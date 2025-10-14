@@ -46,7 +46,7 @@ import org.wordpress.android.support.R
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.support.feature.aibot.AIBotSupportActivity.ConversationScreen
-import org.wordpress.android.support.feature.aibot.BotConversation
+import org.wordpress.android.support.feature.aibot.model.BotConversation
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

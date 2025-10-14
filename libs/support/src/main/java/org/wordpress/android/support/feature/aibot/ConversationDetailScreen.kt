@@ -46,6 +46,8 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import org.wordpress.android.support.R
+import org.wordpress.android.support.feature.aibot.model.BotConversation
+import org.wordpress.android.support.feature.aibot.model.BotMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

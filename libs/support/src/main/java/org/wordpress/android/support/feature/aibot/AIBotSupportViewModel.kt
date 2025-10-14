@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.support.feature.aibot.model.BotConversation
+import org.wordpress.android.support.feature.aibot.model.BotMessage
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.BotConversationSummary
@@ -15,22 +17,6 @@ import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
 import java.util.Date
 import javax.inject.Inject
-
-data class BotMessage(
-    val id: Long,
-    val text: String,
-    val date: Date,
-    val userWantsToTalkToHuman: Boolean,
-    val isWrittenByUser: Boolean
-)
-
-data class BotConversation(
-    val id: Long,
-    val createdAt: Date,
-    val mostRecentMessageDate: Date,
-    val lastMessage: String,
-    val messages: List<BotMessage>
-)
 
 private const val BOT_ID = "jetpack-chat-mobile"
 
