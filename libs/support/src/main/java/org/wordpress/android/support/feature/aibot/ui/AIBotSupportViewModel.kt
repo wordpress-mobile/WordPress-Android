@@ -32,6 +32,7 @@ class AIBotSupportViewModel @Inject constructor(
         viewModelScope.launch {
             aiBotSupportRepository.init(accessToken, userId)
             _conversations.value = aiBotSupportRepository.loadConversations()
+        }
     }
 
     fun onConversationSelected(conversation: BotConversation) {

@@ -118,14 +118,7 @@ fun ConversationDetailScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-
                 item {
-                    // TODO: username
                     WelcomeHeader(userName)
                 }
 
@@ -140,6 +133,12 @@ fun ConversationDetailScreen(
                 item {
                     Spacer(modifier = Modifier.height(8.dp))
                 }
+            }
+
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
         }
     }
