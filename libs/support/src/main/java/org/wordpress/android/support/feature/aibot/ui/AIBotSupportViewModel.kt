@@ -69,21 +69,22 @@ class AIBotSupportViewModel @Inject constructor(
         // TODO: show loading
 
         viewModelScope.launch {
-            if (_selectedConversation.value?.id == 0L) {
+            val conversationId = _selectedConversation.value?.id ?: -1
+            val conversation = if (conversationId == -1L) {
                 // This is a new conversation, so we need to create it first
-                val newConversation = aiBotSupportRepository.createNewConversation(message)
-
-                if (newConversation != null) {
-                    // Add to the top of the conversations list
-                    _conversations.value = listOf(newConversation) + _conversations.value
-
-                    // Select the new conversation
-                    _selectedConversation.value = newConversation
-                } else {
-                    // TODO: show error
-                }
+                aiBotSupportRepository.createNewConversation(message)
             } else {
-                // TODO: just send the message
+                aiBotSupportRepository.sendMessageToConversation(conversationId, message)
+            }
+
+            if (conversation != null) {
+                // Add to the top of the conversations list
+                _conversations.value = listOf(conversation) + _conversations.value
+
+                // Select the new conversation
+                _selectedConversation.value = conversation
+            } else {
+                // TODO: show error
             }
 
             // TODO: hide loading

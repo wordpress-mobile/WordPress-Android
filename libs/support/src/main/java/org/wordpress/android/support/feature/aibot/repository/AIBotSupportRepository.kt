@@ -6,6 +6,7 @@ import org.wordpress.android.support.feature.aibot.model.BotConversation
 import org.wordpress.android.support.feature.aibot.model.BotMessage
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.AddMessageToBotConversationParams
 import uniffi.wp_api.BotConversationSummary
 import uniffi.wp_api.CreateBotConversationParams
 import uniffi.wp_api.GetBotConversationParams
@@ -81,6 +82,30 @@ class AIBotSupportRepository @Inject constructor() {
                 CreateBotConversationParams(
                     message = message,
                     userId = 0
+                )
+            )
+        }
+
+        when (response) {
+            is WpRequestResult.Success -> {
+                val conversation = response.response.data
+                conversation.toBotConversation()
+            }
+
+            else -> {
+                null
+            }
+        }
+    }
+
+    suspend fun sendMessageToConversation(chatId: Long, message: String): BotConversation? = withContext(Dispatchers.IO) {
+        val response = wpComApiClient.request { requestBuilder ->
+            requestBuilder.supportBots().addMessageToBotConversation(
+                botId = BOT_ID,
+                chatId = chatId.toULong(),
+                params = AddMessageToBotConversationParams(
+                    message = message,
+                    context = mapOf()
                 )
             )
         }
