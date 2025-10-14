@@ -28,10 +28,15 @@ class AIBotSupportViewModel @Inject constructor(
     private val _isLoadingConversation = MutableStateFlow(false)
     val isLoadingConversation: StateFlow<Boolean> = _isLoadingConversation.asStateFlow()
 
+    private val _isLoadingConversations = MutableStateFlow(false)
+    val isLoadingConversations: StateFlow<Boolean> = _isLoadingConversations.asStateFlow()
+
     fun init(accessToken: String, userId: Long) {
         viewModelScope.launch {
+            _isLoadingConversations.value = true
             aiBotSupportRepository.init(accessToken, userId)
             _conversations.value = aiBotSupportRepository.loadConversations()
+            _isLoadingConversations.value = false
         }
     }
 

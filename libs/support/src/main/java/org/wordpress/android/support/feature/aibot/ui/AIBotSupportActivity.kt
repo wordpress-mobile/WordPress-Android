@@ -63,8 +63,10 @@ class AIBotSupportActivity : AppCompatActivity() {
                 startDestination = ConversationScreen.List.name
             ) {
                 composable(route = ConversationScreen.List.name) {
+                    val isLoadingConversations by viewModel.isLoadingConversations.collectAsState()
                     ConversationsListScreen(
                         conversations = viewModel.conversations,
+                        isLoading = isLoadingConversations,
                         onConversationClick = { conversation ->
                             viewModel.onConversationSelected(conversation)
                             navController.navigate(ConversationScreen.Detail.name)
