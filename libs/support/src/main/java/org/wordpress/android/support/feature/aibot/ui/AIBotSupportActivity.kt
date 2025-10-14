@@ -63,7 +63,7 @@ class AIBotSupportActivity : AppCompatActivity() {
                     ConversationsListScreen(
                         conversations = viewModel.conversations,
                         onConversationClick = { conversation ->
-                            viewModel.selectConversation(conversation)
+                            viewModel.onConversationSelected(conversation)
                             navController.navigate(ConversationScreen.Detail.name)
                         },
                         onBackClick = { finish() },
@@ -78,9 +78,11 @@ class AIBotSupportActivity : AppCompatActivity() {
 
                 composable(route = ConversationScreen.Detail.name) {
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
+                    val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     selectedConversation?.let { conversation ->
                         ConversationDetailScreen(
                             conversation = conversation,
+                            isLoading = isLoadingConversation,
                             onBackClick = { navController.navigateUp() },
                             onSendMessage = { text ->
                                 viewModel.sendMessage(text)

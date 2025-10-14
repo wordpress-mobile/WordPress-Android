@@ -20,6 +20,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -56,6 +57,7 @@ import org.wordpress.android.support.feature.aibot.model.BotMessage
 @Composable
 fun ConversationDetailScreen(
     conversation: BotConversation,
+    isLoading: Boolean = false,
     onBackClick: () -> Unit,
     onSendMessage: (String) -> Unit
 ) {
@@ -99,33 +101,44 @@ fun ConversationDetailScreen(
             )
         }
     ) { contentPadding ->
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
-                .padding(horizontal = 16.dp),
-            state = listState,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                state = listState,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                item {
+                    // TODO: username
+                    WelcomeHeader("UserName")
+                }
+
+                // Key ensures the items recompose when messages change
+                items(
+                    items = conversation.messages,
+                    key = { message -> message.id }
+                ) { message ->
+                    MessageBubble(message = message)
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
 
-            item {
-                // TODO: username
-                WelcomeHeader("UserName")
-            }
-
-            // Key ensures the items recompose when messages change
-            items(
-                items = conversation.messages,
-                key = { message -> message.id }
-            ) { message ->
-                MessageBubble(message = message)
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
         }
     }

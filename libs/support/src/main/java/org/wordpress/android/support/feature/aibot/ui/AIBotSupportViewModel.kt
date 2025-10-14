@@ -1,14 +1,13 @@
 package org.wordpress.android.support.feature.aibot.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.wordpress.android.support.feature.aibot.util.generateSampleBotConversations
 import org.wordpress.android.support.feature.aibot.model.BotConversation
 import org.wordpress.android.support.feature.aibot.model.BotMessage
 import org.wordpress.android.support.feature.aibot.repository.AIBotSupportRepository
@@ -26,6 +25,9 @@ class AIBotSupportViewModel @Inject constructor(
     private val _selectedConversation = MutableStateFlow<BotConversation?>(null)
     val selectedConversation: StateFlow<BotConversation?> = _selectedConversation.asStateFlow()
 
+    private val _isLoadingConversation = MutableStateFlow(false)
+    val isLoadingConversation: StateFlow<Boolean> = _isLoadingConversation.asStateFlow()
+
     fun init(accessToken: String, userId: Long) {
         viewModelScope.launch {
             aiBotSupportRepository.init(accessToken, userId)
@@ -33,13 +35,15 @@ class AIBotSupportViewModel @Inject constructor(
         }
     }
 
-    fun selectConversation(conversation: BotConversation) {
+    fun onConversationSelected(conversation: BotConversation) {
         viewModelScope.launch {
+            _isLoadingConversation.value = true
             _selectedConversation.value = conversation
             val updatedConversation = aiBotSupportRepository.loadConversation(conversation.id)
             if (updatedConversation != null) {
                 _selectedConversation.value = updatedConversation
             }
+            _isLoadingConversation.value = false
         }
     }
 
