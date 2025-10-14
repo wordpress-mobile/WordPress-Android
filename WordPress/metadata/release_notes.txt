@@ -1,3 +1,5 @@
 We added file size info to your media library, so you can see exactly what you're working with.
 
+Increased the timeout for full-screen image loading, so some edge-cases and low connectivity cases have a higher chance to suncceed.
+
 The experimental editor just got smoother, too. Your content stays put when you rotate your device or toggle dark mode, and dialogs now respond properly to the back button. Happy editing!

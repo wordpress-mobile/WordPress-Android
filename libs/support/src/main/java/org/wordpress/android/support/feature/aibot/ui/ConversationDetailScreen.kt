@@ -58,6 +58,7 @@ import org.wordpress.android.support.feature.aibot.model.BotMessage
 fun ConversationDetailScreen(
     conversation: BotConversation,
     isLoading: Boolean = false,
+    userName: String,
     onBackClick: () -> Unit,
     onSendMessage: (String) -> Unit
 ) {
@@ -117,9 +118,15 @@ fun ConversationDetailScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+
                 item {
                     // TODO: username
-                    WelcomeHeader("UserName")
+                    WelcomeHeader(userName)
                 }
 
                 // Key ensures the items recompose when messages change
@@ -133,12 +140,6 @@ fun ConversationDetailScreen(
                 item {
                     Spacer(modifier = Modifier.height(8.dp))
                 }
-            }
-
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
             }
         }
     }
@@ -284,6 +285,7 @@ private fun ConversationDetailScreenPreview() {
 
     MaterialTheme(colorScheme = lightColorScheme()) {
         ConversationDetailScreen(
+            userName = "UserName",
             conversation = sampleConversation,
             onBackClick = { },
             onSendMessage = { }
@@ -298,6 +300,7 @@ private fun ConversationDetailScreenPreviewDark() {
 
     MaterialTheme(colorScheme = darkColorScheme()) {
         ConversationDetailScreen(
+            userName = "UserName",
             conversation = sampleConversation,
             onBackClick = { },
             onSendMessage = { }
