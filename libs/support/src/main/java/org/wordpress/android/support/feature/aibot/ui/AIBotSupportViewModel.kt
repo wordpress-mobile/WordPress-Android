@@ -29,14 +29,18 @@ class AIBotSupportViewModel @Inject constructor(
     fun init(accessToken: String, userId: Long) {
         viewModelScope.launch {
             aiBotSupportRepository.init(accessToken, userId)
-            val conversations = aiBotSupportRepository.loadConversations()
-            Log.d("AI_TAG", "Conversations: ${conversations.size}")
+            _conversations.value = aiBotSupportRepository.loadConversations()
         }
-        loadDummyData()
     }
 
     fun selectConversation(conversation: BotConversation) {
-        _selectedConversation.value = conversation
+        viewModelScope.launch {
+            _selectedConversation.value = conversation
+            val updatedConversation = aiBotSupportRepository.loadConversation(conversation.id)
+            if (updatedConversation != null) {
+                _selectedConversation.value = updatedConversation
+            }
+        }
     }
 
     fun onNewConversationClicked() {
@@ -80,9 +84,5 @@ class AIBotSupportViewModel @Inject constructor(
 
             // TODO: hide loading
         }
-    }
-
-    private fun loadDummyData() {
-        _conversations.value = generateSampleBotConversations()
     }
 }

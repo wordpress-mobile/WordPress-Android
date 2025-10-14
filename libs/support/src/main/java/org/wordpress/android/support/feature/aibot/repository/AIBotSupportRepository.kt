@@ -124,6 +124,6 @@ class AIBotSupportRepository @Inject constructor() {
             id = messageId.toLong(),
             text = content,
             date = createdAt,
-            isWrittenByUser = role.isEmpty()
+            isWrittenByUser = role == "user"
         )
 }
