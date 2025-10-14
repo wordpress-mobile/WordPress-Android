@@ -43,14 +43,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.text.style.TextAlign
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.aibot.util.generateSampleBotConversations
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,10 +108,6 @@ fun ConversationDetailScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            item {
                 WelcomeHeader(userName)
             }
 
@@ -158,7 +153,7 @@ private fun WelcomeHeader(userName: String) {
                 text = stringResource(R.string.ai_bot_welcome_greeting, userName),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.primary
             )
 
             Text(
@@ -224,7 +219,7 @@ private fun MessageBubble(message: BotMessage) {
                 .widthIn(max = 280.dp)
                 .background(
                     color = if (message.isWrittenByUser) {
-                        MaterialTheme.colorScheme.primaryContainer
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.20f)
                     } else {
                         MaterialTheme.colorScheme.surfaceVariant
                     },
@@ -269,7 +264,7 @@ private fun MessageBubble(message: BotMessage) {
 private fun ConversationDetailScreenPreview() {
     val sampleConversation = generateSampleBotConversations()[0]
 
-    MaterialTheme(colorScheme = lightColorScheme()) {
+    AppThemeM3(isDarkTheme = false) {
         ConversationDetailScreen(
             userName = "UserName",
             conversation = sampleConversation,
@@ -284,7 +279,37 @@ private fun ConversationDetailScreenPreview() {
 private fun ConversationDetailScreenPreviewDark() {
     val sampleConversation = generateSampleBotConversations()[0]
 
-    MaterialTheme(colorScheme = darkColorScheme()) {
+    AppThemeM3(isDarkTheme = true) {
+        ConversationDetailScreen(
+            userName = "UserName",
+            conversation = sampleConversation,
+            onBackClick = { },
+            onSendMessage = { }
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Conversation Detail")
+@Composable
+private fun ConversationDetailScreenWordPressPreview() {
+    val sampleConversation = generateSampleBotConversations()[0]
+
+    AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
+        ConversationDetailScreen(
+            userName = "UserName",
+            conversation = sampleConversation,
+            onBackClick = { },
+            onSendMessage = { }
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Conversation Detail - Dark", uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun ConversationDetailScreenPreviewWordPressDark() {
+    val sampleConversation = generateSampleBotConversations()[0]
+
+    AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         ConversationDetailScreen(
             userName = "UserName",
             conversation = sampleConversation,

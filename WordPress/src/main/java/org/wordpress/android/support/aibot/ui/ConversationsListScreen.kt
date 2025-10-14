@@ -40,6 +40,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.aibot.util.generateSampleBotConversations
 import org.wordpress.android.support.aibot.model.BotConversation
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import kotlin.collections.List
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -176,6 +177,36 @@ private fun ConversationsScreenPreviewDark() {
     val sampleConversations = MutableStateFlow(generateSampleBotConversations())
 
     MaterialTheme(colorScheme = darkColorScheme()) {
+        ConversationsListScreen(
+            conversations = sampleConversations.asStateFlow(),
+            onConversationClick = { },
+            onBackClick = { },
+            onCreateNewConversationClick = { },
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Conversations List")
+@Composable
+private fun ConversationsScreenWordPressPreview() {
+    val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+
+    AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
+        ConversationsListScreen(
+            conversations = sampleConversations.asStateFlow(),
+            onConversationClick = { },
+            onBackClick = { },
+            onCreateNewConversationClick = { },
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Conversations List - Dark", uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun ConversationsScreenPreviewWordPressDark() {
+    val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+
+    AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         ConversationsListScreen(
             conversations = sampleConversations.asStateFlow(),
             onConversationClick = { },
