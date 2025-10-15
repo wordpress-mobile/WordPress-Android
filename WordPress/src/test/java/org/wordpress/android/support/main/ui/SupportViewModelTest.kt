@@ -6,10 +6,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.AccountModel
@@ -99,7 +97,7 @@ class SupportViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `init sets hasAccessToken to true when user has access token`() {
+    fun `init sets isLoggedIn to true when user has access token`() {
         // Given
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.account).thenReturn(account)
@@ -111,7 +109,7 @@ class SupportViewModelTest : BaseUnitTest() {
         viewModel.init()
 
         // Then
-        assertThat(viewModel.hasAccessToken.value).isTrue()
+        assertThat(viewModel.isLoggedIn.value).isTrue()
     }
 
     @Test
@@ -128,7 +126,7 @@ class SupportViewModelTest : BaseUnitTest() {
         viewModel.init()
 
         // Then
-        assertThat(viewModel.hasAccessToken.value).isFalse()
+        assertThat(viewModel.isLoggedIn.value).isFalse()
     }
 
     @Test
@@ -296,7 +294,7 @@ class SupportViewModelTest : BaseUnitTest() {
     @Test
     fun `hasAccessToken is false by default before init`() {
         // Then
-        assertThat(viewModel.hasAccessToken.value).isFalse()
+        assertThat(viewModel.isLoggedIn.value).isFalse()
     }
 
     // endregion

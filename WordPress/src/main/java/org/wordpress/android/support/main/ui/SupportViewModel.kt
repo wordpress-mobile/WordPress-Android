@@ -42,15 +42,15 @@ class SupportViewModel @Inject constructor(
     private val _optionsVisibility = MutableStateFlow(SupportOptionsVisibility())
     val optionsVisibility: StateFlow<SupportOptionsVisibility> = _optionsVisibility.asStateFlow()
 
-    private val _hasAccessToken = MutableStateFlow(false)
-    val hasAccessToken: StateFlow<Boolean> = _hasAccessToken.asStateFlow()
+    private val _isLoggedIn = MutableStateFlow(false)
+    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
 
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents: SharedFlow<NavigationEvent> = _navigationEvents.asSharedFlow()
 
     fun init() {
         val hasAccessToken = accountStore.hasAccessToken()
-        _hasAccessToken.value = hasAccessToken
+        _isLoggedIn.value = hasAccessToken
 
         val account = accountStore.account
         _userInfo.value = UserInfo(

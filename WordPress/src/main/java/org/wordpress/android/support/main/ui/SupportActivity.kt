@@ -40,13 +40,13 @@ class SupportActivity : AppCompatActivity() {
                 setContent {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val optionsVisibility by viewModel.optionsVisibility.collectAsState()
-                    val hasAccessToken by viewModel.hasAccessToken.collectAsState()
+                    val isLoggedIn by viewModel.isLoggedIn.collectAsState()
                     AppThemeM3 {
                         SupportScreen(
                             userName = userInfo.userName,
                             userEmail = userInfo.userEmail,
                             userAvatarUrl = userInfo.avatarUrl,
-                            hasAccessToken = hasAccessToken,
+                            isLoggedIn = isLoggedIn,
                             showAskTheBots = optionsVisibility.showAskTheBots,
                             showAskHappinessEngineers = optionsVisibility.showAskHappinessEngineers,
                             onBackClick = { finish() },

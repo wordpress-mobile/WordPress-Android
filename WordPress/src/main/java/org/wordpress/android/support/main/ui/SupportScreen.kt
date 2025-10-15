@@ -45,7 +45,7 @@ fun SupportScreen(
     userName: String,
     userEmail: String,
     userAvatarUrl: String?,
-    hasAccessToken: Boolean,
+    isLoggedIn: Boolean,
     showAskTheBots: Boolean,
     showAskHappinessEngineers: Boolean,
     onBackClick: () -> Unit,
@@ -84,7 +84,7 @@ fun SupportScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // User Profile Card or Login Button
-            if (hasAccessToken) {
+            if (isLoggedIn) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -261,7 +261,7 @@ private fun SupportScreenPreview() {
             userName = "Test user",
             userEmail = "test.user@gmail.com",
             userAvatarUrl = null,
-            hasAccessToken = true,
+            isLoggedIn = true,
             showAskTheBots = true,
             showAskHappinessEngineers = true,
             onBackClick = {},
@@ -282,7 +282,7 @@ private fun SupportScreenPreviewDark() {
             userName = "Test user",
             userEmail = "test.user@gmail.com",
             userAvatarUrl = null,
-            hasAccessToken = true,
+            isLoggedIn = true,
             showAskTheBots = true,
             showAskHappinessEngineers = true,
             onBackClick = {},
@@ -303,7 +303,7 @@ private fun SupportScreenPreviewLoggedOut() {
             userName = "",
             userEmail = "",
             userAvatarUrl = null,
-            hasAccessToken = false,
+            isLoggedIn = false,
             showAskTheBots = false,
             showAskHappinessEngineers = false,
             onBackClick = {},
