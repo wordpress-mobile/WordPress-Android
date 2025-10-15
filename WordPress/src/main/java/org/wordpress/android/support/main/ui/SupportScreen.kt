@@ -169,7 +169,6 @@ fun SupportScreen(
                         title = "Ask the Happiness Engineers",
                         description = "For your tough questions. We'll reply via email",
                         onClick = onAskHappinessEngineersClick,
-                        showDivider = false
                     )
                 }
             }
@@ -198,7 +197,6 @@ fun SupportScreen(
                     title = "Application Logs",
                     description = "Advanced tool to debug issues",
                     onClick = onApplicationLogsClick,
-                    showDivider = false
                 )
             }
 
@@ -212,35 +210,23 @@ private fun SupportOptionItem(
     title: String,
     description: String,
     onClick: () -> Unit,
-    showDivider: Boolean = true
 ) {
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-            contentDescription = "Navigate",
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = description,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
