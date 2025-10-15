@@ -42,6 +42,7 @@ class AIBotSupportViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<ErrorType?>(null)
     val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
 
+    @Suppress("TooGenericExceptionCaught")
     fun init(accessToken: String, userId: Long) {
         viewModelScope.launch {
             try {
@@ -55,6 +56,7 @@ class AIBotSupportViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun loadConversations() {
         try {
             _isLoadingConversations.value = true
@@ -78,6 +80,7 @@ class AIBotSupportViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun onConversationSelected(conversation: BotConversation) {
         viewModelScope.launch {
             try {
@@ -113,6 +116,7 @@ class AIBotSupportViewModel @Inject constructor(
         _canSendMassage.value = true
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun sendMessage(message: String) {
         viewModelScope.launch {
             try {

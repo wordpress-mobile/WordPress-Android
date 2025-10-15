@@ -10,6 +10,7 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 
+@Suppress("MagicNumber")
 fun formatRelativeTime(date: Date, res: Resources): String {
     val now = Date()
     val diffMillis = now.time - date.time

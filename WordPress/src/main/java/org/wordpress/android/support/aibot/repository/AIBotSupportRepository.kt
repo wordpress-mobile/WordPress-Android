@@ -21,6 +21,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val BOT_ID = "jetpack-chat-mobile"
+private const val READ_WRITE_TIMEOUT = 60L
+private const val CONNECT_TIMEOUT = 30L
 
 class AIBotSupportRepository @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
@@ -29,13 +31,12 @@ class AIBotSupportRepository @Inject constructor(
     private var userId: Long = 0
 
     private val wpComApiClient: WpComApiClient by lazy {
-        if (accessToken == null || userId == 0L) {
-            throw IllegalStateException("Repository not initialized")
-        }
+        check(accessToken == null || userId == 0L) { "Repository not initialized" }
+
         val okHttpClient = OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+            .readTimeout(READ_WRITE_TIMEOUT, TimeUnit.SECONDS)
+            .writeTimeout(READ_WRITE_TIMEOUT, TimeUnit.SECONDS)
             .build()
 
         WpComApiClient(
@@ -112,30 +113,34 @@ class AIBotSupportRepository @Inject constructor(
         }
     }
 
-    suspend fun sendMessageToConversation(chatId: Long, message: String): BotConversation? = withContext(Dispatchers.IO) {
-        val response = wpComApiClient.request { requestBuilder ->
-            requestBuilder.supportBots().addMessageToBotConversation(
-                botId = BOT_ID,
-                chatId = chatId.toULong(),
-                params = AddMessageToBotConversationParams(
-                    message = message,
-                    context = mapOf()
+    suspend fun sendMessageToConversation(chatId: Long, message: String): BotConversation? =
+        withContext(Dispatchers.IO) {
+            val response = wpComApiClient.request { requestBuilder ->
+                requestBuilder.supportBots().addMessageToBotConversation(
+                    botId = BOT_ID,
+                    chatId = chatId.toULong(),
+                    params = AddMessageToBotConversationParams(
+                        message = message,
+                        context = mapOf()
+                    )
                 )
-            )
-        }
-
-        when (response) {
-            is WpRequestResult.Success -> {
-                val conversation = response.response.data
-                conversation.toBotConversation()
             }
 
-            else -> {
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error sending message to conversation $chatId: $response")
-                null
+            when (response) {
+                is WpRequestResult.Success -> {
+                    val conversation = response.response.data
+                    conversation.toBotConversation()
+                }
+
+                else -> {
+                    appLogWrapper.e(
+                        AppLog.T.SUPPORT,
+                        "Error sending message to conversation $chatId: $response"
+                    )
+                    null
+                }
             }
         }
-    }
 
     private fun List<BotConversationSummary>.toBotConversations(): List<BotConversation> =
         map { it.toBotConversation() }

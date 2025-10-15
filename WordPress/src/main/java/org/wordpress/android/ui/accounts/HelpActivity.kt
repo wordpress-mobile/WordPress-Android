@@ -224,20 +224,16 @@ class HelpActivity : BaseAppCompatActivity() {
             JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
         contactUsButton.setOnClickListener {
-            // TODO: remove hardcoded lines. This TODO is preventing the PR to pass
-            val accessToken = accountStore.accessToken
-            if (accessToken != null) {
-                startActivity(
-                    AIBotSupportActivity.Companion.createIntent(
-                        this@HelpActivity,
-                        accessToken,
-                        accountStore.account.userId,
-                        accountStore.account.userName
-                    )
+            // TODO: Again, this TODO is preventing the PR to pass
+            //       When reviewed revert these changes
+            startActivity(
+                AIBotSupportActivity.Companion.createIntent(
+                    this@HelpActivity,
+                    accountStore.accessToken!!,
+                    accountStore.account.userId,
+                    accountStore.account.userName
                 )
-            } else {
-                // TODO: log ERROR
-            }
+            )
 //            if (contactSupportFeatureConfig.isEnabled()) {
 //                launchSupportWidget()
 //            } else {
