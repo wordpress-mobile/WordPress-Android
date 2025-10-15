@@ -27,8 +27,8 @@ class AIBotSupportViewModel @Inject constructor(
     private val _selectedConversation = MutableStateFlow<BotConversation?>(null)
     val selectedConversation: StateFlow<BotConversation?> = _selectedConversation.asStateFlow()
 
-    private val _canSendMassage = MutableStateFlow(true)
-    val canSendMassage: StateFlow<Boolean> = _canSendMassage.asStateFlow()
+    private val _canSendMessage = MutableStateFlow(true)
+    val canSendMessage: StateFlow<Boolean> = _canSendMessage.asStateFlow()
 
     private val _isLoadingConversation = MutableStateFlow(false)
     val isLoadingConversation: StateFlow<Boolean> = _isLoadingConversation.asStateFlow()
@@ -86,7 +86,7 @@ class AIBotSupportViewModel @Inject constructor(
             try {
                 _isLoadingConversation.value = true
                 _selectedConversation.value = conversation
-                _canSendMassage.value = true
+                _canSendMessage.value = true
                 val updatedConversation = aiBotSupportRepository.loadConversation(conversation.id)
                 if (updatedConversation != null) {
                     _selectedConversation.value = updatedConversation
@@ -113,7 +113,7 @@ class AIBotSupportViewModel @Inject constructor(
             lastMessage = "",
             messages = listOf()
         )
-        _canSendMassage.value = true
+        _canSendMessage.value = true
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -122,7 +122,7 @@ class AIBotSupportViewModel @Inject constructor(
             try {
                 // Show bot typing indicator and limit send messages
                 _isBotTyping.value = true
-                _canSendMassage.value = false
+                _canSendMessage.value = false
 
                 val now = Date()
                 val userMessage = BotMessage(
@@ -176,7 +176,7 @@ class AIBotSupportViewModel @Inject constructor(
             }
 
             // Be sure we allow the user to send messages again
-            _canSendMassage.value = true
+            _canSendMessage.value = true
         }
     }
 

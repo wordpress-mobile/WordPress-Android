@@ -107,7 +107,7 @@ class AIBotSupportActivity : AppCompatActivity() {
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isBotTyping by viewModel.isBotTyping.collectAsState()
-                    val canSendMessage by viewModel.canSendMassage.collectAsState()
+                    val canSendMessage by viewModel.canSendMessage.collectAsState()
                     selectedConversation?.let { conversation ->
                         ConversationDetailScreen(
                             userName = userName,
