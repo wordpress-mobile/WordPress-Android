@@ -4,20 +4,24 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.util.ToastUtils
 
 @AndroidEntryPoint
 class AIBotSupportActivity : AppCompatActivity() {
@@ -47,6 +51,20 @@ class AIBotSupportActivity : AppCompatActivity() {
             accessToken = intent.getStringExtra(ACCESS_TOKEN_ID)!!,
             userId = intent.getLongExtra(USER_ID, 0)
         )
+
+        // Observe error messages and show them as Toast
+        lifecycleScope.launch {
+            viewModel.errorMessage.collect { errorType ->
+                val errorMessage = when (errorType) {
+                    AIBotSupportViewModel.ErrorType.GENERAL -> getString(R.string.ai_bot_generic_error)
+                    null -> null
+                }
+                errorMessage?.let {
+                    ToastUtils.showToast(this@AIBotSupportActivity, it, ToastUtils.Duration.LONG, Gravity.CENTER)
+                    viewModel.clearError()
+                }
+            }
+        }
     }
 
     private enum class ConversationScreen {

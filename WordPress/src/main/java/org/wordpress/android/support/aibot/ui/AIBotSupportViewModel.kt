@@ -36,18 +36,27 @@ class AIBotSupportViewModel @Inject constructor(
     private val _isBotTyping = MutableStateFlow(false)
     val isBotTyping: StateFlow<Boolean> = _isBotTyping.asStateFlow()
 
+    private val _errorMessage = MutableStateFlow<ErrorType?>(null)
+    val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
+
     fun init(accessToken: String, userId: Long) {
         viewModelScope.launch {
             try {
                 _isLoadingConversations.value = true
+                _errorMessage.value = null
                 aiBotSupportRepository.init(accessToken, userId)
                 _conversations.value = aiBotSupportRepository.loadConversations()
             } catch (throwable: Throwable) {
                 appLogWrapper.e(AppLog.T.SUPPORT, "Error initialising the AI bot support repository: " +
                         "${throwable.message} - ${throwable.stackTraceToString()}")
+                _errorMessage.value = ErrorType.GENERAL
             }
             _isLoadingConversations.value = false
         }
+    }
+
+    fun clearError() {
+        _errorMessage.value = null
     }
 
     fun onConversationSelected(conversation: BotConversation) {
@@ -133,4 +142,6 @@ class AIBotSupportViewModel @Inject constructor(
             }
         }
     }
+
+    enum class ErrorType { GENERAL }
 }

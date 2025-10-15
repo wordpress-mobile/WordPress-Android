@@ -5107,6 +5107,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="ai_bot_conversations_title">Conversations</string>
     <string name="ai_bot_back_button_content_description">Back</string>
     <string name="ai_bot_new_conversation_content_description">New conversation</string>
+    <string name="ai_bot_generic_error">Something went wrong. Please try again later.</string>
 
     <!-- AI Bot Support - Conversation Detail Screen -->
     <string name="ai_bot_send_button_content_description">Send</string>
