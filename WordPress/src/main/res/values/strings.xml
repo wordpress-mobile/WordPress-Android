@@ -981,6 +981,8 @@
     <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers</string>
     <string name="experimental_application_password_feature">Application Password log in</string>
     <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites</string>
+    <string name="modern_support">Modern Support</string>
+    <string name="modern_support_description">Enable the new modern support experience</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>
