@@ -50,6 +50,8 @@ fun SupportScreen(
     userName: String,
     userEmail: String,
     userAvatarUrl: String?,
+    showAskTheBots: Boolean,
+    showAskHappinessEngineers: Boolean,
     onBackClick: () -> Unit,
     onHelpCenterClick: () -> Unit,
     onAskTheBotsClick: () -> Unit,
@@ -149,27 +151,31 @@ fun SupportScreen(
                         onClick = onHelpCenterClick
                     )
 
-                    HorizontalDivider(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        color = MaterialTheme.colorScheme.surfaceVariant
-                    )
+                    if (showAskTheBots) {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant
+                        )
 
-                    SupportOptionItem(
-                        title = "Ask the bots",
-                        description = "Get quick answers to common questions",
-                        onClick = onAskTheBotsClick
-                    )
+                        SupportOptionItem(
+                            title = "Ask the bots",
+                            description = "Get quick answers to common questions",
+                            onClick = onAskTheBotsClick
+                        )
+                    }
 
-                    HorizontalDivider(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        color = MaterialTheme.colorScheme.surfaceVariant
-                    )
+                    if (showAskHappinessEngineers) {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant
+                        )
 
-                    SupportOptionItem(
-                        title = "Ask the Happiness Engineers",
-                        description = "For your tough questions. We'll reply via email",
-                        onClick = onAskHappinessEngineersClick,
-                    )
+                        SupportOptionItem(
+                            title = "Ask the Happiness Engineers",
+                            description = "For your tough questions. We'll reply via email",
+                            onClick = onAskHappinessEngineersClick,
+                        )
+                    }
                 }
             }
 
@@ -239,6 +245,8 @@ private fun SupportScreenPreview() {
             userName = "Test user",
             userEmail = "test.user@gmail.com",
             userAvatarUrl = null,
+            showAskTheBots = true,
+            showAskHappinessEngineers = true,
             onBackClick = {},
             onHelpCenterClick = {},
             onAskTheBotsClick = {},
@@ -256,6 +264,8 @@ private fun SupportScreenPreviewDark() {
             userName = "Test user",
             userEmail = "test.user@gmail.com",
             userAvatarUrl = null,
+            showAskTheBots = true,
+            showAskHappinessEngineers = true,
             onBackClick = {},
             onHelpCenterClick = {},
             onAskTheBotsClick = {},

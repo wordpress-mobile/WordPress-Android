@@ -37,11 +37,14 @@ class SupportActivity : AppCompatActivity() {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
                     val userInfo by viewModel.userInfo.collectAsState()
+                    val optionsVisibility by viewModel.optionsVisibility.collectAsState()
                     AppThemeM3 {
                         SupportScreen(
                             userName = userInfo.userName,
                             userEmail = userInfo.userEmail,
                             userAvatarUrl = userInfo.avatarUrl,
+                            showAskTheBots = optionsVisibility.showAskTheBots,
+                            showAskHappinessEngineers = optionsVisibility.showAskHappinessEngineers,
                             onBackClick = { finish() },
                             onHelpCenterClick = { viewModel.onHelpCenterClick() },
                             onAskTheBotsClick = { viewModel.onAskTheBotsClick() },

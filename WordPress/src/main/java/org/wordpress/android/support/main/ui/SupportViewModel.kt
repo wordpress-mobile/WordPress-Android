@@ -30,8 +30,16 @@ class SupportViewModel @Inject constructor(
         val avatarUrl: String? = null
     )
 
+    data class SupportOptionsVisibility(
+        val showAskTheBots: Boolean = true,
+        val showAskHappinessEngineers: Boolean = true
+    )
+
     private val _userInfo = MutableStateFlow(UserInfo())
     val userInfo: StateFlow<UserInfo> = _userInfo.asStateFlow()
+
+    private val _optionsVisibility = MutableStateFlow(SupportOptionsVisibility())
+    val optionsVisibility: StateFlow<SupportOptionsVisibility> = _optionsVisibility.asStateFlow()
 
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents: SharedFlow<NavigationEvent> = _navigationEvents.asSharedFlow()
@@ -42,6 +50,12 @@ class SupportViewModel @Inject constructor(
             userName = account.displayName.ifEmpty { account.userName },
             userEmail = account.email,
             avatarUrl = account.avatarUrl.takeIf { it.isNotEmpty() }
+        )
+
+        val hasAccessToken = accountStore.hasAccessToken()
+        _optionsVisibility.value = SupportOptionsVisibility(
+            showAskTheBots = hasAccessToken,
+            showAskHappinessEngineers = hasAccessToken
         )
     }
 
