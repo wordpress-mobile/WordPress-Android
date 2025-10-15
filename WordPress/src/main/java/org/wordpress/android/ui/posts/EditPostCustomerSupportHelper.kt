@@ -10,7 +10,6 @@ import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.EDITOR_HELP
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.SiteUtils
-import javax.inject.Inject
 
 object EditPostCustomerSupportHelper {
     fun onContactCustomerSupport(

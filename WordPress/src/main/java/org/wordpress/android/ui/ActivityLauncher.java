@@ -1374,7 +1374,8 @@ public class ActivityLauncher {
     }
 
     public static void viewHelp(@NonNull Context context, @NonNull Origin origin, @Nullable SiteModel selectedSite,
-                                @Nullable List<String> extraSupportTags, @NonNull ExperimentalFeatures experimentalFeatures) {
+                                @Nullable List<String> extraSupportTags,
+                                @NonNull ExperimentalFeatures experimentalFeatures) {
         Map<String, String> properties = new HashMap<>();
         properties.put("origin", origin.name());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);

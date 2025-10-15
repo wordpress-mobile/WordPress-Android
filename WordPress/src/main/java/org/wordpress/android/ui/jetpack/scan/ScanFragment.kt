@@ -130,7 +130,8 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
                 )
 
                 is ShowContactSupport ->
-                    ActivityLauncher.viewHelp(requireContext(), SCAN_SCREEN_HELP, events.site, null, experimentalFeatures)
+                    ActivityLauncher.viewHelp(requireContext(), SCAN_SCREEN_HELP,
+                        events.site, null, experimentalFeatures)
 
                 is ShowJetpackSettings -> ActivityLauncher.openUrlExternal(context, events.url)
 

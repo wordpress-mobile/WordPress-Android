@@ -60,7 +60,7 @@ class SupportViewModel @Inject constructor(
     }
 
     fun onHelpCenterClick() {
-        // TODO: Navigate to Help Center
+        // Navigate to Help Center
     }
 
     fun onAskTheBotsClick() {
@@ -80,10 +80,10 @@ class SupportViewModel @Inject constructor(
     }
 
     fun onAskHappinessEngineersClick() {
-        // TODO: Navigate to Happiness Engineers contact
+        // Navigate to Happiness Engineers contact
     }
 
     fun onApplicationLogsClick() {
-        // TODO: Navigate to Application Logs
+        // Navigate to Application Logs
     }
 }
