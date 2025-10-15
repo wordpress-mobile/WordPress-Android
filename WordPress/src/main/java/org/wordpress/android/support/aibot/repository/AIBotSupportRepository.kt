@@ -1,8 +1,9 @@
 package org.wordpress.android.support.aibot.repository
 
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
@@ -14,12 +15,14 @@ import uniffi.wp_api.BotConversationSummary
 import uniffi.wp_api.CreateBotConversationParams
 import uniffi.wp_api.GetBotConversationParams
 import javax.inject.Inject
+import javax.inject.Named
 
 private const val BOT_ID = "jetpack-chat-mobile"
 
 class AIBotSupportRepository @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val wpComApiClientProvider: WpComApiClientProvider,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     private var accessToken: String? = null
     private var userId: Long = 0
@@ -34,7 +37,7 @@ class AIBotSupportRepository @Inject constructor(
         this.userId = userId
     }
 
-    suspend fun loadConversations(): List<BotConversation> = withContext(Dispatchers.IO) {
+    suspend fun loadConversations(): List<BotConversation> = withContext(ioDispatcher) {
         val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.supportBots().getBotConverationList(BOT_ID)
         }
@@ -51,7 +54,7 @@ class AIBotSupportRepository @Inject constructor(
         }
     }
 
-    suspend fun loadConversation(chatId: Long): BotConversation? = withContext(Dispatchers.IO) {
+    suspend fun loadConversation(chatId: Long): BotConversation? = withContext(ioDispatcher) {
         val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.supportBots().getBotConversation(
                 botId = BOT_ID,
@@ -72,7 +75,7 @@ class AIBotSupportRepository @Inject constructor(
         }
     }
 
-    suspend fun createNewConversation(message: String): BotConversation? = withContext(Dispatchers.IO) {
+    suspend fun createNewConversation(message: String): BotConversation? = withContext(ioDispatcher) {
         val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.supportBots().createBotConversation(
                 botId = BOT_ID,
@@ -97,7 +100,7 @@ class AIBotSupportRepository @Inject constructor(
     }
 
     suspend fun sendMessageToConversation(chatId: Long, message: String): BotConversation? =
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             val response = wpComApiClient.request { requestBuilder ->
                 requestBuilder.supportBots().addMessageToBotConversation(
                     botId = BOT_ID,

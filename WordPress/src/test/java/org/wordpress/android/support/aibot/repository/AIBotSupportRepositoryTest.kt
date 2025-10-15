@@ -50,7 +50,8 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
 
         repository = AIBotSupportRepository(
             appLogWrapper = appLogWrapper,
-            wpComApiClientProvider = wpComApiClientProvider
+            wpComApiClientProvider = wpComApiClientProvider,
+            testDispatcher()
         )
     }
 
