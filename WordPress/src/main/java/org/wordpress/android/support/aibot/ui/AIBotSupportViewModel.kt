@@ -150,11 +150,13 @@ class AIBotSupportViewModel @Inject constructor(
                     _selectedConversation.value = finalConversation
                 } else {
                     _errorMessage.value = ErrorType.GENERAL
+                    removeLastUserMessage()
                     appLogWrapper.e(AppLog.T.SUPPORT, "Error sending message: response is null")
                 }
             } catch (throwable: Throwable) {
                 _errorMessage.value = ErrorType.GENERAL
                 _isBotTyping.value = false
+                removeLastUserMessage()
                 appLogWrapper.e(AppLog.T.SUPPORT, "Error sending message: " +
                         "${throwable.message} - ${throwable.stackTraceToString()}")
             }
@@ -168,6 +170,14 @@ class AIBotSupportViewModel @Inject constructor(
             aiBotSupportRepository.createNewConversation(message)
         } else {
             aiBotSupportRepository.sendMessageToConversation(conversationId, message)
+        }
+    }
+
+    private fun removeLastUserMessage() {
+        val messages = _selectedConversation.value?.messages
+        val lastMessage = messages?.lastOrNull()
+        if (lastMessage != null && lastMessage.isWrittenByUser) {
+            _selectedConversation.value = _selectedConversation.value?.copy(messages = messages.dropLast(1))
         }
     }
 

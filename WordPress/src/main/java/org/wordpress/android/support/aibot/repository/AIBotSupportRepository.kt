@@ -106,6 +106,7 @@ class AIBotSupportRepository @Inject constructor(
             }
 
             else -> {
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error creating new conversation $response")
                 null
             }
         }
@@ -130,6 +131,7 @@ class AIBotSupportRepository @Inject constructor(
             }
 
             else -> {
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error sending message to conversation $chatId: $response")
                 null
             }
         }
