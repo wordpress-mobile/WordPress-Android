@@ -1,17 +1,28 @@
 package org.wordpress.android.support.main.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 @HiltViewModel
 class SupportViewModel @Inject constructor(
     private val accountStore: AccountStore,
+    private val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
+    sealed class NavigationEvent {
+        data class NavigateToAskTheBots(val accessToken: String, val userName: String) : NavigationEvent()
+    }
 
     data class UserInfo(
         val userName: String = "",
@@ -21,6 +32,9 @@ class SupportViewModel @Inject constructor(
 
     private val _userInfo = MutableStateFlow(UserInfo())
     val userInfo: StateFlow<UserInfo> = _userInfo.asStateFlow()
+
+    private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
+    val navigationEvents: SharedFlow<NavigationEvent> = _navigationEvents.asSharedFlow()
 
     fun init() {
         val account = accountStore.account
@@ -36,7 +50,19 @@ class SupportViewModel @Inject constructor(
     }
 
     fun onAskTheBotsClick() {
-        // TODO: Navigate to AI Bot Support
+        viewModelScope.launch {
+            if (!accountStore.hasAccessToken()) {
+                appLogWrapper.d(AppLog.T.SUPPORT, "Trying to open a bot conversation without access token")
+            } else {
+                val account = accountStore.account
+                _navigationEvents.emit(
+                    NavigationEvent.NavigateToAskTheBots(
+                        accessToken = accountStore.accessToken!!,
+                        userName = account.displayName.ifEmpty { account.userName }
+                    )
+                )
+            }
+        }
     }
 
     fun onAskHappinessEngineersClick() {

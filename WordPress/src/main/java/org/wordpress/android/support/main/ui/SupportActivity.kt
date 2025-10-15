@@ -10,7 +10,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @AndroidEntryPoint
@@ -22,6 +27,7 @@ class SupportActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.init()
+        observeNavigationEvents()
         composeView = ComposeView(this)
         setContentView(
             composeView.apply {
@@ -45,6 +51,26 @@ class SupportActivity : AppCompatActivity() {
                     }
                 }
             }
+        )
+    }
+
+    private fun observeNavigationEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigationEvents.collect { event ->
+                    when (event) {
+                        is SupportViewModel.NavigationEvent.NavigateToAskTheBots -> {
+                            navigateToAskTheBots(event.accessToken, event.userName)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun navigateToAskTheBots(accessToken: String, userName: String) {
+        startActivity(
+            AIBotSupportActivity.Companion.createIntent(this, accessToken, userName)
         )
     }
 
