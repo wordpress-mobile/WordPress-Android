@@ -46,6 +46,8 @@ import androidx.compose.ui.unit.dp
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.text.style.TextAlign
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
@@ -77,6 +79,8 @@ fun ConversationDetailScreen(
             }
         }
     }
+
+    val resources = LocalResources.current
 
     Scaffold(
         topBar = {
@@ -132,7 +136,7 @@ fun ConversationDetailScreen(
                     items = conversation.messages,
                     key = { message -> message.id }
                 ) { message ->
-                    MessageBubble(message = message)
+                    MessageBubble(message = message, resources = resources)
                 }
 
                 // Show typing indicator when bot is typing
@@ -241,7 +245,7 @@ private fun ChatInputBar(
 }
 
 @Composable
-private fun MessageBubble(message: BotMessage) {
+private fun MessageBubble(message: BotMessage, resources: android.content.res.Resources) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = if (message.isWrittenByUser) {
@@ -282,7 +286,7 @@ private fun MessageBubble(message: BotMessage) {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = formatRelativeTime(message.date),
+                    text = formatRelativeTime(message.date, resources),
                     style = MaterialTheme.typography.bodySmall,
                     color = if (message.isWrittenByUser) {
                         MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)

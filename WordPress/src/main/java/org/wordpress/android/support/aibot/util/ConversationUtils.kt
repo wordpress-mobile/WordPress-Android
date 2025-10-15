@@ -1,7 +1,6 @@
 package org.wordpress.android.support.aibot.util
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import android.content.res.Resources
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
@@ -11,9 +10,7 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 
-@Composable
-fun formatRelativeTime(date: Date): String {
-    val context = LocalContext.current
+fun formatRelativeTime(date: Date, res: Resources): String {
     val now = Date()
     val diffMillis = now.time - date.time
     val diffMinutes = TimeUnit.MILLISECONDS.toMinutes(diffMillis)
@@ -21,29 +18,29 @@ fun formatRelativeTime(date: Date): String {
     val diffDays = TimeUnit.MILLISECONDS.toDays(diffMillis)
 
     return when {
-        diffMinutes < 1 -> context.getString(R.string.ai_bot_time_just_now)
-        diffMinutes < 60 -> if (diffMinutes == 1L) {
-            context.getString(R.string.ai_bot_time_minute_ago, diffMinutes)
-        } else {
-            context.getString(R.string.ai_bot_time_minutes_ago, diffMinutes)
-        }
-        diffHours < 24 -> if (diffHours == 1L) {
-            context.getString(R.string.ai_bot_time_hour_ago, diffHours)
-        } else {
-            context.getString(R.string.ai_bot_time_hours_ago, diffHours)
-        }
-        diffDays < 7 -> if (diffDays == 1L) {
-            context.getString(R.string.ai_bot_time_day_ago, diffDays)
-        } else {
-            context.getString(R.string.ai_bot_time_days_ago, diffDays)
-        }
+        diffMinutes < 1 -> res.getString(R.string.ai_bot_time_just_now)
+        diffMinutes < 60 -> res.getQuantityString(
+            R.plurals.ai_bot_time_minutes_ago,
+            diffMinutes.toInt(),
+            diffMinutes
+        )
+        diffHours < 24 -> res.getQuantityString(
+            R.plurals.ai_bot_time_hours_ago,
+            diffHours.toInt(),
+            diffHours
+        )
+        diffDays < 7 -> res.getQuantityString(
+            R.plurals.ai_bot_time_days_ago,
+            diffDays.toInt(),
+            diffDays
+        )
         diffDays < 30 -> {
             val weeks = diffDays / 7
-            if (weeks == 1L) {
-                context.getString(R.string.ai_bot_time_week_ago, weeks)
-            } else {
-                context.getString(R.string.ai_bot_time_weeks_ago, weeks)
-            }
+            res.getQuantityString(
+                R.plurals.ai_bot_time_weeks_ago,
+                weeks.toInt(),
+                weeks
+            )
         }
         else -> {
             val formatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())

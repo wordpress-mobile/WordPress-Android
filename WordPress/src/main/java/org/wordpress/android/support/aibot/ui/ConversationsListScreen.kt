@@ -32,6 +32,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -99,6 +101,7 @@ private fun ShowConversationsList(
     onConversationClick: (BotConversation) -> Unit
 ) {
     val conversations by conversations.collectAsState()
+    val resources = LocalResources.current
 
     LazyColumn(
         modifier = modifier
@@ -114,6 +117,7 @@ private fun ShowConversationsList(
         items(conversations) { conversation ->
             ConversationCard(
                 conversation = conversation,
+                resources = resources,
                 onClick = { onConversationClick(conversation) }
             )
         }
@@ -128,6 +132,7 @@ private fun ShowConversationsList(
 @Composable
 private fun ConversationCard(
     conversation: BotConversation,
+    resources: android.content.res.Resources,
     onClick: () -> Unit
 ) {
     Card(
@@ -157,7 +162,7 @@ private fun ConversationCard(
 
                 Text(
                     modifier = Modifier.padding(top = 8.dp),
-                    text = formatRelativeTime(conversation.mostRecentMessageDate),
+                    text = formatRelativeTime(conversation.mostRecentMessageDate, resources),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
