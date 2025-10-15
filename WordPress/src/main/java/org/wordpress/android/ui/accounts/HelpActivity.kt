@@ -32,7 +32,7 @@ import org.wordpress.android.support.SupportHelper
 import org.wordpress.android.support.SupportWebViewActivity
 import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
-import org.wordpress.android.support.feature.aibot.ui.AIBotSupportActivity
+import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.AppLogViewerActivity

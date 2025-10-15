@@ -1,10 +1,10 @@
-package org.wordpress.android.support.feature.aibot.repository
+package org.wordpress.android.support.aibot.repository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
-import org.wordpress.android.support.feature.aibot.model.BotConversation
-import org.wordpress.android.support.feature.aibot.model.BotMessage
+import org.wordpress.android.support.aibot.model.BotConversation
+import org.wordpress.android.support.aibot.model.BotMessage
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpHttpClient
 import rs.wordpress.api.kotlin.WpRequestExecutor

@@ -20,6 +20,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,18 +44,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.text.style.TextAlign
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.aibot.util.generateSampleBotConversations
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
-import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConversationDetailScreen(
     conversation: BotConversation,
+    isLoading: Boolean = false,
+    isBotTyping: Boolean = false,
     userName: String,
     onBackClick: () -> Unit,
     onSendMessage: (String) -> Unit
@@ -63,11 +67,13 @@ fun ConversationDetailScreen(
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    // Scroll to bottom when conversation changes or messages are added
-    LaunchedEffect(conversation.id, conversation.messages.size) {
-        if (conversation.messages.isNotEmpty()) {
+    // Scroll to bottom when conversation changes or messages are added or typing state changes
+    LaunchedEffect(conversation.id, conversation.messages.size, isBotTyping) {
+        if (conversation.messages.isNotEmpty() || isBotTyping) {
             coroutineScope.launch {
-                listState.animateScrollToItem(conversation.messages.size + 1) // +1 for spacer
+                // +2 for welcome header and spacer, +1 if typing indicator is showing
+                val itemCount = conversation.messages.size + 2 + if (isBotTyping) 1 else 0
+                listState.animateScrollToItem(itemCount)
             }
         }
     }
@@ -89,6 +95,8 @@ fun ConversationDetailScreen(
         bottomBar = {
             ChatInputBar(
                 messageText = messageText,
+                conversation = conversation,
+                isBotTyping = isBotTyping,
                 onMessageTextChange = { messageText = it },
                 onSendClick = {
                     if (messageText.isNotBlank()) {
@@ -99,28 +107,50 @@ fun ConversationDetailScreen(
             )
         }
     ) { contentPadding ->
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
-                .padding(horizontal = 16.dp),
-            state = listState,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item {
-                WelcomeHeader(userName)
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                state = listState,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                item {
+                    WelcomeHeader(userName)
+                }
+
+                // Key ensures the items recompose when messages change
+                items(
+                    items = conversation.messages,
+                    key = { message -> message.id }
+                ) { message ->
+                    MessageBubble(message = message)
+                }
+
+                // Show typing indicator when bot is typing
+                if (isBotTyping) {
+                    item {
+                        TypingIndicatorBubble()
+                    }
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
 
-            // Key ensures the items recompose when messages change
-            items(
-                items = conversation.messages,
-                key = { message -> message.id }
-            ) { message ->
-                MessageBubble(message = message)
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
         }
     }
@@ -153,7 +183,7 @@ private fun WelcomeHeader(userName: String) {
                 text = stringResource(R.string.ai_bot_welcome_greeting, userName),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Text(
@@ -169,9 +199,15 @@ private fun WelcomeHeader(userName: String) {
 @Composable
 private fun ChatInputBar(
     messageText: String,
+    conversation: BotConversation,
+    isBotTyping: Boolean,
     onMessageTextChange: (String) -> Unit,
     onSendClick: () -> Unit
 ) {
+    // Check if the last message is from the bot AND bot is not currently typing
+    val lastMessageFromBot = conversation.messages.lastOrNull()?.isWrittenByUser == false
+    val canSend = messageText.isNotBlank() && lastMessageFromBot && !isBotTyping
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -184,17 +220,17 @@ private fun ChatInputBar(
             onValueChange = onMessageTextChange,
             modifier = Modifier.weight(1f),
             placeholder = { Text(stringResource(R.string.ai_bot_message_input_placeholder)) },
-            maxLines = 4
+            maxLines = 4,
         )
 
         IconButton(
             onClick = onSendClick,
-            enabled = messageText.isNotBlank()
+            enabled = canSend
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
                 contentDescription = stringResource(R.string.ai_bot_send_button_content_description),
-                tint = if (messageText.isNotBlank()) {
+                tint = if (canSend) {
                     MaterialTheme.colorScheme.primary
                 } else {
                     MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
@@ -219,7 +255,7 @@ private fun MessageBubble(message: BotMessage) {
                 .widthIn(max = 280.dp)
                 .background(
                     color = if (message.isWrittenByUser) {
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.20f)
+                        MaterialTheme.colorScheme.primaryContainer
                     } else {
                         MaterialTheme.colorScheme.surfaceVariant
                     },
@@ -259,12 +295,68 @@ private fun MessageBubble(message: BotMessage) {
     }
 }
 
+@Composable
+private fun TypingIndicatorBubble() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Box(
+            modifier = Modifier
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(
+                        topStart = 16.dp,
+                        topEnd = 16.dp,
+                        bottomStart = 4.dp,
+                        bottomEnd = 16.dp
+                    )
+                )
+                .padding(16.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TypingDot(delay = 0)
+                TypingDot(delay = 150)
+                TypingDot(delay = 300)
+            }
+        }
+    }
+}
+
+@Composable
+private fun TypingDot(delay: Int) {
+    var alpha by remember { mutableStateOf(0.3f) }
+
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(delay.toLong())
+        while (true) {
+            alpha = 1f
+            kotlinx.coroutines.delay(600)
+            alpha = 0.3f
+            kotlinx.coroutines.delay(600)
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .padding(2.dp)
+            .background(
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
+                shape = RoundedCornerShape(50)
+            )
+            .padding(4.dp)
+    )
+}
+
 @Preview(showBackground = true, name = "Conversation Detail")
 @Composable
 private fun ConversationDetailScreenPreview() {
     val sampleConversation = generateSampleBotConversations()[0]
 
-    AppThemeM3(isDarkTheme = false) {
+    MaterialTheme(colorScheme = lightColorScheme()) {
         ConversationDetailScreen(
             userName = "UserName",
             conversation = sampleConversation,
@@ -279,37 +371,7 @@ private fun ConversationDetailScreenPreview() {
 private fun ConversationDetailScreenPreviewDark() {
     val sampleConversation = generateSampleBotConversations()[0]
 
-    AppThemeM3(isDarkTheme = true) {
-        ConversationDetailScreen(
-            userName = "UserName",
-            conversation = sampleConversation,
-            onBackClick = { },
-            onSendMessage = { }
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Conversation Detail")
-@Composable
-private fun ConversationDetailScreenWordPressPreview() {
-    val sampleConversation = generateSampleBotConversations()[0]
-
-    AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
-        ConversationDetailScreen(
-            userName = "UserName",
-            conversation = sampleConversation,
-            onBackClick = { },
-            onSendMessage = { }
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Conversation Detail - Dark", uiMode = UI_MODE_NIGHT_YES)
-@Composable
-private fun ConversationDetailScreenPreviewWordPressDark() {
-    val sampleConversation = generateSampleBotConversations()[0]
-
-    AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
+    MaterialTheme(colorScheme = darkColorScheme()) {
         ConversationDetailScreen(
             userName = "UserName",
             conversation = sampleConversation,

@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -16,7 +17,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @AndroidEntryPoint
 class AIBotSupportActivity : AppCompatActivity() {
@@ -42,7 +42,10 @@ class AIBotSupportActivity : AppCompatActivity() {
                 }
             }
         )
-        viewModel.init(intent.getStringExtra(ACCESS_TOKEN_ID)!!)
+        viewModel.init(
+            accessToken = intent.getStringExtra(ACCESS_TOKEN_ID)!!,
+            userId = intent.getLongExtra(USER_ID, 0)
+        )
     }
 
     private enum class ConversationScreen {
@@ -54,21 +57,23 @@ class AIBotSupportActivity : AppCompatActivity() {
     private fun NavigableContent() {
         navController = rememberNavController()
 
-        AppThemeM3 {
+        MaterialTheme {
             NavHost(
                 navController = navController,
                 startDestination = ConversationScreen.List.name
             ) {
                 composable(route = ConversationScreen.List.name) {
+                    val isLoadingConversations by viewModel.isLoadingConversations.collectAsState()
                     ConversationsListScreen(
                         conversations = viewModel.conversations,
+                        isLoading = isLoadingConversations,
                         onConversationClick = { conversation ->
-                            viewModel.selectConversation(conversation)
+                            viewModel.onConversationSelected(conversation)
                             navController.navigate(ConversationScreen.Detail.name)
                         },
                         onBackClick = { finish() },
                         onCreateNewConversationClick = {
-                            viewModel.createNewConversation()
+                            viewModel.onNewConversationClicked()
                             viewModel.selectedConversation.value?.let { newConversation ->
                                 navController.navigate(ConversationScreen.Detail.name)
                             }
@@ -78,10 +83,14 @@ class AIBotSupportActivity : AppCompatActivity() {
 
                 composable(route = ConversationScreen.Detail.name) {
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
+                    val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
+                    val isBotTyping by viewModel.isBotTyping.collectAsState()
                     selectedConversation?.let { conversation ->
                         ConversationDetailScreen(
                             userName = userName,
                             conversation = conversation,
+                            isLoading = isLoadingConversation,
+                            isBotTyping = isBotTyping,
                             onBackClick = { navController.navigateUp() },
                             onSendMessage = { text ->
                                 viewModel.sendMessage(text)
@@ -95,14 +104,17 @@ class AIBotSupportActivity : AppCompatActivity() {
 
     companion object {
         private const val ACCESS_TOKEN_ID = "arg_access_token_id"
+        private const val USER_ID = "arg_user_id"
         private const val USERNAME = "arg_username"
         @JvmStatic
         fun createIntent(
             context: Context,
             accessToken: String,
+            userId: Long,
             userName: String,
         ): Intent = Intent(context, AIBotSupportActivity::class.java).apply {
             putExtra(ACCESS_TOKEN_ID, accessToken)
+            putExtra(USER_ID, userId)
             putExtra(USERNAME, userName)
         }
     }

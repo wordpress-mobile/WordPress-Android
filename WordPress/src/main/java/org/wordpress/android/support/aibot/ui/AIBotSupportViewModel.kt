@@ -7,151 +7,122 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.wordpress.android.support.aibot.util.generateSampleBotConversations
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
-import rs.wordpress.api.kotlin.WpComApiClient
-import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.BotConversationSummary
-import uniffi.wp_api.WpAuthentication
-import uniffi.wp_api.WpAuthenticationProvider
+import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
 import java.util.Date
 import javax.inject.Inject
-
-private const val BOT_ID = "jetpack-chat-mobile"
+import kotlin.Long
 
 @HiltViewModel
-class AIBotSupportViewModel @Inject constructor() : ViewModel() {
+class AIBotSupportViewModel @Inject constructor(
+    private val aiBotSupportRepository: AIBotSupportRepository
+) : ViewModel() {
     private val _conversations = MutableStateFlow<List<BotConversation>>(emptyList())
     val conversations: StateFlow<List<BotConversation>> = _conversations.asStateFlow()
 
     private val _selectedConversation = MutableStateFlow<BotConversation?>(null)
     val selectedConversation: StateFlow<BotConversation?> = _selectedConversation.asStateFlow()
 
-    private lateinit var accessToken: String
+    private val _isLoadingConversation = MutableStateFlow(false)
+    val isLoadingConversation: StateFlow<Boolean> = _isLoadingConversation.asStateFlow()
 
-    private val wpComApiClient: WpComApiClient by lazy {
-        WpComApiClient(
-            WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = accessToken)
-            )
-        )
-    }
+    private val _isLoadingConversations = MutableStateFlow(false)
+    val isLoadingConversations: StateFlow<Boolean> = _isLoadingConversations.asStateFlow()
 
-    fun init(accessToken: String) {
-        loadDummyData()
+    private val _isBotTyping = MutableStateFlow(false)
+    val isBotTyping: StateFlow<Boolean> = _isBotTyping.asStateFlow()
 
-        this.accessToken = accessToken
-//        loadConversations()
-    }
-
-    fun loadConversations() {
+    fun init(accessToken: String, userId: Long) {
         viewModelScope.launch {
-            val response = wpComApiClient.request { requestBuilder ->
-                requestBuilder.supportBots().getBotConverationList(BOT_ID)
-            }
-            when (response) {
-                is WpRequestResult.Success -> {
-                    val conversations = response.response.data
-                    _conversations.value = conversations.toBotConversations()
-                }
-
-                else -> {
-                    // stub for now
-                }
-            }
+            _isLoadingConversations.value = true
+            aiBotSupportRepository.init(accessToken, userId)
+            _conversations.value = aiBotSupportRepository.loadConversations()
+            _isLoadingConversations.value = false
         }
     }
 
-    fun selectConversation(conversation: BotConversation) {
-        _selectedConversation.value = conversation
+    fun onConversationSelected(conversation: BotConversation) {
+        viewModelScope.launch {
+            _isLoadingConversation.value = true
+            _selectedConversation.value = conversation
+            val updatedConversation = aiBotSupportRepository.loadConversation(conversation.id)
+            if (updatedConversation != null) {
+                _selectedConversation.value = updatedConversation
+            }
+            _isLoadingConversation.value = false
+        }
     }
 
-    fun createNewConversation() {
+    fun onNewConversationClicked() {
         val now = Date()
-
-        // Create initial bot greeting message
         val greetingMessage = BotMessage(
             id = 0,
             text = "Hi! I'm here to help you with any questions about WordPress. How can I assist you today?",
             date = now,
-            userWantsToTalkToHuman = false,
             isWrittenByUser = false
         )
 
-        val newConversation = BotConversation(
+        _selectedConversation.value = BotConversation(
             id = 0,
-            mostRecentMessageDate = now,
-            messages = listOf(greetingMessage),
             createdAt = now,
-            lastMessage = greetingMessage.text
+            mostRecentMessageDate = now,
+            lastMessage = "",
+            messages = listOf(greetingMessage)
         )
-
-        // Add to the top of the conversations list
-        _conversations.value = listOf(newConversation) + _conversations.value
-
-        // Select the new conversation
-        _selectedConversation.value = newConversation
     }
 
-    fun sendMessage(text: String) {
-        val currentConversation = _selectedConversation.value ?: return
-        val now = Date()
-        val userMessageId = System.currentTimeMillis()
+    fun sendMessage(message: String) {
+        viewModelScope.launch {
+            val now = Date()
+            val userMessage = BotMessage(
+                id = System.currentTimeMillis(),
+                text = message,
+                date = now,
+                isWrittenByUser = true
+            )
+            val currentMessages = (_selectedConversation.value?.messages ?: emptyList()) + userMessage
+            _selectedConversation.value = _selectedConversation.value?.copy(
+                messages = currentMessages
+            )
 
-        // Create new user message
-        val userMessage = BotMessage(
-            id = userMessageId,
-            text = text,
-            date = now,
-            userWantsToTalkToHuman = false,
-            isWrittenByUser = true
-        )
+            // Show bot typing indicator
+            _isBotTyping.value = true
 
-        // Create bot response (dummy response for now)
-        val botMessage = BotMessage(
-            id = userMessageId + 1, // Ensure unique ID by incrementing
-            text = "Thanks for your message! This is a dummy response. In a real implementation, " +
-                    "this would connect to the support bot API.",
-            date = Date(now.time + 1), // Slightly later timestamp
-            userWantsToTalkToHuman = false,
-            isWrittenByUser = false
-        )
-
-        // Update conversation with new messages
-        val updatedMessages = currentConversation.messages + listOf(userMessage, botMessage)
-        val updatedConversation = currentConversation.copy(
-            messages = updatedMessages,
-            mostRecentMessageDate = botMessage.date,
-            lastMessage = botMessage.text,
-        )
-
-        // Update the conversation in the list
-        _conversations.value = _conversations.value.map { conversation ->
-            if (conversation.id == updatedConversation.id) {
-                updatedConversation
+            val conversationId = _selectedConversation.value?.id ?: 0L
+            val conversation = if (conversationId == 0L) {
+                // This is a new conversation, so we need to create it first
+                val newConversation = aiBotSupportRepository.createNewConversation(message)
+                if (newConversation != null) {
+                    // Add to the top of the conversations list
+                    _conversations.value = listOf(newConversation) + _conversations.value
+                }
+                newConversation
             } else {
-                conversation
+                aiBotSupportRepository.sendMessageToConversation(conversationId, message)
+            }
+
+            // Hide bot typing indicator
+            _isBotTyping.value = false
+
+            if (conversation != null) {
+                val finalConversation = conversation.copy(
+                    lastMessage = conversation.messages.last().text,
+                    messages = (_selectedConversation.value?.messages ?: emptyList()) + conversation.messages
+                )
+                // Update the conversations list
+                _conversations.value = _conversations.value.map {
+                    if (it.id == conversationId) {
+                        finalConversation
+                    } else {
+                        it
+                    }
+                }
+                // Update the selected conversation
+                _selectedConversation.value = finalConversation
+            } else {
+                // TODO: show error
             }
         }
-
-        // Update selected conversation
-        _selectedConversation.value = updatedConversation
     }
-
-    private fun loadDummyData() {
-        _conversations.value = generateSampleBotConversations()
-    }
-
-    private fun List<BotConversationSummary>.toBotConversations(): List<BotConversation> =
-        map { it.toBotConversation() }
-
-
-    private fun BotConversationSummary.toBotConversation(): BotConversation =
-        BotConversation (
-            id = chatId.toLong(),
-            createdAt = createdAt,
-            mostRecentMessageDate = lastMessage.createdAt,
-            lastMessage = lastMessage.content,
-            messages = listOf()
-        )
 }
