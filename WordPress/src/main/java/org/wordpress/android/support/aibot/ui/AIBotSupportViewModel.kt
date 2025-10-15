@@ -27,6 +27,9 @@ class AIBotSupportViewModel @Inject constructor(
     private val _selectedConversation = MutableStateFlow<BotConversation?>(null)
     val selectedConversation: StateFlow<BotConversation?> = _selectedConversation.asStateFlow()
 
+    private val _canSendMassage = MutableStateFlow(true)
+    val canSendMassage: StateFlow<Boolean> = _canSendMassage.asStateFlow()
+
     private val _isLoadingConversation = MutableStateFlow(false)
     val isLoadingConversation: StateFlow<Boolean> = _isLoadingConversation.asStateFlow()
 
@@ -74,6 +77,7 @@ class AIBotSupportViewModel @Inject constructor(
             try {
                 _isLoadingConversation.value = true
                 _selectedConversation.value = conversation
+                _canSendMassage.value = true
                 val updatedConversation = aiBotSupportRepository.loadConversation(conversation.id)
                 if (updatedConversation != null) {
                     _selectedConversation.value = updatedConversation
@@ -100,13 +104,15 @@ class AIBotSupportViewModel @Inject constructor(
             lastMessage = "",
             messages = listOf()
         )
+        _canSendMassage.value = true
     }
 
     fun sendMessage(message: String) {
         viewModelScope.launch {
             try {
-                // Show bot typing indicator
+                // Show bot typing indicator and limit send messages
                 _isBotTyping.value = true
+                _canSendMassage.value = false
 
                 val now = Date()
                 val userMessage = BotMessage(
@@ -150,16 +156,17 @@ class AIBotSupportViewModel @Inject constructor(
                     _selectedConversation.value = finalConversation
                 } else {
                     _errorMessage.value = ErrorType.GENERAL
-                    removeLastUserMessage()
                     appLogWrapper.e(AppLog.T.SUPPORT, "Error sending message: response is null")
                 }
             } catch (throwable: Throwable) {
                 _errorMessage.value = ErrorType.GENERAL
                 _isBotTyping.value = false
-                removeLastUserMessage()
                 appLogWrapper.e(AppLog.T.SUPPORT, "Error sending message: " +
                         "${throwable.message} - ${throwable.stackTraceToString()}")
             }
+
+            // Be sure we allow the user to send messages again
+            _canSendMassage.value = true
         }
     }
 
@@ -170,14 +177,6 @@ class AIBotSupportViewModel @Inject constructor(
             aiBotSupportRepository.createNewConversation(message)
         } else {
             aiBotSupportRepository.sendMessageToConversation(conversationId, message)
-        }
-    }
-
-    private fun removeLastUserMessage() {
-        val messages = _selectedConversation.value?.messages
-        val lastMessage = messages?.lastOrNull()
-        if (lastMessage != null && lastMessage.isWrittenByUser) {
-            _selectedConversation.value = _selectedConversation.value?.copy(messages = messages.dropLast(1))
         }
     }
 

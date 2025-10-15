@@ -60,8 +60,9 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @Composable
 fun ConversationDetailScreen(
     conversation: BotConversation,
-    isLoading: Boolean = false,
-    isBotTyping: Boolean = false,
+    isLoading: Boolean,
+    isBotTyping: Boolean,
+    canSendMessage: Boolean,
     userName: String,
     onBackClick: () -> Unit,
     onSendMessage: (String) -> Unit
@@ -100,8 +101,7 @@ fun ConversationDetailScreen(
         bottomBar = {
             ChatInputBar(
                 messageText = messageText,
-                conversation = conversation,
-                isBotTyping = isBotTyping,
+                canSendMessage = canSendMessage,
                 onMessageTextChange = { messageText = it },
                 onSendClick = {
                     if (messageText.isNotBlank()) {
@@ -200,14 +200,11 @@ private fun WelcomeHeader(userName: String) {
 @Composable
 private fun ChatInputBar(
     messageText: String,
-    conversation: BotConversation,
-    isBotTyping: Boolean,
+    canSendMessage: Boolean,
     onMessageTextChange: (String) -> Unit,
     onSendClick: () -> Unit
 ) {
-    // Check if the last message is from the bot AND bot is not currently typing
-    val lastMessageFromBot = conversation.messages.lastOrNull()?.isWrittenByUser == false
-    val canSend = messageText.isNotBlank() && lastMessageFromBot && !isBotTyping
+    val canSend = messageText.isNotBlank() && canSendMessage
 
     Row(
         modifier = Modifier
@@ -361,6 +358,9 @@ private fun ConversationDetailScreenPreview() {
         ConversationDetailScreen(
             userName = "UserName",
             conversation = sampleConversation,
+            isLoading = false,
+            isBotTyping = false,
+            canSendMessage = true,
             onBackClick = { },
             onSendMessage = { }
         )
@@ -376,6 +376,9 @@ private fun ConversationDetailScreenPreviewDark() {
         ConversationDetailScreen(
             userName = "UserName",
             conversation = sampleConversation,
+            isLoading = false,
+            isBotTyping = false,
+            canSendMessage = true,
             onBackClick = { },
             onSendMessage = { }
         )
@@ -391,6 +394,9 @@ private fun ConversationDetailScreenWordPressPreview() {
         ConversationDetailScreen(
             userName = "UserName",
             conversation = sampleConversation,
+            isLoading = false,
+            isBotTyping = false,
+            canSendMessage = true,
             onBackClick = { },
             onSendMessage = { }
         )
@@ -406,6 +412,9 @@ private fun ConversationDetailScreenPreviewWordPressDark() {
         ConversationDetailScreen(
             userName = "UserName",
             conversation = sampleConversation,
+            isLoading = false,
+            isBotTyping = false,
+            canSendMessage = true,
             onBackClick = { },
             onSendMessage = { }
         )

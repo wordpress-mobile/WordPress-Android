@@ -104,12 +104,14 @@ class AIBotSupportActivity : AppCompatActivity() {
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isBotTyping by viewModel.isBotTyping.collectAsState()
+                    val canSendMessage by viewModel.canSendMassage.collectAsState()
                     selectedConversation?.let { conversation ->
                         ConversationDetailScreen(
                             userName = userName,
                             conversation = conversation,
                             isLoading = isLoadingConversation,
                             isBotTyping = isBotTyping,
+                            canSendMessage = canSendMessage,
                             onBackClick = { navController.navigateUp() },
                             onSendMessage = { text ->
                                 viewModel.sendMessage(text)
