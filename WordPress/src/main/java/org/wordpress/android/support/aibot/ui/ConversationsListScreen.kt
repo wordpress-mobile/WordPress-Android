@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -58,6 +59,7 @@ fun ConversationsListScreen(
     onConversationClick: (BotConversation) -> Unit,
     onBackClick: () -> Unit,
     onCreateNewConversationClick: () -> Unit,
+    onRefresh: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -82,20 +84,17 @@ fun ConversationsListScreen(
             )
         },
     ) { contentPadding ->
-        Box(
+        val conversationsList by conversations.collectAsState()
+
+        PullToRefreshBox(
+            isRefreshing = isLoading,
+            onRefresh = onRefresh,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            val conversationsList by conversations.collectAsState()
-
             when {
-                isLoading -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-                conversationsList.isEmpty() -> {
+                conversationsList.isEmpty() && !isLoading -> {
                     EmptyConversationsView(
                         modifier = Modifier.fillMaxSize(),
                         onCreateNewConversationClick = onCreateNewConversationClick
@@ -245,6 +244,7 @@ private fun ConversationsScreenPreview() {
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
+            onRefresh = { },
         )
     }
 }
@@ -261,6 +261,7 @@ private fun ConversationsScreenPreviewDark() {
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
+            onRefresh = { },
         )
     }
 }
@@ -277,6 +278,7 @@ private fun ConversationsScreenWordPressPreview() {
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
+            onRefresh = { },
         )
     }
 }
@@ -293,6 +295,7 @@ private fun ConversationsScreenPreviewWordPressDark() {
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
+            onRefresh = { },
         )
     }
 }
@@ -309,6 +312,7 @@ private fun EmptyConversationsScreenPreview() {
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
+            onRefresh = { },
         )
     }
 }
@@ -325,6 +329,7 @@ private fun EmptyConversationsScreenPreviewDark() {
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
+            onRefresh = { },
         )
     }
 }

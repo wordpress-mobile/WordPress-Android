@@ -96,6 +96,9 @@ class AIBotSupportActivity : AppCompatActivity() {
                             viewModel.selectedConversation.value?.let { newConversation ->
                                 navController.navigate(ConversationScreen.Detail.name)
                             }
+                        },
+                        onRefresh = {
+                            viewModel.refreshConversations()
                         }
                     )
                 }

@@ -68,6 +68,12 @@ class AIBotSupportViewModel @Inject constructor(
         _isLoadingConversations.value = false
     }
 
+    fun refreshConversations() {
+        viewModelScope.launch {
+            loadConversations()
+        }
+    }
+
     fun clearError() {
         _errorMessage.value = null
     }
