@@ -45,6 +45,7 @@ import org.wordpress.android.R
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.aibot.util.generateSampleBotConversations
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -176,7 +177,7 @@ private fun ConversationCard(
 private fun ConversationsScreenPreview() {
     val sampleConversations = MutableStateFlow(generateSampleBotConversations())
 
-    MaterialTheme(colorScheme = lightColorScheme()) {
+    AppThemeM3(isDarkTheme = false) {
         ConversationsListScreen(
             conversations = sampleConversations.asStateFlow(),
             isLoading = false,
@@ -192,10 +193,42 @@ private fun ConversationsScreenPreview() {
 private fun ConversationsScreenPreviewDark() {
     val sampleConversations = MutableStateFlow(generateSampleBotConversations())
 
-    MaterialTheme(colorScheme = darkColorScheme()) {
+    AppThemeM3(isDarkTheme = true) {
         ConversationsListScreen(
             conversations = sampleConversations.asStateFlow(),
             isLoading = false,
+            onConversationClick = { },
+            onBackClick = { },
+            onCreateNewConversationClick = { },
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Conversations List")
+@Composable
+private fun ConversationsScreenWordPressPreview() {
+    val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+
+    AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
+        ConversationsListScreen(
+            conversations = sampleConversations.asStateFlow(),
+            isLoading = true,
+            onConversationClick = { },
+            onBackClick = { },
+            onCreateNewConversationClick = { },
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Conversations List - Dark", uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun ConversationsScreenPreviewWordPressDark() {
+    val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+
+    AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
+        ConversationsListScreen(
+            conversations = sampleConversations.asStateFlow(),
+            isLoading = true,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },

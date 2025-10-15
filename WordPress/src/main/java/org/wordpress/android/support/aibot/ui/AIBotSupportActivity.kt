@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @AndroidEntryPoint
 class AIBotSupportActivity : AppCompatActivity() {
@@ -57,7 +58,7 @@ class AIBotSupportActivity : AppCompatActivity() {
     private fun NavigableContent() {
         navController = rememberNavController()
 
-        MaterialTheme {
+        AppThemeM3 {
             NavHost(
                 navController = navController,
                 startDestination = ConversationScreen.List.name
