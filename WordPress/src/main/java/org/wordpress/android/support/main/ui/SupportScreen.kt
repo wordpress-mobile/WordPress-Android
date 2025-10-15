@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,7 +58,7 @@ fun SupportScreen(
     Scaffold(
         topBar = {
             MainTopAppBar(
-                title = "Support",
+                title = stringResource(R.string.support_screen_title),
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = onBackClick
             )
@@ -74,7 +75,7 @@ fun SupportScreen(
 
             // Support Profile Section
             Text(
-                text = "Support Profile",
+                text = stringResource(R.string.support_screen_profile_section_title),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Normal
@@ -99,7 +100,9 @@ fun SupportScreen(
                         if (userAvatarUrl.isNullOrEmpty()) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_user_white_24dp),
-                                contentDescription = "User avatar",
+                                contentDescription = stringResource(
+                                    R.string.support_screen_user_avatar_content_description
+                                ),
                                 modifier = Modifier.size(64.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -133,7 +136,7 @@ fun SupportScreen(
                     onClick = onLoginClick,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "Log into WordPress.com")
+                    Text(text = stringResource(R.string.support_screen_login_button))
                 }
             }
 
@@ -141,7 +144,7 @@ fun SupportScreen(
 
             // How can we help? Section
             Text(
-                text = "How can we help?",
+                text = stringResource(R.string.support_screen_how_can_we_help_title),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Normal
@@ -159,8 +162,8 @@ fun SupportScreen(
             ) {
                 Column {
                     SupportOptionItem(
-                        title = "Help Center",
-                        description = "Documentation and Tutorials to help you get started",
+                        title = stringResource(R.string.support_screen_help_center_title),
+                        description = stringResource(R.string.support_screen_help_center_description),
                         onClick = onHelpCenterClick
                     )
 
@@ -171,8 +174,8 @@ fun SupportScreen(
                         )
 
                         SupportOptionItem(
-                            title = "Ask the bots",
-                            description = "Get quick answers to common questions",
+                            title = stringResource(R.string.support_screen_ask_bots_title),
+                            description = stringResource(R.string.support_screen_ask_bots_description),
                             onClick = onAskTheBotsClick
                         )
                     }
@@ -184,8 +187,8 @@ fun SupportScreen(
                         )
 
                         SupportOptionItem(
-                            title = "Ask the Happiness Engineers",
-                            description = "For your tough questions. We'll reply via email",
+                            title = stringResource(R.string.support_screen_ask_happiness_engineers_title),
+                            description = stringResource(R.string.support_screen_ask_happiness_engineers_description),
                             onClick = onAskHappinessEngineersClick,
                         )
                     }
@@ -196,7 +199,7 @@ fun SupportScreen(
 
             // Diagnostics Section
             Text(
-                text = "Diagnostics",
+                text = stringResource(R.string.support_screen_diagnostics_section_title),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Normal
@@ -213,8 +216,8 @@ fun SupportScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
             ) {
                 SupportOptionItem(
-                    title = "Application Logs",
-                    description = "Advanced tool to debug issues",
+                    title = stringResource(R.string.support_screen_application_logs_title),
+                    description = stringResource(R.string.support_screen_application_logs_description),
                     onClick = onApplicationLogsClick,
                 )
             }
