@@ -17,9 +17,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SupportActivity : AppCompatActivity() {
+    @Inject
+    lateinit var meGravatarLoader: MeGravatarLoader
     private val viewModel by viewModels<SupportViewModel>()
 
     private lateinit var composeView: ComposeView

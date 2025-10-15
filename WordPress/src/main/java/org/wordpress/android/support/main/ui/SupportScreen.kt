@@ -43,6 +43,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.dataview.compose.RemoteImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,13 +100,21 @@ fun SupportScreen(
                         .background(MaterialTheme.colorScheme.surfaceVariant),
                     contentAlignment = Alignment.Center
                 ) {
-                    // TODO: Load actual avatar from userAvatarUrl
-                    Icon(
-                        painter = painterResource(R.drawable.ic_user_white_24dp),
-                        contentDescription = "User avatar",
-                        modifier = Modifier.size(32.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    if (userAvatarUrl.isNullOrEmpty()) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_user_white_24dp),
+                            contentDescription = "User avatar",
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    } else {
+                        RemoteImage(
+                            imageUrl = userAvatarUrl,
+                            fallbackImageRes = R.drawable.ic_user_white_24dp,
+                            modifier = Modifier.size(64.dp)
+                                .clip(CircleShape),
+                        )
+                    }
                 }
 
                 Column(
