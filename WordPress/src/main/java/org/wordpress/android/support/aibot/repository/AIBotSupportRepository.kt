@@ -3,8 +3,10 @@ package org.wordpress.android.support.aibot.repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
+import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpHttpClient
 import rs.wordpress.api.kotlin.WpRequestExecutor
@@ -20,7 +22,9 @@ import javax.inject.Inject
 
 private const val BOT_ID = "jetpack-chat-mobile"
 
-class AIBotSupportRepository @Inject constructor() {
+class AIBotSupportRepository @Inject constructor(
+    private val appLogWrapper: AppLogWrapper,
+) {
     private var accessToken: String? = null
     private var userId: Long = 0
 
@@ -57,6 +61,7 @@ class AIBotSupportRepository @Inject constructor() {
             }
 
             else -> {
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversations")
                 emptyList()
             }
         }

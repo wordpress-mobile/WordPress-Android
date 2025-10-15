@@ -42,17 +42,31 @@ class AIBotSupportViewModel @Inject constructor(
     fun init(accessToken: String, userId: Long) {
         viewModelScope.launch {
             try {
-                _isLoadingConversations.value = true
-                _errorMessage.value = null
                 aiBotSupportRepository.init(accessToken, userId)
-                _conversations.value = aiBotSupportRepository.loadConversations()
+                loadConversations()
             } catch (throwable: Throwable) {
                 appLogWrapper.e(AppLog.T.SUPPORT, "Error initialising the AI bot support repository: " +
                         "${throwable.message} - ${throwable.stackTraceToString()}")
                 _errorMessage.value = ErrorType.GENERAL
             }
-            _isLoadingConversations.value = false
         }
+    }
+
+    private suspend fun loadConversations() {
+        try {
+            _isLoadingConversations.value = true
+            val conversations = aiBotSupportRepository.loadConversations()
+            if (conversations.isEmpty()) {
+                // TODO: show empty screen
+            } else {
+                _conversations.value = conversations
+            }
+        } catch (throwable: Throwable) {
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversations: " +
+                    "${throwable.message} - ${throwable.stackTraceToString()}")
+            _errorMessage.value = ErrorType.GENERAL
+        }
+        _isLoadingConversations.value = false
     }
 
     fun clearError() {
