@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,9 +44,11 @@ fun SupportScreen(
     userName: String,
     userEmail: String,
     userAvatarUrl: String?,
+    hasAccessToken: Boolean,
     showAskTheBots: Boolean,
     showAskHappinessEngineers: Boolean,
     onBackClick: () -> Unit,
+    onLoginClick: () -> Unit,
     onHelpCenterClick: () -> Unit,
     onAskTheBotsClick: () -> Unit,
     onAskHappinessEngineersClick: () -> Unit,
@@ -79,49 +82,58 @@ fun SupportScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // User Profile Card
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Avatar placeholder
-                Box(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surfaceVariant),
-                    contentAlignment = Alignment.Center
+            // User Profile Card or Login Button
+            if (hasAccessToken) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (userAvatarUrl.isNullOrEmpty()) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_user_white_24dp),
-                            contentDescription = "User avatar",
-                            modifier = Modifier.size(64.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    // Avatar placeholder
+                    Box(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.surfaceVariant),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (userAvatarUrl.isNullOrEmpty()) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_user_white_24dp),
+                                contentDescription = "User avatar",
+                                modifier = Modifier.size(64.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        } else {
+                            RemoteImage(
+                                imageUrl = userAvatarUrl,
+                                fallbackImageRes = R.drawable.ic_user_white_24dp,
+                                modifier = Modifier.size(64.dp)
+                                    .clip(CircleShape),
+                            )
+                        }
+                    }
+
+                    Column(
+                        modifier = Modifier.padding(start = 16.dp)
+                    ) {
+                        Text(
+                            text = userName,
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold
                         )
-                    } else {
-                        RemoteImage(
-                            imageUrl = userAvatarUrl,
-                            fallbackImageRes = R.drawable.ic_user_white_24dp,
-                            modifier = Modifier.size(64.dp)
-                                .clip(CircleShape),
+                        Text(
+                            text = userEmail,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
-
-                Column(
-                    modifier = Modifier.padding(start = 16.dp)
+            } else {
+                Button(
+                    onClick = onLoginClick,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        text = userName,
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = userEmail,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Text(text = "Log into WordPress.com")
                 }
             }
 
@@ -238,7 +250,7 @@ private fun SupportOptionItem(
     }
 }
 
-@Preview(showBackground = true, name = "Support Screen - Light")
+@Preview(showBackground = true, name = "Support Screen - Light - Logged In")
 @Composable
 private fun SupportScreenPreview() {
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
@@ -246,9 +258,11 @@ private fun SupportScreenPreview() {
             userName = "Test user",
             userEmail = "test.user@gmail.com",
             userAvatarUrl = null,
+            hasAccessToken = true,
             showAskTheBots = true,
             showAskHappinessEngineers = true,
             onBackClick = {},
+            onLoginClick = {},
             onHelpCenterClick = {},
             onAskTheBotsClick = {},
             onAskHappinessEngineersClick = {},
@@ -257,7 +271,7 @@ private fun SupportScreenPreview() {
     }
 }
 
-@Preview(showBackground = true, name = "Support Screen - Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, name = "Support Screen - Dark - Logged In", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun SupportScreenPreviewDark() {
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
@@ -265,9 +279,32 @@ private fun SupportScreenPreviewDark() {
             userName = "Test user",
             userEmail = "test.user@gmail.com",
             userAvatarUrl = null,
+            hasAccessToken = true,
             showAskTheBots = true,
             showAskHappinessEngineers = true,
             onBackClick = {},
+            onLoginClick = {},
+            onHelpCenterClick = {},
+            onAskTheBotsClick = {},
+            onAskHappinessEngineersClick = {},
+            onApplicationLogsClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Support Screen - Logged Out")
+@Composable
+private fun SupportScreenPreviewLoggedOut() {
+    AppThemeM3(isDarkTheme = false) {
+        SupportScreen(
+            userName = "",
+            userEmail = "",
+            userAvatarUrl = null,
+            hasAccessToken = false,
+            showAskTheBots = false,
+            showAskHappinessEngineers = false,
+            onBackClick = {},
+            onLoginClick = {},
             onHelpCenterClick = {},
             onAskTheBotsClick = {},
             onAskHappinessEngineersClick = {},

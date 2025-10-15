@@ -15,15 +15,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SupportActivity : AppCompatActivity() {
-    @Inject
-    lateinit var meGravatarLoader: MeGravatarLoader
     private val viewModel by viewModels<SupportViewModel>()
 
     private lateinit var composeView: ComposeView
@@ -42,14 +40,17 @@ class SupportActivity : AppCompatActivity() {
                 setContent {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val optionsVisibility by viewModel.optionsVisibility.collectAsState()
+                    val hasAccessToken by viewModel.hasAccessToken.collectAsState()
                     AppThemeM3 {
                         SupportScreen(
                             userName = userInfo.userName,
                             userEmail = userInfo.userEmail,
                             userAvatarUrl = userInfo.avatarUrl,
+                            hasAccessToken = hasAccessToken,
                             showAskTheBots = optionsVisibility.showAskTheBots,
                             showAskHappinessEngineers = optionsVisibility.showAskHappinessEngineers,
                             onBackClick = { finish() },
+                            onLoginClick = { viewModel.onLoginClick() },
                             onHelpCenterClick = { viewModel.onHelpCenterClick() },
                             onAskTheBotsClick = { viewModel.onAskTheBotsClick() },
                             onAskHappinessEngineersClick = { viewModel.onAskHappinessEngineersClick() },
@@ -69,6 +70,9 @@ class SupportActivity : AppCompatActivity() {
                         is SupportViewModel.NavigationEvent.NavigateToAskTheBots -> {
                             navigateToAskTheBots(event.accessToken, event.userName)
                         }
+                        is SupportViewModel.NavigationEvent.NavigateToLogin -> {
+                            navigateToLogin()
+                        }
                     }
                 }
             }
@@ -79,6 +83,14 @@ class SupportActivity : AppCompatActivity() {
         startActivity(
             AIBotSupportActivity.Companion.createIntent(this, accessToken, userName)
         )
+    }
+
+    private fun navigateToLogin() {
+        if (BuildConfig.IS_JETPACK_APP) {
+            ActivityLauncher.showSignInForResultJetpackOnly(this)
+        } else {
+            ActivityLauncher.showSignInForResultWpComOnly(this)
+        }
     }
 
     companion object {

@@ -22,6 +22,7 @@ class SupportViewModel @Inject constructor(
 ) : ViewModel() {
     sealed class NavigationEvent {
         data class NavigateToAskTheBots(val accessToken: String, val userName: String) : NavigationEvent()
+        data object NavigateToLogin : NavigationEvent()
     }
 
     data class UserInfo(
@@ -41,10 +42,16 @@ class SupportViewModel @Inject constructor(
     private val _optionsVisibility = MutableStateFlow(SupportOptionsVisibility())
     val optionsVisibility: StateFlow<SupportOptionsVisibility> = _optionsVisibility.asStateFlow()
 
+    private val _hasAccessToken = MutableStateFlow(false)
+    val hasAccessToken: StateFlow<Boolean> = _hasAccessToken.asStateFlow()
+
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents: SharedFlow<NavigationEvent> = _navigationEvents.asSharedFlow()
 
     fun init() {
+        val hasAccessToken = accountStore.hasAccessToken()
+        _hasAccessToken.value = hasAccessToken
+
         val account = accountStore.account
         _userInfo.value = UserInfo(
             userName = account.displayName.ifEmpty { account.userName },
@@ -52,7 +59,6 @@ class SupportViewModel @Inject constructor(
             avatarUrl = account.avatarUrl.takeIf { it.isNotEmpty() }
         )
 
-        val hasAccessToken = accountStore.hasAccessToken()
         _optionsVisibility.value = SupportOptionsVisibility(
             showAskTheBots = hasAccessToken,
             showAskHappinessEngineers = hasAccessToken
@@ -85,5 +91,11 @@ class SupportViewModel @Inject constructor(
 
     fun onApplicationLogsClick() {
         // Navigate to Application Logs
+    }
+
+    fun onLoginClick() {
+        viewModelScope.launch {
+            _navigationEvents.emit(NavigationEvent.NavigateToLogin)
+        }
     }
 }
