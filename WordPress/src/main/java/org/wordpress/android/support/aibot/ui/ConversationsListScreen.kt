@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -35,6 +36,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -79,18 +82,76 @@ fun ConversationsListScreen(
             )
         },
     ) { contentPadding ->
-        Box(modifier = Modifier.padding(contentPadding)) {
-            ShowConversationsList(
-                modifier = Modifier.fillMaxSize(),
-                conversations = conversations,
-                onConversationClick = onConversationClick
-            )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+        ) {
+            val conversationsList by conversations.collectAsState()
 
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
+            when {
+                isLoading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                conversationsList.isEmpty() -> {
+                    EmptyConversationsView(
+                        modifier = Modifier.fillMaxSize(),
+                        onCreateNewConversationClick = onCreateNewConversationClick
+                    )
+                }
+                else -> {
+                    ShowConversationsList(
+                        modifier = Modifier.fillMaxSize(),
+                        conversations = conversations,
+                        onConversationClick = onConversationClick
+                    )
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun EmptyConversationsView(
+    modifier: Modifier,
+    onCreateNewConversationClick: () -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "💬",
+            style = MaterialTheme.typography.displayLarge
+        )
+
+        Spacer(modifier = Modifier.padding(16.dp))
+
+        Text(
+            text = stringResource(R.string.ai_bot_empty_conversations_title),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        Spacer(modifier = Modifier.padding(8.dp))
+
+        Text(
+            text = stringResource(R.string.ai_bot_empty_conversations_message),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.padding(24.dp))
+
+        Button(onClick = onCreateNewConversationClick) {
+            Text(text = stringResource(R.string.ai_bot_empty_conversations_button))
         }
     }
 }
@@ -229,6 +290,38 @@ private fun ConversationsScreenPreviewWordPressDark() {
         ConversationsListScreen(
             conversations = sampleConversations.asStateFlow(),
             isLoading = true,
+            onConversationClick = { },
+            onBackClick = { },
+            onCreateNewConversationClick = { },
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Empty Conversations List")
+@Composable
+private fun EmptyConversationsScreenPreview() {
+    val emptyConversations = MutableStateFlow(emptyList<BotConversation>())
+
+    AppThemeM3(isDarkTheme = false) {
+        ConversationsListScreen(
+            conversations = emptyConversations.asStateFlow(),
+            isLoading = false,
+            onConversationClick = { },
+            onBackClick = { },
+            onCreateNewConversationClick = { },
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Empty Conversations List - Dark", uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun EmptyConversationsScreenPreviewDark() {
+    val emptyConversations = MutableStateFlow(emptyList<BotConversation>())
+
+    AppThemeM3(isDarkTheme = true) {
+        ConversationsListScreen(
+            conversations = emptyConversations.asStateFlow(),
+            isLoading = false,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },

@@ -61,7 +61,7 @@ class AIBotSupportRepository @Inject constructor(
             }
 
             else -> {
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversations")
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversations: $response")
                 emptyList()
             }
         }

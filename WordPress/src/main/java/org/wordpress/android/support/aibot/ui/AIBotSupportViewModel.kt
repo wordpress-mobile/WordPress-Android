@@ -56,11 +56,7 @@ class AIBotSupportViewModel @Inject constructor(
         try {
             _isLoadingConversations.value = true
             val conversations = aiBotSupportRepository.loadConversations()
-            if (conversations.isEmpty()) {
-                // TODO: show empty screen
-            } else {
-                _conversations.value = conversations
-            }
+            _conversations.value = conversations
         } catch (throwable: Throwable) {
             appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversations: " +
                     "${throwable.message} - ${throwable.stackTraceToString()}")
