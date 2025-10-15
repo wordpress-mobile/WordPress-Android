@@ -5,11 +5,11 @@ package org.wordpress.android.ui.accounts
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import androidx.core.net.toUri
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe

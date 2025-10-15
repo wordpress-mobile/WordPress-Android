@@ -19,9 +19,10 @@ private val localColors = staticCompositionLocalOf { extraPaletteJPLight }
 @Composable
 fun AppThemeM3(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
+    isJetpackApp: Boolean = BuildConfig.IS_JETPACK_APP,
     content: @Composable () -> Unit
 ) {
-    AppThemeM3WithoutBackground(isDarkTheme) {
+    AppThemeM3WithoutBackground(isDarkTheme, isJetpackApp) {
         ContentInSurfaceM3(content)
     }
 }
@@ -29,17 +30,18 @@ fun AppThemeM3(
 @Composable
 fun AppThemeM3WithoutBackground(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
+    isJetpackApp: Boolean = BuildConfig.IS_JETPACK_APP,
     content: @Composable () -> Unit
 ) {
     val extraColors = getExtraColors(
         isDarkTheme = isDarkTheme,
-        isJetpackApp = BuildConfig.IS_JETPACK_APP
+        isJetpackApp = isJetpackApp
     )
     CompositionLocalProvider(localColors provides extraColors) {
         MaterialTheme(
             colorScheme = getColorScheme(
                 isDarkTheme = isDarkTheme,
-                isJetpackApp = BuildConfig.IS_JETPACK_APP
+                isJetpackApp = isJetpackApp
             ),
             content = content
         )

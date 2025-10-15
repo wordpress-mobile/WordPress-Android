@@ -5102,4 +5102,29 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="add_term">Add term</string>
     <string name="error_saving_term">There was an error saving the term</string>
     <string name="error_deleting_term">There was an error deleting the term</string>
+
+    <!-- AI Bot Support - Conversations List Screen -->
+    <string name="ai_bot_conversations_title">Conversations</string>
+    <string name="ai_bot_back_button_content_description">Back</string>
+    <string name="ai_bot_new_conversation_content_description">New conversation</string>
+
+    <!-- AI Bot Support - Conversation Detail Screen -->
+    <string name="ai_bot_send_button_content_description">Send</string>
+    <string name="ai_bot_message_input_placeholder">Type a message…</string>
+
+    <!-- AI Bot Support - Welcome Header -->
+    <string name="ai_bot_welcome_greeting">Howdy %1$s 👋</string>
+    <string name="ai_bot_welcome_message">I\'m your personal AI assistant. I can help with any questions about your site or account.</string>
+
+    <!-- AI Bot Support - Conversation Utils -->
+    <string name="ai_bot_default_conversation_title">New Conversation</string>
+    <string name="ai_bot_time_just_now">Just now</string>
+    <string name="ai_bot_time_minute_ago">%1$d minute ago</string>
+    <string name="ai_bot_time_minutes_ago">%1$d minutes ago</string>
+    <string name="ai_bot_time_hour_ago">%1$d hour ago</string>
+    <string name="ai_bot_time_hours_ago">%1$d hours ago</string>
+    <string name="ai_bot_time_day_ago">%1$d day ago</string>
+    <string name="ai_bot_time_days_ago">%1$d days ago</string>
+    <string name="ai_bot_time_week_ago">%1$d week ago</string>
+    <string name="ai_bot_time_weeks_ago">%1$d weeks ago</string>
 </resources>
