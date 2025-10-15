@@ -1,5 +1,6 @@
 package org.wordpress.android.networking
 
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Request.Priority
 import com.bumptech.glide.integration.volley.VolleyRequestFactory
@@ -11,6 +12,9 @@ import org.wordpress.android.util.WPUrlUtils
 import java.io.InputStream
 import javax.inject.Inject
 import javax.inject.Singleton
+
+// Timeout in milliseconds for loading complex images at server side (private, heavy...)
+private const val TIMEOUT = 15_000
 
 /**
  * RequestFactory which adds authorization headers to all Glide requests and makes sure requests to WPcom endpoints
@@ -27,7 +31,18 @@ class GlideRequestFactory @Inject constructor(
         headers: Map<String, String>
     ): Request<ByteArray>? {
         val httpsUrl: String = convertWPcomUrlToHttps(url)
-        return VolleyStreamFetcher.GlideRequest(httpsUrl, callback, priority, addAuthHeaders(url, headers))
+        return VolleyStreamFetcher.GlideRequest(
+            httpsUrl,
+            callback,
+            priority,
+            addAuthHeaders(url, headers)
+        ).apply {
+            retryPolicy = DefaultRetryPolicy(
+                TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+            )
+        }
     }
 
     private fun convertWPcomUrlToHttps(url: String): String {

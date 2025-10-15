@@ -107,7 +107,6 @@ public class ReaderPhotoView extends RelativeLayout {
         }
 
         showProgress();
-
         mImageManager
                 .loadWithResultListener(mImageView, ImageType.IMAGE, mHiResImageUrl, ScaleType.CENTER, mLoResImageUrl,
                 new RequestListener<Drawable>() {
