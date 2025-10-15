@@ -82,6 +82,7 @@ class AIBotSupportRepository @Inject constructor(
             }
 
             else -> {
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversation $chatId: $response")
                 null
             }
         }

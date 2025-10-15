@@ -45,9 +45,9 @@ class AIBotSupportViewModel @Inject constructor(
                 aiBotSupportRepository.init(accessToken, userId)
                 loadConversations()
             } catch (throwable: Throwable) {
+                _errorMessage.value = ErrorType.GENERAL
                 appLogWrapper.e(AppLog.T.SUPPORT, "Error initialising the AI bot support repository: " +
                         "${throwable.message} - ${throwable.stackTraceToString()}")
-                _errorMessage.value = ErrorType.GENERAL
             }
         }
     }
@@ -58,9 +58,9 @@ class AIBotSupportViewModel @Inject constructor(
             val conversations = aiBotSupportRepository.loadConversations()
             _conversations.value = conversations
         } catch (throwable: Throwable) {
+            _errorMessage.value = ErrorType.GENERAL
             appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversations: " +
                     "${throwable.message} - ${throwable.stackTraceToString()}")
-            _errorMessage.value = ErrorType.GENERAL
         }
         _isLoadingConversations.value = false
     }
@@ -71,11 +71,21 @@ class AIBotSupportViewModel @Inject constructor(
 
     fun onConversationSelected(conversation: BotConversation) {
         viewModelScope.launch {
-            _isLoadingConversation.value = true
-            _selectedConversation.value = conversation
-            val updatedConversation = aiBotSupportRepository.loadConversation(conversation.id)
-            if (updatedConversation != null) {
-                _selectedConversation.value = updatedConversation
+            try {
+                _isLoadingConversation.value = true
+                _selectedConversation.value = conversation
+                val updatedConversation = aiBotSupportRepository.loadConversation(conversation.id)
+                if (updatedConversation != null) {
+                    _selectedConversation.value = updatedConversation
+                } else {
+                    _errorMessage.value = ErrorType.GENERAL
+                    appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversation: " +
+                            "error retrieving it from server")
+                }
+            } catch (throwable: Throwable) {
+                _errorMessage.value = ErrorType.GENERAL
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversation: " +
+                        "${throwable.message} - ${throwable.stackTraceToString()}")
             }
             _isLoadingConversation.value = false
         }
@@ -83,73 +93,81 @@ class AIBotSupportViewModel @Inject constructor(
 
     fun onNewConversationClicked() {
         val now = Date()
-        val greetingMessage = BotMessage(
-            id = 0,
-            text = "Hi! I'm here to help you with any questions about WordPress. How can I assist you today?",
-            date = now,
-            isWrittenByUser = false
-        )
-
         _selectedConversation.value = BotConversation(
             id = 0,
             createdAt = now,
             mostRecentMessageDate = now,
             lastMessage = "",
-            messages = listOf(greetingMessage)
+            messages = listOf()
         )
     }
 
     fun sendMessage(message: String) {
         viewModelScope.launch {
-            val now = Date()
-            val userMessage = BotMessage(
-                id = System.currentTimeMillis(),
-                text = message,
-                date = now,
-                isWrittenByUser = true
-            )
-            val currentMessages = (_selectedConversation.value?.messages ?: emptyList()) + userMessage
-            _selectedConversation.value = _selectedConversation.value?.copy(
-                messages = currentMessages
-            )
+            try {
+                // Show bot typing indicator
+                _isBotTyping.value = true
 
-            // Show bot typing indicator
-            _isBotTyping.value = true
-
-            val conversationId = _selectedConversation.value?.id ?: 0L
-            val conversation = if (conversationId == 0L) {
-                // This is a new conversation, so we need to create it first
-                val newConversation = aiBotSupportRepository.createNewConversation(message)
-                if (newConversation != null) {
-                    // Add to the top of the conversations list
-                    _conversations.value = listOf(newConversation) + _conversations.value
-                }
-                newConversation
-            } else {
-                aiBotSupportRepository.sendMessageToConversation(conversationId, message)
-            }
-
-            // Hide bot typing indicator
-            _isBotTyping.value = false
-
-            if (conversation != null) {
-                val finalConversation = conversation.copy(
-                    lastMessage = conversation.messages.last().text,
-                    messages = (_selectedConversation.value?.messages ?: emptyList()) + conversation.messages
+                val now = Date()
+                val userMessage = BotMessage(
+                    id = System.currentTimeMillis(),
+                    text = message,
+                    date = now,
+                    isWrittenByUser = true
                 )
-                // Update the conversations list
-                _conversations.value = _conversations.value.map {
-                    if (it.id == conversationId) {
-                        finalConversation
+                val currentMessages = (_selectedConversation.value?.messages ?: emptyList()) + userMessage
+                _selectedConversation.value = _selectedConversation.value?.copy(
+                    messages = currentMessages
+                )
+
+                val conversation = sendMessageToBot(message)
+
+                // Hide bot typing indicator
+                _isBotTyping.value = false
+
+                if (conversation != null) {
+                    val finalConversation = conversation.copy(
+                        lastMessage = conversation.messages.last().text,
+                        messages = (_selectedConversation.value?.messages ?: emptyList()) + conversation.messages
+                    )
+                    // Update the conversations list
+                    val currentConversations =_conversations.value
+                    if (currentConversations.none { it.id == conversation.id }) {
+                        // It's a new conversation, so add it to the top
+                        _conversations.value = listOf(conversation) + _conversations.value
                     } else {
-                        it
+                        // The conversation exists, so we modify it
+                        _conversations.value = _conversations.value.map {
+                            if (it.id == conversation.id) {
+                                finalConversation
+                            } else {
+                                it
+                            }
+                        }
                     }
+
+                    // Update the selected conversation
+                    _selectedConversation.value = finalConversation
+                } else {
+                    _errorMessage.value = ErrorType.GENERAL
+                    appLogWrapper.e(AppLog.T.SUPPORT, "Error sending message: response is null")
                 }
-                // Update the selected conversation
-                _selectedConversation.value = finalConversation
-            } else {
-                // TODO: show error
+            } catch (throwable: Throwable) {
+                _errorMessage.value = ErrorType.GENERAL
+                _isBotTyping.value = false
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error sending message: " +
+                        "${throwable.message} - ${throwable.stackTraceToString()}")
             }
+        }
+    }
+
+    private suspend fun sendMessageToBot(message: String): BotConversation? {
+        val conversationId = _selectedConversation.value?.id ?: 0L
+        return if (conversationId == 0L) {
+            // This is a new conversation, so we need to create it first
+            aiBotSupportRepository.createNewConversation(message)
+        } else {
+            aiBotSupportRepository.sendMessageToConversation(conversationId, message)
         }
     }
 
