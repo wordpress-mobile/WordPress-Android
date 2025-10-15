@@ -31,7 +31,7 @@ class AIBotSupportRepository @Inject constructor(
     private var userId: Long = 0
 
     private val wpComApiClient: WpComApiClient by lazy {
-        check(accessToken == null || userId == 0L) { "Repository not initialized" }
+        check(accessToken != null || userId != 0L) { "Repository not initialized" }
 
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
