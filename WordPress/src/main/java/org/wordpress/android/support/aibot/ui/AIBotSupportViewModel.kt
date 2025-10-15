@@ -7,16 +7,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
 import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
+import org.wordpress.android.util.AppLog
 import java.util.Date
 import javax.inject.Inject
 import kotlin.Long
 
 @HiltViewModel
 class AIBotSupportViewModel @Inject constructor(
-    private val aiBotSupportRepository: AIBotSupportRepository
+    private val aiBotSupportRepository: AIBotSupportRepository,
+    private val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
     private val _conversations = MutableStateFlow<List<BotConversation>>(emptyList())
     val conversations: StateFlow<List<BotConversation>> = _conversations.asStateFlow()
@@ -35,9 +38,14 @@ class AIBotSupportViewModel @Inject constructor(
 
     fun init(accessToken: String, userId: Long) {
         viewModelScope.launch {
-            _isLoadingConversations.value = true
-            aiBotSupportRepository.init(accessToken, userId)
-            _conversations.value = aiBotSupportRepository.loadConversations()
+            try {
+                _isLoadingConversations.value = true
+                aiBotSupportRepository.init(accessToken, userId)
+                _conversations.value = aiBotSupportRepository.loadConversations()
+            } catch (throwable: Throwable) {
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error initialising the AI bot support repository: " +
+                        "${throwable.message} - ${throwable.stackTraceToString()}")
+            }
             _isLoadingConversations.value = false
         }
     }

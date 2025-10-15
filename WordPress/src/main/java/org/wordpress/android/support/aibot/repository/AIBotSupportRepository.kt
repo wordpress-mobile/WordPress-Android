@@ -88,7 +88,7 @@ class AIBotSupportRepository @Inject constructor() {
                 botId = BOT_ID,
                 CreateBotConversationParams(
                     message = message,
-                    userId = 0
+                    userId = userId
                 )
             )
         }
