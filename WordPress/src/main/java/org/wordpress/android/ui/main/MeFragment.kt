@@ -254,6 +254,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun MeFragmentBinding.showQuickEditor(
         page: AvatarPickerAndAboutEditorConfiguration.Page
     ) {
@@ -291,8 +292,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                     appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Gravatar quick editor dismissed: ${page.value}")
                 }
             )
-        } catch (throwable: Throwable) {
-            appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Error opening Gravatar quick editor: ${throwable.message}")
+        } catch (exception: Exception) {
+            appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Error opening Gravatar quick editor: ${exception.message}")
         }
     }
 
