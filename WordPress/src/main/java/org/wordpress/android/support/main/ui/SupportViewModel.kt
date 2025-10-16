@@ -65,10 +65,6 @@ class SupportViewModel @Inject constructor(
         )
     }
 
-    fun onHelpCenterClick() {
-        // Navigate to Help Center
-    }
-
     fun onAskTheBotsClick() {
         viewModelScope.launch {
             // hasAccessToken() checks if it exists and it's not empty, not only the nullability.
