@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.logs.model.LogDay
 import org.wordpress.android.util.AppLog
 import java.text.SimpleDateFormat
@@ -13,16 +14,27 @@ import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class LogsViewModel @Inject constructor() : ViewModel() {
+class LogsViewModel @Inject constructor(
+    private val appLogWrapper: AppLogWrapper,
+) : ViewModel() {
     private val _logDays = MutableStateFlow<List<LogDay>>(emptyList())
     val logDays: StateFlow<List<LogDay>> = _logDays.asStateFlow()
 
     private val _selectedLogDay = MutableStateFlow<LogDay?>(null)
     val selectedLogDay: StateFlow<LogDay?> = _selectedLogDay.asStateFlow()
 
+    private val _errorMessage = MutableStateFlow<ErrorType?>(null)
+    val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
+
     fun init(context: Context) {
-        val allLogs = AppLog.toHtmlList(context)
-        _logDays.value = parseLogsByDay(allLogs)
+        try {
+            val allLogs = AppLog.toHtmlList(context)
+            _logDays.value = parseLogsByDay(allLogs)
+        } catch (throwable: Throwable) {
+            // If there's any error parsing the logs, better not to crash the app
+            _errorMessage.value = ErrorType.GENERAL
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error parsing logs: ${throwable.stackTraceToString()}")
+        }
     }
 
     fun selectLogDay(logDay: LogDay) {
@@ -65,4 +77,10 @@ class LogsViewModel @Inject constructor() : ViewModel() {
             date
         }
     }
+
+    fun clearError() {
+        _errorMessage.value = null
+    }
+
+    enum class ErrorType { GENERAL }
 }

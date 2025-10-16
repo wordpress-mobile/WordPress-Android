@@ -2642,6 +2642,7 @@
     <string name="support_screen_user_avatar_content_description">User avatar</string>
     <string name="logs_screen_empty_state">No logs available</string>
     <string name="logs_screen_log_count">%d log entries</string>
+    <string name="logs_screen_general_error">Something went wrong…</string>
 
     <!--Me-->
     <string name="me_profile_photo">Profile Photo</string>

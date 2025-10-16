@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
@@ -11,12 +12,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.R
 
 @AndroidEntryPoint
 class LogsActivity : AppCompatActivity() {
@@ -39,6 +44,19 @@ class LogsActivity : AppCompatActivity() {
                 }
             }
         )
+        // Observe error messages and show them as Toast
+        lifecycleScope.launch {
+            viewModel.errorMessage.collect { errorType ->
+                val errorMessage = when (errorType) {
+                    LogsViewModel.ErrorType.GENERAL -> getString(R.string.logs_screen_general_error)
+                    null -> null
+                }
+                errorMessage?.let {
+                    ToastUtils.showToast(this@LogsActivity, it, ToastUtils.Duration.LONG, Gravity.CENTER)
+                    viewModel.clearError()
+                }
+            }
+        }
         viewModel.init(this)
     }
 
