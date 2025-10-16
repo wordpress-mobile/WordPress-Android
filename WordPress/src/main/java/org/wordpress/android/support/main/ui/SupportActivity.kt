@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.WordPress
 import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -52,6 +53,7 @@ class SupportActivity : AppCompatActivity() {
                             isLoggedIn = isLoggedIn,
                             showAskTheBots = optionsVisibility.showAskTheBots,
                             showAskHappinessEngineers = optionsVisibility.showAskHappinessEngineers,
+                            versionName = WordPress.versionName,
                             onBackClick = { finish() },
                             onLoginClick = { viewModel.onLoginClick() },
                             onHelpCenterClick = { navigateToHelpCenter() },
