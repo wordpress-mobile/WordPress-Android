@@ -26,6 +26,7 @@ class LogsViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<ErrorType?>(null)
     val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
 
+    @Suppress("TooGenericExceptionCaught")
     fun init(context: Context) {
         try {
             val allLogs = AppLog.toHtmlList(context)
@@ -63,6 +64,7 @@ class LogsViewModel @Inject constructor(
         }.sortedByDescending { it.date } // Most recent first
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun formatDisplayDate(date: String): String {
         return try {
             val inputFormat = SimpleDateFormat("MMM-dd", Locale.getDefault())
@@ -73,7 +75,8 @@ class LogsViewModel @Inject constructor(
             } else {
                 date
             }
-        } catch (e: Exception) {
+        } catch (exception: Exception) {
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error parsing log date: ${exception.stackTraceToString()}")
             date
         }
     }

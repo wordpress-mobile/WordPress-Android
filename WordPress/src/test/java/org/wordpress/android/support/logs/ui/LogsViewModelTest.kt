@@ -6,13 +6,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.logs.model.LogDay
-import org.wordpress.android.util.AppLog
 import java.lang.reflect.Method
 
 @ExperimentalCoroutinesApi
@@ -109,7 +105,8 @@ class LogsViewModelTest : BaseUnitTest() {
         val errorMessageField = viewModel.javaClass.getDeclaredField("_errorMessage")
         errorMessageField.isAccessible = true
         @Suppress("UNCHECKED_CAST")
-        val errorMessageFlow = errorMessageField.get(viewModel) as kotlinx.coroutines.flow.MutableStateFlow<LogsViewModel.ErrorType?>
+        val errorMessageFlow =
+            errorMessageField.get(viewModel) as kotlinx.coroutines.flow.MutableStateFlow<LogsViewModel.ErrorType?>
         errorMessageFlow.value = LogsViewModel.ErrorType.GENERAL
 
         assertThat(viewModel.errorMessage.value).isEqualTo(LogsViewModel.ErrorType.GENERAL)

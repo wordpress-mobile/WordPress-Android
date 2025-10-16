@@ -20,9 +20,11 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LogsActivity : AppCompatActivity() {
@@ -30,6 +32,9 @@ class LogsActivity : AppCompatActivity() {
 
     private lateinit var composeView: ComposeView
     private lateinit var navController: NavHostController
+
+    @Inject
+    lateinit var appLogWrapper: AppLogWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,12 +110,14 @@ class LogsActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, AppLog.toPlainText(this@LogsActivity))
-            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " " + getString(R.string.support_screen_application_logs_title))
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " " +
+                    getString(R.string.support_screen_application_logs_title))
         }
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.reader_btn_share)))
         } catch (ex: android.content.ActivityNotFoundException) {
             ToastUtils.showToast(this, R.string.reader_toast_err_share_intent)
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error sharing logs: ${ex.stackTraceToString()}")
         }
     }
 
