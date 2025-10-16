@@ -19,9 +19,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.ToastUtils
 
 @AndroidEntryPoint
 class LogsActivity : AppCompatActivity() {
@@ -82,7 +83,8 @@ class LogsActivity : AppCompatActivity() {
                             viewModel.selectLogDay(logDay)
                             navController.navigate(LogsScreen.Detail.name)
                         },
-                        onBackClick = { finish() }
+                        onBackClick = { finish() },
+                        onShareClick = { shareAppLog() }
                     )
                 }
 
@@ -96,6 +98,19 @@ class LogsActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun shareAppLog() {
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, AppLog.toPlainText(this@LogsActivity))
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " " + getString(R.string.support_screen_application_logs_title))
+        }
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.reader_btn_share)))
+        } catch (ex: android.content.ActivityNotFoundException) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_share_intent)
         }
     }
 

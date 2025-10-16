@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -37,7 +38,8 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 fun LogsListScreen(
     logDays: List<LogDay>,
     onLogDayClick: (LogDay) -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onShareClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -46,6 +48,20 @@ fun LogsListScreen(
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = onBackClick
             )
+        },
+        floatingActionButton = {
+            if (logDays.isNotEmpty()) {
+                FloatingActionButton(
+                    onClick = onShareClick,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_share_white_24dp),
+                        contentDescription = stringResource(R.string.reader_btn_share)
+                    )
+                }
+            }
         }
     ) { contentPadding ->
         if (logDays.isEmpty()) {
@@ -164,7 +180,8 @@ private fun LogsListScreenPreview() {
                 )
             ),
             onLogDayClick = {},
-            onBackClick = {}
+            onBackClick = {},
+            onShareClick = {}
         )
     }
 }
@@ -189,7 +206,8 @@ private fun LogsListScreenPreviewDark() {
                 )
             ),
             onLogDayClick = {},
-            onBackClick = {}
+            onBackClick = {},
+            onShareClick = {}
         )
     }
 }
@@ -201,7 +219,8 @@ private fun LogsListScreenPreviewEmpty() {
         LogsListScreen(
             logDays = emptyList(),
             onLogDayClick = {},
-            onBackClick = {}
+            onBackClick = {},
+            onShareClick = {}
         )
     }
 }
