@@ -110,8 +110,10 @@ class LogsActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, AppLog.toPlainText(this@LogsActivity))
-            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " " +
-                    getString(R.string.support_screen_application_logs_title))
+            putExtra(
+                Intent.EXTRA_SUBJECT,
+                "${getString(R.string.app_name)} ${getString(R.string.support_screen_application_logs_title)}"
+            )
         }
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.reader_btn_share)))
