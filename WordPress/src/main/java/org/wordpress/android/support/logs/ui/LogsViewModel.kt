@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import org.wordpress.android.support.logs.model.LogDay
 import org.wordpress.android.util.AppLog
 import java.text.SimpleDateFormat
 import java.util.Locale
