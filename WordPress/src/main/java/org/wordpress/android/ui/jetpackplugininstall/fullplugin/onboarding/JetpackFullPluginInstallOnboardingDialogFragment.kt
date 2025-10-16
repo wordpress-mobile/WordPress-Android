@@ -30,13 +30,18 @@ import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.Jetpa
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.JetpackFullPluginInstallOnboardingViewModel.ActionEvent.OpenTermsAndConditions
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.JetpackFullPluginInstallOnboardingViewModel.UiState
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.compose.state.LoadedState
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
     private val viewModel: JetpackFullPluginInstallOnboardingViewModel by viewModels()
 
     override fun getTheme(): Int {
@@ -111,7 +116,8 @@ class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
                     requireContext(),
                     actionEvent.origin,
                     actionEvent.selectedSite,
-                    null
+                    null,
+                    experimentalFeatures
                 )
             }
             is Dismiss -> {

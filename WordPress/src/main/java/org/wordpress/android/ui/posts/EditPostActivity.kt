@@ -3704,7 +3704,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onGotoCustomerSupportOptions() {
-        onGotoCustomerSupportOptions(this, site)
+        onGotoCustomerSupportOptions(this, site, experimentalFeatures)
     }
 
     override fun onSendEventToHost(eventName: String, properties: Map<String, Any>) {

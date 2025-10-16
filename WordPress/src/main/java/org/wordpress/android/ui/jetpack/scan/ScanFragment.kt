@@ -28,6 +28,7 @@ import org.wordpress.android.ui.jetpack.scan.adapters.HorizontalMarginItemDecora
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.EmptyViewRecyclerView
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -44,6 +45,10 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     @Inject
     lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
     private lateinit var listView: EmptyViewRecyclerView
     private var fixThreatsConfirmationDialog: AlertDialog? = null
     private val viewModel: ScanViewModel by viewModels()
@@ -125,7 +130,8 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
                 )
 
                 is ShowContactSupport ->
-                    ActivityLauncher.viewHelp(requireContext(), SCAN_SCREEN_HELP, events.site, null)
+                    ActivityLauncher.viewHelp(requireContext(), SCAN_SCREEN_HELP,
+                        events.site, null, experimentalFeatures)
 
                 is ShowJetpackSettings -> ActivityLauncher.openUrlExternal(context, events.url)
 
