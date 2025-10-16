@@ -71,13 +71,15 @@ class SupportViewModel @Inject constructor(
 
     fun onAskTheBotsClick() {
         viewModelScope.launch {
+            // hasAccessToken() checks if it exists and it's not empty, not only the nullability.
+            // So, if it's true, then we are sure the token is not null
             if (!accountStore.hasAccessToken()) {
                 appLogWrapper.d(AppLog.T.SUPPORT, "Trying to open a bot conversation without access token")
             } else {
                 val account = accountStore.account
                 _navigationEvents.emit(
                     NavigationEvent.NavigateToAskTheBots(
-                        accessToken = accountStore.accessToken!!,
+                        accessToken = accountStore.accessToken!!, // access token has been checked before
                         userName = account.displayName.ifEmpty { account.userName }
                     )
                 )
