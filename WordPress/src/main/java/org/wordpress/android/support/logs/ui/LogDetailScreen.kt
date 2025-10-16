@@ -111,22 +111,14 @@ private fun LogEntryItem(logEntry: String) {
 @Preview(showBackground = true, name = "Log Detail Screen - Light")
 @Composable
 private fun LogDetailScreenPreview() {
+    val exampleList = getExampleLogList()
     AppThemeM3(isDarkTheme = false) {
         LogDetailScreen(
             logDay = LogDay(
                 date = "Oct-16",
                 displayDate = "October 16",
-                logEntries = listOf(
-                    "[Oct-16 12:34:56.789] D/MainActivity: Activity created",
-                    "[Oct-16 12:34:57.123] I/NetworkManager: Connection established",
-                    "[Oct-16 12:34:58.456] W/ImageLoader: Cache miss for image_123",
-                    "[Oct-16 12:35:00.789] E/ApiClient: Request failed with status 404",
-                    "[Oct-16 12:35:01.234] D/ViewModel: Data loaded successfully",
-                    "[Oct-16 12:35:02.567] I/Analytics: Event tracked: button_clicked",
-                    "[Oct-16 12:35:03.890] D/Database: Query executed in 45ms",
-                    "[Oct-16 12:35:04.123] W/Memory: Low memory warning detected"
-                ),
-                logCount = 8
+                logEntries = exampleList,
+                logCount = exampleList.size
             ),
             onBackClick = {}
         )
@@ -136,20 +128,27 @@ private fun LogDetailScreenPreview() {
 @Preview(showBackground = true, name = "Log Detail Screen - Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun LogDetailScreenPreviewDark() {
+    val exampleList = getExampleLogList()
     AppThemeM3(isDarkTheme = true) {
         LogDetailScreen(
             logDay = LogDay(
                 date = "Oct-16",
                 displayDate = "October 16",
-                logEntries = listOf(
-                    "[Oct-16 12:34:56.789] D/MainActivity: Activity created",
-                    "[Oct-16 12:34:57.123] I/NetworkManager: Connection established",
-                    "[Oct-16 12:34:58.456] W/ImageLoader: Cache miss for image_123",
-                    "[Oct-16 12:35:00.789] E/ApiClient: Request failed with status 404"
-                ),
-                logCount = 4
+                logEntries = exampleList,
+                logCount = exampleList.size
             ),
             onBackClick = {}
         )
     }
 }
+
+private fun getExampleLogList(): List<String> = listOf(
+    "[Oct-16 12:34:56.789] D/MainActivity: Activity created",
+    "[Oct-16 12:34:57.123] I/NetworkManager: Connection established",
+    "[Oct-16 12:34:58.456] W/ImageLoader: Cache miss for image_123",
+    "[Oct-16 12:35:00.789] E/ApiClient: Request failed with status 404",
+    "[Oct-16 12:35:01.234] D/ViewModel: Data loaded successfully",
+    "[Oct-16 12:35:02.567] I/Analytics: Event tracked: button_clicked",
+    "[Oct-16 12:35:03.890] D/Database: Query executed in 45ms",
+    "[Oct-16 12:35:04.123] W/Memory: Low memory warning detected"
+)

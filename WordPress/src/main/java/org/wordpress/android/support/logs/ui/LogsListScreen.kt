@@ -157,28 +157,10 @@ private fun LogDayItem(
 @Preview(showBackground = true, name = "Logs List Screen - Light")
 @Composable
 private fun LogsListScreenPreview() {
+    val exampleList = getExampleLogDaysList()
     AppThemeM3(isDarkTheme = false) {
         LogsListScreen(
-            logDays = listOf(
-                LogDay(
-                    date = "Oct-16",
-                    displayDate = "October 16",
-                    logEntries = List(50) { "[Oct-16 12:34:56.789] Sample log entry $it" },
-                    logCount = 50
-                ),
-                LogDay(
-                    date = "Oct-15",
-                    displayDate = "October 15",
-                    logEntries = List(32) { "[Oct-15 12:34:56.789] Sample log entry $it" },
-                    logCount = 32
-                ),
-                LogDay(
-                    date = "Oct-14",
-                    displayDate = "October 14",
-                    logEntries = List(28) { "[Oct-14 12:34:56.789] Sample log entry $it" },
-                    logCount = 28
-                )
-            ),
+            logDays = exampleList,
             onLogDayClick = {},
             onBackClick = {},
             onShareClick = {}
@@ -189,22 +171,10 @@ private fun LogsListScreenPreview() {
 @Preview(showBackground = true, name = "Logs List Screen - Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun LogsListScreenPreviewDark() {
+    val exampleList = getExampleLogDaysList()
     AppThemeM3(isDarkTheme = true) {
         LogsListScreen(
-            logDays = listOf(
-                LogDay(
-                    date = "Oct-16",
-                    displayDate = "October 16",
-                    logEntries = List(50) { "[Oct-16 12:34:56.789] Sample log entry $it" },
-                    logCount = 50
-                ),
-                LogDay(
-                    date = "Oct-15",
-                    displayDate = "October 15",
-                    logEntries = List(32) { "[Oct-15 12:34:56.789] Sample log entry $it" },
-                    logCount = 32
-                )
-            ),
+            logDays = exampleList,
             onLogDayClick = {},
             onBackClick = {},
             onShareClick = {}
@@ -224,3 +194,25 @@ private fun LogsListScreenPreviewEmpty() {
         )
     }
 }
+
+@Suppress("MagicNumber")
+private fun getExampleLogDaysList(): List<LogDay> = listOf(
+    LogDay(
+        date = "Oct-16",
+        displayDate = "October 16",
+        logEntries = List(50) { "[Oct-16 12:34:56.789] Sample log entry $it" },
+        logCount = 50
+    ),
+    LogDay(
+        date = "Oct-15",
+        displayDate = "October 15",
+        logEntries = List(32) { "[Oct-15 12:34:56.789] Sample log entry $it" },
+        logCount = 32
+    ),
+    LogDay(
+        date = "Oct-14",
+        displayDate = "October 14",
+        logEntries = List(28) { "[Oct-14 12:34:56.789] Sample log entry $it" },
+        logCount = 28
+    )
+)
