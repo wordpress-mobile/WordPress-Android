@@ -14,11 +14,16 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.jetpackplugininstall.install.compose.JetpackPluginInstallScreen
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.setContent
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class JetpackFullPluginInstallActivity : BaseAppCompatActivity() {
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
     private val viewModel: JetpackFullPluginInstallViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +65,8 @@ class JetpackFullPluginInstallActivity : BaseAppCompatActivity() {
                     this,
                     actionEvent.origin,
                     actionEvent.selectedSite,
-                    null
+                    null,
+                    experimentalFeatures
                 )
             }
 

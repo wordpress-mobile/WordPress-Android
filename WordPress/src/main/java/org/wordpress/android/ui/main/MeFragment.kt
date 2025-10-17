@@ -58,6 +58,7 @@ import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -131,6 +132,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject
     lateinit var domainManagementFeatureConfig: DomainManagementFeatureConfig
 
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
     private val viewModel: MeViewModel by viewModels()
     private val emailVerificationViewModel: EmailVerificationViewModel by viewModels()
 
@@ -184,7 +188,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             ActivityLauncher.viewAppSettingsForResult(activity)
         }
         rowSupport.setOnClickListener {
-            ActivityLauncher.viewHelp(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
+            ActivityLauncher.viewHelp(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null, experimentalFeatures)
         }
         learnMoreAtGravatar.setOnClickListener {
             ActivityLauncher.openUrlExternal(activity, GRAVATAR_URL)

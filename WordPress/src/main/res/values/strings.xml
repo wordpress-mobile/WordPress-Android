@@ -981,6 +981,8 @@
     <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers</string>
     <string name="experimental_application_password_feature">Application Password log in</string>
     <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites</string>
+    <string name="modern_support">Modern Support</string>
+    <string name="modern_support_description">Enable the new modern support experience</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>
@@ -2624,6 +2626,20 @@
     <string name="support_identity_input_dialog_enter_email">Please enter your email address</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_name_label">Name</string>
+    <string name="support_screen_title">Support</string>
+    <string name="support_screen_profile_section_title">Support Profile</string>
+    <string name="support_screen_login_button">Log into WordPress.com</string>
+    <string name="support_screen_how_can_we_help_title">How can we help?</string>
+    <string name="support_screen_help_center_title">Help Center</string>
+    <string name="support_screen_help_center_description">Documentation and Tutorials to help you get started</string>
+    <string name="support_screen_ask_bots_title">Ask the bots</string>
+    <string name="support_screen_ask_bots_description">Get quick answers to common questions</string>
+    <string name="support_screen_ask_happiness_engineers_title">Ask the Happiness Engineers</string>
+    <string name="support_screen_ask_happiness_engineers_description">For your tough questions. We\'ll reply via email</string>
+    <string name="support_screen_diagnostics_section_title">Diagnostics</string>
+    <string name="support_screen_application_logs_title">Application Logs</string>
+    <string name="support_screen_application_logs_description">Advanced tool to debug issues</string>
+    <string name="support_screen_user_avatar_content_description">User avatar</string>
 
     <!--Me-->
     <string name="me_profile_photo">Profile Photo</string>

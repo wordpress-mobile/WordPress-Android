@@ -27,6 +27,7 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
@@ -84,6 +85,8 @@ class SiteCreationActivity : BaseAppCompatActivity(),
 
     @Inject
     internal lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
     private val mainViewModel: SiteCreationMainVM by viewModels()
     private val hppViewModel: HomePagePickerViewModel by viewModels()
     private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
@@ -224,7 +227,7 @@ class SiteCreationActivity : BaseAppCompatActivity(),
     }
 
     override fun onHelpClicked(origin: Origin) {
-        ActivityLauncher.viewHelp(this, origin, null, null)
+        ActivityLauncher.viewHelp(this, origin, null, null, experimentalFeatures)
     }
 
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
