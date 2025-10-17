@@ -57,7 +57,7 @@ class HESupportActivity : AppCompatActivity() {
                 startDestination = ConversationScreen.List.name
             ) {
                 composable(route = ConversationScreen.List.name) {
-                    ConversationsListScreen(
+                    HEConversationsListScreen(
                         conversations = viewModel.conversations,
                         onConversationClick = { conversation ->
                             viewModel.selectConversation(conversation)
@@ -73,7 +73,7 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.Detail.name) {
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     selectedConversation?.let { conversation ->
-                        ConversationDetailScreen(
+                        HEConversationDetailScreen(
                             conversation = conversation,
                             onBackClick = { navController.navigateUp() }
                         )

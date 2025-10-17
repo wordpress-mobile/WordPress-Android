@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,12 +28,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -43,7 +47,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConversationsListScreen(
+fun HEConversationsListScreen(
     conversations: StateFlow<List<SupportConversation>>,
     onConversationClick: (SupportConversation) -> Unit,
     onBackClick: () -> Unit,
@@ -130,36 +134,58 @@ private fun ConversationCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.weight(1f)
             ) {
-                Text(
-                    text = conversation.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = conversation.title,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontSize = 17.sp
+                        ),
+                        fontWeight = FontWeight.Normal,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
+                    )
+
+                    Text(
+                        text = formatRelativeTime(conversation.lastMessageSentAt),
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontSize = 13.sp
+                        ),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    modifier = Modifier.padding(top = 4.dp),
                     text = conversation.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 15.sp
+                    ),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-
-                Text(
-                    modifier = Modifier.padding(top = 8.dp),
-                    text = formatRelativeTime(conversation.lastMessageSentAt),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
             }
+
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
+                modifier = Modifier.padding(start = 8.dp)
+            )
         }
     }
 }
@@ -170,7 +196,7 @@ private fun ConversationsScreenPreview() {
     val sampleConversations = MutableStateFlow(generateSampleSupportConversations())
 
     AppThemeM3(isDarkTheme = false) {
-        ConversationsListScreen(
+        HEConversationsListScreen(
             conversations = sampleConversations.asStateFlow(),
             onConversationClick = { },
             onBackClick = { },
@@ -185,7 +211,7 @@ private fun ConversationsScreenPreviewDark() {
     val sampleConversations = MutableStateFlow(generateSampleSupportConversations())
 
     AppThemeM3(isDarkTheme = true) {
-        ConversationsListScreen(
+        HEConversationsListScreen(
             conversations = sampleConversations.asStateFlow(),
             onConversationClick = { },
             onBackClick = { },
@@ -200,7 +226,7 @@ private fun ConversationsScreenWordPressPreview() {
     val sampleConversations = MutableStateFlow(generateSampleSupportConversations())
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
-        ConversationsListScreen(
+        HEConversationsListScreen(
             conversations = sampleConversations.asStateFlow(),
             onConversationClick = { },
             onBackClick = { },
@@ -215,7 +241,7 @@ private fun ConversationsScreenPreviewWordPressDark() {
     val sampleConversations = MutableStateFlow(generateSampleSupportConversations())
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
-        ConversationsListScreen(
+        HEConversationsListScreen(
             conversations = sampleConversations.asStateFlow(),
             onConversationClick = { },
             onBackClick = { },

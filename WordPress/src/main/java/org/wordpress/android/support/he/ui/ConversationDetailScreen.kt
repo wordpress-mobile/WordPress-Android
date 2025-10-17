@@ -25,7 +25,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConversationDetailScreen(
+fun HEConversationDetailScreen(
     conversation: SupportConversation,
     onBackClick: () -> Unit
 ) {
@@ -65,7 +65,7 @@ private fun ConversationDetailScreenPreview() {
     val sampleConversation = generateSampleSupportConversations()[0]
 
     AppThemeM3(isDarkTheme = false) {
-        ConversationDetailScreen(
+        HEConversationDetailScreen(
             conversation = sampleConversation,
             onBackClick = { }
         )
@@ -78,7 +78,7 @@ private fun ConversationDetailScreenPreviewDark() {
     val sampleConversation = generateSampleSupportConversations()[0]
 
     AppThemeM3(isDarkTheme = true) {
-        ConversationDetailScreen(
+        HEConversationDetailScreen(
             conversation = sampleConversation,
             onBackClick = { }
         )
@@ -91,7 +91,7 @@ private fun ConversationDetailScreenWordPressPreview() {
     val sampleConversation = generateSampleSupportConversations()[0]
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
-        ConversationDetailScreen(
+        HEConversationDetailScreen(
             conversation = sampleConversation,
             onBackClick = { }
         )
@@ -104,7 +104,7 @@ private fun ConversationDetailScreenPreviewWordPressDark() {
     val sampleConversation = generateSampleSupportConversations()[0]
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
-        ConversationDetailScreen(
+        HEConversationDetailScreen(
             conversation = sampleConversation,
             onBackClick = { }
         )
