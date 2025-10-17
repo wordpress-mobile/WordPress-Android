@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
+steps:
+  - label: "Test Download Glotpress Translations"
+    plugins: [$CI_TOOLKIT]
+    command: |
+      echo '--- :ruby: Setup Ruby Tools'
+      install_gems
+
+      echo '--- :shipit: New Beta Release'
+      bundle exec fastlane test_download_translations
+    agents:
+       queue: "tumblr-metal"
+    retry:
+      manual:
+        # If those jobs fail, one should always prefer re-triggering a new build from ReleaseV2 rather than retrying the individual job from Buildkite
+        allowed: false

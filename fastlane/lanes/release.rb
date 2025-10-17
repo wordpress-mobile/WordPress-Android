@@ -191,6 +191,12 @@ platform :android do
     create_backmerge_pr
   end
 
+  lane :test_download_translations do
+    download_translations
+    download_metadata_strings(version: current_release_version)
+  end
+
+
   # Prepares a new hotfix branch cut from the previous tag and bumps the version.
   #
   # @param version_name [String] The version number for the new hotfix (e.g., "10.6.1")
