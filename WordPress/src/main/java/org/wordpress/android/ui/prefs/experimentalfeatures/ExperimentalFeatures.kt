@@ -39,6 +39,11 @@ class ExperimentalFeatures @Inject constructor(
             "experimental_application_password_feature",
             R.string.experimental_application_password_feature,
             R.string.experimental_application_password_feature_description
+        ),
+        MODERN_SUPPORT(
+            "modern_support",
+            R.string.modern_support,
+            R.string.modern_support_description
         );
     }
 }

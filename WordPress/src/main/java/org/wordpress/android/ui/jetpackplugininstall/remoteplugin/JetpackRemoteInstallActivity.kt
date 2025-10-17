@@ -26,13 +26,17 @@ import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteI
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.LOGIN
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.MANUAL_INSTALL
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.extensions.setContent
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class JetpackRemoteInstallActivity : BaseAppCompatActivity() {
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
     private val viewModel: JetpackRemoteInstallViewModel by viewModels()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,7 +127,8 @@ class JetpackRemoteInstallActivity : BaseAppCompatActivity() {
             this,
             origin,
             result.site,
-            null
+            null,
+            experimentalFeatures
         )
     }
 

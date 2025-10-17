@@ -8,6 +8,7 @@ import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.EDITOR_HELP
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.SiteUtils
 
 object EditPostCustomerSupportHelper {
@@ -30,8 +31,8 @@ object EditPostCustomerSupportHelper {
         }
     }
 
-    fun onGotoCustomerSupportOptions(context: Context, site: SiteModel) {
-        ActivityLauncher.viewHelp(context, EDITOR_HELP, site, getTagsList(site))
+    fun onGotoCustomerSupportOptions(context: Context, site: SiteModel, experimentalFeatures: ExperimentalFeatures) {
+        ActivityLauncher.viewHelp(context, EDITOR_HELP, site, getTagsList(site), experimentalFeatures)
     }
 
     private fun getTagsList(site: SiteModel): List<String>? =
