@@ -59,7 +59,7 @@ fun HEConversationDetailScreen(
     onBackClick: () -> Unit
 ) {
     val listState = rememberLazyListState()
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
 
