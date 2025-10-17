@@ -2,20 +2,28 @@ package org.wordpress.android.support.logs.ui
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.support.logs.model.LogDay
 import org.wordpress.android.util.AppLog
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class LogsViewModel @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
+    @ApplicationContext private val appContext: Context,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private val _logDays = MutableStateFlow<List<LogDay>>(emptyList())
     val logDays: StateFlow<List<LogDay>> = _logDays.asStateFlow()
@@ -27,14 +35,16 @@ class LogsViewModel @Inject constructor(
     val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
 
     @Suppress("TooGenericExceptionCaught")
-    fun init(context: Context) {
-        try {
-            val allLogs = AppLog.toHtmlList(context)
-            _logDays.value = parseLogsByDay(allLogs)
-        } catch (throwable: Throwable) {
-            // If there's any error parsing the logs, better not to crash the app
-            _errorMessage.value = ErrorType.GENERAL
-            appLogWrapper.e(AppLog.T.SUPPORT, "Error parsing logs: ${throwable.stackTraceToString()}")
+    fun init() {
+        viewModelScope.launch(ioDispatcher) {
+            try {
+                val allLogs = AppLog.toHtmlList(appContext)
+                _logDays.value = parseLogsByDay(allLogs)
+            } catch (throwable: Throwable) {
+                // If there's any error parsing the logs, better not to crash the app
+                _errorMessage.value = ErrorType.GENERAL
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error parsing logs: ${throwable.stackTraceToString()}")
+            }
         }
     }
 
@@ -61,7 +71,15 @@ class LogsViewModel @Inject constructor(
                 logEntries = entries,
                 logCount = entries.size
             )
-        }.sortedByDescending { it.date } // Most recent first
+        }.sortedWith(compareByDescending { logDay ->
+            // Most recent first
+            try {
+                SimpleDateFormat("MMM-dd", Locale.getDefault()).parse(logDay.date)
+            } catch (e: Exception) {
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error sorting logs: ${e.stackTraceToString()}")
+                null
+            }
+        })
     }
 
     @Suppress("TooGenericExceptionCaught")

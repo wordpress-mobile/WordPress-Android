@@ -8,11 +8,14 @@ import android.view.Gravity
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,7 +34,6 @@ class LogsActivity : AppCompatActivity() {
     private val viewModel by viewModels<LogsViewModel>()
 
     private lateinit var composeView: ComposeView
-    private lateinit var navController: NavHostController
 
     @Inject
     lateinit var appLogWrapper: AppLogWrapper
@@ -52,18 +54,20 @@ class LogsActivity : AppCompatActivity() {
         )
         // Observe error messages and show them as Toast
         lifecycleScope.launch {
-            viewModel.errorMessage.collect { errorType ->
-                val errorMessage = when (errorType) {
-                    LogsViewModel.ErrorType.GENERAL -> getString(R.string.logs_screen_general_error)
-                    null -> null
-                }
-                errorMessage?.let {
-                    ToastUtils.showToast(this@LogsActivity, it, ToastUtils.Duration.LONG, Gravity.CENTER)
-                    viewModel.clearError()
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.errorMessage.collect { errorType ->
+                    val errorMessage = when (errorType) {
+                        LogsViewModel.ErrorType.GENERAL -> getString(R.string.logs_screen_general_error)
+                        null -> null
+                    }
+                    errorMessage?.let {
+                        ToastUtils.showToast(this@LogsActivity, it, ToastUtils.Duration.LONG, Gravity.CENTER)
+                        viewModel.clearError()
+                    }
                 }
             }
         }
-        viewModel.init(this)
+        viewModel.init()
     }
 
     private enum class LogsScreen {
@@ -73,7 +77,7 @@ class LogsActivity : AppCompatActivity() {
 
     @Composable
     private fun NavigableContent() {
-        navController = rememberNavController()
+        val navController = rememberNavController()
 
         AppThemeM3 {
             NavHost(
@@ -100,6 +104,10 @@ class LogsActivity : AppCompatActivity() {
                             logDay = logDay,
                             onBackClick = { navController.navigateUp() }
                         )
+                    } ?: run {
+                        LaunchedEffect(Unit) {
+                            navController.navigateUp()
+                        }
                     }
                 }
             }
