@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -24,18 +22,17 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -43,6 +40,8 @@ import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.util.generateSampleSupportConversations
+import org.wordpress.android.ui.compose.components.MainTopAppBar
+import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,16 +54,10 @@ fun HEConversationsListScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.he_support_conversations_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            stringResource(R.string.ai_bot_back_button_content_description)
-                        )
-                    }
-                },
+            MainTopAppBar(
+                title = stringResource(R.string.he_support_conversations_title),
+                navigationIcon = NavigationIcons.BackIcon,
+                onNavigationIconClick = onBackClick,
                 actions = {
                     IconButton(onClick = { onCreateNewConversationClick() }) {
                         Icon(
@@ -97,22 +90,25 @@ private fun ShowConversationsList(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(horizontal = 16.dp)
     ) {
         item {
-            Spacer(modifier = Modifier.padding(top = 4.dp))
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
-        items(conversationsList) { conversation ->
+        items(
+            items = conversationsList,
+            key = { it.id }
+        ) { conversation ->
             ConversationCard(
                 conversation = conversation,
                 onClick = { onConversationClick(conversation) }
             )
+            Spacer(modifier = Modifier.height(12.dp))
         }
 
         item {
-            Spacer(modifier = Modifier.padding(bottom = 4.dp))
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -126,10 +122,10 @@ private fun ConversationCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
-        )
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Row(
             modifier = Modifier
@@ -147,11 +143,8 @@ private fun ConversationCard(
                 ) {
                     Text(
                         text = conversation.title,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontSize = 17.sp
-                        ),
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false)
@@ -159,10 +152,8 @@ private fun ConversationCard(
 
                     Text(
                         text = formatRelativeTime(conversation.lastMessageSentAt),
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            fontSize = 13.sp
-                        ),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(start = 8.dp)
                     )
                 }
@@ -171,20 +162,17 @@ private fun ConversationCard(
 
                 Text(
                     text = conversation.description,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 15.sp
-                    ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
             }
 
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                painter = painterResource(R.drawable.ic_chevron_right_white_24dp),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
-                modifier = Modifier.padding(start = 8.dp)
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
