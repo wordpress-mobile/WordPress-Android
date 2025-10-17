@@ -34,6 +34,7 @@ import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.push.NotificationType;
+import org.wordpress.android.support.main.ui.SupportActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -99,6 +100,8 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature;
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailActivity;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListActivity;
@@ -1371,11 +1374,16 @@ public class ActivityLauncher {
     }
 
     public static void viewHelp(@NonNull Context context, @NonNull Origin origin, @Nullable SiteModel selectedSite,
-                                @Nullable List<String> extraSupportTags) {
+                                @Nullable List<String> extraSupportTags,
+                                @NonNull ExperimentalFeatures experimentalFeatures) {
         Map<String, String> properties = new HashMap<>();
         properties.put("origin", origin.name());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
-        context.startActivity(HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags));
+        if (experimentalFeatures.isEnabled(Feature.MODERN_SUPPORT)) {
+            context.startActivity(SupportActivity.createIntent(context));
+        } else {
+            context.startActivity(HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags));
+        }
     }
 
     public static void viewFeedbackForm(@NonNull Context context) {
