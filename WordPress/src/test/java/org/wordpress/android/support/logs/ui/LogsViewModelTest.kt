@@ -1,11 +1,13 @@
 package org.wordpress.android.support.logs.ui
 
 import android.content.Context
+import app.cash.turbine.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.logs.model.LogDay
@@ -24,7 +26,9 @@ class LogsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = LogsViewModel(
-            appLogWrapper = appLogWrapper
+            appLogWrapper = appLogWrapper,
+            appContext = mock(),
+            ioDispatcher = testDispatcher()
         )
     }
 
@@ -53,7 +57,7 @@ class LogsViewModelTest : BaseUnitTest() {
     // region selectLogDay() tests
 
     @Test
-    fun `selectLogDay updates selectedLogDay state`() {
+    fun `selectLogDay updates selectedLogDay state`() = test {
         // Given
         val logDay = LogDay(
             date = "Oct-16",
@@ -63,14 +67,19 @@ class LogsViewModelTest : BaseUnitTest() {
         )
 
         // When
-        viewModel.selectLogDay(logDay)
+        viewModel.navigationEvents.test {
+            viewModel.onLogDayClick(logDay)
 
-        // Then
-        assertThat(viewModel.selectedLogDay.value).isEqualTo(logDay)
+            // Then
+            assertThat(viewModel.selectedLogDay.value).isEqualTo(logDay)
+            val event = awaitItem()
+            assertThat(event).isInstanceOf(LogsViewModel.NavigationEvent.NavigateToDetail::class.java)
+            assertThat((event as LogsViewModel.NavigationEvent.NavigateToDetail).logDay).isEqualTo(logDay)
+        }
     }
 
     @Test
-    fun `selectLogDay can be called multiple times and updates state each time`() {
+    fun `selectLogDay can be called multiple times and updates state each time`() = test {
         // Given
         val logDay1 = LogDay(
             date = "Oct-16",
@@ -86,13 +95,21 @@ class LogsViewModelTest : BaseUnitTest() {
         )
 
         // When
-        viewModel.selectLogDay(logDay1)
-        assertThat(viewModel.selectedLogDay.value).isEqualTo(logDay1)
+        viewModel.navigationEvents.test {
+            viewModel.onLogDayClick(logDay1)
+            assertThat(viewModel.selectedLogDay.value).isEqualTo(logDay1)
+            val event1 = awaitItem()
+            assertThat(event1).isInstanceOf(LogsViewModel.NavigationEvent.NavigateToDetail::class.java)
+            assertThat((event1 as LogsViewModel.NavigationEvent.NavigateToDetail).logDay).isEqualTo(logDay1)
 
-        viewModel.selectLogDay(logDay2)
+            viewModel.onLogDayClick(logDay2)
 
-        // Then
-        assertThat(viewModel.selectedLogDay.value).isEqualTo(logDay2)
+            // Then
+            assertThat(viewModel.selectedLogDay.value).isEqualTo(logDay2)
+            val event2 = awaitItem()
+            assertThat(event2).isInstanceOf(LogsViewModel.NavigationEvent.NavigateToDetail::class.java)
+            assertThat((event2 as LogsViewModel.NavigationEvent.NavigateToDetail).logDay).isEqualTo(logDay2)
+        }
     }
 
     // endregion
