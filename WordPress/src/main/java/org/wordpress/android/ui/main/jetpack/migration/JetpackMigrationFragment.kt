@@ -42,6 +42,7 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.state.ErrorStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.NotificationsStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.WelcomeStep
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.AppThemeUtils
 import org.wordpress.android.util.UriWrapper
@@ -53,6 +54,9 @@ import javax.inject.Inject
 class JetpackMigrationFragment : Fragment() {
     @Inject
     lateinit var dispatcher: Dispatcher
+
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
 
     private val viewModel: JetpackMigrationViewModel by viewModels()
 
@@ -120,7 +124,8 @@ class JetpackMigrationFragment : Fragment() {
             requireContext(),
             JETPACK_MIGRATION_HELP,
             null,
-            null
+            null,
+            experimentalFeatures
         )
     }
 
