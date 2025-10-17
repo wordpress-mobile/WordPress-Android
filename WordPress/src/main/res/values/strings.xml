@@ -5143,4 +5143,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="ai_bot_time_days_ago">%1$d days ago</string>
     <string name="ai_bot_time_week_ago">%1$d week ago</string>
     <string name="ai_bot_time_weeks_ago">%1$d weeks ago</string>
+
+    <!-- HE Support - Conversations List Screen -->
+    <string name="he_support_conversations_title">Support Conversations</string>
+    <string name="he_support_new_conversation_content_description">New conversation</string>
 </resources>
