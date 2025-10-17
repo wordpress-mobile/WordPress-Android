@@ -79,6 +79,7 @@ class LogsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun parseLogsByDay(logs: List<String>): List<LogDay> {
         val logsByDay = mutableMapOf<String, MutableList<String>>()
 

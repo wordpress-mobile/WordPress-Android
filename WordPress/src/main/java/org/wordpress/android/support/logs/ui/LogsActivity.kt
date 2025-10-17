@@ -24,7 +24,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.support.logs.model.LogDay
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
