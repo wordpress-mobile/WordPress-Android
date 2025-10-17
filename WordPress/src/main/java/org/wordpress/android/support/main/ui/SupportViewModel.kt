@@ -23,6 +23,7 @@ class SupportViewModel @Inject constructor(
     sealed class NavigationEvent {
         data class NavigateToAskTheBots(val accessToken: String, val userName: String) : NavigationEvent()
         data object NavigateToLogin : NavigationEvent()
+        data object NavigateToAskHappinessEngineers : NavigationEvent()
     }
 
     data class UserInfo(
@@ -88,7 +89,9 @@ class SupportViewModel @Inject constructor(
     }
 
     fun onAskHappinessEngineersClick() {
-        // Navigate to Happiness Engineers contact
+        viewModelScope.launch {
+            _navigationEvents.emit(NavigationEvent.NavigateToAskHappinessEngineers)
+        }
     }
 
     fun onApplicationLogsClick() {

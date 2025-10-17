@@ -17,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
+import org.wordpress.android.support.he.ui.HESupportActivity
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
@@ -73,6 +74,10 @@ class SupportActivity : AppCompatActivity() {
                         is SupportViewModel.NavigationEvent.NavigateToLogin -> {
                             navigateToLogin()
                         }
+
+                        SupportViewModel.NavigationEvent.NavigateToAskHappinessEngineers -> {
+                            navigateToAskTheHappinessEngineers()
+                        }
                     }
                 }
             }
@@ -82,6 +87,12 @@ class SupportActivity : AppCompatActivity() {
     private fun navigateToAskTheBots(accessToken: String, userName: String) {
         startActivity(
             AIBotSupportActivity.Companion.createIntent(this, accessToken, userName)
+        )
+    }
+
+    private fun navigateToAskTheHappinessEngineers() {
+        startActivity(
+            HESupportActivity.Companion.createIntent(this)
         )
     }
 
