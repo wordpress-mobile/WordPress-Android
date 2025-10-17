@@ -39,7 +39,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.he.model.SupportConversation
-import org.wordpress.android.support.he.util.generateSampleSupportConversations
+import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -181,7 +181,7 @@ private fun ConversationCard(
 @Preview(showBackground = true, name = "HE Support Conversations List")
 @Composable
 private fun ConversationsScreenPreview() {
-    val sampleConversations = MutableStateFlow(generateSampleSupportConversations())
+    val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
 
     AppThemeM3(isDarkTheme = false) {
         HEConversationsListScreen(
@@ -196,7 +196,7 @@ private fun ConversationsScreenPreview() {
 @Preview(showBackground = true, name = "HE Support Conversations List - Dark", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun ConversationsScreenPreviewDark() {
-    val sampleConversations = MutableStateFlow(generateSampleSupportConversations())
+    val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
 
     AppThemeM3(isDarkTheme = true) {
         HEConversationsListScreen(
@@ -211,7 +211,7 @@ private fun ConversationsScreenPreviewDark() {
 @Preview(showBackground = true, name = "HE Support Conversations List - WordPress")
 @Composable
 private fun ConversationsScreenWordPressPreview() {
-    val sampleConversations = MutableStateFlow(generateSampleSupportConversations())
+    val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
         HEConversationsListScreen(
@@ -226,7 +226,7 @@ private fun ConversationsScreenWordPressPreview() {
 @Preview(showBackground = true, name = "HE Support Conversations List - Dark WordPress", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun ConversationsScreenPreviewWordPressDark() {
-    val sampleConversations = MutableStateFlow(generateSampleSupportConversations())
+    val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         HEConversationsListScreen(

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.support.he.model.SupportConversation
-import org.wordpress.android.support.he.util.generateSampleSupportConversations
+import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,6 +30,6 @@ class HESupportViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun loadDummyData() {
-        _conversations.value = generateSampleSupportConversations()
+        _conversations.value = generateSampleHESupportConversations()
     }
 }

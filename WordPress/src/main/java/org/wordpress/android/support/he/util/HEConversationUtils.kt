@@ -5,7 +5,7 @@ import org.wordpress.android.support.he.model.SupportMessage
 import java.util.Date
 
 @Suppress("MagicNumber", "LongMethod")
-fun generateSampleSupportConversations(): List<SupportConversation> {
+fun generateSampleHESupportConversations(): List<SupportConversation> {
     val now = Date()
     val oneHourAgo = Date(now.time - 3600000)
     val twoDaysAgo = Date(now.time - 172800000)
@@ -14,8 +14,9 @@ fun generateSampleSupportConversations(): List<SupportConversation> {
     return listOf(
         SupportConversation(
             id = 1,
-            title = "Issue with site loading",
-            description = "My site is loading slowly",
+            title = "Login Issues with Two-Factor Authentication Not Working on Mobile App",
+            description = "I'm having trouble logging into my account. The two-factor authentication code " +
+                "doesn't seem to be working properly when I try to access my site from the mobile app.",
             lastMessageSentAt = oneHourAgo,
             messages = listOf(
                 SupportMessage(
@@ -43,8 +44,10 @@ fun generateSampleSupportConversations(): List<SupportConversation> {
         ),
         SupportConversation(
             id = 2,
-            title = "Plugin compatibility question",
-            description = "Question about plugin compatibility",
+            title = "Website Performance Issues After Installing New Theme and Plugins",
+            description = "After updating my theme and installing several new plugins for my e-commerce " +
+                "store, I've noticed significant slowdowns and occasional timeout errors affecting customer " +
+                "experience.",
             lastMessageSentAt = twoDaysAgo,
             messages = listOf(
                 SupportMessage(
@@ -65,8 +68,10 @@ fun generateSampleSupportConversations(): List<SupportConversation> {
         ),
         SupportConversation(
             id = 3,
-            title = "Custom domain setup",
-            description = "Help setting up custom domain",
+            title = "Need Help Configuring Custom Domain DNS Settings and Email Forwarding",
+            description = "I recently purchased a custom domain and need assistance with proper DNS " +
+                "configuration, SSL certificate setup, and setting up professional email forwarding for my " +
+                "business site.",
             lastMessageSentAt = oneWeekAgo,
             messages = listOf(
                 SupportMessage(

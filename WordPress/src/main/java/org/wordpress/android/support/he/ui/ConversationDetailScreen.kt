@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
 import org.wordpress.android.support.he.model.SupportConversation
-import org.wordpress.android.support.he.util.generateSampleSupportConversations
+import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,7 +62,7 @@ fun HEConversationDetailScreen(
 @Preview(showBackground = true, name = "HE Support Conversation Detail")
 @Composable
 private fun ConversationDetailScreenPreview() {
-    val sampleConversation = generateSampleSupportConversations()[0]
+    val sampleConversation = generateSampleHESupportConversations()[0]
 
     AppThemeM3(isDarkTheme = false) {
         HEConversationDetailScreen(
@@ -75,7 +75,7 @@ private fun ConversationDetailScreenPreview() {
 @Preview(showBackground = true, name = "HE Support Conversation Detail - Dark", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun ConversationDetailScreenPreviewDark() {
-    val sampleConversation = generateSampleSupportConversations()[0]
+    val sampleConversation = generateSampleHESupportConversations()[0]
 
     AppThemeM3(isDarkTheme = true) {
         HEConversationDetailScreen(
@@ -88,7 +88,7 @@ private fun ConversationDetailScreenPreviewDark() {
 @Preview(showBackground = true, name = "HE Support Conversation Detail - WordPress")
 @Composable
 private fun ConversationDetailScreenWordPressPreview() {
-    val sampleConversation = generateSampleSupportConversations()[0]
+    val sampleConversation = generateSampleHESupportConversations()[0]
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
         HEConversationDetailScreen(
@@ -101,7 +101,7 @@ private fun ConversationDetailScreenWordPressPreview() {
 @Preview(showBackground = true, name = "HE Support Conversation Detail - Dark WordPress", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun ConversationDetailScreenPreviewWordPressDark() {
-    val sampleConversation = generateSampleSupportConversations()[0]
+    val sampleConversation = generateSampleHESupportConversations()[0]
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         HEConversationDetailScreen(
