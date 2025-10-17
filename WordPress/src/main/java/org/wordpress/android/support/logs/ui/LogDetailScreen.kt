@@ -12,11 +12,14 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,7 +36,8 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @Composable
 fun LogDetailScreen(
     logDay: LogDay,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onShareClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -42,34 +46,47 @@ fun LogDetailScreen(
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = onBackClick
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onShareClick,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_share_white_24dp),
+                    contentDescription = stringResource(R.string.reader_btn_share)
+                )
+            }
         }
     ) { contentPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
-                .padding(horizontal = 16.dp)
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = stringResource(R.string.logs_screen_log_count, logDay.logCount),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding)
+                    .padding(horizontal = 16.dp)
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
 
-            itemsIndexed(
-                items = logDay.logEntries,
-                key = { index, _ -> "${logDay.date}_$index" }
-            ) { _, logEntry ->
-                LogEntryItem(logEntry = logEntry)
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+                itemsIndexed(
+                    items = logDay.logEntries,
+                    key = { index, _ -> "${logDay.date}_$index" }
+                ) { _, logEntry ->
+                    LogEntryItem(logEntry = logEntry)
+                }
 
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
         }
     }
@@ -77,34 +94,25 @@ fun LogDetailScreen(
 
 @Composable
 private fun LogEntryItem(logEntry: String) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)
-        ) {
-            // Strip HTML tags for display in Compose
-            val plainText = HtmlCompat.fromHtml(
-                logEntry,
-                HtmlCompat.FROM_HTML_MODE_LEGACY
-            ).toString()
+        // Strip HTML tags for display in Compose
+        val plainText = HtmlCompat.fromHtml(
+            logEntry,
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        ).toString()
 
-            Text(
-                text = plainText,
-                style = MaterialTheme.typography.bodySmall.copy(
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp
-                ),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
+        Text(
+            text = plainText,
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontFamily = FontFamily.Monospace,
+                fontSize = 12.sp,
+                lineHeight = 16.sp
+            ),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
@@ -120,7 +128,8 @@ private fun LogDetailScreenPreview() {
                 logEntries = exampleList,
                 logCount = exampleList.size
             ),
-            onBackClick = {}
+            onBackClick = {},
+            onShareClick = {}
         )
     }
 }
@@ -137,7 +146,8 @@ private fun LogDetailScreenPreviewDark() {
                 logEntries = exampleList,
                 logCount = exampleList.size
             ),
-            onBackClick = {}
+            onBackClick = {},
+            onShareClick = {}
         )
     }
 }

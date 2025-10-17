@@ -24,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.support.logs.model.LogDay
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
@@ -34,12 +35,14 @@ class LogsActivity : AppCompatActivity() {
     private val viewModel by viewModels<LogsViewModel>()
 
     private lateinit var composeView: ComposeView
+    private var navController: NavHostController? = null
 
     @Inject
     lateinit var appLogWrapper: AppLogWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.init()
         composeView = ComposeView(this)
         setContentView(
             composeView.apply {
@@ -52,7 +55,12 @@ class LogsActivity : AppCompatActivity() {
                 }
             }
         )
-        // Observe error messages and show them as Toast
+        observeErrorMessages()
+        observeNavigationEvents()
+        observeActionEvents()
+    }
+
+    private fun observeErrorMessages() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.errorMessage.collect { errorType ->
@@ -67,7 +75,32 @@ class LogsActivity : AppCompatActivity() {
                 }
             }
         }
-        viewModel.init()
+    }
+
+    private fun observeNavigationEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigationEvents.collect { event ->
+                    when (event) {
+                        is LogsViewModel.NavigationEvent.NavigateToDetail -> {
+                            navController?.navigate(LogsScreen.Detail.name)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeActionEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.actionEvents.collect { event ->
+                    when (event) {
+                        is LogsViewModel.ActionEvent.ShareLogDay -> shareLogDay(event.logDay, event.date)
+                    }
+                }
+            }
+        }
     }
 
     private enum class LogsScreen {
@@ -77,23 +110,19 @@ class LogsActivity : AppCompatActivity() {
 
     @Composable
     private fun NavigableContent() {
-        val navController = rememberNavController()
+        navController = rememberNavController()
 
         AppThemeM3 {
             NavHost(
-                navController = navController,
+                navController = navController!!,
                 startDestination = LogsScreen.List.name
             ) {
                 composable(route = LogsScreen.List.name) {
                     val logDays by viewModel.logDays.collectAsState()
                     LogsListScreen(
                         logDays = logDays,
-                        onLogDayClick = { logDay ->
-                            viewModel.selectLogDay(logDay)
-                            navController.navigate(LogsScreen.Detail.name)
-                        },
-                        onBackClick = { finish() },
-                        onShareClick = { shareAppLog() }
+                        onLogDayClick = { logDay -> viewModel.onLogDayClick(logDay) },
+                        onBackClick = { finish() }
                     )
                 }
 
@@ -102,11 +131,12 @@ class LogsActivity : AppCompatActivity() {
                     selectedLogDay?.let { logDay ->
                         LogDetailScreen(
                             logDay = logDay,
-                            onBackClick = { navController.navigateUp() }
+                            onBackClick = { navController?.navigateUp() },
+                            onShareClick = { viewModel.onShareClick(logDay) }
                         )
                     } ?: run {
                         LaunchedEffect(Unit) {
-                            navController.navigateUp()
+                            navController?.navigateUp()
                         }
                     }
                 }
@@ -114,14 +144,13 @@ class LogsActivity : AppCompatActivity() {
         }
     }
 
-    private fun shareAppLog() {
+    private fun shareLogDay(logDay: String, date: String) {
+        val subject = "${getString(R.string.app_name)} " +
+            "${getString(R.string.support_screen_application_logs_title)} - $date"
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, AppLog.toPlainText(this@LogsActivity))
-            putExtra(
-                Intent.EXTRA_SUBJECT,
-                "${getString(R.string.app_name)} ${getString(R.string.support_screen_application_logs_title)}"
-            )
+            putExtra(Intent.EXTRA_TEXT, logDay)
+            putExtra(Intent.EXTRA_SUBJECT, subject)
         }
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.reader_btn_share)))
