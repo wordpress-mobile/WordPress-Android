@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-04-09 02:33:43+0000
+Translation-Revision-Date: 2025-10-12 21:57:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: es_CL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -1060,12 +1060,12 @@ Language: es_CL
     <string name="me_btn_about">Acerca de WordPress</string>
     <string name="button_copy_link">Copiar el enlace</string>
     <string name="comment_author_badge">Autor</string>
-    <string name="menu_html_mode_switched_notice">Cambiado a modo HTML</string>
-    <string name="menu_visual_mode_switched_notice">Cambiado a modo visual</string>
     <string name="my_site_create_next_post_excerpt">¡Publicar regularmente ayuda a crear tu audiencia!</string>
     <string name="my_site_create_next_post_title">Crear tu próxima entrada</string>
     <string name="my_site_post_card_link_create_post">Crear una entrada</string>
     <string name="post_link_copied_to_clipboard">Enlace copiado al portapapeles</string>
+    <string name="menu_html_mode_switched_notice">Cambiado al editor de código</string>
+    <string name="menu_visual_mode_switched_notice">Cambiado al editor visual</string>
     <string name="domains_paid_plan_add_your_domain_caption">Agregar un dominio personalizado hace que sea más fácil para tus visitantes encontrar tu sitio</string>
     <string name="domains_paid_plan_add_your_domain_title">Agrega tu dominio</string>
     <string name="my_site_create_first_post_excerpt">Las entradas aparecen en la página de tu blog en orden cronológicamente inverso. ¡Es el momento de compartir tus ideas con el mundo!</string>
@@ -2705,9 +2705,8 @@ Language: es_CL
     <string name="jetpack_already_connected_toast">Ya estás conectado a Jetpack</string>
     <string name="menu_preview">Vista previa</string>
     <string name="file_size_in_terabytes">%s TB</string>
-    <string name="menu_html_mode">Modo HTML</string>
     <string name="menu_save_as_draft">Guardar como Borrador</string>
-    <string name="menu_visual_mode">Modo Visual</string>
+    <string name="menu_visual_mode">Editor visual</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="site_settings_quota_space_value">%1$s de %2$s</string>
     <string name="site_settings_quota_header">Multimedia</string>
@@ -2723,12 +2722,12 @@ Language: es_CL
     <string name="comment_untrash_talkback">Comentario restaurado</string>
     <string name="edit_photo_screen_title">Editar Foto</string>
     <string name="file_size_in_bytes">%s B</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="notif_detail_screen_title">Detalle de notificación %s</string>
     <string name="share_intent_screen_title">Elegir sitio</string>
     <string name="site_settings_quota_space_hint">Si necesitas más espacio considera actualizar tu plan de WordPress.</string>
     <string name="site_settings_quota_space_title">Espacio Utilizado</string>
+    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="login_epilogue_screen_title">Has ingresado como</string>
     <string name="me_section_screen_title">Yo</string>
     <string name="media_settings_screen_title">Detalles del archivo</string>

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-11-12 12:10:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: ku_TR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -1078,17 +1078,14 @@ Language: ku_TR
     <string name="reader_cardview_post_play_video_desc">vîdyoya bijarde bilîzîne</string>
     <string name="jetpack_connection_failed_with_reason">Bi Jetpack\'ê ve nehat girêdan: %s</string>
     <string name="jetpack_already_connected_toast">Jixwe tu bi Jetpack\'ê ve girêdayî ye</string>
-    <string name="menu_visual_mode">Moda Dîtbarî</string>
     <string name="menu_preview">Pêşdîtin</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="menu_save_as_draft">Wekî reşnivîs tomar bike</string>
-    <string name="menu_html_mode">Moda HTML\'ê</string>
     <string name="comment_unliked_talkback">Ecibandina şîroveyê hat rakirin</string>
     <string name="comment_liked_talkback">Şîrove hat ecibandin</string>
     <string name="comment_approved_talkback">Şîrove hat pejirandin</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_header">Medya</string>
     <string name="comment_spam_talkback">Şîrove wekî spam hat nîşankirin</string>
