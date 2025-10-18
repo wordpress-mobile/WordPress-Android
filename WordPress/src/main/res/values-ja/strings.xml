@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2025-09-02 11:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: ja_JP
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -33,7 +33,6 @@ Language: ja_JP
     <string name="application_password_info_description_1">アプリケーションパスワードは、アカウントパスワードを使用せずにアプリがサイトに安全にアクセスするための仕組みです。</string>
     <string name="application_password_info_title">アプリケーションパスワード</string>
     <string name="application_password_disable_feature_description">アプリケーションパスワードを無効にすると、サイトの %1$s のログインが削除されます。 再度ログインするには、影響を受けるサイトの再追加が必要になる場合があります。</string>
-    <string name="application_password_invalid_description">ご使用のアプリケーションパスワードは存在しません。 新しいアプリケーションパスワードを作成するには、もう一度ログインしてください。 </string>
     <string name="subscribers_delete_failed">購読者の削除に失敗しました</string>
     <string name="subscribers_delete_success_message">購読者は削除されましたが、削除が有効になるまでには数分かかる場合があります</string>
     <string name="subscribers_delete_success_title">購読者が削除されました</string>
@@ -1168,8 +1167,6 @@ Language: ja_JP
     <string name="my_site_post_card_link_create_post">投稿を作成</string>
     <string name="my_site_create_next_post_excerpt">定期的に投稿することで、読者を増やすことができます。</string>
     <string name="my_site_create_next_post_title">次の投稿を作成</string>
-    <string name="menu_visual_mode_switched_notice">ビジュアルモードに切り替えました</string>
-    <string name="menu_html_mode_switched_notice">HTML モードに切り替えました</string>
     <string name="post_link_copied_to_clipboard">リンクがクリップボードにコピーされました</string>
     <string name="comment_author_badge">投稿者</string>
     <string name="button_copy_link">リンクをコピー</string>
@@ -2810,14 +2807,11 @@ Language: ja_JP
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Google アカウントで登録中…</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack への接続に失敗しました:%s</string>
     <string name="jetpack_already_connected_toast">すでに Jetpack に接続しています</string>
-    <string name="menu_visual_mode">ビジュアルモード</string>
-    <string name="menu_html_mode">HTML モード</string>
     <string name="menu_preview">プレビュー</string>
     <string name="menu_save_as_draft">下書きとして保存</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s/%2$s</string>
     <string name="site_settings_quota_space_hint">さらに多くの容量が必要なら、WordPress プランのアップグレードを検討してください。</string>

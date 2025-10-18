@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-09-02 10:54:09+0000
+Translation-Revision-Date: 2025-10-15 14:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: it
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="error_deleting_term">Si è verificato un errore durante l\'eliminazione del termine</string>
+    <string name="error_saving_term">Si è verificato un errore durante il salvataggio del termine</string>
+    <string name="add_term">Aggiungi termine</string>
+    <string name="term_delete_confirmation_message">Vuoi davvero eliminare \"%1$s\"?</string>
+    <string name="term_delete_confirmation_title">Elimina termine</string>
+    <string name="term_sort_by_count">Conteggio</string>
+    <string name="term_sort_by_name">Nome</string>
+    <string name="term_parent_none">Nessuno</string>
+    <string name="term_parent_label">Genitore:</string>
+    <string name="term_count">Conteggio: %1$d</string>
+    <string name="term_count_label">Conteggio:</string>
+    <string name="term_description_label">Descrizione:</string>
+    <string name="term_slug_label">Abbreviazione:</string>
+    <string name="term_name_label">Nome:</string>
+    <string name="application_password_experimental_feature_note">\n\nNota: l\'autenticazione tramite password per applicazioni sui dispositivi Android è una funzione sperimentale.</string>
+    <string name="application_password_required_block_editor">Editor a blocchi</string>
+    <string name="application_password_required_description">Le password per applicazioni sono un modo più sicuro di connettersi al tuo sito ospitato personalmente e supportano funzioni quali %1$s.</string>
+    <string name="application_password_required">Password per applicazioni richiesta</string>
+    <string name="menu_html_mode">Editor del codice</string>
+    <string name="taxonomies_title">Tassonomie</string>
+    <string name="media_edit_file_size_caption">Dimensione del file</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Impossibile accedere a WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Connetti il sito a WordPress.com</string>
     <string name="dataview_default_empty_message">Qui non c\'è nulla</string>
@@ -33,7 +54,7 @@ Language: it
     <string name="application_password_info_description_1">Le password per le applicazioni sono un modo sicuro per consentire alle app di accedere al tuo sito senza utilizzare la password del tuo account.</string>
     <string name="application_password_info_title">Password per applicazioni</string>
     <string name="application_password_disable_feature_description">La disattivazione delle password per le applicazioni rimuoverà l\'accesso per %1$s dei tuoi siti. Potrebbe essere necessario aggiungere nuovamente i siti interessati per effettuare di nuovo l\'accesso.</string>
-    <string name="application_password_invalid_description">La password dell\'applicazione non esiste più. Accedi di nuovo per creare una nuova password dell\'applicazione. </string>
+    <string name="application_password_invalid_description">La password dell\'applicazione non esiste più. Accedi di nuovo per creare una nuova password dell\'applicazione.</string>
     <string name="subscribers_delete_failed">Impossibile eliminare abbonato</string>
     <string name="subscribers_delete_success_message">L\'abbonato è stato eliminato, ma potrebbe volerci un minuto perché l\'eliminazione abbia effetto</string>
     <string name="subscribers_delete_success_title">Abbonato eliminato</string>
@@ -1173,8 +1194,8 @@ Language: it
     <string name="my_site_post_card_link_create_post">Crea un articolo</string>
     <string name="my_site_create_next_post_excerpt">Pubblicare con regolarità aiuta a creare il tuo pubblico.</string>
     <string name="my_site_create_next_post_title">Crea l\'articolo successivo</string>
-    <string name="menu_visual_mode_switched_notice">Passato alla modalità visuale.</string>
-    <string name="menu_html_mode_switched_notice">Passato alla modalità HTML.</string>
+    <string name="menu_visual_mode_switched_notice">Passato all\'Editor visuale.</string>
+    <string name="menu_html_mode_switched_notice">Passato all\'Editor del codice</string>
     <string name="post_link_copied_to_clipboard">Link copiato negli appunti</string>
     <string name="comment_author_badge">Autore</string>
     <string name="button_copy_link">Copia link</string>
@@ -2813,14 +2834,13 @@ Language: it
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Registrazione con Google…</string>
     <string name="jetpack_connection_failed_with_reason">Connessione a Jetpack non riuscita: %s</string>
     <string name="jetpack_already_connected_toast">Sei già connesso a Jetpack</string>
-    <string name="menu_visual_mode">Modalità visuale</string>
-    <string name="menu_html_mode">Modalità HTML</string>
+    <string name="menu_visual_mode">Editor visuale</string>
     <string name="menu_preview">Visualizzare in anteprima</string>
     <string name="menu_save_as_draft">Salva come bozza</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
+    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s di %2$s</string>
     <string name="site_settings_quota_space_hint">Se hai bisogno di più spazio valuta la possibilità di aggiornare il tuo piano di WordPress.</string>

@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-09-02 10:54:10+0000
+Translation-Revision-Date: 2025-10-14 11:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: tr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="error_deleting_term">Terim silinirken bir hata oluştu</string>
+    <string name="error_saving_term">Terim kaydedilirken bir hata oluştu</string>
+    <string name="add_term">Terim ekle</string>
+    <string name="term_delete_confirmation_message">%1$s terimini silmek istediğinizden emin misiniz?</string>
+    <string name="term_delete_confirmation_title">Terimi sil</string>
+    <string name="term_sort_by_count">Sayı</string>
+    <string name="term_sort_by_name">Ad</string>
+    <string name="term_parent_none">Hiçbiri</string>
+    <string name="term_parent_label">Üst öğe:</string>
+    <string name="term_count">Sayı: %1$d</string>
+    <string name="term_count_label">Sayı:</string>
+    <string name="term_description_label">Açıklama:</string>
+    <string name="term_slug_label">Kısaltma:</string>
+    <string name="term_name_label">Ad:</string>
+    <string name="application_password_experimental_feature_note">\n\nNot: Android cihazlarda Uygulama Şifresi doğrulaması Deneysel bir özelliktir.</string>
+    <string name="application_password_required_block_editor">Blok Düzenleyici</string>
+    <string name="application_password_required_description">Uygulama şifreleri, kullanıcı tarafından barındırılan sitelerinizi bağlamanız ve %1$s gibi özellikler için destek sağlamanın daha güvenli bir yoludur.</string>
+    <string name="application_password_required">Uygulama Şifreleri Gerekli</string>
+    <string name="menu_html_mode">Kod Düzenleyici</string>
+    <string name="taxonomies_title">Sınıflandırmalar</string>
+    <string name="media_edit_file_size_caption">Dosya Boyutu</string>
     <string name="jetpack_rest_connection_error_login_wpcom">WordPress.com\'da oturum açılamıyor</string>
     <string name="jetpack_rest_connection_step_connect_site">Siteyi WordPress.com\'a bağlayın</string>
     <string name="dataview_default_empty_message">Burada bir şey yok</string>
@@ -33,7 +54,7 @@ Language: tr
     <string name="application_password_info_description_1">Uygulama şifreleri, uygulamaların hesap şifrenizi kullanmadan sitenize erişmesinin güvenli bir yoludur.</string>
     <string name="application_password_info_title">Uygulama Şifreleri</string>
     <string name="application_password_disable_feature_description">Uygulama Şifresini devre dışı bırakırsanız oturum açma bilgileri %1$s sitenizden kaldırılır. Tekrar oturum açmak için etkilenen siteleri yeniden eklemeniz gerekebilir.</string>
-    <string name="application_password_invalid_description">Uygulama şifreniz artık yok. Yeni bir uygulama şifresi oluşturmak için lütfen tekrar oturum açın. </string>
+    <string name="application_password_invalid_description">Uygulama şifreniz artık yok. Yeni bir uygulama şifresi oluşturmak için lütfen tekrar oturum açın.</string>
     <string name="subscribers_delete_failed">Abone silinemedi</string>
     <string name="subscribers_delete_success_message">Abone silindi, ancak silmenin geçerli olması bir dakika sürebilir</string>
     <string name="subscribers_delete_success_title">Abone silindi</string>
@@ -1180,8 +1201,8 @@ Language: tr
     <string name="my_site_post_card_link_create_post">Bir yazı oluştur</string>
     <string name="my_site_create_next_post_excerpt">Düzenli olarak yazı yayınlamak, hedef kitlenizi oluşturmanıza yardımcı olur!</string>
     <string name="my_site_create_next_post_title">Bir sonraki yazınızı oluşturun</string>
-    <string name="menu_visual_mode_switched_notice">Görsel moduna geçildi</string>
-    <string name="menu_html_mode_switched_notice">HTML moduna geçildi</string>
+    <string name="menu_visual_mode_switched_notice">Görsel Düzenleyiciye geçildi</string>
+    <string name="menu_html_mode_switched_notice">Kod Düzenleyiciye geçildi</string>
     <string name="post_link_copied_to_clipboard">Bağlantı panoya kopyalandı</string>
     <string name="comment_author_badge">Yazar</string>
     <string name="button_copy_link">Bağlantıyı kopyala</string>
@@ -2822,14 +2843,12 @@ Language: tr
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Google ile hesap açılıyor…</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack ile bağlantı kurulamadı: %s</string>
     <string name="jetpack_already_connected_toast">Jetpack bağlantınız zaten var</string>
-    <string name="menu_visual_mode">Görsel modu</string>
-    <string name="menu_html_mode">HTML modu</string>
+    <string name="menu_visual_mode">Görsel Düzenleyici</string>
     <string name="menu_preview">Ön izleme</string>
     <string name="menu_save_as_draft">Taslak olarak kaydet</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s / %2$s</string>
     <string name="site_settings_quota_space_hint">Daha fazla alana gerek duyuyorsanız WordPress paketinizi yükseltebilirsiniz.</string>

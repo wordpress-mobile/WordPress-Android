@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2025-01-30 10:25:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: sq_AL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -1055,8 +1055,6 @@ Language: sq_AL
     <string name="my_site_post_card_link_create_post">Krijoni një postim</string>
     <string name="my_site_create_next_post_excerpt">Postimi rregullisht ndihmon të krijoni publikun tuaj!</string>
     <string name="my_site_create_next_post_title">Krijoni postimin tuaj pasues</string>
-    <string name="menu_visual_mode_switched_notice">U kalua nën mënyrën Pamore</string>
-    <string name="menu_html_mode_switched_notice">U kalua nën mënyrën HTML</string>
     <string name="post_link_copied_to_clipboard">Lidhja u kopjua në të papastër</string>
     <string name="comment_author_badge">Autori</string>
     <string name="button_copy_link">Kopjoji lidhjen</string>
@@ -2694,14 +2692,11 @@ Language: sq_AL
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Po bëhet regjistrim me Google…</string>
     <string name="jetpack_connection_failed_with_reason">Dështoi lidhja me Jetpack-un: %s</string>
     <string name="jetpack_already_connected_toast">Jeni tashmë i lidhur te Jetpack-u</string>
-    <string name="menu_visual_mode">Mënyra Pamore</string>
-    <string name="menu_html_mode">Mënyra HTML</string>
     <string name="menu_preview">Paraparje</string>
     <string name="menu_save_as_draft">Ruaje si Skicë</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s nga %2$s</string>
     <string name="site_settings_quota_space_hint">Nëse ju duhet më tepër hapësirë, shihni mundësinë e përmirësimit të planit tuaj WordPress.</string>
