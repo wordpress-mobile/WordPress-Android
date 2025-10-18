@@ -1,4 +1,4 @@
-26.2:
-- Connetti i tuoi siti ospitati personalmente a Jetpack con il nostro nuovo flusso semplificato, disponibile direttamente da Statistiche e Notifiche.
-- Abbiamo aggiunto il supporto per le menzioni nell'editor sperimentale: tagga amici e collaboratori in tutta facilità.
-- La selezione degli elementi multimediali è diventata più accessibile per tutti.
+26.3:
+Abbiamo aggiunto le informazioni relative alle dimensioni dei file alla tua libreria multimediale, così puoi vedere esattamente con cosa stai lavorando.
+
+Anche l'editor sperimentale è diventato più fluido. I contenuti rimangono invariati quando ruoti il dispositivo o attivi la modalità scura e le finestre di dialogo ora rispondono correttamente al pulsante indietro. Buon editing!
