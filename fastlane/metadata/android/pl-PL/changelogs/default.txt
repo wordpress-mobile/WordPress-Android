@@ -1,3 +1,0 @@
-26.2:
-- Dodaliśmy obsługę wzmianek w edytorze eksperymentalnym — oznaczaj znajomych i współpracowników z łatwością.
-- Wybór multimediów stał się bardziej dostępny dla wszystkich.
