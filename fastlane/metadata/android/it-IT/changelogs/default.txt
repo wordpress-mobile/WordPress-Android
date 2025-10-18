@@ -1,3 +1,0 @@
-26.2:
-- Abbiamo aggiunto il supporto per le menzioni nell'editor sperimentale: tagga amici e collaboratori in tutta facilità.
-- La selezione degli elementi multimediali è diventata più accessibile per tutti.
