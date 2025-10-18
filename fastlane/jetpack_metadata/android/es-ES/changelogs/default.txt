@@ -1,4 +1,4 @@
-26.2:
-- Conecta tus sitios autoalojados a Jetpack con nuestro nuevo flujo optimizado, disponible directamente desde Estadísticas y Notificaciones.
-- Ya se pueden añadir menciones en el editor experimental: etiqueta a tus amigos y colaboradores fácilmente.
-- La selección de medios ahora es más accesible para todos.
+26.3:
+Hemos añadido información sobre el tamaño de los archivos a la biblioteca de medios para que puedas ver exactamente con qué estás trabajando.
+
+Además, ahora el editor experimental es más sencillo. Tu contenido permanece en el lugar correcto cuando rotas el dispositivo o cambias al modo oscuro, y los cuadros de diálogo ahora responden correctamente al botón Atrás. ¡Disfruta editando!

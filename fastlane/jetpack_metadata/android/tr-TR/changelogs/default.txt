@@ -1,4 +1,4 @@
-26.2:
-- Doğrudan İstatistikler ve Bildirimler'den alınabilen, kullanıcı tarafından barındırılan sitelerinizi yeni ve kolaylaştırılmış akışımızla Jetpack'e bağlayın.
-- Deneysel düzenleyiciye bahsedilme desteği ekledik, arkadaşlarınızı ve çalışma arkadaşlarınızı kolaylıkla etiketleyin.
-- Ortam seçimi herkes için daha erişilebilir hale geldi.
+26.3:
+Tam olarak ne ile çalıştığınızı görebilmeniz için ortam kütüphanenize dosya boyutu bilgileri ekledik.
+
+Deneysel düzenleyici de daha pürüzsüz oldu. Cihazınızı döndürdüğünüzde veya karanlık modu değiştirdiğinizde içeriğiniz sabit kalır ve iletişim kutuları artık geri düğmesine doğru yanıt verir. İyi düzenlemeler!

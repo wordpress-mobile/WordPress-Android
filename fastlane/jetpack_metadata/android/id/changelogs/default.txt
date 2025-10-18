@@ -1,4 +1,4 @@
-26.2:
-- Hubungkan situs yang di-hosting sendiri ke Jetpack dengan alur baru yang lebih efisien—tersedia langsung di Statistik dan Pemberitahuan.
-- Kami telah menambahkan dukungan untuk penyebutan di editor eksperimental—tandai teman dan kolaborator Anda dengan mudah.
-- Pilihan media menjadi lebih mudah diakses oleh semua orang.
+26,3:
+Kami menambahkan info ukuran berkas ke pustaka media Anda agar Anda dapat melihat dengan tepat apa yang sedang Anda kerjakan.
+
+Penyunting eksperimental juga makin lancar. Konten Anda tidak berubah posisi saat Anda memutar perangkat atau mengaktifkan mode gelap, dan dialog kini merespons dengan baik saat tombol kembali ditekan. Selamat menyunting!

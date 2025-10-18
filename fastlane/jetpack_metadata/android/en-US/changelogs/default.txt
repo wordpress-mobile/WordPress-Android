@@ -1,3 +1,3 @@
-- Connect your self-hosted sites to Jetpack with our new streamlined flow—available right from Stats and Notifications.
-- We've added support for mentions in the experimental editor—tag your friends and collaborators with ease.
-- Media selection just got more accessible for everyone.
+We added file size info to your media library, so you can see exactly what you're working with.
+
+The experimental editor just got smoother, too. Your content stays put when you rotate your device or toggle dark mode, and dialogs now respond properly to the back button. Happy editing!
