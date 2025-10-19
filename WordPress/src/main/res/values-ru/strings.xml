@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-09-02 16:54:09+0000
+Translation-Revision-Date: 2025-10-14 22:54:08+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: ru
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="error_deleting_term">Произошла ошибка при удалении термина</string>
+    <string name="error_saving_term">Произошла ошибка при сохранении термина</string>
+    <string name="add_term">Добавить термин</string>
+    <string name="term_delete_confirmation_message">Вы действительно хотите удалить «%1$s»?</string>
+    <string name="term_delete_confirmation_title">Удалить термин</string>
+    <string name="term_sort_by_count">Количество</string>
+    <string name="term_sort_by_name">Имя</string>
+    <string name="term_parent_none">Нет</string>
+    <string name="term_parent_label">Родительский:</string>
+    <string name="term_count">Количество: %1$d</string>
+    <string name="term_count_label">Количество:</string>
+    <string name="term_description_label">Описание:</string>
+    <string name="term_slug_label">Слаг:</string>
+    <string name="term_name_label">Имя:</string>
+    <string name="application_password_experimental_feature_note">\n\nПримечание: аутентификация по паролю приложения на устройствах Android является экспериментальной функцией.</string>
+    <string name="application_password_required_block_editor">Редактор блоков</string>
+    <string name="application_password_required_description">Пароли приложений — это более надёжный способ подключения к автономным сайтам, дающий возможность поддержки таких функций, как %1$s.</string>
+    <string name="application_password_required">Требуется пароль приложения</string>
+    <string name="menu_html_mode">Редактор кода</string>
+    <string name="taxonomies_title">Таксономии</string>
+    <string name="media_edit_file_size_caption">Размер файла</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Не удалось войти в WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Подключите сайт к WordPress.com</string>
     <string name="dataview_default_empty_message">Здесь ничего нет</string>
@@ -33,13 +54,14 @@ Language: ru
     <string name="application_password_info_description_1">Пароли приложения — способ, при помощи которого приложение получает доступ к контенту вашего сайта. Это безопаснее, чем пользоваться паролем учётной записи.</string>
     <string name="application_password_info_title">Пароли приложений</string>
     <string name="application_password_disable_feature_description">При отключении пароля приложения будут удалены данные для входа на сайты: %1$s. Для повторного входа вам может потребоваться вновь ввести эти сайты в приложение.</string>
-    <string name="application_password_invalid_description">Пароля приложения больше нет. Войдите снова, чтобы создать новый пароль приложения. </string>
+    <string name="application_password_invalid_description">Пароля приложения больше нет. Войдите заново, чтобы создать новый пароль приложения.</string>
     <string name="subscribers_delete_failed">Не удалось удалить подписчика</string>
     <string name="subscribers_delete_success_message">Подписчик удалён, но требуется некоторое время, чтобы удаление вступило в силу.</string>
     <string name="subscribers_delete_success_title">Подписчик удалён</string>
     <string name="subscribers_delete_confirmation_message">Вы уверены, что хотите удалить этого подписчика?</string>
     <string name="subscribers_delete_confirmation_title">Удалить подписчика</string>
     <string name="subscribers_sort_name">Имя</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">Не удалось подключиться к WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">Время ожидания истекло</string>
     <string name="jetpack_rest_connection_cancel_message">Выполняется процесс подключения Jetpack. Вы уверены, что хотите отменить действие?</string>
     <string name="jetpack_rest_connection_cancel_title">Отменить установку Jetpack?</string>
@@ -1181,8 +1203,8 @@ Language: ru
     <string name="my_site_post_card_link_create_post">Создать запись</string>
     <string name="my_site_create_next_post_excerpt">Регулярные публикации помогают вам формировать аудиторию!</string>
     <string name="my_site_create_next_post_title">Создайте вашу следующую запись</string>
-    <string name="menu_visual_mode_switched_notice">Переход в визуальный режим</string>
-    <string name="menu_html_mode_switched_notice">Переход в режим HTML</string>
+    <string name="menu_visual_mode_switched_notice">Включён режим «Визуальный редактор»</string>
+    <string name="menu_html_mode_switched_notice">Включён режим «Редактор кода»</string>
     <string name="post_link_copied_to_clipboard">Ссылка скопирована в буфер обмена</string>
     <string name="comment_author_badge">Автор</string>
     <string name="button_copy_link">Скопировать ссылку</string>
@@ -2823,14 +2845,12 @@ Language: ru
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Регистрация через Google…</string>
     <string name="jetpack_connection_failed_with_reason">Подключение к Jetpack не удалось: %s</string>
     <string name="jetpack_already_connected_toast">Вы уже подключили Jetpack</string>
-    <string name="menu_visual_mode">Визуальный режим</string>
-    <string name="menu_html_mode">Режим HTML</string>
+    <string name="menu_visual_mode">Визуальный редактор</string>
     <string name="menu_preview">Предпросмотр</string>
     <string name="menu_save_as_draft">Сохранить как черновик</string>
     <string name="file_size_in_terabytes">%s ТБ</string>
     <string name="file_size_in_gigabytes">%s ГБ</string>
     <string name="file_size_in_megabytes">%s МБ</string>
-    <string name="file_size_in_kilobytes">%s КБ</string>
     <string name="file_size_in_bytes">%s байт</string>
     <string name="site_settings_quota_space_value">%1$s из %2$s</string>
     <string name="site_settings_quota_space_hint">Если вам требуется больше места, то вам нужно улучшить ваш тариф WordPress.</string>

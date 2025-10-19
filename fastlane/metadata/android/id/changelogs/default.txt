@@ -1,3 +1,0 @@
-26.2:
-- Kami telah menambahkan dukungan untuk penyebutan di editor eksperimental—tandai teman dan kolaborator Anda dengan mudah.
-- Pilihan media menjadi lebih mudah diakses oleh semua orang.

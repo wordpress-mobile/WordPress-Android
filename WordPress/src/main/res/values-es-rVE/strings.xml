@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-08-22 17:29:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: es_VE
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -313,8 +313,6 @@ Language: es_VE
     <string name="my_site_post_card_link_create_post">Crear una entrada</string>
     <string name="my_site_create_next_post_excerpt">¡Publicar regularmente ayuda a crear tu audiencia!</string>
     <string name="my_site_create_next_post_title">Crear tu próxima entrada</string>
-    <string name="menu_visual_mode_switched_notice">Cambiado a modo visual</string>
-    <string name="menu_html_mode_switched_notice">Cambiado a modo HTML</string>
     <string name="post_link_copied_to_clipboard">Enlace copiado al portapapeles</string>
     <string name="comment_author_badge">Autor</string>
     <string name="button_copy_link">Copiar el enlace</string>
@@ -1914,14 +1912,11 @@ Language: es_VE
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Registrarse con Google…</string>
     <string name="jetpack_connection_failed_with_reason">Se ha producido un error en la conexión a Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">Ya estás conectado a Jetpack</string>
-    <string name="menu_visual_mode">Modo visual</string>
-    <string name="menu_html_mode">Modo HTML</string>
     <string name="menu_preview">Vista previa</string>
     <string name="menu_save_as_draft">Guardar como borrador</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s de %2$s</string>
     <string name="site_settings_quota_space_hint">Si necesitas más espacio, considera actualizar tu plan de WordPress.</string>

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2024-09-29 15:41:16+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: es_MX
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -1145,14 +1145,11 @@ Language: es_MX
     <string name="open_external_link_desc">Abrir enlace externo</string>
     <string name="jetpack_connection_failed_with_reason">Se ha producido un error en la conexión a Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">Ya estás conectado a Jetpack</string>
-    <string name="menu_visual_mode">Modo visual</string>
-    <string name="menu_html_mode">Modo HTML</string>
     <string name="menu_preview">Vista previa</string>
     <string name="menu_save_as_draft">Guardar como borrador</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s de %2$s</string>
     <string name="site_settings_quota_space_hint">Si necesitas más espacio, considera actualizar tu plan de WordPress.</string>

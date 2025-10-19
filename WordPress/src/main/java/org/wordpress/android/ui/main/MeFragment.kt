@@ -43,6 +43,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.about.UnifiedAboutActivity
@@ -134,6 +135,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     @Inject
     lateinit var experimentalFeatures: ExperimentalFeatures
+
+    @Inject
+    lateinit var appLogWrapper: AppLogWrapper
 
     private val viewModel: MeViewModel by viewModels()
     private val emailVerificationViewModel: EmailVerificationViewModel by viewModels()
@@ -241,49 +245,60 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     }
 
     private fun MeFragmentBinding.showAvatarPicker() {
+        appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Opening avatar editor")
         withVeryfiedEmail(unverifiedEmailMessageRes = R.string.avatar_update_email_unverified) {
             showQuickEditor(page = AvatarPickerAndAboutEditorConfiguration.Page.AvatarPicker)
         }
     }
 
     private fun MeFragmentBinding.showProfileEditor() {
+        appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Opening profile editor")
         withVeryfiedEmail(unverifiedEmailMessageRes = R.string.about_update_email_unverified) {
             showQuickEditor(page = AvatarPickerAndAboutEditorConfiguration.Page.AboutEditor)
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun MeFragmentBinding.showQuickEditor(
         page: AvatarPickerAndAboutEditorConfiguration.Page
     ) {
-        GravatarQuickEditor.show(
-            fragment = this@MeFragment,
-            gravatarQuickEditorParams = GravatarQuickEditorParams {
-                email = Email(accountStore.account.email)
-                scopeOption = QuickEditorScopeOption.avatarAndAbout {
-                    initialPage = page
-                    fields = setOf(
-                        AboutInputField.FirstName,
-                        AboutInputField.LastName,
-                        AboutInputField.DisplayName,
-                        AboutInputField.AboutMe
-                    )
-                }
-            },
-            authenticationMethod = AuthenticationMethod.Bearer(accountStore.accessToken.orEmpty()),
-            updateHandler = { event ->
-                when (event) {
-                    AvatarPickerResult -> {
-                        loadAvatar(null, true)
+        try {
+            appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Showing Gravatar quick editor: ${page.value}")
+            GravatarQuickEditor.show(
+                fragment = this@MeFragment,
+                gravatarQuickEditorParams = GravatarQuickEditorParams {
+                    email = Email(accountStore.account.email)
+                    scopeOption = QuickEditorScopeOption.avatarAndAbout {
+                        initialPage = page
+                        fields = setOf(
+                            AboutInputField.FirstName,
+                            AboutInputField.LastName,
+                            AboutInputField.DisplayName,
+                            AboutInputField.AboutMe
+                        )
                     }
+                },
+                authenticationMethod = AuthenticationMethod.Bearer(accountStore.accessToken.orEmpty()),
+                updateHandler = { event ->
+                    when (event) {
+                        AvatarPickerResult -> {
+                            loadAvatar(null, true)
+                        }
 
-                    is AboutEditorResult -> {
-                        meDisplayName.text = event.profile.displayName.ifEmpty { accountStore.account.displayName }
+                        is AboutEditorResult -> {
+                            meDisplayName.text = event.profile.displayName.ifEmpty { accountStore.account.displayName }
+                        }
+
+                        else -> Unit
                     }
-
-                    else -> Unit
+                },
+                onDismiss = {
+                    appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Gravatar quick editor dismissed: ${page.value}")
                 }
-            },
-        )
+            )
+        } catch (exception: Exception) {
+            appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Error opening Gravatar quick editor: ${exception.message}")
+        }
     }
 
     private fun withVeryfiedEmail(
@@ -291,8 +306,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         action: () -> Unit,
     ) {
         if (accountStore.account.emailVerified) {
+            appLogWrapper.d(AppLog.T.MAIN, "Email verified")
             action()
         } else {
+            appLogWrapper.d(AppLog.T.MAIN, "Email not verified")
             view?.let { view ->
                 sequencer.enqueue(
                     SnackbarItem(

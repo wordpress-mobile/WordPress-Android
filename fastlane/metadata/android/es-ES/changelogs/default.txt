@@ -1,3 +1,0 @@
-26.2:
-- Hemos añadido compatibilidad con meciones en el editor experimental—etiqueta a tus amigos y colaboradores con facilidad.
-- La selección de medios es mucho más accesible para todos.

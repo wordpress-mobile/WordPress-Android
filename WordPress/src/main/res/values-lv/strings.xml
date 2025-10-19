@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2025-06-25 19:41:27+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: lv
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -1089,8 +1089,6 @@ Language: lv
     <string name="my_site_post_card_link_create_post">Izveidojiet ziņu</string>
     <string name="my_site_create_next_post_excerpt">Regulāra publicēšana palīdz palielināt auditoriju!</string>
     <string name="my_site_create_next_post_title">Izveidojiet savu nākamo ziņu</string>
-    <string name="menu_visual_mode_switched_notice">Pārslēgts uz vizuālo režīmu</string>
-    <string name="menu_html_mode_switched_notice">Pārslēgts uz HTML režīmu</string>
     <string name="post_link_copied_to_clipboard">Saite ir nokopēta starpliktuvē</string>
     <string name="comment_author_badge">Autors</string>
     <string name="button_copy_link">Kopēt saiti</string>
@@ -2731,14 +2729,11 @@ Language: lv
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Notiek reģistrēšanās Google tīklā…</string>
     <string name="jetpack_connection_failed_with_reason">Neizdevās izveidot savienojumu ar Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">Jūs jau esat izveidojis savienojumu ar Jetpack</string>
-    <string name="menu_visual_mode">Vizuālais režīms</string>
-    <string name="menu_html_mode">HTML režīms</string>
     <string name="menu_preview">Priekšskatījums</string>
     <string name="menu_save_as_draft">Saglabāt kā melnrakstu</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s no %2$s</string>
     <string name="site_settings_quota_space_hint">Ja jums nepieciešams vairāk vietas, apsveriet sava WordPress plāna jaunināšanu.</string>
