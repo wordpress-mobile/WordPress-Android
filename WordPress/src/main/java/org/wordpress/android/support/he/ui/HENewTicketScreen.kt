@@ -77,6 +77,8 @@ fun HENewTicketScreen(
     var selectedCategory by remember { mutableStateOf<SupportCategory?>(null) }
     var subject by remember { mutableStateOf("") }
     var siteAddress by remember { mutableStateOf("") }
+    var messageText by remember { mutableStateOf("") }
+    var includeAppLogs by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -174,6 +176,15 @@ fun HENewTicketScreen(
                     )
                 },
                 shape = RoundedCornerShape(12.dp)
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            TicketMainContentView(
+                messageText = messageText,
+                includeAppLogs = includeAppLogs,
+                onMessageChanged = { message -> messageText = message},
+                onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -317,7 +328,7 @@ private fun CategoryOption(
                 shape = RoundedCornerShape(12.dp)
             )
             .clickable(onClick = onClick)
-            .padding(16.dp),
+            .padding(start = 16.dp, end = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
