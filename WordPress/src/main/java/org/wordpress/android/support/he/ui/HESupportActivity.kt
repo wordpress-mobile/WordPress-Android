@@ -55,6 +55,9 @@ class HESupportActivity : AppCompatActivity() {
                         is HESupportViewModel.NavigationEvent.NavigateToConversationDetail -> {
                             navController.navigate(ConversationScreen.Detail.name)
                         }
+                        HESupportViewModel.NavigationEvent.NavigateToNewTicket -> {
+                            navController.navigate(ConversationScreen.NewTicket.name)
+                        }
                         HESupportViewModel.NavigationEvent.NavigateBack -> {
                             navController.navigateUp()
                         }
@@ -66,7 +69,8 @@ class HESupportActivity : AppCompatActivity() {
 
     private enum class ConversationScreen {
         List,
-        Detail
+        Detail,
+        NewTicket
     }
 
     @Composable
@@ -99,6 +103,16 @@ class HESupportActivity : AppCompatActivity() {
                             onBackClick = { viewModel.onBackFromDetailClick() }
                         )
                     }
+                }
+
+                composable(route = ConversationScreen.NewTicket.name) {
+                    HENewTicketScreen(
+                        onBackClick = { viewModel.onBackFromDetailClick() },
+                        onSubmit = { category, subject, siteAddress ->
+                            // TODO: Handle ticket submission
+                            viewModel.onBackFromDetailClick()
+                        }
+                    )
                 }
             }
         }

@@ -5160,4 +5160,19 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_app_logs_label">Application Logs (Optional)</string>
     <string name="he_support_include_logs_title">Include application logs</string>
     <string name="he_support_include_logs_description">Including logs can help our team investigate issues. Logs may contain recent app activity.</string>
+
+    <!-- HE Support - New Ticket Screen -->
+    <string name="he_support_contact_support_title">Contact Support</string>
+    <string name="he_support_need_help_with">I need help with</string>
+    <string name="he_support_category_application">Application</string>
+    <string name="he_support_category_jetpack_connection">Jetpack Connection</string>
+    <string name="he_support_category_site_management">Site Management</string>
+    <string name="he_support_category_billing">Billing &amp; Subscriptions</string>
+    <string name="he_support_category_technical_issues">Technical Issues</string>
+    <string name="he_support_category_other">Other</string>
+    <string name="he_support_issue_details">Issue Details</string>
+    <string name="he_support_subject_label">Subject</string>
+    <string name="he_support_subject_placeholder">Brief summary of your issue</string>
+    <string name="he_support_site_address_label">Site Address (Optional)</string>
+    <string name="he_support_site_address_placeholder">https://yoursite.com</string>
 </resources>

@@ -18,6 +18,7 @@ import javax.inject.Inject
 class HESupportViewModel @Inject constructor() : ViewModel() {
     sealed class NavigationEvent {
         data class NavigateToConversationDetail(val conversation: SupportConversation) : NavigationEvent()
+        data object NavigateToNewTicket : NavigationEvent()
         data object NavigateBack : NavigationEvent()
     }
 
@@ -48,7 +49,9 @@ class HESupportViewModel @Inject constructor() : ViewModel() {
     }
 
     fun createNewConversation() {
-        // Placeholder for creating new conversation - will be implemented when detail screen is ready
+        viewModelScope.launch {
+            _navigationEvents.emit(NavigationEvent.NavigateToNewTicket)
+        }
     }
 
     private fun loadDummyData() {
