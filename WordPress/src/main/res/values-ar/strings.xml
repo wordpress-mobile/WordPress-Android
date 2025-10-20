@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-09-01 13:54:09+0000
+Translation-Revision-Date: 2025-10-15 13:16:18+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: ar
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="error_deleting_term">حدث خطأ في حذف المصطلح</string>
+    <string name="error_saving_term">حدث خطأ في حفظ المصطلح</string>
+    <string name="add_term">إضافة مصطلح</string>
+    <string name="term_delete_confirmation_message">هل أنت متأكد من رغبتك في حذف \"⁦%1$s⁩\"؟</string>
+    <string name="term_delete_confirmation_title">حذف مصطلح</string>
+    <string name="term_parent_label">الأصل</string>
+    <string name="term_count">العدد: ⁦%1$d⁩</string>
+    <string name="application_password_experimental_feature_note">\n\nملاحظة: تعد مصادقة كلمة مرور التطبيق على أجهزة Android ميزة تجريبية.</string>
+    <string name="application_password_required_block_editor">محرر المكوِّنات</string>
+    <string name="application_password_required_description">كلمات مرور التطبيقات هي طريقة أكثر أمانًا للاتصال بموقعك المستضاف ذاتيًا، وتمكين الدعم لميزات، مثل: ⁦%1$s⁩.</string>
+    <string name="taxonomies_title">الفئات</string>
     <string name="jetpack_rest_connection_error_login_wpcom">يتعذّر تسجيل الدخول إلى ووردبريس.كوم</string>
     <string name="jetpack_rest_connection_step_connect_site">ربط الموقع الإلكتروني بووردبريس.كوم</string>
     <string name="dataview_default_empty_message">لا يوجد شيء هنا</string>
@@ -31,7 +42,7 @@ Language: ar
     <string name="application_password_info_description_1">كلمات مرور التطبيقات هي طريقة آمنة للتطبيقات للوصول إلى موقعك بدون استخدام كلمة مرور حسابك.</string>
     <string name="application_password_info_title">كلمات مرور التطبيقات</string>
     <string name="application_password_disable_feature_description">سيؤدي تعطيل كلمة مرور التطبيق إلى إزالة معلومات تسجيل الدخول في ⁦%1$s⁩ من مواقعك. قد تحتاج إلى إعادة إضافة المواقع المتأثرة لإعادة تسجيل الدخول.</string>
-    <string name="application_password_invalid_description">لم تعد كلمة مرور تطبيقك موجودة. يُرجى تسجيل الدخول مرة أخرى لإنشاء كلمة مرور جديدة للتطبيق </string>
+    <string name="application_password_invalid_description">لم تعد كلمة مرور تطبيقك موجودة. يُرجى تسجيل الدخول مرة أخرى لإنشاء كلمة مرور جديدة للتطبيق.</string>
     <string name="subscribers_delete_success_message">حُذِف المشترك، لكن قد يستغرق الأمر دقيقة حتى يصبح الحذف ساري المفعول</string>
     <string name="subscribers_delete_success_title">حُذِف المشترك</string>
     <string name="subscribers_delete_confirmation_message">هل أنت متأكد من رغبتك في حذف هذا المشترك؟</string>
@@ -1167,8 +1178,8 @@ Language: ar
     <string name="my_site_post_card_link_create_post">إنشاء مقالة</string>
     <string name="my_site_create_next_post_excerpt">النشر بانتظام يساعد في بناء جمهورك!</string>
     <string name="my_site_create_next_post_title">أنشئ تدوينتك التالية</string>
-    <string name="menu_visual_mode_switched_notice">تم التبديل إلى الوضع المرئي</string>
-    <string name="menu_html_mode_switched_notice">تم التبديل إلى وضع HTML</string>
+    <string name="menu_visual_mode_switched_notice">تم التبديل إلى المحرر المرئي</string>
+    <string name="menu_html_mode_switched_notice">تم التبديل إلى محرر الشفرة البرمجية</string>
     <string name="post_link_copied_to_clipboard">تم نسخ الرابط إلى الحافظة</string>
     <string name="comment_author_badge">الكاتب</string>
     <string name="button_copy_link">نسخ الرابط</string>
@@ -2809,14 +2820,12 @@ Language: ar
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">جاري التسجيل باستخدام Google…</string>
     <string name="jetpack_connection_failed_with_reason">فشل الاتصال بـ Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">أنت متصل بالفعل بـ Jetpack</string>
-    <string name="menu_visual_mode">الوضع المرئي</string>
-    <string name="menu_html_mode">وضع HTML</string>
+    <string name="menu_visual_mode">المحرر المرئي</string>
     <string name="menu_preview">معاينة</string>
     <string name="menu_save_as_draft">حفظ كمسودة</string>
     <string name="file_size_in_terabytes">%s تيرابايت</string>
     <string name="file_size_in_gigabytes">%s جيجابايت</string>
     <string name="file_size_in_megabytes">%s ميجابايت</string>
-    <string name="file_size_in_kilobytes">%s كيلوبايت</string>
     <string name="file_size_in_bytes">%s بايت</string>
     <string name="site_settings_quota_space_value">%1$s من %2$s</string>
     <string name="site_settings_quota_space_hint">إذا كنت بحاجة إلى مزيد من المساحة، ففكر في ترقية خطة ووردبريس الخاصة بك.</string>

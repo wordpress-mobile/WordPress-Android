@@ -1,4 +1,4 @@
-26.2 :
-- Connectez vos sites auto-hébergés à Jetpack avec notre nouveau flux rationalisé, disponible directement depuis Stats and Notifications.
-- Nous avons ajouté la prise en charge des mentions dans l’éditeur expérimental : taguez facilement vos amis et collaborateurs.
-- La sélection des médias est devenue plus accessible à tous.
+26.3 :
+Nous avons ajouté des informations sur la taille du fichier à votre médiathèque afin que vous puissiez voir exactement ce que vous utilisez.
+
+L’éditeur expérimental est devenu plus fluide aussi. Votre contenu reste affiché lorsque vous faites pivoter l’appareil ou que vous basculez en mode sombre et les boîtes de dialogue répondent désormais correctement au bouton Retour. Bonnes modifications !
