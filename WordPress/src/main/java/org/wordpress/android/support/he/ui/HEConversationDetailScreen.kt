@@ -327,7 +327,7 @@ private fun ReplyBottomSheet(
             TicketMainContentView(
                 messageText = messageText,
                 includeAppLogs = includeAppLogs,
-                onMessageChanged = { message -> messageText = message},
+                onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
             )
         }
