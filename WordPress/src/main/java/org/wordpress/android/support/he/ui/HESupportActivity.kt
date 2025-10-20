@@ -11,11 +11,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @AndroidEntryPoint
@@ -27,6 +31,8 @@ class HESupportActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.init()
+        observeNavigationEvents()
         composeView = ComposeView(this)
         setContentView(
             composeView.apply {
@@ -39,7 +45,23 @@ class HESupportActivity : AppCompatActivity() {
                 }
             }
         )
-        viewModel.init()
+    }
+
+    private fun observeNavigationEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigationEvents.collect { event ->
+                    when (event) {
+                        is HESupportViewModel.NavigationEvent.NavigateToConversationDetail -> {
+                            navController.navigate(ConversationScreen.Detail.name)
+                        }
+                        HESupportViewModel.NavigationEvent.NavigateBack -> {
+                            navController.navigateUp()
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private enum class ConversationScreen {
@@ -60,8 +82,7 @@ class HESupportActivity : AppCompatActivity() {
                     HEConversationsListScreen(
                         conversations = viewModel.conversations,
                         onConversationClick = { conversation ->
-                            viewModel.selectConversation(conversation)
-                            navController.navigate(ConversationScreen.Detail.name)
+                            viewModel.onConversationClick(conversation)
                         },
                         onBackClick = { finish() },
                         onCreateNewConversationClick = {
@@ -75,7 +96,7 @@ class HESupportActivity : AppCompatActivity() {
                     selectedConversation?.let { conversation ->
                         HEConversationDetailScreen(
                             conversation = conversation,
-                            onBackClick = { navController.navigateUp() }
+                            onBackClick = { viewModel.onBackFromDetailClick() }
                         )
                     }
                 }
