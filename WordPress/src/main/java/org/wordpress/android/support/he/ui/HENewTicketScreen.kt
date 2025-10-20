@@ -72,7 +72,7 @@ fun HENewTicketScreen(
         },
         bottomBar = {
             SendButton(
-                enabled = selectedCategory != null && subject.isNotBlank(),
+                enabled = selectedCategory != null && subject.isNotBlank() && messageText.isNotBlank(),
                 onClick = {
                     selectedCategory?.let { category ->
                         onSubmit(category, subject, siteAddress)

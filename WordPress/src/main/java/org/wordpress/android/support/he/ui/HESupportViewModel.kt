@@ -65,9 +65,15 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
-    fun createNewConversation() {
+    fun onCreateNewConversation() {
         viewModelScope.launch {
             _navigationEvents.emit(NavigationEvent.NavigateToNewTicket)
+        }
+    }
+
+    fun onSendNewConversation() {
+        viewModelScope.launch {
+            _navigationEvents.emit(NavigationEvent.NavigateBack)
         }
     }
 

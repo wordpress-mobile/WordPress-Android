@@ -90,7 +90,7 @@ class HESupportActivity : AppCompatActivity() {
                         },
                         onBackClick = { finish() },
                         onCreateNewConversationClick = {
-                            viewModel.createNewConversation()
+                            viewModel.onCreateNewConversation()
                         }
                     )
                 }
@@ -110,7 +110,7 @@ class HESupportActivity : AppCompatActivity() {
                     HENewTicketScreen(
                         onBackClick = { viewModel.onBackFromDetailClick() },
                         onSubmit = { category, subject, siteAddress ->
-                            // Submit the new ticket
+                            viewModel.onSendNewConversation()
                         },
                         userName = userInfo.userName,
                         userEmail = userInfo.userEmail,
