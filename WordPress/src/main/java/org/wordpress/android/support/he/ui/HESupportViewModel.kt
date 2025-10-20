@@ -10,12 +10,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
+import org.wordpress.android.support.model.UserInfo
 import javax.inject.Inject
 
 @HiltViewModel
-class HESupportViewModel @Inject constructor() : ViewModel() {
+class HESupportViewModel @Inject constructor(
+    private val accountStore: AccountStore
+) : ViewModel() {
     sealed class NavigationEvent {
         data class NavigateToConversationDetail(val conversation: SupportConversation) : NavigationEvent()
         data object NavigateToNewTicket : NavigationEvent()
@@ -28,11 +32,24 @@ class HESupportViewModel @Inject constructor() : ViewModel() {
     private val _selectedConversation = MutableStateFlow<SupportConversation?>(null)
     val selectedConversation: StateFlow<SupportConversation?> = _selectedConversation.asStateFlow()
 
+    private val _userInfo = MutableStateFlow(UserInfo())
+    val userInfo: StateFlow<UserInfo> = _userInfo.asStateFlow()
+
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents: SharedFlow<NavigationEvent> = _navigationEvents.asSharedFlow()
 
     fun init() {
         loadDummyData()
+        loadUserInfo()
+    }
+
+    private fun loadUserInfo() {
+        val account = accountStore.account
+        _userInfo.value = UserInfo(
+            userName = account.displayName.ifEmpty { account.userName },
+            userEmail = account.email,
+            avatarUrl = account.avatarUrl.takeIf { it.isNotEmpty() }
+        )
     }
 
     fun onConversationClick(conversation: SupportConversation) {

@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -53,6 +54,7 @@ import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.theme.neutral
+import org.wordpress.android.ui.dataview.compose.RemoteImage
 
 enum class SupportCategory(val icon: ImageVector, val labelRes: Int) {
     APPLICATION(Icons.Default.PhoneAndroid, R.string.he_support_category_application),
@@ -67,7 +69,10 @@ enum class SupportCategory(val icon: ImageVector, val labelRes: Int) {
 @Composable
 fun HENewTicketScreen(
     onBackClick: () -> Unit,
-    onSubmit: (category: SupportCategory, subject: String, siteAddress: String) -> Unit
+    onSubmit: (category: SupportCategory, subject: String, siteAddress: String) -> Unit,
+    userName: String = "",
+    userEmail: String = "",
+    userAvatarUrl: String? = null
 ) {
     var selectedCategory by remember { mutableStateOf<SupportCategory?>(null) }
     var subject by remember { mutableStateOf("") }
@@ -79,6 +84,16 @@ fun HENewTicketScreen(
                 title = stringResource(R.string.he_support_contact_support_title),
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = onBackClick
+            )
+        },
+        bottomBar = {
+            SendButton(
+                enabled = selectedCategory != null && subject.isNotBlank(),
+                onClick = {
+                    selectedCategory?.let { category ->
+                        onSubmit(category, subject, siteAddress)
+                    }
+                }
             )
         }
     ) { contentPadding ->
@@ -162,6 +177,119 @@ fun HENewTicketScreen(
             )
 
             Spacer(modifier = Modifier.height(32.dp))
+
+            Text(
+                text = stringResource(R.string.he_support_contact_information),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            ContactInformationCard(
+                userName = userName,
+                userEmail = userEmail,
+                userAvatarUrl = userAvatarUrl
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+    }
+}
+
+@Composable
+private fun SendButton(
+    enabled: Boolean,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Button(
+            onClick = onClick,
+            enabled = enabled,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            shape = RoundedCornerShape(28.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.he_support_send_ticket_button),
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+    }
+}
+
+@Composable
+private fun ContactInformationCard(
+    userName: String,
+    userEmail: String,
+    userAvatarUrl: String?
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .padding(16.dp)
+    ) {
+        Column {
+            Text(
+                text = stringResource(R.string.he_support_contact_email_message),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Avatar
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surface),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (userAvatarUrl.isNullOrEmpty()) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_user_white_24dp),
+                            contentDescription = null,
+                            modifier = Modifier.size(32.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    } else {
+                        RemoteImage(
+                            imageUrl = userAvatarUrl,
+                            fallbackImageRes = R.drawable.ic_user_white_24dp,
+                            modifier = Modifier
+                                .size(64.dp)
+                                .clip(CircleShape)
+                        )
+                    }
+                }
+
+                Column(
+                    modifier = Modifier.padding(start = 16.dp)
+                ) {
+                    Text(
+                        text = userName,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = userEmail,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
         }
     }
 }
@@ -192,18 +320,12 @@ private fun CategoryOption(
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(40.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(24.dp)
-            )
-        }
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(24.dp)
+        )
 
         Text(
             text = label,
@@ -231,7 +353,10 @@ private fun HENewTicketScreenPreview() {
     AppThemeM3(isDarkTheme = false) {
         HENewTicketScreen(
             onBackClick = { },
-            onSubmit = { _, _, _ -> }
+            onSubmit = { _, _, _ -> },
+            userName = "Test user",
+            userEmail = "test.user@automattic.com",
+            userAvatarUrl = null
         )
     }
 }
@@ -242,7 +367,10 @@ private fun HENewTicketScreenPreviewDark() {
     AppThemeM3(isDarkTheme = true) {
         HENewTicketScreen(
             onBackClick = { },
-            onSubmit = { _, _, _ -> }
+            onSubmit = { _, _, _ -> },
+            userName = "Test user",
+            userEmail = "test.user@automattic.com",
+            userAvatarUrl = null
         )
     }
 }
@@ -253,7 +381,10 @@ private fun HENewTicketScreenWordPressPreview() {
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
         HENewTicketScreen(
             onBackClick = { },
-            onSubmit = { _, _, _ -> }
+            onSubmit = { _, _, _ -> },
+            userName = "Test user",
+            userEmail = "test.user@automattic.com",
+            userAvatarUrl = null
         )
     }
 }
@@ -264,7 +395,10 @@ private fun HENewTicketScreenPreviewWordPressDark() {
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         HENewTicketScreen(
             onBackClick = { },
-            onSubmit = { _, _, _ -> }
+            onSubmit = { _, _, _ -> },
+            userName = "Test user",
+            userEmail = "test.user@automattic.com",
+            userAvatarUrl = null
         )
     }
 }

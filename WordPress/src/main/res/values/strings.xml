@@ -5175,4 +5175,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_subject_placeholder">Brief summary of your issue</string>
     <string name="he_support_site_address_label">Site Address (Optional)</string>
     <string name="he_support_site_address_placeholder">https://yoursite.com</string>
+    <string name="he_support_contact_information">Contact Information</string>
+    <string name="he_support_contact_email_message">We\'ll email you at this address.</string>
+    <string name="he_support_send_ticket_button">Send</string>
 </resources>

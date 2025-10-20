@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.support.model.UserInfo
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
@@ -25,12 +26,6 @@ class SupportViewModel @Inject constructor(
         data object NavigateToLogin : NavigationEvent()
         data object NavigateToAskHappinessEngineers : NavigationEvent()
     }
-
-    data class UserInfo(
-        val userName: String = "",
-        val userEmail: String = "",
-        val avatarUrl: String? = null
-    )
 
     data class SupportOptionsVisibility(
         val showAskTheBots: Boolean = true,

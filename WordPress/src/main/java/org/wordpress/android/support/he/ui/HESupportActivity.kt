@@ -106,12 +106,16 @@ class HESupportActivity : AppCompatActivity() {
                 }
 
                 composable(route = ConversationScreen.NewTicket.name) {
+                    val userInfo by viewModel.userInfo.collectAsState()
                     HENewTicketScreen(
                         onBackClick = { viewModel.onBackFromDetailClick() },
                         onSubmit = { category, subject, siteAddress ->
                             // TODO: Handle ticket submission
                             viewModel.onBackFromDetailClick()
-                        }
+                        },
+                        userName = userInfo.userName,
+                        userEmail = userInfo.userEmail,
+                        userAvatarUrl = userInfo.avatarUrl
                     )
                 }
             }
