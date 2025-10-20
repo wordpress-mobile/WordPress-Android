@@ -1,4 +1,4 @@
-26.2:
-- Conecte seus sites auto-hospedados ao Jetpack com nosso novo fluxo simplificado, disponível diretamente em Estatísticas e Notificações.
-- Adicionamos compatibilidade com menções ao editor experimental: marque seus amigos e colaboradores com facilidade.
-- A seleção de mídia está mais acessível para todos.
+26.3:
+Adicionamos informações de tamanho de arquivo à sua biblioteca de mídia para você ver exatamente com o que está trabalhando.
+
+O editor experimental ficou mais estável também. Seu conteúdo permanece visível quando você gira seu dispositivo ou ativa/desativa o modo escuro, e as caixas de diálogo agora respondem corretamente ao botão Voltar. Aproveite a edição!

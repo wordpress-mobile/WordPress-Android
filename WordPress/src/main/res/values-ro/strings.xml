@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-30 05:58:53+0000
+Translation-Revision-Date: 2025-10-11 16:29:55+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: ro
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="error_deleting_term">A fost o eroare la ștergerea termenului</string>
+    <string name="error_saving_term">A fost o eroare la salvarea termenului</string>
+    <string name="add_term">Adaugă termen</string>
+    <string name="term_delete_confirmation_message">Sigur vrei să ștergi „%1$s”?</string>
+    <string name="term_delete_confirmation_title">Șterge termenul</string>
+    <string name="term_sort_by_count">Număr</string>
+    <string name="term_sort_by_name">Nume</string>
+    <string name="term_parent_none">Niciunul</string>
+    <string name="term_parent_label">Părinte:</string>
+    <string name="term_count">Număr: %1$d</string>
+    <string name="term_count_label">Număr:</string>
+    <string name="term_description_label">Descriere:</string>
+    <string name="term_slug_label">Descriptor:</string>
+    <string name="term_name_label">Nume:</string>
+    <string name="application_password_experimental_feature_note">\n\nNotă: autentificarea cu parola aplicației pe dispozitivele Android este o funcționalitate experimentală.</string>
+    <string name="application_password_required_block_editor">Editor de blocuri</string>
+    <string name="application_password_required_description">Parolele aplicației sunt o modalitate mai sigură de a-ți conecta site-ul auto-găzduit și de a activa suportul pentru funcționalități, cum ar fi %1$s.</string>
+    <string name="application_password_required">Parola aplicației este obligatorie</string>
+    <string name="menu_html_mode">Editor de cod</string>
+    <string name="taxonomies_title">Taxonomii</string>
+    <string name="media_edit_file_size_caption">Dimensiune fișier</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Nu mă pot înregistra la WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Conectează site-ul la WordPress.com</string>
     <string name="dataview_default_empty_message">Nu există nimic aici</string>
@@ -33,7 +54,7 @@ Language: ro
     <string name="application_password_info_description_1">Parolele pentru aplicații sunt o modalitate sigură prin care aplicațiile pot să îți acceseze site-ul fără să folosească parola contului.</string>
     <string name="application_password_info_title">Parole pentru aplicații</string>
     <string name="application_password_disable_feature_description">Dezactivarea parolelor pentru aplicații va înlătura autentificarea pentru %1$s pentru site-urile tale. S-ar putea să fie nevoie să adaugi din nou autentificarea pentru site-urile afectate.</string>
-    <string name="application_password_invalid_description">Parola pentru aplicație nu mai există. Te rog să te autentifici din nou pentru a crea o parolă nouă pentru aplicație </string>
+    <string name="application_password_invalid_description">Parola pentru aplicație nu mai există. Te rog să te autentifici din nou pentru a crea o parolă nouă pentru aplicație.</string>
     <string name="subscribers_delete_failed">Ștergerea abonatului a eșuat</string>
     <string name="subscribers_delete_success_message">Abonatul a fost șters, dar s-ar putea să dureze un minut până când ștergerea va avea efect</string>
     <string name="subscribers_delete_success_title">Am șters abonatul</string>
@@ -1182,8 +1203,8 @@ Language: ro
     <string name="my_site_post_card_link_create_post">Creează un articol</string>
     <string name="my_site_create_next_post_excerpt">Publicările dese te ajută să-ți construiești audiența!</string>
     <string name="my_site_create_next_post_title">Creează următorul articol</string>
-    <string name="menu_visual_mode_switched_notice">Am comutat la modul vizual</string>
-    <string name="menu_html_mode_switched_notice">Am comutat la modul HTML</string>
+    <string name="menu_visual_mode_switched_notice">Am comutat la editorul vizual</string>
+    <string name="menu_html_mode_switched_notice">Am comutat la editorul de cod</string>
     <string name="post_link_copied_to_clipboard">Am copiat legătura în clipboard</string>
     <string name="comment_author_badge">Autor</string>
     <string name="button_copy_link">Copiază legătura</string>
@@ -1452,7 +1473,7 @@ Language: ro
     <string name="get_likes_no_network_error">Nu este disponibilă nicio rețea.</string>
     <string name="comments_empty_list_filtered_unreplied">Niciun comentariu fără răspuns</string>
     <string name="comment_status_unreplied">Fără răspuns</string>
-    <string name="gutenberg_native_add_link" tools:ignore="UnusedResources">ADAUGĂ O LEGĂTURĂ</string>
+    <string name="gutenberg_native_add_link" tools:ignore="UnusedResources">ADAUGĂ LEGĂTURA</string>
     <string name="gutenberg_native_search_settings" tools:ignore="UnusedResources">Setări căutare</string>
     <string name="jetpack_brute_force_allowlist_title">Adrese IP mereu permise</string>
     <string name="site_settings_denylist_title">Comentarii neaprobate</string>
@@ -2595,7 +2616,7 @@ Language: ro
     <string name="history_load_dialog_button_positive">Încarcă</string>
     <string name="history_footer_post">Articol creat în %1$s la %2$s</string>
     <string name="history_footer_page">Pagină creată în %1$s la %2$s</string>
-    <string name="history_empty_title">Niciun istoric deocamdată</string>
+    <string name="history_empty_title">Niciun istoric până acum</string>
     <string name="history_empty_subtitle_post">Când faci modificări la articolul tău, vei putea vedea istoricul aici</string>
     <string name="history_empty_subtitle_page">Când faci modificări la pagina ta, vei putea vedea istoricul aici</string>
     <string name="description_user">Avatar utilizator</string>
@@ -2824,8 +2845,7 @@ Language: ro
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Înregistrare cu Google…</string>
     <string name="jetpack_connection_failed_with_reason">Conectarea la Jetpack a eșuat: %s</string>
     <string name="jetpack_already_connected_toast">Ești deja conectat la Jetpack</string>
-    <string name="menu_visual_mode">Modul vizual</string>
-    <string name="menu_html_mode">Modul HTML</string>
+    <string name="menu_visual_mode">Editor vizual</string>
     <string name="menu_preview">Previzualizează</string>
     <string name="menu_save_as_draft">Salvează ca ciornă</string>
     <string name="file_size_in_terabytes">%s TO</string>
@@ -3619,7 +3639,7 @@ Language: ro
     <string name="reader_err_get_post_not_authorized">Nu ești autorizat să vezi acest articol</string>
     <string name="reader_err_get_post_generic">Acest articol nu poate fi regăsit</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Niciun articol recent</string>
-    <string name="media_edit_copy_url_toast">URL copiat în clipboard</string>
+    <string name="media_edit_copy_url_toast">Am copiat URL-ul în clipboard</string>
     <string name="selected_theme">Tema selectată</string>
     <string name="could_not_load_theme">Nu pot încărca tema</string>
     <string name="theme_activation_error">Ceva a mers prost. Nu pot activa tema</string>
@@ -3819,7 +3839,7 @@ Language: ro
     <string name="add_new_category">Adaugă categorie nouă</string>
     <string name="view_in_browser">Vizualizează în navigator</string>
     <string name="remove_account">Înlătură site-ul</string>
-    <string name="saving_changes">Salvează schimbările</string>
+    <string name="saving_changes">Salvez modificările</string>
     <string name="trash">Coș de gunoi</string>
     <string name="dlg_confirm_trash_comments">Trimit la coșul de gunoi?</string>
     <string name="mnu_comment_trash">Coș de gunoi</string>

@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-25 15:09:29+0000
+Translation-Revision-Date: 2025-10-10 14:20:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: en_GB
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="error_deleting_term">There was an error deleting the term</string>
+    <string name="error_saving_term">There was an error saving the term</string>
+    <string name="add_term">Add term</string>
+    <string name="term_delete_confirmation_message">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="term_delete_confirmation_title">Delete term</string>
+    <string name="term_sort_by_count">Count</string>
+    <string name="term_sort_by_name">Name</string>
+    <string name="term_parent_none">None</string>
+    <string name="term_parent_label">Parent:</string>
+    <string name="term_count">Count: %1$d</string>
+    <string name="term_count_label">Count:</string>
+    <string name="term_description_label">Description:</string>
+    <string name="term_slug_label">Slug:</string>
+    <string name="term_name_label">Name:</string>
+    <string name="application_password_experimental_feature_note">\n\nNote: Application Password authentication on Android devices is an Experimental Feature.</string>
+    <string name="application_password_required_block_editor">Block Editor</string>
+    <string name="application_password_required_description">Application passwords are a more secure way to connect to your self-hosted site, and enable support for features like %1$s.</string>
+    <string name="application_password_required">Application Password Required</string>
+    <string name="menu_html_mode">Code Editor</string>
+    <string name="taxonomies_title">Taxonomies</string>
+    <string name="media_edit_file_size_caption">File Size</string>
+    <string name="jetpack_rest_connection_error_login_wpcom">Unable to log into WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Connect site to WordPress.com</string>
+    <string name="dataview_default_empty_message">There\'s nothing here</string>
+    <string name="content_description_empty_view">Image illustrating that the view is empty</string>
+    <string name="jetpack_rest_connection_error_activate_stats">Failed to activate stats</string>
+    <string name="jetpack_rest_connection_error_access_token">Access token missing</string>
+    <string name="jetpack_rest_connection_error_connect_user">Failed to connect user to WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_site">Failed to connect to site</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack installed but inactive</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">Install failed</string>
+    <string name="jetpack_rest_connection_setup_title">Setting up Jetpack</string>
     <string name="application_password_last_used_sort">Last used</string>
     <string name="application_password_created_sort">Created</string>
     <string name="application_password_name_sort">Name</string>
@@ -22,13 +54,14 @@ Language: en_GB
     <string name="application_password_info_description_1">Application passwords are a secure way for apps to access your site without using your account password.</string>
     <string name="application_password_info_title">Application Passwords</string>
     <string name="application_password_disable_feature_description">Disabling Application Password will remove the login for %1$s of your sites. You may need to re-add affected sites to log in again.</string>
-    <string name="application_password_invalid_description">Your application password no longer exists. Please sign in again to create a new application password </string>
+    <string name="application_password_invalid_description">Your application password no longer exists. Please sign in again to create a new application password.</string>
     <string name="subscribers_delete_failed">Failed to delete subscriber</string>
     <string name="subscribers_delete_success_message">The subscriber has been deleted, but it may take a minute for the deletion to take effect</string>
     <string name="subscribers_delete_success_title">Subscriber deleted</string>
     <string name="subscribers_delete_confirmation_message">Are you sure you want to delete this subscriber?</string>
     <string name="subscribers_delete_confirmation_title">Delete subscriber</string>
     <string name="subscribers_sort_name">Name</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">Unable to connect to WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">Timed out</string>
     <string name="jetpack_rest_connection_cancel_message">The Jetpack connection process is in progress. Are you sure you want to cancel?</string>
     <string name="jetpack_rest_connection_cancel_title">Cancel Jetpack Setup?</string>
@@ -37,6 +70,7 @@ Language: en_GB
     <string name="jetpack_rest_connection_status_in_progress">In progress…</string>
     <string name="jetpack_rest_connection_status_not_started">Not started</string>
     <string name="jetpack_rest_connection_step_finalize">Finalise setup</string>
+    <string name="jetpack_rest_connection_step_connect_user">Connect user to WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Install Jetpack plugin</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Log in to WordPress.com</string>
     <string name="jetpack_rest_connection_title">Jetpack Connection</string>
@@ -1169,8 +1203,8 @@ Language: en_GB
     <string name="my_site_post_card_link_create_post">Create a post</string>
     <string name="my_site_create_next_post_excerpt">Posting regularly helps build your audience!</string>
     <string name="my_site_create_next_post_title">Create your next post</string>
-    <string name="menu_visual_mode_switched_notice">Switched to visual mode</string>
-    <string name="menu_html_mode_switched_notice">Switched to HTML mode</string>
+    <string name="menu_visual_mode_switched_notice">Switched to Visual Editor</string>
+    <string name="menu_html_mode_switched_notice">Switched to Code Editor</string>
     <string name="post_link_copied_to_clipboard">Link copied to clipboard</string>
     <string name="comment_author_badge">Author</string>
     <string name="button_copy_link">Copy link</string>
@@ -2811,14 +2845,13 @@ Language: en_GB
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Signing up with Google…</string>
     <string name="jetpack_connection_failed_with_reason">Connection to Jetpack failed: %s</string>
     <string name="jetpack_already_connected_toast">You are already connected to Jetpack</string>
-    <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_html_mode">HTML Mode</string>
+    <string name="menu_visual_mode">Visual Editor</string>
     <string name="menu_preview">Preview</string>
     <string name="menu_save_as_draft">Save as Draft</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
+    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s of %2$s</string>
     <string name="site_settings_quota_space_hint">If you need more space consider upgrading your WordPress plan.</string>

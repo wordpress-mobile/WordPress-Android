@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2024-08-01 15:21:57+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: el_GR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -265,8 +265,6 @@ Language: el_GR
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="menu_preview">Προεπισκόπηση</string>
     <string name="menu_save_as_draft">Αποθήκευση σαν προσχέδιο</string>
-    <string name="menu_html_mode">Λειτουργία HTML</string>
-    <string name="menu_visual_mode">Οπτική λειτουργία</string>
     <string name="comment_delete_talkback">Το σχόλιο διαγράφηκε</string>
     <string name="comment_spam_talkback">Το σχόλιο αυτό έχει σημειωθεί ως ανεπιθύμητο</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -274,7 +272,6 @@ Language: el_GR
     <string name="signup_epilogue_screen_title">Νέος λογαριασμός</string>
     <string name="site_settings_quota_header">Εικόνες και Βίντεο</string>
     <string name="edit_photo_screen_title">Επεξεργασία φωτογραφίας</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s από %2$s</string>
     <string name="comment_liked_talkback">Το σχόλιο σας αρέσει</string>
