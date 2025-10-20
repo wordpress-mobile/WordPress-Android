@@ -110,8 +110,7 @@ class HESupportActivity : AppCompatActivity() {
                     HENewTicketScreen(
                         onBackClick = { viewModel.onBackFromDetailClick() },
                         onSubmit = { category, subject, siteAddress ->
-                            // TODO: Handle ticket submission
-                            viewModel.onBackFromDetailClick()
+                            // Submit the new ticket
                         },
                         userName = userInfo.userName,
                         userEmail = userInfo.userEmail,

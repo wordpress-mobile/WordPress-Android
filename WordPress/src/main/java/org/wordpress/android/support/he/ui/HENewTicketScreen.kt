@@ -5,7 +5,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,12 +18,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Help
-import androidx.compose.material.icons.filled.CreditCard
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.PhoneAndroid
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -42,7 +35,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,17 +45,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.compose.theme.neutral
 import org.wordpress.android.ui.dataview.compose.RemoteImage
-
-enum class SupportCategory(val icon: ImageVector, val labelRes: Int) {
-    APPLICATION(Icons.Default.PhoneAndroid, R.string.he_support_category_application),
-    JETPACK_CONNECTION(Icons.Default.Settings, R.string.he_support_category_jetpack_connection),
-    SITE_MANAGEMENT(Icons.Default.Language, R.string.he_support_category_site_management),
-    BILLING(Icons.Default.CreditCard, R.string.he_support_category_billing),
-    TECHNICAL_ISSUES(Icons.Default.Settings, R.string.he_support_category_technical_issues),
-    OTHER(Icons.AutoMirrored.Filled.Help, R.string.he_support_category_other)
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
