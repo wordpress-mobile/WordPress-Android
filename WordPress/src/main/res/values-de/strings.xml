@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-09-02 10:54:09+0000
+Translation-Revision-Date: 2025-10-14 11:18:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: de
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="error_deleting_term">Beim Löschen des Begriffs ist ein Fehler aufgetreten.</string>
+    <string name="error_saving_term">Beim Speichern des Begriffs ist ein Fehler aufgetreten.</string>
+    <string name="add_term">Begriff hinzufügen</string>
+    <string name="term_delete_confirmation_message">Möchtest du „%1$s“ wirklich löschen?</string>
+    <string name="term_delete_confirmation_title">Begriff löschen</string>
+    <string name="term_sort_by_count">Anzahl</string>
+    <string name="term_sort_by_name">Name</string>
+    <string name="term_parent_none">Ohne</string>
+    <string name="term_parent_label">Übergeordnet:</string>
+    <string name="term_count">Anzahl: %1$d</string>
+    <string name="term_count_label">Anzahl:</string>
+    <string name="term_description_label">Beschreibung:</string>
+    <string name="term_slug_label">Titelform:</string>
+    <string name="term_name_label">Name:</string>
+    <string name="application_password_experimental_feature_note">\n\nHinweis: Die Authentifizierung mittels Anwendungspasswörtern auf Android-Geräten ist eine experimentelle Funktion.</string>
+    <string name="application_password_required_block_editor">Block-Editor</string>
+    <string name="application_password_required_description">Anwendungspasswörter bieten eine sichere Möglichkeit, eine Verbindung zu deiner selbst gehosteten Website herzustellen, und aktivieren die Unterstützung von Funktionen wie %1$s.</string>
+    <string name="application_password_required">Anwendungspasswort ist erforderlich</string>
+    <string name="menu_html_mode">Code-Editor</string>
+    <string name="taxonomies_title">Taxonomien</string>
+    <string name="media_edit_file_size_caption">Dateigröße</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Anmeldung bei WordPress.com nicht möglich</string>
     <string name="jetpack_rest_connection_step_connect_site">Website mit WordPress.com verbinden</string>
     <string name="dataview_default_empty_message">Keine Inhalte</string>
@@ -33,7 +54,7 @@ Language: de
     <string name="application_password_info_description_1">Anwendungspasswörter sind eine sichere Möglichkeit für Apps, um auf deine Website zuzugreifen, ohne dein Kontopasswort zu verwenden.</string>
     <string name="application_password_info_title">Anwendungspasswörter</string>
     <string name="application_password_disable_feature_description">Wenn du das Anwendungspasswort deaktivierst, werden deine Anmeldedaten für %1$s deiner Websites entfernt. Möglicherweise musst du betroffene Websites erneut hinzufügen, um dich erneut anzumelden.</string>
-    <string name="application_password_invalid_description">Dein Anwendungspasswort existiert nicht mehr. Bitte melde dich erneut an, um ein neues Anwendungspasswort zu erstellen </string>
+    <string name="application_password_invalid_description">Dein Anwendungspasswort existiert nicht mehr. Bitte melde dich erneut an, um ein neues Anwendungspasswort zu erstellen.</string>
     <string name="subscribers_delete_failed">Abonnent konnte nicht gelöscht werden</string>
     <string name="subscribers_delete_success_message">Der Abonnent wurde gelöscht, aber es kann eine Minute dauern, bis die Löschung wirksam wird</string>
     <string name="subscribers_delete_success_title">Abonnent wurde gelöscht</string>
@@ -408,7 +429,7 @@ Language: de
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Aus diesem Grund empfehlen wir, den Block in deinem Webbrowser zu bearbeiten.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Aus diesem Grund empfehlen wir, den Block im Webeditor zu bearbeiten.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternativ kannst du die Tiefe des Inhalts reduzieren, indem du die Gruppierung des Blocks aufhebst.</string>
-    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Zu den Einstellungen</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Einstellungen aufrufen</string>
     <string name="barcode_scanning_alert_dialog_dismiss_label">Abbrechen</string>
     <string name="barcode_scanning_alert_dialog_rationale_cta_label">Gewähren</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_message">Du hast die Berechtigung zum Zugriff auf deine Kamera dauerhaft abgelehnt. Sie ist erforderlich, um den Barcode zu scannen. Bitte aktiviere die Option in den App-Einstellungen</string>
@@ -526,7 +547,7 @@ Language: de
     <string name="contact_support_question_two">Hilfe, meine Website ist ausgefallen!</string>
     <string name="contact_support_question_one">Wie lautet meine Website-Adresse?</string>
     <string name="contact_support_suggestions">Nicht sicher, was du fragen sollst?</string>
-    <string name="contact_support_get_support">Kontaktiere den Support</string>
+    <string name="contact_support_get_support">Support kontaktieren</string>
     <string name="contact_support_first_message">Womit kann ich dir behilflich sein?</string>
     <string name="contact_support_input_placeholder">Sende eine Nachricht …</string>
     <string name="post_settings_jetpack_social_share_message_clear">Wolkenlos</string>
@@ -731,7 +752,7 @@ Language: de
     <string name="jetpack_plugin_install_done_title">Jetpack installiert</string>
     <string name="jetpack_plugin_install_installing_description">Jetpack wird auf deiner Website installiert. Dieser Vorgang kann einige Minuten dauern.</string>
     <string name="jetpack_plugin_install_installing_title">Jetpack wird installiert</string>
-    <string name="jetpack_plugin_install_initial_button">Weiter</string>
+    <string name="jetpack_plugin_install_initial_button">Fortfahren</string>
     <string name="jetpack_plugin_install_initial_description">Deine Website-Anmeldedaten werden nicht gespeichert und werden nur verwendet, um Jetpack zu installieren.</string>
     <string name="jetpack_plugin_install_initial_title">Jetpack installieren</string>
     <string name="jetpack_plugin_install_jp_logo_content_description">Jetpack-Icon</string>
@@ -846,7 +867,7 @@ Language: de
     <string name="notification_disable_broadcast_permission_desc" tools:ignore="UnusedResources">Erlaubt der App, WordPress-Benachrichtigungen zu deaktivieren.</string>
     <string name="notification_disable_broadcast_permission_label" tools:ignore="UnusedResources">WordPress-Benachrichtigungen deaktivieren</string>
     <string name="jp_migration_help_button">Brauchst du Hilfe?</string>
-    <string name="jp_migration_continue_button">Weiter</string>
+    <string name="jp_migration_continue_button">Fortfahren</string>
     <string name="jp_migration_welcome_site_found_message">Wir haben deine Website gefunden. Fahre mit der Übertragung all deiner Daten fort und melde dich automatisch bei Jetpack an.</string>
     <string name="jp_migration_welcome_sites_found_message">Wir haben deine Websites gefunden. Fahre mit der Übertragung all deiner Daten fort und melde dich automatisch bei Jetpack an.</string>
     <string name="jp_migration_avatar_content_description">Dein Profilfoto</string>
@@ -981,7 +1002,7 @@ Language: de
     <string name="stats_published_seconds_ago">Vor wenigen Sekunden veröffentlicht</string>
     <string name="stats_view_total_comments">Kommentare gesamt</string>
     <string name="stats_view_total_likes">Likes gesamt</string>
-    <string name="blogging_prompts_notification_dismiss">Ausblenden</string>
+    <string name="blogging_prompts_notification_dismiss">Verwerfen</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Antwort</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Tägliche Aufforderung</string>
     <string name="blogging_prompts_onboarding_got_it">Verstanden</string>
@@ -1182,8 +1203,8 @@ Language: de
     <string name="my_site_post_card_link_create_post">Einen Beitrag erstellen</string>
     <string name="my_site_create_next_post_excerpt">Regelmäßiges Veröffentlichen hilft dir, eine Zielgruppe aufzubauen!</string>
     <string name="my_site_create_next_post_title">Nächsten Beitrag erstellen</string>
-    <string name="menu_visual_mode_switched_notice">Zum visuellen Modus gewechselt</string>
-    <string name="menu_html_mode_switched_notice">Zum HTML-Modus gewechselt</string>
+    <string name="menu_visual_mode_switched_notice">Zum visuellen Editor gewechselt</string>
+    <string name="menu_html_mode_switched_notice">Zum Code-Editor gewechselt</string>
     <string name="post_link_copied_to_clipboard">Link in Zwischenablage kopiert</string>
     <string name="comment_author_badge">Autor</string>
     <string name="button_copy_link">Link kopieren</string>
@@ -1330,7 +1351,7 @@ Language: de
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and" tools:ignore="UnusedResources">Das Bearbeiten von wiederverwendbaren Blöcken wird in WordPress für Android noch nicht unterstützt</string>
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternativ kannst du diese Blöcke loslösen und separat bearbeiten, indem du auf „Vorlage loslösen“ tippst.</string>
     <string name="blogging_reminders_done">Fertig</string>
-    <string name="blogging_reminders_notify_me">Benachrichtige mich</string>
+    <string name="blogging_reminders_notify_me">Mich benachrichtigen</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Gib deine Serveranmeldedaten ein&lt;/a&gt;, um Ein-Klick-Website-Wiederherstellungen von Backups zu aktivieren.</string>
     <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">Als Beitragsbild festlegen</string>
     <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">Als Beitragsbild entfernen </string>
@@ -1457,7 +1478,7 @@ Language: de
     <string name="jetpack_brute_force_allowlist_title">IP-Adressen auf der Liste „Immer zulassen“</string>
     <string name="site_settings_denylist_title">Gesperrte Kommentare</string>
     <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Button-Text hinzufügen.</string>
-    <string name="activity_log_backup_download_notice_dismiss_action">Ausblenden</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Verwerfen</string>
     <string name="activity_log_backup_download_notice_download_action">Herunterladen</string>
     <string name="threat_fix_all_status_success_message_plural">Bedrohungen wurden erfolgreich behoben.</string>
     <string name="threat_fix_all_confirmation_message_plural">Bitte bestätige, dass du alle %s aktiven Bedrohungen beheben möchtest.</string>
@@ -1874,7 +1895,7 @@ Language: de
     <string name="login_magic_links_sent_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">Überprüfe deine E-Mails auf diesem Gerät und tippe auf den Link in der E-Mail, die du von WordPress.com erhalten hast.</string>
     <string name="login_magic_links_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">Wir senden dir per E-Mail einen Link, mit dem du sofort angemeldet wirst, ohne dass du ein Passwort eingeben musst.</string>
     <string name="check_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">Sieh in deinem Postfach nach</string>
-    <string name="get_started" tools:ignore="UnusedResources" a8c-src-lib="module:login">Los geht\'s</string>
+    <string name="get_started" tools:ignore="UnusedResources" a8c-src-lib="module:login">Los geht’s</string>
     <string name="enter_email_to_continue_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="module:login">Gib deine E-Mail-Adresse ein, um dich anzumelden, oder erstelle ein WordPress.com-Konto.</string>
     <string name="or_type_your_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">Oder gib dein Passwort ein</string>
     <string name="create_account" tools:ignore="UnusedResources" a8c-src-lib="module:login">Konto erstellen</string>
@@ -1980,7 +2001,7 @@ Language: de
     <string name="photo_picker_photo_or_video_title">Medien auswählen</string>
     <string name="photo_picker_video_title">Video auswählen</string>
     <string name="site_picker_ask_site_select">Die Website konnte nicht ausgewählt werden. Bitte versuche es erneut.</string>
-    <string name="sitepicker_continue_flow">Weiter</string>
+    <string name="sitepicker_continue_flow">Fortfahren</string>
     <string name="reader_reblog_error">Rebloggen ist fehlgeschlagen</string>
     <string name="reader_no_blog_to_reblog_action">Blogs verwalten</string>
     <string name="reader_no_blog_to_reblog_detail">Sobald du einen Blog bei WordPress.com erstellt hast, kannst du Inhalte, die dir gefallen, deiner eigenen Website hinzufügen.</string>
@@ -1991,7 +2012,7 @@ Language: de
     <string name="comment_share_link_via">Teilen über</string>
     <string name="comment_toast_err_share_intent">Teilen nicht möglich</string>
     <string name="button_insert">Einfügen</string>
-    <string name="continue_label">Weiter</string>
+    <string name="continue_label">Fortfahren</string>
     <string name="copy_text">Kopieren</string>
     <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">Anzahl an Spalten</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Block von Position %1$s nach rechts zur Position %2$s verschieben</string>
@@ -2283,7 +2304,7 @@ Language: de
     <string name="preview_type_desc">Vorschautyp auswählen</string>
     <string name="share_desc">Teilen</string>
     <string name="navigate_back_desc">Zurück</string>
-    <string name="navigate_forward_desc">Vorwärts gehen</string>
+    <string name="navigate_forward_desc">Weiter</string>
     <string name="calendar_scheduled_post_description">„%1$s“ ist für die Veröffentlichung auf „%2$s“ in deiner %3$s-App geplant \n %4$s</string>
     <string name="calendar_scheduled_post_title">Von WordPress geplanter Beitrag: „%s“</string>
     <string name="notification_post_will_be_published_in_ten_minutes">„%s“ wird in 10 Minuten veröffentlicht</string>
@@ -2307,8 +2328,8 @@ Language: de
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
     <string name="stats_item_collapsed">Element ist zusammengeklappt</string>
     <string name="stats_item_expanded">Element ist aufgeklappt</string>
-    <string name="stats_collapse_content_description">Zuklappen</string>
-    <string name="stats_expand_content_description">Aufklappen</string>
+    <string name="stats_collapse_content_description">Einklappen</string>
+    <string name="stats_expand_content_description">Erweitern</string>
     <string name="stats_graph_updated">Diagramm aktualisiert.</string>
     <string name="stats_overview_content_description">%1$s %2$s für die Periode: %3$s, Veränderung gegenüber der Vorperiode - %4$s</string>
     <string name="stats_loading_card">Laden der ausgewählten Kartendaten</string>
@@ -2512,7 +2533,7 @@ Language: de
     <string name="local_post_is_conflicted">Versionskonflikt</string>
     <string name="preference_crash_reports_summary">Automatische Absturzberichte zulassen, die uns helfen, die Leistung der App zu verbessern.</string>
     <string name="preference_crash_reports">Absturzberichte</string>
-    <string name="snackbar_conflict_undo">Widerrufen</string>
+    <string name="snackbar_conflict_undo">Rückgängig machen</string>
     <string name="snackbar_conflict_web_version_discarded">Web-Version verworfen</string>
     <string name="snackbar_conflict_local_version_discarded">Lokale Version verworfen</string>
     <string name="toast_conflict_updating_post">Aktualisieren des Beitrags</string>
@@ -2796,7 +2817,7 @@ Language: de
     <string name="preview_count">%d in der Vorschau anzeigen</string>
     <string name="add_count">%d hinzufügen</string>
     <string name="fab_add_tag_desc">Schlagwort erstellen</string>
-    <string name="navigate_up_desc">nach oben navigieren</string>
+    <string name="navigate_up_desc">nach oben</string>
     <string name="notification_settings_switch_desc">Benachrichtigungen</string>
     <string name="open_external_link_desc">Externen Link öffnen</string>
     <string name="show_more_desc">weitere anzeigen</string>
@@ -2824,14 +2845,13 @@ Language: de
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Anmelden mit Google …</string>
     <string name="jetpack_connection_failed_with_reason">Verbindung zu Jetpack fehlgeschlagen: %s</string>
     <string name="jetpack_already_connected_toast">Du bist bereits mit Jetpack verbunden</string>
-    <string name="menu_visual_mode">Visual-Modus</string>
-    <string name="menu_html_mode">HTML-Modus</string>
+    <string name="menu_visual_mode">Visueller Editor</string>
     <string name="menu_preview">Vorschau</string>
     <string name="menu_save_as_draft">Als Entwurf speichern</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
+    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s von %2$s</string>
     <string name="site_settings_quota_space_hint">Wenn du mehr Speicherplatz brauchst, solltest du darüber nachdenken, deinen WordPress-Tarif aufzurüsten.</string>
@@ -2862,7 +2882,7 @@ Language: de
     <string name="signup_epilogue_error_avatar_view">Dein Avatar wurde hochgeladen und ist in Kürze verfügbar.</string>
     <string name="permissions_denied_message">Es sieht so aus, als hättest du die für diese Funktion erforderlichen Berechtigungen deaktiviert.&lt;br/&gt;&lt;br/&gt;Um dies zu ändern, bearbeite deine Berechtigungen und stelle sicher, dass &lt;strong&gt;%s&lt;/strong&gt; aktiviert ist.</string>
     <string name="permissions_denied_title">Berechtigungen</string>
-    <string name="plugin_caption_featured">Vorgestellt</string>
+    <string name="plugin_caption_featured">Hervorgehoben</string>
     <string name="sharing_disabled_description">Du kannst nicht auf deine Teilen-Einstellungen für soziale Medien zugreifen, da dein Jetpack Social-Modul deaktiviert ist.</string>
     <string name="sharing_disabled">Social-Modul deaktiviert</string>
     <string name="version_with_name_param">Version %s</string>
@@ -3144,7 +3164,7 @@ Language: de
     <string name="login_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">Website-Adresse</string>
     <string name="enter_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">Gib die Adresse der WordPress-Website ein, die du verbinden möchtest.</string>
     <string name="login_already_logged_in_wpcom">Bereits bei WordPress.com angemeldet</string>
-    <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="module:login">Weiter</string>
+    <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="module:login">Fortfahren</string>
     <string name="connect_more">Andere Website verbinden</string>
     <string name="enter_wpcom_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">Gib dein WordPress.com-Passwort ein.</string>
     <string name="login_magic_link_email_requesting" tools:ignore="UnusedResources" a8c-src-lib="module:login">Anmelde-E-Mail wird angefordert</string>
@@ -3160,7 +3180,7 @@ Language: de
     <string name="upload_finished_toast">Das Hochladen kann nicht unterbrochen werden, weil es bereits beendet wurde</string>
     <string name="post_title">Titel</string>
     <string name="menu_redo">Wiederherstellen</string>
-    <string name="menu_undo">Rückgängig</string>
+    <string name="menu_undo">Rückgängig machen</string>
     <string name="media_insert_unimplemented" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Tut uns leid! Diese Funktion wurde noch nicht implementiert :(</string>
     <string name="error_media_small">Die Medien sind zu klein zum Anzeigen</string>
     <string name="editor_dropped_unsupported_files">Warnung: Nicht alle abgelegten Elemente werden unterstützt!</string>
@@ -3582,7 +3602,7 @@ Language: de
     <string name="site_settings_allowlist_all_summary">Kommentare von allen Benutzern</string>
     <string name="site_settings_threading_summary">%d Ebenen</string>
     <string name="site_settings_privacy_private_summary">Privat</string>
-    <string name="site_settings_privacy_hidden_summary">Versteckt</string>
+    <string name="site_settings_privacy_hidden_summary">Ausgeblendet</string>
     <string name="site_settings_privacy_public_summary">Öffentlich</string>
     <string name="site_settings_delete_site_title">Website löschen</string>
     <string name="site_settings_moderation_hold_title">Zur Freischaltung überprüfen</string>
@@ -3677,14 +3697,14 @@ Language: de
     <string name="stats_insights_latest_post_summary">Übersicht des letzten Beitrags</string>
     <string name="connectionbar_no_connection">Keine Verbindung</string>
     <string name="post_trashed">Beitrag in den Papierkorb verschoben</string>
-    <string name="button_trash">In den Papierkorb</string>
+    <string name="button_trash">Papierkorb</string>
     <string name="button_stats">Statistiken</string>
     <string name="button_preview">Vorschau</string>
     <string name="button_view">Anzeigen</string>
     <string name="button_publish">Veröffentlichen</string>
     <string name="button_edit">Bearbeiten</string>
     <string name="reader_toast_err_follow_blog_could_not_be_found">Dieser Blog konnte nicht gefunden werden</string>
-    <string name="undo">Rückgängig</string>
+    <string name="undo">Rückgängig machen</string>
     <string name="push_auth_expired">Die Anfrage ist nicht mehr gültig. Melde dich bei WordPress.com an, um es erneut zu versuchen.</string>
     <string name="ignore">Ignorieren</string>
     <string name="stats_insights_best_ever">Bisher bestes Aufrufergebnis</string>
@@ -3708,7 +3728,7 @@ Language: de
     <string name="my_site_btn_blog_posts">Beiträge</string>
     <string name="my_site_header_publish">Veröffentlichen</string>
     <string name="my_site_header_look_and_feel">Erscheinungsbild</string>
-    <string name="my_site_header_configuration">Einrichtung</string>
+    <string name="my_site_header_configuration">Konfiguration</string>
     <string name="reader_label_new_posts_subtitle">Berühren zum Anzeigen</string>
     <string name="deselect_all">Alle abwählen</string>
     <string name="select_all">Alle auswählen</string>
@@ -3769,7 +3789,7 @@ Language: de
     <string name="mnu_comment_liked">Gefällt</string>
     <string name="comment">Kommentar</string>
     <string name="comment_trashed">Kommentar im Papierkorb</string>
-    <string name="comment_reply_to_user">Antwort zu %s</string>
+    <string name="comment_reply_to_user">Auf %s antworten</string>
     <string name="posts_empty_list">Keine Beiträge bisher. Warum nicht jetzt einen erstellen?</string>
     <string name="signing_out">Abmelden …</string>
     <string name="reader_toast_err_generic">Konnte diese Aktion nicht ausführen</string>
@@ -3883,7 +3903,7 @@ Language: de
     <string name="stats_view_referrers">Referrer</string>
     <string name="stats_view_tags_and_categories">Schlagwörter und Kategorien</string>
     <string name="stats_view_clicks">Klicks</string>
-    <string name="stats">Statistik</string>
+    <string name="stats">Statistiken</string>
     <string name="share_action">Teilen</string>
     <string name="theme_activate_button">Aktivieren</string>
     <string name="media_edit_failure">Aktualisierung fehlgeschlagen</string>

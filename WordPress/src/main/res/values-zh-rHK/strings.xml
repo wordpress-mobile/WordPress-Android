@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-09-02 11:54:10+0000
+Translation-Revision-Date: 2025-10-16 12:32:47+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: zh_TW
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="error_deleting_term">刪除字詞時發生錯誤</string>
+    <string name="error_saving_term">儲存字詞時發生錯誤</string>
+    <string name="add_term">新增字詞</string>
+    <string name="term_delete_confirmation_message">你確定要刪除「%1$s」嗎？</string>
+    <string name="term_delete_confirmation_title">刪除字詞</string>
+    <string name="term_sort_by_count">數量</string>
+    <string name="term_sort_by_name">名稱</string>
+    <string name="term_parent_none">無</string>
+    <string name="term_parent_label">上層：</string>
+    <string name="term_count">數量：%1$d</string>
+    <string name="term_count_label">數量：</string>
+    <string name="term_description_label">說明：</string>
+    <string name="term_slug_label">代稱：</string>
+    <string name="term_name_label">名稱：</string>
+    <string name="application_password_experimental_feature_note">\n\n注意：Android 裝置上的應用程式密碼驗證為測試版功能。</string>
+    <string name="application_password_required_block_editor">區塊編輯器</string>
+    <string name="application_password_required_description">應用程式密碼可提供更安全的自助託管網站連結方式，還支援「%1$s」等功能。</string>
+    <string name="application_password_required">需要應用程式密碼</string>
+    <string name="menu_html_mode">HTML 程式碼編輯器</string>
+    <string name="taxonomies_title">分類法</string>
+    <string name="media_edit_file_size_caption">檔案大小</string>
     <string name="jetpack_rest_connection_error_login_wpcom">無法登入 WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">將網站連結至 WordPress.com</string>
     <string name="dataview_default_empty_message">這裡沒有內容</string>
@@ -23,17 +44,17 @@ Language: zh_TW
     <string name="application_password_no_ip">沒有 IP 紀錄</string>
     <string name="application_password_last_ip_label">上一個 IP：</string>
     <string name="application_password_last_used_label">上次使用：</string>
-    <string name="application_password_created_label">建立時間：</string>
+    <string name="application_password_created_label">已建立：</string>
     <string name="application_password_name_label">名稱：</string>
     <string name="application_password_never_used">從未使用</string>
     <string name="enable">啟用</string>
     <string name="application_password_info_description_4">請注意，撤銷應用程式使用的應用程式密碼時，應用程式會停止存取你的網站。 撤銷應用程式建立的應用程式密碼前，請三思而行。</string>
     <string name="application_password_info_description_3">你可在 WordPress 網站儀表板中的使用者個人檔案，檢視並管理這些密碼。</string>
     <string name="application_password_info_description_2">新增應用程式至網站時，系統會視需要自動建立應用程式密碼。</string>
-    <string name="application_password_info_description_1">應用程式密碼是一種安全的方式，因為應用程式不必使用你的帳號密碼，即可存取你的網站。</string>
+    <string name="application_password_info_description_1">「應用程式密碼」提供安全的方式，因為應用程式不必使用你的帳號密碼，即可存取你的網站內容。</string>
     <string name="application_password_info_title">應用程式密碼</string>
-    <string name="application_password_disable_feature_description">若停用應用程式密碼，系統將移除 %1$s 網站的登入資訊。 受影響的網站可能需要重新加入，才能再次登入。</string>
-    <string name="application_password_invalid_description">應用程式密碼已不存在。 請重新登入，建立新的應用程式密碼。 </string>
+    <string name="application_password_disable_feature_description">若停用「應用程式密碼」，系統將移除 %1$s 網站的登入資訊。 受影響的網站可能需要重新加入，才能再次登入。</string>
+    <string name="application_password_invalid_description">應用程式密碼已不存在。 請重新登入，建立新的應用程式密碼。</string>
     <string name="subscribers_delete_failed">無法刪除訂閱者</string>
     <string name="subscribers_delete_success_message">訂閱者已刪除，但刪除作業可能需要一分鐘才會生效</string>
     <string name="subscribers_delete_success_title">訂閱者已刪除</string>
@@ -46,7 +67,7 @@ Language: zh_TW
     <string name="jetpack_rest_connection_cancel_title">取消 Jetpack 設定？</string>
     <string name="jetpack_rest_connection_status_failed">失敗</string>
     <string name="jetpack_rest_connection_status_completed">已完成</string>
-    <string name="jetpack_rest_connection_status_in_progress">進行中……</string>
+    <string name="jetpack_rest_connection_status_in_progress">進行中…</string>
     <string name="jetpack_rest_connection_status_not_started">未開始</string>
     <string name="jetpack_rest_connection_step_finalize">完成設定</string>
     <string name="jetpack_rest_connection_step_connect_user">將使用者連結至 WordPress.com</string>
@@ -103,7 +124,7 @@ Language: zh_TW
     <string name="qrcode_auth_flow_timeout_subtitle">驗證碼偵測時間過長。 請再試一次，或開啟相機掃瞄驗證碼。</string>
     <string name="qrcode_auth_flow_timeout_title">掃描逾時</string>
     <string name="invite_users">邀請使用者</string>
-    <string name="experimental_application_password_feature_description">啟用應用程式密碼，並登入自助託管網站</string>
+    <string name="experimental_application_password_feature_description">啟用「應用程式密碼」，並登入自助託管網站</string>
     <string name="experimental_application_password_feature">應用程式密碼登入</string>
     <string name="experimental_subscribers_feature">實驗性訂閱者</string>
     <string name="cant_share_no_blog">你無法在沒有網誌的情形下分享內容至 WordPress</string>
@@ -1173,8 +1194,8 @@ Language: zh_TW
     <string name="my_site_post_card_link_create_post">建立文章</string>
     <string name="my_site_create_next_post_excerpt">定期發文有助於建立讀者群！</string>
     <string name="my_site_create_next_post_title">建立下一篇文章</string>
-    <string name="menu_visual_mode_switched_notice">已切換至「視覺化」模式</string>
-    <string name="menu_html_mode_switched_notice">已切換至「HTML」模式</string>
+    <string name="menu_visual_mode_switched_notice">已切換至視覺化編輯器</string>
+    <string name="menu_html_mode_switched_notice">已切換至 HTML 程式碼編輯器</string>
     <string name="post_link_copied_to_clipboard">連結已複製到剪貼簿</string>
     <string name="comment_author_badge">作者</string>
     <string name="button_copy_link">複製連結</string>
@@ -2811,14 +2832,13 @@ Language: zh_TW
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">透過 Google 註冊…</string>
     <string name="jetpack_connection_failed_with_reason">無法連結至 Jetpack：%s</string>
     <string name="jetpack_already_connected_toast">你已連結至 Jetpack</string>
-    <string name="menu_visual_mode">視覺化模式</string>
-    <string name="menu_html_mode">HTML 模式</string>
+    <string name="menu_visual_mode">視覺化編輯器</string>
     <string name="menu_preview">預覽</string>
     <string name="menu_save_as_draft">儲存為草稿</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
+    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%2$s 中的 %1$s</string>
     <string name="site_settings_quota_space_hint">如需更多空間，請考慮升級你的 WordPress 方案。</string>

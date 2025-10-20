@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2025-07-11 04:03:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: nb_NO
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -1272,14 +1272,11 @@ Language: nb_NO
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Registrering hos Google…</string>
     <string name="jetpack_connection_failed_with_reason">Tilkobling til Jetpack feilet: %s</string>
     <string name="jetpack_already_connected_toast">Du er allerede koblet til Jetpack</string>
-    <string name="menu_visual_mode">Visuell modus</string>
-    <string name="menu_html_mode">HTML-modus</string>
     <string name="menu_preview">Forhåndsvis</string>
     <string name="menu_save_as_draft">Lagre som kladd</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s av %2$s</string>
     <string name="site_settings_quota_space_hint">Om du trenger mer plass, vurder å oppgradere din WordPress-pakke.</string>

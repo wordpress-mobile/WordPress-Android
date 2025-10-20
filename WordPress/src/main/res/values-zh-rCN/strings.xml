@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-09-02 10:54:10+0000
+Translation-Revision-Date: 2025-10-14 12:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: zh_CN
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="error_deleting_term">删除此项目时出错</string>
+    <string name="error_saving_term">保存此项目时出错</string>
+    <string name="add_term">添加项目</string>
+    <string name="term_delete_confirmation_message">是否确定要删除“%1$s”？</string>
+    <string name="term_delete_confirmation_title">删除项目</string>
+    <string name="term_sort_by_count">数量</string>
+    <string name="term_sort_by_name">名称</string>
+    <string name="term_parent_none">无</string>
+    <string name="term_parent_label">父级：</string>
+    <string name="term_count">数量：%1$d</string>
+    <string name="term_count_label">数量：</string>
+    <string name="term_description_label">描述：</string>
+    <string name="term_slug_label">别名：</string>
+    <string name="term_name_label">名称：</string>
+    <string name="application_password_experimental_feature_note">\n\n注意：Android 设备上的应用程序密码验证功能是一项实验性功能。</string>
+    <string name="application_password_required_block_editor">区块编辑器</string>
+    <string name="application_password_required_description">应用程序密码能让您更安全地连接到您的自托管站点，并且支持 %1$s 等功能。</string>
+    <string name="application_password_required">必须提供应用程序密码</string>
+    <string name="menu_html_mode">代码编辑器</string>
+    <string name="taxonomies_title">分类</string>
+    <string name="media_edit_file_size_caption">文件尺寸</string>
     <string name="jetpack_rest_connection_error_login_wpcom">无法登录 WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">将站点关联到 WordPress.com</string>
     <string name="dataview_default_empty_message">暂无内容</string>
@@ -33,7 +54,7 @@ Language: zh_CN
     <string name="application_password_info_description_1">应用程序密码是一种安全验证方式，允许应用程序在不使用您账户密码的情况下访问您的站点。</string>
     <string name="application_password_info_title">应用程序密码</string>
     <string name="application_password_disable_feature_description">禁用应用程序密码将移除您 %1$s 个站点的登录信息。 您可能需要重新添加受影响的站点才能再次登录。</string>
-    <string name="application_password_invalid_description">您的应用程序密码已不存在。 请重新登录，以创建新的应用程序密码 </string>
+    <string name="application_password_invalid_description">您的应用程序密码已不存在。 请重新登录，以创建新的应用程序密码。</string>
     <string name="subscribers_delete_failed">订阅者删除失败</string>
     <string name="subscribers_delete_success_message">订阅者已被删除，但删除操作可能需要一分钟才能生效</string>
     <string name="subscribers_delete_success_title">订阅者已删除</string>
@@ -1182,8 +1203,8 @@ Language: zh_CN
     <string name="my_site_post_card_link_create_post">撰写文章</string>
     <string name="my_site_create_next_post_excerpt">定期发表有助于吸引受众！</string>
     <string name="my_site_create_next_post_title">撰写下一篇文章</string>
-    <string name="menu_visual_mode_switched_notice">已切换至可视化模式</string>
-    <string name="menu_html_mode_switched_notice">已切换至 HTML 模式</string>
+    <string name="menu_visual_mode_switched_notice">已切换至可视化编辑器</string>
+    <string name="menu_html_mode_switched_notice">已切换至代码编辑器</string>
     <string name="post_link_copied_to_clipboard">已将链接复制到剪贴板</string>
     <string name="comment_author_badge">作者</string>
     <string name="button_copy_link">复制链接</string>
@@ -2824,14 +2845,12 @@ Language: zh_CN
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">使用 Google 注册…</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack 连接中断：%s</string>
     <string name="jetpack_already_connected_toast">您已连接至 Jetpack</string>
-    <string name="menu_visual_mode">可视模式</string>
-    <string name="menu_html_mode">HTML 模式</string>
+    <string name="menu_visual_mode">可视化编辑器</string>
     <string name="menu_preview">预览</string>
     <string name="menu_save_as_draft">保存为草稿</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s/%2$s</string>
     <string name="site_settings_quota_space_hint">如果您需要更多空间，请考虑升级您的 WordPress 套餐。</string>

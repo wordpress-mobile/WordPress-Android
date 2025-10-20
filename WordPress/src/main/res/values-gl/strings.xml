@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-04-01 14:00:20+0000
+Translation-Revision-Date: 2025-10-10 10:15:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: gl_ES
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -1061,11 +1061,11 @@ Language: gl_ES
     <string name="my_site_post_card_link_create_post">Crear unha entrada</string>
     <string name="my_site_create_next_post_excerpt">Publicar regularmente axuda a crear a túa audiencia!</string>
     <string name="my_site_create_next_post_title">Crear a túa seguinte entrada</string>
-    <string name="menu_visual_mode_switched_notice">Cambiado a modo visual</string>
-    <string name="menu_html_mode_switched_notice">Cambiado a modo HTML</string>
     <string name="post_link_copied_to_clipboard">Ligazón copiada ao portapapeis</string>
     <string name="comment_author_badge">Autor</string>
     <string name="button_copy_link">Copiar ligazón</string>
+    <string name="menu_visual_mode_switched_notice">Cambiado ao editor visual</string>
+    <string name="menu_html_mode_switched_notice">Cambiado ao editor de código</string>
     <string name="domains_paid_plan_add_your_domain_caption">Engadir un dominio personalizado fai que sexa máis fácil para os teus visitantes encontrar o teu sitio</string>
     <string name="my_site_untitled_post">Sen título</string>
     <string name="domains_paid_plan_add_your_domain_title">Engade o teu dominio</string>
@@ -2705,12 +2705,10 @@ Language: gl_ES
     <string name="jetpack_already_connected_toast">Xa estás conectado a Jetpack</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="menu_preview">Vista previa</string>
-    <string name="menu_html_mode">Modo HTML</string>
-    <string name="menu_visual_mode">Modo visual</string>
     <string name="menu_save_as_draft">Gardar coma borrador</string>
+    <string name="menu_visual_mode">Editor visual</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
     <string name="site_settings_quota_space_value">%1$s de %2$s</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_header">Medios</string>
@@ -2729,6 +2727,7 @@ Language: gl_ES
     <string name="notif_detail_screen_title">Detalle de notificación %s</string>
     <string name="comment_unspam_talkback">Comentario marcado como non spam</string>
     <string name="site_settings_quota_space_hint">Se necesitas máis espazo, considera actualizar o teu plan de WordPress.</string>
+    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="reader_screen_title">Lector</string>
     <string name="notifications_screen_title">Notificacións</string>
     <string name="me_section_screen_title">Eu</string>

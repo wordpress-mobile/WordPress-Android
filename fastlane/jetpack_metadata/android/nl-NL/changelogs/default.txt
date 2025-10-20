@@ -1,4 +1,4 @@
-26.2:
-- Koppel je zelfgehoste sites aan Jetpack met onze nieuwe gestroomlijnde flow, rechtstreeks beschikbaar via Statistieken en Meldingen.
-- We hebben ondersteuning toegevoegd voor vermeldingen in de experimentele editor: tag met gemak je vrienden en degenen met wie je samenwerkt.
-- Mediaselectie is voor iedereen toegankelijker geworden.
+26.3:
+We hebben de informatie van de bestandsgrootte toegevoegd aan je mediabibliotheek, zodat je precies kunt zien waar je mee werkt.
+
+De experimentele editor is ook eenvoudiger geworden. Je content blijft op zijn plek wanneer je je apparaat roteert of de donkere modus inschakelt, en dialoogvensters reageren nu correct op de knop Terug. Veel plezier met bewerken!

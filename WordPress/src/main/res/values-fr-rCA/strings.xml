@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-13 15:54:09+0000
+Translation-Revision-Date: 2025-10-14 12:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: fr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="error_deleting_term">Une erreur est survenue lors de la suppression du terme</string>
+    <string name="error_saving_term">Une erreur s’est produite lors de l’enregistrement du terme</string>
+    <string name="add_term">Ajouter un terme</string>
+    <string name="term_delete_confirmation_message">Voulez-vous vraiment supprimer « %1$s » ?</string>
+    <string name="term_delete_confirmation_title">Supprimer le terme</string>
+    <string name="term_sort_by_count">Nombre</string>
+    <string name="term_sort_by_name">Nom</string>
+    <string name="term_parent_none">Aucun</string>
+    <string name="term_parent_label">Parent :</string>
+    <string name="term_count">Nombre : %1$d</string>
+    <string name="term_count_label">Nombre :</string>
+    <string name="term_description_label">Description :</string>
+    <string name="term_slug_label">Slug :</string>
+    <string name="term_name_label">Nom :</string>
+    <string name="application_password_experimental_feature_note">\n\nRemarque : l’authentification par mot de passe d’application sur les appareils Android est une fonctionnalité expérimentale.</string>
+    <string name="application_password_required_block_editor">Éditeur de blocs</string>
+    <string name="application_password_required_description">Les mots de passe d’application sont un moyen plus sûr de vous connecter à votre site auto-hébergé et activer des fonctionnalités telles que %1$s.</string>
+    <string name="application_password_required">Mot de passe d’application requis</string>
+    <string name="menu_html_mode">Éditeur de code</string>
+    <string name="media_edit_file_size_caption">Taille du fichier</string>
     <string name="application_password_last_used_sort">Dernière utilisation</string>
     <string name="application_password_created_sort">Créé</string>
     <string name="application_password_name_sort">Nom</string>
@@ -22,7 +42,7 @@ Language: fr
     <string name="application_password_info_description_1">Les mots de passe d’application sont un moyen sécurisé pour les applications d’accéder à votre site sans utiliser le mot de passe de votre compte.</string>
     <string name="application_password_info_title">Mots de passe d’applications</string>
     <string name="application_password_disable_feature_description">La désactivation du mot de passe d’application supprimera vos informations de connexion pour %1$s de vos sites. Vous devrez peut-être rajouter les sites affectés pour vous connecter à nouveau.</string>
-    <string name="application_password_invalid_description">Votre mot de passe d’application n’existe plus. Veuillez vous connecter à nouveau pour créer un nouveau mot de passe d’application. </string>
+    <string name="application_password_invalid_description">Votre mot de passe d’application n’existe plus. Veuillez vous connecter à nouveau pour créer un nouveau mot de passe d’application.</string>
     <string name="subscribers_delete_failed">Échec de la suppression de l’abonné</string>
     <string name="subscribers_delete_success_message">L’abonné a été supprimé, mais la suppression peut prendre une minute pour être effective</string>
     <string name="subscribers_delete_success_title">Abonné supprimé</string>
@@ -1161,8 +1181,8 @@ Language: fr
     <string name="my_site_post_card_link_create_post">Créer un article</string>
     <string name="my_site_create_next_post_excerpt">Publier régulièrement vous aidera à élargir votre audience !</string>
     <string name="my_site_create_next_post_title">Créer votre prochain article</string>
-    <string name="menu_visual_mode_switched_notice">Basculé en mode visuel</string>
-    <string name="menu_html_mode_switched_notice">Basculé en mode HTML</string>
+    <string name="menu_visual_mode_switched_notice">Basculé en éditeur visuel</string>
+    <string name="menu_html_mode_switched_notice">Basculé en éditeur de code</string>
     <string name="post_link_copied_to_clipboard">Lien copié dans le presse-papier</string>
     <string name="comment_author_badge">Auteur</string>
     <string name="button_copy_link">Copier le lien</string>
@@ -2803,14 +2823,13 @@ Language: fr
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Inscription avec Google…</string>
     <string name="jetpack_connection_failed_with_reason">Échec de la connexion à Jetpack : %s</string>
     <string name="jetpack_already_connected_toast">Vous êtes déjà abonné à Jetpack</string>
-    <string name="menu_visual_mode">Mode visuel</string>
-    <string name="menu_html_mode">Mode HTML</string>
+    <string name="menu_visual_mode">Éditeur visuel</string>
     <string name="menu_preview">Prévisualiser</string>
     <string name="menu_save_as_draft">Enregistrer comme brouillon</string>
     <string name="file_size_in_terabytes">%s To</string>
     <string name="file_size_in_gigabytes">%s Go</string>
     <string name="file_size_in_megabytes">%s Mo</string>
-    <string name="file_size_in_kilobytes">%s Ko</string>
+    <string name="file_size_in_kilobytes">%s ko</string>
     <string name="file_size_in_bytes">%s o</string>
     <string name="site_settings_quota_space_value">%1$s sur %2$s</string>
     <string name="site_settings_quota_space_hint">Si vous avez besoin de plus d\'espace, pensez à mettre à niveau votre plan WordPress.</string>
