@@ -19,6 +19,15 @@ import kotlin.String
 
 private const val APPLICATION_ID = "jetpack"
 
+sealed class CreateConversationResult {
+    data class Success(val conversation: SupportConversation) : CreateConversationResult()
+
+    sealed class Error : CreateConversationResult() {
+        data object Unauthorized : Error()
+        data object GeneralError : Error()
+    }
+}
+
 class HESupportRepository @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val wpComApiClientProvider: WpComApiClientProvider,
@@ -78,7 +87,7 @@ class HESupportRepository @Inject constructor(
         message: String,
         tags: List<String>,
         attachments: List<String>
-    ): SupportConversation? = withContext(ioDispatcher) {
+    ): CreateConversationResult = withContext(ioDispatcher) {
         val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.supportTickets().createSupportTicket(
                 CreateSupportTicketParams(
@@ -94,12 +103,21 @@ class HESupportRepository @Inject constructor(
         when (response) {
             is WpRequestResult.Success -> {
                 val conversation = response.response.data
-                conversation.toSupportConversation()
+                CreateConversationResult.Success(conversation.toSupportConversation())
             }
 
             else -> {
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error creating support conversations: $response")
-                null
+                appLogWrapper.e(
+                    AppLog.T.SUPPORT,
+                    "Error creating support conversation: $response"
+                )
+                // Parse the response string to determine error type
+                val responseString = response.toString()
+                when {
+                    responseString.contains("401") || responseString.contains("403") ->
+                        CreateConversationResult.Error.Unauthorized
+                    else -> CreateConversationResult.Error.GeneralError
+                }
             }
         }
     }

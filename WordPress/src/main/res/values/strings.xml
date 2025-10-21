@@ -5182,5 +5182,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_contact_email_message">We\'ll email you at this address.</string>
     <string name="he_support_send_ticket_button">Send</string>
     <string name="he_support_generic_error">Something wrong happened. Please try again later.</string>
-    <string name="he_support_forbidden_error">Sorry, you are not allowed to perform the action.</string>
+    <string name="he_support_forbidden_error">Sorry, you are not allowed to perform this action.</string>
 </resources>

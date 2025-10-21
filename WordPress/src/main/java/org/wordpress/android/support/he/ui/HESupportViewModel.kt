@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.he.model.SupportConversation
+import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
 import org.wordpress.android.support.model.UserInfo
 import org.wordpress.android.util.AppLog
@@ -132,30 +133,30 @@ class HESupportViewModel @Inject constructor(
         attachments: List<String>
     ) {
         viewModelScope.launch {
-            try {
-                _isSendingNewConversation.value = true
-                val conversation = heSupportRepository.createConversation(
-                    subject = subject,
-                    message = message,
-                    tags = tags,
-                    attachments = attachments
-                )
-                if (conversation == null) {
-                    _errorMessage.value = ErrorType.GENERAL
-                    appLogWrapper.e(
-                        AppLog.T.SUPPORT, "Error creating HE conversation: result null"
-                    )
-                } else {
-                    _selectedConversation.value = conversation
-                    _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail(conversation))
+            _isSendingNewConversation.value = true
+
+            when (val result = heSupportRepository.createConversation(
+                subject = subject,
+                message = message,
+                tags = tags,
+                attachments = attachments
+            )) {
+                is CreateConversationResult.Success -> {
+                    _selectedConversation.value = result.conversation
+                    _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail(result.conversation))
                 }
-            } catch (throwable: Throwable) {
-                _errorMessage.value = ErrorType.GENERAL
-                appLogWrapper.e(
-                    AppLog.T.SUPPORT, "Error creating HE conversation: " +
-                            "${throwable.message} - ${throwable.stackTraceToString()}"
-                )
+
+                is CreateConversationResult.Error.Unauthorized -> {
+                    _errorMessage.value = ErrorType.FORBIDDEN
+                    appLogWrapper.e(AppLog.T.SUPPORT, "Unauthorized error creating HE conversation")
+                }
+
+                is CreateConversationResult.Error.GeneralError -> {
+                    _errorMessage.value = ErrorType.GENERAL
+                    appLogWrapper.e(AppLog.T.SUPPORT, "General error creating HE conversation")
+                }
             }
+
             _isSendingNewConversation.value = false
         }
     }
@@ -164,5 +165,8 @@ class HESupportViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
-    enum class ErrorType { GENERAL, FORBIDDEN }
+    enum class ErrorType {
+        GENERAL,
+        FORBIDDEN,
+    }
 }
