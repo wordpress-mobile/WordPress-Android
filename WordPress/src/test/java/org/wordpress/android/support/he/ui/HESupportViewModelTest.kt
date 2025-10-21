@@ -22,12 +22,20 @@ class HESupportViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var account: AccountModel
 
+    @Mock
+    lateinit var heSupportRepository: org.wordpress.android.support.he.repository.HESupportRepository
+
+    @Mock
+    lateinit var appLogWrapper: org.wordpress.android.fluxc.utils.AppLogWrapper
+
     private lateinit var viewModel: HESupportViewModel
 
     @Before
     fun setUp() {
         viewModel = HESupportViewModel(
-            accountStore = accountStore
+            accountStore = accountStore,
+            heSupportRepository = heSupportRepository,
+            appLogWrapper = appLogWrapper
         )
     }
 
@@ -158,14 +166,28 @@ class HESupportViewModelTest : BaseUnitTest() {
     // region onSendNewConversation() tests
 
     @Test
-    fun `onSendNewConversation emits NavigateBack event`() = test {
+    fun `onSendNewConversation emits NavigateToConversationDetail event on success`() = test {
+        // Given
+        val testConversation = createTestConversation()
+        whenever(heSupportRepository.createConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = emptyList(),
+            attachments = emptyList()
+        )).thenReturn(org.wordpress.android.support.he.repository.CreateConversationResult.Success(testConversation))
+
         // When
         viewModel.navigationEvents.test {
-            viewModel.onSendNewConversation()
+            viewModel.onSendNewConversation(
+                subject = "Test Subject",
+                message = "Test Message",
+                tags = emptyList(),
+                attachments = emptyList()
+            )
 
             // Then
             val event = awaitItem()
-            assertThat(event).isEqualTo(HESupportViewModel.NavigationEvent.NavigateBack)
+            assertThat(event).isInstanceOf(HESupportViewModel.NavigationEvent.NavigateToConversationDetail::class.java)
         }
     }
 
@@ -219,17 +241,31 @@ class HESupportViewModelTest : BaseUnitTest() {
 
     @Test
     fun `can create new ticket and send in sequence`() = test {
+        // Given
+        val testConversation = createTestConversation()
+        whenever(heSupportRepository.createConversation(
+            subject = "Test",
+            message = "Test",
+            tags = emptyList(),
+            attachments = emptyList()
+        )).thenReturn(org.wordpress.android.support.he.repository.CreateConversationResult.Success(testConversation))
+
         // When
         viewModel.navigationEvents.test {
             viewModel.onCreateNewConversation()
             val firstEvent = awaitItem()
 
-            viewModel.onSendNewConversation()
+            viewModel.onSendNewConversation(
+                subject = "Test",
+                message = "Test",
+                tags = emptyList(),
+                attachments = emptyList()
+            )
             val secondEvent = awaitItem()
 
             // Then
             assertThat(firstEvent).isEqualTo(HESupportViewModel.NavigationEvent.NavigateToNewTicket)
-            assertThat(secondEvent).isEqualTo(HESupportViewModel.NavigationEvent.NavigateBack)
+            assertThat(secondEvent).isInstanceOf(HESupportViewModel.NavigationEvent.NavigateToConversationDetail::class.java)
         }
     }
 
