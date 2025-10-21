@@ -73,12 +73,19 @@ class HESupportRepository @Inject constructor(
         }
     }
 
-    suspend fun createConversation(subject: String, message: String, ): SupportConversation? = withContext(ioDispatcher) {
+    suspend fun createConversation(
+        subject: String,
+        message: String,
+        tags: List<String>,
+        attachments: List<String>
+    ): SupportConversation? = withContext(ioDispatcher) {
         val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.supportTickets().createSupportTicket(
                 CreateSupportTicketParams(
                     subject = subject,
                     message = message,
+                    tags = tags,
+                    attachments = attachments,
                     application = APPLICATION_ID, // Only jetpack is supported
                 )
             )

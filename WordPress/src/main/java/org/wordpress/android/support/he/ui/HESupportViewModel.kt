@@ -18,6 +18,7 @@ import org.wordpress.android.support.he.util.generateSampleHESupportConversation
 import org.wordpress.android.support.model.UserInfo
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
+import kotlin.String
 
 @HiltViewModel
 class HESupportViewModel @Inject constructor(
@@ -45,6 +46,9 @@ class HESupportViewModel @Inject constructor(
 
     private val _isLoadingConversations = MutableStateFlow(false)
     val isLoadingConversations: StateFlow<Boolean> = _isLoadingConversations.asStateFlow()
+
+    private val _isLoadingSend = MutableStateFlow(false)
+    val isLoadingSend: StateFlow<Boolean> = _isLoadingSend.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<ErrorType?>(null)
     val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
@@ -113,9 +117,38 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
-    fun onSendNewConversation() {
+    fun onSendNewConversation(
+        subject: String,
+        message: String,
+        tags: List<String>,
+        attachments: List<String>
+    ) {
         viewModelScope.launch {
-            _navigationEvents.emit(NavigationEvent.NavigateBack)
+            try {
+                _isLoadingSend.value = true
+                val conversation = heSupportRepository.createConversation(
+                    subject = subject,
+                    message = message,
+                    tags = tags,
+                    attachments = attachments
+                )
+                if (conversation == null) {
+                    _errorMessage.value = ErrorType.GENERAL
+                    appLogWrapper.e(
+                        AppLog.T.SUPPORT, "Error creating HE conversation: result null"
+                    )
+                } else {
+                    _selectedConversation.value = conversation
+                    _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail(conversation))
+                }
+            } catch (throwable: Throwable) {
+                _errorMessage.value = ErrorType.GENERAL
+                appLogWrapper.e(
+                    AppLog.T.SUPPORT, "Error creating HE conversation: " +
+                            "${throwable.message} - ${throwable.stackTraceToString()}"
+                )
+            }
+            _isLoadingSend.value = false
         }
     }
 
