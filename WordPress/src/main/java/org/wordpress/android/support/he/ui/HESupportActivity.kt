@@ -105,6 +105,7 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.List.name) {
                     HEConversationsListScreen(
                         conversations = viewModel.conversations,
+                        isLoadingConversations = viewModel.isLoadingConversations,
                         onConversationClick = { conversation ->
                             viewModel.onConversationClick(conversation)
                         },

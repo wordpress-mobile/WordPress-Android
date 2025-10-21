@@ -3,6 +3,7 @@ package org.wordpress.android.support.he.ui
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,6 +50,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @Composable
 fun HEConversationsListScreen(
     conversations: StateFlow<List<SupportConversation>>,
+    isLoadingConversations: StateFlow<Boolean>,
     onConversationClick: (SupportConversation) -> Unit,
     onBackClick: () -> Unit,
     onCreateNewConversationClick: () -> Unit
@@ -74,6 +77,7 @@ fun HEConversationsListScreen(
         ShowConversationsList(
             modifier = Modifier.padding(contentPadding),
             conversations = conversations,
+            isLoadingConversations = isLoadingConversations,
             onConversationClick = onConversationClick
         )
     }
@@ -83,32 +87,44 @@ fun HEConversationsListScreen(
 private fun ShowConversationsList(
     modifier: Modifier,
     conversations: StateFlow<List<SupportConversation>>,
+    isLoadingConversations: StateFlow<Boolean>,
     onConversationClick: (SupportConversation) -> Unit
 ) {
     val conversationsList by conversations.collectAsState()
+    val isLoading by isLoadingConversations.collectAsState()
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
+    Box(
+        modifier = modifier.fillMaxSize()
     ) {
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            items(
+                items = conversationsList,
+                key = { it.id }
+            ) { conversation ->
+                ConversationCard(
+                    conversation = conversation,
+                    onClick = { onConversationClick(conversation) }
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
 
-        items(
-            items = conversationsList,
-            key = { it.id }
-        ) { conversation ->
-            ConversationCard(
-                conversation = conversation,
-                onClick = { onConversationClick(conversation) }
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
             )
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -182,10 +198,12 @@ private fun ConversationCard(
 @Composable
 private fun ConversationsScreenPreview() {
     val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
+    val isLoading = MutableStateFlow(false)
 
     AppThemeM3(isDarkTheme = false) {
         HEConversationsListScreen(
             conversations = sampleConversations.asStateFlow(),
+            isLoadingConversations = isLoading.asStateFlow(),
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { }
@@ -197,10 +215,12 @@ private fun ConversationsScreenPreview() {
 @Composable
 private fun ConversationsScreenPreviewDark() {
     val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
+    val isLoading = MutableStateFlow(false)
 
     AppThemeM3(isDarkTheme = true) {
         HEConversationsListScreen(
             conversations = sampleConversations.asStateFlow(),
+            isLoadingConversations = isLoading.asStateFlow(),
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { }
@@ -212,10 +232,12 @@ private fun ConversationsScreenPreviewDark() {
 @Composable
 private fun ConversationsScreenWordPressPreview() {
     val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
+    val isLoading = MutableStateFlow(false)
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
         HEConversationsListScreen(
             conversations = sampleConversations.asStateFlow(),
+            isLoadingConversations = isLoading.asStateFlow(),
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { }
@@ -227,10 +249,12 @@ private fun ConversationsScreenWordPressPreview() {
 @Composable
 private fun ConversationsScreenPreviewWordPressDark() {
     val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
+    val isLoading = MutableStateFlow(false)
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         HEConversationsListScreen(
             conversations = sampleConversations.asStateFlow(),
+            isLoadingConversations = isLoading.asStateFlow(),
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { }
