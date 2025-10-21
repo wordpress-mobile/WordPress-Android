@@ -42,7 +42,7 @@ class HESupportRepository @Inject constructor(
         this.accessToken = accessToken
     }
 
-    suspend fun loadConversations(subject: String, message: String, ): List<SupportConversation> = withContext(ioDispatcher) {
+    suspend fun loadConversations(subject: String, message: String): List<SupportConversation> = withContext(ioDispatcher) {
         val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.supportTickets().getSupportConversationList()
         }
@@ -60,6 +60,26 @@ class HESupportRepository @Inject constructor(
         }
     }
 
+    suspend fun loadConversation(conversationId: Long): SupportConversation? = withContext(ioDispatcher) {
+        val response = wpComApiClient.request { requestBuilder ->
+            requestBuilder.supportTickets().getSupportConversation(
+                conversationId = conversationId.toULong()
+            )
+        }
+
+        when (response) {
+            is WpRequestResult.Success -> {
+                val conversation = response.response.data
+                conversation.toSupportConversation()
+            }
+
+            else -> {
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error loading support conversation: $response")
+                null
+            }
+        }
+    }
+
     suspend fun createConversation(subject: String, message: String, ): SupportConversation? = withContext(ioDispatcher) {
         val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.supportTickets().createSupportTicket(
@@ -73,12 +93,12 @@ class HESupportRepository @Inject constructor(
 
         when (response) {
             is WpRequestResult.Success -> {
-                val conversations = response.response.data
-                conversations.toSupportConversation()
+                val conversation = response.response.data
+                conversation.toSupportConversation()
             }
 
             else -> {
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error crreating support conversations: $response")
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error creating support conversations: $response")
                 null
             }
         }
