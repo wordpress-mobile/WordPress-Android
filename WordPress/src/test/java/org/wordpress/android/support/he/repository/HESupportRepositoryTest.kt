@@ -169,6 +169,176 @@ class HESupportRepositoryTest : BaseUnitTest() {
         assertThat(result).isNull()
     }
 
+    @Test
+    fun `createConversation returns success when request succeeds`() = runTest {
+        // Given
+        repository.init(testAccessToken)
+        val subject = "Test Subject"
+        val message = "Test Message"
+        val tags = listOf("tag1", "tag2")
+        val attachments = listOf("attachment1.jpg")
+
+        val supportConversation = createSupportConversation(1L)
+
+        // Create the actual response object using the concrete type
+        val mockHeaderMap = mock<uniffi.wp_api.WpNetworkHeaderMap>()
+        val responseObject = uniffi.wp_api.SupportTicketsRequestCreateSupportTicketResponse(
+            data = supportConversation,
+            headerMap = mockHeaderMap
+        )
+
+        val successResponse = WpRequestResult.Success(responseObject)
+
+        @Suppress("UNCHECKED_CAST")
+        whenever(
+            wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())
+        ).thenReturn(successResponse as WpRequestResult<uniffi.wp_api.SupportConversation>)
+
+        // When
+        val result = repository.createConversation(
+            subject = subject,
+            message = message,
+            tags = tags,
+            attachments = attachments
+        )
+
+        // Then
+        assertThat(result).isInstanceOf(CreateConversationResult.Success::class.java)
+        val successResult = result as CreateConversationResult.Success
+        assertThat(successResult.conversation).isEqualTo(supportConversation.toSupportConversation())
+    }
+
+    @Test
+    fun `createConversation returns Unauthorized when request fails with 401`() = runTest {
+        // Given
+        repository.init(testAccessToken)
+
+        val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
+            WpRequestResult.UnknownError(401.toUShort(), "Unauthorized")
+
+        whenever(
+            wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())
+        ).thenReturn(errorResponse)
+
+        // When
+        val result = repository.createConversation(
+            subject = "Test",
+            message = "Test",
+            tags = emptyList(),
+            attachments = emptyList()
+        )
+
+        // Then
+        assertThat(result).isInstanceOf(CreateConversationResult.Error.Unauthorized::class.java)
+    }
+
+    @Test
+    fun `createConversation returns GeneralError when request fails with non-auth error`() = runTest {
+        // Given
+        repository.init(testAccessToken)
+
+        val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
+            WpRequestResult.UnknownError(500.toUShort(), "Internal Server Error")
+
+        whenever(
+            wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())
+        ).thenReturn(errorResponse)
+
+        // When
+        val result = repository.createConversation(
+            subject = "Test",
+            message = "Test",
+            tags = emptyList(),
+            attachments = emptyList()
+        )
+
+        // Then
+        assertThat(result).isInstanceOf(CreateConversationResult.Error.GeneralError::class.java)
+    }
+
+    @Test
+    fun `addMessageToConversation returns success when request succeeds`() = runTest {
+        // Given
+        repository.init(testAccessToken)
+        val conversationId = 456L
+        val message = "Test Reply Message"
+        val attachments = listOf("reply-attachment.jpg")
+
+        val supportConversation = createSupportConversation(conversationId)
+
+        // Create the actual response object using the concrete type
+        val mockHeaderMap = mock<uniffi.wp_api.WpNetworkHeaderMap>()
+        val responseObject = uniffi.wp_api.SupportTicketsRequestAddMessageToSupportConversationResponse(
+            data = supportConversation,
+            headerMap = mockHeaderMap
+        )
+
+        val successResponse = WpRequestResult.Success(responseObject)
+
+        @Suppress("UNCHECKED_CAST")
+        whenever(
+            wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())
+        ).thenReturn(successResponse as WpRequestResult<uniffi.wp_api.SupportConversation>)
+
+        // When
+        val result = repository.addMessageToConversation(
+            conversationId = conversationId,
+            message = message,
+            attachments = attachments
+        )
+
+        // Then
+        assertThat(result).isInstanceOf(CreateConversationResult.Success::class.java)
+        val successResult = result as CreateConversationResult.Success
+        assertThat(successResult.conversation).isEqualTo(supportConversation.toSupportConversation())
+    }
+
+    @Test
+    fun `addMessageToConversation returns Unauthorized when request fails with 403`() = runTest {
+        // Given
+        repository.init(testAccessToken)
+
+        val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
+            WpRequestResult.UnknownError(403.toUShort(), "Forbidden")
+
+        whenever(
+            wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())
+        ).thenReturn(errorResponse)
+
+        // When
+        val result = repository.addMessageToConversation(
+            conversationId = 456L,
+            message = "Test",
+            attachments = emptyList()
+        )
+
+        // Then
+        assertThat(result).isInstanceOf(CreateConversationResult.Error.Unauthorized::class.java)
+    }
+
+    @Test
+    fun `addMessageToConversation returns GeneralError when request fails with non-auth error`() = runTest {
+        // Given
+        repository.init(testAccessToken)
+
+        val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
+            WpRequestResult.UnknownError(500.toUShort(), "Internal Server Error")
+
+        whenever(
+            wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())
+        ).thenReturn(errorResponse)
+
+        // When
+        val result = repository.addMessageToConversation(
+            conversationId = 456L,
+            message = "Test",
+            attachments = emptyList()
+        )
+
+        // Then
+        assertThat(result).isInstanceOf(CreateConversationResult.Error.GeneralError::class.java)
+    }
+
     private fun createSupportConversationSummary(id: Long): SupportConversationSummary =
         SupportConversationSummary(
             id = id.toULong(),
