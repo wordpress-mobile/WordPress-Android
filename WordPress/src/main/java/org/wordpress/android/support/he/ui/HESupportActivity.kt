@@ -112,6 +112,9 @@ class HESupportActivity : AppCompatActivity() {
                         onBackClick = { finish() },
                         onCreateNewConversationClick = {
                             viewModel.onCreateNewConversation()
+                        },
+                        onRefresh = {
+                            viewModel.refreshConversations()
                         }
                     )
                 }

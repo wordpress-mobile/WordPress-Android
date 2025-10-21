@@ -80,6 +80,10 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
+    fun refreshConversations() {
+        loadConversations()
+    }
+
     fun onConversationClick(conversation: SupportConversation) {
         viewModelScope.launch {
             _selectedConversation.value = conversation
