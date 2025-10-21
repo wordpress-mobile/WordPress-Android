@@ -3,6 +3,7 @@ package org.wordpress.android.support.he.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -31,7 +32,7 @@ class HESupportViewModel @Inject constructor(
         data object NavigateBack : NavigationEvent()
     }
 
-    private val _conversations = MutableStateFlow<List<SupportConversation>>(emptyList())
+    private val _conversations = MutableStateFlow<List<SupportConversation>>(listOf())
     val conversations: StateFlow<List<SupportConversation>> = _conversations.asStateFlow()
 
     private val _selectedConversation = MutableStateFlow<SupportConversation?>(null)
@@ -53,27 +54,35 @@ class HESupportViewModel @Inject constructor(
     val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
 
     fun init() {
-        loadUserInfo()
-        loadConversations()
+        viewModelScope.launch {
+            // We need to check it this way because access token can be null or empty if not set
+            // So, we manually handle it here
+            val accessToken = if (accountStore.hasAccessToken()) {
+                accountStore.accessToken!!
+            } else {
+                null
+            }
+            if (accessToken == null) {
+                _errorMessage.value = ErrorType.FORBIDDEN
+                appLogWrapper.e(
+                    AppLog.T.SUPPORT, "Error opening HE conversations. The user has no valid access token"
+                )
+            } else {
+                loadUserInfo(accessToken)
+                loadConversations()
+            }
+        }
     }
 
-    private fun loadUserInfo() {
-        viewModelScope.launch {
-            if (!accountStore.hasAccessToken()) {
-                _errorMessage.value = ErrorType.FORBIDDEN
-                _navigationEvents.emit(NavigationEvent.NavigateBack)
-                return@launch
-            }
-            val accessToken = accountStore.accessToken!!
-            val account = accountStore.account
-            heSupportRepository.init(accessToken)
-            _userInfo.value = UserInfo(
-                accessToken = accessToken,
-                userName = account.displayName.ifEmpty { account.userName },
-                userEmail = account.email,
-                avatarUrl = account.avatarUrl.takeIf { it.isNotEmpty() }
-            )
-        }
+    private fun loadUserInfo(accessToken: String) {
+        val account = accountStore.account
+        heSupportRepository.init(accessToken)
+        _userInfo.value = UserInfo(
+            accessToken = accessToken,
+            userName = account.displayName.ifEmpty { account.userName },
+            userEmail = account.email,
+            avatarUrl = account.avatarUrl.takeIf { it.isNotEmpty() }
+        )
     }
 
     private fun loadConversations() {

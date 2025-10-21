@@ -4,12 +4,19 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
@@ -22,9 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.R
-import kotlin.String
 
 @AndroidEntryPoint
 class HESupportActivity : AppCompatActivity() {
@@ -48,26 +53,9 @@ class HESupportActivity : AppCompatActivity() {
             }
         )
         observeNavigationEvents()
-        observeErrorEvents()
         viewModel.init()
     }
 
-    private fun observeErrorEvents() {
-        // Observe error messages and show them as Toast
-        lifecycleScope.launch {
-            viewModel.errorMessage.collect { errorType ->
-                val errorMessage = when (errorType) {
-                    HESupportViewModel.ErrorType.GENERAL -> getString(R.string.he_support_generic_error)
-                    null -> null
-                    HESupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
-                }
-                errorMessage?.let {
-                    ToastUtils.showToast(this@HESupportActivity, it, ToastUtils.Duration.LONG, Gravity.CENTER)
-                    viewModel.clearError()
-                }
-            }
-        }
-    }
 
     private fun observeNavigationEvents() {
         lifecycleScope.launch {
@@ -98,57 +86,80 @@ class HESupportActivity : AppCompatActivity() {
     @Composable
     private fun NavigableContent() {
         navController = rememberNavController()
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
+        val errorMessage by viewModel.errorMessage.collectAsState()
+
+        // Show snackbar when error occurs
+        errorMessage?.let { errorType ->
+            val message = when (errorType) {
+                HESupportViewModel.ErrorType.GENERAL -> getString(R.string.he_support_generic_error)
+                HESupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
+            }
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = message,
+                    duration = SnackbarDuration.Long
+                )
+                viewModel.clearError()
+            }
+        }
 
         AppThemeM3 {
-            NavHost(
-                navController = navController,
-                startDestination = ConversationScreen.List.name
-            ) {
-                composable(route = ConversationScreen.List.name) {
-                    HEConversationsListScreen(
-                        conversations = viewModel.conversations,
-                        isLoadingConversations = viewModel.isLoadingConversations,
-                        onConversationClick = { conversation ->
-                            viewModel.onConversationClick(conversation)
-                        },
-                        onBackClick = { finish() },
-                        onCreateNewConversationClick = {
-                            viewModel.onCreateNewConversation()
-                        },
-                        onRefresh = {
-                            viewModel.refreshConversations()
-                        }
-                    )
-                }
-
-                composable(route = ConversationScreen.Detail.name) {
-                    val selectedConversation by viewModel.selectedConversation.collectAsState()
-                    selectedConversation?.let { conversation ->
-                        HEConversationDetailScreen(
-                            conversation = conversation,
-                            onBackClick = { viewModel.onBackFromDetailClick() }
+            Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) }
+            ) { paddingValues ->
+                NavHost(
+                    navController = navController,
+                    startDestination = ConversationScreen.List.name,
+                    modifier = Modifier.padding(paddingValues)
+                ) {
+                    composable(route = ConversationScreen.List.name) {
+                        HEConversationsListScreen(
+                            conversations = viewModel.conversations,
+                            isLoadingConversations = viewModel.isLoadingConversations,
+                            onConversationClick = { conversation ->
+                                viewModel.onConversationClick(conversation)
+                            },
+                            onBackClick = { finish() },
+                            onCreateNewConversationClick = {
+                                viewModel.onCreateNewConversation()
+                            },
+                            onRefresh = {
+                                viewModel.refreshConversations()
+                            }
                         )
                     }
-                }
 
-                composable(route = ConversationScreen.NewTicket.name) {
-                    val userInfo by viewModel.userInfo.collectAsState()
-                    val isSendingNewConversation by viewModel.isSendingNewConversation.collectAsState()
-                    HENewTicketScreen(
-                        onBackClick = { viewModel.onBackFromDetailClick() },
-                        onSubmit = { category, subject, messageText, siteAddress ->
-                            viewModel.onSendNewConversation(
-                                subject = subject,
-                                message = messageText,
-                                tags = listOf(category.name),
-                                attachments = listOf()
+                    composable(route = ConversationScreen.Detail.name) {
+                        val selectedConversation by viewModel.selectedConversation.collectAsState()
+                        selectedConversation?.let { conversation ->
+                            HEConversationDetailScreen(
+                                conversation = conversation,
+                                onBackClick = { viewModel.onBackFromDetailClick() }
                             )
-                        },
-                        userName = userInfo.userName,
-                        userEmail = userInfo.userEmail,
-                        userAvatarUrl = userInfo.avatarUrl,
-                        isSendingNewConversation = isSendingNewConversation
-                    )
+                        }
+                    }
+
+                    composable(route = ConversationScreen.NewTicket.name) {
+                        val userInfo by viewModel.userInfo.collectAsState()
+                        val isSendingNewConversation by viewModel.isSendingNewConversation.collectAsState()
+                        HENewTicketScreen(
+                            onBackClick = { viewModel.onBackFromDetailClick() },
+                            onSubmit = { category, subject, messageText, siteAddress ->
+                                viewModel.onSendNewConversation(
+                                    subject = subject,
+                                    message = messageText,
+                                    tags = listOf(category.name),
+                                    attachments = listOf()
+                                )
+                            },
+                            userName = userInfo.userName,
+                            userEmail = userInfo.userEmail,
+                            userAvatarUrl = userInfo.avatarUrl,
+                            isSendingNewConversation = isSendingNewConversation
+                        )
+                    }
                 }
             }
         }
