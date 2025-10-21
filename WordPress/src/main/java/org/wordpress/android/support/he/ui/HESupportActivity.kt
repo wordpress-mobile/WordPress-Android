@@ -58,6 +58,7 @@ class HESupportActivity : AppCompatActivity() {
                 val errorMessage = when (errorType) {
                     HESupportViewModel.ErrorType.GENERAL -> getString(R.string.he_support_generic_error)
                     null -> null
+                    HESupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
                 }
                 errorMessage?.let {
                     ToastUtils.showToast(this@HESupportActivity, it, ToastUtils.Duration.LONG, Gravity.CENTER)

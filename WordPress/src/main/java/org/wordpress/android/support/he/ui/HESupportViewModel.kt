@@ -55,12 +55,22 @@ class HESupportViewModel @Inject constructor(
     }
 
     private fun loadUserInfo() {
-        val account = accountStore.account
-        _userInfo.value = UserInfo(
-            userName = account.displayName.ifEmpty { account.userName },
-            userEmail = account.email,
-            avatarUrl = account.avatarUrl.takeIf { it.isNotEmpty() }
-        )
+        viewModelScope.launch {
+            if (!accountStore.hasAccessToken()) {
+                _errorMessage.value = ErrorType.FORBIDDEN
+                _navigationEvents.emit(NavigationEvent.NavigateBack)
+                return@launch
+            }
+            val accessToken = accountStore.accessToken!!
+            val account = accountStore.account
+            heSupportRepository.init(accessToken)
+            _userInfo.value = UserInfo(
+                accessToken = accessToken,
+                userName = account.displayName.ifEmpty { account.userName },
+                userEmail = account.email,
+                avatarUrl = account.avatarUrl.takeIf { it.isNotEmpty() }
+            )
+        }
     }
 
     private fun loadConversations() {
@@ -113,5 +123,5 @@ class HESupportViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
-    enum class ErrorType { GENERAL }
+    enum class ErrorType { GENERAL, FORBIDDEN }
 }
