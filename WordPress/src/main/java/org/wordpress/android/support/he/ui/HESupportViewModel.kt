@@ -161,6 +161,44 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
+    fun onAddMessageToConversation(
+        message: String,
+        attachments: List<String>
+    ) {
+        viewModelScope.launch {
+            val selectedConversation = _selectedConversation.value
+            if (selectedConversation == null) {
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error answering a conversation: no conversation selected")
+                return@launch
+            }
+
+            _isSendingNewConversation.value = true
+
+            when (val result = heSupportRepository.addMessageToConversation(
+                conversationId = selectedConversation.id,
+                message = message,
+                attachments = attachments
+            )) {
+                is CreateConversationResult.Success -> {
+                    _selectedConversation.value = result.conversation
+                    // TODO refresh conversation and scroll to bottom
+                }
+
+                is CreateConversationResult.Error.Unauthorized -> {
+                    _errorMessage.value = ErrorType.FORBIDDEN
+                    appLogWrapper.e(AppLog.T.SUPPORT, "Unauthorized error adding message to HE conversation")
+                }
+
+                is CreateConversationResult.Error.GeneralError -> {
+                    _errorMessage.value = ErrorType.GENERAL
+                    appLogWrapper.e(AppLog.T.SUPPORT, "General error adding message to HE conversation")
+                }
+            }
+
+            _isSendingNewConversation.value = false
+        }
+    }
+
     fun clearError() {
         _errorMessage.value = null
     }

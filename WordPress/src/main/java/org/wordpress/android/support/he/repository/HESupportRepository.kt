@@ -10,6 +10,7 @@ import org.wordpress.android.support.he.model.SupportMessage
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.AddMessageToSupportConversationParams
 import uniffi.wp_api.CreateSupportTicketParams
 import uniffi.wp_api.SupportConversationSummary
 import uniffi.wp_api.SupportMessageAuthor
@@ -110,6 +111,43 @@ class HESupportRepository @Inject constructor(
                 appLogWrapper.e(
                     AppLog.T.SUPPORT,
                     "Error creating support conversation: $response"
+                )
+                // Parse the response string to determine error type
+                val responseString = response.toString()
+                when {
+                    responseString.contains("401") || responseString.contains("403") ->
+                        CreateConversationResult.Error.Unauthorized
+                    else -> CreateConversationResult.Error.GeneralError
+                }
+            }
+        }
+    }
+
+    suspend fun addMessageToConversation(
+        conversationId: Long,
+        message: String,
+        attachments: List<String>
+    ): CreateConversationResult = withContext(ioDispatcher) {
+        val response = wpComApiClient.request { requestBuilder ->
+            requestBuilder.supportTickets().addMessageToSupportConversation(
+                conversationId =  conversationId.toULong(),
+                params = AddMessageToSupportConversationParams(
+                    message = message,
+                    attachments = attachments,
+                )
+            )
+        }
+
+        when (response) {
+            is WpRequestResult.Success -> {
+                val conversation = response.response.data
+                CreateConversationResult.Success(conversation.toSupportConversation())
+            }
+
+            else -> {
+                appLogWrapper.e(
+                    AppLog.T.SUPPORT,
+                    "Error adding message to support conversation: $response"
                 )
                 // Parse the response string to determine error type
                 val responseString = response.toString()
