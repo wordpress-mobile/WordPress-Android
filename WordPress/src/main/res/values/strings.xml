@@ -5147,6 +5147,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- HE Support - Conversations List Screen -->
     <string name="he_support_conversations_title">Support Conversations</string>
     <string name="he_support_new_conversation_content_description">New conversation</string>
+    <string name="he_support_empty_conversations_title">No conversations yet</string>
+    <string name="he_support_empty_conversations_message">Start a conversation with our support team to get help with your questions.</string>
+    <string name="he_support_empty_conversations_button">Start Conversation</string>
 
     <!-- HE Support - Conversation Detail Screen -->
     <string name="he_support_message_count">%1$d Messages</string>

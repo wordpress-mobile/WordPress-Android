@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -79,7 +81,8 @@ fun HEConversationsListScreen(
             conversations = conversations,
             isLoadingConversations = isLoadingConversations,
             onConversationClick = onConversationClick,
-            onRefresh = onRefresh
+            onRefresh = onRefresh,
+            onCreateNewConversationClick = onCreateNewConversationClick
         )
     }
 }
@@ -91,7 +94,8 @@ private fun ShowConversationsList(
     conversations: StateFlow<List<SupportConversation>>,
     isLoadingConversations: StateFlow<Boolean>,
     onConversationClick: (SupportConversation) -> Unit,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
+    onCreateNewConversationClick: () -> Unit
 ) {
     val conversationsList by conversations.collectAsState()
     val isLoading by isLoadingConversations.collectAsState()
@@ -101,28 +105,35 @@ private fun ShowConversationsList(
         onRefresh = onRefresh,
         modifier = modifier.fillMaxSize()
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-        ) {
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-            }
+        if (conversationsList.isEmpty() && !isLoading) {
+            EmptyConversationsView(
+                modifier = Modifier,
+                onCreateNewConversationClick = onCreateNewConversationClick
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
 
-            items(
-                items = conversationsList,
-                key = { it.id }
-            ) { conversation ->
-                ConversationCard(
-                    conversation = conversation,
-                    onClick = { onConversationClick(conversation) }
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-            }
+                items(
+                    items = conversationsList,
+                    key = { it.id }
+                ) { conversation ->
+                    ConversationCard(
+                        conversation = conversation,
+                        onClick = { onConversationClick(conversation) }
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
 
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
         }
     }
@@ -189,6 +200,49 @@ private fun ConversationCard(
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
+        }
+    }
+}
+
+@Composable
+private fun EmptyConversationsView(
+    modifier: Modifier,
+    onCreateNewConversationClick: () -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "💬",
+            style = MaterialTheme.typography.displayLarge
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Text(
+            text = stringResource(R.string.he_support_empty_conversations_title),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        Spacer(modifier = Modifier.padding(8.dp))
+
+        Text(
+            text = stringResource(R.string.he_support_empty_conversations_message),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.padding(24.dp))
+
+        Button(onClick = onCreateNewConversationClick) {
+            Text(text = stringResource(R.string.he_support_empty_conversations_button))
         }
     }
 }
