@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.repository.HESupportRepository
-import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import org.wordpress.android.support.model.UserInfo
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
@@ -47,8 +46,8 @@ class HESupportViewModel @Inject constructor(
     private val _isLoadingConversations = MutableStateFlow(false)
     val isLoadingConversations: StateFlow<Boolean> = _isLoadingConversations.asStateFlow()
 
-    private val _isLoadingSend = MutableStateFlow(false)
-    val isLoadingSend: StateFlow<Boolean> = _isLoadingSend.asStateFlow()
+    private val _isSendingNewConversation = MutableStateFlow(false)
+    val isSendingNewConversation: StateFlow<Boolean> = _isSendingNewConversation.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<ErrorType?>(null)
     val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
@@ -125,7 +124,7 @@ class HESupportViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             try {
-                _isLoadingSend.value = true
+                _isSendingNewConversation.value = true
                 val conversation = heSupportRepository.createConversation(
                     subject = subject,
                     message = message,
@@ -148,7 +147,7 @@ class HESupportViewModel @Inject constructor(
                             "${throwable.message} - ${throwable.stackTraceToString()}"
                 )
             }
-            _isLoadingSend.value = false
+            _isSendingNewConversation.value = false
         }
     }
 

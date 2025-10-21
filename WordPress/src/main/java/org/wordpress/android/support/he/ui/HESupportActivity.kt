@@ -132,6 +132,7 @@ class HESupportActivity : AppCompatActivity() {
 
                 composable(route = ConversationScreen.NewTicket.name) {
                     val userInfo by viewModel.userInfo.collectAsState()
+                    val isSendingNewConversation by viewModel.isSendingNewConversation.collectAsState()
                     HENewTicketScreen(
                         onBackClick = { viewModel.onBackFromDetailClick() },
                         onSubmit = { category, subject, siteAddress ->
@@ -139,7 +140,8 @@ class HESupportActivity : AppCompatActivity() {
                         },
                         userName = userInfo.userName,
                         userEmail = userInfo.userEmail,
-                        userAvatarUrl = userInfo.avatarUrl
+                        userAvatarUrl = userInfo.avatarUrl,
+                        isSendingNewConversation = isSendingNewConversation
                     )
                 }
             }

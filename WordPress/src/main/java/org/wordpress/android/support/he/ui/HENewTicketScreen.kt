@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -54,7 +55,8 @@ fun HENewTicketScreen(
     onSubmit: (category: SupportCategory, subject: String, siteAddress: String) -> Unit,
     userName: String = "",
     userEmail: String = "",
-    userAvatarUrl: String? = null
+    userAvatarUrl: String? = null,
+    isSendingNewConversation: Boolean = false
 ) {
     var selectedCategory by remember { mutableStateOf<SupportCategory?>(null) }
     var subject by remember { mutableStateOf("") }
@@ -73,6 +75,7 @@ fun HENewTicketScreen(
         bottomBar = {
             SendButton(
                 enabled = selectedCategory != null && subject.isNotBlank() && messageText.isNotBlank(),
+                isLoading = isSendingNewConversation,
                 onClick = {
                     selectedCategory?.let { category ->
                         onSubmit(category, subject, siteAddress)
@@ -192,6 +195,7 @@ fun HENewTicketScreen(
 @Composable
 private fun SendButton(
     enabled: Boolean,
+    isLoading: Boolean,
     onClick: () -> Unit
 ) {
     Box(
@@ -201,16 +205,24 @@ private fun SendButton(
     ) {
         Button(
             onClick = onClick,
-            enabled = enabled,
+            enabled = enabled && !isLoading,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
             shape = RoundedCornerShape(28.dp)
         ) {
-            Text(
-                text = stringResource(R.string.he_support_send_ticket_button),
-                style = MaterialTheme.typography.titleMedium
-            )
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text(
+                    text = stringResource(R.string.he_support_send_ticket_button),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
         }
     }
 }
