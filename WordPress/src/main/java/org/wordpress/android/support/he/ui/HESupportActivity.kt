@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.R
+import kotlin.String
 
 @AndroidEntryPoint
 class HESupportActivity : AppCompatActivity() {
@@ -135,8 +136,13 @@ class HESupportActivity : AppCompatActivity() {
                     val isSendingNewConversation by viewModel.isSendingNewConversation.collectAsState()
                     HENewTicketScreen(
                         onBackClick = { viewModel.onBackFromDetailClick() },
-                        onSubmit = { category, subject, siteAddress ->
-                            viewModel.onSendNewConversation()
+                        onSubmit = { category, subject, messageText, siteAddress ->
+                            viewModel.onSendNewConversation(
+                                subject = subject,
+                                message = messageText,
+                                tags = listOf(category.name),
+                                attachments = listOf()
+                            )
                         },
                         userName = userInfo.userName,
                         userEmail = userInfo.userEmail,

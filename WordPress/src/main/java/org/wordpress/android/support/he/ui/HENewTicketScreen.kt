@@ -52,7 +52,12 @@ import org.wordpress.android.ui.dataview.compose.RemoteImage
 @Composable
 fun HENewTicketScreen(
     onBackClick: () -> Unit,
-    onSubmit: (category: SupportCategory, subject: String, siteAddress: String) -> Unit,
+    onSubmit: (
+        category: SupportCategory,
+        subject: String,
+        messageText: String,
+        siteAddress: String,
+            ) -> Unit,
     userName: String = "",
     userEmail: String = "",
     userAvatarUrl: String? = null,
@@ -78,7 +83,7 @@ fun HENewTicketScreen(
                 isLoading = isSendingNewConversation,
                 onClick = {
                     selectedCategory?.let { category ->
-                        onSubmit(category, subject, siteAddress)
+                        onSubmit(category, subject, messageText, siteAddress)
                     }
                 }
             )
@@ -358,7 +363,7 @@ private fun HENewTicketScreenPreview() {
     AppThemeM3(isDarkTheme = false) {
         HENewTicketScreen(
             onBackClick = { },
-            onSubmit = { _, _, _ -> },
+            onSubmit = { _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
@@ -372,7 +377,7 @@ private fun HENewTicketScreenPreviewDark() {
     AppThemeM3(isDarkTheme = true) {
         HENewTicketScreen(
             onBackClick = { },
-            onSubmit = { _, _, _ -> },
+            onSubmit = { _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
@@ -386,7 +391,7 @@ private fun HENewTicketScreenWordPressPreview() {
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
         HENewTicketScreen(
             onBackClick = { },
-            onSubmit = { _, _, _ -> },
+            onSubmit = { _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
@@ -400,7 +405,7 @@ private fun HENewTicketScreenPreviewWordPressDark() {
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         HENewTicketScreen(
             onBackClick = { },
-            onSubmit = { _, _, _ -> },
+            onSubmit = { _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
