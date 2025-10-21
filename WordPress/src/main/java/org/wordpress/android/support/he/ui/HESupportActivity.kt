@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
@@ -21,6 +22,8 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.R
 
 @AndroidEntryPoint
 class HESupportActivity : AppCompatActivity() {
@@ -31,8 +34,6 @@ class HESupportActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.init()
-        observeNavigationEvents()
         composeView = ComposeView(this)
         setContentView(
             composeView.apply {
@@ -45,6 +46,25 @@ class HESupportActivity : AppCompatActivity() {
                 }
             }
         )
+        observeNavigationEvents()
+        observeErrorEvents()
+        viewModel.init()
+    }
+
+    private fun observeErrorEvents() {
+        // Observe error messages and show them as Toast
+        lifecycleScope.launch {
+            viewModel.errorMessage.collect { errorType ->
+                val errorMessage = when (errorType) {
+                    HESupportViewModel.ErrorType.GENERAL -> getString(R.string.he_support_generic_error)
+                    null -> null
+                }
+                errorMessage?.let {
+                    ToastUtils.showToast(this@HESupportActivity, it, ToastUtils.Duration.LONG, Gravity.CENTER)
+                    viewModel.clearError()
+                }
+            }
+        }
     }
 
     private fun observeNavigationEvents() {
