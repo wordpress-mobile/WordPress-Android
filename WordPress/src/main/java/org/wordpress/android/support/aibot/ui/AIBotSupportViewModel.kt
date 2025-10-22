@@ -7,151 +7,188 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.wordpress.android.support.aibot.util.generateSampleBotConversations
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
-import rs.wordpress.api.kotlin.WpComApiClient
-import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.BotConversationSummary
-import uniffi.wp_api.WpAuthentication
-import uniffi.wp_api.WpAuthenticationProvider
+import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
+import org.wordpress.android.util.AppLog
 import java.util.Date
 import javax.inject.Inject
-
-private const val BOT_ID = "jetpack-chat-mobile"
+import kotlin.Long
 
 @HiltViewModel
-class AIBotSupportViewModel @Inject constructor() : ViewModel() {
+class AIBotSupportViewModel @Inject constructor(
+    private val aiBotSupportRepository: AIBotSupportRepository,
+    private val appLogWrapper: AppLogWrapper,
+) : ViewModel() {
     private val _conversations = MutableStateFlow<List<BotConversation>>(emptyList())
     val conversations: StateFlow<List<BotConversation>> = _conversations.asStateFlow()
 
     private val _selectedConversation = MutableStateFlow<BotConversation?>(null)
     val selectedConversation: StateFlow<BotConversation?> = _selectedConversation.asStateFlow()
 
-    private lateinit var accessToken: String
+    private val _canSendMessage = MutableStateFlow(true)
+    val canSendMessage: StateFlow<Boolean> = _canSendMessage.asStateFlow()
 
-    private val wpComApiClient: WpComApiClient by lazy {
-        WpComApiClient(
-            WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = accessToken)
-            )
-        )
-    }
+    private val _isLoadingConversation = MutableStateFlow(false)
+    val isLoadingConversation: StateFlow<Boolean> = _isLoadingConversation.asStateFlow()
 
-    fun init(accessToken: String) {
-        loadDummyData()
+    private val _isLoadingConversations = MutableStateFlow(false)
+    val isLoadingConversations: StateFlow<Boolean> = _isLoadingConversations.asStateFlow()
 
-        this.accessToken = accessToken
-//        loadConversations()
-    }
+    private val _isBotTyping = MutableStateFlow(false)
+    val isBotTyping: StateFlow<Boolean> = _isBotTyping.asStateFlow()
 
-    fun loadConversations() {
+    private val _errorMessage = MutableStateFlow<ErrorType?>(null)
+    val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
+
+    @Suppress("TooGenericExceptionCaught")
+    fun init(accessToken: String, userId: Long) {
         viewModelScope.launch {
-            val response = wpComApiClient.request { requestBuilder ->
-                requestBuilder.supportBots().getBotConverationList(BOT_ID)
-            }
-            when (response) {
-                is WpRequestResult.Success -> {
-                    val conversations = response.response.data
-                    _conversations.value = conversations.toBotConversations()
-                }
-
-                else -> {
-                    // stub for now
-                }
+            try {
+                aiBotSupportRepository.init(accessToken, userId)
+                loadConversations()
+            } catch (throwable: Throwable) {
+                _errorMessage.value = ErrorType.GENERAL
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error initialising the AI bot support repository: " +
+                        "${throwable.message} - ${throwable.stackTraceToString()}")
             }
         }
     }
 
-    fun selectConversation(conversation: BotConversation) {
-        _selectedConversation.value = conversation
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun loadConversations() {
+        try {
+            _isLoadingConversations.value = true
+            val conversations = aiBotSupportRepository.loadConversations()
+            _conversations.value = conversations
+        } catch (throwable: Throwable) {
+            _errorMessage.value = ErrorType.GENERAL
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversations: " +
+                    "${throwable.message} - ${throwable.stackTraceToString()}")
+        }
+        _isLoadingConversations.value = false
     }
 
-    fun createNewConversation() {
+    fun refreshConversations() {
+        viewModelScope.launch {
+            loadConversations()
+        }
+    }
+
+    fun clearError() {
+        _errorMessage.value = null
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    fun onConversationSelected(conversation: BotConversation) {
+        viewModelScope.launch {
+            try {
+                _isLoadingConversation.value = true
+                _selectedConversation.value = conversation
+                _canSendMessage.value = true
+                val updatedConversation = aiBotSupportRepository.loadConversation(conversation.id)
+                if (updatedConversation != null) {
+                    _selectedConversation.value = updatedConversation
+                } else {
+                    _errorMessage.value = ErrorType.GENERAL
+                    appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversation: " +
+                            "error retrieving it from server")
+                }
+            } catch (throwable: Throwable) {
+                _errorMessage.value = ErrorType.GENERAL
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversation: " +
+                        "${throwable.message} - ${throwable.stackTraceToString()}")
+            }
+            _isLoadingConversation.value = false
+        }
+    }
+
+    fun onNewConversationClicked() {
         val now = Date()
-
-        // Create initial bot greeting message
-        val greetingMessage = BotMessage(
+        _selectedConversation.value = BotConversation(
             id = 0,
-            text = "Hi! I'm here to help you with any questions about WordPress. How can I assist you today?",
-            date = now,
-            userWantsToTalkToHuman = false,
-            isWrittenByUser = false
-        )
-
-        val newConversation = BotConversation(
-            id = 0,
-            mostRecentMessageDate = now,
-            messages = listOf(greetingMessage),
             createdAt = now,
-            lastMessage = greetingMessage.text
-        )
-
-        // Add to the top of the conversations list
-        _conversations.value = listOf(newConversation) + _conversations.value
-
-        // Select the new conversation
-        _selectedConversation.value = newConversation
-    }
-
-    fun sendMessage(text: String) {
-        val currentConversation = _selectedConversation.value ?: return
-        val now = Date()
-        val userMessageId = System.currentTimeMillis()
-
-        // Create new user message
-        val userMessage = BotMessage(
-            id = userMessageId,
-            text = text,
-            date = now,
-            userWantsToTalkToHuman = false,
-            isWrittenByUser = true
-        )
-
-        // Create bot response (dummy response for now)
-        val botMessage = BotMessage(
-            id = userMessageId + 1, // Ensure unique ID by incrementing
-            text = "Thanks for your message! This is a dummy response. In a real implementation, " +
-                    "this would connect to the support bot API.",
-            date = Date(now.time + 1), // Slightly later timestamp
-            userWantsToTalkToHuman = false,
-            isWrittenByUser = false
-        )
-
-        // Update conversation with new messages
-        val updatedMessages = currentConversation.messages + listOf(userMessage, botMessage)
-        val updatedConversation = currentConversation.copy(
-            messages = updatedMessages,
-            mostRecentMessageDate = botMessage.date,
-            lastMessage = botMessage.text,
-        )
-
-        // Update the conversation in the list
-        _conversations.value = _conversations.value.map { conversation ->
-            if (conversation.id == updatedConversation.id) {
-                updatedConversation
-            } else {
-                conversation
-            }
-        }
-
-        // Update selected conversation
-        _selectedConversation.value = updatedConversation
-    }
-
-    private fun loadDummyData() {
-        _conversations.value = generateSampleBotConversations()
-    }
-
-    private fun List<BotConversationSummary>.toBotConversations(): List<BotConversation> =
-        map { it.toBotConversation() }
-
-
-    private fun BotConversationSummary.toBotConversation(): BotConversation =
-        BotConversation (
-            id = chatId.toLong(),
-            createdAt = createdAt,
-            mostRecentMessageDate = lastMessage.createdAt,
-            lastMessage = lastMessage.content,
+            mostRecentMessageDate = now,
+            lastMessage = "",
             messages = listOf()
         )
+        _canSendMessage.value = true
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    fun sendMessage(message: String) {
+        viewModelScope.launch {
+            try {
+                // Show bot typing indicator and limit send messages
+                _isBotTyping.value = true
+                _canSendMessage.value = false
+
+                val now = Date()
+                val userMessage = BotMessage(
+                    id = System.currentTimeMillis(),
+                    text = message,
+                    date = now,
+                    isWrittenByUser = true
+                )
+                val currentMessages = (_selectedConversation.value?.messages ?: emptyList()) + userMessage
+                _selectedConversation.value = _selectedConversation.value?.copy(
+                    messages = currentMessages
+                )
+
+                val conversation = sendMessageToBot(message)
+
+                // Hide bot typing indicator
+                _isBotTyping.value = false
+
+                if (conversation != null) {
+                    val finalConversation = conversation.copy(
+                        lastMessage = conversation.messages.last().text,
+                        messages = (_selectedConversation.value?.messages ?: emptyList()) + conversation.messages
+                    )
+                    // Update the conversations list
+                    val currentConversations =_conversations.value
+                    if (currentConversations.none { it.id == conversation.id }) {
+                        // It's a new conversation, so add it to the top
+                        _conversations.value = listOf(conversation) + _conversations.value
+                    } else {
+                        // The conversation exists, so we modify it
+                        _conversations.value = _conversations.value.map {
+                            if (it.id == conversation.id) {
+                                finalConversation
+                            } else {
+                                it
+                            }
+                        }
+                    }
+
+                    // Update the selected conversation
+                    _selectedConversation.value = finalConversation
+                } else {
+                    _errorMessage.value = ErrorType.GENERAL
+                    appLogWrapper.e(AppLog.T.SUPPORT, "Error sending message: response is null")
+                }
+            } catch (throwable: Throwable) {
+                _errorMessage.value = ErrorType.GENERAL
+                _isBotTyping.value = false
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error sending message: " +
+                        "${throwable.message} - ${throwable.stackTraceToString()}")
+            }
+
+            // Be sure we allow the user to send messages again
+            _canSendMessage.value = true
+        }
+    }
+
+    private suspend fun sendMessageToBot(message: String): BotConversation? {
+        val conversationId = _selectedConversation.value?.id ?: 0L
+        return if (conversationId == 0L) {
+            // This is a new conversation, so we need to create it first
+            aiBotSupportRepository.createNewConversation(message)
+        } else {
+            aiBotSupportRepository.sendMessageToConversation(conversationId, message)
+        }
+    }
+
+    enum class ErrorType { GENERAL }
 }
