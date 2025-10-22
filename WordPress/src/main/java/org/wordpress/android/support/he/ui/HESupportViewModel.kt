@@ -3,7 +3,6 @@ package org.wordpress.android.support.he.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -39,7 +38,7 @@ class HESupportViewModel @Inject constructor(
     private val _selectedConversation = MutableStateFlow<SupportConversation?>(null)
     val selectedConversation: StateFlow<SupportConversation?> = _selectedConversation.asStateFlow()
 
-    private val _userInfo = MutableStateFlow(UserInfo())
+    private val _userInfo = MutableStateFlow<UserInfo>(UserInfo("", "", "", null))
     val userInfo: StateFlow<UserInfo> = _userInfo.asStateFlow()
 
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()

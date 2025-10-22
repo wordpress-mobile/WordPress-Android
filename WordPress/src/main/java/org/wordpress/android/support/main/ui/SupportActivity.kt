@@ -96,12 +96,6 @@ class SupportActivity : AppCompatActivity() {
         )
     }
 
-    private fun navigateToAskTheHappinessEngineers() {
-        startActivity(
-            HESupportActivity.Companion.createIntent(this)
-        )
-    }
-
     private fun navigateToLogin() {
         if (BuildConfig.IS_JETPACK_APP) {
             ActivityLauncher.showSignInForResultJetpackOnly(this)

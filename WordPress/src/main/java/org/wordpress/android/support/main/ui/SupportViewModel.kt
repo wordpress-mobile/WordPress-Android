@@ -36,7 +36,7 @@ class SupportViewModel @Inject constructor(
         val showAskHappinessEngineers: Boolean = true
     )
 
-    private val _userInfo = MutableStateFlow(UserInfo())
+    private val _userInfo = MutableStateFlow(UserInfo("", "", "", null))
     val userInfo: StateFlow<UserInfo> = _userInfo.asStateFlow()
 
     private val _optionsVisibility = MutableStateFlow(SupportOptionsVisibility())
@@ -54,6 +54,7 @@ class SupportViewModel @Inject constructor(
 
         val account = accountStore.account
         _userInfo.value = UserInfo(
+            accessToken = accountStore.accessToken!!,
             userName = account.displayName.ifEmpty { account.userName },
             userEmail = account.email,
             avatarUrl = account.avatarUrl.takeIf { it.isNotEmpty() }
