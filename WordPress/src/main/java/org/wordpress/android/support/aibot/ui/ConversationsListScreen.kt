@@ -1,6 +1,7 @@
 package org.wordpress.android.support.aibot.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.content.res.Resources
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -189,7 +190,7 @@ private fun ShowConversationsList(
 @Composable
 private fun ConversationCard(
     conversation: BotConversation,
-    resources: android.content.res.Resources,
+    resources: Resources,
     onClick: () -> Unit
 ) {
     Card(
