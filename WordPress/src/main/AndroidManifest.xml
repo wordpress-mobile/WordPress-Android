@@ -444,6 +444,10 @@
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/support_screen_title"/>
 
+        <activity android:name="org.wordpress.android.support.he.ui.HESupportActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:label="@string/support_screen_title"/>
+
         <!-- Deep Linking Activity -->
         <activity
             android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"

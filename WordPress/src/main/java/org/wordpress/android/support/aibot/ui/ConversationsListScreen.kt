@@ -14,8 +14,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -72,7 +72,7 @@ fun ConversationsListScreen(
                 actions = {
                     IconButton(onClick = { onCreateNewConversationClick() }) {
                         Icon(
-                            imageVector = Icons.Default.Add,
+                            imageVector = Icons.Default.Edit,
                             contentDescription = stringResource(R.string.ai_bot_new_conversation_content_description)
                         )
                     }
