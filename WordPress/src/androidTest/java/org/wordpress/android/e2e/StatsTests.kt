@@ -13,11 +13,9 @@ import org.wordpress.android.e2e.pages.MySitesPage
 import org.wordpress.android.support.BaseTest
 import org.wordpress.android.support.ComposeEspressoLink
 import org.wordpress.android.support.WPSupportUtils
-import org.wordpress.android.wiremock.WireMockStub
-import org.wordpress.android.wiremock.WireMockUrlPath
 
 @HiltAndroidTest
-class StatsTests : BaseTest(listOf(WireMockStub(urlPath = WireMockUrlPath.FEATURE_RESPONSE, fileName = "new-stats-feature-response.json"))) {
+class StatsTests : BaseTest() {
     @Before
     fun setUp() {
         Assume.assumeTrue(BuildConfig.IS_JETPACK_APP)

@@ -16,7 +16,6 @@ class MockingInterceptor : Interceptor {
             val newUrl = request.url.newBuilder()
                 .scheme("http")
                 .host("localhost")
-                .port(BaseTest.WIREMOCK_PORT)
                 .build()
             val newRequest = request.newBuilder()
                 .url(newUrl)
