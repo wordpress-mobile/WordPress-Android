@@ -81,6 +81,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.plans.PlansConstants;
+import org.wordpress.android.ui.posts.GutenbergKitFeatureChecker;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
@@ -193,6 +194,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
     @Inject BloggingPromptsSettingsHelper mPromptsSettingsHelper;
+    @Inject GutenbergKitFeatureChecker mGutenbergKitFeatureChecker;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -1077,8 +1079,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             WPPrefUtils.removePreference(this, R.string.pref_key_homepage, R.string.pref_key_homepage_settings);
         }
 
-        // hide theme styles preference if block editor is not enabled
-        if (!SiteUtils.isBlockEditorDefaultForNewPost(mSite)) {
+        // hide theme styles preference if GutenbergKit is not enabled
+        if (!mGutenbergKitFeatureChecker.isGutenbergKitEnabled()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_site_editor, R.string.pref_key_use_theme_styles);
         }
 
