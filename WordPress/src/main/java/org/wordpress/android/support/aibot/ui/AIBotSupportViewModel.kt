@@ -29,7 +29,7 @@ class AIBotSupportViewModel @Inject constructor(
     val isBotTyping: StateFlow<Boolean> = _isBotTyping.asStateFlow()
 
     override fun initRepository(accessToken: String) {
-        aiBotSupportRepository.init(accessToken, accountStore.account.id.toLong())
+        aiBotSupportRepository.init(accessToken, accountStore.account.userId)
     }
 
     override suspend fun getConversations() = aiBotSupportRepository.loadConversations()
