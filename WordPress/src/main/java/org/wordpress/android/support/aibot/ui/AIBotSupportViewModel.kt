@@ -12,12 +12,10 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
 import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
-import org.wordpress.android.support.he.ui.HESupportViewModel
-import org.wordpress.android.support.model.UserInfo
+import org.wordpress.android.support.common.model.UserInfo
 import org.wordpress.android.util.AppLog
 import java.util.Date
 import javax.inject.Inject
-import kotlin.Long
 
 @HiltViewModel
 class AIBotSupportViewModel @Inject constructor(

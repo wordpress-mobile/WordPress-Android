@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.support.model.UserInfo
+import org.wordpress.android.support.common.model.UserInfo
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 

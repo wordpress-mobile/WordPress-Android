@@ -46,6 +46,7 @@ import org.wordpress.android.R
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.aibot.util.generateSampleBotConversations
+import org.wordpress.android.support.common.ui.EmptyConversationsView
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -105,49 +106,6 @@ fun ConversationsListScreen(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun EmptyConversationsView(
-    modifier: Modifier,
-    onCreateNewConversationClick: () -> Unit
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "💬",
-            style = MaterialTheme.typography.displayLarge
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Text(
-            text = stringResource(R.string.ai_bot_empty_conversations_title),
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        Text(
-            text = stringResource(R.string.ai_bot_empty_conversations_message),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.padding(24.dp))
-
-        Button(onClick = onCreateNewConversationClick) {
-            Text(text = stringResource(R.string.ai_bot_empty_conversations_button))
         }
     }
 }

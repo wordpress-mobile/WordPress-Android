@@ -1,4 +1,4 @@
-package org.wordpress.android.support.model
+package org.wordpress.android.support.common.model
 
 data class UserInfo(
     val accessToken: String,
