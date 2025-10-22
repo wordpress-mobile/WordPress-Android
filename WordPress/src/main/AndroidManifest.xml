@@ -447,7 +447,8 @@
 
         <activity android:name="org.wordpress.android.support.he.ui.HESupportActivity"
             android:theme="@style/WordPress.NoActionBar"
-            android:label="@string/support_screen_title"/>
+            android:label="@string/support_screen_title"
+            android:windowSoftInputMode="adjustResize"/>
 
         <!-- Deep Linking Activity -->
         <activity
