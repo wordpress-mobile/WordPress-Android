@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.support.aibot.ui.AIBotSupportViewModel
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
@@ -55,28 +56,34 @@ class HESupportViewModel @Inject constructor(
 
     fun init() {
         viewModelScope.launch {
-            // We need to check it this way because access token can be null or empty if not set
-            // So, we manually handle it here
-            val accessToken = if (accountStore.hasAccessToken()) {
-                accountStore.accessToken!!
-            } else {
-                null
-            }
-            if (accessToken == null) {
-                _errorMessage.value = ErrorType.FORBIDDEN
-                appLogWrapper.e(
-                    AppLog.T.SUPPORT, "Error opening HE conversations. The user has no valid access token"
-                )
-            } else {
-                loadUserInfo(accessToken)
-                loadConversations()
+            try {
+                // We need to check it this way because access token can be null or empty if not set
+                // So, we manually handle it here
+                val accessToken = if (accountStore.hasAccessToken()) {
+                    accountStore.accessToken!!
+                } else {
+                    null
+                }
+                if (accessToken == null) {
+                    _errorMessage.value = ErrorType.FORBIDDEN
+                    appLogWrapper.e(
+                        AppLog.T.SUPPORT, "Error opening HE conversations. The user has no valid access token"
+                    )
+                } else {
+                    heSupportRepository.init(accessToken)
+                    loadUserInfo(accessToken)
+                    loadConversations()
+                }
+            } catch (throwable: Throwable) {
+                _errorMessage.value = ErrorType.GENERAL
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error initialising HE support repository: " +
+                        "${throwable.message} - ${throwable.stackTraceToString()}")
             }
         }
     }
 
     private fun loadUserInfo(accessToken: String) {
         val account = accountStore.account
-        heSupportRepository.init(accessToken)
         _userInfo.value = UserInfo(
             accessToken = accessToken,
             userName = account.displayName.ifEmpty { account.userName },

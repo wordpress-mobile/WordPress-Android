@@ -7,10 +7,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
 import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
+import org.wordpress.android.support.he.ui.HESupportViewModel
+import org.wordpress.android.support.model.UserInfo
 import org.wordpress.android.util.AppLog
 import java.util.Date
 import javax.inject.Inject
@@ -18,6 +21,7 @@ import kotlin.Long
 
 @HiltViewModel
 class AIBotSupportViewModel @Inject constructor(
+    private val accountStore: AccountStore,
     private val aiBotSupportRepository: AIBotSupportRepository,
     private val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
@@ -42,18 +46,46 @@ class AIBotSupportViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<ErrorType?>(null)
     val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
 
+    private val _userInfo = MutableStateFlow<UserInfo>(UserInfo("", "", "", null))
+    val userInfo: StateFlow<UserInfo> = _userInfo.asStateFlow()
+
     @Suppress("TooGenericExceptionCaught")
-    fun init(accessToken: String, userId: Long) {
+    fun init() {
         viewModelScope.launch {
             try {
-                aiBotSupportRepository.init(accessToken, userId)
-                loadConversations()
+                // We need to check it this way because access token can be null or empty if not set
+                // So, we manually handle it here
+                val accessToken = if (accountStore.hasAccessToken()) {
+                    accountStore.accessToken!!
+                } else {
+                    null
+                }
+                if (accessToken == null) {
+                    _errorMessage.value = ErrorType.FORBIDDEN
+                    appLogWrapper.e(
+                        AppLog.T.SUPPORT, "Error opening the AI bot conversations. The user has no valid access token"
+                    )
+                } else {
+                    aiBotSupportRepository.init(accessToken, accountStore.account.id.toLong())
+                    loadUserInfo(accessToken)
+                    loadConversations()
+                }
             } catch (throwable: Throwable) {
                 _errorMessage.value = ErrorType.GENERAL
                 appLogWrapper.e(AppLog.T.SUPPORT, "Error initialising the AI bot support repository: " +
                         "${throwable.message} - ${throwable.stackTraceToString()}")
             }
         }
+    }
+
+    private fun loadUserInfo(accessToken: String) {
+        val account = accountStore.account
+        _userInfo.value = UserInfo(
+            accessToken = accessToken,
+            userName = account.displayName.ifEmpty { account.userName },
+            userEmail = account.email,
+            avatarUrl = account.avatarUrl.takeIf { it.isNotEmpty() }
+        )
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -190,5 +222,5 @@ class AIBotSupportViewModel @Inject constructor(
         }
     }
 
-    enum class ErrorType { GENERAL }
+    enum class ErrorType { GENERAL, FORBIDDEN }
 }

@@ -30,11 +30,9 @@ class AIBotSupportActivity : AppCompatActivity() {
     private lateinit var composeView: ComposeView
     private lateinit var navController: NavHostController
 
-    private lateinit var userName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userName = intent.getStringExtra(USERNAME).orEmpty()
         composeView = ComposeView(this)
         setContentView(
             composeView.apply {
@@ -47,16 +45,13 @@ class AIBotSupportActivity : AppCompatActivity() {
                 }
             }
         )
-        viewModel.init(
-            accessToken = intent.getStringExtra(ACCESS_TOKEN_ID)!!,
-            userId = intent.getLongExtra(USER_ID, 0)
-        )
 
         // Observe error messages and show them as Toast
         lifecycleScope.launch {
             viewModel.errorMessage.collect { errorType ->
                 val errorMessage = when (errorType) {
                     AIBotSupportViewModel.ErrorType.GENERAL -> getString(R.string.ai_bot_generic_error)
+                    AIBotSupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
                     null -> null
                 }
                 errorMessage?.let {
@@ -65,6 +60,8 @@ class AIBotSupportActivity : AppCompatActivity() {
                 }
             }
         }
+
+        viewModel.init()
     }
 
     private enum class ConversationScreen {
@@ -108,9 +105,10 @@ class AIBotSupportActivity : AppCompatActivity() {
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isBotTyping by viewModel.isBotTyping.collectAsState()
                     val canSendMessage by viewModel.canSendMessage.collectAsState()
+                    val userInfo by viewModel.userInfo.collectAsState()
                     selectedConversation?.let { conversation ->
                         ConversationDetailScreen(
-                            userName = userName,
+                            userName = userInfo.userName,
                             conversation = conversation,
                             isLoading = isLoadingConversation,
                             isBotTyping = isBotTyping,
@@ -127,19 +125,7 @@ class AIBotSupportActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val ACCESS_TOKEN_ID = "arg_access_token_id"
-        private const val USER_ID = "arg_user_id"
-        private const val USERNAME = "arg_username"
         @JvmStatic
-        fun createIntent(
-            context: Context,
-            accessToken: String,
-            userId: Long,
-            userName: String,
-        ): Intent = Intent(context, AIBotSupportActivity::class.java).apply {
-            putExtra(ACCESS_TOKEN_ID, accessToken)
-            putExtra(USER_ID, userId)
-            putExtra(USERNAME, userName)
-        }
+        fun createIntent(context: Context): Intent = Intent(context, AIBotSupportActivity::class.java)
     }
 }
