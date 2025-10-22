@@ -25,6 +25,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -54,6 +56,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HEConversationDetailScreen(
+    snackbarHostState: SnackbarHostState,
     conversation: SupportConversation,
     isLoading: Boolean = false,
     onBackClick: () -> Unit
@@ -65,6 +68,7 @@ fun HEConversationDetailScreen(
     val resources = LocalResources.current
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             MainTopAppBar(
                 title = "",
@@ -353,9 +357,11 @@ private fun ReplyBottomSheet(
 @Composable
 private fun HEConversationDetailScreenPreview() {
     val sampleConversation = generateSampleHESupportConversations()[0]
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false) {
         HEConversationDetailScreen(
+            snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
             onBackClick = { }
         )
@@ -366,9 +372,11 @@ private fun HEConversationDetailScreenPreview() {
 @Composable
 private fun HEConversationDetailScreenPreviewDark() {
     val sampleConversation = generateSampleHESupportConversations()[0]
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true) {
         HEConversationDetailScreen(
+            snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
             onBackClick = { }
         )
@@ -379,9 +387,11 @@ private fun HEConversationDetailScreenPreviewDark() {
 @Composable
 private fun HEConversationDetailScreenWordPressPreview() {
     val sampleConversation = generateSampleHESupportConversations()[0]
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
         HEConversationDetailScreen(
+            snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
             onBackClick = { }
         )
@@ -392,9 +402,11 @@ private fun HEConversationDetailScreenWordPressPreview() {
 @Composable
 private fun HEConversationDetailScreenPreviewWordPressDark() {
     val sampleConversation = generateSampleHESupportConversations()[0]
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         HEConversationDetailScreen(
+            snackbarHostState = snackbarHostState,
             isLoading = true,
             conversation = sampleConversation,
             onBackClick = { }

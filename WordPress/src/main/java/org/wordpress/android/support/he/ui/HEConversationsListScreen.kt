@@ -22,11 +22,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
@@ -51,6 +54,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HEConversationsListScreen(
+    snackbarHostState: SnackbarHostState,
     conversations: StateFlow<List<SupportConversation>>,
     isLoadingConversations: StateFlow<Boolean>,
     onConversationClick: (SupportConversation) -> Unit,
@@ -59,6 +63,7 @@ fun HEConversationsListScreen(
     onRefresh: () -> Unit
 ) {
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             MainTopAppBar(
                 title = stringResource(R.string.he_support_conversations_title),
@@ -213,9 +218,11 @@ private fun ConversationCard(
 private fun ConversationsScreenPreview() {
     val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
     val isLoading = MutableStateFlow(false)
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false) {
         HEConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoadingConversations = isLoading.asStateFlow(),
             onConversationClick = { },
@@ -231,9 +238,11 @@ private fun ConversationsScreenPreview() {
 private fun ConversationsScreenPreviewDark() {
     val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
     val isLoading = MutableStateFlow(false)
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true) {
         HEConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoadingConversations = isLoading.asStateFlow(),
             onConversationClick = { },
@@ -249,9 +258,11 @@ private fun ConversationsScreenPreviewDark() {
 private fun ConversationsScreenWordPressPreview() {
     val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
     val isLoading = MutableStateFlow(false)
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
         HEConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoadingConversations = isLoading.asStateFlow(),
             onConversationClick = { },
@@ -267,9 +278,11 @@ private fun ConversationsScreenWordPressPreview() {
 private fun ConversationsScreenPreviewWordPressDark() {
     val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
     val isLoading = MutableStateFlow(false)
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         HEConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoadingConversations = isLoading.asStateFlow(),
             onConversationClick = { },

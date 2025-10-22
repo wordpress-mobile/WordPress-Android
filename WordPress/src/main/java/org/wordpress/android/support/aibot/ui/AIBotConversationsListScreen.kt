@@ -22,12 +22,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
@@ -47,6 +50,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConversationsListScreen(
+    snackbarHostState: SnackbarHostState,
     conversations: StateFlow<List<BotConversation>>,
     isLoading: Boolean,
     onConversationClick: (BotConversation) -> Unit,
@@ -55,6 +59,7 @@ fun ConversationsListScreen(
     onRefresh: () -> Unit,
 ) {
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.ai_bot_conversations_title)) },
@@ -186,9 +191,11 @@ private fun ConversationCard(
 @Composable
 private fun ConversationsScreenPreview() {
     val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false) {
         ConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoading = false,
             onConversationClick = { },
@@ -203,9 +210,11 @@ private fun ConversationsScreenPreview() {
 @Composable
 private fun ConversationsScreenPreviewDark() {
     val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true) {
         ConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoading = false,
             onConversationClick = { },
@@ -220,9 +229,11 @@ private fun ConversationsScreenPreviewDark() {
 @Composable
 private fun ConversationsScreenWordPressPreview() {
     val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
         ConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoading = true,
             onConversationClick = { },
@@ -237,9 +248,11 @@ private fun ConversationsScreenWordPressPreview() {
 @Composable
 private fun ConversationsScreenPreviewWordPressDark() {
     val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         ConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoading = true,
             onConversationClick = { },
@@ -254,9 +267,11 @@ private fun ConversationsScreenPreviewWordPressDark() {
 @Composable
 private fun EmptyConversationsScreenPreview() {
     val emptyConversations = MutableStateFlow(emptyList<BotConversation>())
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false) {
         ConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = emptyConversations.asStateFlow(),
             isLoading = false,
             onConversationClick = { },
@@ -271,9 +286,11 @@ private fun EmptyConversationsScreenPreview() {
 @Composable
 private fun EmptyConversationsScreenPreviewDark() {
     val emptyConversations = MutableStateFlow(emptyList<BotConversation>())
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true) {
         ConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = emptyConversations.asStateFlow(),
             isLoading = false,
             onConversationClick = { },

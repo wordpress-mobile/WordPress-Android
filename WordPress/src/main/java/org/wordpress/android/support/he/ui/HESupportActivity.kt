@@ -107,62 +107,60 @@ class HESupportActivity : AppCompatActivity() {
         }
 
         AppThemeM3 {
-            Scaffold(
-                snackbarHost = { SnackbarHost(snackbarHostState) }
-            ) { paddingValues ->
-                NavHost(
-                    navController = navController,
-                    startDestination = ConversationScreen.List.name,
-                    modifier = Modifier.padding(paddingValues)
-                ) {
-                    composable(route = ConversationScreen.List.name) {
-                        HEConversationsListScreen(
-                            conversations = viewModel.conversations,
-                            isLoadingConversations = viewModel.isLoadingConversations,
-                            onConversationClick = { conversation ->
-                                viewModel.onConversationClick(conversation)
-                            },
-                            onBackClick = { finish() },
-                            onCreateNewConversationClick = {
-                                viewModel.onCreateNewConversationClick()
-                            },
-                            onRefresh = {
-                                viewModel.refreshConversations()
-                            }
-                        )
-                    }
-
-                    composable(route = ConversationScreen.Detail.name) {
-                        val selectedConversation by viewModel.selectedConversation.collectAsState()
-                        val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
-                        selectedConversation?.let { conversation ->
-                            HEConversationDetailScreen(
-                                conversation = conversation,
-                                isLoading = isLoadingConversation,
-                                onBackClick = { viewModel.onBackFromDetailClick() }
-                            )
+            NavHost(
+                navController = navController,
+                startDestination = ConversationScreen.List.name,
+            ) {
+                composable(route = ConversationScreen.List.name) {
+                    HEConversationsListScreen(
+                        snackbarHostState = snackbarHostState,
+                        conversations = viewModel.conversations,
+                        isLoadingConversations = viewModel.isLoadingConversations,
+                        onConversationClick = { conversation ->
+                            viewModel.onConversationClick(conversation)
+                        },
+                        onBackClick = { finish() },
+                        onCreateNewConversationClick = {
+                            viewModel.onCreateNewConversationClick()
+                        },
+                        onRefresh = {
+                            viewModel.refreshConversations()
                         }
-                    }
+                    )
+                }
 
-                    composable(route = ConversationScreen.NewTicket.name) {
-                        val userInfo by viewModel.userInfo.collectAsState()
-                        val isSendingNewConversation by viewModel.isSendingNewConversation.collectAsState()
-                        HENewTicketScreen(
-                            onBackClick = { viewModel.onBackFromDetailClick() },
-                            onSubmit = { category, subject, messageText, siteAddress ->
-                                viewModel.onSendNewConversation(
-                                    subject = subject,
-                                    message = messageText,
-                                    tags = listOf(category.name),
-                                    attachments = listOf()
-                                )
-                            },
-                            userName = userInfo.userName,
-                            userEmail = userInfo.userEmail,
-                            userAvatarUrl = userInfo.avatarUrl,
-                            isSendingNewConversation = isSendingNewConversation
+                composable(route = ConversationScreen.Detail.name) {
+                    val selectedConversation by viewModel.selectedConversation.collectAsState()
+                    val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
+                    selectedConversation?.let { conversation ->
+                        HEConversationDetailScreen(
+                            snackbarHostState = snackbarHostState,
+                            conversation = conversation,
+                            isLoading = isLoadingConversation,
+                            onBackClick = { viewModel.onBackFromDetailClick() }
                         )
                     }
+                }
+
+                composable(route = ConversationScreen.NewTicket.name) {
+                    val userInfo by viewModel.userInfo.collectAsState()
+                    val isSendingNewConversation by viewModel.isSendingNewConversation.collectAsState()
+                    HENewTicketScreen(
+                        snackbarHostState = snackbarHostState,
+                        onBackClick = { viewModel.onBackFromDetailClick() },
+                        onSubmit = { category, subject, messageText, siteAddress ->
+                            viewModel.onSendNewConversation(
+                                subject = subject,
+                                message = messageText,
+                                tags = listOf(category.name),
+                                attachments = listOf()
+                            )
+                        },
+                        userName = userInfo.userName,
+                        userEmail = userInfo.userEmail,
+                        userAvatarUrl = userInfo.avatarUrl,
+                        isSendingNewConversation = isSendingNewConversation
+                    )
                 }
             }
         }

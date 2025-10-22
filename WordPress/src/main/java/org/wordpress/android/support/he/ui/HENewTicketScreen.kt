@@ -44,6 +44,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
@@ -53,6 +55,7 @@ import org.wordpress.android.ui.dataview.compose.RemoteImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HENewTicketScreen(
+    snackbarHostState: SnackbarHostState,
     onBackClick: () -> Unit,
     onSubmit: (
         category: SupportCategory,
@@ -72,6 +75,7 @@ fun HENewTicketScreen(
     var includeAppLogs by remember { mutableStateOf(false) }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             MainTopAppBar(
                 title = stringResource(R.string.he_support_contact_support_title),
@@ -364,8 +368,10 @@ private fun CategoryOption(
 @Preview(showBackground = true, name = "HE New Ticket Screen")
 @Composable
 private fun HENewTicketScreenPreview() {
+    val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = false) {
         HENewTicketScreen(
+            snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _ -> },
             userName = "Test user",
@@ -378,8 +384,10 @@ private fun HENewTicketScreenPreview() {
 @Preview(showBackground = true, name = "HE New Ticket Screen - Dark", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun HENewTicketScreenPreviewDark() {
+    val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = true) {
         HENewTicketScreen(
+            snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _ -> },
             userName = "Test user",
@@ -392,8 +400,10 @@ private fun HENewTicketScreenPreviewDark() {
 @Preview(showBackground = true, name = "HE New Ticket Screen - WordPress")
 @Composable
 private fun HENewTicketScreenWordPressPreview() {
+    val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
         HENewTicketScreen(
+            snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _ -> },
             userName = "Test user",
@@ -406,8 +416,10 @@ private fun HENewTicketScreenWordPressPreview() {
 @Preview(showBackground = true, name = "HE New Ticket Screen - Dark WordPress", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun HENewTicketScreenPreviewWordPressDark() {
+    val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         HENewTicketScreen(
+            snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _ -> },
             userName = "Test user",

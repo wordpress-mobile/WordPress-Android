@@ -47,6 +47,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.text.style.TextAlign
 import org.wordpress.android.R
@@ -59,6 +61,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConversationDetailScreen(
+    snackbarHostState: SnackbarHostState,
     conversation: BotConversation,
     isLoading: Boolean,
     isBotTyping: Boolean,
@@ -85,6 +88,7 @@ fun ConversationDetailScreen(
     val resources = LocalResources.current
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { },
@@ -355,9 +359,11 @@ private fun TypingDot(delay: Int) {
 @Composable
 private fun ConversationDetailScreenPreview() {
     val sampleConversation = generateSampleBotConversations()[0]
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false) {
         ConversationDetailScreen(
+            snackbarHostState = snackbarHostState,
             userName = "UserName",
             conversation = sampleConversation,
             isLoading = false,
@@ -373,9 +379,11 @@ private fun ConversationDetailScreenPreview() {
 @Composable
 private fun ConversationDetailScreenPreviewDark() {
     val sampleConversation = generateSampleBotConversations()[0]
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true) {
         ConversationDetailScreen(
+            snackbarHostState = snackbarHostState,
             userName = "UserName",
             conversation = sampleConversation,
             isLoading = false,
@@ -391,9 +399,11 @@ private fun ConversationDetailScreenPreviewDark() {
 @Composable
 private fun ConversationDetailScreenWordPressPreview() {
     val sampleConversation = generateSampleBotConversations()[0]
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
         ConversationDetailScreen(
+            snackbarHostState = snackbarHostState,
             userName = "UserName",
             conversation = sampleConversation,
             isLoading = false,
@@ -409,9 +419,11 @@ private fun ConversationDetailScreenWordPressPreview() {
 @Composable
 private fun ConversationDetailScreenPreviewWordPressDark() {
     val sampleConversation = generateSampleBotConversations()[0]
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         ConversationDetailScreen(
+            snackbarHostState = snackbarHostState,
             userName = "UserName",
             conversation = sampleConversation,
             isLoading = false,

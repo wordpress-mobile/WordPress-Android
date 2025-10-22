@@ -108,51 +108,48 @@ class AIBotSupportActivity : AppCompatActivity() {
         }
 
         AppThemeM3 {
-            Scaffold(
-                snackbarHost = { SnackbarHost(snackbarHostState) }
-            ) { paddingValues ->
-                NavHost(
-                    navController = navController,
-                    startDestination = ConversationScreen.List.name,
-                    modifier = Modifier.padding(paddingValues)
-                ) {
-                    composable(route = ConversationScreen.List.name) {
-                        val isLoadingConversations by viewModel.isLoadingConversations.collectAsState()
-                        ConversationsListScreen(
-                            conversations = viewModel.conversations,
-                            isLoading = isLoadingConversations,
-                            onConversationClick = { conversation ->
-                                viewModel.onConversationClick(conversation)
-                            },
-                            onBackClick = { finish() },
-                            onCreateNewConversationClick = {
-                                viewModel.onNewConversationClick()
-                            },
-                            onRefresh = {
-                                viewModel.refreshConversations()
+            NavHost(
+                navController = navController,
+                startDestination = ConversationScreen.List.name,
+            ) {
+                composable(route = ConversationScreen.List.name) {
+                    val isLoadingConversations by viewModel.isLoadingConversations.collectAsState()
+                    ConversationsListScreen(
+                        snackbarHostState = snackbarHostState,
+                        conversations = viewModel.conversations,
+                        isLoading = isLoadingConversations,
+                        onConversationClick = { conversation ->
+                            viewModel.onConversationClick(conversation)
+                        },
+                        onBackClick = { finish() },
+                        onCreateNewConversationClick = {
+                            viewModel.onNewConversationClick()
+                        },
+                        onRefresh = {
+                            viewModel.refreshConversations()
+                        },
+                    )
+                }
+
+                composable(route = ConversationScreen.Detail.name) {
+                    val selectedConversation by viewModel.selectedConversation.collectAsState()
+                    val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
+                    val isBotTyping by viewModel.isBotTyping.collectAsState()
+                    val canSendMessage by viewModel.canSendMessage.collectAsState()
+                    val userInfo by viewModel.userInfo.collectAsState()
+                    selectedConversation?.let { conversation ->
+                        ConversationDetailScreen(
+                            snackbarHostState = snackbarHostState,
+                            userName = userInfo.userName,
+                            conversation = conversation,
+                            isLoading = isLoadingConversation,
+                            isBotTyping = isBotTyping,
+                            canSendMessage = canSendMessage,
+                            onBackClick = { viewModel.onBackFromDetailClick() },
+                            onSendMessage = { text ->
+                                viewModel.sendMessage(text)
                             }
                         )
-                    }
-
-                    composable(route = ConversationScreen.Detail.name) {
-                        val selectedConversation by viewModel.selectedConversation.collectAsState()
-                        val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
-                        val isBotTyping by viewModel.isBotTyping.collectAsState()
-                        val canSendMessage by viewModel.canSendMessage.collectAsState()
-                        val userInfo by viewModel.userInfo.collectAsState()
-                        selectedConversation?.let { conversation ->
-                            ConversationDetailScreen(
-                                userName = userInfo.userName,
-                                conversation = conversation,
-                                isLoading = isLoadingConversation,
-                                isBotTyping = isBotTyping,
-                                canSendMessage = canSendMessage,
-                                onBackClick = { viewModel.onBackFromDetailClick() },
-                                onSendMessage = { text ->
-                                    viewModel.sendMessage(text)
-                                }
-                            )
-                        }
                     }
                 }
             }
