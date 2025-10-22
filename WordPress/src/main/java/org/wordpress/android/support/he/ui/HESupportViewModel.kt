@@ -24,15 +24,6 @@ class HESupportViewModel @Inject constructor(
     private val heSupportRepository: HESupportRepository,
     appLogWrapper: AppLogWrapper,
 ) : SupportViewModel<SupportConversation>(accountStore, appLogWrapper) {
-    sealed class NavigationEvent {
-        data class NavigateToConversationDetail(val conversation: SupportConversation) : NavigationEvent()
-        data object NavigateToNewTicket : NavigationEvent()
-        data object NavigateBack : NavigationEvent()
-    }
-
-    private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
-    val navigationEvents: SharedFlow<NavigationEvent> = _navigationEvents.asSharedFlow()
-
     private val _isSendingNewConversation = MutableStateFlow(false)
     val isSendingNewConversation: StateFlow<Boolean> = _isSendingNewConversation.asStateFlow()
 
@@ -41,25 +32,6 @@ class HESupportViewModel @Inject constructor(
     }
 
     override suspend fun getConversations(): List<SupportConversation> = heSupportRepository.loadConversations()
-
-    fun onConversationClick(conversation: SupportConversation) {
-        viewModelScope.launch {
-            _selectedConversation.value = conversation
-            _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail(conversation))
-        }
-    }
-
-    fun onBackFromDetailClick() {
-        viewModelScope.launch {
-            _navigationEvents.emit(NavigationEvent.NavigateBack)
-        }
-    }
-
-    fun onCreateNewConversation() {
-        viewModelScope.launch {
-            _navigationEvents.emit(NavigationEvent.NavigateToNewTicket)
-        }
-    }
 
     fun onSendNewConversation(
         subject: String,
@@ -77,8 +49,8 @@ class HESupportViewModel @Inject constructor(
                 attachments = attachments
             )) {
                 is CreateConversationResult.Success -> {
-                    _selectedConversation.value = result.conversation
-                    _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail(result.conversation))
+                    // Simulate clicking on the conversation
+                    onConversationClick(result.conversation)
                 }
 
                 is CreateConversationResult.Error.Unauthorized -> {

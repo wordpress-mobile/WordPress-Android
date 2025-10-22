@@ -2,8 +2,11 @@ package org.wordpress.android.support.common.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
@@ -15,6 +18,15 @@ abstract class SupportViewModel<ConversationType>(
     protected val accountStore: AccountStore,
     protected val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
+    sealed class NavigationEvent {
+        data object NavigateToConversationDetail : NavigationEvent()
+        data object NavigateToNewConversation : NavigationEvent()
+        data object NavigateBack : NavigationEvent()
+    }
+
+    private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
+    val navigationEvents: SharedFlow<NavigationEvent> = _navigationEvents.asSharedFlow()
+
     protected val _conversations = MutableStateFlow<List<ConversationType>>(emptyList())
     val conversations: StateFlow<List<ConversationType>> = _conversations.asStateFlow()
 
@@ -98,6 +110,29 @@ abstract class SupportViewModel<ConversationType>(
     fun clearError() {
         _errorMessage.value = null
     }
+
+    // Region navigation
+
+    fun onConversationClick(conversation: ConversationType) {
+        viewModelScope.launch {
+            _selectedConversation.value = conversation
+            _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail)
+        }
+    }
+
+    fun onBackFromDetailClick() {
+        viewModelScope.launch {
+            _navigationEvents.emit(NavigationEvent.NavigateBack)
+        }
+    }
+
+    fun onCreateNewConversationClick() {
+        viewModelScope.launch {
+            _navigationEvents.emit(NavigationEvent.NavigateToNewConversation)
+        }
+    }
+
+    // End region
 
     enum class ErrorType {
         GENERAL,

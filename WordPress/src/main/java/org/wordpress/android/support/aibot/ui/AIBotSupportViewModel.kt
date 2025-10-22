@@ -2,8 +2,11 @@ package org.wordpress.android.support.aibot.ui
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
@@ -22,6 +25,7 @@ class AIBotSupportViewModel @Inject constructor(
     private val aiBotSupportRepository: AIBotSupportRepository,
     appLogWrapper: AppLogWrapper,
 ) : SupportViewModel<BotConversation>(accountStore, appLogWrapper) {
+
     private val _canSendMessage = MutableStateFlow(true)
     val canSendMessage: StateFlow<Boolean> = _canSendMessage.asStateFlow()
 
@@ -46,7 +50,8 @@ class AIBotSupportViewModel @Inject constructor(
                 _canSendMessage.value = true
                 val updatedConversation = aiBotSupportRepository.loadConversation(conversation.id)
                 if (updatedConversation != null) {
-                    _selectedConversation.value = updatedConversation
+                    // Simulate clicking on the conversation
+                    onConversationClick(updatedConversation)
                 } else {
                     _errorMessage.value = ErrorType.GENERAL
                     appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversation: " +
@@ -62,15 +67,19 @@ class AIBotSupportViewModel @Inject constructor(
     }
 
     fun onNewConversationClicked() {
-        val now = Date()
-        _selectedConversation.value = BotConversation(
-            id = 0,
-            createdAt = now,
-            mostRecentMessageDate = now,
-            lastMessage = "",
-            messages = listOf()
-        )
-        _canSendMessage.value = true
+        viewModelScope.launch {
+            val now = Date()
+            val botConversation = BotConversation(
+                id = 0,
+                createdAt = now,
+                mostRecentMessageDate = now,
+                lastMessage = "",
+                messages = listOf()
+            )
+            _canSendMessage.value = true
+            // Simulate clicking on the conversation
+            onConversationClick(botConversation)
+        }
     }
 
     @Suppress("TooGenericExceptionCaught")

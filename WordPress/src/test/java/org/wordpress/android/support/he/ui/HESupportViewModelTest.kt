@@ -153,7 +153,7 @@ class HESupportViewModelTest : BaseUnitTest() {
     fun `onCreateNewConversation emits NavigateToNewTicket event`() = test {
         // When
         viewModel.navigationEvents.test {
-            viewModel.onCreateNewConversation()
+            viewModel.onCreateNewConversationClick()
 
             // Then
             val event = awaitItem()
@@ -252,7 +252,7 @@ class HESupportViewModelTest : BaseUnitTest() {
 
         // When
         viewModel.navigationEvents.test {
-            viewModel.onCreateNewConversation()
+            viewModel.onCreateNewConversationClick()
             val firstEvent = awaitItem()
 
             viewModel.onSendNewConversation(

@@ -63,13 +63,13 @@ class HESupportActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.navigationEvents.collect { event ->
                     when (event) {
-                        is HESupportViewModel.NavigationEvent.NavigateToConversationDetail -> {
+                        is SupportViewModel.NavigationEvent.NavigateToConversationDetail -> {
                             navController.navigate(ConversationScreen.Detail.name)
                         }
-                        HESupportViewModel.NavigationEvent.NavigateToNewTicket -> {
+                        SupportViewModel.NavigationEvent.NavigateToNewConversation -> {
                             navController.navigate(ConversationScreen.NewTicket.name)
                         }
-                        HESupportViewModel.NavigationEvent.NavigateBack -> {
+                        SupportViewModel.NavigationEvent.NavigateBack -> {
                             navController.navigateUp()
                         }
                     }
@@ -124,7 +124,7 @@ class HESupportActivity : AppCompatActivity() {
                             },
                             onBackClick = { finish() },
                             onCreateNewConversationClick = {
-                                viewModel.onCreateNewConversation()
+                                viewModel.onCreateNewConversationClick()
                             },
                             onRefresh = {
                                 viewModel.refreshConversations()

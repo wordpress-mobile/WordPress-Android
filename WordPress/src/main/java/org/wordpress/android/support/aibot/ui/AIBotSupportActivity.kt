@@ -19,6 +19,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -51,7 +54,30 @@ class AIBotSupportActivity : AppCompatActivity() {
                 }
             }
         )
+        observeNavigationEvents()
         viewModel.init()
+    }
+
+    private fun observeNavigationEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigationEvents.collect { event ->
+                    when (event) {
+                        is SupportViewModel.NavigationEvent.NavigateToConversationDetail -> {
+                            navController.navigate(ConversationScreen.Detail.name)
+                        }
+                        SupportViewModel.NavigationEvent.NavigateBack -> {
+                            navController.navigateUp()
+                        }
+
+                        SupportViewModel.NavigationEvent.NavigateToNewConversation -> {
+                            // New conversations are handled in the conversation details screen
+                            navController.navigate(ConversationScreen.Detail.name)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private enum class ConversationScreen {
@@ -97,14 +123,10 @@ class AIBotSupportActivity : AppCompatActivity() {
                             isLoading = isLoadingConversations,
                             onConversationClick = { conversation ->
                                 viewModel.onConversationSelected(conversation)
-                                navController.navigate(ConversationScreen.Detail.name)
                             },
                             onBackClick = { finish() },
                             onCreateNewConversationClick = {
                                 viewModel.onNewConversationClicked()
-                                viewModel.selectedConversation.value?.let { newConversation ->
-                                    navController.navigate(ConversationScreen.Detail.name)
-                                }
                             },
                             onRefresh = {
                                 viewModel.refreshConversations()
@@ -125,7 +147,7 @@ class AIBotSupportActivity : AppCompatActivity() {
                                 isLoading = isLoadingConversation,
                                 isBotTyping = isBotTyping,
                                 canSendMessage = canSendMessage,
-                                onBackClick = { navController.navigateUp() },
+                                onBackClick = { viewModel.onBackFromDetailClick() },
                                 onSendMessage = { text ->
                                     viewModel.sendMessage(text)
                                 }
