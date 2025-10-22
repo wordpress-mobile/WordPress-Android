@@ -181,9 +181,11 @@ class WPComSiteSettings extends SiteSettingsInterface {
 
                             // Local settings
                             boolean location = mSettings.location;
+                            boolean useThemeStyles = mSettings.useThemeStyles;
                             mSettings.copyFrom(mRemoteSettings);
                             mSettings.postFormats = currentPostFormats;
                             mSettings.location = location;
+                            mSettings.useThemeStyles = useThemeStyles;
 
                             SiteSettingsTable.saveSettings(mSettings);
                         }
