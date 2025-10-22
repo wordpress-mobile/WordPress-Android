@@ -2168,8 +2168,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void removeEditorPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_editor,
                 R.string.pref_key_gutenberg_default_for_new_posts);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
-                R.string.pref_key_site_editor);
     }
 
     private void removeCategoriesPreference() {
