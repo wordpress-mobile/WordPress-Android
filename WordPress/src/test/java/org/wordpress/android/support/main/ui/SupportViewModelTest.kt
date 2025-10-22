@@ -252,24 +252,44 @@ class SupportViewModelTest : BaseUnitTest() {
 
     // endregion
 
-    // region placeholder tests for unimplemented methods
+    // region onHelpCenterClick() tests
 
     @Test
-    fun `onHelpCenterClick does not throw exception`() {
-        // When/Then - should not throw
-        viewModel.onHelpCenterClick()
+    fun `onHelpCenterClick emits NavigateToHelpCenter event`() = test {
+        // When
+        viewModel.navigationEvents.test {
+            viewModel.onHelpCenterClick()
+
+            // Then
+            val event = awaitItem()
+            assertThat(event).isEqualTo(SupportViewModel.NavigationEvent.NavigateToHelpCenter)
+        }
     }
+
+    // endregion
+
+    // region onApplicationLogsClick() tests
+
+    @Test
+    fun `onApplicationLogsClick emits NavigateToApplicationLogs event`() = test {
+        // When
+        viewModel.navigationEvents.test {
+            viewModel.onApplicationLogsClick()
+
+            // Then
+            val event = awaitItem()
+            assertThat(event).isEqualTo(SupportViewModel.NavigationEvent.NavigateToApplicationLogs)
+        }
+    }
+
+    // endregion
+
+    // region placeholder tests for unimplemented methods
 
     @Test
     fun `onAskHappinessEngineersClick does not throw exception`() {
         // When/Then - should not throw
         viewModel.onAskHappinessEngineersClick()
-    }
-
-    @Test
-    fun `onApplicationLogsClick does not throw exception`() {
-        // When/Then - should not throw
-        viewModel.onApplicationLogsClick()
     }
 
     // endregion

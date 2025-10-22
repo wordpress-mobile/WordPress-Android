@@ -48,6 +48,7 @@ fun SupportScreen(
     isLoggedIn: Boolean,
     showAskTheBots: Boolean,
     showAskHappinessEngineers: Boolean,
+    versionName: String,
     onBackClick: () -> Unit,
     onLoginClick: () -> Unit,
     onHelpCenterClick: () -> Unit,
@@ -223,6 +224,16 @@ fun SupportScreen(
             }
 
             Spacer(modifier = Modifier.height(24.dp))
+
+            // Version Name
+            Text(
+                text = stringResource(R.string.version_with_name_param, versionName),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
@@ -264,6 +275,7 @@ private fun SupportScreenPreview() {
             isLoggedIn = true,
             showAskTheBots = true,
             showAskHappinessEngineers = true,
+            versionName = "1.0.0",
             onBackClick = {},
             onLoginClick = {},
             onHelpCenterClick = {},
@@ -285,6 +297,7 @@ private fun SupportScreenPreviewDark() {
             isLoggedIn = true,
             showAskTheBots = true,
             showAskHappinessEngineers = true,
+            versionName = "1.0.0",
             onBackClick = {},
             onLoginClick = {},
             onHelpCenterClick = {},
@@ -306,6 +319,7 @@ private fun SupportScreenPreviewLoggedOut() {
             isLoggedIn = false,
             showAskTheBots = false,
             showAskHappinessEngineers = false,
+            versionName = "1.0.0",
             onBackClick = {},
             onLoginClick = {},
             onHelpCenterClick = {},
