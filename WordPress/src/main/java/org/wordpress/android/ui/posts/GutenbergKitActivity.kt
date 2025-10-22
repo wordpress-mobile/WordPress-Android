@@ -2279,9 +2279,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
             val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
                 isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
-                isThemeStylesFeatureEnabled = experimentalFeatures.isEnabled(
-                    Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
-                )
+                isThemeStylesFeatureEnabled = siteSettings?.getUseThemeStyles() ?: true
             )
 
             val appConfig = GutenbergKitSettingsBuilder.AppConfig(

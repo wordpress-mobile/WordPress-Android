@@ -141,9 +141,8 @@ class GutenbergKitWarmupHelper @Inject constructor(
 
         val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
             isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
-            isThemeStylesFeatureEnabled = experimentalFeatures.isEnabled(
-                Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES
-            )
+            // Default to true during warmup; actual value will be used when editor launches
+            isThemeStylesFeatureEnabled = true
         )
 
         val settings = GutenbergKitSettingsBuilder.buildSettings(
