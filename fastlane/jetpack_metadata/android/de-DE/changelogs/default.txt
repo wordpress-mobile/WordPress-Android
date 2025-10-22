@@ -1,4 +1,4 @@
-26.2:
-- Verbinde deine selbst gehosteten Websites mit Jetpack mithilfe unseres neuen, optimierten Workflows, der über Statistiken und Benachrichtigungen verfügbar ist.
-- Wir haben Unterstützung für Erwähnungen im experimentellen Editor hinzugefügt, damit du deine Freunde und beteiligte Personen ganz einfach markieren kannst.
-- Die Medienauswahl ist jetzt für alle zugänglicher.
+26.3:
+Wir haben Informationen zur Dateigröße zu deiner Mediathek hinzugefügt, damit du genau sehen kannst, womit du arbeitest.
+
+Außerdem funktioniert der experimentelle Editor jetzt noch flüssiger. Deine Inhalte bleiben erhalten, wenn du dein Gerät drehst oder den Dunkelmodus aktivierst, und Dialogfelder reagieren jetzt richtig auf den Zurück-Button. Viel Spaß beim Bearbeiten!

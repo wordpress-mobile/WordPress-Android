@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-11-08 05:57:29+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: vi_VN
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -275,8 +275,6 @@ Language: vi_VN
     <string name="my_site_post_card_link_create_post">Viết bài mới</string>
     <string name="my_site_create_next_post_excerpt">Đăng thường xuyên để thu hút độc giả!</string>
     <string name="my_site_create_next_post_title">Tạo bài viết kế tiếp</string>
-    <string name="menu_visual_mode_switched_notice">Chuyển sang chế độ trực quan</string>
-    <string name="menu_html_mode_switched_notice">Chuyển sang chế độ HTML</string>
     <string name="post_link_copied_to_clipboard">Đã chép URL vào bộ nhớ tạm</string>
     <string name="comment_author_badge">Tác giả</string>
     <string name="button_copy_link">Chép liên kết</string>
@@ -1873,8 +1871,6 @@ Language: vi_VN
     <string name="people_invite_role_info_desc">vai trò</string>
     <string name="jetpack_connection_failed_with_reason">Kết nối Jetpack thất bại: %s</string>
     <string name="jetpack_already_connected_toast">Bạn đã được kết nối với Jetpack</string>
-    <string name="menu_visual_mode">Chế độ Trực Quan</string>
-    <string name="menu_html_mode">Chế độ HTML</string>
     <string name="menu_preview">Xem trước</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="menu_save_as_draft">Lưu bản nháp</string>
@@ -1889,7 +1885,6 @@ Language: vi_VN
     <string name="comment_unapproved_talkback">Đã ẩn bình luận</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_hint">Nếu bạn cần nhiều dung lượng lưu trữ hơn, hãy nâng cấp gói WordPress.</string>
     <string name="site_settings_quota_header">Media</string>

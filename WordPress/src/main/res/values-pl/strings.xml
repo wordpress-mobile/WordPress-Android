@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2025-08-30 16:21:34+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: pl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -33,7 +33,6 @@ Language: pl
     <string name="application_password_info_description_1">Hasła aplikacji stanowią bezpieczny sposób uzyskiwania dostępu do Twojej witryny bez konieczności podawania hasła do konta.</string>
     <string name="application_password_info_title">Hasła aplikacji</string>
     <string name="application_password_disable_feature_description">Wyłączenie hasła aplikacji spowoduje usunięcie logowania dla %1$s z Twoich witryn. Może być konieczne ponowne dodanie witryn, których dotyczy problem, aby ponownie się zalogować.</string>
-    <string name="application_password_invalid_description">Twoje hasło do aplikacji już nie istnieje. Zaloguj się ponownie, aby utworzyć nowe hasło do aplikacji. </string>
     <string name="subscribers_delete_failed">Nie udało się usunąć subskrybenta</string>
     <string name="subscribers_delete_success_message">Subskrybent został usunięty, ale może minąć minuta, zanim usunięcie zacznie obowiązywać</string>
     <string name="subscribers_delete_success_title">Usunięto subskrybenta</string>
@@ -1182,8 +1181,6 @@ Language: pl
     <string name="my_site_post_card_link_create_post">Utwórz wpis</string>
     <string name="my_site_create_next_post_excerpt">Regularne dodawanie wpisów pomaga w budowaniu publiki!</string>
     <string name="my_site_create_next_post_title">Utwórz swój kolejny wpis</string>
-    <string name="menu_visual_mode_switched_notice">Przełączono na tryb wizualny</string>
-    <string name="menu_html_mode_switched_notice">Przełączono na tryb HTML</string>
     <string name="post_link_copied_to_clipboard">Skopiowano odnośnik do schowka</string>
     <string name="comment_author_badge">Autor</string>
     <string name="button_copy_link">Skopiuj odnośnik</string>
@@ -2824,14 +2821,11 @@ Language: pl
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Rejestrowanie zaś pomocą Google…</string>
     <string name="jetpack_connection_failed_with_reason">Nie udało się połączenie z Jetpackiem: %s</string>
     <string name="jetpack_already_connected_toast">Jesteś już połączony z Jetpackiem</string>
-    <string name="menu_visual_mode">Tryb wizualny</string>
-    <string name="menu_html_mode">Tryb HTML</string>
     <string name="menu_preview">Podgląd</string>
     <string name="menu_save_as_draft">Zapisz jako szkic</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s z %2$s</string>
     <string name="site_settings_quota_space_hint">Jeśli potrzebujesz więcej przestrzeni, rozważ rozszerzenie subskrypcji WordPress.</string>

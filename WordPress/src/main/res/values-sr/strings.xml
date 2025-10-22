@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2025-09-04 15:07:33+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: sr_RS
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -109,8 +109,6 @@ Language: sr_RS
     <string name="me_btn_about">О Вордпресу</string>
     <string name="my_site_post_card_link_create_post">Направи чланак</string>
     <string name="my_site_create_next_post_title">Направи свој следећи чланак</string>
-    <string name="menu_visual_mode_switched_notice">Пребачено на визуални режим</string>
-    <string name="menu_html_mode_switched_notice">Пребачено на HTML режим</string>
     <string name="comment_author_badge">Аутор</string>
     <string name="button_copy_link">Копирај везу</string>
     <string name="my_site_create_first_post_title">Направи свој први чланак</string>
@@ -980,8 +978,6 @@ Language: sr_RS
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="menu_save_as_draft">Сачувај као нацрт</string>
     <string name="menu_preview">Преглед</string>
-    <string name="menu_html_mode">HTML режим</string>
-    <string name="menu_visual_mode">Визуални режим</string>
     <string name="signup_epilogue_screen_title">Нови налог</string>
     <string name="comment_unapproved_talkback">Коментар није одобрен</string>
     <string name="comment_approved_talkback">Коментар је одобрен</string>
@@ -996,7 +992,6 @@ Language: sr_RS
     <string name="share_intent_screen_title">Одабери сајт</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s од %2$s</string>
     <string name="site_settings_quota_space_title">Искоришћен простор</string>

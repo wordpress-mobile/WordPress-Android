@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-09-02 16:54:09+0000
+Translation-Revision-Date: 2025-10-15 11:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: he_IL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="error_deleting_term">אירעה שגיאה בעת מחיקת המונח</string>
+    <string name="error_saving_term">אירעה שגיאה בעת שמירת המונח</string>
+    <string name="add_term">להוסיף מונח</string>
+    <string name="term_delete_confirmation_message">האם ברצונך למחוק את \"⁦%1$s⁩\"?</string>
+    <string name="term_delete_confirmation_title">למחוק את המונח</string>
+    <string name="term_sort_by_count">כמות</string>
+    <string name="term_sort_by_name">שם</string>
+    <string name="term_parent_none">ללא</string>
+    <string name="term_parent_label">הורה:</string>
+    <string name="term_count">ספירה: ⁦%1$d⁩</string>
+    <string name="term_count_label">ספירה:</string>
+    <string name="term_description_label">תיאור:</string>
+    <string name="term_slug_label">מזהה לכתובת:</string>
+    <string name="term_name_label">שם:</string>
+    <string name="application_password_experimental_feature_note">\n\nלתשומת ליבך: אימות באמצעות סיסמת אפליקציה במכשירי Android הוא תכונה ניסיונית.</string>
+    <string name="application_password_required_block_editor">עורך הבלוקים</string>
+    <string name="application_password_required_description">סיסמאות אפליקציה הן דרך מאובטחת יותר להתחבר לאתר באחסון עצמי, והן מאפשרות תמיכה באפשרויות כמו ⁦%1$s⁩.</string>
+    <string name="application_password_required">נדרשת סיסמת אפליקציה</string>
+    <string name="menu_html_mode">עורך קוד</string>
+    <string name="taxonomies_title">טקסונומיות</string>
+    <string name="media_edit_file_size_caption">גודל הקובץ</string>
     <string name="jetpack_rest_connection_error_login_wpcom">אין אפשרות להתחבר אל WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">לחבר את האתר שלך ל-WordPress.com</string>
     <string name="dataview_default_empty_message">אין פה שום דבר</string>
@@ -33,7 +54,7 @@ Language: he_IL
     <string name="application_password_info_description_1">סיסמאות של אפליקציות הן דרך מאובטחת המאפשרת לאפליקציות לגשת לאתר שלך ללא שימוש בסיסמת החשבון.</string>
     <string name="application_password_info_title">סיסמאות אפליקציה</string>
     <string name="application_password_disable_feature_description">השבתה של סיסמת אפליקציה תסיר את פרטי הכניסה שלך מ-⁦%1$s⁩ אתרים. ייתכן שיהיה צורך להוסיף את האתרים שהוסרו מחדש כדי להתחבר אליהם שוב.</string>
-    <string name="application_password_invalid_description">סיסמת האפליקציה שלך כבר לא קיימת. יש להתחבר שוב כדי ליצור סיסמת אפליקציה חדשה </string>
+    <string name="application_password_invalid_description">סיסמת האפליקציה שלך כבר לא קיימת. יש להתחבר שוב כדי ליצור סיסמת אפליקציה חדשה.</string>
     <string name="subscribers_delete_failed">מחיקת המנוי נכשלה</string>
     <string name="subscribers_delete_success_message">המנוי נמחק, ייתכן שתידרש דקה אחת עד שהמחיקה תיכנס לתוקף</string>
     <string name="subscribers_delete_success_title">המנוי נמחק</string>
@@ -1141,8 +1162,8 @@ Language: he_IL
     <string name="my_site_post_card_link_create_post">ליצור פוסט</string>
     <string name="my_site_create_next_post_excerpt">פרסום פוסטים באופן קבוע יעזור לך לבנות את הקהל!</string>
     <string name="my_site_create_next_post_title">ליצור את הפוסט הבא שלך</string>
-    <string name="menu_visual_mode_switched_notice">הוחלף לעורך החזותי</string>
-    <string name="menu_html_mode_switched_notice">הוחלף לעורך HTML</string>
+    <string name="menu_visual_mode_switched_notice">הוחלף לעורך הוויזואלי</string>
+    <string name="menu_html_mode_switched_notice">מעבר לעורך הקוד</string>
     <string name="post_link_copied_to_clipboard">הקישור הועתק ללוח</string>
     <string name="comment_author_badge">מחבר</string>
     <string name="button_copy_link">להעתיק את הקישור</string>
@@ -2778,14 +2799,13 @@ Language: he_IL
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">מתחבר ל-Google…</string>
     <string name="jetpack_connection_failed_with_reason">ההתחברות ל-Jetpack נכשלה: %s</string>
     <string name="jetpack_already_connected_toast">החשבון שלך ב-Jetpack כבר מחובר</string>
-    <string name="menu_visual_mode">עורך חזותי</string>
-    <string name="menu_html_mode">עורך HTML</string>
+    <string name="menu_visual_mode">עורך ויזואלי</string>
     <string name="menu_preview">תצוגה מקדימה</string>
     <string name="menu_save_as_draft">לשמור כטיוטה</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
+    <string name="file_size_in_kilobytes">‎%s KB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s מתוך %2$s</string>
     <string name="site_settings_quota_space_hint">אם נדרש לך מקום נוסף, מומלץ לשדרג את התוכנית שלך ב-WordPress.</string>

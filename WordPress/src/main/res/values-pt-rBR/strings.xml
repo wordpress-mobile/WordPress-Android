@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2025-02-10 13:34:12+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.1
+Generator: GlotPress/4.0.3
 Language: pt_BR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -1061,8 +1061,6 @@ Language: pt_BR
     <string name="my_site_post_card_link_create_post">Criar um post</string>
     <string name="my_site_create_next_post_excerpt">Publicar regularmente ajuda a construir uma audiência!</string>
     <string name="my_site_create_next_post_title">Crie seu próximo post</string>
-    <string name="menu_visual_mode_switched_notice">Alterado para o modo visual</string>
-    <string name="menu_html_mode_switched_notice">Alterado para o modo HTML</string>
     <string name="post_link_copied_to_clipboard">Link copiado para a área de transferência</string>
     <string name="comment_author_badge">Autor</string>
     <string name="button_copy_link">Copiar link</string>
@@ -2703,14 +2701,11 @@ Language: pt_BR
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Acessando com o Google…</string>
     <string name="jetpack_connection_failed_with_reason">A conexão com o Jetpack falhou: %s</string>
     <string name="jetpack_already_connected_toast">Você já está conectado ao Jetpack</string>
-    <string name="menu_visual_mode">Modo visual</string>
-    <string name="menu_html_mode">Modo HTML</string>
     <string name="menu_preview">Visualizar</string>
     <string name="menu_save_as_draft">Salvar como rascunho</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s de %2$s</string>
     <string name="site_settings_quota_space_hint">Se você precisa de mais espaço, considere fazer upgrade de seu plano do WordPress.</string>
