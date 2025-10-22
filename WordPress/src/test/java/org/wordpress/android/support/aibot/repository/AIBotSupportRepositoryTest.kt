@@ -78,9 +78,9 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         val result = repository.loadConversations()
 
         assertThat(result).hasSize(2)
-        assertThat(result[0].getConversationId).isEqualTo(1L)
+        assertThat(result[0].id).isEqualTo(1L)
         assertThat(result[0].lastMessage).isEqualTo("First conversation")
-        assertThat(result[1].getConversationId).isEqualTo(2L)
+        assertThat(result[1].id).isEqualTo(2L)
         assertThat(result[1].lastMessage).isEqualTo("Second conversation")
     }
 
@@ -112,7 +112,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         val result = repository.loadConversation(testChatId.toLong())
 
         assertThat(result).isNotNull
-        assertThat(result?.getConversationId).isEqualTo(testChatId)
+        assertThat(result?.id).isEqualTo(testChatId)
         assertThat(result?.messages).hasSize(2)
         assertThat(result?.messages?.get(0)?.isWrittenByUser).isTrue
         assertThat(result?.messages?.get(0)?.text).isEqualTo("User message")
@@ -184,7 +184,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         val result = repository.createNewConversation(testMessage)
 
         assertThat(result).isNotNull
-        assertThat(result?.getConversationId).isEqualTo(newChatId)
+        assertThat(result?.id).isEqualTo(newChatId)
         assertThat(result?.messages).hasSize(2)
         assertThat(result?.messages?.get(0)?.text).isEqualTo(testMessage)
         assertThat(result?.messages?.get(0)?.isWrittenByUser).isTrue
@@ -239,7 +239,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         val result = repository.sendMessageToConversation(existingChatId.toLong(), newMessage)
 
         assertThat(result).isNotNull
-        assertThat(result?.getConversationId).isEqualTo(existingChatId)
+        assertThat(result?.id).isEqualTo(existingChatId)
         assertThat(result?.messages).hasSize(4)
         assertThat(result?.messages?.get(2)?.text).isEqualTo(newMessage)
         assertThat(result?.messages?.get(2)?.isWrittenByUser).isTrue

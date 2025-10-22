@@ -186,9 +186,6 @@ class SupportViewModelTest : BaseUnitTest() {
             // Then
             val event = awaitItem()
             assertThat(event).isInstanceOf(SupportViewModel.NavigationEvent.NavigateToAskTheBots::class.java)
-            val navigateEvent = event as SupportViewModel.NavigationEvent.NavigateToAskTheBots
-            assertThat(navigateEvent.accessToken).isEqualTo(accessToken)
-            assertThat(navigateEvent.userName).isEqualTo(displayName)
         }
     }
 
@@ -211,8 +208,6 @@ class SupportViewModelTest : BaseUnitTest() {
             // Then
             val event = awaitItem()
             assertThat(event).isInstanceOf(SupportViewModel.NavigationEvent.NavigateToAskTheBots::class.java)
-            val navigateEvent = event as SupportViewModel.NavigationEvent.NavigateToAskTheBots
-            assertThat(navigateEvent.userName).isEqualTo(userName)
         }
     }
 
