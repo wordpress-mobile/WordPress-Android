@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Reply
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -54,6 +55,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @Composable
 fun HEConversationDetailScreen(
     conversation: SupportConversation,
+    isLoading: Boolean = false,
     onBackClick: () -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -78,14 +80,18 @@ fun HEConversationDetailScreen(
             )
         }
     ) { contentPadding ->
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
-                .padding(horizontal = 16.dp),
-            state = listState,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                state = listState,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
             item {
                 ConversationHeader(
                     messageCount = conversation.messages.size,
@@ -111,6 +117,13 @@ fun HEConversationDetailScreen(
 
             item {
                 Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
+
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
         }
     }
@@ -382,6 +395,7 @@ private fun HEConversationDetailScreenPreviewWordPressDark() {
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         HEConversationDetailScreen(
+            isLoading = true,
             conversation = sampleConversation,
             onBackClick = { }
         )

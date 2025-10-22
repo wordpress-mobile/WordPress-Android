@@ -134,9 +134,11 @@ class HESupportActivity : AppCompatActivity() {
 
                     composable(route = ConversationScreen.Detail.name) {
                         val selectedConversation by viewModel.selectedConversation.collectAsState()
+                        val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                         selectedConversation?.let { conversation ->
                             HEConversationDetailScreen(
                                 conversation = conversation,
+                                isLoading = isLoadingConversation,
                                 onBackClick = { viewModel.onBackFromDetailClick() }
                             )
                         }

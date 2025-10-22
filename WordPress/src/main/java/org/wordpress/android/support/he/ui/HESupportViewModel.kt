@@ -65,9 +65,8 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
-    override suspend fun getConversation(conversationId: Long): SupportConversation? {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getConversation(conversationId: Long): SupportConversation? =
+        heSupportRepository.loadConversation(conversationId)
 
     fun onAddMessageToConversation(
         message: String,
