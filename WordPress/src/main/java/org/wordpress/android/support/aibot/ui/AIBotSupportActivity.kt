@@ -26,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.support.common.ui.SupportViewModel
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @AndroidEntryPoint
@@ -68,8 +69,8 @@ class AIBotSupportActivity : AppCompatActivity() {
         // Show snackbar when error occurs
         errorMessage?.let { errorType ->
             val message = when (errorType) {
-                AIBotSupportViewModel.ErrorType.GENERAL -> getString(R.string.ai_bot_generic_error)
-                AIBotSupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
+                SupportViewModel.ErrorType.GENERAL -> getString(R.string.ai_bot_generic_error)
+                SupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
             }
             scope.launch {
                 snackbarHostState.showSnackbar(

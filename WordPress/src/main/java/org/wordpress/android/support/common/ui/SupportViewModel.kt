@@ -1,0 +1,106 @@
+package org.wordpress.android.support.common.ui
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.support.common.model.UserInfo
+import org.wordpress.android.util.AppLog
+
+abstract class SupportViewModel<ConversationType>(
+    protected val accountStore: AccountStore,
+    protected val appLogWrapper: AppLogWrapper,
+) : ViewModel() {
+    protected val _conversations = MutableStateFlow<List<ConversationType>>(emptyList())
+    val conversations: StateFlow<List<ConversationType>> = _conversations.asStateFlow()
+
+    protected val _selectedConversation = MutableStateFlow<ConversationType?>(null)
+    val selectedConversation: StateFlow<ConversationType?> = _selectedConversation.asStateFlow()
+
+    protected val _userInfo = MutableStateFlow(UserInfo("", "", "", null))
+    val userInfo: StateFlow<UserInfo> = _userInfo.asStateFlow()
+
+    protected val _isLoadingConversations = MutableStateFlow(false)
+    val isLoadingConversations: StateFlow<Boolean> = _isLoadingConversations.asStateFlow()
+
+    protected val _errorMessage = MutableStateFlow<ErrorType?>(null)
+    val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
+
+    @Suppress("TooGenericExceptionCaught")
+    fun init() {
+        viewModelScope.launch {
+            try {
+                // We need to check it this way because access token can be null or empty if not set
+                // So, we manually handle it here
+                val accessToken = if (accountStore.hasAccessToken()) {
+                    accountStore.accessToken!!
+                } else {
+                    null
+                }
+                if (accessToken == null) {
+                    _errorMessage.value = ErrorType.FORBIDDEN
+                    appLogWrapper.e(
+                        AppLog.T.SUPPORT, "Error initialising support conversations: The user has no valid access token"
+                    )
+                } else {
+                    initRepository(accessToken)
+                    loadUserInfo(accessToken)
+                    loadConversations()
+                }
+            } catch (throwable: Throwable) {
+                _errorMessage.value = ErrorType.GENERAL
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error initialising support conversations: " +
+                        "${throwable.message} - ${throwable.stackTraceToString()}")
+            }
+        }
+    }
+
+    abstract fun initRepository(accessToken: String)
+
+    protected fun loadUserInfo(accessToken: String) {
+        val account = accountStore.account
+        _userInfo.value = UserInfo(
+            accessToken = accessToken,
+            userName = account.displayName.ifEmpty { account.userName },
+            userEmail = account.email,
+            avatarUrl = account.avatarUrl.takeIf { it.isNotEmpty() }
+        )
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun loadConversations() {
+        try {
+            _isLoadingConversations.value = true
+            val conversations = getConversations()
+            _conversations.value = conversations
+        } catch (throwable: Throwable) {
+            _errorMessage.value = ErrorType.GENERAL
+            appLogWrapper.e(
+                AppLog.T.SUPPORT, "Error loading support conversations: " +
+                        "${throwable.message} - ${throwable.stackTraceToString()}"
+            )
+        }
+        _isLoadingConversations.value = false
+    }
+
+    protected abstract suspend fun getConversations(): List<ConversationType>
+
+    fun refreshConversations() {
+        viewModelScope.launch {
+            loadConversations()
+        }
+    }
+
+    fun clearError() {
+        _errorMessage.value = null
+    }
+
+    enum class ErrorType {
+        GENERAL,
+        FORBIDDEN,
+    }
+}

@@ -1,6 +1,5 @@
 package org.wordpress.android.support.he.ui
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -12,105 +11,36 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.support.common.ui.SupportViewModel
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
-import org.wordpress.android.support.common.model.UserInfo
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
-import kotlin.String
 
 @HiltViewModel
 class HESupportViewModel @Inject constructor(
-    private val accountStore: AccountStore,
+    accountStore: AccountStore,
     private val heSupportRepository: HESupportRepository,
-    private val appLogWrapper: AppLogWrapper,
-) : ViewModel() {
+    appLogWrapper: AppLogWrapper,
+) : SupportViewModel<SupportConversation>(accountStore, appLogWrapper) {
     sealed class NavigationEvent {
         data class NavigateToConversationDetail(val conversation: SupportConversation) : NavigationEvent()
         data object NavigateToNewTicket : NavigationEvent()
         data object NavigateBack : NavigationEvent()
     }
 
-    private val _conversations = MutableStateFlow<List<SupportConversation>>(listOf())
-    val conversations: StateFlow<List<SupportConversation>> = _conversations.asStateFlow()
-
-    private val _selectedConversation = MutableStateFlow<SupportConversation?>(null)
-    val selectedConversation: StateFlow<SupportConversation?> = _selectedConversation.asStateFlow()
-
-    private val _userInfo = MutableStateFlow<UserInfo>(UserInfo("", "", "", null))
-    val userInfo: StateFlow<UserInfo> = _userInfo.asStateFlow()
-
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents: SharedFlow<NavigationEvent> = _navigationEvents.asSharedFlow()
-
-    private val _isLoadingConversations = MutableStateFlow(false)
-    val isLoadingConversations: StateFlow<Boolean> = _isLoadingConversations.asStateFlow()
 
     private val _isSendingNewConversation = MutableStateFlow(false)
     val isSendingNewConversation: StateFlow<Boolean> = _isSendingNewConversation.asStateFlow()
 
-    private val _errorMessage = MutableStateFlow<ErrorType?>(null)
-    val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
-
-    fun init() {
-        viewModelScope.launch {
-            try {
-                // We need to check it this way because access token can be null or empty if not set
-                // So, we manually handle it here
-                val accessToken = if (accountStore.hasAccessToken()) {
-                    accountStore.accessToken!!
-                } else {
-                    null
-                }
-                if (accessToken == null) {
-                    _errorMessage.value = ErrorType.FORBIDDEN
-                    appLogWrapper.e(
-                        AppLog.T.SUPPORT, "Error opening HE conversations. The user has no valid access token"
-                    )
-                } else {
-                    heSupportRepository.init(accessToken)
-                    loadUserInfo(accessToken)
-                    loadConversations()
-                }
-            } catch (throwable: Throwable) {
-                _errorMessage.value = ErrorType.GENERAL
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error initialising HE support repository: " +
-                        "${throwable.message} - ${throwable.stackTraceToString()}")
-            }
-        }
+    override fun initRepository(accessToken: String) {
+        heSupportRepository.init(accessToken)
     }
 
-    private fun loadUserInfo(accessToken: String) {
-        val account = accountStore.account
-        _userInfo.value = UserInfo(
-            accessToken = accessToken,
-            userName = account.displayName.ifEmpty { account.userName },
-            userEmail = account.email,
-            avatarUrl = account.avatarUrl.takeIf { it.isNotEmpty() }
-        )
-    }
-
-    private fun loadConversations() {
-        viewModelScope.launch {
-            try {
-                _isLoadingConversations.value = true
-                val conversations = heSupportRepository.loadConversations()
-                _conversations.value = conversations
-            } catch (throwable: Throwable) {
-                _errorMessage.value = ErrorType.GENERAL
-                appLogWrapper.e(
-                    AppLog.T.SUPPORT, "Error loading HE conversations: " +
-                            "${throwable.message} - ${throwable.stackTraceToString()}"
-                )
-            }
-            _isLoadingConversations.value = false
-        }
-    }
-
-    fun refreshConversations() {
-        loadConversations()
-    }
+    override suspend fun getConversations(): List<SupportConversation> = heSupportRepository.loadConversations()
 
     fun onConversationClick(conversation: SupportConversation) {
         viewModelScope.launch {
@@ -202,14 +132,5 @@ class HESupportViewModel @Inject constructor(
 
             _isSendingNewConversation.value = false
         }
-    }
-
-    fun clearError() {
-        _errorMessage.value = null
-    }
-
-    enum class ErrorType {
-        GENERAL,
-        FORBIDDEN,
     }
 }

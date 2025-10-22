@@ -30,6 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.R
+import org.wordpress.android.support.common.ui.SupportViewModel
 
 @AndroidEntryPoint
 class HESupportActivity : AppCompatActivity() {
@@ -93,8 +94,8 @@ class HESupportActivity : AppCompatActivity() {
         // Show snackbar when error occurs
         errorMessage?.let { errorType ->
             val message = when (errorType) {
-                HESupportViewModel.ErrorType.GENERAL -> getString(R.string.he_support_generic_error)
-                HESupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
+                SupportViewModel.ErrorType.GENERAL -> getString(R.string.he_support_generic_error)
+                SupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
             }
             scope.launch {
                 snackbarHostState.showSnackbar(
