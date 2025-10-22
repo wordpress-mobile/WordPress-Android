@@ -22,6 +22,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.WordPress
 import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
 import org.wordpress.android.support.logs.ui.LogsActivity
+import org.wordpress.android.support.he.ui.HESupportActivity
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
@@ -85,6 +86,9 @@ class SupportActivity : AppCompatActivity() {
                         is SupportViewModel.NavigationEvent.NavigateToApplicationLogs -> {
                             navigateToApplicationLogs()
                         }
+                        is SupportViewModel.NavigationEvent.NavigateToAskHappinessEngineers -> {
+                            navigateToAskTheHappinessEngineers()
+                        }
                     }
                 }
             }
@@ -94,6 +98,12 @@ class SupportActivity : AppCompatActivity() {
     private fun navigateToAskTheBots(accessToken: String, userName: String) {
         startActivity(
             AIBotSupportActivity.Companion.createIntent(this, accessToken, userName)
+        )
+    }
+
+    private fun navigateToAskTheHappinessEngineers() {
+        startActivity(
+            HESupportActivity.Companion.createIntent(this)
         )
     }
 
