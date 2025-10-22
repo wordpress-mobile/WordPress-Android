@@ -32,7 +32,6 @@ import org.wordpress.android.support.SupportHelper
 import org.wordpress.android.support.SupportWebViewActivity
 import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
-import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.AppLogViewerActivity
@@ -224,21 +223,11 @@ class HelpActivity : BaseAppCompatActivity() {
             JpFaqContainer.setOnClickListener { showMigrationFaq() }
         }
         contactUsButton.setOnClickListener {
-            // TODO: Again, this TODO is preventing the PR to pass
-            //       When reviewed revert these changes
-            startActivity(
-                AIBotSupportActivity.Companion.createIntent(
-                    this@HelpActivity,
-                    accountStore.accessToken!!,
-                    accountStore.account.userId,
-                    accountStore.account.userName
-                )
-            )
-//            if (contactSupportFeatureConfig.isEnabled()) {
-//                launchSupportWidget()
-//            } else {
-//                createNewZendeskTicket()
-//            }
+            if (contactSupportFeatureConfig.isEnabled()) {
+                launchSupportWidget()
+            } else {
+                createNewZendeskTicket()
+            }
         }
         ticketsButton.setOnClickListener { showZendeskTickets() }
 
