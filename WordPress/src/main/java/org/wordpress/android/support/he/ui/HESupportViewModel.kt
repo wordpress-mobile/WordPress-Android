@@ -2,16 +2,13 @@ package org.wordpress.android.support.he.ui
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.support.common.ui.SupportViewModel
+import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
@@ -23,7 +20,7 @@ class HESupportViewModel @Inject constructor(
     accountStore: AccountStore,
     private val heSupportRepository: HESupportRepository,
     appLogWrapper: AppLogWrapper,
-) : SupportViewModel<SupportConversation>(accountStore, appLogWrapper) {
+) : ConversationsSupportViewModel<SupportConversation>(accountStore, appLogWrapper) {
     private val _isSendingNewConversation = MutableStateFlow(false)
     val isSendingNewConversation: StateFlow<Boolean> = _isSendingNewConversation.asStateFlow()
 

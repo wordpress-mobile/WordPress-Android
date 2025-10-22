@@ -30,7 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.R
-import org.wordpress.android.support.common.ui.SupportViewModel
+import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 
 @AndroidEntryPoint
 class HESupportActivity : AppCompatActivity() {
@@ -63,13 +63,13 @@ class HESupportActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.navigationEvents.collect { event ->
                     when (event) {
-                        is SupportViewModel.NavigationEvent.NavigateToConversationDetail -> {
+                        is ConversationsSupportViewModel.NavigationEvent.NavigateToConversationDetail -> {
                             navController.navigate(ConversationScreen.Detail.name)
                         }
-                        SupportViewModel.NavigationEvent.NavigateToNewConversation -> {
+                        ConversationsSupportViewModel.NavigationEvent.NavigateToNewConversation -> {
                             navController.navigate(ConversationScreen.NewTicket.name)
                         }
-                        SupportViewModel.NavigationEvent.NavigateBack -> {
+                        ConversationsSupportViewModel.NavigationEvent.NavigateBack -> {
                             navController.navigateUp()
                         }
                     }
@@ -94,8 +94,8 @@ class HESupportActivity : AppCompatActivity() {
         // Show snackbar when error occurs
         errorMessage?.let { errorType ->
             val message = when (errorType) {
-                SupportViewModel.ErrorType.GENERAL -> getString(R.string.he_support_generic_error)
-                SupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
+                ConversationsSupportViewModel.ErrorType.GENERAL -> getString(R.string.he_support_generic_error)
+                ConversationsSupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
             }
             scope.launch {
                 snackbarHostState.showSnackbar(

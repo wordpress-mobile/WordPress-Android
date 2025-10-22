@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.model.UserInfo
 import org.wordpress.android.util.AppLog
 
-abstract class SupportViewModel<ConversationType>(
+abstract class ConversationsSupportViewModel<ConversationType>(
     protected val accountStore: AccountStore,
     protected val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
