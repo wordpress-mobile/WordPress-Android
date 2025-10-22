@@ -69,7 +69,7 @@ class SupportActivity : AppCompatActivity() {
                 viewModel.navigationEvents.collect { event ->
                     when (event) {
                         is SupportViewModel.NavigationEvent.NavigateToAskTheBots -> {
-                            navigateToAskTheBots(event.accessToken, event.userName)
+                            navigateToAskTheBots(event.accessToken, event.userId, event.userName)
                         }
                         is SupportViewModel.NavigationEvent.NavigateToLogin -> {
                             navigateToLogin()
@@ -84,9 +84,15 @@ class SupportActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToAskTheBots(accessToken: String, userName: String) {
+    private fun navigateToAskTheBots(accessToken: String, userId: Long, userName: String) {
         startActivity(
-            AIBotSupportActivity.Companion.createIntent(this, accessToken, userName)
+            AIBotSupportActivity.Companion.createIntent(this, accessToken, userId, userName)
+        )
+    }
+
+    private fun navigateToAskTheHappinessEngineers() {
+        startActivity(
+            HESupportActivity.Companion.createIntent(this)
         )
     }
 
