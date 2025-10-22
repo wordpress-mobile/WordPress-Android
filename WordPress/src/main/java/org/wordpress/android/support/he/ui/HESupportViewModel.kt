@@ -88,7 +88,6 @@ class HESupportViewModel @Inject constructor(
             )) {
                 is CreateConversationResult.Success -> {
                     _selectedConversation.value = result.conversation
-                    // TODO refresh conversation and scroll to bottom
                 }
 
                 is CreateConversationResult.Error.Unauthorized -> {

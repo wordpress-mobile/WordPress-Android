@@ -37,7 +37,8 @@ fun TicketMainContentView(
     messageText: String,
     includeAppLogs: Boolean,
     onMessageChanged: (String) -> Unit,
-    onIncludeAppLogsChanged: (Boolean) -> Unit
+    onIncludeAppLogsChanged: (Boolean) -> Unit,
+    enabled: Boolean = true
 ) {
     Column(
         modifier = Modifier
@@ -58,7 +59,8 @@ fun TicketMainContentView(
                 .fillMaxWidth()
                 .height(200.dp),
             shape = RoundedCornerShape(12.dp),
-            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+            enabled = enabled
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -80,7 +82,8 @@ fun TicketMainContentView(
         Button(
             onClick = { /* Placeholder for add screenshots */ },
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
+            enabled = enabled
         ) {
             Icon(
                 imageVector = Icons.Default.CameraAlt,
@@ -133,7 +136,8 @@ fun TicketMainContentView(
 
             Switch(
                 checked = includeAppLogs,
-                onCheckedChange = { checked -> onIncludeAppLogsChanged(checked) }
+                onCheckedChange = { checked -> onIncludeAppLogsChanged(checked) },
+                enabled = enabled
             )
         }
     }

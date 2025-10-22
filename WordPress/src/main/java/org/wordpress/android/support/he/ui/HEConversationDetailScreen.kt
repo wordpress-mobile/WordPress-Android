@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,13 +63,22 @@ fun HEConversationDetailScreen(
     snackbarHostState: SnackbarHostState,
     conversation: SupportConversation,
     isLoading: Boolean = false,
-    onBackClick: () -> Unit
+    isSendingMessage: Boolean = false,
+    onBackClick: () -> Unit,
+    onSendMessage: (message: String, includeAppLogs: Boolean) -> Unit
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     val resources = LocalResources.current
+
+    // Scroll to bottom when conversation changes or new messages arrive
+    LaunchedEffect(conversation.messages.size) {
+        if (conversation.messages.isNotEmpty()) {
+            listState.animateScrollToItem(conversation.messages.size + 1) // +1 for header and title
+        }
+    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -81,6 +91,7 @@ fun HEConversationDetailScreen(
         },
         bottomBar = {
             ReplyButton(
+                enabled = !isLoading,
                 onClick = {
                     showBottomSheet = true
                 }
@@ -138,6 +149,7 @@ fun HEConversationDetailScreen(
     if (showBottomSheet) {
         ReplyBottomSheet(
             sheetState = sheetState,
+            isSending = isSendingMessage,
             onDismiss = {
                 scope.launch {
                     sheetState.hide()
@@ -146,12 +158,7 @@ fun HEConversationDetailScreen(
                 }
             },
             onSend = { message, includeAppLogs ->
-                /* Placeholder for send functionality */
-                scope.launch {
-                    sheetState.hide()
-                }.invokeOnCompletion {
-                    showBottomSheet = false
-                }
+                onSendMessage(message, includeAppLogs)
             }
         )
     }
@@ -268,7 +275,10 @@ private fun MessageItem(
 }
 
 @Composable
-private fun ReplyButton(onClick: () -> Unit) {
+private fun ReplyButton(
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -276,6 +286,7 @@ private fun ReplyButton(onClick: () -> Unit) {
     ) {
         Button(
             onClick = onClick,
+            enabled = enabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -299,12 +310,28 @@ private fun ReplyButton(onClick: () -> Unit) {
 @Composable
 private fun ReplyBottomSheet(
     sheetState: androidx.compose.material3.SheetState,
+    isSending: Boolean = false,
     onDismiss: () -> Unit,
     onSend: (String, Boolean) -> Unit
 ) {
     var messageText by remember { mutableStateOf("") }
     var includeAppLogs by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope()
+    var wasSending by remember { mutableStateOf(false) }
+
+    // Close the sheet when sending completes successfully
+    LaunchedEffect(isSending) {
+        if (wasSending && !isSending) {
+            // Sending completed, close the sheet
+            scope.launch {
+                sheetState.hide()
+            }.invokeOnCompletion {
+                onDismiss()
+            }
+        }
+        wasSending = isSending
+    }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -325,7 +352,10 @@ private fun ReplyBottomSheet(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TextButton(onClick = onDismiss) {
+                TextButton(
+                    onClick = onDismiss,
+                    enabled = !isSending
+                ) {
                     Text(
                         text = stringResource(R.string.cancel),
                         style = MaterialTheme.typography.titleMedium
@@ -340,12 +370,19 @@ private fun ReplyBottomSheet(
 
                 TextButton(
                     onClick = { onSend(messageText, includeAppLogs) },
-                    enabled = messageText.isNotBlank()
+                    enabled = messageText.isNotBlank() && !isSending
                 ) {
-                    Text(
-                        text = stringResource(R.string.he_support_send_button),
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    if (isSending) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(R.string.he_support_send_button),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
                 }
             }
 
@@ -354,6 +391,7 @@ private fun ReplyBottomSheet(
                 includeAppLogs = includeAppLogs,
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
+                enabled = !isSending
             )
         }
     }
@@ -369,7 +407,8 @@ private fun HEConversationDetailScreenPreview() {
         HEConversationDetailScreen(
             snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
-            onBackClick = { }
+            onBackClick = { },
+            onSendMessage = { _, _ -> }
         )
     }
 }
@@ -384,7 +423,8 @@ private fun HEConversationDetailScreenPreviewDark() {
         HEConversationDetailScreen(
             snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
-            onBackClick = { }
+            onBackClick = { },
+            onSendMessage = { _, _ -> }
         )
     }
 }
@@ -399,7 +439,8 @@ private fun HEConversationDetailScreenWordPressPreview() {
         HEConversationDetailScreen(
             snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
-            onBackClick = { }
+            onBackClick = { },
+            onSendMessage = { _, _ -> }
         )
     }
 }
@@ -415,7 +456,8 @@ private fun HEConversationDetailScreenPreviewWordPressDark() {
             snackbarHostState = snackbarHostState,
             isLoading = true,
             conversation = sampleConversation,
-            onBackClick = { }
+            onBackClick = { },
+            onSendMessage = { _, _ -> }
         )
     }
 }

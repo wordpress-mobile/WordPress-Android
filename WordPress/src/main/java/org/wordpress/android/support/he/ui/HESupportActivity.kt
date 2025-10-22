@@ -128,12 +128,20 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.Detail.name) {
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
+                    val isSendingMessage by viewModel.isSendingNewConversation.collectAsState()
                     selectedConversation?.let { conversation ->
                         HEConversationDetailScreen(
                             snackbarHostState = snackbarHostState,
                             conversation = conversation,
                             isLoading = isLoadingConversation,
-                            onBackClick = { viewModel.onBackFromDetailClick() }
+                            isSendingMessage = isSendingMessage,
+                            onBackClick = { viewModel.onBackFromDetailClick() },
+                            onSendMessage = { message, includeAppLogs ->
+                                viewModel.onAddMessageToConversation(
+                                    message = message,
+                                    attachments = emptyList()
+                                )
+                            }
                         )
                     }
                 }
