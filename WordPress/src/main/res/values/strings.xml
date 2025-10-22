@@ -5143,4 +5143,39 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="ai_bot_time_days_ago">%1$d days ago</string>
     <string name="ai_bot_time_week_ago">%1$d week ago</string>
     <string name="ai_bot_time_weeks_ago">%1$d weeks ago</string>
+
+    <!-- HE Support - Conversations List Screen -->
+    <string name="he_support_conversations_title">Support Conversations</string>
+    <string name="he_support_new_conversation_content_description">New conversation</string>
+
+    <!-- HE Support - Conversation Detail Screen -->
+    <string name="he_support_message_count">%1$d Messages</string>
+    <string name="he_support_last_updated">Last updated %1$s</string>
+    <string name="he_support_reply_button">Reply</string>
+    <string name="he_support_send_button">Send</string>
+    <string name="he_support_message_label">Message</string>
+    <string name="he_support_screenshots_label">Screenshots (Optional)</string>
+    <string name="he_support_screenshots_description">Adding screenshots can help us understand and resolve your issue faster.</string>
+    <string name="he_support_add_screenshots_button">Add Screenshots</string>
+    <string name="he_support_app_logs_label">Application Logs (Optional)</string>
+    <string name="he_support_include_logs_title">Include application logs</string>
+    <string name="he_support_include_logs_description">Including logs can help our team investigate issues. Logs may contain recent app activity.</string>
+
+    <!-- HE Support - New Ticket Screen -->
+    <string name="he_support_contact_support_title">Contact Support</string>
+    <string name="he_support_need_help_with">I need help with</string>
+    <string name="he_support_category_application">Application</string>
+    <string name="he_support_category_jetpack_connection">Jetpack Connection</string>
+    <string name="he_support_category_site_management">Site Management</string>
+    <string name="he_support_category_billing">Billing &amp; Subscriptions</string>
+    <string name="he_support_category_technical_issues">Technical Issues</string>
+    <string name="he_support_category_other">Other</string>
+    <string name="he_support_issue_details">Issue Details</string>
+    <string name="he_support_subject_label">Subject</string>
+    <string name="he_support_subject_placeholder">Brief summary of your issue</string>
+    <string name="he_support_site_address_label">Site Address (Optional)</string>
+    <string name="he_support_site_address_placeholder">https://yoursite.com</string>
+    <string name="he_support_contact_information">Contact Information</string>
+    <string name="he_support_contact_email_message">We\'ll email you at this address.</string>
+    <string name="he_support_send_ticket_button">Send</string>
 </resources>
