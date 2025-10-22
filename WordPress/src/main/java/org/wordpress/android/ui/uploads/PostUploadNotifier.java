@@ -38,9 +38,9 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
@@ -135,7 +135,7 @@ class PostUploadNotifier {
         }
         updateNotificationBuilder(post);
         if (sNotificationData.mNotificationId == 0) {
-            sNotificationData.mNotificationId = (new Random()).nextInt();
+            sNotificationData.mNotificationId = (new SecureRandom()).nextInt();
             try {
                 mService.startForeground(sNotificationData.mNotificationId, mNotificationBuilder.build());
             } catch (RuntimeException exception) {

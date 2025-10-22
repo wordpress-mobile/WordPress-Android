@@ -25,6 +25,7 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
 
@@ -96,7 +97,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                         formattedString = context.getString(R.string.pending_draft_one_month);
                     } else if (dateLastUpdated < oneWeekAgo) {
                         // use any of the available 2 string formats, randomly
-                        Random randomNum = new Random();
+                        Random randomNum = new SecureRandom();
                         int result = randomNum.nextInt(2);
                         if (result == 0) {
                             formattedString = context.getString(R.string.pending_draft_one_week_1);
@@ -105,7 +106,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                         }
                     } else if (dateLastUpdated < oneDayAgo) {
                         // use any of the available 2 string formats, randomly
-                        Random randomNum = new Random();
+                        Random randomNum = new SecureRandom();
                         int result = randomNum.nextInt(2);
                         if (result == 0) {
                             formattedString = context.getString(R.string.pending_draft_one_day_1);

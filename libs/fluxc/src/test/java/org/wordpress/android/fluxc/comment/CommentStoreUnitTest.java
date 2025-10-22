@@ -17,9 +17,9 @@ import org.wordpress.android.fluxc.persistence.CommentSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.util.DateTimeUtils;
 
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -252,7 +252,7 @@ public class CommentStoreUnitTest {
         commentModel.setContent(content);
         commentModel.setRemoteCommentId(remoteId);
         commentModel.setStatus(status.toString());
-        commentModel.setDatePublished(DateTimeUtils.iso8601FromTimestamp(new Random().nextInt()));
+        commentModel.setDatePublished(DateTimeUtils.iso8601FromTimestamp(new SecureRandom().nextInt()));
         commentModel.setUrl("https://www.wordpress.com");
         CommentSqlUtils.insertOrUpdateComment(commentModel);
     }
