@@ -1,7 +1,6 @@
 package org.wordpress.android.support.common.ui
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -226,7 +225,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
     fun `onConversationClick sets loading state to false after loading`() = test {
         val conversation = createTestConversation(1)
         viewModel.setConversationToReturn(conversation)
-        
+
         viewModel.onConversationClick(conversation)
         advanceUntilIdle()
 
@@ -354,7 +353,6 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         accountStore: AccountStore,
         appLogWrapper: AppLogWrapper
     ) : ConversationsSupportViewModel<TestConversation>(accountStore, appLogWrapper) {
-
         var initRepositoryCalled = false
         private var shouldThrowOnInit = false
         private var shouldThrowOnGetConversations = false
@@ -382,6 +380,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
             conversationToReturn = conversation
         }
 
+        @Suppress("TooGenericExceptionThrown")
         override fun initRepository(accessToken: String) {
             if (shouldThrowOnInit) {
                 throw RuntimeException("Init failed")
@@ -389,6 +388,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
             initRepositoryCalled = true
         }
 
+        @Suppress("TooGenericExceptionThrown")
         override suspend fun getConversations(): List<TestConversation> {
             if (shouldThrowOnGetConversations) {
                 throw RuntimeException("Get conversations failed")
@@ -396,6 +396,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
             return conversationsToReturn
         }
 
+        @Suppress("TooGenericExceptionThrown")
         override suspend fun getConversation(conversationId: Long): TestConversation? {
             if (shouldThrowOnGetConversation) {
                 throw RuntimeException("Get conversation failed")

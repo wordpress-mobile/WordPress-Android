@@ -28,21 +28,26 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents: SharedFlow<NavigationEvent> = _navigationEvents.asSharedFlow()
 
+    @Suppress("VariableNaming")
     protected val _conversations = MutableStateFlow<List<ConversationType>>(emptyList())
     val conversations: StateFlow<List<ConversationType>> = _conversations.asStateFlow()
 
     private val _isLoadingConversation = MutableStateFlow(false)
     val isLoadingConversation: StateFlow<Boolean> = _isLoadingConversation.asStateFlow()
 
+    @Suppress("VariableNaming")
     protected val _selectedConversation = MutableStateFlow<ConversationType?>(null)
     val selectedConversation: StateFlow<ConversationType?> = _selectedConversation.asStateFlow()
 
+    @Suppress("VariableNaming")
     protected val _userInfo = MutableStateFlow(UserInfo("", "", "", null))
     val userInfo: StateFlow<UserInfo> = _userInfo.asStateFlow()
 
+    @Suppress("VariableNaming")
     protected val _isLoadingConversations = MutableStateFlow(false)
     val isLoadingConversations: StateFlow<Boolean> = _isLoadingConversations.asStateFlow()
 
+    @Suppress("VariableNaming")
     protected val _errorMessage = MutableStateFlow<ErrorType?>(null)
     val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
 
@@ -122,6 +127,7 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
 
     // Region navigation
 
+    @Suppress("TooGenericExceptionCaught")
     fun onConversationClick(conversation: ConversationType) {
         viewModelScope.launch {
             try {

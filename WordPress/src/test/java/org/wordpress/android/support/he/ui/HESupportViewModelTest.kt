@@ -265,7 +265,9 @@ class HESupportViewModelTest : BaseUnitTest() {
 
             // Then
             assertThat(firstEvent).isEqualTo(HESupportViewModel.NavigationEvent.NavigateToNewTicket)
-            assertThat(secondEvent).isInstanceOf(HESupportViewModel.NavigationEvent.NavigateToConversationDetail::class.java)
+            assertThat(secondEvent).isInstanceOf(
+                HESupportViewModel.NavigationEvent.NavigateToConversationDetail::class.java
+            )
         }
     }
 
