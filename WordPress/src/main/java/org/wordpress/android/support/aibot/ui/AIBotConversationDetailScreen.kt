@@ -124,7 +124,6 @@ fun ConversationDetailScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .imePadding()
                     .padding(horizontal = 16.dp),
                 state = listState,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -214,6 +213,7 @@ private fun ChatInputBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .imePadding()
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
