@@ -28,6 +28,7 @@ import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity
 import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.GutenbergKitActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity
 import org.wordpress.android.ui.reader.ReaderCommentListActivity
@@ -114,4 +115,8 @@ private val excludedActivities = listOf(
     NotificationsDetailActivity::class.java.name,
     ReaderCommentListActivity::class.java.name,
     ReaderSubsActivity::class.java.name,
+
+    // these are excluded because they implement custom IME inset handling for proper
+    // keyboard management with edge-to-edge support
+    GutenbergKitActivity::class.java.name,
 )
