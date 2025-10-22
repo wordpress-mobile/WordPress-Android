@@ -445,6 +445,10 @@
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/support_screen_title"/>
 
+        <activity android:name="org.wordpress.android.support.logs.ui.LogsActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:label="@string/support_screen_application_logs_title"/>
+
         <activity android:name="org.wordpress.android.support.he.ui.HESupportActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/support_screen_title"

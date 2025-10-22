@@ -10,13 +10,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.WordPress
 import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
+import org.wordpress.android.support.logs.ui.LogsActivity
 import org.wordpress.android.support.he.ui.HESupportActivity
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -50,6 +55,7 @@ class SupportActivity : AppCompatActivity() {
                             isLoggedIn = isLoggedIn,
                             showAskTheBots = optionsVisibility.showAskTheBots,
                             showAskHappinessEngineers = optionsVisibility.showAskHappinessEngineers,
+                            versionName = WordPress.versionName,
                             onBackClick = { finish() },
                             onLoginClick = { viewModel.onLoginClick() },
                             onHelpCenterClick = { viewModel.onHelpCenterClick() },
@@ -70,6 +76,8 @@ class SupportActivity : AppCompatActivity() {
                     when (event) {
                         is SupportViewModel.NavigationEvent.NavigateToAskTheBots -> navigateToAskTheBots()
                         is SupportViewModel.NavigationEvent.NavigateToLogin -> navigateToLogin()
+                        is SupportViewModel.NavigationEvent.NavigateToHelpCenter -> navigateToHelpCenter()
+                        is SupportViewModel.NavigationEvent.NavigateToApplicationLogs -> navigateToApplicationLogs()
                         is SupportViewModel.NavigationEvent.NavigateToAskHappinessEngineers -> {
                             navigateToAskTheHappinessEngineers()
                         }
@@ -97,6 +105,19 @@ class SupportActivity : AppCompatActivity() {
         } else {
             ActivityLauncher.showSignInForResultWpComOnly(this)
         }
+    }
+
+    private fun navigateToHelpCenter() {
+        val intent = Intent(Intent.ACTION_VIEW, "https://wordpress.com/support/".toUri()).apply {
+            addCategory(Intent.CATEGORY_BROWSABLE)
+            setPackage(null) // Ensure it doesn't match internal activities
+        }
+        startActivity(intent)
+        AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
+    }
+
+    private fun navigateToApplicationLogs() {
+        startActivity(LogsActivity.createIntent(this))
     }
 
     companion object {

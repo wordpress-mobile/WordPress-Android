@@ -24,6 +24,8 @@ class SupportViewModel @Inject constructor(
     sealed class NavigationEvent {
         data object NavigateToAskTheBots : NavigationEvent()
         data object NavigateToLogin : NavigationEvent()
+        data object NavigateToHelpCenter : NavigationEvent()
+        data object NavigateToApplicationLogs : NavigationEvent()
         data object NavigateToAskHappinessEngineers : NavigationEvent()
     }
 
@@ -63,7 +65,9 @@ class SupportViewModel @Inject constructor(
     }
 
     fun onHelpCenterClick() {
-        // Navigate to Help Center
+        viewModelScope.launch {
+            _navigationEvents.emit(NavigationEvent.NavigateToHelpCenter)
+        }
     }
 
     fun onAskTheBotsClick() {
@@ -91,7 +95,9 @@ class SupportViewModel @Inject constructor(
     }
 
     fun onApplicationLogsClick() {
-        // Navigate to Application Logs
+        viewModelScope.launch {
+            _navigationEvents.emit(NavigationEvent.NavigateToApplicationLogs)
+        }
     }
 
     fun onLoginClick() {
