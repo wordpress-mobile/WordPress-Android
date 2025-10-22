@@ -65,6 +65,10 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
+    override suspend fun getConversation(conversationId: Long): SupportConversation? {
+        TODO("Not yet implemented")
+    }
+
     fun onAddMessageToConversation(
         message: String,
         attachments: List<String>

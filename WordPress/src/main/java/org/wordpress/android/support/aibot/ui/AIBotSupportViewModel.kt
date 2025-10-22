@@ -22,12 +22,8 @@ class AIBotSupportViewModel @Inject constructor(
     private val aiBotSupportRepository: AIBotSupportRepository,
     appLogWrapper: AppLogWrapper,
 ) : ConversationsSupportViewModel<BotConversation>(accountStore, appLogWrapper) {
-
     private val _canSendMessage = MutableStateFlow(true)
     val canSendMessage: StateFlow<Boolean> = _canSendMessage.asStateFlow()
-
-    private val _isLoadingConversation = MutableStateFlow(false)
-    val isLoadingConversation: StateFlow<Boolean> = _isLoadingConversation.asStateFlow()
 
     private val _isBotTyping = MutableStateFlow(false)
     val isBotTyping: StateFlow<Boolean> = _isBotTyping.asStateFlow()
@@ -38,32 +34,14 @@ class AIBotSupportViewModel @Inject constructor(
 
     override suspend fun getConversations() = aiBotSupportRepository.loadConversations()
 
-    @Suppress("TooGenericExceptionCaught")
-    fun onConversationSelected(conversation: BotConversation) {
-        viewModelScope.launch {
-            try {
-                _isLoadingConversation.value = true
-                _selectedConversation.value = conversation
-                _canSendMessage.value = true
-                val updatedConversation = aiBotSupportRepository.loadConversation(conversation.id)
-                if (updatedConversation != null) {
-                    // Simulate clicking on the conversation
-                    onConversationClick(updatedConversation)
-                } else {
-                    _errorMessage.value = ErrorType.GENERAL
-                    appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversation: " +
-                            "error retrieving it from server")
-                }
-            } catch (throwable: Throwable) {
-                _errorMessage.value = ErrorType.GENERAL
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversation: " +
-                        "${throwable.message} - ${throwable.stackTraceToString()}")
-            }
-            _isLoadingConversation.value = false
+    override suspend fun getConversation(conversationId: Long): BotConversation? {
+        _canSendMessage.value = false
+        return aiBotSupportRepository.loadConversation(conversationId).also {
+            _canSendMessage.value = true
         }
     }
 
-    fun onNewConversationClicked() {
+    fun onNewConversationClick() {
         viewModelScope.launch {
             val now = Date()
             val botConversation = BotConversation(
@@ -74,8 +52,7 @@ class AIBotSupportViewModel @Inject constructor(
                 messages = listOf()
             )
             _canSendMessage.value = true
-            // Simulate clicking on the conversation
-            onConversationClick(botConversation)
+            setNewConversation(botConversation)
         }
     }
 

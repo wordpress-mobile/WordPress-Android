@@ -1,5 +1,6 @@
 package org.wordpress.android.support.common.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -11,10 +12,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.support.common.model.Conversation
 import org.wordpress.android.support.common.model.UserInfo
 import org.wordpress.android.util.AppLog
 
-abstract class ConversationsSupportViewModel<ConversationType>(
+abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     protected val accountStore: AccountStore,
     protected val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
@@ -29,6 +31,9 @@ abstract class ConversationsSupportViewModel<ConversationType>(
 
     protected val _conversations = MutableStateFlow<List<ConversationType>>(emptyList())
     val conversations: StateFlow<List<ConversationType>> = _conversations.asStateFlow()
+
+    private val _isLoadingConversation = MutableStateFlow(false)
+    val isLoadingConversation: StateFlow<Boolean> = _isLoadingConversation.asStateFlow()
 
     protected val _selectedConversation = MutableStateFlow<ConversationType?>(null)
     val selectedConversation: StateFlow<ConversationType?> = _selectedConversation.asStateFlow()
@@ -111,17 +116,43 @@ abstract class ConversationsSupportViewModel<ConversationType>(
         _errorMessage.value = null
     }
 
+    suspend fun setNewConversation(conversation: ConversationType) {
+        _selectedConversation.value = conversation
+        _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail)
+    }
+
     // Region navigation
 
     fun onConversationClick(conversation: ConversationType) {
         viewModelScope.launch {
-            _selectedConversation.value = conversation
-            _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail)
+            try {
+                _isLoadingConversation.value = true
+                _selectedConversation.value = conversation
+                _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail)
+
+                val updatedConversation = getConversation(conversation.getConversationId())
+                if (updatedConversation != null) {
+                    // refresh selected conversation
+                    _selectedConversation.value = updatedConversation
+                } else {
+                    _errorMessage.value = ErrorType.GENERAL
+                    appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversation: " +
+                            "error retrieving it from server")
+                }
+            } catch (throwable: Throwable) {
+                _errorMessage.value = ErrorType.GENERAL
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversation: " +
+                        "${throwable.message} - ${throwable.stackTraceToString()}")
+            }
+            _isLoadingConversation.value = false
         }
     }
 
+    abstract suspend fun getConversation(conversationId: Long): ConversationType?
+
     fun onBackFromDetailClick() {
         viewModelScope.launch {
+            _selectedConversation.value = null
             _navigationEvents.emit(NavigationEvent.NavigateBack)
         }
     }

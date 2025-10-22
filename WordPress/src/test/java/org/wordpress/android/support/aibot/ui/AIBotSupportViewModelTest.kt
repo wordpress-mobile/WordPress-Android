@@ -1,6 +1,5 @@
 package org.wordpress.android.support.aibot.ui
 
-import app.cash.turbine.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -157,11 +156,11 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onNewConversationClicked creates empty conversation`() = test {
-        viewModel.onNewConversationClicked()
+        viewModel.onNewConversationClick()
 
         val selectedConversation = viewModel.selectedConversation.value
         assertThat(selectedConversation).isNotNull
-        assertThat(selectedConversation?.id).isEqualTo(0L)
+        assertThat(selectedConversation?.getConversationId).isEqualTo(0L)
         assertThat(selectedConversation?.messages).isEmpty()
         assertThat(selectedConversation?.lastMessage).isEmpty()
         assertThat(viewModel.canSendMessage.value).isTrue
@@ -178,7 +177,7 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
         )
         whenever(aiBotSupportRepository.createNewConversation(message)).thenReturn(newConversation)
 
-        viewModel.onNewConversationClicked()
+        viewModel.onNewConversationClick()
         viewModel.sendMessage(message)
         advanceUntilIdle()
 
@@ -224,7 +223,7 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
         val newConversation = createTestConversation(id = 123L)
         whenever(aiBotSupportRepository.createNewConversation(message)).thenReturn(newConversation)
 
-        viewModel.onNewConversationClicked()
+        viewModel.onNewConversationClick()
         viewModel.sendMessage(message)
         advanceUntilIdle()
 
@@ -237,7 +236,7 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
         val newConversation = createTestConversation(id = 123L)
         whenever(aiBotSupportRepository.createNewConversation(message)).thenReturn(newConversation)
 
-        viewModel.onNewConversationClicked()
+        viewModel.onNewConversationClick()
         assertThat(viewModel.canSendMessage.value).isTrue
 
         viewModel.sendMessage(message)
@@ -252,7 +251,7 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
         val newConversation = createTestConversation(id = 123L)
         whenever(aiBotSupportRepository.createNewConversation(message)).thenReturn(newConversation)
 
-        viewModel.onNewConversationClicked()
+        viewModel.onNewConversationClick()
         viewModel.sendMessage(message)
 
         // Allow the optimistic update to complete
@@ -269,7 +268,7 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
         val message = "Test message"
         whenever(aiBotSupportRepository.createNewConversation(message)).thenReturn(null)
 
-        viewModel.onNewConversationClicked()
+        viewModel.onNewConversationClick()
         viewModel.sendMessage(message)
         advanceUntilIdle()
 
@@ -285,7 +284,7 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
         val exception = RuntimeException("Send failed")
         whenever(aiBotSupportRepository.createNewConversation(message)).thenThrow(exception)
 
-        viewModel.onNewConversationClicked()
+        viewModel.onNewConversationClick()
         viewModel.sendMessage(message)
         advanceUntilIdle()
 
@@ -312,12 +311,12 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
         viewModel.init(testAccessToken, testUserId)
         advanceUntilIdle()
 
-        viewModel.onNewConversationClicked()
+        viewModel.onNewConversationClick()
         viewModel.sendMessage(message)
         advanceUntilIdle()
 
         assertThat(viewModel.conversations.value).hasSize(3)
-        assertThat(viewModel.conversations.value.first().id).isEqualTo(999L)
+        assertThat(viewModel.conversations.value.first().getConversationId).isEqualTo(999L)
     }
 
     @Test
@@ -352,7 +351,7 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
 
         val updatedList = viewModel.conversations.value
         assertThat(updatedList).hasSize(2)
-        val updatedInList = updatedList.find { it.id == conversationId }
+        val updatedInList = updatedList.find { it.getConversationId == conversationId }
         assertThat(updatedInList?.lastMessage).isEqualTo("Bot response")
     }
 

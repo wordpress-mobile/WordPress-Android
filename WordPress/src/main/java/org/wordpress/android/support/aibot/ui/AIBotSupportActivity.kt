@@ -122,11 +122,11 @@ class AIBotSupportActivity : AppCompatActivity() {
                             conversations = viewModel.conversations,
                             isLoading = isLoadingConversations,
                             onConversationClick = { conversation ->
-                                viewModel.onConversationSelected(conversation)
+                                viewModel.onConversationClick(conversation)
                             },
                             onBackClick = { finish() },
                             onCreateNewConversationClick = {
-                                viewModel.onNewConversationClicked()
+                                viewModel.onNewConversationClick()
                             },
                             onRefresh = {
                                 viewModel.refreshConversations()
