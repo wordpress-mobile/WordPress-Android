@@ -1,6 +1,7 @@
 package org.wordpress.android.support.he.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.content.res.Resources
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -86,6 +88,7 @@ private fun ShowConversationsList(
     onConversationClick: (SupportConversation) -> Unit
 ) {
     val conversationsList by conversations.collectAsState()
+    val resources = LocalResources.current
 
     LazyColumn(
         modifier = modifier
@@ -102,6 +105,7 @@ private fun ShowConversationsList(
         ) { conversation ->
             ConversationCard(
                 conversation = conversation,
+                resources = resources,
                 onClick = { onConversationClick(conversation) }
             )
             Spacer(modifier = Modifier.height(12.dp))
@@ -116,6 +120,7 @@ private fun ShowConversationsList(
 @Composable
 private fun ConversationCard(
     conversation: SupportConversation,
+    resources: Resources,
     onClick: () -> Unit
 ) {
     Card(
@@ -151,7 +156,7 @@ private fun ConversationCard(
                     )
 
                     Text(
-                        text = formatRelativeTime(conversation.lastMessageSentAt),
+                        text = formatRelativeTime(conversation.lastMessageSentAt, resources),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(start = 8.dp)

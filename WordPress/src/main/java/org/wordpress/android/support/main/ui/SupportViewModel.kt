@@ -22,7 +22,11 @@ class SupportViewModel @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
     sealed class NavigationEvent {
-        data class NavigateToAskTheBots(val accessToken: String, val userName: String) : NavigationEvent()
+        data class NavigateToAskTheBots(
+            val accessToken: String,
+            val userId: Long,
+            val userName: String
+        ) : NavigationEvent()
         data object NavigateToLogin : NavigationEvent()
         data object NavigateToHelpCenter : NavigationEvent()
         data object NavigateToApplicationLogs : NavigationEvent()
@@ -80,6 +84,7 @@ class SupportViewModel @Inject constructor(
                 _navigationEvents.emit(
                     NavigationEvent.NavigateToAskTheBots(
                         accessToken = accountStore.accessToken!!, // access token has been checked before
+                        userId = account.userId,
                         userName = account.displayName.ifEmpty { account.userName }
                     )
                 )
