@@ -110,7 +110,7 @@ class AIBotSupportActivity : AppCompatActivity() {
             ) {
                 composable(route = ConversationScreen.List.name) {
                     val isLoadingConversations by viewModel.isLoadingConversations.collectAsState()
-                    ConversationsListScreen(
+                    AIBotConversationsListScreen(
                         snackbarHostState = snackbarHostState,
                         conversations = viewModel.conversations,
                         isLoading = isLoadingConversations,
@@ -134,7 +134,7 @@ class AIBotSupportActivity : AppCompatActivity() {
                     val canSendMessage by viewModel.canSendMessage.collectAsState()
                     val userInfo by viewModel.userInfo.collectAsState()
                     selectedConversation?.let { conversation ->
-                        ConversationDetailScreen(
+                        AIBotConversationDetailScreen(
                             snackbarHostState = snackbarHostState,
                             userName = userInfo.userName,
                             conversation = conversation,
