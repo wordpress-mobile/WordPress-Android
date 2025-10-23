@@ -307,7 +307,7 @@
         <activity
             android:name=".ui.posts.GutenbergKitActivity"
             android:configChanges="locale|screenLayout|orientation|screenSize|keyboard|keyboardHidden|smallestScreenSize|uiMode"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:exported="false">
             <meta-data
