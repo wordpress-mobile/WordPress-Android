@@ -60,7 +60,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConversationDetailScreen(
+fun AIBotConversationDetailScreen(
     snackbarHostState: SnackbarHostState,
     conversation: BotConversation,
     isLoading: Boolean,
@@ -362,7 +362,7 @@ private fun ConversationDetailScreenPreview() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false) {
-        ConversationDetailScreen(
+        AIBotConversationDetailScreen(
             snackbarHostState = snackbarHostState,
             userName = "UserName",
             conversation = sampleConversation,
@@ -382,7 +382,7 @@ private fun ConversationDetailScreenPreviewDark() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true) {
-        ConversationDetailScreen(
+        AIBotConversationDetailScreen(
             snackbarHostState = snackbarHostState,
             userName = "UserName",
             conversation = sampleConversation,
@@ -402,7 +402,7 @@ private fun ConversationDetailScreenWordPressPreview() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
-        ConversationDetailScreen(
+        AIBotConversationDetailScreen(
             snackbarHostState = snackbarHostState,
             userName = "UserName",
             conversation = sampleConversation,
@@ -422,7 +422,7 @@ private fun ConversationDetailScreenPreviewWordPressDark() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
-        ConversationDetailScreen(
+        AIBotConversationDetailScreen(
             snackbarHostState = snackbarHostState,
             userName = "UserName",
             conversation = sampleConversation,

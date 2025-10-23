@@ -3,7 +3,6 @@ package org.wordpress.android.support.aibot.ui
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.content.res.Resources
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,7 +49,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConversationsListScreen(
+fun AIBotConversationsListScreen(
     snackbarHostState: SnackbarHostState,
     conversations: StateFlow<List<BotConversation>>,
     isLoading: Boolean,
@@ -188,7 +187,7 @@ private fun ConversationsScreenPreview() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false) {
-        ConversationsListScreen(
+        AIBotConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoading = false,
@@ -207,7 +206,7 @@ private fun ConversationsScreenPreviewDark() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true) {
-        ConversationsListScreen(
+        AIBotConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoading = false,
@@ -226,7 +225,7 @@ private fun ConversationsScreenWordPressPreview() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
-        ConversationsListScreen(
+        AIBotConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoading = true,
@@ -245,7 +244,7 @@ private fun ConversationsScreenPreviewWordPressDark() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
-        ConversationsListScreen(
+        AIBotConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoading = true,
@@ -264,7 +263,7 @@ private fun EmptyConversationsScreenPreview() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false) {
-        ConversationsListScreen(
+        AIBotConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = emptyConversations.asStateFlow(),
             isLoading = false,
@@ -283,7 +282,7 @@ private fun EmptyConversationsScreenPreviewDark() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true) {
-        ConversationsListScreen(
+        AIBotConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = emptyConversations.asStateFlow(),
             isLoading = false,
