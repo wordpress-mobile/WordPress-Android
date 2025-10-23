@@ -40,7 +40,7 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     val selectedConversation: StateFlow<ConversationType?> = _selectedConversation.asStateFlow()
 
     @Suppress("VariableNaming")
-    protected val _userInfo = MutableStateFlow(UserInfo("", "", "", null))
+    protected val _userInfo = MutableStateFlow(UserInfo("", "", ""))
     val userInfo: StateFlow<UserInfo> = _userInfo.asStateFlow()
 
     @Suppress("VariableNaming")
@@ -55,13 +55,7 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     fun init() {
         viewModelScope.launch {
             try {
-                // We need to check it this way because access token can be null or empty if not set
-                // So, we manually handle it here
-                val accessToken = if (accountStore.hasAccessToken()) {
-                    accountStore.accessToken!!
-                } else {
-                    null
-                }
+                val accessToken = accountStore.accessToken.takeIf { accountStore.hasAccessToken() }
                 if (accessToken == null) {
                     _errorMessage.value = ErrorType.FORBIDDEN
                     appLogWrapper.e(
@@ -69,7 +63,7 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
                     )
                 } else {
                     initRepository(accessToken)
-                    loadUserInfo(accessToken)
+                    loadUserInfo()
                     loadConversations()
                 }
             } catch (throwable: Throwable) {
@@ -82,10 +76,9 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
 
     abstract fun initRepository(accessToken: String)
 
-    protected fun loadUserInfo(accessToken: String) {
+    protected fun loadUserInfo() {
         val account = accountStore.account
         _userInfo.value = UserInfo(
-            accessToken = accessToken,
             userName = account.displayName.ifEmpty { account.userName },
             userEmail = account.email,
             avatarUrl = account.avatarUrl.takeIf { it.isNotEmpty() }
