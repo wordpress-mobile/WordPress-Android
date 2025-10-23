@@ -69,14 +69,12 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
     @Test
     fun `init loads enabled state from experimental features`() = test {
         whenever(experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)).thenReturn(true)
-        whenever(experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES)).thenReturn(false)
 
         createViewModel()
 
         val states = viewModel.switchStates.value
 
         assertThat(states[Feature.EXPERIMENTAL_BLOCK_EDITOR]).isTrue()
-        assertThat(states[Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES]).isFalse()
     }
 
     @Test
@@ -145,7 +143,6 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
     @Test
     fun `state flow emits correct initial state`() = test {
         whenever(experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR)).thenReturn(true)
-        whenever(experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR_THEME_STYLES)).thenReturn(false)
 
         createViewModel()
 

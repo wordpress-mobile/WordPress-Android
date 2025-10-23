@@ -702,6 +702,8 @@
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the block editor</string>
+    <string name="site_settings_use_theme_styles">Use Theme Styles</string>
+    <string name="site_settings_use_theme_styles_summary">Make the block editor look like your theme</string>
     <string name="site_settings_password_updated">Password updated</string>
     <string name="site_settings_update_password_message">To reconnect the app to your self-hosted site, enter the site\'s new password here.</string>
     <string name="site_settings_homepage_settings">Homepage Settings</string>
@@ -971,8 +973,6 @@
     <string name="experimental_block_editor_note">Experimental block editor will become the default in a future release and the ability to disable it will be removed.</string>
     <string name="experimental_block_editor">Experimental block editor</string>
     <string name="experimental_block_editor_description">Access additional block types and settings</string>
-    <string name="experimental_block_editor_theme_styles">Experimental block editor styles</string>
-    <string name="experimental_block_editor_theme_styles_description">Apply theme styles to the editor</string>
     <string name="experimental_block_editor_plugins">Experimental block editor plugins</string>
     <string name="experimental_features_feedback_dialog_title">Share feedback</string>
     <string name="experimental_features_feedback_dialog_message">Are you willing to share feedback on the experimental editor?</string>

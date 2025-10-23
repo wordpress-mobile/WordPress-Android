@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 69;
+    private static final int DATABASE_VERSION = 70;
 
 
     // Warning renaming DATABASE_NAME could break previous App backups (see: xml/backup_scheme.xml)
@@ -184,6 +184,9 @@ public class WordPressDB {
                 // so the table creation depended on that screen being opened. Now that we need this table in other
                 // places, we have to be sure the table exists even if PublicizeListActivity was never opened.
                 PublicizeTable.createTables(mDb);
+            case 69:
+                // add editor theme styles site setting
+                mDb.execSQL(SiteSettingsModel.ADD_USE_THEME_STYLES);
         }
         mDb.setVersion(DATABASE_VERSION);
     }

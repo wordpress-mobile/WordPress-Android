@@ -132,6 +132,12 @@
             android:summary="@string/site_settings_gutenberg_default_for_new_posts_summary"
             android:title="@string/site_settings_gutenberg_default_for_new_posts" />
 
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_use_theme_styles"
+            android:key="@string/pref_key_use_theme_styles"
+            android:summary="@string/site_settings_use_theme_styles_summary"
+            android:title="@string/site_settings_use_theme_styles" />
+
     </PreferenceCategory>
 
     <!-- Writing Settings -->
