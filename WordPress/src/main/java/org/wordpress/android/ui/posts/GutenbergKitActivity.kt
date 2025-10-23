@@ -33,6 +33,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.util.Consumer
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -490,6 +492,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         }
 
         setContentView(R.layout.new_edit_post_activity)
+
+        // Handle edge-to-edge with IME insets for keyboard management
+        setupEdgeToEdgeWithImeInsets()
+
         backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (isModalDialogOpen) {
@@ -612,6 +618,30 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         // check if post content needs updating
         if (postConflictResolutionFeatureConfig.isEnabled()) {
             storePostViewModel.checkIfUpdatedPostVersionExists((editPostRepository), siteModel)
+        }
+    }
+
+    /**
+     * Enables edge-to-edge display with proper IME (keyboard) inset handling.
+     * This ensures the editor toolbar remains visible above the keyboard on all devices.
+     */
+    private fun setupEdgeToEdgeWithImeInsets() {
+        val rootView = findViewById<View>(R.id.editor_activity)
+
+        ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+
+            // Apply system bar insets to keep content within safe areas
+            view.setPadding(
+                systemBarsInsets.left,
+                systemBarsInsets.top,
+                systemBarsInsets.right,
+                // Use IME insets for bottom padding when keyboard is visible, otherwise system bars
+                maxOf(systemBarsInsets.bottom, imeInsets.bottom)
+            )
+
+            WindowInsetsCompat.CONSUMED
         }
     }
 
