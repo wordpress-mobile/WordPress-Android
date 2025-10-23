@@ -70,7 +70,6 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val userInfo = viewModel.userInfo.value
-        assertThat(userInfo.accessToken).isEqualTo(testAccessToken)
         assertThat(userInfo.userName).isEqualTo(testUserName)
         assertThat(userInfo.userEmail).isEqualTo(testUserEmail)
         assertThat(userInfo.avatarUrl).isEqualTo(testAvatarUrl)

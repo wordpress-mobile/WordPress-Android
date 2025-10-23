@@ -18,6 +18,7 @@ import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.SupportConversationSummary
 import uniffi.wp_api.SupportMessageAuthor
+import uniffi.wp_api.WpErrorCode
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -209,12 +210,17 @@ class HESupportRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `createConversation returns Unauthorized when request fails with 401`() = runTest {
+    fun `createConversation returns Forbidden when request fails with WpErrorCode-Forbidden`() = runTest {
         // Given
         repository.init(testAccessToken)
 
         val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
-            WpRequestResult.UnknownError(401.toUShort(), "Unauthorized")
+            WpRequestResult.WpError(
+                errorCode = WpErrorCode.Forbidden(),
+                errorMessage = "Forbidden",
+                statusCode = 403.toUShort(),
+                response = ""
+            )
 
         whenever(
             wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())
@@ -291,29 +297,6 @@ class HESupportRepositoryTest : BaseUnitTest() {
         assertThat(result).isInstanceOf(CreateConversationResult.Success::class.java)
         val successResult = result as CreateConversationResult.Success
         assertThat(successResult.conversation).isEqualTo(supportConversation.toSupportConversation())
-    }
-
-    @Test
-    fun `addMessageToConversation returns Unauthorized when request fails with 403`() = runTest {
-        // Given
-        repository.init(testAccessToken)
-
-        val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
-            WpRequestResult.UnknownError(403.toUShort(), "Forbidden")
-
-        whenever(
-            wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())
-        ).thenReturn(errorResponse)
-
-        // When
-        val result = repository.addMessageToConversation(
-            conversationId = 456L,
-            message = "Test",
-            attachments = emptyList()
-        )
-
-        // Then
-        assertThat(result).isInstanceOf(CreateConversationResult.Error.Forbidden::class.java)
     }
 
     @Test

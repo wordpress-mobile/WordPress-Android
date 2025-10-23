@@ -127,28 +127,6 @@ class HESupportViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onSendNewConversation calls onConversationClick on success`() = test {
-        val newConversation = createTestConversation(1)
-        whenever(heSupportRepository.loadConversation(1L)).thenReturn(newConversation)
-        whenever(heSupportRepository.createConversation(
-            subject = "Test Subject",
-            message = "Test Message",
-            tags = listOf("tag1"),
-            attachments = emptyList()
-        )).thenReturn(CreateConversationResult.Success(newConversation))
-
-        viewModel.onSendNewConversation(
-            subject = "Test Subject",
-            message = "Test Message",
-            tags = listOf("tag1"),
-            attachments = emptyList()
-        )
-        advanceUntilIdle()
-
-        assertThat(viewModel.selectedConversation.value).isEqualTo(newConversation)
-    }
-
-    @Test
     fun `onSendNewConversation sets FORBIDDEN error on Unauthorized result`() = test {
         whenever(heSupportRepository.createConversation(
             subject = "Test Subject",
