@@ -73,6 +73,10 @@ fun HEConversationDetailScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
     val resources = LocalResources.current
 
+    // Save draft message state to restore when reopening the bottom sheet
+    var draftMessageText by remember { mutableStateOf("") }
+    var draftIncludeAppLogs by remember { mutableStateOf(false) }
+
     // Scroll to bottom when conversation changes or new messages arrive
     LaunchedEffect(conversation.messages.size) {
         if (conversation.messages.isNotEmpty()) {
@@ -113,7 +117,8 @@ fun HEConversationDetailScreen(
             item {
                 ConversationHeader(
                     messageCount = conversation.messages.size,
-                    lastUpdated = formatRelativeTime(conversation.lastMessageSentAt, resources)
+                    lastUpdated = formatRelativeTime(conversation.lastMessageSentAt, resources),
+                    isLoading = isLoading
                 )
             }
 
@@ -150,7 +155,12 @@ fun HEConversationDetailScreen(
         ReplyBottomSheet(
             sheetState = sheetState,
             isSending = isSendingMessage,
-            onDismiss = {
+            initialMessageText = draftMessageText,
+            initialIncludeAppLogs = draftIncludeAppLogs,
+            onDismiss = { currentMessage, currentIncludeAppLogs ->
+                // Save draft message when closing without sending
+                draftMessageText = currentMessage
+                draftIncludeAppLogs = currentIncludeAppLogs
                 scope.launch {
                     sheetState.hide()
                 }.invokeOnCompletion {
@@ -158,6 +168,9 @@ fun HEConversationDetailScreen(
                 }
             },
             onSend = { message, includeAppLogs ->
+                // Clear draft after successful send
+                draftMessageText = ""
+                draftIncludeAppLogs = false
                 onSendMessage(message, includeAppLogs)
             }
         )
@@ -167,7 +180,8 @@ fun HEConversationDetailScreen(
 @Composable
 private fun ConversationHeader(
     messageCount: Int,
-    lastUpdated: String
+    lastUpdated: String,
+    isLoading: Boolean = false
 ) {
     Row(
         modifier = Modifier
@@ -176,21 +190,25 @@ private fun ConversationHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_comment_white_24dp),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(20.dp)
-            )
-            Text(
-                text = stringResource(R.string.he_support_message_count, messageCount),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+        if (!isLoading) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_comment_white_24dp),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(20.dp)
+                )
+                Text(
+                    text = stringResource(R.string.he_support_message_count, messageCount),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        } else {
+            Spacer(modifier = Modifier.size(0.dp))
         }
 
         Text(
@@ -311,11 +329,13 @@ private fun ReplyButton(
 private fun ReplyBottomSheet(
     sheetState: androidx.compose.material3.SheetState,
     isSending: Boolean = false,
-    onDismiss: () -> Unit,
+    initialMessageText: String = "",
+    initialIncludeAppLogs: Boolean = false,
+    onDismiss: (currentMessage: String, currentIncludeAppLogs: Boolean) -> Unit,
     onSend: (String, Boolean) -> Unit
 ) {
-    var messageText by remember { mutableStateOf("") }
-    var includeAppLogs by remember { mutableStateOf(false) }
+    var messageText by remember { mutableStateOf(initialMessageText) }
+    var includeAppLogs by remember { mutableStateOf(initialIncludeAppLogs) }
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
     var wasSending by remember { mutableStateOf(false) }
@@ -323,18 +343,18 @@ private fun ReplyBottomSheet(
     // Close the sheet when sending completes successfully
     LaunchedEffect(isSending) {
         if (wasSending && !isSending) {
-            // Sending completed, close the sheet
+            // Sending completed, close the sheet (with empty draft since message was sent)
             scope.launch {
                 sheetState.hide()
             }.invokeOnCompletion {
-                onDismiss()
+                onDismiss("", false)
             }
         }
         wasSending = isSending
     }
 
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { onDismiss(messageText, includeAppLogs) },
         sheetState = sheetState
     ) {
         Column(
@@ -353,7 +373,7 @@ private fun ReplyBottomSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TextButton(
-                    onClick = onDismiss,
+                    onClick = { onDismiss(messageText, includeAppLogs) },
                     enabled = !isSending
                 ) {
                     Text(
