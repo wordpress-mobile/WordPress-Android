@@ -376,9 +376,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     @Inject lateinit var postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 
-    @Inject lateinit var gutenbergKitFeature: GutenbergKitFeature
     @Inject lateinit var gutenbergKitPluginsFeature: GutenbergKitPluginsFeature
-    @Inject lateinit var experimentalFeatures: ExperimentalFeatures
 
     @Inject lateinit var activityNavigator: ActivityNavigator
 
@@ -2277,7 +2275,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
             val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
                 isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
-                isThemeStylesFeatureEnabled = siteSettings?.getUseThemeStyles() ?: true
+                isThemeStylesFeatureEnabled = siteSettings?.useThemeStyles ?: true
             )
 
             val appConfig = GutenbergKitSettingsBuilder.AppConfig(
