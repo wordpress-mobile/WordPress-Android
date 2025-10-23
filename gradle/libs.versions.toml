@@ -98,7 +98,6 @@ squareup-kotlin-poet = '1.18.1'
 squareup-okhttp3 = '5.2.1'
 squareup-retrofit = '3.0.0'
 wellsql = '2.0.0'
-wiremock = '2.26.3'
 wordpress-aztec = 'v2.1.4'
 wordpress-lint = '2.2.0'
 wordpress-persistent-edittext = '1.0.2'
@@ -257,7 +256,6 @@ squareup-okhttp3-urlconnection = { module = "com.squareup.okhttp3:okhttp-urlconn
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "squareup-retrofit" }
 wellsql = { module = "org.wordpress:wellsql", version.ref = "wellsql" }
 wellsql-processor = { module = "org.wordpress.wellsql:wellsql-processor", version.ref = "wellsql" }
-wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref = "wiremock" }
 wordpress-lint = { group = "org.wordpress", name = "lint", version.ref = "wordpress-lint" }
 wordpress-persistent-edittext = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordpress-persistent-edittext" }
 wordpress-rs-android = { group = "rs.wordpress.api", name = "android", version.ref = "wordpress-rs" }
