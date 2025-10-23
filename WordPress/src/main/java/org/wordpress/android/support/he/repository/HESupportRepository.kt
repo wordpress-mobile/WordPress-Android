@@ -14,6 +14,7 @@ import uniffi.wp_api.AddMessageToSupportConversationParams
 import uniffi.wp_api.CreateSupportTicketParams
 import uniffi.wp_api.SupportConversationSummary
 import uniffi.wp_api.SupportMessageAuthor
+import uniffi.wp_api.WpErrorCode
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.String
@@ -24,7 +25,7 @@ sealed class CreateConversationResult {
     data class Success(val conversation: SupportConversation) : CreateConversationResult()
 
     sealed class Error : CreateConversationResult() {
-        data object Unauthorized : Error()
+        data object Forbidden : Error()
         data object GeneralError : Error()
     }
 }
@@ -101,10 +102,18 @@ class HESupportRepository @Inject constructor(
             )
         }
 
-        when (response) {
-            is WpRequestResult.Success -> {
+        when {
+            response is WpRequestResult.Success -> {
                 val conversation = response.response.data
                 CreateConversationResult.Success(conversation.toSupportConversation())
+            }
+
+            response is WpRequestResult.WpError && response.errorCode is WpErrorCode.Forbidden -> {
+                appLogWrapper.e(
+                    AppLog.T.SUPPORT,
+                    "Error creating support conversation - Forbidden: $response"
+                )
+                CreateConversationResult.Error.Forbidden
             }
 
             else -> {
@@ -112,13 +121,7 @@ class HESupportRepository @Inject constructor(
                     AppLog.T.SUPPORT,
                     "Error creating support conversation: $response"
                 )
-                // Parse the response string to determine error type
-                val responseString = response.toString()
-                when {
-                    responseString.contains("401") || responseString.contains("403") ->
-                        CreateConversationResult.Error.Unauthorized
-                    else -> CreateConversationResult.Error.GeneralError
-                }
+                CreateConversationResult.Error.GeneralError
             }
         }
     }
@@ -138,10 +141,18 @@ class HESupportRepository @Inject constructor(
             )
         }
 
-        when (response) {
-            is WpRequestResult.Success -> {
+        when {
+            response is WpRequestResult.Success -> {
                 val conversation = response.response.data
                 CreateConversationResult.Success(conversation.toSupportConversation())
+            }
+
+            response is WpRequestResult.WpError && response.errorCode is WpErrorCode.Forbidden -> {
+                appLogWrapper.e(
+                    AppLog.T.SUPPORT,
+                    "Error adding message to support conversation - Forbidden: $response"
+                )
+                CreateConversationResult.Error.Forbidden
             }
 
             else -> {
@@ -149,13 +160,7 @@ class HESupportRepository @Inject constructor(
                     AppLog.T.SUPPORT,
                     "Error adding message to support conversation: $response"
                 )
-                // Parse the response string to determine error type
-                val responseString = response.toString()
-                when {
-                    responseString.contains("401") || responseString.contains("403") ->
-                        CreateConversationResult.Error.Unauthorized
-                    else -> CreateConversationResult.Error.GeneralError
-                }
+                CreateConversationResult.Error.GeneralError
             }
         }
     }

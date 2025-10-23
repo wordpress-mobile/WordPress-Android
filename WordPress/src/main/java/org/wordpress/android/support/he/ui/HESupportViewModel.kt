@@ -52,7 +52,7 @@ class HESupportViewModel @Inject constructor(
                     onBackClick()
                 }
 
-                is CreateConversationResult.Error.Unauthorized -> {
+                is CreateConversationResult.Error.Forbidden -> {
                     _errorMessage.value = ErrorType.FORBIDDEN
                     appLogWrapper.e(AppLog.T.SUPPORT, "Unauthorized error creating HE conversation")
                 }
@@ -92,7 +92,7 @@ class HESupportViewModel @Inject constructor(
                     _selectedConversation.value = result.conversation
                 }
 
-                is CreateConversationResult.Error.Unauthorized -> {
+                is CreateConversationResult.Error.Forbidden -> {
                     _errorMessage.value = ErrorType.FORBIDDEN
                     appLogWrapper.e(AppLog.T.SUPPORT, "Unauthorized error adding message to HE conversation")
                 }

@@ -155,7 +155,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             message = "Test Message",
             tags = listOf("tag1"),
             attachments = emptyList()
-        )).thenReturn(CreateConversationResult.Error.Unauthorized)
+        )).thenReturn(CreateConversationResult.Error.Forbidden)
 
         viewModel.onSendNewConversation(
             subject = "Test Subject",
@@ -300,7 +300,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             conversationId = 1L,
             message = "Test message",
             attachments = emptyList()
-        )).thenReturn(CreateConversationResult.Error.Unauthorized)
+        )).thenReturn(CreateConversationResult.Error.Forbidden)
 
         viewModel.onConversationClick(existingConversation)
         advanceUntilIdle()

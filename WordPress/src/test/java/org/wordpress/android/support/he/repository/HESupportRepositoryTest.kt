@@ -229,7 +229,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
         )
 
         // Then
-        assertThat(result).isInstanceOf(CreateConversationResult.Error.Unauthorized::class.java)
+        assertThat(result).isInstanceOf(CreateConversationResult.Error.Forbidden::class.java)
     }
 
     @Test
@@ -313,7 +313,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
         )
 
         // Then
-        assertThat(result).isInstanceOf(CreateConversationResult.Error.Unauthorized::class.java)
+        assertThat(result).isInstanceOf(CreateConversationResult.Error.Forbidden::class.java)
     }
 
     @Test
