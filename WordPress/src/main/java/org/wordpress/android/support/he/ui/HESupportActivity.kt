@@ -128,7 +128,7 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.Detail.name) {
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
-                    val isSendingMessage by viewModel.isSendingNewConversation.collectAsState()
+                    val isSendingMessage by viewModel.isSendingMessage.collectAsState()
                     selectedConversation?.let { conversation ->
                         HEConversationDetailScreen(
                             snackbarHostState = snackbarHostState,
@@ -148,7 +148,7 @@ class HESupportActivity : AppCompatActivity() {
 
                 composable(route = ConversationScreen.NewTicket.name) {
                     val userInfo by viewModel.userInfo.collectAsState()
-                    val isSendingNewConversation by viewModel.isSendingNewConversation.collectAsState()
+                    val isSendingNewConversation by viewModel.isSendingMessage.collectAsState()
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
                         onBackClick = { viewModel.onBackClick() },

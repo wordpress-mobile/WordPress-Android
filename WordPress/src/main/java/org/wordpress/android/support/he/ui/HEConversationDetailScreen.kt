@@ -80,7 +80,7 @@ fun HEConversationDetailScreen(
     // Scroll to bottom when conversation changes or new messages arrive
     LaunchedEffect(conversation.messages.size) {
         if (conversation.messages.isNotEmpty()) {
-            listState.animateScrollToItem(conversation.messages.size + 1) // +1 for header and title
+            listState.scrollToItem(listState.layoutInfo.totalItemsCount - 1)
         }
     }
 

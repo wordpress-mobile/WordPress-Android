@@ -63,7 +63,7 @@ class HESupportViewModelTest : BaseUnitTest() {
 
     @Test
     fun `isSendingNewConversation is false initially`() {
-        assertThat(viewModel.isSendingNewConversation.value).isFalse
+        assertThat(viewModel.isSendingMessage.value).isFalse
     }
 
     // endregion
@@ -204,7 +204,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         )
         advanceUntilIdle()
 
-        assertThat(viewModel.isSendingNewConversation.value).isFalse
+        assertThat(viewModel.isSendingMessage.value).isFalse
     }
 
     // endregion
@@ -235,7 +235,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(appLogWrapper).e(any(), eq("Error answering a conversation: no conversation selected"))
-        assertThat(viewModel.isSendingNewConversation.value).isFalse
+        assertThat(viewModel.isSendingMessage.value).isFalse
     }
 
     @Test
@@ -355,7 +355,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         )
         advanceUntilIdle()
 
-        assertThat(viewModel.isSendingNewConversation.value).isFalse
+        assertThat(viewModel.isSendingMessage.value).isFalse
     }
 
     // endregion

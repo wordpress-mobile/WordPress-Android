@@ -21,8 +21,8 @@ class HESupportViewModel @Inject constructor(
     private val heSupportRepository: HESupportRepository,
     appLogWrapper: AppLogWrapper,
 ) : ConversationsSupportViewModel<SupportConversation>(accountStore, appLogWrapper) {
-    private val _isSendingNewConversation = MutableStateFlow(false)
-    val isSendingNewConversation: StateFlow<Boolean> = _isSendingNewConversation.asStateFlow()
+    private val _isSendingMessage = MutableStateFlow(false)
+    val isSendingMessage: StateFlow<Boolean> = _isSendingMessage.asStateFlow()
 
     override fun initRepository(accessToken: String) {
         heSupportRepository.init(accessToken)
@@ -37,7 +37,7 @@ class HESupportViewModel @Inject constructor(
         attachments: List<String>
     ) {
         viewModelScope.launch {
-            _isSendingNewConversation.value = true
+            _isSendingMessage.value = true
 
             when (val result = heSupportRepository.createConversation(
                 subject = subject,
@@ -63,7 +63,7 @@ class HESupportViewModel @Inject constructor(
                 }
             }
 
-            _isSendingNewConversation.value = false
+            _isSendingMessage.value = false
         }
     }
 
@@ -81,7 +81,7 @@ class HESupportViewModel @Inject constructor(
                 return@launch
             }
 
-            _isSendingNewConversation.value = true
+            _isSendingMessage.value = true
 
             when (val result = heSupportRepository.addMessageToConversation(
                 conversationId = selectedConversation.id,
@@ -103,7 +103,7 @@ class HESupportViewModel @Inject constructor(
                 }
             }
 
-            _isSendingNewConversation.value = false
+            _isSendingMessage.value = false
         }
     }
 }

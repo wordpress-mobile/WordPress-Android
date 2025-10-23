@@ -35,6 +35,12 @@ class HESupportRepository @Inject constructor(
     private val wpComApiClientProvider: WpComApiClientProvider,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
+    /**
+     * Access token for API authentication.
+     * Marked as @Volatile to ensure visibility across threads since this repository is accessed
+     * from multiple coroutine contexts (main thread initialization, IO dispatcher for API calls).
+     */
+    @Volatile
     private var accessToken: String? = null
 
     private val wpComApiClient: WpComApiClient by lazy {
