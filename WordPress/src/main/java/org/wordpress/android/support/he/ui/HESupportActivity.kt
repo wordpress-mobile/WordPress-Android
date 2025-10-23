@@ -129,19 +129,22 @@ class HESupportActivity : AppCompatActivity() {
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
+                    val messageSendResult by viewModel.messageSendResult.collectAsState()
                     selectedConversation?.let { conversation ->
                         HEConversationDetailScreen(
                             snackbarHostState = snackbarHostState,
                             conversation = conversation,
                             isLoading = isLoadingConversation,
                             isSendingMessage = isSendingMessage,
+                            messageSendResult = messageSendResult,
                             onBackClick = { viewModel.onBackClick() },
                             onSendMessage = { message, includeAppLogs ->
                                 viewModel.onAddMessageToConversation(
                                     message = message,
                                     attachments = emptyList()
                                 )
-                            }
+                            },
+                            onClearMessageSendResult = { viewModel.clearMessageSendResult() }
                         )
                     }
                 }

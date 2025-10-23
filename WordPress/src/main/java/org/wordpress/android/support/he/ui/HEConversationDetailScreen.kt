@@ -64,8 +64,10 @@ fun HEConversationDetailScreen(
     conversation: SupportConversation,
     isLoading: Boolean = false,
     isSendingMessage: Boolean = false,
+    messageSendResult: HESupportViewModel.MessageSendResult? = null,
     onBackClick: () -> Unit,
-    onSendMessage: (message: String, includeAppLogs: Boolean) -> Unit
+    onSendMessage: (message: String, includeAppLogs: Boolean) -> Unit,
+    onClearMessageSendResult: () -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -155,6 +157,7 @@ fun HEConversationDetailScreen(
         ReplyBottomSheet(
             sheetState = sheetState,
             isSending = isSendingMessage,
+            messageSendResult = messageSendResult,
             initialMessageText = draftMessageText,
             initialIncludeAppLogs = draftIncludeAppLogs,
             onDismiss = { currentMessage, currentIncludeAppLogs ->
@@ -168,10 +171,13 @@ fun HEConversationDetailScreen(
                 }
             },
             onSend = { message, includeAppLogs ->
+                onSendMessage(message, includeAppLogs)
+            },
+            onMessageSentSuccessfully = {
                 // Clear draft after successful send
                 draftMessageText = ""
                 draftIncludeAppLogs = false
-                onSendMessage(message, includeAppLogs)
+                onClearMessageSendResult()
             }
         )
     }
@@ -329,28 +335,34 @@ private fun ReplyButton(
 private fun ReplyBottomSheet(
     sheetState: androidx.compose.material3.SheetState,
     isSending: Boolean = false,
+    messageSendResult: HESupportViewModel.MessageSendResult? = null,
     initialMessageText: String = "",
     initialIncludeAppLogs: Boolean = false,
     onDismiss: (currentMessage: String, currentIncludeAppLogs: Boolean) -> Unit,
-    onSend: (String, Boolean) -> Unit
+    onSend: (String, Boolean) -> Unit,
+    onMessageSentSuccessfully: () -> Unit
 ) {
     var messageText by remember { mutableStateOf(initialMessageText) }
     var includeAppLogs by remember { mutableStateOf(initialIncludeAppLogs) }
     val scrollState = rememberScrollState()
-    val scope = rememberCoroutineScope()
-    var wasSending by remember { mutableStateOf(false) }
 
     // Close the sheet when sending completes successfully
-    LaunchedEffect(isSending) {
-        if (wasSending && !isSending) {
-            // Sending completed, close the sheet (with empty draft since message was sent)
-            scope.launch {
-                sheetState.hide()
-            }.invokeOnCompletion {
+    LaunchedEffect(messageSendResult) {
+        when (messageSendResult) {
+            is HESupportViewModel.MessageSendResult.Success -> {
+                // Message sent successfully, close the sheet and clear draft
+                onDismiss("", false)
+                onMessageSentSuccessfully()
+            }
+            is HESupportViewModel.MessageSendResult.Failure -> {
+                // Message failed to send, draft is saved onDismiss
+                // The error will be shown via snackbar from the Activity
                 onDismiss("", false)
             }
+            null -> {
+                // No result yet, do nothing
+            }
         }
-        wasSending = isSending
     }
 
     ModalBottomSheet(

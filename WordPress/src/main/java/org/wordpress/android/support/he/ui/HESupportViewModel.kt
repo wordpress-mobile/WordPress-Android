@@ -24,6 +24,14 @@ class HESupportViewModel @Inject constructor(
     private val _isSendingMessage = MutableStateFlow(false)
     val isSendingMessage: StateFlow<Boolean> = _isSendingMessage.asStateFlow()
 
+    private val _messageSendResult = MutableStateFlow<MessageSendResult?>(null)
+    val messageSendResult: StateFlow<MessageSendResult?> = _messageSendResult.asStateFlow()
+
+    sealed class MessageSendResult {
+        data object Success : MessageSendResult()
+        data object Failure : MessageSendResult()
+    }
+
     override fun initRepository(accessToken: String) {
         heSupportRepository.init(accessToken)
     }
@@ -90,20 +98,27 @@ class HESupportViewModel @Inject constructor(
             )) {
                 is CreateConversationResult.Success -> {
                     _selectedConversation.value = result.conversation
+                    _messageSendResult.value = MessageSendResult.Success
                 }
 
                 is CreateConversationResult.Error.Forbidden -> {
                     _errorMessage.value = ErrorType.FORBIDDEN
                     appLogWrapper.e(AppLog.T.SUPPORT, "Unauthorized error adding message to HE conversation")
+                    _messageSendResult.value = MessageSendResult.Failure
                 }
 
                 is CreateConversationResult.Error.GeneralError -> {
                     _errorMessage.value = ErrorType.GENERAL
                     appLogWrapper.e(AppLog.T.SUPPORT, "General error adding message to HE conversation")
+                    _messageSendResult.value = MessageSendResult.Failure
                 }
             }
 
             _isSendingMessage.value = false
         }
+    }
+
+    fun clearMessageSendResult() {
+        _messageSendResult.value = null
     }
 }
