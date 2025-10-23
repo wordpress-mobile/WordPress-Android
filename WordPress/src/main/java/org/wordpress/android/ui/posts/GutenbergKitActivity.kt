@@ -206,7 +206,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource
 import org.wordpress.android.util.config.ContactSupportFeatureConfig
-import org.wordpress.android.util.config.GutenbergKitFeature
 import org.wordpress.android.util.config.GutenbergKitPluginsFeature
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
