@@ -46,8 +46,10 @@ class HESupportViewModel @Inject constructor(
                 attachments = attachments
             )) {
                 is CreateConversationResult.Success -> {
-                    // Simulate clicking on the conversation
-                    onConversationClick(result.conversation)
+                    val newConversation = result.conversation
+                    // update conversations locally
+                    _conversations.value = listOf(newConversation) + _conversations.value
+                    onBackClick()
                 }
 
                 is CreateConversationResult.Error.Unauthorized -> {

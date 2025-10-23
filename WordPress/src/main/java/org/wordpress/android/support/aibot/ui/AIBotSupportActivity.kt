@@ -141,7 +141,7 @@ class AIBotSupportActivity : AppCompatActivity() {
                             isLoading = isLoadingConversation,
                             isBotTyping = isBotTyping,
                             canSendMessage = canSendMessage,
-                            onBackClick = { viewModel.onBackFromDetailClick() },
+                            onBackClick = { viewModel.onBackClick() },
                             onSendMessage = { text ->
                                 viewModel.sendMessage(text)
                             }

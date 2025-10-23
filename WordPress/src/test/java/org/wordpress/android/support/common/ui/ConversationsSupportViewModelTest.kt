@@ -278,7 +278,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.selectedConversation.value).isNotNull
 
-        viewModel.onBackFromDetailClick()
+        viewModel.onBackClick()
         advanceUntilIdle()
 
         assertThat(viewModel.selectedConversation.value).isNull()
@@ -293,7 +293,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
             }
         }
 
-        viewModel.onBackFromDetailClick()
+        viewModel.onBackClick()
         advanceUntilIdle()
 
         assertThat(emittedEvent).isEqualTo(ConversationsSupportViewModel.NavigationEvent.NavigateBack)

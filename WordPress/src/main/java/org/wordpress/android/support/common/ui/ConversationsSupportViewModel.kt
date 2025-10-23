@@ -155,7 +155,7 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
 
     abstract suspend fun getConversation(conversationId: Long): ConversationType?
 
-    fun onBackFromDetailClick() {
+    fun onBackClick() {
         viewModelScope.launch {
             _selectedConversation.value = null
             _navigationEvents.emit(NavigationEvent.NavigateBack)

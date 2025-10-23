@@ -135,7 +135,7 @@ class HESupportActivity : AppCompatActivity() {
                             conversation = conversation,
                             isLoading = isLoadingConversation,
                             isSendingMessage = isSendingMessage,
-                            onBackClick = { viewModel.onBackFromDetailClick() },
+                            onBackClick = { viewModel.onBackClick() },
                             onSendMessage = { message, includeAppLogs ->
                                 viewModel.onAddMessageToConversation(
                                     message = message,
@@ -151,7 +151,7 @@ class HESupportActivity : AppCompatActivity() {
                     val isSendingNewConversation by viewModel.isSendingNewConversation.collectAsState()
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
-                        onBackClick = { viewModel.onBackFromDetailClick() },
+                        onBackClick = { viewModel.onBackClick() },
                         onSubmit = { category, subject, messageText, siteAddress ->
                             viewModel.onSendNewConversation(
                                 subject = subject,
