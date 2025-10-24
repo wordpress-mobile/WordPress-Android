@@ -1,6 +1,7 @@
 package org.wordpress.android.support.he.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.filled.AddPhotoAlternate
+import androidx.compose.material3.OutlinedButton
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
@@ -84,16 +87,24 @@ fun TicketMainContentView(
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
-        Button(
+        OutlinedButton(
             onClick = { /* Placeholder for add screenshots */ },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
             shape = RoundedCornerShape(12.dp),
-            enabled = enabled
+            enabled = enabled,
+            border = BorderStroke(
+                width = 1.dp,
+                color = if (enabled) {
+                    MaterialTheme.colorScheme.outline
+                } else {
+                    MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                }
+            )
         ) {
             Icon(
-                imageVector = Icons.Default.CameraAlt,
+                imageVector = Icons.Default.AddPhotoAlternate,
                 contentDescription = null,
                 modifier = Modifier.size(20.dp)
             )
