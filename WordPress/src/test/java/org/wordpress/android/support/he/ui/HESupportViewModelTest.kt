@@ -1,5 +1,6 @@
 package org.wordpress.android.support.he.ui
 
+import androidx.compose.ui.text.AnnotatedString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -361,6 +362,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         return SupportMessage(
             id = id,
             rawText = text,
+            formattedText = AnnotatedString(text),
             createdAt = Date(),
             authorName = if (authorIsUser) "User" else "Support",
             authorIsUser = authorIsUser

@@ -1,5 +1,6 @@
 package org.wordpress.android.support.aibot.ui
 
+import androidx.compose.ui.text.AnnotatedString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -388,6 +389,7 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
         return BotMessage(
             id = id,
             rawText = text,
+            formattedText = AnnotatedString(text),
             date = Date(),
             isWrittenByUser = isWrittenByUser
         )
