@@ -128,7 +128,7 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
         val selectedConversation = viewModel.selectedConversation.value
         assertThat(selectedConversation?.messages).isNotEmpty
         assertThat(selectedConversation?.messages?.any { it.isWrittenByUser }).isTrue
-        assertThat(selectedConversation?.messages?.any { it.text == "Hello bot" }).isTrue
+        assertThat(selectedConversation?.messages?.any { it.rawText == "Hello bot" }).isTrue
     }
 
     @Test
@@ -245,9 +245,9 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
         val selectedConversation = viewModel.selectedConversation.value
         assertThat(selectedConversation?.messages).hasSize(2)
         assertThat(selectedConversation?.messages?.first()?.isWrittenByUser).isTrue
-        assertThat(selectedConversation?.messages?.first()?.text).isEqualTo("Hello bot")
+        assertThat(selectedConversation?.messages?.first()?.rawText).isEqualTo("Hello bot")
         assertThat(selectedConversation?.messages?.last()?.isWrittenByUser).isFalse
-        assertThat(selectedConversation?.messages?.last()?.text).isEqualTo("Bot response")
+        assertThat(selectedConversation?.messages?.last()?.rawText).isEqualTo("Bot response")
     }
 
     @Test
@@ -387,7 +387,7 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
     ): BotMessage {
         return BotMessage(
             id = id,
-            text = text,
+            rawText = text,
             date = Date(),
             isWrittenByUser = isWrittenByUser
         )

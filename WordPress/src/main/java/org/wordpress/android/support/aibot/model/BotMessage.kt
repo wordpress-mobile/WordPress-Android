@@ -7,7 +7,7 @@ import java.util.Date
 @Immutable
 data class BotMessage(
     val id: Long,
-    val text: String,
+    val rawText: String,
     val formattedText: AnnotatedString,
     val date: Date,
     val isWrittenByUser: Boolean

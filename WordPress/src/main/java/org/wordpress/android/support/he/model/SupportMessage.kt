@@ -7,7 +7,7 @@ import java.util.Date
 @Immutable
 data class SupportMessage(
     val id: Long,
-    val text: String,
+    val rawText: String,
     val formattedText: AnnotatedString,
     val createdAt: Date,
     val authorName: String,

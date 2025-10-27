@@ -360,7 +360,7 @@ class HESupportViewModelTest : BaseUnitTest() {
     ): SupportMessage {
         return SupportMessage(
             id = id,
-            text = text,
+            rawText = text,
             createdAt = Date(),
             authorName = if (authorIsUser) "User" else "Support",
             authorIsUser = authorIsUser

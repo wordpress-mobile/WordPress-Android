@@ -364,7 +364,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
     private fun uniffi.wp_api.SupportMessage.toSupportMessage(): SupportMessage =
         SupportMessage(
             id = this.id.toLong(),
-            text = this.content,
+            rawText = this.content,
             createdAt = this.createdAt,
             authorName = when (this.author) {
                 is SupportMessageAuthor.User -> (this.author as SupportMessageAuthor.User).v1.displayName

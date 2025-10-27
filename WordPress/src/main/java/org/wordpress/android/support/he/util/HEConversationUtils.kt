@@ -22,23 +22,25 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
             messages = listOf(
                 SupportMessage(
                     id = 1,
-                    text = "",
-                    formattedText = AnnotatedString("Hello! My website has been loading very slowly for the past few days."),
+                    rawText = "",
+                    formattedText = AnnotatedString("Hello! My website has been loading very slowly for " +
+                            "the past few days."),
                     createdAt = Date(oneHourAgo.time - 1800000),
                     authorName = "You",
                     authorIsUser = true
                 ),
                 SupportMessage(
                     id = 2,
-                    text = "",
-                    formattedText = AnnotatedString("Hi there! I'd be happy to help you with that. Can you share your site URL?"),
+                    rawText = "",
+                    formattedText = AnnotatedString("Hi there! I'd be happy to help you with that. " +
+                            "Can you share your site URL?"),
                     createdAt = Date(oneHourAgo.time - 900000),
                     authorName = "Support Agent",
                     authorIsUser = false
                 ),
                 SupportMessage(
                     id = 3,
-                    text = "",
+                    rawText = "",
                     formattedText = AnnotatedString("Sure, it's example.wordpress.com"),
                     createdAt = oneHourAgo,
                     authorName = "You",
@@ -56,7 +58,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
             messages = listOf(
                 SupportMessage(
                     id = 4,
-                    text = "",
+                    rawText = "",
                     formattedText = AnnotatedString("I'm trying to install a new plugin but getting an error."),
                     createdAt = Date(twoDaysAgo.time - 3600000),
                     authorName = "You",
@@ -64,7 +66,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                 ),
                 SupportMessage(
                     id = 5,
-                    text = "",
+                    rawText = "",
                     formattedText = AnnotatedString("I can help with that! What's the error message you're seeing?"),
                     createdAt = twoDaysAgo,
                     authorName = "Support Agent",
@@ -82,7 +84,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
             messages = listOf(
                 SupportMessage(
                     id = 6,
-                    text = "",
+                    rawText = "",
                     formattedText = AnnotatedString("I need help setting up my custom domain."),
                     createdAt = oneWeekAgo,
                     authorName = "You",

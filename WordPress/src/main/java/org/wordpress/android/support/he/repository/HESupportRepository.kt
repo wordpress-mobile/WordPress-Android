@@ -195,7 +195,7 @@ class HESupportRepository @Inject constructor(
     private fun uniffi.wp_api.SupportMessage.toSupportMessage(): SupportMessage =
         SupportMessage(
             id = this.id.toLong(),
-            text = this.content,
+            rawText = this.content,
             formattedText = markdownToAnnotatedString(this.content),
             createdAt = this.createdAt,
             authorName = when (this.author) {

@@ -68,7 +68,7 @@ class AIBotSupportViewModel @Inject constructor(
                 val now = Date()
                 val botMessage = BotMessage(
                     id = System.currentTimeMillis(),
-                    text = message,
+                    rawText = message,
                     formattedText = markdownToAnnotatedString(message),
                     date = now,
                     isWrittenByUser = true
@@ -85,7 +85,7 @@ class AIBotSupportViewModel @Inject constructor(
 
                 if (conversation != null) {
                     val finalConversation = conversation.copy(
-                        lastMessage = conversation.messages.last().text,
+                        lastMessage = conversation.messages.last().rawText,
                         messages = (_selectedConversation.value?.messages ?: emptyList()) + conversation.messages
                     )
                     // Update the conversations list

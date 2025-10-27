@@ -166,7 +166,7 @@ class AIBotSupportRepository @Inject constructor(
     private fun uniffi.wp_api.BotMessage.toBotMessage(): BotMessage =
         BotMessage(
             id = messageId.toLong(),
-            text = content,
+            rawText = content,
             formattedText = markdownToAnnotatedString(content),
             date = createdAt,
             isWrittenByUser = role == "user"

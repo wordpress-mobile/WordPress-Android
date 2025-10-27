@@ -64,16 +64,18 @@ fun generateSampleBotConversations(): List<BotConversation> {
             messages = listOf(
                 BotMessage(
                     id = 1001,
-                    text = "",
-                    formattedText = AnnotatedString("Hi, I'm having trouble with the app. It keeps crashing when I try to open it after " +
+                    rawText = "",
+                    formattedText = AnnotatedString("Hi, I'm having trouble with the app. It keeps crashing " +
+                            "when I try to open it after " +
                             "the latest update. Can you help?"),
                     date = Date(now.time - 3_600_000), // 1 hour ago
                     isWrittenByUser = true
                 ),
                 BotMessage(
                     id = 1002,
-                    text = "",
-                    formattedText = AnnotatedString("I'm sorry to hear you're experiencing crashes! I'd be happy to help you troubleshoot " +
+                    rawText = "",
+                    formattedText = AnnotatedString("I'm sorry to hear you're experiencing crashes! I'd be " +
+                            "happy to help you troubleshoot " +
                             "this issue. Let me ask a few questions to better understand what's happening. " +
                             "What device are you using and what Android version are you running?"),
                     date = Date(now.time - 3_540_000), // 59 minutes ago
@@ -81,15 +83,17 @@ fun generateSampleBotConversations(): List<BotConversation> {
                 ),
                 BotMessage(
                     id = 1003,
-                    text = "",
-                    formattedText = AnnotatedString("I'm using a Pixel 8 Pro with Android 14. The app worked fine before the update yesterday."),
+                    rawText = "",
+                    formattedText = AnnotatedString("I'm using a Pixel 8 Pro with Android 14. The app worked " +
+                            "fine before the update yesterday."),
                     date = Date(now.time - 3_480_000), // 58 minutes ago
                     isWrittenByUser = true
                 ),
                 BotMessage(
                     id = 1004,
-                    text = "",
-                    formattedText = AnnotatedString("Thank you for that information! Android 14 on Pixel 8 Pro should work well with our " +
+                    rawText = "",
+                    formattedText = AnnotatedString("Thank you for that information! Android 14 on Pixel 8 Pro " +
+                            "should work well with our " +
                             "latest update. Let's try a few troubleshooting steps:\n\n1. First, try force-closing " +
                             "the app and reopening it\n2. If that doesn't work, try restarting your phone\n" +
                             "3. As a last resort, you might need to clear app data or reinstall\n\nCan you try " +
@@ -99,9 +103,10 @@ fun generateSampleBotConversations(): List<BotConversation> {
                 ),
                 BotMessage(
                     id = 1005,
-                    text = "" +
+                    rawText = "" +
                             "I tap the app icon. Should I try reinstalling?",
-                    formattedText = AnnotatedString("I tried force-closing and restarting my phone, but it's still crashing immediately when " +
+                    formattedText = AnnotatedString("I tried force-closing and restarting my phone, but it's " +
+                            "still crashing immediately when " +
                             "I tap the app icon. Should I try reinstalling?"),
                     date = Date(now.time - 3_300_000), // 55 minutes ago
                     isWrittenByUser = true
@@ -118,15 +123,17 @@ fun generateSampleBotConversations(): List<BotConversation> {
             messages = listOf(
                 BotMessage(
                     id = 2001,
-                    text = "",
-                    formattedText = AnnotatedString("I just created my WordPress site and need help getting started. Where should I begin?"),
+                    rawText = "",
+                    formattedText = AnnotatedString("I just created my WordPress site and need help getting " +
+                            "started. Where should I begin?"),
                     date = Date(now.time - 7_800_000),
                     isWrittenByUser = true
                 ),
                 BotMessage(
                     id = 2002,
-                    text = "",
-                    formattedText = AnnotatedString("Congratulations on your new site! I'd be happy to help you get started. Here are the key " +
+                    rawText = "",
+                    formattedText = AnnotatedString("Congratulations on your new site! I'd be happy to help " +
+                            "you get started. Here are the key " +
                             "first steps:\n\n1. Choose and customize a theme\n2. Create your first pages (Home, " +
                             "About, Contact)\n3. Set up your site navigation\n4. Add your first blog post\n\n" +
                             "Which of these would you like to tackle first?"),
@@ -145,15 +152,17 @@ fun generateSampleBotConversations(): List<BotConversation> {
             messages = listOf(
                 BotMessage(
                     id = 3001,
-                    text = "",
-                    formattedText = AnnotatedString("How can I change the colors on my site? I want to match my brand."),
+                    rawText = "",
+                    formattedText = AnnotatedString("How can I change the colors on my site? I want to " +
+                            "match my brand."),
                     date = Date(now.time - 87_000_000),
                     isWrittenByUser = true
                 ),
                 BotMessage(
                     id = 3002,
-                    text = "",
-                    formattedText = AnnotatedString("You can change the colors by going to Appearance → Customize → Colors in your dashboard. " +
+                    rawText = "",
+                    formattedText = AnnotatedString("You can change the colors by going to Appearance → " +
+                            "Customize → Colors in your dashboard. " +
                             "Most themes allow you to customize colors for backgrounds, text, links, and buttons. " +
                             "Would you like step-by-step instructions?"),
                     date = Date(now.time - 86_400_000),
