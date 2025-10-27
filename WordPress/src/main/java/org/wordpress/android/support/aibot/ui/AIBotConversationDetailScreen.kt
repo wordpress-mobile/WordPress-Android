@@ -39,8 +39,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
@@ -65,24 +65,47 @@ fun AIBotConversationDetailScreen(
     conversation: BotConversation,
     isLoading: Boolean,
     isBotTyping: Boolean,
+    isLoadingOlderMessages: Boolean,
+    hasMorePages: Boolean,
     canSendMessage: Boolean,
     userName: String,
     onBackClick: () -> Unit,
-    onSendMessage: (String) -> Unit
+    onSendMessage: (String) -> Unit,
+    onLoadOlderMessages: () -> Unit
 ) {
     var messageText by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
 
-    // Scroll to bottom when conversation changes or messages are added or typing state changes
-    LaunchedEffect(conversation.id, conversation.messages.size, isBotTyping) {
-        if (conversation.messages.isNotEmpty() || isBotTyping) {
-            coroutineScope.launch {
-                // +2 for welcome header and spacer, +1 if typing indicator is showing
-                val itemCount = conversation.messages.size + 2 + if (isBotTyping) 1 else 0
-                listState.animateScrollToItem(itemCount)
-            }
+    // Scroll to bottom when new messages are added at the end (not when loading older messages at the beginning)
+    // Only scroll to bottom when:
+    // 1. The last message changes (new message added at the end)
+    // 2. Bot starts typing
+    // 3. We're not loading older messages (which adds messages at the beginning)
+    LaunchedEffect(conversation.id, conversation.messages.lastOrNull()?.id, isBotTyping) {
+        if ((conversation.messages.isNotEmpty() || isBotTyping) && !isLoadingOlderMessages) {
+            listState.scrollToItem(listState.layoutInfo.totalItemsCount - 1)
         }
+    }
+
+    // Detect when user scrolls to the top to load older messages
+    LaunchedEffect(listState, isLoadingOlderMessages, isLoading, hasMorePages) {
+        snapshotFlow { listState.firstVisibleItemIndex }
+            .collect { firstVisibleIndex ->
+                // Trigger pagination when user scrolls to the top
+                // The top threshold depends on whether we're currently showing a loading indicator
+                val shouldLoadMore = if (isLoadingOlderMessages) {
+                    // If loading indicator is shown at position 0, we shouldn't trigger again
+                    false
+                } else {
+                    // Check if we're at the very top (index 0)
+                    // Note: when hasMorePages=true, there's no welcome header, so index 0 is the first message
+                    firstVisibleIndex == 0
+                }
+
+                if (shouldLoadMore && !isLoading && hasMorePages) {
+                    onLoadOlderMessages()
+                }
+            }
     }
 
     val resources = LocalResources.current
@@ -128,8 +151,25 @@ fun AIBotConversationDetailScreen(
                 state = listState,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                item {
-                    WelcomeHeader(userName)
+                // Show loading indicator at top when loading older messages
+                if (isLoadingOlderMessages) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+
+                // Only show welcome header when we're at the beginning (no more pages to load)
+                if (!hasMorePages) {
+                    item {
+                        WelcomeHeader(userName)
+                    }
                 }
 
                 // Key ensures the items recompose when messages change
@@ -369,9 +409,12 @@ private fun ConversationDetailScreenPreview() {
             conversation = sampleConversation,
             isLoading = false,
             isBotTyping = false,
+            isLoadingOlderMessages = false,
+            hasMorePages = false,
             canSendMessage = true,
             onBackClick = { },
-            onSendMessage = { }
+            onSendMessage = { },
+            onLoadOlderMessages = { }
         )
     }
 }
@@ -389,9 +432,12 @@ private fun ConversationDetailScreenPreviewDark() {
             conversation = sampleConversation,
             isLoading = false,
             isBotTyping = false,
+            isLoadingOlderMessages = false,
+            hasMorePages = false,
             canSendMessage = true,
             onBackClick = { },
-            onSendMessage = { }
+            onSendMessage = { },
+            onLoadOlderMessages = { }
         )
     }
 }
@@ -409,9 +455,12 @@ private fun ConversationDetailScreenWordPressPreview() {
             conversation = sampleConversation,
             isLoading = false,
             isBotTyping = false,
+            isLoadingOlderMessages = false,
+            hasMorePages = false,
             canSendMessage = true,
             onBackClick = { },
-            onSendMessage = { }
+            onSendMessage = { },
+            onLoadOlderMessages = { }
         )
     }
 }
@@ -429,9 +478,12 @@ private fun ConversationDetailScreenPreviewWordPressDark() {
             conversation = sampleConversation,
             isLoading = false,
             isBotTyping = false,
+            isLoadingOlderMessages = false,
+            hasMorePages = false,
             canSendMessage = true,
             onBackClick = { },
-            onSendMessage = { }
+            onSendMessage = { },
+            onLoadOlderMessages = { }
         )
     }
 }
