@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.aibot.model.BotConversation
@@ -35,6 +37,7 @@ class AIBotSupportViewModel @Inject constructor(
     private val _hasMorePages = MutableStateFlow(true)
     val hasMorePages: StateFlow<Boolean> = _hasMorePages.asStateFlow()
 
+    private val paginationMutex = Mutex()
     private var currentPage = 1L
 
     override fun initRepository(accessToken: String) {
@@ -49,8 +52,6 @@ class AIBotSupportViewModel @Inject constructor(
         _hasMorePages.value = true
         return aiBotSupportRepository.loadConversation(conversationId, pageNumber = currentPage).also { conversation ->
             _canSendMessage.value = true
-            // Check if there are more pages (empty messages means end of pagination)
-            _hasMorePages.value = conversation?.messages?.isNotEmpty() == true
         }
     }
 
@@ -78,43 +79,51 @@ class AIBotSupportViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            try {
-                _isLoadingOlderMessages.value = true
-                val conversationId = _selectedConversation.value?.id ?: return@launch
+            // Use mutex to prevent concurrent pagination requests
+            paginationMutex.withLock {
+                // Double-check conditions after acquiring lock
+                if (!_hasMorePages.value || _isLoadingOlderMessages.value) {
+                    return@launch
+                }
 
-                currentPage++
-                val olderMessagesConversation = aiBotSupportRepository.loadConversation(
-                    conversationId,
-                    pageNumber = currentPage
-                )
+                try {
+                    _isLoadingOlderMessages.value = true
+                    val conversationId = _selectedConversation.value?.id ?: return@withLock
 
-                if (olderMessagesConversation != null) {
-                    val olderMessages = olderMessagesConversation.messages
+                    currentPage++
+                    val olderMessagesConversation = aiBotSupportRepository.loadConversation(
+                        conversationId,
+                        pageNumber = currentPage
+                    )
 
-                    // Check if we've reached the end (empty messages)
-                    if (olderMessages.isEmpty()) {
-                        _hasMorePages.value = false
+                    if (olderMessagesConversation != null) {
+                        val olderMessages = olderMessagesConversation.messages
+
+                        // Check if we've reached the end (empty messages)
+                        if (olderMessages.isEmpty()) {
+                            _hasMorePages.value = false
+                        } else {
+                            // Prepend older messages to the existing ones
+                            // (older messages go at the beginning of the list)
+                            val currentMessages = _selectedConversation.value?.messages ?: emptyList()
+                            _selectedConversation.value = _selectedConversation.value?.copy(
+                                messages = olderMessages + currentMessages
+                            )
+                        }
                     } else {
-                        // Prepend older messages to the existing ones
-                        // (older messages go at the beginning of the list)
-                        val currentMessages = _selectedConversation.value?.messages ?: emptyList()
-                        _selectedConversation.value = _selectedConversation.value?.copy(
-                            messages = olderMessages + currentMessages
-                        )
+                        // Error loading, stay on current page
+                        currentPage--
+                        _errorMessage.value = ErrorType.GENERAL
+                        appLogWrapper.e(AppLog.T.SUPPORT, "Error loading older messages: response is null")
                     }
-                } else {
-                    // Error loading, stay on current page
+                } catch (throwable: Throwable) {
                     currentPage--
                     _errorMessage.value = ErrorType.GENERAL
-                    appLogWrapper.e(AppLog.T.SUPPORT, "Error loading older messages: response is null")
+                    appLogWrapper.e(AppLog.T.SUPPORT, "Error loading older messages: " +
+                            "${throwable.message} - ${throwable.stackTraceToString()}")
+                } finally {
+                    _isLoadingOlderMessages.value = false
                 }
-            } catch (throwable: Throwable) {
-                currentPage--
-                _errorMessage.value = ErrorType.GENERAL
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error loading older messages: " +
-                        "${throwable.message} - ${throwable.stackTraceToString()}")
-            } finally {
-                _isLoadingOlderMessages.value = false
             }
         }
     }

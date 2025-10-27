@@ -57,6 +57,8 @@ import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
+private const val PAGINATION_TRIGGER_THRESHOLD = 4
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AIBotConversationDetailScreen(
@@ -90,10 +92,7 @@ fun AIBotConversationDetailScreen(
     LaunchedEffect(listState, isLoadingOlderMessages, isLoading, hasMorePages) {
         snapshotFlow { listState.firstVisibleItemIndex }
             .collect { firstVisibleIndex ->
-                // Trigger pagination when user reaches the 4th message from the top
-                val threshold = 4
-
-                val shouldLoadMore = !isLoadingOlderMessages && firstVisibleIndex <= threshold
+                val shouldLoadMore = !isLoadingOlderMessages && firstVisibleIndex <= PAGINATION_TRIGGER_THRESHOLD
 
                 if (shouldLoadMore && !isLoading && hasMorePages) {
                     onLoadOlderMessages()
