@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.model.UserInfo
@@ -58,8 +59,8 @@ class SupportViewModel @Inject constructor(
         )
 
         _optionsVisibility.value = SupportOptionsVisibility(
-            showAskTheBots = hasAccessToken,
-            showAskHappinessEngineers = hasAccessToken
+            showAskTheBots = hasAccessToken && BuildConfig.IS_JETPACK_APP,
+            showAskHappinessEngineers = hasAccessToken && BuildConfig.IS_JETPACK_APP
         )
     }
 

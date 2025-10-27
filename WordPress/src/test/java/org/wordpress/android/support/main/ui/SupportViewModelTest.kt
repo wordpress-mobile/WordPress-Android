@@ -142,8 +142,13 @@ class SupportViewModelTest : BaseUnitTest() {
         viewModel.init()
 
         // Then
-        assertThat(viewModel.optionsVisibility.value.showAskTheBots).isTrue()
-        assertThat(viewModel.optionsVisibility.value.showAskHappinessEngineers).isTrue()
+        // Note: For WordPress variant (IS_JETPACK_APP=false), these options should be hidden
+        // For Jetpack variant (IS_JETPACK_APP=true), they should be shown when user has access token
+        // This test will behave differently based on which variant is being tested
+        assertThat(viewModel.optionsVisibility.value.showAskTheBots)
+            .isEqualTo(org.wordpress.android.BuildConfig.IS_JETPACK_APP)
+        assertThat(viewModel.optionsVisibility.value.showAskHappinessEngineers)
+            .isEqualTo(org.wordpress.android.BuildConfig.IS_JETPACK_APP)
     }
 
     @Test
