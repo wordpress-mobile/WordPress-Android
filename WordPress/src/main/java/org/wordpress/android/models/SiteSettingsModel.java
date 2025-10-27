@@ -69,6 +69,7 @@ public class SiteSettingsModel {
     private static final String AMP_ENABLED_COLUMN_NAME = "ampEnabled";
     private static final String JETPACK_SEARCH_SUPPORTED_COLUMN_NAME = "jetpackSearchSupported";
     private static final String JETPACK_SEARCH_ENABLED_COLUMN_NAME = "jetpackSearchEnabled";
+    private static final String USE_THEME_STYLES_COLUMN_NAME = "useThemeStyles";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
 
@@ -104,6 +105,8 @@ public class SiteSettingsModel {
                                                    + " add " + JETPACK_SEARCH_SUPPORTED_COLUMN_NAME + " BOOLEAN;";
     public static final String ADD_SITE_ICON = "alter table " + SETTINGS_TABLE_NAME
                                                + " add " + SITE_ICON_COLUMN_NAME + " INTEGER;";
+    public static final String ADD_USE_THEME_STYLES = "alter table " + SETTINGS_TABLE_NAME
+                                                      + " add " + USE_THEME_STYLES_COLUMN_NAME + " BOOLEAN DEFAULT 1;";
 
     public static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS "
@@ -194,6 +197,7 @@ public class SiteSettingsModel {
     public boolean ampEnabled;
     public boolean jetpackSearchSupported;
     public boolean jetpackSearchEnabled;
+    public boolean useThemeStyles = true;
     public String quotaDiskSpace;
 
     @Override
@@ -238,6 +242,7 @@ public class SiteSettingsModel {
                && ampSupported == otherModel.ampSupported
                && jetpackSearchEnabled == otherModel.jetpackSearchEnabled
                && jetpackSearchSupported == otherModel.jetpackSearchSupported
+               && useThemeStyles == otherModel.useThemeStyles
                && maxLinks == otherModel.maxLinks
                && equals(defaultPostFormat, otherModel.defaultPostFormat)
                && holdForModeration != null
@@ -303,6 +308,7 @@ public class SiteSettingsModel {
         ampEnabled = other.ampEnabled;
         jetpackSearchSupported = other.jetpackSearchSupported;
         jetpackSearchEnabled = other.jetpackSearchEnabled;
+        useThemeStyles = other.useThemeStyles;
         if (other.holdForModeration != null) {
             holdForModeration = new ArrayList<>(other.holdForModeration);
         }
@@ -367,6 +373,7 @@ public class SiteSettingsModel {
         ampEnabled = getBooleanFromCursor(cursor, AMP_ENABLED_COLUMN_NAME);
         jetpackSearchSupported = getBooleanFromCursor(cursor, JETPACK_SEARCH_SUPPORTED_COLUMN_NAME);
         jetpackSearchEnabled = getBooleanFromCursor(cursor, JETPACK_SEARCH_ENABLED_COLUMN_NAME);
+        useThemeStyles = getBooleanFromCursor(cursor, USE_THEME_STYLES_COLUMN_NAME);
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
         String denylistKeys = getStringFromCursor(cursor, DENYLIST_KEYS_COLUMN_NAME);
@@ -459,6 +466,7 @@ public class SiteSettingsModel {
         values.put(AMP_ENABLED_COLUMN_NAME, ampEnabled);
         values.put(JETPACK_SEARCH_SUPPORTED_COLUMN_NAME, jetpackSearchSupported);
         values.put(JETPACK_SEARCH_ENABLED_COLUMN_NAME, jetpackSearchEnabled);
+        values.put(USE_THEME_STYLES_COLUMN_NAME, useThemeStyles);
 
         StringBuilder moderationKeys = new StringBuilder();
         if (holdForModeration != null) {

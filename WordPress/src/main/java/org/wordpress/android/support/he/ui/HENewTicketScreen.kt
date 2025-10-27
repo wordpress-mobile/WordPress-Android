@@ -221,8 +221,9 @@ private fun SendButton(
     ) {
         Box(
             modifier = Modifier
+                .fillMaxWidth()
                 .imePadding()
-                .padding(20.dp)
+                .padding(16.dp)
         ) {
             Button(
                 onClick = onClick,

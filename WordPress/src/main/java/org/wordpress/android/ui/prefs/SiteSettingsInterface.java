@@ -620,6 +620,14 @@ public abstract class SiteSettingsInterface {
         mSettings.jetpackSearchEnabled = enabled;
     }
 
+    public boolean getUseThemeStyles() {
+        return mSettings.useThemeStyles;
+    }
+
+    public void setUseThemeStyles(boolean enabled) {
+        mSettings.useThemeStyles = enabled;
+    }
+
     public boolean isJetpackMonitorEnabled() {
         return mJpSettings.monitorActive;
     }
