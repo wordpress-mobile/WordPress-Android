@@ -75,6 +75,8 @@ class AIBotSupportRepository @Inject constructor(
                 chatId = chatId.toULong(),
                 params = GetBotConversationParams(
                     pageNumber = pageNumber.toULong(),
+                    // TODO: this is set to 4 for testing purpose
+                    // The TODO is preventing the Pr to be merged. Change it to a higher number before that
                     itemsPerPage = 4U
                 )
             )
