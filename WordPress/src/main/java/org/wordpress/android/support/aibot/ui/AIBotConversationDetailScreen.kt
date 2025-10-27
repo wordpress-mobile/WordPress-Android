@@ -57,6 +57,7 @@ import org.wordpress.android.support.aibot.util.generateSampleBotConversations
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -274,7 +275,7 @@ private fun MessageBubble(message: BotMessage, resources: android.content.res.Re
         ) {
             Column {
                 Text(
-                    text = message.text,
+                    text = markdownToAnnotatedString(message.text),
                     style = MaterialTheme.typography.bodyMedium,
                     color = if (message.isWrittenByUser) {
                         MaterialTheme.colorScheme.onPrimaryContainer

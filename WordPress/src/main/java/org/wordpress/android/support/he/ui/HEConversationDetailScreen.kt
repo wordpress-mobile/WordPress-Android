@@ -56,6 +56,7 @@ import org.wordpress.android.support.he.util.generateSampleHESupportConversation
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -290,7 +291,7 @@ private fun MessageItem(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = messageText,
+                text = markdownToAnnotatedString(messageText),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
