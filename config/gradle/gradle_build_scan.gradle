@@ -1,19 +1,18 @@
-
 // Only run build scan on CI builds.
-if (gradle.ext.isCi) {
-    develocity {
+develocity {
+    if (gradle.ext.secretProperties.get('measureBuildsEnabled')?.toBoolean() ?: false) {
         buildScan {
-            termsOfUseUrl = 'https://gradle.com/terms-of-service'
-            termsOfUseAgree = 'yes'
-            tag 'CI'
-            publishing.onlyIf { true }
-            uploadInBackground = false
-        }
-    }
-} else {
-    develocity {
-        buildScan {
-            publishing.onlyIf { false }
+            server = "https://develocity.a8c-ci.services/"
+            accessKey = gradle.ext.secretProperties["develocityToken"]
+
+            if (gradle.ext.isCi) {
+                uploadInBackground = false
+            } else {
+                obfuscation {
+                    hostname { "" }
+                    ipAddresses { it.collect { "0.0.0.0" } }
+                }
+            }
         }
     }
 }
