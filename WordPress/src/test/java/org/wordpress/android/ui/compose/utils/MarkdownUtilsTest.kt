@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.compose.utils
 
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
