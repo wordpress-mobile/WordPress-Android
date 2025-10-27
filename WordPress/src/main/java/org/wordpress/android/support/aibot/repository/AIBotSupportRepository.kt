@@ -15,6 +15,7 @@ import uniffi.wp_api.AddMessageToBotConversationParams
 import uniffi.wp_api.BotConversationSummary
 import uniffi.wp_api.CreateBotConversationParams
 import uniffi.wp_api.GetBotConversationParams
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -67,12 +68,15 @@ class AIBotSupportRepository @Inject constructor(
         }
     }
 
-    suspend fun loadConversation(chatId: Long): BotConversation? = withContext(ioDispatcher) {
+    suspend fun loadConversation(chatId: Long, pageNumber: Long = 1L): BotConversation? = withContext(ioDispatcher) {
         val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.supportBots().getBotConversation(
                 botId = BOT_ID,
                 chatId = chatId.toULong(),
-                params = GetBotConversationParams()
+                params = GetBotConversationParams(
+                    pageNumber = pageNumber.toULong(),
+                    itemsPerPage = 4U
+                )
             )
         }
         when (response) {
@@ -158,8 +162,8 @@ class AIBotSupportRepository @Inject constructor(
         BotConversation (
             id = chatId.toLong(),
             createdAt = createdAt,
-            mostRecentMessageDate = messages.last().createdAt,
-            lastMessage = messages.last().content,
+            mostRecentMessageDate = messages.lastOrNull()?.createdAt ?: Date(),
+            lastMessage = messages.lastOrNull()?.content.orEmpty(),
             messages = messages.map { it.toBotMessage() }
         )
 

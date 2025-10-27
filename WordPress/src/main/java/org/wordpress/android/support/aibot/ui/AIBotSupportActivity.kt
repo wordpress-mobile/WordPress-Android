@@ -131,6 +131,8 @@ class AIBotSupportActivity : AppCompatActivity() {
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isBotTyping by viewModel.isBotTyping.collectAsState()
+                    val isLoadingOlderMessages by viewModel.isLoadingOlderMessages.collectAsState()
+                    val hasMorePages by viewModel.hasMorePages.collectAsState()
                     val canSendMessage by viewModel.canSendMessage.collectAsState()
                     val userInfo by viewModel.userInfo.collectAsState()
                     selectedConversation?.let { conversation ->
@@ -140,10 +142,15 @@ class AIBotSupportActivity : AppCompatActivity() {
                             conversation = conversation,
                             isLoading = isLoadingConversation,
                             isBotTyping = isBotTyping,
+                            isLoadingOlderMessages = isLoadingOlderMessages,
+                            hasMorePages = hasMorePages,
                             canSendMessage = canSendMessage,
                             onBackClick = { viewModel.onBackClick() },
                             onSendMessage = { text ->
                                 viewModel.sendMessage(text)
+                            },
+                            onLoadOlderMessages = {
+                                viewModel.loadOlderMessages()
                             }
                         )
                     }
