@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.support.model.UserInfo
+import org.wordpress.android.support.common.model.UserInfo
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
@@ -22,11 +22,7 @@ class SupportViewModel @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
     sealed class NavigationEvent {
-        data class NavigateToAskTheBots(
-            val accessToken: String,
-            val userId: Long,
-            val userName: String
-        ) : NavigationEvent()
+        data object NavigateToAskTheBots : NavigationEvent()
         data object NavigateToLogin : NavigationEvent()
         data object NavigateToHelpCenter : NavigationEvent()
         data object NavigateToApplicationLogs : NavigationEvent()
@@ -38,7 +34,7 @@ class SupportViewModel @Inject constructor(
         val showAskHappinessEngineers: Boolean = true
     )
 
-    private val _userInfo = MutableStateFlow(UserInfo())
+    private val _userInfo = MutableStateFlow(UserInfo("", "", null))
     val userInfo: StateFlow<UserInfo> = _userInfo.asStateFlow()
 
     private val _optionsVisibility = MutableStateFlow(SupportOptionsVisibility())
@@ -80,21 +76,20 @@ class SupportViewModel @Inject constructor(
             if (!accountStore.hasAccessToken()) {
                 appLogWrapper.d(AppLog.T.SUPPORT, "Trying to open a bot conversation without access token")
             } else {
-                val account = accountStore.account
-                _navigationEvents.emit(
-                    NavigationEvent.NavigateToAskTheBots(
-                        accessToken = accountStore.accessToken!!, // access token has been checked before
-                        userId = account.userId,
-                        userName = account.displayName.ifEmpty { account.userName }
-                    )
-                )
+                _navigationEvents.emit(NavigationEvent.NavigateToAskTheBots)
             }
         }
     }
 
     fun onAskHappinessEngineersClick() {
         viewModelScope.launch {
-            _navigationEvents.emit(NavigationEvent.NavigateToAskHappinessEngineers)
+            // hasAccessToken() checks if it exists and it's not empty, not only the nullability.
+            // So, if it's true, then we are sure the token is not null
+            if (!accountStore.hasAccessToken()) {
+                appLogWrapper.d(AppLog.T.SUPPORT, "Trying to open a HE conversation without access token")
+            } else {
+                _navigationEvents.emit(NavigationEvent.NavigateToAskHappinessEngineers)
+            }
         }
     }
 

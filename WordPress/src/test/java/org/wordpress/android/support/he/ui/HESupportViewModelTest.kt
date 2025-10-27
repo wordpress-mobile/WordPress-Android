@@ -1,156 +1,99 @@
 package org.wordpress.android.support.he.ui
 
-import app.cash.turbine.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
+import org.wordpress.android.support.he.repository.CreateConversationResult
+import org.wordpress.android.support.he.repository.HESupportRepository
 import java.util.Date
 
 @ExperimentalCoroutinesApi
 class HESupportViewModelTest : BaseUnitTest() {
     @Mock
-    lateinit var accountStore: AccountStore
+    private lateinit var accountStore: AccountStore
 
     @Mock
-    lateinit var account: AccountModel
+    private lateinit var heSupportRepository: HESupportRepository
+
+    @Mock
+    private lateinit var appLogWrapper: AppLogWrapper
 
     private lateinit var viewModel: HESupportViewModel
 
+    private val testAccessToken = "test_access_token"
+    private val testUserId = 12345L
+    private val testUserName = "Test User"
+    private val testUserEmail = "test@example.com"
+    private val testAvatarUrl = "https://example.com/avatar.jpg"
+
     @Before
     fun setUp() {
+        val accountModel = AccountModel().apply {
+            displayName = testUserName
+            userName = "testuser"
+            email = testUserEmail
+            avatarUrl = testAvatarUrl
+            userId = testUserId
+        }
+        whenever(accountStore.account).thenReturn(accountModel)
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(accountStore.accessToken).thenReturn(testAccessToken)
+
         viewModel = HESupportViewModel(
-            accountStore = accountStore
+            accountStore = accountStore,
+            heSupportRepository = heSupportRepository,
+            appLogWrapper = appLogWrapper
         )
     }
 
-    // region init() tests
+    // region StateFlow initial values tests
 
     @Test
-    fun `init loads user info when account exists`() {
-        // Given
-        val displayName = "Test User"
-        val email = "test@example.com"
-        val avatarUrl = "https://example.com/avatar.jpg"
-
-        whenever(accountStore.account).thenReturn(account)
-        whenever(account.displayName).thenReturn(displayName)
-        whenever(account.email).thenReturn(email)
-        whenever(account.avatarUrl).thenReturn(avatarUrl)
-
-        // When
-        viewModel.init()
-
-        // Then
-        assertThat(viewModel.userInfo.value.userName).isEqualTo(displayName)
-        assertThat(viewModel.userInfo.value.userEmail).isEqualTo(email)
-        assertThat(viewModel.userInfo.value.avatarUrl).isEqualTo(avatarUrl)
-    }
-
-    @Test
-    fun `init uses userName when displayName is empty`() {
-        // Given
-        val userName = "testuser"
-        val email = "test@example.com"
-
-        whenever(accountStore.account).thenReturn(account)
-        whenever(account.displayName).thenReturn("")
-        whenever(account.userName).thenReturn(userName)
-        whenever(account.email).thenReturn(email)
-        whenever(account.avatarUrl).thenReturn("")
-
-        // When
-        viewModel.init()
-
-        // Then
-        assertThat(viewModel.userInfo.value.userName).isEqualTo(userName)
-    }
-
-    @Test
-    fun `init sets avatarUrl to null when empty`() {
-        // Given
-        whenever(accountStore.account).thenReturn(account)
-        whenever(account.displayName).thenReturn("Test User")
-        whenever(account.email).thenReturn("test@example.com")
-        whenever(account.avatarUrl).thenReturn("")
-
-        // When
-        viewModel.init()
-
-        // Then
-        assertThat(viewModel.userInfo.value.avatarUrl).isNull()
+    fun `isSendingNewConversation is false initially`() {
+        assertThat(viewModel.isSendingMessage.value).isFalse
     }
 
     // endregion
 
-    // region onConversationClick() tests
+    // region initRepository() override tests
 
     @Test
-    fun `onConversationClick updates selected conversation`() {
-        // Given
-        val conversation = createTestConversation()
+    fun `initRepository calls repository init with correct access token`() = test {
+        whenever(heSupportRepository.loadConversations()).thenReturn(emptyList())
 
-        // When
-        viewModel.onConversationClick(conversation)
+        viewModel.init()
+        advanceUntilIdle()
 
-        // Then
-        assertThat(viewModel.selectedConversation.value).isEqualTo(conversation)
-    }
-
-    @Test
-    fun `onConversationClick emits NavigateToConversationDetail event`() = test {
-        // Given
-        val conversation = createTestConversation()
-
-        // When
-        viewModel.navigationEvents.test {
-            viewModel.onConversationClick(conversation)
-
-            // Then
-            val event = awaitItem()
-            assertThat(event).isInstanceOf(HESupportViewModel.NavigationEvent.NavigateToConversationDetail::class.java)
-            val navigateEvent = event as HESupportViewModel.NavigationEvent.NavigateToConversationDetail
-            assertThat(navigateEvent.conversation).isEqualTo(conversation)
-        }
+        verify(heSupportRepository).init(testAccessToken)
     }
 
     // endregion
 
-    // region onBackFromDetailClick() tests
+    // region getConversations() override tests
 
     @Test
-    fun `onBackFromDetailClick emits NavigateBack event`() = test {
-        // When
-        viewModel.navigationEvents.test {
-            viewModel.onBackFromDetailClick()
+    fun `getConversations calls repository loadConversations`() = test {
+        val conversations = listOf(createTestConversation(1), createTestConversation(2))
+        whenever(heSupportRepository.loadConversations()).thenReturn(conversations)
 
-            // Then
-            val event = awaitItem()
-            assertThat(event).isEqualTo(HESupportViewModel.NavigationEvent.NavigateBack)
-        }
-    }
+        viewModel.init()
+        advanceUntilIdle()
 
-    // endregion
-
-    // region onCreateNewConversation() tests
-
-    @Test
-    fun `onCreateNewConversation emits NavigateToNewTicket event`() = test {
-        // When
-        viewModel.navigationEvents.test {
-            viewModel.onCreateNewConversation()
-
-            // Then
-            val event = awaitItem()
-            assertThat(event).isEqualTo(HESupportViewModel.NavigationEvent.NavigateToNewTicket)
-        }
+        verify(heSupportRepository).loadConversations()
+        assertThat(viewModel.conversations.value).isEqualTo(conversations)
     }
 
     // endregion
@@ -158,110 +101,246 @@ class HESupportViewModelTest : BaseUnitTest() {
     // region onSendNewConversation() tests
 
     @Test
-    fun `onSendNewConversation emits NavigateBack event`() = test {
-        // When
-        viewModel.navigationEvents.test {
-            viewModel.onSendNewConversation()
+    fun `onSendNewConversation creates new conversation successfully`() = test {
+        val newConversation = createTestConversation(1)
+        whenever(heSupportRepository.createConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+            attachments = emptyList()
+        )).thenReturn(CreateConversationResult.Success(newConversation))
 
-            // Then
-            val event = awaitItem()
-            assertThat(event).isEqualTo(HESupportViewModel.NavigationEvent.NavigateBack)
-        }
+        viewModel.onSendNewConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+            attachments = emptyList()
+        )
+        advanceUntilIdle()
+
+        verify(heSupportRepository).createConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+            attachments = emptyList()
+        )
+    }
+
+    @Test
+    fun `onSendNewConversation sets FORBIDDEN error on Unauthorized result`() = test {
+        whenever(heSupportRepository.createConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+            attachments = emptyList()
+        )).thenReturn(CreateConversationResult.Error.Forbidden)
+
+        viewModel.onSendNewConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+            attachments = emptyList()
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.FORBIDDEN)
+        verify(appLogWrapper).e(any(), eq("Unauthorized error creating HE conversation"))
+    }
+
+    @Test
+    fun `onSendNewConversation sets GENERAL error on GeneralError result`() = test {
+        whenever(heSupportRepository.createConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+            attachments = emptyList()
+        )).thenReturn(CreateConversationResult.Error.GeneralError)
+
+        viewModel.onSendNewConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+            attachments = emptyList()
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.GENERAL)
+        verify(appLogWrapper).e(any(), eq("General error creating HE conversation"))
+    }
+
+    @Test
+    fun `onSendNewConversation resets isSendingNewConversation even when error occurs`() = test {
+        whenever(heSupportRepository.createConversation(
+            any(), any(), any(), any()
+        )).thenReturn(CreateConversationResult.Error.GeneralError)
+
+        viewModel.onSendNewConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = emptyList(),
+            attachments = emptyList()
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.isSendingMessage.value).isFalse
     }
 
     // endregion
 
-    // region StateFlow initial values tests
+    // region getConversation() override tests
 
     @Test
-    fun `conversations is empty before init`() {
-        // Then
-        assertThat(viewModel.conversations.value).isEmpty()
-    }
+    fun `getConversation calls repository loadConversation with correct id`() = test {
+        val conversation = createTestConversation(5)
+        whenever(heSupportRepository.loadConversation(5L)).thenReturn(conversation)
 
-    @Test
-    fun `selectedConversation is null before init`() {
-        // Then
-        assertThat(viewModel.selectedConversation.value).isNull()
-    }
+        viewModel.onConversationClick(conversation)
+        advanceUntilIdle()
 
-    @Test
-    fun `userInfo has correct initial values before init`() {
-        // Then
-        assertThat(viewModel.userInfo.value.userName).isEmpty()
-        assertThat(viewModel.userInfo.value.userEmail).isEmpty()
-        assertThat(viewModel.userInfo.value.avatarUrl).isNull()
+        verify(heSupportRepository).loadConversation(5L)
     }
 
     // endregion
 
-    // region Navigation event sequence tests
+    // region onAddMessageToConversation() tests
 
     @Test
-    fun `can navigate to detail and back in sequence`() = test {
-        // Given
-        val conversation = createTestConversation()
+    fun `onAddMessageToConversation does nothing when no conversation is selected`() = test {
+        viewModel.onAddMessageToConversation(
+            message = "Test message",
+            attachments = emptyList()
+        )
+        advanceUntilIdle()
 
-        // When
-        viewModel.navigationEvents.test {
-            viewModel.onConversationClick(conversation)
-            val firstEvent = awaitItem()
-
-            viewModel.onBackFromDetailClick()
-            val secondEvent = awaitItem()
-
-            // Then
-            assertThat(firstEvent)
-                .isInstanceOf(HESupportViewModel.NavigationEvent.NavigateToConversationDetail::class.java)
-            assertThat(secondEvent).isEqualTo(HESupportViewModel.NavigationEvent.NavigateBack)
-        }
+        verify(appLogWrapper).e(any(), eq("Error answering a conversation: no conversation selected"))
+        assertThat(viewModel.isSendingMessage.value).isFalse
     }
 
     @Test
-    fun `can create new ticket and send in sequence`() = test {
-        // When
-        viewModel.navigationEvents.test {
-            viewModel.onCreateNewConversation()
-            val firstEvent = awaitItem()
+    fun `onAddMessageToConversation calls repository with correct parameters`() = test {
+        val existingConversation = createTestConversation(1)
+        val updatedConversation = createTestConversation(1).copy(
+            messages = listOf(createTestMessage(1, "New message", true))
+        )
+        whenever(heSupportRepository.loadConversation(1L)).thenReturn(existingConversation)
+        whenever(heSupportRepository.addMessageToConversation(
+            conversationId = 1L,
+            message = "Test message",
+            attachments = listOf("attachment1")
+        )).thenReturn(CreateConversationResult.Success(updatedConversation))
 
-            viewModel.onSendNewConversation()
-            val secondEvent = awaitItem()
+        viewModel.onConversationClick(existingConversation)
+        advanceUntilIdle()
 
-            // Then
-            assertThat(firstEvent).isEqualTo(HESupportViewModel.NavigationEvent.NavigateToNewTicket)
-            assertThat(secondEvent).isEqualTo(HESupportViewModel.NavigationEvent.NavigateBack)
-        }
+        viewModel.onAddMessageToConversation(
+            message = "Test message",
+            attachments = listOf("attachment1")
+        )
+        advanceUntilIdle()
+
+        verify(heSupportRepository).addMessageToConversation(
+            conversationId = 1L,
+            message = "Test message",
+            attachments = listOf("attachment1")
+        )
+    }
+
+    @Test
+    fun `onAddMessageToConversation updates selectedConversation on success`() = test {
+        val existingConversation = createTestConversation(1)
+        val updatedConversation = createTestConversation(1).copy(
+            messages = listOf(createTestMessage(1, "New message", true))
+        )
+        whenever(heSupportRepository.loadConversation(1L)).thenReturn(existingConversation)
+        whenever(heSupportRepository.addMessageToConversation(
+            conversationId = 1L,
+            message = "Test message",
+            attachments = emptyList()
+        )).thenReturn(CreateConversationResult.Success(updatedConversation))
+
+        viewModel.onConversationClick(existingConversation)
+        advanceUntilIdle()
+
+        viewModel.onAddMessageToConversation(
+            message = "Test message",
+            attachments = emptyList()
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedConversation.value).isEqualTo(updatedConversation)
+    }
+
+    @Test
+    fun `onAddMessageToConversation sets FORBIDDEN error on Unauthorized result`() = test {
+        val existingConversation = createTestConversation(1)
+        whenever(heSupportRepository.loadConversation(1L)).thenReturn(existingConversation)
+        whenever(heSupportRepository.addMessageToConversation(
+            conversationId = 1L,
+            message = "Test message",
+            attachments = emptyList()
+        )).thenReturn(CreateConversationResult.Error.Forbidden)
+
+        viewModel.onConversationClick(existingConversation)
+        advanceUntilIdle()
+
+        viewModel.onAddMessageToConversation(
+            message = "Test message",
+            attachments = emptyList()
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.FORBIDDEN)
+        verify(appLogWrapper).e(any(), eq("Unauthorized error adding message to HE conversation"))
+    }
+
+    @Test
+    fun `onAddMessageToConversation sets GENERAL error on GeneralError result`() = test {
+        val existingConversation = createTestConversation(1)
+        whenever(heSupportRepository.loadConversation(1L)).thenReturn(existingConversation)
+        whenever(heSupportRepository.addMessageToConversation(
+            conversationId = 1L,
+            message = "Test message",
+            attachments = emptyList()
+        )).thenReturn(CreateConversationResult.Error.GeneralError)
+
+        viewModel.onConversationClick(existingConversation)
+        advanceUntilIdle()
+
+        viewModel.onAddMessageToConversation(
+            message = "Test message",
+            attachments = emptyList()
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.GENERAL)
+        verify(appLogWrapper).e(any(), eq("General error adding message to HE conversation"))
+    }
+
+    @Test
+    fun `onAddMessageToConversation resets isSendingNewConversation even when error occurs`() = test {
+        val existingConversation = createTestConversation(1)
+        whenever(heSupportRepository.loadConversation(1L)).thenReturn(existingConversation)
+        whenever(heSupportRepository.addMessageToConversation(
+            any(), any(), any()
+        )).thenReturn(CreateConversationResult.Error.GeneralError)
+
+        viewModel.onConversationClick(existingConversation)
+        advanceUntilIdle()
+
+        viewModel.onAddMessageToConversation(
+            message = "Test message",
+            attachments = emptyList()
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.isSendingMessage.value).isFalse
     }
 
     // endregion
 
-    // region Multiple conversation selection tests
-
-    @Test
-    fun `selecting different conversations updates selectedConversation`() {
-        // Given
-        val conversation1 = createTestConversation(id = 1L, title = "First")
-        val conversation2 = createTestConversation(id = 2L, title = "Second")
-
-        // When
-        viewModel.onConversationClick(conversation1)
-        val firstSelection = viewModel.selectedConversation.value
-
-        viewModel.onConversationClick(conversation2)
-        val secondSelection = viewModel.selectedConversation.value
-
-        // Then
-        assertThat(firstSelection).isEqualTo(conversation1)
-        assertThat(secondSelection).isEqualTo(conversation2)
-        assertThat(secondSelection).isNotEqualTo(firstSelection)
-    }
-
-    // endregion
-
-    // Helper methods
-
+    // Helper functions
     private fun createTestConversation(
-        id: Long = 1L,
+        id: Long,
         title: String = "Test Conversation",
         description: String = "Test Description"
     ): SupportConversation {
@@ -269,16 +348,22 @@ class HESupportViewModelTest : BaseUnitTest() {
             id = id,
             title = title,
             description = description,
-            lastMessageSentAt = Date(System.currentTimeMillis()),
-            messages = listOf(
-                SupportMessage(
-                    id = 1L,
-                    text = "Test message",
-                    createdAt = Date(System.currentTimeMillis()),
-                    authorName = "Test Author",
-                    authorIsUser = true
-                )
-            )
+            lastMessageSentAt = Date(),
+            messages = emptyList()
+        )
+    }
+
+    private fun createTestMessage(
+        id: Long,
+        text: String,
+        authorIsUser: Boolean
+    ): SupportMessage {
+        return SupportMessage(
+            id = id,
+            text = text,
+            createdAt = Date(),
+            authorName = if (authorIsUser) "User" else "Support",
+            authorIsUser = authorIsUser
         )
     }
 }

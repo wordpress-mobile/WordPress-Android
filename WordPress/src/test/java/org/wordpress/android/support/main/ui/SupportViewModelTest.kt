@@ -171,13 +171,7 @@ class SupportViewModelTest : BaseUnitTest() {
     @Test
     fun `onAskTheBotsClick emits NavigateToAskTheBots event when user has access token`() = test {
         // Given
-        val accessToken = "test_access_token"
-        val displayName = "Test User"
-
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(accessToken)
-        whenever(accountStore.account).thenReturn(account)
-        whenever(account.displayName).thenReturn(displayName)
 
         // When
         viewModel.navigationEvents.test {
@@ -186,23 +180,13 @@ class SupportViewModelTest : BaseUnitTest() {
             // Then
             val event = awaitItem()
             assertThat(event).isInstanceOf(SupportViewModel.NavigationEvent.NavigateToAskTheBots::class.java)
-            val navigateEvent = event as SupportViewModel.NavigationEvent.NavigateToAskTheBots
-            assertThat(navigateEvent.accessToken).isEqualTo(accessToken)
-            assertThat(navigateEvent.userName).isEqualTo(displayName)
         }
     }
 
     @Test
     fun `onAskTheBotsClick uses userName when displayName is empty`() = test {
         // Given
-        val accessToken = "test_access_token"
-        val userName = "testuser"
-
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(accessToken)
-        whenever(accountStore.account).thenReturn(account)
-        whenever(account.displayName).thenReturn("")
-        whenever(account.userName).thenReturn(userName)
 
         // When
         viewModel.navigationEvents.test {
@@ -211,8 +195,6 @@ class SupportViewModelTest : BaseUnitTest() {
             // Then
             val event = awaitItem()
             assertThat(event).isInstanceOf(SupportViewModel.NavigationEvent.NavigateToAskTheBots::class.java)
-            val navigateEvent = event as SupportViewModel.NavigationEvent.NavigateToAskTheBots
-            assertThat(navigateEvent.userName).isEqualTo(userName)
         }
     }
 

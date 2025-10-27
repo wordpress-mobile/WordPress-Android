@@ -1,119 +1,59 @@
 package org.wordpress.android.support.aibot.ui
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
 import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
+import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.util.AppLog
 import java.util.Date
 import javax.inject.Inject
-import kotlin.Long
 
 @HiltViewModel
 class AIBotSupportViewModel @Inject constructor(
+    accountStore: AccountStore,
     private val aiBotSupportRepository: AIBotSupportRepository,
-    private val appLogWrapper: AppLogWrapper,
-) : ViewModel() {
-    private val _conversations = MutableStateFlow<List<BotConversation>>(emptyList())
-    val conversations: StateFlow<List<BotConversation>> = _conversations.asStateFlow()
-
-    private val _selectedConversation = MutableStateFlow<BotConversation?>(null)
-    val selectedConversation: StateFlow<BotConversation?> = _selectedConversation.asStateFlow()
-
+    appLogWrapper: AppLogWrapper,
+) : ConversationsSupportViewModel<BotConversation>(accountStore, appLogWrapper) {
     private val _canSendMessage = MutableStateFlow(true)
     val canSendMessage: StateFlow<Boolean> = _canSendMessage.asStateFlow()
-
-    private val _isLoadingConversation = MutableStateFlow(false)
-    val isLoadingConversation: StateFlow<Boolean> = _isLoadingConversation.asStateFlow()
-
-    private val _isLoadingConversations = MutableStateFlow(false)
-    val isLoadingConversations: StateFlow<Boolean> = _isLoadingConversations.asStateFlow()
 
     private val _isBotTyping = MutableStateFlow(false)
     val isBotTyping: StateFlow<Boolean> = _isBotTyping.asStateFlow()
 
-    private val _errorMessage = MutableStateFlow<ErrorType?>(null)
-    val errorMessage: StateFlow<ErrorType?> = _errorMessage.asStateFlow()
+    override fun initRepository(accessToken: String) {
+        aiBotSupportRepository.init(accessToken, accountStore.account.userId)
+    }
 
-    @Suppress("TooGenericExceptionCaught")
-    fun init(accessToken: String, userId: Long) {
+    override suspend fun getConversations() = aiBotSupportRepository.loadConversations()
+
+    override suspend fun getConversation(conversationId: Long): BotConversation? {
+        _canSendMessage.value = false
+        return aiBotSupportRepository.loadConversation(conversationId).also {
+            _canSendMessage.value = true
+        }
+    }
+
+    fun onNewConversationClick() {
         viewModelScope.launch {
-            try {
-                aiBotSupportRepository.init(accessToken, userId)
-                loadConversations()
-            } catch (throwable: Throwable) {
-                _errorMessage.value = ErrorType.GENERAL
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error initialising the AI bot support repository: " +
-                        "${throwable.message} - ${throwable.stackTraceToString()}")
-            }
+            val now = Date()
+            val botConversation = BotConversation(
+                id = 0,
+                createdAt = now,
+                mostRecentMessageDate = now,
+                lastMessage = "",
+                messages = listOf()
+            )
+            _canSendMessage.value = true
+            setNewConversation(botConversation)
         }
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadConversations() {
-        try {
-            _isLoadingConversations.value = true
-            val conversations = aiBotSupportRepository.loadConversations()
-            _conversations.value = conversations
-        } catch (throwable: Throwable) {
-            _errorMessage.value = ErrorType.GENERAL
-            appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversations: " +
-                    "${throwable.message} - ${throwable.stackTraceToString()}")
-        }
-        _isLoadingConversations.value = false
-    }
-
-    fun refreshConversations() {
-        viewModelScope.launch {
-            loadConversations()
-        }
-    }
-
-    fun clearError() {
-        _errorMessage.value = null
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    fun onConversationSelected(conversation: BotConversation) {
-        viewModelScope.launch {
-            try {
-                _isLoadingConversation.value = true
-                _selectedConversation.value = conversation
-                _canSendMessage.value = true
-                val updatedConversation = aiBotSupportRepository.loadConversation(conversation.id)
-                if (updatedConversation != null) {
-                    _selectedConversation.value = updatedConversation
-                } else {
-                    _errorMessage.value = ErrorType.GENERAL
-                    appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversation: " +
-                            "error retrieving it from server")
-                }
-            } catch (throwable: Throwable) {
-                _errorMessage.value = ErrorType.GENERAL
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error loading conversation: " +
-                        "${throwable.message} - ${throwable.stackTraceToString()}")
-            }
-            _isLoadingConversation.value = false
-        }
-    }
-
-    fun onNewConversationClicked() {
-        val now = Date()
-        _selectedConversation.value = BotConversation(
-            id = 0,
-            createdAt = now,
-            mostRecentMessageDate = now,
-            lastMessage = "",
-            messages = listOf()
-        )
-        _canSendMessage.value = true
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -189,6 +129,4 @@ class AIBotSupportViewModel @Inject constructor(
             aiBotSupportRepository.sendMessageToConversation(conversationId, message)
         }
     }
-
-    enum class ErrorType { GENERAL }
 }

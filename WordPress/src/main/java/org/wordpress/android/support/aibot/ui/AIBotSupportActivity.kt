@@ -4,15 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,8 +25,8 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.util.ToastUtils
 
 @AndroidEntryPoint
 class AIBotSupportActivity : AppCompatActivity() {
@@ -30,11 +35,9 @@ class AIBotSupportActivity : AppCompatActivity() {
     private lateinit var composeView: ComposeView
     private lateinit var navController: NavHostController
 
-    private lateinit var userName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userName = intent.getStringExtra(USERNAME).orEmpty()
         composeView = ComposeView(this)
         setContentView(
             composeView.apply {
@@ -47,21 +50,27 @@ class AIBotSupportActivity : AppCompatActivity() {
                 }
             }
         )
-        viewModel.init(
-            accessToken = intent.getStringExtra(ACCESS_TOKEN_ID)!!,
-            userId = intent.getLongExtra(USER_ID, 0)
-        )
+        observeNavigationEvents()
+        viewModel.init()
+    }
 
-        // Observe error messages and show them as Toast
+    private fun observeNavigationEvents() {
         lifecycleScope.launch {
-            viewModel.errorMessage.collect { errorType ->
-                val errorMessage = when (errorType) {
-                    AIBotSupportViewModel.ErrorType.GENERAL -> getString(R.string.ai_bot_generic_error)
-                    null -> null
-                }
-                errorMessage?.let {
-                    ToastUtils.showToast(this@AIBotSupportActivity, it, ToastUtils.Duration.LONG, Gravity.CENTER)
-                    viewModel.clearError()
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigationEvents.collect { event ->
+                    when (event) {
+                        is ConversationsSupportViewModel.NavigationEvent.NavigateToConversationDetail -> {
+                            navController.navigate(ConversationScreen.Detail.name)
+                        }
+                        ConversationsSupportViewModel.NavigationEvent.NavigateBack -> {
+                            navController.navigateUp()
+                        }
+
+                        ConversationsSupportViewModel.NavigationEvent.NavigateToNewConversation -> {
+                            // New conversations are handled in the conversation details screen
+                            navController.navigate(ConversationScreen.Detail.name)
+                        }
+                    }
                 }
             }
         }
@@ -75,31 +84,46 @@ class AIBotSupportActivity : AppCompatActivity() {
     @Composable
     private fun NavigableContent() {
         navController = rememberNavController()
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
+        val errorMessage by viewModel.errorMessage.collectAsState()
+
+        // Show snackbar when error occurs
+        errorMessage?.let { errorType ->
+            val message = when (errorType) {
+                ConversationsSupportViewModel.ErrorType.GENERAL -> getString(R.string.ai_bot_generic_error)
+                ConversationsSupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
+            }
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = message,
+                    duration = SnackbarDuration.Long
+                )
+                viewModel.clearError()
+            }
+        }
 
         AppThemeM3 {
             NavHost(
                 navController = navController,
-                startDestination = ConversationScreen.List.name
+                startDestination = ConversationScreen.List.name,
             ) {
                 composable(route = ConversationScreen.List.name) {
                     val isLoadingConversations by viewModel.isLoadingConversations.collectAsState()
-                    ConversationsListScreen(
+                    AIBotConversationsListScreen(
+                        snackbarHostState = snackbarHostState,
                         conversations = viewModel.conversations,
                         isLoading = isLoadingConversations,
                         onConversationClick = { conversation ->
-                            viewModel.onConversationSelected(conversation)
-                            navController.navigate(ConversationScreen.Detail.name)
+                            viewModel.onConversationClick(conversation)
                         },
                         onBackClick = { finish() },
                         onCreateNewConversationClick = {
-                            viewModel.onNewConversationClicked()
-                            viewModel.selectedConversation.value?.let { newConversation ->
-                                navController.navigate(ConversationScreen.Detail.name)
-                            }
+                            viewModel.onNewConversationClick()
                         },
                         onRefresh = {
                             viewModel.refreshConversations()
-                        }
+                        },
                     )
                 }
 
@@ -108,14 +132,16 @@ class AIBotSupportActivity : AppCompatActivity() {
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isBotTyping by viewModel.isBotTyping.collectAsState()
                     val canSendMessage by viewModel.canSendMessage.collectAsState()
+                    val userInfo by viewModel.userInfo.collectAsState()
                     selectedConversation?.let { conversation ->
-                        ConversationDetailScreen(
-                            userName = userName,
+                        AIBotConversationDetailScreen(
+                            snackbarHostState = snackbarHostState,
+                            userName = userInfo.userName,
                             conversation = conversation,
                             isLoading = isLoadingConversation,
                             isBotTyping = isBotTyping,
                             canSendMessage = canSendMessage,
-                            onBackClick = { navController.navigateUp() },
+                            onBackClick = { viewModel.onBackClick() },
                             onSendMessage = { text ->
                                 viewModel.sendMessage(text)
                             }
@@ -127,19 +153,7 @@ class AIBotSupportActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val ACCESS_TOKEN_ID = "arg_access_token_id"
-        private const val USER_ID = "arg_user_id"
-        private const val USERNAME = "arg_username"
         @JvmStatic
-        fun createIntent(
-            context: Context,
-            accessToken: String,
-            userId: Long,
-            userName: String,
-        ): Intent = Intent(context, AIBotSupportActivity::class.java).apply {
-            putExtra(ACCESS_TOKEN_ID, accessToken)
-            putExtra(USER_ID, userId)
-            putExtra(USERNAME, userName)
-        }
+        fun createIntent(context: Context): Intent = Intent(context, AIBotSupportActivity::class.java)
     }
 }

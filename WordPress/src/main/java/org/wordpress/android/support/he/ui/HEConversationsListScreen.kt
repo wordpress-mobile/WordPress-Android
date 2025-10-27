@@ -22,10 +22,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
@@ -40,6 +44,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
+import org.wordpress.android.support.common.ui.EmptyConversationsView
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import org.wordpress.android.ui.compose.components.MainTopAppBar
@@ -49,12 +54,16 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HEConversationsListScreen(
+    snackbarHostState: SnackbarHostState,
     conversations: StateFlow<List<SupportConversation>>,
+    isLoadingConversations: StateFlow<Boolean>,
     onConversationClick: (SupportConversation) -> Unit,
     onBackClick: () -> Unit,
-    onCreateNewConversationClick: () -> Unit
+    onCreateNewConversationClick: () -> Unit,
+    onRefresh: () -> Unit
 ) {
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             MainTopAppBar(
                 title = stringResource(R.string.he_support_conversations_title),
@@ -76,43 +85,64 @@ fun HEConversationsListScreen(
         ShowConversationsList(
             modifier = Modifier.padding(contentPadding),
             conversations = conversations,
-            onConversationClick = onConversationClick
+            isLoadingConversations = isLoadingConversations,
+            onConversationClick = onConversationClick,
+            onRefresh = onRefresh,
+            onCreateNewConversationClick = onCreateNewConversationClick
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ShowConversationsList(
     modifier: Modifier,
     conversations: StateFlow<List<SupportConversation>>,
-    onConversationClick: (SupportConversation) -> Unit
+    isLoadingConversations: StateFlow<Boolean>,
+    onConversationClick: (SupportConversation) -> Unit,
+    onRefresh: () -> Unit,
+    onCreateNewConversationClick: () -> Unit
 ) {
     val conversationsList by conversations.collectAsState()
+    val isLoading by isLoadingConversations.collectAsState()
     val resources = LocalResources.current
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
+    PullToRefreshBox(
+        isRefreshing = isLoading,
+        onRefresh = onRefresh,
+        modifier = modifier.fillMaxSize()
     ) {
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        items(
-            items = conversationsList,
-            key = { it.id }
-        ) { conversation ->
-            ConversationCard(
-                conversation = conversation,
-                resources = resources,
-                onClick = { onConversationClick(conversation) }
+        if (conversationsList.isEmpty() && !isLoading) {
+            EmptyConversationsView(
+                modifier = Modifier,
+                onCreateNewConversationClick = onCreateNewConversationClick
             )
-            Spacer(modifier = Modifier.height(12.dp))
-        }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
 
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
+                items(
+                    items = conversationsList,
+                    key = { it.id }
+                ) { conversation ->
+                    ConversationCard(
+                        conversation = conversation,
+                        resources = resources,
+                        onClick = { onConversationClick(conversation) }
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
         }
     }
 }
@@ -187,13 +217,18 @@ private fun ConversationCard(
 @Composable
 private fun ConversationsScreenPreview() {
     val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
+    val isLoading = MutableStateFlow(false)
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false) {
         HEConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
+            isLoadingConversations = isLoading.asStateFlow(),
             onConversationClick = { },
             onBackClick = { },
-            onCreateNewConversationClick = { }
+            onCreateNewConversationClick = { },
+            onRefresh = { }
         )
     }
 }
@@ -202,13 +237,18 @@ private fun ConversationsScreenPreview() {
 @Composable
 private fun ConversationsScreenPreviewDark() {
     val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
+    val isLoading = MutableStateFlow(false)
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true) {
         HEConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
+            isLoadingConversations = isLoading.asStateFlow(),
             onConversationClick = { },
             onBackClick = { },
-            onCreateNewConversationClick = { }
+            onCreateNewConversationClick = { },
+            onRefresh = { }
         )
     }
 }
@@ -217,13 +257,18 @@ private fun ConversationsScreenPreviewDark() {
 @Composable
 private fun ConversationsScreenWordPressPreview() {
     val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
+    val isLoading = MutableStateFlow(false)
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
         HEConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
+            isLoadingConversations = isLoading.asStateFlow(),
             onConversationClick = { },
             onBackClick = { },
-            onCreateNewConversationClick = { }
+            onCreateNewConversationClick = { },
+            onRefresh = { }
         )
     }
 }
@@ -232,13 +277,18 @@ private fun ConversationsScreenWordPressPreview() {
 @Composable
 private fun ConversationsScreenPreviewWordPressDark() {
     val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
+    val isLoading = MutableStateFlow(false)
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         HEConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
+            isLoadingConversations = isLoading.asStateFlow(),
             onConversationClick = { },
             onBackClick = { },
-            onCreateNewConversationClick = { }
+            onCreateNewConversationClick = { },
+            onRefresh = { }
         )
     }
 }

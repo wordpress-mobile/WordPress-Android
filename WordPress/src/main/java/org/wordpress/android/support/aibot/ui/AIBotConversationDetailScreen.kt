@@ -42,9 +42,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.text.KeyboardOptions
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.text.style.TextAlign
 import org.wordpress.android.R
@@ -56,7 +60,8 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConversationDetailScreen(
+fun AIBotConversationDetailScreen(
+    snackbarHostState: SnackbarHostState,
     conversation: BotConversation,
     isLoading: Boolean,
     isBotTyping: Boolean,
@@ -83,6 +88,7 @@ fun ConversationDetailScreen(
     val resources = LocalResources.current
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { },
@@ -118,7 +124,6 @@ fun ConversationDetailScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .imePadding()
                     .padding(horizontal = 16.dp),
                 state = listState,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -208,6 +213,7 @@ private fun ChatInputBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .imePadding()
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -218,6 +224,7 @@ private fun ChatInputBar(
             modifier = Modifier.weight(1f),
             placeholder = { Text(stringResource(R.string.ai_bot_message_input_placeholder)) },
             maxLines = 4,
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
         )
 
         IconButton(
@@ -352,9 +359,11 @@ private fun TypingDot(delay: Int) {
 @Composable
 private fun ConversationDetailScreenPreview() {
     val sampleConversation = generateSampleBotConversations()[0]
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false) {
-        ConversationDetailScreen(
+        AIBotConversationDetailScreen(
+            snackbarHostState = snackbarHostState,
             userName = "UserName",
             conversation = sampleConversation,
             isLoading = false,
@@ -370,9 +379,11 @@ private fun ConversationDetailScreenPreview() {
 @Composable
 private fun ConversationDetailScreenPreviewDark() {
     val sampleConversation = generateSampleBotConversations()[0]
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true) {
-        ConversationDetailScreen(
+        AIBotConversationDetailScreen(
+            snackbarHostState = snackbarHostState,
             userName = "UserName",
             conversation = sampleConversation,
             isLoading = false,
@@ -388,9 +399,11 @@ private fun ConversationDetailScreenPreviewDark() {
 @Composable
 private fun ConversationDetailScreenWordPressPreview() {
     val sampleConversation = generateSampleBotConversations()[0]
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
-        ConversationDetailScreen(
+        AIBotConversationDetailScreen(
+            snackbarHostState = snackbarHostState,
             userName = "UserName",
             conversation = sampleConversation,
             isLoading = false,
@@ -406,9 +419,11 @@ private fun ConversationDetailScreenWordPressPreview() {
 @Composable
 private fun ConversationDetailScreenPreviewWordPressDark() {
     val sampleConversation = generateSampleBotConversations()[0]
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
-        ConversationDetailScreen(
+        AIBotConversationDetailScreen(
+            snackbarHostState = snackbarHostState,
             userName = "UserName",
             conversation = sampleConversation,
             isLoading = false,

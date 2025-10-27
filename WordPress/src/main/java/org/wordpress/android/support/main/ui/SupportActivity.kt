@@ -74,18 +74,10 @@ class SupportActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.navigationEvents.collect { event ->
                     when (event) {
-                        is SupportViewModel.NavigationEvent.NavigateToAskTheBots -> {
-                            navigateToAskTheBots(event.accessToken, event.userId, event.userName)
-                        }
-                        is SupportViewModel.NavigationEvent.NavigateToLogin -> {
-                            navigateToLogin()
-                        }
-                        is SupportViewModel.NavigationEvent.NavigateToHelpCenter -> {
-                            navigateToHelpCenter()
-                        }
-                        is SupportViewModel.NavigationEvent.NavigateToApplicationLogs -> {
-                            navigateToApplicationLogs()
-                        }
+                        is SupportViewModel.NavigationEvent.NavigateToAskTheBots -> navigateToAskTheBots()
+                        is SupportViewModel.NavigationEvent.NavigateToLogin -> navigateToLogin()
+                        is SupportViewModel.NavigationEvent.NavigateToHelpCenter -> navigateToHelpCenter()
+                        is SupportViewModel.NavigationEvent.NavigateToApplicationLogs -> navigateToApplicationLogs()
                         is SupportViewModel.NavigationEvent.NavigateToAskHappinessEngineers -> {
                             navigateToAskTheHappinessEngineers()
                         }
@@ -95,9 +87,9 @@ class SupportActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToAskTheBots(accessToken: String, userId: Long, userName: String) {
+    private fun navigateToAskTheBots() {
         startActivity(
-            AIBotSupportActivity.Companion.createIntent(this, accessToken, userId, userName)
+            AIBotSupportActivity.Companion.createIntent(this)
         )
     }
 

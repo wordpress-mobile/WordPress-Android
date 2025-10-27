@@ -9,13 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -24,18 +22,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,11 +44,13 @@ import org.wordpress.android.R
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.aibot.util.generateSampleBotConversations
+import org.wordpress.android.support.common.ui.EmptyConversationsView
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConversationsListScreen(
+fun AIBotConversationsListScreen(
+    snackbarHostState: SnackbarHostState,
     conversations: StateFlow<List<BotConversation>>,
     isLoading: Boolean,
     onConversationClick: (BotConversation) -> Unit,
@@ -59,6 +59,7 @@ fun ConversationsListScreen(
     onRefresh: () -> Unit,
 ) {
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.ai_bot_conversations_title)) },
@@ -105,49 +106,6 @@ fun ConversationsListScreen(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun EmptyConversationsView(
-    modifier: Modifier,
-    onCreateNewConversationClick: () -> Unit
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "💬",
-            style = MaterialTheme.typography.displayLarge
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Text(
-            text = stringResource(R.string.ai_bot_empty_conversations_title),
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        Text(
-            text = stringResource(R.string.ai_bot_empty_conversations_message),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.padding(24.dp))
-
-        Button(onClick = onCreateNewConversationClick) {
-            Text(text = stringResource(R.string.ai_bot_empty_conversations_button))
         }
     }
 }
@@ -233,9 +191,11 @@ private fun ConversationCard(
 @Composable
 private fun ConversationsScreenPreview() {
     val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false) {
-        ConversationsListScreen(
+        AIBotConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoading = false,
             onConversationClick = { },
@@ -250,9 +210,11 @@ private fun ConversationsScreenPreview() {
 @Composable
 private fun ConversationsScreenPreviewDark() {
     val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true) {
-        ConversationsListScreen(
+        AIBotConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoading = false,
             onConversationClick = { },
@@ -267,9 +229,11 @@ private fun ConversationsScreenPreviewDark() {
 @Composable
 private fun ConversationsScreenWordPressPreview() {
     val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
-        ConversationsListScreen(
+        AIBotConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoading = true,
             onConversationClick = { },
@@ -284,9 +248,11 @@ private fun ConversationsScreenWordPressPreview() {
 @Composable
 private fun ConversationsScreenPreviewWordPressDark() {
     val sampleConversations = MutableStateFlow(generateSampleBotConversations())
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
-        ConversationsListScreen(
+        AIBotConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = sampleConversations.asStateFlow(),
             isLoading = true,
             onConversationClick = { },
@@ -301,9 +267,11 @@ private fun ConversationsScreenPreviewWordPressDark() {
 @Composable
 private fun EmptyConversationsScreenPreview() {
     val emptyConversations = MutableStateFlow(emptyList<BotConversation>())
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false) {
-        ConversationsListScreen(
+        AIBotConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = emptyConversations.asStateFlow(),
             isLoading = false,
             onConversationClick = { },
@@ -318,9 +286,11 @@ private fun EmptyConversationsScreenPreview() {
 @Composable
 private fun EmptyConversationsScreenPreviewDark() {
     val emptyConversations = MutableStateFlow(emptyList<BotConversation>())
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true) {
-        ConversationsListScreen(
+        AIBotConversationsListScreen(
+            snackbarHostState = snackbarHostState,
             conversations = emptyConversations.asStateFlow(),
             isLoading = false,
             onConversationClick = { },

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -19,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,8 +41,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
@@ -50,11 +56,18 @@ import org.wordpress.android.ui.dataview.compose.RemoteImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HENewTicketScreen(
+    snackbarHostState: SnackbarHostState,
     onBackClick: () -> Unit,
-    onSubmit: (category: SupportCategory, subject: String, siteAddress: String) -> Unit,
+    onSubmit: (
+        category: SupportCategory,
+        subject: String,
+        messageText: String,
+        siteAddress: String,
+            ) -> Unit,
     userName: String = "",
     userEmail: String = "",
-    userAvatarUrl: String? = null
+    userAvatarUrl: String? = null,
+    isSendingNewConversation: Boolean = false
 ) {
     var selectedCategory by remember { mutableStateOf<SupportCategory?>(null) }
     var subject by remember { mutableStateOf("") }
@@ -63,6 +76,7 @@ fun HENewTicketScreen(
     var includeAppLogs by remember { mutableStateOf(false) }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             MainTopAppBar(
                 title = stringResource(R.string.he_support_contact_support_title),
@@ -73,9 +87,10 @@ fun HENewTicketScreen(
         bottomBar = {
             SendButton(
                 enabled = selectedCategory != null && subject.isNotBlank() && messageText.isNotBlank(),
+                isLoading = isSendingNewConversation,
                 onClick = {
                     selectedCategory?.let { category ->
-                        onSubmit(category, subject, siteAddress)
+                        onSubmit(category, subject, messageText, siteAddress)
                     }
                 }
             )
@@ -134,7 +149,8 @@ fun HENewTicketScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 },
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -157,7 +173,8 @@ fun HENewTicketScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 },
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -192,25 +209,35 @@ fun HENewTicketScreen(
 @Composable
 private fun SendButton(
     enabled: Boolean,
+    isLoading: Boolean,
     onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .imePadding()
             .padding(16.dp)
     ) {
         Button(
             onClick = onClick,
-            enabled = enabled,
+            enabled = enabled && !isLoading,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
             shape = RoundedCornerShape(28.dp)
         ) {
-            Text(
-                text = stringResource(R.string.he_support_send_ticket_button),
-                style = MaterialTheme.typography.titleMedium
-            )
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text(
+                    text = stringResource(R.string.he_support_send_ticket_button),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
         }
     }
 }
@@ -343,10 +370,12 @@ private fun CategoryOption(
 @Preview(showBackground = true, name = "HE New Ticket Screen")
 @Composable
 private fun HENewTicketScreenPreview() {
+    val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = false) {
         HENewTicketScreen(
+            snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _ -> },
+            onSubmit = { _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
@@ -357,10 +386,12 @@ private fun HENewTicketScreenPreview() {
 @Preview(showBackground = true, name = "HE New Ticket Screen - Dark", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun HENewTicketScreenPreviewDark() {
+    val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = true) {
         HENewTicketScreen(
+            snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _ -> },
+            onSubmit = { _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
@@ -371,10 +402,12 @@ private fun HENewTicketScreenPreviewDark() {
 @Preview(showBackground = true, name = "HE New Ticket Screen - WordPress")
 @Composable
 private fun HENewTicketScreenWordPressPreview() {
+    val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
         HENewTicketScreen(
+            snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _ -> },
+            onSubmit = { _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
@@ -385,10 +418,12 @@ private fun HENewTicketScreenWordPressPreview() {
 @Preview(showBackground = true, name = "HE New Ticket Screen - Dark WordPress", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun HENewTicketScreenPreviewWordPressDark() {
+    val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         HENewTicketScreen(
+            snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _ -> },
+            onSubmit = { _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null

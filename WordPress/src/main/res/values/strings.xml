@@ -5154,6 +5154,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- HE Support - Conversations List Screen -->
     <string name="he_support_conversations_title">Support Conversations</string>
     <string name="he_support_new_conversation_content_description">New conversation</string>
+    <string name="he_support_empty_conversations_title">No conversations yet</string>
+    <string name="he_support_empty_conversations_message">Start a conversation with our support team to get help with your questions.</string>
+    <string name="he_support_empty_conversations_button">Start Conversation</string>
 
     <!-- HE Support - Conversation Detail Screen -->
     <string name="he_support_message_count">%1$d Messages</string>
@@ -5185,4 +5188,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_contact_information">Contact Information</string>
     <string name="he_support_contact_email_message">We\'ll email you at this address.</string>
     <string name="he_support_send_ticket_button">Send</string>
+    <string name="he_support_generic_error">An error occurred. Please try again later.</string>
+    <string name="he_support_forbidden_error">Sorry, you are not allowed to perform this action.</string>
 </resources>
