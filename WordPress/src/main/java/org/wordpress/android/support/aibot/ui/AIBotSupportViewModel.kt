@@ -71,6 +71,7 @@ class AIBotSupportViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun loadOlderMessages() {
         if (!_hasMorePages.value || _isLoadingOlderMessages.value) {
             return
@@ -104,10 +105,12 @@ class AIBotSupportViewModel @Inject constructor(
                 } else {
                     // Error loading, stay on current page
                     currentPage--
+                    _errorMessage.value = ErrorType.GENERAL
                     appLogWrapper.e(AppLog.T.SUPPORT, "Error loading older messages: response is null")
                 }
             } catch (throwable: Throwable) {
                 currentPage--
+                _errorMessage.value = ErrorType.GENERAL
                 appLogWrapper.e(AppLog.T.SUPPORT, "Error loading older messages: " +
                         "${throwable.message} - ${throwable.stackTraceToString()}")
             } finally {
