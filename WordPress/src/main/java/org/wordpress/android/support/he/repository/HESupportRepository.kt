@@ -7,6 +7,7 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
+import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -195,6 +196,7 @@ class HESupportRepository @Inject constructor(
         SupportMessage(
             id = this.id.toLong(),
             text = this.content,
+            formattedText = markdownToAnnotatedString(this.content),
             createdAt = this.createdAt,
             authorName = when (this.author) {
                 is SupportMessageAuthor.User -> (this.author as SupportMessageAuthor.User).v1.displayName

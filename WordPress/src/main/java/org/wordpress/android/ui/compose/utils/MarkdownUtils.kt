@@ -84,7 +84,7 @@ fun markdownToAnnotatedString(markdownText: String): AnnotatedString = buildAnno
 private fun AnnotatedString.Builder.processBoldItalic(text: String, startIndex: Int): Int {
     val delimiter = text.substring(startIndex, startIndex + TRIPLE_DELIMITER_LENGTH)
     val endIndex = text.indexOf(delimiter, startIndex + TRIPLE_DELIMITER_LENGTH)
-    return if (endIndex != -1) {
+    return if (endIndex != -1 && endIndex > startIndex + TRIPLE_DELIMITER_LENGTH) {
         val start = length
         append(text.substring(startIndex + TRIPLE_DELIMITER_LENGTH, endIndex))
         addStyle(

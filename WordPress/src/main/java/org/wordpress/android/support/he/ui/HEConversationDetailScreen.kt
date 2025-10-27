@@ -52,11 +52,11 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.he.model.SupportConversation
+import org.wordpress.android.support.he.model.SupportMessage
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -134,10 +134,8 @@ fun HEConversationDetailScreen(
                 key = { it.id }
             ) { message ->
                 MessageItem(
-                    authorName = message.authorName,
-                    messageText = message.text,
-                    timestamp = formatRelativeTime(message.createdAt, resources),
-                    isUserMessage = message.authorIsUser
+                    message = message,
+                    timestamp = formatRelativeTime(message.createdAt, resources)
                 )
             }
 
@@ -244,16 +242,14 @@ private fun ConversationTitleCard(title: String) {
 
 @Composable
 private fun MessageItem(
-    authorName: String,
-    messageText: String,
-    timestamp: String,
-    isUserMessage: Boolean
+    message: SupportMessage,
+    timestamp: String
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = if (isUserMessage) {
+                color = if (message.authorIsUser) {
                     MaterialTheme.colorScheme.primary.copy(alpha = 0.20f)
                 } else {
                     MaterialTheme.colorScheme.surfaceVariant
@@ -271,10 +267,10 @@ private fun MessageItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = authorName,
+                    text = message.authorName,
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = if (isUserMessage) FontWeight.Bold else FontWeight.Normal,
-                    color = if (isUserMessage) {
+                    fontWeight = if (message.authorIsUser) FontWeight.Bold else FontWeight.Normal,
+                    color = if (message.authorIsUser) {
                         MaterialTheme.colorScheme.primary
                     } else {
                         MaterialTheme.colorScheme.onSurfaceVariant
@@ -291,7 +287,7 @@ private fun MessageItem(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = markdownToAnnotatedString(messageText),
+                text = message.formattedText,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )

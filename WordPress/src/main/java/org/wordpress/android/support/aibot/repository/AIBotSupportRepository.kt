@@ -7,6 +7,7 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
+import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -166,6 +167,7 @@ class AIBotSupportRepository @Inject constructor(
         BotMessage(
             id = messageId.toLong(),
             text = content,
+            formattedText = markdownToAnnotatedString(content),
             date = createdAt,
             isWrittenByUser = role == "user"
         )

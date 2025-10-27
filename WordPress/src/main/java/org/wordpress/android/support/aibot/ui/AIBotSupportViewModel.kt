@@ -12,6 +12,7 @@ import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
 import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
 import org.wordpress.android.util.AppLog
 import java.util.Date
 import javax.inject.Inject
@@ -65,13 +66,14 @@ class AIBotSupportViewModel @Inject constructor(
                 _canSendMessage.value = false
 
                 val now = Date()
-                val userMessage = BotMessage(
+                val botMessage = BotMessage(
                     id = System.currentTimeMillis(),
                     text = message,
+                    formattedText = markdownToAnnotatedString(message),
                     date = now,
                     isWrittenByUser = true
                 )
-                val currentMessages = (_selectedConversation.value?.messages ?: emptyList()) + userMessage
+                val currentMessages = (_selectedConversation.value?.messages ?: emptyList()) + botMessage
                 _selectedConversation.value = _selectedConversation.value?.copy(
                     messages = currentMessages
                 )
