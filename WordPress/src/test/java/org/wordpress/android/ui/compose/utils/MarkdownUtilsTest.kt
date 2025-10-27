@@ -226,4 +226,125 @@ class MarkdownUtilsTest {
         assertThat(result.spanStyles[0].start).isEqualTo(7)
         assertThat(result.spanStyles[0].end).isEqualTo(8)
     }
+
+    // Edge Cases and Escape Characters
+
+    @Test
+    fun `escaped asterisk is treated as literal`() {
+        val input = "This is \\*not italic\\* text"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("This is *not italic* text")
+        assertThat(result.spanStyles).isEmpty()
+    }
+
+    @Test
+    fun `escaped underscore is treated as literal`() {
+        val input = "This is \\_not italic\\_ text"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("This is _not italic_ text")
+        assertThat(result.spanStyles).isEmpty()
+    }
+
+    @Test
+    fun `escaped backtick is treated as literal`() {
+        val input = "This is \\`not code\\` text"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("This is `not code` text")
+        assertThat(result.spanStyles).isEmpty()
+    }
+
+    @Test
+    fun `escaped backslash is treated as literal`() {
+        val input = "This is \\\\ a backslash"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("This is \\ a backslash")
+        assertThat(result.spanStyles).isEmpty()
+    }
+
+    @Test
+    fun `backslash before non-special character is kept`() {
+        val input = "This is \\a normal text"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("This is \\a normal text")
+        assertThat(result.spanStyles).isEmpty()
+    }
+
+    @Test
+    fun `mixed escaped and formatted characters work together`() {
+        val input = "\\*literal\\* and **bold** text"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("*literal* and bold text")
+        assertThat(result.spanStyles).hasSize(1)
+        assertThat(result.spanStyles[0].item.fontWeight).isEqualTo(FontWeight.Bold)
+        assertThat(result.spanStyles[0].start).isEqualTo(14)
+        assertThat(result.spanStyles[0].end).isEqualTo(18)
+    }
+
+    @Test
+    fun `unicode characters are preserved correctly`() {
+        val input = "**Hello 世界** and *emoji 😀*"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Hello 世界 and emoji 😀")
+        assertThat(result.spanStyles).hasSize(2)
+        assertThat(result.spanStyles[0].item.fontWeight).isEqualTo(FontWeight.Bold)
+        assertThat(result.spanStyles[1].item.fontStyle).isEqualTo(FontStyle.Italic)
+    }
+
+    @Test
+    fun `mixed delimiters are not formatted`() {
+        val input = "This is **not bold__"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("This is **not bold__")
+        assertThat(result.spanStyles).isEmpty()
+    }
+
+    @Test
+    fun `multiline text with formatting works`() {
+        val input = "Line 1 **bold**\nLine 2 *italic*\nLine 3 normal"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Line 1 bold\nLine 2 italic\nLine 3 normal")
+        assertThat(result.spanStyles).hasSize(2)
+        assertThat(result.spanStyles[0].item.fontWeight).isEqualTo(FontWeight.Bold)
+        assertThat(result.spanStyles[1].item.fontStyle).isEqualTo(FontStyle.Italic)
+    }
+
+    @Test
+    fun `long text with multiple formats performs correctly`() {
+        val input = buildString {
+            repeat(100) {
+                append("**bold** *italic* `code` ")
+            }
+        }
+        val result = markdownToAnnotatedString(input)
+
+        // Should have 300 spans (100 bold + 100 italic + 100 code)
+        assertThat(result.spanStyles).hasSize(300)
+    }
+
+    @Test
+    fun `escaped characters at end of string are handled`() {
+        val input = "Text ending with \\*"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Text ending with *")
+        assertThat(result.spanStyles).isEmpty()
+    }
+
+    @Test
+    fun `backslash at end of string is preserved`() {
+        val input = "Text ending with \\"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Text ending with \\")
+        assertThat(result.spanStyles).isEmpty()
+    }
 }

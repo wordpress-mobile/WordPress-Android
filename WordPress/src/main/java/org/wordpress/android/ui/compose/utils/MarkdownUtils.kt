@@ -14,8 +14,31 @@ private const val SINGLE_DELIMITER_LENGTH = 1
 private const val CODE_BACKGROUND_ALPHA = 0.2f
 
 /**
- * Convert markdown text to Compose AnnotatedString.
- * Supports basic markdown formatting: bold, italic, bold+italic, and inline code.
+ * Convert markdown text to Compose AnnotatedString with basic formatting support.
+ *
+ * ## Supported Syntax
+ * - **Bold**: `**text**` or `__text__`
+ * - *Italic*: `*text*` or `_text_`
+ * - ***Bold + Italic***: `***text***` or `___text___`
+ * - `Inline Code`: `` `text` ``
+ *
+ * ## Limitations
+ * - Nested formatting is not supported (e.g., `**bold *and italic***` will only apply bold to the outer content)
+ * - Mixed delimiters are not supported (e.g., `**bold__` won't work, use matching delimiters)
+ * - Multiline formatting is supported but not optimized for very long texts (>10,000 characters)
+ * - Links, images, lists, headers, and block quotes are not supported
+ *
+ * ## Escape Characters
+ * Use backslash `\` to escape markdown characters:
+ * - `\*not italic\*` → *not italic* (literal asterisks)
+ * - `\`not code\`` → `not code` (literal backticks)
+ *
+ * ## Security
+ * This parser only applies text styling and does not interpret URLs, HTML, or scripts.
+ * Safe to use with untrusted user input from support conversations.
+ *
+ * @param markdownText The input text with optional markdown syntax
+ * @return AnnotatedString with applied formatting styles
  */
 fun markdownToAnnotatedString(markdownText: String): AnnotatedString = buildAnnotatedString {
     var currentIndex = 0
@@ -23,6 +46,17 @@ fun markdownToAnnotatedString(markdownText: String): AnnotatedString = buildAnno
 
     while (currentIndex < text.length) {
         when {
+            // Escape character: \* → *
+            text[currentIndex] == '\\' && currentIndex + SINGLE_DELIMITER_LENGTH < text.length -> {
+                val nextChar = text[currentIndex + SINGLE_DELIMITER_LENGTH]
+                if (nextChar in setOf('*', '_', '`', '\\')) {
+                    append(nextChar)
+                    currentIndex += DOUBLE_DELIMITER_LENGTH
+                } else {
+                    append(text[currentIndex])
+                    currentIndex++
+                }
+            }
             // Bold + Italic: ***text*** or ___text___
             text.startsWith("***", currentIndex) || text.startsWith("___", currentIndex) -> {
                 currentIndex = processBoldItalic(text, currentIndex)
