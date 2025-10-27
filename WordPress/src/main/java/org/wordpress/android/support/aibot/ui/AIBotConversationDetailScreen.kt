@@ -87,20 +87,14 @@ fun AIBotConversationDetailScreen(
         }
     }
 
-    // Detect when user scrolls to the top to load older messages
+    // Detect when user scrolls near the top to load older messages
     LaunchedEffect(listState, isLoadingOlderMessages, isLoading, hasMorePages) {
         snapshotFlow { listState.firstVisibleItemIndex }
             .collect { firstVisibleIndex ->
-                // Trigger pagination when user scrolls to the top
-                // The top threshold depends on whether we're currently showing a loading indicator
-                val shouldLoadMore = if (isLoadingOlderMessages) {
-                    // If loading indicator is shown at position 0, we shouldn't trigger again
-                    false
-                } else {
-                    // Check if we're at the very top (index 0)
-                    // Note: when hasMorePages=true, there's no welcome header, so index 0 is the first message
-                    firstVisibleIndex == 0
-                }
+                // Trigger pagination when user reaches the 4th message from the top
+                val threshold = 4
+
+                val shouldLoadMore = !isLoadingOlderMessages && firstVisibleIndex <= threshold
 
                 if (shouldLoadMore && !isLoading && hasMorePages) {
                     onLoadOlderMessages()
