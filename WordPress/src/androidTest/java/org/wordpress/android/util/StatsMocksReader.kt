@@ -8,8 +8,7 @@ class StatsMocksReader {
             MutableList<StatsKeyValueData> {
         val todayMarker = "{{now format='yyyy-MM-dd'}}"
         val readString = this.readAssetsFile("mocks/mappings/wpcom/stats/$fileName.json")
-        val wireMockJSON = JSONObject(readString)
-        val arrayRaw = wireMockJSON
+        val arrayRaw = JSONObject(readString)
             .getJSONObject("response")
             .getJSONObject("jsonBody")
             .getJSONObject("days")

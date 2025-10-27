@@ -12,34 +12,3 @@ android {
         compileSdk rootProject.compileSdkVersion
     }
 }
-
-dependencies {
-    api(libs.wiremock.get().module.toString()) {
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-        exclude group: 'org.apache.commons', module: 'commons-lang3'
-        exclude group: 'asm', module: 'asm'
-        exclude group: 'org.json', module: 'json'
-    }
-    runtimeOnly(libs.apache.http.client.android)
-
-    constraints {
-        implementation(libs.wiremock) {
-            because("newer versions of WireMock use Java APIs not available on Android")
-        }
-
-        def wireMockSecurity = "version shipped with WireMock 2.26.3 contains security vulnerabilities"
-
-        implementation(libs.jetty.webapp) {
-            because(wireMockSecurity)
-        }
-        implementation(libs.jackson.databind) {
-            because(wireMockSecurity)
-        }
-        implementation(libs.json.path) {
-            because(wireMockSecurity)
-        }
-        implementation(libs.commons.fileupload) {
-            because(wireMockSecurity)
-        }
-    }
-}
