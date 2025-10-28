@@ -41,6 +41,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -123,8 +125,9 @@ fun HENewTicketScreen(
 
             SectionHeader(text = stringResource(R.string.he_support_issue_details))
 
+            val subjectLabel = stringResource(R.string.he_support_subject_label)
             Text(
-                text = stringResource(R.string.he_support_subject_label),
+                text = subjectLabel,
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -133,7 +136,9 @@ fun HENewTicketScreen(
             OutlinedTextField(
                 value = subject,
                 onValueChange = { subject = it },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { contentDescription = subjectLabel },
                 placeholder = {
                     Text(
                         text = stringResource(R.string.he_support_subject_placeholder)
@@ -148,8 +153,9 @@ fun HENewTicketScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            val siteAddressLabel = stringResource(R.string.he_support_site_address_label)
             Text(
-                text = stringResource(R.string.he_support_site_address_label),
+                text = siteAddressLabel,
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -158,7 +164,9 @@ fun HENewTicketScreen(
             OutlinedTextField(
                 value = siteAddress,
                 onValueChange = { siteAddress = it },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { contentDescription = siteAddressLabel },
                 placeholder = {
                     Text(
                         text = stringResource(R.string.he_support_site_address_placeholder)
@@ -339,7 +347,9 @@ private fun CategoryOption(
     onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics { contentDescription = label },
         onClick = onClick,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
