@@ -56,6 +56,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(accountModel)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.accessToken).thenReturn(testAccessToken)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel = HESupportViewModel(
             accountStore = accountStore,
