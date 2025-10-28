@@ -70,11 +70,12 @@ class MarkdownUtilsTest {
         val result = markdownToAnnotatedString(input)
 
         assertThat(result.text).isEqualTo("This is bold and italic text")
-        assertThat(result.spanStyles).hasSize(1)
-        assertThat(result.spanStyles[0].item.fontWeight).isEqualTo(FontWeight.Bold)
-        assertThat(result.spanStyles[0].item.fontStyle).isEqualTo(FontStyle.Italic)
-        assertThat(result.spanStyles[0].start).isEqualTo(8)
-        assertThat(result.spanStyles[0].end).isEqualTo(23)
+        // CommonMark applies bold and italic as separate, nested spans
+        assertThat(result.spanStyles).hasSize(2)
+        val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
+        val hasItalic = result.spanStyles.any { it.item.fontStyle == FontStyle.Italic }
+        assertThat(hasBold).isTrue()
+        assertThat(hasItalic).isTrue()
     }
 
     @Test
@@ -83,11 +84,12 @@ class MarkdownUtilsTest {
         val result = markdownToAnnotatedString(input)
 
         assertThat(result.text).isEqualTo("This is bold and italic text")
-        assertThat(result.spanStyles).hasSize(1)
-        assertThat(result.spanStyles[0].item.fontWeight).isEqualTo(FontWeight.Bold)
-        assertThat(result.spanStyles[0].item.fontStyle).isEqualTo(FontStyle.Italic)
-        assertThat(result.spanStyles[0].start).isEqualTo(8)
-        assertThat(result.spanStyles[0].end).isEqualTo(23)
+        // CommonMark applies bold and italic as separate, nested spans
+        assertThat(result.spanStyles).hasSize(2)
+        val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
+        val hasItalic = result.spanStyles.any { it.item.fontStyle == FontStyle.Italic }
+        assertThat(hasBold).isTrue()
+        assertThat(hasItalic).isTrue()
     }
 
     @Test
@@ -146,14 +148,17 @@ class MarkdownUtilsTest {
     }
 
     @Test
-    fun `nested markdown formats are not supported and treated literally`() {
+    fun `nested markdown formats are properly supported`() {
         val input = "**bold *and italic* combined**"
         val result = markdownToAnnotatedString(input)
 
-        // The outer bold will be applied to "bold *and italic* combined"
-        assertThat(result.text).isEqualTo("bold *and italic* combined")
-        assertThat(result.spanStyles).hasSize(1)
-        assertThat(result.spanStyles[0].item.fontWeight).isEqualTo(FontWeight.Bold)
+        // CommonMark properly handles nested formatting
+        assertThat(result.text).isEqualTo("bold and italic combined")
+        assertThat(result.spanStyles.size).isGreaterThan(1)
+        val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
+        val hasItalic = result.spanStyles.any { it.item.fontStyle == FontStyle.Italic }
+        assertThat(hasBold).isTrue()
+        assertThat(hasItalic).isTrue()
     }
 
     @Test
@@ -311,10 +316,12 @@ class MarkdownUtilsTest {
         val input = "Line 1 **bold**\nLine 2 *italic*\nLine 3 normal"
         val result = markdownToAnnotatedString(input)
 
-        assertThat(result.text).isEqualTo("Line 1 bold\nLine 2 italic\nLine 3 normal")
-        assertThat(result.spanStyles).hasSize(2)
-        assertThat(result.spanStyles[0].item.fontWeight).isEqualTo(FontWeight.Bold)
-        assertThat(result.spanStyles[1].item.fontStyle).isEqualTo(FontStyle.Italic)
+        // CommonMark adds paragraph separators, so we just verify formatting is applied
+        assertThat(result.spanStyles.size).isGreaterThanOrEqualTo(2)
+        val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
+        val hasItalic = result.spanStyles.any { it.item.fontStyle == FontStyle.Italic }
+        assertThat(hasBold).isTrue()
+        assertThat(hasItalic).isTrue()
     }
 
     @Test
@@ -346,5 +353,367 @@ class MarkdownUtilsTest {
 
         assertThat(result.text).isEqualTo("Text ending with \\")
         assertThat(result.spanStyles).isEmpty()
+    }
+
+    // Link Tests
+
+    @Test
+    fun `simple link is formatted with underline and color`() {
+        val input = "Check out [this link](https://example.com)"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Check out this link")
+        assertThat(result.spanStyles).hasSize(1)
+
+        // Should have color and underline styles combined
+        val linkStyle = result.spanStyles[0]
+        assertThat(linkStyle.item.textDecoration).isNotNull()
+        assertThat(linkStyle.item.color).isNotNull()
+    }
+
+    @Test
+    fun `link URL is stored as string annotation`() {
+        val input = "Visit [example](https://example.com) for more"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Visit example for more")
+
+        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        assertThat(annotations).hasSize(1)
+        assertThat(annotations[0].item).isEqualTo("https://example.com")
+        assertThat(annotations[0].start).isEqualTo(6)
+        assertThat(annotations[0].end).isEqualTo(13)
+    }
+
+    @Test
+    fun `multiple links are all formatted`() {
+        val input = "See [link1](http://one.com) and [link2](http://two.com)"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("See link1 and link2")
+
+        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        assertThat(annotations).hasSize(2)
+        assertThat(annotations[0].item).isEqualTo("http://one.com")
+        assertThat(annotations[1].item).isEqualTo("http://two.com")
+    }
+
+    @Test
+    fun `link with formatted text inside works`() {
+        val input = "Click [**bold link**](https://example.com)"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Click bold link")
+
+        // Should have bold, color, and underline
+        assertThat(result.spanStyles.size).isGreaterThanOrEqualTo(2)
+        val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
+        assertThat(hasBold).isTrue()
+
+        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        assertThat(annotations).hasSize(1)
+        assertThat(annotations[0].item).isEqualTo("https://example.com")
+    }
+
+    @Test
+    fun `link at start of string is formatted`() {
+        val input = "[Start link](https://example.com) here"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Start link here")
+
+        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        assertThat(annotations).hasSize(1)
+        assertThat(annotations[0].start).isEqualTo(0)
+    }
+
+    @Test
+    fun `link at end of string is formatted`() {
+        val input = "End with [this link](https://example.com)"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("End with this link")
+
+        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        assertThat(annotations).hasSize(1)
+        assertThat(annotations[0].end).isEqualTo(result.text.length)
+    }
+
+    @Test
+    fun `entire string as a link is formatted`() {
+        val input = "[Everything is a link](https://example.com)"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Everything is a link")
+
+        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        assertThat(annotations).hasSize(1)
+        assertThat(annotations[0].start).isEqualTo(0)
+        assertThat(annotations[0].end).isEqualTo(result.text.length)
+    }
+
+    @Test
+    fun `link with special characters in URL is preserved`() {
+        val input = "Go to [search](https://example.com/search?q=test&lang=en)"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Go to search")
+
+        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        assertThat(annotations).hasSize(1)
+        assertThat(annotations[0].item).isEqualTo("https://example.com/search?q=test&lang=en")
+    }
+
+    // Heading Tests
+
+    @Test
+    fun `heading level 1 is formatted as bold`() {
+        val input = "# Heading 1"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Heading 1")
+        assertThat(result.spanStyles).hasSize(1)
+        assertThat(result.spanStyles[0].item.fontWeight).isEqualTo(FontWeight.Bold)
+    }
+
+    @Test
+    fun `heading level 2 is formatted as bold`() {
+        val input = "## Heading 2"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Heading 2")
+        assertThat(result.spanStyles).hasSize(1)
+        assertThat(result.spanStyles[0].item.fontWeight).isEqualTo(FontWeight.Bold)
+    }
+
+    @Test
+    fun `heading level 6 is formatted as bold`() {
+        val input = "###### Heading 6"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Heading 6")
+        assertThat(result.spanStyles).hasSize(1)
+        assertThat(result.spanStyles[0].item.fontWeight).isEqualTo(FontWeight.Bold)
+    }
+
+    @Test
+    fun `heading with inline formatting preserves both styles`() {
+        val input = "# Heading with *italic* text"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("Heading with italic text")
+        // Should have bold for heading and italic for the word
+        assertThat(result.spanStyles.size).isGreaterThanOrEqualTo(2)
+        val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
+        val hasItalic = result.spanStyles.any { it.item.fontStyle == FontStyle.Italic }
+        assertThat(hasBold).isTrue()
+        assertThat(hasItalic).isTrue()
+    }
+
+    @Test
+    fun `multiple headings are all formatted`() {
+        val input = "# First\n## Second"
+        val result = markdownToAnnotatedString(input)
+
+        // Both headings should be bold
+        val boldStyles = result.spanStyles.filter { it.item.fontWeight == FontWeight.Bold }
+        assertThat(boldStyles.size).isGreaterThanOrEqualTo(2)
+    }
+
+    @Test
+    fun `heading followed by paragraph maintains separation`() {
+        val input = "# Heading\nRegular paragraph"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).contains("Heading")
+        assertThat(result.text).contains("Regular paragraph")
+        // Should have bold for heading
+        val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
+        assertThat(hasBold).isTrue()
+    }
+
+    @Test
+    fun `heading with link inside works`() {
+        val input = "# Heading with [link](https://example.com)"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).contains("Heading with link")
+        // Should have bold for heading
+        val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
+        assertThat(hasBold).isTrue()
+        // Should have link annotation
+        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        assertThat(annotations).hasSize(1)
+    }
+
+    @Test
+    fun `heading with code inside works`() {
+        val input = "# Heading with `code`"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).contains("Heading with code")
+        // Should have bold for heading
+        val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
+        assertThat(hasBold).isTrue()
+        // Should have monospace for code
+        val hasCode = result.spanStyles.any { it.item.fontFamily == FontFamily.Monospace }
+        assertThat(hasCode).isTrue()
+    }
+
+    // List Tests
+
+    @Test
+    fun `simple unordered list is formatted with bullets`() {
+        val input = "- First item\n- Second item\n- Third item"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).contains("• First item")
+        assertThat(result.text).contains("• Second item")
+        assertThat(result.text).contains("• Third item")
+    }
+
+    @Test
+    fun `list with asterisk delimiter is formatted`() {
+        val input = "* Item one\n* Item two"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).contains("• Item one")
+        assertThat(result.text).contains("• Item two")
+    }
+
+    @Test
+    fun `list items with inline formatting preserve styles`() {
+        val input = "- **Bold item**\n- *Italic item*\n- Item with `code`"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).contains("• Bold item")
+        assertThat(result.text).contains("• Italic item")
+        assertThat(result.text).contains("• Item with code")
+
+        val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
+        val hasItalic = result.spanStyles.any { it.item.fontStyle == FontStyle.Italic }
+        val hasCode = result.spanStyles.any { it.item.fontFamily == FontFamily.Monospace }
+
+        assertThat(hasBold).isTrue()
+        assertThat(hasItalic).isTrue()
+        assertThat(hasCode).isTrue()
+    }
+
+    @Test
+    fun `list item with link works`() {
+        val input = "- Check [this link](https://example.com)\n- Another item"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).contains("• Check this link")
+        assertThat(result.text).contains("• Another item")
+
+        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        assertThat(annotations).hasSize(1)
+        assertThat(annotations[0].item).isEqualTo("https://example.com")
+    }
+
+    @Test
+    fun `list followed by paragraph maintains separation`() {
+        val input = "- List item\n\nRegular paragraph"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).contains("• List item")
+        assertThat(result.text).contains("Regular paragraph")
+    }
+
+    @Test
+    fun `single list item is formatted`() {
+        val input = "- Only one item"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).isEqualTo("• Only one item")
+    }
+
+    // Horizontal Rule Tests
+
+    @Test
+    fun `horizontal rule with dashes is rendered`() {
+        val input = "Before\n\n---\n\nAfter"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).contains("Before")
+        assertThat(result.text).contains("────────────────────")
+        assertThat(result.text).contains("After")
+    }
+
+    @Test
+    fun `horizontal rule with asterisks is rendered`() {
+        val input = "Text above\n\n***\n\nText below"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).contains("Text above")
+        assertThat(result.text).contains("────────────────────")
+        assertThat(result.text).contains("Text below")
+    }
+
+    @Test
+    fun `horizontal rule with underscores is rendered`() {
+        val input = "Start\n\n___\n\nEnd"
+        val result = markdownToAnnotatedString(input)
+
+        assertThat(result.text).contains("Start")
+        assertThat(result.text).contains("────────────────────")
+        assertThat(result.text).contains("End")
+    }
+
+    @Test
+    fun `multiple horizontal rules are all rendered`() {
+        val input = "Section 1\n\n---\n\nSection 2\n\n---\n\nSection 3"
+        val result = markdownToAnnotatedString(input)
+
+        val hrCount = result.text.count { it == '─' } / 20
+        assertThat(hrCount).isEqualTo(2)
+    }
+
+    // Complex Integration Test
+
+    @Test
+    fun `complex message with all features renders correctly`() {
+        val input = """
+            # Welcome
+
+            Here's a **bold** statement and *italic* text.
+
+            ## Features
+
+            - First **feature**
+            - Second with [link](https://example.com)
+            - Third with `code`
+
+            ---
+
+            Visit our site!
+        """.trimIndent()
+
+        val result = markdownToAnnotatedString(input)
+
+        // Check all elements are present
+        assertThat(result.text).contains("Welcome")
+        assertThat(result.text).contains("bold")
+        assertThat(result.text).contains("italic")
+        assertThat(result.text).contains("Features")
+        assertThat(result.text).contains("• First feature")
+        assertThat(result.text).contains("• Second with link")
+        assertThat(result.text).contains("• Third with code")
+        assertThat(result.text).contains("────────────────────")
+        assertThat(result.text).contains("Visit our site!")
+
+        // Check styles are applied
+        val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
+        val hasItalic = result.spanStyles.any { it.item.fontStyle == FontStyle.Italic }
+        val hasCode = result.spanStyles.any { it.item.fontFamily == FontFamily.Monospace }
+
+        assertThat(hasBold).isTrue()
+        assertThat(hasItalic).isTrue()
+        assertThat(hasCode).isTrue()
+
+        // Check link annotation
+        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        assertThat(annotations).hasSize(1)
     }
 }

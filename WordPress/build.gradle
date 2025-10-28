@@ -374,6 +374,7 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
 
 dependencies {
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.commonmark)
     compileOnly project(path: ':libs:annotations')
     ksp project(':libs:processors')
     implementation (project(path:':libs:networking')) {
