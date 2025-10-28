@@ -2,12 +2,14 @@ package org.wordpress.android.ui.compose.utils
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 import org.commonmark.node.BulletList
 import org.commonmark.node.Code
 import org.commonmark.node.Emphasis
@@ -23,7 +25,6 @@ import org.commonmark.node.ThematicBreak
 import org.commonmark.parser.Parser
 
 private const val CODE_BACKGROUND_ALPHA = 0.2f
-private const val URL_TAG = "URL"
 
 /**
  * Convert markdown text to Compose AnnotatedString using the CommonMark library.
@@ -45,17 +46,17 @@ private const val URL_TAG = "URL"
  * This provides visual emphasis while maintaining a consistent text flow for chat-like UIs.
  *
  * ## List Handling
- * Unordered list items are prefixed with "• " (bullet point). List formatting is preserved
+ * Unordered list items are prefixed with "- " (dash). List formatting is preserved
  * with proper indentation and spacing.
  *
  * ## Link Handling
- * Links are styled with underline and color, and include URL annotations that can be
- * used with ClickableText to handle clicks. The URL is stored as a string annotation
- * with the tag "URL".
+ * Links are styled with underline and color, and include LinkAnnotation.Url annotations
+ * that automatically handle clicks. When used with Compose Text, links will open in
+ * the default browser automatically.
  *
  * ## Security
- * This parser applies text styling and link annotations. Links are annotated but not
- * automatically opened - the calling code must handle URL clicks and validate URLs.
+ * This parser applies text styling and link annotations. Links use LinkAnnotation.Url
+ * which will automatically open URLs in the system browser.
  * Safe to use with untrusted user input from support conversations.
  *
  * @param markdownText The input text with optional markdown syntax
@@ -88,22 +89,18 @@ private fun AnnotatedString.Builder.processNode(node: Node) {
                 )
             }
             is Link -> {
-                val start = length
-                processNode(child)
-                addStyle(
-                    SpanStyle(
-                        color = Color.Blue,
-                        textDecoration = TextDecoration.Underline
-                    ),
-                    start,
-                    length
-                )
-                addStringAnnotation(
-                    tag = URL_TAG,
-                    annotation = child.destination,
-                    start = start,
-                    end = length
-                )
+                withLink(LinkAnnotation.Url(child.destination)) {
+                    val start = length
+                    processNode(child)
+                    addStyle(
+                        SpanStyle(
+                            color = Color.Blue,
+                            textDecoration = TextDecoration.Underline
+                        ),
+                        start,
+                        length
+                    )
+                }
             }
             is Emphasis -> {
                 val start = length

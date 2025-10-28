@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.compose.utils
 
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -372,15 +373,16 @@ class MarkdownUtilsTest {
     }
 
     @Test
-    fun `link URL is stored as string annotation`() {
+    fun `link URL is stored as link annotation`() {
         val input = "Visit [example](https://example.com) for more"
         val result = markdownToAnnotatedString(input)
 
         assertThat(result.text).isEqualTo("Visit example for more")
 
-        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        val annotations = result.getLinkAnnotations(0, result.text.length)
         assertThat(annotations).hasSize(1)
-        assertThat(annotations[0].item).isEqualTo("https://example.com")
+        val linkAnnotation = annotations[0].item as LinkAnnotation.Url
+        assertThat(linkAnnotation.url).isEqualTo("https://example.com")
         assertThat(annotations[0].start).isEqualTo(6)
         assertThat(annotations[0].end).isEqualTo(13)
     }
@@ -392,10 +394,12 @@ class MarkdownUtilsTest {
 
         assertThat(result.text).isEqualTo("See link1 and link2")
 
-        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        val annotations = result.getLinkAnnotations(0, result.text.length)
         assertThat(annotations).hasSize(2)
-        assertThat(annotations[0].item).isEqualTo("http://one.com")
-        assertThat(annotations[1].item).isEqualTo("http://two.com")
+        val link1 = annotations[0].item as LinkAnnotation.Url
+        val link2 = annotations[1].item as LinkAnnotation.Url
+        assertThat(link1.url).isEqualTo("http://one.com")
+        assertThat(link2.url).isEqualTo("http://two.com")
     }
 
     @Test
@@ -410,9 +414,10 @@ class MarkdownUtilsTest {
         val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
         assertThat(hasBold).isTrue()
 
-        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        val annotations = result.getLinkAnnotations(0, result.text.length)
         assertThat(annotations).hasSize(1)
-        assertThat(annotations[0].item).isEqualTo("https://example.com")
+        val linkAnnotation = annotations[0].item as LinkAnnotation.Url
+        assertThat(linkAnnotation.url).isEqualTo("https://example.com")
     }
 
     @Test
@@ -422,7 +427,7 @@ class MarkdownUtilsTest {
 
         assertThat(result.text).isEqualTo("Start link here")
 
-        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        val annotations = result.getLinkAnnotations(0, result.text.length)
         assertThat(annotations).hasSize(1)
         assertThat(annotations[0].start).isEqualTo(0)
     }
@@ -434,7 +439,7 @@ class MarkdownUtilsTest {
 
         assertThat(result.text).isEqualTo("End with this link")
 
-        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        val annotations = result.getLinkAnnotations(0, result.text.length)
         assertThat(annotations).hasSize(1)
         assertThat(annotations[0].end).isEqualTo(result.text.length)
     }
@@ -446,7 +451,7 @@ class MarkdownUtilsTest {
 
         assertThat(result.text).isEqualTo("Everything is a link")
 
-        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        val annotations = result.getLinkAnnotations(0, result.text.length)
         assertThat(annotations).hasSize(1)
         assertThat(annotations[0].start).isEqualTo(0)
         assertThat(annotations[0].end).isEqualTo(result.text.length)
@@ -459,9 +464,10 @@ class MarkdownUtilsTest {
 
         assertThat(result.text).isEqualTo("Go to search")
 
-        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        val annotations = result.getLinkAnnotations(0, result.text.length)
         assertThat(annotations).hasSize(1)
-        assertThat(annotations[0].item).isEqualTo("https://example.com/search?q=test&lang=en")
+        val linkAnnotation = annotations[0].item as LinkAnnotation.Url
+        assertThat(linkAnnotation.url).isEqualTo("https://example.com/search?q=test&lang=en")
     }
 
     // Heading Tests
@@ -542,7 +548,7 @@ class MarkdownUtilsTest {
         val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
         assertThat(hasBold).isTrue()
         // Should have link annotation
-        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        val annotations = result.getLinkAnnotations(0, result.text.length)
         assertThat(annotations).hasSize(1)
     }
 
@@ -567,9 +573,9 @@ class MarkdownUtilsTest {
         val input = "- First item\n- Second item\n- Third item"
         val result = markdownToAnnotatedString(input)
 
-        assertThat(result.text).contains("• First item")
-        assertThat(result.text).contains("• Second item")
-        assertThat(result.text).contains("• Third item")
+        assertThat(result.text).contains("- First item")
+        assertThat(result.text).contains("- Second item")
+        assertThat(result.text).contains("- Third item")
     }
 
     @Test
@@ -577,8 +583,8 @@ class MarkdownUtilsTest {
         val input = "* Item one\n* Item two"
         val result = markdownToAnnotatedString(input)
 
-        assertThat(result.text).contains("• Item one")
-        assertThat(result.text).contains("• Item two")
+        assertThat(result.text).contains("- Item one")
+        assertThat(result.text).contains("- Item two")
     }
 
     @Test
@@ -586,9 +592,9 @@ class MarkdownUtilsTest {
         val input = "- **Bold item**\n- *Italic item*\n- Item with `code`"
         val result = markdownToAnnotatedString(input)
 
-        assertThat(result.text).contains("• Bold item")
-        assertThat(result.text).contains("• Italic item")
-        assertThat(result.text).contains("• Item with code")
+        assertThat(result.text).contains("- Bold item")
+        assertThat(result.text).contains("- Italic item")
+        assertThat(result.text).contains("- Item with code")
 
         val hasBold = result.spanStyles.any { it.item.fontWeight == FontWeight.Bold }
         val hasItalic = result.spanStyles.any { it.item.fontStyle == FontStyle.Italic }
@@ -604,12 +610,13 @@ class MarkdownUtilsTest {
         val input = "- Check [this link](https://example.com)\n- Another item"
         val result = markdownToAnnotatedString(input)
 
-        assertThat(result.text).contains("• Check this link")
-        assertThat(result.text).contains("• Another item")
+        assertThat(result.text).contains("- Check this link")
+        assertThat(result.text).contains("- Another item")
 
-        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        val annotations = result.getLinkAnnotations(0, result.text.length)
         assertThat(annotations).hasSize(1)
-        assertThat(annotations[0].item).isEqualTo("https://example.com")
+        val linkAnnotation = annotations[0].item as LinkAnnotation.Url
+        assertThat(linkAnnotation.url).isEqualTo("https://example.com")
     }
 
     @Test
@@ -617,7 +624,7 @@ class MarkdownUtilsTest {
         val input = "- List item\n\nRegular paragraph"
         val result = markdownToAnnotatedString(input)
 
-        assertThat(result.text).contains("• List item")
+        assertThat(result.text).contains("- List item")
         assertThat(result.text).contains("Regular paragraph")
     }
 
@@ -626,7 +633,7 @@ class MarkdownUtilsTest {
         val input = "- Only one item"
         val result = markdownToAnnotatedString(input)
 
-        assertThat(result.text).isEqualTo("• Only one item")
+        assertThat(result.text).isEqualTo("- Only one item")
     }
 
     // Horizontal Rule Tests
@@ -637,7 +644,7 @@ class MarkdownUtilsTest {
         val result = markdownToAnnotatedString(input)
 
         assertThat(result.text).contains("Before")
-        assertThat(result.text).contains("────────────────────")
+        assertThat(result.text).contains("──────────")
         assertThat(result.text).contains("After")
     }
 
@@ -647,7 +654,7 @@ class MarkdownUtilsTest {
         val result = markdownToAnnotatedString(input)
 
         assertThat(result.text).contains("Text above")
-        assertThat(result.text).contains("────────────────────")
+        assertThat(result.text).contains("──────────")
         assertThat(result.text).contains("Text below")
     }
 
@@ -657,7 +664,7 @@ class MarkdownUtilsTest {
         val result = markdownToAnnotatedString(input)
 
         assertThat(result.text).contains("Start")
-        assertThat(result.text).contains("────────────────────")
+        assertThat(result.text).contains("──────────")
         assertThat(result.text).contains("End")
     }
 
@@ -666,7 +673,7 @@ class MarkdownUtilsTest {
         val input = "Section 1\n\n---\n\nSection 2\n\n---\n\nSection 3"
         val result = markdownToAnnotatedString(input)
 
-        val hrCount = result.text.count { it == '─' } / 20
+        val hrCount = result.text.count { it == '─' } / 10
         assertThat(hrCount).isEqualTo(2)
     }
 
@@ -697,10 +704,10 @@ class MarkdownUtilsTest {
         assertThat(result.text).contains("bold")
         assertThat(result.text).contains("italic")
         assertThat(result.text).contains("Features")
-        assertThat(result.text).contains("• First feature")
-        assertThat(result.text).contains("• Second with link")
-        assertThat(result.text).contains("• Third with code")
-        assertThat(result.text).contains("────────────────────")
+        assertThat(result.text).contains("- First feature")
+        assertThat(result.text).contains("- Second with link")
+        assertThat(result.text).contains("- Third with code")
+        assertThat(result.text).contains("──────────")
         assertThat(result.text).contains("Visit our site!")
 
         // Check styles are applied
@@ -713,7 +720,7 @@ class MarkdownUtilsTest {
         assertThat(hasCode).isTrue()
 
         // Check link annotation
-        val annotations = result.getStringAnnotations("URL", 0, result.text.length)
+        val annotations = result.getLinkAnnotations(0, result.text.length)
         assertThat(annotations).hasSize(1)
     }
 }
