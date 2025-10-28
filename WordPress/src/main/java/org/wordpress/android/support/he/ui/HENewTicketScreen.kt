@@ -68,11 +68,15 @@ fun HENewTicketScreen(
         subject: String,
         messageText: String,
         siteAddress: String,
+        attachments: List<String>
             ) -> Unit,
     userName: String = "",
     userEmail: String = "",
     userAvatarUrl: String? = null,
-    isSendingNewConversation: Boolean = false
+    isSendingNewConversation: Boolean = false,
+    onAddImageClick: () -> Unit = { },
+    selectedImagePaths: List<String> = emptyList(),
+    onRemoveImage: (String) -> Unit = { }
 ) {
     var selectedCategory by remember { mutableStateOf<SupportCategory?>(null) }
     var subject by remember { mutableStateOf("") }
@@ -95,7 +99,7 @@ fun HENewTicketScreen(
                 isLoading = isSendingNewConversation,
                 onClick = {
                     selectedCategory?.let { category ->
-                        onSubmit(category, subject, messageText, siteAddress)
+                        onSubmit(category, subject, messageText, siteAddress, selectedImagePaths)
                     }
                 }
             )
@@ -194,6 +198,9 @@ fun HENewTicketScreen(
                 includeAppLogs = includeAppLogs,
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
+                selectedImagePaths = selectedImagePaths,
+                onAddImageClick = onAddImageClick,
+                onRemoveImage = onRemoveImage
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -418,7 +425,7 @@ private fun HENewTicketScreenPreview() {
         HENewTicketScreen(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
+            onSubmit = { _, _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
@@ -434,7 +441,7 @@ private fun HENewTicketScreenPreviewDark() {
         HENewTicketScreen(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
+            onSubmit = { _, _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
@@ -450,7 +457,7 @@ private fun HENewTicketScreenWordPressPreview() {
         HENewTicketScreen(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
+            onSubmit = { _, _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
@@ -466,7 +473,7 @@ private fun HENewTicketScreenPreviewWordPressDark() {
         HENewTicketScreen(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
+            onSubmit = { _, _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
