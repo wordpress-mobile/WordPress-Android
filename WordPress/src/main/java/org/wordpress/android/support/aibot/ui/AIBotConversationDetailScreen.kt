@@ -293,7 +293,7 @@ private fun ChatInputBar(
 @Composable
 private fun MessageBubble(message: BotMessage, resources: android.content.res.Resources) {
     val timestamp = formatRelativeTime(message.date, resources)
-    val author = if (message.isWrittenByUser) "You" else "AI Bot"
+    val author = stringResource(if (message.isWrittenByUser) R.string.ai_bot_you else R.string.ai_bot_odie)
     val messageDescription = "$author, $timestamp. ${message.formattedText}"
 
     Row(
