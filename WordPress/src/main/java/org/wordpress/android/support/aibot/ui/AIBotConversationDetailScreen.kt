@@ -40,6 +40,9 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
@@ -195,10 +198,17 @@ fun AIBotConversationDetailScreen(
 
 @Composable
 private fun WelcomeHeader(userName: String) {
+    val greeting = stringResource(R.string.ai_bot_welcome_greeting, userName)
+    val message = stringResource(R.string.ai_bot_welcome_message)
+    val welcomeDescription = "$greeting. $message"
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = welcomeDescription
+            },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
@@ -220,7 +230,8 @@ private fun WelcomeHeader(userName: String) {
                 text = stringResource(R.string.ai_bot_welcome_greeting, userName),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.semantics { heading() }
             )
 
             Text(
@@ -241,6 +252,7 @@ private fun ChatInputBar(
     onSendClick: () -> Unit
 ) {
     val canSend = messageText.isNotBlank() && canSendMessage
+    val messageInputLabel = stringResource(R.string.ai_bot_message_input_placeholder)
 
     Row(
         modifier = Modifier
@@ -253,8 +265,10 @@ private fun ChatInputBar(
         OutlinedTextField(
             value = messageText,
             onValueChange = onMessageTextChange,
-            modifier = Modifier.weight(1f),
-            placeholder = { Text(stringResource(R.string.ai_bot_message_input_placeholder)) },
+            modifier = Modifier
+                .weight(1f)
+                .semantics { contentDescription = messageInputLabel },
+            placeholder = { Text(messageInputLabel) },
             maxLines = 4,
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
         )
@@ -278,6 +292,10 @@ private fun ChatInputBar(
 
 @Composable
 private fun MessageBubble(message: BotMessage, resources: android.content.res.Resources) {
+    val timestamp = formatRelativeTime(message.date, resources)
+    val author = if (message.isWrittenByUser) "You" else "AI Bot"
+    val messageDescription = "$author, $timestamp. ${message.formattedText}"
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = if (message.isWrittenByUser) {
@@ -303,6 +321,9 @@ private fun MessageBubble(message: BotMessage, resources: android.content.res.Re
                     )
                 )
                 .padding(12.dp)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = messageDescription
+                }
         ) {
             Column {
                 Text(
@@ -318,7 +339,7 @@ private fun MessageBubble(message: BotMessage, resources: android.content.res.Re
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = formatRelativeTime(message.date, resources),
+                    text = timestamp,
                     style = MaterialTheme.typography.bodySmall,
                     color = if (message.isWrittenByUser) {
                         MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
@@ -349,6 +370,7 @@ private fun TypingIndicatorBubble() {
                     )
                 )
                 .padding(16.dp)
+                .semantics { contentDescription = "AI Bot is typing" }
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
