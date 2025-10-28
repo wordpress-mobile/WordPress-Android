@@ -18,6 +18,7 @@ import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
 import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -30,6 +31,9 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var appLogWrapper: AppLogWrapper
+
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private lateinit var viewModel: AIBotSupportViewModel
 
@@ -55,7 +59,8 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
         viewModel = AIBotSupportViewModel(
             accountStore = accountStore,
             aiBotSupportRepository = aiBotSupportRepository,
-            appLogWrapper = appLogWrapper
+            appLogWrapper = appLogWrapper,
+            networkUtilsWrapper = networkUtilsWrapper,
         )
     }
 
