@@ -71,6 +71,9 @@ fun markdownToAnnotatedString(markdownText: String): AnnotatedString {
     }
 }
 
+private const val SECTION_DIVIDER_SIZE = 10
+
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 private fun AnnotatedString.Builder.processNode(node: Node) {
     var child = node.firstChild
     while (child != null) {
@@ -137,7 +140,7 @@ private fun AnnotatedString.Builder.processNode(node: Node) {
                 }
             }
             is ThematicBreak -> {
-                append("─".repeat(10))
+                append("─".repeat(SECTION_DIVIDER_SIZE))
                 // Add newline after horizontal rule if it's not the last one
                 if (child.next != null) {
                     append("\n\n")
