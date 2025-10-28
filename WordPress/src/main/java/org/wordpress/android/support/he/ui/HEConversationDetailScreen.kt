@@ -192,7 +192,8 @@ private fun ConversationHeader(
     isLoading: Boolean = false
 ) {
     val headerDescription = if (!isLoading) {
-        "${stringResource(R.string.he_support_message_count, messageCount)}. ${stringResource(R.string.he_support_last_updated, lastUpdated)}"
+        "${stringResource(R.string.he_support_message_count, messageCount)}. " +
+                stringResource(R.string.he_support_last_updated, lastUpdated)
     } else {
         stringResource(R.string.he_support_last_updated, lastUpdated)
     }
