@@ -29,7 +29,7 @@ fun <T : Conversation> ConversationsListScreen(
     addConversationContentDescription: String,
     snackbarHostState: SnackbarHostState,
     conversations: List<T>,
-    isLoading: Boolean,
+    conversationsState: ConversationsSupportViewModel.ConversationsState,
     onBackClick: () -> Unit,
     onCreateNewConversationClick: () -> Unit,
     onRefresh: () -> Unit,
@@ -54,14 +54,14 @@ fun <T : Conversation> ConversationsListScreen(
         }
     ) { contentPadding ->
         PullToRefreshBox(
-            isRefreshing = isLoading,
+            isRefreshing = conversationsState is ConversationsSupportViewModel.ConversationsState.Loading,
             onRefresh = onRefresh,
             modifier = modifier.fillMaxSize()
         ) {
             ConversationsList(
                 modifier = Modifier.padding(contentPadding),
                 conversations = conversations,
-                isLoading = isLoading,
+                conversationsState = conversationsState,
                 onCreateNewConversationClick = onCreateNewConversationClick,
                 conversationListItem = conversationListItem,
             )
@@ -74,15 +74,19 @@ fun <T : Conversation> ConversationsListScreen(
 private fun <T : Conversation> ConversationsList(
     modifier: Modifier,
     conversations: List<T>,
-    isLoading: Boolean,
+    conversationsState: ConversationsSupportViewModel.ConversationsState,
     onCreateNewConversationClick: () -> Unit,
     conversationListItem: @Composable (T) -> Unit
 ) {
-    if (conversations.isEmpty() && !isLoading) {
+    if (conversations.isEmpty() && conversationsState is ConversationsSupportViewModel.ConversationsState.Loaded) {
         EmptyConversationsView(
             modifier = modifier,
             onCreateNewConversationClick = onCreateNewConversationClick
         )
+    } else if (conversationsState is ConversationsSupportViewModel.ConversationsState.NoNetwork) {
+        OfflineConversationsView()
+    } else if (conversationsState is ConversationsSupportViewModel.ConversationsState.Error) {
+        ErrorConversationsView()
     } else {
         LazyColumn(
             modifier = modifier.fillMaxSize()

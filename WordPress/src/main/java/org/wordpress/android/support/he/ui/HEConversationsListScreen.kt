@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.common.ui.ConversationsListScreen
+import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.common.ui.EmptyConversationsView
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
@@ -49,7 +50,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 fun HEConversationsListScreen(
     snackbarHostState: SnackbarHostState,
     conversations: List<SupportConversation>,
-    isLoading: Boolean,
+    conversationsState: ConversationsSupportViewModel.ConversationsState,
     onConversationClick: (SupportConversation) -> Unit,
     onBackClick: () -> Unit,
     onCreateNewConversationClick: () -> Unit,
@@ -61,7 +62,7 @@ fun HEConversationsListScreen(
         addConversationContentDescription = stringResource(R.string.he_support_new_conversation_content_description),
         snackbarHostState = snackbarHostState,
         conversations = conversations,
-        isLoading = isLoading,
+        conversationsState = conversationsState,
         onBackClick = onBackClick,
         onCreateNewConversationClick = onCreateNewConversationClick,
         onRefresh = onRefresh,
@@ -142,7 +143,7 @@ private fun ConversationsScreenPreview() {
         HEConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = generateSampleHESupportConversations(),
-            isLoading = false,
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
@@ -160,7 +161,7 @@ private fun ConversationsScreenPreviewDark() {
         HEConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = generateSampleHESupportConversations(),
-            isLoading = false,
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
@@ -178,7 +179,7 @@ private fun ConversationsScreenWordPressPreview() {
         HEConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = generateSampleHESupportConversations(),
-            isLoading = false,
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
@@ -196,7 +197,7 @@ private fun ConversationsScreenPreviewWordPressDark() {
         HEConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = generateSampleHESupportConversations(),
-            isLoading = false,
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },

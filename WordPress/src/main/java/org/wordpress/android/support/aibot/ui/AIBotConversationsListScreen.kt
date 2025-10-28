@@ -40,6 +40,7 @@ import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.aibot.util.generateSampleBotConversations
 import org.wordpress.android.support.common.ui.ConversationsListScreen
+import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,7 +48,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 fun AIBotConversationsListScreen(
     snackbarHostState: SnackbarHostState,
     conversations: List<BotConversation>,
-    isLoading: Boolean,
+    conversationsState: ConversationsSupportViewModel.ConversationsState,
     onConversationClick: (BotConversation) -> Unit,
     onBackClick: () -> Unit,
     onCreateNewConversationClick: () -> Unit,
@@ -59,7 +60,7 @@ fun AIBotConversationsListScreen(
         addConversationContentDescription = stringResource(R.string.ai_bot_new_conversation_content_description),
         snackbarHostState = snackbarHostState,
         conversations = conversations,
-        isLoading = isLoading,
+        conversationsState = conversationsState,
         onBackClick = onBackClick,
         onCreateNewConversationClick = onCreateNewConversationClick,
         onRefresh = onRefresh,
@@ -124,7 +125,7 @@ private fun ConversationsScreenPreview() {
         AIBotConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = generateSampleBotConversations(),
-            isLoading = false,
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
@@ -142,7 +143,7 @@ private fun ConversationsScreenPreviewDark() {
         AIBotConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = generateSampleBotConversations(),
-            isLoading = false,
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
@@ -160,7 +161,7 @@ private fun ConversationsScreenWordPressPreview() {
         AIBotConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = generateSampleBotConversations(),
-            isLoading = true,
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
@@ -178,7 +179,7 @@ private fun ConversationsScreenPreviewWordPressDark() {
         AIBotConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = generateSampleBotConversations(),
-            isLoading = true,
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
@@ -196,7 +197,7 @@ private fun EmptyConversationsScreenPreview() {
         AIBotConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = emptyList(),
-            isLoading = false,
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
@@ -214,7 +215,7 @@ private fun EmptyConversationsScreenPreviewDark() {
         AIBotConversationsListScreen(
             snackbarHostState = snackbarHostState,
             conversations = emptyList(),
-            isLoading = false,
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
