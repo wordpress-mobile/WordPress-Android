@@ -2,17 +2,23 @@ package org.wordpress.android.support.he.ui
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
@@ -132,6 +138,25 @@ class HESupportActivity : AppCompatActivity() {
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
                     val messageSendResult by viewModel.messageSendResult.collectAsState()
+                    var selectedImageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
+
+                    val imagePickerLauncher = rememberLauncherForActivityResult(
+                        contract = ActivityResultContracts.GetMultipleContents()
+                    ) { uris: List<Uri> ->
+                        // Only add images if we haven't reached the limit of 4
+                        val availableSlots = 4 - selectedImageUris.size
+                        if (availableSlots > 0) {
+                            selectedImageUris = selectedImageUris + uris.take(availableSlots)
+                        }
+                    }
+
+                    // Clear images after successful message send
+                    LaunchedEffect(messageSendResult) {
+                        if (messageSendResult is HESupportViewModel.MessageSendResult.Success) {
+                            selectedImageUris = emptyList()
+                        }
+                    }
+
                     selectedConversation?.let { conversation ->
                         HEConversationDetailScreen(
                             snackbarHostState = snackbarHostState,
@@ -140,13 +165,22 @@ class HESupportActivity : AppCompatActivity() {
                             isSendingMessage = isSendingMessage,
                             messageSendResult = messageSendResult,
                             onBackClick = { viewModel.onBackClick() },
-                            onSendMessage = { message, includeAppLogs ->
+                            onSendMessage = { message, includeAppLogs, attachments ->
                                 viewModel.onAddMessageToConversation(
                                     message = message,
-                                    attachments = emptyList()
+                                    attachments = attachments
                                 )
                             },
-                            onClearMessageSendResult = { viewModel.clearMessageSendResult() }
+                            onClearMessageSendResult = { viewModel.clearMessageSendResult() },
+                            onAddImageClick = {
+                                if (selectedImageUris.size < 4) {
+                                    imagePickerLauncher.launch("image/*")
+                                }
+                            },
+                            selectedImagePaths = selectedImageUris.map { it.toString() },
+                            onRemoveImage = { pathToRemove ->
+                                selectedImageUris = selectedImageUris.filter { it.toString() != pathToRemove }
+                            }
                         )
                     }
                 }
@@ -154,6 +188,18 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.NewTicket.name) {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val isSendingNewConversation by viewModel.isSendingMessage.collectAsState()
+                    var selectedImageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
+
+                    val imagePickerLauncher = rememberLauncherForActivityResult(
+                        contract = ActivityResultContracts.GetMultipleContents()
+                    ) { uris: List<Uri> ->
+                        // Only add images if we haven't reached the limit of 4
+                        val availableSlots = 4 - selectedImageUris.size
+                        if (availableSlots > 0) {
+                            selectedImageUris = selectedImageUris + uris.take(availableSlots)
+                        }
+                    }
+
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
                         onBackClick = { viewModel.onBackClick() },
@@ -168,8 +214,17 @@ class HESupportActivity : AppCompatActivity() {
                         userName = userInfo.userName,
                         userEmail = userInfo.userEmail,
                         userAvatarUrl = userInfo.avatarUrl,
-                        isSendingNewConversation = isSendingNewConversation
-                    )
+                        isSendingNewConversation = isSendingNewConversation,
+                        onAddImageClick = {
+                            if (selectedImageUris.size < 4) {
+                                imagePickerLauncher.launch("image/*")
+                            }
+                        },
+                        selectedImagePaths = selectedImageUris.map { it.toString() },
+                        onRemoveImage = { pathToRemove ->
+                            selectedImageUris = selectedImageUris.filter { it.toString() != pathToRemove }
+                        },
+                        )
                 }
             }
         }

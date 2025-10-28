@@ -70,8 +70,11 @@ fun HEConversationDetailScreen(
     isSendingMessage: Boolean = false,
     messageSendResult: HESupportViewModel.MessageSendResult? = null,
     onBackClick: () -> Unit,
-    onSendMessage: (message: String, includeAppLogs: Boolean) -> Unit,
-    onClearMessageSendResult: () -> Unit = {}
+    onSendMessage: (message: String, includeAppLogs: Boolean, attachments: List<String>) -> Unit,
+    onClearMessageSendResult: () -> Unit = {},
+    onAddImageClick: () -> Unit = {},
+    selectedImagePaths: List<String> = emptyList(),
+    onRemoveImage: (String) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -173,14 +176,17 @@ fun HEConversationDetailScreen(
                 }
             },
             onSend = { message, includeAppLogs ->
-                onSendMessage(message, includeAppLogs)
+                onSendMessage(message, includeAppLogs, selectedImagePaths)
             },
             onMessageSentSuccessfully = {
                 // Clear draft after successful send
                 draftMessageText = ""
                 draftIncludeAppLogs = false
                 onClearMessageSendResult()
-            }
+            },
+            onAddImageClick = onAddImageClick,
+            selectedImagePaths = selectedImagePaths,
+            onRemoveImage = onRemoveImage
         )
     }
 }
@@ -359,7 +365,10 @@ private fun ReplyBottomSheet(
     initialIncludeAppLogs: Boolean = false,
     onDismiss: (currentMessage: String, currentIncludeAppLogs: Boolean) -> Unit,
     onSend: (String, Boolean) -> Unit,
-    onMessageSentSuccessfully: () -> Unit
+    onMessageSentSuccessfully: () -> Unit,
+    onAddImageClick: () -> Unit = {},
+    selectedImagePaths: List<String> = emptyList(),
+    onRemoveImage: (String) -> Unit = {}
 ) {
     var messageText by remember { mutableStateOf(initialMessageText) }
     var includeAppLogs by remember { mutableStateOf(initialIncludeAppLogs) }
@@ -443,7 +452,10 @@ private fun ReplyBottomSheet(
                 includeAppLogs = includeAppLogs,
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
-                enabled = !isSending
+                enabled = !isSending,
+                selectedImagePaths = selectedImagePaths,
+                onAddImageClick = onAddImageClick,
+                onRemoveImage = onRemoveImage
             )
         }
     }
@@ -460,7 +472,7 @@ private fun HEConversationDetailScreenPreview() {
             snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
             onBackClick = { },
-            onSendMessage = { _, _ -> }
+            onSendMessage = { _, _, _ -> }
         )
     }
 }
@@ -476,7 +488,7 @@ private fun HEConversationDetailScreenPreviewDark() {
             snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
             onBackClick = { },
-            onSendMessage = { _, _ -> }
+            onSendMessage = { _, _, _ -> }
         )
     }
 }
@@ -492,7 +504,7 @@ private fun HEConversationDetailScreenWordPressPreview() {
             snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
             onBackClick = { },
-            onSendMessage = { _, _ -> }
+            onSendMessage = { _, _, _ -> }
         )
     }
 }
@@ -509,7 +521,7 @@ private fun HEConversationDetailScreenPreviewWordPressDark() {
             isLoading = true,
             conversation = sampleConversation,
             onBackClick = { },
-            onSendMessage = { _, _ -> }
+            onSendMessage = { _, _, _ -> }
         )
     }
 }
