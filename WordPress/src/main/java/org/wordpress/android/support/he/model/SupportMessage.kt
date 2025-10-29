@@ -2,7 +2,6 @@ package org.wordpress.android.support.he.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.AnnotatedString
-import uniffi.wp_api.AttachmentMetadataValue
 import java.util.Date
 
 @Immutable

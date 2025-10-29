@@ -31,18 +31,21 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.reader.ReaderFileDownloadManager
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserType
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HESupportActivity : AppCompatActivity() {
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var fileDownloadManager: ReaderFileDownloadManager
+    @Inject lateinit var appLogWrapper: AppLogWrapper
     private val viewModel by viewModels<HESupportViewModel>()
 
     private lateinit var composeView: ComposeView
@@ -138,6 +141,7 @@ class HESupportActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun copyUriToTempFile(uri: Uri): java.io.File? {
         return try {
             val inputStream = contentResolver.openInputStream(uri) ?: return null
@@ -151,6 +155,7 @@ class HESupportActivity : AppCompatActivity() {
 
             tempFile
         } catch (e: Exception) {
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error copying URI to temp file: ${e.stackTraceToString()}")
             null
         }
     }
@@ -251,15 +256,20 @@ class HESupportActivity : AppCompatActivity() {
                             onRemoveImage = { uriString ->
                                 val index = selectedDetailImageUris.indexOfFirst { it.toString() == uriString }
                                 if (index >= 0) {
-                                    selectedDetailImageUris = selectedDetailImageUris.filterIndexed { i, _ -> i != index }
-                                    selectedDetailImagePaths = selectedDetailImagePaths.filterIndexed { i, _ -> i != index }
+                                    selectedDetailImageUris =
+                                        selectedDetailImageUris.filterIndexed { i, _ -> i != index }
+                                    selectedDetailImagePaths =
+                                        selectedDetailImagePaths.filterIndexed { i, _ -> i != index }
                                 }
                             },
                             onDownloadAttachment = { attachment ->
                                 // Show loading snackbar
                                 scope.launch {
                                     snackbarHostState.showSnackbar(
-                                        message = getString(R.string.he_support_downloading_attachment, attachment.filename),
+                                        message = getString(
+                                            R.string.he_support_downloading_attachment,
+                                            attachment.filename
+                                        ),
                                         duration = SnackbarDuration.Short
                                     )
                                 }
@@ -303,8 +313,10 @@ class HESupportActivity : AppCompatActivity() {
                         onRemoveImage = { uriString ->
                             val index = selectedNewTicketImageUris.indexOfFirst { it.toString() == uriString }
                             if (index >= 0) {
-                                selectedNewTicketImageUris = selectedNewTicketImageUris.filterIndexed { i, _ -> i != index }
-                                selectedNewTicketImagePaths = selectedNewTicketImagePaths.filterIndexed { i, _ -> i != index }
+                                selectedNewTicketImageUris =
+                                    selectedNewTicketImageUris.filterIndexed { i, _ -> i != index }
+                                selectedNewTicketImagePaths =
+                                    selectedNewTicketImagePaths.filterIndexed { i, _ -> i != index }
                             }
                         },
                         )
