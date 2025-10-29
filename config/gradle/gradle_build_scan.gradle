@@ -14,5 +14,9 @@ develocity {
                 }
             }
         }
+    } else if (gradle.ext.isCi) {
+        termsOfUseUrl = 'https://gradle.com/terms-of-service'
+        termsOfUseAgree = 'yes'
+        uploadInBackground = false
     }
 }
