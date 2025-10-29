@@ -79,7 +79,8 @@ fun HEConversationDetailScreen(
     onClearMessageSendResult: () -> Unit = {},
     onAddImageClick: () -> Unit = {},
     selectedImagePaths: List<String> = emptyList(),
-    onRemoveImage: (String) -> Unit = {}
+    onRemoveImage: (String) -> Unit = {},
+    onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -146,7 +147,8 @@ fun HEConversationDetailScreen(
             ) { message ->
                 MessageItem(
                     message = message,
-                    timestamp = formatRelativeTime(message.createdAt, resources)
+                    timestamp = formatRelativeTime(message.createdAt, resources),
+                    onDownloadAttachment = onDownloadAttachment
                 )
             }
 
@@ -268,7 +270,8 @@ private fun ConversationTitleCard(title: String) {
 @Composable
 private fun MessageItem(
     message: SupportMessage,
-    timestamp: String
+    timestamp: String,
+    onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit
 ) {
     val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
 
@@ -325,25 +328,27 @@ private fun MessageItem(
             // Display attachments if present
             if (message.attachments.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
-                AttachmentsList(attachments = message.attachments)
+                AttachmentsList(
+                    attachments = message.attachments,
+                    onDownloadAttachment = onDownloadAttachment
+                )
             }
         }
     }
 }
 
 @Composable
-private fun AttachmentsList(attachments: List<org.wordpress.android.support.he.model.SupportAttachment>) {
-    val context = LocalContext.current
-
+private fun AttachmentsList(
+    attachments: List<org.wordpress.android.support.he.model.SupportAttachment>,
+    onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit
+) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         attachments.forEach { attachment ->
             AttachmentItem(
                 attachment = attachment,
-                onClick = {
-                    // TODO: open the attachment
-                }
+                onClick = { onDownloadAttachment(attachment) }
             )
         }
     }

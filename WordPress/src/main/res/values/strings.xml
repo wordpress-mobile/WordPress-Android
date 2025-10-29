@@ -5166,6 +5166,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_reply_button">Reply</string>
     <string name="he_support_send_button">Send</string>
     <string name="he_support_message_label">Message</string>
+    <string name="he_support_downloading_attachment">Downloading %1$s…</string>
     <string name="he_support_screenshots_label">Screenshots (Optional)</string>
     <string name="he_support_screenshots_description">Adding screenshots can help us understand and resolve your issue faster.</string>
     <string name="he_support_add_screenshots_button">Add Screenshots</string>

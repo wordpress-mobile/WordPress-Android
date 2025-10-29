@@ -34,6 +34,7 @@ import org.wordpress.android.R
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
+import org.wordpress.android.ui.reader.ReaderFileDownloadManager
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserType
 import javax.inject.Inject
@@ -41,6 +42,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HESupportActivity : AppCompatActivity() {
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
+    @Inject lateinit var fileDownloadManager: ReaderFileDownloadManager
     private val viewModel by viewModels<HESupportViewModel>()
 
     private lateinit var composeView: ComposeView
@@ -252,6 +254,17 @@ class HESupportActivity : AppCompatActivity() {
                                     selectedDetailImageUris = selectedDetailImageUris.filterIndexed { i, _ -> i != index }
                                     selectedDetailImagePaths = selectedDetailImagePaths.filterIndexed { i, _ -> i != index }
                                 }
+                            },
+                            onDownloadAttachment = { attachment ->
+                                // Show loading snackbar
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = getString(R.string.he_support_downloading_attachment, attachment.filename),
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                                // Start download with proper filename
+                                fileDownloadManager.downloadFile(attachment.url, attachment.filename)
                             }
                         )
                     }
