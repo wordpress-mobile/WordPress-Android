@@ -20,6 +20,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 private const val BOT_ID = "jetpack-chat-mobile"
+private const val ITEMS_PER_PAGE = 20
 
 class AIBotSupportRepository @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
@@ -75,9 +76,7 @@ class AIBotSupportRepository @Inject constructor(
                 chatId = chatId.toULong(),
                 params = GetBotConversationParams(
                     pageNumber = pageNumber.toULong(),
-                    // TODO: this is set to 4 for testing purpose
-                    // The TODO is preventing the Pr to be merged. Change it to a higher number before that
-                    itemsPerPage = 4U
+                    itemsPerPage = ITEMS_PER_PAGE.toULong()
                 )
             )
         }
