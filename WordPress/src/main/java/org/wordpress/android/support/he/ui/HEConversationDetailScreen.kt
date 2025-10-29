@@ -46,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -202,7 +203,7 @@ private fun ConversationHeader(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .semantics(mergeDescendants = true) {
+            .clearAndSetSemantics {
                 contentDescription = headerDescription
             },
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -273,7 +274,7 @@ private fun MessageItem(
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(16.dp)
-            .semantics(mergeDescendants = true) {
+            .clearAndSetSemantics {
                 contentDescription = messageDescription
             }
     ) {
