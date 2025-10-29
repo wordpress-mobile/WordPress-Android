@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
+import org.wordpress.android.support.he.model.AttachmentType
 import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
@@ -212,5 +213,14 @@ class HESupportRepository @Inject constructor(
             id = id.toLong(),
             filename = filename,
             url = url,
+            type = determineAttachmentType(contentType)
         )
+
+    private fun determineAttachmentType(contentType: String): AttachmentType {
+        return when {
+            contentType.startsWith("image/") -> AttachmentType.Image
+            contentType.startsWith("video/") -> AttachmentType.Video
+            else -> AttachmentType.Other
+        }
+    }
 }
