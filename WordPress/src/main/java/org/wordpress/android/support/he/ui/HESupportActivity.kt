@@ -4,9 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import androidx.core.net.toUri
 import android.os.Bundle
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.SnackbarDuration
@@ -33,13 +32,27 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.R
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
+import org.wordpress.android.ui.photopicker.MediaPickerConstants
+import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.media.MediaBrowserType
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HESupportActivity : AppCompatActivity() {
+    @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     private val viewModel by viewModels<HESupportViewModel>()
 
     private lateinit var composeView: ComposeView
     private lateinit var navController: NavHostController
+
+    // State for selected images in Detail screen
+    private var selectedDetailImageUris by mutableStateOf<List<Uri>>(emptyList())
+    private var selectedDetailImagePaths by mutableStateOf<List<String>>(emptyList())
+
+    // State for selected images in NewTicket screen
+    private var selectedNewTicketImageUris by mutableStateOf<List<Uri>>(emptyList())
+    private var selectedNewTicketImagePaths by mutableStateOf<List<String>>(emptyList())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +90,66 @@ class HESupportActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK && data != null) {
+            when (requestCode) {
+                RequestCodes.PHOTO_PICKER -> {
+                    // Handle media picker result based on current screen
+                    val uris = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
+                    uris?.let { uriStrings ->
+                        lifecycleScope.launch {
+                            val newUris = uriStrings.map { it.toUri() }
+
+                            // Determine which screen is active by checking current destination
+                            val currentDestination = navController.currentDestination?.route
+
+                            when (currentDestination) {
+                                ConversationScreen.Detail.name -> {
+                                    // Convert URIs to file paths
+                                    val newPaths = newUris.mapNotNull { uri ->
+                                        copyUriToTempFile(uri)?.absolutePath
+                                    }
+                                    // Update state immutably to trigger recomposition
+                                    selectedDetailImageUris = selectedDetailImageUris + newUris
+                                    selectedDetailImagePaths = selectedDetailImagePaths + newPaths
+                                }
+                                ConversationScreen.NewTicket.name -> {
+                                    // Convert URIs to file paths
+                                    val newPaths = newUris.mapNotNull { uri ->
+                                        copyUriToTempFile(uri)?.absolutePath
+                                    }
+                                    // Update state immutably to trigger recomposition
+                                    selectedNewTicketImageUris = selectedNewTicketImageUris + newUris
+                                    selectedNewTicketImagePaths = selectedNewTicketImagePaths + newPaths
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun copyUriToTempFile(uri: Uri): java.io.File? {
+        return try {
+            val inputStream = contentResolver.openInputStream(uri) ?: return null
+            val fileName = "support_image_${System.currentTimeMillis()}.jpg"
+            val tempFile = java.io.File(cacheDir, fileName)
+
+            tempFile.outputStream().use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
+            inputStream.close()
+
+            tempFile
+        } catch (e: Exception) {
+            null
         }
     }
 
@@ -138,22 +211,12 @@ class HESupportActivity : AppCompatActivity() {
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
                     val messageSendResult by viewModel.messageSendResult.collectAsState()
-                    var selectedImageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
-
-                    val imagePickerLauncher = rememberLauncherForActivityResult(
-                        contract = ActivityResultContracts.GetMultipleContents()
-                    ) { uris: List<Uri> ->
-                        // Only add images if we haven't reached the limit of 4
-                        val availableSlots = 4 - selectedImageUris.size
-                        if (availableSlots > 0) {
-                            selectedImageUris = selectedImageUris + uris.take(availableSlots)
-                        }
-                    }
 
                     // Clear images after successful message send
                     LaunchedEffect(messageSendResult) {
                         if (messageSendResult is HESupportViewModel.MessageSendResult.Success) {
-                            selectedImageUris = emptyList()
+                            selectedDetailImageUris = emptyList()
+                            selectedDetailImagePaths = emptyList()
                         }
                     }
 
@@ -165,21 +228,30 @@ class HESupportActivity : AppCompatActivity() {
                             isSendingMessage = isSendingMessage,
                             messageSendResult = messageSendResult,
                             onBackClick = { viewModel.onBackClick() },
-                            onSendMessage = { message, includeAppLogs, attachments ->
+                            onSendMessage = { message, includeAppLogs, _ ->
                                 viewModel.onAddMessageToConversation(
                                     message = message,
-                                    attachments = attachments
+                                    attachments = selectedDetailImagePaths
                                 )
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
                             onAddImageClick = {
-                                if (selectedImageUris.size < 4) {
-                                    imagePickerLauncher.launch("image/*")
+                                if (selectedDetailImageUris.size < 4) {
+                                    mediaPickerLauncher.showPhotoPickerForResult(
+                                        activity = this@HESupportActivity,
+                                        browserType = MediaBrowserType.FEEDBACK_FORM_MEDIA_PICKER,
+                                        site = null,
+                                        localPostId = null
+                                    )
                                 }
                             },
-                            selectedImagePaths = selectedImageUris.map { it.toString() },
-                            onRemoveImage = { pathToRemove ->
-                                selectedImageUris = selectedImageUris.filter { it.toString() != pathToRemove }
+                            selectedImagePaths = selectedDetailImageUris.map { it.toString() },
+                            onRemoveImage = { uriString ->
+                                val index = selectedDetailImageUris.indexOfFirst { it.toString() == uriString }
+                                if (index >= 0) {
+                                    selectedDetailImageUris = selectedDetailImageUris.filterIndexed { i, _ -> i != index }
+                                    selectedDetailImagePaths = selectedDetailImagePaths.filterIndexed { i, _ -> i != index }
+                                }
                             }
                         )
                     }
@@ -188,27 +260,16 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.NewTicket.name) {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val isSendingNewConversation by viewModel.isSendingMessage.collectAsState()
-                    var selectedImageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
-
-                    val imagePickerLauncher = rememberLauncherForActivityResult(
-                        contract = ActivityResultContracts.GetMultipleContents()
-                    ) { uris: List<Uri> ->
-                        // Only add images if we haven't reached the limit of 4
-                        val availableSlots = 4 - selectedImageUris.size
-                        if (availableSlots > 0) {
-                            selectedImageUris = selectedImageUris + uris.take(availableSlots)
-                        }
-                    }
 
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
                         onBackClick = { viewModel.onBackClick() },
-                        onSubmit = { category, subject, messageText, siteAddress, attachments ->
+                        onSubmit = { category, subject, messageText, siteAddress, _ ->
                             viewModel.onSendNewConversation(
                                 subject = subject,
                                 message = messageText,
                                 tags = listOf(category.key),
-                                attachments = attachments
+                                attachments = selectedNewTicketImagePaths
                             )
                         },
                         userName = userInfo.userName,
@@ -216,13 +277,22 @@ class HESupportActivity : AppCompatActivity() {
                         userAvatarUrl = userInfo.avatarUrl,
                         isSendingNewConversation = isSendingNewConversation,
                         onAddImageClick = {
-                            if (selectedImageUris.size < 4) {
-                                imagePickerLauncher.launch("image/*")
+                            if (selectedNewTicketImageUris.size < 4) {
+                                mediaPickerLauncher.showPhotoPickerForResult(
+                                    activity = this@HESupportActivity,
+                                    browserType = MediaBrowserType.FEEDBACK_FORM_MEDIA_PICKER,
+                                    site = null,
+                                    localPostId = null
+                                )
                             }
                         },
-                        selectedImagePaths = selectedImageUris.map { it.toString() },
-                        onRemoveImage = { pathToRemove ->
-                            selectedImageUris = selectedImageUris.filter { it.toString() != pathToRemove }
+                        selectedImagePaths = selectedNewTicketImageUris.map { it.toString() },
+                        onRemoveImage = { uriString ->
+                            val index = selectedNewTicketImageUris.indexOfFirst { it.toString() == uriString }
+                            if (index >= 0) {
+                                selectedNewTicketImageUris = selectedNewTicketImageUris.filterIndexed { i, _ -> i != index }
+                                selectedNewTicketImagePaths = selectedNewTicketImagePaths.filterIndexed { i, _ -> i != index }
+                            }
                         },
                         )
                 }
