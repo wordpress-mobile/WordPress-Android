@@ -50,7 +50,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
