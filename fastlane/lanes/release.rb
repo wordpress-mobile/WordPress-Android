@@ -16,15 +16,17 @@ platform :android do
     computed_version = next_release_version
     new_version = version || computed_version
 
-    # Warn if provided version differs from computed version
+    # Fail if provided version differs from computed version
     if version && version != computed_version
-      warning_message = <<~WARNING
-        ⚠️ Version mismatch: The explicitly-provided version was '#{version}' while new computed version would have been '#{computed_version}'.
-        If this is unexpected, you might want to investigate the discrepency.
-        Continuing with the explicitly-provided verison '#{version}'.
-      WARNING
-      UI.important(warning_message)
-      buildkite_annotate(style: 'warning', context: 'code-freeze-version-mismatch', message: warning_message) if is_ci
+      error_message = <<~ERROR
+        ❌ Version mismatch detected!
+
+        The explicitly-provided version from the release tool is '#{version}' but the computed version from the codebase is '#{computed_version}'.
+
+        This mismatch must be resolved before proceeding with the code freeze. Please investigate and ensure the versions are aligned.
+      ERROR
+      buildkite_annotate(style: 'error', context: 'code-freeze-version-mismatch', message: error_message) if is_ci
+      UI.user_error!(error_message)
     end
 
     message = <<-MESSAGE
