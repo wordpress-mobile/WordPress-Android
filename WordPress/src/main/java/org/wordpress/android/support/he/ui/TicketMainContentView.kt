@@ -25,6 +25,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,11 +51,14 @@ fun TicketMainContentView(
             .fillMaxWidth()
             .padding(bottom = 32.dp)
     ) {
+        val messageLabel = stringResource(R.string.he_support_message_label)
         Text(
-            text = stringResource(R.string.he_support_message_label),
+            text = messageLabel,
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .semantics { heading() }
         )
 
         OutlinedTextField(
@@ -60,7 +66,8 @@ fun TicketMainContentView(
             onValueChange = { message -> onMessageChanged(message) },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp),
+                .height(200.dp)
+                .semantics { contentDescription = messageLabel },
             shape = RoundedCornerShape(12.dp),
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             enabled = enabled,
@@ -75,7 +82,9 @@ fun TicketMainContentView(
             text = stringResource(R.string.he_support_screenshots_label),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(bottom = 4.dp)
+            modifier = Modifier
+                .padding(bottom = 4.dp)
+                .semantics { heading() }
         )
 
         Text(
@@ -85,11 +94,13 @@ fun TicketMainContentView(
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
+        val addScreenshotsLabel = stringResource(R.string.he_support_add_screenshots_button)
         OutlinedButton(
             onClick = { /* Placeholder for add screenshots */ },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp),
+                .height(48.dp)
+                .semantics { contentDescription = addScreenshotsLabel },
             shape = RoundedCornerShape(12.dp),
             enabled = enabled,
             border = BorderStroke(
@@ -108,7 +119,7 @@ fun TicketMainContentView(
             )
             Spacer(modifier = Modifier.size(8.dp))
             Text(
-                text = stringResource(R.string.he_support_add_screenshots_button),
+                text = addScreenshotsLabel,
                 style = MaterialTheme.typography.labelLarge
             )
         }
@@ -119,8 +130,12 @@ fun TicketMainContentView(
             text = stringResource(R.string.he_support_app_logs_label),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(bottom = 12.dp)
+            modifier = Modifier
+                .padding(bottom = 12.dp)
+                .semantics { heading() }
         )
+
+        val includeLogsLabel = stringResource(R.string.he_support_include_logs_title)
 
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -141,7 +156,7 @@ fun TicketMainContentView(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = stringResource(R.string.he_support_include_logs_title),
+                        text = includeLogsLabel,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(bottom = 4.dp)
@@ -159,7 +174,10 @@ fun TicketMainContentView(
                 Switch(
                     checked = includeAppLogs,
                     onCheckedChange = { checked -> onIncludeAppLogsChanged(checked) },
-                    enabled = enabled
+                    enabled = enabled,
+                    modifier = Modifier.semantics {
+                        contentDescription = includeLogsLabel
+                    }
                 )
             }
         }

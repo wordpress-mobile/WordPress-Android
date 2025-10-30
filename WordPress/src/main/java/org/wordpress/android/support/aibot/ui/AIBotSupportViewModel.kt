@@ -16,6 +16,7 @@ import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 import javax.inject.Inject
 
@@ -24,7 +25,8 @@ class AIBotSupportViewModel @Inject constructor(
     accountStore: AccountStore,
     private val aiBotSupportRepository: AIBotSupportRepository,
     appLogWrapper: AppLogWrapper,
-) : ConversationsSupportViewModel<BotConversation>(accountStore, appLogWrapper) {
+    networkUtilsWrapper: NetworkUtilsWrapper,
+) : ConversationsSupportViewModel<BotConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
     private val _canSendMessage = MutableStateFlow(true)
     val canSendMessage: StateFlow<Boolean> = _canSendMessage.asStateFlow()
 

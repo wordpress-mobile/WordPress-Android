@@ -41,8 +41,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
@@ -122,17 +126,22 @@ fun HENewTicketScreen(
 
             SectionHeader(text = stringResource(R.string.he_support_issue_details))
 
+            val subjectLabel = stringResource(R.string.he_support_subject_label)
             Text(
-                text = stringResource(R.string.he_support_subject_label),
+                text = subjectLabel,
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .semantics { heading() }
             )
 
             OutlinedTextField(
                 value = subject,
                 onValueChange = { subject = it },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { contentDescription = subjectLabel },
                 placeholder = {
                     Text(
                         text = stringResource(R.string.he_support_subject_placeholder)
@@ -147,24 +156,32 @@ fun HENewTicketScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            val siteAddressLabel = stringResource(R.string.he_support_site_address_label)
             Text(
-                text = stringResource(R.string.he_support_site_address_label),
+                text = siteAddressLabel,
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .semantics { heading() }
             )
 
             OutlinedTextField(
                 value = siteAddress,
                 onValueChange = { siteAddress = it },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { contentDescription = siteAddressLabel },
                 placeholder = {
                     Text(
                         text = stringResource(R.string.he_support_site_address_placeholder)
                     )
                 },
                 shape = RoundedCornerShape(12.dp),
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.None,
+                    keyboardType = KeyboardType.Uri
+                ),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
                 )
@@ -204,7 +221,9 @@ private fun SectionHeader(
         style = MaterialTheme.typography.titleMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         fontWeight = FontWeight.SemiBold,
-        modifier = modifier.padding(bottom = 16.dp)
+        modifier = modifier
+            .padding(bottom = 16.dp)
+            .semantics { heading() }
     )
 }
 
@@ -335,7 +354,9 @@ private fun CategoryOption(
     onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics { contentDescription = label },
         onClick = onClick,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(

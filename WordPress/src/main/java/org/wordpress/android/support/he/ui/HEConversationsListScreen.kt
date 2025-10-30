@@ -6,26 +6,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,108 +24,47 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
-import org.wordpress.android.support.common.ui.EmptyConversationsView
+import org.wordpress.android.support.common.ui.ConversationsListScreen
+import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
-import org.wordpress.android.ui.compose.components.MainTopAppBar
-import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HEConversationsListScreen(
     snackbarHostState: SnackbarHostState,
-    conversations: StateFlow<List<SupportConversation>>,
-    isLoadingConversations: StateFlow<Boolean>,
+    conversations: List<SupportConversation>,
+    conversationsState: ConversationsSupportViewModel.ConversationsState,
     onConversationClick: (SupportConversation) -> Unit,
     onBackClick: () -> Unit,
     onCreateNewConversationClick: () -> Unit,
     onRefresh: () -> Unit
 ) {
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = {
-            MainTopAppBar(
-                title = stringResource(R.string.he_support_conversations_title),
-                navigationIcon = NavigationIcons.BackIcon,
-                onNavigationIconClick = onBackClick,
-                actions = {
-                    IconButton(onClick = { onCreateNewConversationClick() }) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = stringResource(
-                                R.string.he_support_new_conversation_content_description
-                            )
-                        )
-                    }
-                }
-            )
-        }
-    ) { contentPadding ->
-        ShowConversationsList(
-            modifier = Modifier.padding(contentPadding),
-            conversations = conversations,
-            isLoadingConversations = isLoadingConversations,
-            onConversationClick = onConversationClick,
-            onRefresh = onRefresh,
-            onCreateNewConversationClick = onCreateNewConversationClick
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ShowConversationsList(
-    modifier: Modifier,
-    conversations: StateFlow<List<SupportConversation>>,
-    isLoadingConversations: StateFlow<Boolean>,
-    onConversationClick: (SupportConversation) -> Unit,
-    onRefresh: () -> Unit,
-    onCreateNewConversationClick: () -> Unit
-) {
-    val conversationsList by conversations.collectAsState()
-    val isLoading by isLoadingConversations.collectAsState()
     val resources = LocalResources.current
-
-    PullToRefreshBox(
-        isRefreshing = isLoading,
+    ConversationsListScreen(
+        title = stringResource(R.string.he_support_conversations_title),
+        addConversationContentDescription = stringResource(R.string.he_support_new_conversation_content_description),
+        snackbarHostState = snackbarHostState,
+        conversations = conversations,
+        conversationsState = conversationsState,
+        onBackClick = onBackClick,
+        onCreateNewConversationClick = onCreateNewConversationClick,
         onRefresh = onRefresh,
-        modifier = modifier.fillMaxSize()
-    ) {
-        if (conversationsList.isEmpty() && !isLoading) {
-            EmptyConversationsView(
-                modifier = Modifier,
-                onCreateNewConversationClick = onCreateNewConversationClick
+        conversationListItem = { conversation ->
+            HEConversationListItem(
+                conversation = conversation,
+                resources = resources,
+                onClick = { onConversationClick(conversation) }
             )
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(
-                    items = conversationsList,
-                    key = { it.id }
-                ) { conversation ->
-                    ConversationListItem(
-                        conversation = conversation,
-                        resources = resources,
-                        onClick = { onConversationClick(conversation) }
-                    )
-                    HorizontalDivider(
-                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-                    )
-                }
-            }
         }
-    }
+    )
 }
 
 @Composable
-private fun ConversationListItem(
+private fun HEConversationListItem(
     conversation: SupportConversation,
     resources: Resources,
     onClick: () -> Unit
@@ -197,15 +124,13 @@ private fun ConversationListItem(
 @Preview(showBackground = true, name = "HE Support Conversations List")
 @Composable
 private fun ConversationsScreenPreview() {
-    val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
-    val isLoading = MutableStateFlow(false)
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false) {
         HEConversationsListScreen(
             snackbarHostState = snackbarHostState,
-            conversations = sampleConversations.asStateFlow(),
-            isLoadingConversations = isLoading.asStateFlow(),
+            conversations = generateSampleHESupportConversations(),
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
@@ -217,15 +142,13 @@ private fun ConversationsScreenPreview() {
 @Preview(showBackground = true, name = "HE Support Conversations List - Dark", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun ConversationsScreenPreviewDark() {
-    val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
-    val isLoading = MutableStateFlow(false)
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true) {
         HEConversationsListScreen(
             snackbarHostState = snackbarHostState,
-            conversations = sampleConversations.asStateFlow(),
-            isLoadingConversations = isLoading.asStateFlow(),
+            conversations = generateSampleHESupportConversations(),
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
@@ -237,15 +160,13 @@ private fun ConversationsScreenPreviewDark() {
 @Preview(showBackground = true, name = "HE Support Conversations List - WordPress")
 @Composable
 private fun ConversationsScreenWordPressPreview() {
-    val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
-    val isLoading = MutableStateFlow(false)
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
         HEConversationsListScreen(
             snackbarHostState = snackbarHostState,
-            conversations = sampleConversations.asStateFlow(),
-            isLoadingConversations = isLoading.asStateFlow(),
+            conversations = generateSampleHESupportConversations(),
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },
@@ -257,15 +178,13 @@ private fun ConversationsScreenWordPressPreview() {
 @Preview(showBackground = true, name = "HE Support Conversations List - Dark WordPress", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun ConversationsScreenPreviewWordPressDark() {
-    val sampleConversations = MutableStateFlow(generateSampleHESupportConversations())
-    val isLoading = MutableStateFlow(false)
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
         HEConversationsListScreen(
             snackbarHostState = snackbarHostState,
-            conversations = sampleConversations.asStateFlow(),
-            isLoadingConversations = isLoading.asStateFlow(),
+            conversations = generateSampleHESupportConversations(),
+            conversationsState = ConversationsSupportViewModel.ConversationsState.Loaded,
             onConversationClick = { },
             onBackClick = { },
             onCreateNewConversationClick = { },

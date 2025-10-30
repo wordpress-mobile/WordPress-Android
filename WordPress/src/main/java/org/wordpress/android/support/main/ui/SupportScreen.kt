@@ -26,6 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -117,13 +120,15 @@ fun SupportScreen(
                     }
                 }
             } else {
+                val loginButtonText = stringResource(R.string.support_screen_login_button)
                 Button(
                     onClick = onLoginClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 24.dp)
+                        .semantics { contentDescription = loginButtonText }
                 ) {
-                    Text(text = stringResource(R.string.support_screen_login_button))
+                    Text(text = loginButtonText)
                 }
             }
 
@@ -218,6 +223,7 @@ private fun SectionHeader(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 12.dp)
+            .semantics { heading() }
     )
 }
 
@@ -232,6 +238,9 @@ private fun SupportOptionItem(
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 16.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "$title. $description"
+            }
     ) {
         Text(
             text = title,

@@ -108,10 +108,12 @@ class HESupportActivity : AppCompatActivity() {
                 startDestination = ConversationScreen.List.name,
             ) {
                 composable(route = ConversationScreen.List.name) {
+                    val conversationsState by viewModel.conversationsState.collectAsState()
+                    val conversations by viewModel.conversations.collectAsState()
                     HEConversationsListScreen(
                         snackbarHostState = snackbarHostState,
-                        conversations = viewModel.conversations,
-                        isLoadingConversations = viewModel.isLoadingConversations,
+                        conversations = conversations,
+                        conversationsState = conversationsState,
                         onConversationClick = { conversation ->
                             viewModel.onConversationClick(conversation)
                         },
