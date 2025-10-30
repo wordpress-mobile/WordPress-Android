@@ -5173,6 +5173,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_app_logs_label">Application Logs (Optional)</string>
     <string name="he_support_include_logs_title">Include application logs</string>
     <string name="he_support_include_logs_description">Including logs can help our team investigate issues. Logs may contain recent app activity.</string>
+    <string name="he_support_download_image">Download image</string>
 
     <!-- HE Support - New Ticket Screen -->
     <string name="he_support_contact_support_title">Contact Support</string>

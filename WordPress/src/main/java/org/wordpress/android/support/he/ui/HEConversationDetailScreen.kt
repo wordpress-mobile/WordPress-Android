@@ -48,6 +48,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import coil.compose.SubcomposeAsyncImage
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,7 +68,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
@@ -604,42 +604,63 @@ private fun FullscreenImagePreview(
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
-                // Zoomable image
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(imageUrl)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .graphicsLayer(
-                            scaleX = scale,
-                            scaleY = scale,
-                            translationX = offsetX,
-                            translationY = offsetY
-                        )
-                        .pointerInput(Unit) {
-                            detectTransformGestures { _, pan, zoom, _ ->
-                                scale = (scale * zoom).coerceIn(1f, 5f)
-                                if (scale > 1f) {
-                                    offsetX += pan.x
-                                    offsetY += pan.y
-                                } else {
-                                    offsetX = 0f
-                                    offsetY = 0f
-                                }
-                            }
-                        },
-                    contentScale = ContentScale.Fit
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
                 )
+                // Zoomable image
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    SubcomposeAsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(imageUrl)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .graphicsLayer(
+                                scaleX = scale,
+                                scaleY = scale,
+                                translationX = offsetX,
+                                translationY = offsetY
+                            )
+                            .pointerInput(Unit) {
+                                detectTransformGestures { _, pan, zoom, _ ->
+                                    scale = (scale * zoom).coerceIn(1f, 5f)
+                                    if (scale > 1f) {
+                                        offsetX += pan.x
+                                        offsetY += pan.y
+                                    } else {
+                                        offsetX = 0f
+                                        offsetY = 0f
+                                    }
+                                }
+                            },
+                        contentScale = ContentScale.Fit,
+                        error = {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_image_white_24dp),
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(48.dp)
+                            )
+                        }
+                    )
+                }
 
                 // Top bar with close button
                 Row(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        .padding(16.dp)
+                        .background(
+                            color = Color.Black.copy(alpha = 0.5f),
+                            shape = RoundedCornerShape(24.dp)
+                        )
+                        .padding(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     // Download button
                     IconButton(
@@ -650,9 +671,9 @@ private fun FullscreenImagePreview(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_get_app_white_24dp),
-                            contentDescription = "Download image",
+                            contentDescription = stringResource(R.string.he_support_download_image),
                             tint = Color.White,
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(24.dp)
                         )
                     }
 
@@ -664,7 +685,7 @@ private fun FullscreenImagePreview(
                             imageVector = Icons.Filled.Close,
                             contentDescription = stringResource(R.string.close),
                             tint = Color.White,
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }
