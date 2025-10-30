@@ -106,6 +106,7 @@ wordpress-utils = '3.14.0'
 automattic-ucrop = '2.2.11'
 zendesk = '5.5.1'
 turbine = '1.2.1'
+commonmark = '0.24.0'
 
 [libraries]
 airbnb-lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "airbnb-lottie" }
@@ -263,6 +264,7 @@ wordpress-utils = { group = "org.wordpress", name = "utils", version.ref = "word
 automattic-ucrop = { group = "com.automattic", name = "ucrop", version.ref = "automattic-ucrop" }
 zendesk-support = { group = "com.zendesk", name = "support", version.ref = "zendesk" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+commonmark = { group = "org.commonmark", name = "commonmark", version.ref = "commonmark" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,5 +1,6 @@
 package org.wordpress.android.support.he.repository
 
+import androidx.compose.ui.text.AnnotatedString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
@@ -364,7 +365,8 @@ class HESupportRepositoryTest : BaseUnitTest() {
     private fun uniffi.wp_api.SupportMessage.toSupportMessage(): SupportMessage =
         SupportMessage(
             id = this.id.toLong(),
-            text = this.content,
+            rawText = this.content,
+            formattedText = AnnotatedString(this.content),
             createdAt = this.createdAt,
             authorName = when (this.author) {
                 is SupportMessageAuthor.User -> (this.author as SupportMessageAuthor.User).v1.displayName

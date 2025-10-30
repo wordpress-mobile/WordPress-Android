@@ -40,18 +40,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.he.model.SupportConversation
+import org.wordpress.android.support.he.model.SupportMessage
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
@@ -133,10 +138,8 @@ fun HEConversationDetailScreen(
                 key = { it.id }
             ) { message ->
                 MessageItem(
-                    authorName = message.authorName,
-                    messageText = message.text,
-                    timestamp = formatRelativeTime(message.createdAt, resources),
-                    isUserMessage = message.authorIsUser
+                    message = message,
+                    timestamp = formatRelativeTime(message.createdAt, resources)
                 )
             }
 
@@ -189,10 +192,20 @@ private fun ConversationHeader(
     lastUpdated: String,
     isLoading: Boolean = false
 ) {
+    val headerDescription = if (!isLoading) {
+        "${stringResource(R.string.he_support_message_count, messageCount)}. " +
+                stringResource(R.string.he_support_last_updated, lastUpdated)
+    } else {
+        stringResource(R.string.he_support_last_updated, lastUpdated)
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clearAndSetSemantics {
+                contentDescription = headerDescription
+            },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -236,23 +249,24 @@ private fun ConversationTitleCard(title: String) {
             text = title,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.semantics { heading() }
         )
     }
 }
 
 @Composable
 private fun MessageItem(
-    authorName: String,
-    messageText: String,
-    timestamp: String,
-    isUserMessage: Boolean
+    message: SupportMessage,
+    timestamp: String
 ) {
+    val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = if (isUserMessage) {
+                color = if (message.authorIsUser) {
                     MaterialTheme.colorScheme.primary.copy(alpha = 0.20f)
                 } else {
                     MaterialTheme.colorScheme.surfaceVariant
@@ -260,6 +274,9 @@ private fun MessageItem(
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(16.dp)
+            .clearAndSetSemantics {
+                contentDescription = messageDescription
+            }
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
@@ -270,10 +287,10 @@ private fun MessageItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = authorName,
+                    text = message.authorName,
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = if (isUserMessage) FontWeight.Bold else FontWeight.Normal,
-                    color = if (isUserMessage) {
+                    fontWeight = if (message.authorIsUser) FontWeight.Bold else FontWeight.Normal,
+                    color = if (message.authorIsUser) {
                         MaterialTheme.colorScheme.primary
                     } else {
                         MaterialTheme.colorScheme.onSurfaceVariant
@@ -290,9 +307,10 @@ private fun MessageItem(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = messageText,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                text = message.formattedText,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             )
         }
     }
@@ -303,6 +321,8 @@ private fun ReplyButton(
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
+    val replyButtonLabel = stringResource(R.string.he_support_reply_button)
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -313,7 +333,8 @@ private fun ReplyButton(
             enabled = enabled,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .height(56.dp)
+                .semantics { contentDescription = replyButtonLabel },
             shape = RoundedCornerShape(28.dp)
         ) {
             Icon(
@@ -323,7 +344,7 @@ private fun ReplyButton(
             )
             Spacer(modifier = Modifier.size(8.dp))
             Text(
-                text = stringResource(R.string.he_support_reply_button),
+                text = replyButtonLabel,
                 style = MaterialTheme.typography.titleMedium
             )
         }
@@ -397,7 +418,8 @@ private fun ReplyBottomSheet(
                 Text(
                     text = stringResource(R.string.he_support_reply_button),
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.semantics { heading() }
                 )
 
                 TextButton(

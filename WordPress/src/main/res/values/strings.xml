@@ -5130,6 +5130,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="ai_bot_empty_conversations_title">No conversations yet</string>
     <string name="ai_bot_empty_conversations_message">Start a new conversation to get help with your WordPress site or account.</string>
     <string name="ai_bot_empty_conversations_button">Start conversation</string>
+    <string name="ai_bot_you">You</string>
+    <string name="ai_bot_support_bot">Support Bot</string>
 
     <!-- AI Bot Support - Conversation Detail Screen -->
     <string name="ai_bot_send_button_content_description">Send</string>

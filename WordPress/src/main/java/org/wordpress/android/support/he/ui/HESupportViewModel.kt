@@ -13,6 +13,7 @@ import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,7 +21,8 @@ class HESupportViewModel @Inject constructor(
     accountStore: AccountStore,
     private val heSupportRepository: HESupportRepository,
     appLogWrapper: AppLogWrapper,
-) : ConversationsSupportViewModel<SupportConversation>(accountStore, appLogWrapper) {
+    networkUtilsWrapper: NetworkUtilsWrapper,
+) : ConversationsSupportViewModel<SupportConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
     private val _isSendingMessage = MutableStateFlow(false)
     val isSendingMessage: StateFlow<Boolean> = _isSendingMessage.asStateFlow()
 

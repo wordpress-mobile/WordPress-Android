@@ -1,5 +1,6 @@
 package org.wordpress.android.support.he.ui
 
+import androidx.compose.ui.text.AnnotatedString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -18,6 +19,7 @@ import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
+import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -30,6 +32,9 @@ class HESupportViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var appLogWrapper: AppLogWrapper
+
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private lateinit var viewModel: HESupportViewModel
 
@@ -51,11 +56,13 @@ class HESupportViewModelTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(accountModel)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.accessToken).thenReturn(testAccessToken)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel = HESupportViewModel(
             accountStore = accountStore,
             heSupportRepository = heSupportRepository,
-            appLogWrapper = appLogWrapper
+            appLogWrapper = appLogWrapper,
+            networkUtilsWrapper = networkUtilsWrapper,
         )
     }
 
@@ -360,7 +367,8 @@ class HESupportViewModelTest : BaseUnitTest() {
     ): SupportMessage {
         return SupportMessage(
             id = id,
-            text = text,
+            rawText = text,
+            formattedText = AnnotatedString(text),
             createdAt = Date(),
             authorName = if (authorIsUser) "User" else "Support",
             authorIsUser = authorIsUser
