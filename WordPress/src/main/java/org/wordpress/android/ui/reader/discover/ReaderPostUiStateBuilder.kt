@@ -282,9 +282,13 @@ class ReaderPostUiStateBuilder @Inject constructor(
     // TODO malinjir show overlay when buildFullVideoUrl != null
     private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO
 
-    private fun buildFeaturedImageVisibility(post: ReaderPost) =
-        (post.cardType == PHOTO || post.cardType == DEFAULT) && post.hasFeaturedImage() ||
-                post.cardType == VIDEO && post.hasFeaturedVideo()
+    private fun buildFeaturedImageVisibility(post: ReaderPost): Boolean {
+        return when (post.cardType) {
+            GALLERY -> false
+            VIDEO -> post.hasFeaturedVideo() || post.hasFeaturedImage()
+            else -> post.hasFeaturedImage()
+        }
+    }
 
     private fun buildThumbnailStripUrls(post: ReaderPost) =
         post.takeIf { it.cardType == GALLERY }
@@ -292,7 +296,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildFeaturedImageUrl(post: ReaderPost, photonWidth: Int, photonHeight: Int): String? {
         return post
-            .takeIf { (it.cardType == PHOTO || it.cardType == DEFAULT) && it.hasFeaturedImage() }
+            .takeIf { it.cardType != GALLERY && it.hasFeaturedImage() }
             ?.getFeaturedImageForDisplay(photonWidth, photonHeight)
     }
 
