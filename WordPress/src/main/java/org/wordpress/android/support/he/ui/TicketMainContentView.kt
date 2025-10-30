@@ -124,9 +124,6 @@ fun TicketMainContentView(
             }
         }
 
-        val maxImagesReached = selectedImagePaths.size >= 4
-
-
         val addScreenshotsLabel = stringResource(R.string.he_support_add_screenshots_button)
         OutlinedButton(
             onClick = onAddImageClick,
@@ -236,7 +233,7 @@ private fun ImagePreviewItem(
         ) {
             AsyncImage(
                 model = imagePath,
-                contentDescription = "Screenshot preview",
+                contentDescription = stringResource(R.string.he_support_screenshot_preview),
                 modifier = Modifier
                     .size(100.dp)
                     .clip(RoundedCornerShape(12.dp)),
@@ -264,7 +261,7 @@ private fun ImagePreviewItem(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Remove screenshot",
+                        contentDescription = stringResource(R.string.he_support_remove_screenshot),
                         tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.size(18.dp)
                     )
