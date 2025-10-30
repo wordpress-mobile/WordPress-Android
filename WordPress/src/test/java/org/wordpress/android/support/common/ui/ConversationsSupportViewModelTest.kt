@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.model.Conversation
+import org.wordpress.android.support.common.ui.ConversationsSupportViewModel.ConversationsState
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 class ConversationsSupportViewModelTest : BaseUnitTest() {
@@ -22,6 +24,9 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var appLogWrapper: AppLogWrapper
+
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private lateinit var viewModel: TestConversationsSupportViewModel
 
@@ -41,10 +46,12 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(accountModel)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.accessToken).thenReturn(testAccessToken)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel = TestConversationsSupportViewModel(
             accountStore = accountStore,
-            appLogWrapper = appLogWrapper
+            appLogWrapper = appLogWrapper,
+            networkUtilsWrapper = networkUtilsWrapper,
         )
     }
 
@@ -60,7 +67,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.initRepositoryCalled).isTrue
         assertThat(viewModel.conversations.value).isEqualTo(testConversations)
-        assertThat(viewModel.isLoadingConversations.value).isFalse
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.Loaded.javaClass)
         assertThat(viewModel.errorMessage.value).isNull()
     }
 
@@ -137,7 +144,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.GENERAL)
-        assertThat(viewModel.isLoadingConversations.value).isFalse
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.Error.javaClass)
         verify(appLogWrapper).e(any(), any<String>())
     }
 
@@ -157,7 +164,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(viewModel.conversations.value).isEqualTo(updatedConversations)
-        assertThat(viewModel.isLoadingConversations.value).isFalse
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.Loaded.javaClass)
     }
 
     @Test
@@ -170,7 +177,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.GENERAL)
-        assertThat(viewModel.isLoadingConversations.value).isFalse
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.Error.javaClass)
     }
 
     // Clear Error Tests
@@ -350,8 +357,9 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
 
     private class TestConversationsSupportViewModel(
         accountStore: AccountStore,
-        appLogWrapper: AppLogWrapper
-    ) : ConversationsSupportViewModel<TestConversation>(accountStore, appLogWrapper) {
+        appLogWrapper: AppLogWrapper,
+        networkUtilsWrapper: NetworkUtilsWrapper
+    ) : ConversationsSupportViewModel<TestConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
         var initRepositoryCalled = false
         private var shouldThrowOnInit = false
         private var shouldThrowOnGetConversations = false

@@ -39,24 +39,29 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.aibot.util.generateSampleBotConversations
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+
+private const val PAGINATION_TRIGGER_THRESHOLD = 4
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,24 +70,38 @@ fun AIBotConversationDetailScreen(
     conversation: BotConversation,
     isLoading: Boolean,
     isBotTyping: Boolean,
+    isLoadingOlderMessages: Boolean,
+    hasMorePages: Boolean,
     canSendMessage: Boolean,
     userName: String,
     onBackClick: () -> Unit,
-    onSendMessage: (String) -> Unit
+    onSendMessage: (String) -> Unit,
+    onLoadOlderMessages: () -> Unit
 ) {
     var messageText by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
 
-    // Scroll to bottom when conversation changes or messages are added or typing state changes
-    LaunchedEffect(conversation.id, conversation.messages.size, isBotTyping) {
-        if (conversation.messages.isNotEmpty() || isBotTyping) {
-            coroutineScope.launch {
-                // +2 for welcome header and spacer, +1 if typing indicator is showing
-                val itemCount = conversation.messages.size + 2 + if (isBotTyping) 1 else 0
-                listState.animateScrollToItem(itemCount)
-            }
+    // Scroll to bottom when new messages are added at the end (not when loading older messages at the beginning)
+    // Only scroll to bottom when:
+    // 1. The last message changes (new message added at the end)
+    // 2. Bot starts typing
+    // 3. We're not loading older messages (which adds messages at the beginning)
+    LaunchedEffect(conversation.id, conversation.messages.lastOrNull()?.id, isBotTyping) {
+        if ((conversation.messages.isNotEmpty() || isBotTyping) && !isLoadingOlderMessages) {
+            listState.scrollToItem(listState.layoutInfo.totalItemsCount - 1)
         }
+    }
+
+    // Detect when user scrolls near the top to load older messages
+    LaunchedEffect(listState, isLoadingOlderMessages, isLoading, hasMorePages) {
+        snapshotFlow { listState.firstVisibleItemIndex }
+            .collect { firstVisibleIndex ->
+                val shouldLoadMore = !isLoadingOlderMessages && firstVisibleIndex <= PAGINATION_TRIGGER_THRESHOLD
+
+                if (shouldLoadMore && !isLoading && hasMorePages) {
+                    onLoadOlderMessages()
+                }
+            }
     }
 
     val resources = LocalResources.current
@@ -128,8 +147,25 @@ fun AIBotConversationDetailScreen(
                 state = listState,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                item {
-                    WelcomeHeader(userName)
+                // Show loading indicator at top when loading older messages
+                if (isLoadingOlderMessages) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+
+                // Only show welcome header when we're at the beginning (no more pages to load)
+                if (!hasMorePages) {
+                    item {
+                        WelcomeHeader(userName)
+                    }
                 }
 
                 // Key ensures the items recompose when messages change
@@ -163,10 +199,17 @@ fun AIBotConversationDetailScreen(
 
 @Composable
 private fun WelcomeHeader(userName: String) {
+    val greeting = stringResource(R.string.ai_bot_welcome_greeting, userName)
+    val message = stringResource(R.string.ai_bot_welcome_message)
+    val welcomeDescription = "$greeting. $message"
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clearAndSetSemantics {
+                contentDescription = welcomeDescription
+            },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
@@ -188,7 +231,8 @@ private fun WelcomeHeader(userName: String) {
                 text = stringResource(R.string.ai_bot_welcome_greeting, userName),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.semantics { heading() }
             )
 
             Text(
@@ -209,6 +253,7 @@ private fun ChatInputBar(
     onSendClick: () -> Unit
 ) {
     val canSend = messageText.isNotBlank() && canSendMessage
+    val messageInputLabel = stringResource(R.string.ai_bot_message_input_placeholder)
 
     Row(
         modifier = Modifier
@@ -221,8 +266,10 @@ private fun ChatInputBar(
         OutlinedTextField(
             value = messageText,
             onValueChange = onMessageTextChange,
-            modifier = Modifier.weight(1f),
-            placeholder = { Text(stringResource(R.string.ai_bot_message_input_placeholder)) },
+            modifier = Modifier
+                .weight(1f)
+                .semantics { contentDescription = messageInputLabel },
+            placeholder = { Text(messageInputLabel) },
             maxLines = 4,
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
         )
@@ -246,6 +293,10 @@ private fun ChatInputBar(
 
 @Composable
 private fun MessageBubble(message: BotMessage, resources: android.content.res.Resources) {
+    val timestamp = formatRelativeTime(message.date, resources)
+    val author = stringResource(if (message.isWrittenByUser) R.string.ai_bot_you else R.string.ai_bot_support_bot)
+    val messageDescription = "$author, $timestamp. ${message.formattedText}"
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = if (message.isWrittenByUser) {
@@ -271,6 +322,9 @@ private fun MessageBubble(message: BotMessage, resources: android.content.res.Re
                     )
                 )
                 .padding(12.dp)
+                .clearAndSetSemantics {
+                    contentDescription = messageDescription
+                }
         ) {
             Column {
                 Text(
@@ -287,7 +341,7 @@ private fun MessageBubble(message: BotMessage, resources: android.content.res.Re
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = formatRelativeTime(message.date, resources),
+                    text = timestamp,
                     style = MaterialTheme.typography.bodySmall,
                     color = if (message.isWrittenByUser) {
                         MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
@@ -318,6 +372,7 @@ private fun TypingIndicatorBubble() {
                     )
                 )
                 .padding(16.dp)
+                .semantics { contentDescription = "AI Bot is typing" }
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -369,9 +424,12 @@ private fun ConversationDetailScreenPreview() {
             conversation = sampleConversation,
             isLoading = false,
             isBotTyping = false,
+            isLoadingOlderMessages = false,
+            hasMorePages = false,
             canSendMessage = true,
             onBackClick = { },
-            onSendMessage = { }
+            onSendMessage = { },
+            onLoadOlderMessages = { }
         )
     }
 }
@@ -389,9 +447,12 @@ private fun ConversationDetailScreenPreviewDark() {
             conversation = sampleConversation,
             isLoading = false,
             isBotTyping = false,
+            isLoadingOlderMessages = false,
+            hasMorePages = false,
             canSendMessage = true,
             onBackClick = { },
-            onSendMessage = { }
+            onSendMessage = { },
+            onLoadOlderMessages = { }
         )
     }
 }
@@ -409,9 +470,12 @@ private fun ConversationDetailScreenWordPressPreview() {
             conversation = sampleConversation,
             isLoading = false,
             isBotTyping = false,
+            isLoadingOlderMessages = false,
+            hasMorePages = false,
             canSendMessage = true,
             onBackClick = { },
-            onSendMessage = { }
+            onSendMessage = { },
+            onLoadOlderMessages = { }
         )
     }
 }
@@ -429,9 +493,12 @@ private fun ConversationDetailScreenPreviewWordPressDark() {
             conversation = sampleConversation,
             isLoading = false,
             isBotTyping = false,
+            isLoadingOlderMessages = false,
+            hasMorePages = false,
             canSendMessage = true,
             onBackClick = { },
-            onSendMessage = { }
+            onSendMessage = { },
+            onLoadOlderMessages = { }
         )
     }
 }

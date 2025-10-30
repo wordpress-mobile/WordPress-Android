@@ -14,15 +14,24 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.model.Conversation
 import org.wordpress.android.support.common.model.UserInfo
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     protected val accountStore: AccountStore,
     protected val appLogWrapper: AppLogWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ViewModel() {
     sealed class NavigationEvent {
         data object NavigateToConversationDetail : NavigationEvent()
         data object NavigateToNewConversation : NavigationEvent()
         data object NavigateBack : NavigationEvent()
+    }
+
+    sealed class ConversationsState {
+        data object Loading : ConversationsState()
+        data object Loaded : ConversationsState()
+        data object NoNetwork : ConversationsState()
+        data object Error : ConversationsState()
     }
 
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
@@ -44,8 +53,8 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     val userInfo: StateFlow<UserInfo> = _userInfo.asStateFlow()
 
     @Suppress("VariableNaming")
-    protected val _isLoadingConversations = MutableStateFlow(false)
-    val isLoadingConversations: StateFlow<Boolean> = _isLoadingConversations.asStateFlow()
+    protected val _conversationsState = MutableStateFlow<ConversationsState>(ConversationsState.Loading)
+    val conversationsState: StateFlow<ConversationsState> = _conversationsState.asStateFlow()
 
     @Suppress("VariableNaming")
     protected val _errorMessage = MutableStateFlow<ErrorType?>(null)
@@ -88,17 +97,23 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun loadConversations() {
         try {
-            _isLoadingConversations.value = true
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                _conversationsState.value = ConversationsState.NoNetwork
+                return
+            }
+
+            _conversationsState.value = ConversationsState.Loading
             val conversations = getConversations()
             _conversations.value = conversations
+            _conversationsState.value = ConversationsState.Loaded
         } catch (throwable: Throwable) {
             _errorMessage.value = ErrorType.GENERAL
+            _conversationsState.value = ConversationsState.Error
             appLogWrapper.e(
                 AppLog.T.SUPPORT, "Error loading support conversations: " +
                         "${throwable.message} - ${throwable.stackTraceToString()}"
             )
         }
-        _isLoadingConversations.value = false
     }
 
     protected abstract suspend fun getConversations(): List<ConversationType>
