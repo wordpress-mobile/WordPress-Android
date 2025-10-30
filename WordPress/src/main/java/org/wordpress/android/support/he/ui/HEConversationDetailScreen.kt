@@ -354,8 +354,9 @@ private fun MessageItem(
 
             Text(
                 text = message.formattedText,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             )
 
             // Display attachments if present
