@@ -588,6 +588,11 @@ private fun FullscreenImagePreview(
     var offsetX by remember { mutableFloatStateOf(0f) }
     var offsetY by remember { mutableFloatStateOf(0f) }
 
+    // Load semantics
+    val loadingImageDescription = stringResource(R.string.he_support_loading_image)
+    val attachmentImageDescription = stringResource(R.string.he_support_attachment_image)
+    val failedToLoadImageDescription = stringResource(R.string.he_support_failed_to_load_image)
+
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -606,7 +611,11 @@ private fun FullscreenImagePreview(
                 modifier = Modifier.fillMaxSize()
             ) {
                 CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .semantics {
+                            contentDescription = loadingImageDescription
+                        }
                 )
                 // Zoomable image
                 Box(
@@ -618,7 +627,7 @@ private fun FullscreenImagePreview(
                             .data(imageUrl)
                             .crossfade(true)
                             .build(),
-                        contentDescription = null,
+                        contentDescription = attachmentImageDescription,
                         modifier = Modifier
                             .fillMaxSize()
                             .graphicsLayer(
@@ -643,7 +652,7 @@ private fun FullscreenImagePreview(
                         error = {
                             Icon(
                                 painter = painterResource(R.drawable.ic_image_white_24dp),
-                                contentDescription = null,
+                                contentDescription = failedToLoadImageDescription,
                                 tint = Color.White,
                                 modifier = Modifier.size(48.dp)
                             )
