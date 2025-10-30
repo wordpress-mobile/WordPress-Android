@@ -1,7 +1,6 @@
 package org.wordpress.android.support.he.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTransformGestures
@@ -60,6 +59,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -247,7 +247,7 @@ private fun ConversationHeader(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .semantics(mergeDescendants = true) {
+            .clearAndSetSemantics {
                 contentDescription = headerDescription
             },
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -320,7 +320,7 @@ private fun MessageItem(
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(16.dp)
-            .semantics(mergeDescendants = true) {
+            .clearAndSetSemantics {
                 contentDescription = messageDescription
             }
     ) {

@@ -135,10 +135,10 @@ fun TicketMainContentView(
                 .height(48.dp)
                 .semantics { contentDescription = addScreenshotsLabel },
             shape = RoundedCornerShape(12.dp),
-            enabled = enabled && !maxImagesReached,
+            enabled = enabled,
             border = BorderStroke(
                 width = 1.dp,
-                color = if (enabled && !maxImagesReached) {
+                color = if (enabled) {
                     MaterialTheme.colorScheme.outline
                 } else {
                     MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)

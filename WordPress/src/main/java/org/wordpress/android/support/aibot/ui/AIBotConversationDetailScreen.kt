@@ -45,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -206,7 +207,7 @@ private fun WelcomeHeader(userName: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .semantics(mergeDescendants = true) {
+            .clearAndSetSemantics {
                 contentDescription = welcomeDescription
             },
         colors = CardDefaults.cardColors(
@@ -293,7 +294,7 @@ private fun ChatInputBar(
 @Composable
 private fun MessageBubble(message: BotMessage, resources: android.content.res.Resources) {
     val timestamp = formatRelativeTime(message.date, resources)
-    val author = stringResource(if (message.isWrittenByUser) R.string.ai_bot_you else R.string.ai_bot_odie)
+    val author = stringResource(if (message.isWrittenByUser) R.string.ai_bot_you else R.string.ai_bot_support_bot)
     val messageDescription = "$author, $timestamp. ${message.formattedText}"
 
     Row(
@@ -321,7 +322,7 @@ private fun MessageBubble(message: BotMessage, resources: android.content.res.Re
                     )
                 )
                 .padding(12.dp)
-                .semantics(mergeDescendants = true) {
+                .clearAndSetSemantics {
                     contentDescription = messageDescription
                 }
         ) {
