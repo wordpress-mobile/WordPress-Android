@@ -54,6 +54,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import org.wordpress.android.R
+import org.wordpress.android.support.common.model.UserInfo
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -70,9 +71,7 @@ fun HENewTicketScreen(
         messageText: String,
         siteAddress: String,
             ) -> Unit,
-    userName: String = "",
-    userEmail: String = "",
-    userAvatarUrl: String? = null,
+    userInfo: UserInfo,
     isSendingNewConversation: Boolean = false,
     onAddImageClick: () -> Unit = { },
     attachments: List<Uri> = emptyList(),
@@ -199,8 +198,10 @@ fun HENewTicketScreen(
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
                 attachments = attachments,
-                onAddImageClick = onAddImageClick,
-                onRemoveImage = onRemoveImage
+                attachmentActionsListener = object : AttachmentActionsListener {
+                    override fun onAddImageClick() = onAddImageClick()
+                    override fun onRemoveImage(uri: Uri) = onRemoveImage(uri)
+                }
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -208,9 +209,9 @@ fun HENewTicketScreen(
             SectionHeader(text = stringResource(R.string.he_support_contact_information))
 
             ContactInformationCard(
-                userName = userName,
-                userEmail = userEmail,
-                userAvatarUrl = userAvatarUrl
+                userName = userInfo.userName,
+                userEmail = userInfo.userEmail,
+                userAvatarUrl = userInfo.avatarUrl
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -426,9 +427,7 @@ private fun HENewTicketScreenPreview() {
             snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _-> },
-            userName = "Test user",
-            userEmail = "test.user@automattic.com",
-            userAvatarUrl = null
+            userInfo = UserInfo("Test user", "test.user@automattic.com", null)
         )
     }
 }
@@ -442,9 +441,7 @@ private fun HENewTicketScreenPreviewDark() {
             snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _ -> },
-            userName = "Test user",
-            userEmail = "test.user@automattic.com",
-            userAvatarUrl = null
+            userInfo = UserInfo("Test user", "test.user@automattic.com", null)
         )
     }
 }
@@ -458,9 +455,7 @@ private fun HENewTicketScreenWordPressPreview() {
             snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _ -> },
-            userName = "Test user",
-            userEmail = "test.user@automattic.com",
-            userAvatarUrl = null
+            userInfo = UserInfo("Test user", "test.user@automattic.com", null)
         )
     }
 }
@@ -474,9 +469,7 @@ private fun HENewTicketScreenPreviewWordPressDark() {
             snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _ -> },
-            userName = "Test user",
-            userEmail = "test.user@automattic.com",
-            userAvatarUrl = null
+            userInfo = UserInfo("Test user", "test.user@automattic.com", null)
         )
     }
 }

@@ -130,8 +130,10 @@ fun HEConversationReplyBottomSheet(
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
                 enabled = !isSending,
                 attachments = attachments,
-                onAddImageClick = onAddImageClick,
-                onRemoveImage = onRemoveImage
+                attachmentActionsListener = object : AttachmentActionsListener {
+                    override fun onAddImageClick() = onAddImageClick()
+                    override fun onRemoveImage(uri: Uri) = onRemoveImage(uri)
+                }
             )
         }
     }

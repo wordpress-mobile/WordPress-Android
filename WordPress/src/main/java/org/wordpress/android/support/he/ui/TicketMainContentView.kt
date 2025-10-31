@@ -47,6 +47,11 @@ import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
+interface AttachmentActionsListener {
+    fun onAddImageClick()
+    fun onRemoveImage(uri: Uri)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketMainContentView(
@@ -56,9 +61,11 @@ fun TicketMainContentView(
     onIncludeAppLogsChanged: (Boolean) -> Unit,
     enabled: Boolean = true,
     attachments: List<Uri> = emptyList(),
-    onAddImageClick: () -> Unit = { },
-    onRemoveImage: (Uri) -> Unit = { },
-    ) {
+    attachmentActionsListener: AttachmentActionsListener = object : AttachmentActionsListener {
+        override fun onAddImageClick() {}
+        override fun onRemoveImage(uri: Uri) {}
+    }
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -118,7 +125,7 @@ fun TicketMainContentView(
                 attachments.forEach { imageUri ->
                     ImagePreviewItem(
                         imageUri = imageUri,
-                        onRemove = { onRemoveImage(imageUri) },
+                        onRemove = { attachmentActionsListener.onRemoveImage(imageUri) },
                         enabled = enabled
                     )
                 }
@@ -127,7 +134,7 @@ fun TicketMainContentView(
 
         val addScreenshotsLabel = stringResource(R.string.he_support_add_screenshots_button)
         OutlinedButton(
-            onClick = onAddImageClick,
+            onClick = attachmentActionsListener::onAddImageClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
