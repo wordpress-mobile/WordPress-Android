@@ -55,7 +55,7 @@ fun TicketMainContentView(
     onMessageChanged: (String) -> Unit,
     onIncludeAppLogsChanged: (Boolean) -> Unit,
     enabled: Boolean = true,
-    selectedImages: List<Uri> = emptyList(),
+    attachments: List<Uri> = emptyList(),
     onAddImageClick: () -> Unit = { },
     onRemoveImage: (Uri) -> Unit = { },
     ) {
@@ -107,7 +107,7 @@ fun TicketMainContentView(
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
-        if (selectedImages.isNotEmpty()) {
+        if (attachments.isNotEmpty()) {
             FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -115,7 +115,7 @@ fun TicketMainContentView(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                selectedImages.forEach { imageUri ->
+                attachments.forEach { imageUri ->
                     ImagePreviewItem(
                         imageUri = imageUri,
                         onRemove = { onRemoveImage(imageUri) },

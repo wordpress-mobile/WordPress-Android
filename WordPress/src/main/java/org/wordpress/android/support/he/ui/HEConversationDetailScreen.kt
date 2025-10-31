@@ -91,7 +91,7 @@ fun HEConversationDetailScreen(
     onSendMessage: (message: String, includeAppLogs: Boolean) -> Unit,
     onClearMessageSendResult: () -> Unit = {},
     onAddImageClick: () -> Unit = {},
-    selectedImages: List<Uri> = emptyList(),
+    attachments: List<Uri> = emptyList(),
     onRemoveImage: (Uri) -> Unit = {},
     onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit = {}
 ) {
@@ -209,7 +209,7 @@ fun HEConversationDetailScreen(
                 onClearMessageSendResult()
             },
             onAddImageClick = onAddImageClick,
-            selectedImages = selectedImages,
+            attachments = attachments,
             onRemoveImage = onRemoveImage
         )
     }
@@ -509,7 +509,7 @@ private fun ReplyBottomSheet(
     onSend: (String, Boolean) -> Unit,
     onMessageSentSuccessfully: () -> Unit,
     onAddImageClick: () -> Unit = {},
-    selectedImages: List<Uri> = emptyList(),
+    attachments: List<Uri> = emptyList(),
     onRemoveImage: (Uri) -> Unit = {}
 ) {
     var messageText by remember { mutableStateOf(initialMessageText) }
@@ -595,7 +595,7 @@ private fun ReplyBottomSheet(
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
                 enabled = !isSending,
-                selectedImages = selectedImages,
+                attachments = attachments,
                 onAddImageClick = onAddImageClick,
                 onRemoveImage = onRemoveImage
             )

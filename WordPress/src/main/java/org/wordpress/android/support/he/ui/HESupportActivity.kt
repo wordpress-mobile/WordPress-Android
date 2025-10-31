@@ -2,7 +2,6 @@ package org.wordpress.android.support.he.ui
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import androidx.core.net.toUri
 import android.os.Bundle
@@ -37,7 +36,6 @@ import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.reader.ReaderFileDownloadManager
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaType
-import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -55,15 +53,8 @@ class HESupportActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK && result.data != null) {
             val uris = result.data?.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
             uris?.let { uriStrings ->
-                lifecycleScope.launch {
-                    val newUris = uriStrings.map { it.toUri() }
-                    // Convert URIs to file paths and add to ViewModel
-                    newUris.forEach { uri ->
-                        copyUriToTempFile(uri)?.absolutePath?.let { path ->
-                            viewModel.addAttachment(uri, path)
-                        }
-                    }
-                }
+                val newUris = uriStrings.map { it.toUri() }
+                viewModel.addAttachments(newUris)
             }
         }
     }
@@ -104,26 +95,6 @@ class HESupportActivity : AppCompatActivity() {
                     }
                 }
             }
-        }
-    }
-
-
-    @Suppress("TooGenericExceptionCaught")
-    private fun copyUriToTempFile(uri: Uri): java.io.File? {
-        return try {
-            val inputStream = contentResolver.openInputStream(uri) ?: return null
-            val fileName = "support_image_${System.currentTimeMillis()}.jpg"
-            val tempFile = java.io.File(cacheDir, fileName)
-
-            tempFile.outputStream().use { outputStream ->
-                inputStream.copyTo(outputStream)
-            }
-            inputStream.close()
-
-            tempFile
-        } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.SUPPORT, "Error copying URI to temp file: ${e.stackTraceToString()}")
-            null
         }
     }
 
@@ -231,7 +202,7 @@ class HESupportActivity : AppCompatActivity() {
                                 )
                                 photoPickerLauncher.launch(intent)
                             },
-                            selectedImages = attachments.map { it.uri },
+                            attachments = attachments,
                             onRemoveImage = { imageuri ->
                                 viewModel.removeAttachment(imageuri)
                             },
@@ -302,7 +273,7 @@ class HESupportActivity : AppCompatActivity() {
                             )
                             photoPickerLauncher.launch(intent)
                         },
-                        selectedImages = attachments.map { it.uri },
+                        attachments = attachments,
                         onRemoveImage = { imageUri ->
                             viewModel.removeAttachment(imageUri)
                         },

@@ -75,7 +75,7 @@ fun HENewTicketScreen(
     userAvatarUrl: String? = null,
     isSendingNewConversation: Boolean = false,
     onAddImageClick: () -> Unit = { },
-    selectedImages: List<Uri> = emptyList(),
+    attachments: List<Uri> = emptyList(),
     onRemoveImage: (Uri) -> Unit = { }
 ) {
     var selectedCategory by remember { mutableStateOf<SupportCategory?>(null) }
@@ -198,7 +198,7 @@ fun HENewTicketScreen(
                 includeAppLogs = includeAppLogs,
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
-                selectedImages = selectedImages,
+                attachments = attachments,
                 onAddImageClick = onAddImageClick,
                 onRemoveImage = onRemoveImage
             )

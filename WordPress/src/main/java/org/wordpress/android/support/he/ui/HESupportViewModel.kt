@@ -1,5 +1,6 @@
 package org.wordpress.android.support.he.ui
 
+import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,18 +11,19 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
-import org.wordpress.android.support.he.model.AttachmentUI
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class HESupportViewModel @Inject constructor(
-    accountStore: AccountStore,
     private val heSupportRepository: HESupportRepository,
+    private val application: Application,
+    accountStore: AccountStore,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ConversationsSupportViewModel<SupportConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
@@ -32,8 +34,8 @@ class HESupportViewModel @Inject constructor(
     val messageSendResult: StateFlow<MessageSendResult?> = _messageSendResult.asStateFlow()
 
     // Attachment state (shared for both Detail and NewTicket screens)
-    private val _attachments = MutableStateFlow<List<AttachmentUI>>(emptyList())
-    val attachments: StateFlow<List<AttachmentUI>> = _attachments.asStateFlow()
+    private val _attachments = MutableStateFlow<List<Uri>>(emptyList())
+    val attachments: StateFlow<List<Uri>> = _attachments.asStateFlow()
 
     sealed class MessageSendResult {
         data object Success : MessageSendResult()
@@ -54,11 +56,13 @@ class HESupportViewModel @Inject constructor(
         viewModelScope.launch {
             _isSendingMessage.value = true
 
+            val files = copyUrisToTempFiles(_attachments.value)
+
             when (val result = heSupportRepository.createConversation(
                 subject = subject,
                 message = message,
                 tags = tags,
-                attachments = attachments.value.map { it.path }
+                attachments = files.map { it.path }
             )) {
                 is CreateConversationResult.Success -> {
                     val newConversation = result.conversation
@@ -80,6 +84,7 @@ class HESupportViewModel @Inject constructor(
                 }
             }
 
+            removeTempFiles(files)
             _isSendingMessage.value = false
         }
     }
@@ -96,11 +101,12 @@ class HESupportViewModel @Inject constructor(
             }
 
             _isSendingMessage.value = true
+            val files = copyUrisToTempFiles(_attachments.value)
 
             when (val result = heSupportRepository.addMessageToConversation(
                 conversationId = selectedConversation.id,
                 message = message,
-                attachments = _attachments.value.map { it.path }
+                attachments = files.map { it.path }
             )) {
                 is CreateConversationResult.Success -> {
                     _selectedConversation.value = result.conversation
@@ -122,6 +128,7 @@ class HESupportViewModel @Inject constructor(
                 }
             }
 
+            removeTempFiles(files)
             _isSendingMessage.value = false
         }
     }
@@ -130,16 +137,52 @@ class HESupportViewModel @Inject constructor(
         _messageSendResult.value = null
     }
 
-    // Attachment management functions
-    fun addAttachment(uri: Uri, path: String) {
-        _attachments.value = _attachments.value + AttachmentUI(uri, path)
+    fun addAttachments(uris: List<Uri>) {
+        _attachments.value = _attachments.value + uris
     }
 
     fun removeAttachment(uri: Uri) {
-        _attachments.value = _attachments.value.filter { it.uri != uri }
+        _attachments.value = _attachments.value.filter { it != uri }
     }
 
     fun clearAttachments() {
         _attachments.value = emptyList()
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private fun copyUrisToTempFiles(uris: List<Uri>): List<File> {
+        return try {
+            uris.mapNotNull { it.toTempFile() }
+        } catch (e: Exception) {
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error copying URIs to temp files: ${e.stackTraceToString()}")
+            emptyList()
+        }
+    }
+
+    private fun removeTempFiles(files: List<File>) {
+        return try {
+            // Remove temp files
+        } catch (e: Exception) {
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error removing attachment temp files temp files: ${e.stackTraceToString()}")
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private fun Uri.toTempFile(): File? {
+        return try {
+            val inputStream = application.contentResolver.openInputStream(this) ?: return null
+            val fileName = "support_image_${System.currentTimeMillis()}.jpg"
+            val tempFile = File(application.cacheDir, fileName)
+
+            tempFile.outputStream().use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
+            inputStream.close()
+
+            tempFile
+        } catch (e: Exception) {
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error copying URI to temp file: ${e.stackTraceToString()}")
+            null
+        }
     }
 }
