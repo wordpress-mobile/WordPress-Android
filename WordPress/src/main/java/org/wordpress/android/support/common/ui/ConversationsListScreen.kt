@@ -97,7 +97,7 @@ private fun <T : Conversation> ConversationsList(
     conversationListItem: @Composable (T) -> Unit
 ) {
     when {
-        conversations.isEmpty() && conversationsState is ConversationsSupportViewModel.ConversationsState.Loading -> {
+        conversationsState is ConversationsSupportViewModel.ConversationsState.Loading -> {
             Box(
                 modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
