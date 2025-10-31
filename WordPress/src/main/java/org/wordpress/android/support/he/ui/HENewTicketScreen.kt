@@ -74,9 +74,8 @@ fun HENewTicketScreen(
             ) -> Unit,
     userInfo: UserInfo,
     isSendingNewConversation: Boolean = false,
-    onAddImageClick: () -> Unit = { },
     attachments: List<Uri> = emptyList(),
-    onRemoveImage: (Uri) -> Unit = { }
+    attachmentActionsListener: AttachmentActionsListener,
 ) {
     var selectedCategory by remember { mutableStateOf<SupportCategory?>(null) }
     var subject by remember { mutableStateOf("") }
@@ -199,10 +198,7 @@ fun HENewTicketScreen(
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
                 attachments = attachments,
-                attachmentActionsListener = object : AttachmentActionsListener {
-                    override fun onAddImageClick() = onAddImageClick()
-                    override fun onRemoveImage(uri: Uri) = onRemoveImage(uri)
-                }
+                attachmentActionsListener = attachmentActionsListener
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -428,7 +424,11 @@ private fun HENewTicketScreenPreview() {
             snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _-> },
-            userInfo = UserInfo("Test user", "test.user@automattic.com", null)
+            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() { }
+                override fun onRemoveImage(uri: Uri) { }
+            }
         )
     }
 }
@@ -442,7 +442,11 @@ private fun HENewTicketScreenPreviewDark() {
             snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _ -> },
-            userInfo = UserInfo("Test user", "test.user@automattic.com", null)
+            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() { }
+                override fun onRemoveImage(uri: Uri) { }
+            }
         )
     }
 }
@@ -456,7 +460,11 @@ private fun HENewTicketScreenWordPressPreview() {
             snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _ -> },
-            userInfo = UserInfo("Test user", "test.user@automattic.com", null)
+            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() { }
+                override fun onRemoveImage(uri: Uri) { }
+            }
         )
     }
 }
@@ -470,7 +478,11 @@ private fun HENewTicketScreenPreviewWordPressDark() {
             snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _ -> },
-            userInfo = UserInfo("Test user", "test.user@automattic.com", null)
+            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() { }
+                override fun onRemoveImage(uri: Uri) { }
+            }
         )
     }
 }

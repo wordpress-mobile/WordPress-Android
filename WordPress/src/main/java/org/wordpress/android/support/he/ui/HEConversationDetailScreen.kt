@@ -59,6 +59,7 @@ import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
+import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
@@ -75,9 +76,8 @@ fun HEConversationDetailScreen(
     onBackClick: () -> Unit,
     onSendMessage: (message: String, includeAppLogs: Boolean) -> Unit,
     onClearMessageSendResult: () -> Unit = {},
-    onAddImageClick: () -> Unit = {},
     attachments: List<Uri> = emptyList(),
-    onRemoveImage: (Uri) -> Unit = {},
+    attachmentActionsListener: AttachmentActionsListener,
     onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
@@ -193,9 +193,8 @@ fun HEConversationDetailScreen(
                 draftIncludeAppLogs = false
                 onClearMessageSendResult()
             },
-            onAddImageClick = onAddImageClick,
             attachments = attachments,
-            onRemoveImage = onRemoveImage
+            attachmentActionsListener = attachmentActionsListener
         )
     }
 
@@ -493,7 +492,11 @@ private fun HEConversationDetailScreenPreview() {
             snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
             onBackClick = { },
-            onSendMessage = { _, _ -> }
+            onSendMessage = { _, _ -> },
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() { }
+                override fun onRemoveImage(uri: Uri) { }
+            }
         )
     }
 }
@@ -509,7 +512,11 @@ private fun HEConversationDetailScreenPreviewDark() {
             snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
             onBackClick = { },
-            onSendMessage = { _, _ -> }
+            onSendMessage = { _, _ -> },
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() { }
+                override fun onRemoveImage(uri: Uri) { }
+            }
         )
     }
 }
@@ -525,7 +532,11 @@ private fun HEConversationDetailScreenWordPressPreview() {
             snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
             onBackClick = { },
-            onSendMessage = { _, _ -> }
+            onSendMessage = { _, _ -> },
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() { }
+                override fun onRemoveImage(uri: Uri) { }
+            }
         )
     }
 }
@@ -542,7 +553,11 @@ private fun HEConversationDetailScreenPreviewWordPressDark() {
             isLoading = true,
             conversation = sampleConversation,
             onBackClick = { },
-            onSendMessage = { _, _ -> }
+            onSendMessage = { _, _ -> },
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() { }
+                override fun onRemoveImage(uri: Uri) { }
+            }
         )
     }
 }

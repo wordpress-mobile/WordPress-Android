@@ -2,6 +2,7 @@ package org.wordpress.android.support.he.ui
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.core.net.toUri
 import android.os.Bundle
@@ -185,32 +186,35 @@ class HESupportActivity : AppCompatActivity() {
                                 )
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
-                            onAddImageClick = {
-                                val mediaPickerSetup = MediaPickerSetup(
-                                    primaryDataSource = MediaPickerSetup.DataSource.DEVICE,
-                                    availableDataSources = setOf(),
-                                    canMultiselect = true,
-                                    requiresPhotosVideosPermissions = true,
-                                    requiresMusicAudioPermissions = false,
-                                    allowedTypes = setOf(MediaType.IMAGE),
-                                    cameraSetup = MediaPickerSetup.CameraSetup.HIDDEN,
-                                    systemPickerEnabled = true,
-                                    editingEnabled = true,
-                                    queueResults = false,
-                                    defaultSearchView = false,
-                                    title = R.string.photo_picker_title
-                                )
-                                val intent = org.wordpress.android.ui.mediapicker.MediaPickerActivity.buildIntent(
-                                    this@HESupportActivity,
-                                    mediaPickerSetup,
-                                    null,
-                                    null
-                                )
-                                photoPickerLauncher.launch(intent)
-                            },
                             attachments = attachments,
-                            onRemoveImage = { imageuri ->
-                                viewModel.removeAttachment(imageuri)
+                            attachmentActionsListener = object : org.wordpress.android.support.he.util.AttachmentActionsListener {
+                                override fun onAddImageClick() {
+                                    val mediaPickerSetup = MediaPickerSetup(
+                                        primaryDataSource = MediaPickerSetup.DataSource.DEVICE,
+                                        availableDataSources = setOf(),
+                                        canMultiselect = true,
+                                        requiresPhotosVideosPermissions = true,
+                                        requiresMusicAudioPermissions = false,
+                                        allowedTypes = setOf(MediaType.IMAGE),
+                                        cameraSetup = MediaPickerSetup.CameraSetup.HIDDEN,
+                                        systemPickerEnabled = true,
+                                        editingEnabled = true,
+                                        queueResults = false,
+                                        defaultSearchView = false,
+                                        title = R.string.photo_picker_title
+                                    )
+                                    val intent = org.wordpress.android.ui.mediapicker.MediaPickerActivity.buildIntent(
+                                        this@HESupportActivity,
+                                        mediaPickerSetup,
+                                        null,
+                                        null
+                                    )
+                                    photoPickerLauncher.launch(intent)
+                                }
+
+                                override fun onRemoveImage(uri: Uri) {
+                                    viewModel.removeAttachment(uri)
+                                }
                             },
                             onDownloadAttachment = { attachment ->
                                 // Show loading snackbar
@@ -254,34 +258,37 @@ class HESupportActivity : AppCompatActivity() {
                         },
                         userInfo = userInfo,
                         isSendingNewConversation = isSendingNewConversation,
-                        onAddImageClick = {
-                            val mediaPickerSetup = MediaPickerSetup(
-                                primaryDataSource = MediaPickerSetup.DataSource.DEVICE,
-                                availableDataSources = setOf(),
-                                canMultiselect = true,
-                                requiresPhotosVideosPermissions = true,
-                                requiresMusicAudioPermissions = false,
-                                allowedTypes = setOf(MediaType.IMAGE),
-                                cameraSetup = MediaPickerSetup.CameraSetup.HIDDEN,
-                                systemPickerEnabled = true,
-                                editingEnabled = true,
-                                queueResults = false,
-                                defaultSearchView = false,
-                                title = R.string.photo_picker_title
-                            )
-                            val intent = org.wordpress.android.ui.mediapicker.MediaPickerActivity.buildIntent(
-                                this@HESupportActivity,
-                                mediaPickerSetup,
-                                null,
-                                null
-                            )
-                            photoPickerLauncher.launch(intent)
-                        },
                         attachments = attachments,
-                        onRemoveImage = { imageUri ->
-                            viewModel.removeAttachment(imageUri)
-                        },
-                        )
+                        attachmentActionsListener = object : org.wordpress.android.support.he.util.AttachmentActionsListener {
+                            override fun onAddImageClick() {
+                                val mediaPickerSetup = MediaPickerSetup(
+                                    primaryDataSource = MediaPickerSetup.DataSource.DEVICE,
+                                    availableDataSources = setOf(),
+                                    canMultiselect = true,
+                                    requiresPhotosVideosPermissions = true,
+                                    requiresMusicAudioPermissions = false,
+                                    allowedTypes = setOf(MediaType.IMAGE),
+                                    cameraSetup = MediaPickerSetup.CameraSetup.HIDDEN,
+                                    systemPickerEnabled = true,
+                                    editingEnabled = true,
+                                    queueResults = false,
+                                    defaultSearchView = false,
+                                    title = R.string.photo_picker_title
+                                )
+                                val intent = org.wordpress.android.ui.mediapicker.MediaPickerActivity.buildIntent(
+                                    this@HESupportActivity,
+                                    mediaPickerSetup,
+                                    null,
+                                    null
+                                )
+                                photoPickerLauncher.launch(intent)
+                            }
+
+                            override fun onRemoveImage(uri: Uri) {
+                                viewModel.removeAttachment(uri)
+                            }
+                        }
+                    )
                 }
             }
         }

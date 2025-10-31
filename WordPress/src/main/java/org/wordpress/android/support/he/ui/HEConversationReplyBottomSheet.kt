@@ -43,9 +43,8 @@ fun HEConversationReplyBottomSheet(
     onDismiss: (currentMessage: String, currentIncludeAppLogs: Boolean) -> Unit,
     onSend: (String, Boolean) -> Unit,
     onMessageSentSuccessfully: () -> Unit,
-    onAddImageClick: () -> Unit = {},
     attachments: List<Uri> = emptyList(),
-    onRemoveImage: (Uri) -> Unit = {}
+    attachmentActionsListener: AttachmentActionsListener
 ) {
     var messageText by remember { mutableStateOf(initialMessageText) }
     var includeAppLogs by remember { mutableStateOf(initialIncludeAppLogs) }
@@ -131,10 +130,7 @@ fun HEConversationReplyBottomSheet(
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
                 enabled = !isSending,
                 attachments = attachments,
-                attachmentActionsListener = object : AttachmentActionsListener {
-                    override fun onAddImageClick() = onAddImageClick()
-                    override fun onRemoveImage(uri: Uri) = onRemoveImage(uri)
-                }
+                attachmentActionsListener = attachmentActionsListener
             )
         }
     }
