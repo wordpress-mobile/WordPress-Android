@@ -259,7 +259,7 @@ private fun ConversationTitleCard(title: String) {
 @Composable
 private fun MessageItem(
     message: SupportMessage,
-    timestamp: String,
+    timestamp: String
 ) {
     val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
 

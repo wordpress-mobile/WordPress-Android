@@ -202,6 +202,6 @@ class HESupportRepository @Inject constructor(
                 is SupportMessageAuthor.User -> (this.author as SupportMessageAuthor.User).v1.displayName
                 is SupportMessageAuthor.SupportAgent -> (this.author as SupportMessageAuthor.SupportAgent).v1.name
             },
-            authorIsUser = this.authorIsCurrentUser,
+            authorIsUser = this.authorIsCurrentUser
         )
 }
