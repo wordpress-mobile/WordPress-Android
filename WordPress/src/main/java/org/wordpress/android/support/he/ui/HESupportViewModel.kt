@@ -189,7 +189,10 @@ class HESupportViewModel @Inject constructor(
         try {
             val inputStream = application.contentResolver.openInputStream(this@toTempFile)
                 ?: throw Exception("Failed to open input stream for attachment")
-            val fileName = "support_image_${System.currentTimeMillis()}.jpg"
+
+            // Get file extension from MIME type or URI
+            val extension = getFileExtension()
+            val fileName = "support_attachment_${System.currentTimeMillis()}.$extension"
             val tempFile = File(application.cacheDir, fileName)
 
             tempFile.outputStream().use { outputStream ->
@@ -202,5 +205,28 @@ class HESupportViewModel @Inject constructor(
             appLogWrapper.e(AppLog.T.SUPPORT, "Error copying URI to temp file: ${e.stackTraceToString()}")
             throw e
         }
+    }
+
+    private fun Uri.getFileExtension(): String {
+        // First, try to get extension from MIME type
+        val mimeType = application.contentResolver.getType(this)
+        mimeType?.let { type ->
+            val extension = android.webkit.MimeTypeMap.getSingleton().getExtensionFromMimeType(type)
+            if (!extension.isNullOrEmpty()) {
+                return extension
+            }
+        }
+
+        // Fallback: try to extract extension from the URI path
+        val path = this.path
+        path?.let {
+            val lastDotIndex = it.lastIndexOf('.')
+            if (lastDotIndex > 0 && lastDotIndex < it.length - 1) {
+                return it.substring(lastDotIndex + 1)
+            }
+        }
+
+        // Default to jpg if we can't determine the extension
+        return "jpg"
     }
 }
