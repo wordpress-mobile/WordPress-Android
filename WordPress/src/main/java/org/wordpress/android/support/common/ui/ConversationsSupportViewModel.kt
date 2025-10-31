@@ -96,14 +96,14 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadConversations(refresh: Boolean = false) {
+    private suspend fun loadConversations(isRefresh: Boolean = false) {
         try {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 _conversationsState.value = ConversationsState.NoNetwork
                 return
             }
 
-            _conversationsState.value = if (refresh) ConversationsState.Refreshing else ConversationsState.Loading
+            _conversationsState.value = if (isRefresh) ConversationsState.Refreshing else ConversationsState.Loading
             val conversations = getConversations()
             _conversations.value = conversations
             _conversationsState.value = ConversationsState.Loaded
@@ -121,7 +121,7 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
 
     fun refreshConversations() {
         viewModelScope.launch {
-            loadConversations(refresh = true)
+            loadConversations(isRefresh = true)
         }
     }
 
