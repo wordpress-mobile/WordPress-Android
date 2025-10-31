@@ -1,6 +1,5 @@
 package org.wordpress.android.support.he.ui
 
-import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
@@ -17,17 +15,17 @@ import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
+import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
 class HESupportViewModel @Inject constructor(
     private val heSupportRepository: HESupportRepository,
-    private val application: Application,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
+    private val tempAttachmentsUtil: TempAttachmentsUtil,
     accountStore: AccountStore,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper,
@@ -63,7 +61,7 @@ class HESupportViewModel @Inject constructor(
             try {
                 _isSendingMessage.value = true
 
-                val files = copyUrisToTempFiles(_attachments.value)
+                val files = tempAttachmentsUtil.createTempFilesFrom(_attachments.value)
 
                 when (val result = heSupportRepository.createConversation(
                     subject = subject,
@@ -91,7 +89,7 @@ class HESupportViewModel @Inject constructor(
                     }
                 }
 
-                removeTempFiles(files)
+                tempAttachmentsUtil.removeTempFiles(files)
                 _isSendingMessage.value = false
             } catch (e: Exception) {
                 _errorMessage.value = ErrorType.GENERAL
@@ -117,7 +115,7 @@ class HESupportViewModel @Inject constructor(
                 }
 
                 _isSendingMessage.value = true
-                val files = copyUrisToTempFiles(_attachments.value)
+                val files = tempAttachmentsUtil.createTempFilesFrom(_attachments.value)
 
                 when (val result = heSupportRepository.addMessageToConversation(
                     conversationId = selectedConversation.id,
@@ -144,7 +142,7 @@ class HESupportViewModel @Inject constructor(
                     }
                 }
 
-                removeTempFiles(files)
+                tempAttachmentsUtil.removeTempFiles(files)
                 _isSendingMessage.value = false
             } catch (e: Exception) {
                 _errorMessage.value = ErrorType.GENERAL
@@ -174,73 +172,5 @@ class HESupportViewModel @Inject constructor(
 
     fun notifyGeneralError() {
         _errorMessage.value = ErrorType.GENERAL
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun copyUrisToTempFiles(uris: List<Uri>): List<File> = withContext(ioDispatcher) {
-        uris.map{ it.toTempFile() }
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun removeTempFiles(files: List<File>) = withContext(ioDispatcher) {
-        try {
-            var removed = files.isEmpty() // If empty, count them as removed
-            files.forEach { file ->
-                if (file.exists()) {
-                    removed = removed && file.delete()
-                }
-            }
-            removed
-        } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.SUPPORT, "Error removing attachment temp files temp files: " +
-                    e.stackTraceToString())
-        }
-    }
-
-    @Suppress("TooGenericExceptionCaught", "TooGenericExceptionThrown")
-    private suspend fun Uri.toTempFile(): File = withContext(ioDispatcher) {
-        try {
-            val inputStream = application.contentResolver.openInputStream(this@toTempFile)
-                ?: throw Exception("Failed to open input stream for attachment")
-
-            // Get file extension from MIME type or URI
-            val extension = getFileExtension()
-            val fileName = "support_attachment_${System.currentTimeMillis()}.$extension"
-            val tempFile = File(application.cacheDir, fileName)
-
-            tempFile.outputStream().use { outputStream ->
-                inputStream.copyTo(outputStream)
-            }
-            inputStream.close()
-
-            tempFile
-        } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.SUPPORT, "Error copying URI to temp file: ${e.stackTraceToString()}")
-            throw e
-        }
-    }
-
-    @Suppress("ReturnCount")
-    private fun Uri.getFileExtension(): String {
-        // First, try to get extension from MIME type
-        val mimeType = application.contentResolver.getType(this)
-        mimeType?.let { type ->
-            val extension = android.webkit.MimeTypeMap.getSingleton().getExtensionFromMimeType(type)
-            if (!extension.isNullOrEmpty()) {
-                return extension
-            }
-        }
-
-        // Fallback: try to extract extension from the URI path
-        val path = this.path
-        path?.let {
-            val lastDotIndex = it.lastIndexOf('.')
-            if (lastDotIndex > 0 && lastDotIndex < it.length - 1) {
-                return it.substring(lastDotIndex + 1)
-            }
-        }
-
-        // Default to jpg if we can't determine the extension
-        return "jpg"
     }
 }
