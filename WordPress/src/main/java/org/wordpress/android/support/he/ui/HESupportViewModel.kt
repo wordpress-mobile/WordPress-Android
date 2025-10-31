@@ -1,5 +1,6 @@
 package org.wordpress.android.support.he.ui
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,6 +10,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.support.he.model.AttachmentUI
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
@@ -28,6 +30,10 @@ class HESupportViewModel @Inject constructor(
 
     private val _messageSendResult = MutableStateFlow<MessageSendResult?>(null)
     val messageSendResult: StateFlow<MessageSendResult?> = _messageSendResult.asStateFlow()
+
+    // Attachment state (shared for both Detail and NewTicket screens)
+    private val _attachments = MutableStateFlow<List<AttachmentUI>>(emptyList())
+    val attachments: StateFlow<List<AttachmentUI>> = _attachments.asStateFlow()
 
     sealed class MessageSendResult {
         data object Success : MessageSendResult()
@@ -59,6 +65,8 @@ class HESupportViewModel @Inject constructor(
                     val newConversation = result.conversation
                     // update conversations locally
                     _conversations.value = listOf(newConversation) + _conversations.value
+                    // Clear attachments after successful creation
+                    _attachments.value = emptyList()
                     onBackClick()
                 }
 
@@ -80,10 +88,7 @@ class HESupportViewModel @Inject constructor(
     override suspend fun getConversation(conversationId: Long): SupportConversation? =
         heSupportRepository.loadConversation(conversationId)
 
-    fun onAddMessageToConversation(
-        message: String,
-        attachments: List<String>
-    ) {
+    fun onAddMessageToConversation(message: String) {
         viewModelScope.launch {
             val selectedConversation = _selectedConversation.value
             if (selectedConversation == null) {
@@ -96,11 +101,13 @@ class HESupportViewModel @Inject constructor(
             when (val result = heSupportRepository.addMessageToConversation(
                 conversationId = selectedConversation.id,
                 message = message,
-                attachments = attachments
+                attachments = _attachments.value.map { it.path }
             )) {
                 is CreateConversationResult.Success -> {
                     _selectedConversation.value = result.conversation
                     _messageSendResult.value = MessageSendResult.Success
+                    // Clear attachments after successful message send
+                    _attachments.value = emptyList()
                 }
 
                 is CreateConversationResult.Error.Forbidden -> {
@@ -122,5 +129,18 @@ class HESupportViewModel @Inject constructor(
 
     fun clearMessageSendResult() {
         _messageSendResult.value = null
+    }
+
+    // Attachment management functions
+    fun addAttachment(uri: Uri, path: String) {
+        _attachments.value = _attachments.value + AttachmentUI(uri, path)
+    }
+
+    fun removeAttachment(uri: Uri) {
+        _attachments.value = _attachments.value.filter { it.uri != uri }
+    }
+
+    fun clearAttachments() {
+        _attachments.value = emptyList()
     }
 }

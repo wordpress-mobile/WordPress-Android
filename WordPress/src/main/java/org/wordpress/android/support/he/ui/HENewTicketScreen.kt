@@ -1,6 +1,7 @@
 package org.wordpress.android.support.he.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -68,15 +69,14 @@ fun HENewTicketScreen(
         subject: String,
         messageText: String,
         siteAddress: String,
-        attachments: List<String>
             ) -> Unit,
     userName: String = "",
     userEmail: String = "",
     userAvatarUrl: String? = null,
     isSendingNewConversation: Boolean = false,
     onAddImageClick: () -> Unit = { },
-    selectedImagePaths: List<String> = emptyList(),
-    onRemoveImage: (String) -> Unit = { }
+    selectedImages: List<Uri> = emptyList(),
+    onRemoveImage: (Uri) -> Unit = { }
 ) {
     var selectedCategory by remember { mutableStateOf<SupportCategory?>(null) }
     var subject by remember { mutableStateOf("") }
@@ -99,7 +99,7 @@ fun HENewTicketScreen(
                 isLoading = isSendingNewConversation,
                 onClick = {
                     selectedCategory?.let { category ->
-                        onSubmit(category, subject, messageText, siteAddress, selectedImagePaths)
+                        onSubmit(category, subject, messageText, siteAddress)
                     }
                 }
             )
@@ -198,7 +198,7 @@ fun HENewTicketScreen(
                 includeAppLogs = includeAppLogs,
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
-                selectedImagePaths = selectedImagePaths,
+                selectedImages = selectedImages,
                 onAddImageClick = onAddImageClick,
                 onRemoveImage = onRemoveImage
             )
@@ -425,7 +425,7 @@ private fun HENewTicketScreenPreview() {
         HENewTicketScreen(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _, _ -> },
+            onSubmit = { _, _, _, _-> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
@@ -441,7 +441,7 @@ private fun HENewTicketScreenPreviewDark() {
         HENewTicketScreen(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _, _ -> },
+            onSubmit = { _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
@@ -457,7 +457,7 @@ private fun HENewTicketScreenWordPressPreview() {
         HENewTicketScreen(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _, _ -> },
+            onSubmit = { _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null
@@ -473,7 +473,7 @@ private fun HENewTicketScreenPreviewWordPressDark() {
         HENewTicketScreen(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _, _ -> },
+            onSubmit = { _, _, _, _ -> },
             userName = "Test user",
             userEmail = "test.user@automattic.com",
             userAvatarUrl = null

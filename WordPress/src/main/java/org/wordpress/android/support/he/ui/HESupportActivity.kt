@@ -51,14 +51,6 @@ class HESupportActivity : AppCompatActivity() {
     private lateinit var composeView: ComposeView
     private lateinit var navController: NavHostController
 
-    // State for selected images in Detail screen
-    private var selectedDetailImageUris by mutableStateOf<List<Uri>>(emptyList())
-    private var selectedDetailImagePaths by mutableStateOf<List<String>>(emptyList())
-
-    // State for selected images in NewTicket screen
-    private var selectedNewTicketImageUris by mutableStateOf<List<Uri>>(emptyList())
-    private var selectedNewTicketImagePaths by mutableStateOf<List<String>>(emptyList())
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         composeView = ComposeView(this)
@@ -114,24 +106,10 @@ class HESupportActivity : AppCompatActivity() {
                             // Determine which screen is active by checking current destination
                             val currentDestination = navController.currentDestination?.route
 
-                            when (currentDestination) {
-                                ConversationScreen.Detail.name -> {
-                                    // Convert URIs to file paths
-                                    val newPaths = newUris.mapNotNull { uri ->
-                                        copyUriToTempFile(uri)?.absolutePath
-                                    }
-                                    // Update state immutably to trigger recomposition
-                                    selectedDetailImageUris = selectedDetailImageUris + newUris
-                                    selectedDetailImagePaths = selectedDetailImagePaths + newPaths
-                                }
-                                ConversationScreen.NewTicket.name -> {
-                                    // Convert URIs to file paths
-                                    val newPaths = newUris.mapNotNull { uri ->
-                                        copyUriToTempFile(uri)?.absolutePath
-                                    }
-                                    // Update state immutably to trigger recomposition
-                                    selectedNewTicketImageUris = selectedNewTicketImageUris + newUris
-                                    selectedNewTicketImagePaths = selectedNewTicketImagePaths + newPaths
+                            // Convert URIs to file paths and add to ViewModel
+                            newUris.forEach { uri ->
+                                copyUriToTempFile(uri)?.absolutePath?.let { path ->
+                                    viewModel.addAttachment(uri, path)
                                 }
                             }
                         }
@@ -214,18 +192,18 @@ class HESupportActivity : AppCompatActivity() {
                 }
 
                 composable(route = ConversationScreen.Detail.name) {
+                    // Clear attachments when leaving conversation screen
+                    androidx.compose.runtime.DisposableEffect(Unit) {
+                        onDispose {
+                            viewModel.clearAttachments()
+                        }
+                    }
+
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
                     val messageSendResult by viewModel.messageSendResult.collectAsState()
-
-                    // Clear images after successful message send
-                    LaunchedEffect(messageSendResult) {
-                        if (messageSendResult is HESupportViewModel.MessageSendResult.Success) {
-                            selectedDetailImageUris = emptyList()
-                            selectedDetailImagePaths = emptyList()
-                        }
-                    }
+                    val attachments by viewModel.attachments.collectAsState()
 
                     selectedConversation?.let { conversation ->
                         HEConversationDetailScreen(
@@ -235,10 +213,9 @@ class HESupportActivity : AppCompatActivity() {
                             isSendingMessage = isSendingMessage,
                             messageSendResult = messageSendResult,
                             onBackClick = { viewModel.onBackClick() },
-                            onSendMessage = { message, includeAppLogs, _ ->
+                            onSendMessage = { message, includeAppLogs ->
                                 viewModel.onAddMessageToConversation(
                                     message = message,
-                                    attachments = selectedDetailImagePaths
                                 )
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
@@ -250,15 +227,9 @@ class HESupportActivity : AppCompatActivity() {
                                     localPostId = null
                                 )
                             },
-                            selectedImagePaths = selectedDetailImageUris.map { it.toString() },
-                            onRemoveImage = { uriString ->
-                                val index = selectedDetailImageUris.indexOfFirst { it.toString() == uriString }
-                                if (index >= 0) {
-                                    selectedDetailImageUris =
-                                        selectedDetailImageUris.filterIndexed { i, _ -> i != index }
-                                    selectedDetailImagePaths =
-                                        selectedDetailImagePaths.filterIndexed { i, _ -> i != index }
-                                }
+                            selectedImages = attachments.map { it.uri },
+                            onRemoveImage = { imageuri ->
+                                viewModel.removeAttachment(imageuri)
                             },
                             onDownloadAttachment = { attachment ->
                                 // Show loading snackbar
@@ -281,24 +252,24 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.NewTicket.name) {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val isSendingNewConversation by viewModel.isSendingMessage.collectAsState()
+                    val attachments by viewModel.attachments.collectAsState()
 
-                    // Clear attachments when opening a new ticket
+                    // Clear attachments when leaving the new ticket screen
                     androidx.compose.runtime.DisposableEffect(Unit) {
                         onDispose {
-                            selectedNewTicketImageUris = emptyList()
-                            selectedNewTicketImagePaths = emptyList()
+                            viewModel.clearAttachments()
                         }
                     }
 
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
                         onBackClick = { viewModel.onBackClick() },
-                        onSubmit = { category, subject, messageText, siteAddress, _ ->
+                        onSubmit = { category, subject, messageText, siteAddress ->
                             viewModel.onSendNewConversation(
                                 subject = subject,
                                 message = messageText,
                                 tags = listOf(category.key),
-                                attachments = selectedNewTicketImagePaths
+                                attachments = attachments.map { it.path }
                             )
                         },
                         userName = userInfo.userName,
@@ -313,15 +284,9 @@ class HESupportActivity : AppCompatActivity() {
                                 localPostId = null
                             )
                         },
-                        selectedImagePaths = selectedNewTicketImageUris.map { it.toString() },
-                        onRemoveImage = { uriString ->
-                            val index = selectedNewTicketImageUris.indexOfFirst { it.toString() == uriString }
-                            if (index >= 0) {
-                                selectedNewTicketImageUris =
-                                    selectedNewTicketImageUris.filterIndexed { i, _ -> i != index }
-                                selectedNewTicketImagePaths =
-                                    selectedNewTicketImagePaths.filterIndexed { i, _ -> i != index }
-                            }
+                        selectedImages = attachments.map { it.uri },
+                        onRemoveImage = { imageUri ->
+                            viewModel.removeAttachment(imageUri)
                         },
                         )
                 }

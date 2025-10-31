@@ -1,6 +1,7 @@
 package org.wordpress.android.support.he.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTransformGestures
@@ -87,11 +88,11 @@ fun HEConversationDetailScreen(
     isSendingMessage: Boolean = false,
     messageSendResult: HESupportViewModel.MessageSendResult? = null,
     onBackClick: () -> Unit,
-    onSendMessage: (message: String, includeAppLogs: Boolean, attachments: List<String>) -> Unit,
+    onSendMessage: (message: String, includeAppLogs: Boolean) -> Unit,
     onClearMessageSendResult: () -> Unit = {},
     onAddImageClick: () -> Unit = {},
-    selectedImagePaths: List<String> = emptyList(),
-    onRemoveImage: (String) -> Unit = {},
+    selectedImages: List<Uri> = emptyList(),
+    onRemoveImage: (Uri) -> Unit = {},
     onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
@@ -199,7 +200,7 @@ fun HEConversationDetailScreen(
                 }
             },
             onSend = { message, includeAppLogs ->
-                onSendMessage(message, includeAppLogs, selectedImagePaths)
+                onSendMessage(message, includeAppLogs)
             },
             onMessageSentSuccessfully = {
                 // Clear draft after successful send
@@ -208,7 +209,7 @@ fun HEConversationDetailScreen(
                 onClearMessageSendResult()
             },
             onAddImageClick = onAddImageClick,
-            selectedImagePaths = selectedImagePaths,
+            selectedImages = selectedImages,
             onRemoveImage = onRemoveImage
         )
     }
@@ -508,8 +509,8 @@ private fun ReplyBottomSheet(
     onSend: (String, Boolean) -> Unit,
     onMessageSentSuccessfully: () -> Unit,
     onAddImageClick: () -> Unit = {},
-    selectedImagePaths: List<String> = emptyList(),
-    onRemoveImage: (String) -> Unit = {}
+    selectedImages: List<Uri> = emptyList(),
+    onRemoveImage: (Uri) -> Unit = {}
 ) {
     var messageText by remember { mutableStateOf(initialMessageText) }
     var includeAppLogs by remember { mutableStateOf(initialIncludeAppLogs) }
@@ -594,7 +595,7 @@ private fun ReplyBottomSheet(
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
                 enabled = !isSending,
-                selectedImagePaths = selectedImagePaths,
+                selectedImages = selectedImages,
                 onAddImageClick = onAddImageClick,
                 onRemoveImage = onRemoveImage
             )
@@ -763,7 +764,7 @@ private fun HEConversationDetailScreenPreview() {
             snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
             onBackClick = { },
-            onSendMessage = { _, _, _ -> }
+            onSendMessage = { _, _ -> }
         )
     }
 }
@@ -779,7 +780,7 @@ private fun HEConversationDetailScreenPreviewDark() {
             snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
             onBackClick = { },
-            onSendMessage = { _, _, _ -> }
+            onSendMessage = { _, _ -> }
         )
     }
 }
@@ -795,7 +796,7 @@ private fun HEConversationDetailScreenWordPressPreview() {
             snackbarHostState = snackbarHostState,
             conversation = sampleConversation,
             onBackClick = { },
-            onSendMessage = { _, _, _ -> }
+            onSendMessage = { _, _ -> }
         )
     }
 }
@@ -812,7 +813,7 @@ private fun HEConversationDetailScreenPreviewWordPressDark() {
             isLoading = true,
             conversation = sampleConversation,
             onBackClick = { },
-            onSendMessage = { _, _, _ -> }
+            onSendMessage = { _, _ -> }
         )
     }
 }

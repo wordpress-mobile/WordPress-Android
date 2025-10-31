@@ -1,6 +1,7 @@
 package org.wordpress.android.support.he.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -54,9 +55,9 @@ fun TicketMainContentView(
     onMessageChanged: (String) -> Unit,
     onIncludeAppLogsChanged: (Boolean) -> Unit,
     enabled: Boolean = true,
-    selectedImagePaths: List<String> = emptyList(),
+    selectedImages: List<Uri> = emptyList(),
     onAddImageClick: () -> Unit = { },
-    onRemoveImage: (String) -> Unit = { },
+    onRemoveImage: (Uri) -> Unit = { },
     ) {
     Column(
         modifier = Modifier
@@ -106,7 +107,7 @@ fun TicketMainContentView(
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
-        if (selectedImagePaths.isNotEmpty()) {
+        if (selectedImages.isNotEmpty()) {
             FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -114,10 +115,10 @@ fun TicketMainContentView(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                selectedImagePaths.forEach { imagePath ->
+                selectedImages.forEach { imageUri ->
                     ImagePreviewItem(
-                        imagePath = imagePath,
-                        onRemove = { onRemoveImage(imagePath) },
+                        imageUri = imageUri,
+                        onRemove = { onRemoveImage(imageUri) },
                         enabled = enabled
                     )
                 }
@@ -216,7 +217,7 @@ fun TicketMainContentView(
 
 @Composable
 private fun ImagePreviewItem(
-    imagePath: String,
+    imageUri: Uri,
     onRemove: () -> Unit,
     enabled: Boolean = true
 ) {
@@ -232,7 +233,7 @@ private fun ImagePreviewItem(
             )
         ) {
             AsyncImage(
-                model = imagePath,
+                model = imageUri,
                 contentDescription = stringResource(R.string.he_support_screenshot_preview),
                 modifier = Modifier
                     .size(100.dp)
