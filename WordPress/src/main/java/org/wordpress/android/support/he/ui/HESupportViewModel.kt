@@ -50,7 +50,6 @@ class HESupportViewModel @Inject constructor(
         subject: String,
         message: String,
         tags: List<String>,
-        attachments: List<String>
     ) {
         viewModelScope.launch {
             _isSendingMessage.value = true
@@ -59,7 +58,7 @@ class HESupportViewModel @Inject constructor(
                 subject = subject,
                 message = message,
                 tags = tags,
-                attachments = attachments
+                attachments = attachments.value.map { it.path }
             )) {
                 is CreateConversationResult.Success -> {
                     val newConversation = result.conversation

@@ -273,7 +273,6 @@ class HESupportActivity : AppCompatActivity() {
                                 subject = subject,
                                 message = messageText,
                                 tags = listOf(category.key),
-                                attachments = attachments.map { it.path }
                             )
                         },
                         userName = userInfo.userName,
