@@ -156,12 +156,7 @@ class HESupportViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun copyUrisToTempFiles(uris: List<Uri>): List<File> = withContext(ioDispatcher) {
-        try {
-            uris.mapNotNull { it.toTempFile() }
-        } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.SUPPORT, "Error copying URIs to temp files: ${e.stackTraceToString()}")
-            emptyList()
-        }
+        uris.mapNotNull { it.toTempFile() }
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -193,7 +188,7 @@ class HESupportViewModel @Inject constructor(
             tempFile
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.SUPPORT, "Error copying URI to temp file: ${e.stackTraceToString()}")
-            null
+            throw e
         }
     }
 }
