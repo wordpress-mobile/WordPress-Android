@@ -284,6 +284,14 @@ class HESupportActivity : AppCompatActivity() {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val isSendingNewConversation by viewModel.isSendingMessage.collectAsState()
 
+                    // Clear attachments when opening a new ticket
+                    androidx.compose.runtime.DisposableEffect(Unit) {
+                        onDispose {
+                            selectedNewTicketImageUris = emptyList()
+                            selectedNewTicketImagePaths = emptyList()
+                        }
+                    }
+
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
                         onBackClick = { viewModel.onBackClick() },
