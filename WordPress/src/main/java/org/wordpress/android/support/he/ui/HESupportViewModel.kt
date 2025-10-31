@@ -4,12 +4,15 @@ import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.repository.CreateConversationResult
@@ -18,11 +21,13 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class HESupportViewModel @Inject constructor(
     private val heSupportRepository: HESupportRepository,
     private val application: Application,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     accountStore: AccountStore,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper,
@@ -150,8 +155,8 @@ class HESupportViewModel @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private fun copyUrisToTempFiles(uris: List<Uri>): List<File> {
-        return try {
+    private suspend fun copyUrisToTempFiles(uris: List<Uri>): List<File> = withContext(ioDispatcher) {
+        try {
             uris.mapNotNull { it.toTempFile() }
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.SUPPORT, "Error copying URIs to temp files: ${e.stackTraceToString()}")
@@ -159,18 +164,22 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
-    private fun removeTempFiles(files: List<File>) {
-        return try {
-            // Remove temp files
+    private suspend fun removeTempFiles(files: List<File>) = withContext(ioDispatcher) {
+        try {
+            files.forEach { file ->
+                if (file.exists()) {
+                    file.delete()
+                }
+            }
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.SUPPORT, "Error removing attachment temp files temp files: ${e.stackTraceToString()}")
         }
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private fun Uri.toTempFile(): File? {
-        return try {
-            val inputStream = application.contentResolver.openInputStream(this) ?: return null
+    private suspend fun Uri.toTempFile(): File? = withContext(ioDispatcher) {
+        try {
+            val inputStream = application.contentResolver.openInputStream(this@toTempFile) ?: return@withContext null
             val fileName = "support_image_${System.currentTimeMillis()}.jpg"
             val tempFile = File(application.cacheDir, fileName)
 
