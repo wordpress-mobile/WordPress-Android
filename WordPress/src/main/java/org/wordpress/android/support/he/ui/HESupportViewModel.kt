@@ -164,6 +164,7 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun removeTempFiles(files: List<File>) = withContext(ioDispatcher) {
         try {
             files.forEach { file ->
@@ -172,7 +173,8 @@ class HESupportViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.SUPPORT, "Error removing attachment temp files temp files: ${e.stackTraceToString()}")
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error removing attachment temp files temp files: " +
+                    e.stackTraceToString())
         }
     }
 
