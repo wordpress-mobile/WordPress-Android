@@ -29,10 +29,12 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.support.common.ui.ConversationsSupportViewModel.ErrorType
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.reader.ReaderFileDownloadManager
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaType
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -44,15 +46,22 @@ class HESupportActivity : AppCompatActivity() {
     private lateinit var composeView: ComposeView
     private lateinit var navController: NavHostController
 
+    @Suppress("TooGenericExceptionCaught")
     private val photoPickerLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == RESULT_OK && result.data != null) {
-            val uris = result.data?.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
-            uris?.let { uriStrings ->
-                val newUris = uriStrings.map { it.toUri() }
-                viewModel.addAttachments(newUris)
+        try {
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                val uris = result.data?.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
+                uris?.let { uriStrings ->
+                    val newUris = uriStrings.map { it.toUri() }
+                    viewModel.addAttachments(newUris)
+                }
             }
+        } catch (e: Exception) {
+            viewModel.notifyGeneralError()
+            appLogWrapper.e(
+                AppLog.T.SUPPORT, "Error getting attachments to add: ${e.stackTraceToString()}")
         }
     }
 

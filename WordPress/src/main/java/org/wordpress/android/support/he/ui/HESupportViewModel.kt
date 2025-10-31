@@ -95,7 +95,10 @@ class HESupportViewModel @Inject constructor(
                 _isSendingMessage.value = false
             } catch (e: Exception) {
                 _errorMessage.value = ErrorType.GENERAL
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error creating HE conversation")
+                appLogWrapper.e(
+                    AppLog.T.SUPPORT,
+                    "Error creating HE conversation ${e.stackTraceToString()}"
+                )
             }
         }
     }
@@ -145,8 +148,10 @@ class HESupportViewModel @Inject constructor(
                 _isSendingMessage.value = false
             } catch (e: Exception) {
                 _errorMessage.value = ErrorType.GENERAL
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error adding message to HE conversation: " +
-                e.stackTraceToString())
+                appLogWrapper.e(
+                    AppLog.T.SUPPORT,
+                    "Error adding message to HE conversation: ${e.stackTraceToString()}"
+                )
             }
         }
     }
@@ -167,6 +172,10 @@ class HESupportViewModel @Inject constructor(
         _attachments.value = emptyList()
     }
 
+    fun notifyGeneralError() {
+        _errorMessage.value = ErrorType.GENERAL
+    }
+
     @Suppress("TooGenericExceptionCaught")
     private suspend fun copyUrisToTempFiles(uris: List<Uri>): List<File> = withContext(ioDispatcher) {
         uris.map{ it.toTempFile() }
@@ -175,11 +184,13 @@ class HESupportViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun removeTempFiles(files: List<File>) = withContext(ioDispatcher) {
         try {
+            var removed = files.isEmpty() // If empty, count them as removed
             files.forEach { file ->
                 if (file.exists()) {
-                    file.delete()
+                    removed = removed && file.delete()
                 }
             }
+            removed
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.SUPPORT, "Error removing attachment temp files temp files: " +
                     e.stackTraceToString())
