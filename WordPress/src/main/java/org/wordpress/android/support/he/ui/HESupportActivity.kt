@@ -243,14 +243,12 @@ class HESupportActivity : AppCompatActivity() {
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
                             onAddImageClick = {
-                                if (selectedDetailImageUris.size < 4) {
-                                    mediaPickerLauncher.showPhotoPickerForResult(
-                                        activity = this@HESupportActivity,
-                                        browserType = MediaBrowserType.FEEDBACK_FORM_MEDIA_PICKER,
-                                        site = null,
-                                        localPostId = null
-                                    )
-                                }
+                                mediaPickerLauncher.showPhotoPickerForResult(
+                                    activity = this@HESupportActivity,
+                                    browserType = MediaBrowserType.FEEDBACK_FORM_MEDIA_PICKER,
+                                    site = null,
+                                    localPostId = null
+                                )
                             },
                             selectedImagePaths = selectedDetailImageUris.map { it.toString() },
                             onRemoveImage = { uriString ->
@@ -308,14 +306,12 @@ class HESupportActivity : AppCompatActivity() {
                         userAvatarUrl = userInfo.avatarUrl,
                         isSendingNewConversation = isSendingNewConversation,
                         onAddImageClick = {
-                            if (selectedNewTicketImageUris.size < 4) {
-                                mediaPickerLauncher.showPhotoPickerForResult(
-                                    activity = this@HESupportActivity,
-                                    browserType = MediaBrowserType.FEEDBACK_FORM_MEDIA_PICKER,
-                                    site = null,
-                                    localPostId = null
-                                )
-                            }
+                            mediaPickerLauncher.showPhotoPickerForResult(
+                                activity = this@HESupportActivity,
+                                browserType = MediaBrowserType.FEEDBACK_FORM_MEDIA_PICKER,
+                                site = null,
+                                localPostId = null
+                            )
                         },
                         selectedImagePaths = selectedNewTicketImageUris.map { it.toString() },
                         onRemoveImage = { uriString ->
