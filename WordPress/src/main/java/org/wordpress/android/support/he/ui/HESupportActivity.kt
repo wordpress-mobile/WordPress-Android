@@ -33,23 +33,40 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
-import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.reader.ReaderFileDownloadManager
-import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.media.MediaBrowserType
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup
+import org.wordpress.android.ui.mediapicker.MediaType
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HESupportActivity : AppCompatActivity() {
-    @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var fileDownloadManager: ReaderFileDownloadManager
     @Inject lateinit var appLogWrapper: AppLogWrapper
     private val viewModel by viewModels<HESupportViewModel>()
 
     private lateinit var composeView: ComposeView
     private lateinit var navController: NavHostController
+
+    private val photoPickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK && result.data != null) {
+            val uris = result.data?.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
+            uris?.let { uriStrings ->
+                lifecycleScope.launch {
+                    val newUris = uriStrings.map { it.toUri() }
+                    // Convert URIs to file paths and add to ViewModel
+                    newUris.forEach { uri ->
+                        copyUriToTempFile(uri)?.absolutePath?.let { path ->
+                            viewModel.addAttachment(uri, path)
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,34 +107,6 @@ class HESupportActivity : AppCompatActivity() {
         }
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == RESULT_OK && data != null) {
-            when (requestCode) {
-                RequestCodes.PHOTO_PICKER -> {
-                    // Handle media picker result based on current screen
-                    val uris = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
-                    uris?.let { uriStrings ->
-                        lifecycleScope.launch {
-                            val newUris = uriStrings.map { it.toUri() }
-
-                            // Determine which screen is active by checking current destination
-                            val currentDestination = navController.currentDestination?.route
-
-                            // Convert URIs to file paths and add to ViewModel
-                            newUris.forEach { uri ->
-                                copyUriToTempFile(uri)?.absolutePath?.let { path ->
-                                    viewModel.addAttachment(uri, path)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     @Suppress("TooGenericExceptionCaught")
     private fun copyUriToTempFile(uri: Uri): java.io.File? {
@@ -220,12 +209,27 @@ class HESupportActivity : AppCompatActivity() {
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
                             onAddImageClick = {
-                                mediaPickerLauncher.showPhotoPickerForResult(
-                                    activity = this@HESupportActivity,
-                                    browserType = MediaBrowserType.FEEDBACK_FORM_MEDIA_PICKER,
-                                    site = null,
-                                    localPostId = null
+                                val mediaPickerSetup = MediaPickerSetup(
+                                    primaryDataSource = MediaPickerSetup.DataSource.DEVICE,
+                                    availableDataSources = setOf(),
+                                    canMultiselect = true,
+                                    requiresPhotosVideosPermissions = true,
+                                    requiresMusicAudioPermissions = false,
+                                    allowedTypes = setOf(MediaType.IMAGE),
+                                    cameraSetup = MediaPickerSetup.CameraSetup.HIDDEN,
+                                    systemPickerEnabled = true,
+                                    editingEnabled = true,
+                                    queueResults = false,
+                                    defaultSearchView = false,
+                                    title = R.string.photo_picker_title
                                 )
+                                val intent = org.wordpress.android.ui.mediapicker.MediaPickerActivity.buildIntent(
+                                    this@HESupportActivity,
+                                    mediaPickerSetup,
+                                    null,
+                                    null
+                                )
+                                photoPickerLauncher.launch(intent)
                             },
                             selectedImages = attachments.map { it.uri },
                             onRemoveImage = { imageuri ->
@@ -277,12 +281,27 @@ class HESupportActivity : AppCompatActivity() {
                         userAvatarUrl = userInfo.avatarUrl,
                         isSendingNewConversation = isSendingNewConversation,
                         onAddImageClick = {
-                            mediaPickerLauncher.showPhotoPickerForResult(
-                                activity = this@HESupportActivity,
-                                browserType = MediaBrowserType.FEEDBACK_FORM_MEDIA_PICKER,
-                                site = null,
-                                localPostId = null
+                            val mediaPickerSetup = MediaPickerSetup(
+                                primaryDataSource = MediaPickerSetup.DataSource.DEVICE,
+                                availableDataSources = setOf(),
+                                canMultiselect = true,
+                                requiresPhotosVideosPermissions = true,
+                                requiresMusicAudioPermissions = false,
+                                allowedTypes = setOf(MediaType.IMAGE),
+                                cameraSetup = MediaPickerSetup.CameraSetup.HIDDEN,
+                                systemPickerEnabled = true,
+                                editingEnabled = true,
+                                queueResults = false,
+                                defaultSearchView = false,
+                                title = R.string.photo_picker_title
                             )
+                            val intent = org.wordpress.android.ui.mediapicker.MediaPickerActivity.buildIntent(
+                                this@HESupportActivity,
+                                mediaPickerSetup,
+                                null,
+                                null
+                            )
+                            photoPickerLauncher.launch(intent)
                         },
                         selectedImages = attachments.map { it.uri },
                         onRemoveImage = { imageUri ->
