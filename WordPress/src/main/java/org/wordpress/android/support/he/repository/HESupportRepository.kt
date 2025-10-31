@@ -5,8 +5,6 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
-import org.wordpress.android.support.he.model.AttachmentType
-import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
 import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
@@ -205,22 +203,5 @@ class HESupportRepository @Inject constructor(
                 is SupportMessageAuthor.SupportAgent -> (author as SupportMessageAuthor.SupportAgent).v1.name
             },
             authorIsUser = authorIsCurrentUser,
-            attachments = attachments.map { it.toSupportAttachment() }
         )
-
-    private fun uniffi.wp_api.SupportAttachment.toSupportAttachment(): SupportAttachment =
-        SupportAttachment(
-            id = id.toLong(),
-            filename = filename,
-            url = url,
-            type = determineAttachmentType(contentType)
-        )
-
-    private fun determineAttachmentType(contentType: String): AttachmentType {
-        return when {
-            contentType.startsWith("image/") -> AttachmentType.Image
-            contentType.startsWith("video/") -> AttachmentType.Video
-            else -> AttachmentType.Other
-        }
-    }
 }

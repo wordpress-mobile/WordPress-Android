@@ -426,8 +426,12 @@ private fun HENewTicketScreenPreview() {
             onSubmit = { _, _, _, _-> },
             userInfo = UserInfo("Test user", "test.user@automattic.com", null),
             attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() { }
-                override fun onRemoveImage(uri: Uri) { }
+                override fun onAddImageClick() {
+                    // stub
+                }
+                override fun onRemoveImage(uri: Uri) {
+                    // stub
+                }
             }
         )
     }
@@ -444,8 +448,12 @@ private fun HENewTicketScreenPreviewDark() {
             onSubmit = { _, _, _, _ -> },
             userInfo = UserInfo("Test user", "test.user@automattic.com", null),
             attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() { }
-                override fun onRemoveImage(uri: Uri) { }
+                override fun onAddImageClick() {
+                    // stub
+                }
+                override fun onRemoveImage(uri: Uri) {
+                    // stub
+                }
             }
         )
     }
@@ -462,8 +470,12 @@ private fun HENewTicketScreenWordPressPreview() {
             onSubmit = { _, _, _, _ -> },
             userInfo = UserInfo("Test user", "test.user@automattic.com", null),
             attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() { }
-                override fun onRemoveImage(uri: Uri) { }
+                override fun onAddImageClick() {
+                    // stub
+                }
+                override fun onRemoveImage(uri: Uri) {
+                    // stub
+                }
             }
         )
     }
@@ -480,8 +492,12 @@ private fun HENewTicketScreenPreviewWordPressDark() {
             onSubmit = { _, _, _, _ -> },
             userInfo = UserInfo("Test user", "test.user@automattic.com", null),
             attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() { }
-                override fun onRemoveImage(uri: Uri) { }
+                override fun onAddImageClick() {
+                    // stub
+                }
+                override fun onRemoveImage(uri: Uri) {
+                    // stub
+                }
             }
         )
     }

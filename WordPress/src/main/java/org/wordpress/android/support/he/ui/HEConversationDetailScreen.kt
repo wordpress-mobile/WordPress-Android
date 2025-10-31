@@ -3,7 +3,6 @@ package org.wordpress.android.support.he.ui
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -38,12 +36,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import coil.compose.SubcomposeAsyncImage
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -54,7 +49,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.he.model.SupportConversation
@@ -78,7 +72,6 @@ fun HEConversationDetailScreen(
     onClearMessageSendResult: () -> Unit = {},
     attachments: List<Uri> = emptyList(),
     attachmentActionsListener: AttachmentActionsListener,
-    onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -89,9 +82,6 @@ fun HEConversationDetailScreen(
     // Save draft message state to restore when reopening the bottom sheet
     var draftMessageText by remember { mutableStateOf("") }
     var draftIncludeAppLogs by remember { mutableStateOf(false) }
-
-    // State for fullscreen image preview
-    var previewImageUrl by remember { mutableStateOf<String?>(null) }
 
     // Scroll to bottom when conversation changes or new messages arrive
     LaunchedEffect(conversation.messages.size) {
@@ -149,8 +139,6 @@ fun HEConversationDetailScreen(
                 MessageItem(
                     message = message,
                     timestamp = formatRelativeTime(message.createdAt, resources),
-                    onPreviewImage = { imageUrl -> previewImageUrl = imageUrl },
-                    onDownloadAttachment = onDownloadAttachment
                 )
             }
 
@@ -195,22 +183,6 @@ fun HEConversationDetailScreen(
             },
             attachments = attachments,
             attachmentActionsListener = attachmentActionsListener
-        )
-    }
-
-    // Show fullscreen image preview when an image attachment is tapped
-    previewImageUrl?.let { imageUrl ->
-        // Find the attachment with this URL to get the filename for download
-        val attachment = conversation.messages
-            .flatMap { it.attachments }
-            .firstOrNull { it.url == imageUrl }
-
-        AttachmentFullscreenImagePreview(
-            imageUrl = imageUrl,
-            onDismiss = { previewImageUrl = null },
-            onDownload = {
-                attachment?.let { onDownloadAttachment(it) }
-            }
         )
     }
 }
@@ -288,8 +260,6 @@ private fun ConversationTitleCard(title: String) {
 private fun MessageItem(
     message: SupportMessage,
     timestamp: String,
-    onPreviewImage: (String) -> Unit,
-    onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit
 ) {
     val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
 
@@ -343,105 +313,6 @@ private fun MessageItem(
                     color = MaterialTheme.colorScheme.onSurface
                 )
             )
-
-            // Display attachments if present
-            if (message.attachments.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(12.dp))
-                AttachmentsList(
-                    attachments = message.attachments,
-                    onPreviewImage = onPreviewImage,
-                    onDownloadAttachment = onDownloadAttachment
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun AttachmentsList(
-    attachments: List<org.wordpress.android.support.he.model.SupportAttachment>,
-    onPreviewImage: (String) -> Unit,
-    onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit
-) {
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        attachments.forEach { attachment ->
-            AttachmentItem(
-                attachment = attachment,
-                onClick = {
-                    if (attachment.type == org.wordpress.android.support.he.model.AttachmentType.Image) {
-                        onPreviewImage(attachment.url)
-                    } else {
-                        onDownloadAttachment(attachment)
-                    }
-                }
-            )
-        }
-    }
-}
-
-@Composable
-private fun AttachmentItem(
-    attachment: org.wordpress.android.support.he.model.SupportAttachment,
-    onClick: () -> Unit
-) {
-    val iconRes = when (attachment.type) {
-        org.wordpress.android.support.he.model.AttachmentType.Image -> R.drawable.ic_image_white_24dp
-        org.wordpress.android.support.he.model.AttachmentType.Video -> R.drawable.ic_video_camera_white_24dp
-        org.wordpress.android.support.he.model.AttachmentType.Other -> R.drawable.ic_pages_white_24dp
-    }
-
-    Box(
-        modifier = Modifier
-            .size(120.dp)
-            .clickable(onClick = onClick)
-            .background(
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
-                shape = RoundedCornerShape(8.dp)
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        if (attachment.type == org.wordpress.android.support.he.model.AttachmentType.Image) {
-            // Show image preview for image attachments
-            SubcomposeAsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(attachment.url)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = attachment.filename,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
-                loading = {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
-                            strokeWidth = 2.dp
-                        )
-                    }
-                },
-                error = {
-                    // Show icon if image fails to load
-                    Icon(
-                        painter = painterResource(iconRes),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-            )
-        } else {
-            // Show icon for non-image attachments
-            Icon(
-                painter = painterResource(iconRes),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(48.dp)
-            )
         }
     }
 }
@@ -494,8 +365,12 @@ private fun HEConversationDetailScreenPreview() {
             onBackClick = { },
             onSendMessage = { _, _ -> },
             attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() { }
-                override fun onRemoveImage(uri: Uri) { }
+                override fun onAddImageClick() {
+                    // stub
+                }
+                override fun onRemoveImage(uri: Uri) {
+                    // stub
+                }
             }
         )
     }
@@ -514,8 +389,12 @@ private fun HEConversationDetailScreenPreviewDark() {
             onBackClick = { },
             onSendMessage = { _, _ -> },
             attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() { }
-                override fun onRemoveImage(uri: Uri) { }
+                override fun onAddImageClick() {
+                    // stub
+                }
+                override fun onRemoveImage(uri: Uri) {
+                    // stub
+                }
             }
         )
     }
@@ -534,8 +413,12 @@ private fun HEConversationDetailScreenWordPressPreview() {
             onBackClick = { },
             onSendMessage = { _, _ -> },
             attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() { }
-                override fun onRemoveImage(uri: Uri) { }
+                override fun onAddImageClick() {
+                    // stub
+                }
+                override fun onRemoveImage(uri: Uri) {
+                    // stub
+                }
             }
         )
     }
@@ -555,8 +438,12 @@ private fun HEConversationDetailScreenPreviewWordPressDark() {
             onBackClick = { },
             onSendMessage = { _, _ -> },
             attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() { }
-                override fun onRemoveImage(uri: Uri) { }
+                override fun onAddImageClick() {
+                    // stub
+                }
+                override fun onRemoveImage(uri: Uri) {
+                    // stub
+                }
             }
         )
     }

@@ -695,7 +695,6 @@ class HESupportViewModelTest : BaseUnitTest() {
             createdAt = Date(),
             authorName = if (authorIsUser) "User" else "Support",
             authorIsUser = authorIsUser,
-            attachments = emptyList()
         )
     }
 }
