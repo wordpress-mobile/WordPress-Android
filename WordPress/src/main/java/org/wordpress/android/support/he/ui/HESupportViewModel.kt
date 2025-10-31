@@ -53,12 +53,13 @@ class HESupportViewModel @Inject constructor(
 
     override suspend fun getConversations(): List<SupportConversation> = heSupportRepository.loadConversations()
 
+    @Suppress("TooGenericExceptionCaught")
     fun onSendNewConversation(
         subject: String,
         message: String,
         tags: List<String>,
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 _isSendingMessage.value = true
 
@@ -102,8 +103,9 @@ class HESupportViewModel @Inject constructor(
     override suspend fun getConversation(conversationId: Long): SupportConversation? =
         heSupportRepository.loadConversation(conversationId)
 
+    @Suppress("TooGenericExceptionCaught")
     fun onAddMessageToConversation(message: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 val selectedConversation = _selectedConversation.value
                 if (selectedConversation == null) {
@@ -184,7 +186,7 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "TooGenericExceptionThrown")
     private suspend fun Uri.toTempFile(): File = withContext(ioDispatcher) {
         try {
             val inputStream = application.contentResolver.openInputStream(this@toTempFile)
@@ -207,6 +209,7 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ReturnCount")
     private fun Uri.getFileExtension(): String {
         // First, try to get extension from MIME type
         val mimeType = application.contentResolver.getType(this)

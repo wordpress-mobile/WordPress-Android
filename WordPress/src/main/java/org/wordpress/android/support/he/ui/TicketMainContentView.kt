@@ -45,12 +45,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
 import org.wordpress.android.R
+import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-
-interface AttachmentActionsListener {
-    fun onAddImageClick()
-    fun onRemoveImage(uri: Uri)
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,10 +57,7 @@ fun TicketMainContentView(
     onIncludeAppLogsChanged: (Boolean) -> Unit,
     enabled: Boolean = true,
     attachments: List<Uri> = emptyList(),
-    attachmentActionsListener: AttachmentActionsListener = object : AttachmentActionsListener {
-        override fun onAddImageClick() {}
-        override fun onRemoveImage(uri: Uri) {}
-    }
+    attachmentActionsListener: AttachmentActionsListener
 ) {
     Column(
         modifier = Modifier
@@ -281,6 +274,7 @@ private fun ImagePreviewItem(
 
 
 @Preview(showBackground = true, name = "HE main ticket content")
+@Suppress("EmptyFunctionBlock")
 @Composable
 private fun TicketMainContentViewPreview() {
     AppThemeM3(isDarkTheme = false) {
@@ -288,12 +282,17 @@ private fun TicketMainContentViewPreview() {
             messageText = "",
             includeAppLogs = false,
             onMessageChanged = { },
-            onIncludeAppLogsChanged = { }
+            onIncludeAppLogsChanged = { },
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() { }
+                override fun onRemoveImage(uri: Uri) { }
+            }
         )
     }
 }
 
 @Preview(showBackground = true, name = "HE main ticket content - Dark", uiMode = UI_MODE_NIGHT_YES)
+@Suppress("EmptyFunctionBlock")
 @Composable
 private fun TicketMainContentViewPreviewDark() {
     AppThemeM3(isDarkTheme = true) {
@@ -301,7 +300,11 @@ private fun TicketMainContentViewPreviewDark() {
             messageText = "",
             includeAppLogs = false,
             onMessageChanged = { },
-            onIncludeAppLogsChanged = { }
+            onIncludeAppLogsChanged = { },
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() { }
+                override fun onRemoveImage(uri: Uri) { }
+            }
         )
     }
 }

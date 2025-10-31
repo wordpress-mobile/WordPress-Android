@@ -243,9 +243,7 @@ class HESupportActivity : AppCompatActivity() {
                                 tags = listOf(category.key),
                             )
                         },
-                        userName = userInfo.userName,
-                        userEmail = userInfo.userEmail,
-                        userAvatarUrl = userInfo.avatarUrl,
+                        userInfo = userInfo,
                         isSendingNewConversation = isSendingNewConversation,
                         onAddImageClick = {
                             val mediaPickerSetup = MediaPickerSetup(
