@@ -59,38 +59,43 @@ class HESupportViewModel @Inject constructor(
         tags: List<String>,
     ) {
         viewModelScope.launch {
-            _isSendingMessage.value = true
+            try {
+                _isSendingMessage.value = true
 
-            val files = copyUrisToTempFiles(_attachments.value)
+                val files = copyUrisToTempFiles(_attachments.value)
 
-            when (val result = heSupportRepository.createConversation(
-                subject = subject,
-                message = message,
-                tags = tags,
-                attachments = files.map { it.path }
-            )) {
-                is CreateConversationResult.Success -> {
-                    val newConversation = result.conversation
-                    // update conversations locally
-                    _conversations.value = listOf(newConversation) + _conversations.value
-                    // Clear attachments after successful creation
-                    _attachments.value = emptyList()
-                    onBackClick()
+                when (val result = heSupportRepository.createConversation(
+                    subject = subject,
+                    message = message,
+                    tags = tags,
+                    attachments = files.map { it.path }
+                )) {
+                    is CreateConversationResult.Success -> {
+                        val newConversation = result.conversation
+                        // update conversations locally
+                        _conversations.value = listOf(newConversation) + _conversations.value
+                        // Clear attachments after successful creation
+                        _attachments.value = emptyList()
+                        onBackClick()
+                    }
+
+                    is CreateConversationResult.Error.Forbidden -> {
+                        _errorMessage.value = ErrorType.FORBIDDEN
+                        appLogWrapper.e(AppLog.T.SUPPORT, "Unauthorized error creating HE conversation")
+                    }
+
+                    is CreateConversationResult.Error.GeneralError -> {
+                        _errorMessage.value = ErrorType.GENERAL
+                        appLogWrapper.e(AppLog.T.SUPPORT, "General error creating HE conversation")
+                    }
                 }
 
-                is CreateConversationResult.Error.Forbidden -> {
-                    _errorMessage.value = ErrorType.FORBIDDEN
-                    appLogWrapper.e(AppLog.T.SUPPORT, "Unauthorized error creating HE conversation")
-                }
-
-                is CreateConversationResult.Error.GeneralError -> {
-                    _errorMessage.value = ErrorType.GENERAL
-                    appLogWrapper.e(AppLog.T.SUPPORT, "General error creating HE conversation")
-                }
+                removeTempFiles(files)
+                _isSendingMessage.value = false
+            } catch (e: Exception) {
+                _errorMessage.value = ErrorType.GENERAL
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error creating HE conversation")
             }
-
-            removeTempFiles(files)
-            _isSendingMessage.value = false
         }
     }
 
@@ -99,42 +104,48 @@ class HESupportViewModel @Inject constructor(
 
     fun onAddMessageToConversation(message: String) {
         viewModelScope.launch {
-            val selectedConversation = _selectedConversation.value
-            if (selectedConversation == null) {
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error answering a conversation: no conversation selected")
-                return@launch
+            try {
+                val selectedConversation = _selectedConversation.value
+                if (selectedConversation == null) {
+                    appLogWrapper.e(AppLog.T.SUPPORT, "Error answering a conversation: no conversation selected")
+                    return@launch
+                }
+
+                _isSendingMessage.value = true
+                val files = copyUrisToTempFiles(_attachments.value)
+
+                when (val result = heSupportRepository.addMessageToConversation(
+                    conversationId = selectedConversation.id,
+                    message = message,
+                    attachments = files.map { it.path }
+                )) {
+                    is CreateConversationResult.Success -> {
+                        _selectedConversation.value = result.conversation
+                        _messageSendResult.value = MessageSendResult.Success
+                        // Clear attachments after successful message send
+                        _attachments.value = emptyList()
+                    }
+
+                    is CreateConversationResult.Error.Forbidden -> {
+                        _errorMessage.value = ErrorType.FORBIDDEN
+                        appLogWrapper.e(AppLog.T.SUPPORT, "Unauthorized error adding message to HE conversation")
+                        _messageSendResult.value = MessageSendResult.Failure
+                    }
+
+                    is CreateConversationResult.Error.GeneralError -> {
+                        _errorMessage.value = ErrorType.GENERAL
+                        appLogWrapper.e(AppLog.T.SUPPORT, "General error adding message to HE conversation")
+                        _messageSendResult.value = MessageSendResult.Failure
+                    }
+                }
+
+                removeTempFiles(files)
+                _isSendingMessage.value = false
+            } catch (e: Exception) {
+                _errorMessage.value = ErrorType.GENERAL
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error adding message to HE conversation: " +
+                e.stackTraceToString())
             }
-
-            _isSendingMessage.value = true
-            val files = copyUrisToTempFiles(_attachments.value)
-
-            when (val result = heSupportRepository.addMessageToConversation(
-                conversationId = selectedConversation.id,
-                message = message,
-                attachments = files.map { it.path }
-            )) {
-                is CreateConversationResult.Success -> {
-                    _selectedConversation.value = result.conversation
-                    _messageSendResult.value = MessageSendResult.Success
-                    // Clear attachments after successful message send
-                    _attachments.value = emptyList()
-                }
-
-                is CreateConversationResult.Error.Forbidden -> {
-                    _errorMessage.value = ErrorType.FORBIDDEN
-                    appLogWrapper.e(AppLog.T.SUPPORT, "Unauthorized error adding message to HE conversation")
-                    _messageSendResult.value = MessageSendResult.Failure
-                }
-
-                is CreateConversationResult.Error.GeneralError -> {
-                    _errorMessage.value = ErrorType.GENERAL
-                    appLogWrapper.e(AppLog.T.SUPPORT, "General error adding message to HE conversation")
-                    _messageSendResult.value = MessageSendResult.Failure
-                }
-            }
-
-            removeTempFiles(files)
-            _isSendingMessage.value = false
         }
     }
 
@@ -156,7 +167,7 @@ class HESupportViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun copyUrisToTempFiles(uris: List<Uri>): List<File> = withContext(ioDispatcher) {
-        uris.mapNotNull { it.toTempFile() }
+        uris.map{ it.toTempFile() }
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -174,9 +185,10 @@ class HESupportViewModel @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun Uri.toTempFile(): File? = withContext(ioDispatcher) {
+    private suspend fun Uri.toTempFile(): File = withContext(ioDispatcher) {
         try {
-            val inputStream = application.contentResolver.openInputStream(this@toTempFile) ?: return@withContext null
+            val inputStream = application.contentResolver.openInputStream(this@toTempFile)
+                ?: throw Exception("Failed to open input stream for attachment")
             val fileName = "support_image_${System.currentTimeMillis()}.jpg"
             val tempFile = File(application.cacheDir, fileName)
 
