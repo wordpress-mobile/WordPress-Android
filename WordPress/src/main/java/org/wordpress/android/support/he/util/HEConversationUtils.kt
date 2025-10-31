@@ -27,7 +27,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                             "the past few days."),
                     createdAt = Date(oneHourAgo.time - 1800000),
                     authorName = "You",
-                    authorIsUser = true,
+                    authorIsUser = true
                 ),
                 SupportMessage(
                     id = 2,
@@ -36,7 +36,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                             "Can you share your site URL?"),
                     createdAt = Date(oneHourAgo.time - 900000),
                     authorName = "Support Agent",
-                    authorIsUser = false,
+                    authorIsUser = false
                 ),
                 SupportMessage(
                     id = 3,
@@ -44,7 +44,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                     formattedText = AnnotatedString("Sure, it's example.wordpress.com"),
                     createdAt = oneHourAgo,
                     authorName = "You",
-                    authorIsUser = true,
+                    authorIsUser = true
                 )
             )
         ),
@@ -62,7 +62,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                     formattedText = AnnotatedString("I'm trying to install a new plugin but getting an error."),
                     createdAt = Date(twoDaysAgo.time - 3600000),
                     authorName = "You",
-                    authorIsUser = true,
+                    authorIsUser = true
                 ),
                 SupportMessage(
                     id = 5,
@@ -70,7 +70,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                     formattedText = AnnotatedString("I can help with that! What's the error message you're seeing?"),
                     createdAt = twoDaysAgo,
                     authorName = "Support Agent",
-                    authorIsUser = false,
+                    authorIsUser = false
                 )
             )
         ),
@@ -88,7 +88,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                     formattedText = AnnotatedString("I need help setting up my custom domain."),
                     createdAt = oneWeekAgo,
                     authorName = "You",
-                    authorIsUser = true,
+                    authorIsUser = true
                 )
             )
         )

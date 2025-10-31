@@ -11,5 +11,5 @@ data class SupportMessage(
     val formattedText: AnnotatedString,
     val createdAt: Date,
     val authorName: String,
-    val authorIsUser: Boolean,
+    val authorIsUser: Boolean
 )

@@ -185,23 +185,23 @@ class HESupportRepository @Inject constructor(
 
     private fun uniffi.wp_api.SupportConversation.toSupportConversation(): SupportConversation =
         SupportConversation(
-            id = id.toLong(),
-            title = title,
-            description = description,
-            lastMessageSentAt = updatedAt,
-            messages = messages.map { it.toSupportMessage() }
+            id = this.id.toLong(),
+            title = this.title,
+            description = this.description,
+            lastMessageSentAt = this.updatedAt,
+            messages = this.messages.map { it.toSupportMessage() }
         )
 
     private fun uniffi.wp_api.SupportMessage.toSupportMessage(): SupportMessage =
         SupportMessage(
-            id = id.toLong(),
-            rawText = content,
-            formattedText = markdownToAnnotatedString(content),
-            createdAt = createdAt,
-            authorName = when (author) {
-                is SupportMessageAuthor.User -> (author as SupportMessageAuthor.User).v1.displayName
-                is SupportMessageAuthor.SupportAgent -> (author as SupportMessageAuthor.SupportAgent).v1.name
+            id = this.id.toLong(),
+            rawText = this.content,
+            formattedText = markdownToAnnotatedString(this.content),
+            createdAt = this.createdAt,
+            authorName = when (this.author) {
+                is SupportMessageAuthor.User -> (this.author as SupportMessageAuthor.User).v1.displayName
+                is SupportMessageAuthor.SupportAgent -> (this.author as SupportMessageAuthor.SupportAgent).v1.name
             },
-            authorIsUser = authorIsCurrentUser,
+            authorIsUser = this.authorIsCurrentUser,
         )
 }
