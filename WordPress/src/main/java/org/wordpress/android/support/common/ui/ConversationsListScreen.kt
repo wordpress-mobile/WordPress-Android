@@ -1,11 +1,13 @@
 package org.wordpress.android.support.common.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -15,7 +17,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.wordpress.android.support.common.model.Conversation
 import org.wordpress.android.ui.compose.components.MainTopAppBar
@@ -53,13 +58,26 @@ fun <T : Conversation> ConversationsListScreen(
             )
         }
     ) { contentPadding ->
+        val isRefreshing = conversationsState is ConversationsSupportViewModel.ConversationsState.Refreshing
+        val pullToRefreshState = rememberPullToRefreshState()
+
         PullToRefreshBox(
-            isRefreshing = conversationsState is ConversationsSupportViewModel.ConversationsState.Loading,
+            state = pullToRefreshState,
+            isRefreshing = isRefreshing,
             onRefresh = onRefresh,
-            modifier = modifier.fillMaxSize()
+            modifier = modifier
+                .fillMaxSize()
+                .padding(contentPadding),
+            indicator = {
+                PullToRefreshDefaults.Indicator(
+                    state = pullToRefreshState,
+                    isRefreshing = isRefreshing,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
+            }
         ) {
             ConversationsList(
-                modifier = Modifier.padding(contentPadding),
+                modifier = Modifier,
                 conversations = conversations,
                 conversationsState = conversationsState,
                 onCreateNewConversationClick = onCreateNewConversationClick,
@@ -78,27 +96,40 @@ private fun <T : Conversation> ConversationsList(
     onCreateNewConversationClick: () -> Unit,
     conversationListItem: @Composable (T) -> Unit
 ) {
-    if (conversations.isEmpty() && conversationsState is ConversationsSupportViewModel.ConversationsState.Loaded) {
-        EmptyConversationsView(
-            modifier = modifier,
-            onCreateNewConversationClick = onCreateNewConversationClick
-        )
-    } else if (conversationsState is ConversationsSupportViewModel.ConversationsState.NoNetwork) {
-        OfflineConversationsView()
-    } else if (conversationsState is ConversationsSupportViewModel.ConversationsState.Error) {
-        ErrorConversationsView()
-    } else {
-        LazyColumn(
-            modifier = modifier.fillMaxSize()
-        ) {
-            items(
-                items = conversations,
-                key = { it.getConversationId() }
-            ) { conversation ->
-                conversationListItem(conversation)
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-                )
+    when {
+        conversationsState is ConversationsSupportViewModel.ConversationsState.Loading -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        conversations.isEmpty() && conversationsState is ConversationsSupportViewModel.ConversationsState.Loaded -> {
+            EmptyConversationsView(
+                modifier = modifier,
+                onCreateNewConversationClick = onCreateNewConversationClick
+            )
+        }
+        conversationsState is ConversationsSupportViewModel.ConversationsState.NoNetwork -> {
+            OfflineConversationsView()
+        }
+        conversationsState is ConversationsSupportViewModel.ConversationsState.Error -> {
+            ErrorConversationsView()
+        }
+        else -> {
+            LazyColumn(
+                modifier = modifier.fillMaxSize()
+            ) {
+                items(
+                    items = conversations,
+                    key = { it.getConversationId() }
+                ) { conversation ->
+                    conversationListItem(conversation)
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                    )
+                }
             }
         }
     }
