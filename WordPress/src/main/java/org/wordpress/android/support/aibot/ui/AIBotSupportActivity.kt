@@ -93,7 +93,6 @@ class AIBotSupportActivity : AppCompatActivity() {
             val message = when (errorType) {
                 ConversationsSupportViewModel.ErrorType.GENERAL -> getString(R.string.ai_bot_generic_error)
                 ConversationsSupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
-                ConversationsSupportViewModel.ErrorType.OFFLINE -> getString(R.string.no_network_title)
             }
             scope.launch {
                 snackbarHostState.showSnackbar(
