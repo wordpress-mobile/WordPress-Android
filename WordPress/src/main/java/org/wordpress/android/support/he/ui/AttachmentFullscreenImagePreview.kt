@@ -102,11 +102,18 @@ fun AttachmentFullscreenImagePreview(
                             )
                             .pointerInput(Unit) {
                                 detectTransformGestures { _, pan, zoom, _ ->
+                                    val previousScale = scale
                                     scale = (scale * zoom).coerceIn(1f, 5f)
+
                                     if (scale > 1f) {
-                                        offsetX += pan.x
-                                        offsetY += pan.y
-                                    } else {
+                                        // Calculate max pan bounds to prevent image from going off-screen
+                                        val maxOffsetX = (size.width * (scale - 1f)) / 2f
+                                        val maxOffsetY = (size.height * (scale - 1f)) / 2f
+
+                                        offsetX = (offsetX + pan.x).coerceIn(-maxOffsetX, maxOffsetX)
+                                        offsetY = (offsetY + pan.y).coerceIn(-maxOffsetY, maxOffsetY)
+                                    } else if (previousScale > 1f && scale == 1f) {
+                                        // Only reset when transitioning from zoomed to unzoomed
                                         offsetX = 0f
                                         offsetY = 0f
                                     }
