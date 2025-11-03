@@ -71,6 +71,7 @@ fun HENewTicketScreen(
         subject: String,
         messageText: String,
         siteAddress: String,
+        includeAppLogs: Boolean,
             ) -> Unit,
     userInfo: UserInfo,
     isSendingNewConversation: Boolean = false,
@@ -98,7 +99,7 @@ fun HENewTicketScreen(
                 isLoading = isSendingNewConversation,
                 onClick = {
                     selectedCategory?.let { category ->
-                        onSubmit(category, subject, messageText, siteAddress)
+                        onSubmit(category, subject, messageText, siteAddress, includeAppLogs)
                     }
                 }
             )
@@ -423,7 +424,7 @@ private fun HENewTicketScreenPreview() {
         HENewTicketScreen(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _-> },
+            onSubmit = { _, _, _, _, _ -> },
             userInfo = UserInfo("Test user", "test.user@automattic.com", null),
             attachmentActionsListener = object : AttachmentActionsListener {
                 override fun onAddImageClick() {
@@ -445,7 +446,7 @@ private fun HENewTicketScreenPreviewDark() {
         HENewTicketScreen(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
+            onSubmit = { _, _, _, _, _ -> },
             userInfo = UserInfo("Test user", "test.user@automattic.com", null),
             attachmentActionsListener = object : AttachmentActionsListener {
                 override fun onAddImageClick() {
@@ -467,7 +468,7 @@ private fun HENewTicketScreenWordPressPreview() {
         HENewTicketScreen(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
+            onSubmit = { _, _, _, _, _ -> },
             userInfo = UserInfo("Test user", "test.user@automattic.com", null),
             attachmentActionsListener = object : AttachmentActionsListener {
                 override fun onAddImageClick() {
@@ -489,7 +490,7 @@ private fun HENewTicketScreenPreviewWordPressDark() {
         HENewTicketScreen(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
+            onSubmit = { _, _, _, _, _ -> },
             userInfo = UserInfo("Test user", "test.user@automattic.com", null),
             attachmentActionsListener = object : AttachmentActionsListener {
                 override fun onAddImageClick() {

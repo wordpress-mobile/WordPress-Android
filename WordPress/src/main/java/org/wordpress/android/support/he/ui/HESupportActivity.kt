@@ -183,6 +183,7 @@ class HESupportActivity : AppCompatActivity() {
                             onSendMessage = { message, includeAppLogs ->
                                 viewModel.onAddMessageToConversation(
                                     message = message,
+                                    includeAppLogs = includeAppLogs,
                                 )
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
@@ -221,11 +222,12 @@ class HESupportActivity : AppCompatActivity() {
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
                         onBackClick = { viewModel.onBackClick() },
-                        onSubmit = { category, subject, messageText, siteAddress ->
+                        onSubmit = { category, subject, messageText, siteAddress, includeAppLogs ->
                             viewModel.onSendNewConversation(
                                 subject = subject,
                                 message = messageText,
                                 tags = listOf(category.key),
+                                includeAppLogs = includeAppLogs,
                             )
                         },
                         userInfo = userInfo,
