@@ -2,6 +2,8 @@ package org.wordpress.android.support.he.ui
 
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
+import com.automattic.android.tracks.crashlogging.EventLevel
+import com.automattic.android.tracks.crashlogging.ExtraKnownKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +20,9 @@ import org.wordpress.android.support.he.repository.HESupportRepository
 import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EncryptedLogging
+import org.wordpress.android.util.LogFileProviderWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider.Companion.EXTRA_UUID
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
@@ -29,6 +33,7 @@ class HESupportViewModel @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val tempAttachmentsUtil: TempAttachmentsUtil,
     private val encryptedLogging: EncryptedLogging,
+    private val logFileProvider: LogFileProviderWrapper,
     accountStore: AccountStore,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper,
@@ -59,13 +64,13 @@ class HESupportViewModel @Inject constructor(
         subject: String,
         message: String,
         tags: List<String>,
-        uploadLogs: Boolean,
+        includeAppLogs : Boolean,
     ) {
         viewModelScope.launch(ioDispatcher) {
             try {
                 _isSendingMessage.value = true
 
-                if (uploadLogs) {
+                if (includeAppLogs) {
                     // TODO: use the Id to send it within the ticket
                     val logsId = uploadLogs()
                 }
@@ -110,21 +115,26 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
-    private suspend fun uploadLogs(): String? {
-        val logFile: File? = tempAttachmentsUtil.createTempLogsFile()
-        val logsId = if (logFile == null) {
-            encryptedLogging.encryptAndUploadLogFile(logFile = logFile, shouldStartUploadImmediately = true)
-        } else {
-            null
+    private fun uploadLogs(): List<String> {
+        val encryptedLogsUuid = mutableListOf<String>()
+        logFileProvider.getLogFiles().lastOrNull()?.let { logFile ->
+            if (logFile.exists()) {
+                encryptedLogging.encryptAndUploadLogFile(
+                    logFile = logFile,
+                    shouldStartUploadImmediately = true
+                )?.let { uuid ->
+                    encryptedLogsUuid.add(uuid)
+                }
+            }
         }
-        return logsId
+        return encryptedLogsUuid
     }
 
     override suspend fun getConversation(conversationId: Long): SupportConversation? =
         heSupportRepository.loadConversation(conversationId)
 
     @Suppress("TooGenericExceptionCaught")
-    fun onAddMessageToConversation(message: String, uploadLogs: Boolean,) {
+    fun onAddMessageToConversation(message: String, includeAppLogs: Boolean,) {
         viewModelScope.launch(ioDispatcher) {
             try {
                 val selectedConversation = _selectedConversation.value
@@ -135,7 +145,7 @@ class HESupportViewModel @Inject constructor(
 
                 _isSendingMessage.value = true
 
-                if (uploadLogs) {
+                if (includeAppLogs) {
                     // TODO: use the Id to send it within the answer
                     val logsId = uploadLogs()
                 }
