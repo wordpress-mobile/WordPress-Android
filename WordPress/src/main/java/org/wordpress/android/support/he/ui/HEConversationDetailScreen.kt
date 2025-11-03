@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
+import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
 import org.wordpress.android.support.he.util.AttachmentActionsListener
@@ -149,7 +150,7 @@ fun HEConversationDetailScreen(
                 MessageItem(
                     message = message,
                     timestamp = formatRelativeTime(message.createdAt, resources),
-                    onPreviewImage = { imageUrl -> previewImageUrl = imageUrl },
+                    onPreviewImage = { attachment -> previewImageUrl = attachment.url },
                     onDownloadAttachment = onDownloadAttachment
                 )
             }
@@ -288,8 +289,8 @@ private fun ConversationTitleCard(title: String) {
 private fun MessageItem(
     message: SupportMessage,
     timestamp: String,
-    onPreviewImage: (String) -> Unit,
-    onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit
+    onPreviewImage: (SupportAttachment) -> Unit,
+    onDownloadAttachment: (SupportAttachment) -> Unit
 ) {
     val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
 
@@ -359,9 +360,9 @@ private fun MessageItem(
 
 @Composable
 private fun AttachmentsList(
-    attachments: List<org.wordpress.android.support.he.model.SupportAttachment>,
-    onPreviewImage: (String) -> Unit,
-    onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit
+    attachments: List<SupportAttachment>,
+    onPreviewImage: (SupportAttachment) -> Unit,
+    onDownloadAttachment: (SupportAttachment) -> Unit
 ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -372,7 +373,7 @@ private fun AttachmentsList(
                 attachment = attachment,
                 onClick = {
                     if (attachment.type == org.wordpress.android.support.he.model.AttachmentType.Image) {
-                        onPreviewImage(attachment.url)
+                        onPreviewImage(attachment)
                     } else {
                         onDownloadAttachment(attachment)
                     }
