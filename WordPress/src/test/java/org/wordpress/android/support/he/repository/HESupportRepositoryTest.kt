@@ -372,6 +372,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
                 is SupportMessageAuthor.User -> (this.author as SupportMessageAuthor.User).v1.displayName
                 is SupportMessageAuthor.SupportAgent -> (this.author as SupportMessageAuthor.SupportAgent).v1.name
             },
-            authorIsUser = this.author is SupportMessageAuthor.User
+            authorIsUser = this.author is SupportMessageAuthor.User,
+            attachments = emptyList()
         )
 }
