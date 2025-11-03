@@ -253,7 +253,7 @@ class HESupportActivity : AppCompatActivity() {
                     editingEnabled = true,
                     queueResults = false,
                     defaultSearchView = false,
-                    title = R.string.photo_picker_title
+                    title = R.string.he_support_select_attachments
                 )
                 val intent = org.wordpress.android.ui.mediapicker.MediaPickerActivity.buildIntent(
                     this@HESupportActivity,
