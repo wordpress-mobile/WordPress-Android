@@ -17,7 +17,9 @@ import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
 import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.EncryptedLogging
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -26,6 +28,7 @@ class HESupportViewModel @Inject constructor(
     private val heSupportRepository: HESupportRepository,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val tempAttachmentsUtil: TempAttachmentsUtil,
+    private val encryptedLogging: EncryptedLogging,
     accountStore: AccountStore,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper,
@@ -56,18 +59,24 @@ class HESupportViewModel @Inject constructor(
         subject: String,
         message: String,
         tags: List<String>,
+        uploadLogs: Boolean,
     ) {
         viewModelScope.launch(ioDispatcher) {
             try {
                 _isSendingMessage.value = true
 
-                val files = tempAttachmentsUtil.createTempFilesFrom(_attachments.value)
+                if (uploadLogs) {
+                    // TODO: use the Id to send it within the ticket
+                    val logsId = uploadLogs()
+                }
+
+                val attachments = tempAttachmentsUtil.createTempFilesFrom(_attachments.value)
 
                 when (val result = heSupportRepository.createConversation(
                     subject = subject,
                     message = message,
                     tags = tags,
-                    attachments = files.map { it.path }
+                    attachments = attachments.map { it.path }
                 )) {
                     is CreateConversationResult.Success -> {
                         val newConversation = result.conversation
@@ -89,7 +98,7 @@ class HESupportViewModel @Inject constructor(
                     }
                 }
 
-                tempAttachmentsUtil.removeTempFiles(files)
+                tempAttachmentsUtil.removeTempFiles(attachments)
                 _isSendingMessage.value = false
             } catch (e: Exception) {
                 _errorMessage.value = ErrorType.GENERAL
@@ -101,11 +110,21 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
+    private suspend fun uploadLogs(): String? {
+        val logFile: File? = tempAttachmentsUtil.createTempLogsFile()
+        val logsId = if (logFile == null) {
+            encryptedLogging.encryptAndUploadLogFile(logFile = logFile, shouldStartUploadImmediately = true)
+        } else {
+            null
+        }
+        return logsId
+    }
+
     override suspend fun getConversation(conversationId: Long): SupportConversation? =
         heSupportRepository.loadConversation(conversationId)
 
     @Suppress("TooGenericExceptionCaught")
-    fun onAddMessageToConversation(message: String) {
+    fun onAddMessageToConversation(message: String, uploadLogs: Boolean,) {
         viewModelScope.launch(ioDispatcher) {
             try {
                 val selectedConversation = _selectedConversation.value
@@ -115,6 +134,12 @@ class HESupportViewModel @Inject constructor(
                 }
 
                 _isSendingMessage.value = true
+
+                if (uploadLogs) {
+                    // TODO: use the Id to send it within the answer
+                    val logsId = uploadLogs()
+                }
+
                 val files = tempAttachmentsUtil.createTempFilesFrom(_attachments.value)
 
                 when (val result = heSupportRepository.addMessageToConversation(

@@ -23,6 +23,27 @@ class TempAttachmentsUtil @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
+    suspend fun createTempLogsFile(): File? =
+        withContext(ioDispatcher) {
+            try {
+                val logs = AppLog.toPlainText(application)
+                if (logs.isNullOrEmpty()) {
+                    null
+                } else {
+                    val fileName = "logs_${System.currentTimeMillis()}.txt"
+                    val tempFile = File(application.cacheDir, fileName)
+
+                    tempFile.writeText(AppLog.toPlainText(application))
+
+                    tempFile
+                }
+            } catch (e: Exception) {
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error creating logs file: ${e.stackTraceToString()}")
+                null
+            }
+        }
+
+    @Suppress("TooGenericExceptionCaught")
     suspend fun removeTempFiles(files: List<File>) = withContext(ioDispatcher) {
         try {
             var removed = files.isEmpty() // If empty, count them as removed
