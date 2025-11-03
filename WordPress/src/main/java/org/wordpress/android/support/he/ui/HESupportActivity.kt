@@ -30,7 +30,6 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
-import org.wordpress.android.support.common.ui.ConversationsSupportViewModel.ErrorType
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.reader.ReaderFileDownloadManager
@@ -188,7 +187,7 @@ class HESupportActivity : AppCompatActivity() {
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
                             attachments = attachments,
-                            attachmentActionsListener = AttachmentActionsListener(),
+                            attachmentActionsListener = createAttachmentActionListener(),
                             onDownloadAttachment = { attachment ->
                                 // Show loading snackbar
                                 scope.launch {
@@ -232,14 +231,14 @@ class HESupportActivity : AppCompatActivity() {
                         userInfo = userInfo,
                         isSendingNewConversation = isSendingNewConversation,
                         attachments = attachments,
-                        attachmentActionsListener = AttachmentActionsListener()
+                        attachmentActionsListener = createAttachmentActionListener()
                     )
                 }
             }
         }
     }
 
-    private fun AttachmentActionsListener(): AttachmentActionsListener {
+    private fun createAttachmentActionListener(): AttachmentActionsListener {
         return object : AttachmentActionsListener {
             override fun onAddImageClick() {
                 val mediaPickerSetup = MediaPickerSetup(
