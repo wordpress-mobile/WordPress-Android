@@ -37,37 +37,16 @@ import org.wordpress.android.support.he.util.AttachmentActionsListener
 fun HEConversationReplyBottomSheet(
     sheetState: androidx.compose.material3.SheetState,
     isSending: Boolean = false,
-    messageSendResult: HESupportViewModel.MessageSendResult? = null,
     initialMessageText: String = "",
     initialIncludeAppLogs: Boolean = false,
     onDismiss: (currentMessage: String, currentIncludeAppLogs: Boolean) -> Unit,
     onSend: (String, Boolean) -> Unit,
-    onMessageSentSuccessfully: () -> Unit,
     attachments: List<Uri> = emptyList(),
     attachmentActionsListener: AttachmentActionsListener
 ) {
     var messageText by remember { mutableStateOf(initialMessageText) }
     var includeAppLogs by remember { mutableStateOf(initialIncludeAppLogs) }
     val scrollState = rememberScrollState()
-
-    // Close the sheet when sending completes successfully
-    LaunchedEffect(messageSendResult) {
-        when (messageSendResult) {
-            is HESupportViewModel.MessageSendResult.Success -> {
-                // Message sent successfully, close the sheet and clear draft
-                onDismiss("", false)
-                onMessageSentSuccessfully()
-            }
-            is HESupportViewModel.MessageSendResult.Failure -> {
-                // Message failed to send, draft is saved onDismiss
-                // The error will be shown via snackbar from the Activity
-                onDismiss("", false)
-            }
-            null -> {
-                // No result yet, do nothing
-            }
-        }
-    }
 
     ModalBottomSheet(
         onDismissRequest = { onDismiss(messageText, includeAppLogs) },
