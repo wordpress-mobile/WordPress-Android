@@ -152,7 +152,7 @@ fun AttachmentFullscreenImagePreview(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_get_app_white_24dp),
-                            contentDescription = stringResource(R.string.he_support_download_image),
+                            contentDescription = stringResource(R.string.he_support_download_attachment),
                             tint = Color.White,
                             modifier = Modifier.size(24.dp)
                         )
