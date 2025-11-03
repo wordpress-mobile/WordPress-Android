@@ -185,35 +185,7 @@ class HESupportActivity : AppCompatActivity() {
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
                             attachments = attachments,
-                            attachmentActionsListener = object : AttachmentActionsListener {
-                                override fun onAddImageClick() {
-                                    val mediaPickerSetup = MediaPickerSetup(
-                                        primaryDataSource = MediaPickerSetup.DataSource.DEVICE,
-                                        availableDataSources = setOf(),
-                                        canMultiselect = true,
-                                        requiresPhotosVideosPermissions = true,
-                                        requiresMusicAudioPermissions = false,
-                                        allowedTypes = setOf(MediaType.IMAGE),
-                                        cameraSetup = MediaPickerSetup.CameraSetup.HIDDEN,
-                                        systemPickerEnabled = true,
-                                        editingEnabled = true,
-                                        queueResults = false,
-                                        defaultSearchView = false,
-                                        title = R.string.photo_picker_title
-                                    )
-                                    val intent = org.wordpress.android.ui.mediapicker.MediaPickerActivity.buildIntent(
-                                        this@HESupportActivity,
-                                        mediaPickerSetup,
-                                        null,
-                                        null
-                                    )
-                                    photoPickerLauncher.launch(intent)
-                                }
-
-                                override fun onRemoveImage(uri: Uri) {
-                                    viewModel.removeAttachment(uri)
-                                }
-                            },
+                            attachmentActionsListener = createAttachmentActionListener()
                         )
                     }
                 }
@@ -243,37 +215,41 @@ class HESupportActivity : AppCompatActivity() {
                         userInfo = userInfo,
                         isSendingNewConversation = isSendingNewConversation,
                         attachments = attachments,
-                        attachmentActionsListener = object : AttachmentActionsListener {
-                            override fun onAddImageClick() {
-                                val mediaPickerSetup = MediaPickerSetup(
-                                    primaryDataSource = MediaPickerSetup.DataSource.DEVICE,
-                                    availableDataSources = setOf(),
-                                    canMultiselect = true,
-                                    requiresPhotosVideosPermissions = true,
-                                    requiresMusicAudioPermissions = false,
-                                    allowedTypes = setOf(MediaType.IMAGE),
-                                    cameraSetup = MediaPickerSetup.CameraSetup.HIDDEN,
-                                    systemPickerEnabled = true,
-                                    editingEnabled = true,
-                                    queueResults = false,
-                                    defaultSearchView = false,
-                                    title = R.string.photo_picker_title
-                                )
-                                val intent = org.wordpress.android.ui.mediapicker.MediaPickerActivity.buildIntent(
-                                    this@HESupportActivity,
-                                    mediaPickerSetup,
-                                    null,
-                                    null
-                                )
-                                photoPickerLauncher.launch(intent)
-                            }
-
-                            override fun onRemoveImage(uri: Uri) {
-                                viewModel.removeAttachment(uri)
-                            }
-                        }
+                        attachmentActionsListener = createAttachmentActionListener()
                     )
                 }
+            }
+        }
+    }
+
+    private fun createAttachmentActionListener(): AttachmentActionsListener {
+        return object : AttachmentActionsListener {
+            override fun onAddImageClick() {
+                val mediaPickerSetup = MediaPickerSetup(
+                    primaryDataSource = MediaPickerSetup.DataSource.DEVICE,
+                    availableDataSources = setOf(),
+                    canMultiselect = true,
+                    requiresPhotosVideosPermissions = true,
+                    requiresMusicAudioPermissions = false,
+                    allowedTypes = setOf(MediaType.IMAGE, MediaType.VIDEO),
+                    cameraSetup = MediaPickerSetup.CameraSetup.HIDDEN,
+                    systemPickerEnabled = true,
+                    editingEnabled = true,
+                    queueResults = false,
+                    defaultSearchView = false,
+                    title = R.string.photo_picker_title
+                )
+                val intent = org.wordpress.android.ui.mediapicker.MediaPickerActivity.buildIntent(
+                    this@HESupportActivity,
+                    mediaPickerSetup,
+                    null,
+                    null
+                )
+                photoPickerLauncher.launch(intent)
+            }
+
+            override fun onRemoveImage(uri: Uri) {
+                viewModel.removeAttachment(uri)
             }
         }
     }
