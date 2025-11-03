@@ -204,7 +204,6 @@ fun HEConversationDetailScreen(
             initialMessageText = draftMessageText,
             initialIncludeAppLogs = draftIncludeAppLogs,
             onDismiss = { currentMessage, currentIncludeAppLogs ->
-                // Save draft message when closing without sending
                 draftMessageText = currentMessage
                 draftIncludeAppLogs = currentIncludeAppLogs
                 scope.launch {
@@ -214,6 +213,7 @@ fun HEConversationDetailScreen(
                 }
             },
             onSend = { message, includeAppLogs ->
+                draftMessageText = message
                 onSendMessage(message, includeAppLogs)
             },
             attachments = attachments,
