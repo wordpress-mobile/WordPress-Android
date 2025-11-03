@@ -148,6 +148,17 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         verify(appLogWrapper).e(any(), any<String>())
     }
 
+    @Test
+    fun `init sets NoNetwork state when network is not available`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.init()
+        advanceUntilIdle()
+
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.NoNetwork.javaClass)
+        assertThat(viewModel.conversations.value).isEmpty()
+    }
+
     // Refresh Conversations Tests
 
     @Test
@@ -178,6 +189,22 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.GENERAL)
         assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.Error.javaClass)
+    }
+
+    @Test
+    fun `refreshConversations sets NoNetwork state when network is not available`() = test {
+        val initialConversations = createTestConversations(count = 2)
+        viewModel.setConversationsToReturn(initialConversations)
+        viewModel.init()
+        advanceUntilIdle()
+
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        viewModel.refreshConversations()
+        advanceUntilIdle()
+
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.NoNetwork.javaClass)
+        // Conversations should remain unchanged from previous load
+        assertThat(viewModel.conversations.value).isEqualTo(initialConversations)
     }
 
     // Clear Error Tests
@@ -276,6 +303,37 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `onConversationClick sets OFFLINE error when network is not available`() = test {
+        val conversation = createTestConversation(1)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onConversationClick(conversation)
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.OFFLINE)
+        assertThat(viewModel.isLoadingConversation.value).isFalse
+    }
+
+    @Test
+    fun `onConversationClick does not navigate when network is not available`() = test {
+        val conversation = createTestConversation(1)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        var emittedEvent: ConversationsSupportViewModel.NavigationEvent? = null
+        val job = launch {
+            viewModel.navigationEvents.collect { event ->
+                emittedEvent = event
+            }
+        }
+
+        viewModel.onConversationClick(conversation)
+        advanceUntilIdle()
+
+        assertThat(emittedEvent).isNull()
+        job.cancel()
+    }
+
+    @Test
     fun `onBackFromDetailClick clears selected conversation`() = test {
         val conversation = createTestConversation(1)
         viewModel.setConversationToReturn(conversation)
@@ -319,6 +377,34 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(emittedEvent).isEqualTo(ConversationsSupportViewModel.NavigationEvent.NavigateToNewConversation)
+        job.cancel()
+    }
+
+    @Test
+    fun `onCreateNewConversationClick sets OFFLINE error when network is not available`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onCreateNewConversationClick()
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.OFFLINE)
+    }
+
+    @Test
+    fun `onCreateNewConversationClick does not navigate when network is not available`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        var emittedEvent: ConversationsSupportViewModel.NavigationEvent? = null
+        val job = launch {
+            viewModel.navigationEvents.collect { event ->
+                emittedEvent = event
+            }
+        }
+
+        viewModel.onCreateNewConversationClick()
+        advanceUntilIdle()
+
+        assertThat(emittedEvent).isNull()
         job.cancel()
     }
 
