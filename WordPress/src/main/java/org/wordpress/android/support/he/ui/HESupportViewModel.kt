@@ -59,11 +59,6 @@ class HESupportViewModel @Inject constructor(
     ) {
         viewModelScope.launch(ioDispatcher) {
             try {
-                if (!networkUtilsWrapper.isNetworkAvailable()) {
-                    _errorMessage.value = ErrorType.OFFLINE
-                    return@launch
-                }
-
                 _isSendingMessage.value = true
 
                 val files = tempAttachmentsUtil.createTempFilesFrom(_attachments.value)
@@ -113,12 +108,6 @@ class HESupportViewModel @Inject constructor(
     fun onAddMessageToConversation(message: String) {
         viewModelScope.launch(ioDispatcher) {
             try {
-                if (!networkUtilsWrapper.isNetworkAvailable()) {
-                    _messageSendResult.value = MessageSendResult.Failure
-                    _errorMessage.value = ErrorType.OFFLINE
-                    return@launch
-                }
-
                 val selectedConversation = _selectedConversation.value
                 if (selectedConversation == null) {
                     appLogWrapper.e(AppLog.T.SUPPORT, "Error answering a conversation: no conversation selected")

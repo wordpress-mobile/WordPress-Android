@@ -169,41 +169,14 @@ fun HEConversationDetailScreen(
     }
 
     if (showBottomSheet) {
-        // Close the sheet when sending completes successfully
-        LaunchedEffect(messageSendResult) {
-            @OptIn(ExperimentalMaterial3Api::class)
-            fun dismissSheet() {
-                onClearMessageSendResult()
-                scope.launch {
-                    sheetState.hide()
-                }.invokeOnCompletion {
-                    showBottomSheet = false
-                }
-            }
-
-            when (messageSendResult) {
-                is HESupportViewModel.MessageSendResult.Success -> {
-                    // Clear draft after successful send and dismiss the button sheet
-                    draftMessageText = ""
-                    draftIncludeAppLogs = false
-                    dismissSheet()
-                }
-                is HESupportViewModel.MessageSendResult.Failure -> {
-                    // Message failed to send, draft is saved
-                    dismissSheet()
-                }
-                null -> {
-                    // No result yet, do nothing
-                }
-            }
-        }
-
         HEConversationReplyBottomSheet(
             sheetState = sheetState,
             isSending = isSendingMessage,
+            messageSendResult = messageSendResult,
             initialMessageText = draftMessageText,
             initialIncludeAppLogs = draftIncludeAppLogs,
             onDismiss = { currentMessage, currentIncludeAppLogs ->
+                // Save draft message when closing without sending
                 draftMessageText = currentMessage
                 draftIncludeAppLogs = currentIncludeAppLogs
                 scope.launch {
@@ -213,8 +186,13 @@ fun HEConversationDetailScreen(
                 }
             },
             onSend = { message, includeAppLogs ->
-                draftMessageText = message
                 onSendMessage(message, includeAppLogs)
+            },
+            onMessageSentSuccessfully = {
+                // Clear draft after successful send
+                draftMessageText = ""
+                draftIncludeAppLogs = false
+                onClearMessageSendResult()
             },
             attachments = attachments,
             attachmentActionsListener = attachmentActionsListener
