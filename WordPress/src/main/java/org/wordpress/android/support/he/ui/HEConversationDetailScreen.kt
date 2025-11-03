@@ -169,31 +169,21 @@ fun HEConversationDetailScreen(
     }
 
     if (showBottomSheet) {
-        // Close the sheet when sending completes successfully
+        // Close the sheet when sending completes
         LaunchedEffect(messageSendResult) {
-            @OptIn(ExperimentalMaterial3Api::class)
-            fun dismissSheet() {
+            if (messageSendResult != null) {
+                // Clear draft only on success
+                if (messageSendResult is HESupportViewModel.MessageSendResult.Success) {
+                    draftMessageText = ""
+                    draftIncludeAppLogs = false
+                }
+
+                // Dismiss sheet and clear result for both success and failure
                 onClearMessageSendResult()
                 scope.launch {
                     sheetState.hide()
                 }.invokeOnCompletion {
                     showBottomSheet = false
-                }
-            }
-
-            when (messageSendResult) {
-                is HESupportViewModel.MessageSendResult.Success -> {
-                    // Clear draft after successful send and dismiss the button sheet
-                    draftMessageText = ""
-                    draftIncludeAppLogs = false
-                    dismissSheet()
-                }
-                is HESupportViewModel.MessageSendResult.Failure -> {
-                    // Message failed to send, draft is saved
-                    dismissSheet()
-                }
-                null -> {
-                    // No result yet, do nothing
                 }
             }
         }
