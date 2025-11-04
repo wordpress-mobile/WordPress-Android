@@ -1,6 +1,8 @@
 package org.wordpress.android.support.he.util
 
 import androidx.compose.ui.text.AnnotatedString
+import org.wordpress.android.support.he.model.AttachmentType
+import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
 import java.util.Date
@@ -27,7 +29,21 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                             "the past few days."),
                     createdAt = Date(oneHourAgo.time - 1800000),
                     authorName = "You",
-                    authorIsUser = true
+                    authorIsUser = true,
+                    attachments = listOf(
+                        SupportAttachment(
+                            id = 1,
+                            filename = "screenshot.png",
+                            url = "https://example.com/attachments/screenshot.png",
+                            type = AttachmentType.Image
+                        ),
+                        SupportAttachment(
+                            id = 2,
+                            filename = "error-log.txt",
+                            url = "https://example.com/attachments/error-log.txt",
+                            type = AttachmentType.Other
+                        )
+                    )
                 ),
                 SupportMessage(
                     id = 2,
@@ -36,7 +52,8 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                             "Can you share your site URL?"),
                     createdAt = Date(oneHourAgo.time - 900000),
                     authorName = "Support Agent",
-                    authorIsUser = false
+                    authorIsUser = false,
+                    attachments = emptyList()
                 ),
                 SupportMessage(
                     id = 3,
@@ -44,7 +61,8 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                     formattedText = AnnotatedString("Sure, it's example.wordpress.com"),
                     createdAt = oneHourAgo,
                     authorName = "You",
-                    authorIsUser = true
+                    authorIsUser = true,
+                    attachments = emptyList()
                 )
             )
         ),
@@ -62,7 +80,8 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                     formattedText = AnnotatedString("I'm trying to install a new plugin but getting an error."),
                     createdAt = Date(twoDaysAgo.time - 3600000),
                     authorName = "You",
-                    authorIsUser = true
+                    authorIsUser = true,
+                    attachments = emptyList()
                 ),
                 SupportMessage(
                     id = 5,
@@ -70,7 +89,8 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                     formattedText = AnnotatedString("I can help with that! What's the error message you're seeing?"),
                     createdAt = twoDaysAgo,
                     authorName = "Support Agent",
-                    authorIsUser = false
+                    authorIsUser = false,
+                    attachments = emptyList()
                 )
             )
         ),
@@ -88,7 +108,21 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                     formattedText = AnnotatedString("I need help setting up my custom domain."),
                     createdAt = oneWeekAgo,
                     authorName = "You",
-                    authorIsUser = true
+                    authorIsUser = true,
+                    attachments = listOf(
+                        SupportAttachment(
+                            id = 3,
+                            filename = "domain-settings.pdf",
+                            url = "https://example.com/attachments/domain-settings.pdf",
+                            type = AttachmentType.Other
+                        ),
+                        SupportAttachment(
+                            id = 4,
+                            filename = "setup-tutorial.mp4",
+                            url = "https://example.com/attachments/setup-tutorial.mp4",
+                            type = AttachmentType.Video
+                        )
+                    )
                 )
             )
         )

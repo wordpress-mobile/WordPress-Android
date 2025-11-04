@@ -694,7 +694,8 @@ class HESupportViewModelTest : BaseUnitTest() {
             formattedText = AnnotatedString(text),
             createdAt = Date(),
             authorName = if (authorIsUser) "User" else "Support",
-            authorIsUser = authorIsUser
+            authorIsUser = authorIsUser,
+            attachments = emptyList()
         )
     }
 }
