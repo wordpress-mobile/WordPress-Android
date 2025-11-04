@@ -11,5 +11,15 @@ data class SupportMessage(
     val formattedText: AnnotatedString,
     val createdAt: Date,
     val authorName: String,
-    val authorIsUser: Boolean
+    val authorIsUser: Boolean,
+    val attachments: List<SupportAttachment>,
 )
+
+data class SupportAttachment (
+    val id: Long,
+    val filename: String,
+    val url: String,
+    val type: AttachmentType,
+)
+
+enum class AttachmentType { Image, Video, Other }

@@ -2,7 +2,9 @@ package org.wordpress.android.support.he.ui
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import androidx.core.net.toUri
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -26,14 +28,43 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.support.he.util.AttachmentActionsListener
+import org.wordpress.android.ui.photopicker.MediaPickerConstants
+import org.wordpress.android.ui.reader.ReaderFileDownloadManager
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup
+import org.wordpress.android.ui.mediapicker.MediaType
+import org.wordpress.android.util.AppLog
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HESupportActivity : AppCompatActivity() {
+    @Inject lateinit var fileDownloadManager: ReaderFileDownloadManager
+    @Inject lateinit var appLogWrapper: AppLogWrapper
     private val viewModel by viewModels<HESupportViewModel>()
 
     private lateinit var composeView: ComposeView
     private lateinit var navController: NavHostController
+
+    @Suppress("TooGenericExceptionCaught")
+    private val photoPickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        try {
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                val uris = result.data?.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
+                uris?.let { uriStrings ->
+                    val newUris = uriStrings.map { it.toUri() }
+                    viewModel.addAttachments(newUris)
+                }
+            }
+        } catch (e: Exception) {
+            viewModel.notifyGeneralError()
+            appLogWrapper.e(
+                AppLog.T.SUPPORT, "Error getting attachments to add: ${e.stackTraceToString()}")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,10 +159,19 @@ class HESupportActivity : AppCompatActivity() {
                 }
 
                 composable(route = ConversationScreen.Detail.name) {
+                    // Clear attachments when leaving conversation screen
+                    androidx.compose.runtime.DisposableEffect(Unit) {
+                        onDispose {
+                            viewModel.clearAttachments()
+                        }
+                    }
+
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
                     val messageSendResult by viewModel.messageSendResult.collectAsState()
+                    val attachments by viewModel.attachments.collectAsState()
+
                     selectedConversation?.let { conversation ->
                         HEConversationDetailScreen(
                             snackbarHostState = snackbarHostState,
@@ -143,10 +183,25 @@ class HESupportActivity : AppCompatActivity() {
                             onSendMessage = { message, includeAppLogs ->
                                 viewModel.onAddMessageToConversation(
                                     message = message,
-                                    attachments = emptyList()
                                 )
                             },
-                            onClearMessageSendResult = { viewModel.clearMessageSendResult() }
+                            onClearMessageSendResult = { viewModel.clearMessageSendResult() },
+                            attachments = attachments,
+                            attachmentActionsListener = createAttachmentActionListener(),
+                            onDownloadAttachment = { attachment ->
+                                // Show loading snackbar
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = getString(
+                                            R.string.he_support_downloading_attachment,
+                                            attachment.filename
+                                        ),
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                                // Start download with proper filename
+                                fileDownloadManager.downloadFile(attachment.url, attachment.filename)
+                            }
                         )
                     }
                 }
@@ -154,6 +209,15 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.NewTicket.name) {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val isSendingNewConversation by viewModel.isSendingMessage.collectAsState()
+                    val attachments by viewModel.attachments.collectAsState()
+
+                    // Clear attachments when leaving the new ticket screen
+                    androidx.compose.runtime.DisposableEffect(Unit) {
+                        onDispose {
+                            viewModel.clearAttachments()
+                        }
+                    }
+
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
                         onBackClick = { viewModel.onBackClick() },
@@ -161,19 +225,51 @@ class HESupportActivity : AppCompatActivity() {
                             viewModel.onSendNewConversation(
                                 subject = subject,
                                 message = messageText,
-                                tags = listOf(category.name),
-                                attachments = listOf()
+                                tags = listOf(category.key),
                             )
                         },
-                        userName = userInfo.userName,
-                        userEmail = userInfo.userEmail,
-                        userAvatarUrl = userInfo.avatarUrl,
-                        isSendingNewConversation = isSendingNewConversation
+                        userInfo = userInfo,
+                        isSendingNewConversation = isSendingNewConversation,
+                        attachments = attachments,
+                        attachmentActionsListener = createAttachmentActionListener()
                     )
                 }
             }
         }
     }
+
+    private fun createAttachmentActionListener(): AttachmentActionsListener {
+        return object : AttachmentActionsListener {
+            override fun onAddImageClick() {
+                val mediaPickerSetup = MediaPickerSetup(
+                    primaryDataSource = MediaPickerSetup.DataSource.DEVICE,
+                    availableDataSources = setOf(),
+                    canMultiselect = true,
+                    requiresPhotosVideosPermissions = true,
+                    requiresMusicAudioPermissions = false,
+                    allowedTypes = setOf(MediaType.IMAGE, MediaType.VIDEO),
+                    cameraSetup = MediaPickerSetup.CameraSetup.HIDDEN,
+                    systemPickerEnabled = true,
+                    editingEnabled = true,
+                    queueResults = false,
+                    defaultSearchView = false,
+                    title = R.string.he_support_select_attachments
+                )
+                val intent = org.wordpress.android.ui.mediapicker.MediaPickerActivity.buildIntent(
+                    this@HESupportActivity,
+                    mediaPickerSetup,
+                    null,
+                    null
+                )
+                photoPickerLauncher.launch(intent)
+            }
+
+            override fun onRemoveImage(uri: Uri) {
+                viewModel.removeAttachment(uri)
+            }
+        }
+    }
+
 
     companion object {
         @JvmStatic

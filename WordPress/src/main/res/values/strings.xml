@@ -5166,12 +5166,20 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_reply_button">Reply</string>
     <string name="he_support_send_button">Send</string>
     <string name="he_support_message_label">Message</string>
+    <string name="he_support_downloading_attachment">Downloading %1$s…</string>
+    <string name="he_support_loading_image">Loading image</string>
+    <string name="he_support_attachment_image">Attachment image</string>
+    <string name="he_support_failed_to_load_image">Failed to load image</string>
     <string name="he_support_screenshots_label">Screenshots (Optional)</string>
     <string name="he_support_screenshots_description">Adding screenshots can help us understand and resolve your issue faster.</string>
     <string name="he_support_add_screenshots_button">Add Screenshots</string>
+    <string name="he_support_screenshot_preview">Screenshot preview</string>
+    <string name="he_support_remove_screenshot">Remove screenshot</string>
     <string name="he_support_app_logs_label">Application Logs (Optional)</string>
     <string name="he_support_include_logs_title">Include application logs</string>
     <string name="he_support_include_logs_description">Including logs can help our team investigate issues. Logs may contain recent app activity.</string>
+    <string name="he_support_download_attachment">Download attachment</string>
+    <string name="he_support_select_attachments">Select attachments</string>
 
     <!-- HE Support - New Ticket Screen -->
     <string name="he_support_contact_support_title">Contact Support</string>

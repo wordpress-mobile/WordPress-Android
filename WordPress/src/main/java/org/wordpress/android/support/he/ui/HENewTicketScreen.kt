@@ -1,6 +1,7 @@
 package org.wordpress.android.support.he.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,6 +54,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import org.wordpress.android.R
+import org.wordpress.android.support.common.model.UserInfo
+import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -69,10 +72,10 @@ fun HENewTicketScreen(
         messageText: String,
         siteAddress: String,
             ) -> Unit,
-    userName: String = "",
-    userEmail: String = "",
-    userAvatarUrl: String? = null,
-    isSendingNewConversation: Boolean = false
+    userInfo: UserInfo,
+    isSendingNewConversation: Boolean = false,
+    attachments: List<Uri> = emptyList(),
+    attachmentActionsListener: AttachmentActionsListener,
 ) {
     var selectedCategory by remember { mutableStateOf<SupportCategory?>(null) }
     var subject by remember { mutableStateOf("") }
@@ -194,6 +197,8 @@ fun HENewTicketScreen(
                 includeAppLogs = includeAppLogs,
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
+                attachments = attachments,
+                attachmentActionsListener = attachmentActionsListener
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -201,9 +206,9 @@ fun HENewTicketScreen(
             SectionHeader(text = stringResource(R.string.he_support_contact_information))
 
             ContactInformationCard(
-                userName = userName,
-                userEmail = userEmail,
-                userAvatarUrl = userAvatarUrl
+                userName = userInfo.userName,
+                userEmail = userInfo.userEmail,
+                userAvatarUrl = userInfo.avatarUrl
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -418,10 +423,16 @@ private fun HENewTicketScreenPreview() {
         HENewTicketScreen(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
-            userName = "Test user",
-            userEmail = "test.user@automattic.com",
-            userAvatarUrl = null
+            onSubmit = { _, _, _, _-> },
+            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() {
+                    // stub
+                }
+                override fun onRemoveImage(uri: Uri) {
+                    // stub
+                }
+            }
         )
     }
 }
@@ -435,9 +446,15 @@ private fun HENewTicketScreenPreviewDark() {
             snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _ -> },
-            userName = "Test user",
-            userEmail = "test.user@automattic.com",
-            userAvatarUrl = null
+            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() {
+                    // stub
+                }
+                override fun onRemoveImage(uri: Uri) {
+                    // stub
+                }
+            }
         )
     }
 }
@@ -451,9 +468,15 @@ private fun HENewTicketScreenWordPressPreview() {
             snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _ -> },
-            userName = "Test user",
-            userEmail = "test.user@automattic.com",
-            userAvatarUrl = null
+            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() {
+                    // stub
+                }
+                override fun onRemoveImage(uri: Uri) {
+                    // stub
+                }
+            }
         )
     }
 }
@@ -467,9 +490,15 @@ private fun HENewTicketScreenPreviewWordPressDark() {
             snackbarHostState = snackbarHostState,
             onBackClick = { },
             onSubmit = { _, _, _, _ -> },
-            userName = "Test user",
-            userEmail = "test.user@automattic.com",
-            userAvatarUrl = null
+            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() {
+                    // stub
+                }
+                override fun onRemoveImage(uri: Uri) {
+                    // stub
+                }
+            }
         )
     }
 }

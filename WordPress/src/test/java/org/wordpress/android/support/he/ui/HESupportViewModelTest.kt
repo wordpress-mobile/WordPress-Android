@@ -1,13 +1,17 @@
 package org.wordpress.android.support.he.ui
 
+import android.net.Uri
 import androidx.compose.ui.text.AnnotatedString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -19,6 +23,7 @@ import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
+import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 
@@ -35,6 +40,9 @@ class HESupportViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    private lateinit var tempAttachmentsUtil: TempAttachmentsUtil
 
     private lateinit var viewModel: HESupportViewModel
 
@@ -57,10 +65,16 @@ class HESupportViewModelTest : BaseUnitTest() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.accessToken).thenReturn(testAccessToken)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        runBlocking {
+            whenever(tempAttachmentsUtil.createTempFilesFrom(any())).thenReturn(emptyList())
+            whenever(tempAttachmentsUtil.removeTempFiles(any())).thenReturn(Unit)
+        }
 
         viewModel = HESupportViewModel(
-            accountStore = accountStore,
             heSupportRepository = heSupportRepository,
+            ioDispatcher = UnconfinedTestDispatcher(),
+            tempAttachmentsUtil = tempAttachmentsUtil,
+            accountStore = accountStore,
             appLogWrapper = appLogWrapper,
             networkUtilsWrapper = networkUtilsWrapper,
         )
@@ -121,7 +135,6 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
-            attachments = emptyList()
         )
         advanceUntilIdle()
 
@@ -146,7 +159,6 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
-            attachments = emptyList()
         )
         advanceUntilIdle()
 
@@ -167,7 +179,6 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
-            attachments = emptyList()
         )
         advanceUntilIdle()
 
@@ -184,8 +195,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         viewModel.onSendNewConversation(
             subject = "Test Subject",
             message = "Test Message",
-            tags = emptyList(),
-            attachments = emptyList()
+            tags = emptyList()
         )
         advanceUntilIdle()
 
@@ -214,8 +224,7 @@ class HESupportViewModelTest : BaseUnitTest() {
     @Test
     fun `onAddMessageToConversation does nothing when no conversation is selected`() = test {
         viewModel.onAddMessageToConversation(
-            message = "Test message",
-            attachments = emptyList()
+            message = "Test message"
         )
         advanceUntilIdle()
 
@@ -233,22 +242,21 @@ class HESupportViewModelTest : BaseUnitTest() {
         whenever(heSupportRepository.addMessageToConversation(
             conversationId = 1L,
             message = "Test message",
-            attachments = listOf("attachment1")
+            attachments = emptyList()
         )).thenReturn(CreateConversationResult.Success(updatedConversation))
 
         viewModel.onConversationClick(existingConversation)
         advanceUntilIdle()
 
         viewModel.onAddMessageToConversation(
-            message = "Test message",
-            attachments = listOf("attachment1")
+            message = "Test message"
         )
         advanceUntilIdle()
 
         verify(heSupportRepository).addMessageToConversation(
             conversationId = 1L,
             message = "Test message",
-            attachments = listOf("attachment1")
+            attachments = emptyList()
         )
     }
 
@@ -269,8 +277,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         viewModel.onAddMessageToConversation(
-            message = "Test message",
-            attachments = emptyList()
+            message = "Test message"
         )
         advanceUntilIdle()
 
@@ -291,8 +298,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         viewModel.onAddMessageToConversation(
-            message = "Test message",
-            attachments = emptyList()
+            message = "Test message"
         )
         advanceUntilIdle()
 
@@ -314,8 +320,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         viewModel.onAddMessageToConversation(
-            message = "Test message",
-            attachments = emptyList()
+            message = "Test message"
         )
         advanceUntilIdle()
 
@@ -335,12 +340,330 @@ class HESupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         viewModel.onAddMessageToConversation(
-            message = "Test message",
-            attachments = emptyList()
+            message = "Test message"
         )
         advanceUntilIdle()
 
         assertThat(viewModel.isSendingMessage.value).isFalse
+    }
+
+    // endregion
+
+    // region Attachment management tests
+
+    @Test
+    fun `addAttachments adds URIs to attachments list`() {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+
+        viewModel.addAttachments(listOf(uri1, uri2))
+
+        assertThat(viewModel.attachments.value).containsExactly(uri1, uri2)
+    }
+
+    @Test
+    fun `addAttachments appends to existing attachments`() {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+        val uri3 = mock<Uri>()
+
+        viewModel.addAttachments(listOf(uri1))
+        viewModel.addAttachments(listOf(uri2, uri3))
+
+        assertThat(viewModel.attachments.value).containsExactly(uri1, uri2, uri3)
+    }
+
+    @Test
+    fun `removeAttachment removes specific URI from attachments list`() {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+        val uri3 = mock<Uri>()
+
+        viewModel.addAttachments(listOf(uri1, uri2, uri3))
+        viewModel.removeAttachment(uri2)
+
+        assertThat(viewModel.attachments.value).containsExactly(uri1, uri3)
+    }
+
+    @Test
+    fun `removeAttachment does nothing when URI not in list`() {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+        val uri3 = mock<Uri>()
+
+        viewModel.addAttachments(listOf(uri1, uri2))
+        viewModel.removeAttachment(uri3)
+
+        assertThat(viewModel.attachments.value).containsExactly(uri1, uri2)
+    }
+
+    @Test
+    fun `clearAttachments removes all attachments`() {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+
+        viewModel.addAttachments(listOf(uri1, uri2))
+        viewModel.clearAttachments()
+
+        assertThat(viewModel.attachments.value).isEmpty()
+    }
+
+    @Test
+    fun `attachments list is empty initially`() {
+        assertThat(viewModel.attachments.value).isEmpty()
+    }
+
+    // endregion
+
+    // region Attachment integration tests
+
+    @Test
+    fun `onSendNewConversation sends attachments to repository`() = test {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+        val tempFile1 = java.io.File("/tmp/file1.jpg")
+        val tempFile2 = java.io.File("/tmp/file2.jpg")
+        val newConversation = createTestConversation(1)
+
+        whenever(tempAttachmentsUtil.createTempFilesFrom(listOf(uri1, uri2)))
+            .thenReturn(listOf(tempFile1, tempFile2))
+        whenever(heSupportRepository.createConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+            attachments = listOf(tempFile1.path, tempFile2.path)
+        )).thenReturn(CreateConversationResult.Success(newConversation))
+
+        viewModel.addAttachments(listOf(uri1, uri2))
+        viewModel.onSendNewConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+        )
+        advanceUntilIdle()
+
+        verify(tempAttachmentsUtil).createTempFilesFrom(listOf(uri1, uri2))
+        verify(heSupportRepository).createConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+            attachments = listOf(tempFile1.path, tempFile2.path)
+        )
+        verify(tempAttachmentsUtil).removeTempFiles(listOf(tempFile1, tempFile2))
+    }
+
+    @Test
+    fun `onSendNewConversation clears attachments after success`() = test {
+        val uri1 = mock<Uri>()
+        val newConversation = createTestConversation(1)
+
+        whenever(heSupportRepository.createConversation(
+            any(), any(), any(), any()
+        )).thenReturn(CreateConversationResult.Success(newConversation))
+
+        viewModel.addAttachments(listOf(uri1))
+        assertThat(viewModel.attachments.value).containsExactly(uri1)
+
+        viewModel.onSendNewConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.attachments.value).isEmpty()
+    }
+
+    @Test
+    fun `onSendNewConversation does not clear attachments on error`() = test {
+        val uri1 = mock<Uri>()
+
+        whenever(heSupportRepository.createConversation(
+            any(), any(), any(), any()
+        )).thenReturn(CreateConversationResult.Error.GeneralError)
+
+        viewModel.addAttachments(listOf(uri1))
+
+        viewModel.onSendNewConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.attachments.value).containsExactly(uri1)
+    }
+
+    @Test
+    fun `onSendNewConversation cleans up temp files even on error`() = test {
+        val uri1 = mock<Uri>()
+        val tempFile1 = java.io.File("/tmp/file1.jpg")
+
+        whenever(tempAttachmentsUtil.createTempFilesFrom(listOf(uri1)))
+            .thenReturn(listOf(tempFile1))
+        whenever(heSupportRepository.createConversation(
+            any(), any(), any(), any()
+        )).thenReturn(CreateConversationResult.Error.GeneralError)
+
+        viewModel.addAttachments(listOf(uri1))
+        viewModel.onSendNewConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+        )
+        advanceUntilIdle()
+
+        verify(tempAttachmentsUtil).removeTempFiles(listOf(tempFile1))
+    }
+
+    @Test
+    fun `onAddMessageToConversation sends attachments to repository`() = test {
+        val uri1 = mock<Uri>()
+        val tempFile1 = java.io.File("/tmp/file1.jpg")
+        val existingConversation = createTestConversation(1)
+        val updatedConversation = createTestConversation(1).copy(
+            messages = listOf(createTestMessage(1, "New message", true))
+        )
+
+        whenever(heSupportRepository.loadConversation(1L)).thenReturn(existingConversation)
+        whenever(tempAttachmentsUtil.createTempFilesFrom(listOf(uri1)))
+            .thenReturn(listOf(tempFile1))
+        whenever(heSupportRepository.addMessageToConversation(
+            conversationId = 1L,
+            message = "Test message",
+            attachments = listOf(tempFile1.path)
+        )).thenReturn(CreateConversationResult.Success(updatedConversation))
+
+        viewModel.onConversationClick(existingConversation)
+        advanceUntilIdle()
+
+        viewModel.addAttachments(listOf(uri1))
+        viewModel.onAddMessageToConversation(
+            message = "Test message"
+        )
+        advanceUntilIdle()
+
+        verify(tempAttachmentsUtil).createTempFilesFrom(listOf(uri1))
+        verify(heSupportRepository).addMessageToConversation(
+            conversationId = 1L,
+            message = "Test message",
+            attachments = listOf(tempFile1.path)
+        )
+        verify(tempAttachmentsUtil).removeTempFiles(listOf(tempFile1))
+    }
+
+    @Test
+    fun `onAddMessageToConversation clears attachments after success`() = test {
+        val uri1 = mock<Uri>()
+        val existingConversation = createTestConversation(1)
+        val updatedConversation = createTestConversation(1)
+
+        whenever(heSupportRepository.loadConversation(1L)).thenReturn(existingConversation)
+        whenever(heSupportRepository.addMessageToConversation(
+            any(), any(), any()
+        )).thenReturn(CreateConversationResult.Success(updatedConversation))
+
+        viewModel.onConversationClick(existingConversation)
+        advanceUntilIdle()
+
+        viewModel.addAttachments(listOf(uri1))
+        assertThat(viewModel.attachments.value).containsExactly(uri1)
+
+        viewModel.onAddMessageToConversation(
+            message = "Test message"
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.attachments.value).isEmpty()
+    }
+
+    @Test
+    fun `onAddMessageToConversation does not clear attachments on error`() = test {
+        val uri1 = mock<Uri>()
+        val existingConversation = createTestConversation(1)
+
+        whenever(heSupportRepository.loadConversation(1L)).thenReturn(existingConversation)
+        whenever(heSupportRepository.addMessageToConversation(
+            any(), any(), any()
+        )).thenReturn(CreateConversationResult.Error.GeneralError)
+
+        viewModel.onConversationClick(existingConversation)
+        advanceUntilIdle()
+
+        viewModel.addAttachments(listOf(uri1))
+
+        viewModel.onAddMessageToConversation(
+            message = "Test message"
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.attachments.value).containsExactly(uri1)
+    }
+
+    @Test
+    fun `onAddMessageToConversation cleans up temp files even on error`() = test {
+        val uri1 = mock<Uri>()
+        val tempFile1 = java.io.File("/tmp/file1.jpg")
+        val existingConversation = createTestConversation(1)
+
+        whenever(heSupportRepository.loadConversation(1L)).thenReturn(existingConversation)
+        whenever(tempAttachmentsUtil.createTempFilesFrom(listOf(uri1)))
+            .thenReturn(listOf(tempFile1))
+        whenever(heSupportRepository.addMessageToConversation(
+            any(), any(), any()
+        )).thenReturn(CreateConversationResult.Error.GeneralError)
+
+        viewModel.onConversationClick(existingConversation)
+        advanceUntilIdle()
+
+        viewModel.addAttachments(listOf(uri1))
+        viewModel.onAddMessageToConversation(
+            message = "Test message"
+        )
+        advanceUntilIdle()
+
+        verify(tempAttachmentsUtil).removeTempFiles(listOf(tempFile1))
+    }
+
+    @Test
+    fun `onSendNewConversation handles exception during temp file creation`() = test {
+        val uri1 = mock<Uri>()
+
+        whenever(tempAttachmentsUtil.createTempFilesFrom(listOf(uri1)))
+            .thenThrow(RuntimeException("File creation failed"))
+
+        viewModel.addAttachments(listOf(uri1))
+        viewModel.onSendNewConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1"),
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.GENERAL)
+        verify(appLogWrapper).e(any(), any())
+    }
+
+    @Test
+    fun `onAddMessageToConversation handles exception during temp file creation`() = test {
+        val uri1 = mock<Uri>()
+        val existingConversation = createTestConversation(1)
+
+        whenever(heSupportRepository.loadConversation(1L)).thenReturn(existingConversation)
+        whenever(tempAttachmentsUtil.createTempFilesFrom(listOf(uri1)))
+            .thenThrow(RuntimeException("File creation failed"))
+
+        viewModel.onConversationClick(existingConversation)
+        advanceUntilIdle()
+
+        viewModel.addAttachments(listOf(uri1))
+        viewModel.onAddMessageToConversation(
+            message = "Test message"
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.GENERAL)
+        verify(appLogWrapper).e(any(), any())
     }
 
     // endregion
@@ -371,7 +694,8 @@ class HESupportViewModelTest : BaseUnitTest() {
             formattedText = AnnotatedString(text),
             createdAt = Date(),
             authorName = if (authorIsUser) "User" else "Support",
-            authorIsUser = authorIsUser
+            authorIsUser = authorIsUser,
+            attachments = emptyList()
         )
     }
 }

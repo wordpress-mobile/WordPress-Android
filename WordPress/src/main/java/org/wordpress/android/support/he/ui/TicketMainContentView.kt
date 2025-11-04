@@ -1,15 +1,19 @@
 package org.wordpress.android.support.he.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Card
@@ -33,8 +37,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.filled.AddPhotoAlternate
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
 import org.wordpress.android.R
+import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,7 +55,9 @@ fun TicketMainContentView(
     includeAppLogs: Boolean,
     onMessageChanged: (String) -> Unit,
     onIncludeAppLogsChanged: (Boolean) -> Unit,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    attachments: List<Uri> = emptyList(),
+    attachmentActionsListener: AttachmentActionsListener
 ) {
     Column(
         modifier = Modifier
@@ -94,9 +107,27 @@ fun TicketMainContentView(
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
+        if (attachments.isNotEmpty()) {
+            FlowRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                attachments.forEach { imageUri ->
+                    ImagePreviewItem(
+                        imageUri = imageUri,
+                        onRemove = { attachmentActionsListener.onRemoveImage(imageUri) },
+                        enabled = enabled
+                    )
+                }
+            }
+        }
+
         val addScreenshotsLabel = stringResource(R.string.he_support_add_screenshots_button)
         OutlinedButton(
-            onClick = { /* Placeholder for add screenshots */ },
+            onClick = attachmentActionsListener::onAddImageClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
@@ -184,28 +215,96 @@ fun TicketMainContentView(
     }
 }
 
-@Preview(showBackground = true, name = "HE main ticket content")
 @Composable
-private fun ReplyBottomSheetPreview() {
+private fun ImagePreviewItem(
+    imageUri: Uri,
+    onRemove: () -> Unit,
+    enabled: Boolean = true
+) {
+    Box(
+        modifier = Modifier
+            .size(100.dp)
+    ) {
+        Card(
+            modifier = Modifier.size(100.dp),
+            shape = RoundedCornerShape(12.dp),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 2.dp
+            )
+        ) {
+            AsyncImage(
+                model = imageUri,
+                contentDescription = stringResource(R.string.he_support_screenshot_preview),
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop
+            )
+        }
+
+        if (enabled) {
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(4.dp)
+                    .size(28.dp),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.surface,
+                shadowElevation = 4.dp,
+                border = BorderStroke(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+                )
+            ) {
+                IconButton(
+                    onClick = onRemove,
+                    modifier = Modifier.size(28.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(R.string.he_support_remove_screenshot),
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Preview(showBackground = true, name = "HE main ticket content")
+@Suppress("EmptyFunctionBlock")
+@Composable
+private fun TicketMainContentViewPreview() {
     AppThemeM3(isDarkTheme = false) {
         TicketMainContentView(
             messageText = "",
             includeAppLogs = false,
             onMessageChanged = { },
-            onIncludeAppLogsChanged = { }
+            onIncludeAppLogsChanged = { },
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() { }
+                override fun onRemoveImage(uri: Uri) { }
+            }
         )
     }
 }
 
 @Preview(showBackground = true, name = "HE main ticket content - Dark", uiMode = UI_MODE_NIGHT_YES)
+@Suppress("EmptyFunctionBlock")
 @Composable
-private fun ReplyBottomSheetPreviewDark() {
+private fun TicketMainContentViewPreviewDark() {
     AppThemeM3(isDarkTheme = true) {
         TicketMainContentView(
             messageText = "",
             includeAppLogs = false,
             onMessageChanged = { },
-            onIncludeAppLogsChanged = { }
+            onIncludeAppLogsChanged = { },
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() { }
+                override fun onRemoveImage(uri: Uri) { }
+            }
         )
     }
 }
