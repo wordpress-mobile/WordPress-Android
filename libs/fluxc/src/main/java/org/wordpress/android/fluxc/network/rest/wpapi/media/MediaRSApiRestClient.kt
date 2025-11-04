@@ -256,10 +256,10 @@ class MediaRSApiRestClient @Inject constructor(
 
             val mediaResponse = client.request { requestBuilder ->
                 requestBuilder.media().create(
-                    params = MediaCreateParams(title = media.title),
-                    filePath = filePath,
-                    fileContentType = media.mimeType.orEmpty(),
-                    requestId = null
+                    params = MediaCreateParams(
+                        title = media.title,
+                        filePath = filePath,
+                    ),
                 )
             }
 

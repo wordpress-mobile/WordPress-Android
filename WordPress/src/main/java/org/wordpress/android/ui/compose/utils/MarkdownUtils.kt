@@ -95,9 +95,9 @@ private fun AnnotatedString.Builder.processNode(node: Node) {
                 withLink(LinkAnnotation.Url(child.destination)) {
                     val start = length
                     processNode(child)
+                    // Inherit text color from theme; only add underline for discoverability
                     addStyle(
                         SpanStyle(
-                            color = Color.Blue,
                             textDecoration = TextDecoration.Underline
                         ),
                         start,
