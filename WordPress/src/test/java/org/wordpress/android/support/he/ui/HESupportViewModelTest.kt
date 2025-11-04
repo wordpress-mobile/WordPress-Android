@@ -1,5 +1,8 @@
 package org.wordpress.android.support.he.ui
 
+import android.app.Application
+import android.content.ContentResolver
+import android.content.res.AssetFileDescriptor
 import android.net.Uri
 import androidx.compose.ui.text.AnnotatedString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -44,6 +47,12 @@ class HESupportViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var tempAttachmentsUtil: TempAttachmentsUtil
 
+    @Mock
+    private lateinit var application: Application
+
+    @Mock
+    private lateinit var contentResolver: ContentResolver
+
     private lateinit var viewModel: HESupportViewModel
 
     private val testAccessToken = "test_access_token"
@@ -70,10 +79,17 @@ class HESupportViewModelTest : BaseUnitTest() {
             whenever(tempAttachmentsUtil.removeTempFiles(any())).thenReturn(Unit)
         }
 
+        // Mock ContentResolver to return file sizes
+        whenever(application.contentResolver).thenReturn(contentResolver)
+        val assetFileDescriptor = mock<AssetFileDescriptor>()
+        whenever(assetFileDescriptor.length).thenReturn(1024L * 1024L) // 1MB by default
+        whenever(contentResolver.openAssetFileDescriptor(any(), any())).thenReturn(assetFileDescriptor)
+
         viewModel = HESupportViewModel(
             heSupportRepository = heSupportRepository,
             ioDispatcher = UnconfinedTestDispatcher(),
             tempAttachmentsUtil = tempAttachmentsUtil,
+            application = application,
             accountStore = accountStore,
             appLogWrapper = appLogWrapper,
             networkUtilsWrapper = networkUtilsWrapper,

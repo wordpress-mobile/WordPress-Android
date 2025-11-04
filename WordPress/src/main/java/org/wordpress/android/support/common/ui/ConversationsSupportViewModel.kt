@@ -182,5 +182,7 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     enum class ErrorType {
         GENERAL,
         FORBIDDEN,
+        ATTACHMENT_FILES_SKIPPED_TOO_LARGE,
+        ATTACHMENT_FILES_SKIPPED_TOTAL_SIZE,
     }
 }

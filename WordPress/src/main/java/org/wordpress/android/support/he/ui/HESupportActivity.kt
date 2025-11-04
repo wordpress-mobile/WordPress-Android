@@ -123,6 +123,10 @@ class HESupportActivity : AppCompatActivity() {
             val message = when (errorType) {
                 ConversationsSupportViewModel.ErrorType.GENERAL -> getString(R.string.he_support_generic_error)
                 ConversationsSupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
+                ConversationsSupportViewModel.ErrorType.ATTACHMENT_FILES_SKIPPED_TOO_LARGE ->
+                    getString(R.string.he_support_attachment_files_skipped_too_large)
+                ConversationsSupportViewModel.ErrorType.ATTACHMENT_FILES_SKIPPED_TOTAL_SIZE ->
+                    getString(R.string.he_support_attachment_files_skipped_total_size)
             }
             scope.launch {
                 snackbarHostState.showSnackbar(

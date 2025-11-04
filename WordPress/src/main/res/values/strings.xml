@@ -5200,4 +5200,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_send_ticket_button">Send</string>
     <string name="he_support_generic_error">An error occurred. Please try again later.</string>
     <string name="he_support_forbidden_error">Sorry, you are not allowed to perform this action.</string>
+    <string name="he_support_attachment_files_skipped_too_large">Some files were skipped because they exceed the 20MB limit.</string>
+    <string name="he_support_attachment_files_skipped_total_size">Some files were skipped because the total size would exceed 40MB. Consider splitting them across multiple replies.</string>
 </resources>

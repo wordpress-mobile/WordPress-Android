@@ -1,5 +1,6 @@
 package org.wordpress.android.support.he.ui
 
+import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,10 +27,15 @@ class HESupportViewModel @Inject constructor(
     private val heSupportRepository: HESupportRepository,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val tempAttachmentsUtil: TempAttachmentsUtil,
+    private val application: Application,
     accountStore: AccountStore,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ConversationsSupportViewModel<SupportConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
+    companion object {
+        const val MAX_ATTACHMENT_SIZE_BYTES = 20L * 1024 * 1024 // 20MB per file
+        const val MAX_TOTAL_SIZE_BYTES = 40L * 1024 * 1024 // 40MB total
+    }
     private val _isSendingMessage = MutableStateFlow(false)
     val isSendingMessage: StateFlow<Boolean> = _isSendingMessage.asStateFlow()
 
@@ -43,6 +49,12 @@ class HESupportViewModel @Inject constructor(
     sealed class MessageSendResult {
         data object Success : MessageSendResult()
         data object Failure : MessageSendResult()
+    }
+
+    sealed class AttachmentValidationResult(open val uris: List<Uri>) {
+        data class Success(override val uris: List<Uri>) : AttachmentValidationResult(uris)
+        data class IndividualFileSkipped(override val uris: List<Uri>) : AttachmentValidationResult(uris)
+        data class TotalSizeSkipped(override val uris: List<Uri>) : AttachmentValidationResult(uris)
     }
 
     override fun initRepository(accessToken: String) {
@@ -159,7 +171,92 @@ class HESupportViewModel @Inject constructor(
     }
 
     fun addAttachments(uris: List<Uri>) {
-        _attachments.value = _attachments.value + uris
+        viewModelScope.launch(ioDispatcher) {
+            val validationResult = validateAttachmentSizes(uris)
+
+            // Add valid URIs to attachments
+            if (validationResult.uris.isNotEmpty()) {
+                _attachments.value = _attachments.value + validationResult.uris
+            }
+
+            // Set error message if needed
+            when (validationResult) {
+                is AttachmentValidationResult.Success -> {
+                    // All attachments added successfully, no error
+                }
+                is AttachmentValidationResult.IndividualFileSkipped -> {
+                    _errorMessage.value = ErrorType.ATTACHMENT_FILES_SKIPPED_TOO_LARGE
+                }
+                is AttachmentValidationResult.TotalSizeSkipped -> {
+                    _errorMessage.value = ErrorType.ATTACHMENT_FILES_SKIPPED_TOTAL_SIZE
+                }
+            }
+        }
+    }
+
+    private fun validateAttachmentSizes(uris: List<Uri>): AttachmentValidationResult {
+        val validUris = mutableListOf<Uri>()
+        var skippedDueToFileSize = false
+        var skippedDueToTotalSize = false
+
+        // Calculate current total size
+        var currentTotalSize = 0L
+        for (uri in _attachments.value) {
+            val fileSize = getFileSize(uri) ?: 0L
+            currentTotalSize += fileSize
+        }
+
+        // Validate each new attachment
+        for (uri in uris) {
+            val fileSize = getFileSize(uri)
+
+            // Skip if we can't determine file size
+            if (fileSize == null) {
+                continue
+            } else
+
+            // Check individual file size
+            if (fileSize > MAX_ATTACHMENT_SIZE_BYTES) {
+                skippedDueToFileSize = true
+                continue
+            }
+
+            // Check if adding this file would exceed total size limit
+            if (currentTotalSize + fileSize > MAX_TOTAL_SIZE_BYTES) {
+                skippedDueToTotalSize = true
+                break
+            }
+
+            // File is valid, add it
+            validUris.add(uri)
+            currentTotalSize += fileSize
+        }
+
+        // Determine result based on what was skipped
+        return when {
+            skippedDueToFileSize -> {
+                AttachmentValidationResult.IndividualFileSkipped(uris = validUris)
+            }
+            skippedDueToTotalSize -> {
+                AttachmentValidationResult.TotalSizeSkipped(uris = validUris)
+            }
+            else -> {
+                AttachmentValidationResult.Success(uris = validUris)
+            }
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    private fun getFileSize(uri: Uri): Long? {
+        return try {
+            application.contentResolver.openAssetFileDescriptor(uri, "r")?.use { descriptor ->
+                descriptor.length
+            }
+        } catch (_: Exception) {
+            // Silently return null if we can't get the file size
+            // This will be handled by the validation logic
+            null
+        }
     }
 
     fun removeAttachment(uri: Uri) {
