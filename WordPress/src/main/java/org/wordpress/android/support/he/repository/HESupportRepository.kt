@@ -1,5 +1,6 @@
 package org.wordpress.android.support.he.repository
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -181,6 +182,7 @@ class HESupportRepository @Inject constructor(
                 title = it.title,
                 description = it.description,
                 lastMessageSentAt = it.updatedAt,
+                status = it.status,
                 messages = emptyList()
             )
         }
@@ -191,6 +193,7 @@ class HESupportRepository @Inject constructor(
             title = title,
             description = description,
             lastMessageSentAt = updatedAt,
+            status = status,
             messages = messages.map { it.toSupportMessage() }
         )
 
