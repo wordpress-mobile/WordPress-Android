@@ -47,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
 import org.wordpress.android.R
+import org.wordpress.android.support.he.model.AttachmentState
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
@@ -58,7 +59,7 @@ fun TicketMainContentView(
     onMessageChanged: (String) -> Unit,
     onIncludeAppLogsChanged: (Boolean) -> Unit,
     enabled: Boolean = true,
-    attachmentState: HESupportViewModel.AttachmentState = HESupportViewModel.AttachmentState(),
+    attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener
 ) {
     Column(
@@ -161,9 +162,9 @@ fun TicketMainContentView(
         if (attachmentState.rejectedUris.isNotEmpty() && attachmentState.rejectionReason != null) {
             Spacer(modifier = Modifier.height(16.dp))
             val reason = when (attachmentState.rejectionReason) {
-                HESupportViewModel.RejectionReason.TotalSizeExceeded ->
+                AttachmentState.RejectionReason.TotalSizeExceeded ->
                     stringResource(R.string.he_support_total_size_exceeded)
-                HESupportViewModel.RejectionReason.FileTooLarge ->
+                AttachmentState.RejectionReason.FileTooLarge ->
                     stringResource(R.string.he_support_file_too_large)
             }
             RejectedAttachmentsSection(

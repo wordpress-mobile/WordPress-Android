@@ -57,6 +57,8 @@ import androidx.compose.ui.unit.dp
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
+import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.MessageSendResult
 import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
@@ -73,11 +75,11 @@ fun HEConversationDetailScreen(
     conversation: SupportConversation,
     isLoading: Boolean = false,
     isSendingMessage: Boolean = false,
-    messageSendResult: HESupportViewModel.MessageSendResult? = null,
+    messageSendResult: MessageSendResult? = null,
     onBackClick: () -> Unit,
     onSendMessage: (message: String, includeAppLogs: Boolean) -> Unit,
     onClearMessageSendResult: () -> Unit = {},
-    attachmentState: HESupportViewModel.AttachmentState = HESupportViewModel.AttachmentState(),
+    attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener,
     onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit = {}
 ) {

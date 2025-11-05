@@ -29,6 +29,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.MessageSendResult
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,13 +38,13 @@ import org.wordpress.android.support.he.util.AttachmentActionsListener
 fun HEConversationReplyBottomSheet(
     sheetState: androidx.compose.material3.SheetState,
     isSending: Boolean = false,
-    messageSendResult: HESupportViewModel.MessageSendResult? = null,
+    messageSendResult: MessageSendResult? = null,
     initialMessageText: String = "",
     initialIncludeAppLogs: Boolean = false,
     onDismiss: (currentMessage: String, currentIncludeAppLogs: Boolean) -> Unit,
     onSend: (String, Boolean) -> Unit,
     onMessageSentSuccessfully: () -> Unit,
-    attachmentState: HESupportViewModel.AttachmentState = HESupportViewModel.AttachmentState(),
+    attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener
 ) {
     var messageText by remember { mutableStateOf(initialMessageText) }
@@ -52,12 +54,12 @@ fun HEConversationReplyBottomSheet(
     // Close the sheet when sending completes successfully
     LaunchedEffect(messageSendResult) {
         when (messageSendResult) {
-            is HESupportViewModel.MessageSendResult.Success -> {
+            is MessageSendResult.Success -> {
                 // Message sent successfully, close the sheet and clear draft
                 onDismiss("", false)
                 onMessageSentSuccessfully()
             }
-            is HESupportViewModel.MessageSendResult.Failure -> {
+            is MessageSendResult.Failure -> {
                 // Message failed to send, draft is saved onDismiss
                 // The error will be shown via snackbar from the Activity
                 onDismiss("", false)

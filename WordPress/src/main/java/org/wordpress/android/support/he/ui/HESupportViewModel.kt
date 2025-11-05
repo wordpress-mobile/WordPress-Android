@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.MessageSendResult
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
@@ -45,22 +47,6 @@ class HESupportViewModel @Inject constructor(
     // Unified attachment state (shared for both Detail and NewTicket screens)
     private val _attachmentState = MutableStateFlow(AttachmentState())
     val attachmentState: StateFlow<AttachmentState> = _attachmentState.asStateFlow()
-
-    sealed class MessageSendResult {
-        data object Success : MessageSendResult()
-        data object Failure : MessageSendResult()
-    }
-
-    data class AttachmentState(
-        val acceptedUris: List<Uri> = emptyList(),
-        val rejectedUris: List<Uri> = emptyList(),
-        val rejectionReason: RejectionReason? = null
-    )
-
-    sealed class RejectionReason {
-        data object FileTooLarge : RejectionReason()
-        data object TotalSizeExceeded : RejectionReason()
-    }
 
     override fun initRepository(accessToken: String) {
         heSupportRepository.init(accessToken)
@@ -227,8 +213,8 @@ class HESupportViewModel @Inject constructor(
 
         // Determine rejection reason - prioritize TotalSizeExceeded as it refers to the whole request
         val rejectionReason = when {
-            skippedDueToTotalSize -> RejectionReason.TotalSizeExceeded
-            skippedDueToFileSize -> RejectionReason.FileTooLarge
+            skippedDueToTotalSize -> AttachmentState.RejectionReason.TotalSizeExceeded
+            skippedDueToFileSize -> AttachmentState.RejectionReason.FileTooLarge
             else -> null
         }
 

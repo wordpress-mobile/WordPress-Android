@@ -55,6 +55,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import org.wordpress.android.R
 import org.wordpress.android.support.common.model.UserInfo
+import org.wordpress.android.support.he.model.AttachmentState
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
@@ -74,7 +75,7 @@ fun HENewTicketScreen(
             ) -> Unit,
     userInfo: UserInfo,
     isSendingNewConversation: Boolean = false,
-    attachmentState: HESupportViewModel.AttachmentState = HESupportViewModel.AttachmentState(),
+    attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener
 ) {
     var selectedCategory by remember { mutableStateOf<SupportCategory?>(null) }

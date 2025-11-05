@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.support.he.model.AttachmentState
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
 import org.wordpress.android.support.he.repository.CreateConversationResult
@@ -455,7 +456,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         assertThat(viewModel.attachmentState.value.acceptedUris).isEmpty()
         assertThat(viewModel.attachmentState.value.rejectedUris).containsExactly(uri1)
         assertThat(viewModel.attachmentState.value.rejectionReason)
-            .isEqualTo(HESupportViewModel.RejectionReason.FileTooLarge)
+            .isEqualTo(AttachmentState.RejectionReason.FileTooLarge)
     }
 
     @Test
@@ -499,7 +500,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri3)
         assertThat(viewModel.attachmentState.value.rejectedUris).containsExactly(uri2)
         assertThat(viewModel.attachmentState.value.rejectionReason)
-            .isEqualTo(HESupportViewModel.RejectionReason.TotalSizeExceeded)
+            .isEqualTo(AttachmentState.RejectionReason.TotalSizeExceeded)
     }
 
     @Test
@@ -609,7 +610,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri3)
         assertThat(viewModel.attachmentState.value.rejectedUris).containsExactly(uri2, uri4)
         assertThat(viewModel.attachmentState.value.rejectionReason)
-            .isEqualTo(HESupportViewModel.RejectionReason.TotalSizeExceeded)
+            .isEqualTo(AttachmentState.RejectionReason.TotalSizeExceeded)
     }
 
     // endregion
