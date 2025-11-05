@@ -26,6 +26,7 @@ class HESupportViewModel @Inject constructor(
     private val heSupportRepository: HESupportRepository,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val tempAttachmentsUtil: TempAttachmentsUtil,
+    val videoUrlResolver: org.wordpress.android.support.he.util.VideoUrlResolver,
     accountStore: AccountStore,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper,

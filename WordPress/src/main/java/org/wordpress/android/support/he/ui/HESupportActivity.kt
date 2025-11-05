@@ -179,6 +179,7 @@ class HESupportActivity : AppCompatActivity() {
                             isLoading = isLoadingConversation,
                             isSendingMessage = isSendingMessage,
                             messageSendResult = messageSendResult,
+                            videoUrlResolver = viewModel.videoUrlResolver,
                             onBackClick = { viewModel.onBackClick() },
                             onSendMessage = { message, includeAppLogs ->
                                 viewModel.onAddMessageToConversation(

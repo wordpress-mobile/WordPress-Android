@@ -83,7 +83,8 @@ fun HEConversationDetailScreen(
     onClearMessageSendResult: () -> Unit = {},
     attachments: List<Uri> = emptyList(),
     attachmentActionsListener: AttachmentActionsListener,
-    onDownloadAttachment: (SupportAttachment) -> Unit = {}
+    onDownloadAttachment: (SupportAttachment) -> Unit = {},
+    videoUrlResolver: org.wordpress.android.support.he.util.VideoUrlResolver? = null
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -97,6 +98,8 @@ fun HEConversationDetailScreen(
 
     // State for fullscreen image preview
     var previewImageUrl by remember { mutableStateOf<String?>(null) }
+    // State for fullscreen video preview
+    var previewVideoAttachment by remember { mutableStateOf<SupportAttachment?>(null) }
 
     // Scroll to bottom when conversation changes or new messages arrive
     LaunchedEffect(conversation.messages.size) {
@@ -155,6 +158,7 @@ fun HEConversationDetailScreen(
                     message = message,
                     timestamp = formatRelativeTime(message.createdAt, resources),
                     onPreviewImage = { attachment -> previewImageUrl = attachment.url },
+                    onPreviewVideo = { attachment -> previewVideoAttachment = attachment },
                     onDownloadAttachment = onDownloadAttachment
                 )
             }
@@ -216,6 +220,18 @@ fun HEConversationDetailScreen(
             onDownload = {
                 attachment?.let { onDownloadAttachment(it) }
             }
+        )
+    }
+
+    // Show fullscreen video player when a video attachment is tapped
+    previewVideoAttachment?.let { videoAttachment ->
+        AttachmentFullscreenVideoPlayer(
+            videoUrl = videoAttachment.url,
+            onDismiss = { previewVideoAttachment = null },
+            onDownload = {
+                onDownloadAttachment(videoAttachment)
+            },
+            videoUrlResolver = videoUrlResolver
         )
     }
 }
@@ -294,6 +310,7 @@ private fun MessageItem(
     message: SupportMessage,
     timestamp: String,
     onPreviewImage: (SupportAttachment) -> Unit,
+    onPreviewVideo: (SupportAttachment) -> Unit,
     onDownloadAttachment: (SupportAttachment) -> Unit
 ) {
     val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
@@ -355,6 +372,7 @@ private fun MessageItem(
                 AttachmentsList(
                     attachments = message.attachments,
                     onPreviewImage = onPreviewImage,
+                    onPreviewVideo = onPreviewVideo,
                     onDownloadAttachment = onDownloadAttachment
                 )
             }
@@ -366,6 +384,7 @@ private fun MessageItem(
 private fun AttachmentsList(
     attachments: List<SupportAttachment>,
     onPreviewImage: (SupportAttachment) -> Unit,
+    onPreviewVideo: (SupportAttachment) -> Unit,
     onDownloadAttachment: (SupportAttachment) -> Unit
 ) {
     FlowRow(
@@ -376,10 +395,10 @@ private fun AttachmentsList(
             AttachmentItem(
                 attachment = attachment,
                 onClick = {
-                    if (attachment.type == AttachmentType.Image) {
-                        onPreviewImage(attachment)
-                    } else {
-                        onDownloadAttachment(attachment)
+                    when (attachment.type) {
+                        AttachmentType.Image -> onPreviewImage(attachment)
+                        AttachmentType.Video -> onPreviewVideo(attachment)
+                        else -> onDownloadAttachment(attachment)
                     }
                 }
             )
