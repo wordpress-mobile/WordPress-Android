@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package org.wordpress.android.support.he.ui
 
 import android.view.ViewGroup
@@ -39,13 +37,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.exoplayer2.util.Util
 import org.wordpress.android.R
 import org.wordpress.android.support.he.util.VideoUrlResolver
 
@@ -83,17 +78,9 @@ fun AttachmentFullscreenVideoPlayer(
                 }
             })
 
-            // Simple configuration - URL is already resolved by VideoUrlResolver
-            val userAgent = Util.getUserAgent(context, context.packageName)
-            @Suppress("DEPRECATION")
-            val httpDataSourceFactory = DefaultHttpDataSourceFactory(userAgent)
-            val dataSourceFactory = DefaultDataSourceFactory(context, httpDataSourceFactory)
-
-            @Suppress("DEPRECATION")
-            val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(resolvedUrl!!.toUri())
-
-            setMediaSource(mediaSource)
+            // Simple configuration using MediaItem
+            val mediaItem = MediaItem.fromUri(resolvedUrl!!.toUri())
+            setMediaItem(mediaItem)
             prepare()
             playWhenReady = true
             repeatMode = Player.REPEAT_MODE_OFF
