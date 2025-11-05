@@ -199,67 +199,54 @@ class HESupportViewModel @Inject constructor(
         for (uri in uris) {
             val fileSize = getFileSize(uri)
 
-            // Skip if we can't determine file size
-            if (fileSize == null) {
-                skippedUris.add(uri)
-                continue
-            }
+            // Skip if we can't determine file size we just allow it to be added
+            if (fileSize != null) {
+                // Check individual file size
+                if (fileSize > MAX_TOTAL_SIZE_BYTES) {
+                    skippedDueToFileSize = true
+                    skippedUris.add(uri)
+                    continue
+                }
 
-            // Check individual file size
-            if (fileSize > MAX_TOTAL_SIZE_BYTES) {
-                skippedDueToFileSize = true
-                skippedUris.add(uri)
-                continue
-            }
-
-            // Check if adding this file would exceed total size limit
-            if (currentTotalSize + fileSize > MAX_TOTAL_SIZE_BYTES) {
-                skippedDueToTotalSize = true
-                skippedUris.add(uri)
-                continue
+                // Check if adding this file would exceed total size limit
+                if (currentTotalSize + fileSize > MAX_TOTAL_SIZE_BYTES) {
+                    skippedDueToTotalSize = true
+                    skippedUris.add(uri)
+                    continue
+                }
             }
 
             // File is valid, add it
             validUris.add(uri)
-            currentTotalSize += fileSize
+            currentTotalSize += fileSize ?: 0
         }
 
         // Build the new attachment state
         val currentAccepted = _attachmentState.value.acceptedUris
         val newAccepted = currentAccepted + validUris
 
-        when {
-            skippedDueToFileSize -> {
-                AttachmentState(
-                    acceptedUris = newAccepted,
-                    rejectedUris = skippedUris,
-                    rejectionReason = RejectionReason.FileTooLarge
-                )
-            }
-            skippedDueToTotalSize -> {
-                AttachmentState(
-                    acceptedUris = newAccepted,
-                    rejectedUris = skippedUris,
-                    rejectionReason = RejectionReason.TotalSizeExceeded
-                )
-            }
-            else -> {
-                AttachmentState(
-                    acceptedUris = newAccepted,
-                    rejectedUris = emptyList(),
-                    rejectionReason = null
-                )
-            }
+        // Determine rejection reason - prioritize TotalSizeExceeded as it refers to the whole request
+        val rejectionReason = when {
+            skippedDueToTotalSize -> RejectionReason.TotalSizeExceeded
+            skippedDueToFileSize -> RejectionReason.FileTooLarge
+            else -> null
         }
+
+        AttachmentState(
+            acceptedUris = newAccepted,
+            rejectedUris = if (rejectionReason != null) skippedUris else emptyList(),
+            rejectionReason = rejectionReason
+        )
     }
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun getFileSize(uri: Uri): Long? = withContext(ioDispatcher) {
         try {
             application.contentResolver.openAssetFileDescriptor(uri, "r")?.use { descriptor ->
                 descriptor.length
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            appLogWrapper.d(AppLog.T.SUPPORT, "Could not determine file size for URI: $uri - ${e.message}")
             // Silently return null if we can't get the file size
             // This will be handled by the validation logic
             null
