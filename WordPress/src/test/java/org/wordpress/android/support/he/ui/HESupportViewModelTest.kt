@@ -578,7 +578,7 @@ class HESupportViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `addAttachments prioritizes FileTooLarge over TotalSizeExceeded when both occur`() = test {
+    fun `addAttachments prioritizes TotalSizeExceeded over FileTooLarge when both occur`() = test {
         val uri1 = mock<Uri>()
         val uri2 = mock<Uri>()
         val uri3 = mock<Uri>()
@@ -605,11 +605,11 @@ class HESupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // uri1 accepted (5MB), uri2 rejected (too large), uri3 accepted (5+12=17 < 20), uri4 rejected (17+8=25 > 20)
-        // Should show FileTooLarge as the rejection reason (higher priority than TotalSizeExceeded)
+        // Should show TotalSizeExceeded as rejection reason (higher priority - helps user focus on overall constraint)
         assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri3)
         assertThat(viewModel.attachmentState.value.rejectedUris).containsExactly(uri2, uri4)
         assertThat(viewModel.attachmentState.value.rejectionReason)
-            .isEqualTo(HESupportViewModel.RejectionReason.FileTooLarge)
+            .isEqualTo(HESupportViewModel.RejectionReason.TotalSizeExceeded)
     }
 
     // endregion
