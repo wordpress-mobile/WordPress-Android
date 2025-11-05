@@ -5180,6 +5180,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_include_logs_description">Including logs can help our team investigate issues. Logs may contain recent app activity.</string>
     <string name="he_support_download_attachment">Download attachment</string>
     <string name="he_support_select_attachments">Select attachments</string>
+    <string name="he_support_video_playback_error_title">Unable to play video</string>
+    <string name="he_support_video_playback_error_message">This video cannot be played inline. Please download it to view.</string>
+    <string name="he_support_download_video_button">Download Video</string>
 
     <!-- HE Support - New Ticket Screen -->
     <string name="he_support_contact_support_title">Contact Support</string>

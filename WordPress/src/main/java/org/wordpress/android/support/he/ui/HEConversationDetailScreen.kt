@@ -464,7 +464,7 @@ private fun AttachmentItem(
             if (attachment.type == AttachmentType.Video) {
                 Icon(
                     imageVector = Icons.Default.PlayCircle,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.photo_picker_thumbnail_desc),
                     modifier = Modifier
                         .align(Alignment.Center)
                         .size(48.dp),

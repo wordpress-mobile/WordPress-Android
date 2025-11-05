@@ -6,9 +6,11 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-private const val SUCESSFULLY_RESOLVED_CODE = 206
+private const val SUCCESSFULLY_RESOLVED_CODE = 206
+private const val TIMEOUT_SECONDS = 30L
 
 /**
  * Helper class to resolve video URLs that may have redirect chains.
@@ -18,6 +20,15 @@ private const val SUCESSFULLY_RESOLVED_CODE = 206
 class VideoUrlResolver @Inject constructor(
     private val appLogWrapper: AppLogWrapper
 ) {
+    private val client by lazy {
+        OkHttpClient.Builder()
+            .followRedirects(true)
+            .followSslRedirects(true)
+            .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .writeTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .build()
+    }
     /**
      * Resolves a video URL by following all redirects and returning the final URL.
      *
@@ -27,16 +38,6 @@ class VideoUrlResolver @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     suspend fun resolveUrl(url: String): String = withContext(Dispatchers.IO) {
         try {
-            val client = OkHttpClient.Builder()
-                .followRedirects(true)
-                .followSslRedirects(true)
-                .addNetworkInterceptor { chain ->
-                    val request = chain.request()
-                    val response = chain.proceed(request)
-                    response
-                }
-                .build()
-
             val request = Request.Builder()
                 .url(url)
                 .get()
@@ -47,7 +48,7 @@ class VideoUrlResolver @Inject constructor(
                 val finalUrl = response.request.url.toString()
 
                 when {
-                    response.isSuccessful || response.code == SUCESSFULLY_RESOLVED_CODE -> {
+                    response.isSuccessful || response.code == SUCCESSFULLY_RESOLVED_CODE -> {
                         finalUrl
                     }
                     finalUrl != url -> {
@@ -60,7 +61,7 @@ class VideoUrlResolver @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.UTILS, "Error resolving support url: ${e.stackTraceToString()}",)
+            appLogWrapper.e(AppLog.T.UTILS, "Error resolving support url: ${e.stackTraceToString()}")
             url
         }
     }

@@ -68,7 +68,7 @@ fun AttachmentFullscreenVideoPlayer(
 
     val exoPlayer = remember(resolvedUrl) {
         // Don't create player until URL is resolved
-        if (resolvedUrl == null) return@remember null
+        val url = resolvedUrl ?: return@remember null
 
         SimpleExoPlayer.Builder(context).build().apply {
             // Add error listener
@@ -79,7 +79,7 @@ fun AttachmentFullscreenVideoPlayer(
             })
 
             // Simple configuration using MediaItem
-            val mediaItem = MediaItem.fromUri(resolvedUrl!!.toUri())
+            val mediaItem = MediaItem.fromUri(url.toUri())
             setMediaItem(mediaItem)
             prepare()
             playWhenReady = true
@@ -134,12 +134,12 @@ fun AttachmentFullscreenVideoPlayer(
                             modifier = Modifier.size(64.dp)
                         )
                         Text(
-                            text = "Unable to play video",
+                            text = stringResource(R.string.he_support_video_playback_error_title),
                             color = Color.White,
                             style = androidx.compose.material3.MaterialTheme.typography.titleLarge
                         )
                         Text(
-                            text = "This video cannot be played inline. Please download it to view.",
+                            text = stringResource(R.string.he_support_video_playback_error_message),
                             color = Color.White.copy(alpha = 0.7f),
                             style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center
@@ -151,7 +151,7 @@ fun AttachmentFullscreenVideoPlayer(
                                 onDismiss()
                             }
                         ) {
-                            Text("Download Video")
+                            Text(stringResource(R.string.he_support_download_video_button))
                         }
                     }
                 }
