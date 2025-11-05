@@ -1,6 +1,5 @@
 package org.wordpress.android.support.he.repository
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
