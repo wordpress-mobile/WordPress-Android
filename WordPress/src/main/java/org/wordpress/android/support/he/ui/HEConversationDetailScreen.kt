@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Reply
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,9 +55,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
+import coil.request.videoFrameMillis
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
+import org.wordpress.android.support.he.model.AttachmentType
 import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
@@ -79,7 +83,7 @@ fun HEConversationDetailScreen(
     onClearMessageSendResult: () -> Unit = {},
     attachments: List<Uri> = emptyList(),
     attachmentActionsListener: AttachmentActionsListener,
-    onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit = {}
+    onDownloadAttachment: (SupportAttachment) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -372,7 +376,7 @@ private fun AttachmentsList(
             AttachmentItem(
                 attachment = attachment,
                 onClick = {
-                    if (attachment.type == org.wordpress.android.support.he.model.AttachmentType.Image) {
+                    if (attachment.type == AttachmentType.Image) {
                         onPreviewImage(attachment)
                     } else {
                         onDownloadAttachment(attachment)
@@ -385,13 +389,13 @@ private fun AttachmentsList(
 
 @Composable
 private fun AttachmentItem(
-    attachment: org.wordpress.android.support.he.model.SupportAttachment,
+    attachment: SupportAttachment,
     onClick: () -> Unit
 ) {
     val iconRes = when (attachment.type) {
-        org.wordpress.android.support.he.model.AttachmentType.Image -> R.drawable.ic_image_white_24dp
-        org.wordpress.android.support.he.model.AttachmentType.Video -> R.drawable.ic_video_camera_white_24dp
-        org.wordpress.android.support.he.model.AttachmentType.Other -> R.drawable.ic_pages_white_24dp
+        AttachmentType.Image -> R.drawable.ic_image_white_24dp
+        AttachmentType.Video -> R.drawable.ic_video_camera_white_24dp
+        AttachmentType.Other -> R.drawable.ic_pages_white_24dp
     }
 
     Box(
@@ -404,12 +408,19 @@ private fun AttachmentItem(
             ),
         contentAlignment = Alignment.Center
     ) {
-        if (attachment.type == org.wordpress.android.support.he.model.AttachmentType.Image) {
-            // Show image preview for image attachments
+        if (attachment.type == AttachmentType.Image ||
+            attachment.type == AttachmentType.Video) {
+            // Show image/video preview for image and video attachments
             SubcomposeAsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(attachment.url)
                     .crossfade(true)
+                    .apply {
+                        if (attachment.type == AttachmentType.Video) {
+                            decoderFactory(VideoFrameDecoder.Factory())
+                            videoFrameMillis(0) // Get first frame
+                        }
+                    }
                     .build(),
                 contentDescription = attachment.filename,
                 modifier = Modifier.fillMaxSize(),
@@ -426,7 +437,7 @@ private fun AttachmentItem(
                     }
                 },
                 error = {
-                    // Show icon if image fails to load
+                    // Show icon if image/video fails to load
                     Icon(
                         painter = painterResource(iconRes),
                         contentDescription = null,
@@ -435,8 +446,20 @@ private fun AttachmentItem(
                     )
                 }
             )
+
+            // Add play icon overlay for videos
+            if (attachment.type == AttachmentType.Video) {
+                Icon(
+                    imageVector = Icons.Default.PlayCircle,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(48.dp),
+                    tint = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+                )
+            }
         } else {
-            // Show icon for non-image attachments
+            // Show icon for non-image/video attachments
             Icon(
                 painter = painterResource(iconRes),
                 contentDescription = null,
