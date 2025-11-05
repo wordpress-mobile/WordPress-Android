@@ -2,12 +2,16 @@ package org.wordpress.android.support.he.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.content.res.Resources
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -79,6 +83,22 @@ private fun HEConversationListItem(
         Column(
             modifier = Modifier.weight(1f)
         ) {
+            // Closed badge (if applicable)
+            if (conversation.status.equals("closed", ignoreCase = true)) {
+                Text(
+                    text = stringResource(R.string.he_support_status_closed),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    modifier = Modifier
+                        .padding(bottom = 4.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.errorContainer,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                )
+            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -95,7 +115,10 @@ private fun HEConversationListItem(
                 )
 
                 Text(
-                    text = formatRelativeTime(conversation.lastMessageSentAt, resources),
+                    text = formatRelativeTime(
+                        conversation.lastMessageSentAt,
+                        resources
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(start = 8.dp)

@@ -5180,6 +5180,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_include_logs_description">Including logs can help our team investigate issues. Logs may contain recent app activity.</string>
     <string name="he_support_download_attachment">Download attachment</string>
     <string name="he_support_select_attachments">Select attachments</string>
+    <string name="he_support_status_closed">Closed</string>
+    <string name="he_support_conversation_closed_message">This conversation is closed. You can no longer reply to it.</string>
 
     <!-- HE Support - New Ticket Screen -->
     <string name="he_support_contact_support_title">Contact Support</string>

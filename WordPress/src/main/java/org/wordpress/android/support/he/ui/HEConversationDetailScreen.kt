@@ -111,12 +111,17 @@ fun HEConversationDetailScreen(
             )
         },
         bottomBar = {
-            ReplyButton(
-                enabled = !isLoading,
-                onClick = {
-                    showBottomSheet = true
-                }
-            )
+            val isClosed = conversation.status.equals("closed", ignoreCase = true)
+            if (isClosed) {
+                ClosedConversationBanner()
+            } else {
+                ReplyButton(
+                    enabled = !isLoading,
+                    onClick = {
+                        showBottomSheet = true
+                    }
+                )
+            }
         }
     ) { contentPadding ->
         Box(
@@ -282,6 +287,36 @@ private fun ConversationTitleCard(title: String) {
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.semantics { heading() }
         )
+    }
+}
+
+@Composable
+private fun ClosedConversationBanner() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.errorContainer,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_info_outline_white_24dp),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onErrorContainer,
+                modifier = Modifier.size(24.dp)
+            )
+            Text(
+                text = stringResource(R.string.he_support_conversation_closed_message),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onErrorContainer
+            )
+        }
     }
 }
 
