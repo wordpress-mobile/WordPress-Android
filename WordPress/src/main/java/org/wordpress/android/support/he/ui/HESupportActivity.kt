@@ -31,6 +31,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.util.AttachmentActionsListener
+import org.wordpress.android.support.he.util.VideoUrlResolver
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.reader.ReaderFileDownloadManager
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
@@ -42,6 +43,7 @@ import javax.inject.Inject
 class HESupportActivity : AppCompatActivity() {
     @Inject lateinit var fileDownloadManager: ReaderFileDownloadManager
     @Inject lateinit var appLogWrapper: AppLogWrapper
+    @Inject lateinit var videoUrlResolver: VideoUrlResolver
     private val viewModel by viewModels<HESupportViewModel>()
 
     private lateinit var composeView: ComposeView
@@ -179,7 +181,7 @@ class HESupportActivity : AppCompatActivity() {
                             isLoading = isLoadingConversation,
                             isSendingMessage = isSendingMessage,
                             messageSendResult = messageSendResult,
-                            videoUrlResolver = viewModel.videoUrlResolver,
+                            videoUrlResolver = videoUrlResolver,
                             onBackClick = { viewModel.onBackClick() },
                             onSendMessage = { message, includeAppLogs ->
                                 viewModel.onAddMessageToConversation(
