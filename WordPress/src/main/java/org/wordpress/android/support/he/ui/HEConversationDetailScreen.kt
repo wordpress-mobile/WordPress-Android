@@ -96,10 +96,8 @@ fun HEConversationDetailScreen(
     var draftMessageText by remember { mutableStateOf("") }
     var draftIncludeAppLogs by remember { mutableStateOf(false) }
 
-    // State for fullscreen image preview
-    var previewImageUrl by remember { mutableStateOf<String?>(null) }
-    // State for fullscreen video preview
-    var previewVideoAttachment by remember { mutableStateOf<SupportAttachment?>(null) }
+    // State for fullscreen attachment preview (image or video)
+    var previewAttachment by remember { mutableStateOf<SupportAttachment?>(null) }
 
     // Scroll to bottom when conversation changes or new messages arrive
     LaunchedEffect(conversation.messages.size) {
@@ -157,8 +155,7 @@ fun HEConversationDetailScreen(
                 MessageItem(
                     message = message,
                     timestamp = formatRelativeTime(message.createdAt, resources),
-                    onPreviewImage = { attachment -> previewImageUrl = attachment.url },
-                    onPreviewVideo = { attachment -> previewVideoAttachment = attachment },
+                    onPreviewAttachment = { attachment -> previewAttachment = attachment },
                     onDownloadAttachment = onDownloadAttachment
                 )
             }
@@ -207,32 +204,33 @@ fun HEConversationDetailScreen(
         )
     }
 
-    // Show fullscreen image preview when an image attachment is tapped
-    previewImageUrl?.let { imageUrl ->
-        // Find the attachment with this URL to get the filename for download
-        val attachment = conversation.messages
-            .flatMap { it.attachments }
-            .firstOrNull { it.url == imageUrl }
-
-        AttachmentFullscreenImagePreview(
-            imageUrl = imageUrl,
-            onDismiss = { previewImageUrl = null },
-            onDownload = {
-                attachment?.let { onDownloadAttachment(it) }
+    // Show fullscreen attachment preview based on type
+    previewAttachment?.let { attachment ->
+        when (attachment.type) {
+            AttachmentType.Image -> {
+                AttachmentFullscreenImagePreview(
+                    imageUrl = attachment.url,
+                    onDismiss = { previewAttachment = null },
+                    onDownload = {
+                        onDownloadAttachment(attachment)
+                    }
+                )
             }
-        )
-    }
-
-    // Show fullscreen video player when a video attachment is tapped
-    previewVideoAttachment?.let { videoAttachment ->
-        AttachmentFullscreenVideoPlayer(
-            videoUrl = videoAttachment.url,
-            onDismiss = { previewVideoAttachment = null },
-            onDownload = {
-                onDownloadAttachment(videoAttachment)
-            },
-            videoUrlResolver = videoUrlResolver
-        )
+            AttachmentType.Video -> {
+                AttachmentFullscreenVideoPlayer(
+                    videoUrl = attachment.url,
+                    onDismiss = { previewAttachment = null },
+                    onDownload = {
+                        onDownloadAttachment(attachment)
+                    },
+                    videoUrlResolver = videoUrlResolver
+                )
+            }
+            else -> {
+                // For other types (documents, etc.), do nothing
+                // They should only be downloadable, not previewable
+            }
+        }
     }
 }
 
@@ -309,8 +307,7 @@ private fun ConversationTitleCard(title: String) {
 private fun MessageItem(
     message: SupportMessage,
     timestamp: String,
-    onPreviewImage: (SupportAttachment) -> Unit,
-    onPreviewVideo: (SupportAttachment) -> Unit,
+    onPreviewAttachment: (SupportAttachment) -> Unit,
     onDownloadAttachment: (SupportAttachment) -> Unit
 ) {
     val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
@@ -371,8 +368,7 @@ private fun MessageItem(
                 Spacer(modifier = Modifier.height(12.dp))
                 AttachmentsList(
                     attachments = message.attachments,
-                    onPreviewImage = onPreviewImage,
-                    onPreviewVideo = onPreviewVideo,
+                    onPreviewAttachment = onPreviewAttachment,
                     onDownloadAttachment = onDownloadAttachment
                 )
             }
@@ -383,8 +379,7 @@ private fun MessageItem(
 @Composable
 private fun AttachmentsList(
     attachments: List<SupportAttachment>,
-    onPreviewImage: (SupportAttachment) -> Unit,
-    onPreviewVideo: (SupportAttachment) -> Unit,
+    onPreviewAttachment: (SupportAttachment) -> Unit,
     onDownloadAttachment: (SupportAttachment) -> Unit
 ) {
     FlowRow(
@@ -396,8 +391,7 @@ private fun AttachmentsList(
                 attachment = attachment,
                 onClick = {
                     when (attachment.type) {
-                        AttachmentType.Image -> onPreviewImage(attachment)
-                        AttachmentType.Video -> onPreviewVideo(attachment)
+                        AttachmentType.Image, AttachmentType.Video -> onPreviewAttachment(attachment)
                         else -> onDownloadAttachment(attachment)
                     }
                 }
