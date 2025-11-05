@@ -2,6 +2,7 @@ package org.wordpress.android.support.he.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,7 +58,7 @@ fun TicketMainContentView(
     onMessageChanged: (String) -> Unit,
     onIncludeAppLogsChanged: (Boolean) -> Unit,
     enabled: Boolean = true,
-    attachments: List<Uri> = emptyList(),
+    attachmentState: HESupportViewModel.AttachmentState = HESupportViewModel.AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener
 ) {
     Column(
@@ -107,7 +109,7 @@ fun TicketMainContentView(
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
-        if (attachments.isNotEmpty()) {
+        if (attachmentState.acceptedUris.isNotEmpty()) {
             FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -115,7 +117,7 @@ fun TicketMainContentView(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                attachments.forEach { imageUri ->
+                attachmentState.acceptedUris.forEach { imageUri ->
                     ImagePreviewItem(
                         imageUri = imageUri,
                         onRemove = { attachmentActionsListener.onRemoveImage(imageUri) },
@@ -152,6 +154,21 @@ fun TicketMainContentView(
             Text(
                 text = addScreenshotsLabel,
                 style = MaterialTheme.typography.labelLarge
+            )
+        }
+
+        // Show rejected attachments with thumbnails
+        if (attachmentState.rejectedUris.isNotEmpty() && attachmentState.rejectionReason != null) {
+            Spacer(modifier = Modifier.height(16.dp))
+            val reason = when (attachmentState.rejectionReason) {
+                HESupportViewModel.RejectionReason.FileTooLarge ->
+                    stringResource(R.string.he_support_file_too_large)
+                HESupportViewModel.RejectionReason.TotalSizeExceeded ->
+                    stringResource(R.string.he_support_total_size_exceeded)
+            }
+            RejectedAttachmentsSection(
+                skippedUris = attachmentState.rejectedUris,
+                reason = reason
             )
         }
 
@@ -267,6 +284,117 @@ private fun ImagePreviewItem(
                         modifier = Modifier.size(18.dp)
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun RejectedAttachmentsSection(
+    skippedUris: List<Uri>,
+    reason: String
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        // Section header with error message
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer
+            ),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 0.dp
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(12.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.he_support_skipped_files_header),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = reason,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onErrorContainer
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Thumbnails of rejected files
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            skippedUris.forEach { uri ->
+                RejectedImagePreviewItem(imageUri = uri)
+            }
+        }
+    }
+}
+
+@Composable
+private fun RejectedImagePreviewItem(
+    imageUri: Uri
+) {
+    Box(
+        modifier = Modifier.size(100.dp)
+    ) {
+        Card(
+            modifier = Modifier.size(100.dp),
+            shape = RoundedCornerShape(12.dp),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 2.dp
+            )
+        ) {
+            Box {
+                AsyncImage(
+                    model = imageUri,
+                    contentDescription = stringResource(R.string.he_support_screenshot_preview),
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+                // Semi-transparent red overlay to indicate rejection
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .background(
+                            MaterialTheme.colorScheme.error.copy(alpha = 0.3f),
+                            RoundedCornerShape(12.dp)
+                        )
+                )
+            }
+        }
+
+        // Error icon in the center
+        Surface(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .size(32.dp),
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.error,
+            shadowElevation = 4.dp
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.size(32.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onError,
+                    modifier = Modifier.size(20.dp)
+                )
             }
         }
     }

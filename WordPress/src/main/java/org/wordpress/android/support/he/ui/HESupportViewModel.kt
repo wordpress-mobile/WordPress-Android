@@ -42,19 +42,24 @@ class HESupportViewModel @Inject constructor(
     private val _messageSendResult = MutableStateFlow<MessageSendResult?>(null)
     val messageSendResult: StateFlow<MessageSendResult?> = _messageSendResult.asStateFlow()
 
-    // Attachment state (shared for both Detail and NewTicket screens)
-    private val _attachments = MutableStateFlow<List<Uri>>(emptyList())
-    val attachments: StateFlow<List<Uri>> = _attachments.asStateFlow()
+    // Unified attachment state (shared for both Detail and NewTicket screens)
+    private val _attachmentState = MutableStateFlow(AttachmentState())
+    val attachmentState: StateFlow<AttachmentState> = _attachmentState.asStateFlow()
 
     sealed class MessageSendResult {
         data object Success : MessageSendResult()
         data object Failure : MessageSendResult()
     }
 
-    sealed class AttachmentValidationResult(open val uris: List<Uri>) {
-        data class Success(override val uris: List<Uri>) : AttachmentValidationResult(uris)
-        data class IndividualFileSkipped(override val uris: List<Uri>) : AttachmentValidationResult(uris)
-        data class TotalSizeSkipped(override val uris: List<Uri>) : AttachmentValidationResult(uris)
+    data class AttachmentState(
+        val acceptedUris: List<Uri> = emptyList(),
+        val rejectedUris: List<Uri> = emptyList(),
+        val rejectionReason: RejectionReason? = null
+    )
+
+    sealed class RejectionReason {
+        data object FileTooLarge : RejectionReason()
+        data object TotalSizeExceeded : RejectionReason()
     }
 
     override fun initRepository(accessToken: String) {
@@ -73,7 +78,7 @@ class HESupportViewModel @Inject constructor(
             try {
                 _isSendingMessage.value = true
 
-                val files = tempAttachmentsUtil.createTempFilesFrom(_attachments.value)
+                val files = tempAttachmentsUtil.createTempFilesFrom(_attachmentState.value.acceptedUris)
 
                 when (val result = heSupportRepository.createConversation(
                     subject = subject,
@@ -86,7 +91,7 @@ class HESupportViewModel @Inject constructor(
                         // update conversations locally
                         _conversations.value = listOf(newConversation) + _conversations.value
                         // Clear attachments after successful creation
-                        _attachments.value = emptyList()
+                        _attachmentState.value = AttachmentState()
                         onBackClick()
                     }
 
@@ -127,7 +132,7 @@ class HESupportViewModel @Inject constructor(
                 }
 
                 _isSendingMessage.value = true
-                val files = tempAttachmentsUtil.createTempFilesFrom(_attachments.value)
+                val files = tempAttachmentsUtil.createTempFilesFrom(_attachmentState.value.acceptedUris)
 
                 when (val result = heSupportRepository.addMessageToConversation(
                     conversationId = selectedConversation.id,
@@ -138,7 +143,7 @@ class HESupportViewModel @Inject constructor(
                         _selectedConversation.value = result.conversation
                         _messageSendResult.value = MessageSendResult.Success
                         // Clear attachments after successful message send
-                        _attachments.value = emptyList()
+                        _attachmentState.value = AttachmentState()
                     }
 
                     is CreateConversationResult.Error.Forbidden -> {
@@ -172,36 +177,19 @@ class HESupportViewModel @Inject constructor(
 
     fun addAttachments(uris: List<Uri>) {
         viewModelScope.launch(ioDispatcher) {
-            val validationResult = validateAttachmentSizes(uris)
-
-            // Add valid URIs to attachments
-            if (validationResult.uris.isNotEmpty()) {
-                _attachments.value = _attachments.value + validationResult.uris
-            }
-
-            // Set error message if needed
-            when (validationResult) {
-                is AttachmentValidationResult.Success -> {
-                    // All attachments added successfully, no error
-                }
-                is AttachmentValidationResult.IndividualFileSkipped -> {
-                    _errorMessage.value = ErrorType.ATTACHMENT_FILES_SKIPPED_TOO_LARGE
-                }
-                is AttachmentValidationResult.TotalSizeSkipped -> {
-                    _errorMessage.value = ErrorType.ATTACHMENT_FILES_SKIPPED_TOTAL_SIZE
-                }
-            }
+            _attachmentState.value = validateAndCreateAttachmentState(uris)
         }
     }
 
-    private fun validateAttachmentSizes(uris: List<Uri>): AttachmentValidationResult {
+    private fun validateAndCreateAttachmentState(uris: List<Uri>): AttachmentState {
         val validUris = mutableListOf<Uri>()
+        val skippedUris = mutableListOf<Uri>()
         var skippedDueToFileSize = false
         var skippedDueToTotalSize = false
 
         // Calculate current total size
         var currentTotalSize = 0L
-        for (uri in _attachments.value) {
+        for (uri in _attachmentState.value.acceptedUris) {
             val fileSize = getFileSize(uri) ?: 0L
             currentTotalSize += fileSize
         }
@@ -212,19 +200,22 @@ class HESupportViewModel @Inject constructor(
 
             // Skip if we can't determine file size
             if (fileSize == null) {
+                skippedUris.add(uri)
                 continue
-            } else
+            }
 
             // Check individual file size
             if (fileSize > MAX_ATTACHMENT_SIZE_BYTES) {
                 skippedDueToFileSize = true
+                skippedUris.add(uri)
                 continue
             }
 
             // Check if adding this file would exceed total size limit
             if (currentTotalSize + fileSize > MAX_TOTAL_SIZE_BYTES) {
                 skippedDueToTotalSize = true
-                break
+                skippedUris.add(uri)
+                continue
             }
 
             // File is valid, add it
@@ -232,16 +223,31 @@ class HESupportViewModel @Inject constructor(
             currentTotalSize += fileSize
         }
 
-        // Determine result based on what was skipped
+        // Build the new attachment state
+        val currentAccepted = _attachmentState.value.acceptedUris
+        val newAccepted = currentAccepted + validUris
+
         return when {
             skippedDueToFileSize -> {
-                AttachmentValidationResult.IndividualFileSkipped(uris = validUris)
+                AttachmentState(
+                    acceptedUris = newAccepted,
+                    rejectedUris = skippedUris,
+                    rejectionReason = RejectionReason.FileTooLarge
+                )
             }
             skippedDueToTotalSize -> {
-                AttachmentValidationResult.TotalSizeSkipped(uris = validUris)
+                AttachmentState(
+                    acceptedUris = newAccepted,
+                    rejectedUris = skippedUris,
+                    rejectionReason = RejectionReason.TotalSizeExceeded
+                )
             }
             else -> {
-                AttachmentValidationResult.Success(uris = validUris)
+                AttachmentState(
+                    acceptedUris = newAccepted,
+                    rejectedUris = emptyList(),
+                    rejectionReason = null
+                )
             }
         }
     }
@@ -260,11 +266,16 @@ class HESupportViewModel @Inject constructor(
     }
 
     fun removeAttachment(uri: Uri) {
-        _attachments.value = _attachments.value.filter { it != uri }
+        val currentState = _attachmentState.value
+        _attachmentState.value = currentState.copy(
+            acceptedUris = currentState.acceptedUris.filter { it != uri },
+            rejectedUris = emptyList(),
+            rejectionReason = null
+        )
     }
 
     fun clearAttachments() {
-        _attachments.value = emptyList()
+        _attachmentState.value = AttachmentState()
     }
 
     fun notifyGeneralError() {

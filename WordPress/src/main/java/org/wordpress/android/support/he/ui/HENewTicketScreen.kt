@@ -74,8 +74,8 @@ fun HENewTicketScreen(
             ) -> Unit,
     userInfo: UserInfo,
     isSendingNewConversation: Boolean = false,
-    attachments: List<Uri> = emptyList(),
-    attachmentActionsListener: AttachmentActionsListener,
+    attachmentState: HESupportViewModel.AttachmentState = HESupportViewModel.AttachmentState(),
+    attachmentActionsListener: AttachmentActionsListener
 ) {
     var selectedCategory by remember { mutableStateOf<SupportCategory?>(null) }
     var subject by remember { mutableStateOf("") }
@@ -197,7 +197,7 @@ fun HENewTicketScreen(
                 includeAppLogs = includeAppLogs,
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
-                attachments = attachments,
+                attachmentState = attachmentState,
                 attachmentActionsListener = attachmentActionsListener
             )
 

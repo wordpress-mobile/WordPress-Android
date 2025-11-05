@@ -43,7 +43,7 @@ fun HEConversationReplyBottomSheet(
     onDismiss: (currentMessage: String, currentIncludeAppLogs: Boolean) -> Unit,
     onSend: (String, Boolean) -> Unit,
     onMessageSentSuccessfully: () -> Unit,
-    attachments: List<Uri> = emptyList(),
+    attachmentState: HESupportViewModel.AttachmentState = HESupportViewModel.AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener
 ) {
     var messageText by remember { mutableStateOf(initialMessageText) }
@@ -129,7 +129,7 @@ fun HEConversationReplyBottomSheet(
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
                 enabled = !isSending,
-                attachments = attachments,
+                attachmentState = attachmentState,
                 attachmentActionsListener = attachmentActionsListener
             )
         }

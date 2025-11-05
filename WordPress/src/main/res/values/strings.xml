@@ -5175,6 +5175,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_add_screenshots_button">Add Screenshots</string>
     <string name="he_support_screenshot_preview">Screenshot preview</string>
     <string name="he_support_remove_screenshot">Remove screenshot</string>
+    <string name="he_support_skipped_files_header">Skipped Files</string>
+    <string name="he_support_file_too_large">File too large (max 20MB)</string>
+    <string name="he_support_total_size_exceeded">Total size limit reached (max 40MB)</string>
     <string name="he_support_app_logs_label">Application Logs (Optional)</string>
     <string name="he_support_include_logs_title">Include application logs</string>
     <string name="he_support_include_logs_description">Including logs can help our team investigate issues. Logs may contain recent app activity.</string>
@@ -5200,6 +5203,4 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_send_ticket_button">Send</string>
     <string name="he_support_generic_error">An error occurred. Please try again later.</string>
     <string name="he_support_forbidden_error">Sorry, you are not allowed to perform this action.</string>
-    <string name="he_support_attachment_files_skipped_too_large">Some files were skipped because they exceed the 20MB limit.</string>
-    <string name="he_support_attachment_files_skipped_total_size">Some files were skipped because the total size would exceed 40MB. Consider splitting them across multiple replies.</string>
 </resources>

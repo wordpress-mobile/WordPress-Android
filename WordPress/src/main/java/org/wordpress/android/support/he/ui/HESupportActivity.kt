@@ -123,10 +123,6 @@ class HESupportActivity : AppCompatActivity() {
             val message = when (errorType) {
                 ConversationsSupportViewModel.ErrorType.GENERAL -> getString(R.string.he_support_generic_error)
                 ConversationsSupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
-                ConversationsSupportViewModel.ErrorType.ATTACHMENT_FILES_SKIPPED_TOO_LARGE ->
-                    getString(R.string.he_support_attachment_files_skipped_too_large)
-                ConversationsSupportViewModel.ErrorType.ATTACHMENT_FILES_SKIPPED_TOTAL_SIZE ->
-                    getString(R.string.he_support_attachment_files_skipped_total_size)
             }
             scope.launch {
                 snackbarHostState.showSnackbar(
@@ -174,7 +170,7 @@ class HESupportActivity : AppCompatActivity() {
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
                     val messageSendResult by viewModel.messageSendResult.collectAsState()
-                    val attachments by viewModel.attachments.collectAsState()
+                    val attachmentState by viewModel.attachmentState.collectAsState()
 
                     selectedConversation?.let { conversation ->
                         HEConversationDetailScreen(
@@ -190,7 +186,7 @@ class HESupportActivity : AppCompatActivity() {
                                 )
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
-                            attachments = attachments,
+                            attachmentState = attachmentState,
                             attachmentActionsListener = createAttachmentActionListener(),
                             onDownloadAttachment = { attachment ->
                                 // Show loading snackbar
@@ -213,7 +209,7 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.NewTicket.name) {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val isSendingNewConversation by viewModel.isSendingMessage.collectAsState()
-                    val attachments by viewModel.attachments.collectAsState()
+                    val attachmentState by viewModel.attachmentState.collectAsState()
 
                     // Clear attachments when leaving the new ticket screen
                     androidx.compose.runtime.DisposableEffect(Unit) {
@@ -234,7 +230,7 @@ class HESupportActivity : AppCompatActivity() {
                         },
                         userInfo = userInfo,
                         isSendingNewConversation = isSendingNewConversation,
-                        attachments = attachments,
+                        attachmentState = attachmentState,
                         attachmentActionsListener = createAttachmentActionListener()
                     )
                 }

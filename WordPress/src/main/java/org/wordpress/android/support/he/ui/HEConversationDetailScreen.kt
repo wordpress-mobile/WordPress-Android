@@ -77,7 +77,7 @@ fun HEConversationDetailScreen(
     onBackClick: () -> Unit,
     onSendMessage: (message: String, includeAppLogs: Boolean) -> Unit,
     onClearMessageSendResult: () -> Unit = {},
-    attachments: List<Uri> = emptyList(),
+    attachmentState: HESupportViewModel.AttachmentState = HESupportViewModel.AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener,
     onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit = {}
 ) {
@@ -194,7 +194,7 @@ fun HEConversationDetailScreen(
                 draftIncludeAppLogs = false
                 onClearMessageSendResult()
             },
-            attachments = attachments,
+            attachmentState = attachmentState,
             attachmentActionsListener = attachmentActionsListener
         )
     }
