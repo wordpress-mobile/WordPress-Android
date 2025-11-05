@@ -31,6 +31,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 
 @ExperimentalCoroutinesApi
+@Suppress("LargeClass")
 class HESupportViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var accountStore: AccountStore
@@ -494,7 +495,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         viewModel.addAttachments(listOf(uri2, uri3))
         advanceUntilIdle()
 
-        // uri1 (12MB) accepted, uri2 (10MB) rejected (12+10=22 exceeds 20MB), uri3 (3MB) accepted (12+3=15 within limit)
+        // uri1 (12MB) accepted, uri2 (10MB) rejected (12+10=22 exceeds 20MB), uri3 (3MB) accepted (12+3=15MB)
         assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri3)
         assertThat(viewModel.attachmentState.value.rejectedUris).containsExactly(uri2)
         assertThat(viewModel.attachmentState.value.rejectionReason)
