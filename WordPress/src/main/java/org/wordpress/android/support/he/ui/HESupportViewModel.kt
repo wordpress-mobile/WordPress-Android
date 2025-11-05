@@ -2,8 +2,6 @@ package org.wordpress.android.support.he.ui
 
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
-import com.automattic.android.tracks.crashlogging.EventLevel
-import com.automattic.android.tracks.crashlogging.ExtraKnownKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,8 +20,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EncryptedLogging
 import org.wordpress.android.util.LogFileProviderWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider.Companion.EXTRA_UUID
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
