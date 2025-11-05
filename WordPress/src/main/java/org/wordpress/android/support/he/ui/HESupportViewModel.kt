@@ -34,7 +34,7 @@ class HESupportViewModel @Inject constructor(
     networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ConversationsSupportViewModel<SupportConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
     companion object {
-        const val MAX_TOTAL_SIZE_BYTES = 40L * 1024 * 1024 // 40MB total
+        const val MAX_TOTAL_SIZE_BYTES = 20L * 1024 * 1024 // 20MB total
     }
     private val _isSendingMessage = MutableStateFlow(false)
     val isSendingMessage: StateFlow<Boolean> = _isSendingMessage.asStateFlow()
