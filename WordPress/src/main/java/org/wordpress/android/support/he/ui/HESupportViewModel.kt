@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
@@ -33,7 +34,6 @@ class HESupportViewModel @Inject constructor(
     networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ConversationsSupportViewModel<SupportConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
     companion object {
-        const val MAX_ATTACHMENT_SIZE_BYTES = 20L * 1024 * 1024 // 20MB per file
         const val MAX_TOTAL_SIZE_BYTES = 40L * 1024 * 1024 // 40MB total
     }
     private val _isSendingMessage = MutableStateFlow(false)
@@ -181,7 +181,8 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
-    private fun validateAndCreateAttachmentState(uris: List<Uri>): AttachmentState {
+    @Suppress("LoopWithTooManyJumpStatements")
+    private suspend fun validateAndCreateAttachmentState(uris: List<Uri>): AttachmentState = withContext(ioDispatcher) {
         val validUris = mutableListOf<Uri>()
         val skippedUris = mutableListOf<Uri>()
         var skippedDueToFileSize = false
@@ -205,7 +206,7 @@ class HESupportViewModel @Inject constructor(
             }
 
             // Check individual file size
-            if (fileSize > MAX_ATTACHMENT_SIZE_BYTES) {
+            if (fileSize > MAX_TOTAL_SIZE_BYTES) {
                 skippedDueToFileSize = true
                 skippedUris.add(uri)
                 continue
@@ -227,7 +228,7 @@ class HESupportViewModel @Inject constructor(
         val currentAccepted = _attachmentState.value.acceptedUris
         val newAccepted = currentAccepted + validUris
 
-        return when {
+        when {
             skippedDueToFileSize -> {
                 AttachmentState(
                     acceptedUris = newAccepted,
@@ -253,8 +254,8 @@ class HESupportViewModel @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
-    private fun getFileSize(uri: Uri): Long? {
-        return try {
+    private suspend fun getFileSize(uri: Uri): Long? = withContext(ioDispatcher) {
+        try {
             application.contentResolver.openAssetFileDescriptor(uri, "r")?.use { descriptor ->
                 descriptor.length
             }
@@ -266,12 +267,12 @@ class HESupportViewModel @Inject constructor(
     }
 
     fun removeAttachment(uri: Uri) {
-        val currentState = _attachmentState.value
-        _attachmentState.value = currentState.copy(
-            acceptedUris = currentState.acceptedUris.filter { it != uri },
-            rejectedUris = emptyList(),
-            rejectionReason = null
-        )
+        viewModelScope.launch {
+            val currentState = _attachmentState.value
+            _attachmentState.value = currentState.copy(
+                acceptedUris = currentState.acceptedUris.filter { it != uri },
+            )
+        }
     }
 
     fun clearAttachments() {

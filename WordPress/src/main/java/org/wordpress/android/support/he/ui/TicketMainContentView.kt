@@ -161,10 +161,10 @@ fun TicketMainContentView(
         if (attachmentState.rejectedUris.isNotEmpty() && attachmentState.rejectionReason != null) {
             Spacer(modifier = Modifier.height(16.dp))
             val reason = when (attachmentState.rejectionReason) {
-                HESupportViewModel.RejectionReason.FileTooLarge ->
-                    stringResource(R.string.he_support_file_too_large)
                 HESupportViewModel.RejectionReason.TotalSizeExceeded ->
                     stringResource(R.string.he_support_total_size_exceeded)
+                HESupportViewModel.RejectionReason.FileTooLarge ->
+                    stringResource(R.string.he_support_file_too_large)
             }
             RejectedAttachmentsSection(
                 skippedUris = attachmentState.rejectedUris,
