@@ -74,7 +74,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                 "store, I've noticed significant slowdowns and occasional timeout errors affecting customer " +
                 "experience.",
             lastMessageSentAt = twoDaysAgo,
-            status = "Open",
+            status = "closed",
             messages = listOf(
                 SupportMessage(
                     id = 4,
@@ -103,7 +103,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                 "configuration, SSL certificate setup, and setting up professional email forwarding for my " +
                 "business site.",
             lastMessageSentAt = oneWeekAgo,
-            status = "Open",
+            status = "solved",
             messages = listOf(
                 SupportMessage(
                     id = 6,

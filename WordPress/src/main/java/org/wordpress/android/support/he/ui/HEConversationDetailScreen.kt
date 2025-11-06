@@ -66,7 +66,7 @@ import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
-private const val CLOSED = "closed"
+private const val STATUS_CLOSED = "closed"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -113,7 +113,7 @@ fun HEConversationDetailScreen(
             )
         },
         bottomBar = {
-            val isClosed = conversation.status.equals(CLOSED, ignoreCase = true)
+            val isClosed = conversation.status.equals(STATUS_CLOSED, ignoreCase = true)
             if (isClosed) {
                 ClosedConversationBanner()
             } else {

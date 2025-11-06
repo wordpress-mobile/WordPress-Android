@@ -81,21 +81,8 @@ private fun HEConversationListItem(
         Column(
             modifier = Modifier.weight(1f)
         ) {
-            // Closed badge (if applicable)
-            if (conversation.status.equals("closed", ignoreCase = true)) {
-                Text(
-                    text = stringResource(R.string.he_support_status_closed),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onErrorContainer,
-                    modifier = Modifier
-                        .padding(bottom = 4.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.errorContainer,
-                            shape = RoundedCornerShape(4.dp)
-                        )
-                        .padding(horizontal = 6.dp, vertical = 2.dp)
-                )
-            }
+            // Status badge
+            ConversationStatusBadge(status = conversation.status)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -140,6 +127,55 @@ private fun HEConversationListItem(
             modifier = Modifier.padding(start = 8.dp)
         )
     }
+}
+
+@Composable
+private fun ConversationStatusBadge(status: String) {
+    val (statusText, backgroundColor, textColor) = when (status.lowercase()) {
+        "open" -> Triple(
+            stringResource(R.string.he_support_status_open),
+            MaterialTheme.colorScheme.primaryContainer,
+            MaterialTheme.colorScheme.onPrimaryContainer
+        )
+        "pending" -> Triple(
+            stringResource(R.string.he_support_status_pending),
+            MaterialTheme.colorScheme.secondaryContainer,
+            MaterialTheme.colorScheme.onSecondaryContainer
+        )
+        "on-hold" -> Triple(
+            stringResource(R.string.he_support_status_on_hold),
+            MaterialTheme.colorScheme.surfaceVariant,
+            MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        "solved" -> Triple(
+            stringResource(R.string.he_support_status_solved),
+            MaterialTheme.colorScheme.primary,
+            MaterialTheme.colorScheme.onPrimary
+        )
+        "closed" -> Triple(
+            stringResource(R.string.he_support_status_closed),
+            MaterialTheme.colorScheme.tertiaryContainer,
+            MaterialTheme.colorScheme.onTertiaryContainer
+        )
+        else -> Triple(
+            status,
+            MaterialTheme.colorScheme.surfaceVariant,
+            MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+
+    Text(
+        text = statusText,
+        style = MaterialTheme.typography.labelSmall,
+        color = textColor,
+        modifier = Modifier
+            .padding(bottom = 4.dp)
+            .background(
+                color = backgroundColor,
+                shape = RoundedCornerShape(4.dp)
+            )
+            .padding(horizontal = 6.dp, vertical = 2.dp)
+    )
 }
 
 @Preview(showBackground = true, name = "HE Support Conversations List")
