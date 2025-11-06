@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
+import org.wordpress.android.support.he.model.ConversationStatus
 import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
@@ -65,8 +66,6 @@ import org.wordpress.android.support.he.util.generateSampleHESupportConversation
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-
-private const val STATUS_CLOSED = "closed"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -113,7 +112,7 @@ fun HEConversationDetailScreen(
             )
         },
         bottomBar = {
-            val isClosed = conversation.status.equals(STATUS_CLOSED, ignoreCase = true)
+            val isClosed = conversation.status.equals(ConversationStatus.CLOSED, ignoreCase = true)
             if (isClosed) {
                 ClosedConversationBanner()
             } else {

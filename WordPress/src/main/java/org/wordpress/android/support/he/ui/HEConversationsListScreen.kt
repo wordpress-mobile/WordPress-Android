@@ -30,6 +30,7 @@ import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.common.ui.ConversationsListScreen
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.support.he.model.ConversationStatus
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -132,27 +133,32 @@ private fun HEConversationListItem(
 @Composable
 private fun ConversationStatusBadge(status: String) {
     val (statusText, backgroundColor, textColor) = when (status.lowercase()) {
-        "open" -> Triple(
+        ConversationStatus.NEW -> Triple(
+            stringResource(R.string.he_support_status_new),
+            MaterialTheme.colorScheme.primaryContainer,
+            MaterialTheme.colorScheme.onPrimaryContainer
+        )
+        ConversationStatus.OPEN -> Triple(
             stringResource(R.string.he_support_status_open),
             MaterialTheme.colorScheme.primaryContainer,
             MaterialTheme.colorScheme.onPrimaryContainer
         )
-        "pending" -> Triple(
+        ConversationStatus.PENDING -> Triple(
             stringResource(R.string.he_support_status_pending),
             MaterialTheme.colorScheme.secondaryContainer,
             MaterialTheme.colorScheme.onSecondaryContainer
         )
-        "on-hold" -> Triple(
+        ConversationStatus.ON_HOLD -> Triple(
             stringResource(R.string.he_support_status_on_hold),
             MaterialTheme.colorScheme.surfaceVariant,
             MaterialTheme.colorScheme.onSurfaceVariant
         )
-        "solved" -> Triple(
+        ConversationStatus.SOLVED -> Triple(
             stringResource(R.string.he_support_status_solved),
             MaterialTheme.colorScheme.primary,
             MaterialTheme.colorScheme.onPrimary
         )
-        "closed" -> Triple(
+        ConversationStatus.CLOSED -> Triple(
             stringResource(R.string.he_support_status_closed),
             MaterialTheme.colorScheme.tertiaryContainer,
             MaterialTheme.colorScheme.onTertiaryContainer
