@@ -22,7 +22,6 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
-import org.wordpress.android.support.he.model.AttachmentState
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
 import org.wordpress.android.support.he.repository.CreateConversationResult
@@ -379,7 +378,6 @@ class HESupportViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri2)
         assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.rejectionReason).isNull()
     }
 
     @Test
@@ -435,7 +433,6 @@ class HESupportViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.attachmentState.value.acceptedUris).isEmpty()
         assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.rejectionReason).isNull()
     }
 
     @Test
@@ -455,8 +452,7 @@ class HESupportViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.attachmentState.value.acceptedUris).isEmpty()
         assertThat(viewModel.attachmentState.value.rejectedUris).containsExactly(uri1)
-        assertThat(viewModel.attachmentState.value.rejectionReason)
-            .isEqualTo(AttachmentState.RejectionReason.FileTooLarge)
+        assertThat(viewModel.attachmentState.value.rejectedTotalSizeBytes).isEqualTo(21L * 1024L * 1024L)
     }
 
     @Test
@@ -471,7 +467,7 @@ class HESupportViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1)
         assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.rejectionReason).isNull()
+        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(10L * 1024L * 1024L)
     }
 
     @Test
@@ -499,8 +495,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         // uri1 (12MB) accepted, uri2 (10MB) rejected (12+10=22 exceeds 20MB), uri3 (3MB) accepted (12+3=15MB)
         assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri3)
         assertThat(viewModel.attachmentState.value.rejectedUris).containsExactly(uri2)
-        assertThat(viewModel.attachmentState.value.rejectionReason)
-            .isEqualTo(AttachmentState.RejectionReason.TotalSizeExceeded)
+        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(15L * 1024L * 1024L)
+        assertThat(viewModel.attachmentState.value.rejectedTotalSizeBytes).isEqualTo(10L * 1024L * 1024L)
     }
 
     @Test
@@ -523,7 +519,7 @@ class HESupportViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri2)
         assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.rejectionReason).isNull()
+        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(19L * 1024L * 1024L)
     }
 
     @Test
@@ -538,7 +534,7 @@ class HESupportViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1)
         assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.rejectionReason).isNull()
+        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(20L * 1024L * 1024L)
     }
 
     @Test
@@ -561,7 +557,7 @@ class HESupportViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri2)
         assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.rejectionReason).isNull()
+        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(20L * 1024L * 1024L)
     }
 
     @Test
@@ -575,11 +571,11 @@ class HESupportViewModelTest : BaseUnitTest() {
         // File should be accepted since we can't determine size (fail open approach)
         assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1)
         assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.rejectionReason).isNull()
+        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(0L)
     }
 
     @Test
-    fun `addAttachments prioritizes TotalSizeExceeded over FileTooLarge when both occur`() = test {
+    fun `addAttachments rejects files that exceed total size even when individual files are valid`() = test {
         val uri1 = mock<Uri>()
         val uri2 = mock<Uri>()
         val uri3 = mock<Uri>()
@@ -589,12 +585,11 @@ class HESupportViewModelTest : BaseUnitTest() {
         val descriptor3 = mock<AssetFileDescriptor>()
         val descriptor4 = mock<AssetFileDescriptor>()
 
-        // uri1: 5MB (accepted), uri2: 25MB (rejected - too large), uri3: 12MB (accepted),
-        // uri4: 8MB (rejected - would exceed total)
+        // uri1: 5MB (accepted), uri2: 12MB (accepted), uri3: 8MB (rejected - would exceed total)
         whenever(descriptor1.length).thenReturn(5L * 1024L * 1024L)
-        whenever(descriptor2.length).thenReturn(25L * 1024L * 1024L)
-        whenever(descriptor3.length).thenReturn(12L * 1024L * 1024L)
-        whenever(descriptor4.length).thenReturn(8L * 1024L * 1024L)
+        whenever(descriptor2.length).thenReturn(12L * 1024L * 1024L)
+        whenever(descriptor3.length).thenReturn(8L * 1024L * 1024L)
+        whenever(descriptor4.length).thenReturn(2L * 1024L * 1024L)
         whenever(contentResolver.openAssetFileDescriptor(eq(uri1), any())).thenReturn(descriptor1)
         whenever(contentResolver.openAssetFileDescriptor(eq(uri2), any())).thenReturn(descriptor2)
         whenever(contentResolver.openAssetFileDescriptor(eq(uri3), any())).thenReturn(descriptor3)
@@ -605,12 +600,11 @@ class HESupportViewModelTest : BaseUnitTest() {
         viewModel.addAttachments(listOf(uri2, uri3, uri4))
         advanceUntilIdle()
 
-        // uri1 accepted (5MB), uri2 rejected (too large), uri3 accepted (5+12=17 < 20), uri4 rejected (17+8=25 > 20)
-        // Should show TotalSizeExceeded as rejection reason (higher priority - helps user focus on overall constraint)
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri3)
-        assertThat(viewModel.attachmentState.value.rejectedUris).containsExactly(uri2, uri4)
-        assertThat(viewModel.attachmentState.value.rejectionReason)
-            .isEqualTo(AttachmentState.RejectionReason.TotalSizeExceeded)
+        // uri1 accepted (5MB), uri2 accepted (5+12=17 < 20), uri3 rejected (17+8=25 > 20), uri4 accepted (17+2=19 < 20)
+        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri2, uri4)
+        assertThat(viewModel.attachmentState.value.rejectedUris).containsExactly(uri3)
+        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(19L * 1024L * 1024L)
+        assertThat(viewModel.attachmentState.value.rejectedTotalSizeBytes).isEqualTo(8L * 1024L * 1024L)
     }
 
     // endregion

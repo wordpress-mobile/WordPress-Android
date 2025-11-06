@@ -170,7 +170,7 @@ class HESupportViewModel @Inject constructor(
     @Suppress("LoopWithTooManyJumpStatements")
     private suspend fun validateAndCreateAttachmentState(uris: List<Uri>): AttachmentState = withContext(ioDispatcher) {
         if (uris.isEmpty()) {
-            return@withContext AttachmentState()
+            return@withContext _attachmentState.value
         }
 
         val validUris = mutableListOf<Uri>()
