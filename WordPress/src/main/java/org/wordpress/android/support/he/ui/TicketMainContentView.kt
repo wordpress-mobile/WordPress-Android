@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Card
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -45,11 +46,20 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.support.he.model.AttachmentState
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import java.util.Locale
+import kotlin.math.roundToInt
+
+private const val MAX_TOTAL_SIZE_BYTES = 20L * 1024 * 1024 // 20MB
+private const val BYTES_IN_KB = 1024
+private const val BYTES_IN_MB = 1024 * 1024
+private const val PROGRESS_WARNING_THRESHOLD = 0.9f // Show warning color at 90%
+private const val PROGRESS_PERCENTAGE_MULTIPLIER = 100
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -158,18 +168,21 @@ fun TicketMainContentView(
             )
         }
 
+        // Show attachment size progress bar if there are any attachments
+        if (attachmentState.acceptedUris.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(12.dp))
+            AttachmentSizeProgressBar(
+                currentSizeBytes = attachmentState.currentTotalSizeBytes,
+                maxSizeBytes = MAX_TOTAL_SIZE_BYTES
+            )
+        }
+
         // Show rejected attachments with thumbnails
-        if (attachmentState.rejectedUris.isNotEmpty() && attachmentState.rejectionReason != null) {
+        if (attachmentState.rejectedUris.isNotEmpty()) {
             Spacer(modifier = Modifier.height(16.dp))
-            val reason = when (attachmentState.rejectionReason) {
-                AttachmentState.RejectionReason.TotalSizeExceeded ->
-                    stringResource(R.string.he_support_total_size_exceeded)
-                AttachmentState.RejectionReason.FileTooLarge ->
-                    stringResource(R.string.he_support_file_too_large)
-            }
             RejectedAttachmentsSection(
                 skippedUris = attachmentState.rejectedUris,
-                reason = reason
+                rejectedTotalSizeBytes = attachmentState.rejectedTotalSizeBytes
             )
         }
 
@@ -293,41 +306,21 @@ private fun ImagePreviewItem(
 @Composable
 private fun RejectedAttachmentsSection(
     skippedUris: List<Uri>,
-    reason: String
+    rejectedTotalSizeBytes: Long
 ) {
+    val rejectedSizeFormatted = formatFileSize(rejectedTotalSizeBytes)
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        // Section header with error message
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer
-            ),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 0.dp
-            )
-        ) {
-            Column(
-                modifier = Modifier.padding(12.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.he_support_skipped_files_header),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onErrorContainer,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = reason,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onErrorContainer
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
+        // Section header
+        Text(
+            text = stringResource(R.string.he_support_skipped_files_header, rejectedSizeFormatted),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.error,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
 
         // Thumbnails of rejected files
         FlowRow(
@@ -401,6 +394,78 @@ private fun RejectedImagePreviewItem(
     }
 }
 
+@Composable
+private fun AttachmentSizeProgressBar(
+    currentSizeBytes: Long,
+    maxSizeBytes: Long
+) {
+    val progress = (currentSizeBytes.toFloat() / maxSizeBytes.toFloat()).coerceIn(0f, 1f)
+    val currentSizeFormatted = formatFileSize(currentSizeBytes)
+    val maxSizeFormatted = formatFileSize(maxSizeBytes)
+    val progressDescription = stringResource(
+        R.string.he_support_attachment_size_label,
+        currentSizeFormatted,
+        maxSizeFormatted
+    )
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(
+                    R.string.he_support_attachment_size_label,
+                    currentSizeFormatted,
+                    maxSizeFormatted
+                ),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = "${(progress * PROGRESS_PERCENTAGE_MULTIPLIER).roundToInt()}%",
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.SemiBold,
+                color = if (progress >= PROGRESS_WARNING_THRESHOLD) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                }
+            )
+        }
+
+        LinearProgressIndicator(
+            progress = { progress },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(6.dp)
+                .clip(RoundedCornerShape(3.dp))
+                .semantics {
+                    contentDescription = progressDescription
+                },
+            color = when {
+                progress >= 1.0f -> MaterialTheme.colorScheme.error
+                progress >= PROGRESS_WARNING_THRESHOLD -> MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
+                else -> MaterialTheme.colorScheme.primary
+            },
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        )
+    }
+}
+
+private fun formatFileSize(bytes: Long): String {
+    return when {
+        bytes < BYTES_IN_KB -> "$bytes B"
+        bytes < BYTES_IN_MB -> String.format(Locale.US, "%.1f KB", bytes / BYTES_IN_KB.toDouble())
+        else -> String.format(Locale.US, "%.1f MB", bytes / BYTES_IN_MB.toDouble())
+    }
+}
+
 
 @Preview(showBackground = true, name = "HE main ticket content")
 @Suppress("EmptyFunctionBlock")
@@ -430,6 +495,28 @@ private fun TicketMainContentViewPreviewDark() {
             includeAppLogs = false,
             onMessageChanged = { },
             onIncludeAppLogsChanged = { },
+            attachmentActionsListener = object : AttachmentActionsListener {
+                override fun onAddImageClick() { }
+                override fun onRemoveImage(uri: Uri) { }
+            }
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "HE main ticket content - With Attachments")
+@Suppress("EmptyFunctionBlock")
+@Composable
+private fun TicketMainContentViewPreviewWithAttachments() {
+    AppThemeM3(isDarkTheme = false) {
+        TicketMainContentView(
+            messageText = "I'm having trouble with my site",
+            includeAppLogs = true,
+            onMessageChanged = { },
+            onIncludeAppLogsChanged = { },
+            attachmentState = AttachmentState(
+                acceptedUris = listOf("content://test1".toUri(), "content://test2".toUri()),
+                currentTotalSizeBytes = 15L * 1024 * 1024 // 15MB
+            ),
             attachmentActionsListener = object : AttachmentActionsListener {
                 override fun onAddImageClick() { }
                 override fun onRemoveImage(uri: Uri) { }

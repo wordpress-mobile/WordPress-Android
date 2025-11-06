@@ -169,17 +169,15 @@ class HESupportViewModel @Inject constructor(
 
     @Suppress("LoopWithTooManyJumpStatements")
     private suspend fun validateAndCreateAttachmentState(uris: List<Uri>): AttachmentState = withContext(ioDispatcher) {
+        if (uris.isEmpty()) {
+            return@withContext AttachmentState()
+        }
+
         val validUris = mutableListOf<Uri>()
         val skippedUris = mutableListOf<Uri>()
-        var skippedDueToFileSize = false
-        var skippedDueToTotalSize = false
 
         // Calculate current total size
-        var currentTotalSize = 0L
-        for (uri in _attachmentState.value.acceptedUris) {
-            val fileSize = getFileSize(uri) ?: 0L
-            currentTotalSize += fileSize
-        }
+        var currentTotalSize = calculateTotalSize(_attachmentState.value.acceptedUris)
 
         // Validate each new attachment
         for (uri in uris) {
@@ -187,16 +185,8 @@ class HESupportViewModel @Inject constructor(
 
             // Skip if we can't determine file size we just allow it to be added
             if (fileSize != null) {
-                // Check individual file size
-                if (fileSize > MAX_TOTAL_SIZE_BYTES) {
-                    skippedDueToFileSize = true
-                    skippedUris.add(uri)
-                    continue
-                }
-
                 // Check if adding this file would exceed total size limit
                 if (currentTotalSize + fileSize > MAX_TOTAL_SIZE_BYTES) {
-                    skippedDueToTotalSize = true
                     skippedUris.add(uri)
                     continue
                 }
@@ -211,17 +201,14 @@ class HESupportViewModel @Inject constructor(
         val currentAccepted = _attachmentState.value.acceptedUris
         val newAccepted = currentAccepted + validUris
 
-        // Determine rejection reason - prioritize TotalSizeExceeded as it refers to the whole request
-        val rejectionReason = when {
-            skippedDueToTotalSize -> AttachmentState.RejectionReason.TotalSizeExceeded
-            skippedDueToFileSize -> AttachmentState.RejectionReason.FileTooLarge
-            else -> null
-        }
+        // Calculate rejected total size
+        val rejectedTotalSize = calculateTotalSize(skippedUris)
 
         AttachmentState(
             acceptedUris = newAccepted,
-            rejectedUris = if (rejectionReason != null) skippedUris else emptyList(),
-            rejectionReason = rejectionReason
+            rejectedUris = skippedUris,
+            currentTotalSizeBytes = currentTotalSize,
+            rejectedTotalSizeBytes = rejectedTotalSize
         )
     }
 
@@ -239,12 +226,34 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Calculates the total size of all files in the list
+     * @param uris List of URIs to calculate size for
+     * @return Total size in bytes
+     */
+    private suspend fun calculateTotalSize(uris: List<Uri>): Long {
+        var totalSize = 0L
+        for (uri in uris) {
+            totalSize += getFileSize(uri) ?: 0L
+        }
+        return totalSize
+    }
+
+    /**
+     * Removes an attachment from the accepted list and attempts to re-include any previously
+     * skipped files that can now fit within the size limit.
+     *
+     * This function removes the specified URI and then re-validates all previously skipped files
+     * by calling [addAttachments], which ensures consistent validation logic and automatically
+     * includes files that now fit within the available space.
+     */
     fun removeAttachment(uri: Uri) {
         viewModelScope.launch {
-            val currentState = _attachmentState.value
-            _attachmentState.value = currentState.copy(
-                acceptedUris = currentState.acceptedUris.filter { it != uri },
-            )
+            // Remove the attachment and re-validate skipped files
+            val currentState = _attachmentState.value.copy()
+            val newAcceptedUris = currentState.acceptedUris.filter { it != uri }
+            _attachmentState.value = currentState.copy(acceptedUris = newAcceptedUris)
+            addAttachments(currentState.rejectedUris)
         }
     }
 

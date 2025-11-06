@@ -5,10 +5,6 @@ import android.net.Uri
 data class AttachmentState(
     val acceptedUris: List<Uri> = emptyList(),
     val rejectedUris: List<Uri> = emptyList(),
-    val rejectionReason: RejectionReason? = null
-) {
-    sealed class RejectionReason {
-        data object FileTooLarge : RejectionReason()
-        data object TotalSizeExceeded : RejectionReason()
-    }
-}
+    val currentTotalSizeBytes: Long = 0L,
+    val rejectedTotalSizeBytes: Long = 0L
+)
