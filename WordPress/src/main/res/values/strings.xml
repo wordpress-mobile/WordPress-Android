@@ -5180,7 +5180,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_include_logs_description">Including logs can help our team investigate issues. Logs may contain recent app activity.</string>
     <string name="he_support_download_attachment">Download attachment</string>
     <string name="he_support_select_attachments">Select attachments</string>
-    <string name="he_support_status_new">New</string>
+    <string name="he_support_status_new">Waiting for Support</string>
     <string name="he_support_status_open">Open</string>
     <string name="he_support_status_pending">Pending</string>
     <string name="he_support_status_on_hold">On-hold</string>
