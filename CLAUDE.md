@@ -87,10 +87,19 @@ WordPress/src/main/java/org/wordpress/android/
 - **Checkstyle**: Java code style enforcement (`config/checkstyle.xml`)
 - **Detekt**: Kotlin code analysis (`config/detekt/detekt.yml`)
 - **Android Lint**: Built-in Android static analysis
-- **Line Length**: 120 characters max
+- **Line Length**: 120 characters max - **ALWAYS respect this limit in all code, comments, and strings**
 - **No FIXME**: Use TODO instead of FIXME in committed code
 - **No Deprecated APIs**: Avoid using deprecated methods and classes in new code
 - **No Reflection**: Avoid using reflection in new code; prefer type-safe alternatives
+
+### Code Style Guidelines
+- **IMPORTANT**: Always keep lines at or under 120 characters
+- Break long lines by:
+  - Splitting long comments across multiple lines
+  - Breaking method chains at logical points
+  - Splitting long strings with string concatenation or multiline strings
+  - Breaking parameter lists across multiple lines
+  - Using proper indentation for continuation lines
 
 ### Development Workflow
 - Default development flavor: `jetpackWasabi` (Jetpack app with beta suffix)
