@@ -2,14 +2,12 @@ package org.wordpress.android.support.he.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.content.res.Resources
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +28,6 @@ import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.common.ui.ConversationsListScreen
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
-import org.wordpress.android.support.he.model.ConversationStatus
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -83,7 +80,10 @@ private fun HEConversationListItem(
             modifier = Modifier.weight(1f)
         ) {
             // Status badge
-            ConversationStatusBadge(status = conversation.status)
+            ConversationStatusBadge(
+                status = conversation.status,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -128,60 +128,6 @@ private fun HEConversationListItem(
             modifier = Modifier.padding(start = 8.dp)
         )
     }
-}
-
-@Composable
-private fun ConversationStatusBadge(status: String) {
-    val (statusText, backgroundColor, textColor) = when (status.lowercase()) {
-        ConversationStatus.NEW -> Triple(
-            stringResource(R.string.he_support_status_new),
-            MaterialTheme.colorScheme.primaryContainer,
-            MaterialTheme.colorScheme.onPrimaryContainer
-        )
-        ConversationStatus.OPEN -> Triple(
-            stringResource(R.string.he_support_status_open),
-            MaterialTheme.colorScheme.primaryContainer,
-            MaterialTheme.colorScheme.onPrimaryContainer
-        )
-        ConversationStatus.PENDING -> Triple(
-            stringResource(R.string.he_support_status_pending),
-            MaterialTheme.colorScheme.secondaryContainer,
-            MaterialTheme.colorScheme.onSecondaryContainer
-        )
-        ConversationStatus.ON_HOLD -> Triple(
-            stringResource(R.string.he_support_status_on_hold),
-            MaterialTheme.colorScheme.surfaceVariant,
-            MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        ConversationStatus.SOLVED -> Triple(
-            stringResource(R.string.he_support_status_solved),
-            MaterialTheme.colorScheme.primary,
-            MaterialTheme.colorScheme.onPrimary
-        )
-        ConversationStatus.CLOSED -> Triple(
-            stringResource(R.string.he_support_status_closed),
-            MaterialTheme.colorScheme.tertiaryContainer,
-            MaterialTheme.colorScheme.onTertiaryContainer
-        )
-        else -> Triple(
-            status,
-            MaterialTheme.colorScheme.surfaceVariant,
-            MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-
-    Text(
-        text = statusText,
-        style = MaterialTheme.typography.labelSmall,
-        color = textColor,
-        modifier = Modifier
-            .padding(bottom = 4.dp)
-            .background(
-                color = backgroundColor,
-                shape = RoundedCornerShape(4.dp)
-            )
-            .padding(horizontal = 6.dp, vertical = 2.dp)
-    )
 }
 
 @Preview(showBackground = true, name = "HE Support Conversations List")

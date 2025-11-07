@@ -112,7 +112,8 @@ fun HEConversationDetailScreen(
             )
         },
         bottomBar = {
-            val isClosed = conversation.status.equals(ConversationStatus.CLOSED, ignoreCase = true)
+            val status = ConversationStatus.fromStatus(conversation.status)
+            val isClosed = status == ConversationStatus.CLOSED
             if (isClosed) {
                 ClosedConversationBanner()
             } else {
@@ -139,7 +140,7 @@ fun HEConversationDetailScreen(
             ) {
             item {
                 ConversationHeader(
-                    messageCount = conversation.messages.size,
+                    status = conversation.status,
                     lastUpdated = formatRelativeTime(conversation.lastMessageSentAt, resources),
                     isLoading = isLoading
                 )
@@ -224,13 +225,15 @@ fun HEConversationDetailScreen(
 
 @Composable
 private fun ConversationHeader(
-    messageCount: Int,
+    status: String,
     lastUpdated: String,
     isLoading: Boolean = false
 ) {
+    val statusText = ConversationStatus.fromStatus(status).name.lowercase()
+        .replace("_", " ")
+        .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
     val headerDescription = if (!isLoading) {
-        "${stringResource(R.string.he_support_message_count, messageCount)}. " +
-                stringResource(R.string.he_support_last_updated, lastUpdated)
+        "$statusText. ${stringResource(R.string.he_support_last_updated, lastUpdated)}"
     } else {
         stringResource(R.string.he_support_last_updated, lastUpdated)
     }
@@ -246,22 +249,7 @@ private fun ConversationHeader(
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (!isLoading) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_comment_white_24dp),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(20.dp)
-                )
-                Text(
-                    text = stringResource(R.string.he_support_message_count, messageCount),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            ConversationStatusBadge(status = status)
         } else {
             Spacer(modifier = Modifier.size(0.dp))
         }
