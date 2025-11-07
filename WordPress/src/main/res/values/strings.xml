@@ -5181,7 +5181,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_download_attachment">Download attachment</string>
     <string name="he_support_select_attachments">Select attachments</string>
     <string name="he_support_status_waiting_for_support">Waiting for Support</string>
-    <string name="he_support_status_waiting_for_user">Waiting for user</string>
+    <string name="he_support_status_waiting_for_user">Waiting for User</string>
     <string name="he_support_status_solved">Solved</string>
     <string name="he_support_status_closed">Closed</string>
     <string name="he_support_status_unknown">Unknown</string>

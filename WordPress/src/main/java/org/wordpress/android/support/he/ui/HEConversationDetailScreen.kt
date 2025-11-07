@@ -229,9 +229,18 @@ private fun ConversationHeader(
     lastUpdated: String,
     isLoading: Boolean = false
 ) {
-    val statusText = ConversationStatus.fromStatus(status).name.lowercase()
-        .replace("_", " ")
-        .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+    val statusText = when (ConversationStatus.fromStatus(status)) {
+        ConversationStatus.WAITING_FOR_SUPPORT ->
+            stringResource(R.string.he_support_status_waiting_for_support)
+        ConversationStatus.WAITING_FOR_USER ->
+            stringResource(R.string.he_support_status_waiting_for_user)
+        ConversationStatus.SOLVED ->
+            stringResource(R.string.he_support_status_solved)
+        ConversationStatus.CLOSED ->
+            stringResource(R.string.he_support_status_closed)
+        ConversationStatus.UNKNOWN ->
+            stringResource(R.string.he_support_status_unknown)
+    }
     val headerDescription = if (!isLoading) {
         "$statusText. ${stringResource(R.string.he_support_last_updated, lastUpdated)}"
     } else {
@@ -248,11 +257,7 @@ private fun ConversationHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (!isLoading) {
-            ConversationStatusBadge(status = status)
-        } else {
-            Spacer(modifier = Modifier.size(0.dp))
-        }
+        ConversationStatusBadge(status = status)
 
         Text(
             text = stringResource(R.string.he_support_last_updated, lastUpdated),
