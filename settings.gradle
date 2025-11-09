@@ -82,8 +82,8 @@ dependencyResolutionManagement {
         maven {
             url "https://a8c-libs.s3.amazonaws.com/android/jcenter-mirror"
             content {
-                includeVersion "com.automattic", "rest", "1.0.8"
-                includeVersion "org.wordpress", "persistentedittext", "1.0.2"
+                includeVersion "com.automattic", "rest", "1.0.0"
+                includeVersion "org.wordpress", "persistentedittext", "1.0.0"
             }
         }
         maven { url "https://www.jitpack.io" }
