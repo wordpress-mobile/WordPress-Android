@@ -6,42 +6,42 @@
     {
       "file": "android/WPAndroid/secrets.properties",
       "destination": "~/.configure/wordpress-android/secrets/secrets.properties",
-      "encrypt": true
+      "encrypt": false
     },
     {
       "file": "android/WPAndroid/google-services.json",
       "destination": "WordPress/google-services.json",
-      "encrypt": true
+      "encrypt": false
     },
     {
       "file": "android/WPAndroid/wordpress-sentry.properties",
       "destination": "WordPress/src/wordpress/sentry.properties",
-      "encrypt": true
+      "encrypt": false
     },
     {
       "file": "android/WPAndroid/jetpack-sentry.properties",
       "destination": "WordPress/src/jetpack/sentry.properties",
-      "encrypt": true
+      "encrypt": false
     },
     {
       "file": "android/debug.keystore",
       "destination": "~/.configure/wordpress-android/secrets/debug_a8c.keystore",
-      "encrypt": true
+      "encrypt": false
     },
     {
       "file": "android/WPAndroid/google-upload-credentials.json",
       "destination": "~/.configure/wordpress-android/secrets/google-upload-credentials.json",
-      "encrypt": true
+      "encrypt": false
     },
     {
       "file": "android/automattic_upload.jks",
       "destination": "WordPress/upload.jks",
-      "encrypt": true
+      "encrypt": false
     },
     {
       "file": "android/WPAndroid/firebase.secrets.json",
       "destination": "~/.configure/wordpress-android/secrets/firebase.secrets.json",
-      "encrypt": true
+      "encrypt": false
     }
   ],
   "file_dependencies": [
