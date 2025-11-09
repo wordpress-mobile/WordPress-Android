@@ -1,6 +1,4 @@
-
-#
-# NOTE: The `promo_config` hash is used by `fastlane/helpers/android_promo_screenshot_helper.rb` and accepts keys `:text_size` and `:font`.
+ NOTE: The `promo_config` hash is used by `fastlane/helpers/android_promo_screenshot_helper.rb` and accepts keys `:text_size` and `:font`.
 # When set to `false`, the locale will just not be included during the screenshot generation (see `lanes/screenshots.rb`).
 # This setup is likely to disappear soon (we currently don't provide any custom text size and font for any local anyway) when we will:
 #  1. Get rid of the local `fastlane/helpers/*` from this repo, to ultimately switch to use the `release-toolkit`'s action instead
