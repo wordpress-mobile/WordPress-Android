@@ -2,7 +2,9 @@
   "project_name": "WordPress-Android",
   "branch": "trunk",
   "pinned_hash": "ccf321783e91fa1523f456d0cc8573d1e32493d2",
-  "files_to_copy": [
+  
+
+"files_to_copy": [
     {
       "file": "android/WPAndroid/secrets.properties",
       "destination": "~/.configure/wordpress-android/secrets/secrets.properties",
