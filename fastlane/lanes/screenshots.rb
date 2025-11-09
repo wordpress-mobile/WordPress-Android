@@ -1,6 +1,4 @@
-# frozen_string_literal: true
 
-# Possible values for `device` parameter can be found using `avdmanager list devices`
 SCREENSHOT_DEVICES = [
   {
     device_type: 'phone',
