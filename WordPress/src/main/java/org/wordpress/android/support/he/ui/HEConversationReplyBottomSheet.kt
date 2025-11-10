@@ -1,6 +1,5 @@
 package org.wordpress.android.support.he.ui
 
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +16,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +29,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.MessageSendResult
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,16 +38,37 @@ import org.wordpress.android.support.he.util.AttachmentActionsListener
 fun HEConversationReplyBottomSheet(
     sheetState: androidx.compose.material3.SheetState,
     isSending: Boolean = false,
+    messageSendResult: MessageSendResult? = null,
     initialMessageText: String = "",
     initialIncludeAppLogs: Boolean = false,
     onDismiss: (currentMessage: String, currentIncludeAppLogs: Boolean) -> Unit,
     onSend: (String, Boolean) -> Unit,
-    attachments: List<Uri> = emptyList(),
+    onMessageSentSuccessfully: () -> Unit,
+    attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener
 ) {
     var messageText by remember { mutableStateOf(initialMessageText) }
     var includeAppLogs by remember { mutableStateOf(initialIncludeAppLogs) }
     val scrollState = rememberScrollState()
+
+    // Close the sheet when sending completes successfully
+    LaunchedEffect(messageSendResult) {
+        when (messageSendResult) {
+            is MessageSendResult.Success -> {
+                // Message sent successfully, close the sheet and clear draft
+                onDismiss("", false)
+                onMessageSentSuccessfully()
+            }
+            is MessageSendResult.Failure -> {
+                // Message failed to send, draft is saved onDismiss
+                // The error will be shown via snackbar from the Activity
+                onDismiss("", false)
+            }
+            null -> {
+                // No result yet, do nothing
+            }
+        }
+    }
 
     ModalBottomSheet(
         onDismissRequest = { onDismiss(messageText, includeAppLogs) },
@@ -107,7 +130,7 @@ fun HEConversationReplyBottomSheet(
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
                 enabled = !isSending,
-                attachments = attachments,
+                attachmentState = attachmentState,
                 attachmentActionsListener = attachmentActionsListener
             )
         }

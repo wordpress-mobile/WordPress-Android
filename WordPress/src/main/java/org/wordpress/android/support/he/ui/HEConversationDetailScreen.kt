@@ -60,6 +60,8 @@ import coil.request.ImageRequest
 import coil.request.videoFrameMillis
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
+import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.MessageSendResult
 import org.wordpress.android.support.he.model.AttachmentType
 import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
@@ -77,11 +79,11 @@ fun HEConversationDetailScreen(
     conversation: SupportConversation,
     isLoading: Boolean = false,
     isSendingMessage: Boolean = false,
-    messageSendResult: HESupportViewModel.MessageSendResult? = null,
+    messageSendResult: MessageSendResult? = null,
     onBackClick: () -> Unit,
     onSendMessage: (message: String, includeAppLogs: Boolean) -> Unit,
     onClearMessageSendResult: () -> Unit = {},
-    attachments: List<Uri> = emptyList(),
+    attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener,
     onDownloadAttachment: (SupportAttachment) -> Unit = {},
     videoUrlResolver: org.wordpress.android.support.he.util.VideoUrlResolver? = null
@@ -178,7 +180,7 @@ fun HEConversationDetailScreen(
         LaunchedEffect(messageSendResult) {
             if (messageSendResult != null) {
                 // Clear draft only on success
-                if (messageSendResult is HESupportViewModel.MessageSendResult.Success) {
+                if (messageSendResult is MessageSendResult.Success) {
                     draftMessageText = ""
                     draftIncludeAppLogs = false
                 }
@@ -211,7 +213,13 @@ fun HEConversationDetailScreen(
                 draftMessageText = message
                 onSendMessage(message, includeAppLogs)
             },
-            attachments = attachments,
+            onMessageSentSuccessfully = {
+                // Clear draft after successful send
+                draftMessageText = ""
+                draftIncludeAppLogs = false
+                onClearMessageSendResult()
+            },
+            attachmentState = attachmentState,
             attachmentActionsListener = attachmentActionsListener
         )
     }

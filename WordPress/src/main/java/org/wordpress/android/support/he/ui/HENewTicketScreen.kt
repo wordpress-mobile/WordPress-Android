@@ -55,6 +55,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import org.wordpress.android.R
 import org.wordpress.android.support.common.model.UserInfo
+import org.wordpress.android.support.he.model.AttachmentState
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
@@ -74,8 +75,8 @@ fun HENewTicketScreen(
             ) -> Unit,
     userInfo: UserInfo,
     isSendingNewConversation: Boolean = false,
-    attachments: List<Uri> = emptyList(),
-    attachmentActionsListener: AttachmentActionsListener,
+    attachmentState: AttachmentState = AttachmentState(),
+    attachmentActionsListener: AttachmentActionsListener
 ) {
     var selectedCategory by remember { mutableStateOf<SupportCategory?>(null) }
     var subject by remember { mutableStateOf("") }
@@ -197,7 +198,7 @@ fun HENewTicketScreen(
                 includeAppLogs = includeAppLogs,
                 onMessageChanged = { message -> messageText = message },
                 onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
-                attachments = attachments,
+                attachmentState = attachmentState,
                 attachmentActionsListener = attachmentActionsListener
             )
 
