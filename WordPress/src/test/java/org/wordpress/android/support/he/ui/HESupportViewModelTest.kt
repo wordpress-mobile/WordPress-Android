@@ -15,6 +15,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -22,6 +23,7 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.support.he.model.MessageSendResult
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
 import org.wordpress.android.support.he.repository.CreateConversationResult
@@ -219,6 +221,35 @@ class HESupportViewModelTest : BaseUnitTest() {
         assertThat(viewModel.isSendingMessage.value).isFalse
     }
 
+    @Test
+    fun `onSendNewConversation sets OFFLINE error when network is not available`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onSendNewConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1")
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.OFFLINE)
+        assertThat(viewModel.isSendingMessage.value).isFalse
+    }
+
+    @Test
+    fun `onSendNewConversation does not call repository when network is not available`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onSendNewConversation(
+            subject = "Test Subject",
+            message = "Test Message",
+            tags = listOf("tag1")
+        )
+        advanceUntilIdle()
+
+        verify(heSupportRepository, never()).createConversation(any(), any(), any(), any())
+    }
+
     // endregion
 
     // region getConversation() override tests
@@ -362,6 +393,67 @@ class HESupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(viewModel.isSendingMessage.value).isFalse
+    }
+
+    @Test
+    fun `onAddMessageToConversation sets OFFLINE error when network is not available`() = test {
+        val existingConversation = createTestConversation(1)
+        whenever(heSupportRepository.loadConversation(1L)).thenReturn(existingConversation)
+
+        // Network available when loading conversation
+        viewModel.onConversationClick(existingConversation)
+        advanceUntilIdle()
+
+        // Network unavailable when sending message
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onAddMessageToConversation(
+            message = "Test message"
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.OFFLINE)
+        assertThat(viewModel.isSendingMessage.value).isFalse
+    }
+
+    @Test
+    fun `onAddMessageToConversation sets Failure result when network is not available`() = test {
+        val existingConversation = createTestConversation(1)
+        whenever(heSupportRepository.loadConversation(1L)).thenReturn(existingConversation)
+
+        // Network available when loading conversation
+        viewModel.onConversationClick(existingConversation)
+        advanceUntilIdle()
+
+        // Network unavailable when sending message
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onAddMessageToConversation(
+            message = "Test message"
+        )
+        advanceUntilIdle()
+
+        assertThat(viewModel.messageSendResult.value).isEqualTo(MessageSendResult.Failure)
+    }
+
+    @Test
+    fun `onAddMessageToConversation does not call repository when network is not available`() = test {
+        val existingConversation = createTestConversation(1)
+        whenever(heSupportRepository.loadConversation(1L)).thenReturn(existingConversation)
+
+        // Network available when loading conversation
+        viewModel.onConversationClick(existingConversation)
+        advanceUntilIdle()
+
+        // Network unavailable when sending message
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onAddMessageToConversation(
+            message = "Test message"
+        )
+        advanceUntilIdle()
+
+        verify(heSupportRepository, never()).addMessageToConversation(any(), any(), any())
     }
 
     // endregion
