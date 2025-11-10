@@ -9,6 +9,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.ANDROID_JETPACK_CLIENT
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.ANDROID_WORDPRESS_CLIENT
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.JETPACK_SUCCESS_URL
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.WORDPRESS_SUCCESS_URL
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -18,6 +22,7 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.Event
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordCreateParams
@@ -28,6 +33,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val siteStore: SiteStore,
     private val experimentalFeatures: ExperimentalFeatures,
+    private val buildConfigWrapper: BuildConfigWrapper,
 ) {
     lateinit var scope: CoroutineScope
 
@@ -69,19 +75,22 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             if (authorizationUrlComplete.isEmpty()) {
                 uiModelMutable.postValue(null)
             } else {
-                postAuthenticationUrl(authorizationUrlComplete)
+                postAuthenticationUrl(site, authorizationUrlComplete)
             }
         }
     }
 
-    private fun postAuthenticationUrl(authorizationUrlComplete: String) {
+    private fun postAuthenticationUrl(
+        site: SiteModel,
+        authorizationUrlComplete: String
+    ) {
         uiModelMutable.postValue(
             MySiteCardAndItem.Card.QuickLinksItem(
                 listOf(
                     QuickLinkItem(
                         label = UiString.UiStringRes(R.string.application_password_title),
                         icon = R.drawable.ic_lock_white_24dp,
-                        onClick = ListItemInteraction.create { onClick(authorizationUrlComplete) }
+                        onClick = ListItemInteraction.create { onClick(site, authorizationUrlComplete) }
                     )
                 )
             )
@@ -89,24 +98,38 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     }
 
 
-    private fun onClick(authorizationUrlComplete: String) {
-        val client = wpApiClientProvider.getWpApiClientCookiesNonceAuthentication()
-        val userIdResponse = client.request { requestBuilder ->
-            requestBuilder.applicationPasswords().create(
-                userId = "",
-                params = ApplicationPasswordCreateParams(
-                    appId = "",
-                    name = ""
-                )
+    private fun onClick(
+        site: SiteModel,
+        authorizationUrlComplete: String
+    ) {
+        scope.launch {
+            val client = wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(
+                site = site,
+                applicationPasswordsAuthenticationUrl = authorizationUrlComplete,
             )
-        }
-        when (userIdResponse) {
-            is WpRequestResult.Success -> {
-                userIdResponse.response.data
+            val appName = if (buildConfigWrapper.isJetpackApp) {
+                ANDROID_JETPACK_CLIENT
+            } else {
+                ANDROID_WORDPRESS_CLIENT
             }
+            val userIdResponse = client.request { requestBuilder ->
+                requestBuilder.applicationPasswords().create(
+                    userId = "",
+                    params = ApplicationPasswordCreateParams(
+                        appId = appName,
+                        name = "$appName-${System.currentTimeMillis()}"
+                    )
+                )
+            }
+            when (userIdResponse) {
+                is WpRequestResult.Success -> {
+                    userIdResponse.response.data
+                    // TODO: store credentials
+                }
 
-            else -> {
-                val error = "Error getting current user Id"
+                else -> {
+                    // TODO: log error
+                }
             }
         }
     }
