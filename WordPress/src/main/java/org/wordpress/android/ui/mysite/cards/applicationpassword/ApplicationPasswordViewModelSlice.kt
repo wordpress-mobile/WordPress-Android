@@ -8,11 +8,11 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.ANDROID_JETPACK_CLIENT
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.ANDROID_WORDPRESS_CLIENT
-import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.JETPACK_SUCCESS_URL
-import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.WORDPRESS_SUCCESS_URL
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -21,12 +21,15 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.viewmodel.Event
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordCreateParams
 import javax.inject.Inject
+import kotlin.String
 
 class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
@@ -34,6 +37,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val siteStore: SiteStore,
     private val experimentalFeatures: ExperimentalFeatures,
     private val buildConfigWrapper: BuildConfigWrapper,
+    private val appLogWrapper: AppLogWrapper,
 ) {
     lateinit var scope: CoroutineScope
 
@@ -123,12 +127,39 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             }
             when (userIdResponse) {
                 is WpRequestResult.Success -> {
-                    userIdResponse.response.data
-                    // TODO: store credentials
+                    val name = userIdResponse.response.data.name
+                    val password = userIdResponse.response.data.password
+                    applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+                        UriLogin(
+                            siteUrl = site.url,
+                            user = name,
+                            password = password,
+                            apiRootUrl = 
+                        )
+                    )
+                    _onSnackbarMessage.postValue(
+                        Event(
+                            SnackbarMessageHolder(
+                                UiString.UiStringResWithParams(R.string.application_password_credentials_stored,
+                                    UiString.UiStringText(site.url)
+                                )
+                            )
+                        )
+                    )
                 }
 
                 else -> {
-                    // TODO: log error
+                    appLogWrapper.e(AppLog.T.API, "Error creating application password")
+                    _onSnackbarMessage.postValue(
+                        Event(
+                            SnackbarMessageHolder(
+                                UiString.UiStringResWithParams(
+                                    R.string.application_password_credentials_storing_error,
+                                    UiString.UiStringText(site.url)
+                                )
+                            )
+                        )
+                    )
                 }
             }
         }
