@@ -68,5 +68,7 @@ class WpApiClientProvider @Inject constructor(
         return client
     }
 
+    fun getApiRootUrlFrom(site: SiteModel): String = site.buildUrl()
+
     private fun SiteModel.buildUrl(): String = wpApiRestUrl ?: "${url}/wp-json"
 }

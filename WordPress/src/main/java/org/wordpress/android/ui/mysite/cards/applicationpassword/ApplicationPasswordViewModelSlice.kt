@@ -129,12 +129,13 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 is WpRequestResult.Success -> {
                     val name = userIdResponse.response.data.name
                     val password = userIdResponse.response.data.password
+                    val apiRootUrl = wpApiClientProvider.getApiRootUrlFrom(site)
                     applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
                         UriLogin(
                             siteUrl = site.url,
                             user = name,
                             password = password,
-                            apiRootUrl = 
+                            apiRootUrl = apiRootUrl
                         )
                     )
                     _onSnackbarMessage.postValue(
