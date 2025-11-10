@@ -19,7 +19,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     protected val accountStore: AccountStore,
     protected val appLogWrapper: AppLogWrapper,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    protected val networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ViewModel() {
     sealed class NavigationEvent {
         data object NavigateToConversationDetail : NavigationEvent()
@@ -140,6 +140,11 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     fun onConversationClick(conversation: ConversationType) {
         viewModelScope.launch {
             try {
+                if (!networkUtilsWrapper.isNetworkAvailable()) {
+                    _errorMessage.value = ErrorType.OFFLINE
+                    return@launch
+                }
+
                 _isLoadingConversation.value = true
                 _selectedConversation.value = conversation
                 _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail)
@@ -173,6 +178,10 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
 
     fun onCreateNewConversationClick() {
         viewModelScope.launch {
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                _errorMessage.value = ErrorType.OFFLINE
+                return@launch
+            }
             _navigationEvents.emit(NavigationEvent.NavigateToNewConversation)
         }
     }
@@ -182,5 +191,6 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     enum class ErrorType {
         GENERAL,
         FORBIDDEN,
+        OFFLINE,
     }
 }

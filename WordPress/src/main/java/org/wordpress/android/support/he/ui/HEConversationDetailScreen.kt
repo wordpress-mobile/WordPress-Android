@@ -169,14 +169,31 @@ fun HEConversationDetailScreen(
     }
 
     if (showBottomSheet) {
+        // Close the sheet when sending completes
+        LaunchedEffect(messageSendResult) {
+            if (messageSendResult != null) {
+                // Clear draft only on success
+                if (messageSendResult is HESupportViewModel.MessageSendResult.Success) {
+                    draftMessageText = ""
+                    draftIncludeAppLogs = false
+                }
+
+                // Dismiss sheet and clear result for both success and failure
+                onClearMessageSendResult()
+                scope.launch {
+                    sheetState.hide()
+                }.invokeOnCompletion {
+                    showBottomSheet = false
+                }
+            }
+        }
+
         HEConversationReplyBottomSheet(
             sheetState = sheetState,
             isSending = isSendingMessage,
-            messageSendResult = messageSendResult,
             initialMessageText = draftMessageText,
             initialIncludeAppLogs = draftIncludeAppLogs,
             onDismiss = { currentMessage, currentIncludeAppLogs ->
-                // Save draft message when closing without sending
                 draftMessageText = currentMessage
                 draftIncludeAppLogs = currentIncludeAppLogs
                 scope.launch {
@@ -186,13 +203,8 @@ fun HEConversationDetailScreen(
                 }
             },
             onSend = { message, includeAppLogs ->
+                draftMessageText = message
                 onSendMessage(message, includeAppLogs)
-            },
-            onMessageSentSuccessfully = {
-                // Clear draft after successful send
-                draftMessageText = ""
-                draftIncludeAppLogs = false
-                onClearMessageSendResult()
             },
             attachments = attachments,
             attachmentActionsListener = attachmentActionsListener
