@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -16,11 +17,15 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
+import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.ApplicationPasswordCreateParams
 import javax.inject.Inject
 
 class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
+    private val wpApiClientProvider: WpApiClientProvider,
     private val siteStore: SiteStore,
     private val experimentalFeatures: ExperimentalFeatures,
 ) {
@@ -85,10 +90,24 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
 
 
     private fun onClick(authorizationUrlComplete: String) {
-        _onNavigation.postValue(
-            Event(
-                SiteNavigationAction.OpenApplicationPasswordAuthentication(authorizationUrlComplete)
+        val client = wpApiClientProvider.getWpApiClientCookiesNonceAuthentication()
+        val userIdResponse = client.request { requestBuilder ->
+            requestBuilder.applicationPasswords().create(
+                userId = "",
+                params = ApplicationPasswordCreateParams(
+                    appId = "",
+                    name = ""
+                )
             )
-        )
+        }
+        when (userIdResponse) {
+            is WpRequestResult.Success -> {
+                userIdResponse.response.data
+            }
+
+            else -> {
+                val error = "Error getting current user Id"
+            }
+        }
     }
 }
