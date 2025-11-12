@@ -37,27 +37,20 @@ class WpApiClientProvider @Inject constructor(
         return client
     }
 
-    fun getWpApiClientCookiesNonceAuthentication(
-        site: SiteModel,
-        applicationPasswordsAuthenticationUrl: String,
-    ): WpApiClient {
-        val parsedSiteUrl = ParsedUrl.parse(site.url)
-        val apiRootUrl = ParsedUrl.parse(site.buildUrl())
+    fun getWpApiClientCookiesNonceAuthentication(site: SiteModel): WpApiClient {
+        val apiRoot = site.buildUrl()
+        val apiRootUrl = URL(apiRoot)
         val requestExecutor = WpRequestExecutor()
-        val cookiesNonceProvider = CookiesNonceAuthenticationProvider(
-            username = site.apiRestUsernamePlain,
-            password = site.apiRestPasswordPlain,
-            details = AutoDiscoveryAttemptSuccess(
-                parsedSiteUrl = parsedSiteUrl,
-                apiRootUrl = apiRootUrl,
-                apiDetails = WpApiDetails(site.url),
-                applicationPasswordsAuthenticationUrl = ParsedUrl.parse(applicationPasswordsAuthenticationUrl)
-            ),
+        val cookiesNonceProvider = CookiesNonceAuthenticationProvider.withSiteUrl(
+            url = apiRoot,
+            username = site.username,
+            password = site.password,
             requestExecutor = requestExecutor
         )
+        val authProvider = WpAuthenticationProvider.dynamic(cookiesNonceProvider)
         val client = WpApiClient(
-            wpOrgSiteApiRootUrl = URL(site.buildUrl()),
-            authProvider = cookiesNonceProvider,
+            wpOrgSiteApiRootUrl = apiRootUrl,
+            authProvider = authProvider,
             requestExecutor = requestExecutor,
             appNotifier = object : WpAppNotifier {
                 override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {

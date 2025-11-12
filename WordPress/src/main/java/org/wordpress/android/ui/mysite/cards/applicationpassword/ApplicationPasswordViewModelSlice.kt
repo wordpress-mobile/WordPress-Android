@@ -79,22 +79,19 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             if (authorizationUrlComplete.isEmpty()) {
                 uiModelMutable.postValue(null)
             } else {
-                postAuthenticationUrl(site, authorizationUrlComplete)
+                postAuthenticationUrl(site)
             }
         }
     }
 
-    private fun postAuthenticationUrl(
-        site: SiteModel,
-        authorizationUrlComplete: String
-    ) {
+    private fun postAuthenticationUrl(site: SiteModel) {
         uiModelMutable.postValue(
             MySiteCardAndItem.Card.QuickLinksItem(
                 listOf(
                     QuickLinkItem(
                         label = UiString.UiStringRes(R.string.application_password_title),
                         icon = R.drawable.ic_lock_white_24dp,
-                        onClick = ListItemInteraction.create { onClick(site, authorizationUrlComplete) }
+                        onClick = ListItemInteraction.create { onClick(site) }
                     )
                 )
             )
@@ -102,14 +99,10 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     }
 
 
-    private fun onClick(
-        site: SiteModel,
-        authorizationUrlComplete: String
-    ) {
+    private fun onClick(site: SiteModel) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(
                 site = site,
-                applicationPasswordsAuthenticationUrl = authorizationUrlComplete,
             )
             val appName = if (buildConfigWrapper.isJetpackApp) {
                 ANDROID_JETPACK_CLIENT
