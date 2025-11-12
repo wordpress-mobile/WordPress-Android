@@ -117,8 +117,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 ANDROID_WORDPRESS_CLIENT
             }
             val userIdResponse = client.request { requestBuilder ->
-                requestBuilder.applicationPasswords().create(
-                    userId = "",
+                requestBuilder.applicationPasswords().createForCurrentUser(
                     params = ApplicationPasswordCreateParams(
                         appId = appName,
                         name = "$appName-${System.currentTimeMillis()}"
