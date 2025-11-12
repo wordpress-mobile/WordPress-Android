@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
@@ -38,6 +39,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val experimentalFeatures: ExperimentalFeatures,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appLogWrapper: AppLogWrapper,
+    private val appSecrets: AppSecrets
 ) {
     lateinit var scope: CoroutineScope
 
@@ -112,7 +114,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             val userIdResponse = client.request { requestBuilder ->
                 requestBuilder.applicationPasswords().createForCurrentUser(
                     params = ApplicationPasswordCreateParams(
-                        appId = appName,
+                        appId = null,
                         name = "$appName-${System.currentTimeMillis()}"
                     )
                 )
