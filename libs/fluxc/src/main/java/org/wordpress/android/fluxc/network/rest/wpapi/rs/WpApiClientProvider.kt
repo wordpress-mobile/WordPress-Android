@@ -38,8 +38,6 @@ class WpApiClientProvider @Inject constructor(
     }
 
     fun getWpApiClientCookiesNonceAuthentication(site: SiteModel): WpApiClient {
-        val apiRoot = site.buildUrl()
-        val apiRootUrl = URL(apiRoot)
         val requestExecutor = WpRequestExecutor()
         val cookiesNonceProvider = CookiesNonceAuthenticationProvider.withSiteUrl(
             url = site.url,
@@ -49,7 +47,7 @@ class WpApiClientProvider @Inject constructor(
         )
         val authProvider = WpAuthenticationProvider.dynamic(cookiesNonceProvider)
         val client = WpApiClient(
-            wpOrgSiteApiRootUrl = apiRootUrl,
+            wpOrgSiteApiRootUrl = URL(site.buildUrl()),
             authProvider = authProvider,
             requestExecutor = requestExecutor,
             appNotifier = object : WpAppNotifier {
