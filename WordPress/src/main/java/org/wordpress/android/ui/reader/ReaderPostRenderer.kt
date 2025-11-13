@@ -162,10 +162,12 @@ class ReaderPostRenderer(
 
         // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
         // https://code.google.com/p/android/issues/detail?id=4401
-        // also important to use null as the baseUrl since onPageFinished
-        // doesn't appear to fire when it's set to an actual url
+        // Use android-app:// scheme as baseUrl to set HTTP referrer for YouTube embeds.
+        // Google requires this for embedded videos to work properly.
+        // https://developers.google.com/youtube/terms/required-minimum-functionality#set-the-referer
+        // https://stackoverflow.com/questions/79761743/youtube-video-in-webview-gives-error-code-153-on-android/79809094#79809094
         webView.loadDataWithBaseURL(
-            null,
+            "https://wordpress.com/reader",
             htmlContent,
             "text/html",
             "UTF-8",
