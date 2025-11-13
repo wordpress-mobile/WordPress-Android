@@ -42,7 +42,7 @@ class WpApiClientProvider @Inject constructor(
         val apiRootUrl = URL(apiRoot)
         val requestExecutor = WpRequestExecutor()
         val cookiesNonceProvider = CookiesNonceAuthenticationProvider.withSiteUrl(
-            url = apiRoot,
+            url = site.url,
             username = site.username,
             password = site.password,
             requestExecutor = requestExecutor

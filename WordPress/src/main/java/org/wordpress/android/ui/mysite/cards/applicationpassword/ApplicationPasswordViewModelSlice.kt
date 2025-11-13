@@ -29,6 +29,7 @@ import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.viewmodel.Event
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordCreateParams
+import uniffi.wp_api.WpUuid
 import javax.inject.Inject
 import kotlin.String
 
@@ -39,7 +40,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val experimentalFeatures: ExperimentalFeatures,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appLogWrapper: AppLogWrapper,
-    private val appSecrets: AppSecrets
 ) {
     lateinit var scope: CoroutineScope
 
@@ -111,18 +111,19 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             } else {
                 ANDROID_WORDPRESS_CLIENT
             }
-            val userIdResponse = client.request { requestBuilder ->
+            val appId = WpUuid()
+            val response = client.request { requestBuilder ->
                 requestBuilder.applicationPasswords().createForCurrentUser(
                     params = ApplicationPasswordCreateParams(
-                        appId = null,
+                        appId = appId.uuidString(),
                         name = "$appName-${System.currentTimeMillis()}"
                     )
                 )
             }
-            when (userIdResponse) {
+            when (response) {
                 is WpRequestResult.Success -> {
-                    val name = userIdResponse.response.data.name
-                    val password = userIdResponse.response.data.password
+                    val name = response.response.data.name
+                    val password = response.response.data.password
                     val apiRootUrl = wpApiClientProvider.getApiRootUrlFrom(site)
                     applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
                         UriLogin(
