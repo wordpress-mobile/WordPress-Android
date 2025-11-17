@@ -452,67 +452,33 @@ class MySiteViewModel @Inject constructor(
         )
     }
 
-    fun createApplicationPassword(site: SiteModel) {
-        viewModelScope.launch {
-            val client = wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(
-                site = site,
-            )
-            val appName = if (buildConfigWrapper.isJetpackApp) {
-                ANDROID_JETPACK_CLIENT
-            } else {
-                ANDROID_WORDPRESS_CLIENT
-            }
-            val appId = WpUuid()
-            val response = client.request { requestBuilder ->
-                requestBuilder.applicationPasswords().createForCurrentUser(
-                    params = ApplicationPasswordCreateParams(
-                        appId = appId.uuidString(),
-                        name = "$appName-${System.currentTimeMillis()}"
+    fun onApplicationPasswordCreated(site: SiteModel) {
+        // Hide the Application Password creation card
+        applicationPasswordViewModelSlice.uiModelMutable.postValue(null)
+        _onSnackbarMessage.postValue(
+            Event(
+                SnackbarMessageHolder(
+                    UiString.UiStringResWithParams(
+                        R.string.application_password_credentials_stored,
+                        UiString.UiStringText(site.url)
                     )
                 )
-            }
-            when (response) {
-                is WpRequestResult.Success -> {
-                    val name = site.username // This should be the response name, but it's retuning a wrong value
-                    val password = response.response.data.password
-                    val apiRootUrl = wpApiClientProvider.getApiRootUrlFrom(site)
-                    applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
-                        UriLogin(
-                            siteUrl = site.url,
-                            user = name,
-                            password = password,
-                            apiRootUrl = apiRootUrl
-                        )
-                    )
-                    // Hide the Application Password creation card
-                    applicationPasswordViewModelSlice.uiModelMutable.postValue(null)
-                    _onSnackbarMessage.postValue(
-                        Event(
-                            SnackbarMessageHolder(
-                                UiString.UiStringResWithParams(
-                                    R.string.application_password_credentials_stored,
-                                    UiString.UiStringText(site.url)
-                                )
-                            )
-                        )
-                    )
-                }
+            )
+        )
+    }
 
-                else -> {
-                    appLogWrapper.e(AppLog.T.API, "Error creating application password")
-                    _onSnackbarMessage.postValue(
-                        Event(
-                            SnackbarMessageHolder(
-                                UiString.UiStringResWithParams(
-                                    R.string.application_password_credentials_storing_error,
-                                    UiString.UiStringText(site.url)
-                                )
-                            )
-                        )
+    fun onApplicationPasswordCreationError(site: SiteModel) {
+        _onSnackbarMessage.postValue(
+            Event(
+                SnackbarMessageHolder(
+                    UiString.UiStringResWithParams(
+                        R.string.application_password_credentials_storing_error,
+                        UiString.UiStringText(site.url)
                     )
-                }
-            }
-        }
+                )
+            )
+        )
+
     }
 
     // FluxC events
