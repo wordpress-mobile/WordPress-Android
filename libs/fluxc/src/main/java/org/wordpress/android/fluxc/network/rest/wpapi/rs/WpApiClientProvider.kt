@@ -1,13 +1,15 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.rs
 
+import okhttp3.Cookie
+import okhttp3.CookieJar
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import rs.wordpress.api.kotlin.WpApiClient
+import rs.wordpress.api.kotlin.WpHttpClient
 import rs.wordpress.api.kotlin.WpRequestExecutor
-import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.CookiesNonceAuthenticationProvider
-import uniffi.wp_api.ParsedUrl
-import uniffi.wp_api.WpApiDetails
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
 import java.net.URL
@@ -38,7 +40,24 @@ class WpApiClientProvider @Inject constructor(
     }
 
     fun getWpApiClientCookiesNonceAuthentication(site: SiteModel): WpApiClient {
-        val requestExecutor = WpRequestExecutor()
+        // Create OkHttpClient with cookie jar for cookies/nonce authentication
+        val okHttpClient = OkHttpClient.Builder()
+            .cookieJar(object : CookieJar {
+                private val cookieStore = mutableMapOf<String, List<Cookie>>()
+
+                override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+                    cookieStore[url.host] = cookies
+                }
+
+                override fun loadForRequest(url: HttpUrl): List<Cookie> {
+                    return cookieStore[url.host] ?: emptyList()
+                }
+            })
+            .build()
+
+        val httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient)
+        val requestExecutor = WpRequestExecutor(httpClient)
+
         val cookiesNonceProvider = CookiesNonceAuthenticationProvider.withSiteUrl(
             url = site.url,
             username = site.username,

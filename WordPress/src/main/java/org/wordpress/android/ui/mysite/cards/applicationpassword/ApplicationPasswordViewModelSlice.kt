@@ -122,7 +122,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             }
             when (response) {
                 is WpRequestResult.Success -> {
-                    val name = response.response.data.name
+                    val name = site.username // This should be the response name, but it's retuning a wrong value
                     val password = response.response.data.password
                     val apiRootUrl = wpApiClientProvider.getApiRootUrlFrom(site)
                     applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
