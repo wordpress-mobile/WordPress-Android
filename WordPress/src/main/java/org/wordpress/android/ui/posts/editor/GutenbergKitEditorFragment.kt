@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.view.LayoutInflater
@@ -16,7 +15,9 @@ import android.view.ViewGroup
 import android.webkit.URLUtil
 import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.editor.BuildConfig
 import org.wordpress.android.editor.EditorEditMediaListener
@@ -234,24 +235,17 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     private fun handleFileChooserResult(gutenbergView: GutenbergView, resultCode: Int, data: Intent?) {
         val filePathCallback = gutenbergView.filePathCallback ?: return
 
-        val uris = extractUrisFromIntent(resultCode, data)
-        filePathCallback.onReceiveValue(uris)
-        gutenbergView.resetFilePathCallback()
-    }
-
-    private fun extractUrisFromIntent(resultCode: Int, data: Intent?): Array<Uri?>? {
-        if (resultCode != Activity.RESULT_OK || data == null) {
-            return null
+        if (resultCode != Activity.RESULT_OK) {
+            filePathCallback.onReceiveValue(null)
+            gutenbergView.resetFilePathCallback()
+            return
         }
 
-        return when {
-            data.clipData != null -> {
-                val clipData = data.clipData!!
-                Array(clipData.itemCount) { i -> clipData.getItemAt(i).uri }
-            }
-
-            data.data != null -> arrayOf(data.data)
-            else -> null
+        lifecycleScope.launch {
+            val uris = gutenbergView.extractUrisFromIntent(data)
+            val processedUris = gutenbergView.processFileUris(requireContext(), uris)
+            filePathCallback.onReceiveValue(processedUris)
+            gutenbergView.resetFilePathCallback()
         }
     }
 
