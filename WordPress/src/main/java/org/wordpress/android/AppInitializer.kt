@@ -33,6 +33,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import com.android.volley.RequestQueue
+import com.automattic.android.experimentation.VariationsRepository
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
@@ -110,7 +111,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.AppConfig
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig
 import org.wordpress.android.util.enqueuePeriodicUploadWorkRequestForAllSites
-import org.wordpress.android.util.experiments.ExPlat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.AppReviewManager
 import org.wordpress.android.workers.WordPressWorkersFactory
@@ -185,7 +185,7 @@ class AppInitializer @Inject constructor(
     lateinit var imageEditorFileUtils: ImageEditorFileUtils
 
     @Inject
-    lateinit var exPlat: ExPlat
+    lateinit var variationsRepository: VariationsRepository
 
     @Inject
     lateinit var wordPressWorkerFactory: WordPressWorkersFactory
@@ -371,8 +371,6 @@ class AppInitializer @Inject constructor(
 
         systemNotificationsTracker.checkSystemNotificationsState()
         ImageEditorInitializer.init(imageManager, imageEditorTracker, imageEditorFileUtils, appScope)
-
-        exPlat.forceRefresh()
 
         initDebugCookieManager()
 
@@ -663,8 +661,8 @@ class AppInitializer @Inject constructor(
             // Make sure the Push Notification token is sent to our servers after a successful login
             gcmRegistrationScheduler.scheduleRegistration()
 
-            // Force a refresh if user has logged in. This can be removed once we start using an anonymous ID.
-            exPlat.forceRefresh()
+            // Possible way to initialize variations repository. Not tested, verify when working on experiments.
+            // variationsRepository.initialize("${tracker.anonID}")
         }
     }
 
@@ -728,8 +726,7 @@ class AppInitializer @Inject constructor(
         // Clear WordPress.com account cookie cache
         wordPressCookieAuthenticator.clearAllCachedCookies()
 
-        // Clear cached assignments if user has logged out. This can be removed once we start using an anonymous ID.
-        exPlat.clear()
+        variationsRepository.clear()
     }
 
     /*
@@ -934,11 +931,6 @@ class AppInitializer @Inject constructor(
 
             // Let's migrate the old editor preference if available in AppPrefs to the remote backend
             SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(accountStore, siteStore, dispatcher)
-            if (!firstActivityResumed) {
-                // Since we're force refreshing on app startup, we don't need to try refreshing again when starting
-                // our first Activity.
-                exPlat.refreshIfNeeded()
-            }
             if (firstActivityResumed) {
                 deferredInit()
             }
