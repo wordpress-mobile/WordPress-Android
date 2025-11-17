@@ -17,11 +17,17 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.ANDROID_JETPACK_CLIENT
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.ANDROID_WORDPRESS_CLIENT
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
@@ -53,6 +59,11 @@ import javax.inject.Inject
 import javax.inject.Named
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
 import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.AppLog
+import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.ApplicationPasswordCreateParams
+import uniffi.wp_api.WpUuid
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
@@ -81,6 +92,9 @@ class MySiteViewModel @Inject constructor(
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
     private val applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice,
     private val gutenbergKitWarmupHelper: GutenbergKitWarmupHelper,
+    private val wpApiClientProvider: WpApiClientProvider,
+    private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
+    private val appLogWrapper: AppLogWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -436,6 +450,69 @@ class MySiteViewModel @Inject constructor(
         _onNavigation.value = Event(
             SiteNavigationAction.OpenExternalUrl(DAY_ONE_EXTERNAL_URL)
         )
+    }
+
+    fun createApplicationPassword(site: SiteModel) {
+        viewModelScope.launch {
+            val client = wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(
+                site = site,
+            )
+            val appName = if (buildConfigWrapper.isJetpackApp) {
+                ANDROID_JETPACK_CLIENT
+            } else {
+                ANDROID_WORDPRESS_CLIENT
+            }
+            val appId = WpUuid()
+            val response = client.request { requestBuilder ->
+                requestBuilder.applicationPasswords().createForCurrentUser(
+                    params = ApplicationPasswordCreateParams(
+                        appId = appId.uuidString(),
+                        name = "$appName-${System.currentTimeMillis()}"
+                    )
+                )
+            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    val name = site.username // This should be the response name, but it's retuning a wrong value
+                    val password = response.response.data.password
+                    val apiRootUrl = wpApiClientProvider.getApiRootUrlFrom(site)
+                    applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+                        UriLogin(
+                            siteUrl = site.url,
+                            user = name,
+                            password = password,
+                            apiRootUrl = apiRootUrl
+                        )
+                    )
+                    // Hide the Application Password creation card
+                    applicationPasswordViewModelSlice.uiModelMutable.postValue(null)
+                    _onSnackbarMessage.postValue(
+                        Event(
+                            SnackbarMessageHolder(
+                                UiString.UiStringResWithParams(
+                                    R.string.application_password_credentials_stored,
+                                    UiString.UiStringText(site.url)
+                                )
+                            )
+                        )
+                    )
+                }
+
+                else -> {
+                    appLogWrapper.e(AppLog.T.API, "Error creating application password")
+                    _onSnackbarMessage.postValue(
+                        Event(
+                            SnackbarMessageHolder(
+                                UiString.UiStringResWithParams(
+                                    R.string.application_password_credentials_storing_error,
+                                    UiString.UiStringText(site.url)
+                                )
+                            )
+                        )
+                    )
+                }
+            }
+        }
     }
 
     // FluxC events

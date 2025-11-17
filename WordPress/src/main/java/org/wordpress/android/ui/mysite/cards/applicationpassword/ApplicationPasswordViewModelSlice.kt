@@ -7,7 +7,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
@@ -25,21 +24,16 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.viewmodel.Event
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordCreateParams
 import uniffi.wp_api.WpUuid
 import javax.inject.Inject
-import kotlin.String
 
 class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
-    private val wpApiClientProvider: WpApiClientProvider,
     private val siteStore: SiteStore,
     private val experimentalFeatures: ExperimentalFeatures,
-    private val buildConfigWrapper: BuildConfigWrapper,
-    private val appLogWrapper: AppLogWrapper,
 ) {
     lateinit var scope: CoroutineScope
 
@@ -81,17 +75,17 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             if (authorizationUrlComplete.isEmpty()) {
                 uiModelMutable.postValue(null)
             } else {
-                postAuthenticationUrl(site)
+                showApplicationPasswordCreateCard(site)
             }
         }
     }
 
-    private fun postAuthenticationUrl(site: SiteModel) {
+    private fun showApplicationPasswordCreateCard(site: SiteModel) {
         uiModelMutable.postValue(
             MySiteCardAndItem.Card.QuickLinksItem(
                 listOf(
                     QuickLinkItem(
-                        label = UiString.UiStringRes(R.string.application_password_title),
+                        label = UiStringRes(R.string.application_password_title),
                         icon = R.drawable.ic_lock_white_24dp,
                         onClick = ListItemInteraction.create { onClick(site) }
                     )
@@ -102,62 +96,10 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
 
 
     private fun onClick(site: SiteModel) {
-        scope.launch {
-            val client = wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(
-                site = site,
+        _onNavigation.postValue(
+            Event(
+                SiteNavigationAction.OpenApplicationPasswordAutoAuthentication(site)
             )
-            val appName = if (buildConfigWrapper.isJetpackApp) {
-                ANDROID_JETPACK_CLIENT
-            } else {
-                ANDROID_WORDPRESS_CLIENT
-            }
-            val appId = WpUuid()
-            val response = client.request { requestBuilder ->
-                requestBuilder.applicationPasswords().createForCurrentUser(
-                    params = ApplicationPasswordCreateParams(
-                        appId = appId.uuidString(),
-                        name = "$appName-${System.currentTimeMillis()}"
-                    )
-                )
-            }
-            when (response) {
-                is WpRequestResult.Success -> {
-                    val name = site.username // This should be the response name, but it's retuning a wrong value
-                    val password = response.response.data.password
-                    val apiRootUrl = wpApiClientProvider.getApiRootUrlFrom(site)
-                    applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
-                        UriLogin(
-                            siteUrl = site.url,
-                            user = name,
-                            password = password,
-                            apiRootUrl = apiRootUrl
-                        )
-                    )
-                    _onSnackbarMessage.postValue(
-                        Event(
-                            SnackbarMessageHolder(
-                                UiString.UiStringResWithParams(R.string.application_password_credentials_stored,
-                                    UiString.UiStringText(site.url)
-                                )
-                            )
-                        )
-                    )
-                }
-
-                else -> {
-                    appLogWrapper.e(AppLog.T.API, "Error creating application password")
-                    _onSnackbarMessage.postValue(
-                        Event(
-                            SnackbarMessageHolder(
-                                UiString.UiStringResWithParams(
-                                    R.string.application_password_credentials_storing_error,
-                                    UiString.UiStringText(site.url)
-                                )
-                            )
-                        )
-                    )
-                }
-            }
-        }
+        )
     }
 }

@@ -741,6 +741,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenApplicationPasswordAuthentication -> {
             activityNavigator.openApplicationPasswordLogin(requireActivity(), action.url)
         }
+        is SiteNavigationAction.OpenApplicationPasswordAutoAuthentication -> {
+            viewModel.createApplicationPassword(action.site)
+        }
     }
 
     private fun openBloganuaryNudgeOverlay(isPromptsEnabled: Boolean) {
