@@ -96,7 +96,8 @@ sealed class SiteNavigationAction {
 
     object OpenApplicationPasswordsList : SiteNavigationAction()
     data class OpenApplicationPasswordAuthentication(val url: String) : SiteNavigationAction()
-    data class OpenApplicationPasswordAutoAuthentication(val site: SiteModel) : SiteNavigationAction()
+    // alternativeUrl used to open the web view authentication if necessary as it's done in OpenApplicationPasswordAuthentication
+    data class OpenApplicationPasswordAutoAuthentication(val site: SiteModel, val alternativeUrl: String) : SiteNavigationAction()
 }
 
 sealed class BloggingPromptCardNavigationAction: SiteNavigationAction() {

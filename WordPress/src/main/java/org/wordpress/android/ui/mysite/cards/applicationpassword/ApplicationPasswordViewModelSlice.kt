@@ -64,19 +64,19 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             if (authorizationUrlComplete.isEmpty()) {
                 uiModelMutable.postValue(null)
             } else {
-                showApplicationPasswordCreateCard(site)
+                showApplicationPasswordCreateCard(site, authorizationUrlComplete)
             }
         }
     }
 
-    private fun showApplicationPasswordCreateCard(site: SiteModel) {
+    private fun showApplicationPasswordCreateCard(site: SiteModel, alternativeUrl: String) {
         uiModelMutable.postValue(
             MySiteCardAndItem.Card.QuickLinksItem(
                 listOf(
                     QuickLinkItem(
                         label = UiStringRes(R.string.application_password_title),
                         icon = R.drawable.ic_lock_white_24dp,
-                        onClick = ListItemInteraction.create { onClick(site) }
+                        onClick = ListItemInteraction.create { onClick(site, alternativeUrl) }
                     )
                 )
             )
@@ -84,10 +84,10 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     }
 
 
-    private fun onClick(site: SiteModel) {
+    private fun onClick(site: SiteModel, alternativeUrl: String) {
         _onNavigation.postValue(
             Event(
-                SiteNavigationAction.OpenApplicationPasswordAutoAuthentication(site)
+                SiteNavigationAction.OpenApplicationPasswordAutoAuthentication(site, alternativeUrl)
             )
         )
     }
