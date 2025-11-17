@@ -82,7 +82,10 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
                 val isLoading = viewModel.isLoading.collectAsState()
                 ApplicationPasswordAutoAuthDialog(
                     isLoading = isLoading.value,
-                    onDismiss = { finish() },
+                    onDismiss = {
+                        setResult(RESULT_DISMISSED)
+                        finish()
+                                },
                     onConfirm = { viewModel.createApplicationPassword(site) }
                 )
             }
@@ -91,8 +94,8 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
 
     companion object {
         private const val EXTRA_SITE = "extra_site"
-        const val RESULT_SUCCESS = 0
-        const val RESULT_ERROR = -1
+        const val RESULT_SUCCESS = -1
+        const val RESULT_ERROR = -0
         const val RESULT_DISMISSED = 1
 
         fun createIntent(context: Context, site: SiteModel): Intent {
@@ -168,8 +171,7 @@ fun ApplicationPasswordAutoAuthDialog(
         },
         dismissButton = {
             TextButton(
-                onClick = onDismiss,
-                enabled = !isLoading
+                onClick = onDismiss
             ) {
                 Text(text = stringResource(R.string.cancel))
             }

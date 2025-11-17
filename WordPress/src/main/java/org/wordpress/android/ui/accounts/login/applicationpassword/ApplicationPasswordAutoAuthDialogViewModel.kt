@@ -22,6 +22,9 @@ import org.wordpress.android.util.BuildConfigWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordCreateParams
 import uniffi.wp_api.WpUuid
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,6 +44,9 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     fun createApplicationPassword(site: SiteModel) {
         viewModelScope.launch {
             try {
+                require(site.username.isNotBlank()) { "Site username is required for cookie authentication" }
+                require(site.password.isNotBlank()) { "Site password is required for cookie authentication" }
+
                 _isLoading.value = true
                 val client = wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(
                     site = site,
@@ -55,13 +61,14 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                     requestBuilder.applicationPasswords().createForCurrentUser(
                         params = ApplicationPasswordCreateParams(
                             appId = appId.uuidString(),
-                            name = "$appName-${System.currentTimeMillis()}"
+                            name =
+                                "$appName-${SimpleDateFormat("yyyy-MM-dd_HH:mm", Locale.getDefault()).format(Date())}"
                         )
                     )
                 }
                 when (response) {
                     is WpRequestResult.Success -> {
-                        val name = site.username // This should be the response name, but it's retuning a wrong value
+                        val name = site.username
                         val password = response.response.data.password
                         val apiRootUrl = wpApiClientProvider.getApiRootUrlFrom(site)
                         applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
