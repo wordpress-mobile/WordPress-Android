@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login.applicationpassword
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -92,9 +91,9 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
 
     companion object {
         private const val EXTRA_SITE = "extra_site"
-        const val RESULT_SUCCESS = Activity.RESULT_OK
-        const val RESULT_ERROR = Activity.RESULT_FIRST_USER
-        const val RESULT_DISMISSED = Activity.RESULT_CANCELED
+        const val RESULT_SUCCESS = 0
+        const val RESULT_ERROR = -1
+        const val RESULT_DISMISSED = 1
 
         fun createIntent(context: Context, site: SiteModel): Intent {
             return Intent(context, ApplicationPasswordAutoAuthDialogActivity::class.java).apply {
@@ -163,7 +162,7 @@ fun ApplicationPasswordAutoAuthDialog(
                         strokeWidth = 2.dp
                     )
                 } else {
-                    Text(text = stringResource(R.string.enable))
+                    Text(text = stringResource(R.string.create))
                 }
             }
         },
