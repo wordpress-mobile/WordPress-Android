@@ -108,28 +108,16 @@ def current_beta_version
   VERSION_FORMATTER.beta_version(current_version)
 end
 
-# Returns the beta version that is used by the code freeze
-# It first increments the minor number, which also resets the build number to 0
-# It then bumps the build number so the -rc-1 can be appended to the code freeze version
-def code_freeze_beta_version
-  # Read the current release version from the .xcconfig file and parse it into an AppVersion object
-  current_version = VERSION_FORMATTER.parse(VERSION_FILE.read_version_name)
-  # Calculate the next major version number
-  next_version = VERSION_CALCULATOR.next_release_version(version: current_version)
-  # Calculate the next build number
-  code_freeze_beta_version = VERSION_CALCULATOR.next_build_number(version: next_version)
-  # Return the formatted release version
-  VERSION_FORMATTER.beta_version(code_freeze_beta_version)
-end
-
-# Returns the beta version of the app in the format `1.2-rc-1`
+# Returns the next beta version in the format `1.2-rc-2` (increments the build number)
 #
-def next_beta_version
-  # Read the current release version from the .xcconfig file and parse it into an AppVersion object
-  current_version = VERSION_FORMATTER.parse(VERSION_FILE.read_version_name)
-  # Calculate the next beta version
+def next_beta_version(version_name: nil)
+  # Use provided version or read the current version from version.properties
+  version_name ||= VERSION_FILE.read_version_name
+  # Parse the version string (e.g., "1.2-rc-1") into an AppVersion object
+  current_version = VERSION_FORMATTER.parse(version_name)
+  # Increment the build number to get the next beta version
   next_beta_version = VERSION_CALCULATOR.next_build_number(version: current_version)
-  # Return the formatted release version
+  # Format as beta version (e.g., "1.2-rc-2")
   VERSION_FORMATTER.beta_version(next_beta_version)
 end
 
