@@ -213,6 +213,16 @@ platform :android do
     # Parse the provided version into an AppVersion object
     parsed_version = VERSION_FORMATTER.parse(new_version)
     previous_version = VERSION_FORMATTER.release_version(VERSION_CALCULATOR.previous_patch_version(version: parsed_version))
+    previous_release_branch = "release/#{previous_version}"
+
+    # Determine the base for the hotfix branch: either a tag or a release branch
+    base_ref_for_hotfix = if git_tag_exists(tag: previous_version)
+                            previous_version
+                          elsif Fastlane::Helper::GitHelper.branch_exists_on_remote?(branch_name: previous_release_branch)
+                            previous_release_branch
+                          else
+                            UI.user_error!("Neither tag #{previous_version} nor branch #{previous_release_branch} exists! A hotfix branch cannot be created.")
+                          end
 
     # Check versions
     message = <<-MESSAGE
@@ -223,7 +233,7 @@ platform :android do
       Current build code: #{current_build_code}
       New build code: #{new_build_code}
 
-      Branching from tag: #{previous_version}
+      Branching from #{base_ref_for_hotfix}
 
     MESSAGE
 
@@ -233,11 +243,10 @@ platform :android do
 
     # Check tags
     UI.user_error!("The version `#{new_version}` tag already exists!") if git_tag_exists(tag: new_version)
-    UI.user_error!("Version #{previous_version} is not tagged! A hotfix branch cannot be created.") unless git_tag_exists(tag: previous_version)
 
     # Create the hotfix branch
-    UI.message 'Creating hotfix branch...'
-    Fastlane::Helper::GitHelper.create_branch("release/#{new_version}", from: previous_version)
+    UI.message "Creating hotfix branch from #{base_ref_for_hotfix}..."
+    Fastlane::Helper::GitHelper.create_branch("release/#{new_version}", from: base_ref_for_hotfix)
     UI.success "Done! New hotfix branch is: #{git_branch}"
 
     # Bump the hotfix version and build code and write it to the `version.properties` file
