@@ -219,10 +219,10 @@ platform :android do
     base_ref_for_hotfix = if git_tag_exists(tag: previous_version)
                             previous_version
                           elsif Fastlane::Helper::GitHelper.branch_exists_on_remote?(branch_name: previous_release_branch)
-                            UI.message("ℹ️  Tag #{previous_version} not found. Using release branch #{previous_release_branch} as the base for hotfix instead.")
+                            UI.message("ℹ️  Tag '#{previous_version}' not found on the remote. Using release branch '#{previous_release_branch}' as the base for hotfix instead.")
                             previous_release_branch
                           else
-                            UI.user_error!("Neither tag #{previous_version} nor branch #{previous_release_branch} exists! A hotfix branch cannot be created.")
+                            UI.user_error!("Neither tag '#{previous_version}' nor branch '#{previous_release_branch}' exists on the remote! A hotfix branch cannot be created.")
                           end
 
     # Check versions
@@ -246,18 +246,18 @@ platform :android do
     UI.user_error!("The version `#{new_version}` tag already exists!") if git_tag_exists(tag: new_version)
 
     # Create the hotfix branch
-    UI.message "Creating hotfix branch from #{base_ref_for_hotfix}..."
+    UI.message("Creating hotfix branch from '#{base_ref_for_hotfix}'...")
     Fastlane::Helper::GitHelper.create_branch("release/#{new_version}", from: base_ref_for_hotfix)
-    UI.success "Done! New hotfix branch is: #{git_branch}"
+    UI.success("Done! New hotfix branch is: '#{git_branch}'")
 
     # Bump the hotfix version and build code and write it to the `version.properties` file
-    UI.message 'Bumping hotfix version and build code...'
+    UI.message('Bumping hotfix version and build code...')
     VERSION_FILE.write_version(
       version_name: new_version,
       version_code: new_build_code
     )
     commit_version_bump
-    UI.success "Done! New Release Version: #{current_release_version}. New Build Code: #{current_build_code}"
+    UI.success("Done! New Release Version: '#{current_release_version}'. New Build Code: '#{current_build_code}'")
 
     push_to_git_remote(tags: false)
   end
