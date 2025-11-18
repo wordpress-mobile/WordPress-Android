@@ -216,7 +216,7 @@ platform :android do
     previous_release_branch = "release/#{previous_version}"
 
     # Determine the base for the hotfix branch: either a tag or a release branch
-    base_ref_for_hotfix = if git_tag_exists(tag: previous_version)
+    base_ref_for_hotfix = if git_tag_exists(tag: previous_version, remote: true)
                             previous_version
                           elsif Fastlane::Helper::GitHelper.branch_exists_on_remote?(branch_name: previous_release_branch)
                             UI.message("ℹ️  Tag '#{previous_version}' not found on the remote. Using release branch '#{previous_release_branch}' as the base for hotfix instead.")
@@ -243,7 +243,7 @@ platform :android do
     UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
 
     # Check tags
-    UI.user_error!("The version `#{new_version}` tag already exists!") if git_tag_exists(tag: new_version)
+    UI.user_error!("Version '#{new_version}' already exists on the remote! Abort!") if git_tag_exists(tag: new_version, remote: true)
 
     # Create the hotfix branch
     UI.message("Creating hotfix branch from '#{base_ref_for_hotfix}'...")
