@@ -61,6 +61,7 @@ import coil.request.videoFrameMillis
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.ConversationStatus
 import org.wordpress.android.support.he.model.MessageSendResult
 import org.wordpress.android.support.he.model.AttachmentType
 import org.wordpress.android.support.he.model.SupportAttachment
@@ -118,12 +119,18 @@ fun HEConversationDetailScreen(
             )
         },
         bottomBar = {
-            ReplyButton(
-                enabled = !isLoading,
-                onClick = {
-                    showBottomSheet = true
-                }
-            )
+            val status = ConversationStatus.fromStatus(conversation.status)
+            val isClosed = status == ConversationStatus.CLOSED
+            if (isClosed) {
+                ClosedConversationBanner()
+            } else {
+                ReplyButton(
+                    enabled = !isLoading,
+                    onClick = {
+                        showBottomSheet = true
+                    }
+                )
+            }
         }
     ) { contentPadding ->
         Box(
@@ -140,7 +147,7 @@ fun HEConversationDetailScreen(
             ) {
             item {
                 ConversationHeader(
-                    messageCount = conversation.messages.size,
+                    status = conversation.status,
                     lastUpdated = formatRelativeTime(conversation.lastMessageSentAt, resources),
                     isLoading = isLoading
                 )
@@ -256,13 +263,24 @@ fun HEConversationDetailScreen(
 
 @Composable
 private fun ConversationHeader(
-    messageCount: Int,
+    status: String,
     lastUpdated: String,
     isLoading: Boolean = false
 ) {
+    val statusText = when (ConversationStatus.fromStatus(status)) {
+        ConversationStatus.WAITING_FOR_SUPPORT ->
+            stringResource(R.string.he_support_status_waiting_for_support)
+        ConversationStatus.WAITING_FOR_USER ->
+            stringResource(R.string.he_support_status_waiting_for_user)
+        ConversationStatus.SOLVED ->
+            stringResource(R.string.he_support_status_solved)
+        ConversationStatus.CLOSED ->
+            stringResource(R.string.he_support_status_closed)
+        ConversationStatus.UNKNOWN ->
+            stringResource(R.string.he_support_status_unknown)
+    }
     val headerDescription = if (!isLoading) {
-        "${stringResource(R.string.he_support_message_count, messageCount)}. " +
-                stringResource(R.string.he_support_last_updated, lastUpdated)
+        "$statusText. ${stringResource(R.string.he_support_last_updated, lastUpdated)}"
     } else {
         stringResource(R.string.he_support_last_updated, lastUpdated)
     }
@@ -277,26 +295,7 @@ private fun ConversationHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (!isLoading) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_comment_white_24dp),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(20.dp)
-                )
-                Text(
-                    text = stringResource(R.string.he_support_message_count, messageCount),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        } else {
-            Spacer(modifier = Modifier.size(0.dp))
-        }
+        ConversationStatusBadge(status = status)
 
         Text(
             text = stringResource(R.string.he_support_last_updated, lastUpdated),
@@ -320,6 +319,36 @@ private fun ConversationTitleCard(title: String) {
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.semantics { heading() }
         )
+    }
+}
+
+@Composable
+private fun ClosedConversationBanner() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.errorContainer,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_info_outline_white_24dp),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onErrorContainer,
+                modifier = Modifier.size(24.dp)
+            )
+            Text(
+                text = stringResource(R.string.he_support_conversation_closed_message),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onErrorContainer
+            )
+        }
     }
 }
 
