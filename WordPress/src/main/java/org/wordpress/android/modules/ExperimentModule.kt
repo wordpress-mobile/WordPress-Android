@@ -19,7 +19,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class ExperimentModule {
-
     @Provides
     @Singleton
     fun provideVariationsRepository(
@@ -37,5 +36,4 @@ class ExperimentModule {
         cacheDir = File(appContext.filesDir, "experiments"),
         coroutineScope = appScope
     )
-
 }
