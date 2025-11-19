@@ -91,16 +91,9 @@ fun AttachmentFullscreenVideoPlayer(
         }
     }
 
-    fun closeFullScreen() {
-        exoPlayer?.stop()
-        exoPlayer?.release()
-        onDismiss()
-        onResetVideoDownloadState()
-    }
-
     Dialog(
         onDismissRequest = {
-            closeFullScreen()
+            closeFullScreen(exoPlayer, onDismiss, onResetVideoDownloadState)
         },
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
@@ -151,7 +144,7 @@ fun AttachmentFullscreenVideoPlayer(
                         Button(
                             onClick = {
                                 onDownload()
-                                closeFullScreen()
+                                closeFullScreen(exoPlayer, onDismiss, onResetVideoDownloadState)
                             }
                         ) {
                             Text(stringResource(R.string.he_support_download_video_button))
@@ -194,7 +187,7 @@ fun AttachmentFullscreenVideoPlayer(
                 IconButton(
                     onClick = {
                         onDownload()
-                        closeFullScreen()
+                        closeFullScreen(exoPlayer, onDismiss, onResetVideoDownloadState)
                     }
                 ) {
                     Icon(
@@ -208,7 +201,7 @@ fun AttachmentFullscreenVideoPlayer(
                 // Close button
                 IconButton(
                     onClick = {
-                        closeFullScreen()
+                        closeFullScreen(exoPlayer, onDismiss, onResetVideoDownloadState)
                     }
                 ) {
                     Icon(
@@ -221,4 +214,15 @@ fun AttachmentFullscreenVideoPlayer(
             }
         }
     }
+}
+
+fun closeFullScreen(
+    exoPlayer: SimpleExoPlayer?,
+    onDismiss: () -> Unit,
+    onResetVideoDownloadState: () -> Unit,
+) {
+    exoPlayer?.stop()
+    exoPlayer?.release()
+    onDismiss()
+    onResetVideoDownloadState()
 }
