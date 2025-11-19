@@ -51,8 +51,9 @@ class HESupportViewModel @Inject constructor(
     private val _attachmentState = MutableStateFlow(AttachmentState())
     val attachmentState: StateFlow<AttachmentState> = _attachmentState.asStateFlow()
 
-    // Cache for downloaded video files (videoUrl -> tempFile)
-    private val videoCache = mutableMapOf<String, File>()
+    // Cache for downloaded video file paths (videoUrl -> file path)
+    // Stores paths instead of File objects to minimize memory footprint
+    private val videoCache = mutableMapOf<String, String>()
 
     // Video download state
     private val _videoDownloadState = MutableStateFlow<VideoDownloadState>(VideoDownloadState.Idle)
@@ -294,9 +295,9 @@ class HESupportViewModel @Inject constructor(
     fun downloadVideoToTempFile(videoUrl: String) {
         viewModelScope.launch(ioDispatcher) {
             try {
-                _videoDownloadState.value = VideoDownloadState.Idle
-                // Check cache first
-                videoCache[videoUrl]?.let { cachedFile ->
+                // Check cache first (before setting state to avoid unnecessary state changes)
+                videoCache[videoUrl]?.let { cachedFilePath ->
+                    val cachedFile = File(cachedFilePath)
                     if (cachedFile.exists()) {
                         AppLog.d(AppLog.T.SUPPORT, "Using cached video file for: $videoUrl")
                         _videoDownloadState.value = VideoDownloadState.Success(cachedFile)
@@ -314,8 +315,8 @@ class HESupportViewModel @Inject constructor(
                 if (tempFile == null) {
                     _videoDownloadState.value = VideoDownloadState.Error
                 } else {
-                    // Cache the downloaded file
-                    videoCache[videoUrl] = tempFile
+                    // Cache the downloaded file path
+                    videoCache[videoUrl] = tempFile.absolutePath
                     _videoDownloadState.value = VideoDownloadState.Success(tempFile)
                 }
             } catch (e: Exception) {
@@ -337,9 +338,10 @@ class HESupportViewModel @Inject constructor(
      */
     fun cleanupVideoCache() {
         AppLog.d(AppLog.T.SUPPORT, "Cleaning up ${videoCache.size} cached video files")
-        videoCache.values.forEach { file ->
+        videoCache.values.forEach { filePath ->
+            val file = File(filePath)
             if (file.exists()) {
-                AppLog.d(AppLog.T.SUPPORT, "Deleting temp video file: ${file.absolutePath}")
+                AppLog.d(AppLog.T.SUPPORT, "Deleting temp video file: $filePath")
                 file.delete()
             }
         }
@@ -347,4 +349,13 @@ class HESupportViewModel @Inject constructor(
     }
 
     fun getAuthorizationHeader():String = "$BEARER_TAG ${accountStore.accessToken}"
+
+    /**
+     * Called when the ViewModel is destroyed. Ensures video cache cleanup even if Activity
+     * onDestroy() is not called (e.g., process death).
+     */
+    override fun onCleared() {
+        super.onCleared()
+        cleanupVideoCache()
+    }
 }
