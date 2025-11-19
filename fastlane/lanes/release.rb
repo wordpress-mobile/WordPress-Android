@@ -247,6 +247,9 @@ platform :android do
     # Check tags
     UI.user_error!("Version '#{new_version}' already exists on the remote! Abort!") if git_tag_exists(tag: new_version, remote: true)
 
+    # Fetch the base ref to ensure it's available locally
+    sh('git', 'fetch', 'origin', base_ref_for_hotfix)
+
     # Create the hotfix branch
     UI.message("Creating hotfix branch from '#{base_ref_for_hotfix}'...")
     Fastlane::Helper::GitHelper.create_branch("release/#{new_version}", from: base_ref_for_hotfix)
