@@ -124,13 +124,14 @@ class TempAttachmentsUtil @Inject constructor(
                 AppLog.d(AppLog.T.SUPPORT, "Video downloaded: ${tempFile.absolutePath}")
                 tempFile
             } else {
-                AppLog.e(AppLog.T.SUPPORT, "Failed to download video. Response code: $responseCode")
-                tempFile?.delete()
+                val deleted = tempFile?.delete()
+                AppLog.e(AppLog.T.SUPPORT, "Failed to download video. Deleted: ${deleted} - " +
+                        "Response code: $responseCode")
                 null
             }
         } catch (e: Exception) {
-            AppLog.e(AppLog.T.SUPPORT, "Error downloading video: ${e.message}")
-            tempFile?.delete()
+            val deleted = tempFile?.delete()
+            AppLog.e(AppLog.T.SUPPORT, "Error downloading video: ${e.message} Deleted: ${deleted}")
             null
         } finally {
             connection?.disconnect()
