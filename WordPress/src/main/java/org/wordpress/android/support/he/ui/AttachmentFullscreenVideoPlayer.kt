@@ -20,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +43,6 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
 import org.wordpress.android.R
 import org.wordpress.android.support.he.model.VideoDownloadState
-import org.wordpress.android.support.he.util.VideoUrlResolver
 import org.wordpress.android.util.AppLog
 import java.io.File
 
@@ -57,7 +55,6 @@ fun AttachmentFullscreenVideoPlayer(
     downloadState: VideoDownloadState,
     onStartVideoDownload: (String, String) -> Unit,
     onResetVideoDownloadState: () -> Unit = {},
-    videoUrlResolver: VideoUrlResolver? = null
 ) {
     val context = LocalContext.current
     var localVideoFile by remember { mutableStateOf<File?>(null) }
