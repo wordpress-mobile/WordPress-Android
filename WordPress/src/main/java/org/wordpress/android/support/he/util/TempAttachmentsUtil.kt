@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.support.he.model.VideoDownloadState
 import org.wordpress.android.util.AppLog
 import java.io.File
 import java.net.HttpURLConnection
@@ -14,7 +13,6 @@ import java.net.URL
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.collections.forEach
-import kotlin.collections.set
 
 class TempAttachmentsUtil @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,

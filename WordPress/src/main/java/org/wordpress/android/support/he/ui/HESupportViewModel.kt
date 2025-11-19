@@ -290,6 +290,7 @@ class HESupportViewModel @Inject constructor(
      * Downloads a video to a temporary file with caching and state management.
      * Updates videoDownloadState as it progresses.
      */
+    @Suppress("TooGenericExceptionCaught")
     fun downloadVideoToTempFile(videoUrl: String) {
         viewModelScope.launch(ioDispatcher) {
             try {

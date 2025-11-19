@@ -40,7 +40,6 @@ import androidx.compose.ui.window.DialogProperties
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.support.he.ui.HESupportActivity.Companion.AUTHORIZATION_TAG
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
