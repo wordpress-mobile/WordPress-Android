@@ -87,14 +87,21 @@ class TempAttachmentsUtil @Inject constructor(
         return "jpg"
     }
 
+    @Suppress("TooGenericExceptionCaught")
     suspend fun createVideoTempFile(videoUrl: String, authHeader: String): File? = withContext(ioDispatcher) {
-        val tempFile = File.createTempFile("video_", ".mp4", application.cacheDir)
-        val connection = URL(videoUrl).openConnection() as HttpURLConnection
-        connection.requestMethod = "GET"
-        connection.setRequestProperty("Authorization", authHeader)
-        connection.instanceFollowRedirects = true
+        var tempFile: File? = null
+        var connection: HttpURLConnection? = null
 
         try {
+            tempFile = File.createTempFile("video_", ".mp4", application.cacheDir)
+            connection = (URL(videoUrl).openConnection() as HttpURLConnection).apply {
+                requestMethod = "GET"
+                setRequestProperty("Authorization", authHeader)
+                instanceFollowRedirects = true
+                connectTimeout = 30_000 // 30 seconds
+                readTimeout = 60_000 // 60 seconds
+            }
+
             connection.connect()
 
             val responseCode = connection.responseCode
@@ -111,10 +118,15 @@ class TempAttachmentsUtil @Inject constructor(
                 tempFile
             } else {
                 AppLog.e(AppLog.T.SUPPORT, "Failed to download video. Response code: $responseCode")
+                tempFile?.delete()
                 null
             }
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.SUPPORT, "Error downloading video: ${e.message}")
+            tempFile?.delete()
+            null
         } finally {
-            connection.disconnect()
+            connection?.disconnect()
         }
     }
 }
