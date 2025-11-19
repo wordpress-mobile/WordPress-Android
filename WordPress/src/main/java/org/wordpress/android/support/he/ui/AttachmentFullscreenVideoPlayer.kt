@@ -51,9 +51,8 @@ fun AttachmentFullscreenVideoPlayer(
     videoUrl: String,
     onDismiss: () -> Unit,
     onDownload: () -> Unit = {},
-    onGetAuthorizationHeaderArgument: () -> String,
     downloadState: VideoDownloadState,
-    onStartVideoDownload: (String, String) -> Unit,
+    onStartVideoDownload: (String) -> Unit,
     onResetVideoDownloadState: () -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -61,7 +60,7 @@ fun AttachmentFullscreenVideoPlayer(
 
     // Start download when composable is first launched
     LaunchedEffect(videoUrl) {
-        onStartVideoDownload(videoUrl, onGetAuthorizationHeaderArgument())
+        onStartVideoDownload(videoUrl)
     }
 
     // Update local file when download succeeds
@@ -194,9 +193,8 @@ fun AttachmentFullscreenVideoPlayer(
                 // Download button
                 IconButton(
                     onClick = {
-                        exoPlayer?.stop()
-                        onDownload.invoke()
-                        onDismiss.invoke()
+                        onDownload()
+                        closeFullScreen()
                     }
                 ) {
                     Icon(

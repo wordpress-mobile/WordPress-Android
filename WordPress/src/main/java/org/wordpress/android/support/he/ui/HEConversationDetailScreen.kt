@@ -90,10 +90,9 @@ fun HEConversationDetailScreen(
     attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener,
     onDownloadAttachment: (SupportAttachment) -> Unit = {},
-    videoUrlResolver: org.wordpress.android.support.he.util.VideoUrlResolver? = null,
     onGetAuthorizationHeaderArgument: () -> String,
     videoDownloadState: VideoDownloadState,
-    onStartVideoDownload: (String, String) -> Unit,
+    onStartVideoDownload: (String) -> Unit,
     onResetVideoDownloadState: () -> Unit = {},
 ) {
     val listState = rememberLazyListState()
@@ -255,7 +254,6 @@ fun HEConversationDetailScreen(
             AttachmentType.Video -> {
                 AttachmentFullscreenVideoPlayer(
                     videoUrl = attachment.url,
-                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument,
                     downloadState = videoDownloadState,
                     onStartVideoDownload = onStartVideoDownload,
                     onResetVideoDownloadState = onResetVideoDownloadState,
@@ -265,7 +263,6 @@ fun HEConversationDetailScreen(
                     onDownload = {
                         onDownloadAttachment(attachment)
                     },
-                    videoUrlResolver = videoUrlResolver,
                 )
             }
             else -> {
@@ -612,7 +609,7 @@ private fun HEConversationDetailScreenPreview() {
             },
             onGetAuthorizationHeaderArgument = { "" },
             videoDownloadState = VideoDownloadState.Idle,
-            onStartVideoDownload = { _, _ -> },
+            onStartVideoDownload = { _ -> },
         )
     }
 }
@@ -639,7 +636,7 @@ private fun HEConversationDetailScreenPreviewDark() {
             },
             onGetAuthorizationHeaderArgument = { "" },
             videoDownloadState = VideoDownloadState.Idle,
-            onStartVideoDownload = { _, _ -> },
+            onStartVideoDownload = { _ -> },
         )
     }
 }
@@ -668,7 +665,7 @@ private fun HEConversationDetailScreenWordPressPreview() {
             },
             onGetAuthorizationHeaderArgument = { "" },
             videoDownloadState = VideoDownloadState.Idle,
-            onStartVideoDownload = { _, _ -> },
+            onStartVideoDownload = { _ -> },
         )
     }
 }
@@ -696,7 +693,7 @@ private fun HEConversationDetailScreenPreviewWordPressDark() {
             },
             onGetAuthorizationHeaderArgument = { "" },
             videoDownloadState = VideoDownloadState.Idle,
-            onStartVideoDownload = { _, _ -> },
+            onStartVideoDownload = { _ -> },
         )
     }
 }

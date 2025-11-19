@@ -6,11 +6,15 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.support.he.model.VideoDownloadState
 import org.wordpress.android.util.AppLog
 import java.io.File
+import java.net.HttpURLConnection
+import java.net.URL
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.collections.forEach
+import kotlin.collections.set
 
 class TempAttachmentsUtil @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
@@ -83,5 +87,36 @@ class TempAttachmentsUtil @Inject constructor(
 
         // Default to jpg if we can't determine the extension
         return "jpg"
+    }
+
+    suspend fun createVideoTempFile(videoUrl: String, authHeader: String): File? = withContext(ioDispatcher) {
+        val tempFile = File.createTempFile("video_", ".mp4", application.cacheDir)
+        val connection = URL(videoUrl).openConnection() as HttpURLConnection
+        connection.requestMethod = "GET"
+        connection.setRequestProperty("Authorization", authHeader)
+        connection.instanceFollowRedirects = true
+
+        try {
+            connection.connect()
+
+            val responseCode = connection.responseCode
+            AppLog.d(AppLog.T.SUPPORT, "Download response code: $responseCode")
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                connection.inputStream.use { input ->
+                    tempFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+
+                AppLog.d(AppLog.T.SUPPORT, "Video downloaded: ${tempFile.absolutePath}")
+                tempFile
+            } else {
+                AppLog.e(AppLog.T.SUPPORT, "Failed to download video. Response code: $responseCode")
+                null
+            }
+        } finally {
+            connection.disconnect()
+        }
     }
 }

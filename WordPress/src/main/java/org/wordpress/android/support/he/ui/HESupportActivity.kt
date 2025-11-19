@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.util.AttachmentActionsListener
-import org.wordpress.android.support.he.util.VideoUrlResolver
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.reader.ReaderFileDownloadManager
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
@@ -44,7 +43,6 @@ import javax.inject.Inject
 class HESupportActivity : AppCompatActivity() {
     @Inject lateinit var fileDownloadManager: ReaderFileDownloadManager
     @Inject lateinit var appLogWrapper: AppLogWrapper
-    @Inject lateinit var videoUrlResolver: VideoUrlResolver
     @Inject lateinit var accountStore: AccountStore
     private val viewModel by viewModels<HESupportViewModel>()
 
@@ -191,7 +189,6 @@ class HESupportActivity : AppCompatActivity() {
                             isLoading = isLoadingConversation,
                             isSendingMessage = isSendingMessage,
                             messageSendResult = messageSendResult,
-                            videoUrlResolver = videoUrlResolver,
                             onBackClick = { viewModel.onBackClick() },
                             onSendMessage = { message, includeAppLogs ->
                                 viewModel.onAddMessageToConversation(
@@ -215,10 +212,10 @@ class HESupportActivity : AppCompatActivity() {
                                 // Start download with proper filename
                                 fileDownloadManager.downloadFile(attachment.url, attachment.filename)
                             },
-                            onGetAuthorizationHeaderArgument = { "$BEARER_TAG ${accountStore.accessToken}" },
+                            onGetAuthorizationHeaderArgument = { viewModel.getAuthorizationHeader() },
                             videoDownloadState = videoDownloadState,
-                            onStartVideoDownload = { url, authHeader ->
-                                viewModel.downloadVideoToTempFile(url, authHeader)
+                            onStartVideoDownload = { url ->
+                                viewModel.downloadVideoToTempFile(url)
                             },
                             onResetVideoDownloadState = { viewModel.resetVideoDownloadState() }
                         )
@@ -292,7 +289,6 @@ class HESupportActivity : AppCompatActivity() {
 
     companion object {
         const val AUTHORIZATION_TAG = "Authorization"
-        private const val BEARER_TAG = "Bearer"
 
         @JvmStatic
         fun createIntent(context: Context): Intent = Intent(context, HESupportActivity::class.java)

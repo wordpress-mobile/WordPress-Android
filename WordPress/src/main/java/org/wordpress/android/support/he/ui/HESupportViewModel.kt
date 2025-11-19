@@ -24,8 +24,6 @@ import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.io.File
-import java.net.HttpURLConnection
-import java.net.URL
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -41,6 +39,7 @@ class HESupportViewModel @Inject constructor(
 ) : ConversationsSupportViewModel<SupportConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
     companion object {
         const val MAX_TOTAL_SIZE_BYTES = 20L * 1024 * 1024 // 20MB total
+        private const val BEARER_TAG = "Bearer"
     }
     private val _isSendingMessage = MutableStateFlow(false)
     val isSendingMessage: StateFlow<Boolean> = _isSendingMessage.asStateFlow()
@@ -291,7 +290,7 @@ class HESupportViewModel @Inject constructor(
      * Downloads a video to a temporary file with caching and state management.
      * Updates videoDownloadState as it progresses.
      */
-    fun downloadVideoToTempFile(videoUrl: String, authHeader: String) {
+    fun downloadVideoToTempFile(videoUrl: String) {
         viewModelScope.launch(ioDispatcher) {
             try {
                 _videoDownloadState.value = VideoDownloadState.Idle
@@ -310,40 +309,17 @@ class HESupportViewModel @Inject constructor(
                 // Start downloading
                 _videoDownloadState.value = VideoDownloadState.Downloading
                 AppLog.d(AppLog.T.SUPPORT, "Downloading video to temp file: $videoUrl")
-
-                val tempFile = File.createTempFile("video_", ".mp4", application.cacheDir)
-                val connection = URL(videoUrl).openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
-                connection.setRequestProperty("Authorization", authHeader)
-                connection.instanceFollowRedirects = true
-
-                try {
-                    connection.connect()
-
-                    val responseCode = connection.responseCode
-                    AppLog.d(AppLog.T.SUPPORT, "Download response code: $responseCode")
-
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        connection.inputStream.use { input ->
-                            tempFile.outputStream().use { output ->
-                                input.copyTo(output)
-                            }
-                        }
-                        // Cache the downloaded file
-                        videoCache[videoUrl] = tempFile
-                        AppLog.d(AppLog.T.SUPPORT, "Video downloaded and cached: ${tempFile.absolutePath}")
-                        _videoDownloadState.value = VideoDownloadState.Success(tempFile)
-                    } else {
-                        val errorMsg = "Failed to download video. Response code: $responseCode"
-                        AppLog.e(AppLog.T.SUPPORT, errorMsg)
-                        _videoDownloadState.value = VideoDownloadState.Error(errorMsg)
-                    }
-                } finally {
-                    connection.disconnect()
+                val tempFile = tempAttachmentsUtil.createVideoTempFile(videoUrl, getAuthorizationHeader())
+                if (tempFile == null) {
+                    _videoDownloadState.value = VideoDownloadState.Error
+                } else {
+                    // Cache the downloaded file
+                    videoCache[videoUrl] = tempFile
+                    _videoDownloadState.value = VideoDownloadState.Success(tempFile)
                 }
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.SUPPORT, "Error downloading video", e)
-                _videoDownloadState.value = VideoDownloadState.Error(e.message ?: "Unknown error")
+                _videoDownloadState.value = VideoDownloadState.Error
             }
         }
     }
@@ -368,4 +344,6 @@ class HESupportViewModel @Inject constructor(
         }
         videoCache.clear()
     }
+
+    fun getAuthorizationHeader():String = "$BEARER_TAG ${accountStore.accessToken}"
 }
