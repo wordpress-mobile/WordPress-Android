@@ -28,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.util.AttachmentActionsListener
@@ -44,6 +45,7 @@ class HESupportActivity : AppCompatActivity() {
     @Inject lateinit var fileDownloadManager: ReaderFileDownloadManager
     @Inject lateinit var appLogWrapper: AppLogWrapper
     @Inject lateinit var videoUrlResolver: VideoUrlResolver
+    @Inject lateinit var accountStore: AccountStore
     private val viewModel by viewModels<HESupportViewModel>()
 
     private lateinit var composeView: ComposeView
@@ -205,7 +207,8 @@ class HESupportActivity : AppCompatActivity() {
                                 }
                                 // Start download with proper filename
                                 fileDownloadManager.downloadFile(attachment.url, attachment.filename)
-                            }
+                            },
+                            accountStore = accountStore
                         )
                     }
                 }

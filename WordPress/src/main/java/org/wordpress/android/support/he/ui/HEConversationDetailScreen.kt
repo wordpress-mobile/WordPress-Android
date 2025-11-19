@@ -59,6 +59,7 @@ import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
 import coil.request.videoFrameMillis
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.he.model.AttachmentState
 import org.wordpress.android.support.he.model.ConversationStatus
@@ -87,7 +88,8 @@ fun HEConversationDetailScreen(
     attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener,
     onDownloadAttachment: (SupportAttachment) -> Unit = {},
-    videoUrlResolver: org.wordpress.android.support.he.util.VideoUrlResolver? = null
+    videoUrlResolver: org.wordpress.android.support.he.util.VideoUrlResolver? = null,
+    accountStore: AccountStore? = null,
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -240,7 +242,8 @@ fun HEConversationDetailScreen(
                     onDismiss = { previewAttachment = null },
                     onDownload = {
                         onDownloadAttachment(attachment)
-                    }
+                    },
+                    accountStore = accountStore,
                 )
             }
             AttachmentType.Video -> {

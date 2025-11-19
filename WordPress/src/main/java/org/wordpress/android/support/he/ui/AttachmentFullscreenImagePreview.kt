@@ -40,13 +40,15 @@ import androidx.compose.ui.window.DialogProperties
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable
 fun AttachmentFullscreenImagePreview(
     imageUrl: String,
     onDismiss: () -> Unit,
-    onDownload: () -> Unit = {}
+    onDownload: () -> Unit = {},
+    accountStore: AccountStore? = null,
 ) {
     var scale by remember { mutableFloatStateOf(1f) }
     var offsetX by remember { mutableFloatStateOf(0f) }
@@ -90,6 +92,9 @@ fun AttachmentFullscreenImagePreview(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(imageUrl)
                             .crossfade(true)
+                            .apply {
+                                addHeader("Authorization", "Bearer ${accountStore?.accessToken}")
+                            }
                             .build(),
                         contentDescription = attachmentImageDescription,
                         modifier = Modifier
