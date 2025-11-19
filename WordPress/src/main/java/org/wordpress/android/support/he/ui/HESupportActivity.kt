@@ -88,6 +88,12 @@ class HESupportActivity : AppCompatActivity() {
         viewModel.init()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        // Cleanup cached video files
+        viewModel.cleanupVideoCache()
+    }
+
 
     private fun observeNavigationEvents() {
         lifecycleScope.launch {
@@ -176,6 +182,7 @@ class HESupportActivity : AppCompatActivity() {
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
                     val messageSendResult by viewModel.messageSendResult.collectAsState()
                     val attachmentState by viewModel.attachmentState.collectAsState()
+                    val videoDownloadState by viewModel.videoDownloadState.collectAsState()
 
                     selectedConversation?.let { conversation ->
                         HEConversationDetailScreen(
@@ -208,7 +215,12 @@ class HESupportActivity : AppCompatActivity() {
                                 // Start download with proper filename
                                 fileDownloadManager.downloadFile(attachment.url, attachment.filename)
                             },
-                            onGetAuthorizationHeaderArgument = { "$BEARER_TAG ${accountStore?.accessToken}" }
+                            onGetAuthorizationHeaderArgument = { "$BEARER_TAG ${accountStore.accessToken}" },
+                            videoDownloadState = videoDownloadState,
+                            onStartVideoDownload = { url, authHeader ->
+                                viewModel.downloadVideoToTempFile(url, authHeader)
+                            },
+                            onResetVideoDownloadState = { viewModel.resetVideoDownloadState() }
                         )
                     }
                 }

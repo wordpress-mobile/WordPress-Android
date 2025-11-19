@@ -68,6 +68,7 @@ import org.wordpress.android.support.he.model.AttachmentType
 import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
+import org.wordpress.android.support.he.model.VideoDownloadState
 import org.wordpress.android.support.he.ui.HESupportActivity.Companion.AUTHORIZATION_TAG
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
@@ -91,6 +92,9 @@ fun HEConversationDetailScreen(
     onDownloadAttachment: (SupportAttachment) -> Unit = {},
     videoUrlResolver: org.wordpress.android.support.he.util.VideoUrlResolver? = null,
     onGetAuthorizationHeaderArgument: () -> String,
+    videoDownloadState: VideoDownloadState,
+    onStartVideoDownload: (String, String) -> Unit,
+    onResetVideoDownloadState: () -> Unit = {},
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -252,7 +256,12 @@ fun HEConversationDetailScreen(
                 AttachmentFullscreenVideoPlayer(
                     videoUrl = attachment.url,
                     onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument,
-                    onDismiss = { previewAttachment = null },
+                    downloadState = videoDownloadState,
+                    onStartVideoDownload = onStartVideoDownload,
+                    onResetVideoDownloadState = onResetVideoDownloadState,
+                    onDismiss = {
+                        previewAttachment = null
+                    },
                     onDownload = {
                         onDownloadAttachment(attachment)
                     },
@@ -602,6 +611,8 @@ private fun HEConversationDetailScreenPreview() {
                 }
             },
             onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _, _ -> },
         )
     }
 }
@@ -627,6 +638,8 @@ private fun HEConversationDetailScreenPreviewDark() {
                 }
             },
             onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _, _ -> },
         )
     }
 }
@@ -654,6 +667,8 @@ private fun HEConversationDetailScreenWordPressPreview() {
                 }
             },
             onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _, _ -> },
         )
     }
 }
@@ -680,6 +695,8 @@ private fun HEConversationDetailScreenPreviewWordPressDark() {
                 }
             },
             onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _, _ -> },
         )
     }
 }

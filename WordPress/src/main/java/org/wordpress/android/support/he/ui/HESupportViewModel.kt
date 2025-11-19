@@ -17,11 +17,15 @@ import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.model.AttachmentState
 import org.wordpress.android.support.he.model.MessageSendResult
 import org.wordpress.android.support.he.model.SupportConversation
+import org.wordpress.android.support.he.model.VideoDownloadState
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
 import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.io.File
+import java.net.HttpURLConnection
+import java.net.URL
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -47,6 +51,13 @@ class HESupportViewModel @Inject constructor(
     // Unified attachment state (shared for both Detail and NewTicket screens)
     private val _attachmentState = MutableStateFlow(AttachmentState())
     val attachmentState: StateFlow<AttachmentState> = _attachmentState.asStateFlow()
+
+    // Cache for downloaded video files (videoUrl -> tempFile)
+    private val videoCache = mutableMapOf<String, File>()
+
+    // Video download state
+    private val _videoDownloadState = MutableStateFlow<VideoDownloadState>(VideoDownloadState.Idle)
+    val videoDownloadState: StateFlow<VideoDownloadState> = _videoDownloadState.asStateFlow()
 
     override fun initRepository(accessToken: String) {
         heSupportRepository.init(accessToken)
@@ -274,5 +285,87 @@ class HESupportViewModel @Inject constructor(
 
     fun notifyGeneralError() {
         _errorMessage.value = ErrorType.GENERAL
+    }
+
+    /**
+     * Downloads a video to a temporary file with caching and state management.
+     * Updates videoDownloadState as it progresses.
+     */
+    fun downloadVideoToTempFile(videoUrl: String, authHeader: String) {
+        viewModelScope.launch(ioDispatcher) {
+            try {
+                _videoDownloadState.value = VideoDownloadState.Idle
+                // Check cache first
+                videoCache[videoUrl]?.let { cachedFile ->
+                    if (cachedFile.exists()) {
+                        AppLog.d(AppLog.T.SUPPORT, "Using cached video file for: $videoUrl")
+                        _videoDownloadState.value = VideoDownloadState.Success(cachedFile)
+                        return@launch
+                    } else {
+                        // File was deleted, remove from cache
+                        videoCache.remove(videoUrl)
+                    }
+                }
+
+                // Start downloading
+                _videoDownloadState.value = VideoDownloadState.Downloading
+                AppLog.d(AppLog.T.SUPPORT, "Downloading video to temp file: $videoUrl")
+
+                val tempFile = File.createTempFile("video_", ".mp4", application.cacheDir)
+                val connection = URL(videoUrl).openConnection() as HttpURLConnection
+                connection.requestMethod = "GET"
+                connection.setRequestProperty("Authorization", authHeader)
+                connection.instanceFollowRedirects = true
+
+                try {
+                    connection.connect()
+
+                    val responseCode = connection.responseCode
+                    AppLog.d(AppLog.T.SUPPORT, "Download response code: $responseCode")
+
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        connection.inputStream.use { input ->
+                            tempFile.outputStream().use { output ->
+                                input.copyTo(output)
+                            }
+                        }
+                        // Cache the downloaded file
+                        videoCache[videoUrl] = tempFile
+                        AppLog.d(AppLog.T.SUPPORT, "Video downloaded and cached: ${tempFile.absolutePath}")
+                        _videoDownloadState.value = VideoDownloadState.Success(tempFile)
+                    } else {
+                        val errorMsg = "Failed to download video. Response code: $responseCode"
+                        AppLog.e(AppLog.T.SUPPORT, errorMsg)
+                        _videoDownloadState.value = VideoDownloadState.Error(errorMsg)
+                    }
+                } finally {
+                    connection.disconnect()
+                }
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.SUPPORT, "Error downloading video", e)
+                _videoDownloadState.value = VideoDownloadState.Error(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    /**
+     * Resets the video download state to Idle. Call this when closing the video player.
+     */
+    fun resetVideoDownloadState() {
+        _videoDownloadState.value = VideoDownloadState.Idle
+    }
+
+    /**
+     * Cleans up all cached video files. Call this when the activity is destroyed.
+     */
+    fun cleanupVideoCache() {
+        AppLog.d(AppLog.T.SUPPORT, "Cleaning up ${videoCache.size} cached video files")
+        videoCache.values.forEach { file ->
+            if (file.exists()) {
+                AppLog.d(AppLog.T.SUPPORT, "Deleting temp video file: ${file.absolutePath}")
+                file.delete()
+            }
+        }
+        videoCache.clear()
     }
 }
