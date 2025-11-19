@@ -21,6 +21,11 @@ class TempAttachmentsUtil @Inject constructor(
     private val application: Application,
     private val accountStore: AccountStore
 ) {
+    companion object {
+        private const val CONNECTION_TIMEOUT_MS = 30_000 // 30 seconds
+        private const val READ_TIMEOUT_MS = 60_000 // 60 seconds
+    }
+
     @Suppress("TooGenericExceptionCaught")
     suspend fun createTempFilesFrom(uris: List<Uri>): List<File> = withContext(ioDispatcher) {
         uris.map{ it.toTempFile() }
@@ -100,8 +105,8 @@ class TempAttachmentsUtil @Inject constructor(
                 requestMethod = "GET"
                 setRequestProperty("Authorization", "Bearer ${accountStore.accessToken}")
                 instanceFollowRedirects = true
-                connectTimeout = 30_000 // 30 seconds
-                readTimeout = 60_000 // 60 seconds
+                connectTimeout = CONNECTION_TIMEOUT_MS
+                readTimeout = READ_TIMEOUT_MS
             }
 
             connection.connect()
