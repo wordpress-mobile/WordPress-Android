@@ -189,7 +189,6 @@ assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "as
 automattic-encryptedlogging = { group = "com.automattic", name = "encryptedlogging", version.ref = "automattic-encryptedlogging" }
 automattic-rest = { group = "com.automattic", name = "rest", version.ref = "automattic-rest" }
 automattic-tracks-android = { group = "com.automattic", name = "Automattic-Tracks-Android", version.ref = "automattic-tracks" }
-automattic-tracks-experimentation = { group = "com.automattic.tracks", name = "experimentation", version.ref = "automattic-tracks" }
 automattic-tracks-crashlogging = { group = "com.automattic.tracks", name = "crashlogging", version.ref = "automattic-tracks" }
 bumptech-glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "bumptech-glide" }
 bumptech-glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref = "bumptech-glide" }

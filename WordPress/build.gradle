@@ -571,7 +571,6 @@ dependencies {
 
     implementation(libs.automattic.encryptedlogging)
     implementation(libs.automattic.tracks.crashlogging)
-    implementation(libs.automattic.tracks.experimentation)
 }
 
 dependencyAnalysis {

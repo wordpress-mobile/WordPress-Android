@@ -33,7 +33,6 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import com.android.volley.RequestQueue
-import com.automattic.android.experimentation.VariationsRepository
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
@@ -183,9 +182,6 @@ class AppInitializer @Inject constructor(
 
     @Inject
     lateinit var imageEditorFileUtils: ImageEditorFileUtils
-
-    @Inject
-    lateinit var variationsRepository: VariationsRepository
 
     @Inject
     lateinit var wordPressWorkerFactory: WordPressWorkersFactory
@@ -660,9 +656,6 @@ class AppInitializer @Inject constructor(
         if (accountStore.hasAccessToken()) {
             // Make sure the Push Notification token is sent to our servers after a successful login
             gcmRegistrationScheduler.scheduleRegistration()
-
-            // Possible way to initialize variations repository. Not tested, verify when working on experiments.
-            // variationsRepository.initialize("${tracker.anonID}")
         }
     }
 
@@ -725,8 +718,6 @@ class AppInitializer @Inject constructor(
 
         // Clear WordPress.com account cookie cache
         wordPressCookieAuthenticator.clearAllCachedCookies()
-
-        variationsRepository.clear()
     }
 
     /*
