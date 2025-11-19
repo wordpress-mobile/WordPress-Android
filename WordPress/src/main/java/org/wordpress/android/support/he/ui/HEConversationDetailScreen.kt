@@ -470,6 +470,9 @@ private fun AttachmentItem(
     onClick: () -> Unit,
     onGetAuthorizationHeaderArgument: () -> String,
 ) {
+    // Cache authorization header to avoid repeated function calls during composition
+    val authorizationHeader = remember { onGetAuthorizationHeaderArgument() }
+
     val iconRes = when (attachment.type) {
         AttachmentType.Image -> R.drawable.ic_image_white_24dp
         AttachmentType.Video -> R.drawable.ic_video_camera_white_24dp
@@ -500,7 +503,7 @@ private fun AttachmentItem(
                         }
                     }
                     .apply {
-                        addHeader(AUTHORIZATION_TAG, onGetAuthorizationHeaderArgument.invoke())
+                        addHeader(AUTHORIZATION_TAG, authorizationHeader)
                     }
                     .build(),
                 contentDescription = attachment.filename,
