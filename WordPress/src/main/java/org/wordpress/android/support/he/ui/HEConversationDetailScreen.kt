@@ -167,7 +167,8 @@ fun HEConversationDetailScreen(
                     message = message,
                     timestamp = formatRelativeTime(message.createdAt, resources),
                     onPreviewAttachment = { attachment -> previewAttachment = attachment },
-                    onDownloadAttachment = onDownloadAttachment
+                    onDownloadAttachment = onDownloadAttachment,
+                    accountStore = accountStore
                 )
             }
 
@@ -360,7 +361,8 @@ private fun MessageItem(
     message: SupportMessage,
     timestamp: String,
     onPreviewAttachment: (SupportAttachment) -> Unit,
-    onDownloadAttachment: (SupportAttachment) -> Unit
+    onDownloadAttachment: (SupportAttachment) -> Unit,
+    accountStore: AccountStore? = null,
 ) {
     val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
 
@@ -421,7 +423,8 @@ private fun MessageItem(
                 AttachmentsList(
                     attachments = message.attachments,
                     onPreviewAttachment = onPreviewAttachment,
-                    onDownloadAttachment = onDownloadAttachment
+                    onDownloadAttachment = onDownloadAttachment,
+                    accountStore = accountStore
                 )
             }
         }
@@ -432,7 +435,8 @@ private fun MessageItem(
 private fun AttachmentsList(
     attachments: List<SupportAttachment>,
     onPreviewAttachment: (SupportAttachment) -> Unit,
-    onDownloadAttachment: (SupportAttachment) -> Unit
+    onDownloadAttachment: (SupportAttachment) -> Unit,
+    accountStore: AccountStore? = null,
 ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -446,7 +450,8 @@ private fun AttachmentsList(
                         AttachmentType.Image, AttachmentType.Video -> onPreviewAttachment(attachment)
                         else -> onDownloadAttachment(attachment)
                     }
-                }
+                },
+                accountStore = accountStore
             )
         }
     }
@@ -455,7 +460,8 @@ private fun AttachmentsList(
 @Composable
 private fun AttachmentItem(
     attachment: SupportAttachment,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    accountStore: AccountStore? = null,
 ) {
     val iconRes = when (attachment.type) {
         AttachmentType.Image -> R.drawable.ic_image_white_24dp
@@ -485,6 +491,9 @@ private fun AttachmentItem(
                             decoderFactory(VideoFrameDecoder.Factory())
                             videoFrameMillis(0) // Get first frame
                         }
+                    }
+                    .apply {
+                        addHeader("Authorization", "Bearer ${accountStore?.accessToken}")
                     }
                     .build(),
                 contentDescription = attachment.filename,
