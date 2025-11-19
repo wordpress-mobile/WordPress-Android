@@ -54,6 +54,9 @@ fun AttachmentFullscreenImagePreview(
     var offsetX by remember { mutableFloatStateOf(0f) }
     var offsetY by remember { mutableFloatStateOf(0f) }
 
+    // Cache authorization header to avoid repeated function calls during composition
+    val authorizationHeader = remember { onGetAuthorizationHeaderArgument() }
+
     // Load semantics
     val loadingImageDescription = stringResource(R.string.he_support_loading_image)
     val attachmentImageDescription = stringResource(R.string.he_support_attachment_image)
@@ -93,7 +96,7 @@ fun AttachmentFullscreenImagePreview(
                             .data(imageUrl)
                             .crossfade(true)
                             .apply {
-                                addHeader(AUTHORIZATION_TAG, onGetAuthorizationHeaderArgument.invoke())
+                                addHeader(AUTHORIZATION_TAG, authorizationHeader)
                             }
                             .build(),
                         contentDescription = attachmentImageDescription,
