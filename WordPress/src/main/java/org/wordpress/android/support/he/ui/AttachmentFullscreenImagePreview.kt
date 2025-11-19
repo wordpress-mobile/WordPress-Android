@@ -41,14 +41,15 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.support.he.ui.HESupportActivity.Companion.AUTHORIZATION_TAG
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable
 fun AttachmentFullscreenImagePreview(
     imageUrl: String,
+    onGetAuthorizationHeaderArgument: () -> String,
     onDismiss: () -> Unit,
     onDownload: () -> Unit = {},
-    accountStore: AccountStore? = null,
 ) {
     var scale by remember { mutableFloatStateOf(1f) }
     var offsetX by remember { mutableFloatStateOf(0f) }
@@ -93,7 +94,7 @@ fun AttachmentFullscreenImagePreview(
                             .data(imageUrl)
                             .crossfade(true)
                             .apply {
-                                addHeader("Authorization", "Bearer ${accountStore?.accessToken}")
+                                addHeader(AUTHORIZATION_TAG, onGetAuthorizationHeaderArgument.invoke())
                             }
                             .build(),
                         contentDescription = attachmentImageDescription,
@@ -186,6 +187,7 @@ private fun AttachmentFullscreenImagePreviewPreview() {
     AppThemeM3(isDarkTheme = false) {
         AttachmentFullscreenImagePreview(
             imageUrl = "https://via.placeholder.com/800x600",
+            onGetAuthorizationHeaderArgument = { "" },
             onDismiss = { },
             onDownload = { }
         )
@@ -198,6 +200,7 @@ private fun AttachmentFullscreenImagePreviewPreviewDark() {
     AppThemeM3(isDarkTheme = true) {
         AttachmentFullscreenImagePreview(
             imageUrl = "https://via.placeholder.com/800x600",
+            onGetAuthorizationHeaderArgument = { "" },
             onDismiss = { },
             onDownload = { }
         )

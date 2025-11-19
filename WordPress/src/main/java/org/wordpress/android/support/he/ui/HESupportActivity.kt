@@ -208,7 +208,7 @@ class HESupportActivity : AppCompatActivity() {
                                 // Start download with proper filename
                                 fileDownloadManager.downloadFile(attachment.url, attachment.filename)
                             },
-                            accountStore = accountStore
+                            onGetAuthorizationHeaderArgument = { "$BEARER_TAG ${accountStore?.accessToken}" }
                         )
                     }
                 }
@@ -279,6 +279,9 @@ class HESupportActivity : AppCompatActivity() {
 
 
     companion object {
+        const val AUTHORIZATION_TAG = "Authorization"
+        private const val BEARER_TAG = "Bearer"
+
         @JvmStatic
         fun createIntent(context: Context): Intent = Intent(context, HESupportActivity::class.java)
     }

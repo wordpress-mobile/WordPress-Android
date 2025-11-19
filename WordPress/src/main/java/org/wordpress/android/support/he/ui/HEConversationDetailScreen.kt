@@ -68,6 +68,7 @@ import org.wordpress.android.support.he.model.AttachmentType
 import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
+import org.wordpress.android.support.he.ui.HESupportActivity.Companion.AUTHORIZATION_TAG
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import org.wordpress.android.ui.compose.components.MainTopAppBar
@@ -89,7 +90,7 @@ fun HEConversationDetailScreen(
     attachmentActionsListener: AttachmentActionsListener,
     onDownloadAttachment: (SupportAttachment) -> Unit = {},
     videoUrlResolver: org.wordpress.android.support.he.util.VideoUrlResolver? = null,
-    accountStore: AccountStore? = null,
+    onGetAuthorizationHeaderArgument: () -> String,
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -168,7 +169,7 @@ fun HEConversationDetailScreen(
                     timestamp = formatRelativeTime(message.createdAt, resources),
                     onPreviewAttachment = { attachment -> previewAttachment = attachment },
                     onDownloadAttachment = onDownloadAttachment,
-                    accountStore = accountStore
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
                 )
             }
 
@@ -240,21 +241,22 @@ fun HEConversationDetailScreen(
             AttachmentType.Image -> {
                 AttachmentFullscreenImagePreview(
                     imageUrl = attachment.url,
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument,
                     onDismiss = { previewAttachment = null },
                     onDownload = {
                         onDownloadAttachment(attachment)
-                    },
-                    accountStore = accountStore,
+                    }
                 )
             }
             AttachmentType.Video -> {
                 AttachmentFullscreenVideoPlayer(
                     videoUrl = attachment.url,
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument,
                     onDismiss = { previewAttachment = null },
                     onDownload = {
                         onDownloadAttachment(attachment)
                     },
-                    videoUrlResolver = videoUrlResolver
+                    videoUrlResolver = videoUrlResolver,
                 )
             }
             else -> {
@@ -362,7 +364,7 @@ private fun MessageItem(
     timestamp: String,
     onPreviewAttachment: (SupportAttachment) -> Unit,
     onDownloadAttachment: (SupportAttachment) -> Unit,
-    accountStore: AccountStore? = null,
+    onGetAuthorizationHeaderArgument: () -> String,
 ) {
     val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
 
@@ -424,7 +426,7 @@ private fun MessageItem(
                     attachments = message.attachments,
                     onPreviewAttachment = onPreviewAttachment,
                     onDownloadAttachment = onDownloadAttachment,
-                    accountStore = accountStore
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
                 )
             }
         }
@@ -436,7 +438,7 @@ private fun AttachmentsList(
     attachments: List<SupportAttachment>,
     onPreviewAttachment: (SupportAttachment) -> Unit,
     onDownloadAttachment: (SupportAttachment) -> Unit,
-    accountStore: AccountStore? = null,
+    onGetAuthorizationHeaderArgument: () -> String,
 ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -451,7 +453,7 @@ private fun AttachmentsList(
                         else -> onDownloadAttachment(attachment)
                     }
                 },
-                accountStore = accountStore
+                onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
             )
         }
     }
@@ -461,7 +463,7 @@ private fun AttachmentsList(
 private fun AttachmentItem(
     attachment: SupportAttachment,
     onClick: () -> Unit,
-    accountStore: AccountStore? = null,
+    onGetAuthorizationHeaderArgument: () -> String,
 ) {
     val iconRes = when (attachment.type) {
         AttachmentType.Image -> R.drawable.ic_image_white_24dp
@@ -493,7 +495,7 @@ private fun AttachmentItem(
                         }
                     }
                     .apply {
-                        addHeader("Authorization", "Bearer ${accountStore?.accessToken}")
+                        addHeader(AUTHORIZATION_TAG, onGetAuthorizationHeaderArgument.invoke())
                     }
                     .build(),
                 contentDescription = attachment.filename,
@@ -598,7 +600,8 @@ private fun HEConversationDetailScreenPreview() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
         )
     }
 }
@@ -622,7 +625,8 @@ private fun HEConversationDetailScreenPreviewDark() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
         )
     }
 }
@@ -648,7 +652,8 @@ private fun HEConversationDetailScreenWordPressPreview() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
         )
     }
 }
@@ -673,7 +678,8 @@ private fun HEConversationDetailScreenPreviewWordPressDark() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
         )
     }
 }
