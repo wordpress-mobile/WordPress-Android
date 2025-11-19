@@ -965,7 +965,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         val videoUrl = "https://example.com/video.mp4"
         val tempFile = java.io.File.createTempFile("test_video", ".mp4")
 
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
             .thenReturn(tempFile)
 
         viewModel.downloadVideoToTempFile(videoUrl)
@@ -983,7 +983,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         val videoUrl = "https://example.com/video.mp4"
         val tempFile = java.io.File.createTempFile("test_video", ".mp4")
 
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
             .thenReturn(tempFile)
 
         viewModel.downloadVideoToTempFile(videoUrl)
@@ -1001,7 +1001,7 @@ class HESupportViewModelTest : BaseUnitTest() {
     fun `downloadVideoToTempFile sets state to Error when download fails`() = test {
         val videoUrl = "https://example.com/video.mp4"
 
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
             .thenReturn(null)
 
         viewModel.downloadVideoToTempFile(videoUrl)
@@ -1015,7 +1015,7 @@ class HESupportViewModelTest : BaseUnitTest() {
     fun `downloadVideoToTempFile sets state to Error when exception occurs`() = test {
         val videoUrl = "https://example.com/video.mp4"
 
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
             .thenThrow(RuntimeException("Network error"))
 
         viewModel.downloadVideoToTempFile(videoUrl)
@@ -1030,7 +1030,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         val videoUrl = "https://example.com/video.mp4"
         val tempFile = java.io.File.createTempFile("test_video", ".mp4")
 
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
             .thenReturn(tempFile)
 
         // First download
@@ -1043,7 +1043,7 @@ class HESupportViewModelTest : BaseUnitTest() {
 
         // Should only call createVideoTempFile once
         verify(tempAttachmentsUtil, org.mockito.kotlin.times(1))
-            .createVideoTempFile(videoUrl, viewModel.getAuthorizationHeader())
+            .createVideoTempFile(videoUrl)
 
         val state = viewModel.videoDownloadState.value
         assertThat(state).isInstanceOf(org.wordpress.android.support.he.model.VideoDownloadState.Success::class.java)
@@ -1059,7 +1059,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         val tempFile1 = java.io.File.createTempFile("test_video1", ".mp4")
         val tempFile2 = java.io.File.createTempFile("test_video2", ".mp4")
 
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
             .thenReturn(tempFile1)
             .thenReturn(tempFile2)
 
@@ -1076,7 +1076,7 @@ class HESupportViewModelTest : BaseUnitTest() {
 
         // Should call createVideoTempFile twice
         verify(tempAttachmentsUtil, org.mockito.kotlin.times(2))
-            .createVideoTempFile(videoUrl, viewModel.getAuthorizationHeader())
+            .createVideoTempFile(videoUrl)
 
         val state = viewModel.videoDownloadState.value
         assertThat(state).isInstanceOf(org.wordpress.android.support.he.model.VideoDownloadState.Success::class.java)
@@ -1093,9 +1093,9 @@ class HESupportViewModelTest : BaseUnitTest() {
         val tempFile1 = java.io.File.createTempFile("test_video1", ".mp4")
         val tempFile2 = java.io.File.createTempFile("test_video2", ".mp4")
 
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl1, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl1))
             .thenReturn(tempFile1)
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl2, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl2))
             .thenReturn(tempFile2)
 
         // Download first video
@@ -1112,9 +1112,9 @@ class HESupportViewModelTest : BaseUnitTest() {
 
         // Should only call createVideoTempFile once per unique URL
         verify(tempAttachmentsUtil, org.mockito.kotlin.times(1))
-            .createVideoTempFile(videoUrl1, viewModel.getAuthorizationHeader())
+            .createVideoTempFile(videoUrl1)
         verify(tempAttachmentsUtil, org.mockito.kotlin.times(1))
-            .createVideoTempFile(videoUrl2, viewModel.getAuthorizationHeader())
+            .createVideoTempFile(videoUrl2)
 
         tempFile1.delete()
         tempFile2.delete()
@@ -1125,7 +1125,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         val videoUrl = "https://example.com/video.mp4"
         val tempFile = java.io.File.createTempFile("test_video", ".mp4")
 
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
             .thenReturn(tempFile)
 
         // Download video to set state to Success
@@ -1155,9 +1155,9 @@ class HESupportViewModelTest : BaseUnitTest() {
         tempFile1.writeText("test content 1")
         tempFile2.writeText("test content 2")
 
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl1, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl1))
             .thenReturn(tempFile1)
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl2, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl2))
             .thenReturn(tempFile2)
 
         // Download both videos to cache them
@@ -1181,7 +1181,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         val videoUrl = "https://example.com/video.mp4"
         val tempFile = java.io.File.createTempFile("test_video", ".mp4")
 
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
             .thenReturn(tempFile)
 
         // Download video to cache it
@@ -1193,14 +1193,14 @@ class HESupportViewModelTest : BaseUnitTest() {
 
         // Try to download again - should call createVideoTempFile again (not use cache)
         val tempFile2 = java.io.File.createTempFile("test_video2", ".mp4")
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
             .thenReturn(tempFile2)
 
         viewModel.downloadVideoToTempFile(videoUrl)
         advanceUntilIdle()
 
         verify(tempAttachmentsUtil, org.mockito.kotlin.times(2))
-            .createVideoTempFile(videoUrl, viewModel.getAuthorizationHeader())
+            .createVideoTempFile(videoUrl)
 
         tempFile2.delete()
     }
@@ -1210,7 +1210,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         val videoUrl = "https://example.com/video.mp4"
         val tempFile = java.io.File.createTempFile("test_video", ".mp4")
 
-        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl, viewModel.getAuthorizationHeader()))
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
             .thenReturn(tempFile)
 
         // Download video to cache it

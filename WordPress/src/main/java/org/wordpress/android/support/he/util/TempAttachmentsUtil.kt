@@ -4,6 +4,7 @@ import android.app.Application
 import android.net.Uri
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.util.AppLog
@@ -18,6 +19,7 @@ class TempAttachmentsUtil @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
     private val application: Application,
+    private val accountStore: AccountStore
 ) {
     @Suppress("TooGenericExceptionCaught")
     suspend fun createTempFilesFrom(uris: List<Uri>): List<File> = withContext(ioDispatcher) {
@@ -88,7 +90,7 @@ class TempAttachmentsUtil @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    suspend fun createVideoTempFile(videoUrl: String, authHeader: String): File? = withContext(ioDispatcher) {
+    suspend fun createVideoTempFile(videoUrl: String): File? = withContext(ioDispatcher) {
         var tempFile: File? = null
         var connection: HttpURLConnection? = null
 
@@ -96,7 +98,7 @@ class TempAttachmentsUtil @Inject constructor(
             tempFile = File.createTempFile("video_", ".mp4", application.cacheDir)
             connection = (URL(videoUrl).openConnection() as HttpURLConnection).apply {
                 requestMethod = "GET"
-                setRequestProperty("Authorization", authHeader)
+                setRequestProperty("Authorization", "Bearer ${accountStore.accessToken}")
                 instanceFollowRedirects = true
                 connectTimeout = 30_000 // 30 seconds
                 readTimeout = 60_000 // 60 seconds

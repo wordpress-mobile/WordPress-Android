@@ -310,7 +310,7 @@ class HESupportViewModel @Inject constructor(
                 // Start downloading
                 _videoDownloadState.value = VideoDownloadState.Downloading
                 AppLog.d(AppLog.T.SUPPORT, "Downloading video to temp file: $videoUrl")
-                val tempFile = tempAttachmentsUtil.createVideoTempFile(videoUrl, getAuthorizationHeader())
+                val tempFile = tempAttachmentsUtil.createVideoTempFile(videoUrl)
                 if (tempFile == null) {
                     _videoDownloadState.value = VideoDownloadState.Error
                 } else {
