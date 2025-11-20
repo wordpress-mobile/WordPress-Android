@@ -67,6 +67,8 @@ import org.wordpress.android.support.he.model.AttachmentType
 import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
+import org.wordpress.android.support.he.model.VideoDownloadState
+import org.wordpress.android.support.he.ui.HESupportActivity.Companion.AUTHORIZATION_TAG
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import org.wordpress.android.ui.compose.components.MainTopAppBar
@@ -87,7 +89,10 @@ fun HEConversationDetailScreen(
     attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener,
     onDownloadAttachment: (SupportAttachment) -> Unit = {},
-    videoUrlResolver: org.wordpress.android.support.he.util.VideoUrlResolver? = null
+    onGetAuthorizationHeaderArgument: () -> String,
+    videoDownloadState: VideoDownloadState,
+    onStartVideoDownload: (String) -> Unit,
+    onResetVideoDownloadState: () -> Unit = {},
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -165,7 +170,8 @@ fun HEConversationDetailScreen(
                     message = message,
                     timestamp = formatRelativeTime(message.createdAt, resources),
                     onPreviewAttachment = { attachment -> previewAttachment = attachment },
-                    onDownloadAttachment = onDownloadAttachment
+                    onDownloadAttachment = onDownloadAttachment,
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
                 )
             }
 
@@ -237,6 +243,7 @@ fun HEConversationDetailScreen(
             AttachmentType.Image -> {
                 AttachmentFullscreenImagePreview(
                     imageUrl = attachment.url,
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument,
                     onDismiss = { previewAttachment = null },
                     onDownload = {
                         onDownloadAttachment(attachment)
@@ -246,11 +253,15 @@ fun HEConversationDetailScreen(
             AttachmentType.Video -> {
                 AttachmentFullscreenVideoPlayer(
                     videoUrl = attachment.url,
-                    onDismiss = { previewAttachment = null },
+                    downloadState = videoDownloadState,
+                    onStartVideoDownload = onStartVideoDownload,
+                    onResetVideoDownloadState = onResetVideoDownloadState,
+                    onDismiss = {
+                        previewAttachment = null
+                    },
                     onDownload = {
                         onDownloadAttachment(attachment)
                     },
-                    videoUrlResolver = videoUrlResolver
                 )
             }
             else -> {
@@ -357,7 +368,8 @@ private fun MessageItem(
     message: SupportMessage,
     timestamp: String,
     onPreviewAttachment: (SupportAttachment) -> Unit,
-    onDownloadAttachment: (SupportAttachment) -> Unit
+    onDownloadAttachment: (SupportAttachment) -> Unit,
+    onGetAuthorizationHeaderArgument: () -> String,
 ) {
     val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
 
@@ -418,7 +430,8 @@ private fun MessageItem(
                 AttachmentsList(
                     attachments = message.attachments,
                     onPreviewAttachment = onPreviewAttachment,
-                    onDownloadAttachment = onDownloadAttachment
+                    onDownloadAttachment = onDownloadAttachment,
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
                 )
             }
         }
@@ -429,7 +442,8 @@ private fun MessageItem(
 private fun AttachmentsList(
     attachments: List<SupportAttachment>,
     onPreviewAttachment: (SupportAttachment) -> Unit,
-    onDownloadAttachment: (SupportAttachment) -> Unit
+    onDownloadAttachment: (SupportAttachment) -> Unit,
+    onGetAuthorizationHeaderArgument: () -> String,
 ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -443,7 +457,8 @@ private fun AttachmentsList(
                         AttachmentType.Image, AttachmentType.Video -> onPreviewAttachment(attachment)
                         else -> onDownloadAttachment(attachment)
                     }
-                }
+                },
+                onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
             )
         }
     }
@@ -452,8 +467,12 @@ private fun AttachmentsList(
 @Composable
 private fun AttachmentItem(
     attachment: SupportAttachment,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onGetAuthorizationHeaderArgument: () -> String,
 ) {
+    // Cache authorization header to avoid repeated function calls during composition
+    val authorizationHeader = remember { onGetAuthorizationHeaderArgument() }
+
     val iconRes = when (attachment.type) {
         AttachmentType.Image -> R.drawable.ic_image_white_24dp
         AttachmentType.Video -> R.drawable.ic_video_camera_white_24dp
@@ -482,6 +501,9 @@ private fun AttachmentItem(
                             decoderFactory(VideoFrameDecoder.Factory())
                             videoFrameMillis(0) // Get first frame
                         }
+                    }
+                    .apply {
+                        addHeader(AUTHORIZATION_TAG, authorizationHeader)
                     }
                     .build(),
                 contentDescription = attachment.filename,
@@ -586,7 +608,10 @@ private fun HEConversationDetailScreenPreview() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _ -> },
         )
     }
 }
@@ -610,7 +635,10 @@ private fun HEConversationDetailScreenPreviewDark() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _ -> },
         )
     }
 }
@@ -636,7 +664,10 @@ private fun HEConversationDetailScreenWordPressPreview() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _ -> },
         )
     }
 }
@@ -661,7 +692,10 @@ private fun HEConversationDetailScreenPreviewWordPressDark() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _ -> },
         )
     }
 }

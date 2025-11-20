@@ -40,17 +40,22 @@ import androidx.compose.ui.window.DialogProperties
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
+import org.wordpress.android.support.he.ui.HESupportActivity.Companion.AUTHORIZATION_TAG
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable
 fun AttachmentFullscreenImagePreview(
     imageUrl: String,
+    onGetAuthorizationHeaderArgument: () -> String,
     onDismiss: () -> Unit,
-    onDownload: () -> Unit = {}
+    onDownload: () -> Unit = {},
 ) {
     var scale by remember { mutableFloatStateOf(1f) }
     var offsetX by remember { mutableFloatStateOf(0f) }
     var offsetY by remember { mutableFloatStateOf(0f) }
+
+    // Cache authorization header to avoid repeated function calls during composition
+    val authorizationHeader = remember { onGetAuthorizationHeaderArgument() }
 
     // Load semantics
     val loadingImageDescription = stringResource(R.string.he_support_loading_image)
@@ -90,6 +95,9 @@ fun AttachmentFullscreenImagePreview(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(imageUrl)
                             .crossfade(true)
+                            .apply {
+                                addHeader(AUTHORIZATION_TAG, authorizationHeader)
+                            }
                             .build(),
                         contentDescription = attachmentImageDescription,
                         modifier = Modifier
@@ -181,6 +189,7 @@ private fun AttachmentFullscreenImagePreviewPreview() {
     AppThemeM3(isDarkTheme = false) {
         AttachmentFullscreenImagePreview(
             imageUrl = "https://via.placeholder.com/800x600",
+            onGetAuthorizationHeaderArgument = { "" },
             onDismiss = { },
             onDownload = { }
         )
@@ -193,6 +202,7 @@ private fun AttachmentFullscreenImagePreviewPreviewDark() {
     AppThemeM3(isDarkTheme = true) {
         AttachmentFullscreenImagePreview(
             imageUrl = "https://via.placeholder.com/800x600",
+            onGetAuthorizationHeaderArgument = { "" },
             onDismiss = { },
             onDownload = { }
         )

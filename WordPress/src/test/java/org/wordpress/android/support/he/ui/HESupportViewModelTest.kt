@@ -958,6 +958,290 @@ class HESupportViewModelTest : BaseUnitTest() {
 
     // endregion
 
+    // region Video download tests
+
+    @Test
+    fun `downloadVideoToTempFile sets state to Downloading when starting download`() = test {
+        val videoUrl = "https://example.com/video.mp4"
+        val tempFile = java.io.File.createTempFile("test_video", ".mp4")
+
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
+            .thenReturn(tempFile)
+
+        viewModel.downloadVideoToTempFile(videoUrl)
+        advanceUntilIdle()
+
+        // State should transition through Idle -> Downloading -> Success
+        assertThat(viewModel.videoDownloadState.value)
+            .isInstanceOf(org.wordpress.android.support.he.model.VideoDownloadState.Success::class.java)
+
+        tempFile.delete()
+    }
+
+    @Test
+    fun `downloadVideoToTempFile sets state to Success with file when download succeeds`() = test {
+        val videoUrl = "https://example.com/video.mp4"
+        val tempFile = java.io.File.createTempFile("test_video", ".mp4")
+
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
+            .thenReturn(tempFile)
+
+        viewModel.downloadVideoToTempFile(videoUrl)
+        advanceUntilIdle()
+
+        val state = viewModel.videoDownloadState.value
+        assertThat(state).isInstanceOf(org.wordpress.android.support.he.model.VideoDownloadState.Success::class.java)
+        assertThat((state as org.wordpress.android.support.he.model.VideoDownloadState.Success).file)
+            .isEqualTo(tempFile)
+
+        tempFile.delete()
+    }
+
+    @Test
+    fun `downloadVideoToTempFile sets state to Error when download fails`() = test {
+        val videoUrl = "https://example.com/video.mp4"
+
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
+            .thenReturn(null)
+
+        viewModel.downloadVideoToTempFile(videoUrl)
+        advanceUntilIdle()
+
+        assertThat(viewModel.videoDownloadState.value)
+            .isInstanceOf(org.wordpress.android.support.he.model.VideoDownloadState.Error::class.java)
+    }
+
+    @Test
+    fun `downloadVideoToTempFile sets state to Error when exception occurs`() = test {
+        val videoUrl = "https://example.com/video.mp4"
+
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
+            .thenThrow(RuntimeException("Network error"))
+
+        viewModel.downloadVideoToTempFile(videoUrl)
+        advanceUntilIdle()
+
+        assertThat(viewModel.videoDownloadState.value)
+            .isInstanceOf(org.wordpress.android.support.he.model.VideoDownloadState.Error::class.java)
+    }
+
+    @Test
+    fun `downloadVideoToTempFile returns cached file when available`() = test {
+        val videoUrl = "https://example.com/video.mp4"
+        val tempFile = java.io.File.createTempFile("test_video", ".mp4")
+
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
+            .thenReturn(tempFile)
+
+        // First download
+        viewModel.downloadVideoToTempFile(videoUrl)
+        advanceUntilIdle()
+
+        // Second download should use cache
+        viewModel.downloadVideoToTempFile(videoUrl)
+        advanceUntilIdle()
+
+        // Should only call createVideoTempFile once
+        verify(tempAttachmentsUtil, org.mockito.kotlin.times(1))
+            .createVideoTempFile(videoUrl)
+
+        val state = viewModel.videoDownloadState.value
+        assertThat(state).isInstanceOf(org.wordpress.android.support.he.model.VideoDownloadState.Success::class.java)
+        assertThat((state as org.wordpress.android.support.he.model.VideoDownloadState.Success).file)
+            .isEqualTo(tempFile)
+
+        tempFile.delete()
+    }
+
+    @Test
+    fun `downloadVideoToTempFile removes deleted cached file and re-downloads`() = test {
+        val videoUrl = "https://example.com/video.mp4"
+        val tempFile1 = java.io.File.createTempFile("test_video1", ".mp4")
+        val tempFile2 = java.io.File.createTempFile("test_video2", ".mp4")
+
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
+            .thenReturn(tempFile1)
+            .thenReturn(tempFile2)
+
+        // First download
+        viewModel.downloadVideoToTempFile(videoUrl)
+        advanceUntilIdle()
+
+        // Delete the cached file
+        tempFile1.delete()
+
+        // Second download should detect deleted file and re-download
+        viewModel.downloadVideoToTempFile(videoUrl)
+        advanceUntilIdle()
+
+        // Should call createVideoTempFile twice
+        verify(tempAttachmentsUtil, org.mockito.kotlin.times(2))
+            .createVideoTempFile(videoUrl)
+
+        val state = viewModel.videoDownloadState.value
+        assertThat(state).isInstanceOf(org.wordpress.android.support.he.model.VideoDownloadState.Success::class.java)
+        assertThat((state as org.wordpress.android.support.he.model.VideoDownloadState.Success).file)
+            .isEqualTo(tempFile2)
+
+        tempFile2.delete()
+    }
+
+    @Test
+    fun `downloadVideoToTempFile caches multiple different videos`() = test {
+        val videoUrl1 = "https://example.com/video1.mp4"
+        val videoUrl2 = "https://example.com/video2.mp4"
+        val tempFile1 = java.io.File.createTempFile("test_video1", ".mp4")
+        val tempFile2 = java.io.File.createTempFile("test_video2", ".mp4")
+
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl1))
+            .thenReturn(tempFile1)
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl2))
+            .thenReturn(tempFile2)
+
+        // Download first video
+        viewModel.downloadVideoToTempFile(videoUrl1)
+        advanceUntilIdle()
+
+        // Download second video
+        viewModel.downloadVideoToTempFile(videoUrl2)
+        advanceUntilIdle()
+
+        // Download first video again - should use cache
+        viewModel.downloadVideoToTempFile(videoUrl1)
+        advanceUntilIdle()
+
+        // Should only call createVideoTempFile once per unique URL
+        verify(tempAttachmentsUtil, org.mockito.kotlin.times(1))
+            .createVideoTempFile(videoUrl1)
+        verify(tempAttachmentsUtil, org.mockito.kotlin.times(1))
+            .createVideoTempFile(videoUrl2)
+
+        tempFile1.delete()
+        tempFile2.delete()
+    }
+
+    @Test
+    fun `resetVideoDownloadState sets state to Idle`() = test {
+        val videoUrl = "https://example.com/video.mp4"
+        val tempFile = java.io.File.createTempFile("test_video", ".mp4")
+
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
+            .thenReturn(tempFile)
+
+        // Download video to set state to Success
+        viewModel.downloadVideoToTempFile(videoUrl)
+        advanceUntilIdle()
+
+        assertThat(viewModel.videoDownloadState.value)
+            .isInstanceOf(org.wordpress.android.support.he.model.VideoDownloadState.Success::class.java)
+
+        // Reset state
+        viewModel.resetVideoDownloadState()
+
+        assertThat(viewModel.videoDownloadState.value)
+            .isInstanceOf(org.wordpress.android.support.he.model.VideoDownloadState.Idle::class.java)
+
+        tempFile.delete()
+    }
+
+    @Test
+    fun `cleanupVideoCache deletes all cached video files`() = test {
+        val videoUrl1 = "https://example.com/video1.mp4"
+        val videoUrl2 = "https://example.com/video2.mp4"
+        val tempFile1 = java.io.File.createTempFile("test_video1", ".mp4")
+        val tempFile2 = java.io.File.createTempFile("test_video2", ".mp4")
+
+        // Create actual temp files that exist
+        tempFile1.writeText("test content 1")
+        tempFile2.writeText("test content 2")
+
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl1))
+            .thenReturn(tempFile1)
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl2))
+            .thenReturn(tempFile2)
+
+        // Download both videos to cache them
+        viewModel.downloadVideoToTempFile(videoUrl1)
+        advanceUntilIdle()
+        viewModel.downloadVideoToTempFile(videoUrl2)
+        advanceUntilIdle()
+
+        assertThat(tempFile1.exists()).isTrue
+        assertThat(tempFile2.exists()).isTrue
+
+        // Cleanup cache
+        viewModel.cleanupVideoCache()
+
+        assertThat(tempFile1.exists()).isFalse
+        assertThat(tempFile2.exists()).isFalse
+    }
+
+    @Test
+    fun `cleanupVideoCache clears cache map`() = test {
+        val videoUrl = "https://example.com/video.mp4"
+        val tempFile = java.io.File.createTempFile("test_video", ".mp4")
+
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
+            .thenReturn(tempFile)
+
+        // Download video to cache it
+        viewModel.downloadVideoToTempFile(videoUrl)
+        advanceUntilIdle()
+
+        // Cleanup cache
+        viewModel.cleanupVideoCache()
+
+        // Try to download again - should call createVideoTempFile again (not use cache)
+        val tempFile2 = java.io.File.createTempFile("test_video2", ".mp4")
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
+            .thenReturn(tempFile2)
+
+        viewModel.downloadVideoToTempFile(videoUrl)
+        advanceUntilIdle()
+
+        verify(tempAttachmentsUtil, org.mockito.kotlin.times(2))
+            .createVideoTempFile(videoUrl)
+
+        tempFile2.delete()
+    }
+
+    @Test
+    fun `cleanupVideoCache handles non-existent files gracefully`() = test {
+        val videoUrl = "https://example.com/video.mp4"
+        val tempFile = java.io.File.createTempFile("test_video", ".mp4")
+
+        whenever(tempAttachmentsUtil.createVideoTempFile(videoUrl))
+            .thenReturn(tempFile)
+
+        // Download video to cache it
+        viewModel.downloadVideoToTempFile(videoUrl)
+        advanceUntilIdle()
+
+        // Manually delete the file before cleanup
+        tempFile.delete()
+        assertThat(tempFile.exists()).isFalse
+
+        // Cleanup should not throw exception
+        viewModel.cleanupVideoCache()
+    }
+
+    @Test
+    fun `getAuthorizationHeader returns Bearer token format`() {
+        val expectedHeader = "Bearer $testAccessToken"
+
+        val actualHeader = viewModel.getAuthorizationHeader()
+
+        assertThat(actualHeader).isEqualTo(expectedHeader)
+    }
+
+    @Test
+    fun `videoDownloadState is Idle initially`() {
+        assertThat(viewModel.videoDownloadState.value)
+            .isInstanceOf(org.wordpress.android.support.he.model.VideoDownloadState.Idle::class.java)
+    }
+
+    // endregion
+
     // Helper functions
     private fun createTestConversation(
         id: Long,
