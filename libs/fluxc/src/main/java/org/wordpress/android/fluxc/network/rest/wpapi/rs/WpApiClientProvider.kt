@@ -43,7 +43,7 @@ class WpApiClientProvider @Inject constructor(
         // Create OkHttpClient with cookie jar for cookies/nonce authentication
         val okHttpClient = OkHttpClient.Builder()
             .cookieJar(object : CookieJar {
-                // We are storing the cookie in memory as this is a one-time call and there0s no need to persist it
+                // We are storing the cookie in memory as this is a one-time call and there is no need to persist it
                 private val cookieStore = mutableMapOf<String, List<Cookie>>()
 
                 override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
