@@ -21,6 +21,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
             description = "I'm having trouble logging into my account. The two-factor authentication code " +
                 "doesn't seem to be working properly when I try to access my site from the mobile app.",
             lastMessageSentAt = oneHourAgo,
+            status = "Open",
             messages = listOf(
                 SupportMessage(
                     id = 1,
@@ -73,6 +74,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                 "store, I've noticed significant slowdowns and occasional timeout errors affecting customer " +
                 "experience.",
             lastMessageSentAt = twoDaysAgo,
+            status = "closed",
             messages = listOf(
                 SupportMessage(
                     id = 4,
@@ -101,6 +103,7 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                 "configuration, SSL certificate setup, and setting up professional email forwarding for my " +
                 "business site.",
             lastMessageSentAt = oneWeekAgo,
+            status = "solved",
             messages = listOf(
                 SupportMessage(
                     id = 6,

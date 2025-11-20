@@ -1,5 +1,6 @@
 package org.wordpress.android.support.he.ui
 
+import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,11 +9,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.MessageSendResult
 import org.wordpress.android.support.he.model.SupportConversation
+import org.wordpress.android.support.he.model.VideoDownloadState
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
 import org.wordpress.android.support.he.util.TempAttachmentsUtil
@@ -20,6 +25,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EncryptedLogging
 import org.wordpress.android.util.LogFileProviderWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -30,24 +36,32 @@ class HESupportViewModel @Inject constructor(
     private val tempAttachmentsUtil: TempAttachmentsUtil,
     private val encryptedLogging: EncryptedLogging,
     private val logFileProvider: LogFileProviderWrapper,
+    private val application: Application,
     accountStore: AccountStore,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ConversationsSupportViewModel<SupportConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
+    companion object {
+        const val MAX_TOTAL_SIZE_BYTES = 20L * 1024 * 1024 // 20MB total
+        private const val BEARER_TAG = "Bearer"
+    }
     private val _isSendingMessage = MutableStateFlow(false)
     val isSendingMessage: StateFlow<Boolean> = _isSendingMessage.asStateFlow()
 
     private val _messageSendResult = MutableStateFlow<MessageSendResult?>(null)
     val messageSendResult: StateFlow<MessageSendResult?> = _messageSendResult.asStateFlow()
 
-    // Attachment state (shared for both Detail and NewTicket screens)
-    private val _attachments = MutableStateFlow<List<Uri>>(emptyList())
-    val attachments: StateFlow<List<Uri>> = _attachments.asStateFlow()
+    // Unified attachment state (shared for both Detail and NewTicket screens)
+    private val _attachmentState = MutableStateFlow(AttachmentState())
+    val attachmentState: StateFlow<AttachmentState> = _attachmentState.asStateFlow()
 
-    sealed class MessageSendResult {
-        data object Success : MessageSendResult()
-        data object Failure : MessageSendResult()
-    }
+    // Cache for downloaded video file paths (videoUrl -> file path)
+    // Stores paths instead of File objects to minimize memory footprint
+    private val videoCache = mutableMapOf<String, String>()
+
+    // Video download state
+    private val _videoDownloadState = MutableStateFlow<VideoDownloadState>(VideoDownloadState.Idle)
+    val videoDownloadState: StateFlow<VideoDownloadState> = _videoDownloadState.asStateFlow()
 
     override fun initRepository(accessToken: String) {
         heSupportRepository.init(accessToken)
@@ -64,6 +78,11 @@ class HESupportViewModel @Inject constructor(
     ) {
         viewModelScope.launch(ioDispatcher) {
             try {
+                if (!networkUtilsWrapper.isNetworkAvailable()) {
+                    _errorMessage.value = ErrorType.OFFLINE
+                    return@launch
+                }
+
                 _isSendingMessage.value = true
 
                 if (includeAppLogs) {
@@ -71,7 +90,7 @@ class HESupportViewModel @Inject constructor(
                     val logsId = uploadLogs()
                 }
 
-                val attachments = tempAttachmentsUtil.createTempFilesFrom(_attachments.value)
+                val attachments = tempAttachmentsUtil.createTempFilesFrom(_attachmentState.value.acceptedUris)
 
                 when (val result = heSupportRepository.createConversation(
                     subject = subject,
@@ -84,7 +103,7 @@ class HESupportViewModel @Inject constructor(
                         // update conversations locally
                         _conversations.value = listOf(newConversation) + _conversations.value
                         // Clear attachments after successful creation
-                        _attachments.value = emptyList()
+                        _attachmentState.value = AttachmentState()
                         onBackClick()
                     }
 
@@ -133,6 +152,12 @@ class HESupportViewModel @Inject constructor(
     fun onAddMessageToConversation(message: String, includeAppLogs: Boolean,) {
         viewModelScope.launch(ioDispatcher) {
             try {
+                if (!networkUtilsWrapper.isNetworkAvailable()) {
+                    _messageSendResult.value = MessageSendResult.Failure
+                    _errorMessage.value = ErrorType.OFFLINE
+                    return@launch
+                }
+
                 val selectedConversation = _selectedConversation.value
                 if (selectedConversation == null) {
                     appLogWrapper.e(AppLog.T.SUPPORT, "Error answering a conversation: no conversation selected")
@@ -146,7 +171,7 @@ class HESupportViewModel @Inject constructor(
                     val logsId = uploadLogs()
                 }
 
-                val files = tempAttachmentsUtil.createTempFilesFrom(_attachments.value)
+                val files = tempAttachmentsUtil.createTempFilesFrom(_attachmentState.value.acceptedUris)
 
                 when (val result = heSupportRepository.addMessageToConversation(
                     conversationId = selectedConversation.id,
@@ -157,7 +182,7 @@ class HESupportViewModel @Inject constructor(
                         _selectedConversation.value = result.conversation
                         _messageSendResult.value = MessageSendResult.Success
                         // Clear attachments after successful message send
-                        _attachments.value = emptyList()
+                        _attachmentState.value = AttachmentState()
                     }
 
                     is CreateConversationResult.Error.Forbidden -> {
@@ -190,18 +215,178 @@ class HESupportViewModel @Inject constructor(
     }
 
     fun addAttachments(uris: List<Uri>) {
-        _attachments.value = _attachments.value + uris
+        viewModelScope.launch(ioDispatcher) {
+            _attachmentState.value = validateAndCreateAttachmentState(uris)
+        }
     }
 
+    @Suppress("LoopWithTooManyJumpStatements")
+    private suspend fun validateAndCreateAttachmentState(uris: List<Uri>): AttachmentState = withContext(ioDispatcher) {
+        if (uris.isEmpty()) {
+            return@withContext _attachmentState.value
+        }
+
+        val validUris = mutableListOf<Uri>()
+        val skippedUris = mutableListOf<Uri>()
+
+        // Calculate current total size
+        var currentTotalSize = calculateTotalSize(_attachmentState.value.acceptedUris)
+
+        // Validate each new attachment
+        for (uri in uris) {
+            val fileSize = getFileSize(uri)
+
+            // Skip if we can't determine file size we just allow it to be added
+            if (fileSize != null) {
+                // Check if adding this file would exceed total size limit
+                if (currentTotalSize + fileSize > MAX_TOTAL_SIZE_BYTES) {
+                    skippedUris.add(uri)
+                    continue
+                }
+            }
+
+            // File is valid, add it
+            validUris.add(uri)
+            currentTotalSize += fileSize ?: 0
+        }
+
+        // Build the new attachment state
+        val currentAccepted = _attachmentState.value.acceptedUris
+        val newAccepted = currentAccepted + validUris
+
+        // Calculate rejected total size
+        val rejectedTotalSize = calculateTotalSize(skippedUris)
+
+        AttachmentState(
+            acceptedUris = newAccepted,
+            rejectedUris = skippedUris,
+            currentTotalSizeBytes = currentTotalSize,
+            rejectedTotalSizeBytes = rejectedTotalSize
+        )
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun getFileSize(uri: Uri): Long? = withContext(ioDispatcher) {
+        try {
+            application.contentResolver.openAssetFileDescriptor(uri, "r")?.use { descriptor ->
+                descriptor.length
+            }
+        } catch (e: Exception) {
+            appLogWrapper.d(AppLog.T.SUPPORT, "Could not determine file size for URI: $uri - ${e.message}")
+            // Silently return null if we can't get the file size
+            // This will be handled by the validation logic
+            null
+        }
+    }
+
+    /**
+     * Calculates the total size of all files in the list
+     * @param uris List of URIs to calculate size for
+     * @return Total size in bytes
+     */
+    private suspend fun calculateTotalSize(uris: List<Uri>): Long {
+        var totalSize = 0L
+        for (uri in uris) {
+            totalSize += getFileSize(uri) ?: 0L
+        }
+        return totalSize
+    }
+
+    /**
+     * Removes an attachment from the accepted list and attempts to re-include any previously
+     * skipped files that can now fit within the size limit.
+     *
+     * This function removes the specified URI and then re-validates all previously skipped files
+     * by calling [addAttachments], which ensures consistent validation logic and automatically
+     * includes files that now fit within the available space.
+     */
     fun removeAttachment(uri: Uri) {
-        _attachments.value = _attachments.value.filter { it != uri }
+        viewModelScope.launch {
+            // Remove the attachment and re-validate skipped files
+            val currentState = _attachmentState.value.copy()
+            val newAcceptedUris = currentState.acceptedUris.filter { it != uri }
+            _attachmentState.value = currentState.copy(acceptedUris = newAcceptedUris)
+            addAttachments(currentState.rejectedUris)
+        }
     }
 
     fun clearAttachments() {
-        _attachments.value = emptyList()
+        _attachmentState.value = AttachmentState()
     }
 
     fun notifyGeneralError() {
         _errorMessage.value = ErrorType.GENERAL
+    }
+
+    /**
+     * Downloads a video to a temporary file with caching and state management.
+     * Updates videoDownloadState as it progresses.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    fun downloadVideoToTempFile(videoUrl: String) {
+        viewModelScope.launch(ioDispatcher) {
+            try {
+                // Check cache first (before setting state to avoid unnecessary state changes)
+                videoCache[videoUrl]?.let { cachedFilePath ->
+                    val cachedFile = File(cachedFilePath)
+                    if (cachedFile.exists()) {
+                        AppLog.d(AppLog.T.SUPPORT, "Using cached video file for: $videoUrl")
+                        _videoDownloadState.value = VideoDownloadState.Success(cachedFile)
+                        return@launch
+                    } else {
+                        // File was deleted, remove from cache
+                        videoCache.remove(videoUrl)
+                    }
+                }
+
+                // Start downloading
+                _videoDownloadState.value = VideoDownloadState.Downloading
+                AppLog.d(AppLog.T.SUPPORT, "Downloading video to temp file: $videoUrl")
+                val tempFile = tempAttachmentsUtil.createVideoTempFile(videoUrl)
+                if (tempFile == null) {
+                    _videoDownloadState.value = VideoDownloadState.Error
+                } else {
+                    // Cache the downloaded file path
+                    videoCache[videoUrl] = tempFile.absolutePath
+                    _videoDownloadState.value = VideoDownloadState.Success(tempFile)
+                }
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.SUPPORT, "Error downloading video", e)
+                _videoDownloadState.value = VideoDownloadState.Error
+            }
+        }
+    }
+
+    /**
+     * Resets the video download state to Idle. Call this when closing the video player.
+     */
+    fun resetVideoDownloadState() {
+        _videoDownloadState.value = VideoDownloadState.Idle
+    }
+
+    /**
+     * Cleans up all cached video files. Call this when the activity is destroyed.
+     */
+    fun cleanupVideoCache() {
+        AppLog.d(AppLog.T.SUPPORT, "Cleaning up ${videoCache.size} cached video files")
+        videoCache.values.forEach { filePath ->
+            val file = File(filePath)
+            if (file.exists()) {
+                AppLog.d(AppLog.T.SUPPORT, "Deleting temp video file: $filePath")
+                file.delete()
+            }
+        }
+        videoCache.clear()
+    }
+
+    fun getAuthorizationHeader():String = "$BEARER_TAG ${accountStore.accessToken}"
+
+    /**
+     * Called when the ViewModel is destroyed. Ensures video cache cleanup even if Activity
+     * onDestroy() is not called (e.g., process death).
+     */
+    override fun onCleared() {
+        super.onCleared()
+        cleanupVideoCache()
     }
 }

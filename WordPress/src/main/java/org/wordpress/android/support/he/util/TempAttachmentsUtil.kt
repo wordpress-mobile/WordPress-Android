@@ -4,10 +4,13 @@ import android.app.Application
 import android.net.Uri
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.util.AppLog
 import java.io.File
+import java.net.HttpURLConnection
+import java.net.URL
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.collections.forEach
@@ -16,7 +19,13 @@ class TempAttachmentsUtil @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val appLogWrapper: AppLogWrapper,
     private val application: Application,
+    private val accountStore: AccountStore
 ) {
+    companion object {
+        private const val CONNECTION_TIMEOUT_MS = 30_000 // 30 seconds
+        private const val READ_TIMEOUT_MS = 60_000 // 60 seconds
+    }
+
     @Suppress("TooGenericExceptionCaught")
     suspend fun createTempFilesFrom(uris: List<Uri>): List<File> = withContext(ioDispatcher) {
         uris.map{ it.toTempFile() }
@@ -83,5 +92,49 @@ class TempAttachmentsUtil @Inject constructor(
 
         // Default to jpg if we can't determine the extension
         return "jpg"
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun createVideoTempFile(videoUrl: String): File? = withContext(ioDispatcher) {
+        var tempFile: File? = null
+        var connection: HttpURLConnection? = null
+
+        try {
+            tempFile = File.createTempFile("video_", ".mp4", application.cacheDir)
+            connection = (URL(videoUrl).openConnection() as HttpURLConnection).apply {
+                requestMethod = "GET"
+                setRequestProperty("Authorization", "Bearer ${accountStore.accessToken}")
+                instanceFollowRedirects = true
+                connectTimeout = CONNECTION_TIMEOUT_MS
+                readTimeout = READ_TIMEOUT_MS
+            }
+
+            connection.connect()
+
+            val responseCode = connection.responseCode
+            AppLog.d(AppLog.T.SUPPORT, "Download response code: $responseCode")
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                connection.inputStream.use { input ->
+                    tempFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+
+                AppLog.d(AppLog.T.SUPPORT, "Video downloaded: ${tempFile.absolutePath}")
+                tempFile
+            } else {
+                val deleted = tempFile?.delete()
+                AppLog.e(AppLog.T.SUPPORT, "Failed to download video. Deleted: ${deleted} - " +
+                        "Response code: $responseCode")
+                null
+            }
+        } catch (e: Exception) {
+            val deleted = tempFile?.delete()
+            AppLog.e(AppLog.T.SUPPORT, "Error downloading video: ${e.message} Deleted: ${deleted}")
+            null
+        } finally {
+            connection?.disconnect()
+        }
     }
 }

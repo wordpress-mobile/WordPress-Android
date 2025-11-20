@@ -181,6 +181,7 @@ class HESupportRepository @Inject constructor(
                 title = it.title,
                 description = it.description,
                 lastMessageSentAt = it.updatedAt,
+                status = it.status,
                 messages = emptyList()
             )
         }
@@ -191,6 +192,7 @@ class HESupportRepository @Inject constructor(
             title = title,
             description = description,
             lastMessageSentAt = updatedAt,
+            status = status,
             messages = messages.map { it.toSupportMessage() }
         )
 

@@ -28,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.util.AttachmentActionsListener
@@ -42,6 +43,7 @@ import javax.inject.Inject
 class HESupportActivity : AppCompatActivity() {
     @Inject lateinit var fileDownloadManager: ReaderFileDownloadManager
     @Inject lateinit var appLogWrapper: AppLogWrapper
+    @Inject lateinit var accountStore: AccountStore
     private val viewModel by viewModels<HESupportViewModel>()
 
     private lateinit var composeView: ComposeView
@@ -84,6 +86,12 @@ class HESupportActivity : AppCompatActivity() {
         viewModel.init()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        // Cleanup cached video files
+        viewModel.cleanupVideoCache()
+    }
+
 
     private fun observeNavigationEvents() {
         lifecycleScope.launch {
@@ -123,6 +131,7 @@ class HESupportActivity : AppCompatActivity() {
             val message = when (errorType) {
                 ConversationsSupportViewModel.ErrorType.GENERAL -> getString(R.string.he_support_generic_error)
                 ConversationsSupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
+                ConversationsSupportViewModel.ErrorType.OFFLINE -> getString(R.string.no_network_title)
             }
             scope.launch {
                 snackbarHostState.showSnackbar(
@@ -170,7 +179,8 @@ class HESupportActivity : AppCompatActivity() {
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
                     val messageSendResult by viewModel.messageSendResult.collectAsState()
-                    val attachments by viewModel.attachments.collectAsState()
+                    val attachmentState by viewModel.attachmentState.collectAsState()
+                    val videoDownloadState by viewModel.videoDownloadState.collectAsState()
 
                     selectedConversation?.let { conversation ->
                         HEConversationDetailScreen(
@@ -187,7 +197,7 @@ class HESupportActivity : AppCompatActivity() {
                                 )
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
-                            attachments = attachments,
+                            attachmentState = attachmentState,
                             attachmentActionsListener = createAttachmentActionListener(),
                             onDownloadAttachment = { attachment ->
                                 // Show loading snackbar
@@ -202,7 +212,13 @@ class HESupportActivity : AppCompatActivity() {
                                 }
                                 // Start download with proper filename
                                 fileDownloadManager.downloadFile(attachment.url, attachment.filename)
-                            }
+                            },
+                            onGetAuthorizationHeaderArgument = { viewModel.getAuthorizationHeader() },
+                            videoDownloadState = videoDownloadState,
+                            onStartVideoDownload = { url ->
+                                viewModel.downloadVideoToTempFile(url)
+                            },
+                            onResetVideoDownloadState = { viewModel.resetVideoDownloadState() }
                         )
                     }
                 }
@@ -210,7 +226,7 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.NewTicket.name) {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val isSendingNewConversation by viewModel.isSendingMessage.collectAsState()
-                    val attachments by viewModel.attachments.collectAsState()
+                    val attachmentState by viewModel.attachmentState.collectAsState()
 
                     // Clear attachments when leaving the new ticket screen
                     androidx.compose.runtime.DisposableEffect(Unit) {
@@ -232,7 +248,7 @@ class HESupportActivity : AppCompatActivity() {
                         },
                         userInfo = userInfo,
                         isSendingNewConversation = isSendingNewConversation,
-                        attachments = attachments,
+                        attachmentState = attachmentState,
                         attachmentActionsListener = createAttachmentActionListener()
                     )
                 }
@@ -274,6 +290,8 @@ class HESupportActivity : AppCompatActivity() {
 
 
     companion object {
+        const val AUTHORIZATION_TAG = "Authorization"
+
         @JvmStatic
         fun createIntent(context: Context): Intent = Intent(context, HESupportActivity::class.java)
     }

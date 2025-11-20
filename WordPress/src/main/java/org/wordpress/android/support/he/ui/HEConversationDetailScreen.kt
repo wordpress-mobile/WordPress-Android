@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Reply
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,12 +55,20 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
+import coil.request.videoFrameMillis
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
+import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.ConversationStatus
+import org.wordpress.android.support.he.model.MessageSendResult
+import org.wordpress.android.support.he.model.AttachmentType
 import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
+import org.wordpress.android.support.he.model.VideoDownloadState
+import org.wordpress.android.support.he.ui.HESupportActivity.Companion.AUTHORIZATION_TAG
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import org.wordpress.android.ui.compose.components.MainTopAppBar
@@ -73,13 +82,17 @@ fun HEConversationDetailScreen(
     conversation: SupportConversation,
     isLoading: Boolean = false,
     isSendingMessage: Boolean = false,
-    messageSendResult: HESupportViewModel.MessageSendResult? = null,
+    messageSendResult: MessageSendResult? = null,
     onBackClick: () -> Unit,
     onSendMessage: (message: String, includeAppLogs: Boolean) -> Unit,
     onClearMessageSendResult: () -> Unit = {},
-    attachments: List<Uri> = emptyList(),
+    attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener,
-    onDownloadAttachment: (org.wordpress.android.support.he.model.SupportAttachment) -> Unit = {}
+    onDownloadAttachment: (SupportAttachment) -> Unit = {},
+    onGetAuthorizationHeaderArgument: () -> String,
+    videoDownloadState: VideoDownloadState,
+    onStartVideoDownload: (String) -> Unit,
+    onResetVideoDownloadState: () -> Unit = {},
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -91,8 +104,8 @@ fun HEConversationDetailScreen(
     var draftMessageText by remember { mutableStateOf("") }
     var draftIncludeAppLogs by remember { mutableStateOf(false) }
 
-    // State for fullscreen image preview
-    var previewImageUrl by remember { mutableStateOf<String?>(null) }
+    // State for fullscreen attachment preview (image or video)
+    var previewAttachment by remember { mutableStateOf<SupportAttachment?>(null) }
 
     // Scroll to bottom when conversation changes or new messages arrive
     LaunchedEffect(conversation.messages.size) {
@@ -111,12 +124,18 @@ fun HEConversationDetailScreen(
             )
         },
         bottomBar = {
-            ReplyButton(
-                enabled = !isLoading,
-                onClick = {
-                    showBottomSheet = true
-                }
-            )
+            val status = ConversationStatus.fromStatus(conversation.status)
+            val isClosed = status == ConversationStatus.CLOSED
+            if (isClosed) {
+                ClosedConversationBanner()
+            } else {
+                ReplyButton(
+                    enabled = !isLoading,
+                    onClick = {
+                        showBottomSheet = true
+                    }
+                )
+            }
         }
     ) { contentPadding ->
         Box(
@@ -133,7 +152,7 @@ fun HEConversationDetailScreen(
             ) {
             item {
                 ConversationHeader(
-                    messageCount = conversation.messages.size,
+                    status = conversation.status,
                     lastUpdated = formatRelativeTime(conversation.lastMessageSentAt, resources),
                     isLoading = isLoading
                 )
@@ -150,8 +169,9 @@ fun HEConversationDetailScreen(
                 MessageItem(
                     message = message,
                     timestamp = formatRelativeTime(message.createdAt, resources),
-                    onPreviewImage = { attachment -> previewImageUrl = attachment.url },
-                    onDownloadAttachment = onDownloadAttachment
+                    onPreviewAttachment = { attachment -> previewAttachment = attachment },
+                    onDownloadAttachment = onDownloadAttachment,
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
                 )
             }
 
@@ -169,14 +189,31 @@ fun HEConversationDetailScreen(
     }
 
     if (showBottomSheet) {
+        // Close the sheet when sending completes
+        LaunchedEffect(messageSendResult) {
+            if (messageSendResult != null) {
+                // Clear draft only on success
+                if (messageSendResult is MessageSendResult.Success) {
+                    draftMessageText = ""
+                    draftIncludeAppLogs = false
+                }
+
+                // Dismiss sheet and clear result for both success and failure
+                onClearMessageSendResult()
+                scope.launch {
+                    sheetState.hide()
+                }.invokeOnCompletion {
+                    showBottomSheet = false
+                }
+            }
+        }
+
         HEConversationReplyBottomSheet(
             sheetState = sheetState,
             isSending = isSendingMessage,
-            messageSendResult = messageSendResult,
             initialMessageText = draftMessageText,
             initialIncludeAppLogs = draftIncludeAppLogs,
             onDismiss = { currentMessage, currentIncludeAppLogs ->
-                // Save draft message when closing without sending
                 draftMessageText = currentMessage
                 draftIncludeAppLogs = currentIncludeAppLogs
                 scope.launch {
@@ -186,6 +223,7 @@ fun HEConversationDetailScreen(
                 }
             },
             onSend = { message, includeAppLogs ->
+                draftMessageText = message
                 onSendMessage(message, includeAppLogs)
             },
             onMessageSentSuccessfully = {
@@ -194,37 +232,66 @@ fun HEConversationDetailScreen(
                 draftIncludeAppLogs = false
                 onClearMessageSendResult()
             },
-            attachments = attachments,
+            attachmentState = attachmentState,
             attachmentActionsListener = attachmentActionsListener
         )
     }
 
-    // Show fullscreen image preview when an image attachment is tapped
-    previewImageUrl?.let { imageUrl ->
-        // Find the attachment with this URL to get the filename for download
-        val attachment = conversation.messages
-            .flatMap { it.attachments }
-            .firstOrNull { it.url == imageUrl }
-
-        AttachmentFullscreenImagePreview(
-            imageUrl = imageUrl,
-            onDismiss = { previewImageUrl = null },
-            onDownload = {
-                attachment?.let { onDownloadAttachment(it) }
+    // Show fullscreen attachment preview based on type
+    previewAttachment?.let { attachment ->
+        when (attachment.type) {
+            AttachmentType.Image -> {
+                AttachmentFullscreenImagePreview(
+                    imageUrl = attachment.url,
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument,
+                    onDismiss = { previewAttachment = null },
+                    onDownload = {
+                        onDownloadAttachment(attachment)
+                    }
+                )
             }
-        )
+            AttachmentType.Video -> {
+                AttachmentFullscreenVideoPlayer(
+                    videoUrl = attachment.url,
+                    downloadState = videoDownloadState,
+                    onStartVideoDownload = onStartVideoDownload,
+                    onResetVideoDownloadState = onResetVideoDownloadState,
+                    onDismiss = {
+                        previewAttachment = null
+                    },
+                    onDownload = {
+                        onDownloadAttachment(attachment)
+                    },
+                )
+            }
+            else -> {
+                // For other types (documents, etc.), do nothing
+                // They should only be downloadable, not previewable
+            }
+        }
     }
 }
 
 @Composable
 private fun ConversationHeader(
-    messageCount: Int,
+    status: String,
     lastUpdated: String,
     isLoading: Boolean = false
 ) {
+    val statusText = when (ConversationStatus.fromStatus(status)) {
+        ConversationStatus.WAITING_FOR_SUPPORT ->
+            stringResource(R.string.he_support_status_waiting_for_support)
+        ConversationStatus.WAITING_FOR_USER ->
+            stringResource(R.string.he_support_status_waiting_for_user)
+        ConversationStatus.SOLVED ->
+            stringResource(R.string.he_support_status_solved)
+        ConversationStatus.CLOSED ->
+            stringResource(R.string.he_support_status_closed)
+        ConversationStatus.UNKNOWN ->
+            stringResource(R.string.he_support_status_unknown)
+    }
     val headerDescription = if (!isLoading) {
-        "${stringResource(R.string.he_support_message_count, messageCount)}. " +
-                stringResource(R.string.he_support_last_updated, lastUpdated)
+        "$statusText. ${stringResource(R.string.he_support_last_updated, lastUpdated)}"
     } else {
         stringResource(R.string.he_support_last_updated, lastUpdated)
     }
@@ -239,26 +306,7 @@ private fun ConversationHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (!isLoading) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_comment_white_24dp),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(20.dp)
-                )
-                Text(
-                    text = stringResource(R.string.he_support_message_count, messageCount),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        } else {
-            Spacer(modifier = Modifier.size(0.dp))
-        }
+        ConversationStatusBadge(status = status)
 
         Text(
             text = stringResource(R.string.he_support_last_updated, lastUpdated),
@@ -286,11 +334,42 @@ private fun ConversationTitleCard(title: String) {
 }
 
 @Composable
+private fun ClosedConversationBanner() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.errorContainer,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_info_outline_white_24dp),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onErrorContainer,
+                modifier = Modifier.size(24.dp)
+            )
+            Text(
+                text = stringResource(R.string.he_support_conversation_closed_message),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onErrorContainer
+            )
+        }
+    }
+}
+
+@Composable
 private fun MessageItem(
     message: SupportMessage,
     timestamp: String,
-    onPreviewImage: (SupportAttachment) -> Unit,
-    onDownloadAttachment: (SupportAttachment) -> Unit
+    onPreviewAttachment: (SupportAttachment) -> Unit,
+    onDownloadAttachment: (SupportAttachment) -> Unit,
+    onGetAuthorizationHeaderArgument: () -> String,
 ) {
     val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
 
@@ -350,8 +429,9 @@ private fun MessageItem(
                 Spacer(modifier = Modifier.height(12.dp))
                 AttachmentsList(
                     attachments = message.attachments,
-                    onPreviewImage = onPreviewImage,
-                    onDownloadAttachment = onDownloadAttachment
+                    onPreviewAttachment = onPreviewAttachment,
+                    onDownloadAttachment = onDownloadAttachment,
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
                 )
             }
         }
@@ -361,8 +441,9 @@ private fun MessageItem(
 @Composable
 private fun AttachmentsList(
     attachments: List<SupportAttachment>,
-    onPreviewImage: (SupportAttachment) -> Unit,
-    onDownloadAttachment: (SupportAttachment) -> Unit
+    onPreviewAttachment: (SupportAttachment) -> Unit,
+    onDownloadAttachment: (SupportAttachment) -> Unit,
+    onGetAuthorizationHeaderArgument: () -> String,
 ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -372,12 +453,12 @@ private fun AttachmentsList(
             AttachmentItem(
                 attachment = attachment,
                 onClick = {
-                    if (attachment.type == org.wordpress.android.support.he.model.AttachmentType.Image) {
-                        onPreviewImage(attachment)
-                    } else {
-                        onDownloadAttachment(attachment)
+                    when (attachment.type) {
+                        AttachmentType.Image, AttachmentType.Video -> onPreviewAttachment(attachment)
+                        else -> onDownloadAttachment(attachment)
                     }
-                }
+                },
+                onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
             )
         }
     }
@@ -385,13 +466,17 @@ private fun AttachmentsList(
 
 @Composable
 private fun AttachmentItem(
-    attachment: org.wordpress.android.support.he.model.SupportAttachment,
-    onClick: () -> Unit
+    attachment: SupportAttachment,
+    onClick: () -> Unit,
+    onGetAuthorizationHeaderArgument: () -> String,
 ) {
+    // Cache authorization header to avoid repeated function calls during composition
+    val authorizationHeader = remember { onGetAuthorizationHeaderArgument() }
+
     val iconRes = when (attachment.type) {
-        org.wordpress.android.support.he.model.AttachmentType.Image -> R.drawable.ic_image_white_24dp
-        org.wordpress.android.support.he.model.AttachmentType.Video -> R.drawable.ic_video_camera_white_24dp
-        org.wordpress.android.support.he.model.AttachmentType.Other -> R.drawable.ic_pages_white_24dp
+        AttachmentType.Image -> R.drawable.ic_image_white_24dp
+        AttachmentType.Video -> R.drawable.ic_video_camera_white_24dp
+        AttachmentType.Other -> R.drawable.ic_pages_white_24dp
     }
 
     Box(
@@ -404,12 +489,22 @@ private fun AttachmentItem(
             ),
         contentAlignment = Alignment.Center
     ) {
-        if (attachment.type == org.wordpress.android.support.he.model.AttachmentType.Image) {
-            // Show image preview for image attachments
+        if (attachment.type == AttachmentType.Image ||
+            attachment.type == AttachmentType.Video) {
+            // Show image/video preview for image and video attachments
             SubcomposeAsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(attachment.url)
                     .crossfade(true)
+                    .apply {
+                        if (attachment.type == AttachmentType.Video) {
+                            decoderFactory(VideoFrameDecoder.Factory())
+                            videoFrameMillis(0) // Get first frame
+                        }
+                    }
+                    .apply {
+                        addHeader(AUTHORIZATION_TAG, authorizationHeader)
+                    }
                     .build(),
                 contentDescription = attachment.filename,
                 modifier = Modifier.fillMaxSize(),
@@ -426,7 +521,7 @@ private fun AttachmentItem(
                     }
                 },
                 error = {
-                    // Show icon if image fails to load
+                    // Show icon if image/video fails to load
                     Icon(
                         painter = painterResource(iconRes),
                         contentDescription = null,
@@ -435,8 +530,20 @@ private fun AttachmentItem(
                     )
                 }
             )
+
+            // Add play icon overlay for videos
+            if (attachment.type == AttachmentType.Video) {
+                Icon(
+                    imageVector = Icons.Default.PlayCircle,
+                    contentDescription = stringResource(R.string.photo_picker_thumbnail_desc),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(48.dp),
+                    tint = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+                )
+            }
         } else {
-            // Show icon for non-image attachments
+            // Show icon for non-image/video attachments
             Icon(
                 painter = painterResource(iconRes),
                 contentDescription = null,
@@ -501,7 +608,10 @@ private fun HEConversationDetailScreenPreview() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _ -> },
         )
     }
 }
@@ -525,7 +635,10 @@ private fun HEConversationDetailScreenPreviewDark() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _ -> },
         )
     }
 }
@@ -551,7 +664,10 @@ private fun HEConversationDetailScreenWordPressPreview() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _ -> },
         )
     }
 }
@@ -576,7 +692,10 @@ private fun HEConversationDetailScreenPreviewWordPressDark() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _ -> },
         )
     }
 }

@@ -79,6 +79,12 @@ private fun HEConversationListItem(
         Column(
             modifier = Modifier.weight(1f)
         ) {
+            // Status badge
+            ConversationStatusBadge(
+                status = conversation.status,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -95,7 +101,10 @@ private fun HEConversationListItem(
                 )
 
                 Text(
-                    text = formatRelativeTime(conversation.lastMessageSentAt, resources),
+                    text = formatRelativeTime(
+                        conversation.lastMessageSentAt,
+                        resources
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(start = 8.dp)
