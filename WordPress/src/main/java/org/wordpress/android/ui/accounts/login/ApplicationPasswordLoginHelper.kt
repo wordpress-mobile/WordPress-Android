@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login
 
-import android.util.Log
 import androidx.core.net.toUri
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -56,8 +55,10 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
                 val authorizationUrlComplete =
                     uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-                Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete" +
-                        " API_ROOT_URL $apiRootUrl")
+                appLogWrapper.d(
+                    AppLog.T.API,
+                    "WP_RS: Found authorization for $siteUrl URL: $authorizationUrlComplete " +
+                            "API_ROOT_URL $apiRootUrl")
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
                 authorizationUrlComplete
             }

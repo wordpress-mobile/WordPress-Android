@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -23,6 +25,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteStore: SiteStore,
     private val experimentalFeatures: ExperimentalFeatures,
+    private val appLogWrapper: AppLogWrapper,
 ) {
     lateinit var scope: CoroutineScope
 
@@ -57,12 +60,14 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             val storedSite = siteStore.sites.firstOrNull { it.id == site.id }
             if (storedSite != null && !applicationPasswordLoginHelper.siteHasBadCredentials(site)) {
                 uiModelMutable.postValue(null)
+                appLogWrapper.d(AppLog.T.MAIN, "WP_RS: Hiding card for ${site.url} - authenticated")
                 return@launch
             }
 
             val authorizationUrlComplete = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
             if (authorizationUrlComplete.isEmpty()) {
                 uiModelMutable.postValue(null)
+                appLogWrapper.d(AppLog.T.MAIN, "WP_RS: Hiding card for ${site.url} - bad discovery")
             } else {
                 showApplicationPasswordCreateCard(site)
             }
@@ -81,6 +86,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 )
             )
         )
+        appLogWrapper.d(AppLog.T.MAIN, "WP_RS: Showing card for ${site.url}")
     }
 
 
