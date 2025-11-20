@@ -962,13 +962,15 @@ class HESupportViewModelTest : BaseUnitTest() {
     private fun createTestConversation(
         id: Long,
         title: String = "Test Conversation",
-        description: String = "Test Description"
+        description: String = "Test Description",
+        status: String = "open"
     ): SupportConversation {
         return SupportConversation(
             id = id,
             title = title,
             description = description,
             lastMessageSentAt = Date(),
+            status = status,
             messages = emptyList()
         )
     }
