@@ -85,9 +85,10 @@ class HESupportViewModel @Inject constructor(
 
                 _isSendingMessage.value = true
 
-                if (includeAppLogs) {
-                    // TODO: use the Id to send it within the ticket
-                    val logsId = uploadLogs()
+                val logsIds: List<String> = if (includeAppLogs) {
+                     uploadLogs()
+                } else {
+                    emptyList()
                 }
 
                 val attachments = tempAttachmentsUtil.createTempFilesFrom(_attachmentState.value.acceptedUris)
@@ -96,7 +97,8 @@ class HESupportViewModel @Inject constructor(
                     subject = subject,
                     message = message,
                     tags = tags,
-                    attachments = attachments.map { it.path }
+                    attachments = attachments.map { it.path },
+                    encryptedLogIds = logsIds
                 )) {
                     is CreateConversationResult.Success -> {
                         val newConversation = result.conversation
@@ -171,12 +173,12 @@ class HESupportViewModel @Inject constructor(
                     val logsId = uploadLogs()
                 }
 
-                val files = tempAttachmentsUtil.createTempFilesFrom(_attachmentState.value.acceptedUris)
+                val attachments = tempAttachmentsUtil.createTempFilesFrom(_attachmentState.value.acceptedUris)
 
                 when (val result = heSupportRepository.addMessageToConversation(
                     conversationId = selectedConversation.id,
                     message = message,
-                    attachments = files.map { it.path }
+                    attachments = attachments.map { it.path }
                 )) {
                     is CreateConversationResult.Success -> {
                         _selectedConversation.value = result.conversation
@@ -198,7 +200,7 @@ class HESupportViewModel @Inject constructor(
                     }
                 }
 
-                tempAttachmentsUtil.removeTempFiles(files)
+                tempAttachmentsUtil.removeTempFiles(attachments)
                 _isSendingMessage.value = false
             } catch (e: Exception) {
                 _errorMessage.value = ErrorType.GENERAL
