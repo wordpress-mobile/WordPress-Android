@@ -1,7 +1,6 @@
 package org.wordpress.android.support.he.ui
 
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import android.widget.FrameLayout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,49 +36,54 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.net.toUri
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
 import org.wordpress.android.R
-import org.wordpress.android.support.he.util.VideoUrlResolver
+import org.wordpress.android.support.he.model.VideoDownloadState
+import org.wordpress.android.util.AppLog
+import java.io.File
 
 @Composable
 fun AttachmentFullscreenVideoPlayer(
     videoUrl: String,
     onDismiss: () -> Unit,
     onDownload: () -> Unit = {},
-    videoUrlResolver: VideoUrlResolver? = null
+    downloadState: VideoDownloadState,
+    onStartVideoDownload: (String) -> Unit,
+    onResetVideoDownloadState: () -> Unit = {},
 ) {
     val context = LocalContext.current
-    var hasError by remember { mutableStateOf(false) }
-    var resolvedUrl by remember { mutableStateOf<String?>(null) }
-    var isResolving by remember { mutableStateOf(true) }
+    var localVideoFile by remember { mutableStateOf<File?>(null) }
 
-    // Resolve URL redirects before playing
-    androidx.compose.runtime.LaunchedEffect(videoUrl) {
-        if (videoUrlResolver != null) {
-            resolvedUrl = videoUrlResolver.resolveUrl(videoUrl)
-        } else {
-            resolvedUrl = videoUrl
-        }
-        isResolving = false
+    // Start download when composable is first launched
+    LaunchedEffect(videoUrl) {
+        onStartVideoDownload(videoUrl)
     }
 
-    val exoPlayer = remember(resolvedUrl) {
-        // Don't create player until URL is resolved
-        val url = resolvedUrl ?: return@remember null
+    // Update local file when download succeeds
+    LaunchedEffect(downloadState) {
+        if (downloadState is VideoDownloadState.Success) {
+            localVideoFile = downloadState.file
+        }
+    }
+
+    val exoPlayer = remember(localVideoFile) {
+        // Don't create player until video is downloaded
+        val file = localVideoFile ?: return@remember null
 
         SimpleExoPlayer.Builder(context).build().apply {
-            // Add error listener
+            // Add error listener for logging
             addListener(object : Player.EventListener {
                 override fun onPlayerError(error: com.google.android.exoplayer2.ExoPlaybackException) {
-                    hasError = true
+                    AppLog.e(AppLog.T.SUPPORT, "Video playback error", error)
                 }
             })
 
-            // Simple configuration using MediaItem
-            val mediaItem = MediaItem.fromUri(url.toUri())
+            // Play from local file
+            val mediaItem = MediaItem.fromUri(file.toUri())
             setMediaItem(mediaItem)
             prepare()
             playWhenReady = true
@@ -87,17 +91,9 @@ fun AttachmentFullscreenVideoPlayer(
         }
     }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            exoPlayer?.stop()
-            exoPlayer?.release()
-        }
-    }
-
     Dialog(
         onDismissRequest = {
-            exoPlayer?.stop()
-            onDismiss()
+            closeFullScreen(exoPlayer, onDismiss, onResetVideoDownloadState)
         },
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
@@ -110,15 +106,16 @@ fun AttachmentFullscreenVideoPlayer(
                 .fillMaxSize()
                 .background(Color.Black)
         ) {
-            when {
-                isResolving -> {
-                    // Show loading indicator while resolving URL
+            when (downloadState) {
+                is VideoDownloadState.Idle,
+                is VideoDownloadState.Downloading -> {
+                    // Show loading indicator while downloading video
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center),
                         color = Color.White
                     )
                 }
-                hasError -> {
+                is VideoDownloadState.Error -> {
                     // Show error message when video fails to load
                     Column(
                         modifier = Modifier
@@ -146,17 +143,16 @@ fun AttachmentFullscreenVideoPlayer(
                         )
                         Button(
                             onClick = {
-                                exoPlayer?.stop()
                                 onDownload()
-                                onDismiss()
+                                closeFullScreen(exoPlayer, onDismiss, onResetVideoDownloadState)
                             }
                         ) {
                             Text(stringResource(R.string.he_support_download_video_button))
                         }
                     }
                 }
-                else -> {
-                    // Show video player when URL is resolved and no error
+                is VideoDownloadState.Success -> {
+                    // Show video player when video is downloaded successfully
                     exoPlayer?.let { player ->
                         AndroidView(
                             factory = { ctx ->
@@ -190,9 +186,8 @@ fun AttachmentFullscreenVideoPlayer(
                 // Download button
                 IconButton(
                     onClick = {
-                        exoPlayer?.stop()
-                        onDownload.invoke()
-                        onDismiss.invoke()
+                        onDownload()
+                        closeFullScreen(exoPlayer, onDismiss, onResetVideoDownloadState)
                     }
                 ) {
                     Icon(
@@ -206,8 +201,7 @@ fun AttachmentFullscreenVideoPlayer(
                 // Close button
                 IconButton(
                     onClick = {
-                        exoPlayer?.stop()
-                        onDismiss()
+                        closeFullScreen(exoPlayer, onDismiss, onResetVideoDownloadState)
                     }
                 ) {
                     Icon(
@@ -220,4 +214,15 @@ fun AttachmentFullscreenVideoPlayer(
             }
         }
     }
+}
+
+fun closeFullScreen(
+    exoPlayer: SimpleExoPlayer?,
+    onDismiss: () -> Unit,
+    onResetVideoDownloadState: () -> Unit,
+) {
+    exoPlayer?.stop()
+    exoPlayer?.release()
+    onDismiss()
+    onResetVideoDownloadState()
 }

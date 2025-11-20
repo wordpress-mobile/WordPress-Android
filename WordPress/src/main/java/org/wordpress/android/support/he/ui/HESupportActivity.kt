@@ -28,10 +28,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.util.AttachmentActionsListener
-import org.wordpress.android.support.he.util.VideoUrlResolver
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.reader.ReaderFileDownloadManager
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
@@ -43,7 +43,7 @@ import javax.inject.Inject
 class HESupportActivity : AppCompatActivity() {
     @Inject lateinit var fileDownloadManager: ReaderFileDownloadManager
     @Inject lateinit var appLogWrapper: AppLogWrapper
-    @Inject lateinit var videoUrlResolver: VideoUrlResolver
+    @Inject lateinit var accountStore: AccountStore
     private val viewModel by viewModels<HESupportViewModel>()
 
     private lateinit var composeView: ComposeView
@@ -84,6 +84,12 @@ class HESupportActivity : AppCompatActivity() {
         )
         observeNavigationEvents()
         viewModel.init()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Cleanup cached video files
+        viewModel.cleanupVideoCache()
     }
 
 
@@ -174,6 +180,7 @@ class HESupportActivity : AppCompatActivity() {
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
                     val messageSendResult by viewModel.messageSendResult.collectAsState()
                     val attachmentState by viewModel.attachmentState.collectAsState()
+                    val videoDownloadState by viewModel.videoDownloadState.collectAsState()
 
                     selectedConversation?.let { conversation ->
                         HEConversationDetailScreen(
@@ -182,7 +189,6 @@ class HESupportActivity : AppCompatActivity() {
                             isLoading = isLoadingConversation,
                             isSendingMessage = isSendingMessage,
                             messageSendResult = messageSendResult,
-                            videoUrlResolver = videoUrlResolver,
                             onBackClick = { viewModel.onBackClick() },
                             onSendMessage = { message, includeAppLogs ->
                                 viewModel.onAddMessageToConversation(
@@ -205,7 +211,13 @@ class HESupportActivity : AppCompatActivity() {
                                 }
                                 // Start download with proper filename
                                 fileDownloadManager.downloadFile(attachment.url, attachment.filename)
-                            }
+                            },
+                            onGetAuthorizationHeaderArgument = { viewModel.getAuthorizationHeader() },
+                            videoDownloadState = videoDownloadState,
+                            onStartVideoDownload = { url ->
+                                viewModel.downloadVideoToTempFile(url)
+                            },
+                            onResetVideoDownloadState = { viewModel.resetVideoDownloadState() }
                         )
                     }
                 }
@@ -276,6 +288,8 @@ class HESupportActivity : AppCompatActivity() {
 
 
     companion object {
+        const val AUTHORIZATION_TAG = "Authorization"
+
         @JvmStatic
         fun createIntent(context: Context): Intent = Intent(context, HESupportActivity::class.java)
     }

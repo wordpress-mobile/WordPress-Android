@@ -61,11 +61,14 @@ import coil.request.videoFrameMillis
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.ConversationStatus
 import org.wordpress.android.support.he.model.MessageSendResult
 import org.wordpress.android.support.he.model.AttachmentType
 import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
+import org.wordpress.android.support.he.model.VideoDownloadState
+import org.wordpress.android.support.he.ui.HESupportActivity.Companion.AUTHORIZATION_TAG
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.support.he.util.generateSampleHESupportConversations
 import org.wordpress.android.ui.compose.components.MainTopAppBar
@@ -86,7 +89,10 @@ fun HEConversationDetailScreen(
     attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener,
     onDownloadAttachment: (SupportAttachment) -> Unit = {},
-    videoUrlResolver: org.wordpress.android.support.he.util.VideoUrlResolver? = null
+    onGetAuthorizationHeaderArgument: () -> String,
+    videoDownloadState: VideoDownloadState,
+    onStartVideoDownload: (String) -> Unit,
+    onResetVideoDownloadState: () -> Unit = {},
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -118,12 +124,18 @@ fun HEConversationDetailScreen(
             )
         },
         bottomBar = {
-            ReplyButton(
-                enabled = !isLoading,
-                onClick = {
-                    showBottomSheet = true
-                }
-            )
+            val status = ConversationStatus.fromStatus(conversation.status)
+            val isClosed = status == ConversationStatus.CLOSED
+            if (isClosed) {
+                ClosedConversationBanner()
+            } else {
+                ReplyButton(
+                    enabled = !isLoading,
+                    onClick = {
+                        showBottomSheet = true
+                    }
+                )
+            }
         }
     ) { contentPadding ->
         Box(
@@ -140,7 +152,7 @@ fun HEConversationDetailScreen(
             ) {
             item {
                 ConversationHeader(
-                    messageCount = conversation.messages.size,
+                    status = conversation.status,
                     lastUpdated = formatRelativeTime(conversation.lastMessageSentAt, resources),
                     isLoading = isLoading
                 )
@@ -158,7 +170,8 @@ fun HEConversationDetailScreen(
                     message = message,
                     timestamp = formatRelativeTime(message.createdAt, resources),
                     onPreviewAttachment = { attachment -> previewAttachment = attachment },
-                    onDownloadAttachment = onDownloadAttachment
+                    onDownloadAttachment = onDownloadAttachment,
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
                 )
             }
 
@@ -230,6 +243,7 @@ fun HEConversationDetailScreen(
             AttachmentType.Image -> {
                 AttachmentFullscreenImagePreview(
                     imageUrl = attachment.url,
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument,
                     onDismiss = { previewAttachment = null },
                     onDownload = {
                         onDownloadAttachment(attachment)
@@ -239,11 +253,15 @@ fun HEConversationDetailScreen(
             AttachmentType.Video -> {
                 AttachmentFullscreenVideoPlayer(
                     videoUrl = attachment.url,
-                    onDismiss = { previewAttachment = null },
+                    downloadState = videoDownloadState,
+                    onStartVideoDownload = onStartVideoDownload,
+                    onResetVideoDownloadState = onResetVideoDownloadState,
+                    onDismiss = {
+                        previewAttachment = null
+                    },
                     onDownload = {
                         onDownloadAttachment(attachment)
                     },
-                    videoUrlResolver = videoUrlResolver
                 )
             }
             else -> {
@@ -256,13 +274,24 @@ fun HEConversationDetailScreen(
 
 @Composable
 private fun ConversationHeader(
-    messageCount: Int,
+    status: String,
     lastUpdated: String,
     isLoading: Boolean = false
 ) {
+    val statusText = when (ConversationStatus.fromStatus(status)) {
+        ConversationStatus.WAITING_FOR_SUPPORT ->
+            stringResource(R.string.he_support_status_waiting_for_support)
+        ConversationStatus.WAITING_FOR_USER ->
+            stringResource(R.string.he_support_status_waiting_for_user)
+        ConversationStatus.SOLVED ->
+            stringResource(R.string.he_support_status_solved)
+        ConversationStatus.CLOSED ->
+            stringResource(R.string.he_support_status_closed)
+        ConversationStatus.UNKNOWN ->
+            stringResource(R.string.he_support_status_unknown)
+    }
     val headerDescription = if (!isLoading) {
-        "${stringResource(R.string.he_support_message_count, messageCount)}. " +
-                stringResource(R.string.he_support_last_updated, lastUpdated)
+        "$statusText. ${stringResource(R.string.he_support_last_updated, lastUpdated)}"
     } else {
         stringResource(R.string.he_support_last_updated, lastUpdated)
     }
@@ -277,26 +306,7 @@ private fun ConversationHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (!isLoading) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_comment_white_24dp),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(20.dp)
-                )
-                Text(
-                    text = stringResource(R.string.he_support_message_count, messageCount),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        } else {
-            Spacer(modifier = Modifier.size(0.dp))
-        }
+        ConversationStatusBadge(status = status)
 
         Text(
             text = stringResource(R.string.he_support_last_updated, lastUpdated),
@@ -324,11 +334,42 @@ private fun ConversationTitleCard(title: String) {
 }
 
 @Composable
+private fun ClosedConversationBanner() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.errorContainer,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_info_outline_white_24dp),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onErrorContainer,
+                modifier = Modifier.size(24.dp)
+            )
+            Text(
+                text = stringResource(R.string.he_support_conversation_closed_message),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onErrorContainer
+            )
+        }
+    }
+}
+
+@Composable
 private fun MessageItem(
     message: SupportMessage,
     timestamp: String,
     onPreviewAttachment: (SupportAttachment) -> Unit,
-    onDownloadAttachment: (SupportAttachment) -> Unit
+    onDownloadAttachment: (SupportAttachment) -> Unit,
+    onGetAuthorizationHeaderArgument: () -> String,
 ) {
     val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
 
@@ -389,7 +430,8 @@ private fun MessageItem(
                 AttachmentsList(
                     attachments = message.attachments,
                     onPreviewAttachment = onPreviewAttachment,
-                    onDownloadAttachment = onDownloadAttachment
+                    onDownloadAttachment = onDownloadAttachment,
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
                 )
             }
         }
@@ -400,7 +442,8 @@ private fun MessageItem(
 private fun AttachmentsList(
     attachments: List<SupportAttachment>,
     onPreviewAttachment: (SupportAttachment) -> Unit,
-    onDownloadAttachment: (SupportAttachment) -> Unit
+    onDownloadAttachment: (SupportAttachment) -> Unit,
+    onGetAuthorizationHeaderArgument: () -> String,
 ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -414,7 +457,8 @@ private fun AttachmentsList(
                         AttachmentType.Image, AttachmentType.Video -> onPreviewAttachment(attachment)
                         else -> onDownloadAttachment(attachment)
                     }
-                }
+                },
+                onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
             )
         }
     }
@@ -423,8 +467,12 @@ private fun AttachmentsList(
 @Composable
 private fun AttachmentItem(
     attachment: SupportAttachment,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onGetAuthorizationHeaderArgument: () -> String,
 ) {
+    // Cache authorization header to avoid repeated function calls during composition
+    val authorizationHeader = remember { onGetAuthorizationHeaderArgument() }
+
     val iconRes = when (attachment.type) {
         AttachmentType.Image -> R.drawable.ic_image_white_24dp
         AttachmentType.Video -> R.drawable.ic_video_camera_white_24dp
@@ -453,6 +501,9 @@ private fun AttachmentItem(
                             decoderFactory(VideoFrameDecoder.Factory())
                             videoFrameMillis(0) // Get first frame
                         }
+                    }
+                    .apply {
+                        addHeader(AUTHORIZATION_TAG, authorizationHeader)
                     }
                     .build(),
                 contentDescription = attachment.filename,
@@ -557,7 +608,10 @@ private fun HEConversationDetailScreenPreview() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _ -> },
         )
     }
 }
@@ -581,7 +635,10 @@ private fun HEConversationDetailScreenPreviewDark() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _ -> },
         )
     }
 }
@@ -607,7 +664,10 @@ private fun HEConversationDetailScreenWordPressPreview() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _ -> },
         )
     }
 }
@@ -632,7 +692,10 @@ private fun HEConversationDetailScreenPreviewWordPressDark() {
                 override fun onRemoveImage(uri: Uri) {
                     // stub
                 }
-            }
+            },
+            onGetAuthorizationHeaderArgument = { "" },
+            videoDownloadState = VideoDownloadState.Idle,
+            onStartVideoDownload = { _ -> },
         )
     }
 }

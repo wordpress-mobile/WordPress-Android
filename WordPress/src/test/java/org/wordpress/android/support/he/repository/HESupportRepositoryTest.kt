@@ -350,6 +350,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
             title = title,
             description = description,
             lastMessageSentAt = updatedAt,
+            status = status,
             messages = emptyList()
         )
 
@@ -359,6 +360,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
             title = this.title,
             description = this.description,
             lastMessageSentAt = this.updatedAt,
+            status = this.status,
             messages = this.messages.map { it.toSupportMessage() }
         )
 

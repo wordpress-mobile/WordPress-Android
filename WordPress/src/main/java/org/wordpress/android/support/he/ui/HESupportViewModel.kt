@@ -17,11 +17,13 @@ import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.model.AttachmentState
 import org.wordpress.android.support.he.model.MessageSendResult
 import org.wordpress.android.support.he.model.SupportConversation
+import org.wordpress.android.support.he.model.VideoDownloadState
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
 import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -37,6 +39,7 @@ class HESupportViewModel @Inject constructor(
 ) : ConversationsSupportViewModel<SupportConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
     companion object {
         const val MAX_TOTAL_SIZE_BYTES = 20L * 1024 * 1024 // 20MB total
+        private const val BEARER_TAG = "Bearer"
     }
     private val _isSendingMessage = MutableStateFlow(false)
     val isSendingMessage: StateFlow<Boolean> = _isSendingMessage.asStateFlow()
@@ -47,6 +50,14 @@ class HESupportViewModel @Inject constructor(
     // Unified attachment state (shared for both Detail and NewTicket screens)
     private val _attachmentState = MutableStateFlow(AttachmentState())
     val attachmentState: StateFlow<AttachmentState> = _attachmentState.asStateFlow()
+
+    // Cache for downloaded video file paths (videoUrl -> file path)
+    // Stores paths instead of File objects to minimize memory footprint
+    private val videoCache = mutableMapOf<String, String>()
+
+    // Video download state
+    private val _videoDownloadState = MutableStateFlow<VideoDownloadState>(VideoDownloadState.Idle)
+    val videoDownloadState: StateFlow<VideoDownloadState> = _videoDownloadState.asStateFlow()
 
     override fun initRepository(accessToken: String) {
         heSupportRepository.init(accessToken)
@@ -274,5 +285,77 @@ class HESupportViewModel @Inject constructor(
 
     fun notifyGeneralError() {
         _errorMessage.value = ErrorType.GENERAL
+    }
+
+    /**
+     * Downloads a video to a temporary file with caching and state management.
+     * Updates videoDownloadState as it progresses.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    fun downloadVideoToTempFile(videoUrl: String) {
+        viewModelScope.launch(ioDispatcher) {
+            try {
+                // Check cache first (before setting state to avoid unnecessary state changes)
+                videoCache[videoUrl]?.let { cachedFilePath ->
+                    val cachedFile = File(cachedFilePath)
+                    if (cachedFile.exists()) {
+                        AppLog.d(AppLog.T.SUPPORT, "Using cached video file for: $videoUrl")
+                        _videoDownloadState.value = VideoDownloadState.Success(cachedFile)
+                        return@launch
+                    } else {
+                        // File was deleted, remove from cache
+                        videoCache.remove(videoUrl)
+                    }
+                }
+
+                // Start downloading
+                _videoDownloadState.value = VideoDownloadState.Downloading
+                AppLog.d(AppLog.T.SUPPORT, "Downloading video to temp file: $videoUrl")
+                val tempFile = tempAttachmentsUtil.createVideoTempFile(videoUrl)
+                if (tempFile == null) {
+                    _videoDownloadState.value = VideoDownloadState.Error
+                } else {
+                    // Cache the downloaded file path
+                    videoCache[videoUrl] = tempFile.absolutePath
+                    _videoDownloadState.value = VideoDownloadState.Success(tempFile)
+                }
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.SUPPORT, "Error downloading video", e)
+                _videoDownloadState.value = VideoDownloadState.Error
+            }
+        }
+    }
+
+    /**
+     * Resets the video download state to Idle. Call this when closing the video player.
+     */
+    fun resetVideoDownloadState() {
+        _videoDownloadState.value = VideoDownloadState.Idle
+    }
+
+    /**
+     * Cleans up all cached video files. Call this when the activity is destroyed.
+     */
+    fun cleanupVideoCache() {
+        AppLog.d(AppLog.T.SUPPORT, "Cleaning up ${videoCache.size} cached video files")
+        videoCache.values.forEach { filePath ->
+            val file = File(filePath)
+            if (file.exists()) {
+                AppLog.d(AppLog.T.SUPPORT, "Deleting temp video file: $filePath")
+                file.delete()
+            }
+        }
+        videoCache.clear()
+    }
+
+    fun getAuthorizationHeader():String = "$BEARER_TAG ${accountStore.accessToken}"
+
+    /**
+     * Called when the ViewModel is destroyed. Ensures video cache cleanup even if Activity
+     * onDestroy() is not called (e.g., process death).
+     */
+    override fun onCleared() {
+        super.onCleared()
+        cleanupVideoCache()
     }
 }
