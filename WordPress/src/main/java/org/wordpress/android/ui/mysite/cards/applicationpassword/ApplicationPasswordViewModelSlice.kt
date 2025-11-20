@@ -15,7 +15,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -64,19 +64,19 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             if (authorizationUrlComplete.isEmpty()) {
                 uiModelMutable.postValue(null)
             } else {
-                postAuthenticationUrl(authorizationUrlComplete)
+                showApplicationPasswordCreateCard(site)
             }
         }
     }
 
-    private fun postAuthenticationUrl(authorizationUrlComplete: String) {
+    private fun showApplicationPasswordCreateCard(site: SiteModel) {
         uiModelMutable.postValue(
             MySiteCardAndItem.Card.QuickLinksItem(
                 listOf(
                     QuickLinkItem(
-                        label = UiString.UiStringRes(R.string.application_password_title),
+                        label = UiStringRes(R.string.application_password_title),
                         icon = R.drawable.ic_lock_white_24dp,
-                        onClick = ListItemInteraction.create { onClick(authorizationUrlComplete) }
+                        onClick = ListItemInteraction.create { onClick(site) }
                     )
                 )
             )
@@ -84,10 +84,10 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     }
 
 
-    private fun onClick(authorizationUrlComplete: String) {
+    private fun onClick(site: SiteModel) {
         _onNavigation.postValue(
             Event(
-                SiteNavigationAction.OpenApplicationPasswordAuthentication(authorizationUrlComplete)
+                SiteNavigationAction.OpenApplicationPasswordAutoAuthentication(site)
             )
         )
     }

@@ -96,6 +96,7 @@ sealed class SiteNavigationAction {
 
     object OpenApplicationPasswordsList : SiteNavigationAction()
     data class OpenApplicationPasswordAuthentication(val url: String) : SiteNavigationAction()
+    data class OpenApplicationPasswordAutoAuthentication(val site: SiteModel) : SiteNavigationAction()
 }
 
 sealed class BloggingPromptCardNavigationAction: SiteNavigationAction() {

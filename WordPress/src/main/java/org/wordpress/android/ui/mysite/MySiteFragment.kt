@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.view.WindowManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
@@ -21,6 +22,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.MySiteFragmentBinding
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.ActivityLauncher
@@ -31,6 +33,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity
+import org.wordpress.android.ui.accounts.login.applicationpassword.ApplicationPasswordAutoAuthDialogActivity
 import org.wordpress.android.ui.bloganuary.learnmore.BloganuaryNudgeLearnMoreOverlayFragment
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity
@@ -147,6 +150,26 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private var binding: MySiteFragmentBinding? = null
     private var siteTitle: String? = null
+    private var pendingApplicationPasswordSite: SiteModel? = null
+
+    private val applicationPasswordAutoAuthLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        pendingApplicationPasswordSite?.let { site ->
+            when (result.resultCode) {
+                ApplicationPasswordAutoAuthDialogActivity.RESULT_SUCCESS -> {
+                    viewModel.onApplicationPasswordCreated(site)
+                }
+                ApplicationPasswordAutoAuthDialogActivity.RESULT_ERROR -> {
+                    viewModel.onApplicationPasswordCreationError(site)
+                }
+                ApplicationPasswordAutoAuthDialogActivity.RESULT_DISMISSED -> {
+                    // User dismissed the dialog, no action needed
+                }
+            }
+            pendingApplicationPasswordSite = null
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -740,6 +763,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
         is SiteNavigationAction.OpenApplicationPasswordAuthentication -> {
             activityNavigator.openApplicationPasswordLogin(requireActivity(), action.url)
+        }
+        is SiteNavigationAction.OpenApplicationPasswordAutoAuthentication -> {
+            pendingApplicationPasswordSite = action.site
+            val intent = ApplicationPasswordAutoAuthDialogActivity.createIntent(
+                requireContext(),
+                action.site
+            )
+            applicationPasswordAutoAuthLauncher.launch(intent)
         }
     }
 
