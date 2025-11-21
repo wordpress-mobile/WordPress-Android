@@ -151,6 +151,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private var binding: MySiteFragmentBinding? = null
     private var siteTitle: String? = null
     private var pendingApplicationPasswordSite: SiteModel? = null
+    private var pendingApplicationPasswordUrl: String? = null
 
     private val applicationPasswordAutoAuthLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -161,13 +162,16 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     viewModel.onApplicationPasswordCreated(site)
                 }
                 ApplicationPasswordAutoAuthDialogActivity.RESULT_ERROR -> {
-                    viewModel.onApplicationPasswordCreationError(site)
+                    pendingApplicationPasswordUrl?.let {
+                        activityNavigator.openApplicationPasswordLogin(requireActivity(), it)
+                    } ?: viewModel.onApplicationPasswordCreationError(site)
                 }
                 ApplicationPasswordAutoAuthDialogActivity.RESULT_DISMISSED -> {
                     // User dismissed the dialog, no action needed
                 }
             }
             pendingApplicationPasswordSite = null
+            pendingApplicationPasswordUrl = null
         }
     }
 
@@ -766,6 +770,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
         is SiteNavigationAction.OpenApplicationPasswordAutoAuthentication -> {
             pendingApplicationPasswordSite = action.site
+            pendingApplicationPasswordUrl = action.alternativeUrl
             val intent = ApplicationPasswordAutoAuthDialogActivity.createIntent(
                 requireContext(),
                 action.site
