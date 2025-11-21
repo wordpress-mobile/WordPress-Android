@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login
 
-import android.util.Log
 import androidx.core.net.toUri
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -56,8 +55,10 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
                 val authorizationUrlComplete =
                     uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-                Log.d("WP_RS", "Found authorization for $siteUrl URL: $authorizationUrlComplete" +
-                        " API_ROOT_URL $apiRootUrl")
+                appLogWrapper.d(
+                    AppLog.T.API,
+                    "AP: Found authorization for $siteUrl URL: $authorizationUrlComplete " +
+                            "API_ROOT_URL $apiRootUrl")
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
                 authorizationUrlComplete
             }
@@ -74,7 +75,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     private fun handleAuthenticationDiscoveryError(siteUrl: String, throwable: Throwable): String {
-        appLogWrapper.e(AppLog.T.API, "WP_RS: Error during API discovery for $siteUrl - ${throwable.message}")
+        appLogWrapper.e(AppLog.T.API, "AP: Error during API discovery for $siteUrl - ${throwable.message}")
         AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
         return ""
     }
@@ -87,6 +88,10 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             urlLogin.siteUrl == null ||
             urlLogin.siteUrl == processedAppPasswordData
             ) {
+            appLogWrapper.e(
+                AppLog.T.DB,
+                "AP: Cannot save application password credentials for: ${urlLogin.siteUrl} - bad data"
+            )
             return false
         }
 
@@ -110,7 +115,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             } else {
                 appLogWrapper.e(
                     AppLog.T.DB,
-                    "WP_RS: Cannot save application password credentials for: ${urlLogin.siteUrl}"
+                    "AP: Cannot save application password credentials for: ${urlLogin.siteUrl} - null site"
                 )
                 false
             }
@@ -129,7 +134,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             },
             properties
         )
-        appLogWrapper.d(AppLog.T.DB, "WP_RS: Saved application password credentials for: $siteUrl")
+        appLogWrapper.d(AppLog.T.DB, "AP: Saved application password credentials for: $siteUrl")
     }
 
     fun getSiteUrlLoginFromRawData(url: String): UriLogin {
@@ -155,6 +160,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
                 dispatcherWrapper.removeApplicationPassword(site)
             }
+            appLogWrapper.d(AppLog.T.DB, "AP: Removed application password credentials for: $affectedSites sites")
             affectedSites
         }
     }
