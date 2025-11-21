@@ -201,7 +201,8 @@ class HESupportRepositoryTest : BaseUnitTest() {
             subject = subject,
             message = message,
             tags = tags,
-            attachments = attachments
+            attachments = attachments,
+            encryptedLogIds = emptyList()
         )
 
         // Then
@@ -232,7 +233,8 @@ class HESupportRepositoryTest : BaseUnitTest() {
             subject = "Test",
             message = "Test",
             tags = emptyList(),
-            attachments = emptyList()
+            attachments = emptyList(),
+            encryptedLogIds = emptyList()
         )
 
         // Then
@@ -256,7 +258,8 @@ class HESupportRepositoryTest : BaseUnitTest() {
             subject = "Test",
             message = "Test",
             tags = emptyList(),
-            attachments = emptyList()
+            attachments = emptyList(),
+            encryptedLogIds = emptyList()
         )
 
         // Then
