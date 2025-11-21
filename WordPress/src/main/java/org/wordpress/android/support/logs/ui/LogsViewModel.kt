@@ -1,8 +1,10 @@
 package org.wordpress.android.support.logs.ui
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +18,7 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.support.logs.model.LogFile
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LogFileProviderWrapper
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
@@ -25,6 +28,7 @@ import javax.inject.Named
 class LogsViewModel @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val logFileProvider: LogFileProviderWrapper,
+    @ApplicationContext private val context: Context,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     sealed class NavigationEvent {
@@ -32,7 +36,7 @@ class LogsViewModel @Inject constructor(
     }
 
     sealed class ActionEvent {
-        data class ShareLogFile(val logLines: List<String>, val fileName: String) : ActionEvent()
+        data class ShareLogFile(val file: java.io.File) : ActionEvent()
     }
 
     private val _logFiles = MutableStateFlow<List<LogFile>>(emptyList())
@@ -92,10 +96,18 @@ class LogsViewModel @Inject constructor(
     fun onShareClick(logFile: LogFile) {
         viewModelScope.launch(ioDispatcher) {
             try {
-                val logLines = logFile.logLines ?: readFileContent(logFile.file)
-                _actionEvents.emit(ActionEvent.ShareLogFile(logLines, logFile.fileName))
+                // Copy log file to cache directory for secure sharing
+                val cacheDir = File(context.cacheDir, "shared_logs")
+                if (!cacheDir.exists()) {
+                    cacheDir.mkdirs()
+                }
+
+                val cachedFile = File(cacheDir, logFile.file.name)
+                logFile.file.copyTo(cachedFile, overwrite = true)
+
+                _actionEvents.emit(ActionEvent.ShareLogFile(cachedFile))
             } catch (throwable: Throwable) {
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error reading log file: ${throwable.stackTraceToString()}")
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error preparing log file for sharing: ${throwable.stackTraceToString()}")
                 _errorMessage.value = ErrorType.GENERAL
             }
         }
@@ -126,7 +138,7 @@ class LogsViewModel @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private fun readFileContent(file: java.io.File): List<String> {
+    private fun readFileContent(file: File): List<String> {
         return try {
             file.bufferedReader().use { reader ->
                 val linesList = mutableListOf<String>()

@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -27,6 +28,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
+import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -95,7 +97,7 @@ class LogsActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.actionEvents.collect { event ->
                     when (event) {
-                        is LogsViewModel.ActionEvent.ShareLogFile -> shareLogFile(event.logLines, event.fileName)
+                        is LogsViewModel.ActionEvent.ShareLogFile -> shareLogFile(event.file)
                     }
                 }
             }
@@ -143,20 +145,25 @@ class LogsActivity : AppCompatActivity() {
         }
     }
 
-    private fun shareLogFile(logLines: List<String>, fileName: String) {
-        val subject = "${getString(R.string.app_name)} " +
-            "${getString(R.string.support_screen_application_logs_title)} - $fileName"
-        val content = logLines.joinToString("\n")
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, content)
-            putExtra(Intent.EXTRA_SUBJECT, subject)
-        }
+    private fun shareLogFile(cachedFile: File) {
         try {
+            val uri = FileProvider.getUriForFile(
+                this,
+                "${applicationContext.packageName}.provider",
+                cachedFile
+            )
+            val subject = "${getString(R.string.app_name)} " +
+                "${getString(R.string.support_screen_application_logs_title)} - ${cachedFile.name}"
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                putExtra(Intent.EXTRA_SUBJECT, subject)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
             startActivity(Intent.createChooser(intent, getString(R.string.reader_btn_share)))
-        } catch (ex: android.content.ActivityNotFoundException) {
+        } catch (ex: Exception) {
             ToastUtils.showToast(this, R.string.reader_toast_err_share_intent)
-            appLogWrapper.e(AppLog.T.SUPPORT, "Error sharing logs: ${ex.stackTraceToString()}")
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error sharing log file: ${ex.stackTraceToString()}")
         }
     }
 
