@@ -134,7 +134,7 @@ class HESupportViewModel @Inject constructor(
 
     private fun uploadLogs(): List<String> {
         val encryptedLogsUuid = mutableListOf<String>()
-        logFileProvider.getLogFiles().lastOrNull()?.let { logFile ->
+        logFileProvider.getLogFiles().forEach { logFile ->
             if (logFile.exists()) {
                 encryptedLogging.encryptAndUploadLogFile(
                     logFile = logFile,
