@@ -25,7 +25,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.text.HtmlCompat
 import org.wordpress.android.R
 import org.wordpress.android.support.logs.model.LogFile
 import org.wordpress.android.ui.compose.components.MainTopAppBar

@@ -145,6 +145,7 @@ class LogsActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun shareLogFile(cachedFile: File) {
         try {
             val uri = FileProvider.getUriForFile(

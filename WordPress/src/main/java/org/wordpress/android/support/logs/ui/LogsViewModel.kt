@@ -107,7 +107,10 @@ class LogsViewModel @Inject constructor(
 
                 _actionEvents.emit(ActionEvent.ShareLogFile(cachedFile))
             } catch (throwable: Throwable) {
-                appLogWrapper.e(AppLog.T.SUPPORT, "Error preparing log file for sharing: ${throwable.stackTraceToString()}")
+                appLogWrapper.e(
+                    AppLog.T.SUPPORT,
+                    "Error preparing log file for sharing: ${throwable.stackTraceToString()}"
+                )
                 _errorMessage.value = ErrorType.GENERAL
             }
         }
