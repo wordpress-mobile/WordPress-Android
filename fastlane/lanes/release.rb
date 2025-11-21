@@ -250,9 +250,12 @@ platform :android do
     # Fetch the base ref to ensure it's available locally
     sh('git', 'fetch', 'origin', base_ref_for_hotfix)
 
+    hotfix_branch = "release/#{new_version}"
+    ensure_branch_does_not_exist!(hotfix_branch)
+
     # Create the hotfix branch
     UI.message("Creating hotfix branch from '#{base_ref_for_hotfix}'...")
-    Fastlane::Helper::GitHelper.create_branch("release/#{new_version}", from: base_ref_for_hotfix)
+    Fastlane::Helper::GitHelper.create_branch(hotfix_branch, from: base_ref_for_hotfix)
     UI.success("Done! New hotfix branch is: '#{git_branch}'")
 
     # Bump the hotfix version and build code and write it to the `version.properties` file
