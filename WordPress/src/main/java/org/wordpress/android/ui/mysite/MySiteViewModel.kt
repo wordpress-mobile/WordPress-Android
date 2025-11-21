@@ -53,6 +53,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
 import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
+import org.wordpress.android.ui.utils.UiString
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
@@ -435,6 +436,34 @@ class MySiteViewModel @Inject constructor(
     fun onBloggingPromptsAttributionClicked() {
         _onNavigation.value = Event(
             SiteNavigationAction.OpenExternalUrl(DAY_ONE_EXTERNAL_URL)
+        )
+    }
+
+    fun onApplicationPasswordCreated(site: SiteModel) {
+        // Hide the Application Password creation card
+        applicationPasswordViewModelSlice.uiModelMutable.postValue(null)
+        _onSnackbarMessage.postValue(
+            Event(
+                SnackbarMessageHolder(
+                    UiString.UiStringResWithParams(
+                        R.string.application_password_credentials_stored,
+                        UiString.UiStringText(site.url)
+                    )
+                )
+            )
+        )
+    }
+
+    fun onApplicationPasswordCreationError(site: SiteModel) {
+        _onSnackbarMessage.postValue(
+            Event(
+                SnackbarMessageHolder(
+                    UiString.UiStringResWithParams(
+                        R.string.application_password_credentials_storing_error,
+                        UiString.UiStringText(site.url)
+                    )
+                )
+            )
         )
     }
 

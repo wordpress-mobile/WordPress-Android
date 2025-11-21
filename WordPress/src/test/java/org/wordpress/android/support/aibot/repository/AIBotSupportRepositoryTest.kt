@@ -22,7 +22,7 @@ import uniffi.wp_api.MessageContext
 import uniffi.wp_api.SupportBotsRequestAddMessageToBotConversationResponse
 import uniffi.wp_api.SupportBotsRequestCreateBotConversationResponse
 import uniffi.wp_api.SupportBotsRequestGetBotConversationResponse
-import uniffi.wp_api.SupportBotsRequestGetBotConverationListResponse
+import uniffi.wp_api.SupportBotsRequestGetBotConversationListResponse
 import uniffi.wp_api.UserMessageContext
 import uniffi.wp_api.UserPaidSupportEligibility
 import uniffi.wp_api.WpNetworkHeaderMap
@@ -64,7 +64,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         )
 
         // Create the actual response type
-        val response = SupportBotsRequestGetBotConverationListResponse(
+        val response = SupportBotsRequestGetBotConversationListResponse(
             data = testConversations,
             headerMap = mock<WpNetworkHeaderMap>()
         )
@@ -72,7 +72,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         val successResponse = WpRequestResult.Success(response = response)
 
         repository.init(testAccessToken, testUserId)
-        whenever(wpComApiClient.request<SupportBotsRequestGetBotConverationListResponse>(any()))
+        whenever(wpComApiClient.request<SupportBotsRequestGetBotConversationListResponse>(any()))
             .thenReturn(successResponse)
 
         val result = repository.loadConversations()
@@ -268,7 +268,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         return BotConversationSummary(
             chatId = chatId.toULong(),
             createdAt = Date(),
-            lastMessage = BotMessageSummary(
+            summaryMessage = BotMessageSummary(
                 content = message,
                 createdAt = Date(),
                 role = "user"
