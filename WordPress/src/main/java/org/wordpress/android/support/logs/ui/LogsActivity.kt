@@ -95,7 +95,7 @@ class LogsActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.actionEvents.collect { event ->
                     when (event) {
-                        is LogsViewModel.ActionEvent.ShareLogDay -> shareLogDay(event.logDay, event.date)
+                        is LogsViewModel.ActionEvent.ShareLogFile -> shareLogFile(event.logLines, event.fileName)
                     }
                 }
             }
@@ -117,21 +117,21 @@ class LogsActivity : AppCompatActivity() {
                 startDestination = LogsScreen.List.name
             ) {
                 composable(route = LogsScreen.List.name) {
-                    val logDays by viewModel.logDays.collectAsState()
+                    val logFiles by viewModel.logFiles.collectAsState()
                     LogsListScreen(
-                        logDays = logDays,
-                        onLogDayClick = { logDay -> viewModel.onLogDayClick(logDay) },
+                        logFiles = logFiles,
+                        onLogFileClick = { logFile -> viewModel.onLogFileClick(logFile) },
                         onBackClick = { finish() }
                     )
                 }
 
                 composable(route = LogsScreen.Detail.name) {
-                    val selectedLogDay by viewModel.selectedLogDay.collectAsState()
-                    selectedLogDay?.let { logDay ->
+                    val selectedLogFile by viewModel.selectedLogFile.collectAsState()
+                    selectedLogFile?.let { logFile ->
                         LogDetailScreen(
-                            logDay = logDay,
+                            logFile = logFile,
                             onBackClick = { navController?.navigateUp() },
-                            onShareClick = { viewModel.onShareClick(logDay) }
+                            onShareClick = { viewModel.onShareClick(logFile) }
                         )
                     } ?: run {
                         LaunchedEffect(Unit) {
@@ -143,12 +143,13 @@ class LogsActivity : AppCompatActivity() {
         }
     }
 
-    private fun shareLogDay(logDay: String, date: String) {
+    private fun shareLogFile(logLines: List<String>, fileName: String) {
         val subject = "${getString(R.string.app_name)} " +
-            "${getString(R.string.support_screen_application_logs_title)} - $date"
+            "${getString(R.string.support_screen_application_logs_title)} - $fileName"
+        val content = logLines.joinToString("\n")
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, logDay)
+            putExtra(Intent.EXTRA_TEXT, content)
             putExtra(Intent.EXTRA_SUBJECT, subject)
         }
         try {
