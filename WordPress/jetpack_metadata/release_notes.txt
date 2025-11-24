@@ -1,2 +1,2 @@
-* [*] Monochrome icon support for the WordPress app [#22321]
-* [*] Fixed high-resolution image loading issues [#22235]
+- The app icon now comes in a single-color option to match the other themed icons on your device. #aesthetic
+- Large, high-resolution images are more likely to load (but they might still take a few seconds).
