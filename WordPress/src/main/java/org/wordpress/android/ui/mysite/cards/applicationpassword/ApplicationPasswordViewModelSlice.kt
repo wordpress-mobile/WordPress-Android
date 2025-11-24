@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
@@ -15,7 +16,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -23,6 +25,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteStore: SiteStore,
     private val experimentalFeatures: ExperimentalFeatures,
+    private val appLogWrapper: AppLogWrapper,
 ) {
     lateinit var scope: CoroutineScope
 
@@ -57,37 +60,40 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             val storedSite = siteStore.sites.firstOrNull { it.id == site.id }
             if (storedSite != null && !applicationPasswordLoginHelper.siteHasBadCredentials(site)) {
                 uiModelMutable.postValue(null)
+                appLogWrapper.d(AppLog.T.MAIN, "AP: Hiding card for ${site.url} - authenticated")
                 return@launch
             }
 
             val authorizationUrlComplete = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
             if (authorizationUrlComplete.isEmpty()) {
                 uiModelMutable.postValue(null)
+                appLogWrapper.d(AppLog.T.MAIN, "AP: Hiding card for ${site.url} - bad discovery")
             } else {
-                postAuthenticationUrl(authorizationUrlComplete)
+                showApplicationPasswordCreateCard(site, authorizationUrlComplete)
             }
         }
     }
 
-    private fun postAuthenticationUrl(authorizationUrlComplete: String) {
+    private fun showApplicationPasswordCreateCard(site: SiteModel, alternativeUrl: String) {
         uiModelMutable.postValue(
             MySiteCardAndItem.Card.QuickLinksItem(
                 listOf(
                     QuickLinkItem(
-                        label = UiString.UiStringRes(R.string.application_password_title),
+                        label = UiStringRes(R.string.application_password_title),
                         icon = R.drawable.ic_lock_white_24dp,
-                        onClick = ListItemInteraction.create { onClick(authorizationUrlComplete) }
+                        onClick = ListItemInteraction.create { onClick(site, alternativeUrl) }
                     )
                 )
             )
         )
+        appLogWrapper.d(AppLog.T.MAIN, "AP: Showing card for ${site.url}")
     }
 
 
-    private fun onClick(authorizationUrlComplete: String) {
+    private fun onClick(site: SiteModel, alternativeUrl: String) {
         _onNavigation.postValue(
             Event(
-                SiteNavigationAction.OpenApplicationPasswordAuthentication(authorizationUrlComplete)
+                SiteNavigationAction.OpenApplicationPasswordAutoAuthentication(site, alternativeUrl)
             )
         )
     }

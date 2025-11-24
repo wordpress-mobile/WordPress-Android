@@ -9,11 +9,11 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.wordpress.android.R
 
-enum class SupportCategory(val icon: ImageVector, val labelRes: Int) {
-    APPLICATION(Icons.Default.PhoneAndroid, R.string.he_support_category_application),
-    JETPACK_CONNECTION(Icons.Default.Settings, R.string.he_support_category_jetpack_connection),
-    SITE_MANAGEMENT(Icons.Default.Language, R.string.he_support_category_site_management),
-    BILLING(Icons.Default.CreditCard, R.string.he_support_category_billing),
-    TECHNICAL_ISSUES(Icons.Default.Settings, R.string.he_support_category_technical_issues),
-    OTHER(Icons.AutoMirrored.Filled.Help, R.string.he_support_category_other)
+enum class SupportCategory(val icon: ImageVector, val labelRes: Int, val key: String) {
+    APPLICATION(Icons.Default.PhoneAndroid, R.string.he_support_category_application, "application"),
+    JETPACK_CONNECTION(Icons.Default.Settings, R.string.he_support_category_jetpack_connection, "jetpack-connection"),
+    SITE_MANAGEMENT(Icons.Default.Language, R.string.he_support_category_site_management, "site-management"),
+    BILLING(Icons.Default.CreditCard, R.string.he_support_category_billing, "billing-subscriptions"),
+    TECHNICAL_ISSUES(Icons.Default.Settings, R.string.he_support_category_technical_issues, "technical-issues"),
+    OTHER(Icons.AutoMirrored.Filled.Help, R.string.he_support_category_other, "other")
 }

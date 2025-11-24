@@ -22,7 +22,7 @@ import uniffi.wp_api.MessageContext
 import uniffi.wp_api.SupportBotsRequestAddMessageToBotConversationResponse
 import uniffi.wp_api.SupportBotsRequestCreateBotConversationResponse
 import uniffi.wp_api.SupportBotsRequestGetBotConversationResponse
-import uniffi.wp_api.SupportBotsRequestGetBotConverationListResponse
+import uniffi.wp_api.SupportBotsRequestGetBotConversationListResponse
 import uniffi.wp_api.UserMessageContext
 import uniffi.wp_api.UserPaidSupportEligibility
 import uniffi.wp_api.WpNetworkHeaderMap
@@ -64,7 +64,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         )
 
         // Create the actual response type
-        val response = SupportBotsRequestGetBotConverationListResponse(
+        val response = SupportBotsRequestGetBotConversationListResponse(
             data = testConversations,
             headerMap = mock<WpNetworkHeaderMap>()
         )
@@ -72,7 +72,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         val successResponse = WpRequestResult.Success(response = response)
 
         repository.init(testAccessToken, testUserId)
-        whenever(wpComApiClient.request<SupportBotsRequestGetBotConverationListResponse>(any()))
+        whenever(wpComApiClient.request<SupportBotsRequestGetBotConversationListResponse>(any()))
             .thenReturn(successResponse)
 
         val result = repository.loadConversations()
@@ -115,9 +115,9 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         assertThat(result?.id).isEqualTo(testChatId)
         assertThat(result?.messages).hasSize(2)
         assertThat(result?.messages?.get(0)?.isWrittenByUser).isTrue
-        assertThat(result?.messages?.get(0)?.text).isEqualTo("User message")
+        assertThat(result?.messages?.get(0)?.rawText).isEqualTo("User message")
         assertThat(result?.messages?.get(1)?.isWrittenByUser).isFalse
-        assertThat(result?.messages?.get(1)?.text).isEqualTo("Bot response")
+        assertThat(result?.messages?.get(1)?.rawText).isEqualTo("Bot response")
         assertThat(result?.lastMessage).isEqualTo("Bot response")
     }
 
@@ -186,9 +186,9 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         assertThat(result).isNotNull
         assertThat(result?.id).isEqualTo(newChatId)
         assertThat(result?.messages).hasSize(2)
-        assertThat(result?.messages?.get(0)?.text).isEqualTo(testMessage)
+        assertThat(result?.messages?.get(0)?.rawText).isEqualTo(testMessage)
         assertThat(result?.messages?.get(0)?.isWrittenByUser).isTrue
-        assertThat(result?.messages?.get(1)?.text).isEqualTo("Bot welcome response")
+        assertThat(result?.messages?.get(1)?.rawText).isEqualTo("Bot welcome response")
         assertThat(result?.messages?.get(1)?.isWrittenByUser).isFalse
     }
 
@@ -241,9 +241,9 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         assertThat(result).isNotNull
         assertThat(result?.id).isEqualTo(existingChatId)
         assertThat(result?.messages).hasSize(4)
-        assertThat(result?.messages?.get(2)?.text).isEqualTo(newMessage)
+        assertThat(result?.messages?.get(2)?.rawText).isEqualTo(newMessage)
         assertThat(result?.messages?.get(2)?.isWrittenByUser).isTrue
-        assertThat(result?.messages?.get(3)?.text).isEqualTo("Bot follow-up response")
+        assertThat(result?.messages?.get(3)?.rawText).isEqualTo("Bot follow-up response")
         assertThat(result?.messages?.get(3)?.isWrittenByUser).isFalse
         assertThat(result?.lastMessage).isEqualTo("Bot follow-up response")
     }
@@ -268,7 +268,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         return BotConversationSummary(
             chatId = chatId.toULong(),
             createdAt = Date(),
-            lastMessage = BotMessageSummary(
+            summaryMessage = BotMessageSummary(
                 content = message,
                 createdAt = Date(),
                 role = "user"

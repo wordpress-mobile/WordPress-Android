@@ -5,8 +5,11 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
+import org.wordpress.android.support.he.model.AttachmentType
+import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
+import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -178,28 +181,48 @@ class HESupportRepository @Inject constructor(
                 title = it.title,
                 description = it.description,
                 lastMessageSentAt = it.updatedAt,
+                status = it.status,
                 messages = emptyList()
             )
         }
 
     private fun uniffi.wp_api.SupportConversation.toSupportConversation(): SupportConversation =
         SupportConversation(
-            id = this.id.toLong(),
-            title = this.title,
-            description = this.description,
-            lastMessageSentAt = this.updatedAt,
-            messages = this.messages.map { it.toSupportMessage() }
+            id = id.toLong(),
+            title = title,
+            description = description,
+            lastMessageSentAt = updatedAt,
+            status = status,
+            messages = messages.map { it.toSupportMessage() }
         )
 
     private fun uniffi.wp_api.SupportMessage.toSupportMessage(): SupportMessage =
         SupportMessage(
-            id = this.id.toLong(),
-            text = this.content,
-            createdAt = this.createdAt,
-            authorName = when (this.author) {
-                is SupportMessageAuthor.User -> (this.author as SupportMessageAuthor.User).v1.displayName
-                is SupportMessageAuthor.SupportAgent -> (this.author as SupportMessageAuthor.SupportAgent).v1.name
+            id = id.toLong(),
+            rawText = content,
+            formattedText = markdownToAnnotatedString(content),
+            createdAt = createdAt,
+            authorName = when (author) {
+                is SupportMessageAuthor.User -> (author as SupportMessageAuthor.User).v1.displayName
+                is SupportMessageAuthor.SupportAgent -> (author as SupportMessageAuthor.SupportAgent).v1.name
             },
-            authorIsUser = this.authorIsCurrentUser
+            authorIsUser = authorIsCurrentUser,
+            attachments = attachments.map { it.toSupportAttachment() }
         )
+
+    private fun uniffi.wp_api.SupportAttachment.toSupportAttachment(): SupportAttachment =
+        SupportAttachment(
+            id = id.toLong(),
+            filename = filename,
+            url = url,
+            type = determineAttachmentType(contentType)
+        )
+
+    private fun determineAttachmentType(contentType: String): AttachmentType {
+        return when {
+            contentType.startsWith("image/") -> AttachmentType.Image
+            contentType.startsWith("video/") -> AttachmentType.Video
+            else -> AttachmentType.Other
+        }
+    }
 }

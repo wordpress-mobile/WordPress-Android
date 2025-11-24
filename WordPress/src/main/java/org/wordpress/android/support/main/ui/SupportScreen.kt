@@ -6,18 +6,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -30,6 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -70,27 +69,15 @@ fun SupportScreen(
                 .fillMaxSize()
                 .padding(contentPadding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Support Profile Section
-            Text(
-                text = stringResource(R.string.support_screen_profile_section_title),
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = FontWeight.Normal
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // User Profile Card or Login Button
+            // User Profile or Login Button
             if (isLoggedIn) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 24.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Avatar placeholder
                     Box(
                         modifier = Modifier
                             .size(64.dp)
@@ -133,109 +120,111 @@ fun SupportScreen(
                     }
                 }
             } else {
+                val loginButtonText = stringResource(R.string.support_screen_login_button)
                 Button(
                     onClick = onLoginClick,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 24.dp)
+                        .semantics { contentDescription = loginButtonText }
                 ) {
-                    Text(text = stringResource(R.string.support_screen_login_button))
+                    Text(text = loginButtonText)
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+            )
 
             // How can we help? Section
-            Text(
-                text = stringResource(R.string.support_screen_how_can_we_help_title),
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = FontWeight.Normal
+            SectionHeader(
+                title = stringResource(R.string.support_screen_how_can_we_help_title)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Support Options Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-            ) {
-                Column {
-                    SupportOptionItem(
-                        title = stringResource(R.string.support_screen_help_center_title),
-                        description = stringResource(R.string.support_screen_help_center_description),
-                        onClick = onHelpCenterClick
-                    )
-
-                    if (showAskTheBots) {
-                        HorizontalDivider(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            color = MaterialTheme.colorScheme.surfaceVariant
-                        )
-
-                        SupportOptionItem(
-                            title = stringResource(R.string.support_screen_ask_bots_title),
-                            description = stringResource(R.string.support_screen_ask_bots_description),
-                            onClick = onAskTheBotsClick
-                        )
-                    }
-
-                    if (showAskHappinessEngineers) {
-                        HorizontalDivider(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            color = MaterialTheme.colorScheme.surfaceVariant
-                        )
-
-                        SupportOptionItem(
-                            title = stringResource(R.string.support_screen_ask_happiness_engineers_title),
-                            description = stringResource(R.string.support_screen_ask_happiness_engineers_description),
-                            onClick = onAskHappinessEngineersClick,
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Diagnostics Section
-            Text(
-                text = stringResource(R.string.support_screen_diagnostics_section_title),
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = FontWeight.Normal
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            SupportOptionItem(
+                title = stringResource(R.string.support_screen_help_center_title),
+                description = stringResource(R.string.support_screen_help_center_description),
+                onClick = onHelpCenterClick
+            )
 
-            // Application Logs Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-            ) {
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+            )
+
+            if (showAskTheBots) {
                 SupportOptionItem(
-                    title = stringResource(R.string.support_screen_application_logs_title),
-                    description = stringResource(R.string.support_screen_application_logs_description),
-                    onClick = onApplicationLogsClick,
+                    title = stringResource(R.string.support_screen_ask_bots_title),
+                    description = stringResource(R.string.support_screen_ask_bots_description),
+                    onClick = onAskTheBotsClick
+                )
+
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            if (showAskHappinessEngineers) {
+                SupportOptionItem(
+                    title = stringResource(R.string.support_screen_ask_happiness_engineers_title),
+                    description = stringResource(R.string.support_screen_ask_happiness_engineers_description),
+                    onClick = onAskHappinessEngineersClick,
+                )
+
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                )
+            }
+
+            // Diagnostics Section
+            SectionHeader(
+                title = stringResource(R.string.support_screen_diagnostics_section_title)
+            )
+
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+            )
+
+            SupportOptionItem(
+                title = stringResource(R.string.support_screen_application_logs_title),
+                description = stringResource(R.string.support_screen_application_logs_description),
+                onClick = onApplicationLogsClick,
+            )
+
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+            )
 
             // Version Name
             Text(
                 text = stringResource(R.string.version_with_name_param, versionName),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(vertical = 24.dp)
             )
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
+}
+
+@Composable
+private fun SectionHeader(
+    title: String
+) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.titleSmall,
+        fontWeight = FontWeight.SemiBold,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .semantics { heading() }
+    )
 }
 
 @Composable
@@ -248,15 +237,19 @@ private fun SupportOptionItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 16.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "$title. $description"
+            }
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface
         )
-        Spacer(modifier = Modifier.height(4.dp))
         Text(
+            modifier = Modifier.padding(top = 4.dp),
             text = description,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -267,7 +260,7 @@ private fun SupportOptionItem(
 @Preview(showBackground = true, name = "Support Screen - Light - Logged In")
 @Composable
 private fun SupportScreenPreview() {
-    AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
+    AppThemeM3(isDarkTheme = false, isJetpackApp = true) {
         SupportScreen(
             userName = "Test user",
             userEmail = "test.user@gmail.com",
@@ -289,7 +282,7 @@ private fun SupportScreenPreview() {
 @Preview(showBackground = true, name = "Support Screen - Dark - Logged In", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun SupportScreenPreviewDark() {
-    AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
+    AppThemeM3(isDarkTheme = true, isJetpackApp = true) {
         SupportScreen(
             userName = "Test user",
             userEmail = "test.user@gmail.com",

@@ -1,5 +1,8 @@
 package org.wordpress.android.support.he.util
 
+import androidx.compose.ui.text.AnnotatedString
+import org.wordpress.android.support.he.model.AttachmentType
+import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
 import java.util.Date
@@ -18,27 +21,49 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
             description = "I'm having trouble logging into my account. The two-factor authentication code " +
                 "doesn't seem to be working properly when I try to access my site from the mobile app.",
             lastMessageSentAt = oneHourAgo,
+            status = "Open",
             messages = listOf(
                 SupportMessage(
                     id = 1,
-                    text = "Hello! My website has been loading very slowly for the past few days.",
+                    rawText = "",
+                    formattedText = AnnotatedString("Hello! My website has been loading very slowly for " +
+                            "the past few days."),
                     createdAt = Date(oneHourAgo.time - 1800000),
                     authorName = "You",
-                    authorIsUser = true
+                    authorIsUser = true,
+                    attachments = listOf(
+                        SupportAttachment(
+                            id = 1,
+                            filename = "screenshot.png",
+                            url = "https://example.com/attachments/screenshot.png",
+                            type = AttachmentType.Image
+                        ),
+                        SupportAttachment(
+                            id = 2,
+                            filename = "error-log.txt",
+                            url = "https://example.com/attachments/error-log.txt",
+                            type = AttachmentType.Other
+                        )
+                    )
                 ),
                 SupportMessage(
                     id = 2,
-                    text = "Hi there! I'd be happy to help you with that. Can you share your site URL?",
+                    rawText = "",
+                    formattedText = AnnotatedString("Hi there! I'd be happy to help you with that. " +
+                            "Can you share your site URL?"),
                     createdAt = Date(oneHourAgo.time - 900000),
                     authorName = "Support Agent",
-                    authorIsUser = false
+                    authorIsUser = false,
+                    attachments = emptyList()
                 ),
                 SupportMessage(
                     id = 3,
-                    text = "Sure, it's example.wordpress.com",
+                    rawText = "",
+                    formattedText = AnnotatedString("Sure, it's example.wordpress.com"),
                     createdAt = oneHourAgo,
                     authorName = "You",
-                    authorIsUser = true
+                    authorIsUser = true,
+                    attachments = emptyList()
                 )
             )
         ),
@@ -49,20 +74,25 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                 "store, I've noticed significant slowdowns and occasional timeout errors affecting customer " +
                 "experience.",
             lastMessageSentAt = twoDaysAgo,
+            status = "closed",
             messages = listOf(
                 SupportMessage(
                     id = 4,
-                    text = "I'm trying to install a new plugin but getting an error.",
+                    rawText = "",
+                    formattedText = AnnotatedString("I'm trying to install a new plugin but getting an error."),
                     createdAt = Date(twoDaysAgo.time - 3600000),
                     authorName = "You",
-                    authorIsUser = true
+                    authorIsUser = true,
+                    attachments = emptyList()
                 ),
                 SupportMessage(
                     id = 5,
-                    text = "I can help with that! What's the error message you're seeing?",
+                    rawText = "",
+                    formattedText = AnnotatedString("I can help with that! What's the error message you're seeing?"),
                     createdAt = twoDaysAgo,
                     authorName = "Support Agent",
-                    authorIsUser = false
+                    authorIsUser = false,
+                    attachments = emptyList()
                 )
             )
         ),
@@ -73,13 +103,29 @@ fun generateSampleHESupportConversations(): List<SupportConversation> {
                 "configuration, SSL certificate setup, and setting up professional email forwarding for my " +
                 "business site.",
             lastMessageSentAt = oneWeekAgo,
+            status = "solved",
             messages = listOf(
                 SupportMessage(
                     id = 6,
-                    text = "I need help setting up my custom domain.",
+                    rawText = "",
+                    formattedText = AnnotatedString("I need help setting up my custom domain."),
                     createdAt = oneWeekAgo,
                     authorName = "You",
-                    authorIsUser = true
+                    authorIsUser = true,
+                    attachments = listOf(
+                        SupportAttachment(
+                            id = 3,
+                            filename = "domain-settings.pdf",
+                            url = "https://example.com/attachments/domain-settings.pdf",
+                            type = AttachmentType.Other
+                        ),
+                        SupportAttachment(
+                            id = 4,
+                            filename = "setup-tutorial.mp4",
+                            url = "https://example.com/attachments/setup-tutorial.mp4",
+                            type = AttachmentType.Video
+                        )
+                    )
                 )
             )
         )

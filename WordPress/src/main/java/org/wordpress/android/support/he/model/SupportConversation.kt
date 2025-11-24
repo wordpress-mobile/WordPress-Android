@@ -8,6 +8,7 @@ data class SupportConversation(
     val title: String,
     val description: String,
     val lastMessageSentAt: Date,
+    val status: String,
     val messages: List<SupportMessage>
 ): Conversation {
     override fun getConversationId(): Long = id

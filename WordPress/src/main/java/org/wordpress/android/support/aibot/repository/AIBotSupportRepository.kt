@@ -7,6 +7,7 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
+import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -14,10 +15,14 @@ import uniffi.wp_api.AddMessageToBotConversationParams
 import uniffi.wp_api.BotConversationSummary
 import uniffi.wp_api.CreateBotConversationParams
 import uniffi.wp_api.GetBotConversationParams
+import uniffi.wp_api.ListBotConversationsParams
+import uniffi.wp_api.ListBotConversationsSummaryMethod
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
 private const val BOT_ID = "jetpack-chat-mobile"
+private const val ITEMS_PER_PAGE = 20
 
 class AIBotSupportRepository @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
@@ -51,7 +56,12 @@ class AIBotSupportRepository @Inject constructor(
 
     suspend fun loadConversations(): List<BotConversation> = withContext(ioDispatcher) {
         val response = wpComApiClient.request { requestBuilder ->
-            requestBuilder.supportBots().getBotConverationList(BOT_ID)
+            requestBuilder.supportBots().getBotConversationList(
+                botId = BOT_ID,
+                params = ListBotConversationsParams(
+                    summaryMethod = ListBotConversationsSummaryMethod.LAST_MESSAGE
+                )
+            )
         }
         when (response) {
             is WpRequestResult.Success -> {
@@ -66,12 +76,15 @@ class AIBotSupportRepository @Inject constructor(
         }
     }
 
-    suspend fun loadConversation(chatId: Long): BotConversation? = withContext(ioDispatcher) {
+    suspend fun loadConversation(chatId: Long, pageNumber: Long = 1L): BotConversation? = withContext(ioDispatcher) {
         val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.supportBots().getBotConversation(
                 botId = BOT_ID,
                 chatId = chatId.toULong(),
-                params = GetBotConversationParams()
+                params = GetBotConversationParams(
+                    pageNumber = pageNumber.toULong(),
+                    itemsPerPage = ITEMS_PER_PAGE.toULong()
+                )
             )
         }
         when (response) {
@@ -148,8 +161,8 @@ class AIBotSupportRepository @Inject constructor(
         BotConversation (
             id = chatId.toLong(),
             createdAt = createdAt,
-            mostRecentMessageDate = lastMessage.createdAt,
-            lastMessage = lastMessage.content,
+            mostRecentMessageDate = summaryMessage.createdAt,
+            lastMessage = summaryMessage.content,
             messages = listOf()
         )
 
@@ -157,15 +170,16 @@ class AIBotSupportRepository @Inject constructor(
         BotConversation (
             id = chatId.toLong(),
             createdAt = createdAt,
-            mostRecentMessageDate = messages.last().createdAt,
-            lastMessage = messages.last().content,
+            mostRecentMessageDate = messages.lastOrNull()?.createdAt ?: Date(),
+            lastMessage = messages.lastOrNull()?.content.orEmpty(),
             messages = messages.map { it.toBotMessage() }
         )
 
     private fun uniffi.wp_api.BotMessage.toBotMessage(): BotMessage =
         BotMessage(
             id = messageId.toLong(),
-            text = content,
+            rawText = content,
+            formattedText = markdownToAnnotatedString(content),
             date = createdAt,
             isWrittenByUser = role == "user"
         )

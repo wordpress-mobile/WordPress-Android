@@ -151,6 +151,10 @@
             android:name=".ui.accounts.login.applicationpassword.ApplicationPasswordRequiredDialogActivity"
             android:theme="@style/WordPress.TransparentDialog"
             android:exported="false" />
+        <activity
+            android:name=".ui.accounts.login.applicationpassword.ApplicationPasswordAutoAuthDialogActivity"
+            android:theme="@style/WordPress.TransparentDialog"
+            android:exported="false" />
 
         <activity
             android:name=".ui.accounts.LoginMagicLinkInterceptActivity"
