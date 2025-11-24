@@ -1,5 +1,6 @@
 package org.wordpress.android.support.common.ui
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,8 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable
 fun EmptyConversationsView(
@@ -58,5 +61,49 @@ fun EmptyConversationsView(
         Button(onClick = onCreateNewConversationClick) {
             Text(text = stringResource(R.string.he_support_empty_conversations_button))
         }
+    }
+}
+
+@Preview(showBackground = true, name = "Empty Conversations View")
+@Composable
+private fun EmptyConversationsViewPreview() {
+    AppThemeM3(isDarkTheme = false) {
+        EmptyConversationsView(
+            modifier = Modifier,
+            onCreateNewConversationClick = { }
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Empty Conversations View - Dark", uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun EmptyConversationsViewPreviewDark() {
+    AppThemeM3(isDarkTheme = true) {
+        EmptyConversationsView(
+            modifier = Modifier,
+            onCreateNewConversationClick = { }
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Empty Conversations View - WordPress")
+@Composable
+private fun EmptyConversationsViewPreviewWordPress() {
+    AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
+        EmptyConversationsView(
+            modifier = Modifier,
+            onCreateNewConversationClick = { }
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Empty Conversations View - Dark WordPress", uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun EmptyConversationsViewPreviewWordPressDark() {
+    AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
+        EmptyConversationsView(
+            modifier = Modifier,
+            onCreateNewConversationClick = { }
+        )
     }
 }

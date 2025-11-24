@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.model.Conversation
+import org.wordpress.android.support.common.ui.ConversationsSupportViewModel.ConversationsState
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 class ConversationsSupportViewModelTest : BaseUnitTest() {
@@ -22,6 +24,9 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var appLogWrapper: AppLogWrapper
+
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private lateinit var viewModel: TestConversationsSupportViewModel
 
@@ -41,10 +46,12 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(accountModel)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.accessToken).thenReturn(testAccessToken)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel = TestConversationsSupportViewModel(
             accountStore = accountStore,
-            appLogWrapper = appLogWrapper
+            appLogWrapper = appLogWrapper,
+            networkUtilsWrapper = networkUtilsWrapper,
         )
     }
 
@@ -60,7 +67,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.initRepositoryCalled).isTrue
         assertThat(viewModel.conversations.value).isEqualTo(testConversations)
-        assertThat(viewModel.isLoadingConversations.value).isFalse
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.Loaded.javaClass)
         assertThat(viewModel.errorMessage.value).isNull()
     }
 
@@ -137,8 +144,19 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.GENERAL)
-        assertThat(viewModel.isLoadingConversations.value).isFalse
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.Error.javaClass)
         verify(appLogWrapper).e(any(), any<String>())
+    }
+
+    @Test
+    fun `init sets NoNetwork state when network is not available`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.init()
+        advanceUntilIdle()
+
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.NoNetwork.javaClass)
+        assertThat(viewModel.conversations.value).isEmpty()
     }
 
     // Refresh Conversations Tests
@@ -157,7 +175,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(viewModel.conversations.value).isEqualTo(updatedConversations)
-        assertThat(viewModel.isLoadingConversations.value).isFalse
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.Loaded.javaClass)
     }
 
     @Test
@@ -170,7 +188,23 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.GENERAL)
-        assertThat(viewModel.isLoadingConversations.value).isFalse
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.Error.javaClass)
+    }
+
+    @Test
+    fun `refreshConversations sets NoNetwork state when network is not available`() = test {
+        val initialConversations = createTestConversations(count = 2)
+        viewModel.setConversationsToReturn(initialConversations)
+        viewModel.init()
+        advanceUntilIdle()
+
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        viewModel.refreshConversations()
+        advanceUntilIdle()
+
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.NoNetwork.javaClass)
+        // Conversations should remain unchanged from previous load
+        assertThat(viewModel.conversations.value).isEqualTo(initialConversations)
     }
 
     // Clear Error Tests
@@ -269,6 +303,37 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `onConversationClick sets OFFLINE error when network is not available`() = test {
+        val conversation = createTestConversation(1)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onConversationClick(conversation)
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.OFFLINE)
+        assertThat(viewModel.isLoadingConversation.value).isFalse
+    }
+
+    @Test
+    fun `onConversationClick does not navigate when network is not available`() = test {
+        val conversation = createTestConversation(1)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        var emittedEvent: ConversationsSupportViewModel.NavigationEvent? = null
+        val job = launch {
+            viewModel.navigationEvents.collect { event ->
+                emittedEvent = event
+            }
+        }
+
+        viewModel.onConversationClick(conversation)
+        advanceUntilIdle()
+
+        assertThat(emittedEvent).isNull()
+        job.cancel()
+    }
+
+    @Test
     fun `onBackFromDetailClick clears selected conversation`() = test {
         val conversation = createTestConversation(1)
         viewModel.setConversationToReturn(conversation)
@@ -316,6 +381,34 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `onCreateNewConversationClick sets OFFLINE error when network is not available`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onCreateNewConversationClick()
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.OFFLINE)
+    }
+
+    @Test
+    fun `onCreateNewConversationClick does not navigate when network is not available`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        var emittedEvent: ConversationsSupportViewModel.NavigationEvent? = null
+        val job = launch {
+            viewModel.navigationEvents.collect { event ->
+                emittedEvent = event
+            }
+        }
+
+        viewModel.onCreateNewConversationClick()
+        advanceUntilIdle()
+
+        assertThat(emittedEvent).isNull()
+        job.cancel()
+    }
+
+    @Test
     fun `setNewConversation sets selected conversation and emits navigation event`() = test {
         val conversation = createTestConversation(1)
         var emittedEvent: ConversationsSupportViewModel.NavigationEvent? = null
@@ -350,8 +443,9 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
 
     private class TestConversationsSupportViewModel(
         accountStore: AccountStore,
-        appLogWrapper: AppLogWrapper
-    ) : ConversationsSupportViewModel<TestConversation>(accountStore, appLogWrapper) {
+        appLogWrapper: AppLogWrapper,
+        networkUtilsWrapper: NetworkUtilsWrapper
+    ) : ConversationsSupportViewModel<TestConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
         var initRepositoryCalled = false
         private var shouldThrowOnInit = false
         private var shouldThrowOnGetConversations = false

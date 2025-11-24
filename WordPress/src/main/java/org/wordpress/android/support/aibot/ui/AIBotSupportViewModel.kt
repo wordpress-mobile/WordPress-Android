@@ -6,13 +6,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
 import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 import javax.inject.Inject
 
@@ -21,12 +25,22 @@ class AIBotSupportViewModel @Inject constructor(
     accountStore: AccountStore,
     private val aiBotSupportRepository: AIBotSupportRepository,
     appLogWrapper: AppLogWrapper,
-) : ConversationsSupportViewModel<BotConversation>(accountStore, appLogWrapper) {
+    networkUtilsWrapper: NetworkUtilsWrapper,
+) : ConversationsSupportViewModel<BotConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
     private val _canSendMessage = MutableStateFlow(true)
     val canSendMessage: StateFlow<Boolean> = _canSendMessage.asStateFlow()
 
     private val _isBotTyping = MutableStateFlow(false)
     val isBotTyping: StateFlow<Boolean> = _isBotTyping.asStateFlow()
+
+    private val _isLoadingOlderMessages = MutableStateFlow(false)
+    val isLoadingOlderMessages: StateFlow<Boolean> = _isLoadingOlderMessages.asStateFlow()
+
+    private val _hasMorePages = MutableStateFlow(true)
+    val hasMorePages: StateFlow<Boolean> = _hasMorePages.asStateFlow()
+
+    private val paginationMutex = Mutex()
+    private var currentPage = 1L
 
     override fun initRepository(accessToken: String) {
         aiBotSupportRepository.init(accessToken, accountStore.account.userId)
@@ -36,7 +50,9 @@ class AIBotSupportViewModel @Inject constructor(
 
     override suspend fun getConversation(conversationId: Long): BotConversation? {
         _canSendMessage.value = false
-        return aiBotSupportRepository.loadConversation(conversationId).also {
+        currentPage = 1L
+        _hasMorePages.value = true
+        return aiBotSupportRepository.loadConversation(conversationId, pageNumber = currentPage).also { conversation ->
             _canSendMessage.value = true
         }
     }
@@ -52,7 +68,65 @@ class AIBotSupportViewModel @Inject constructor(
                 messages = listOf()
             )
             _canSendMessage.value = true
+            currentPage = 1L
+            _hasMorePages.value = false
             setNewConversation(botConversation)
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    fun loadOlderMessages() {
+        if (!_hasMorePages.value || _isLoadingOlderMessages.value) {
+            return
+        }
+
+        viewModelScope.launch {
+            // Use mutex to prevent concurrent pagination requests
+            paginationMutex.withLock {
+                // Double-check conditions after acquiring lock
+                if (!_hasMorePages.value || _isLoadingOlderMessages.value) {
+                    return@launch
+                }
+
+                try {
+                    _isLoadingOlderMessages.value = true
+                    val conversationId = _selectedConversation.value?.id ?: return@withLock
+
+                    currentPage++
+                    val olderMessagesConversation = aiBotSupportRepository.loadConversation(
+                        conversationId,
+                        pageNumber = currentPage
+                    )
+
+                    if (olderMessagesConversation != null) {
+                        val olderMessages = olderMessagesConversation.messages
+
+                        // Check if we've reached the end (empty messages)
+                        if (olderMessages.isEmpty()) {
+                            _hasMorePages.value = false
+                        } else {
+                            // Prepend older messages to the existing ones
+                            // (older messages go at the beginning of the list)
+                            val currentMessages = _selectedConversation.value?.messages ?: emptyList()
+                            _selectedConversation.value = _selectedConversation.value?.copy(
+                                messages = olderMessages + currentMessages
+                            )
+                        }
+                    } else {
+                        // Error loading, stay on current page
+                        currentPage--
+                        _errorMessage.value = ErrorType.GENERAL
+                        appLogWrapper.e(AppLog.T.SUPPORT, "Error loading older messages: response is null")
+                    }
+                } catch (throwable: Throwable) {
+                    currentPage--
+                    _errorMessage.value = ErrorType.GENERAL
+                    appLogWrapper.e(AppLog.T.SUPPORT, "Error loading older messages: " +
+                            "${throwable.message} - ${throwable.stackTraceToString()}")
+                } finally {
+                    _isLoadingOlderMessages.value = false
+                }
+            }
         }
     }
 
@@ -65,13 +139,14 @@ class AIBotSupportViewModel @Inject constructor(
                 _canSendMessage.value = false
 
                 val now = Date()
-                val userMessage = BotMessage(
+                val botMessage = BotMessage(
                     id = System.currentTimeMillis(),
-                    text = message,
+                    rawText = message,
+                    formattedText = markdownToAnnotatedString(message),
                     date = now,
                     isWrittenByUser = true
                 )
-                val currentMessages = (_selectedConversation.value?.messages ?: emptyList()) + userMessage
+                val currentMessages = (_selectedConversation.value?.messages ?: emptyList()) + botMessage
                 _selectedConversation.value = _selectedConversation.value?.copy(
                     messages = currentMessages
                 )
@@ -83,7 +158,7 @@ class AIBotSupportViewModel @Inject constructor(
 
                 if (conversation != null) {
                     val finalConversation = conversation.copy(
-                        lastMessage = conversation.messages.last().text,
+                        lastMessage = conversation.messages.last().rawText,
                         messages = (_selectedConversation.value?.messages ?: emptyList()) + conversation.messages
                     )
                     // Update the conversations list

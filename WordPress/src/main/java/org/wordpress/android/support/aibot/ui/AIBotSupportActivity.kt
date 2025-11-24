@@ -93,6 +93,7 @@ class AIBotSupportActivity : AppCompatActivity() {
             val message = when (errorType) {
                 ConversationsSupportViewModel.ErrorType.GENERAL -> getString(R.string.ai_bot_generic_error)
                 ConversationsSupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
+                ConversationsSupportViewModel.ErrorType.OFFLINE -> getString(R.string.no_network_title)
             }
             scope.launch {
                 snackbarHostState.showSnackbar(
@@ -109,11 +110,12 @@ class AIBotSupportActivity : AppCompatActivity() {
                 startDestination = ConversationScreen.List.name,
             ) {
                 composable(route = ConversationScreen.List.name) {
-                    val isLoadingConversations by viewModel.isLoadingConversations.collectAsState()
+                    val conversationsState by viewModel.conversationsState.collectAsState()
+                    val conversations by viewModel.conversations.collectAsState()
                     AIBotConversationsListScreen(
                         snackbarHostState = snackbarHostState,
-                        conversations = viewModel.conversations,
-                        isLoading = isLoadingConversations,
+                        conversations = conversations,
+                        conversationsState = conversationsState,
                         onConversationClick = { conversation ->
                             viewModel.onConversationClick(conversation)
                         },
@@ -131,6 +133,8 @@ class AIBotSupportActivity : AppCompatActivity() {
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isBotTyping by viewModel.isBotTyping.collectAsState()
+                    val isLoadingOlderMessages by viewModel.isLoadingOlderMessages.collectAsState()
+                    val hasMorePages by viewModel.hasMorePages.collectAsState()
                     val canSendMessage by viewModel.canSendMessage.collectAsState()
                     val userInfo by viewModel.userInfo.collectAsState()
                     selectedConversation?.let { conversation ->
@@ -140,10 +144,15 @@ class AIBotSupportActivity : AppCompatActivity() {
                             conversation = conversation,
                             isLoading = isLoadingConversation,
                             isBotTyping = isBotTyping,
+                            isLoadingOlderMessages = isLoadingOlderMessages,
+                            hasMorePages = hasMorePages,
                             canSendMessage = canSendMessage,
                             onBackClick = { viewModel.onBackClick() },
                             onSendMessage = { text ->
                                 viewModel.sendMessage(text)
+                            },
+                            onLoadOlderMessages = {
+                                viewModel.loadOlderMessages()
                             }
                         )
                     }

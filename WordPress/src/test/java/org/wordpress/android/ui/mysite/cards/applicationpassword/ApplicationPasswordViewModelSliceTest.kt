@@ -17,6 +17,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
@@ -41,6 +42,9 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var experimentalFeatures: ExperimentalFeatures
 
+    @Mock
+    lateinit var appLogWrapper: AppLogWrapper
+
     private lateinit var siteTest: SiteModel
 
     private var applicationPasswordCard: MySiteCardAndItem.Card? = null
@@ -55,6 +59,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             applicationPasswordLoginHelper,
             siteStore,
             experimentalFeatures,
+            appLogWrapper
         ).apply {
             initialize(testScope())
             whenever(experimentalFeatures.isEnabled(any())).thenReturn(true)
