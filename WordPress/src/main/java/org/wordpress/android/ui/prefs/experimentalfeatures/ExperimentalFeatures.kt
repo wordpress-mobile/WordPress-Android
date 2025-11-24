@@ -44,6 +44,11 @@ class ExperimentalFeatures @Inject constructor(
             "network_debugging",
             R.string.experimental_network_debugging,
             R.string.experimental_network_debugging_description
+        ),
+        EXPERIMENTAL_POST_TYPES(
+            "experimental_post_types",
+            R.string.experimental_post_types,
+            R.string.experimental_post_types_description
         );
     }
 }
