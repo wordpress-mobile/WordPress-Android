@@ -206,11 +206,6 @@ public class AppPrefs {
         PINNED_SITE_IDS,
         READER_READING_PREFERENCES_JSON,
         SHOULD_SHOW_READER_ANNOUNCEMENT_CARD,
-
-        // Indicates if track network requests is enabled for troubleshooting
-        IS_TRACK_NETWORK_REQUESTS_ENABLED,
-        // Retention period for tracked network requests (ONE_HOUR, ONE_DAY, ONE_WEEK, FOREVER)
-        TRACK_NETWORK_REQUESTS_RETENTION_PERIOD,
     }
 
     /**
@@ -318,6 +313,12 @@ public class AppPrefs {
 
         // Indicates if the user is eligible for the Jetpack migration flow
         IS_JETPACK_MIGRATION_ELIGIBLE,
+
+        // Track Network Requests (Chucker) preferences - stored as device-level preferences
+        // (not user-specific) to allow troubleshooting network issues during login flows.
+        // These preferences persist across logout/login cycles.
+        IS_TRACK_NETWORK_REQUESTS_ENABLED,
+        TRACK_NETWORK_REQUESTS_RETENTION_PERIOD,
     }
 
     static SharedPreferences prefs() {
@@ -1843,19 +1844,29 @@ public class AppPrefs {
         }
     }
 
+    /**
+     * Returns whether network request tracking (Chucker) is enabled.
+     * This is a device-level preference that persists across logout/login cycles
+     * to support troubleshooting network issues during login flows.
+     */
     public static boolean isTrackNetworkRequestsEnabled() {
-        return getBoolean(DeletablePrefKey.IS_TRACK_NETWORK_REQUESTS_ENABLED, false);
+        return getBoolean(UndeletablePrefKey.IS_TRACK_NETWORK_REQUESTS_ENABLED, false);
     }
 
     public static void setTrackNetworkRequestsEnabled(boolean enabled) {
-        setBoolean(DeletablePrefKey.IS_TRACK_NETWORK_REQUESTS_ENABLED, enabled);
+        setBoolean(UndeletablePrefKey.IS_TRACK_NETWORK_REQUESTS_ENABLED, enabled);
     }
 
+    /**
+     * Returns the retention period for network request tracking.
+     * This is a device-level preference that persists across logout/login cycles.
+     * @see org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
+     */
     public static int getTrackNetworkRequestsRetentionPeriod() {
-        return getInt(DeletablePrefKey.TRACK_NETWORK_REQUESTS_RETENTION_PERIOD, 0);
+        return getInt(UndeletablePrefKey.TRACK_NETWORK_REQUESTS_RETENTION_PERIOD, 0);
     }
 
     public static void setTrackNetworkRequestsRetentionPeriod(int period) {
-        setInt(DeletablePrefKey.TRACK_NETWORK_REQUESTS_RETENTION_PERIOD, period);
+        setInt(UndeletablePrefKey.TRACK_NETWORK_REQUESTS_RETENTION_PERIOD, period);
     }
 }
