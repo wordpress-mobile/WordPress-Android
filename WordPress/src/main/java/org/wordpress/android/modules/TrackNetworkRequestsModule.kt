@@ -1,8 +1,10 @@
 package org.wordpress.android.modules
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import okhttp3.Interceptor
@@ -27,7 +29,10 @@ class TrackNetworkRequestsModule {
     @Provides
     @IntoSet
     @Named("interceptors")
-    fun provideTrackNetworkRequestsInterceptor(preference: TrackNetworkRequestsPreference): Interceptor {
-        return TrackNetworkRequestsInterceptor(preference)
+    fun provideTrackNetworkRequestsInterceptor(
+        @ApplicationContext context: Context,
+        preference: TrackNetworkRequestsPreference
+    ): Interceptor {
+        return TrackNetworkRequestsInterceptor(context, preference)
     }
 }

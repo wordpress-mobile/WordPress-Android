@@ -48,6 +48,7 @@ automattic-tracks = '6.0.6'
 bumptech-glide = '5.0.5'
 cascade = '2.3.0'
 checkstyle = '10.17.0'
+chucker = '4.2.0'
 coil = '2.7.0'
 commons-fileupload = '1.5'
 detekt = '1.23.8'
@@ -195,6 +196,7 @@ bumptech-glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", versio
 bumptech-glide-main = { group = "com.github.bumptech.glide", name = "glide", version.ref = "bumptech-glide" }
 bumptech-glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref = "bumptech-glide" }
 cascade-compose = { group = "me.saket.cascade", name = "cascade-compose", version.ref = "cascade" }
+chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-video = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }
 commons-fileupload = { group = "commons-fileupload", name = "commons-fileupload", version.ref = "commons-fileupload" }
