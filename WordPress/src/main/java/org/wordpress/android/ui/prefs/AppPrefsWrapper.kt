@@ -513,6 +513,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getSupportEmail()
         set(value) = AppPrefs.setSupportEmail(value)
 
+    var isTrackNetworkRequestsEnabled: Boolean
+        get() = AppPrefs.isTrackNetworkRequestsEnabled()
+        set(value) = AppPrefs.setTrackNetworkRequestsEnabled(value)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

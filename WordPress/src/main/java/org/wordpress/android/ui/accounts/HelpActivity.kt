@@ -125,6 +125,8 @@ class HelpActivity : BaseAppCompatActivity() {
             if (originFromExtras == Origin.JETPACK_MIGRATION_HELP) {
                 configureForJetpackMigrationHelp()
             }
+
+            setupTrackNetworkRequestsToggle()
         }
         /**
          * If the user taps on a Zendesk notification, we want to show them the `My Tickets` page. However, this
@@ -141,6 +143,17 @@ class HelpActivity : BaseAppCompatActivity() {
         binding.debugSettingsButton.isVisible = true
         binding.debugSettingsButton.setOnClickListener {
             startActivity(Intent(this, DebugSettingsActivity::class.java))
+        }
+    }
+
+    private fun HelpActivityBinding.setupTrackNetworkRequestsToggle() {
+        trackNetworkRequestsSwitch.isChecked = appPrefsWrapper.isTrackNetworkRequestsEnabled
+        trackNetworkRequestsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            appPrefsWrapper.isTrackNetworkRequestsEnabled = isChecked
+            AppLog.d(
+                API,
+                "Track network requests ${if (isChecked) "enabled" else "disabled"}"
+            )
         }
     }
 

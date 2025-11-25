@@ -206,6 +206,9 @@ public class AppPrefs {
         PINNED_SITE_IDS,
         READER_READING_PREFERENCES_JSON,
         SHOULD_SHOW_READER_ANNOUNCEMENT_CARD,
+
+        // Indicates if track network requests is enabled for troubleshooting
+        IS_TRACK_NETWORK_REQUESTS_ENABLED,
     }
 
     /**
@@ -1836,5 +1839,13 @@ public class AppPrefs {
         } else {
             setString(DeletablePrefKey.READER_READING_PREFERENCES_JSON, json);
         }
+    }
+
+    public static boolean isTrackNetworkRequestsEnabled() {
+        return getBoolean(DeletablePrefKey.IS_TRACK_NETWORK_REQUESTS_ENABLED, false);
+    }
+
+    public static void setTrackNetworkRequestsEnabled(boolean enabled) {
+        setBoolean(DeletablePrefKey.IS_TRACK_NETWORK_REQUESTS_ENABLED, enabled);
     }
 }
