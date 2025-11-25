@@ -985,6 +985,7 @@
     <string name="modern_support_description">Enable the new modern support experience</string>
     <string name="track_network_requests">Track Network Requests</string>
     <string name="track_network_requests_description">Record HTTP requests for troubleshooting. Logs stay on device unless you share them.</string>
+    <string name="view_network_requests">View Network Requests</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>

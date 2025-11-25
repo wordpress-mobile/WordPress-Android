@@ -235,6 +235,13 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/viewNetworkRequestsButton"
+                    style="@style/HelpActivitySingleText"
+                    android:text="@string/view_network_requests"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
                 <View
                     android:id="@+id/trackNetworkRequestsBottomDivider"
                     android:layout_width="match_parent"

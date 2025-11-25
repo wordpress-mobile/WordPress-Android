@@ -11,6 +11,7 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
+import com.chuckerteam.chucker.api.Chucker
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -147,13 +148,19 @@ class HelpActivity : BaseAppCompatActivity() {
     }
 
     private fun HelpActivityBinding.setupTrackNetworkRequestsToggle() {
-        trackNetworkRequestsSwitch.isChecked = appPrefsWrapper.isTrackNetworkRequestsEnabled
+        val isEnabled = appPrefsWrapper.isTrackNetworkRequestsEnabled
+        trackNetworkRequestsSwitch.isChecked = isEnabled
+        viewNetworkRequestsButton.isVisible = isEnabled
         trackNetworkRequestsSwitch.setOnCheckedChangeListener { _, isChecked ->
             appPrefsWrapper.isTrackNetworkRequestsEnabled = isChecked
+            viewNetworkRequestsButton.isVisible = isChecked
             AppLog.d(
                 API,
                 "Track network requests ${if (isChecked) "enabled" else "disabled"}"
             )
+        }
+        viewNetworkRequestsButton.setOnClickListener {
+            startActivity(Chucker.getLaunchIntent(this@HelpActivity))
         }
     }
 
