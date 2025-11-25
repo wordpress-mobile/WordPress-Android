@@ -1711,7 +1711,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         var button: ActionableEmptyViewButtonType? = null
 
         // Ensure the default image is reset for empty views before applying logic
-        actionableEmptyView!!.image.setImageResource(R.drawable.illustration_reader_empty)
+        actionableEmptyView!!.image.setImageResource(0)
 
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleAndDescriptionForSelfHostedCta()
@@ -1810,11 +1810,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         actionableEmptyView!!.subtitle.contentDescription =
             getString(R.string.reader_empty_saved_posts_content_description)
         actionableEmptyView!!.subtitle.visibility = View.VISIBLE
-        actionableEmptyView!!.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions)
+        actionableEmptyView!!.button.setText(R.string.reader_no_followed_blogs_button_discover)
         actionableEmptyView!!.button.visibility = View.VISIBLE
         actionableEmptyView!!.button.setOnClickListener {
             setCurrentTagFromEmptyViewButton(
-                ActionableEmptyViewButtonType.FOLLOWED
+                ActionableEmptyViewButtonType.DISCOVER
             )
         }
     }
@@ -1832,9 +1832,16 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         actionableEmptyView!!.image.visibility = View.VISIBLE
         actionableEmptyView!!.title.text =
-            getString(R.string.reader_self_hosted_select_filter)
+            getString(R.string.reader_empty_subscriptions)
         actionableEmptyView!!.subtitle.visibility = View.GONE
-        actionableEmptyView!!.button.visibility = View.GONE
+        actionableEmptyView!!.button.setText(
+            R.string.reader_no_followed_blogs_button_discover
+        )
+        actionableEmptyView!!.button.setOnClickListener {
+            setCurrentTagFromEmptyViewButton(
+                ActionableEmptyViewButtonType.DISCOVER
+            )
+        }
     }
 
     private fun addBookmarkImageSpan(ssb: SpannableStringBuilder, imagePlaceholderPosition: Int) {
@@ -2354,14 +2361,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     activity.runOnUiThread {
                         if (isBookmarksList && isPostAdapterEmpty() && isAdded) {
                             setEmptyTitleAndDescriptionForBookmarksList()
-                            actionableEmptyView!!.image.setImageResource(
-                                R.drawable.illustration_reader_empty
-                            )
                             showEmptyView()
                         } else if ((currentTag?.isListTopic() == true) && isPostAdapterEmpty() && isAdded) {
-                            actionableEmptyView!!.image.setImageResource(
-                                R.drawable.illustration_reader_empty
-                            )
                             actionableEmptyView!!.title.text =
                                 getString(R.string.reader_empty_blogs_posts_in_custom_list)
                             actionableEmptyView!!.image.visibility = View.VISIBLE
