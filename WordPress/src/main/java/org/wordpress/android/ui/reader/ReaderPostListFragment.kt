@@ -1711,7 +1711,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         var button: ActionableEmptyViewButtonType? = null
 
         // Ensure the default image is reset for empty views before applying logic
-        actionableEmptyView!!.image.setImageResource(R.drawable.illustration_reader_empty)
+        actionableEmptyView!!.image.setImageResource(R.drawable.ic_reader_empty_state_96dp)
 
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleAndDescriptionForSelfHostedCta()
@@ -2355,12 +2355,12 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                         if (isBookmarksList && isPostAdapterEmpty() && isAdded) {
                             setEmptyTitleAndDescriptionForBookmarksList()
                             actionableEmptyView!!.image.setImageResource(
-                                R.drawable.illustration_reader_empty
+                                R.drawable.ic_reader_empty_state_96dp
                             )
                             showEmptyView()
                         } else if ((currentTag?.isListTopic() == true) && isPostAdapterEmpty() && isAdded) {
                             actionableEmptyView!!.image.setImageResource(
-                                R.drawable.illustration_reader_empty
+                                R.drawable.ic_reader_empty_state_96dp
                             )
                             actionableEmptyView!!.title.text =
                                 getString(R.string.reader_empty_blogs_posts_in_custom_list)
