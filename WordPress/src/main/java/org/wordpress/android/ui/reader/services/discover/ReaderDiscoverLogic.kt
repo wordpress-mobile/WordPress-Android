@@ -152,7 +152,7 @@ class ReaderDiscoverLogic @Inject constructor(
         if (taskType == REQUEST_FIRST_PAGE) {
             clearCache()
         }
-        json.optJSONArray(JSON_CARDS)?.let { originalCardsJson ->
+        json.optJSONArray(JSON_CARDS)?.let { fullCardsJson ->
             // Parse the json into cards model objects
             val cards = parseCards(fullCardsJson)
             insertPostsIntoDb(cards.filterIsInstance<ReaderPostCard>().map { it.post })
