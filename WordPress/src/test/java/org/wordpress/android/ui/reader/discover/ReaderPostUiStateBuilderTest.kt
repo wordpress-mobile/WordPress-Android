@@ -312,10 +312,10 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
 
     // region FEATURED IMAGE
     @Test
-    fun `featured image is displayed for photo and default card types`() = test {
+    fun `featured image is displayed for supported card types`() = test {
         // Arrange
         val dummyUrl = "12345"
-        ReaderCardType.values().filter { it == PHOTO || it == DEFAULT }.forEach {
+        ReaderCardType.values().filter { it != GALLERY }.forEach {
             val post = createPost(cardType = it, hasFeaturedImage = true, featuredImageUrlForDisplay = dummyUrl)
             // Act
             val uiState = mapPostToUiState(post)
@@ -325,10 +325,10 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `featured image is displayed for photo and default card types for new UI`() = test {
+    fun `featured image is displayed for supported card types for new UI`() = test {
         // Arrange
         val dummyUrl = "12345"
-        ReaderCardType.values().filter { it == PHOTO || it == DEFAULT }.forEach {
+        ReaderCardType.values().filter { it != GALLERY }.forEach {
             val post = createPost(cardType = it, hasFeaturedImage = true, featuredImageUrlForDisplay = dummyUrl)
             // Act
             val uiState = mapPostToUiState(post)
@@ -338,27 +338,23 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `featured image is not displayed for other than photo and default card types`() = test {
+    fun `featured image is not displayed for gallery card type`() = test {
         // Arrange
-        ReaderCardType.values().filter { it != PHOTO && it != DEFAULT }.forEach {
-            val post = createPost(cardType = it, hasFeaturedImage = true)
-            // Act
-            val uiState = mapPostToUiState(post)
-            // Assert
-            assertThat(uiState.featuredImageUrl).isNull()
-        }
+        val post = createPost(cardType = GALLERY, hasFeaturedImage = true)
+        // Act
+        val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat(uiState.featuredImageUrl).isNull()
     }
 
     @Test
-    fun `featured image is not displayed for other than photo and default card types for new UI`() = test {
+    fun `featured image is not displayed for gallery card type for new UI`() = test {
         // Arrange
-        ReaderCardType.values().filter { it != PHOTO && it != DEFAULT }.forEach {
-            val post = createPost(cardType = it, hasFeaturedImage = true)
-            // Act
-            val uiState = mapPostToUiState(post)
-            // Assert
-            assertThat(uiState.featuredImageUrl).isNull()
-        }
+        val post = createPost(cardType = GALLERY, hasFeaturedImage = true)
+        // Act
+        val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat(uiState.featuredImageUrl).isNull()
     }
 
     @Test
@@ -379,6 +375,21 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.featuredImageUrl).isNull()
+    }
+
+    @Test
+    fun `video card shows featured media area when only video is available`() = test {
+        // Arrange
+        val post = createPost(
+            cardType = VIDEO,
+            hasFeaturedVideo = true,
+            featuredVideoUrl = "video://example",
+            hasFeaturedImage = false
+        )
+        // Act
+        val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat(uiState.featuredImageVisibility).isTrue
     }
     // endregion
 
