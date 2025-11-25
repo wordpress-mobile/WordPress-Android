@@ -179,6 +179,8 @@ class ReaderDiscoverLogic @Inject constructor(
 
     private fun parseCards(cardsJsonArray: JSONArray): ArrayList<ReaderDiscoverCard> {
         val cards: ArrayList<ReaderDiscoverCard> = arrayListOf()
+        val addedPostIds = mutableSetOf<Long>()
+
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
@@ -188,6 +190,15 @@ class ReaderDiscoverLogic @Inject constructor(
                 }
                 JSON_CARD_POST -> {
                     val post = parseDiscoverCardsJsonUseCase.parsePostCard(cardJson)
+
+                    // Check for duplicate post
+                    if (addedPostIds.contains(post.postId)) {
+                        AppLog.w(READER, "Duplicate post detected in parseCards - ID: ${post.postId}, " +
+                                "skipping duplicate entry")
+                        continue
+                    }
+
+                    addedPostIds.add(post.postId)
                     cards.add(ReaderPostCard(post))
                 }
                 JSON_CARD_RECOMMENDED_BLOGS -> {
@@ -219,9 +230,10 @@ class ReaderDiscoverLogic @Inject constructor(
      * It for example copies only ids from post object as we don't need to store the gigantic post in the json
      * as it's already stored in the db.
      */
-    @Suppress("NestedBlockDepth")
+    @Suppress("NestedBlockDepth", "CyclomaticComplexMethod", "LoopWithTooManyJumpStatements")
     private fun createSimplifiedJson(cardsJsonArray: JSONArray, discoverTasks: DiscoverTasks): JSONArray {
         val simplifiedJsonList = mutableListOf<JSONObject>()
+        val addedPostIds = mutableSetOf<Long>()
         var firstRecommendationCard: JSONObject? = null
         val isFirstPage = discoverTasks == REQUEST_FIRST_PAGE
         for (i in 0 until cardsJsonArray.length()) {
@@ -246,6 +258,17 @@ class ReaderDiscoverLogic @Inject constructor(
                     simplifiedJsonList.add(cardJson)
                 }
                 JSON_CARD_POST -> {
+                    // Check for duplicate posts in simplified JSON
+                    val postData = cardJson.getJSONObject(JSON_CARD_DATA)
+                    val postId = postData.optLong(POST_ID)
+
+                    if (addedPostIds.contains(postId)) {
+                        AppLog.w(READER, "Duplicate post detected in createSimplifiedJson - ID: $postId, " +
+                                "skipping duplicate entry")
+                        continue
+                    }
+
+                    addedPostIds.add(postId)
                     simplifiedJsonList.add(createSimplifiedPostJson(cardJson))
                 }
             }
