@@ -235,12 +235,30 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/viewNetworkRequestsButton"
-                    style="@style/HelpActivitySingleText"
-                    android:text="@string/view_network_requests"
+                <LinearLayout
+                    android:id="@+id/viewNetworkRequestsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="vertical"
+                    android:padding="@dimen/margin_extra_large"
                     android:visibility="gone"
-                    tools:visibility="visible" />
+                    tools:visibility="visible">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/viewNetworkRequestsButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/view_network_requests"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/networkRequestsRetentionInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        tools:text="Retention: 1 Hour" />
+                </LinearLayout>
 
                 <View
                     android:id="@+id/trackNetworkRequestsBottomDivider"

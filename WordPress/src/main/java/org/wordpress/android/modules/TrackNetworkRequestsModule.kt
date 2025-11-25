@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import okhttp3.Interceptor
+import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsPreference
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -22,6 +23,8 @@ class TrackNetworkRequestsModule {
     fun provideTrackNetworkRequestsPreference(appPrefsWrapper: AppPrefsWrapper): TrackNetworkRequestsPreference {
         return object : TrackNetworkRequestsPreference {
             override fun isEnabled(): Boolean = appPrefsWrapper.isTrackNetworkRequestsEnabled
+            override fun getRetentionPeriod(): NetworkRequestsRetentionPeriod =
+                NetworkRequestsRetentionPeriod.fromInt(appPrefsWrapper.trackNetworkRequestsRetentionPeriod)
         }
     }
 

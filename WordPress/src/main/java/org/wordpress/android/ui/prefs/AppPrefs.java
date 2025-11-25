@@ -209,6 +209,8 @@ public class AppPrefs {
 
         // Indicates if track network requests is enabled for troubleshooting
         IS_TRACK_NETWORK_REQUESTS_ENABLED,
+        // Retention period for tracked network requests (ONE_HOUR, ONE_DAY, ONE_WEEK, FOREVER)
+        TRACK_NETWORK_REQUESTS_RETENTION_PERIOD,
     }
 
     /**
@@ -1847,5 +1849,13 @@ public class AppPrefs {
 
     public static void setTrackNetworkRequestsEnabled(boolean enabled) {
         setBoolean(DeletablePrefKey.IS_TRACK_NETWORK_REQUESTS_ENABLED, enabled);
+    }
+
+    public static int getTrackNetworkRequestsRetentionPeriod() {
+        return getInt(DeletablePrefKey.TRACK_NETWORK_REQUESTS_RETENTION_PERIOD, 0);
+    }
+
+    public static void setTrackNetworkRequestsRetentionPeriod(int period) {
+        setInt(DeletablePrefKey.TRACK_NETWORK_REQUESTS_RETENTION_PERIOD, period);
     }
 }

@@ -8,11 +8,38 @@ import okhttp3.Interceptor
 import okhttp3.Response
 
 /**
- * Interface to check if tracking network requests is enabled.
+ * Retention period options for tracked network requests.
+ *
+ * IMPORTANT: Do not modify existing int values as they are persisted to SharedPreferences.
+ * To add new options, append them with new int values. If existing values must change,
+ * implement a preference migration.
+ */
+enum class NetworkRequestsRetentionPeriod(val value: Int) {
+    ONE_HOUR(0),
+    ONE_DAY(1),
+    ONE_WEEK(2),
+    FOREVER(3);
+
+    fun toChuckerPeriod(): RetentionManager.Period = when (this) {
+        ONE_HOUR -> RetentionManager.Period.ONE_HOUR
+        ONE_DAY -> RetentionManager.Period.ONE_DAY
+        ONE_WEEK -> RetentionManager.Period.ONE_WEEK
+        FOREVER -> RetentionManager.Period.FOREVER
+    }
+
+    companion object {
+        fun fromInt(value: Int): NetworkRequestsRetentionPeriod =
+            entries.find { it.value == value } ?: ONE_HOUR
+    }
+}
+
+/**
+ * Interface to check tracking preferences.
  * This is implemented in the app module to access preferences.
  */
 interface TrackNetworkRequestsPreference {
     fun isEnabled(): Boolean
+    fun getRetentionPeriod(): NetworkRequestsRetentionPeriod
 }
 
 /**
@@ -23,13 +50,17 @@ interface TrackNetworkRequestsPreference {
  * through without any logging or inspection.
  *
  * @param context Application context for Chucker initialization
- * @param preference Provides the enabled/disabled state from app preferences
+ * @param preference Provides the enabled/disabled state and retention period from app preferences
  */
 class TrackNetworkRequestsInterceptor(
-    context: Context,
+    private val context: Context,
     private val preference: TrackNetworkRequestsPreference
 ) : Interceptor {
-    private val chuckerInterceptor: Interceptor = createChuckerInterceptor(context)
+    @Volatile
+    private var chuckerInterceptor: ChuckerInterceptor? = null
+
+    @Volatile
+    private var currentRetentionPeriod: NetworkRequestsRetentionPeriod? = null
 
     override fun intercept(chain: Interceptor.Chain): Response {
         // Note: Reading the preference on every request is acceptable because SharedPreferences
@@ -39,10 +70,41 @@ class TrackNetworkRequestsInterceptor(
         // 3. HashMap lookup (negligible)
         // See: https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-14.0.0_r1/core/java/android/app/SharedPreferencesImpl.java#345
         return if (preference.isEnabled()) {
-            chuckerInterceptor.intercept(chain)
+            getOrCreateChuckerInterceptor().intercept(chain)
         } else {
             chain.proceed(chain.request())
         }
+    }
+
+    private fun getOrCreateChuckerInterceptor(): ChuckerInterceptor {
+        val desiredRetention = preference.getRetentionPeriod()
+        val currentInterceptor = chuckerInterceptor
+
+        // Recreate interceptor if retention period changed
+        if (currentInterceptor == null || currentRetentionPeriod != desiredRetention) {
+            synchronized(this) {
+                // Double-check after acquiring lock
+                if (chuckerInterceptor == null || currentRetentionPeriod != desiredRetention) {
+                    chuckerInterceptor = createChuckerInterceptor(desiredRetention)
+                    currentRetentionPeriod = desiredRetention
+                }
+            }
+        }
+        return chuckerInterceptor!!
+    }
+
+    private fun createChuckerInterceptor(retention: NetworkRequestsRetentionPeriod): ChuckerInterceptor {
+        val collector = ChuckerCollector(
+            context = context,
+            showNotification = false,
+            retentionPeriod = retention.toChuckerPeriod()
+        )
+        return ChuckerInterceptor.Builder(context)
+            .collector(collector)
+            .maxContentLength(MAX_CONTENT_LENGTH)
+            .redactHeaders(SENSITIVE_HEADERS)
+            .alwaysReadResponseBody(false)
+            .build()
     }
 
     companion object {
@@ -52,20 +114,6 @@ class TrackNetworkRequestsInterceptor(
             "Set-Cookie",
             "X-WP-Nonce"
         )
-
-        private fun createChuckerInterceptor(context: Context): ChuckerInterceptor {
-            val collector = ChuckerCollector(
-                context = context,
-                showNotification = false,
-                retentionPeriod = RetentionManager.Period.ONE_HOUR
-            )
-            return ChuckerInterceptor.Builder(context)
-                .collector(collector)
-                .maxContentLength(MAX_CONTENT_LENGTH)
-                .redactHeaders(SENSITIVE_HEADERS)
-                .alwaysReadResponseBody(false)
-                .build()
-        }
 
         private const val MAX_CONTENT_LENGTH = 250_000L
     }
