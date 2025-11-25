@@ -152,7 +152,10 @@ class ReaderDiscoverLogic @Inject constructor(
         if (taskType == REQUEST_FIRST_PAGE) {
             clearCache()
         }
-        json.optJSONArray(JSON_CARDS)?.let { fullCardsJson ->
+        json.optJSONArray(JSON_CARDS)?.let { originalCardsJson ->
+            // Inject fake posts
+            // TODO: REMOVE THIS FAKE INJECTION
+            val fullCardsJson = injectFakePosts(originalCardsJson)
             // Parse the json into cards model objects
             val cards = parseCards(fullCardsJson)
             insertPostsIntoDb(cards.filterIsInstance<ReaderPostCard>().map { it.post })
@@ -177,8 +180,85 @@ class ReaderDiscoverLogic @Inject constructor(
         }
     }
 
+    private fun injectFakePosts(originalCardsJson: JSONArray): JSONArray {
+        // Create a new JSONArray with fake posts injected at the beginning
+        val modifiedCardsJson = JSONArray()
+
+        // Create the same fake post to inject twice (simulating duplicate response)
+        val fakePost = JSONObject().apply {
+            put("type", "post")
+            put("data", JSONObject().apply {
+                put("ID", 99991)
+                put("site_ID", 999999991)
+                put("author", JSONObject().apply {
+                    put("ID", 999999991)
+                    put("login", "fakeuser1")
+                    put("name", "Fake Test User 1")
+                    put("first_name", "Fake")
+                    put("last_name", "User 1")
+                    put("URL", "https://fakeuser1.wordpress.com")
+                    put(
+                        "avatar_URL",
+                        "https://0.gravatar.com/avatar/fake1?s=96&d=identicon&r=G"
+                    )
+                    put("profile_URL", "https://gravatar.com/fakeuser1")
+                })
+                put("date", "2025-11-25T10:00:00+00:00")
+                put("modified", "2025-11-25T10:00:00+00:00")
+                put("title", "🧪 FAKE POST - Testing Duplicate Detection")
+                put("URL", "https://fakeuser1.wordpress.com/2025/11/25/fake-post-1/")
+                put("short_URL", "https://wp.me/fake1")
+                put(
+                    "content",
+                    "<div class=\"is-reader\"><p>This is a FAKE injected post for testing " +
+                    "duplicate detection. This post is intentionally added TWICE to the response " +
+                    "to simulate a duplicate scenario. Only ONE instance should appear!</p></div>"
+                )
+                put("excerpt", "<p>FAKE post to test duplicate detection.</p>")
+                put("slug", "fake-post-1")
+                put("status", "publish")
+                put("discussion", JSONObject().apply {
+                    put("comments_open", true)
+                    put("comment_status", "open")
+                    put("comment_count", 0)
+                })
+                put("likes_enabled", true)
+                put("like_count", "42")
+                put("i_like", false)
+                put("is_reblogged", false)
+                put("is_following", false)
+                put("global_ID", "fake_global_id_1")
+                put("featured_image", "")
+                put("post_thumbnail", JSONObject.NULL)
+                put("format", "standard")
+                put("tags", JSONObject())
+                put("categories", JSONObject())
+                put("feed_ID", 999999991)
+                put("feed_URL", "https://fakeuser1.wordpress.com")
+                put("pseudo_ID", "fake_pseudo_id_1")
+                put("is_external", false)
+                put("site_name", "Fake Test Blog 1")
+                put("site_URL", "https://fakeuser1.wordpress.com")
+                put("site_is_private", false)
+            })
+        }
+
+        // Add the SAME fake post TWICE to simulate duplicate in JSON response
+        modifiedCardsJson.put(fakePost)
+        modifiedCardsJson.put(fakePost)
+
+        // Add all original posts
+        for (i in 0 until originalCardsJson.length()) {
+            modifiedCardsJson.put(originalCardsJson.getJSONObject(i))
+        }
+
+        return modifiedCardsJson
+    }
+
     private fun parseCards(cardsJsonArray: JSONArray): ArrayList<ReaderDiscoverCard> {
         val cards: ArrayList<ReaderDiscoverCard> = arrayListOf()
+        val addedPostIds = mutableSetOf<Long>()
+
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
