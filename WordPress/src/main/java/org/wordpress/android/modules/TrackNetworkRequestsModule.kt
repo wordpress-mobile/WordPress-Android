@@ -11,6 +11,7 @@ import okhttp3.Interceptor
 import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsPreference
+import org.wordpress.android.ui.posts.editor.GutenbergKitNetworkLogger
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import javax.inject.Named
 import javax.inject.Singleton
@@ -30,12 +31,25 @@ class TrackNetworkRequestsModule {
 
     @Singleton
     @Provides
-    @IntoSet
-    @Named("interceptors")
     fun provideTrackNetworkRequestsInterceptor(
         @ApplicationContext context: Context,
         preference: TrackNetworkRequestsPreference
-    ): Interceptor {
+    ): TrackNetworkRequestsInterceptor {
         return TrackNetworkRequestsInterceptor(context, preference)
+    }
+
+    @Provides
+    @IntoSet
+    @Named("interceptors")
+    fun provideTrackNetworkRequestsInterceptorAsInterceptor(
+        interceptor: TrackNetworkRequestsInterceptor
+    ): Interceptor = interceptor
+
+    @Singleton
+    @Provides
+    fun provideGutenbergKitNetworkLogger(
+        interceptor: TrackNetworkRequestsInterceptor
+    ): GutenbergKitNetworkLogger {
+        return GutenbergKitNetworkLogger(interceptor)
     }
 }

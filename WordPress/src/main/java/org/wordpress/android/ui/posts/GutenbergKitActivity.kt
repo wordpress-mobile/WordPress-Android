@@ -67,6 +67,7 @@ import org.wordpress.android.editor.EditorImageSettingsListener
 import org.wordpress.android.editor.ExceptionLogger
 import org.wordpress.android.editor.gutenberg.DialogVisibility
 import org.wordpress.android.ui.posts.editor.GutenbergKitEditorFragment
+import org.wordpress.android.ui.posts.editor.GutenbergKitNetworkLogger
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
 import org.wordpress.android.fluxc.Dispatcher
@@ -225,6 +226,7 @@ import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import org.wordpress.android.widgets.WPViewPager
 import org.wordpress.gutenberg.GutenbergView
+import org.wordpress.gutenberg.NetworkRequest
 import java.io.File
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -386,6 +388,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
     @Inject lateinit var editorBloggingPromptsViewModel: EditorBloggingPromptsViewModel
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
+    @Inject lateinit var gutenbergKitNetworkLogger: GutenbergKitNetworkLogger
     private lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
     private lateinit var prepublishingViewModel: PrepublishingViewModel
@@ -2302,9 +2305,12 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 editPostRepository.getPost()
             )
 
+            val isNetworkLoggingEnabled = AppPrefs.isTrackNetworkRequestsEnabled()
+            AppLog.d(AppLog.T.EDITOR, "Creating FeatureConfig with isNetworkLoggingEnabled=$isNetworkLoggingEnabled")
             val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
                 isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
-                isThemeStylesFeatureEnabled = siteSettings?.useThemeStyles ?: true
+                isThemeStylesFeatureEnabled = siteSettings?.useThemeStyles ?: true,
+                isNetworkLoggingEnabled = isNetworkLoggingEnabled
             )
 
             val appConfig = GutenbergKitSettingsBuilder.AppConfig(
@@ -2344,6 +2350,21 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
                     // Set up custom headers for the visual editor's internal WebView
                     editorFragment?.setCustomHttpHeader("User-Agent", userAgent.webViewUserAgent)
+
+                    // Set up network request logging if enabled
+                    val isTrackingEnabled = AppPrefs.isTrackNetworkRequestsEnabled()
+                    AppLog.d(AppLog.T.EDITOR, "Network tracking enabled: $isTrackingEnabled")
+                    if (isTrackingEnabled) {
+                        AppLog.d(AppLog.T.EDITOR, "Setting up NetworkRequestListener for GutenbergKit")
+                        editorFragment?.setNetworkRequestListener(
+                            object : GutenbergView.NetworkRequestListener {
+                                override fun onNetworkRequest(request: NetworkRequest) {
+                                    AppLog.d(AppLog.T.EDITOR, "Received network request from GutenbergKit: ${request.url}")
+                                    gutenbergKitNetworkLogger.log(request)
+                                }
+                            }
+                        )
+                    }
                 }
                 VIEW_PAGER_PAGE_SETTINGS -> editPostSettingsFragment = fragment as EditPostSettingsFragment
             }
