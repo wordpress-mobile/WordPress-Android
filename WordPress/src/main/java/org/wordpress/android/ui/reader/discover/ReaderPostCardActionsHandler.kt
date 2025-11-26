@@ -302,17 +302,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         source: String
     ) {
         if (!accountStore.hasAccessToken()) {
-            _snackbarEvents.postValue(
-                Event(
-                    SnackbarMessageHolder(
-                        UiStringRes(R.string.reader_snackbar_err_cannot_follow_logged_out),
-                        UiStringRes(R.string.reader_snackbar_err_cannot_follow_logged_out_action),
-                        buttonAction = {
-                            _navigationEvents.postValue(Event(ReaderNavigationEvents.ShowSignIn))
-                        }
-                    )
-                )
-            )
+            showSignInPrompt()
             return
         }
         val param = ReaderSiteFollowUseCase.Param(
@@ -328,17 +318,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         source: String
     ) {
         if (!accountStore.hasAccessToken()) {
-            _snackbarEvents.postValue(
-                Event(
-                    SnackbarMessageHolder(
-                        UiStringRes(R.string.reader_snackbar_err_cannot_follow_logged_out),
-                        UiStringRes(R.string.reader_snackbar_err_cannot_follow_logged_out_action),
-                        buttonAction = {
-                            _navigationEvents.postValue(Event(ReaderNavigationEvents.ShowSignIn))
-                        }
-                    )
-                )
-            )
+            showSignInPrompt()
             return
         }
         followSite(
@@ -347,6 +327,20 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 post.feedId,
                 post.blogName
             ), source
+        )
+    }
+
+    private fun showSignInPrompt() {
+        _snackbarEvents.postValue(
+            Event(
+                SnackbarMessageHolder(
+                    UiStringRes(R.string.reader_snackbar_err_cannot_follow_logged_out),
+                    UiStringRes(R.string.reader_snackbar_err_cannot_follow_logged_out_action),
+                    buttonAction = {
+                        _navigationEvents.postValue(Event(ReaderNavigationEvents.ShowSignIn))
+                    }
+                )
+            )
         )
     }
 
