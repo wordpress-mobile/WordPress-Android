@@ -45,6 +45,7 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.SiteUtils
@@ -79,6 +80,9 @@ class HelpActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
+
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
 
     private lateinit var binding: HelpActivityBinding
 
@@ -152,6 +156,14 @@ class HelpActivity : BaseAppCompatActivity() {
     }
 
     private fun HelpActivityBinding.setupTrackNetworkRequestsToggle() {
+        // Hide entire section if experimental feature is not enabled
+        val isFeatureEnabled = experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NETWORK_DEBUGGING)
+        trackNetworkRequestsSection.isVisible = isFeatureEnabled
+
+        if (!isFeatureEnabled) {
+            return
+        }
+
         val isEnabled = appPrefsWrapper.isTrackNetworkRequestsEnabled
         trackNetworkRequestsSwitch.isChecked = isEnabled
         viewNetworkRequestsContainer.isVisible = isEnabled

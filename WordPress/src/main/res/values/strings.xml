@@ -983,6 +983,10 @@
     <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites</string>
     <string name="modern_support">Modern Support</string>
     <string name="modern_support_description">Enable the new modern support experience</string>
+    <string name="experimental_network_debugging">Network Debugging</string>
+    <string name="experimental_network_debugging_description">Show network request tracking tools in the Help screen</string>
+    <string name="experimental_network_debugging_disable_error_title">Disable Tracking First</string>
+    <string name="experimental_network_debugging_disable_error_message">Network tracking is currently enabled. Please go to Help and disable \"Track Network Requests\" before turning off this feature.</string>
     <string name="track_network_requests">Track Network Requests</string>
     <string name="track_network_requests_description">Record HTTP requests for troubleshooting. Logs stay on device unless you share them.</string>
     <string name="view_network_requests">View Network Requests</string>
