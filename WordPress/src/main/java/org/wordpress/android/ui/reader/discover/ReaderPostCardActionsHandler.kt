@@ -303,7 +303,15 @@ class ReaderPostCardActionsHandler @Inject constructor(
     ) {
         if (!accountStore.hasAccessToken()) {
             _snackbarEvents.postValue(
-                Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_cannot_follow_logged_out)))
+                Event(
+                    SnackbarMessageHolder(
+                        UiStringRes(R.string.reader_snackbar_err_cannot_follow_logged_out),
+                        UiStringRes(R.string.reader_snackbar_err_cannot_follow_logged_out_action),
+                        buttonAction = {
+                            _navigationEvents.postValue(Event(ReaderNavigationEvents.ShowSignIn))
+                        }
+                    )
+                )
             )
             return
         }

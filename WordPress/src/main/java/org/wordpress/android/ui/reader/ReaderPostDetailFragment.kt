@@ -934,7 +934,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             is ReaderNavigationEvents.ShowPostDetail,
             is ReaderNavigationEvents.ShowVideoViewer,
-            is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
+            is ReaderNavigationEvents.ShowReaderSubs,
+            is ReaderNavigationEvents.ShowSignIn -> Unit // Do Nothing
         }
     }
 
