@@ -11,9 +11,12 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.model.UserInfo
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
@@ -21,6 +24,8 @@ import javax.inject.Inject
 class SupportViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val appLogWrapper: AppLogWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val experimentalFeatures: ExperimentalFeatures,
 ) : ViewModel() {
     sealed class NavigationEvent {
         data object NavigateToAskTheBots : NavigationEvent()
@@ -28,11 +33,26 @@ class SupportViewModel @Inject constructor(
         data object NavigateToHelpCenter : NavigationEvent()
         data object NavigateToApplicationLogs : NavigationEvent()
         data object NavigateToAskHappinessEngineers : NavigationEvent()
+        data object NavigateToNetworkRequests : NavigationEvent()
+    }
+
+    sealed class DialogEvent {
+        data class ShowEnableTrackingDialog(
+            val currentPeriod: NetworkRequestsRetentionPeriod
+        ) : DialogEvent()
+
+        data object ShowDisableTrackingDialog : DialogEvent()
     }
 
     data class SupportOptionsVisibility(
         val showAskTheBots: Boolean = true,
         val showAskHappinessEngineers: Boolean = true
+    )
+
+    data class NetworkTrackingState(
+        val showNetworkDebugging: Boolean = false,
+        val isTrackingEnabled: Boolean = false,
+        val retentionPeriod: NetworkRequestsRetentionPeriod = NetworkRequestsRetentionPeriod.ONE_HOUR
     )
 
     private val _userInfo = MutableStateFlow(UserInfo("", "", null))
@@ -46,6 +66,12 @@ class SupportViewModel @Inject constructor(
 
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents: SharedFlow<NavigationEvent> = _navigationEvents.asSharedFlow()
+
+    private val _dialogEvents = MutableSharedFlow<DialogEvent>()
+    val dialogEvents: SharedFlow<DialogEvent> = _dialogEvents.asSharedFlow()
+
+    private val _networkTrackingState = MutableStateFlow(NetworkTrackingState())
+    val networkTrackingState: StateFlow<NetworkTrackingState> = _networkTrackingState.asStateFlow()
 
     fun init() {
         val hasAccessToken = accountStore.hasAccessToken()
@@ -61,6 +87,22 @@ class SupportViewModel @Inject constructor(
         _optionsVisibility.value = SupportOptionsVisibility(
             showAskTheBots = hasAccessToken && BuildConfig.IS_JETPACK_APP,
             showAskHappinessEngineers = hasAccessToken && BuildConfig.IS_JETPACK_APP
+        )
+
+        initNetworkTrackingState()
+    }
+
+    private fun initNetworkTrackingState() {
+        val isFeatureEnabled = experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NETWORK_DEBUGGING)
+        val isTrackingEnabled = appPrefsWrapper.isTrackNetworkRequestsEnabled
+        val retentionPeriod = NetworkRequestsRetentionPeriod.fromInt(
+            appPrefsWrapper.trackNetworkRequestsRetentionPeriod
+        )
+
+        _networkTrackingState.value = NetworkTrackingState(
+            showNetworkDebugging = isFeatureEnabled,
+            isTrackingEnabled = isTrackingEnabled,
+            retentionPeriod = retentionPeriod
         )
     }
 
@@ -103,6 +145,45 @@ class SupportViewModel @Inject constructor(
     fun onLoginClick() {
         viewModelScope.launch {
             _navigationEvents.emit(NavigationEvent.NavigateToLogin)
+        }
+    }
+
+    fun onNetworkTrackingToggle(enabled: Boolean) {
+        viewModelScope.launch {
+            if (enabled) {
+                val currentPeriod = NetworkRequestsRetentionPeriod.fromInt(
+                    appPrefsWrapper.trackNetworkRequestsRetentionPeriod
+                )
+                _dialogEvents.emit(DialogEvent.ShowEnableTrackingDialog(currentPeriod))
+            } else {
+                _dialogEvents.emit(DialogEvent.ShowDisableTrackingDialog)
+            }
+        }
+    }
+
+    fun onEnableTrackingConfirmed(period: NetworkRequestsRetentionPeriod) {
+        appPrefsWrapper.trackNetworkRequestsRetentionPeriod = period.value
+        appPrefsWrapper.isTrackNetworkRequestsEnabled = true
+
+        _networkTrackingState.value = _networkTrackingState.value.copy(
+            isTrackingEnabled = true,
+            retentionPeriod = period
+        )
+        appLogWrapper.d(AppLog.T.API, "Track network requests enabled with retention: $period")
+    }
+
+    fun onDisableTrackingConfirmed() {
+        appPrefsWrapper.isTrackNetworkRequestsEnabled = false
+
+        _networkTrackingState.value = _networkTrackingState.value.copy(
+            isTrackingEnabled = false
+        )
+        appLogWrapper.d(AppLog.T.API, "Track network requests disabled")
+    }
+
+    fun onViewNetworkRequestsClick() {
+        viewModelScope.launch {
+            _navigationEvents.emit(NavigationEvent.NavigateToNetworkRequests)
         }
     }
 }

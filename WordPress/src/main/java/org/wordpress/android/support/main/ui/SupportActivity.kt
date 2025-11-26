@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -14,11 +16,14 @@ import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.chuckerteam.chucker.api.Chucker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
 import org.wordpress.android.WordPress
 import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
 import org.wordpress.android.support.logs.ui.LogsActivity
@@ -36,6 +41,7 @@ class SupportActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         viewModel.init()
         observeNavigationEvents()
+        observeDialogEvents()
         composeView = ComposeView(this)
         setContentView(
             composeView.apply {
@@ -47,6 +53,7 @@ class SupportActivity : AppCompatActivity() {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val optionsVisibility by viewModel.optionsVisibility.collectAsState()
                     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
+                    val networkTrackingState by viewModel.networkTrackingState.collectAsState()
                     AppThemeM3 {
                         SupportScreen(
                             userName = userInfo.userName,
@@ -55,18 +62,43 @@ class SupportActivity : AppCompatActivity() {
                             isLoggedIn = isLoggedIn,
                             showAskTheBots = optionsVisibility.showAskTheBots,
                             showAskHappinessEngineers = optionsVisibility.showAskHappinessEngineers,
+                            showNetworkDebugging = networkTrackingState.showNetworkDebugging,
+                            isNetworkTrackingEnabled = networkTrackingState.isTrackingEnabled,
+                            networkTrackingRetentionInfo = getRetentionInfoText(
+                                networkTrackingState.retentionPeriod
+                            ),
                             versionName = WordPress.versionName,
                             onBackClick = { finish() },
                             onLoginClick = { viewModel.onLoginClick() },
                             onHelpCenterClick = { viewModel.onHelpCenterClick() },
                             onAskTheBotsClick = { viewModel.onAskTheBotsClick() },
                             onAskHappinessEngineersClick = { viewModel.onAskHappinessEngineersClick() },
-                            onApplicationLogsClick = { viewModel.onApplicationLogsClick() }
+                            onApplicationLogsClick = { viewModel.onApplicationLogsClick() },
+                            onNetworkTrackingToggle = { viewModel.onNetworkTrackingToggle(it) },
+                            onViewNetworkRequestsClick = { viewModel.onViewNetworkRequestsClick() },
                         )
                     }
                 }
             }
         )
+    }
+
+    private fun getRetentionInfoText(period: NetworkRequestsRetentionPeriod): String {
+        val periodString = getRetentionPeriodDisplayString(period)
+        return getString(R.string.network_requests_retention_info, periodString)
+    }
+
+    private fun getRetentionPeriodDisplayString(period: NetworkRequestsRetentionPeriod): String {
+        return when (period) {
+            NetworkRequestsRetentionPeriod.ONE_HOUR ->
+                getString(R.string.network_requests_retention_one_hour)
+            NetworkRequestsRetentionPeriod.ONE_DAY ->
+                getString(R.string.network_requests_retention_one_day)
+            NetworkRequestsRetentionPeriod.ONE_WEEK ->
+                getString(R.string.network_requests_retention_one_week)
+            NetworkRequestsRetentionPeriod.FOREVER ->
+                getString(R.string.network_requests_retention_until_cleared)
+        }
     }
 
     private fun observeNavigationEvents() {
@@ -81,10 +113,67 @@ class SupportActivity : AppCompatActivity() {
                         is SupportViewModel.NavigationEvent.NavigateToAskHappinessEngineers -> {
                             navigateToAskTheHappinessEngineers()
                         }
+                        is SupportViewModel.NavigationEvent.NavigateToNetworkRequests -> {
+                            navigateToNetworkRequests()
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun observeDialogEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.dialogEvents.collect { event ->
+                    when (event) {
+                        is SupportViewModel.DialogEvent.ShowEnableTrackingDialog -> {
+                            showEnableTrackingDialog(event.currentPeriod)
+                        }
+                        is SupportViewModel.DialogEvent.ShowDisableTrackingDialog -> {
+                            showDisableTrackingDialog()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showEnableTrackingDialog(currentPeriod: NetworkRequestsRetentionPeriod) {
+        val periods = NetworkRequestsRetentionPeriod.entries.toTypedArray()
+        val displayNames = periods.map { getRetentionPeriodDisplayString(it) }.toTypedArray()
+        var selectedIndex = periods.indexOf(currentPeriod)
+
+        val titleView = layoutInflater.inflate(R.layout.dialog_title_with_message, null).apply {
+            findViewById<TextView>(R.id.dialog_title).setText(R.string.track_network_requests)
+            findViewById<TextView>(R.id.dialog_message)
+                .setText(R.string.network_requests_enable_dialog_description)
+        }
+
+        AlertDialog.Builder(this)
+            .setCustomTitle(titleView)
+            .setSingleChoiceItems(displayNames, selectedIndex) { _, which ->
+                selectedIndex = which
+            }
+            .setPositiveButton(R.string.network_requests_enable) { _, _ ->
+                val selectedPeriod = periods[selectedIndex]
+                viewModel.onEnableTrackingConfirmed(selectedPeriod)
+            }
+            // No action needed on cancel - UI state is driven by ViewModel
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun showDisableTrackingDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.network_requests_disable_tracking_title)
+            .setMessage(R.string.network_requests_disable_tracking_description)
+            .setPositiveButton(R.string.network_requests_disable) { _, _ ->
+                viewModel.onDisableTrackingConfirmed()
+            }
+            // No action needed on cancel - UI state is driven by ViewModel
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun navigateToAskTheBots() {
@@ -118,6 +207,10 @@ class SupportActivity : AppCompatActivity() {
 
     private fun navigateToApplicationLogs() {
         startActivity(LogsActivity.createIntent(this))
+    }
+
+    private fun navigateToNetworkRequests() {
+        startActivity(Chucker.getLaunchIntent(this))
     }
 
     companion object {

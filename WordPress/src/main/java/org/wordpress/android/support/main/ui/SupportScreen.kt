@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,6 +20,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -47,6 +49,9 @@ fun SupportScreen(
     isLoggedIn: Boolean,
     showAskTheBots: Boolean,
     showAskHappinessEngineers: Boolean,
+    showNetworkDebugging: Boolean,
+    isNetworkTrackingEnabled: Boolean,
+    networkTrackingRetentionInfo: String,
     versionName: String,
     onBackClick: () -> Unit,
     onLoginClick: () -> Unit,
@@ -54,6 +59,8 @@ fun SupportScreen(
     onAskTheBotsClick: () -> Unit,
     onAskHappinessEngineersClick: () -> Unit,
     onApplicationLogsClick: () -> Unit,
+    onNetworkTrackingToggle: (Boolean) -> Unit,
+    onViewNetworkRequestsClick: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -198,6 +205,38 @@ fun SupportScreen(
                 color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
             )
 
+            // Network Tracking Section
+            if (showNetworkDebugging) {
+                NetworkTrackingToggleItem(
+                    title = stringResource(R.string.track_network_requests),
+                    description = stringResource(R.string.track_network_requests_description),
+                    isChecked = isNetworkTrackingEnabled,
+                    onCheckedChange = onNetworkTrackingToggle,
+                )
+
+                if (isNetworkTrackingEnabled) {
+                    Text(
+                        text = networkTrackingRetentionInfo,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .padding(bottom = 8.dp)
+                    )
+
+                    SupportOptionItem(
+                        title = stringResource(R.string.view_network_requests),
+                        description = "",
+                        onClick = onViewNetworkRequestsClick,
+                    )
+                }
+
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                )
+            }
+
             // Version Name
             Text(
                 text = stringResource(R.string.version_with_name_param, versionName),
@@ -257,6 +296,47 @@ private fun SupportOptionItem(
     }
 }
 
+@Composable
+private fun NetworkTrackingToggleItem(
+    title: String,
+    description: String,
+    isChecked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onCheckedChange(!isChecked) }
+            .padding(horizontal = 16.dp, vertical = 16.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "$title. $description"
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                modifier = Modifier.padding(top = 4.dp),
+                text = description,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Spacer(modifier = Modifier.size(16.dp))
+        Switch(
+            checked = isChecked,
+            onCheckedChange = null, // Handled by row click
+        )
+    }
+}
+
 @Preview(showBackground = true, name = "Support Screen - Light - Logged In")
 @Composable
 private fun SupportScreenPreview() {
@@ -268,13 +348,18 @@ private fun SupportScreenPreview() {
             isLoggedIn = true,
             showAskTheBots = true,
             showAskHappinessEngineers = true,
+            showNetworkDebugging = true,
+            isNetworkTrackingEnabled = true,
+            networkTrackingRetentionInfo = "Retention: 1 Hour",
             versionName = "1.0.0",
             onBackClick = {},
             onLoginClick = {},
             onHelpCenterClick = {},
             onAskTheBotsClick = {},
             onAskHappinessEngineersClick = {},
-            onApplicationLogsClick = {}
+            onApplicationLogsClick = {},
+            onNetworkTrackingToggle = {},
+            onViewNetworkRequestsClick = {},
         )
     }
 }
@@ -290,13 +375,18 @@ private fun SupportScreenPreviewDark() {
             isLoggedIn = true,
             showAskTheBots = true,
             showAskHappinessEngineers = true,
+            showNetworkDebugging = true,
+            isNetworkTrackingEnabled = false,
+            networkTrackingRetentionInfo = "",
             versionName = "1.0.0",
             onBackClick = {},
             onLoginClick = {},
             onHelpCenterClick = {},
             onAskTheBotsClick = {},
             onAskHappinessEngineersClick = {},
-            onApplicationLogsClick = {}
+            onApplicationLogsClick = {},
+            onNetworkTrackingToggle = {},
+            onViewNetworkRequestsClick = {},
         )
     }
 }
@@ -312,13 +402,18 @@ private fun SupportScreenPreviewLoggedOut() {
             isLoggedIn = false,
             showAskTheBots = false,
             showAskHappinessEngineers = false,
+            showNetworkDebugging = false,
+            isNetworkTrackingEnabled = false,
+            networkTrackingRetentionInfo = "",
             versionName = "1.0.0",
             onBackClick = {},
             onLoginClick = {},
             onHelpCenterClick = {},
             onAskTheBotsClick = {},
             onAskHappinessEngineersClick = {},
-            onApplicationLogsClick = {}
+            onApplicationLogsClick = {},
+            onNetworkTrackingToggle = {},
+            onViewNetworkRequestsClick = {},
         )
     }
 }

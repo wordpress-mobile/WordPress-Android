@@ -166,13 +166,14 @@ class HelpActivity : BaseAppCompatActivity() {
 
         val isEnabled = appPrefsWrapper.isTrackNetworkRequestsEnabled
         trackNetworkRequestsSwitch.isChecked = isEnabled
-        viewNetworkRequestsContainer.isVisible = isEnabled
+        networkRequestsRetentionInfo.isVisible = isEnabled
+        viewNetworkRequestsButton.isVisible = isEnabled
         if (isEnabled) {
             updateRetentionInfoText()
         }
 
         trackNetworkRequestsSwitch.setOnCheckedChangeListener(trackNetworkRequestsCheckedChangeListener)
-        viewNetworkRequestsContainer.setOnClickListener {
+        viewNetworkRequestsButton.setOnClickListener {
             startActivity(Chucker.getLaunchIntent(this@HelpActivity))
         }
     }
@@ -235,7 +236,8 @@ class HelpActivity : BaseAppCompatActivity() {
                 val selectedPeriod = periods[selectedIndex]
                 appPrefsWrapper.trackNetworkRequestsRetentionPeriod = selectedPeriod.value
                 appPrefsWrapper.isTrackNetworkRequestsEnabled = true
-                binding.viewNetworkRequestsContainer.isVisible = true
+                binding.networkRequestsRetentionInfo.isVisible = true
+                binding.viewNetworkRequestsButton.isVisible = true
                 binding.updateRetentionInfoText()
                 AppLog.d(API, "Track network requests enabled with retention: $selectedPeriod")
             }
@@ -254,7 +256,8 @@ class HelpActivity : BaseAppCompatActivity() {
             .setMessage(R.string.network_requests_disable_tracking_description)
             .setPositiveButton(R.string.network_requests_disable) { _, _ ->
                 appPrefsWrapper.isTrackNetworkRequestsEnabled = false
-                binding.viewNetworkRequestsContainer.isVisible = false
+                binding.networkRequestsRetentionInfo.isVisible = false
+                binding.viewNetworkRequestsButton.isVisible = false
                 AppLog.d(API, "Track network requests disabled")
             }
             .setNegativeButton(R.string.cancel) { _, _ ->

@@ -241,30 +241,28 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/viewNetworkRequestsContainer"
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/networkRequestsRetentionInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/margin_extra_large"
+                        android:paddingEnd="@dimen/margin_extra_large"
+                        android:paddingBottom="@dimen/margin_medium"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:visibility="gone"
+                        tools:text="Retention: 1 Hour"
+                        tools:visibility="visible" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/viewNetworkRequestsButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
-                        android:orientation="vertical"
                         android:padding="@dimen/margin_extra_large"
+                        android:text="@string/view_network_requests"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
                         android:visibility="gone"
-                        tools:visibility="visible">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/viewNetworkRequestsButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/view_network_requests"
-                            android:textAppearance="?attr/textAppearanceSubtitle1" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/networkRequestsRetentionInfo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?attr/textAppearanceCaption"
-                            tools:text="Retention: 1 Hour" />
-                    </LinearLayout>
+                        tools:visibility="visible" />
 
                     <View
                         android:layout_width="match_parent"
