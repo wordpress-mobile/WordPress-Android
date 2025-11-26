@@ -9,11 +9,9 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
-import android.util.Log
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
+import org.wordpress.android.util.AppLog
 import org.wordpress.gutenberg.NetworkRequest
-
-private const val TAG = "GutenbergKitNetworkLogger"
 
 /**
  * Logs GutenbergKit WebView network requests to Chucker by replaying them through OkHttp.
@@ -39,8 +37,6 @@ class GutenbergKitNetworkLogger(
      * Call this from [org.wordpress.gutenberg.GutenbergView.NetworkRequestListener.onNetworkRequest].
      */
     fun log(networkRequest: NetworkRequest) {
-        Log.d(TAG, "Logging request: ${networkRequest.method} ${networkRequest.url} -> ${networkRequest.status}")
-
         val contentType = networkRequest.requestHeaders["content-type"]?.toMediaTypeOrNull()
         // OkHttp doesn't allow request bodies for GET/HEAD methods
         val requestBody = if (networkRequest.method.uppercase() in listOf("GET", "HEAD")) {
@@ -58,9 +54,8 @@ class GutenbergKitNetworkLogger(
 
         try {
             client.newCall(request).execute().close()
-            Log.d(TAG, "Successfully logged request to Chucker")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to log request: ${e.message}", e)
+            AppLog.e(AppLog.T.EDITOR, "Failed to log GutenbergKit network request", e)
         }
     }
 }

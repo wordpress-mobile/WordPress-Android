@@ -2305,12 +2305,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 editPostRepository.getPost()
             )
 
-            val isNetworkLoggingEnabled = AppPrefs.isTrackNetworkRequestsEnabled()
-            AppLog.d(AppLog.T.EDITOR, "Creating FeatureConfig with isNetworkLoggingEnabled=$isNetworkLoggingEnabled")
             val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
                 isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
                 isThemeStylesFeatureEnabled = siteSettings?.useThemeStyles ?: true,
-                isNetworkLoggingEnabled = isNetworkLoggingEnabled
+                isNetworkLoggingEnabled = AppPrefs.isTrackNetworkRequestsEnabled()
             )
 
             val appConfig = GutenbergKitSettingsBuilder.AppConfig(
@@ -2352,14 +2350,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                     editorFragment?.setCustomHttpHeader("User-Agent", userAgent.webViewUserAgent)
 
                     // Set up network request logging if enabled
-                    val isTrackingEnabled = AppPrefs.isTrackNetworkRequestsEnabled()
-                    AppLog.d(AppLog.T.EDITOR, "Network tracking enabled: $isTrackingEnabled")
-                    if (isTrackingEnabled) {
-                        AppLog.d(AppLog.T.EDITOR, "Setting up NetworkRequestListener for GutenbergKit")
+                    if (AppPrefs.isTrackNetworkRequestsEnabled()) {
                         editorFragment?.setNetworkRequestListener(
                             object : GutenbergView.NetworkRequestListener {
                                 override fun onNetworkRequest(request: NetworkRequest) {
-                                    AppLog.d(AppLog.T.EDITOR, "Received network request from GutenbergKit: ${request.url}")
                                     gutenbergKitNetworkLogger.log(request)
                                 }
                             }
