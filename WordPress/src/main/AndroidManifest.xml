@@ -634,18 +634,6 @@
                 </data>
 
                 <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/reader/feeds/.*/posts/.*"
-                    android:scheme="https" >
-                </data>
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/reader/feeds/.*/posts/.*"
-                    android:scheme="http" >
-                </data>
-
-                <data
                     android:host="*.wordpress.com"
                     android:pathPattern="/2.../../../.*"
                     android:scheme="https" >
@@ -666,6 +654,18 @@
                 <data
                     android:host="*.wordpress.com"
                     android:pathPattern="/19../../../.*"
+                    android:scheme="http" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/reader/feeds/.*/posts/.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/reader/feeds/.*/posts/.*"
                     android:scheme="http" >
                 </data>
 
