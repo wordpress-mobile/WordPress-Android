@@ -12,6 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.DELETE
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
 import org.wordpress.android.models.ReaderPost
@@ -100,6 +101,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val appReviewsManagerWrapper: AppReviewsManagerWrapper,
     private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
+    private val accountStore: AccountStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private lateinit var coroutineScope: CoroutineScope
@@ -299,6 +301,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
         recommendedBlogUiState: ReaderRecommendedBlogUiState,
         source: String
     ) {
+        if (!accountStore.hasAccessToken()) {
+            _snackbarEvents.postValue(
+                Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_cannot_follow_logged_out)))
+            )
+            return
+        }
         val param = ReaderSiteFollowUseCase.Param(
             blogId = recommendedBlogUiState.blogId,
             blogName = recommendedBlogUiState.name,
