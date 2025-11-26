@@ -657,6 +657,18 @@
                     android:scheme="http" >
                 </data>
 
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/reader/feeds/.*/posts/.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/reader/feeds/.*/posts/.*"
+                    android:scheme="http" >
+                </data>
+
                 <action android:name="org.wordpress.android.action.VIEW_POST" />
                 <action android:name="android.intent.action.VIEW" />
 
