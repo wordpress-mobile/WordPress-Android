@@ -18,6 +18,7 @@ import org.wordpress.android.ui.accounts.HelpActivity
 class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
     private val viewModel: ExperimentalFeaturesViewModel by viewModels()
 
+    @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -52,9 +52,12 @@ class GutenbergKitNetworkLogger(
             .tag(NetworkRequest::class.java, networkRequest)
             .build()
 
+        @Suppress("TooGenericExceptionCaught")
         try {
             client.newCall(request).execute().close()
         } catch (e: Exception) {
+            // Catch all exceptions since various things can fail (IOException, IllegalStateException, etc.)
+            // and we don't want logging failures to crash the app
             AppLog.e(AppLog.T.EDITOR, "Failed to log GutenbergKit network request", e)
         }
     }
@@ -84,6 +87,7 @@ private class ReplayInterceptor : Interceptor {
             .build()
     }
 
+    @Suppress("MagicNumber") // HTTP status codes are well-known and clearer as literals
     private fun Int.toStatusMessage(): String = when (this) {
         200 -> "OK"
         201 -> "Created"
