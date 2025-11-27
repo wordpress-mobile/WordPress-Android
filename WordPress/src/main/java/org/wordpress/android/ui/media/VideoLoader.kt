@@ -14,6 +14,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.MediaUtilsWrapper
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.IOException
 import java.net.URL
 import javax.inject.Inject
@@ -23,6 +25,7 @@ class VideoLoader
 @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @param:Named("regular") private val okHttpClient: OkHttpClient,
     private val authenticationUtils: AuthenticationUtils,
     private val appLogWrapper: AppLogWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
@@ -67,16 +70,17 @@ class VideoLoader
         }
 
     private fun getSizeFromURL(url: URL): Int {
-        val urlConnection = url.openConnection()
-        for ((key, value) in authenticationUtils.getAuthHeaders(url.toString()).entries) {
-            urlConnection.addRequestProperty(key, value)
+        val requestBuilder = Request.Builder()
+            .url(url)
+            .head()
+
+        authenticationUtils.getAuthHeaders(url.toString()).forEach { (key, value) ->
+            requestBuilder.addHeader(key, value)
         }
 
-        var length = urlConnection.contentLength
-        if (length <= MIN_SIZE) {
-            length = urlConnection.getHeaderFieldInt("Content-Length", MIN_SIZE)
+        return okHttpClient.newCall(requestBuilder.build()).execute().use { response ->
+            response.header("Content-Length")?.toIntOrNull() ?: MIN_SIZE
         }
-        return length
     }
 
     companion object {
