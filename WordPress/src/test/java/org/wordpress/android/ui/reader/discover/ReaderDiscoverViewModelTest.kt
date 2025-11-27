@@ -745,7 +745,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
                     onItemClicked = onItemClicked,
                     onFollowClicked = onFollowClicked,
                     isFollowed = it.isFollowing,
-                    isFollowEnabled = true,
                 )
             }
         )

@@ -200,7 +200,10 @@ class ReaderDiscoverViewModel @Inject constructor(
                 for (j in mutableBlogs.indices) {
                     val blog = mutableBlogs[j]
                     if (blog.blogId == data.blogId && blog.feedId == data.feedId) {
-                        mutableBlogs[j] = blog.copy(isFollowed = data.following, isFollowEnabled = data.isChangeFinal)
+                        mutableBlogs[j] = blog.copy(
+                            isFollowed = data.following,
+                            isFollowActionRunning = !data.isChangeFinal
+                        )
                         hasChangedBlogs = true
                     }
                 }

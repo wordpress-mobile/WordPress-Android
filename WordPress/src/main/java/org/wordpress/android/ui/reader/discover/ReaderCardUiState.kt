@@ -122,7 +122,7 @@ sealed class ReaderCardUiState {
             val description: String?,
             val iconUrl: String?,
             val isFollowed: Boolean,
-            val isFollowEnabled: Boolean,
+            val isFollowActionRunning: Boolean = false,
             val onItemClicked: (Long, Long, Boolean) -> Unit,
             val onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
         ) {
