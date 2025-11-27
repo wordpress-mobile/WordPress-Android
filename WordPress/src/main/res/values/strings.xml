@@ -2355,6 +2355,8 @@
 
     <!-- snackbar messages -->
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>
+    <string name="reader_snackbar_err_cannot_follow_logged_out">Log in to WordPress.com to subscribe to this site</string>
+    <string name="reader_snackbar_err_cannot_follow_logged_out_action">Log In</string>
 
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
