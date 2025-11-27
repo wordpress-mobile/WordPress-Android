@@ -28,7 +28,7 @@ class JetpackConnectionHelper @Inject constructor(
 
         val delegate = WpApiClientDelegate(
             authProvider = createRestAuthProvider(site),
-            requestExecutor = WpRequestExecutor(),
+            requestExecutor = WpRequestExecutor(interceptors = emptyList()),
             middlewarePipeline = WpApiMiddlewarePipeline(emptyList()),
             appNotifier = InvalidAuthNotifier()
         )

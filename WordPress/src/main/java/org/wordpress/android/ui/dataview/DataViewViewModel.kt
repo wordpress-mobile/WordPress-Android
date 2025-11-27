@@ -81,11 +81,12 @@ open class DataViewViewModel @Inject constructor(
     // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
     protected val wpComApiClient: WpComApiClient by lazy {
         WpComApiClient(
-            WpAuthenticationProvider.staticWithAuth(
+            authProvider = WpAuthenticationProvider.staticWithAuth(
                 requireNotNull(accountStore.accessToken) { "Access token is required but was null" }.let { token ->
                     WpAuthentication.Bearer(token = token)
                 }
-            )
+            ),
+            interceptors = emptyList()
         )
     }
 

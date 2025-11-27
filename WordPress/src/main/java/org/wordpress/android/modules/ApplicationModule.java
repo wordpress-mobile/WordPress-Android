@@ -39,6 +39,8 @@ import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
+import java.util.Collections;
+
 import javax.inject.Named;
 
 import dagger.Binds;
@@ -152,6 +154,6 @@ public abstract class ApplicationModule {
 
     @Provides
     public static WpLoginClient provideWpLoginClient() {
-        return new WpLoginClient();
+        return new WpLoginClient(Collections.emptyList());
     }
 }
