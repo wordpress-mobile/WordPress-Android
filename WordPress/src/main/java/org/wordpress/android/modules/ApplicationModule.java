@@ -36,10 +36,12 @@ import org.wordpress.android.util.audio.VoiceToContentStrategy;
 import org.wordpress.android.util.config.InAppUpdatesFeatureConfig;
 import org.wordpress.android.util.config.RemoteConfigWrapper;
 import org.wordpress.android.util.wizard.WizardManager;
+import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
 import java.util.Collections;
+import java.util.List;
 
 import javax.inject.Named;
 
@@ -153,7 +155,9 @@ public abstract class ApplicationModule {
     }
 
     @Provides
-    public static WpLoginClient provideWpLoginClient() {
-        return new WpLoginClient(Collections.emptyList());
+    public static WpLoginClient provideWpLoginClient(
+            TrackNetworkRequestsInterceptor trackNetworkRequestsInterceptor
+    ) {
+        return new WpLoginClient(Collections.singletonList(trackNetworkRequestsInterceptor));
     }
 }

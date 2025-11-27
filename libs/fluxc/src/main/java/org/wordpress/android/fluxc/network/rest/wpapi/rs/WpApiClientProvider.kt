@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.network.rest.wpapi.rs
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
@@ -14,9 +15,11 @@ import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
 import java.net.URL
 import javax.inject.Inject
+import javax.inject.Named
 
 class WpApiClientProvider @Inject constructor(
     private val wpAppNotifierHandler: WpAppNotifierHandler,
+    @Named("interceptors") private val interceptors: Set<@JvmSuppressWildcards Interceptor>,
 ) {
     fun getWpApiClient(
         site: SiteModel,
@@ -29,7 +32,7 @@ class WpApiClientProvider @Inject constructor(
         val client = WpApiClient(
             wpOrgSiteApiRootUrl = apiRootUrl,
             authProvider = authProvider,
-            requestExecutor = WpRequestExecutor(uploadListener = uploadListener, interceptors = emptyList()),
+            requestExecutor = WpRequestExecutor(interceptors = interceptors.toList(), uploadListener = uploadListener),
             appNotifier = object : WpAppNotifier {
                 override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
                     wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
@@ -54,6 +57,7 @@ class WpApiClientProvider @Inject constructor(
                     return cookieStore[url.host] ?: emptyList()
                 }
             })
+            .apply { interceptors.forEach { addInterceptor(it) } }
             .build()
 
         val httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient)
