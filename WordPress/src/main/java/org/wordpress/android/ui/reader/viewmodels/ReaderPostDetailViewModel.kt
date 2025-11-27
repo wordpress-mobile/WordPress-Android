@@ -622,16 +622,17 @@ class ReaderPostDetailViewModel @Inject constructor(
         val currentUiState = _uiState.value as? ReaderPostDetailsUiState ?: return newUiState
         val currentFollowButtonState = currentUiState.headerUiState.followButtonUiState
 
-        if (currentFollowButtonState.isFollowActionRunning) {
+        return if (currentFollowButtonState.isFollowActionRunning) {
             val updatedFollowButtonUiState = newUiState.headerUiState.followButtonUiState.copy(
                 isFollowActionRunning = true
             )
             val updatedHeaderUiState = newUiState.headerUiState.copy(
                 followButtonUiState = updatedFollowButtonUiState
             )
-            return newUiState.copy(headerUiState = updatedHeaderUiState)
+            newUiState.copy(headerUiState = updatedHeaderUiState)
+        } else {
+            newUiState
         }
-        return newUiState
     }
 
     private fun convertRelatedPostsToUiState(

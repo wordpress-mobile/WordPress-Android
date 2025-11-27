@@ -55,5 +55,4 @@ class ReaderRecommendedBlogViewHolder(
             imageManager.cancelRequestAndClearImageView(siteIcon)
         }
     }
-
 }
