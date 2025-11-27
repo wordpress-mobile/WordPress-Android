@@ -34,6 +34,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -55,7 +56,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private val getCommentUseCase: GetCommentUseCase,
     private val notificationActionsWrapper: NotificationsActionsWrapper,
     private val readerCommentTableWrapper: ReaderCommentTableWrapper,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val htmlCompatWrapper: HtmlCompatWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<EditCommentUiState>()
     private val _uiActionEvent = MutableLiveData<Event<EditCommentActionEvent>>()
@@ -239,13 +241,21 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             CommentEssentials(
                 commentId = commentEntity.id,
                 userName = commentEntity.authorName ?: "",
-                commentText = commentEntity.content ?: "",
+                commentText = htmlToPlainText(commentEntity.content ?: ""),
                 userUrl = commentEntity.authorUrl ?: "",
                 userEmail = commentEntity.authorEmail ?: "",
                 isFromRegisteredUser = commentEntity.authorId > 0
             )
         } else {
             CommentEssentials()
+        }
+    }
+
+    private fun htmlToPlainText(html: String): String {
+        return if (html.contains("<") || html.contains("&")) {
+            htmlCompatWrapper.fromHtml(html).toString().trim()
+        } else {
+            html
         }
     }
 
