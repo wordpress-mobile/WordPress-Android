@@ -252,11 +252,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     }
 
     private fun htmlToPlainText(html: String): String {
-        return if (html.contains("<") || html.contains("&")) {
-            htmlCompatWrapper.fromHtml(html).toString().trim()
-        } else {
-            html
-        }
+        return htmlCompatWrapper.fromHtml(html).toString().trim()
     }
 
     private suspend fun updateComment(editedCommentEssentials: CommentEssentials) {
