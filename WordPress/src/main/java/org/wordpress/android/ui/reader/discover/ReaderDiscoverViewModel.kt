@@ -157,8 +157,11 @@ class ReaderDiscoverViewModel @Inject constructor(
                         emptyList()
                     }
 
+                    val newCards = convertCardsToUiStates(posts)
+                    val cardsWithPreservedState = preserveFollowActionRunningState(newCards)
+
                     _uiState.value = DiscoverUiState.ContentUiState(
-                        announcement + convertCardsToUiStates(posts),
+                        announcement + cardsWithPreservedState,
                         reloadProgressVisibility = false,
                         loadMoreProgressVisibility = false,
                     )
@@ -171,6 +174,30 @@ class ReaderDiscoverViewModel @Inject constructor(
                         _navigationEvents.value = Event(ShowReaderSubs)
                     }
                 }
+            }
+        }
+    }
+
+    private fun preserveFollowActionRunningState(newCards: List<ReaderCardUiState>): List<ReaderCardUiState> {
+        val currentUiState = _uiState.value as? DiscoverUiState.ContentUiState ?: return newCards
+
+        return newCards.map { card ->
+            if (card is ReaderCardUiState.ReaderRecommendedBlogsCardUiState) {
+                val updatedBlogs = card.blogs.map { blog ->
+                    val currentBlog = currentUiState.cards
+                        .filterIsInstance<ReaderCardUiState.ReaderRecommendedBlogsCardUiState>()
+                        .flatMap { it.blogs }
+                        .find { it.blogId == blog.blogId && it.feedId == blog.feedId }
+
+                    if (currentBlog != null && currentBlog.isFollowActionRunning) {
+                        blog.copy(isFollowActionRunning = true)
+                    } else {
+                        blog
+                    }
+                }
+                card.copy(blogs = updatedBlogs)
+            } else {
+                card
             }
         }
     }
