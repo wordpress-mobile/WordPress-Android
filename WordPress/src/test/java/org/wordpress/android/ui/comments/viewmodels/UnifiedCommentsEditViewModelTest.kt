@@ -42,6 +42,7 @@ import org.wordpress.android.ui.comments.unified.usecase.GetCommentUseCase
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -73,6 +74,9 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
+    @Mock
+    lateinit var htmlCompatWrapper: HtmlCompatWrapper
+
     private lateinit var viewModel: UnifiedCommentsEditViewModel
 
     private var uiState: MutableList<EditCommentUiState> = mutableListOf()
@@ -102,6 +106,9 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         whenever(readerCommentTableWrapper.getComment(REMOTE_SITE_ID, postId, remoteCommentId))
             .thenReturn(READER_COMMENT_ENTITY)
 
+        whenever(htmlCompatWrapper.fromHtml(any(), any()))
+            .thenReturn(COMMENT_CONTENT_PLAIN)
+
         viewModel = UnifiedCommentsEditViewModel(
             mainDispatcher = testDispatcher(),
             bgDispatcher = testDispatcher(),
@@ -112,7 +119,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             getCommentUseCase = getCommentUseCase,
             notificationActionsWrapper = notificationActionsWrapper,
             readerCommentTableWrapper = readerCommentTableWrapper,
-            analyticsUtilsWrapper
+            analyticsUtilsWrapper = analyticsUtilsWrapper,
+            htmlCompatWrapper = htmlCompatWrapper
         )
 
         setupObservers()
@@ -503,6 +511,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     companion object {
         private const val LOCAL_SITE_ID = 123
         private const val REMOTE_SITE_ID = 456L
+        private const val COMMENT_CONTENT_HTML = "<p>content</p>"
+        private const val COMMENT_CONTENT_PLAIN = "content"
 
         private val COMMENT_ENTITY = CommentEntity(
             id = 1000,
@@ -519,7 +529,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             status = null,
             datePublished = null,
             publishedTimestamp = 0,
-            content = "content",
+            content = COMMENT_CONTENT_HTML,
             url = null,
             hasParent = false,
             parentId = 0,
@@ -541,7 +551,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             status = null,
             datePublished = null,
             publishedTimestamp = 0,
-            content = "content",
+            content = COMMENT_CONTENT_HTML,
             url = null,
             hasParent = false,
             parentId = 0,
@@ -553,13 +563,13 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             authorUrl = "authorUrl"
             authorName = "authorName"
             authorEmail = "authorEmail"
-            text = "content"
+            text = COMMENT_CONTENT_PLAIN
         }
 
         private val COMMENT_ESSENTIALS = CommentEssentials(
             commentId = COMMENT_ENTITY.id,
             userName = COMMENT_ENTITY.authorName!!,
-            commentText = COMMENT_ENTITY.content!!,
+            commentText = COMMENT_CONTENT_PLAIN,
             userUrl = COMMENT_ENTITY.authorUrl!!,
             userEmail = COMMENT_ENTITY.authorEmail!!
         )
