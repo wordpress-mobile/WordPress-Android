@@ -255,7 +255,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                     updateFollowButtonUiState(
                         currentUiState = currentUiState,
                         isFollowed = post.isFollowedByCurrentUser,
-                        isFollowEnabled = data.isChangeFinal
+                        isFollowActionRunning = !data.isChangeFinal
                     )
                 }
             }
@@ -608,11 +608,30 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun convertPostToUiState(
         post: ReaderPost
     ): ReaderPostDetailsUiState {
-        return postDetailUiStateBuilder.mapPostToUiState(
+        val newUiState = postDetailUiStateBuilder.mapPostToUiState(
             post = post,
             onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
             onHeaderAction = { action -> onHeaderAction(post, action) },
         )
+        return preserveFollowActionRunningState(newUiState)
+    }
+
+    private fun preserveFollowActionRunningState(
+        newUiState: ReaderPostDetailsUiState
+    ): ReaderPostDetailsUiState {
+        val currentUiState = _uiState.value as? ReaderPostDetailsUiState ?: return newUiState
+        val currentFollowButtonState = currentUiState.headerUiState.followButtonUiState
+
+        if (currentFollowButtonState.isFollowActionRunning) {
+            val updatedFollowButtonUiState = newUiState.headerUiState.followButtonUiState.copy(
+                isFollowActionRunning = true
+            )
+            val updatedHeaderUiState = newUiState.headerUiState.copy(
+                followButtonUiState = updatedFollowButtonUiState
+            )
+            return newUiState.copy(headerUiState = updatedHeaderUiState)
+        }
+        return newUiState
     }
 
     private fun convertRelatedPostsToUiState(
@@ -637,12 +656,15 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun updateFollowButtonUiState(
         currentUiState: ReaderPostDetailsUiState,
         isFollowed: Boolean,
-        isFollowEnabled: Boolean,
+        isFollowActionRunning: Boolean,
     ) {
         val updatedFollowButtonUiState = currentUiState
             .headerUiState
             .followButtonUiState
-            .copy(isFollowed = isFollowed, isEnabled = isFollowEnabled)
+            .copy(
+                isFollowed = isFollowed,
+                isFollowActionRunning = isFollowActionRunning
+            )
 
         val updatedHeaderUiState = currentUiState
             .headerUiState

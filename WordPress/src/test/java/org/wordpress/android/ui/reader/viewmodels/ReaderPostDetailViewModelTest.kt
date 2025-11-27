@@ -1197,7 +1197,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 FollowButtonUiState(
                     onFollowButtonClicked = mock(),
                     isFollowed = false,
-                    isEnabled = true,
                     isVisible = true
                 ),
                 "",
