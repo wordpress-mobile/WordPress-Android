@@ -21,6 +21,8 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenQ
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenFeedInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReaderDiscover
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReaderSearch
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenTagInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStats
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSite
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
@@ -81,7 +83,9 @@ class DeepLinkNavigator
 
             OpenReader -> ActivityLauncher.viewReaderInNewStack(activity)
             OpenReaderDiscover -> ActivityLauncher.viewReaderDiscoverInNewStack(activity)
+            OpenReaderSearch -> ActivityLauncher.viewReaderSearchInNewStack(activity)
             is OpenFeedInReader -> ActivityLauncher.viewReaderFeedInNewStack(activity, navigateAction.feedId)
+            is OpenTagInReader -> ActivityLauncher.viewReaderTagInNewStack(activity, navigateAction.tagSlug)
             is OpenInReader -> ActivityLauncher.viewPostDeeplinkInNewStack(activity, navigateAction.uri.uri)
             is ViewPostInReader -> ActivityLauncher.viewReaderPostDetailInNewStack(
                 activity,
@@ -128,7 +132,9 @@ class DeepLinkNavigator
         data class OpenEditorForSite(val site: SiteModel) : NavigateAction()
         object OpenReader : NavigateAction()
         object OpenReaderDiscover : NavigateAction()
+        object OpenReaderSearch : NavigateAction()
         data class OpenFeedInReader(val feedId: Long) : NavigateAction()
+        data class OpenTagInReader(val tagSlug: String) : NavigateAction()
         data class OpenInReader(val uri: UriWrapper) : NavigateAction()
         data class ViewPostInReader(val blogId: Long, val postId: Long, val uri: UriWrapper) : NavigateAction()
         object OpenEditor : NavigateAction()

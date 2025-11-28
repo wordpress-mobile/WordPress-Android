@@ -10,6 +10,8 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenF
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReaderDiscover
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReaderSearch
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenTagInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ViewPostInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.APPLINK_SCHEME
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.HOST_WORDPRESS_COM
@@ -45,6 +47,8 @@ class ReaderLinkHandler
             isWordPressComReaderUrl(uri) ||
             isWordPressComDiscoverUrl(uri) ||
             isWordPressComFeedUrl(uri) ||
+            isWordPressComReaderSearchUrl(uri) ||
+            isWordPressComTagUrl(uri) ||
             intentUtils.canResolveWith(ReaderConstants.ACTION_VIEW_POST, uri)
     }
 
@@ -69,11 +73,36 @@ class ReaderLinkHandler
         return uri.host == HOST_WORDPRESS_COM &&
             segments.size == FEED_URL_SEGMENTS &&
             (segments.firstOrNull() == PATH_READ || segments.firstOrNull() == PATH_READER) &&
-            segments.getOrNull(BLOGS_FEEDS_PATH_POSITION) == PATH_FEEDS
+            segments.getOrNull(SECOND_PATH_POSITION) == PATH_FEEDS
+    }
+
+    /**
+     * Checks if this is a reader search URL like wordpress.com/read/search
+     */
+    private fun isWordPressComReaderSearchUrl(uri: UriWrapper): Boolean {
+        val segments = uri.pathSegments
+        return uri.host == HOST_WORDPRESS_COM &&
+            segments.size == SEARCH_URL_SEGMENTS &&
+            segments.firstOrNull() == PATH_READ &&
+            segments.getOrNull(SECOND_PATH_POSITION) == PATH_SEARCH
+    }
+
+    /**
+     * Checks if this is a tag URL like wordpress.com/tag/{tagSlug}
+     */
+    private fun isWordPressComTagUrl(uri: UriWrapper): Boolean {
+        val segments = uri.pathSegments
+        return uri.host == HOST_WORDPRESS_COM &&
+            segments.size == TAG_URL_SEGMENTS &&
+            segments.firstOrNull() == PATH_TAG
     }
 
     private fun extractFeedId(uri: UriWrapper): Long? {
         return uri.pathSegments.getOrNull(FEED_ID_POSITION)?.toLongOrNull()
+    }
+
+    private fun extractTagSlug(uri: UriWrapper): String? {
+        return uri.pathSegments.getOrNull(TAG_SLUG_POSITION)
     }
 
     override fun buildNavigateAction(uri: UriWrapper): NavigateAction {
@@ -92,10 +121,20 @@ class ReaderLinkHandler
             }
             isWordPressComReaderUrl(uri) -> OpenReader
             isWordPressComDiscoverUrl(uri) -> OpenReaderDiscover
+            isWordPressComReaderSearchUrl(uri) -> OpenReaderSearch
             isWordPressComFeedUrl(uri) -> {
                 val feedId = extractFeedId(uri)
                 if (feedId != null) {
                     OpenFeedInReader(feedId)
+                } else {
+                    _toast.value = Event(R.string.error_generic)
+                    OpenReader
+                }
+            }
+            isWordPressComTagUrl(uri) -> {
+                val tagSlug = extractTagSlug(uri)
+                if (!tagSlug.isNullOrBlank()) {
+                    OpenTagInReader(tagSlug)
                 } else {
                     _toast.value = Event(R.string.error_generic)
                     OpenReader
@@ -141,7 +180,9 @@ class ReaderLinkHandler
             }
             isWordPressComReaderUrl(uri) -> "$HOST_WORDPRESS_COM/$PATH_READ"
             isWordPressComDiscoverUrl(uri) -> "$HOST_WORDPRESS_COM/$PATH_DISCOVER"
+            isWordPressComReaderSearchUrl(uri) -> "$HOST_WORDPRESS_COM/$PATH_READ/$PATH_SEARCH"
             isWordPressComFeedUrl(uri) -> "$HOST_WORDPRESS_COM/$PATH_READ/$PATH_FEEDS/$FEED_ID"
+            isWordPressComTagUrl(uri) -> "$HOST_WORDPRESS_COM/$PATH_TAG/$TAG_SLUG"
             else -> {
                 buildString {
                     val segments = uri.pathSegments
@@ -172,7 +213,7 @@ class ReaderLinkHandler
 
     private fun StringBuilder.appendReadPath(segments: List<String>) {
         append("/read")
-        when (segments.getOrNull(BLOGS_FEEDS_PATH_POSITION)) {
+        when (segments.getOrNull(SECOND_PATH_POSITION)) {
             "blogs" -> {
                 append("/blogs/$FEED_ID")
             }
@@ -192,14 +233,20 @@ class ReaderLinkHandler
         private const val PATH_READER = "reader"
         private const val PATH_DISCOVER = "discover"
         private const val PATH_FEEDS = "feeds"
+        private const val PATH_SEARCH = "search"
+        private const val PATH_TAG = "tag"
         private const val BLOG_ID = "blogId"
         private const val POST_ID = "postId"
         private const val FEED_ID = "feedId"
+        private const val TAG_SLUG = "tagSlug"
         private const val CUSTOM_DOMAIN_POSITION = 3
-        private const val BLOGS_FEEDS_PATH_POSITION = 1
+        private const val SECOND_PATH_POSITION = 1
         private const val FEED_ID_POSITION = 2
+        private const val TAG_SLUG_POSITION = 1
         private const val POSTS_PATH_POSITION = 3
         private const val DATE_URL_SEGMENTS = 3
         private const val FEED_URL_SEGMENTS = 3
+        private const val SEARCH_URL_SEGMENTS = 2
+        private const val TAG_URL_SEGMENTS = 2
     }
 }

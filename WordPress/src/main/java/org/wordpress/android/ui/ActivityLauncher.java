@@ -355,6 +355,26 @@ public class ActivityLauncher {
                         .startActivities();
     }
 
+    public static void viewReaderSearchInNewStack(Context context) {
+        Intent mainActivityIntent = getMainActivityInNewStack(context)
+                .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        Intent searchIntent = ReaderActivityLauncher.createReaderSearchIntent(context);
+        TaskStackBuilder.create(context)
+                        .addNextIntent(mainActivityIntent)
+                        .addNextIntent(searchIntent)
+                        .startActivities();
+    }
+
+    public static void viewReaderTagInNewStack(Context context, String tagSlug) {
+        Intent mainActivityIntent = getMainActivityInNewStack(context)
+                .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        Intent tagIntent = ReaderActivityLauncher.buildReaderTagIntent(context, tagSlug, "deeplink");
+        TaskStackBuilder.create(context)
+                        .addNextIntent(mainActivityIntent)
+                        .addNextIntent(tagIntent)
+                        .startActivities();
+    }
+
     public static void viewPostDeeplinkInNewStack(Context context, Uri uri) {
         Intent mainActivityIntent = getMainActivityInNewStack(context)
                 .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);

@@ -13,6 +13,8 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenF
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReaderDiscover
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReaderSearch
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenTagInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ViewPostInReader
 import org.wordpress.android.ui.deeplinks.buildUri
 import org.wordpress.android.ui.reader.ReaderConstants
@@ -324,5 +326,59 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
         val strippedUrl = readerLinkHandler.stripUrl(uri)
 
         assertThat(strippedUrl).isEqualTo("wordpress.com/read/feeds/feedId")
+    }
+
+    @Test
+    fun `handles wordpress com read search path`() {
+        val uri = buildUri("wordpress.com", "read", "search")
+
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
+
+        assertThat(isReaderUri).isTrue()
+    }
+
+    @Test
+    fun `wordpress com read search opens reader search`() {
+        val uri = buildUri("wordpress.com", "read", "search")
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenReaderSearch)
+    }
+
+    @Test
+    fun `correctly strips wordpress com read search URI`() {
+        val uri = buildUri("wordpress.com", "read", "search")
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/read/search")
+    }
+
+    @Test
+    fun `handles wordpress com tag path`() {
+        val uri = buildUri("wordpress.com", "tag", "dogs")
+
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
+
+        assertThat(isReaderUri).isTrue()
+    }
+
+    @Test
+    fun `wordpress com tag opens tag in reader`() {
+        val uri = buildUri("wordpress.com", "tag", "dogs")
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenTagInReader("dogs"))
+    }
+
+    @Test
+    fun `correctly strips wordpress com tag URI`() {
+        val uri = buildUri("wordpress.com", "tag", "dogs")
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/tag/tagSlug")
     }
 }
