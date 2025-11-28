@@ -365,7 +365,7 @@ public class ActivityLauncher {
                         .startActivities();
     }
 
-    public static void viewReaderTagInNewStack(Context context, String tagSlug) {
+    public static void viewReaderTagInNewStack(@NonNull Context context, @NonNull String tagSlug) {
         Intent mainActivityIntent = getMainActivityInNewStack(context)
                 .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
         Intent tagIntent = ReaderActivityLauncher.buildReaderTagIntent(context, tagSlug, "deeplink");
