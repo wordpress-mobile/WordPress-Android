@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
         android:textColor="?attr/colorOnSurface"
-        app:layout_constraintBottom_toTopOf="@+id/follow_button"
+        app:layout_constraintBottom_toTopOf="@+id/follow_button_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginBottom="@dimen/margin_extra_large"
