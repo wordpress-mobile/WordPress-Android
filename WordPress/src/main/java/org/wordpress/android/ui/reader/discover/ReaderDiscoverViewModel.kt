@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.ReaderPost
@@ -178,29 +179,30 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    private fun preserveFollowActionRunningState(newCards: List<ReaderCardUiState>): List<ReaderCardUiState> {
-        val currentUiState = _uiState.value as? DiscoverUiState.ContentUiState ?: return newCards
+    private suspend fun preserveFollowActionRunningState(newCards: List<ReaderCardUiState>): List<ReaderCardUiState> =
+        withContext(ioDispatcher) {
+            val currentUiState = _uiState.value as? DiscoverUiState.ContentUiState ?: return@withContext newCards
 
-        return newCards.map { card ->
-            if (card is ReaderCardUiState.ReaderRecommendedBlogsCardUiState) {
-                val updatedBlogs = card.blogs.map { blog ->
-                    val currentBlog = currentUiState.cards
-                        .filterIsInstance<ReaderCardUiState.ReaderRecommendedBlogsCardUiState>()
-                        .flatMap { it.blogs }
-                        .find { it.blogId == blog.blogId && it.feedId == blog.feedId }
+            newCards.map { card ->
+                if (card is ReaderCardUiState.ReaderRecommendedBlogsCardUiState) {
+                    val updatedBlogs = card.blogs.map { blog ->
+                        val currentBlog = currentUiState.cards
+                            .filterIsInstance<ReaderCardUiState.ReaderRecommendedBlogsCardUiState>()
+                            .flatMap { it.blogs }
+                            .find { it.blogId == blog.blogId && it.feedId == blog.feedId }
 
-                    if (currentBlog != null && currentBlog.isFollowActionRunning) {
-                        blog.copy(isFollowActionRunning = true)
-                    } else {
-                        blog
+                        if (currentBlog != null && currentBlog.isFollowActionRunning) {
+                            blog.copy(isFollowActionRunning = true)
+                        } else {
+                            blog
+                        }
                     }
+                    card.copy(blogs = updatedBlogs)
+                } else {
+                    card
                 }
-                card.copy(blogs = updatedBlogs)
-            } else {
-                card
             }
         }
-    }
 
     private fun dismissAnnouncementCard() {
         readerAnnouncementHelper.dismissReaderAnnouncement()
