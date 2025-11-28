@@ -692,6 +692,18 @@
                 </data>
 
                 <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
+                    android:scheme="http" >
+                </data>
+
+                <data
                     android:host="*.wordpress.com"
                     android:pathPattern="/2.../../../.*"
                     android:scheme="https" >
