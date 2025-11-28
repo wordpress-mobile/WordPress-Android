@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -608,7 +607,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    private suspend fun convertPostToUiState(
+    private fun convertPostToUiState(
         post: ReaderPost
     ): ReaderPostDetailsUiState {
         val newUiState = postDetailUiStateBuilder.mapPostToUiState(
@@ -619,13 +618,13 @@ class ReaderPostDetailViewModel @Inject constructor(
         return preserveFollowActionRunningState(newUiState)
     }
 
-    private suspend fun preserveFollowActionRunningState(
+    private fun preserveFollowActionRunningState(
         newUiState: ReaderPostDetailsUiState
-    ): ReaderPostDetailsUiState = withContext(ioDispatcher) {
-        val currentUiState = _uiState.value as? ReaderPostDetailsUiState ?: return@withContext newUiState
+    ): ReaderPostDetailsUiState {
+        val currentUiState = _uiState.value as? ReaderPostDetailsUiState ?: return newUiState
         val currentFollowButtonState = currentUiState.headerUiState.followButtonUiState
 
-        if (currentFollowButtonState.isFollowActionRunning) {
+        return if (currentFollowButtonState.isFollowActionRunning) {
             val updatedFollowButtonUiState = newUiState.headerUiState.followButtonUiState.copy(
                 isFollowActionRunning = true
             )
@@ -650,12 +649,10 @@ class ReaderPostDetailViewModel @Inject constructor(
     )
 
     private fun updatePostDetailsUi() {
-        viewModelScope.launch {
-            post?.let {
-                readerTracker.trackPost(Stat.READER_ARTICLE_RENDERED, it)
-                _navigationEvents.postValue(Event(ShowPostInWebView(it)))
-                _uiState.value = convertPostToUiState(it)
-            }
+        post?.let {
+            readerTracker.trackPost(Stat.READER_ARTICLE_RENDERED, it)
+            _navigationEvents.postValue(Event(ShowPostInWebView(it)))
+            _uiState.value = convertPostToUiState(it)
         }
     }
 
