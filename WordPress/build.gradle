@@ -493,6 +493,8 @@ dependencies {
     testImplementation(libs.assertj.core)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
 
     androidTestImplementation project(path:':libs:mocks')
 
