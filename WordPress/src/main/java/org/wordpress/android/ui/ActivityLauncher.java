@@ -345,6 +345,16 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewReaderFeedInNewStack(Context context, long feedId) {
+        Intent mainActivityIntent = getMainActivityInNewStack(context)
+                .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        Intent feedIntent = ReaderActivityLauncher.buildReaderFeedIntent(context, feedId, "deeplink");
+        TaskStackBuilder.create(context)
+                        .addNextIntent(mainActivityIntent)
+                        .addNextIntent(feedIntent)
+                        .startActivities();
+    }
+
     public static void viewPostDeeplinkInNewStack(Context context, Uri uri) {
         Intent mainActivityIntent = getMainActivityInNewStack(context)
                 .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);

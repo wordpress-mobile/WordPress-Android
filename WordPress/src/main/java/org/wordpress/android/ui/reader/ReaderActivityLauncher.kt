@@ -194,6 +194,19 @@ object ReaderActivityLauncher {
         )
     }
 
+    /**
+     * Build an intent to show posts from a specific feed (for deeplinks)
+     */
+    @JvmStatic
+    fun buildReaderFeedIntent(context: Context, feedId: Long, source: String): Intent {
+        return Intent(context, ReaderPostListActivity::class.java).apply {
+            putExtra(ReaderConstants.ARG_SOURCE, source)
+            putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW)
+            putExtra(ReaderConstants.ARG_FEED_ID, feedId)
+            putExtra(ReaderConstants.ARG_IS_FEED, true)
+        }
+    }
+
     /*
      * show a list of posts with a specific tag
      */

@@ -9,6 +9,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenFeedInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReaderDiscover
@@ -278,5 +279,50 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
         val strippedUrl = readerLinkHandler.stripUrl(uri)
 
         assertThat(strippedUrl).isEqualTo("wordpress.com/discover")
+    }
+
+    @Test
+    fun `handles wordpress com read feeds path`() {
+        val uri = buildUri("wordpress.com", "read", "feeds", feedId.toString())
+
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
+
+        assertThat(isReaderUri).isTrue()
+    }
+
+    @Test
+    fun `handles wordpress com reader feeds path`() {
+        val uri = buildUri("wordpress.com", "reader", "feeds", feedId.toString())
+
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
+
+        assertThat(isReaderUri).isTrue()
+    }
+
+    @Test
+    fun `wordpress com read feeds opens feed in reader`() {
+        val uri = buildUri("wordpress.com", "read", "feeds", feedId.toString())
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenFeedInReader(feedId))
+    }
+
+    @Test
+    fun `wordpress com reader feeds opens feed in reader`() {
+        val uri = buildUri("wordpress.com", "reader", "feeds", feedId.toString())
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenFeedInReader(feedId))
+    }
+
+    @Test
+    fun `correctly strips wordpress com feed URI`() {
+        val uri = buildUri("wordpress.com", "read", "feeds", feedId.toString())
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/read/feeds/feedId")
     }
 }

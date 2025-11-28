@@ -18,6 +18,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenN
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenPages
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenPagesForSite
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenQRCodeAuthFlow
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenFeedInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReaderDiscover
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStats
@@ -80,6 +81,7 @@ class DeepLinkNavigator
 
             OpenReader -> ActivityLauncher.viewReaderInNewStack(activity)
             OpenReaderDiscover -> ActivityLauncher.viewReaderDiscoverInNewStack(activity)
+            is OpenFeedInReader -> ActivityLauncher.viewReaderFeedInNewStack(activity, navigateAction.feedId)
             is OpenInReader -> ActivityLauncher.viewPostDeeplinkInNewStack(activity, navigateAction.uri.uri)
             is ViewPostInReader -> ActivityLauncher.viewReaderPostDetailInNewStack(
                 activity,
@@ -126,6 +128,7 @@ class DeepLinkNavigator
         data class OpenEditorForSite(val site: SiteModel) : NavigateAction()
         object OpenReader : NavigateAction()
         object OpenReaderDiscover : NavigateAction()
+        data class OpenFeedInReader(val feedId: Long) : NavigateAction()
         data class OpenInReader(val uri: UriWrapper) : NavigateAction()
         data class ViewPostInReader(val blogId: Long, val postId: Long, val uri: UriWrapper) : NavigateAction()
         object OpenEditor : NavigateAction()

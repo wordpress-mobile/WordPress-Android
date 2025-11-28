@@ -601,6 +601,26 @@
                     android:path="/discover"
                     android:scheme="http" />
 
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/feeds/.*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/feeds/.*"
+                    android:scheme="http" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/reader/feeds/.*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/reader/feeds/.*"
+                    android:scheme="http" />
+
             </intent-filter>
         </activity-alias>
 
@@ -638,18 +658,6 @@
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/read/feeds/.*/posts/.*"
-                    android:scheme="http" >
-                </data>
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/blogs/.*/posts/.*"
-                    android:scheme="https" >
-                </data>
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/blogs/.*/posts/.*"
                     android:scheme="http" >
                 </data>
 

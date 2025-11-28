@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenFeedInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReaderDiscover
@@ -43,6 +44,7 @@ class ReaderLinkHandler
             DEEP_LINK_HOST_VIEWPOST == uri.host ||
             isWordPressComReaderUrl(uri) ||
             isWordPressComDiscoverUrl(uri) ||
+            isWordPressComFeedUrl(uri) ||
             intentUtils.canResolveWith(ReaderConstants.ACTION_VIEW_POST, uri)
     }
 
@@ -56,6 +58,22 @@ class ReaderLinkHandler
         return uri.host == HOST_WORDPRESS_COM &&
             uri.pathSegments.size == 1 &&
             uri.pathSegments.firstOrNull() == PATH_DISCOVER
+    }
+
+    /**
+     * Checks if this is a feed URL like wordpress.com/read/feeds/{feedId} or wordpress.com/reader/feeds/{feedId}
+     * but NOT a post URL like wordpress.com/read/feeds/{feedId}/posts/{postId}
+     */
+    private fun isWordPressComFeedUrl(uri: UriWrapper): Boolean {
+        val segments = uri.pathSegments
+        return uri.host == HOST_WORDPRESS_COM &&
+            segments.size == FEED_URL_SEGMENTS &&
+            (segments.firstOrNull() == PATH_READ || segments.firstOrNull() == PATH_READER) &&
+            segments.getOrNull(BLOGS_FEEDS_PATH_POSITION) == PATH_FEEDS
+    }
+
+    private fun extractFeedId(uri: UriWrapper): Long? {
+        return uri.pathSegments.getOrNull(FEED_ID_POSITION)?.toLongOrNull()
     }
 
     override fun buildNavigateAction(uri: UriWrapper): NavigateAction {
@@ -74,6 +92,15 @@ class ReaderLinkHandler
             }
             isWordPressComReaderUrl(uri) -> OpenReader
             isWordPressComDiscoverUrl(uri) -> OpenReaderDiscover
+            isWordPressComFeedUrl(uri) -> {
+                val feedId = extractFeedId(uri)
+                if (feedId != null) {
+                    OpenFeedInReader(feedId)
+                } else {
+                    _toast.value = Event(R.string.error_generic)
+                    OpenReader
+                }
+            }
             else -> OpenInReader(uri)
         }
     }
@@ -114,6 +141,7 @@ class ReaderLinkHandler
             }
             isWordPressComReaderUrl(uri) -> "$HOST_WORDPRESS_COM/$PATH_READ"
             isWordPressComDiscoverUrl(uri) -> "$HOST_WORDPRESS_COM/$PATH_DISCOVER"
+            isWordPressComFeedUrl(uri) -> "$HOST_WORDPRESS_COM/$PATH_READ/$PATH_FEEDS/$FEED_ID"
             else -> {
                 buildString {
                     val segments = uri.pathSegments
@@ -161,13 +189,17 @@ class ReaderLinkHandler
         private const val DEEP_LINK_HOST_READ = "read"
         private const val DEEP_LINK_HOST_VIEWPOST = "viewpost"
         private const val PATH_READ = "read"
+        private const val PATH_READER = "reader"
         private const val PATH_DISCOVER = "discover"
+        private const val PATH_FEEDS = "feeds"
         private const val BLOG_ID = "blogId"
         private const val POST_ID = "postId"
         private const val FEED_ID = "feedId"
         private const val CUSTOM_DOMAIN_POSITION = 3
         private const val BLOGS_FEEDS_PATH_POSITION = 1
+        private const val FEED_ID_POSITION = 2
         private const val POSTS_PATH_POSITION = 3
         private const val DATE_URL_SEGMENTS = 3
+        private const val FEED_URL_SEGMENTS = 3
     }
 }
