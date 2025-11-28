@@ -72,20 +72,22 @@ class ReaderLinkHandler
         val segments = uri.pathSegments
         return uri.host == HOST_WORDPRESS_COM &&
             segments.size == FEED_URL_SEGMENTS &&
-            (segments.firstOrNull() == PATH_READ || segments.firstOrNull() == PATH_READER) &&
+            isReadOrReaderPath(segments.firstOrNull()) &&
             segments.getOrNull(SECOND_PATH_POSITION) == PATH_FEEDS
     }
 
     /**
-     * Checks if this is a reader search URL like wordpress.com/read/search
+     * Checks if this is a reader search URL like wordpress.com/read/search or wordpress.com/reader/search
      */
     private fun isWordPressComReaderSearchUrl(uri: UriWrapper): Boolean {
         val segments = uri.pathSegments
         return uri.host == HOST_WORDPRESS_COM &&
             segments.size == SEARCH_URL_SEGMENTS &&
-            segments.firstOrNull() == PATH_READ &&
+            isReadOrReaderPath(segments.firstOrNull()) &&
             segments.getOrNull(SECOND_PATH_POSITION) == PATH_SEARCH
     }
+
+    private fun isReadOrReaderPath(segment: String?) = segment == PATH_READ || segment == PATH_READER
 
     /**
      * Checks if this is a tag URL like wordpress.com/tag/{tagSlug}
@@ -189,8 +191,7 @@ class ReaderLinkHandler
                     // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
                     // with the first segment being 'read'.
                     append(stripHost(uri))
-                    val firstSegment = segments.firstOrNull()
-                    if (firstSegment == PATH_READ || firstSegment == "reader") {
+                    if (isReadOrReaderPath(segments.firstOrNull())) {
                         appendReadPath(segments)
                     } else if (segments.size > DATE_URL_SEGMENTS) {
                         append("/YYYY/MM/DD/$POST_ID")
@@ -227,23 +228,32 @@ class ReaderLinkHandler
     }
 
     companion object {
+        // Applink hosts (wordpress://read, wordpress://viewpost)
         private const val DEEP_LINK_HOST_READ = "read"
         private const val DEEP_LINK_HOST_VIEWPOST = "viewpost"
+
+        // URL path segments
         private const val PATH_READ = "read"
         private const val PATH_READER = "reader"
         private const val PATH_DISCOVER = "discover"
         private const val PATH_FEEDS = "feeds"
         private const val PATH_SEARCH = "search"
         private const val PATH_TAG = "tag"
+
+        // Query and path parameter names (used for analytics stripping)
         private const val BLOG_ID = "blogId"
         private const val POST_ID = "postId"
         private const val FEED_ID = "feedId"
         private const val TAG_SLUG = "tagSlug"
-        private const val CUSTOM_DOMAIN_POSITION = 3
+
+        // URL segment positions
         private const val SECOND_PATH_POSITION = 1
         private const val FEED_ID_POSITION = 2
         private const val TAG_SLUG_POSITION = 1
         private const val POSTS_PATH_POSITION = 3
+        private const val CUSTOM_DOMAIN_POSITION = 3
+
+        // Expected URL segment counts
         private const val DATE_URL_SEGMENTS = 3
         private const val FEED_URL_SEGMENTS = 3
         private const val SEARCH_URL_SEGMENTS = 2
