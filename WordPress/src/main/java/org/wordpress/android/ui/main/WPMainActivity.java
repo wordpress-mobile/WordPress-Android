@@ -902,14 +902,13 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
                         break;
                     }
+                    if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.READER);
                     if (intent.getBooleanExtra(ARG_READER_BOOKMARK_TAB, false) && mBottomNav != null && mBottomNav
                             .getActiveFragment() instanceof ReaderFragment) {
                         ((ReaderFragment) mBottomNav.getActiveFragment()).requestBookmarkTab();
                     } else if (intent.getBooleanExtra(ARG_READER_DISCOVER_TAB, false) && mBottomNav != null
                             && mBottomNav.getActiveFragment() instanceof ReaderFragment) {
                         ((ReaderFragment) mBottomNav.getActiveFragment()).requestDiscoverTab();
-                    } else {
-                        if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.READER);
                     }
                     break;
                 case ARG_EDITOR:
