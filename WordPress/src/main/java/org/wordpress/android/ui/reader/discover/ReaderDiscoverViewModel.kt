@@ -183,23 +183,32 @@ class ReaderDiscoverViewModel @Inject constructor(
 
         return newCards.map { card ->
             if (card is ReaderCardUiState.ReaderRecommendedBlogsCardUiState) {
-                val updatedBlogs = card.blogs.map { blog ->
-                    val currentBlog = currentUiState.cards
-                        .filterIsInstance<ReaderCardUiState.ReaderRecommendedBlogsCardUiState>()
-                        .flatMap { it.blogs }
-                        .find { it.blogId == blog.blogId && it.feedId == blog.feedId }
-
-                    if (currentBlog != null && currentBlog.isFollowActionRunning) {
-                        blog.copy(isFollowActionRunning = true)
-                    } else {
-                        blog
-                    }
-                }
-                card.copy(blogs = updatedBlogs)
+                preserveBlogCardFollowState(card, currentUiState)
             } else {
                 card
             }
         }
+    }
+
+    private fun preserveBlogCardFollowState(
+        card: ReaderCardUiState.ReaderRecommendedBlogsCardUiState,
+        currentUiState: DiscoverUiState.ContentUiState
+    ): ReaderCardUiState.ReaderRecommendedBlogsCardUiState {
+        val currentBlogs = currentUiState.cards
+            .filterIsInstance<ReaderCardUiState.ReaderRecommendedBlogsCardUiState>()
+            .flatMap { it.blogs }
+
+        val updatedBlogs = card.blogs.map { blog ->
+            val currentBlog = currentBlogs.find {
+                it.blogId == blog.blogId && it.feedId == blog.feedId
+            }
+            if (currentBlog?.isFollowActionRunning == true) {
+                blog.copy(isFollowActionRunning = true)
+            } else {
+                blog
+            }
+        }
+        return card.copy(blogs = updatedBlogs)
     }
 
     private fun dismissAnnouncementCard() {
