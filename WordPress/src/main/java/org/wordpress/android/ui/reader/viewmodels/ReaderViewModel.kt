@@ -209,6 +209,12 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    fun discoverTabRequested() {
+        readerTagsList.find { it.isDiscover }?.let {
+            updateSelectedContent(it)
+        }
+    }
+
     @Suppress("UseCheckOrError")
     fun onSearchActionClicked() {
         if (isSearchSupported()) {

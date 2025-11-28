@@ -8,6 +8,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_VIEWPOST_INT
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReaderDiscover
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ViewPostInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.APPLINK_SCHEME
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.HOST_WORDPRESS_COM
@@ -34,18 +35,33 @@ class ReaderLinkHandler
      * Other deeplinks handled:
      * `wordpress://read`
      * `wordpress://viewpost?blogId={blogId}&postId={postId}`
+     * `wordpress.com/read`
+     * `wordpress.com/discover`
      */
     override fun shouldHandleUrl(uri: UriWrapper): Boolean {
-        return DEEP_LINK_HOST_READ == uri.host || DEEP_LINK_HOST_VIEWPOST == uri.host || intentUtils.canResolveWith(
-            ReaderConstants.ACTION_VIEW_POST,
-            uri
-        )
+        return DEEP_LINK_HOST_READ == uri.host ||
+            DEEP_LINK_HOST_VIEWPOST == uri.host ||
+            isWordPressComReaderUrl(uri) ||
+            isWordPressComDiscoverUrl(uri) ||
+            intentUtils.canResolveWith(ReaderConstants.ACTION_VIEW_POST, uri)
+    }
+
+    private fun isWordPressComReaderUrl(uri: UriWrapper): Boolean {
+        return uri.host == HOST_WORDPRESS_COM &&
+            uri.pathSegments.size == 1 &&
+            uri.pathSegments.firstOrNull() == PATH_READ
+    }
+
+    private fun isWordPressComDiscoverUrl(uri: UriWrapper): Boolean {
+        return uri.host == HOST_WORDPRESS_COM &&
+            uri.pathSegments.size == 1 &&
+            uri.pathSegments.firstOrNull() == PATH_DISCOVER
     }
 
     override fun buildNavigateAction(uri: UriWrapper): NavigateAction {
-        return when (uri.host) {
-            DEEP_LINK_HOST_READ -> OpenReader
-            DEEP_LINK_HOST_VIEWPOST -> {
+        return when {
+            uri.host == DEEP_LINK_HOST_READ -> OpenReader
+            uri.host == DEEP_LINK_HOST_VIEWPOST -> {
                 val blogId = uri.getQueryParameter(BLOG_ID)?.toLongOrNull()
                 val postId = uri.getQueryParameter(POST_ID)?.toLongOrNull()
                 if (blogId != null && postId != null) {
@@ -56,6 +72,8 @@ class ReaderLinkHandler
                     OpenReader
                 }
             }
+            isWordPressComReaderUrl(uri) -> OpenReader
+            isWordPressComDiscoverUrl(uri) -> OpenReaderDiscover
             else -> OpenInReader(uri)
         }
     }
@@ -64,15 +82,18 @@ class ReaderLinkHandler
      * URLs handled here
      * `wordpress://read`
      * `wordpress://viewpost?blogId={blogId}&postId={postId}`
+     * wordpress.com/read
      * wordpress.com/read/feeds/feedId/posts/feedItemId
      * wordpress.com/read/blogs/feedId/posts/feedItemId
+     * wordpress.com/reader/feeds/feedId/posts/feedItemId
+     * wordpress.com/discover
      * domain.wordpress.com/2.../../../postId
      * domain.wordpress.com/19../../../postId
      */
     override fun stripUrl(uri: UriWrapper): String {
-        return when (uri.host) {
-            DEEP_LINK_HOST_READ -> "$APPLINK_SCHEME$DEEP_LINK_HOST_READ"
-            DEEP_LINK_HOST_VIEWPOST -> {
+        return when {
+            uri.host == DEEP_LINK_HOST_READ -> "$APPLINK_SCHEME$DEEP_LINK_HOST_READ"
+            uri.host == DEEP_LINK_HOST_VIEWPOST -> {
                 val hasBlogId = uri.getQueryParameter(BLOG_ID) != null
                 val hasPostId = uri.getQueryParameter(POST_ID) != null
                 buildString {
@@ -91,13 +112,16 @@ class ReaderLinkHandler
                     }
                 }
             }
+            isWordPressComReaderUrl(uri) -> "$HOST_WORDPRESS_COM/$PATH_READ"
+            isWordPressComDiscoverUrl(uri) -> "$HOST_WORDPRESS_COM/$PATH_DISCOVER"
             else -> {
                 buildString {
                     val segments = uri.pathSegments
                     // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
                     // with the first segment being 'read'.
                     append(stripHost(uri))
-                    if (segments.firstOrNull() == "read") {
+                    val firstSegment = segments.firstOrNull()
+                    if (firstSegment == PATH_READ || firstSegment == "reader") {
                         appendReadPath(segments)
                     } else if (segments.size > DATE_URL_SEGMENTS) {
                         append("/YYYY/MM/DD/$POST_ID")
@@ -136,6 +160,8 @@ class ReaderLinkHandler
     companion object {
         private const val DEEP_LINK_HOST_READ = "read"
         private const val DEEP_LINK_HOST_VIEWPOST = "viewpost"
+        private const val PATH_READ = "read"
+        private const val PATH_DISCOVER = "discover"
         private const val BLOG_ID = "blogId"
         private const val POST_ID = "postId"
         private const val FEED_ID = "feedId"

@@ -11,6 +11,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReaderDiscover
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ViewPostInReader
 import org.wordpress.android.ui.deeplinks.buildUri
 import org.wordpress.android.ui.reader.ReaderConstants
@@ -223,5 +224,59 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
         val strippedUrl = readerLinkHandler.stripUrl(uri)
 
         assertThat(strippedUrl).isEqualTo("www.wordpress.com/read")
+    }
+
+    @Test
+    fun `handles wordpress com read path`() {
+        val uri = buildUri("wordpress.com", "read")
+
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
+
+        assertThat(isReaderUri).isTrue()
+    }
+
+    @Test
+    fun `handles wordpress com discover path`() {
+        val uri = buildUri("wordpress.com", "discover")
+
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
+
+        assertThat(isReaderUri).isTrue()
+    }
+
+    @Test
+    fun `wordpress com read opens reader`() {
+        val uri = buildUri("wordpress.com", "read")
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenReader)
+    }
+
+    @Test
+    fun `wordpress com discover opens reader discover`() {
+        val uri = buildUri("wordpress.com", "discover")
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenReaderDiscover)
+    }
+
+    @Test
+    fun `correctly strips wordpress com read URI`() {
+        val uri = buildUri("wordpress.com", "read")
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/read")
+    }
+
+    @Test
+    fun `correctly strips wordpress com discover URI`() {
+        val uri = buildUri("wordpress.com", "discover")
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/discover")
     }
 }

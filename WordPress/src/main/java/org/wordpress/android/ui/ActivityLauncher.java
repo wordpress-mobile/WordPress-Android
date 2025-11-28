@@ -338,6 +338,13 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewReaderDiscoverInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        intent.putExtra(WPMainActivity.ARG_READER_DISCOVER_TAB, true);
+        context.startActivity(intent);
+    }
+
     public static void viewPostDeeplinkInNewStack(Context context, Uri uri) {
         Intent mainActivityIntent = getMainActivityInNewStack(context)
                 .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
