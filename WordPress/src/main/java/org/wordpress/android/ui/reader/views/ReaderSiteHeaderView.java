@@ -56,7 +56,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private boolean mIsFeed;
 
     private ReaderFollowButton mFollowButton;
-    private ProgressBar mFollowProgress;
+    @Nullable private ProgressBar mFollowProgress;
     private ReaderBlog mBlogInfo;
     private OnBlogInfoLoadedListener mBlogInfoListener;
     private OnFollowListener mFollowListener;
