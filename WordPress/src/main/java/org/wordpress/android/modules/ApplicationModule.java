@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.preference.PreferenceManager;
 
@@ -155,7 +156,7 @@ public abstract class ApplicationModule {
 
     @Provides
     public static WpLoginClient provideWpLoginClient(
-            TrackNetworkRequestsInterceptor trackNetworkRequestsInterceptor
+            @NonNull TrackNetworkRequestsInterceptor trackNetworkRequestsInterceptor
     ) {
         return new WpLoginClient(Collections.singletonList(trackNetworkRequestsInterceptor));
     }

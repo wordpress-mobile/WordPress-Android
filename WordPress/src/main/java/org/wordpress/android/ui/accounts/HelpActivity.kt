@@ -2,6 +2,7 @@
 
 package org.wordpress.android.ui.accounts
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -222,6 +223,7 @@ class HelpActivity : BaseAppCompatActivity() {
         var selectedIndex = periods.indexOf(currentPeriod)
 
         // Custom title view with title + description (setMessage conflicts with setSingleChoiceItems)
+        @SuppressLint("InflateParams") // Parent is null because AlertDialog attaches it internally
         val titleView = layoutInflater.inflate(R.layout.dialog_title_with_message, null).apply {
             findViewById<TextView>(R.id.dialog_title).setText(R.string.track_network_requests)
             findViewById<TextView>(R.id.dialog_message).setText(R.string.network_requests_enable_dialog_description)

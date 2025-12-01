@@ -13,6 +13,8 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.AppLog
 
 @ExperimentalCoroutinesApi
@@ -24,6 +26,12 @@ class SupportViewModelTest : BaseUnitTest() {
     lateinit var appLogWrapper: AppLogWrapper
 
     @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
+    @Mock
     lateinit var account: AccountModel
 
     private lateinit var viewModel: SupportViewModel
@@ -32,7 +40,9 @@ class SupportViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = SupportViewModel(
             accountStore = accountStore,
-            appLogWrapper = appLogWrapper
+            appLogWrapper = appLogWrapper,
+            appPrefsWrapper = appPrefsWrapper,
+            experimentalFeatures = experimentalFeatures
         )
     }
 

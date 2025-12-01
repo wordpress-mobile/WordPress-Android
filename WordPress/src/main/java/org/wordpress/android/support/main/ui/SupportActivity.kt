@@ -1,5 +1,6 @@
 package org.wordpress.android.support.main.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -144,6 +145,7 @@ class SupportActivity : AppCompatActivity() {
         val displayNames = periods.map { getRetentionPeriodDisplayString(it) }.toTypedArray()
         var selectedIndex = periods.indexOf(currentPeriod)
 
+        @SuppressLint("InflateParams") // Parent is null because AlertDialog attaches it internally
         val titleView = layoutInflater.inflate(R.layout.dialog_title_with_message, null).apply {
             findViewById<TextView>(R.id.dialog_title).setText(R.string.track_network_requests)
             findViewById<TextView>(R.id.dialog_message)
