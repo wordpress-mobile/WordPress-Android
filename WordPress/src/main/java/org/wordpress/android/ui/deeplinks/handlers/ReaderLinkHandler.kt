@@ -67,20 +67,29 @@ class ReaderLinkHandler
      */
     private fun buildReadNavigateAction(uri: UriWrapper): NavigateAction {
         val segments = uri.pathSegments
-        // Check for path: /blogs/{blogId}/posts/{postId} or /feeds/{feedId}/posts/{feedItemId}
-        if (segments.size >= 4 &&
-            (segments[0] == BLOGS_PATH || segments[0] == FEEDS_PATH) &&
-            segments[2] == POSTS_PATH
-        ) {
-            val blogId = segments[1].toLongOrNull()
-            val postId = segments[3].toLongOrNull()
-            val isFeed = segments[0] == FEEDS_PATH
-            if (blogId != null && postId != null) {
-                analyticsUtilsWrapper.trackWithBlogPostDetails(READER_VIEWPOST_INTERCEPTED, blogId, postId)
-                return ViewPostInReader(blogId, postId, isFeed, uri)
-            }
+        if (!isValidReadPath(segments)) {
+            return OpenReader
         }
-        return OpenReader
+        val blogId = segments[BLOG_ID_PATH_POSITION].toLongOrNull()
+        val postId = segments[POST_ID_PATH_POSITION].toLongOrNull()
+        val isFeed = segments[0] == FEEDS_PATH
+        return if (blogId != null && postId != null) {
+            analyticsUtilsWrapper.trackWithBlogPostDetails(READER_VIEWPOST_INTERCEPTED, blogId, postId)
+            ViewPostInReader(blogId, postId, isFeed, uri)
+        } else {
+            OpenReader
+        }
+    }
+
+    /**
+     * Checks if the path segments represent a valid read path.
+     * Valid paths: /blogs/{blogId}/posts/{postId} or /feeds/{feedId}/posts/{feedItemId}
+     */
+    private fun isValidReadPath(segments: List<String>): Boolean {
+        if (segments.size < MIN_READ_PATH_SEGMENTS) return false
+        val isBlogsOrFeeds = segments[0] == BLOGS_PATH || segments[0] == FEEDS_PATH
+        val hasPostsSegment = segments[POSTS_SEGMENT_POSITION] == POSTS_PATH
+        return isBlogsOrFeeds && hasPostsSegment
     }
 
     /**
@@ -91,10 +100,7 @@ class ReaderLinkHandler
         val segments = uri.pathSegments
         return buildString {
             append("$APPLINK_SCHEME$DEEP_LINK_HOST_READ")
-            if (segments.size >= 4 &&
-                (segments[0] == BLOGS_PATH || segments[0] == FEEDS_PATH) &&
-                segments[2] == POSTS_PATH
-            ) {
+            if (isValidReadPath(segments)) {
                 append("/${segments[0]}/$BLOG_ID/$POSTS_PATH/$POST_ID")
             }
         }
@@ -191,5 +197,10 @@ class ReaderLinkHandler
         private const val BLOGS_FEEDS_PATH_POSITION = 1
         private const val POSTS_PATH_POSITION = 3
         private const val DATE_URL_SEGMENTS = 3
+        // Path segment positions for read deep links: /blogs/{blogId}/posts/{postId}
+        private const val MIN_READ_PATH_SEGMENTS = 4
+        private const val BLOG_ID_PATH_POSITION = 1
+        private const val POSTS_SEGMENT_POSITION = 2
+        private const val POST_ID_PATH_POSITION = 3
     }
 }
