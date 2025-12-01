@@ -226,7 +226,7 @@ import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import org.wordpress.android.widgets.WPViewPager
 import org.wordpress.gutenberg.GutenbergView
-import org.wordpress.gutenberg.NetworkRequest
+import org.wordpress.gutenberg.RecordedNetworkRequest
 import java.io.File
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -2353,7 +2353,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                     if (AppPrefs.isTrackNetworkRequestsEnabled()) {
                         editorFragment?.setNetworkRequestListener(
                             object : GutenbergView.NetworkRequestListener {
-                                override fun onNetworkRequest(request: NetworkRequest) {
+                                override fun onNetworkRequest(request: RecordedNetworkRequest) {
                                     gutenbergKitNetworkLogger.log(request)
                                 }
                             }

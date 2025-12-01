@@ -11,12 +11,12 @@ import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.util.AppLog
-import org.wordpress.gutenberg.NetworkRequest
+import org.wordpress.gutenberg.RecordedNetworkRequest
 
 /**
  * Logs GutenbergKit WebView network requests to Chucker by replaying them through OkHttp.
  *
- * GutenbergKit intercepts JavaScript `fetch` calls and reports them via [NetworkRequest].
+ * GutenbergKit intercepts JavaScript `fetch` calls and reports them via [RecordedNetworkRequest].
  * Since Chucker only captures OkHttp traffic, we "replay" these requests through an OkHttp
  * client with Chucker attached, allowing all network activity to appear in a unified log.
  *
@@ -36,7 +36,7 @@ class GutenbergKitNetworkLogger(
      * Logs a GutenbergKit network request to Chucker.
      * Call this from [org.wordpress.gutenberg.GutenbergView.NetworkRequestListener.onNetworkRequest].
      */
-    fun log(networkRequest: NetworkRequest) {
+    fun log(networkRequest: RecordedNetworkRequest) {
         val contentType = networkRequest.requestHeaders["content-type"]?.toMediaTypeOrNull()
         // OkHttp doesn't allow request bodies for GET/HEAD methods
         val requestBody = if (networkRequest.method.uppercase() in listOf("GET", "HEAD")) {
@@ -49,7 +49,7 @@ class GutenbergKitNetworkLogger(
             .url(networkRequest.url)
             .method(networkRequest.method, requestBody)
             .headers(networkRequest.requestHeaders.toHeaders())
-            .tag(NetworkRequest::class.java, networkRequest)
+            .tag(RecordedNetworkRequest::class.java, networkRequest)
             .build()
 
         @Suppress("TooGenericExceptionCaught")
@@ -69,8 +69,8 @@ class GutenbergKitNetworkLogger(
  */
 private class ReplayInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val networkRequest = chain.request().tag(NetworkRequest::class.java)
-            ?: error("ReplayInterceptor requires NetworkRequest tag")
+        val networkRequest = chain.request().tag(RecordedNetworkRequest::class.java)
+            ?: error("ReplayInterceptor requires RecordedNetworkRequest tag")
 
         val contentType = networkRequest.responseHeaders["content-type"]?.toMediaTypeOrNull()
 
@@ -81,28 +81,9 @@ private class ReplayInterceptor : Interceptor {
             .request(chain.request())
             .protocol(Protocol.HTTP_1_1)
             .code(networkRequest.status)
-            .message(networkRequest.status.toStatusMessage())
+            .message(networkRequest.statusText)
             .headers(networkRequest.responseHeaders.toHeaders())
             .body(responseBody)
             .build()
-    }
-
-    @Suppress("MagicNumber") // HTTP status codes are well-known and clearer as literals
-    private fun Int.toStatusMessage(): String = when (this) {
-        200 -> "OK"
-        201 -> "Created"
-        204 -> "No Content"
-        301 -> "Moved Permanently"
-        302 -> "Found"
-        304 -> "Not Modified"
-        400 -> "Bad Request"
-        401 -> "Unauthorized"
-        403 -> "Forbidden"
-        404 -> "Not Found"
-        405 -> "Method Not Allowed"
-        500 -> "Internal Server Error"
-        502 -> "Bad Gateway"
-        503 -> "Service Unavailable"
-        else -> "Unknown"
     }
 }

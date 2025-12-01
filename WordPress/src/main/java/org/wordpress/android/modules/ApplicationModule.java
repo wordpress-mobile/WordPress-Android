@@ -41,7 +41,6 @@ import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
 import java.util.Collections;
-import java.util.List;
 
 import javax.inject.Named;
 
