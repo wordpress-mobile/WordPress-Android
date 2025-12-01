@@ -66,6 +66,7 @@ class ReaderLinkHandler
      * `wordpress://viewpost?blogId={blogId}&postId={postId}`
      * wordpress.com/read/feeds/feedId/posts/feedItemId
      * wordpress.com/read/blogs/feedId/posts/feedItemId
+     * wordpress.com/reader/feeds/feedId/posts/feedItemId
      * domain.wordpress.com/2.../../../postId
      * domain.wordpress.com/19../../../postId
      */
@@ -95,9 +96,11 @@ class ReaderLinkHandler
                 buildString {
                     val segments = uri.pathSegments
                     // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
-                    // with the first segment being 'read'.
+                    // or http[s]://wordpress.com/reader/feeds/{feedId}/posts/{feedItemId}
+                    // with the first segment being 'read' or 'reader'.
                     append(stripHost(uri))
-                    if (segments.firstOrNull() == "read") {
+                    val firstSegment = segments.firstOrNull()
+                    if (firstSegment == "read" || firstSegment == "reader") {
                         appendReadPath(segments)
                     } else if (segments.size > DATE_URL_SEGMENTS) {
                         append("/YYYY/MM/DD/$POST_ID")

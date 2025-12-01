@@ -190,6 +190,16 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     }
 
     @Test
+    fun `correctly strips reader feeds URI`() {
+        val uri = buildUri("wordpress.com", "reader", "feeds", feedId.toString(), "posts", postId.toString())
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        // Note: both 'reader' and 'read' paths are normalized to 'read' for analytics tracking
+        assertThat(strippedUrl).isEqualTo("wordpress.com/read/feeds/feedId/posts/feedItemId")
+    }
+
+    @Test
     fun `correctly strips 2xxx URI`() {
         val uri = buildUri("wordpress.com", "2020", "10", "1", postId.toString())
 

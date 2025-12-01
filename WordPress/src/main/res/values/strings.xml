@@ -2355,6 +2355,8 @@
 
     <!-- snackbar messages -->
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>
+    <string name="reader_snackbar_err_cannot_follow_logged_out">Log in to WordPress.com to subscribe to this site</string>
+    <string name="reader_snackbar_err_cannot_follow_logged_out_action">Log In</string>
 
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
@@ -2397,6 +2399,7 @@
     <string name="reader_empty_search_title">No results found</string>
     <string name="reader_empty_search_description">No results found for %s for your language</string>
     <string name="reader_empty_search_request_failed">Unable to perform search</string>
+    <string name="reader_empty_subscriptions">You haven\'t subscribed to any blogs yet</string>
 
     <string name="dlg_confirm_clear_search_history">Clear search history?</string>
     <string name="label_clear_search_history">Clear search history</string>
@@ -5093,6 +5096,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_info_description_3">You can view and manage these passwords in your user profile within your WordPress site\'s admin panel.</string>
     <string name="application_password_info_description_4">Please note that revoking application passwords used by the app will terminate the app\'s access to your site. Be cautious when revoking application passwords created by the app.</string>
     <string name="enable">Enable</string>
+    <string name="create">Create</string>
     <string name="application_password_never_used">Never used</string>
     <string name="application_password_name_label">Name:</string>
     <string name="application_password_created_label">Created:</string>
