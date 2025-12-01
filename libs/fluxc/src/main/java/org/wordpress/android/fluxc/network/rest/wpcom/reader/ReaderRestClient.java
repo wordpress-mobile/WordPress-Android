@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderError;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderErrorType;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesResponsePayload;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 
@@ -32,7 +33,7 @@ import javax.inject.Singleton;
 @Singleton
 public class ReaderRestClient extends BaseWPComRestClient {
     @Inject public ReaderRestClient(Context appContext, Dispatcher dispatcher,
-                            @Named("regular") RequestQueue requestQueue,
+                            @Named(OkHttpClientQualifiers.REGULAR) RequestQueue requestQueue,
                             AccessToken accessToken,
                             UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);

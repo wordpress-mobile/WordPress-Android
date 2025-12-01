@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryException;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 
@@ -36,7 +37,7 @@ import static org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFi
 public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
     @Inject public DiscoveryXMLRPCClient(
             Dispatcher dispatcher,
-            @Named("custom-ssl") RequestQueue requestQueue,
+            @Named(OkHttpClientQualifiers.CUSTOM_SSL) RequestQueue requestQueue,
             UserAgent userAgent,
             HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);

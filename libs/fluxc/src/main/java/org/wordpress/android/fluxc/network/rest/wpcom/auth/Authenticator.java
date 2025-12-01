@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LanguageUtils;
@@ -92,7 +93,7 @@ public class Authenticator {
 
     @Inject public Authenticator(Context appContext,
                          Dispatcher dispatcher,
-                         @Named("regular") RequestQueue requestQueue,
+                         @Named(OkHttpClientQualifiers.REGULAR) RequestQueue requestQueue,
                          AppSecrets secrets) {
         mAppContext = appContext;
         mDispatcher = dispatcher;

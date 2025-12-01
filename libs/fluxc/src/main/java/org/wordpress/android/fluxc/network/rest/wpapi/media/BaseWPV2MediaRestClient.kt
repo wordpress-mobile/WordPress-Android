@@ -40,12 +40,13 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Named
 
 abstract class BaseWPV2MediaRestClient constructor(
     private val dispatcher: Dispatcher,
     private val coroutineEngine: CoroutineEngine,
-    @Named("regular") private val okHttpClient: OkHttpClient
+    @Named(OkHttpClientQualifiers.REGULAR) private val okHttpClient: OkHttpClient
 ) {
     private val gson: Gson by lazy { Gson() }
 

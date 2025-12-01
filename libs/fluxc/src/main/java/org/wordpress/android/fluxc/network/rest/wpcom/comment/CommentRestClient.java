@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePaylo
 import org.wordpress.android.fluxc.store.CommentStore.FetchedCommentLikesResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 import org.wordpress.android.fluxc.utils.CommentErrorUtils;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class CommentRestClient extends BaseWPComRestClient {
     @Inject public CommentRestClient(
             Context appContext,
             Dispatcher dispatcher,
-            @Named("regular") RequestQueue requestQueue,
+            @Named(OkHttpClientQualifiers.REGULAR) RequestQueue requestQueue,
             AccessToken accessToken,
             UserAgent userAgent,
             @NonNull LikesUtilsProvider likesUtilsProvider) {

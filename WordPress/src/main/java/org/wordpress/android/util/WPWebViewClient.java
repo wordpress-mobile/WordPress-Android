@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -40,7 +41,7 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
     private final SiteModel mSite;
     private String mToken;
     @Inject protected MemorizingTrustManager mMemorizingTrustManager;
-    @Inject @Named("regular") protected OkHttpClient mOkHttpClient;
+    @Inject @Named(OkHttpClientQualifiers.REGULAR) protected OkHttpClient mOkHttpClient;
 
     public WPWebViewClient(SiteModel site, String token, List<String> urls,
                            ErrorManagedWebViewClientListener listener) {

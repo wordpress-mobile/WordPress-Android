@@ -15,6 +15,7 @@ import okhttp3.Response
 import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 import org.wordpress.android.util.AppLog
 import java.io.IOException
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -30,7 +31,7 @@ import androidx.core.content.edit
  */
 @Singleton
 class WordPressCookieAuthenticator @Inject constructor(
-    @Named("regular") private val okHttpClient: OkHttpClient,
+    @Named(OkHttpClientQualifiers.REGULAR) private val okHttpClient: OkHttpClient,
     @Named("IO_THREAD") private val ioDispatcher: CoroutineDispatcher,
     private val preferenceUtils: PreferenceUtilsWrapper
 ) {

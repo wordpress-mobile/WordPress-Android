@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload
 import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
 import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -26,7 +27,7 @@ class SiteWPAPIRestClient @Inject constructor(
     private val wpapiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
     dispatcher: Dispatcher,
-    @Named("custom-ssl") requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL) requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     companion object {
