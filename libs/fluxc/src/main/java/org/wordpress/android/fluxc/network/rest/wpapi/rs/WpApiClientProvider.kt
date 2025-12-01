@@ -6,6 +6,7 @@ import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpHttpClient
@@ -19,7 +20,7 @@ import javax.inject.Named
 
 class WpApiClientProvider @Inject constructor(
     private val wpAppNotifierHandler: WpAppNotifierHandler,
-    @Named("interceptors") private val interceptors: Set<@JvmSuppressWildcards Interceptor>,
+    @Named(OkHttpClientQualifiers.INTERCEPTORS) private val interceptors: Set<@JvmSuppressWildcards Interceptor>,
 ) {
     fun getWpApiClient(
         site: SiteModel,

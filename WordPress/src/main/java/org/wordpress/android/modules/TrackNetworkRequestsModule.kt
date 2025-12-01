@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import okhttp3.Interceptor
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsPreference
@@ -40,7 +41,7 @@ class TrackNetworkRequestsModule {
 
     @Provides
     @IntoSet
-    @Named("interceptors")
+    @Named(OkHttpClientQualifiers.INTERCEPTORS)
     fun provideTrackNetworkRequestsInterceptorAsInterceptor(
         interceptor: TrackNetworkRequestsInterceptor
     ): Interceptor = interceptor

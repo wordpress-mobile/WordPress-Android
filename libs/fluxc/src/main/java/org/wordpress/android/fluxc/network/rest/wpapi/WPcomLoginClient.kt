@@ -8,6 +8,7 @@ import okhttp3.FormBody
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WPcomAuthorizationCodeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import javax.inject.Inject
@@ -19,7 +20,7 @@ import kotlin.coroutines.CoroutineContext
 class WPcomLoginClient @Inject constructor(
     private val context: CoroutineContext,
     private val appSecrets: AppSecrets,
-    @Named("interceptors") interceptors: Set<@JvmSuppressWildcards Interceptor>
+    @Named(OkHttpClientQualifiers.INTERCEPTORS) interceptors: Set<@JvmSuppressWildcards Interceptor>
 ) {
     private val client = OkHttpClient.Builder().apply {
         interceptors.forEach { addInterceptor(it) }
