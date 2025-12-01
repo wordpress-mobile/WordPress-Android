@@ -2822,10 +2822,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     override fun onFollowTappedWhenLoggedOut() {
         getSnackbarParent()?.let { snackbarParent ->
-            Snackbar.make(
-                snackbarParent,
-                R.string.reader_snackbar_err_cannot_follow_logged_out,
-                Snackbar.LENGTH_LONG
+            make(
+                view = snackbarParent,
+                text = getString(R.string.reader_snackbar_err_cannot_follow_logged_out),
+                duration = Snackbar.LENGTH_LONG
             ).setAction(R.string.reader_snackbar_err_cannot_follow_logged_out_action) {
                 if (BuildConfig.IS_JETPACK_APP) {
                     ActivityLauncher.showSignInForResultJetpackOnly(requireActivity())
