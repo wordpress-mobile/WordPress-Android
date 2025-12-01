@@ -189,18 +189,20 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         loadFollowCount(blogInfo, txtFollowCount);
 
-        if (!mAccountStore.hasAccessToken()) {
-            mFollowButton.setVisibility(View.GONE);
-        } else {
-            mFollowButton.setVisibility(View.VISIBLE);
-            mFollowButton.setIsFollowed(blogInfo.isFollowing);
-            mFollowButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        mFollowButton.setVisibility(View.VISIBLE);
+        mFollowButton.setIsFollowed(blogInfo.isFollowing);
+        mFollowButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mAccountStore.hasAccessToken()) {
+                    if (mFollowListener != null) {
+                        mFollowListener.onFollowTappedWhenLoggedOut();
+                    }
+                } else {
                     toggleFollowStatus(v, source);
                 }
-            });
-        }
+            }
+        });
 
         if (layoutInfo.getVisibility() != View.VISIBLE) {
             layoutInfo.setVisibility(View.VISIBLE);
