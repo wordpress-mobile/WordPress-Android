@@ -44,13 +44,14 @@ class ReaderLinkHandler
 
     override fun buildNavigateAction(uri: UriWrapper): NavigateAction {
         return when (uri.host) {
-            DEEP_LINK_HOST_READ -> OpenReader
+            DEEP_LINK_HOST_READ -> buildReadNavigateAction(uri)
             DEEP_LINK_HOST_VIEWPOST -> {
                 val blogId = uri.getQueryParameter(BLOG_ID)?.toLongOrNull()
                 val postId = uri.getQueryParameter(POST_ID)?.toLongOrNull()
                 if (blogId != null && postId != null) {
                     analyticsUtilsWrapper.trackWithBlogPostDetails(READER_VIEWPOST_INTERCEPTED, blogId, postId)
-                    ViewPostInReader(blogId, postId, uri)
+                    // viewpost deep links always use blog IDs, not feed IDs
+                    ViewPostInReader(blogId, postId, isFeed = false, uri)
                 } else {
                     _toast.value = Event(R.string.error_generic)
                     OpenReader
@@ -61,8 +62,49 @@ class ReaderLinkHandler
     }
 
     /**
+     * Builds the navigate action for URIs with "read" host.
+     * Handles paths like /blogs/{blogId}/posts/{postId} or /feeds/{feedId}/posts/{feedItemId}
+     */
+    private fun buildReadNavigateAction(uri: UriWrapper): NavigateAction {
+        val segments = uri.pathSegments
+        // Check for path: /blogs/{blogId}/posts/{postId} or /feeds/{feedId}/posts/{feedItemId}
+        if (segments.size >= 4 &&
+            (segments[0] == BLOGS_PATH || segments[0] == FEEDS_PATH) &&
+            segments[2] == POSTS_PATH
+        ) {
+            val blogId = segments[1].toLongOrNull()
+            val postId = segments[3].toLongOrNull()
+            val isFeed = segments[0] == FEEDS_PATH
+            if (blogId != null && postId != null) {
+                analyticsUtilsWrapper.trackWithBlogPostDetails(READER_VIEWPOST_INTERCEPTED, blogId, postId)
+                return ViewPostInReader(blogId, postId, isFeed, uri)
+            }
+        }
+        return OpenReader
+    }
+
+    /**
+     * Builds a stripped URL for analytics from URIs with "read" host.
+     * Replaces actual IDs with placeholders.
+     */
+    private fun buildStrippedReadUrl(uri: UriWrapper): String {
+        val segments = uri.pathSegments
+        return buildString {
+            append("$APPLINK_SCHEME$DEEP_LINK_HOST_READ")
+            if (segments.size >= 4 &&
+                (segments[0] == BLOGS_PATH || segments[0] == FEEDS_PATH) &&
+                segments[2] == POSTS_PATH
+            ) {
+                append("/${segments[0]}/$BLOG_ID/$POSTS_PATH/$POST_ID")
+            }
+        }
+    }
+
+    /**
      * URLs handled here
      * `wordpress://read`
+     * `wordpress://read/blogs/{blogId}/posts/{postId}`
+     * `wordpress://read/feeds/{feedId}/posts/{feedItemId}`
      * `wordpress://viewpost?blogId={blogId}&postId={postId}`
      * wordpress.com/read/feeds/feedId/posts/feedItemId
      * wordpress.com/read/blogs/feedId/posts/feedItemId
@@ -72,7 +114,7 @@ class ReaderLinkHandler
      */
     override fun stripUrl(uri: UriWrapper): String {
         return when (uri.host) {
-            DEEP_LINK_HOST_READ -> "$APPLINK_SCHEME$DEEP_LINK_HOST_READ"
+            DEEP_LINK_HOST_READ -> buildStrippedReadUrl(uri)
             DEEP_LINK_HOST_VIEWPOST -> {
                 val hasBlogId = uri.getQueryParameter(BLOG_ID) != null
                 val hasPostId = uri.getQueryParameter(POST_ID) != null
@@ -142,6 +184,9 @@ class ReaderLinkHandler
         private const val BLOG_ID = "blogId"
         private const val POST_ID = "postId"
         private const val FEED_ID = "feedId"
+        private const val BLOGS_PATH = "blogs"
+        private const val FEEDS_PATH = "feeds"
+        private const val POSTS_PATH = "posts"
         private const val CUSTOM_DOMAIN_POSITION = 3
         private const val BLOGS_FEEDS_PATH_POSITION = 1
         private const val POSTS_PATH_POSITION = 3

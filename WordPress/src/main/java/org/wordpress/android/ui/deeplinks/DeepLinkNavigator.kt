@@ -83,6 +83,7 @@ class DeepLinkNavigator
                 activity,
                 navigateAction.blogId,
                 navigateAction.postId,
+                navigateAction.isFeed,
                 navigateAction.uri.uri
             )
             OpenNotifications -> ActivityLauncher.viewNotificationsInNewStack(activity)
@@ -124,7 +125,12 @@ class DeepLinkNavigator
         data class OpenEditorForSite(val site: SiteModel) : NavigateAction()
         object OpenReader : NavigateAction()
         data class OpenInReader(val uri: UriWrapper) : NavigateAction()
-        data class ViewPostInReader(val blogId: Long, val postId: Long, val uri: UriWrapper) : NavigateAction()
+        data class ViewPostInReader(
+            val blogId: Long,
+            val postId: Long,
+            val isFeed: Boolean,
+            val uri: UriWrapper
+        ) : NavigateAction()
         object OpenEditor : NavigateAction()
         data class OpenStatsForSiteAndTimeframe(val site: SiteModel, val statsTimeframe: StatsTimeframe) :
             NavigateAction()

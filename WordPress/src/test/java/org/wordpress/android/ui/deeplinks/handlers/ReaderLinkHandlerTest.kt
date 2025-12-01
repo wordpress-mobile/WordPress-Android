@@ -82,6 +82,44 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     }
 
     @Test
+    fun `URI with read host and blogs path opens post in reader with isFeed false`() {
+        val uri = buildUri("read", "blogs", blogId.toString(), "posts", postId.toString())
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(ViewPostInReader(blogId, postId, isFeed = false, uri))
+        verify(analyticsUtilsWrapper).trackWithBlogPostDetails(READER_VIEWPOST_INTERCEPTED, blogId, postId)
+    }
+
+    @Test
+    fun `URI with read host and feeds path opens post in reader with isFeed true`() {
+        val uri = buildUri("read", "feeds", feedId.toString(), "posts", postId.toString())
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(ViewPostInReader(feedId, postId, isFeed = true, uri))
+        verify(analyticsUtilsWrapper).trackWithBlogPostDetails(READER_VIEWPOST_INTERCEPTED, feedId, postId)
+    }
+
+    @Test
+    fun `URI with read host and invalid blog ID opens reader`() {
+        val uri = buildUri("read", "blogs", "invalid", "posts", postId.toString())
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenReader)
+    }
+
+    @Test
+    fun `URI with read host and incomplete path opens reader`() {
+        val uri = buildUri("read", "blogs", blogId.toString())
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenReader)
+    }
+
+    @Test
     fun `URI with viewpost host without query params opens reader`() {
         val uri = buildUri(host = "viewpost")
 
@@ -104,7 +142,7 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     }
 
     @Test
-    fun `URI with viewpost host with query params opens post in reader`() {
+    fun `URI with viewpost host with query params opens post in reader with isFeed false`() {
         val uri = buildUri(
             host = "viewpost",
             queryParam1 = "blogId" to blogId.toString(),
@@ -113,7 +151,7 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
 
         val navigateAction = readerLinkHandler.buildNavigateAction(uri)
 
-        assertThat(navigateAction).isEqualTo(ViewPostInReader(blogId, postId, uri))
+        assertThat(navigateAction).isEqualTo(ViewPostInReader(blogId, postId, isFeed = false, uri))
         verify(analyticsUtilsWrapper).trackWithBlogPostDetails(READER_VIEWPOST_INTERCEPTED, blogId, postId)
     }
 
@@ -133,6 +171,24 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
         val strippedUrl = readerLinkHandler.stripUrl(uri)
 
         assertThat(strippedUrl).isEqualTo("wordpress://read")
+    }
+
+    @Test
+    fun `correctly strips READ applink with blogs path`() {
+        val uri = buildUri("read", "blogs", blogId.toString(), "posts", postId.toString())
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://read/blogs/blogId/posts/postId")
+    }
+
+    @Test
+    fun `correctly strips READ applink with feeds path`() {
+        val uri = buildUri("read", "feeds", feedId.toString(), "posts", postId.toString())
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://read/feeds/blogId/posts/postId")
     }
 
     @Test

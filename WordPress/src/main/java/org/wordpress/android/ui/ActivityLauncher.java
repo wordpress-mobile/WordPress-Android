@@ -348,12 +348,18 @@ public class ActivityLauncher {
                         .startActivities();
     }
 
-    public static void viewReaderPostDetailInNewStack(Context context, long blogId, long postId, Uri uri) {
+    public static void viewReaderPostDetailInNewStack(
+            Context context,
+            long blogId,
+            long postId,
+            boolean isFeed,
+            Uri uri
+    ) {
         Intent mainActivityIntent = getMainActivityInNewStack(context)
                 .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
         Intent viewPostIntent = ReaderActivityLauncher.buildReaderPostDetailIntent(
                 context,
-                false,
+                isFeed,
                 blogId,
                 postId,
                 null,
