@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import com.android.volley.RequestQueue
 import java.util.Date
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -43,7 +44,7 @@ import org.wordpress.android.util.PackageUtils
 class NotificationRestClient @Inject constructor(
     private val appContext: Context?,
     private val dispatcher: Dispatcher,
-    @Named("regular") requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.REGULAR) requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder

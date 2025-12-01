@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -20,7 +21,7 @@ import javax.inject.Singleton
 class CloseAccountRestClient @Inject constructor(
     dispatcher: Dispatcher,
     appContext: Context?,
-    @Named("regular") requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.REGULAR) requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,

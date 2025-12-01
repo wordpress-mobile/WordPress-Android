@@ -23,13 +23,14 @@ import java.lang.reflect.Type
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 
 class JetpackAITranscriptionRestClient  @Inject constructor(
     private val appContext: Context,
     private val userAgent: UserAgent,
-    @Named("regular") private val okHttpClient: OkHttpClient,
+    @Named(OkHttpClientQualifiers.REGULAR) private val okHttpClient: OkHttpClient,
     private val jetpackAIUtils: JetpackAITranscriptionUtils
 ) {
     companion object {

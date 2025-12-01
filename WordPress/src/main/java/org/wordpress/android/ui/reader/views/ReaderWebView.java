@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.ui.WPWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
@@ -86,7 +87,7 @@ public class ReaderWebView extends WPWebView {
 
     @Inject UserAgent mUserAgent;
     @Inject AccountStore mAccountStore;
-    @Inject @Named("regular") OkHttpClient mOkHttpClient;
+    @Inject @Named(OkHttpClientQualifiers.REGULAR) OkHttpClient mOkHttpClient;
 
     public ReaderWebView(Context context) {
         super(context);

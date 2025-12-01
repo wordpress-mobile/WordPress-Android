@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginPayload
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -28,7 +29,7 @@ import javax.inject.Singleton
 class PluginJetpackTunnelRestClient @Inject constructor(
     private val dispatcher: Dispatcher,
     appContext: Context?,
-    @Named("regular") requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.REGULAR) requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {

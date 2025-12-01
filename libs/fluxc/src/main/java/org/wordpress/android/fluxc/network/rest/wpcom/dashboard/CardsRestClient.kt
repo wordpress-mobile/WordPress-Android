@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErrorType
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -46,7 +47,7 @@ class CardsRestClient @Inject constructor(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     dispatcher: Dispatcher,
     appContext: Context?,
-    @Named("regular") requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.REGULAR) requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {

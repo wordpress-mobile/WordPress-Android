@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.Appli
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsNetwork
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -22,7 +23,7 @@ import javax.inject.Singleton
 class ApplicationPasswordsMediaRestClient @Inject constructor(
     dispatcher: Dispatcher,
     coroutineEngine: CoroutineEngine,
-    @Named("no-cookies") okHttpClient: OkHttpClient,
+    @Named(OkHttpClientQualifiers.NO_COOKIES) okHttpClient: OkHttpClient,
     private val applicationPasswordsNetwork: ApplicationPasswordsNetwork
 ) : BaseWPV2MediaRestClient(dispatcher, coroutineEngine, okHttpClient) {
     @Inject internal lateinit var applicationPasswordsManager: ApplicationPasswordsManager

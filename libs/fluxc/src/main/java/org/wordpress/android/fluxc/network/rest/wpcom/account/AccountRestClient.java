@@ -53,6 +53,7 @@ import org.wordpress.android.fluxc.store.AccountStore.SubscriptionResponsePayloa
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionType;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload.SubscriptionFrequency;
 import org.wordpress.android.fluxc.utils.extensions.StringExtensionsKt;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LanguageUtils;
@@ -210,7 +211,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     @Inject public AccountRestClient(Context appContext, Dispatcher dispatcher,
-                                     @Named("regular") RequestQueue requestQueue,
+                                     @Named(OkHttpClientQualifiers.REGULAR) RequestQueue requestQueue,
                              AppSecrets appSecrets, AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mAppSecrets = appSecrets;
