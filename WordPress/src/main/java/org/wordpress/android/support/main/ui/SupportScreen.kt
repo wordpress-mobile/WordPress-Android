@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -22,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +37,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
 import org.wordpress.android.ui.compose.components.MainTopAppBar
+import org.wordpress.android.ui.compose.components.SingleChoiceAlertDialog
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.compose.RemoteImage
@@ -53,6 +57,7 @@ fun SupportScreen(
     isNetworkTrackingEnabled: Boolean,
     networkTrackingRetentionInfo: String,
     versionName: String,
+    dialogState: SupportViewModel.DialogState,
     onBackClick: () -> Unit,
     onLoginClick: () -> Unit,
     onHelpCenterClick: () -> Unit,
@@ -61,7 +66,30 @@ fun SupportScreen(
     onApplicationLogsClick: () -> Unit,
     onNetworkTrackingToggle: (Boolean) -> Unit,
     onViewNetworkRequestsClick: () -> Unit,
+    onRetentionPeriodSelected: (NetworkRequestsRetentionPeriod) -> Unit,
+    onEnableTrackingConfirmed: (NetworkRequestsRetentionPeriod) -> Unit,
+    onDisableTrackingConfirmed: () -> Unit,
+    onDialogDismissed: () -> Unit,
 ) {
+    // Show dialogs based on state
+    when (dialogState) {
+        is SupportViewModel.DialogState.EnableTracking -> {
+            EnableTrackingDialog(
+                selectedPeriod = dialogState.selectedPeriod,
+                onPeriodSelected = onRetentionPeriodSelected,
+                onConfirm = { onEnableTrackingConfirmed(dialogState.selectedPeriod) },
+                onDismiss = onDialogDismissed
+            )
+        }
+        is SupportViewModel.DialogState.DisableTracking -> {
+            DisableTrackingDialog(
+                onConfirm = onDisableTrackingConfirmed,
+                onDismiss = onDialogDismissed
+            )
+        }
+        SupportViewModel.DialogState.Hidden -> { /* No dialog */ }
+    }
+
     Scaffold(
         topBar = {
             MainTopAppBar(
@@ -337,6 +365,61 @@ private fun NetworkTrackingToggleItem(
     }
 }
 
+@Composable
+private fun EnableTrackingDialog(
+    selectedPeriod: NetworkRequestsRetentionPeriod,
+    onPeriodSelected: (NetworkRequestsRetentionPeriod) -> Unit,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val periods = NetworkRequestsRetentionPeriod.entries
+    val options = periods.map { period ->
+        when (period) {
+            NetworkRequestsRetentionPeriod.ONE_HOUR ->
+                stringResource(R.string.network_requests_retention_one_hour)
+            NetworkRequestsRetentionPeriod.ONE_DAY ->
+                stringResource(R.string.network_requests_retention_one_day)
+            NetworkRequestsRetentionPeriod.ONE_WEEK ->
+                stringResource(R.string.network_requests_retention_one_week)
+            NetworkRequestsRetentionPeriod.FOREVER ->
+                stringResource(R.string.network_requests_retention_until_cleared)
+        }
+    }
+
+    SingleChoiceAlertDialog(
+        title = stringResource(R.string.track_network_requests),
+        message = stringResource(R.string.network_requests_enable_dialog_description),
+        options = options,
+        selectedIndex = periods.indexOf(selectedPeriod),
+        onOptionSelected = { index -> onPeriodSelected(periods[index]) },
+        onConfirm = onConfirm,
+        onDismiss = onDismiss,
+        confirmButtonText = stringResource(R.string.network_requests_enable)
+    )
+}
+
+@Composable
+private fun DisableTrackingDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.network_requests_disable_tracking_title)) },
+        text = { Text(stringResource(R.string.network_requests_disable_tracking_description)) },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(stringResource(R.string.network_requests_disable))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
 @Preview(showBackground = true, name = "Support Screen - Light - Logged In")
 @Composable
 private fun SupportScreenPreview() {
@@ -352,6 +435,7 @@ private fun SupportScreenPreview() {
             isNetworkTrackingEnabled = true,
             networkTrackingRetentionInfo = "Retention: 1 Hour",
             versionName = "1.0.0",
+            dialogState = SupportViewModel.DialogState.Hidden,
             onBackClick = {},
             onLoginClick = {},
             onHelpCenterClick = {},
@@ -360,6 +444,10 @@ private fun SupportScreenPreview() {
             onApplicationLogsClick = {},
             onNetworkTrackingToggle = {},
             onViewNetworkRequestsClick = {},
+            onRetentionPeriodSelected = {},
+            onEnableTrackingConfirmed = {},
+            onDisableTrackingConfirmed = {},
+            onDialogDismissed = {},
         )
     }
 }
@@ -379,6 +467,7 @@ private fun SupportScreenPreviewDark() {
             isNetworkTrackingEnabled = false,
             networkTrackingRetentionInfo = "",
             versionName = "1.0.0",
+            dialogState = SupportViewModel.DialogState.Hidden,
             onBackClick = {},
             onLoginClick = {},
             onHelpCenterClick = {},
@@ -387,6 +476,10 @@ private fun SupportScreenPreviewDark() {
             onApplicationLogsClick = {},
             onNetworkTrackingToggle = {},
             onViewNetworkRequestsClick = {},
+            onRetentionPeriodSelected = {},
+            onEnableTrackingConfirmed = {},
+            onDisableTrackingConfirmed = {},
+            onDialogDismissed = {},
         )
     }
 }
@@ -406,6 +499,7 @@ private fun SupportScreenPreviewLoggedOut() {
             isNetworkTrackingEnabled = false,
             networkTrackingRetentionInfo = "",
             versionName = "1.0.0",
+            dialogState = SupportViewModel.DialogState.Hidden,
             onBackClick = {},
             onLoginClick = {},
             onHelpCenterClick = {},
@@ -414,6 +508,10 @@ private fun SupportScreenPreviewLoggedOut() {
             onApplicationLogsClick = {},
             onNetworkTrackingToggle = {},
             onViewNetworkRequestsClick = {},
+            onRetentionPeriodSelected = {},
+            onEnableTrackingConfirmed = {},
+            onDisableTrackingConfirmed = {},
+            onDialogDismissed = {},
         )
     }
 }

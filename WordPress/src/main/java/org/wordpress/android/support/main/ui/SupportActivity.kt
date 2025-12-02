@@ -1,13 +1,10 @@
 package org.wordpress.android.support.main.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,13 +19,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
-import org.wordpress.android.WordPress
 import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
-import org.wordpress.android.support.logs.ui.LogsActivity
 import org.wordpress.android.support.he.ui.HESupportActivity
+import org.wordpress.android.support.logs.ui.LogsActivity
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
@@ -42,7 +39,6 @@ class SupportActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         viewModel.init()
         observeNavigationEvents()
-        observeDialogEvents()
         composeView = ComposeView(this)
         setContentView(
             composeView.apply {
@@ -55,6 +51,7 @@ class SupportActivity : AppCompatActivity() {
                     val optionsVisibility by viewModel.optionsVisibility.collectAsState()
                     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
                     val networkTrackingState by viewModel.networkTrackingState.collectAsState()
+                    val dialogState by viewModel.dialogState.collectAsState()
                     AppThemeM3 {
                         SupportScreen(
                             userName = userInfo.userName,
@@ -69,6 +66,7 @@ class SupportActivity : AppCompatActivity() {
                                 networkTrackingState.retentionPeriod
                             ),
                             versionName = WordPress.versionName,
+                            dialogState = dialogState,
                             onBackClick = { finish() },
                             onLoginClick = { viewModel.onLoginClick() },
                             onHelpCenterClick = { viewModel.onHelpCenterClick() },
@@ -77,6 +75,10 @@ class SupportActivity : AppCompatActivity() {
                             onApplicationLogsClick = { viewModel.onApplicationLogsClick() },
                             onNetworkTrackingToggle = { viewModel.onNetworkTrackingToggle(it) },
                             onViewNetworkRequestsClick = { viewModel.onViewNetworkRequestsClick() },
+                            onRetentionPeriodSelected = { viewModel.onRetentionPeriodSelected(it) },
+                            onEnableTrackingConfirmed = { viewModel.onEnableTrackingConfirmed(it) },
+                            onDisableTrackingConfirmed = { viewModel.onDisableTrackingConfirmed() },
+                            onDialogDismissed = { viewModel.onDialogDismissed() },
                         )
                     }
                 }
@@ -121,61 +123,6 @@ private fun getRetentionPeriodStringRes(period: NetworkRequestsRetentionPeriod):
                 }
             }
         }
-    }
-
-    private fun observeDialogEvents() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.dialogEvents.collect { event ->
-                    when (event) {
-                        is SupportViewModel.DialogEvent.ShowEnableTrackingDialog -> {
-                            showEnableTrackingDialog(event.currentPeriod)
-                        }
-                        is SupportViewModel.DialogEvent.ShowDisableTrackingDialog -> {
-                            showDisableTrackingDialog()
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun showEnableTrackingDialog(currentPeriod: NetworkRequestsRetentionPeriod) {
-        val periods = NetworkRequestsRetentionPeriod.entries.toTypedArray()
-        val displayNames = periods.map { getRetentionPeriodDisplayString(it) }.toTypedArray()
-        var selectedIndex = periods.indexOf(currentPeriod)
-
-        @SuppressLint("InflateParams") // Parent is null because AlertDialog attaches it internally
-        val titleView = layoutInflater.inflate(R.layout.dialog_title_with_message, null).apply {
-            findViewById<TextView>(R.id.dialog_title).setText(R.string.track_network_requests)
-            findViewById<TextView>(R.id.dialog_message)
-                .setText(R.string.network_requests_enable_dialog_description)
-        }
-
-        AlertDialog.Builder(this)
-            .setCustomTitle(titleView)
-            .setSingleChoiceItems(displayNames, selectedIndex) { _, which ->
-                selectedIndex = which
-            }
-            .setPositiveButton(R.string.network_requests_enable) { _, _ ->
-                val selectedPeriod = periods[selectedIndex]
-                viewModel.onEnableTrackingConfirmed(selectedPeriod)
-            }
-            // No action needed on cancel - UI state is driven by ViewModel
-            .setNegativeButton(R.string.cancel, null)
-            .show()
-    }
-
-    private fun showDisableTrackingDialog() {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.network_requests_disable_tracking_title)
-            .setMessage(R.string.network_requests_disable_tracking_description)
-            .setPositiveButton(R.string.network_requests_disable) { _, _ ->
-                viewModel.onDisableTrackingConfirmed()
-            }
-            // No action needed on cancel - UI state is driven by ViewModel
-            .setNegativeButton(R.string.cancel, null)
-            .show()
     }
 
     private fun navigateToAskTheBots() {
