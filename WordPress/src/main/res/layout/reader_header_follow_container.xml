@@ -11,20 +11,36 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
         android:textColor="?attr/colorOnSurface"
-        app:layout_constraintBottom_toTopOf="@+id/follow_button"
+        app:layout_constraintBottom_toTopOf="@+id/follow_button_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginBottom="@dimen/margin_extra_large"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="123 posts • 1.2m followers" />
 
-    <org.wordpress.android.ui.reader.views.ReaderFollowButton
-        android:id="@+id/follow_button"
-        style="@style/Reader.Follow.Button.New"
+    <FrameLayout
+        android:id="@+id/follow_button_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_blog_follow_count" />
+        app:layout_constraintTop_toBottomOf="@+id/text_blog_follow_count">
+
+        <org.wordpress.android.ui.reader.views.ReaderFollowButton
+            android:id="@+id/follow_button"
+            style="@style/Reader.Follow.Button.New"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <ProgressBar
+            android:id="@+id/follow_button_progress"
+            android:layout_width="@dimen/reader_follow_button_progress_size"
+            android:layout_height="@dimen/reader_follow_button_progress_size"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -48,7 +48,7 @@ class ReaderTagHeaderView @JvmOverloads constructor(
         with(uiState.followButtonUiState) {
             val followButton = binding.followContainer.followButton
             followButton.setIsFollowed(isFollowed)
-            followButton.isEnabled = isEnabled
+            followButton.isEnabled = !isFollowActionRunning
             onFollowBtnClicked = onFollowButtonClicked
         }
     }
