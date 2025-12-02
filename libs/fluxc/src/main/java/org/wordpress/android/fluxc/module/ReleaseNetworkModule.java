@@ -56,43 +56,46 @@ public class ReleaseNetworkModule {
     }
 
     @Singleton
-    @Named("regular")
+    @Named(OkHttpClientQualifiers.REGULAR)
     @Provides
-    public RequestQueue provideRequestQueue(@Named("regular") OkHttpClient okHttpClient,
+    public RequestQueue provideRequestQueue(@Named(OkHttpClientQualifiers.REGULAR) OkHttpClient okHttpClient,
                                             Context appContext) {
         return newRequestQueue(okHttpClient, appContext);
     }
 
     @Singleton
-    @Named("no-redirects")
+    @Named(OkHttpClientQualifiers.NO_REDIRECTS)
     @Provides
-    public RequestQueue provideNoRedirectsRequestQueue(@Named("no-redirects") OkHttpClient okHttpClient,
-                                                       Context appContext) {
+    public RequestQueue provideNoRedirectsRequestQueue(
+            @Named(OkHttpClientQualifiers.NO_REDIRECTS) OkHttpClient okHttpClient,
+            Context appContext) {
         return newRetryOnRedirectRequestQueue(okHttpClient, appContext);
     }
 
     @Singleton
-    @Named("custom-ssl")
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL)
     @Provides
-    public RequestQueue provideRequestQueueCustomSSL(@Named("custom-ssl") OkHttpClient okHttpClient,
-                                                     Context appContext) {
-        return newRequestQueue(okHttpClient, appContext);
-    }
-
-    @Singleton
-    @Named("custom-ssl-custom-redirects")
-    @Provides
-    public RequestQueue provideRequestQueueCustomSSLWithRedirects(
-            @Named("custom-ssl-custom-redirects") OkHttpClient okHttpClient,
+    public RequestQueue provideRequestQueueCustomSSL(
+            @Named(OkHttpClientQualifiers.CUSTOM_SSL) OkHttpClient okHttpClient,
             Context appContext) {
         return newRequestQueue(okHttpClient, appContext);
     }
 
     @Singleton
-    @Named("no-cookies")
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL_CUSTOM_REDIRECTS)
     @Provides
-    public RequestQueue provideRequestQueueNoCookies(@Named("no-cookies") OkHttpClient okHttpClient,
-                                                     Context appContext) {
+    public RequestQueue provideRequestQueueCustomSSLWithRedirects(
+            @Named(OkHttpClientQualifiers.CUSTOM_SSL_CUSTOM_REDIRECTS) OkHttpClient okHttpClient,
+            Context appContext) {
+        return newRequestQueue(okHttpClient, appContext);
+    }
+
+    @Singleton
+    @Named(OkHttpClientQualifiers.NO_COOKIES)
+    @Provides
+    public RequestQueue provideRequestQueueNoCookies(
+            @Named(OkHttpClientQualifiers.NO_COOKIES) OkHttpClient okHttpClient,
+            Context appContext) {
         return newRequestQueue(okHttpClient, appContext);
     }
 

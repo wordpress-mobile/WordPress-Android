@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsNetwork
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -30,8 +31,8 @@ class JetpackWPAPIRestClient @Inject constructor(
     private val cookieNonceAuthenticator: CookieNonceAuthenticator,
     private val applicationPasswordsNetwork: ApplicationPasswordsNetwork,
     dispatcher: Dispatcher,
-    @Named("custom-ssl") requestQueue: RequestQueue,
-    @Named("no-redirects") private val noRedirectsRequestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL) requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.NO_REDIRECTS) private val noRedirectsRequestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     suspend fun fetchJetpackConnectionUrl(

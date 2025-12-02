@@ -117,6 +117,7 @@ import java.io.File
 import java.io.IOException
 import java.net.CookieManager
 import java.util.Date
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -209,7 +210,7 @@ class AppInitializer @Inject constructor(
     lateinit var tracker: Tracker
 
     @Inject
-    @Named("custom-ssl")
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL)
     lateinit var requestQueue: RequestQueue
 
     @Inject

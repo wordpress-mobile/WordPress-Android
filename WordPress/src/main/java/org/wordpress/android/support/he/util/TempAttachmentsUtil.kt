@@ -12,13 +12,14 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
 import java.util.concurrent.TimeUnit
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.collections.forEach
 
 class TempAttachmentsUtil @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
-    @Named("regular") private val okHttpClient: OkHttpClient,
+    @Named(OkHttpClientQualifiers.REGULAR) private val okHttpClient: OkHttpClient,
     private val appLogWrapper: AppLogWrapper,
     private val application: Application,
     private val accountStore: AccountStore

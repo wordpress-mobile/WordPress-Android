@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_E
 import org.wordpress.android.fluxc.utils.CommentErrorUtilsWrapper
 import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
 import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -32,7 +33,7 @@ import javax.inject.Singleton
 @Singleton
 class CommentsXMLRPCClient @Inject constructor(
     dispatcher: Dispatcher?,
-    @Named("custom-ssl") requestQueue: RequestQueue?,
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL) requestQueue: RequestQueue?,
     userAgent: UserAgent?,
     httpAuthManager: HTTPAuthManager?,
     private val commentErrorUtilsWrapper: CommentErrorUtilsWrapper,
