@@ -1,6 +1,0 @@
-26.3:
-Tam olarak neyle çalıştığınızı görebilmeniz için ortam kütüphanenize dosya boyutu bilgileri eklendi.
-
-Tam ekran görsellerin yüklenmesi için zaman aşımı süresi artırıldı; böylece bazı edge case senaryoları ve düşük bağlantı durumları daha iyi şekilde destekleniyor.
-
-Deneysel düzenleyici de artık daha akıcı. Cihazınızı döndürdüğünüzde veya karanlık modu değiştirirken içeriğiniz korunur ve iletişim kutuları artık geri düğmesine doğru şekilde yanıt verir. Keyifli düzenlemeler!
