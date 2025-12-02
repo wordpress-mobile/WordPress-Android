@@ -192,6 +192,7 @@
     <dimen name="reader_more_icon">36dp</dimen>
     <dimen name="reader_follow_icon">24dp</dimen>
     <dimen name="reader_follow_button_min_height">36dp</dimen>
+    <dimen name="reader_follow_button_progress_size">24dp</dimen>
 
     <dimen name="reader_post_card_new_more_icon">24dp</dimen>
 
