@@ -1,3 +1,3 @@
-We added file size info to your media library, so you can see exactly what you're working with.
-
-The experimental editor just got smoother, too. Your content stays put when you rotate your device or toggle dark mode, and dialogs now respond properly to the back button. Happy editing!
+- The app icon has a single-color option to match your device’s other themed icons. #aesthetic
+- Large, high-resolution images are more likely to load (but might take a few seconds).
+- We removed HTML tags from the Reader comment editor and fixed the “Subscribe” button.
