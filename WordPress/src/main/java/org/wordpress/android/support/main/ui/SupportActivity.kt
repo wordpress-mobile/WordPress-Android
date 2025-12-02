@@ -89,18 +89,18 @@ class SupportActivity : AppCompatActivity() {
         return getString(R.string.network_requests_retention_info, periodString)
     }
 
-    private fun getRetentionPeriodDisplayString(period: NetworkRequestsRetentionPeriod): String {
-        return when (period) {
-            NetworkRequestsRetentionPeriod.ONE_HOUR ->
-                getString(R.string.network_requests_retention_one_hour)
-            NetworkRequestsRetentionPeriod.ONE_DAY ->
-                getString(R.string.network_requests_retention_one_day)
-            NetworkRequestsRetentionPeriod.ONE_WEEK ->
-                getString(R.string.network_requests_retention_one_week)
-            NetworkRequestsRetentionPeriod.FOREVER ->
-                getString(R.string.network_requests_retention_until_cleared)
-        }
+private fun getRetentionPeriodDisplayString(period: NetworkRequestsRetentionPeriod): String {
+    return getString(getRetentionPeriodStringRes(period))
+}
+
+private fun getRetentionPeriodStringRes(period: NetworkRequestsRetentionPeriod): Int {
+    return when (period) {
+        NetworkRequestsRetentionPeriod.ONE_HOUR -> R.string.network_requests_retention_one_hour
+        NetworkRequestsRetentionPeriod.ONE_DAY -> R.string.network_requests_retention_one_day
+        NetworkRequestsRetentionPeriod.ONE_WEEK -> R.string.network_requests_retention_one_week
+        NetworkRequestsRetentionPeriod.FOREVER -> R.string.network_requests_retention_until_cleared
     }
+}
 
     private fun observeNavigationEvents() {
         lifecycleScope.launch {
