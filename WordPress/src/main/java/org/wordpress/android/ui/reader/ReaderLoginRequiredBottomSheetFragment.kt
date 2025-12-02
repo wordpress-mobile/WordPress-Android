@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.widgets.WPTextView
@@ -62,11 +61,7 @@ class ReaderLoginRequiredBottomSheetFragment : BottomSheetDialogFragment() {
         primaryButton.setText(R.string.reader_filter_self_hosted_empty_sites_tags_action)
         primaryButton.setOnClickListener {
             dismiss()
-            if (BuildConfig.IS_JETPACK_APP) {
-                ActivityLauncher.showSignInForResultJetpackOnly(requireActivity())
-            } else {
-                ActivityLauncher.showSignInForResultWpComOnly(requireActivity())
-            }
+            ActivityLauncher.showMainActivityAndMeScreen(requireContext())
         }
 
         // Hide secondary button (not needed for login-only scenario)
