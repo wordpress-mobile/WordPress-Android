@@ -625,6 +625,97 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         verify(readerDiscoverDataProvider).refreshCards()
     }
 
+    @Test
+    fun `When follow status changes and is not final, isFollowActionRunning is true`() = test {
+        // Arrange
+        val (uiStates) = init(autoUpdateFeed = false)
+        fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
+
+        // Act
+        fakeFollowStatusChangedFeed.value = FollowStatusChanged(
+            blogId = 1L,
+            feedId = 0L,
+            following = true,
+            isChangeFinal = false
+        )
+
+        // Assert
+        val contentUiState = uiStates.last() as ContentUiState
+        val blogCard = contentUiState.cards.first() as ReaderRecommendedBlogsCardUiState
+        assertThat(blogCard.blogs[0].isFollowActionRunning).isTrue
+    }
+
+    @Test
+    fun `When follow status changes and is final, isFollowActionRunning is false`() = test {
+        // Arrange
+        val (uiStates) = init(autoUpdateFeed = false)
+        fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
+
+        // Act
+        fakeFollowStatusChangedFeed.value = FollowStatusChanged(
+            blogId = 1L,
+            feedId = 0L,
+            following = true,
+            isChangeFinal = true
+        )
+
+        // Assert
+        val contentUiState = uiStates.last() as ContentUiState
+        val blogCard = contentUiState.cards.first() as ReaderRecommendedBlogsCardUiState
+        assertThat(blogCard.blogs[0].isFollowActionRunning).isFalse
+    }
+
+    @Test
+    fun `When feed updates during follow action, isFollowActionRunning state is preserved`() = test {
+        // Arrange
+        val (uiStates) = init(autoUpdateFeed = false)
+        fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
+
+        // Simulate follow action starting (not final)
+        fakeFollowStatusChangedFeed.value = FollowStatusChanged(
+            blogId = 1L,
+            feedId = 0L,
+            following = true,
+            isChangeFinal = false
+        )
+
+        // Act - simulate feed refresh while follow action is running
+        fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
+
+        // Assert - the running state should be preserved
+        val contentUiState = uiStates.last() as ContentUiState
+        val blogCard = contentUiState.cards.first() as ReaderRecommendedBlogsCardUiState
+        assertThat(blogCard.blogs[0].isFollowActionRunning).isTrue
+    }
+
+    @Test
+    fun `When follow action completes after feed refresh, isFollowActionRunning becomes false`() = test {
+        // Arrange
+        val (uiStates) = init(autoUpdateFeed = false)
+        fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
+
+        // Simulate follow action starting (not final)
+        fakeFollowStatusChangedFeed.value = FollowStatusChanged(
+            blogId = 1L,
+            feedId = 0L,
+            following = true,
+            isChangeFinal = false
+        )
+
+        // Act - complete the follow action
+        fakeFollowStatusChangedFeed.value = FollowStatusChanged(
+            blogId = 1L,
+            feedId = 0L,
+            following = true,
+            isChangeFinal = true
+        )
+
+        // Assert
+        val contentUiState = uiStates.last() as ContentUiState
+        val blogCard = contentUiState.cards.first() as ReaderRecommendedBlogsCardUiState
+        assertThat(blogCard.blogs[0].isFollowActionRunning).isFalse
+    }
+
     private fun init(autoUpdateFeed: Boolean = true): Observers {
         val uiStates = mutableListOf<DiscoverUiState>()
         viewModel.uiState.observeForever {
@@ -745,7 +836,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
                     onItemClicked = onItemClicked,
                     onFollowClicked = onFollowClicked,
                     isFollowed = it.isFollowing,
-                    isFollowEnabled = true,
                 )
             }
         )

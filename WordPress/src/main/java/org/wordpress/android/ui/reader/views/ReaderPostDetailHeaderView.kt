@@ -58,7 +58,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
         uiHelpers.setTextOrHide(layoutBlogSection.blogSectionTextBlogName, uiState.blogSectionUiState.blogName)
 
-        headerFollowButton.update(uiState.followButtonUiState)
+        updateFollowButton(uiState.followButtonUiState)
 
         updateAvatars(uiState.blogSectionUiState)
         updateBlogSectionClick(uiState.blogSectionUiState)
@@ -113,11 +113,17 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         }
     }
 
-    private fun ReaderFollowButton.update(followButtonUiState: FollowButtonUiState) {
-        isEnabled = followButtonUiState.isEnabled
-        setVisible(followButtonUiState.isVisible)
-        setIsFollowed(followButtonUiState.isFollowed)
-        setOnClickListener { followButtonUiState.onFollowButtonClicked?.invoke() }
+    private fun ReaderPostDetailHeaderViewBinding.updateFollowButton(
+        followButtonUiState: FollowButtonUiState
+    ) {
+        headerFollowButtonContainer.setVisible(followButtonUiState.isVisible)
+        headerFollowProgress.setVisible(followButtonUiState.isFollowActionRunning)
+        headerFollowButton.apply {
+            setIsLoading(followButtonUiState.isFollowActionRunning)
+            isEnabled = !followButtonUiState.isFollowActionRunning
+            setIsFollowed(followButtonUiState.isFollowed)
+            setOnClickListener { followButtonUiState.onFollowButtonClicked?.invoke() }
+        }
     }
 
     private fun setAuthorAndDate(authorName: String?, dateLine: String) = with(binding.layoutBlogSection) {

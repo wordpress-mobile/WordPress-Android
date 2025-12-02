@@ -74,7 +74,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         return FollowButtonUiState(
             onFollowButtonClicked = onFollowClicked,
             isFollowed = post.isFollowedByCurrentUser,
-            isEnabled = hasAccessToken,
             isVisible = hasAccessToken
         )
     }
