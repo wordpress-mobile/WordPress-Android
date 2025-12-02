@@ -143,7 +143,6 @@ Language: es_CO
     <string name="experimental_features_feedback_dialog_message">¿Te apetece compartir impresiones sobre el editor experimental?</string>
     <string name="experimental_features_feedback_dialog_title">Compartir comentarios</string>
     <string name="experimental_block_editor_plugins">Plugins experimentales del editor de bloques</string>
-    <string name="experimental_block_editor_theme_styles_description">Aplicar estilos temáticos al editor</string>
     <string name="experimental_block_editor_description">Accede a tipos de bloque y ajustes adicionales</string>
     <string name="experimental_block_editor_note">El editor de bloques experimental se convertirá en el predeterminado en una futura versión y se eliminará la posibilidad de desactivarlo.</string>
     <string name="disable_experimental_block_editor_description">Exclusión de tipos de bloque y ajustes adicionales</string>
@@ -178,7 +177,6 @@ Language: es_CO
     <string name="reader_toast_success_undo">Blog desbloqueado</string>
     <string name="feedback_form_note_link_jetpack">Pantalla de contacto con soporte</string>
     <string name="feedback_form_note_text">Ten en cuenta que este no es un formulario de soporte y no podremos responder. Si necesitas ayuda, usa nuestro \"</string>
-    <string name="experimental_block_editor_theme_styles">Estilos experimentales del editor de bloques</string>
     <string name="experimental_block_editor">Editor de bloques experimental</string>
     <string name="experimental_features_screen_title">Características experimentales</string>
     <string name="back">Volver</string>

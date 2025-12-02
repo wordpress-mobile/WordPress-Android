@@ -36,7 +36,6 @@ Language: es_CL
     <string name="reader_toast_success_undo">Blog desbloqueado</string>
     <string name="feedback_form_note_link_jetpack">Pantalla de contacto con soporte.</string>
     <string name="feedback_form_note_text">Ten en cuenta que este no es un formulario de soporte y no podremos responder. Si necesitas ayuda, usa nuestro \"</string>
-    <string name="experimental_block_editor_theme_styles">Estilos experimentales del editor de bloques</string>
     <string name="experimental_block_editor">Editor de bloques experimental</string>
     <string name="experimental_features_screen_title">Características experimentales</string>
     <string name="back">Volver</string>

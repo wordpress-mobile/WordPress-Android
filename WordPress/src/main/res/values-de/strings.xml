@@ -1,11 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-10-14 11:18:06+0000
+Translation-Revision-Date: 2025-11-26 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: de
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="he_support_forbidden_error">Du bist leider nicht berechtigt, diese Aktion durchzuführen.</string>
+    <string name="he_support_generic_error">Ein Fehler ist aufgetreten. Bitte versuche es später erneut.</string>
+    <string name="he_support_send_ticket_button">Senden</string>
+    <string name="he_support_contact_email_message">Wir senden dir eine E-Mail an diese Adresse.</string>
+    <string name="he_support_contact_information">Kontaktinformation</string>
+    <string name="he_support_site_address_placeholder">https://yoursite.com</string>
+    <string name="he_support_site_address_label">Website-Adresse (optional)</string>
+    <string name="he_support_subject_placeholder">Kurze Zusammenfassung deines Problems</string>
+    <string name="he_support_subject_label">Betreff</string>
+    <string name="he_support_issue_details">Problemdetails</string>
+    <string name="he_support_category_other">Sonstiges</string>
+    <string name="he_support_category_technical_issues">Technische Probleme</string>
+    <string name="he_support_category_billing">Abrechnung und Abonnements</string>
+    <string name="he_support_category_site_management">Website-Verwaltung</string>
+    <string name="he_support_category_jetpack_connection">Jetpack-Verbindung</string>
+    <string name="he_support_category_application">Antrag</string>
+    <string name="he_support_need_help_with">Ich brauche Hilfe bei</string>
+    <string name="he_support_contact_support_title">Support kontaktieren</string>
+    <string name="he_support_download_video_button">Video herunterladen</string>
+    <string name="he_support_video_playback_error_message">Dieses Video kann nicht inline abgespielt werden. Bitte lade es herunter, um es anzusehen.</string>
+    <string name="he_support_video_playback_error_title">Video kann nicht abgespielt werden</string>
+    <string name="he_support_conversation_closed_message">Diese Unterhaltung ist geschlossen. Du kannst nicht mehr darauf antworten.</string>
+    <string name="he_support_status_unknown">Unbekannt</string>
+    <string name="he_support_status_closed">Geschlossen</string>
+    <string name="he_support_status_solved">Gelöst</string>
+    <string name="he_support_status_waiting_for_user">Warten auf Benutzer</string>
+    <string name="he_support_status_waiting_for_support">Warten auf Support</string>
+    <string name="he_support_select_attachments">Anhänge auswählen</string>
+    <string name="he_support_download_attachment">Anhang herunterladen</string>
+    <string name="he_support_include_logs_description">Das Hinzufügen von Protokollen kann unserem Team helfen, Probleme zu untersuchen. Protokolle können aktuelle App-Aktivitäten enthalten.</string>
+    <string name="he_support_include_logs_title">Anwendungsprotokolle einbeziehen</string>
+    <string name="he_support_app_logs_label">Anwendungsprotokolle (optional)</string>
+    <string name="he_support_skipped_files_header">Übersprungene Dateien: %1$s</string>
+    <string name="he_support_attachment_size_label">Anhangslimit: %1$s von %2$s</string>
+    <string name="he_support_remove_screenshot">Screenshot entfernen</string>
+    <string name="he_support_screenshot_preview">Screenshot-Vorschau</string>
+    <string name="he_support_add_screenshots_button">Screenshots hinzufügen</string>
+    <string name="he_support_screenshots_description">Das Hinzufügen von Screenshots kann uns helfen, dein Problem schneller zu verstehen und zu lösen.</string>
+    <string name="he_support_screenshots_label">Screenshots (optional)</string>
+    <string name="he_support_failed_to_load_image">Laden des Bilds fehlgeschlagen</string>
+    <string name="he_support_attachment_image">Anhangsbild</string>
+    <string name="he_support_loading_image">Bild wird geladen</string>
+    <string name="he_support_downloading_attachment">%1$s wird heruntergeladen …</string>
+    <string name="he_support_message_label">Nachricht</string>
+    <string name="he_support_send_button">Senden</string>
+    <string name="he_support_reply_button">Antworten</string>
+    <string name="he_support_last_updated">Zuletzt aktualisiert: %1$s</string>
+    <string name="he_support_message_count">%1$d Nachrichten</string>
+    <string name="he_support_empty_conversations_button">Unterhaltung starten</string>
+    <string name="he_support_empty_conversations_message">Starte eine Unterhaltung mit unserem Support-Team, um Hilfe bei deinen Fragen zu erhalten.</string>
+    <string name="he_support_empty_conversations_title">Noch keine Unterhaltungen</string>
+    <string name="he_support_new_conversation_content_description">Neue Unterhaltung</string>
+    <string name="he_support_conversations_title">Support-Unterhaltungen</string>
+    <string name="ai_bot_time_weeks_ago">Vor %1$d Wochen</string>
+    <string name="ai_bot_time_week_ago">Vor %1$d Woche</string>
+    <string name="ai_bot_time_days_ago">Vor %1$d Tagen</string>
+    <string name="ai_bot_time_day_ago">Vor %1$d Tag</string>
+    <string name="ai_bot_time_hours_ago">Vor %1$d Stunden</string>
+    <string name="ai_bot_time_hour_ago">Vor %1$d Stunde</string>
+    <string name="ai_bot_time_minutes_ago">Vor %1$d Minuten</string>
+    <string name="ai_bot_time_minute_ago">Vor %1$d Minute</string>
+    <string name="ai_bot_time_just_now">Gerade eben</string>
+    <string name="ai_bot_default_conversation_title">Neue Unterhaltung</string>
+    <string name="ai_bot_welcome_message">Ich bin dein persönlicher KI-Assistent. Ich kann dich bei allen Fragen zu deiner Website oder deinem Konto unterstützen.</string>
+    <string name="ai_bot_welcome_greeting">Hallo %1$s 👋</string>
+    <string name="ai_bot_message_input_placeholder">Gib eine Nachricht ein …</string>
+    <string name="ai_bot_send_button_content_description">Senden</string>
+    <string name="ai_bot_support_bot">Support-Bot</string>
+    <string name="ai_bot_you">Du</string>
+    <string name="ai_bot_empty_conversations_button">Unterhaltung starten</string>
+    <string name="ai_bot_empty_conversations_message">Starte eine neue Unterhaltung, um Hilfe mit deiner WordPress-Website oder deinem WordPress-Konto zu erhalten.</string>
+    <string name="ai_bot_empty_conversations_title">Noch keine Unterhaltungen</string>
+    <string name="ai_bot_generic_error">Es ist ein Fehler aufgetreten. Bitte versuche es später erneut.</string>
+    <string name="ai_bot_new_conversation_content_description">Neue Unterhaltung</string>
+    <string name="ai_bot_back_button_content_description">Zurück</string>
+    <string name="ai_bot_conversations_title">Unterhaltungen</string>
+    <string name="create">Erstellen</string>
+    <string name="logs_screen_general_error">Es ist ein Fehler aufgetreten …</string>
+    <string name="logs_screen_log_count">%d Protokolleinträge</string>
+    <string name="logs_screen_empty_state">Keine Protokolle verfügbar</string>
+    <string name="support_screen_user_avatar_content_description">Benutzer-Avatar</string>
+    <string name="support_screen_application_logs_description">Erweitertes Tool zur Fehlerbehebung</string>
+    <string name="support_screen_application_logs_title">Anwendungsprotokolle</string>
+    <string name="support_screen_diagnostics_section_title">Diagnose</string>
+    <string name="support_screen_ask_happiness_engineers_description">Für deine schwierigen Fragen. Wir antworten per E-Mail</string>
+    <string name="support_screen_ask_happiness_engineers_title">Frage einen Support-Mitarbeiter</string>
+    <string name="support_screen_ask_bots_description">Erhalte schnelle Antworten auf häufige Fragen</string>
+    <string name="support_screen_ask_bots_title">Frag die Bots</string>
+    <string name="support_screen_help_center_description">Dokumentation und Tutorials für den Einstieg</string>
+    <string name="support_screen_help_center_title">Hilfe-Center</string>
+    <string name="support_screen_how_can_we_help_title">Wie können wir helfen?</string>
+    <string name="support_screen_login_button">Bei WordPress.com anmelden</string>
+    <string name="support_screen_profile_section_title">Support-Profil</string>
+    <string name="support_screen_title">Support</string>
+    <string name="modern_support_description">Aktiviere das neue, moderne Support-Erlebnis</string>
+    <string name="modern_support">Moderner Support</string>
+    <string name="site_settings_use_theme_styles_summary">Lass den Block-Editor wie dein Theme aussehen</string>
+    <string name="site_settings_use_theme_styles">Theme-Stile verwenden</string>
     <string name="error_deleting_term">Beim Löschen des Begriffs ist ein Fehler aufgetreten.</string>
     <string name="error_saving_term">Beim Speichern des Begriffs ist ein Fehler aufgetreten.</string>
     <string name="add_term">Begriff hinzufügen</string>
@@ -143,7 +241,6 @@ Language: de
     <string name="experimental_features_feedback_dialog_message">Hättest du einen Moment Zeit, um uns Feedback zum experimentellen Editor zu geben?</string>
     <string name="experimental_features_feedback_dialog_title">Feedback teilen</string>
     <string name="experimental_block_editor_plugins">Plugins für den experimentellen Block-Editor</string>
-    <string name="experimental_block_editor_theme_styles_description">Theme-Stile auf den Editor anwenden</string>
     <string name="experimental_block_editor_description">Auf zusätzliche Blocktypen und -einstellungen zugreifen</string>
     <string name="experimental_block_editor_note">Der experimentelle Block-Editor wird in einer zukünftigen Version zum Standard und die Möglichkeit, ihn zu deaktivieren, wird entfernt.</string>
     <string name="disable_experimental_block_editor_description">Zusätzliche Blocktypen und -einstellungen ablehnen</string>
@@ -178,7 +275,6 @@ Language: de
     <string name="reader_toast_success_undo">Blockierung des Blogs aufgehoben</string>
     <string name="feedback_form_note_link_jetpack">Bildschirm „Support kontaktieren“.</string>
     <string name="feedback_form_note_text">Bitte beachte, dass dies kein Supportformular ist. Wir können daher auf deine Anfrage nicht antworten. Wenn du Hilfe benötigst, nutze bitte unseren</string>
-    <string name="experimental_block_editor_theme_styles">Stile für den experimentellen Block-Editor</string>
     <string name="experimental_block_editor">Experimenteller Block-Editor</string>
     <string name="experimental_features_screen_title">Experimentelle Funktionen</string>
     <string name="back">Zurück</string>
@@ -1014,7 +1110,7 @@ Language: de
     <string name="photo_picker_media_thumbnail_content_description">Medien-Vorschaubild</string>
     <string name="stats_insights_popular_title">🔥 Beliebteste Zeit</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="scan_vault_press_active_on_site_button_text">Dashboard besuchen</string>
+    <string name="scan_vault_press_active_on_site_button_text">Dashboard aufrufen</string>
     <string name="scan_vault_press_active_on_site_subtitle">Deine Website ist bereits durch VaultPress geschützt. Klicke auf den nachfolgenden Button, um zu deinem VaultPress-Dashboard zu gelangen.</string>
     <string name="scan_vault_press_active_on_site_title">Deine Website hat VaultPress</string>
     <string name="locale_picker_current_language">Aktuelle Sprache:</string>
@@ -1585,7 +1681,7 @@ Language: de
     <string name="restore_complete_visit_site_button_content_description">Website besuchen-Button</string>
     <string name="restore_complete_done_button_content_description">Fertig-Button</string>
     <string name="restore_complete_icon_content_description">Wiederherstellen-Button</string>
-    <string name="restore_complete_visit_site_action_button">Website besuchen</string>
+    <string name="restore_complete_visit_site_action_button">Website aufrufen</string>
     <string name="restore_complete_description_with_two_parameters">Alle deine ausgewählten Elemente werden jetzt auf den Stand von %1$s %2$s wiederhergestellt.</string>
     <string name="restore_complete_header">Deine Website wurde wiederhergestellt.</string>
     <string name="restore_progress_footnote">Du brauchst nicht zu warten. Wir benachrichtigen dich, wenn deine Website wiederhergestellt wurde.</string>
@@ -2006,7 +2102,7 @@ Language: de
     <string name="reader_no_blog_to_reblog_action">Blogs verwalten</string>
     <string name="reader_no_blog_to_reblog_detail">Sobald du einen Blog bei WordPress.com erstellt hast, kannst du Inhalte, die dir gefallen, deiner eigenen Website hinzufügen.</string>
     <string name="reader_no_blog_to_reblog_title">Keine verfügbaren Blogs bei WordPress.com</string>
-    <string name="whats_new_in_version_title">Was ist neu?</string>
+    <string name="whats_new_in_version_title">Neues</string>
     <string name="comment_q_action_copied_url">Link-Adresse wurde kopiert</string>
     <string name="copy_link_address">Link-Adresse kopieren</string>
     <string name="comment_share_link_via">Teilen über</string>
@@ -2168,7 +2264,7 @@ Language: de
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%s Mio.</string>
-    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000">%s Tsd.</string>
     <string name="posts_cannot_be_started">Wir können die Beiträge momentan nicht öffnen. Bitte versuche es später erneut</string>
     <string name="site_cannot_be_loaded">Wir können die Daten deiner Website momentan nicht laden. Bitte versuche es später erneut</string>
     <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress-Mediathek</string>
@@ -2388,7 +2484,7 @@ Language: de
     <string name="domain_contact_information_register_domain_button">Domain registrieren</string>
     <string name="domain_contact_information_postal_code_hint">Postleitzahl</string>
     <string name="domain_contact_information_state_hint">Bundesstaat</string>
-    <string name="domain_contact_information_city_hint">Ort</string>
+    <string name="domain_contact_information_city_hint">Stadt</string>
     <string name="domain_contact_information_address_hint_two">Adresse 2</string>
     <string name="domain_contact_information_address_hint">Adresse</string>
     <string name="domain_contact_information_country_hint">Land</string>
@@ -2634,7 +2730,7 @@ Language: de
     <string name="pages_search_suggestion">Seiten suchen</string>
     <string name="pages_empty_search_result">Keine Seiten entsprechen deiner Suche</string>
     <string name="pages_delete_permanently">Endgültig löschen</string>
-    <string name="pages_move_to_trash">In Papierkorb verschieben</string>
+    <string name="pages_move_to_trash">In den Papierkorb verschieben</string>
     <string name="pages_move_to_draft">In Entwurf verschieben</string>
     <string name="pages_set_parent">Übergeordnete Seite festlegen</string>
     <string name="pages_view">Anzeigen</string>
@@ -3006,7 +3102,7 @@ Language: de
     <string name="site_settings_timezone_title">Zeitzone</string>
     <string name="site_settings_time_format_title">Zeitformat</string>
     <string name="site_settings_date_format_title">Datumsformat</string>
-    <string name="site_settings_week_start_title">Die Woche beginnt am</string>
+    <string name="site_settings_week_start_title">Erster Wochentag</string>
     <string name="site_settings_tags_title">Schlagwörter</string>
     <string name="site_settings_traffic_header">Traffic</string>
     <string name="delete_yes">Löschen</string>
@@ -3311,7 +3407,7 @@ Language: de
     <string name="editor_post_saved_online">Der Beitrag wurde online gespeichert</string>
     <string name="site_settings_image_quality_hint">Qualität der Bilder. Höhere Werte bedeuten bessere Bilder.</string>
     <string name="site_settings_optimize_images_summary">Aktivieren, um die Größe von Bildern zu ändern und sie zu komprimieren</string>
-    <string name="media_encoder_quality_maximum">Maximal</string>
+    <string name="media_encoder_quality_maximum">Maximum</string>
     <string name="media_encoder_quality_high">Hoch</string>
     <string name="media_encoder_quality_medium">Mittel</string>
     <string name="media_encoder_quality_low">Niedrig</string>
@@ -3347,7 +3443,7 @@ Language: de
     <string name="pending_draft_one_week_1">Dein Entwurf „%1$s“ wartet auf dich – denke daran, ihn zu veröffentlichen!</string>
     <string name="pending_draft_one_day_2">Wusstest du, dass „%1$s“ noch ein Entwurf ist? Veröffentliche ihn doch!</string>
     <string name="pending_draft_one_day_1">Du hast gestern „%1$s“ geschrieben. Vergiss nicht, es zu veröffentlichen!</string>
-    <string name="reader_label_visit">Website besuchen</string>
+    <string name="reader_label_visit">Website aufrufen</string>
     <string name="swipe_for_more">Wischen für mehr</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Du bist nicht berechtigt, diesen Beitrag anzuzeigen. Versuche, dich zuerst auf WordPress.com anzumelden, oder öffne stattdessen über den oberen Aktions-Button einen Browser.</string>
     <string name="reader_err_get_post_not_authorized_signin">Du hast nicht die erforderlichen Rechte, um diesen Beitrag anzusehen. Versuche zuerst dich auf WordPress.com anzumelden.</string>
@@ -3975,7 +4071,7 @@ Language: de
     <string name="save">Speichern</string>
     <string name="cancel">Abbrechen</string>
     <string-array name="blogging_reminders_count">
-        <item>Einmal</item>
+        <item>Einmalig</item>
         <item>Zweimal</item>
         <item>Dreimal</item>
         <item>Viermal</item>
