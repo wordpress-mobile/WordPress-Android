@@ -85,6 +85,7 @@ class ReaderViewModel @Inject constructor(
     private var wasPaused: Boolean = false
     private var trackReaderTabJob: Job? = null
     private var isQuickStartPromptShown: Boolean = false
+    private var pendingTabRequest: PendingTabRequest? = null
 
     private val _uiState = MutableLiveData<ReaderUiState>()
     val uiState: LiveData<ReaderUiState> = _uiState.distinct()
@@ -151,7 +152,19 @@ class ReaderViewModel @Inject constructor(
                 if (!initialized) {
                     initialized = true
                 }
+                applyPendingTabRequest()
             }
+        }
+    }
+
+    private fun applyPendingTabRequest() {
+        pendingTabRequest?.let { request ->
+            val tag = when (request) {
+                PendingTabRequest.BOOKMARK -> readerTagsList.find { it.isBookmarked }
+                PendingTabRequest.DISCOVER -> readerTagsList.find { it.isDiscover }
+            }
+            tag?.let { updateSelectedContent(it) }
+            pendingTabRequest = null
         }
     }
 
@@ -204,8 +217,20 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun bookmarkTabRequested() {
-        readerTagsList.find { it.isBookmarked }?.let {
-            updateSelectedContent(it)
+        val tag = readerTagsList.find { it.isBookmarked }
+        if (tag != null) {
+            updateSelectedContent(tag)
+        } else {
+            pendingTabRequest = PendingTabRequest.BOOKMARK
+        }
+    }
+
+    fun discoverTabRequested() {
+        val tag = readerTagsList.find { it.isDiscover }
+        if (tag != null) {
+            updateSelectedContent(tag)
+        } else {
+            pendingTabRequest = PendingTabRequest.DISCOVER
         }
     }
 
@@ -574,3 +599,8 @@ class ReaderViewModel @Inject constructor(
 }
 
 data class TabNavigation(val position: Int, val smoothAnimation: Boolean)
+
+enum class PendingTabRequest {
+    BOOKMARK,
+    DISCOVER
+}
