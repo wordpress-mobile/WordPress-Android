@@ -142,7 +142,6 @@ Language: zh_TW
     <string name="experimental_features_feedback_dialog_message">你願意分享關於試用版編輯器的意見嗎？</string>
     <string name="experimental_features_feedback_dialog_title">分享意見！</string>
     <string name="experimental_block_editor_plugins">試用版區塊編輯器外掛程式</string>
-    <string name="experimental_block_editor_theme_styles_description">將佈景主題樣式套用至編輯器</string>
     <string name="experimental_block_editor_description">存取額外的區塊類型和設定</string>
     <string name="experimental_block_editor_note">試用版區塊編輯器將在未來版本中成為預設選項，屆時將無法停用。</string>
     <string name="disable_experimental_block_editor_description">選擇不啟用額外區塊類型與設定</string>
@@ -176,7 +175,6 @@ Language: zh_TW
     <string name="more_content_description_promote_blaze">更多 Blaze</string>
     <string name="reader_toast_success_undo">已取消封鎖網誌</string>
     <string name="feedback_form_note_text">請注意，這不是支援表單，所以我們無法回覆。 如果需要協助，請使用我們的「</string>
-    <string name="experimental_block_editor_theme_styles">實驗性區塊編輯器樣式</string>
     <string name="experimental_block_editor">實驗性區塊編輯器</string>
     <string name="experimental_features_screen_title">實驗性功能</string>
     <string name="back">返回</string>

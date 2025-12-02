@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-30 16:21:34+0000
+Translation-Revision-Date: 2025-10-27 09:22:22+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: pl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="error_deleting_term">Wystąpił błąd podczas usuwania terminu</string>
+    <string name="error_saving_term">Wystąpił błąd podczas zapisywania terminu</string>
+    <string name="add_term">Utwórz termin</string>
+    <string name="term_delete_confirmation_message">Czy na chcesz usunąć „%1$s”?</string>
+    <string name="term_delete_confirmation_title">Usuń termin</string>
+    <string name="term_sort_by_count">Liczba</string>
+    <string name="term_sort_by_name">Nazwa</string>
+    <string name="term_parent_none">Brak</string>
+    <string name="term_parent_label">Element nadrzędny:</string>
+    <string name="term_count">Liczba: %1$d</string>
+    <string name="term_count_label">Liczba:</string>
+    <string name="term_description_label">Opis:</string>
+    <string name="term_slug_label">Uproszczona nazwa:</string>
+    <string name="term_name_label">Nazwa:</string>
+    <string name="application_password_experimental_feature_note">\n\nUwaga: uwierzytelnianie hasłem aplikacji na urządzeniach z systemem Android jest funkcją eksperymentalną.</string>
+    <string name="application_password_required_block_editor">Edytor blokowy</string>
+    <string name="application_password_required_description">Hasła aplikacji są bezpieczniejszym sposobem łączenia się z samodzielnie hostowaną witryną i umożliwiają obsługę funkcji takich jak %1$s.</string>
+    <string name="application_password_required">Wymagane hasło aplikacji</string>
+    <string name="menu_html_mode">Edytor kodu</string>
+    <string name="taxonomies_title">Taksonomie</string>
+    <string name="media_edit_file_size_caption">Rozmiar pliku</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Nie można zalogować się do WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Połącz witrynę z WordPress.com</string>
     <string name="dataview_default_empty_message">Nic tu nie ma</string>
@@ -33,6 +54,7 @@ Language: pl
     <string name="application_password_info_description_1">Hasła aplikacji stanowią bezpieczny sposób uzyskiwania dostępu do Twojej witryny bez konieczności podawania hasła do konta.</string>
     <string name="application_password_info_title">Hasła aplikacji</string>
     <string name="application_password_disable_feature_description">Wyłączenie hasła aplikacji spowoduje usunięcie logowania dla %1$s z Twoich witryn. Może być konieczne ponowne dodanie witryn, których dotyczy problem, aby ponownie się zalogować.</string>
+    <string name="application_password_invalid_description">Twoje hasło aplikacji już nie istnieje. Zaloguj się ponownie, aby utworzyć nowe hasło aplikacji.</string>
     <string name="subscribers_delete_failed">Nie udało się usunąć subskrybenta</string>
     <string name="subscribers_delete_success_message">Subskrybent został usunięty, ale może minąć minuta, zanim usunięcie zacznie obowiązywać</string>
     <string name="subscribers_delete_success_title">Usunięto subskrybenta</string>
@@ -121,7 +143,6 @@ Language: pl
     <string name="experimental_features_feedback_dialog_message">Czy chciałbyś podzielić się informacją zwrotną dotyczącą edytora eksperymentalnego?</string>
     <string name="experimental_features_feedback_dialog_title">Podziel się swoją informacją zwrotną</string>
     <string name="experimental_block_editor_plugins">Eksperymentalne wtyczki edytora blokowego</string>
-    <string name="experimental_block_editor_theme_styles_description">Zastosuj style motywu do edytora</string>
     <string name="experimental_block_editor_description">Uzyskaj dostęp do dodatkowych rodzajów bloków oraz ustawień</string>
     <string name="experimental_block_editor_note">Eksperymentalny edytor bloków stanie się domyślny w przyszłych wydaniach, a funkcjonalność umożliwiająca wyłączenie go będzie usunięta.</string>
     <string name="disable_experimental_block_editor_description">Zrezygnuj z dodatkowych rodzajów bloków oraz ustawień</string>
@@ -156,7 +177,6 @@ Language: pl
     <string name="reader_toast_success_undo">Blog odblokowany</string>
     <string name="feedback_form_note_link_jetpack">Ekran kontaktu ze wsparciem.</string>
     <string name="feedback_form_note_text">Pamiętaj, że nie jest to formularz pomocy technicznej i nie będziemy mogli odpowiedzieć. Jeżeli potrzebujesz pomocy, skorzystaj z naszego \"</string>
-    <string name="experimental_block_editor_theme_styles">Style eksperymentalnego edytora blokowego</string>
     <string name="experimental_block_editor">Ekstremalny edytor blokowy</string>
     <string name="experimental_features_screen_title">Funkcje eksperymentalne</string>
     <string name="back">Cofnij</string>
@@ -1181,6 +1201,8 @@ Language: pl
     <string name="my_site_post_card_link_create_post">Utwórz wpis</string>
     <string name="my_site_create_next_post_excerpt">Regularne dodawanie wpisów pomaga w budowaniu publiki!</string>
     <string name="my_site_create_next_post_title">Utwórz swój kolejny wpis</string>
+    <string name="menu_visual_mode_switched_notice">Przełączono do edytora wizualnego</string>
+    <string name="menu_html_mode_switched_notice">Przełączono do edytora kodu</string>
     <string name="post_link_copied_to_clipboard">Skopiowano odnośnik do schowka</string>
     <string name="comment_author_badge">Autor</string>
     <string name="button_copy_link">Skopiuj odnośnik</string>
@@ -2821,11 +2843,13 @@ Language: pl
     <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Rejestrowanie zaś pomocą Google…</string>
     <string name="jetpack_connection_failed_with_reason">Nie udało się połączenie z Jetpackiem: %s</string>
     <string name="jetpack_already_connected_toast">Jesteś już połączony z Jetpackiem</string>
+    <string name="menu_visual_mode">Edytor wizualny</string>
     <string name="menu_preview">Podgląd</string>
     <string name="menu_save_as_draft">Zapisz jako szkic</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
+    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s z %2$s</string>
     <string name="site_settings_quota_space_hint">Jeśli potrzebujesz więcej przestrzeni, rozważ rozszerzenie subskrypcji WordPress.</string>
