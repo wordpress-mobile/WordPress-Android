@@ -107,9 +107,36 @@ class ReaderLinkHandler
         return uri.pathSegments.getOrNull(TAG_SLUG_POSITION)
     }
 
+    /**
+     * Builds navigate action for applink URIs with host "read"
+     * e.g., jetpack://read/feeds/{feedId}/posts/{postId}
+     *
+     * Path segments for jetpack://read/feeds/138734090/posts/5879194632:
+     * [0] = "feeds", [1] = "138734090", [2] = "posts", [3] = "5879194632"
+     */
+    @Suppress("ComplexCondition")
+    private fun buildNavigateActionForReadHost(uri: UriWrapper): NavigateAction {
+        val segments = uri.pathSegments
+        // Check if it's a post URL: read/feeds/{feedId}/posts/{postId}
+        if (segments.size >= APPLINK_POST_URL_SEGMENTS &&
+            (segments[APPLINK_FEEDS_PATH_POSITION] == PATH_FEEDS ||
+                segments[APPLINK_FEEDS_PATH_POSITION] == PATH_BLOGS) &&
+            segments[APPLINK_POSTS_PATH_POSITION] == PATH_POSTS
+        ) {
+            // Convert applink to https URL that OpenInReader can handle
+            val httpsUri = UriWrapper(
+                android.net.Uri.parse(
+                    "https://$HOST_WORDPRESS_COM/$PATH_READ/${segments.joinToString("/")}"
+                )
+            )
+            return OpenInReader(httpsUri)
+        }
+        return OpenReader
+    }
+
     override fun buildNavigateAction(uri: UriWrapper): NavigateAction {
         return when {
-            uri.host == DEEP_LINK_HOST_READ -> OpenReader
+            uri.host == DEEP_LINK_HOST_READ -> buildNavigateActionForReadHost(uri)
             uri.host == DEEP_LINK_HOST_VIEWPOST -> {
                 val blogId = uri.getQueryParameter(BLOG_ID)?.toLongOrNull()
                 val postId = uri.getQueryParameter(POST_ID)?.toLongOrNull()
@@ -237,6 +264,8 @@ class ReaderLinkHandler
         private const val PATH_READER = "reader"
         private const val PATH_DISCOVER = "discover"
         private const val PATH_FEEDS = "feeds"
+        private const val PATH_BLOGS = "blogs"
+        private const val PATH_POSTS = "posts"
         private const val PATH_SEARCH = "search"
         private const val PATH_TAG = "tag"
 
@@ -258,5 +287,10 @@ class ReaderLinkHandler
         private const val FEED_URL_SEGMENTS = 3
         private const val SEARCH_URL_SEGMENTS = 2
         private const val TAG_URL_SEGMENTS = 2
+
+        // Applink URL segment positions (for jetpack://read/feeds/{feedId}/posts/{postId})
+        private const val APPLINK_FEEDS_PATH_POSITION = 0
+        private const val APPLINK_POSTS_PATH_POSITION = 2
+        private const val APPLINK_POST_URL_SEGMENTS = 4
     }
 }
