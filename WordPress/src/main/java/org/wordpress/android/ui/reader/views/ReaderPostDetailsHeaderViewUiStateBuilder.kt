@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.views
 
 import dagger.Reusable
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.ReaderPostTagsUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
@@ -16,7 +15,6 @@ import javax.inject.Inject
 
 @Reusable
 class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
-    private val accountStore: AccountStore,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
     private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
@@ -25,7 +23,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
     ): ReaderPostDetailsHeaderUiState {
-        val hasAccessToken = accountStore.hasAccessToken()
         val textTitle = post
             .takeIf { post.hasTitle() }
             ?.title?.let { UiStringText(it) }
@@ -44,7 +41,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             ),
             followButtonUiState = buildFollowButtonUiState(
                 post,
-                hasAccessToken,
                 onFollowClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.FollowClicked) }
             ),
             dateLine = buildDateLine(post),
@@ -68,14 +64,13 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
 
     private fun buildFollowButtonUiState(
         post: ReaderPost,
-        hasAccessToken: Boolean,
         onFollowClicked: () -> Unit
     ): FollowButtonUiState {
         return FollowButtonUiState(
             onFollowButtonClicked = onFollowClicked,
             isFollowed = post.isFollowedByCurrentUser,
-            isEnabled = hasAccessToken,
-            isVisible = hasAccessToken
+            isEnabled = true,
+            isVisible = true
         )
     }
 

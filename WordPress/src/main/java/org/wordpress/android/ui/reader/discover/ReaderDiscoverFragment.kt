@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import org.wordpress.android.BuildConfig
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +23,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
+import org.wordpress.android.ui.reader.ReaderLoginRequiredBottomSheetFragment
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_POST_CARD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
@@ -40,7 +40,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReade
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSignIn
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowLoginRequiredBottomSheet
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -222,16 +222,13 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             OpenUrlType.INTERNAL
         )
         is ShowReaderSubs -> ReaderActivityLauncher.showReaderSubs(requireActivity())
-        is ShowSignIn -> navigateToLogin()
+        is ShowLoginRequiredBottomSheet -> showLoginRequiredBottomSheet()
         else -> Unit // Do Nothing
     }
 
-    private fun navigateToLogin() {
-        if (BuildConfig.IS_JETPACK_APP) {
-            ActivityLauncher.showSignInForResultJetpackOnly(requireActivity())
-        } else {
-            ActivityLauncher.showSignInForResultWpComOnly(requireActivity())
-        }
+    private fun showLoginRequiredBottomSheet() {
+        ReaderLoginRequiredBottomSheetFragment.newInstance()
+            .show(childFragmentManager, ReaderLoginRequiredBottomSheetFragment.TAG)
     }
 
     private fun showBookmarkSavedLocallyDialog(bookmarkDialog: ShowBookmarkedSavedOnlyLocallyDialog) {

@@ -2819,6 +2819,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
     }
 
+    override fun onFollowTappedWhenLoggedOut() {
+        ReaderLoginRequiredBottomSheetFragment.newInstance()
+            .show(childFragmentManager, ReaderLoginRequiredBottomSheetFragment.TAG)
+    }
+
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSubscriptionUpdated(event: OnSubscriptionUpdated) {

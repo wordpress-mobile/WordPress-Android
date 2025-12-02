@@ -35,6 +35,8 @@ public class ReaderInterfaces {
         void onFollowTapped(View view, String blogName, long blogId, long feedId);
 
         void onFollowingTapped();
+
+        void onFollowTappedWhenLoggedOut();
     }
 
     /*

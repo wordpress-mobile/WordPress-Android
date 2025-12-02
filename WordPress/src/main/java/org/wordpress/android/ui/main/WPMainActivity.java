@@ -247,6 +247,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public static final String ARG_IS_CHANGING_CONFIGURATION = "IS_CHANGING_CONFIGURATION";
     public static final String ARG_BYPASS_MIGRATION = "bypass_migration";
     public static final String ARG_MEDIA = "show_media";
+    public static final String ARG_ME = "show_me";
     public static final String ARG_OPEN_PAGE_MESSAGE = "open_page_message";
     private boolean mIsChangingConfiguration = false;
     private WPMainNavigationView mBottomNav;
@@ -955,6 +956,9 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                         initSelectedSite();
                     }
                     mActivityNavigator.viewCurrentBlogMedia(this, getSelectedSite());
+                    break;
+                case ARG_ME:
+                    if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.ME);
                     break;
             }
         } else {

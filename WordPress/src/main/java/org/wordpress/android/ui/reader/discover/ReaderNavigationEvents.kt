@@ -69,5 +69,5 @@ sealed class ReaderNavigationEvents {
     ) : ReaderNavigationEvents()
 
     data object ShowReadingPreferences : ReaderNavigationEvents()
-    data object ShowSignIn : ReaderNavigationEvents()
+    data object ShowLoginRequiredBottomSheet : ReaderNavigationEvents()
 }
