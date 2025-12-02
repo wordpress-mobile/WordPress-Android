@@ -1,2 +1,3 @@
-- The app icon now comes in a single-color option to match the other themed icons on your device. #aesthetic
-- Large, high-resolution images are more likely to load (but they might still take a few seconds).
+- The app icon has a single-color option to match your device’s other themed icons. #aesthetic
+- Large, high-resolution images are more likely to load (but might take a few seconds).
+- We removed HTML tags from the Reader comment editor and fixed the “Subscribe” button.
