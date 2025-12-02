@@ -5197,6 +5197,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_download_video_button">Download Video</string>
 
     <!-- HE Support - New Ticket Screen -->
+    <string name="he_support_contact_support_title_test">Add for testing purposes only</string>
     <string name="he_support_contact_support_title">Contact Support</string>
     <string name="he_support_need_help_with">I need help with</string>
     <string name="he_support_category_application">Application</string>
@@ -5214,5 +5215,4 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_contact_email_message">We\'ll email you at this address.</string>
     <string name="he_support_send_ticket_button">Send</string>
     <string name="he_support_generic_error">An error occurred. Please try again later.</string>
-    <string name="he_support_forbidden_error">Sorry, you are not allowed to perform this action.</string>
 </resources>
