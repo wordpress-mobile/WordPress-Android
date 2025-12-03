@@ -280,7 +280,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     private void setFollowButtonLoading(boolean isLoading) {
         mFollowButton.setIsLoading(isLoading);
-        mFollowProgress.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        if (mFollowProgress != null) {
+            mFollowProgress.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void toggleFollowStatus(final View followButton, final String source) {
