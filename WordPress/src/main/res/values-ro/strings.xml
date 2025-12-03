@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-11-24 10:02:19+0000
+Translation-Revision-Date: 2025-12-03 16:46:16+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: ro
@@ -60,11 +60,11 @@ Language: ro
     <string name="he_support_new_conversation_content_description">Conversație nouă</string>
     <string name="he_support_conversations_title">Conversații cu suportul</string>
     <string name="ai_bot_time_weeks_ago">Acum %1$d săptămâni</string>
-    <string name="ai_bot_time_week_ago">Acum o săptămână</string>
+    <string name="ai_bot_time_week_ago">Acum %1$d săptămână</string>
     <string name="ai_bot_time_days_ago">Acum %1$d zile</string>
-    <string name="ai_bot_time_day_ago">Acum o zi</string>
+    <string name="ai_bot_time_day_ago">Acum %1$d zi</string>
     <string name="ai_bot_time_hours_ago">Acum %1$d ore</string>
-    <string name="ai_bot_time_hour_ago">Acum o oră</string>
+    <string name="ai_bot_time_hour_ago">Acum %1$d oră</string>
     <string name="ai_bot_time_minutes_ago">Acum %1$d minute</string>
     <string name="ai_bot_time_minute_ago">Acum %1$d minut</string>
     <string name="ai_bot_time_just_now">Chiar acum</string>
