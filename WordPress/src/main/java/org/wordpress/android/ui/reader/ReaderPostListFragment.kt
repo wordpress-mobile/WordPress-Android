@@ -811,6 +811,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             intent.putExtra(ReaderTagsFeedFragment.RESULT_SHOULD_REFRESH_TAGS_FEED, true)
             activity.setResult(Activity.RESULT_OK, intent)
         }
+        if (activity is OnBlogInfoFailedListener) {
+            readerPostAdapter!!.setOnBlogInfoFailedListener(activity as OnBlogInfoFailedListener?)
+        }
     }
 
     private fun initReaderSubsActivityResultLauncher() {
@@ -836,7 +839,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     override fun onDetach() {
         super.onDetach()
         bottomNavController = null
-        readerPostAdapter?.setOnBlogInfoLoadedListener(null)
         readerPostAdapter?.setOnBlogInfoFailedListener(null)
     }
 
@@ -2031,9 +2033,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             readerPostAdapter!!.setOnDataRequestedListener(dataRequestedListener)
             if (activity is OnBlogInfoLoadedListener) {
                 readerPostAdapter!!.setOnBlogInfoLoadedListener(activity as OnBlogInfoLoadedListener?)
-            }
-            if (activity is OnBlogInfoFailedListener) {
-                readerPostAdapter!!.setOnBlogInfoFailedListener(activity as OnBlogInfoFailedListener?)
             }
             if (getPostListType().isTagType) {
                 readerPostAdapter!!.setCurrentTag(currentTag)
