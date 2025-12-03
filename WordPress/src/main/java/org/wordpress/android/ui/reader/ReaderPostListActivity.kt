@@ -33,6 +33,7 @@ import org.wordpress.android.ui.posts.EditorConstants
 import org.wordpress.android.ui.posts.EditorLauncher
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoFailedListener
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
@@ -44,7 +45,7 @@ import javax.inject.Inject
 * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
 */
 @AndroidEntryPoint
-class ReaderPostListActivity : BaseAppCompatActivity() {
+class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener {
     private var source: String? = null
     private var postListType: ReaderPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE
     private var siteId: Long = 0
@@ -333,6 +334,11 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
      * Returns the view to attach the snackbar to. Note that this view isn't part of this activity.
      */
     private fun getSnackbarAttachView(): View? = findViewById(R.id.coordinator)
+
+    override fun onBlogInfoFailed() {
+        ToastUtils.showToast(this, R.string.reader_toast_err_follow_blog_could_not_be_found)
+        finish()
+    }
 
     @Deprecated("Deprecated in Java")
     @Suppress("NestedBlockDepth")

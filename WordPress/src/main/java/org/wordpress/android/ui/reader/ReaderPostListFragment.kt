@@ -127,6 +127,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoFailedListener
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoLoadedListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
@@ -2028,6 +2029,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             readerPostAdapter!!.setOnDataRequestedListener(dataRequestedListener)
             if (activity is OnBlogInfoLoadedListener) {
                 readerPostAdapter!!.setOnBlogInfoLoadedListener(activity as OnBlogInfoLoadedListener?)
+            }
+            if (activity is OnBlogInfoFailedListener) {
+                readerPostAdapter!!.setOnBlogInfoFailedListener(activity as OnBlogInfoFailedListener?)
             }
             if (getPostListType().isTagType) {
                 readerPostAdapter!!.setCurrentTag(currentTag)

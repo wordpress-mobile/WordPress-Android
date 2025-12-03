@@ -53,6 +53,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
         void onBlogInfoLoaded(ReaderBlog blogInfo);
     }
 
+    public interface OnBlogInfoFailedListener {
+        void onBlogInfoFailed();
+    }
+
     private long mBlogId;
     private long mFeedId;
     private boolean mIsFeed;
@@ -61,6 +65,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     @Nullable private ProgressBar mFollowProgress;
     private ReaderBlog mBlogInfo;
     private OnBlogInfoLoadedListener mBlogInfoListener;
+    private OnBlogInfoFailedListener mBlogInfoFailedListener;
     private OnFollowListener mFollowListener;
 
     private final ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
@@ -100,6 +105,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
         mBlogInfoListener = listener;
     }
 
+    public void setOnBlogInfoFailedListener(OnBlogInfoFailedListener listener) {
+        mBlogInfoFailedListener = listener;
+    }
+
     public void loadBlogInfo(
             final long blogId,
             final long feedId,
@@ -110,6 +119,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         if (blogId == 0 && feedId == 0) {
             ToastUtils.showToast(getContext(), R.string.reader_toast_err_show_blog);
+            if (mBlogInfoFailedListener != null) {
+                mBlogInfoFailedListener.onBlogInfoFailed();
+            }
             return;
         }
 
@@ -132,7 +144,12 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 if (localBlogInfo == null || ReaderBlogTable.isTimeToUpdateBlogInfo(localBlogInfo)) {
                     ReaderActions.UpdateBlogInfoListener listener = serverBlogInfo -> {
                         if (isAttachedToWindow()) {
-                            showBlogInfo(serverBlogInfo, source);
+                            if (serverBlogInfo != null) {
+                                showBlogInfo(serverBlogInfo, source);
+                            } else if (localBlogInfo == null && mBlogInfoFailedListener != null) {
+                                // No local info and server returned null - blog/feed not found
+                                mBlogInfoFailedListener.onBlogInfoFailed();
+                            }
                         }
                     };
 
