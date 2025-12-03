@@ -37,6 +37,8 @@ import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoFail
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
+import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.onBackPressedCompat
 import javax.inject.Inject
@@ -71,6 +73,9 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
 
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Inject
+    lateinit var appLogWrapper: AppLogWrapper
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -336,7 +341,8 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
     private fun getSnackbarAttachView(): View? = findViewById(R.id.coordinator)
 
     override fun onBlogInfoFailed() {
-        ToastUtils.showToast(this, R.string.reader_toast_err_follow_blog_could_not_be_found)
+        appLogWrapper.d(AppLog.T.READER, "Blog or feed not found for siteId: $siteId")
+        ToastUtils.showToast(this, R.string.reader_toast_err_blog_not_found)
         finish()
     }
 
