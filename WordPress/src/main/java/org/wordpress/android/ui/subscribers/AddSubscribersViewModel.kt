@@ -47,7 +47,8 @@ class AddSubscribersViewModel @Inject constructor(
         WpComApiClient(
             WpAuthenticationProvider.staticWithAuth(
                 WpAuthentication.Bearer(token = accountStore.accessToken!!)
-            )
+            ),
+            interceptors = emptyList()
         )
     }
 

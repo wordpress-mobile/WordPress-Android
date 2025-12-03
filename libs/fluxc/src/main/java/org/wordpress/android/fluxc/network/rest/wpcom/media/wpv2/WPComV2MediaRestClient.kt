@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComNetwork
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -19,7 +20,7 @@ import javax.inject.Singleton
 class WPComV2MediaRestClient @Inject constructor(
     dispatcher: Dispatcher,
     coroutineEngine: CoroutineEngine,
-    @Named("regular") okHttpClient: OkHttpClient,
+    @Named(OkHttpClientQualifiers.REGULAR) okHttpClient: OkHttpClient,
     private val accessToken: AccessToken,
     private val wpComNetwork: WPComNetwork
 ) : BaseWPV2MediaRestClient(dispatcher, coroutineEngine, okHttpClient) {

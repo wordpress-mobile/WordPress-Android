@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.network.toVolleyMethod
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.AppLog
 import java.util.Optional
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -28,7 +29,7 @@ private const val UNAUTHORIZED = 401
 
 @Singleton
 class ApplicationPasswordsNetwork @Inject constructor(
-    @Named("no-cookies") private val requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.NO_COOKIES) private val requestQueue: RequestQueue,
     private val userAgent: UserAgent,
     private val listener: Optional<ApplicationPasswordsListener>
 ) {

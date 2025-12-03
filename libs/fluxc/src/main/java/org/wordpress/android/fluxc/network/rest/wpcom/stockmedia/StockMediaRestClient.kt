@@ -28,6 +28,7 @@ import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.UrlUtils
 import java.util.HashMap
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -38,7 +39,7 @@ class StockMediaRestClient @Inject constructor(
     private val mediaResponseUtils: MediaResponseUtils,
     dispatcher: Dispatcher,
     appContext: Context?,
-    @Named("regular") requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.REGULAR) requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {

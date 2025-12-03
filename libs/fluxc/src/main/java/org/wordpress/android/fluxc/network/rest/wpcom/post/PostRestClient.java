@@ -61,6 +61,7 @@ import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -82,7 +83,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
     @Inject public PostRestClient(Context appContext,
                                   Dispatcher dispatcher,
-                                  @Named("regular") RequestQueue requestQueue,
+                                  @Named(OkHttpClientQualifiers.REGULAR) RequestQueue requestQueue,
                                   AccessToken accessToken,
                                   UserAgent userAgent,
                                   LikesUtilsProvider likesUtilsProvider) {

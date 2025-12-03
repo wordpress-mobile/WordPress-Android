@@ -53,6 +53,7 @@ import org.wordpress.android.fluxc.utils.NetworkErrorMapper
 import org.wordpress.android.fluxc.utils.TimeZoneProvider
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -63,7 +64,7 @@ class ActivityLogRestClient @Inject constructor(
     private val timeZoneProvider: TimeZoneProvider,
     dispatcher: Dispatcher,
     appContext: Context?,
-    @Named("regular") requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.REGULAR) requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {

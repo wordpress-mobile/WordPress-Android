@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -21,7 +22,7 @@ class MobilePayRestClient @Inject constructor(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     appContext: Context?,
     dispatcher: Dispatcher,
-    @Named("regular") requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.REGULAR) requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {

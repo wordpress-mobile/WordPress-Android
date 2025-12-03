@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.store.PluginCoroutineStore.WPApiPluginsPayload
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -22,7 +23,7 @@ class PluginWPAPIRestClient @Inject constructor(
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     private val cookieNonceAuthenticator: CookieNonceAuthenticator,
     dispatcher: Dispatcher,
-    @Named("custom-ssl") requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL) requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     suspend fun fetchPlugins(

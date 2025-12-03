@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.PluginDirectoryError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -46,7 +47,7 @@ import javax.inject.Singleton;
 @Singleton
 public class PluginRestClient extends BaseWPComRestClient {
     @Inject public PluginRestClient(Context appContext, Dispatcher dispatcher,
-                            @Named("regular") RequestQueue requestQueue,
+                            @Named(OkHttpClientQualifiers.REGULAR) RequestQueue requestQueue,
                             AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }

@@ -935,7 +935,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ShowPostDetail,
             is ReaderNavigationEvents.ShowVideoViewer,
             is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
+            is ReaderNavigationEvents.ShowLoginRequiredBottomSheet -> showLoginRequiredBottomSheet()
         }
+    }
+
+    private fun showLoginRequiredBottomSheet() {
+        ReaderLoginRequiredBottomSheetFragment.newInstance()
+            .show(childFragmentManager, ReaderLoginRequiredBottomSheetFragment.TAG)
     }
 
     private fun updateFeaturedImage(

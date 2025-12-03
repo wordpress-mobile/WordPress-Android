@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError;
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType;
 import org.wordpress.android.fluxc.utils.extensions.SiteModelExtensionsKt;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ import javax.inject.Singleton;
 public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
     @Inject public TaxonomyXMLRPCClient(
             Dispatcher dispatcher,
-            @Named("custom-ssl") RequestQueue requestQueue,
+            @Named(OkHttpClientQualifiers.CUSTOM_SSL) RequestQueue requestQueue,
             UserAgent userAgent,
             HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);

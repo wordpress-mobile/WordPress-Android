@@ -702,6 +702,8 @@
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the block editor</string>
+    <string name="site_settings_use_theme_styles">Use Theme Styles</string>
+    <string name="site_settings_use_theme_styles_summary">Make the block editor look like your theme</string>
     <string name="site_settings_password_updated">Password updated</string>
     <string name="site_settings_update_password_message">To reconnect the app to your self-hosted site, enter the site\'s new password here.</string>
     <string name="site_settings_homepage_settings">Homepage Settings</string>
@@ -971,8 +973,6 @@
     <string name="experimental_block_editor_note">Experimental block editor will become the default in a future release and the ability to disable it will be removed.</string>
     <string name="experimental_block_editor">Experimental block editor</string>
     <string name="experimental_block_editor_description">Access additional block types and settings</string>
-    <string name="experimental_block_editor_theme_styles">Experimental block editor styles</string>
-    <string name="experimental_block_editor_theme_styles_description">Apply theme styles to the editor</string>
     <string name="experimental_block_editor_plugins">Experimental block editor plugins</string>
     <string name="experimental_features_feedback_dialog_title">Share feedback</string>
     <string name="experimental_features_feedback_dialog_message">Are you willing to share feedback on the experimental editor?</string>
@@ -981,6 +981,8 @@
     <string name="experimental_subscribers_feature_description">View and manage newsletter subscribers</string>
     <string name="experimental_application_password_feature">Application Password log in</string>
     <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites</string>
+    <string name="modern_support">Modern Support</string>
+    <string name="modern_support_description">Enable the new modern support experience</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>
@@ -2624,6 +2626,23 @@
     <string name="support_identity_input_dialog_enter_email">Please enter your email address</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_name_label">Name</string>
+    <string name="support_screen_title">Support</string>
+    <string name="support_screen_profile_section_title">Support Profile</string>
+    <string name="support_screen_login_button">Log into WordPress.com</string>
+    <string name="support_screen_how_can_we_help_title">How can we help?</string>
+    <string name="support_screen_help_center_title">Help Center</string>
+    <string name="support_screen_help_center_description">Documentation and Tutorials to help you get started</string>
+    <string name="support_screen_ask_bots_title">Ask the bots</string>
+    <string name="support_screen_ask_bots_description">Get quick answers to common questions</string>
+    <string name="support_screen_ask_happiness_engineers_title">Ask the Happiness Engineers</string>
+    <string name="support_screen_ask_happiness_engineers_description">For your tough questions. We\'ll reply via email</string>
+    <string name="support_screen_diagnostics_section_title">Diagnostics</string>
+    <string name="support_screen_application_logs_title">Application Logs</string>
+    <string name="support_screen_application_logs_description">Advanced tool to debug issues</string>
+    <string name="support_screen_user_avatar_content_description">User avatar</string>
+    <string name="logs_screen_empty_state">No logs available</string>
+    <string name="logs_screen_log_count">%d log entries</string>
+    <string name="logs_screen_general_error">Something went wrong…</string>
 
     <!--Me-->
     <string name="me_profile_photo">Profile Photo</string>
@@ -5074,6 +5093,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_info_description_3">You can view and manage these passwords in your user profile within your WordPress site\'s admin panel.</string>
     <string name="application_password_info_description_4">Please note that revoking application passwords used by the app will terminate the app\'s access to your site. Be cautious when revoking application passwords created by the app.</string>
     <string name="enable">Enable</string>
+    <string name="create">Create</string>
     <string name="application_password_never_used">Never used</string>
     <string name="application_password_name_label">Name:</string>
     <string name="application_password_created_label">Created:</string>
@@ -5102,4 +5122,94 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="add_term">Add term</string>
     <string name="error_saving_term">There was an error saving the term</string>
     <string name="error_deleting_term">There was an error deleting the term</string>
+
+    <!-- AI Bot Support - Conversations List Screen -->
+    <string name="ai_bot_conversations_title">Conversations</string>
+    <string name="ai_bot_back_button_content_description">Back</string>
+    <string name="ai_bot_new_conversation_content_description">New conversation</string>
+    <string name="ai_bot_generic_error">Something went wrong. Please try again later.</string>
+    <string name="ai_bot_empty_conversations_title">No conversations yet</string>
+    <string name="ai_bot_empty_conversations_message">Start a new conversation to get help with your WordPress site or account.</string>
+    <string name="ai_bot_empty_conversations_button">Start conversation</string>
+    <string name="ai_bot_you">You</string>
+    <string name="ai_bot_support_bot">Support Bot</string>
+
+    <!-- AI Bot Support - Conversation Detail Screen -->
+    <string name="ai_bot_send_button_content_description">Send</string>
+    <string name="ai_bot_message_input_placeholder">Type a message…</string>
+
+    <!-- AI Bot Support - Welcome Header -->
+    <string name="ai_bot_welcome_greeting">Howdy %1$s 👋</string>
+    <string name="ai_bot_welcome_message">I\'m your personal AI assistant. I can help with any questions about your site or account.</string>
+
+    <!-- AI Bot Support - Conversation Utils -->
+    <string name="ai_bot_default_conversation_title">New Conversation</string>
+    <string name="ai_bot_time_just_now">Just now</string>
+    <string name="ai_bot_time_minute_ago">%1$d minute ago</string>
+    <string name="ai_bot_time_minutes_ago">%1$d minutes ago</string>
+    <string name="ai_bot_time_hour_ago">%1$d hour ago</string>
+    <string name="ai_bot_time_hours_ago">%1$d hours ago</string>
+    <string name="ai_bot_time_day_ago">%1$d day ago</string>
+    <string name="ai_bot_time_days_ago">%1$d days ago</string>
+    <string name="ai_bot_time_week_ago">%1$d week ago</string>
+    <string name="ai_bot_time_weeks_ago">%1$d weeks ago</string>
+
+    <!-- HE Support - Conversations List Screen -->
+    <string name="he_support_conversations_title">Support Conversations</string>
+    <string name="he_support_new_conversation_content_description">New conversation</string>
+    <string name="he_support_empty_conversations_title">No conversations yet</string>
+    <string name="he_support_empty_conversations_message">Start a conversation with our support team to get help with your questions.</string>
+    <string name="he_support_empty_conversations_button">Start Conversation</string>
+
+    <!-- HE Support - Conversation Detail Screen -->
+    <string name="he_support_message_count">%1$d Messages</string>
+    <string name="he_support_last_updated">Last updated %1$s</string>
+    <string name="he_support_reply_button">Reply</string>
+    <string name="he_support_send_button">Send</string>
+    <string name="he_support_message_label">Message</string>
+    <string name="he_support_downloading_attachment">Downloading %1$s…</string>
+    <string name="he_support_loading_image">Loading image</string>
+    <string name="he_support_attachment_image">Attachment image</string>
+    <string name="he_support_failed_to_load_image">Failed to load image</string>
+    <string name="he_support_screenshots_label">Screenshots (Optional)</string>
+    <string name="he_support_screenshots_description">Adding screenshots can help us understand and resolve your issue faster.</string>
+    <string name="he_support_add_screenshots_button">Add Screenshots</string>
+    <string name="he_support_screenshot_preview">Screenshot preview</string>
+    <string name="he_support_remove_screenshot">Remove screenshot</string>
+    <string name="he_support_attachment_size_label">Attachment limit: %1$s of %2$s</string>
+    <string name="he_support_skipped_files_header">Skipped Files: %1$s</string>
+    <string name="he_support_app_logs_label">Application Logs (Optional)</string>
+    <string name="he_support_include_logs_title">Include application logs</string>
+    <string name="he_support_include_logs_description">Including logs can help our team investigate issues. Logs may contain recent app activity.</string>
+    <string name="he_support_download_attachment">Download attachment</string>
+    <string name="he_support_select_attachments">Select attachments</string>
+    <string name="he_support_status_waiting_for_support">Waiting for Support</string>
+    <string name="he_support_status_waiting_for_user">Waiting for User</string>
+    <string name="he_support_status_solved">Solved</string>
+    <string name="he_support_status_closed">Closed</string>
+    <string name="he_support_status_unknown">Unknown</string>
+    <string name="he_support_conversation_closed_message">This conversation is closed. You can no longer reply to it.</string>
+    <string name="he_support_video_playback_error_title">Unable to play video</string>
+    <string name="he_support_video_playback_error_message">This video cannot be played inline. Please download it to view.</string>
+    <string name="he_support_download_video_button">Download Video</string>
+
+    <!-- HE Support - New Ticket Screen -->
+    <string name="he_support_contact_support_title">Contact Support</string>
+    <string name="he_support_need_help_with">I need help with</string>
+    <string name="he_support_category_application">Application</string>
+    <string name="he_support_category_jetpack_connection">Jetpack Connection</string>
+    <string name="he_support_category_site_management">Site Management</string>
+    <string name="he_support_category_billing">Billing &amp; Subscriptions</string>
+    <string name="he_support_category_technical_issues">Technical Issues</string>
+    <string name="he_support_category_other">Other</string>
+    <string name="he_support_issue_details">Issue Details</string>
+    <string name="he_support_subject_label">Subject</string>
+    <string name="he_support_subject_placeholder">Brief summary of your issue</string>
+    <string name="he_support_site_address_label">Site Address (Optional)</string>
+    <string name="he_support_site_address_placeholder">https://yoursite.com</string>
+    <string name="he_support_contact_information">Contact Information</string>
+    <string name="he_support_contact_email_message">We\'ll email you at this address.</string>
+    <string name="he_support_send_ticket_button">Send</string>
+    <string name="he_support_generic_error">An error occurred. Please try again later.</string>
+    <string name="he_support_forbidden_error">Sorry, you are not allowed to perform this action.</string>
 </resources>

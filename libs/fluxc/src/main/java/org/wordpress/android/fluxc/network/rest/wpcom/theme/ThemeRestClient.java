@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.store.ThemeStore.FetchedStarterDesignsPayload
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedWpComThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
@@ -49,7 +50,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
     @Inject public ThemeRestClient(
             Context appContext,
             Dispatcher dispatcher,
-            @Named("regular") RequestQueue requestQueue,
+            @Named(OkHttpClientQualifiers.REGULAR) RequestQueue requestQueue,
             AccessToken accessToken,
             UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
