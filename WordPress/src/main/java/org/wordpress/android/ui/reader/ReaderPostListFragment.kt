@@ -836,6 +836,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     override fun onDetach() {
         super.onDetach()
         bottomNavController = null
+        readerPostAdapter?.setOnBlogInfoLoadedListener(null)
+        readerPostAdapter?.setOnBlogInfoFailedListener(null)
     }
 
     override fun onStart() {
