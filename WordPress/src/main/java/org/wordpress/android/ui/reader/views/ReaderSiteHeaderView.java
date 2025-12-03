@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.R;
@@ -34,6 +35,7 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 
+import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -65,7 +67,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     @Nullable private ProgressBar mFollowProgress;
     private ReaderBlog mBlogInfo;
     private OnBlogInfoLoadedListener mBlogInfoListener;
-    private OnBlogInfoFailedListener mBlogInfoFailedListener;
+    @Nullable private WeakReference<OnBlogInfoFailedListener> mBlogInfoFailedListenerRef;
     private OnFollowListener mFollowListener;
 
     private final ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
@@ -105,8 +107,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
         mBlogInfoListener = listener;
     }
 
-    public void setOnBlogInfoFailedListener(OnBlogInfoFailedListener listener) {
-        mBlogInfoFailedListener = listener;
+    public void setOnBlogInfoFailedListener(@NonNull OnBlogInfoFailedListener listener) {
+        mBlogInfoFailedListenerRef = new WeakReference<>(listener);
     }
 
     public void loadBlogInfo(
@@ -119,8 +121,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         if (blogId == 0 && feedId == 0) {
             ToastUtils.showToast(getContext(), R.string.reader_toast_err_show_blog);
-            if (mBlogInfoFailedListener != null) {
-                mBlogInfoFailedListener.onBlogInfoFailed();
+            OnBlogInfoFailedListener failedListener =
+                    mBlogInfoFailedListenerRef != null ? mBlogInfoFailedListenerRef.get() : null;
+            if (failedListener != null) {
+                failedListener.onBlogInfoFailed();
             }
             return;
         }
@@ -146,9 +150,14 @@ public class ReaderSiteHeaderView extends LinearLayout {
                         if (isAttachedToWindow()) {
                             if (serverBlogInfo != null) {
                                 showBlogInfo(serverBlogInfo, source);
-                            } else if (localBlogInfo == null && mBlogInfoFailedListener != null) {
+                            } else if (localBlogInfo == null) {
                                 // No local info and server returned null - blog/feed not found
-                                mBlogInfoFailedListener.onBlogInfoFailed();
+                                OnBlogInfoFailedListener failedListener =
+                                        mBlogInfoFailedListenerRef != null
+                                                ? mBlogInfoFailedListenerRef.get() : null;
+                                if (failedListener != null) {
+                                    failedListener.onBlogInfoFailed();
+                                }
                             }
                         }
                     };
@@ -340,11 +349,5 @@ public class ReaderSiteHeaderView extends LinearLayout {
             setFollowButtonLoading(false);
             mFollowButton.setIsFollowed(!isAskingToFollow);
         }
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        mBlogInfoFailedListener = null;
     }
 }
