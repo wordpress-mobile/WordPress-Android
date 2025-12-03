@@ -66,9 +66,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private ReaderFollowButton mFollowButton;
     @Nullable private ProgressBar mFollowProgress;
     private ReaderBlog mBlogInfo;
-    private OnBlogInfoLoadedListener mBlogInfoListener;
+    @Nullable private WeakReference<OnBlogInfoLoadedListener> mBlogInfoListenerRef;
     @Nullable private WeakReference<OnBlogInfoFailedListener> mBlogInfoFailedListenerRef;
-    private OnFollowListener mFollowListener;
+    @Nullable private WeakReference<OnFollowListener> mFollowListenerRef;
 
     private final ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
@@ -99,16 +99,16 @@ public class ReaderSiteHeaderView extends LinearLayout {
         view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
-    public void setOnFollowListener(OnFollowListener listener) {
-        mFollowListener = listener;
+    public void setOnFollowListener(@Nullable OnFollowListener listener) {
+        mFollowListenerRef = listener != null ? new WeakReference<>(listener) : null;
     }
 
-    public void setOnBlogInfoLoadedListener(OnBlogInfoLoadedListener listener) {
-        mBlogInfoListener = listener;
+    public void setOnBlogInfoLoadedListener(@Nullable OnBlogInfoLoadedListener listener) {
+        mBlogInfoListenerRef = listener != null ? new WeakReference<>(listener) : null;
     }
 
-    public void setOnBlogInfoFailedListener(@NonNull OnBlogInfoFailedListener listener) {
-        mBlogInfoFailedListenerRef = new WeakReference<>(listener);
+    public void setOnBlogInfoFailedListener(@Nullable OnBlogInfoFailedListener listener) {
+        mBlogInfoFailedListenerRef = listener != null ? new WeakReference<>(listener) : null;
     }
 
     public void loadBlogInfo(
@@ -239,8 +239,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
             layoutInfo.setVisibility(View.VISIBLE);
         }
 
-        if (mBlogInfoListener != null) {
-            mBlogInfoListener.onBlogInfoLoaded(blogInfo);
+        OnBlogInfoLoadedListener blogInfoListener =
+                mBlogInfoListenerRef != null ? mBlogInfoListenerRef.get() : null;
+        if (blogInfoListener != null) {
+            blogInfoListener.onBlogInfoLoaded(blogInfo);
         }
     }
 
@@ -298,15 +300,17 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         mFollowButton.setIsFollowed(isAskingToFollow);
 
-        if (mFollowListener != null) {
+        OnFollowListener followListener =
+                mFollowListenerRef != null ? mFollowListenerRef.get() : null;
+        if (followListener != null) {
             if (isAskingToFollow) {
-                mFollowListener.onFollowTapped(
+                followListener.onFollowTapped(
                         followButton,
                         mBlogInfo.getName(),
                         mIsFeed ? 0 : mBlogInfo.blogId,
                         mBlogInfo.feedId);
             } else {
-                mFollowListener.onFollowingTapped();
+                followListener.onFollowingTapped();
             }
         }
 
