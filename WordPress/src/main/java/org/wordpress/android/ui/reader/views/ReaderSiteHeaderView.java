@@ -341,4 +341,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
             mFollowButton.setIsFollowed(!isAskingToFollow);
         }
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mBlogInfoFailedListener = null;
+    }
 }
