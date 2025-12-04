@@ -95,47 +95,16 @@ fun HENewTicketScreen(
             )
         },
         bottomBar = {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding(),
-                color = MaterialTheme.colorScheme.surface,
-                shadowElevation = 8.dp
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .imePadding()
-                        .padding(16.dp)
-                ) {
-                    Button(
-                        onClick = {
-                            selectedCategory?.let { category ->
-                                onSubmit(category, subject, messageText, siteAddress)
-                            }
-                        },
-                        enabled = selectedCategory != null && subject.isNotBlank() && 
-                            messageText.isNotBlank() && !isSendingNewConversation,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(52.dp),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        if (isSendingNewConversation) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(20.dp),
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        } else {
-                            Text(
-                                text = stringResource(R.string.he_support_send_button),
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
+            SendButton(
+                enabled = selectedCategory != null && subject.isNotBlank() && messageText.isNotBlank(),
+                isLoading = isSendingNewConversation,
+                onClick = {
+                    selectedCategory?.let { category ->
+                        onSubmit(category, subject, messageText, siteAddress)
                     }
-                }
-            }
+                },
+                modifier = Modifier.navigationBarsPadding()
+            )
         }
     ) { contentPadding ->
         Column(
@@ -270,10 +239,11 @@ private fun SectionHeader(
 private fun SendButton(
     enabled: Boolean,
     isLoading: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surface,
         shadowElevation = 8.dp
     ) {
