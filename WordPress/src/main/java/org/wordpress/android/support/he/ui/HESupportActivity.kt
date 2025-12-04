@@ -168,13 +168,6 @@ class HESupportActivity : AppCompatActivity() {
                 }
 
                 composable(route = ConversationScreen.Detail.name) {
-                    // Clear attachments when leaving conversation screen
-                    androidx.compose.runtime.DisposableEffect(Unit) {
-                        onDispose {
-                            viewModel.clearAttachments()
-                        }
-                    }
-
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
@@ -189,7 +182,10 @@ class HESupportActivity : AppCompatActivity() {
                             isLoading = isLoadingConversation,
                             isSendingMessage = isSendingMessage,
                             messageSendResult = messageSendResult,
-                            onBackClick = { viewModel.onBackClick() },
+                            onBackClick = {
+                                viewModel.clearAttachments()
+                                viewModel.onBackClick()
+                            },
                             onSendMessage = { message, includeAppLogs ->
                                 viewModel.onAddMessageToConversation(
                                     message = message,
@@ -227,16 +223,13 @@ class HESupportActivity : AppCompatActivity() {
                     val isSendingNewConversation by viewModel.isSendingMessage.collectAsState()
                     val attachmentState by viewModel.attachmentState.collectAsState()
 
-                    // Clear attachments when leaving the new ticket screen
-                    androidx.compose.runtime.DisposableEffect(Unit) {
-                        onDispose {
-                            viewModel.clearAttachments()
-                        }
-                    }
-
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
-                        onBackClick = { viewModel.onBackClick() },
+                        onBackClick = {
+                            viewModel.clearAttachments()
+                            viewModel.clearNewTicketForm()
+                            viewModel.onBackClick()
+                        },
                         onSubmit = { category, subject, message, site ->
                             viewModel.onSendNewConversation(
                                 subject = subject,
