@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -94,15 +95,47 @@ fun HENewTicketScreen(
             )
         },
         bottomBar = {
-            SendButton(
-                enabled = selectedCategory != null && subject.isNotBlank() && messageText.isNotBlank(),
-                isLoading = isSendingNewConversation,
-                onClick = {
-                    selectedCategory?.let { category ->
-                        onSubmit(category, subject, messageText, siteAddress)
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding(),
+                color = MaterialTheme.colorScheme.surface,
+                shadowElevation = 8.dp
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .imePadding()
+                        .padding(16.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            selectedCategory?.let { category ->
+                                onSubmit(category, subject, messageText, siteAddress)
+                            }
+                        },
+                        enabled = selectedCategory != null && subject.isNotBlank() && 
+                            messageText.isNotBlank() && !isSendingNewConversation,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        if (isSendingNewConversation) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        } else {
+                            Text(
+                                text = stringResource(R.string.he_support_send_button),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                 }
-            )
+            }
         }
     ) { contentPadding ->
         Column(

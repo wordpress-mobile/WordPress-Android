@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -175,6 +176,7 @@ fun AttachmentFullscreenVideoPlayer(
             Row(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
+                    .systemBarsPadding()
                     .padding(16.dp)
                     .background(
                         color = Color.Black.copy(alpha = 0.5f),
