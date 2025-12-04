@@ -228,10 +228,10 @@
     <string name="media_empty_list">You don\'t have any media - yet!</string>
     <string name="media_empty_list_subtitle">Why not upload something?</string>
     <string name="media_empty_search_list">No media matching your search</string>
-    <string name="media_empty_image_list">You don\'t have any images</string>
-    <string name="media_empty_videos_list">You don\'t have any videos</string>
-    <string name="media_empty_documents_list">You don\'t have any documents</string>
-    <string name="media_empty_audio_list">You don\'t have any audio</string>
+    <string name="media_empty_image_list">You don\'t have any images - yet!</string>
+    <string name="media_empty_videos_list">You don\'t have any videos - yet!</string>
+    <string name="media_empty_documents_list">You don\'t have any documents - yet!</string>
+    <string name="media_empty_audio_list">You don\'t have any audio - yet!</string>
     <string name="media_empty_upload_media">Upload media</string>
     <string name="delete">Delete</string>
     <string name="confirm_delete_media_image">Delete this image?</string>
