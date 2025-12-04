@@ -1854,7 +1854,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         val tint = requireContext().getColorFromAttribute(MaterialR.attr.colorOnBackground)
         drawable?.setTint(tint)
-        drawable?.alpha = 150
+        drawable?.alpha = BOOKMARK_IMAGE_ALPHA
 
         drawable!!.setBounds(
             0,
@@ -2909,6 +2909,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         private const val NO_POSITION = -1
         private const val RECYCLER_DELAY_MS = 1000L
         private const val BOOKMARK_IMAGE_MULTIPLIER = 1.2
+        private const val BOOKMARK_IMAGE_ALPHA = 150
         private var hasPurgedReaderDb = false
 
         /*
