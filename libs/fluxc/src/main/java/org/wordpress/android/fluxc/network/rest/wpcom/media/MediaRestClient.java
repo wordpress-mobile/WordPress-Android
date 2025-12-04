@@ -41,6 +41,7 @@ import org.wordpress.android.fluxc.store.MediaStore.UploadedStockMediaPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.fluxc.utils.MimeType;
 import org.wordpress.android.fluxc.utils.WPComRestClientUtils;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -91,8 +92,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     @Inject public MediaRestClient(
             Context appContext,
             Dispatcher dispatcher,
-            @Named("regular") RequestQueue requestQueue,
-            @NonNull @Named("regular") OkHttpClient okHttpClient,
+            @Named(OkHttpClientQualifiers.REGULAR) RequestQueue requestQueue,
+            @NonNull @Named(OkHttpClientQualifiers.REGULAR) OkHttpClient okHttpClient,
             AccessToken accessToken,
             UserAgent userAgent,
             @NonNull MediaResponseUtils mediaResponseUtils) {

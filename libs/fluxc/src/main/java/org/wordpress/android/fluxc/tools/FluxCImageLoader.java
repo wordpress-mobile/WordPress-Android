@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.network.HTTPAuthModel;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.utils.WPUrlUtils;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 
 /**
  * Image Loader that leverage the Volley queue, stored access token and stored HTTP Auth credentials
@@ -33,7 +35,7 @@ public class FluxCImageLoader extends ImageLoader {
     private HTTPAuthManager mHTTPAuthManager;
     private UserAgent mUserAgent;
 
-    @Inject public FluxCImageLoader(@Named("custom-ssl") RequestQueue queue,
+    @Inject public FluxCImageLoader(@Named(OkHttpClientQualifiers.CUSTOM_SSL) RequestQueue queue,
                             ImageCache imageCache,
                             AccessToken accessToken,
                             HTTPAuthManager httpAuthManager,

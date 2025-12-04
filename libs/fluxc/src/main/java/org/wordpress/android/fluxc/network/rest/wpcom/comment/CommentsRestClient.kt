@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestRe
 import org.wordpress.android.fluxc.persistence.comments.CommentEntityList
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.utils.CommentErrorUtilsWrapper
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -27,7 +28,7 @@ import javax.inject.Singleton
 class CommentsRestClient @Inject constructor(
     appContext: Context?,
     dispatcher: Dispatcher,
-    @Named("regular") requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.REGULAR) requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,

@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePaylo
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 import org.wordpress.android.fluxc.utils.CommentErrorUtils;
 import org.wordpress.android.fluxc.utils.extensions.SiteModelExtensionsKt;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ import javax.inject.Singleton;
 public class CommentXMLRPCClient extends BaseXMLRPCClient {
     @Inject public CommentXMLRPCClient(
             Dispatcher dispatcher,
-            @Named("custom-ssl") RequestQueue requestQueue,
+            @Named(OkHttpClientQualifiers.CUSTOM_SSL) RequestQueue requestQueue,
             UserAgent userAgent,
             HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);

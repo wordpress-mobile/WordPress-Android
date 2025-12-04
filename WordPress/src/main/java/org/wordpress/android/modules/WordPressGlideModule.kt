@@ -14,6 +14,7 @@ import org.wordpress.android.networking.GlideMShotsLoader
 import org.wordpress.android.networking.GlideRequestFactory
 import org.wordpress.android.networking.MShot
 import java.io.InputStream
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -24,11 +25,11 @@ import javax.inject.Named
 @GlideModule
 class WordPressGlideModule : AppGlideModule() {
     @Inject
-    @Named("custom-ssl-custom-redirects")
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL_CUSTOM_REDIRECTS)
     lateinit var requestQueue: RequestQueue
 
     @Inject
-    @Named("no-redirects")
+    @Named(OkHttpClientQualifiers.NO_REDIRECTS)
     lateinit var noRedirectsRequestQueue: RequestQueue
 
     @Inject

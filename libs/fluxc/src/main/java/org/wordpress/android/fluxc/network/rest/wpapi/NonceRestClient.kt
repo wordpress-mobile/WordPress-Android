@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
 import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.HtmlUtils
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -26,7 +27,7 @@ class NonceRestClient @Inject constructor(
     private val wpApiEncodedBodyRequestBuilder: WPAPIEncodedBodyRequestBuilder,
     private val currentTimeProvider: CurrentTimeProvider,
     dispatcher: Dispatcher,
-    @Named("no-redirects") requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.NO_REDIRECTS) requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     private val nonceMap: MutableMap<String, Nonce> = mutableMapOf()

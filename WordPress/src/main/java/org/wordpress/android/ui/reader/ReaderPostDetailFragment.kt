@@ -57,7 +57,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -936,16 +935,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ShowPostDetail,
             is ReaderNavigationEvents.ShowVideoViewer,
             is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
-            is ReaderNavigationEvents.ShowSignIn -> navigateToLogin()
+            is ReaderNavigationEvents.ShowLoginRequiredBottomSheet -> showLoginRequiredBottomSheet()
         }
     }
 
-    private fun navigateToLogin() {
-        if (BuildConfig.IS_JETPACK_APP) {
-            ActivityLauncher.showSignInForResultJetpackOnly(requireActivity())
-        } else {
-            ActivityLauncher.showSignInForResultWpComOnly(requireActivity())
-        }
+    private fun showLoginRequiredBottomSheet() {
+        ReaderLoginRequiredBottomSheetFragment.newInstance()
+            .show(childFragmentManager, ReaderLoginRequiredBottomSheetFragment.TAG)
     }
 
     private fun updateFeaturedImage(

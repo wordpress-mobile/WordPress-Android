@@ -38,7 +38,6 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -2821,19 +2820,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     override fun onFollowTappedWhenLoggedOut() {
-        getSnackbarParent()?.let { snackbarParent ->
-            Snackbar.make(
-                snackbarParent,
-                R.string.reader_snackbar_err_cannot_follow_logged_out,
-                Snackbar.LENGTH_LONG
-            ).setAction(R.string.reader_snackbar_err_cannot_follow_logged_out_action) {
-                if (BuildConfig.IS_JETPACK_APP) {
-                    ActivityLauncher.showSignInForResultJetpackOnly(requireActivity())
-                } else {
-                    ActivityLauncher.showSignInForResultWpComOnly(requireActivity())
-                }
-            }.show()
-        }
+        ReaderLoginRequiredBottomSheetFragment.newInstance()
+            .show(childFragmentManager, ReaderLoginRequiredBottomSheetFragment.TAG)
     }
 
     @Suppress("unused")

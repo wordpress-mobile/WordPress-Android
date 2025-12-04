@@ -97,6 +97,7 @@ import java.io.UnsupportedEncodingException
 import java.net.URI
 import java.net.URLEncoder
 import java.util.Locale
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -107,7 +108,7 @@ import kotlin.math.max
 class SiteRestClient @Inject constructor(
     appContext: Context?,
     dispatcher: Dispatcher?,
-    @Named("regular") requestQueue: RequestQueue?,
+    @Named(OkHttpClientQualifiers.REGULAR) requestQueue: RequestQueue?,
     private val appSecrets: AppSecrets,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     accessToken: AccessToken?,
