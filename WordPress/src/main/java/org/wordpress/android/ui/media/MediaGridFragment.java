@@ -669,7 +669,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         titleId = R.string.media_empty_search_list;
                     } else {
                         mActionableEmptyView.updateLayoutForSearch(false, 0);
-                        mActionableEmptyView.image.setVisibility(View.VISIBLE);
                         subtitleId = R.string.media_empty_list_subtitle;
 
                         switch (mFilter) {
