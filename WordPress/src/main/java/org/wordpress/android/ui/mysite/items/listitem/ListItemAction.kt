@@ -7,6 +7,7 @@ enum class ListItemAction (val trackingLabel: String) {
     PLAN("plan"),
     POSTS("posts"),
     PAGES("pages"),
+    POST_TYPES("post_types"),
     ADMIN("admin"),
     PEOPLE("people"),
     SUBSCRIBERS("subscribers"),

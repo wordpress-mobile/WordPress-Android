@@ -705,6 +705,11 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
 
+    public static void viewPostTypes(@NonNull Context context, @NonNull SiteModel site) {
+        Intent intent = org.wordpress.android.ui.posttypes.PostTypesActivity.Companion.createIntent(context, site);
+        context.startActivity(intent);
+    }
+
     public static void viewCurrentBlogPagesOfType(Context context, SiteModel site, PageListType pageListType) {
         if (pageListType == null) {
             Intent intent = new Intent(context, PagesActivity.class);
