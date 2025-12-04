@@ -5,20 +5,26 @@ import android.util.Log
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WPcomAuthorizationCodeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class WPcomLoginClient @Inject constructor(
     private val context: CoroutineContext,
-    private val appSecrets: AppSecrets
+    private val appSecrets: AppSecrets,
+    @Named(OkHttpClientQualifiers.INTERCEPTORS) interceptors: Set<@JvmSuppressWildcards Interceptor>
 ) {
-    private val client = OkHttpClient()
+    private val client = OkHttpClient.Builder().apply {
+        interceptors.forEach { addInterceptor(it) }
+    }.build()
 
     fun loginUri(redirectUri: String): Uri {
         return Uri.Builder().scheme("https")

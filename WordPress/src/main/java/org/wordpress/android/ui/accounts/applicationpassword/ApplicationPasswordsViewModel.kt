@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -41,6 +42,7 @@ class ApplicationPasswordsViewModel @Inject constructor(
     sharedPrefs: SharedPreferences,
     networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher,
+    trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper,
@@ -48,7 +50,8 @@ class ApplicationPasswordsViewModel @Inject constructor(
     networkUtilsWrapper = networkUtilsWrapper,
     selectedSiteRepository = selectedSiteRepository,
     accountStore = accountStore,
-    ioDispatcher = ioDispatcher
+    ioDispatcher = ioDispatcher,
+    trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor
 ) {
     init {
         initialize()

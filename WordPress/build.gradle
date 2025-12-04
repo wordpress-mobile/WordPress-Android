@@ -452,6 +452,7 @@ dependencies {
     implementation(libs.greenrobot.eventbus.main)
     implementation(libs.greenrobot.eventbus.java)
     implementation(libs.squareup.retrofit)
+    implementation(libs.chucker)
     implementation(libs.apache.commons.text)
     implementation(libs.airbnb.lottie.main)
     implementation(libs.facebook.shimmer)
