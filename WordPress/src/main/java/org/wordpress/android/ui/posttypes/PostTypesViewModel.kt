@@ -23,6 +23,7 @@ data class PostTypesUiState(
 class PostTypesViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    @Suppress("unused") // TODO: Will be used to fetch post types from API
     private val site: SiteModel? = savedStateHandle.get<SiteModel>(WordPress.SITE)
 
     private val _uiState = MutableStateFlow(
