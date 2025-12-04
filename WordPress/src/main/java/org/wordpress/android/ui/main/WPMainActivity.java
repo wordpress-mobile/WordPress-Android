@@ -231,6 +231,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
     public static final String ARG_READER_BOOKMARK_TAB = "show_reader_bookmark_tab";
+    public static final String ARG_READER_DISCOVER_TAB = "show_reader_discover_tab";
     public static final String ARG_EDITOR = "show_editor";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
     public static final String ARG_STATS = "show_stats";
@@ -902,11 +903,13 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
                         break;
                     }
+                    if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.READER);
                     if (intent.getBooleanExtra(ARG_READER_BOOKMARK_TAB, false) && mBottomNav != null && mBottomNav
                             .getActiveFragment() instanceof ReaderFragment) {
                         ((ReaderFragment) mBottomNav.getActiveFragment()).requestBookmarkTab();
-                    } else {
-                        if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.READER);
+                    } else if (intent.getBooleanExtra(ARG_READER_DISCOVER_TAB, false) && mBottomNav != null
+                            && mBottomNav.getActiveFragment() instanceof ReaderFragment) {
+                        ((ReaderFragment) mBottomNav.getActiveFragment()).requestDiscoverTab();
                     }
                     break;
                 case ARG_EDITOR:

@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -55,6 +58,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private boolean mIsFeed;
 
     private ReaderFollowButton mFollowButton;
+    @Nullable private ProgressBar mFollowProgress;
     private ReaderBlog mBlogInfo;
     private OnBlogInfoLoadedListener mBlogInfoListener;
     private OnFollowListener mFollowListener;
@@ -84,6 +88,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private void initView(Context context) {
         final View view = inflate(context, R.layout.reader_site_header_view, this);
         mFollowButton = view.findViewById(R.id.follow_button);
+        mFollowProgress = view.findViewById(R.id.follow_button_progress);
         view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
@@ -246,12 +251,17 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.HIGH));
     }
 
+    private void setFollowButtonLoading(boolean isLoading) {
+        mFollowButton.setIsLoading(isLoading);
+        mFollowProgress.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+    }
+
     private void toggleFollowStatus(final View followButton, final String source) {
         if (!NetworkUtils.checkConnection(getContext())) {
             return;
         }
-        // disable follow button until API call returns
-        mFollowButton.setEnabled(false);
+        // disable follow button and show loading indicator until API call returns
+        setFollowButtonLoading(true);
 
         final boolean isAskingToFollow;
         if (mIsFeed) {
@@ -278,7 +288,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
             if (getContext() == null) {
                 return;
             }
-            mFollowButton.setEnabled(true);
+            setFollowButtonLoading(false);
             if (!succeeded) {
                 int errResId = isAskingToFollow ? R.string.reader_toast_err_unable_to_follow_blog
                         : R.string.reader_toast_err_unable_to_unfollow_blog;
@@ -310,6 +320,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
 
         if (!result) {
+            setFollowButtonLoading(false);
             mFollowButton.setIsFollowed(!isAskingToFollow);
         }
     }

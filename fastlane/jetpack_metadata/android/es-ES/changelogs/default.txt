@@ -1,4 +1,0 @@
-26.3:
-Hemos añadido información sobre el tamaño de los archivos a la biblioteca de medios para que puedas ver exactamente con qué estás trabajando.
-
-Además, ahora el editor experimental es más sencillo. Tu contenido permanece en el lugar correcto cuando rotas el dispositivo o cambias al modo oscuro, y los cuadros de diálogo ahora responden correctamente al botón Atrás. ¡Disfruta editando!

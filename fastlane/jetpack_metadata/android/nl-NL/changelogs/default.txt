@@ -1,4 +1,0 @@
-26.3:
-We hebben de informatie van de bestandsgrootte toegevoegd aan je mediabibliotheek, zodat je precies kunt zien waar je mee werkt.
-
-De experimentele editor is ook eenvoudiger geworden. Je content blijft op zijn plek wanneer je je apparaat roteert of de donkere modus inschakelt, en dialoogvensters reageren nu correct op de knop Terug. Veel plezier met bewerken!

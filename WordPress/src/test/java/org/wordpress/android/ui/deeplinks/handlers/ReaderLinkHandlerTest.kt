@@ -9,8 +9,12 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenFeedInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReaderDiscover
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReaderSearch
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenTagInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ViewPostInReader
 import org.wordpress.android.ui.deeplinks.buildUri
 import org.wordpress.android.ui.reader.ReaderConstants
@@ -28,6 +32,7 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     val blogId: Long = 111
     val postId: Long = 222
     val feedId: Long = 333
+    val tagSlug: String = "dogs"
 
     @Before
     fun setUp() {
@@ -233,5 +238,176 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
         val strippedUrl = readerLinkHandler.stripUrl(uri)
 
         assertThat(strippedUrl).isEqualTo("www.wordpress.com/read")
+    }
+
+    @Test
+    fun `handles wordpress com read path`() {
+        val uri = buildUri("wordpress.com", "read")
+
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
+
+        assertThat(isReaderUri).isTrue()
+    }
+
+    @Test
+    fun `handles wordpress com discover path`() {
+        val uri = buildUri("wordpress.com", "discover")
+
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
+
+        assertThat(isReaderUri).isTrue()
+    }
+
+    @Test
+    fun `wordpress com read opens reader`() {
+        val uri = buildUri("wordpress.com", "read")
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenReader)
+    }
+
+    @Test
+    fun `wordpress com discover opens reader discover`() {
+        val uri = buildUri("wordpress.com", "discover")
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenReaderDiscover)
+    }
+
+    @Test
+    fun `correctly strips wordpress com read URI`() {
+        val uri = buildUri("wordpress.com", "read")
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/read")
+    }
+
+    @Test
+    fun `correctly strips wordpress com discover URI`() {
+        val uri = buildUri("wordpress.com", "discover")
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/discover")
+    }
+
+    @Test
+    fun `handles wordpress com read feeds path`() {
+        val uri = buildUri("wordpress.com", "read", "feeds", feedId.toString())
+
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
+
+        assertThat(isReaderUri).isTrue()
+    }
+
+    @Test
+    fun `handles wordpress com reader feeds path`() {
+        val uri = buildUri("wordpress.com", "reader", "feeds", feedId.toString())
+
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
+
+        assertThat(isReaderUri).isTrue()
+    }
+
+    @Test
+    fun `wordpress com read feeds opens feed in reader`() {
+        val uri = buildUri("wordpress.com", "read", "feeds", feedId.toString())
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenFeedInReader(feedId))
+    }
+
+    @Test
+    fun `wordpress com reader feeds opens feed in reader`() {
+        val uri = buildUri("wordpress.com", "reader", "feeds", feedId.toString())
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenFeedInReader(feedId))
+    }
+
+    @Test
+    fun `correctly strips wordpress com feed URI`() {
+        val uri = buildUri("wordpress.com", "read", "feeds", feedId.toString())
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/read/feeds/feedId")
+    }
+
+    @Test
+    fun `handles wordpress com read search path`() {
+        val uri = buildUri("wordpress.com", "read", "search")
+
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
+
+        assertThat(isReaderUri).isTrue()
+    }
+
+    @Test
+    fun `wordpress com read search opens reader search`() {
+        val uri = buildUri("wordpress.com", "read", "search")
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenReaderSearch)
+    }
+
+    @Test
+    fun `correctly strips wordpress com read search URI`() {
+        val uri = buildUri("wordpress.com", "read", "search")
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/read/search")
+    }
+
+    @Test
+    fun `handles wordpress com reader search path`() {
+        val uri = buildUri("wordpress.com", "reader", "search")
+
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
+
+        assertThat(isReaderUri).isTrue()
+    }
+
+    @Test
+    fun `wordpress com reader search opens reader search`() {
+        val uri = buildUri("wordpress.com", "reader", "search")
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenReaderSearch)
+    }
+
+    @Test
+    fun `handles wordpress com tag path`() {
+        val uri = buildUri("wordpress.com", "tag", tagSlug)
+
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
+
+        assertThat(isReaderUri).isTrue()
+    }
+
+    @Test
+    fun `wordpress com tag opens tag in reader`() {
+        val uri = buildUri("wordpress.com", "tag", tagSlug)
+
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
+
+        assertThat(navigateAction).isEqualTo(OpenTagInReader(tagSlug))
+    }
+
+    @Test
+    fun `correctly strips wordpress com tag URI`() {
+        val uri = buildUri("wordpress.com", "tag", tagSlug)
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/tag/tagSlug")
     }
 }

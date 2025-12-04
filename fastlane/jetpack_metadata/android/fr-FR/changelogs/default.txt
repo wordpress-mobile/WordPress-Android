@@ -1,4 +1,0 @@
-26.3 :
-Nous avons ajouté des informations sur la taille du fichier à votre médiathèque afin que vous puissiez voir exactement ce que vous utilisez.
-
-L’éditeur expérimental est devenu plus fluide aussi. Votre contenu reste affiché lorsque vous faites pivoter l’appareil ou que vous basculez en mode sombre et les boîtes de dialogue répondent désormais correctement au bouton Retour. Bonnes modifications !

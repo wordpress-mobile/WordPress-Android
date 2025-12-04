@@ -29,7 +29,6 @@ Language: lv
     <string name="experimental_features_feedback_dialog_message">Vai vēlaties sniegt atsauksmes par eksperimentālo redaktoru?</string>
     <string name="experimental_features_feedback_dialog_title">Kopīgot atsauksmes</string>
     <string name="experimental_block_editor_plugins">Eksperimentāli bloku redaktora spraudņi</string>
-    <string name="experimental_block_editor_theme_styles_description">Apply theme styles to the editor</string>
     <string name="experimental_block_editor_description">Piekļūstiet papildu bloku veidiem un iestatījumiem</string>
     <string name="experimental_block_editor_note">Eksperimentālais bloku redaktors kļūs par noklusējuma redaktoru nākamajā laidienā, un iespēja to atspējot tiks noņemta.</string>
     <string name="disable_experimental_block_editor_description">Atteikties no papildu bloķēšanas veidiem un iestatījumiem</string>
@@ -64,7 +63,6 @@ Language: lv
     <string name="reader_toast_success_undo">Blogs atbloķēts</string>
     <string name="feedback_form_note_link_jetpack">Sazinieties ar atbalsta dienestu ekrāns.</string>
     <string name="feedback_form_note_text">Lūdzu, ņemiet vērā, ka šī nav atbalsta veidlapa, un mēs nevarēsim atbildēt. Ja jums nepieciešama palīdzība, lūdzu, izmantojiet mūsu \"</string>
-    <string name="experimental_block_editor_theme_styles">Eksperimentāli bloku redaktora stili</string>
     <string name="experimental_block_editor">Eksperimentāls bloku redaktors</string>
     <string name="experimental_features_screen_title">Eksperimentālās funkcijas</string>
     <string name="back">Atpakaļ</string>
