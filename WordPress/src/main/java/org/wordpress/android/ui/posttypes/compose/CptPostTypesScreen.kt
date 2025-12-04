@@ -22,15 +22,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.posttypes.PostTypeItem
-import org.wordpress.android.ui.posttypes.PostTypesUiState
+import org.wordpress.android.ui.posttypes.CptPostTypeItem
+import org.wordpress.android.ui.posttypes.CptPostTypesUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PostTypesScreen(
-    uiState: PostTypesUiState,
+fun CptPostTypesScreen(
+    uiState: CptPostTypesUiState,
     onBackClick: () -> Unit,
-    onPostTypeClick: (PostTypeItem) -> Unit
+    onPostTypeClick: (CptPostTypeItem) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -53,7 +53,7 @@ fun PostTypesScreen(
                 .padding(paddingValues)
         ) {
             items(uiState.postTypes) { postType ->
-                PostTypeListItem(
+                CptPostTypeListItem(
                     postType = postType,
                     onClick = { onPostTypeClick(postType) }
                 )
@@ -64,8 +64,8 @@ fun PostTypesScreen(
 }
 
 @Composable
-private fun PostTypeListItem(
-    postType: PostTypeItem,
+private fun CptPostTypeListItem(
+    postType: CptPostTypeItem,
     onClick: () -> Unit
 ) {
     Column(

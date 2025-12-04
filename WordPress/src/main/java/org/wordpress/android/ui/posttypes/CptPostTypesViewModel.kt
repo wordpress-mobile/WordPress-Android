@@ -13,46 +13,46 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import javax.inject.Inject
 
-data class PostTypeItem(
+data class CptPostTypeItem(
     val slug: String,
     val label: String
 )
 
-data class PostTypesUiState(
-    val postTypes: List<PostTypeItem> = emptyList()
+data class CptPostTypesUiState(
+    val postTypes: List<CptPostTypeItem> = emptyList()
 )
 
-sealed class PostTypesNavigationAction {
+sealed class CptNavigationAction {
     data class OpenPostTypeList(
         val site: SiteModel,
         val postTypeSlug: String,
         val postTypeLabel: String
-    ) : PostTypesNavigationAction()
+    ) : CptNavigationAction()
 }
 
 @HiltViewModel
-class PostTypesViewModel @Inject constructor(
+class CptPostTypesViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val site: SiteModel? = savedStateHandle.get<SiteModel>(WordPress.SITE)
 
     private val _uiState = MutableStateFlow(
-        PostTypesUiState(
+        CptPostTypesUiState(
             postTypes = listOf(
-                PostTypeItem(slug = "post", label = "Posts"),
-                PostTypeItem(slug = "page", label = "Pages")
+                CptPostTypeItem(slug = "post", label = "Posts"),
+                CptPostTypeItem(slug = "page", label = "Pages")
             )
         )
     )
-    val uiState: StateFlow<PostTypesUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<CptPostTypesUiState> = _uiState.asStateFlow()
 
-    private val _navigation = MutableSharedFlow<PostTypesNavigationAction>()
-    val navigation: SharedFlow<PostTypesNavigationAction> = _navigation.asSharedFlow()
+    private val _navigation = MutableSharedFlow<CptNavigationAction>()
+    val navigation: SharedFlow<CptNavigationAction> = _navigation.asSharedFlow()
 
-    fun onPostTypeClick(postType: PostTypeItem) {
+    fun onPostTypeClick(postType: CptPostTypeItem) {
         site?.let {
             _navigation.tryEmit(
-                PostTypesNavigationAction.OpenPostTypeList(
+                CptNavigationAction.OpenPostTypeList(
                     site = it,
                     postTypeSlug = postType.slug,
                     postTypeLabel = postType.label

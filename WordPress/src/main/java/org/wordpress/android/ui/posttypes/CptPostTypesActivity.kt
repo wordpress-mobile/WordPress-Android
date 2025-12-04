@@ -12,12 +12,12 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.posttypes.compose.PostTypesScreen
+import org.wordpress.android.ui.posttypes.compose.CptPostTypesScreen
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
-class PostTypesActivity : BaseAppCompatActivity() {
-    private val viewModel: PostTypesViewModel by viewModels()
+class CptPostTypesActivity : BaseAppCompatActivity() {
+    private val viewModel: CptPostTypesViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +31,7 @@ class PostTypesActivity : BaseAppCompatActivity() {
                     }
                 }
 
-                PostTypesScreen(
+                CptPostTypesScreen(
                     uiState = uiState,
                     onBackClick = { onBackPressedDispatcher.onBackPressed() },
                     onPostTypeClick = viewModel::onPostTypeClick
@@ -40,9 +40,9 @@ class PostTypesActivity : BaseAppCompatActivity() {
         }
     }
 
-    private fun handleNavigation(action: PostTypesNavigationAction) {
+    private fun handleNavigation(action: CptNavigationAction) {
         when (action) {
-            is PostTypesNavigationAction.OpenPostTypeList -> {
+            is CptNavigationAction.OpenPostTypeList -> {
                 startActivity(
                     CptFlatPostListActivity.createIntent(
                         context = this,
@@ -57,7 +57,7 @@ class PostTypesActivity : BaseAppCompatActivity() {
 
     companion object {
         fun createIntent(context: Context, site: SiteModel): Intent {
-            return Intent(context, PostTypesActivity::class.java).apply {
+            return Intent(context, CptPostTypesActivity::class.java).apply {
                 putExtra(WordPress.SITE, site)
             }
         }
