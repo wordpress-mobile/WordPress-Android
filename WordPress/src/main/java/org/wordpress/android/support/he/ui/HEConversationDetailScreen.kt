@@ -62,9 +62,10 @@ import coil.request.videoFrameMillis
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.AttachmentType
+import org.wordpress.android.support.he.model.ConversationReplyFormState
 import org.wordpress.android.support.he.model.ConversationStatus
 import org.wordpress.android.support.he.model.MessageSendResult
-import org.wordpress.android.support.he.model.AttachmentType
 import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage

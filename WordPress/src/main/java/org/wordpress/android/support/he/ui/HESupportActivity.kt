@@ -49,6 +49,9 @@ class HESupportActivity : AppCompatActivity() {
     private lateinit var composeView: ComposeView
     private lateinit var navController: NavHostController
 
+    // Callback to add attachments to the correct form after media picker returns
+    private var onAttachmentsSelected: ((List<Uri>) -> Unit)? = null
+
     @Suppress("TooGenericExceptionCaught")
     private val photoPickerLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
@@ -58,7 +61,7 @@ class HESupportActivity : AppCompatActivity() {
                 val uris = result.data?.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
                 uris?.let { uriStrings ->
                     val newUris = uriStrings.map { it.toUri() }
-                    viewModel.addAttachments(newUris)
+                    onAttachmentsSelected?.invoke(newUris)
                 }
             }
         } catch (e: Exception) {
@@ -172,7 +175,7 @@ class HESupportActivity : AppCompatActivity() {
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
                     val messageSendResult by viewModel.messageSendResult.collectAsState()
-                    val attachmentState by viewModel.attachmentState.collectAsState()
+                    val replyFormState by viewModel.replyFormState.collectAsState()
                     val videoDownloadState by viewModel.videoDownloadState.collectAsState()
 
                     selectedConversation?.let { conversation ->
@@ -183,7 +186,6 @@ class HESupportActivity : AppCompatActivity() {
                             isSendingMessage = isSendingMessage,
                             messageSendResult = messageSendResult,
                             onBackClick = {
-                                viewModel.clearAttachments()
                                 viewModel.clearReplyForm()
                                 viewModel.onBackClick()
                             },
@@ -193,8 +195,11 @@ class HESupportActivity : AppCompatActivity() {
                                 )
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
-                            attachmentState = attachmentState,
-                            attachmentActionsListener = createAttachmentActionListener(),
+                            attachmentState = replyFormState.attachmentState,
+                            attachmentActionsListener = createAttachmentActionListener(
+                                onAddAttachments = { viewModel.addReplyAttachments(it) },
+                                onRemoveAttachment = { viewModel.removeReplyAttachment(it) }
+                            ),
                             onDownloadAttachment = { attachment ->
                                 // Show loading snackbar
                                 scope.launch {
@@ -223,12 +228,11 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.NewTicket.name) {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val isSendingNewConversation by viewModel.isSendingMessage.collectAsState()
-                    val attachmentState by viewModel.attachmentState.collectAsState()
+                    val newTicketFormState by viewModel.newTicketFormState.collectAsState()
 
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
                         onBackClick = {
-                            viewModel.clearAttachments()
                             viewModel.clearNewTicketForm()
                             viewModel.onBackClick()
                         },
@@ -241,8 +245,11 @@ class HESupportActivity : AppCompatActivity() {
                         },
                         userInfo = userInfo,
                         isSendingNewConversation = isSendingNewConversation,
-                        attachmentState = attachmentState,
-                        attachmentActionsListener = createAttachmentActionListener(),
+                        attachmentState = newTicketFormState.attachmentState,
+                        attachmentActionsListener = createAttachmentActionListener(
+                            onAddAttachments = { viewModel.addNewTicketAttachments(it) },
+                            onRemoveAttachment = { viewModel.removeNewTicketAttachment(it) }
+                        ),
                         viewModel = viewModel,
                     )
                 }
@@ -250,9 +257,13 @@ class HESupportActivity : AppCompatActivity() {
         }
     }
 
-    private fun createAttachmentActionListener(): AttachmentActionsListener {
+    private fun createAttachmentActionListener(
+        onAddAttachments: (List<Uri>) -> Unit,
+        onRemoveAttachment: (Uri) -> Unit
+    ): AttachmentActionsListener {
         return object : AttachmentActionsListener {
             override fun onAddImageClick() {
+                onAttachmentsSelected = onAddAttachments
                 val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = MediaPickerSetup.DataSource.DEVICE,
                     availableDataSources = setOf(),
@@ -277,7 +288,7 @@ class HESupportActivity : AppCompatActivity() {
             }
 
             override fun onRemoveImage(uri: Uri) {
-                viewModel.removeAttachment(uri)
+                onRemoveAttachment(uri)
             }
         }
     }
