@@ -202,10 +202,8 @@ class HESupportViewModel @Inject constructor(
     fun removeNewTicketAttachment(uri: Uri) {
         viewModelScope.launch {
             val currentState = _newTicketFormState.value.attachmentState
-            val newAcceptedUris = currentState.acceptedUris.filter { it != uri }
-            _newTicketFormState.value = _newTicketFormState.value.copy(
-                attachmentState = currentState.copy(acceptedUris = newAcceptedUris)
-            )
+            val updatedState = removeAttachmentFromState(currentState, uri)
+            _newTicketFormState.value = _newTicketFormState.value.copy(attachmentState = updatedState)
             addNewTicketAttachments(currentState.rejectedUris)
         }
     }
@@ -221,12 +219,15 @@ class HESupportViewModel @Inject constructor(
     fun removeReplyAttachment(uri: Uri) {
         viewModelScope.launch {
             val currentState = _replyFormState.value.attachmentState
-            val newAcceptedUris = currentState.acceptedUris.filter { it != uri }
-            _replyFormState.value = _replyFormState.value.copy(
-                attachmentState = currentState.copy(acceptedUris = newAcceptedUris)
-            )
+            val updatedState = removeAttachmentFromState(currentState, uri)
+            _replyFormState.value = _replyFormState.value.copy(attachmentState = updatedState)
             addReplyAttachments(currentState.rejectedUris)
         }
+    }
+
+    private fun removeAttachmentFromState(currentState: AttachmentState, uri: Uri): AttachmentState {
+        val newAcceptedUris = currentState.acceptedUris.filter { it != uri }
+        return currentState.copy(acceptedUris = newAcceptedUris)
     }
 
     @Suppress("LoopWithTooManyJumpStatements")
