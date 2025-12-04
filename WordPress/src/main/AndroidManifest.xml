@@ -334,6 +334,10 @@
             android:launchMode="singleTop"
             android:label="@string/post_types_screen_title" />
         <activity
+            android:name=".ui.posttypes.CptFlatPostListActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".ui.pages.PageParentActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/set_parent" />
