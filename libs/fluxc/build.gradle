@@ -93,6 +93,7 @@ dependencies {
     implementation libs.squareup.okhttp3.urlconnection
     api libs.android.volley
     implementation libs.google.gson
+    implementation libs.chucker
 
     implementation libs.apache.commons.text
     api libs.androidx.paging.runtime

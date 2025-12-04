@@ -17,6 +17,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.TaxonomyStore
@@ -55,6 +56,9 @@ class TermsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var fluxCDispatcher: Dispatcher
 
+    @Mock
+    private lateinit var trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor
+
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
@@ -72,7 +76,8 @@ class TermsViewModelTest : BaseUnitTest() {
             networkUtilsWrapper = networkUtilsWrapper,
             ioDispatcher = testDispatcher(),
             taxonomyStore = taxonomyStore,
-            fluxCDispatcher = fluxCDispatcher
+            fluxCDispatcher = fluxCDispatcher,
+            trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor
         )
     }
 

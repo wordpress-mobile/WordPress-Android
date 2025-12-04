@@ -70,7 +70,8 @@ object GutenbergKitSettingsBuilder {
 
     data class FeatureConfig(
         val isPluginsFeatureEnabled: Boolean,
-        val isThemeStylesFeatureEnabled: Boolean
+        val isThemeStylesFeatureEnabled: Boolean,
+        val isNetworkLoggingEnabled: Boolean = false
     )
 
     data class AppConfig(
@@ -141,7 +142,8 @@ object GutenbergKitSettingsBuilder {
                 applicationPassword = applicationPassword
             ),
             "locale" to wpcomLocaleSlug,
-            "cookies" to appConfig.cookies
+            "cookies" to appConfig.cookies,
+            "enableNetworkLogging" to featureConfig.isNetworkLoggingEnabled
         )
     }
 

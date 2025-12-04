@@ -13,6 +13,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.dataview.DataViewViewModel.Companion.PAGE_SIZE
@@ -39,6 +40,9 @@ class DataViewViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var accountStore: AccountStore
+
+    @Mock
+    private lateinit var trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor
 
     private val testSite = SiteModel().apply {
         id = 1
@@ -68,7 +72,8 @@ class DataViewViewModelTest : BaseUnitTest() {
             networkUtilsWrapper = networkUtilsWrapper,
             selectedSiteRepository = selectedSiteRepository,
             accountStore = accountStore,
-            ioDispatcher = testDispatcher()
+            ioDispatcher = testDispatcher(),
+            trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor
         )
     }
 
@@ -226,7 +231,8 @@ class DataViewViewModelTest : BaseUnitTest() {
                 networkUtilsWrapper = networkUtilsWrapper,
                 selectedSiteRepository = selectedSiteRepository,
                 accountStore = accountStore,
-                ioDispatcher = testDispatcher()
+                ioDispatcher = testDispatcher(),
+                trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor
             )
             // Access the wpComApiClient property to trigger the lazy initialization
             viewModel.testAccessWpComApiClient()
@@ -493,7 +499,8 @@ class DataViewViewModelTest : BaseUnitTest() {
         networkUtilsWrapper: NetworkUtilsWrapper,
         selectedSiteRepository: SelectedSiteRepository,
         accountStore: AccountStore,
-        ioDispatcher: kotlinx.coroutines.CoroutineDispatcher
+        ioDispatcher: kotlinx.coroutines.CoroutineDispatcher,
+        trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor
     ) : DataViewViewModel(
         mainDispatcher,
         appLogWrapper,
@@ -501,7 +508,8 @@ class DataViewViewModelTest : BaseUnitTest() {
         networkUtilsWrapper,
         selectedSiteRepository,
         accountStore,
-        ioDispatcher
+        ioDispatcher,
+        trackNetworkRequestsInterceptor
     ) {
         init {
             initialize()

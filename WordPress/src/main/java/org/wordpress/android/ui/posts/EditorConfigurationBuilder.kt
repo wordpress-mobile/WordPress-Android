@@ -48,6 +48,9 @@ object EditorConfigurationBuilder {
             // Cookies
             setCookies(settings.getSetting<Map<String, String>>("cookies") ?: emptyMap())
 
+            // Network logging for debugging
+            setEnableNetworkLogging(settings.getSettingOrDefault("enableNetworkLogging", false))
+
             // Editor settings (null for warmup scenarios)
             setEditorSettings(editorSettings)
         }.build()

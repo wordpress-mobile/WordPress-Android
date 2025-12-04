@@ -14,15 +14,18 @@ import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.chuckerteam.chucker.api.Chucker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
 import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
-import org.wordpress.android.support.logs.ui.LogsActivity
 import org.wordpress.android.support.he.ui.HESupportActivity
+import org.wordpress.android.support.logs.ui.LogsActivity
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
@@ -47,6 +50,8 @@ class SupportActivity : AppCompatActivity() {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val optionsVisibility by viewModel.optionsVisibility.collectAsState()
                     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
+                    val networkTrackingState by viewModel.networkTrackingState.collectAsState()
+                    val dialogState by viewModel.dialogState.collectAsState()
                     AppThemeM3 {
                         SupportScreen(
                             userName = userInfo.userName,
@@ -55,19 +60,49 @@ class SupportActivity : AppCompatActivity() {
                             isLoggedIn = isLoggedIn,
                             showAskTheBots = optionsVisibility.showAskTheBots,
                             showAskHappinessEngineers = optionsVisibility.showAskHappinessEngineers,
+                            showNetworkDebugging = networkTrackingState.showNetworkDebugging,
+                            isNetworkTrackingEnabled = networkTrackingState.isTrackingEnabled,
+                            networkTrackingRetentionInfo = getRetentionInfoText(
+                                networkTrackingState.retentionPeriod
+                            ),
                             versionName = WordPress.versionName,
+                            dialogState = dialogState,
                             onBackClick = { finish() },
                             onLoginClick = { viewModel.onLoginClick() },
                             onHelpCenterClick = { viewModel.onHelpCenterClick() },
                             onAskTheBotsClick = { viewModel.onAskTheBotsClick() },
                             onAskHappinessEngineersClick = { viewModel.onAskHappinessEngineersClick() },
-                            onApplicationLogsClick = { viewModel.onApplicationLogsClick() }
+                            onApplicationLogsClick = { viewModel.onApplicationLogsClick() },
+                            onNetworkTrackingToggle = { viewModel.onNetworkTrackingToggle(it) },
+                            onViewNetworkRequestsClick = { viewModel.onViewNetworkRequestsClick() },
+                            onRetentionPeriodSelected = { viewModel.onRetentionPeriodSelected(it) },
+                            onEnableTrackingConfirmed = { viewModel.onEnableTrackingConfirmed(it) },
+                            onDisableTrackingConfirmed = { viewModel.onDisableTrackingConfirmed() },
+                            onDialogDismissed = { viewModel.onDialogDismissed() },
                         )
                     }
                 }
             }
         )
     }
+
+    private fun getRetentionInfoText(period: NetworkRequestsRetentionPeriod): String {
+        val periodString = getRetentionPeriodDisplayString(period)
+        return getString(R.string.network_requests_retention_info, periodString)
+    }
+
+private fun getRetentionPeriodDisplayString(period: NetworkRequestsRetentionPeriod): String {
+    return getString(getRetentionPeriodStringRes(period))
+}
+
+private fun getRetentionPeriodStringRes(period: NetworkRequestsRetentionPeriod): Int {
+    return when (period) {
+        NetworkRequestsRetentionPeriod.ONE_HOUR -> R.string.network_requests_retention_one_hour
+        NetworkRequestsRetentionPeriod.ONE_DAY -> R.string.network_requests_retention_one_day
+        NetworkRequestsRetentionPeriod.ONE_WEEK -> R.string.network_requests_retention_one_week
+        NetworkRequestsRetentionPeriod.FOREVER -> R.string.network_requests_retention_until_cleared
+    }
+}
 
     private fun observeNavigationEvents() {
         lifecycleScope.launch {
@@ -80,6 +115,9 @@ class SupportActivity : AppCompatActivity() {
                         is SupportViewModel.NavigationEvent.NavigateToApplicationLogs -> navigateToApplicationLogs()
                         is SupportViewModel.NavigationEvent.NavigateToAskHappinessEngineers -> {
                             navigateToAskTheHappinessEngineers()
+                        }
+                        is SupportViewModel.NavigationEvent.NavigateToNetworkRequests -> {
+                            navigateToNetworkRequests()
                         }
                     }
                 }
@@ -118,6 +156,10 @@ class SupportActivity : AppCompatActivity() {
 
     private fun navigateToApplicationLogs() {
         startActivity(LogsActivity.createIntent(this))
+    }
+
+    private fun navigateToNetworkRequests() {
+        startActivity(Chucker.getLaunchIntent(this))
     }
 
     companion object {
