@@ -184,6 +184,7 @@ class HESupportActivity : AppCompatActivity() {
                             messageSendResult = messageSendResult,
                             onBackClick = {
                                 viewModel.clearAttachments()
+                                viewModel.clearReplyForm()
                                 viewModel.onBackClick()
                             },
                             onSendMessage = { message, includeAppLogs ->
@@ -213,7 +214,8 @@ class HESupportActivity : AppCompatActivity() {
                             onStartVideoDownload = { url ->
                                 viewModel.downloadVideoToTempFile(url)
                             },
-                            onResetVideoDownloadState = { viewModel.resetVideoDownloadState() }
+                            onResetVideoDownloadState = { viewModel.resetVideoDownloadState() },
+                            viewModel = viewModel,
                         )
                     }
                 }

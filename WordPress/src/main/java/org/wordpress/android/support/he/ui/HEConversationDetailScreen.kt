@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -93,6 +94,7 @@ fun HEConversationDetailScreen(
     videoDownloadState: VideoDownloadState,
     onStartVideoDownload: (String) -> Unit,
     onResetVideoDownloadState: () -> Unit = {},
+    viewModel: HESupportViewModel? = null,
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -100,9 +102,9 @@ fun HEConversationDetailScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
     val resources = LocalResources.current
 
-    // Save draft message state to restore when reopening the bottom sheet
-    var draftMessageText by remember { mutableStateOf("") }
-    var draftIncludeAppLogs by remember { mutableStateOf(false) }
+    // Reply form state from ViewModel (survives configuration changes)
+    val replyFormState = viewModel?.replyFormState?.collectAsState()?.value
+        ?: ConversationReplyFormState()
 
     // State for fullscreen attachment preview (image or video)
     var previewAttachment by remember { mutableStateOf<SupportAttachment?>(null) }
@@ -192,12 +194,6 @@ fun HEConversationDetailScreen(
         // Close the sheet when sending completes
         LaunchedEffect(messageSendResult) {
             if (messageSendResult != null) {
-                // Clear draft only on success
-                if (messageSendResult is MessageSendResult.Success) {
-                    draftMessageText = ""
-                    draftIncludeAppLogs = false
-                }
-
                 // Dismiss sheet and clear result for both success and failure
                 onClearMessageSendResult()
                 scope.launch {
@@ -211,11 +207,11 @@ fun HEConversationDetailScreen(
         HEConversationReplyBottomSheet(
             sheetState = sheetState,
             isSending = isSendingMessage,
-            initialMessageText = draftMessageText,
-            initialIncludeAppLogs = draftIncludeAppLogs,
+            initialMessageText = replyFormState.message,
+            initialIncludeAppLogs = replyFormState.includeAppLogs,
             onDismiss = { currentMessage, currentIncludeAppLogs ->
-                draftMessageText = currentMessage
-                draftIncludeAppLogs = currentIncludeAppLogs
+                viewModel?.updateReplyMessage(currentMessage)
+                viewModel?.updateReplyIncludeAppLogs(currentIncludeAppLogs)
                 scope.launch {
                     sheetState.hide()
                 }.invokeOnCompletion {
@@ -223,13 +219,10 @@ fun HEConversationDetailScreen(
                 }
             },
             onSend = { message, includeAppLogs ->
-                draftMessageText = message
+                viewModel?.updateReplyMessage(message)
                 onSendMessage(message, includeAppLogs)
             },
             onMessageSentSuccessfully = {
-                // Clear draft after successful send
-                draftMessageText = ""
-                draftIncludeAppLogs = false
                 onClearMessageSendResult()
             },
             attachmentState = attachmentState,

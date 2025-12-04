@@ -63,6 +63,10 @@ class HESupportViewModel @Inject constructor(
     private val _newTicketFormState = MutableStateFlow(NewTicketFormState())
     val newTicketFormState: StateFlow<NewTicketFormState> = _newTicketFormState.asStateFlow()
 
+    // Conversation reply form state (survives configuration changes)
+    private val _replyFormState = MutableStateFlow(ConversationReplyFormState())
+    val replyFormState: StateFlow<ConversationReplyFormState> = _replyFormState.asStateFlow()
+
     override fun initRepository(accessToken: String) {
         heSupportRepository.init(accessToken)
     }
@@ -155,8 +159,9 @@ class HESupportViewModel @Inject constructor(
                     is CreateConversationResult.Success -> {
                         _selectedConversation.value = result.conversation
                         _messageSendResult.value = MessageSendResult.Success
-                        // Clear attachments after successful message send
+                        // Clear attachments and reply form after successful message send
                         _attachmentState.value = AttachmentState()
+                        clearReplyForm()
                     }
 
                     is CreateConversationResult.Error.Forbidden -> {
@@ -310,6 +315,18 @@ class HESupportViewModel @Inject constructor(
 
     fun clearNewTicketForm() {
         _newTicketFormState.value = NewTicketFormState()
+    }
+
+    fun updateReplyMessage(message: String) {
+        _replyFormState.value = _replyFormState.value.copy(message = message)
+    }
+
+    fun updateReplyIncludeAppLogs(include: Boolean) {
+        _replyFormState.value = _replyFormState.value.copy(includeAppLogs = include)
+    }
+
+    fun clearReplyForm() {
+        _replyFormState.value = ConversationReplyFormState()
     }
 
     fun notifyGeneralError() {
