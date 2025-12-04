@@ -610,7 +610,17 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (isEmpty() && !TextUtils.isEmpty(mSearchTerm)) {
             updateEmptyView(EmptyViewMessageType.NO_CONTENT);
         } else {
-            mActionableEmptyView.setVisibility(View.GONE);
+            hideEmptyView();
+        }
+    }
+
+    public void onSearchClosed() {
+        mSearchTerm = null;
+        if (isEmpty()) {
+            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+            showActionableEmptyViewButton(true);
+        } else {
+            hideEmptyView();
         }
     }
 
