@@ -237,17 +237,18 @@ class HESupportActivity : AppCompatActivity() {
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
                         onBackClick = { viewModel.onBackClick() },
-                        onSubmit = { category, subject, messageText, siteAddress ->
+                        onSubmit = { category, subject, message, site ->
                             viewModel.onSendNewConversation(
                                 subject = subject,
-                                message = messageText,
+                                message = message,
                                 tags = listOf(category.key),
                             )
                         },
                         userInfo = userInfo,
                         isSendingNewConversation = isSendingNewConversation,
                         attachmentState = attachmentState,
-                        attachmentActionsListener = createAttachmentActionListener()
+                        attachmentActionsListener = createAttachmentActionListener(),
+                        viewModel = viewModel,
                     )
                 }
             }

@@ -59,6 +59,10 @@ class HESupportViewModel @Inject constructor(
     private val _videoDownloadState = MutableStateFlow<VideoDownloadState>(VideoDownloadState.Idle)
     val videoDownloadState: StateFlow<VideoDownloadState> = _videoDownloadState.asStateFlow()
 
+    // New ticket form state (survives configuration changes)
+    private val _newTicketFormState = MutableStateFlow(NewTicketFormState())
+    val newTicketFormState: StateFlow<NewTicketFormState> = _newTicketFormState.asStateFlow()
+
     override fun initRepository(accessToken: String) {
         heSupportRepository.init(accessToken)
     }
@@ -92,8 +96,9 @@ class HESupportViewModel @Inject constructor(
                         val newConversation = result.conversation
                         // update conversations locally
                         _conversations.value = listOf(newConversation) + _conversations.value
-                        // Clear attachments after successful creation
+                        // Clear attachments and form state after successful creation
                         _attachmentState.value = AttachmentState()
+                        clearNewTicketForm()
                         onBackClick()
                     }
 
@@ -281,6 +286,30 @@ class HESupportViewModel @Inject constructor(
 
     fun clearAttachments() {
         _attachmentState.value = AttachmentState()
+    }
+
+    fun updateNewTicketCategory(category: SupportCategory?) {
+        _newTicketFormState.value = _newTicketFormState.value.copy(category = category)
+    }
+
+    fun updateNewTicketSubject(subject: String) {
+        _newTicketFormState.value = _newTicketFormState.value.copy(subject = subject)
+    }
+
+    fun updateNewTicketSiteAddress(siteAddress: String) {
+        _newTicketFormState.value = _newTicketFormState.value.copy(siteAddress = siteAddress)
+    }
+
+    fun updateNewTicketMessage(message: String) {
+        _newTicketFormState.value = _newTicketFormState.value.copy(message = message)
+    }
+
+    fun updateNewTicketIncludeAppLogs(include: Boolean) {
+        _newTicketFormState.value = _newTicketFormState.value.copy(includeAppLogs = include)
+    }
+
+    fun clearNewTicketForm() {
+        _newTicketFormState.value = NewTicketFormState()
     }
 
     fun notifyGeneralError() {
