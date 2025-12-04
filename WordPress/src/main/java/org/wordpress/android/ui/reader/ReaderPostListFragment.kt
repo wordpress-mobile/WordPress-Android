@@ -31,6 +31,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.R as MaterialR
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
@@ -143,6 +144,7 @@ import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
@@ -1849,6 +1851,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             requireContext(),
             R.drawable.ic_bookmark_grey_dark_18dp
         )
+
+        val tint = requireContext().getColorFromAttribute(MaterialR.attr.colorOnBackground)
+        drawable?.setTint(tint)
+        drawable?.alpha = 150
+
         drawable!!.setBounds(
             0,
             0,
