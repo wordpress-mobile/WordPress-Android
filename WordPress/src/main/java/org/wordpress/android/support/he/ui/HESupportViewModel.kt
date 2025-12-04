@@ -337,6 +337,10 @@ class HESupportViewModel @Inject constructor(
         _replyFormState.value = _replyFormState.value.copy(includeAppLogs = include)
     }
 
+    fun updateReplyBottomSheetVisibility(isVisible: Boolean) {
+        _replyFormState.value = _replyFormState.value.copy(isBottomSheetVisible = isVisible)
+    }
+
     fun clearReplyForm() {
         _replyFormState.value = ConversationReplyFormState()
     }

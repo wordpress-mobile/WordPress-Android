@@ -222,6 +222,9 @@ class HESupportActivity : AppCompatActivity() {
                             replyFormState = replyFormState,
                             onReplyMessageChange = { viewModel.updateReplyMessage(it) },
                             onReplyIncludeAppLogsChange = { viewModel.updateReplyIncludeAppLogs(it) },
+                            onReplyBottomSheetVisibilityChange = {
+                                viewModel.updateReplyBottomSheetVisibility(it)
+                            },
                         )
                     }
                 }

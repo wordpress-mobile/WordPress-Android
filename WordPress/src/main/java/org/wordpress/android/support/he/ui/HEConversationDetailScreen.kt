@@ -95,11 +95,11 @@ fun HEConversationDetailScreen(
     replyFormState: ConversationReplyFormState,
     onReplyMessageChange: (String) -> Unit,
     onReplyIncludeAppLogsChange: (Boolean) -> Unit,
+    onReplyBottomSheetVisibilityChange: (Boolean) -> Unit,
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
-    var showBottomSheet by remember { mutableStateOf(false) }
     val resources = LocalResources.current
 
     // State for fullscreen attachment preview (image or video)
@@ -130,7 +130,7 @@ fun HEConversationDetailScreen(
                 ReplyButton(
                     enabled = !isLoading,
                     onClick = {
-                        showBottomSheet = true
+                        onReplyBottomSheetVisibilityChange(true)
                     }
                 )
             }
@@ -186,7 +186,7 @@ fun HEConversationDetailScreen(
         }
     }
 
-    if (showBottomSheet) {
+    if (replyFormState.isBottomSheetVisible) {
         // Close the sheet when sending completes
         LaunchedEffect(messageSendResult) {
             if (messageSendResult != null) {
@@ -195,7 +195,7 @@ fun HEConversationDetailScreen(
                 scope.launch {
                     sheetState.hide()
                 }.invokeOnCompletion {
-                    showBottomSheet = false
+                    onReplyBottomSheetVisibilityChange(false)
                 }
             }
         }
@@ -203,24 +203,23 @@ fun HEConversationDetailScreen(
         HEConversationReplyBottomSheet(
             sheetState = sheetState,
             isSending = isSendingMessage,
-            initialMessageText = replyFormState.message,
-            initialIncludeAppLogs = replyFormState.includeAppLogs,
-            onDismiss = { currentMessage, currentIncludeAppLogs ->
-                onReplyMessageChange(currentMessage)
-                onReplyIncludeAppLogsChange(currentIncludeAppLogs)
+            messageText = replyFormState.message,
+            includeAppLogs = replyFormState.includeAppLogs,
+            onDismiss = {
                 scope.launch {
                     sheetState.hide()
                 }.invokeOnCompletion {
-                    showBottomSheet = false
+                    onReplyBottomSheetVisibilityChange(false)
                 }
             },
             onSend = { message, includeAppLogs ->
-                onReplyMessageChange(message)
                 onSendMessage(message, includeAppLogs)
             },
             onMessageSentSuccessfully = {
                 onClearMessageSendResult()
             },
+            onMessageChange = onReplyMessageChange,
+            onIncludeAppLogsChange = onReplyIncludeAppLogsChange,
             attachmentState = replyFormState.attachmentState,
             attachmentActionsListener = attachmentActionsListener
         )
@@ -598,6 +597,7 @@ private fun HEConversationDetailScreenPreviewContent(
         replyFormState = ConversationReplyFormState(),
         onReplyMessageChange = { },
         onReplyIncludeAppLogsChange = { },
+        onReplyBottomSheetVisibilityChange = { },
     )
 }
 
