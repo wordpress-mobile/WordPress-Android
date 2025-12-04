@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
@@ -644,51 +645,51 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         if (isEmpty()) {
-            int stringId;
+            @StringRes int titleId;
             switch (emptyViewMessageType) {
                 case LOADING:
-                    stringId = R.string.media_fetching;
+                    titleId = R.string.media_fetching;
                     break;
                 case NO_CONTENT:
                     if (!TextUtils.isEmpty(mSearchTerm)) {
                         mActionableEmptyView.updateLayoutForSearch(true, 0);
-                        stringId = R.string.media_empty_search_list;
+                        titleId = R.string.media_empty_search_list;
                     } else {
                         mActionableEmptyView.updateLayoutForSearch(false, 0);
                         mActionableEmptyView.image.setVisibility(View.VISIBLE);
 
                         switch (mFilter) {
                             case FILTER_IMAGES:
-                                stringId = R.string.media_empty_image_list;
+                                titleId = R.string.media_empty_image_list;
                                 break;
                             case FILTER_VIDEOS:
-                                stringId = R.string.media_empty_videos_list;
+                                titleId = R.string.media_empty_videos_list;
                                 break;
                             case FILTER_DOCUMENTS:
-                                stringId = R.string.media_empty_documents_list;
+                                titleId = R.string.media_empty_documents_list;
                                 break;
                             case FILTER_AUDIO:
-                                stringId = R.string.media_empty_audio_list;
+                                titleId = R.string.media_empty_audio_list;
                                 break;
                             default:
-                                stringId = R.string.media_empty_list;
+                                titleId = R.string.media_empty_list;
                                 break;
                         }
                     }
 
                     break;
                 case NETWORK_ERROR:
-                    stringId = R.string.no_network_message;
+                    titleId = R.string.no_network_message;
                     break;
                 case PERMISSION_ERROR:
-                    stringId = R.string.media_error_no_permission;
+                    titleId = R.string.media_error_no_permission;
                     break;
                 default:
-                    stringId = R.string.error_refresh_media;
+                    titleId = R.string.error_refresh_media;
                     break;
             }
 
-            mActionableEmptyView.title.setText(stringId);
+            mActionableEmptyView.title.setText(titleId);
             mActionableEmptyView.setVisibility(View.VISIBLE);
         } else {
             mActionableEmptyView.setVisibility(View.GONE);
