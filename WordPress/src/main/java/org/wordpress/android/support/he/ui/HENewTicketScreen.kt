@@ -459,33 +459,40 @@ private fun CategoryOption(
     }
 }
 
+@Composable
+private fun HENewTicketScreenPreviewContent(snackbarHostState: SnackbarHostState) {
+    HENewTicketScreenContent(
+        snackbarHostState = snackbarHostState,
+        onBackClick = { },
+        onSubmit = { _, _, _, _ -> },
+        userInfo = UserInfo("Test user", "test.user@automattic.com", null),
+        isSendingNewConversation = false,
+        attachmentState = AttachmentState(),
+        attachmentActionsListener = PreviewAttachmentActionsListener,
+        selectedCategory = null,
+        onCategoryChange = {},
+        subject = "",
+        onSubjectChange = {},
+        siteAddress = "",
+        onSiteAddressChange = {},
+        messageText = "",
+        onMessageTextChange = {},
+        includeAppLogs = false,
+        onIncludeAppLogsChange = {},
+    )
+}
+
+private object PreviewAttachmentActionsListener : AttachmentActionsListener {
+    override fun onAddImageClick() { /* Preview stub */ }
+    override fun onRemoveImage(uri: Uri) { /* Preview stub */ }
+}
+
 @Preview(showBackground = true, name = "HE New Ticket Screen")
 @Composable
 private fun HENewTicketScreenPreview() {
     val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = false) {
-        HENewTicketScreenContent(
-            snackbarHostState = snackbarHostState,
-            onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
-            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
-            isSendingNewConversation = false,
-            attachmentState = AttachmentState(),
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() { /* Preview stub */ }
-                override fun onRemoveImage(uri: Uri) { /* Preview stub */ }
-            },
-            selectedCategory = null,
-            onCategoryChange = {},
-            subject = "",
-            onSubjectChange = {},
-            siteAddress = "",
-            onSiteAddressChange = {},
-            messageText = "",
-            onMessageTextChange = {},
-            includeAppLogs = false,
-            onIncludeAppLogsChange = {},
-        )
+        HENewTicketScreenPreviewContent(snackbarHostState)
     }
 }
 
@@ -494,28 +501,7 @@ private fun HENewTicketScreenPreview() {
 private fun HENewTicketScreenPreviewDark() {
     val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = true) {
-        HENewTicketScreenContent(
-            snackbarHostState = snackbarHostState,
-            onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
-            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
-            isSendingNewConversation = false,
-            attachmentState = AttachmentState(),
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() { /* Preview stub */ }
-                override fun onRemoveImage(uri: Uri) { /* Preview stub */ }
-            },
-            selectedCategory = null,
-            onCategoryChange = {},
-            subject = "",
-            onSubjectChange = {},
-            siteAddress = "",
-            onSiteAddressChange = {},
-            messageText = "",
-            onMessageTextChange = {},
-            includeAppLogs = false,
-            onIncludeAppLogsChange = {},
-        )
+        HENewTicketScreenPreviewContent(snackbarHostState)
     }
 }
 
@@ -524,28 +510,7 @@ private fun HENewTicketScreenPreviewDark() {
 private fun HENewTicketScreenWordPressPreview() {
     val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
-        HENewTicketScreenContent(
-            snackbarHostState = snackbarHostState,
-            onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
-            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
-            isSendingNewConversation = false,
-            attachmentState = AttachmentState(),
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() { /* Preview stub */ }
-                override fun onRemoveImage(uri: Uri) { /* Preview stub */ }
-            },
-            selectedCategory = null,
-            onCategoryChange = {},
-            subject = "",
-            onSubjectChange = {},
-            siteAddress = "",
-            onSiteAddressChange = {},
-            messageText = "",
-            onMessageTextChange = {},
-            includeAppLogs = false,
-            onIncludeAppLogsChange = {},
-        )
+        HENewTicketScreenPreviewContent(snackbarHostState)
     }
 }
 
@@ -554,27 +519,6 @@ private fun HENewTicketScreenWordPressPreview() {
 private fun HENewTicketScreenPreviewWordPressDark() {
     val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
-        HENewTicketScreenContent(
-            snackbarHostState = snackbarHostState,
-            onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
-            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
-            isSendingNewConversation = false,
-            attachmentState = AttachmentState(),
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() { /* Preview stub */ }
-                override fun onRemoveImage(uri: Uri) { /* Preview stub */ }
-            },
-            selectedCategory = null,
-            onCategoryChange = {},
-            subject = "",
-            onSubjectChange = {},
-            siteAddress = "",
-            onSiteAddressChange = {},
-            messageText = "",
-            onMessageTextChange = {},
-            includeAppLogs = false,
-            onIncludeAppLogsChange = {},
-        )
+        HENewTicketScreenPreviewContent(snackbarHostState)
     }
 }
