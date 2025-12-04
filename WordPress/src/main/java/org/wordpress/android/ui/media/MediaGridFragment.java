@@ -646,6 +646,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         if (isEmpty()) {
             @StringRes int titleId;
+            @StringRes int subtitleId = 0;
             switch (emptyViewMessageType) {
                 case LOADING:
                     titleId = R.string.media_fetching;
@@ -657,6 +658,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     } else {
                         mActionableEmptyView.updateLayoutForSearch(false, 0);
                         mActionableEmptyView.image.setVisibility(View.VISIBLE);
+                        subtitleId = R.string.media_empty_list_subtitle;
 
                         switch (mFilter) {
                             case FILTER_IMAGES:
@@ -690,6 +692,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
 
             mActionableEmptyView.title.setText(titleId);
+            if (subtitleId > 0) {
+                mActionableEmptyView.subtitle.setText(subtitleId);
+                mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
+            } else {
+                mActionableEmptyView.subtitle.setVisibility(View.GONE);
+            }
             mActionableEmptyView.setVisibility(View.VISIBLE);
         } else {
             mActionableEmptyView.setVisibility(View.GONE);
