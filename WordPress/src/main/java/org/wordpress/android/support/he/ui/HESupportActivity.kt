@@ -176,6 +176,7 @@ class HESupportActivity : AppCompatActivity() {
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
                     val messageSendResult by viewModel.messageSendResult.collectAsState()
                     val videoDownloadState by viewModel.videoDownloadState.collectAsState()
+                    val replyFormState by viewModel.replyFormState.collectAsState()
 
                     selectedConversation?.let { conversation ->
                         HEConversationDetailScreen(
@@ -188,7 +189,7 @@ class HESupportActivity : AppCompatActivity() {
                                 viewModel.clearReplyForm()
                                 viewModel.onBackClick()
                             },
-                            onSendMessage = { message, includeAppLogs ->
+                            onSendMessage = { message, _ ->
                                 viewModel.onAddMessageToConversation(
                                     message = message,
                                 )
@@ -218,7 +219,9 @@ class HESupportActivity : AppCompatActivity() {
                                 viewModel.downloadVideoToTempFile(url)
                             },
                             onResetVideoDownloadState = { viewModel.resetVideoDownloadState() },
-                            viewModel = viewModel,
+                            replyFormState = replyFormState,
+                            onReplyMessageChange = { viewModel.updateReplyMessage(it) },
+                            onReplyIncludeAppLogsChange = { viewModel.updateReplyIncludeAppLogs(it) },
                         )
                     }
                 }
@@ -226,6 +229,7 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.NewTicket.name) {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val isSendingNewConversation by viewModel.isSendingMessage.collectAsState()
+                    val newTicketFormState by viewModel.newTicketFormState.collectAsState()
 
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
@@ -233,7 +237,7 @@ class HESupportActivity : AppCompatActivity() {
                             viewModel.clearNewTicketForm()
                             viewModel.onBackClick()
                         },
-                        onSubmit = { category, subject, message, site ->
+                        onSubmit = { category, subject, message, _ ->
                             viewModel.onSendNewConversation(
                                 subject = subject,
                                 message = message,
@@ -246,7 +250,12 @@ class HESupportActivity : AppCompatActivity() {
                             onAddAttachments = { viewModel.addNewTicketAttachments(it) },
                             onRemoveAttachment = { viewModel.removeNewTicketAttachment(it) }
                         ),
-                        viewModel = viewModel,
+                        formState = newTicketFormState,
+                        onCategoryChange = { viewModel.updateNewTicketCategory(it) },
+                        onSubjectChange = { viewModel.updateNewTicketSubject(it) },
+                        onSiteAddressChange = { viewModel.updateNewTicketSiteAddress(it) },
+                        onMessageTextChange = { viewModel.updateNewTicketMessage(it) },
+                        onIncludeAppLogsChange = { viewModel.updateNewTicketIncludeAppLogs(it) },
                     )
                 }
             }

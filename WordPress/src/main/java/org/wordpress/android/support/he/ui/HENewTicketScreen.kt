@@ -32,8 +32,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,6 +53,7 @@ import androidx.compose.material3.SnackbarHostState
 import org.wordpress.android.R
 import org.wordpress.android.support.common.model.UserInfo
 import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.NewTicketFormState
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
@@ -75,11 +74,13 @@ fun HENewTicketScreen(
     userInfo: UserInfo,
     isSendingNewConversation: Boolean = false,
     attachmentActionsListener: AttachmentActionsListener,
-    viewModel: HESupportViewModel,
+    formState: NewTicketFormState,
+    onCategoryChange: (SupportCategory) -> Unit,
+    onSubjectChange: (String) -> Unit,
+    onSiteAddressChange: (String) -> Unit,
+    onMessageTextChange: (String) -> Unit,
+    onIncludeAppLogsChange: (Boolean) -> Unit,
 ) {
-    // Form state from ViewModel (survives configuration changes)
-    val formState by viewModel.newTicketFormState.collectAsState()
-
     HENewTicketScreenContent(
         snackbarHostState = snackbarHostState,
         onBackClick = onBackClick,
@@ -89,15 +90,15 @@ fun HENewTicketScreen(
         attachmentState = formState.attachmentState,
         attachmentActionsListener = attachmentActionsListener,
         selectedCategory = formState.category,
-        onCategoryChange = { viewModel.updateNewTicketCategory(it) },
+        onCategoryChange = onCategoryChange,
         subject = formState.subject,
-        onSubjectChange = { viewModel.updateNewTicketSubject(it) },
+        onSubjectChange = onSubjectChange,
         siteAddress = formState.siteAddress,
-        onSiteAddressChange = { viewModel.updateNewTicketSiteAddress(it) },
+        onSiteAddressChange = onSiteAddressChange,
         messageText = formState.message,
-        onMessageTextChange = { viewModel.updateNewTicketMessage(it) },
+        onMessageTextChange = onMessageTextChange,
         includeAppLogs = formState.includeAppLogs,
-        onIncludeAppLogsChange = { viewModel.updateNewTicketIncludeAppLogs(it) },
+        onIncludeAppLogsChange = onIncludeAppLogsChange,
     )
 }
 

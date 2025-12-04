@@ -34,7 +34,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -93,17 +92,15 @@ fun HEConversationDetailScreen(
     videoDownloadState: VideoDownloadState,
     onStartVideoDownload: (String) -> Unit,
     onResetVideoDownloadState: () -> Unit = {},
-    viewModel: HESupportViewModel? = null,
+    replyFormState: ConversationReplyFormState,
+    onReplyMessageChange: (String) -> Unit,
+    onReplyIncludeAppLogsChange: (Boolean) -> Unit,
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     val resources = LocalResources.current
-
-    // Reply form state from ViewModel (survives configuration changes)
-    val replyFormState = viewModel?.replyFormState?.collectAsState()?.value
-        ?: ConversationReplyFormState()
 
     // State for fullscreen attachment preview (image or video)
     var previewAttachment by remember { mutableStateOf<SupportAttachment?>(null) }
@@ -209,8 +206,8 @@ fun HEConversationDetailScreen(
             initialMessageText = replyFormState.message,
             initialIncludeAppLogs = replyFormState.includeAppLogs,
             onDismiss = { currentMessage, currentIncludeAppLogs ->
-                viewModel?.updateReplyMessage(currentMessage)
-                viewModel?.updateReplyIncludeAppLogs(currentIncludeAppLogs)
+                onReplyMessageChange(currentMessage)
+                onReplyIncludeAppLogsChange(currentIncludeAppLogs)
                 scope.launch {
                     sheetState.hide()
                 }.invokeOnCompletion {
@@ -218,7 +215,7 @@ fun HEConversationDetailScreen(
                 }
             },
             onSend = { message, includeAppLogs ->
-                viewModel?.updateReplyMessage(message)
+                onReplyMessageChange(message)
                 onSendMessage(message, includeAppLogs)
             },
             onMessageSentSuccessfully = {
@@ -581,113 +578,66 @@ private fun ReplyButton(
     }
 }
 
+@Composable
+private fun HEConversationDetailScreenPreviewContent(
+    snackbarHostState: SnackbarHostState,
+    isLoading: Boolean = false
+) {
+    val sampleConversation = generateSampleHESupportConversations()[0]
+
+    HEConversationDetailScreen(
+        snackbarHostState = snackbarHostState,
+        conversation = sampleConversation,
+        isLoading = isLoading,
+        onBackClick = { },
+        onSendMessage = { _, _ -> },
+        attachmentActionsListener = ConversationDetailPreviewAttachmentActionsListener,
+        onGetAuthorizationHeaderArgument = { "" },
+        videoDownloadState = VideoDownloadState.Idle,
+        onStartVideoDownload = { },
+        replyFormState = ConversationReplyFormState(),
+        onReplyMessageChange = { },
+        onReplyIncludeAppLogsChange = { },
+    )
+}
+
+private object ConversationDetailPreviewAttachmentActionsListener : AttachmentActionsListener {
+    override fun onAddImageClick() { /* Preview stub */ }
+    override fun onRemoveImage(uri: Uri) { /* Preview stub */ }
+}
+
 @Preview(showBackground = true, name = "HE Conversation Detail")
 @Composable
 private fun HEConversationDetailScreenPreview() {
-    val sampleConversation = generateSampleHESupportConversations()[0]
     val snackbarHostState = remember { SnackbarHostState() }
-
     AppThemeM3(isDarkTheme = false) {
-        HEConversationDetailScreen(
-            snackbarHostState = snackbarHostState,
-            conversation = sampleConversation,
-            onBackClick = { },
-            onSendMessage = { _, _ -> },
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {
-                    // stub
-                }
-                override fun onRemoveImage(uri: Uri) {
-                    // stub
-                }
-            },
-            onGetAuthorizationHeaderArgument = { "" },
-            videoDownloadState = VideoDownloadState.Idle,
-            onStartVideoDownload = { _ -> },
-        )
+        HEConversationDetailScreenPreviewContent(snackbarHostState)
     }
 }
 
 @Preview(showBackground = true, name = "HE Conversation Detail - Dark", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun HEConversationDetailScreenPreviewDark() {
-    val sampleConversation = generateSampleHESupportConversations()[0]
     val snackbarHostState = remember { SnackbarHostState() }
-
     AppThemeM3(isDarkTheme = true) {
-        HEConversationDetailScreen(
-            snackbarHostState = snackbarHostState,
-            conversation = sampleConversation,
-            onBackClick = { },
-            onSendMessage = { _, _ -> },
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {
-                    // stub
-                }
-                override fun onRemoveImage(uri: Uri) {
-                    // stub
-                }
-            },
-            onGetAuthorizationHeaderArgument = { "" },
-            videoDownloadState = VideoDownloadState.Idle,
-            onStartVideoDownload = { _ -> },
-        )
+        HEConversationDetailScreenPreviewContent(snackbarHostState)
     }
 }
 
 @Preview(showBackground = true, name = "HE Conversation Detail - WordPress")
 @Composable
 private fun HEConversationDetailScreenWordPressPreview() {
-    val sampleConversation = generateSampleHESupportConversations()[0]
     val snackbarHostState = remember { SnackbarHostState() }
-
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
-        HEConversationDetailScreen(
-            snackbarHostState = snackbarHostState,
-            conversation = sampleConversation,
-            onBackClick = {
-                // stub
-            },
-            onSendMessage = { _, _ -> },
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {
-                    // stub
-                }
-                override fun onRemoveImage(uri: Uri) {
-                    // stub
-                }
-            },
-            onGetAuthorizationHeaderArgument = { "" },
-            videoDownloadState = VideoDownloadState.Idle,
-            onStartVideoDownload = { _ -> },
-        )
+        HEConversationDetailScreenPreviewContent(snackbarHostState)
     }
 }
 
 @Preview(showBackground = true, name = "HE Conversation Detail - Dark WordPress", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun HEConversationDetailScreenPreviewWordPressDark() {
-    val sampleConversation = generateSampleHESupportConversations()[0]
     val snackbarHostState = remember { SnackbarHostState() }
-
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
-        HEConversationDetailScreen(
-            snackbarHostState = snackbarHostState,
-            isLoading = true,
-            conversation = sampleConversation,
-            onBackClick = { },
-            onSendMessage = { _, _ -> },
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {
-                    // stub
-                }
-                override fun onRemoveImage(uri: Uri) {
-                    // stub
-                }
-            },
-            onGetAuthorizationHeaderArgument = { "" },
-            videoDownloadState = VideoDownloadState.Idle,
-            onStartVideoDownload = { _ -> },
-        )
+        HEConversationDetailScreenPreviewContent(snackbarHostState, isLoading = true)
     }
 }
