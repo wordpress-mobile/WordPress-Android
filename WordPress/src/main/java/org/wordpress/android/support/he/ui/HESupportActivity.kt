@@ -175,7 +175,6 @@ class HESupportActivity : AppCompatActivity() {
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
                     val messageSendResult by viewModel.messageSendResult.collectAsState()
-                    val replyFormState by viewModel.replyFormState.collectAsState()
                     val videoDownloadState by viewModel.videoDownloadState.collectAsState()
 
                     selectedConversation?.let { conversation ->
@@ -195,7 +194,6 @@ class HESupportActivity : AppCompatActivity() {
                                 )
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
-                            attachmentState = replyFormState.attachmentState,
                             attachmentActionsListener = createAttachmentActionListener(
                                 onAddAttachments = { viewModel.addReplyAttachments(it) },
                                 onRemoveAttachment = { viewModel.removeReplyAttachment(it) }
@@ -228,7 +226,6 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.NewTicket.name) {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val isSendingNewConversation by viewModel.isSendingMessage.collectAsState()
-                    val newTicketFormState by viewModel.newTicketFormState.collectAsState()
 
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
@@ -245,7 +242,6 @@ class HESupportActivity : AppCompatActivity() {
                         },
                         userInfo = userInfo,
                         isSendingNewConversation = isSendingNewConversation,
-                        attachmentState = newTicketFormState.attachmentState,
                         attachmentActionsListener = createAttachmentActionListener(
                             onAddAttachments = { viewModel.addNewTicketAttachments(it) },
                             onRemoveAttachment = { viewModel.removeNewTicketAttachment(it) }

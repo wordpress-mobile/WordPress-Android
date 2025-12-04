@@ -74,7 +74,6 @@ fun HENewTicketScreen(
             ) -> Unit,
     userInfo: UserInfo,
     isSendingNewConversation: Boolean = false,
-    attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener,
     viewModel: HESupportViewModel,
 ) {
@@ -87,7 +86,7 @@ fun HENewTicketScreen(
         onSubmit = onSubmit,
         userInfo = userInfo,
         isSendingNewConversation = isSendingNewConversation,
-        attachmentState = attachmentState,
+        attachmentState = formState.attachmentState,
         attachmentActionsListener = attachmentActionsListener,
         selectedCategory = formState.category,
         onCategoryChange = { viewModel.updateNewTicketCategory(it) },

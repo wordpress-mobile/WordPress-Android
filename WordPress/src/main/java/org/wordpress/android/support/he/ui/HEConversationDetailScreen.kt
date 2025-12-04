@@ -61,7 +61,6 @@ import coil.request.ImageRequest
 import coil.request.videoFrameMillis
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
-import org.wordpress.android.support.he.model.AttachmentState
 import org.wordpress.android.support.he.model.AttachmentType
 import org.wordpress.android.support.he.model.ConversationReplyFormState
 import org.wordpress.android.support.he.model.ConversationStatus
@@ -88,7 +87,6 @@ fun HEConversationDetailScreen(
     onBackClick: () -> Unit,
     onSendMessage: (message: String, includeAppLogs: Boolean) -> Unit,
     onClearMessageSendResult: () -> Unit = {},
-    attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener,
     onDownloadAttachment: (SupportAttachment) -> Unit = {},
     onGetAuthorizationHeaderArgument: () -> String,
@@ -226,7 +224,7 @@ fun HEConversationDetailScreen(
             onMessageSentSuccessfully = {
                 onClearMessageSendResult()
             },
-            attachmentState = attachmentState,
+            attachmentState = replyFormState.attachmentState,
             attachmentActionsListener = attachmentActionsListener
         )
     }
