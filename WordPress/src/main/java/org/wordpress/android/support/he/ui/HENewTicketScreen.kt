@@ -34,9 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -130,7 +128,6 @@ private fun HENewTicketScreenContent(
     includeAppLogs: Boolean,
     onIncludeAppLogsChange: (Boolean) -> Unit,
 ) {
-
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
@@ -471,13 +468,13 @@ private fun HENewTicketScreenPreview() {
         HENewTicketScreenContent(
             snackbarHostState = snackbarHostState,
             onBackClick = { },
-            onSubmit = { _, _, _, _-> },
+            onSubmit = { _, _, _, _ -> },
             userInfo = UserInfo("Test user", "test.user@automattic.com", null),
             isSendingNewConversation = false,
             attachmentState = AttachmentState(),
             attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {}
-                override fun onRemoveImage(uri: Uri) {}
+                override fun onAddImageClick() { /* Preview stub */ }
+                override fun onRemoveImage(uri: Uri) { /* Preview stub */ }
             },
             selectedCategory = null,
             onCategoryChange = {},
@@ -506,8 +503,8 @@ private fun HENewTicketScreenPreviewDark() {
             isSendingNewConversation = false,
             attachmentState = AttachmentState(),
             attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {}
-                override fun onRemoveImage(uri: Uri) {}
+                override fun onAddImageClick() { /* Preview stub */ }
+                override fun onRemoveImage(uri: Uri) { /* Preview stub */ }
             },
             selectedCategory = null,
             onCategoryChange = {},
@@ -536,8 +533,8 @@ private fun HENewTicketScreenWordPressPreview() {
             isSendingNewConversation = false,
             attachmentState = AttachmentState(),
             attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {}
-                override fun onRemoveImage(uri: Uri) {}
+                override fun onAddImageClick() { /* Preview stub */ }
+                override fun onRemoveImage(uri: Uri) { /* Preview stub */ }
             },
             selectedCategory = null,
             onCategoryChange = {},
@@ -566,8 +563,8 @@ private fun HENewTicketScreenPreviewWordPressDark() {
             isSendingNewConversation = false,
             attachmentState = AttachmentState(),
             attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {}
-                override fun onRemoveImage(uri: Uri) {}
+                override fun onAddImageClick() { /* Preview stub */ }
+                override fun onRemoveImage(uri: Uri) { /* Preview stub */ }
             },
             selectedCategory = null,
             onCategoryChange = {},
