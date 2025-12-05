@@ -225,8 +225,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if (!mAccountStore.hasAccessToken()) {
-                    if (mFollowListener != null) {
-                        mFollowListener.onFollowTappedWhenLoggedOut();
+                    OnFollowListener followListener = mFollowListenerRef != null ? mFollowListenerRef.get() : null;
+                    if (followListener != null) {
+                        followListener.onFollowTappedWhenLoggedOut();
                     }
                 } else {
                     toggleFollowStatus(v, source);
