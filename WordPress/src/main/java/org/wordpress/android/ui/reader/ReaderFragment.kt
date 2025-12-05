@@ -402,6 +402,13 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         viewModel.bookmarkTabRequested()
     }
 
+    fun requestDiscoverTab() {
+        if (!::viewModel.isInitialized) {
+            viewModel = ViewModelProvider(this@ReaderFragment, viewModelFactory)[ReaderViewModel::class.java]
+        }
+        viewModel.discoverTabRequested()
+    }
+
     private fun showReaderInterests() {
         val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
         if (readerInterestsFragment == null) {

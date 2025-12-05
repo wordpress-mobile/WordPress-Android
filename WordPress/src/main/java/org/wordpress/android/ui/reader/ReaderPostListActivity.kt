@@ -98,12 +98,12 @@ class ReaderPostListActivity : BaseAppCompatActivity() {
         if (postListType == ReaderPostListType.BLOG_PREVIEW) {
             setTitle(R.string.reader_activity_title_blog_preview)
             if (savedInstanceState == null) {
-                val blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
                 val feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0)
                 if (feedId != 0L) {
                     showListFragmentForFeed(feedId)
                     siteId = feedId
                 } else {
+                    val blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
                     showListFragmentForBlog(blogId)
                     siteId = blogId
                 }

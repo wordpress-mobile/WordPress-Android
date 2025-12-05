@@ -49,6 +49,9 @@ class HESupportActivity : AppCompatActivity() {
     private lateinit var composeView: ComposeView
     private lateinit var navController: NavHostController
 
+    // Callback to add attachments to the correct form after media picker returns
+    private var onAttachmentsSelected: ((List<Uri>) -> Unit)? = null
+
     @Suppress("TooGenericExceptionCaught")
     private val photoPickerLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
@@ -58,7 +61,7 @@ class HESupportActivity : AppCompatActivity() {
                 val uris = result.data?.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
                 uris?.let { uriStrings ->
                     val newUris = uriStrings.map { it.toUri() }
-                    viewModel.addAttachments(newUris)
+                    onAttachmentsSelected?.invoke(newUris)
                 }
             }
         } catch (e: Exception) {
@@ -168,19 +171,12 @@ class HESupportActivity : AppCompatActivity() {
                 }
 
                 composable(route = ConversationScreen.Detail.name) {
-                    // Clear attachments when leaving conversation screen
-                    androidx.compose.runtime.DisposableEffect(Unit) {
-                        onDispose {
-                            viewModel.clearAttachments()
-                        }
-                    }
-
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isSendingMessage by viewModel.isSendingMessage.collectAsState()
                     val messageSendResult by viewModel.messageSendResult.collectAsState()
-                    val attachmentState by viewModel.attachmentState.collectAsState()
                     val videoDownloadState by viewModel.videoDownloadState.collectAsState()
+                    val replyFormState by viewModel.replyFormState.collectAsState()
 
                     selectedConversation?.let { conversation ->
                         HEConversationDetailScreen(
@@ -189,7 +185,10 @@ class HESupportActivity : AppCompatActivity() {
                             isLoading = isLoadingConversation,
                             isSendingMessage = isSendingMessage,
                             messageSendResult = messageSendResult,
-                            onBackClick = { viewModel.onBackClick() },
+                            onBackClick = {
+                                viewModel.clearReplyForm()
+                                viewModel.onBackClick()
+                            },
                             onSendMessage = { message, includeAppLogs ->
                                 viewModel.onAddMessageToConversation(
                                     message = message,
@@ -197,8 +196,10 @@ class HESupportActivity : AppCompatActivity() {
                                 )
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
-                            attachmentState = attachmentState,
-                            attachmentActionsListener = createAttachmentActionListener(),
+                            attachmentActionsListener = createAttachmentActionListener(
+                                onAddAttachments = { viewModel.addReplyAttachments(it) },
+                                onRemoveAttachment = { viewModel.removeReplyAttachment(it) }
+                            ),
                             onDownloadAttachment = { attachment ->
                                 // Show loading snackbar
                                 scope.launch {
@@ -218,7 +219,13 @@ class HESupportActivity : AppCompatActivity() {
                             onStartVideoDownload = { url ->
                                 viewModel.downloadVideoToTempFile(url)
                             },
-                            onResetVideoDownloadState = { viewModel.resetVideoDownloadState() }
+                            onResetVideoDownloadState = { viewModel.resetVideoDownloadState() },
+                            replyFormState = replyFormState,
+                            onReplyMessageChange = { viewModel.updateReplyMessage(it) },
+                            onReplyIncludeAppLogsChange = { viewModel.updateReplyIncludeAppLogs(it) },
+                            onReplyBottomSheetVisibilityChange = {
+                                viewModel.updateReplyBottomSheetVisibility(it)
+                            },
                         )
                     }
                 }
@@ -226,39 +233,47 @@ class HESupportActivity : AppCompatActivity() {
                 composable(route = ConversationScreen.NewTicket.name) {
                     val userInfo by viewModel.userInfo.collectAsState()
                     val isSendingNewConversation by viewModel.isSendingMessage.collectAsState()
-                    val attachmentState by viewModel.attachmentState.collectAsState()
-
-                    // Clear attachments when leaving the new ticket screen
-                    androidx.compose.runtime.DisposableEffect(Unit) {
-                        onDispose {
-                            viewModel.clearAttachments()
-                        }
-                    }
+                    val newTicketFormState by viewModel.newTicketFormState.collectAsState()
 
                     HENewTicketScreen(
                         snackbarHostState = snackbarHostState,
-                        onBackClick = { viewModel.onBackClick() },
-                        onSubmit = { category, subject, messageText, siteAddress, includeAppLogs ->
+                        onBackClick = {
+                            viewModel.clearNewTicketForm()
+                            viewModel.onBackClick()
+                        },
+                        onSubmit = { category, subject, message, siteAddress, includeAppLogs ->
                             viewModel.onSendNewConversation(
                                 subject = subject,
-                                message = messageText,
+                                message = message,
                                 tags = listOf(category.key),
                                 includeAppLogs = includeAppLogs,
                             )
                         },
                         userInfo = userInfo,
                         isSendingNewConversation = isSendingNewConversation,
-                        attachmentState = attachmentState,
-                        attachmentActionsListener = createAttachmentActionListener()
+                        attachmentActionsListener = createAttachmentActionListener(
+                            onAddAttachments = { viewModel.addNewTicketAttachments(it) },
+                            onRemoveAttachment = { viewModel.removeNewTicketAttachment(it) }
+                        ),
+                        formState = newTicketFormState,
+                        onCategoryChange = { viewModel.updateNewTicketCategory(it) },
+                        onSubjectChange = { viewModel.updateNewTicketSubject(it) },
+                        onSiteAddressChange = { viewModel.updateNewTicketSiteAddress(it) },
+                        onMessageTextChange = { viewModel.updateNewTicketMessage(it) },
+                        onIncludeAppLogsChange = { viewModel.updateNewTicketIncludeAppLogs(it) },
                     )
                 }
             }
         }
     }
 
-    private fun createAttachmentActionListener(): AttachmentActionsListener {
+    private fun createAttachmentActionListener(
+        onAddAttachments: (List<Uri>) -> Unit,
+        onRemoveAttachment: (Uri) -> Unit
+    ): AttachmentActionsListener {
         return object : AttachmentActionsListener {
             override fun onAddImageClick() {
+                onAttachmentsSelected = onAddAttachments
                 val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = MediaPickerSetup.DataSource.DEVICE,
                     availableDataSources = setOf(),
@@ -283,7 +298,7 @@ class HESupportActivity : AppCompatActivity() {
             }
 
             override fun onRemoveImage(uri: Uri) {
-                viewModel.removeAttachment(uri)
+                onRemoveAttachment(uri)
             }
         }
     }

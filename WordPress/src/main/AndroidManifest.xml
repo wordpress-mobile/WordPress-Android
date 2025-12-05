@@ -581,6 +581,82 @@
                     android:pathPattern="/site-monitoring/.*"
                     android:scheme="http" />
 
+                <data
+                    android:host="wordpress.com"
+                    android:path="/read"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:path="/read"
+                    android:scheme="http" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:path="/discover"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:path="/discover"
+                    android:scheme="http" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/feeds/.*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/feeds/.*"
+                    android:scheme="http" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/reader/feeds/.*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/reader/feeds/.*"
+                    android:scheme="http" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:path="/read/search"
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:path="/read/search"
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:path="/reader/search"
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:path="/reader/search"
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/tag/.*"
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/tag/.*"
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" />
+
             </intent-filter>
         </activity-alias>
 
@@ -612,49 +688,71 @@
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/read/feeds/.*/posts/.*"
-                    android:scheme="https" >
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
                 </data>
 
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/read/feeds/.*/posts/.*"
-                    android:scheme="http" >
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
                 </data>
 
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/read/blogs/.*/posts/.*"
-                    android:scheme="https" >
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
                 </data>
 
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/read/blogs/.*/posts/.*"
-                    android:scheme="http" >
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
                 </data>
 
                 <data
                     android:host="*.wordpress.com"
                     android:pathPattern="/2.../../../.*"
-                    android:scheme="https" >
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
                 </data>
 
                 <data
                     android:host="*.wordpress.com"
                     android:pathPattern="/2.../../../.*"
-                    android:scheme="http" >
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
                 </data>
 
                 <data
                     android:host="*.wordpress.com"
                     android:pathPattern="/19../../../.*"
-                    android:scheme="https" >
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
                 </data>
 
                 <data
                     android:host="*.wordpress.com"
                     android:pathPattern="/19../../../.*"
-                    android:scheme="http" >
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/reader/feeds/.*/posts/.*"
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/reader/feeds/.*/posts/.*"
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
                 </data>
 
                 <data

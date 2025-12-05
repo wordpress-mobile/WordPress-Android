@@ -50,11 +50,12 @@ fun PurchaseDomainScreen(
     modifier: Modifier = Modifier
 ) {
     val contentScrollState = rememberScrollState()
+    val isScrolled = contentScrollState.canScrollBackward
     Scaffold(
         modifier = modifier,
         topBar = {
             val elevation = animateDpAsState(
-                targetValue = if (contentScrollState.value == 0) 0.dp else 4.dp,
+                targetValue = if (isScrolled) 4.dp else 0.dp,
                 label = "AppBarElevation"
             )
             MainTopAppBar(

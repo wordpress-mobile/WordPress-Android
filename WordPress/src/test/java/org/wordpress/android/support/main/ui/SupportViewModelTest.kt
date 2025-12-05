@@ -11,8 +11,11 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.AccountModel
+import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.AppLog
 
 @ExperimentalCoroutinesApi
@@ -24,6 +27,12 @@ class SupportViewModelTest : BaseUnitTest() {
     lateinit var appLogWrapper: AppLogWrapper
 
     @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
+    @Mock
     lateinit var account: AccountModel
 
     private lateinit var viewModel: SupportViewModel
@@ -32,7 +41,9 @@ class SupportViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = SupportViewModel(
             accountStore = accountStore,
-            appLogWrapper = appLogWrapper
+            appLogWrapper = appLogWrapper,
+            appPrefsWrapper = appPrefsWrapper,
+            experimentalFeatures = experimentalFeatures
         )
     }
 
@@ -169,6 +180,70 @@ class SupportViewModelTest : BaseUnitTest() {
         assertThat(viewModel.optionsVisibility.value.showAskHappinessEngineers).isFalse()
     }
 
+    @Test
+    fun `init shows network debugging when feature flag is enabled`() {
+        // Given
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(accountStore.account).thenReturn(account)
+        whenever(account.displayName).thenReturn("")
+        whenever(account.userName).thenReturn("")
+        whenever(account.email).thenReturn("")
+        whenever(account.avatarUrl).thenReturn("")
+        whenever(experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NETWORK_DEBUGGING))
+            .thenReturn(true)
+        whenever(appPrefsWrapper.isTrackNetworkRequestsEnabled).thenReturn(false)
+        whenever(appPrefsWrapper.trackNetworkRequestsRetentionPeriod).thenReturn(0)
+
+        // When
+        viewModel.init()
+
+        // Then
+        assertThat(viewModel.networkTrackingState.value.showNetworkDebugging).isTrue()
+    }
+
+    @Test
+    fun `init hides network debugging when feature flag is disabled`() {
+        // Given
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(accountStore.account).thenReturn(account)
+        whenever(account.displayName).thenReturn("")
+        whenever(account.userName).thenReturn("")
+        whenever(account.email).thenReturn("")
+        whenever(account.avatarUrl).thenReturn("")
+        whenever(experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NETWORK_DEBUGGING))
+            .thenReturn(false)
+
+        // When
+        viewModel.init()
+
+        // Then
+        assertThat(viewModel.networkTrackingState.value.showNetworkDebugging).isFalse()
+    }
+
+    @Test
+    fun `init loads tracking enabled state from preferences`() {
+        // Given
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(accountStore.account).thenReturn(account)
+        whenever(account.displayName).thenReturn("")
+        whenever(account.userName).thenReturn("")
+        whenever(account.email).thenReturn("")
+        whenever(account.avatarUrl).thenReturn("")
+        whenever(experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NETWORK_DEBUGGING))
+            .thenReturn(true)
+        whenever(appPrefsWrapper.isTrackNetworkRequestsEnabled).thenReturn(true)
+        whenever(appPrefsWrapper.trackNetworkRequestsRetentionPeriod)
+            .thenReturn(NetworkRequestsRetentionPeriod.ONE_WEEK.value)
+
+        // When
+        viewModel.init()
+
+        // Then
+        assertThat(viewModel.networkTrackingState.value.isTrackingEnabled).isTrue()
+        assertThat(viewModel.networkTrackingState.value.retentionPeriod)
+            .isEqualTo(NetworkRequestsRetentionPeriod.ONE_WEEK)
+    }
+
     // endregion
 
     // region onAskTheBotsClick() tests
@@ -302,6 +377,111 @@ class SupportViewModelTest : BaseUnitTest() {
     fun `hasAccessToken is false by default before init`() {
         // Then
         assertThat(viewModel.isLoggedIn.value).isFalse()
+    }
+
+    // endregion
+
+    // region Network tracking dialog tests
+
+    @Test
+    fun `onNetworkTrackingToggle shows enable dialog when toggled on`() {
+        // Given
+        whenever(appPrefsWrapper.trackNetworkRequestsRetentionPeriod)
+            .thenReturn(NetworkRequestsRetentionPeriod.ONE_DAY.value)
+
+        // When
+        viewModel.onNetworkTrackingToggle(true)
+
+        // Then
+        val dialogState = viewModel.dialogState.value
+        assertThat(dialogState).isInstanceOf(SupportViewModel.DialogState.EnableTracking::class.java)
+        assertThat((dialogState as SupportViewModel.DialogState.EnableTracking).selectedPeriod)
+            .isEqualTo(NetworkRequestsRetentionPeriod.ONE_DAY)
+    }
+
+    @Test
+    fun `onNetworkTrackingToggle shows disable dialog when toggled off`() {
+        // When
+        viewModel.onNetworkTrackingToggle(false)
+
+        // Then
+        assertThat(viewModel.dialogState.value)
+            .isEqualTo(SupportViewModel.DialogState.DisableTracking)
+    }
+
+    @Test
+    fun `onEnableTrackingConfirmed updates state and hides dialog`() {
+        // Given
+        viewModel.onNetworkTrackingToggle(true) // Show dialog first
+
+        // When
+        viewModel.onEnableTrackingConfirmed(NetworkRequestsRetentionPeriod.ONE_WEEK)
+
+        // Then
+        assertThat(viewModel.networkTrackingState.value.isTrackingEnabled).isTrue()
+        assertThat(viewModel.networkTrackingState.value.retentionPeriod)
+            .isEqualTo(NetworkRequestsRetentionPeriod.ONE_WEEK)
+        assertThat(viewModel.dialogState.value).isEqualTo(SupportViewModel.DialogState.Hidden)
+        verify(appPrefsWrapper).isTrackNetworkRequestsEnabled = true
+        verify(appPrefsWrapper).trackNetworkRequestsRetentionPeriod =
+            NetworkRequestsRetentionPeriod.ONE_WEEK.value
+    }
+
+    @Test
+    fun `onDisableTrackingConfirmed updates state and hides dialog`() {
+        // Given
+        viewModel.onNetworkTrackingToggle(false) // Show dialog first
+
+        // When
+        viewModel.onDisableTrackingConfirmed()
+
+        // Then
+        assertThat(viewModel.networkTrackingState.value.isTrackingEnabled).isFalse()
+        assertThat(viewModel.dialogState.value).isEqualTo(SupportViewModel.DialogState.Hidden)
+        verify(appPrefsWrapper).isTrackNetworkRequestsEnabled = false
+    }
+
+    @Test
+    fun `onDialogDismissed hides dialog without changing tracking state`() {
+        // Given
+        viewModel.onNetworkTrackingToggle(true) // Show dialog first
+        val initialTrackingState = viewModel.networkTrackingState.value
+
+        // When
+        viewModel.onDialogDismissed()
+
+        // Then
+        assertThat(viewModel.dialogState.value).isEqualTo(SupportViewModel.DialogState.Hidden)
+        assertThat(viewModel.networkTrackingState.value).isEqualTo(initialTrackingState)
+    }
+
+    @Test
+    fun `onRetentionPeriodSelected updates selected period in dialog`() {
+        // Given
+        whenever(appPrefsWrapper.trackNetworkRequestsRetentionPeriod)
+            .thenReturn(NetworkRequestsRetentionPeriod.ONE_HOUR.value)
+        viewModel.onNetworkTrackingToggle(true) // Show dialog with ONE_HOUR
+
+        // When
+        viewModel.onRetentionPeriodSelected(NetworkRequestsRetentionPeriod.FOREVER)
+
+        // Then
+        val dialogState = viewModel.dialogState.value
+        assertThat(dialogState).isInstanceOf(SupportViewModel.DialogState.EnableTracking::class.java)
+        assertThat((dialogState as SupportViewModel.DialogState.EnableTracking).selectedPeriod)
+            .isEqualTo(NetworkRequestsRetentionPeriod.FOREVER)
+    }
+
+    @Test
+    fun `onRetentionPeriodSelected does nothing when dialog is not EnableTracking`() {
+        // Given - dialog is Hidden
+        assertThat(viewModel.dialogState.value).isEqualTo(SupportViewModel.DialogState.Hidden)
+
+        // When
+        viewModel.onRetentionPeriodSelected(NetworkRequestsRetentionPeriod.FOREVER)
+
+        // Then - dialog is still Hidden
+        assertThat(viewModel.dialogState.value).isEqualTo(SupportViewModel.DialogState.Hidden)
     }
 
     // endregion

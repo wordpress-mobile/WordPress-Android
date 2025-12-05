@@ -12,10 +12,11 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
-import org.wordpress.android.util.config.GutenbergKitFeature
-import javax.inject.Inject
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.config.GutenbergKitFeature
+import javax.inject.Inject
 
 private const val AFFECTED_SITES = "affected_sites"
 
@@ -25,6 +26,7 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     private val gutenbergKitFeature: GutenbergKitFeature,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val appLogWrapper: AppLogWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
 ) : ViewModel() {
     private val _switchStates = MutableStateFlow<Map<Feature, Boolean>>(emptyMap())
     val switchStates: StateFlow<Map<Feature, Boolean>> = _switchStates.asStateFlow()
@@ -33,6 +35,9 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         MutableStateFlow<ApplicationPasswordDialogState>(ApplicationPasswordDialogState.None)
     val applicationPasswordDialogState: StateFlow<ApplicationPasswordDialogState> =
         _applicationPasswordDialogState.asStateFlow()
+
+    private val _showNetworkDebuggingError = MutableStateFlow(false)
+    val showNetworkDebuggingError: StateFlow<Boolean> = _showNetworkDebuggingError.asStateFlow()
 
     init {
         val initialStates = Feature.entries
@@ -53,23 +58,38 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     }
 
     fun onFeatureToggled(feature: Feature, enabled: Boolean) {
-        // Since FluxC has not way to access the experimental features, this is a workaround to remove the
-        // Application Password credentials when the feature is disabled to avoid FluxC to use them.
-        // See the logic in [SiteModelExtensions.kt] and how it can not access to the feature flag
-        if (feature == Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE) {
-            if (enabled) {
-                _applicationPasswordDialogState.value = ApplicationPasswordDialogState.Info
-            }  else {
-                val affectedSites = applicationPasswordLoginHelper.getApplicationPasswordSitesCount()
-                if (affectedSites > 0) {
-                    _applicationPasswordDialogState.value = ApplicationPasswordDialogState.Disable(affectedSites)
+        when (feature) {
+            // Since FluxC has no way to access the experimental features, this is a workaround to
+            // remove the Application Password credentials when the feature is disabled to avoid
+            // FluxC to use them.
+            // See the logic in [SiteModelExtensions.kt] and how it can not access to the feature flag
+            Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE -> {
+                if (enabled) {
+                    _applicationPasswordDialogState.value = ApplicationPasswordDialogState.Info
                 } else {
-                    confirmDisableApplicationPassword()
+                    val affectedSites = applicationPasswordLoginHelper.getApplicationPasswordSitesCount()
+                    if (affectedSites > 0) {
+                        _applicationPasswordDialogState.value =
+                            ApplicationPasswordDialogState.Disable(affectedSites)
+                    } else {
+                        confirmDisableApplicationPassword()
+                    }
                 }
             }
-        } else {
-            setFeatureSwitchState(feature, enabled)
+            // Prevent disabling the feature if network tracking is currently enabled
+            Feature.NETWORK_DEBUGGING -> {
+                if (!enabled && appPrefsWrapper.isTrackNetworkRequestsEnabled) {
+                    _showNetworkDebuggingError.value = true
+                } else {
+                    setFeatureSwitchState(feature, enabled)
+                }
+            }
+            else -> setFeatureSwitchState(feature, enabled)
         }
+    }
+
+    fun dismissNetworkDebuggingError() {
+        _showNetworkDebuggingError.value = false
     }
 
     fun dismissDisableApplicationPassword() {

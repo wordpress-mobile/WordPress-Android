@@ -24,6 +24,7 @@ class ReaderFollowButton @JvmOverloads constructor(
 ) : MaterialButton(context, attrs, defStyleAttr) {
     private var isFollowed = false
     private var showCaption = false
+    private var isLoading = false
 
     init {
         initView(context, attrs)
@@ -57,6 +58,14 @@ class ReaderFollowButton @JvmOverloads constructor(
     fun setIsFollowedAnimated(isFollowed: Boolean) {
         setIsFollowed(isFollowed, true)
     }
+
+    fun setIsLoading(loading: Boolean) {
+        if (isLoading == loading) return
+        isLoading = loading
+        isEnabled = !loading
+    }
+
+    fun getIsLoading(): Boolean = isLoading
 
     @SuppressLint("Recycle")
     private fun setIsFollowed(isFollowed: Boolean, animateChanges: Boolean) {

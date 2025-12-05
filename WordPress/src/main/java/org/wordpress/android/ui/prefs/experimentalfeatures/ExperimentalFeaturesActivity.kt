@@ -18,6 +18,7 @@ import org.wordpress.android.ui.accounts.HelpActivity
 class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
     private val viewModel: ExperimentalFeaturesViewModel by viewModels()
 
+    @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -26,7 +27,15 @@ class ExperimentalFeaturesActivity : BaseAppCompatActivity() {
                 val features by viewModel.switchStates.collectAsStateWithLifecycle()
                 val applicationPasswordDialogState by
                 viewModel.applicationPasswordDialogState.collectAsStateWithLifecycle()
+                val showNetworkDebuggingError by
+                viewModel.showNetworkDebuggingError.collectAsStateWithLifecycle()
                 val showDialog = remember { mutableStateOf(false) }
+
+                if (showNetworkDebuggingError) {
+                    NetworkDebuggingErrorDialog(
+                        onDismiss = { viewModel.dismissNetworkDebuggingError() }
+                    )
+                }
 
                 when (applicationPasswordDialogState) {
                     is ExperimentalFeaturesViewModel.ApplicationPasswordDialogState.Disable -> {

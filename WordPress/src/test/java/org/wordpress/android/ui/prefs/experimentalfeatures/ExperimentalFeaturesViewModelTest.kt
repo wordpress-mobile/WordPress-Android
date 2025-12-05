@@ -15,6 +15,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesViewModel.ApplicationPasswordDialogState
 import org.wordpress.android.util.AppLog
@@ -33,6 +34,9 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var appLogWrapper: AppLogWrapper
+
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
 
     private lateinit var viewModel: ExperimentalFeaturesViewModel
 
@@ -225,7 +229,8 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
             experimentalFeatures = experimentalFeatures,
             gutenbergKitFeature = gutenbergKitFeature,
             applicationPasswordLoginHelper = applicationPasswordLoginHelper,
-            appLogWrapper = appLogWrapper
+            appLogWrapper = appLogWrapper,
+            appPrefsWrapper = appPrefsWrapper
         )
     }
 }

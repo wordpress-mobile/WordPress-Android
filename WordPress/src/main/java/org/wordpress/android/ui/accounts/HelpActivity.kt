@@ -2,16 +2,22 @@
 
 package org.wordpress.android.ui.accounts
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
+import android.widget.CompoundButton
+import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
+import com.chuckerteam.chucker.api.Chucker
 import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.BuildConfig
@@ -40,6 +46,7 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.SiteUtils
@@ -74,6 +81,9 @@ class HelpActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
+
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
 
     private lateinit var binding: HelpActivityBinding
 
@@ -125,6 +135,8 @@ class HelpActivity : BaseAppCompatActivity() {
             if (originFromExtras == Origin.JETPACK_MIGRATION_HELP) {
                 configureForJetpackMigrationHelp()
             }
+
+            setupTrackNetworkRequestsToggle()
         }
         /**
          * If the user taps on a Zendesk notification, we want to show them the `My Tickets` page. However, this
@@ -142,6 +154,121 @@ class HelpActivity : BaseAppCompatActivity() {
         binding.debugSettingsButton.setOnClickListener {
             startActivity(Intent(this, DebugSettingsActivity::class.java))
         }
+    }
+
+    private fun HelpActivityBinding.setupTrackNetworkRequestsToggle() {
+        // Hide entire section if experimental feature is not enabled
+        val isFeatureEnabled = experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NETWORK_DEBUGGING)
+        trackNetworkRequestsSection.isVisible = isFeatureEnabled
+
+        if (!isFeatureEnabled) {
+            return
+        }
+
+        val isEnabled = appPrefsWrapper.isTrackNetworkRequestsEnabled
+        trackNetworkRequestsSwitch.isChecked = isEnabled
+        networkRequestsRetentionInfo.isVisible = isEnabled
+        viewNetworkRequestsButton.isVisible = isEnabled
+        if (isEnabled) {
+            updateRetentionInfoText()
+        }
+
+        trackNetworkRequestsSwitch.setOnCheckedChangeListener(trackNetworkRequestsCheckedChangeListener)
+        viewNetworkRequestsButton.setOnClickListener {
+            startActivity(Chucker.getLaunchIntent(this@HelpActivity))
+        }
+    }
+
+    private fun HelpActivityBinding.updateRetentionInfoText() {
+        val period = NetworkRequestsRetentionPeriod.fromInt(appPrefsWrapper.trackNetworkRequestsRetentionPeriod)
+        val periodString = getRetentionPeriodDisplayString(period)
+        networkRequestsRetentionInfo.text = getString(R.string.network_requests_retention_info, periodString)
+    }
+
+    /**
+     * Listener for the track network requests switch. Defined as a property so we can
+     * remove/re-add it when programmatically changing the switch state.
+     */
+    private val trackNetworkRequestsCheckedChangeListener =
+        CompoundButton.OnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                showEnableTrackingDialog()
+            } else {
+                showDisableTrackingDialog()
+            }
+        }
+
+    /**
+     * Sets the switch state without triggering the listener.
+     */
+    private fun HelpActivityBinding.setSwitchCheckedSilently(checked: Boolean) {
+        trackNetworkRequestsSwitch.setOnCheckedChangeListener(null)
+        trackNetworkRequestsSwitch.isChecked = checked
+        trackNetworkRequestsSwitch.setOnCheckedChangeListener(trackNetworkRequestsCheckedChangeListener)
+    }
+
+    private fun getRetentionPeriodDisplayString(period: NetworkRequestsRetentionPeriod): String {
+        return when (period) {
+            NetworkRequestsRetentionPeriod.ONE_HOUR -> getString(R.string.network_requests_retention_one_hour)
+            NetworkRequestsRetentionPeriod.ONE_DAY -> getString(R.string.network_requests_retention_one_day)
+            NetworkRequestsRetentionPeriod.ONE_WEEK -> getString(R.string.network_requests_retention_one_week)
+            NetworkRequestsRetentionPeriod.FOREVER -> getString(R.string.network_requests_retention_until_cleared)
+        }
+    }
+
+    private fun showEnableTrackingDialog() {
+        val periods = NetworkRequestsRetentionPeriod.entries.toTypedArray()
+        val displayNames = periods.map { getRetentionPeriodDisplayString(it) }.toTypedArray()
+        val currentPeriod = NetworkRequestsRetentionPeriod.fromInt(appPrefsWrapper.trackNetworkRequestsRetentionPeriod)
+        var selectedIndex = periods.indexOf(currentPeriod)
+
+        // Custom title view with title + description (setMessage conflicts with setSingleChoiceItems)
+        @SuppressLint("InflateParams") // Parent is null because AlertDialog attaches it internally
+        val titleView = layoutInflater.inflate(R.layout.dialog_title_with_message, null).apply {
+            findViewById<TextView>(R.id.dialog_title).setText(R.string.track_network_requests)
+            findViewById<TextView>(R.id.dialog_message).setText(R.string.network_requests_enable_dialog_description)
+        }
+
+        AlertDialog.Builder(this)
+            .setCustomTitle(titleView)
+            .setSingleChoiceItems(displayNames, selectedIndex) { _, which ->
+                selectedIndex = which
+            }
+            .setPositiveButton(R.string.network_requests_enable) { _, _ ->
+                val selectedPeriod = periods[selectedIndex]
+                appPrefsWrapper.trackNetworkRequestsRetentionPeriod = selectedPeriod.value
+                appPrefsWrapper.isTrackNetworkRequestsEnabled = true
+                binding.networkRequestsRetentionInfo.isVisible = true
+                binding.viewNetworkRequestsButton.isVisible = true
+                binding.updateRetentionInfoText()
+                AppLog.d(API, "Track network requests enabled with retention: $selectedPeriod")
+            }
+            .setNegativeButton(R.string.cancel) { _, _ ->
+                binding.setSwitchCheckedSilently(false)
+            }
+            .setOnCancelListener {
+                binding.setSwitchCheckedSilently(false)
+            }
+            .show()
+    }
+
+    private fun showDisableTrackingDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.network_requests_disable_tracking_title)
+            .setMessage(R.string.network_requests_disable_tracking_description)
+            .setPositiveButton(R.string.network_requests_disable) { _, _ ->
+                appPrefsWrapper.isTrackNetworkRequestsEnabled = false
+                binding.networkRequestsRetentionInfo.isVisible = false
+                binding.viewNetworkRequestsButton.isVisible = false
+                AppLog.d(API, "Track network requests disabled")
+            }
+            .setNegativeButton(R.string.cancel) { _, _ ->
+                binding.setSwitchCheckedSilently(true)
+            }
+            .setOnCancelListener {
+                binding.setSwitchCheckedSilently(true)
+            }
+            .show()
     }
 
     override fun onResume() {
