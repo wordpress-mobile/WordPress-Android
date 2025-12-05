@@ -302,7 +302,6 @@ class LogsViewModelTest : BaseUnitTest() {
 
     // Helper methods
 
-    @Suppress("DEPRECATION")
     private fun createMockFile(name: String, lastModified: Long): File {
         // Create a temporary directory with expected filename
         val testDir = File(System.getProperty("java.io.tmpdir"), "test-logs")

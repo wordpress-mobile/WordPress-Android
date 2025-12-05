@@ -158,7 +158,7 @@ class HESupportViewModel @Inject constructor(
         heSupportRepository.loadConversation(conversationId)
 
     @Suppress("TooGenericExceptionCaught")
-    fun onAddMessageToConversation(message: String, includeAppLogs: Boolean,) {
+    fun onAddMessageToConversation(message: String, includeAppLogs: Boolean) {
         viewModelScope.launch(ioDispatcher) {
             try {
                 if (!networkUtilsWrapper.isNetworkAvailable()) {

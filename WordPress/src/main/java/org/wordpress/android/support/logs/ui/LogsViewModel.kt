@@ -122,8 +122,9 @@ class LogsViewModel @Inject constructor(
         val nameWithoutExtension = fileName.substringBeforeLast(".")
 
         // Try to parse timestamp format: 2025-11-21T10:42:06+0100
+        // Use Locale.ROOT for parsing fixed ISO-8601 format to avoid locale-specific issues
         return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault())
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT)
             val parsedDate = inputFormat.parse(nameWithoutExtension)
             if (parsedDate != null) {
                 val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
