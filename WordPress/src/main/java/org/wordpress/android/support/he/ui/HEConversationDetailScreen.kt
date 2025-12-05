@@ -60,10 +60,10 @@ import coil.request.ImageRequest
 import coil.request.videoFrameMillis
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
-import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.AttachmentType
+import org.wordpress.android.support.he.model.ConversationReplyFormState
 import org.wordpress.android.support.he.model.ConversationStatus
 import org.wordpress.android.support.he.model.MessageSendResult
-import org.wordpress.android.support.he.model.AttachmentType
 import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
@@ -86,23 +86,21 @@ fun HEConversationDetailScreen(
     onBackClick: () -> Unit,
     onSendMessage: (message: String, includeAppLogs: Boolean) -> Unit,
     onClearMessageSendResult: () -> Unit = {},
-    attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener,
     onDownloadAttachment: (SupportAttachment) -> Unit = {},
     onGetAuthorizationHeaderArgument: () -> String,
     videoDownloadState: VideoDownloadState,
     onStartVideoDownload: (String) -> Unit,
     onResetVideoDownloadState: () -> Unit = {},
+    replyFormState: ConversationReplyFormState,
+    onReplyMessageChange: (String) -> Unit,
+    onReplyIncludeAppLogsChange: (Boolean) -> Unit,
+    onReplyBottomSheetVisibilityChange: (Boolean) -> Unit,
 ) {
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
-    var showBottomSheet by remember { mutableStateOf(false) }
     val resources = LocalResources.current
-
-    // Save draft message state to restore when reopening the bottom sheet
-    var draftMessageText by remember { mutableStateOf("") }
-    var draftIncludeAppLogs by remember { mutableStateOf(false) }
 
     // State for fullscreen attachment preview (image or video)
     var previewAttachment by remember { mutableStateOf<SupportAttachment?>(null) }
@@ -132,7 +130,7 @@ fun HEConversationDetailScreen(
                 ReplyButton(
                     enabled = !isLoading,
                     onClick = {
-                        showBottomSheet = true
+                        onReplyBottomSheetVisibilityChange(true)
                     }
                 )
             }
@@ -188,22 +186,16 @@ fun HEConversationDetailScreen(
         }
     }
 
-    if (showBottomSheet) {
+    if (replyFormState.isBottomSheetVisible) {
         // Close the sheet when sending completes
         LaunchedEffect(messageSendResult) {
             if (messageSendResult != null) {
-                // Clear draft only on success
-                if (messageSendResult is MessageSendResult.Success) {
-                    draftMessageText = ""
-                    draftIncludeAppLogs = false
-                }
-
                 // Dismiss sheet and clear result for both success and failure
                 onClearMessageSendResult()
                 scope.launch {
                     sheetState.hide()
                 }.invokeOnCompletion {
-                    showBottomSheet = false
+                    onReplyBottomSheetVisibilityChange(false)
                 }
             }
         }
@@ -211,28 +203,24 @@ fun HEConversationDetailScreen(
         HEConversationReplyBottomSheet(
             sheetState = sheetState,
             isSending = isSendingMessage,
-            initialMessageText = draftMessageText,
-            initialIncludeAppLogs = draftIncludeAppLogs,
-            onDismiss = { currentMessage, currentIncludeAppLogs ->
-                draftMessageText = currentMessage
-                draftIncludeAppLogs = currentIncludeAppLogs
+            messageText = replyFormState.message,
+            includeAppLogs = replyFormState.includeAppLogs,
+            onDismiss = {
                 scope.launch {
                     sheetState.hide()
                 }.invokeOnCompletion {
-                    showBottomSheet = false
+                    onReplyBottomSheetVisibilityChange(false)
                 }
             },
             onSend = { message, includeAppLogs ->
-                draftMessageText = message
                 onSendMessage(message, includeAppLogs)
             },
             onMessageSentSuccessfully = {
-                // Clear draft after successful send
-                draftMessageText = ""
-                draftIncludeAppLogs = false
                 onClearMessageSendResult()
             },
-            attachmentState = attachmentState,
+            onMessageChange = onReplyMessageChange,
+            onIncludeAppLogsChange = onReplyIncludeAppLogsChange,
+            attachmentState = replyFormState.attachmentState,
             attachmentActionsListener = attachmentActionsListener
         )
     }
@@ -589,113 +577,67 @@ private fun ReplyButton(
     }
 }
 
+@Composable
+private fun HEConversationDetailScreenPreviewContent(
+    snackbarHostState: SnackbarHostState,
+    isLoading: Boolean = false
+) {
+    val sampleConversation = generateSampleHESupportConversations()[0]
+
+    HEConversationDetailScreen(
+        snackbarHostState = snackbarHostState,
+        conversation = sampleConversation,
+        isLoading = isLoading,
+        onBackClick = { },
+        onSendMessage = { _, _ -> },
+        attachmentActionsListener = ConversationDetailPreviewAttachmentActionsListener,
+        onGetAuthorizationHeaderArgument = { "" },
+        videoDownloadState = VideoDownloadState.Idle,
+        onStartVideoDownload = { },
+        replyFormState = ConversationReplyFormState(),
+        onReplyMessageChange = { },
+        onReplyIncludeAppLogsChange = { },
+        onReplyBottomSheetVisibilityChange = { },
+    )
+}
+
+private object ConversationDetailPreviewAttachmentActionsListener : AttachmentActionsListener {
+    override fun onAddImageClick() { /* Preview stub */ }
+    override fun onRemoveImage(uri: Uri) { /* Preview stub */ }
+}
+
 @Preview(showBackground = true, name = "HE Conversation Detail")
 @Composable
 private fun HEConversationDetailScreenPreview() {
-    val sampleConversation = generateSampleHESupportConversations()[0]
     val snackbarHostState = remember { SnackbarHostState() }
-
     AppThemeM3(isDarkTheme = false) {
-        HEConversationDetailScreen(
-            snackbarHostState = snackbarHostState,
-            conversation = sampleConversation,
-            onBackClick = { },
-            onSendMessage = { _, _ -> },
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {
-                    // stub
-                }
-                override fun onRemoveImage(uri: Uri) {
-                    // stub
-                }
-            },
-            onGetAuthorizationHeaderArgument = { "" },
-            videoDownloadState = VideoDownloadState.Idle,
-            onStartVideoDownload = { _ -> },
-        )
+        HEConversationDetailScreenPreviewContent(snackbarHostState)
     }
 }
 
 @Preview(showBackground = true, name = "HE Conversation Detail - Dark", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun HEConversationDetailScreenPreviewDark() {
-    val sampleConversation = generateSampleHESupportConversations()[0]
     val snackbarHostState = remember { SnackbarHostState() }
-
     AppThemeM3(isDarkTheme = true) {
-        HEConversationDetailScreen(
-            snackbarHostState = snackbarHostState,
-            conversation = sampleConversation,
-            onBackClick = { },
-            onSendMessage = { _, _ -> },
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {
-                    // stub
-                }
-                override fun onRemoveImage(uri: Uri) {
-                    // stub
-                }
-            },
-            onGetAuthorizationHeaderArgument = { "" },
-            videoDownloadState = VideoDownloadState.Idle,
-            onStartVideoDownload = { _ -> },
-        )
+        HEConversationDetailScreenPreviewContent(snackbarHostState)
     }
 }
 
 @Preview(showBackground = true, name = "HE Conversation Detail - WordPress")
 @Composable
 private fun HEConversationDetailScreenWordPressPreview() {
-    val sampleConversation = generateSampleHESupportConversations()[0]
     val snackbarHostState = remember { SnackbarHostState() }
-
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
-        HEConversationDetailScreen(
-            snackbarHostState = snackbarHostState,
-            conversation = sampleConversation,
-            onBackClick = {
-                // stub
-            },
-            onSendMessage = { _, _ -> },
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {
-                    // stub
-                }
-                override fun onRemoveImage(uri: Uri) {
-                    // stub
-                }
-            },
-            onGetAuthorizationHeaderArgument = { "" },
-            videoDownloadState = VideoDownloadState.Idle,
-            onStartVideoDownload = { _ -> },
-        )
+        HEConversationDetailScreenPreviewContent(snackbarHostState)
     }
 }
 
 @Preview(showBackground = true, name = "HE Conversation Detail - Dark WordPress", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun HEConversationDetailScreenPreviewWordPressDark() {
-    val sampleConversation = generateSampleHESupportConversations()[0]
     val snackbarHostState = remember { SnackbarHostState() }
-
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
-        HEConversationDetailScreen(
-            snackbarHostState = snackbarHostState,
-            isLoading = true,
-            conversation = sampleConversation,
-            onBackClick = { },
-            onSendMessage = { _, _ -> },
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {
-                    // stub
-                }
-                override fun onRemoveImage(uri: Uri) {
-                    // stub
-                }
-            },
-            onGetAuthorizationHeaderArgument = { "" },
-            videoDownloadState = VideoDownloadState.Idle,
-            onStartVideoDownload = { _ -> },
-        )
+        HEConversationDetailScreenPreviewContent(snackbarHostState, isLoading = true)
     }
 }
