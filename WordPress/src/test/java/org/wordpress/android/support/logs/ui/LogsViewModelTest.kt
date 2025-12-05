@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.logs.model.LogFile
 import org.wordpress.android.util.LogFileProviderWrapper
 import java.io.File
+import kotlin.io.path.createTempDirectory
 
 @ExperimentalCoroutinesApi
 class LogsViewModelTest : BaseUnitTest() {
@@ -28,7 +29,7 @@ class LogsViewModelTest : BaseUnitTest() {
         context = mock()
 
         // Create a real temporary directory for cache operations to avoid mocking File constructor
-        val tempCacheDir = createTempDir("test-cache")
+        val tempCacheDir = createTempDirectory("test-cache").toFile()
         tempCacheDir.deleteOnExit()
         whenever(context.cacheDir).thenReturn(tempCacheDir)
 
