@@ -97,7 +97,7 @@ class LogsViewModel @Inject constructor(
         viewModelScope.launch(ioDispatcher) {
             try {
                 // Copy log file to cache directory for secure sharing
-                val cacheDir = File(context.cacheDir, "shared_logs")
+                val cacheDir = File(context.cacheDir, SHARED_LOGS_DIR)
                 if (!cacheDir.exists()) {
                     cacheDir.mkdirs()
                 }
@@ -170,9 +170,29 @@ class LogsViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
+    /**
+     * Cleans up cached log files used for sharing. Call this when the activity is destroyed.
+     */
+    fun cleanupSharedLogsCache() {
+        val cacheDir = File(context.cacheDir, SHARED_LOGS_DIR)
+        if (cacheDir.exists()) {
+            cacheDir.listFiles()?.forEach { file ->
+                if (!file.delete()) {
+                    appLogWrapper.w(AppLog.T.SUPPORT, "Failed to delete cached log file: ${file.name}")
+                }
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        cleanupSharedLogsCache()
+    }
+
     enum class ErrorType { GENERAL }
 
     companion object {
         private const val MAX_LINES = 100
+        private const val SHARED_LOGS_DIR = "shared_logs"
     }
 }
