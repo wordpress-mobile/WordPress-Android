@@ -29,8 +29,8 @@
         android:layout_width="match_parent"
         android:visibility="gone"
         app:aevButton="@string/media_empty_upload_media"
-        app:aevImage="@drawable/img_illustration_media_105dp"
         app:aevTitle="@string/media_empty_list"
+        app:aevSubtitle="@string/media_empty_list_subtitle"
         tools:visibility="visible" >
     </org.wordpress.android.ui.ActionableEmptyView>
 
