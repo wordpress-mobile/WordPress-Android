@@ -202,7 +202,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
             message = message,
             tags = tags,
             attachments = attachments,
-            encryptedLogIds = emptyList()
+            encryptedLogUuids = emptyList()
         )
 
         // Then
@@ -234,7 +234,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
             message = "Test",
             tags = emptyList(),
             attachments = emptyList(),
-            encryptedLogIds = emptyList()
+            encryptedLogUuids = emptyList()
         )
 
         // Then
@@ -259,7 +259,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
             message = "Test",
             tags = emptyList(),
             attachments = emptyList(),
-            encryptedLogIds = emptyList()
+            encryptedLogUuids = emptyList()
         )
 
         // Then

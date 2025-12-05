@@ -158,7 +158,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             message = "Test Message",
             tags = listOf("tag1"),
             attachments = emptyList(),
-            encryptedLogIds = emptyList()
+            encryptedLogUuids = emptyList()
         )).thenReturn(CreateConversationResult.Success(newConversation))
 
         viewModel.onSendNewConversation(
@@ -174,7 +174,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             message = "Test Message",
             tags = listOf("tag1"),
             attachments = emptyList(),
-            encryptedLogIds = emptyList()
+            encryptedLogUuids = emptyList()
         )
     }
 
@@ -185,7 +185,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             message = "Test Message",
             tags = listOf("tag1"),
             attachments = emptyList(),
-            encryptedLogIds = emptyList()
+            encryptedLogUuids = emptyList()
         )).thenReturn(CreateConversationResult.Error.Forbidden)
 
         viewModel.onSendNewConversation(
@@ -207,7 +207,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             message = "Test Message",
             tags = listOf("tag1"),
             attachments = emptyList(),
-            encryptedLogIds = emptyList()
+            encryptedLogUuids = emptyList()
         )).thenReturn(CreateConversationResult.Error.GeneralError)
 
         viewModel.onSendNewConversation(
@@ -927,7 +927,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             message = "Test Message",
             tags = listOf("tag1"),
             attachments = listOf(tempFile1.path, tempFile2.path),
-            encryptedLogIds = emptyList()
+            encryptedLogUuids = emptyList()
         )).thenReturn(CreateConversationResult.Success(newConversation))
 
         viewModel.addNewTicketAttachments(listOf(uri1, uri2))
@@ -946,7 +946,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             message = "Test Message",
             tags = listOf("tag1"),
             attachments = listOf(tempFile1.path, tempFile2.path),
-            encryptedLogIds = emptyList()
+            encryptedLogUuids = emptyList()
         )
         verify(tempAttachmentsUtil).removeTempFiles(listOf(tempFile1, tempFile2))
     }
