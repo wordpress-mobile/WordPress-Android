@@ -13,7 +13,10 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.logs.model.LogFile
 import org.wordpress.android.util.LogFileProviderWrapper
 import java.io.File
+import java.util.Locale
+import java.util.TimeZone
 import kotlin.io.path.createTempDirectory
+import org.junit.After
 
 @ExperimentalCoroutinesApi
 class LogsViewModelTest : BaseUnitTest() {
@@ -22,8 +25,20 @@ class LogsViewModelTest : BaseUnitTest() {
     private lateinit var context: Context
     private lateinit var viewModel: LogsViewModel
 
+    private lateinit var originalLocale: Locale
+    private lateinit var originalTimeZone: TimeZone
+
     @Before
     fun setUp() {
+        // Save original locale and timezone
+        originalLocale = Locale.getDefault()
+        originalTimeZone = TimeZone.getDefault()
+
+        // Set fixed locale and timezone for consistent test results
+        // Use GMT+1 to match the +0100 offset in test filenames
+        Locale.setDefault(Locale.US)
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+1"))
+
         appLogWrapper = mock()
         logFileProvider = mock()
         context = mock()
@@ -39,6 +54,13 @@ class LogsViewModelTest : BaseUnitTest() {
             context = context,
             ioDispatcher = testDispatcher()
         )
+    }
+
+    @After
+    fun tearDown() {
+        // Restore original locale and timezone
+        Locale.setDefault(originalLocale)
+        TimeZone.setDefault(originalTimeZone)
     }
 
     // region Initial state tests
