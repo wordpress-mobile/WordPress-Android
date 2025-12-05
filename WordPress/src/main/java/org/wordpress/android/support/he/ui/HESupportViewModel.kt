@@ -139,6 +139,7 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
+    @Suppress("NestedBlockDepth", "TooGenericExceptionCaught")
     private fun uploadLogs(): List<String> {
         try {
             val encryptedLogsUuid = mutableListOf<String>()
