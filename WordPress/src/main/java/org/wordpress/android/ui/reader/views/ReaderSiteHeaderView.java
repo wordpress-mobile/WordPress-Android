@@ -34,6 +34,7 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 
+import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,6 +54,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
         void onBlogInfoLoaded(ReaderBlog blogInfo);
     }
 
+    public interface OnBlogInfoFailedListener {
+        void onBlogInfoFailed();
+    }
+
     private long mBlogId;
     private long mFeedId;
     private boolean mIsFeed;
@@ -60,8 +65,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private ReaderFollowButton mFollowButton;
     @Nullable private ProgressBar mFollowProgress;
     private ReaderBlog mBlogInfo;
-    private OnBlogInfoLoadedListener mBlogInfoListener;
-    private OnFollowListener mFollowListener;
+    @Nullable private WeakReference<OnBlogInfoLoadedListener> mBlogInfoListenerRef;
+    @Nullable private WeakReference<OnBlogInfoFailedListener> mBlogInfoFailedListenerRef;
+    @Nullable private WeakReference<OnFollowListener> mFollowListenerRef;
 
     private final ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
@@ -92,12 +98,16 @@ public class ReaderSiteHeaderView extends LinearLayout {
         view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
-    public void setOnFollowListener(OnFollowListener listener) {
-        mFollowListener = listener;
+    public void setOnFollowListener(@Nullable OnFollowListener listener) {
+        mFollowListenerRef = listener != null ? new WeakReference<>(listener) : null;
     }
 
-    public void setOnBlogInfoLoadedListener(OnBlogInfoLoadedListener listener) {
-        mBlogInfoListener = listener;
+    public void setOnBlogInfoLoadedListener(@Nullable OnBlogInfoLoadedListener listener) {
+        mBlogInfoListenerRef = listener != null ? new WeakReference<>(listener) : null;
+    }
+
+    public void setOnBlogInfoFailedListener(@Nullable OnBlogInfoFailedListener listener) {
+        mBlogInfoFailedListenerRef = listener != null ? new WeakReference<>(listener) : null;
     }
 
     public void loadBlogInfo(
@@ -110,6 +120,11 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         if (blogId == 0 && feedId == 0) {
             ToastUtils.showToast(getContext(), R.string.reader_toast_err_show_blog);
+            OnBlogInfoFailedListener failedListener =
+                    mBlogInfoFailedListenerRef != null ? mBlogInfoFailedListenerRef.get() : null;
+            if (failedListener != null) {
+                failedListener.onBlogInfoFailed();
+            }
             return;
         }
 
@@ -132,7 +147,17 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 if (localBlogInfo == null || ReaderBlogTable.isTimeToUpdateBlogInfo(localBlogInfo)) {
                     ReaderActions.UpdateBlogInfoListener listener = serverBlogInfo -> {
                         if (isAttachedToWindow()) {
-                            showBlogInfo(serverBlogInfo, source);
+                            if (serverBlogInfo != null) {
+                                showBlogInfo(serverBlogInfo, source);
+                            } else if (localBlogInfo == null) {
+                                // No local info and server returned null - blog/feed not found
+                                OnBlogInfoFailedListener failedListener =
+                                        mBlogInfoFailedListenerRef != null
+                                                ? mBlogInfoFailedListenerRef.get() : null;
+                                if (failedListener != null) {
+                                    failedListener.onBlogInfoFailed();
+                                }
+                            }
                         }
                     };
 
@@ -200,8 +225,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if (!mAccountStore.hasAccessToken()) {
-                    if (mFollowListener != null) {
-                        mFollowListener.onFollowTappedWhenLoggedOut();
+                    OnFollowListener followListener = mFollowListenerRef != null ? mFollowListenerRef.get() : null;
+                    if (followListener != null) {
+                        followListener.onFollowTappedWhenLoggedOut();
                     }
                 } else {
                     toggleFollowStatus(v, source);
@@ -213,8 +239,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
             layoutInfo.setVisibility(View.VISIBLE);
         }
 
-        if (mBlogInfoListener != null) {
-            mBlogInfoListener.onBlogInfoLoaded(blogInfo);
+        OnBlogInfoLoadedListener blogInfoListener =
+                mBlogInfoListenerRef != null ? mBlogInfoListenerRef.get() : null;
+        if (blogInfoListener != null) {
+            blogInfoListener.onBlogInfoLoaded(blogInfo);
         }
     }
 
@@ -253,7 +281,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     private void setFollowButtonLoading(boolean isLoading) {
         mFollowButton.setIsLoading(isLoading);
-        mFollowProgress.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        if (mFollowProgress != null) {
+            mFollowProgress.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void toggleFollowStatus(final View followButton, final String source) {
@@ -272,15 +302,17 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         mFollowButton.setIsFollowed(isAskingToFollow);
 
-        if (mFollowListener != null) {
+        OnFollowListener followListener =
+                mFollowListenerRef != null ? mFollowListenerRef.get() : null;
+        if (followListener != null) {
             if (isAskingToFollow) {
-                mFollowListener.onFollowTapped(
+                followListener.onFollowTapped(
                         followButton,
                         mBlogInfo.getName(),
                         mIsFeed ? 0 : mBlogInfo.blogId,
                         mBlogInfo.feedId);
             } else {
-                mFollowListener.onFollowingTapped();
+                followListener.onFollowingTapped();
             }
         }
 
