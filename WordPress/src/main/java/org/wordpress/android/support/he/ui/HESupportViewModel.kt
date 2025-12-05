@@ -155,7 +155,7 @@ class HESupportViewModel @Inject constructor(
             }
             return encryptedLogsUuid
         } catch (throwable: Throwable) {
-            appLogWrapper.e(AppLog.T.SUPPORT, "Error uploadng logs: ${throwable.stackTraceToString()}")
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error uploading logs: ${throwable.stackTraceToString()}")
             throw throwable
         }
     }
