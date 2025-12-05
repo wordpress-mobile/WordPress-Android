@@ -105,7 +105,7 @@ class HESupportViewModel @Inject constructor(
                     message = message,
                     tags = tags,
                     attachments = attachments.map { it.path },
-                    encryptedLogIds = logsIds
+                    encryptedLogUuids = logsIds
                 )) {
                     is CreateConversationResult.Success -> {
                         val newConversation = result.conversation
@@ -140,18 +140,23 @@ class HESupportViewModel @Inject constructor(
     }
 
     private fun uploadLogs(): List<String> {
-        val encryptedLogsUuid = mutableListOf<String>()
-        logFileProvider.getLogFiles().forEach { logFile ->
-            if (logFile.exists()) {
-                encryptedLogging.encryptAndUploadLogFile(
-                    logFile = logFile,
-                    shouldStartUploadImmediately = true
-                )?.let { uuid ->
-                    encryptedLogsUuid.add(uuid)
+        try {
+            val encryptedLogsUuid = mutableListOf<String>()
+            logFileProvider.getLogFiles().forEach { logFile ->
+                if (logFile.exists()) {
+                    encryptedLogging.encryptAndUploadLogFile(
+                        logFile = logFile,
+                        shouldStartUploadImmediately = true
+                    )?.let { uuid ->
+                        encryptedLogsUuid.add(uuid)
+                    }
                 }
             }
+            return encryptedLogsUuid
+        } catch (throwable: Throwable) {
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error uploadng logs: ${throwable.stackTraceToString()}")
+            throw throwable
         }
-        return encryptedLogsUuid
     }
 
     override suspend fun getConversation(conversationId: Long): SupportConversation? =

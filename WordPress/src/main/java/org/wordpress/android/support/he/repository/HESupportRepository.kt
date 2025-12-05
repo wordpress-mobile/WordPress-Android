@@ -98,7 +98,7 @@ class HESupportRepository @Inject constructor(
         message: String,
         tags: List<String>,
         attachments: List<String>,
-        encryptedLogIds: List<String>,
+        encryptedLogUuids: List<String>,
     ): CreateConversationResult = withContext(ioDispatcher) {
         val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.supportTickets().createSupportTicket(
@@ -107,7 +107,7 @@ class HESupportRepository @Inject constructor(
                     message = message,
                     tags = tags,
                     attachments = attachments,
-                    encryptedLogIds = encryptedLogIds,
+                    encryptedLogIds = encryptedLogUuids,
                     application = APPLICATION_ID, // Only jetpack is supported
                 )
             )

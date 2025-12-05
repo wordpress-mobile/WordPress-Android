@@ -241,7 +241,7 @@ class HESupportActivity : AppCompatActivity() {
                             viewModel.clearNewTicketForm()
                             viewModel.onBackClick()
                         },
-                        onSubmit = { category, subject, message, siteAddress, includeAppLogs ->
+                        onSubmit = { category, subject, message, _, includeAppLogs ->
                             viewModel.onSendNewConversation(
                                 subject = subject,
                                 message = message,
