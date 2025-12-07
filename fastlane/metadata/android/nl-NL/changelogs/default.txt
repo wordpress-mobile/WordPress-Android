@@ -1,0 +1,3 @@
+26.4:
+- Het app icoon heeft een eenkleurige optie om bij de andere thematische iconen op je apparaat te passen. #aesthetic
+- Grote afbeeldingen met hoge resolutie worden eerder geladen (maar het kan een paar seconden duren).
