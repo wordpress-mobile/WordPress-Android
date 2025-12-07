@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-11-14 19:46:32+0000
+Translation-Revision-Date: 2025-12-06 23:49:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: gl_ES
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="he_support_forbidden_error">Síntoo, non tes permisos para realizar esta acción.</string>
+    <string name="he_support_generic_error">Produciuse un erro. Por favor, inténtao de novo máis tarde.</string>
+    <string name="he_support_send_ticket_button">Enviar</string>
+    <string name="he_support_contact_information">Información de contacto</string>
+    <string name="he_support_site_address_placeholder">https://oteusitio.com</string>
+    <string name="he_support_status_closed">Pechado</string>
+    <string name="he_support_message_label">Mensaxe</string>
+    <string name="he_support_send_button">Enviar</string>
     <string name="error_deleting_term">Produciuse un erro ao eliminar o termo</string>
     <string name="error_saving_term">Produciuse un erro ao gardar o termo</string>
     <string name="add_term">Engadir termo</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-11-30 09:15:50+0000
+Translation-Revision-Date: 2025-12-05 21:46:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: bg
@@ -148,6 +148,36 @@ Language: bg
     <string name="enable">Активиране</string>
     <string name="application_password_info_description_4">Моля, имайте предвид, че отмяната на пароли за приложения ще прекрати достъпа им до вашия сайт. Бъдете внимателни, когато отменяте пароли за приложения.</string>
     <string name="application_password_info_description_3">Може да видите и управлявате тези пароли в своя профил, в рамките на административното табло.</string>
+    <string name="application_password_info_description_2">Когато добавяте сайтове в приложението, паролите за приложения ще бъдат създавани автоматично при необходимост.</string>
+    <string name="application_password_info_description_1">Паролите за приложения са сигурен начин приложенията да имат достъп до вашия сайт, без да използват паролата на профила.</string>
+    <string name="application_password_info_title">Пароли на приложения</string>
+    <string name="application_password_disable_feature_description">Деактивирането на паролите за приложения ще премахне входа за %1$s от вашите сайтове. Може да се наложи да добавите отново засегнатите сайтове, за да влезете пак.</string>
+    <string name="application_password_invalid_description">Паролата за приложението не е активна. Моля, влезте отново и създайте нова парола за приложението.</string>
+    <string name="subscribers_delete_failed">Неуспешно изтриване на абонат</string>
+    <string name="subscribers_delete_success_message">Абонатът беше изтрит, но може да отнеме няколко минути, за да влезе в сила изтриването</string>
+    <string name="subscribers_delete_success_title">Абонатът е изтрит</string>
+    <string name="subscribers_delete_confirmation_message">Сиурни ли сте, че искате да изтриете абоната?</string>
+    <string name="subscribers_delete_confirmation_title">Изтриване на абонат</string>
+    <string name="subscribers_sort_name">Име</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">Неуспешно свързване с WordPress.com</string>
+    <string name="jetpack_rest_connection_error_timeout">Времето изтече</string>
+    <string name="jetpack_rest_connection_cancel_message">Установяването на връзка с Jetpack е в процес на извършване. Сигурни ли сте, че искате да го отмените?</string>
+    <string name="jetpack_rest_connection_cancel_title">Отмяна на настройките на Jetpack?</string>
+    <string name="jetpack_rest_connection_status_failed">Неуспешно</string>
+    <string name="jetpack_rest_connection_status_completed">Готово</string>
+    <string name="jetpack_rest_connection_status_in_progress">В ход…</string>
+    <string name="jetpack_rest_connection_status_not_started">Не е започнато</string>
+    <string name="jetpack_rest_connection_step_finalize">Приключване на настройката</string>
+    <string name="jetpack_rest_connection_step_connect_user">Свързване на потребител с WordPress.com</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Инсталиране на разширението Jetpack</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">Вход в WordPress.com</string>
+    <string name="jetpack_rest_connection_title">Връзка с Jetpack</string>
+    <string name="experimental_subscribers_feature_description">Преглед и управление на абонатите на бюлетина</string>
+    <string name="start">Начало</string>
+    <string name="descending">Низходящ ред</string>
+    <string name="ascending">Възходящ ред</string>
+    <string name="application_password_disable_feature_title">Изключване на паролата на приложението?</string>
+    <string name="application_password_invalid">Невалидна парола на приложението</string>
     <string name="change_password_dialog_message">Смяна на парола…</string>
     <string name="change_password">Промяна на паролата</string>
     <string name="change_password_confirmation">Паролата е променена успешно.</string>
@@ -195,6 +225,7 @@ Language: bg
     <string name="login_error_email_not_found_v2" tools:ignore="UnusedResources" a8c-src-lib="module:login">Няма профил в WordPress.com, съответстващ на този профил в Google.</string>
     <string name="site_picker_remove_site_empty">Няма сайтове, съответстващи на търсенето ви</string>
     <string name="page_parent_changed">Родителската страница е сменена</string>
+    <string name="reader_no_followed_blogs_search_title">Няма блогове, съответстващи на търсенето ви</string>
     <string name="page_permanently_deleted">Страницата е изтрита за постоянно</string>
     <string name="page_moved_to_published">Страницата е публикувана</string>
     <string name="page_moved_to_draft">Страницата бе преместена в чернови</string>
@@ -206,6 +237,7 @@ Language: bg
     <string name="set_parent">Задаване на родител</string>
     <string name="page_moved_to_trash">Страницата е преместена в кошчето</string>
     <string name="page_moved_to_scheduled">Насрочено е публикуване на страницата</string>
+    <string name="dismiss">Затваряне</string>
     <string name="quick_start_focus_point_description">докоснете тук</string>
     <string name="quick_start_list_create_site_title">Създайте своя сайт</string>
     <string name="quick_start_dialog_share_site_title">Споделете сайта си</string>
@@ -265,12 +297,19 @@ Language: bg
     <string name="confirm_delete_media_video">Да се изтрие ли това видео?</string>
     <string name="confirm_delete_media_image">Да се изтрие ли това изображение?</string>
     <string name="media_title_document_details">Детайли на документа</string>
+    <string name="connect_site">Свързване на сайт</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Изберете мелодия</string>
     <string name="notification_settings_item_other_comments_other_blogs">Коментари на други сайтове</string>
     <string name="notification_settings_category_other">Други</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Всички мои сайтове</string>
     <string name="notification_settings_category_your_sites">Вашите сайтове</string>
+    <string name="notification_settings_main_off_message">Изключването на състемата за известия ще спре изпращането на известия, независимо от вида им. Може да донастройте системата за известия след като я включите.</string>
+    <string name="notification_settings_main_off_title">За да получавате известия на устройството, активирайте известията.</string>
+    <string name="notification_settings_main_hint_off">Включване на известията</string>
+    <string name="notification_settings_main_hint_on">Изключване на известията</string>
+    <string name="notification_settings_main_status_off">Изключено</string>
     <string name="max_video_resolution">Максимален размер на видеото</string>
+    <string name="notification_settings_main_status_on">Включено</string>
     <string name="max_thumbnail_px_size">Максимален размер на изображенията</string>
     <string name="error_upload_post_media_param">Възникна грешка при качване на медиата в тази публикация %s.</string>
     <string name="error_upload_post_param">Възникна грешка при качването на тази публикация: %s.</string>
@@ -300,7 +339,9 @@ Language: bg
     <string name="login_already_logged_in_wpcom">Вече сте влезли в WordPress.com</string>
     <string name="enter_wpcom_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">Въведете вашата WordPress.com парола.</string>
     <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="module:login">Напред</string>
+    <string name="connect_more">Свързване на друг сайт</string>
     <string name="password_incorrect" tools:ignore="UnusedResources" a8c-src-lib="module:login">Изглежда вашата парола е грешна. Моля проверете информацията повторно и пробвайте отново.</string>
+    <string name="enter_verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Моля, въведете кода за потвърждение от вашето приложение Authenticator.</string>
     <string name="next">Следващ</string>
     <string name="me_profile_photo">Снимка на профила</string>
     <string name="error_media_parse_error">Неочакван отговор от сървъра</string>
@@ -331,6 +372,7 @@ Language: bg
     <string name="media_all">Всички</string>
     <string name="media_audio">Аудио</string>
     <string name="media_videos">Видео файлове</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">Достъпът на %1$s до вашите файлове беше ограничен. За да поправите това редактирайте вашите правомощия и включете %2$s.</string>
     <string name="reader_view_comments">Преглед на коментарите</string>
     <string name="site_settings_video_width_hint">Променя размера на видеоклиповете в публикациите до този</string>
     <string name="site_settings_optimize_video_summary">Включва преоразмеряването и компресията на видеото</string>
@@ -366,6 +408,7 @@ Language: bg
     <string name="share_btn_disconnect">Изключване на връзката</string>
     <string name="share_btn_reconnect">Повторен опит за свързване</string>
     <string name="button_not_now">Не сега</string>
+    <string name="my_site_btn_sharing">Социални</string>
     <string name="media_downloading">Запазване на медийни файлове на това устройство</string>
     <string name="editor_draft_saved_locally">Черновата е запазена на устройството</string>
     <string name="editor_draft_saved_online">Черновата е запазена онлайн</string>
@@ -397,9 +440,11 @@ Language: bg
     <string name="editor_post_saved_locally_failed_media">Тази публикация има незавършени качвания на изображения и беше запазена в локален режим</string>
     <string name="sure_to_remove_account">Премахване на сайта от приложението?</string>
     <string name="photo_picker_title">Избор на изображение</string>
+    <string name="error_publish_no_network">Устройството е офлайн. Промените бяха запазени в локален режим.</string>
     <string name="editor_post_saved_online">Публикацията е запазена онлайн.</string>
     <string name="site_settings_image_quality_hint">Качество на изображенията. Високите стойности означават снимки с по-високо качество.</string>
     <string name="media_upload_state_uploaded">Качено</string>
+    <string name="media_encoder_quality_maximum">Максимално</string>
     <string name="media_upload_state_deleted">Изтрито</string>
     <string name="media_upload_state_deleting">Изтрива се</string>
     <string name="media_upload_state_uploading">Качва се</string>
@@ -896,6 +941,7 @@ Language: bg
     <string name="reader_title_applog">Дневник на приложението</string>
     <string name="notifications_empty_all">Все още няма известявания.</string>
     <string name="invalid_site_url_message">Уверете се че въведения URL адрес на сайт е валиден</string>
+    <string name="error_refresh_media">Файлът не може да бъде обновен в момента</string>
     <string name="share_link">Споделяне на връзка</string>
     <string name="reader_empty_posts_in_tag_updating">Извличане на публикации…</string>
     <string name="reader_likes_you_and_multi">Вие и %,d още харесахте това</string>
@@ -919,6 +965,8 @@ Language: bg
     <string name="reader_toast_err_share_intent">Споделянето е неуспешно</string>
     <string name="reader_toast_err_view_image">Преглеждането на изображението е неуспешно</string>
     <string name="comments_empty_list">Все още няма коментари</string>
+    <string name="sign_up_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">Регистрация</string>
+    <string name="reader_view_reblog">Реблог</string>
     <string name="themes">Теми</string>
     <string name="media_edit_title_text">Заглавие</string>
     <string name="media_edit_caption_text">Подзаглавие</string>
@@ -963,6 +1011,7 @@ Language: bg
     <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Задаване като основно изображение на публикацията</string>
     <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Използване на снимката в съдържанието на публикацията</string>
     <string name="ok">ОК</string>
+    <string name="done">готово</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Качва се…</string>
     <string name="image_alignment">Подравняване</string>
@@ -993,4 +1042,5 @@ Language: bg
     <string name="add">Добавяне</string>
     <string name="preview">Предвариетелен преглед</string>
     <string name="reply">Отговор</string>
+    <string name="publish_now">Публикуване</string>
 </resources>
