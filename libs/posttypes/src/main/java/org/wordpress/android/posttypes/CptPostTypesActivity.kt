@@ -46,14 +46,22 @@ class CptPostTypesActivity : AppCompatActivity(), CptActivity {
     private fun handleNavigation(action: CptNavigationAction) {
         when (action) {
             is CptNavigationAction.OpenPostTypeList -> {
-                startActivity(
+                val intent = if (action.hierarchical) {
+                    CptHierarchicalPostListActivity.createIntent(
+                        context = this,
+                        site = action.site,
+                        postTypeSlug = action.postTypeSlug,
+                        postTypeLabel = action.postTypeLabel
+                    )
+                } else {
                     CptFlatPostListActivity.createIntent(
                         context = this,
                         site = action.site,
                         postTypeSlug = action.postTypeSlug,
                         postTypeLabel = action.postTypeLabel
                     )
-                )
+                }
+                startActivity(intent)
             }
         }
     }

@@ -15,7 +15,8 @@ import javax.inject.Inject
 
 data class CptPostTypeItem(
     val slug: String,
-    val label: String
+    val label: String,
+    val hierarchical: Boolean = false
 )
 
 data class CptPostTypesUiState(
@@ -26,7 +27,8 @@ sealed class CptNavigationAction {
     data class OpenPostTypeList(
         val site: SiteReference,
         val postTypeSlug: String,
-        val postTypeLabel: String
+        val postTypeLabel: String,
+        val hierarchical: Boolean
     ) : CptNavigationAction()
 }
 
@@ -39,8 +41,8 @@ class CptPostTypesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(
         CptPostTypesUiState(
             postTypes = listOf(
-                CptPostTypeItem(slug = "post", label = "Posts"),
-                CptPostTypeItem(slug = "page", label = "Pages")
+                CptPostTypeItem(slug = "post", label = "Posts", hierarchical = false),
+                CptPostTypeItem(slug = "page", label = "Pages", hierarchical = true)
             )
         )
     )
@@ -55,7 +57,8 @@ class CptPostTypesViewModel @Inject constructor(
                 CptNavigationAction.OpenPostTypeList(
                     site = it,
                     postTypeSlug = postType.slug,
-                    postTypeLabel = postType.label
+                    postTypeLabel = postType.label,
+                    hierarchical = postType.hierarchical
                 )
             )
         }

@@ -13,5 +13,9 @@
             android:name="org.wordpress.android.posttypes.CptFlatPostListActivity"
             android:theme="@style/Cpt.NoActionBar"
             android:exported="false" />
+        <activity
+            android:name="org.wordpress.android.posttypes.CptHierarchicalPostListActivity"
+            android:theme="@style/Cpt.NoActionBar"
+            android:exported="false" />
     </application>
 </manifest>
