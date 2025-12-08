@@ -26,6 +26,7 @@ libs/posttypes/
     ├── java/org/wordpress/android/posttypes/
     │   ├── bridge/                    # ⚠️ Temporary bridging code
     │   │   ├── package-info.kt        # Documentation for bridge package
+    │   │   ├── ActivitySetup.kt       # CptActivity interface + applyBaseSetup()
     │   │   ├── BridgeConstants.kt     # Intent keys mirroring main app
     │   │   ├── BridgeTheme.kt         # Standalone Material3 theme
     │   │   └── SiteReference.kt       # Minimal site representation
@@ -36,7 +37,9 @@ libs/posttypes/
     │   └── compose/
     │       ├── CptPostTypesScreen.kt
     │       └── CptFlatPostListScreen.kt
-    └── res/values/strings.xml
+    └── res/values/
+        ├── strings.xml
+        └── styles.xml              # Cpt.NoActionBar theme
 ```
 
 ## The Bridge Package
@@ -49,9 +52,21 @@ merging back or integrating wordpress-rs properly."
 
 | Component | Purpose | Main App Equivalent |
 |-----------|---------|---------------------|
+| `CptActivity` + `applyBaseSetup()` | Activity setup (edge-to-edge, etc.) | `BaseAppCompatActivity` |
+| `@style/Cpt.NoActionBar` | Activity theme (no action bar) | `@style/WordPress.NoActionBar` |
 | `BridgeConstants.EXTRA_SITE` | Intent extra key for site data | `WordPress.SITE` |
-| `CptTheme` | Standalone Material3 theme | `AppThemeM3` |
+| `CptTheme` | Standalone Material3 Compose theme | `AppThemeM3` |
 | `SiteReference` | Minimal site data model | `SiteModel` (FluxC) |
+
+### Why Composition Over Inheritance?
+
+Activities implement `CptActivity` interface and call `applyBaseSetup()` instead of extending
+a base class. This approach:
+
+- Avoids "is-a" inheritance problems (fragile base class, tight coupling)
+- Makes the setup explicit and discoverable
+- Easier to migrate - just remove interface and inline or replace the setup
+- Can be extended with additional lifecycle hooks if needed
 
 ## Migration Guide
 
@@ -62,8 +77,9 @@ When wordpress-rs integration is complete:
 1. Replace `SiteReference` with wordpress-rs site models
 2. Replace `CptTheme` with `AppThemeM3` (or keep module theme if preferred)
 3. Replace `BridgeConstants.EXTRA_SITE` with `WordPress.SITE`
-4. Delete the entire `bridge` package
-5. Keep module structure for continued isolation
+4. For activities: either extend `BaseAppCompatActivity` or keep `CptActivity` pattern
+5. Delete the entire `bridge` package
+6. Keep module structure for continued isolation
 
 ### Option B: Merge Back to Main Module
 
@@ -75,9 +91,11 @@ If reverting to the main module structure:
    ```
 
 2. Replace bridge imports with main app equivalents:
-   - `org.wordpress.android.posttypes.bridge.CptTheme` → `org.wordpress.android.ui.compose.theme.AppThemeM3`
-   - `org.wordpress.android.posttypes.bridge.SiteReference` → `org.wordpress.android.fluxc.model.SiteModel`
-   - `org.wordpress.android.posttypes.bridge.BridgeConstants.EXTRA_SITE` → `org.wordpress.android.WordPress.SITE`
+   - `CptActivity` + `applyBaseSetup()` → extend `BaseAppCompatActivity`
+   - `@style/Cpt.NoActionBar` → `@style/WordPress.NoActionBar` (in AndroidManifest)
+   - `CptTheme` → `AppThemeM3`
+   - `SiteReference` → `SiteModel`
+   - `BridgeConstants.EXTRA_SITE` → `WordPress.SITE`
 
 3. Update `ActivityLauncher.viewPostTypes()` to pass `SiteModel` directly
 

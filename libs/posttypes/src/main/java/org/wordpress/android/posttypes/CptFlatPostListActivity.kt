@@ -10,15 +10,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.posttypes.bridge.BridgeConstants
+import org.wordpress.android.posttypes.bridge.CptActivity
 import org.wordpress.android.posttypes.bridge.CptTheme
 import org.wordpress.android.posttypes.bridge.SiteReference
+import org.wordpress.android.posttypes.bridge.applyBaseSetup
 import org.wordpress.android.posttypes.compose.CptFlatPostListScreen
 
 @AndroidEntryPoint
-class CptFlatPostListActivity : AppCompatActivity() {
+class CptFlatPostListActivity : AppCompatActivity(), CptActivity {
     private val viewModel: CptFlatPostListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyBaseSetup()
         super.onCreate(savedInstanceState)
         setContent {
             CptTheme {

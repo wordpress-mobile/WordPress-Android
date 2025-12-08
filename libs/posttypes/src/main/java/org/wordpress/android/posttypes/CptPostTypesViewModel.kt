@@ -46,7 +46,7 @@ class CptPostTypesViewModel @Inject constructor(
     )
     val uiState: StateFlow<CptPostTypesUiState> = _uiState.asStateFlow()
 
-    private val _navigation = MutableSharedFlow<CptNavigationAction>()
+    private val _navigation = MutableSharedFlow<CptNavigationAction>(extraBufferCapacity = 1)
     val navigation: SharedFlow<CptNavigationAction> = _navigation.asSharedFlow()
 
     fun onPostTypeClick(postType: CptPostTypeItem) {
