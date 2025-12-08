@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-25 06:19:48+0000
+Translation-Revision-Date: 2025-10-23 06:31:00+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: sk
@@ -347,6 +347,7 @@ Language: sk
     <string name="menu_preview">Ukážka</string>
     <string name="menu_save_as_draft">Uložiť ako koncept</string>
     <string name="file_size_in_terabytes">%s TB</string>
+    <string name="menu_visual_mode">Vizuálny editor</string>
     <string name="comment_unliked_talkback">Komentár bol odpáčikovaný</string>
     <string name="comment_liked_talkback">Komentár bol páčikovaný</string>
     <string name="comment_unapproved_talkback">Komentár bol odschválený</string>
@@ -367,6 +368,7 @@ Language: sk
     <string name="comment_delete_talkback">Komentár zmazaný</string>
     <string name="comment_untrash_talkback">Komentár obnovený</string>
     <string name="comment_trash_talkback">Komentár odoslaný do koša</string>
+    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="login_epilogue_screen_title">Prihlásený ako</string>
     <string name="person_detail_screen_title">Detail osoby</string>
     <string name="media_settings_screen_title">Detaily súboru</string>

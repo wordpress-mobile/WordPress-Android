@@ -302,6 +302,39 @@ fun ApplicationPasswordInfoDialog(
     )
 }
 
+@Composable
+fun NetworkDebuggingErrorDialog(
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Icon(
+                imageVector = Icons.Outlined.Warning,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(Margin.ExtraLarge.value)
+            )
+        },
+        title = {
+            Text(
+                text = stringResource(R.string.experimental_network_debugging_disable_error_title),
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(R.string.experimental_network_debugging_disable_error_message)
+            )
+        },
+        confirmButton = {
+            Button(onClick = onDismiss) {
+                Text(text = stringResource(R.string.ok))
+            }
+        }
+    )
+}
+
 @Preview
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable

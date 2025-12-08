@@ -17,10 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,16 +35,16 @@ fun HEConversationReplyBottomSheet(
     sheetState: androidx.compose.material3.SheetState,
     isSending: Boolean = false,
     messageSendResult: MessageSendResult? = null,
-    initialMessageText: String = "",
-    initialIncludeAppLogs: Boolean = false,
-    onDismiss: (currentMessage: String, currentIncludeAppLogs: Boolean) -> Unit,
+    messageText: String = "",
+    includeAppLogs: Boolean = false,
+    onDismiss: () -> Unit,
     onSend: (String, Boolean) -> Unit,
     onMessageSentSuccessfully: () -> Unit,
+    onMessageChange: (String) -> Unit,
+    onIncludeAppLogsChange: (Boolean) -> Unit,
     attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener
 ) {
-    var messageText by remember { mutableStateOf(initialMessageText) }
-    var includeAppLogs by remember { mutableStateOf(initialIncludeAppLogs) }
     val scrollState = rememberScrollState()
 
     // Close the sheet when sending completes successfully
@@ -56,13 +52,13 @@ fun HEConversationReplyBottomSheet(
         when (messageSendResult) {
             is MessageSendResult.Success -> {
                 // Message sent successfully, close the sheet and clear draft
-                onDismiss("", false)
+                onDismiss()
                 onMessageSentSuccessfully()
             }
             is MessageSendResult.Failure -> {
                 // Message failed to send, draft is saved onDismiss
                 // The error will be shown via snackbar from the Activity
-                onDismiss("", false)
+                onDismiss()
             }
             null -> {
                 // No result yet, do nothing
@@ -71,7 +67,7 @@ fun HEConversationReplyBottomSheet(
     }
 
     ModalBottomSheet(
-        onDismissRequest = { onDismiss(messageText, includeAppLogs) },
+        onDismissRequest = { onDismiss() },
         sheetState = sheetState
     ) {
         Column(
@@ -90,7 +86,7 @@ fun HEConversationReplyBottomSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TextButton(
-                    onClick = { onDismiss(messageText, includeAppLogs) },
+                    onClick = { onDismiss() },
                     enabled = !isSending
                 ) {
                     Text(
@@ -127,8 +123,8 @@ fun HEConversationReplyBottomSheet(
             TicketMainContentView(
                 messageText = messageText,
                 includeAppLogs = includeAppLogs,
-                onMessageChanged = { message -> messageText = message },
-                onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
+                onMessageChanged = onMessageChange,
+                onIncludeAppLogsChanged = onIncludeAppLogsChange,
                 enabled = !isSending,
                 attachmentState = attachmentState,
                 attachmentActionsListener = attachmentActionsListener

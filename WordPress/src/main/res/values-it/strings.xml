@@ -1,11 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-10-15 14:54:09+0000
+Translation-Revision-Date: 2025-11-26 09:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: it
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="he_support_forbidden_error">Non hai i permessi per eseguire questa azione.</string>
+    <string name="he_support_generic_error">Si è verificato un errore. Riprova più tardi.</string>
+    <string name="he_support_send_ticket_button">Invia</string>
+    <string name="he_support_contact_email_message">Ti invieremo un\'e-mail a questo indirizzo.</string>
+    <string name="he_support_contact_information">Informazioni di contatto</string>
+    <string name="he_support_site_address_placeholder">https://yoursite.com</string>
+    <string name="he_support_site_address_label">Indirizzo del sito (opzionale)</string>
+    <string name="he_support_subject_placeholder">Breve riassunto del problema</string>
+    <string name="he_support_subject_label">Oggetto</string>
+    <string name="he_support_issue_details">Dettagli del problema</string>
+    <string name="he_support_category_other">Altro</string>
+    <string name="he_support_category_technical_issues">Problemi tecnici</string>
+    <string name="he_support_category_billing">Fatturazione e abbonamenti</string>
+    <string name="he_support_category_site_management">Gestione siti</string>
+    <string name="he_support_category_jetpack_connection">Connessione a Jetpack</string>
+    <string name="he_support_category_application">Applicazione</string>
+    <string name="he_support_need_help_with">Ho bisogno di aiuto con</string>
+    <string name="he_support_contact_support_title">Contatta il supporto</string>
+    <string name="he_support_download_video_button">Scarica video</string>
+    <string name="he_support_video_playback_error_message">Questo video non può essere riprodotto in linea. Scaricalo per visualizzarlo.</string>
+    <string name="he_support_video_playback_error_title">Impossibile riprodurre il video</string>
+    <string name="he_support_conversation_closed_message">Questa conversazione è chiusa. Non puoi più rispondere.</string>
+    <string name="he_support_status_unknown">Sconosciuto</string>
+    <string name="he_support_status_closed">Chiuso</string>
+    <string name="he_support_status_solved">Risolto</string>
+    <string name="he_support_status_waiting_for_user">In attesa dell\'utente</string>
+    <string name="he_support_status_waiting_for_support">In attesa di supporto</string>
+    <string name="he_support_select_attachments">Seleziona allegati</string>
+    <string name="he_support_download_attachment">Scarica allegato</string>
+    <string name="he_support_include_logs_description">Includere i log può aiutare il nostro team a investigare i problemi. I log potrebbero contenere attività recenti delle app.</string>
+    <string name="he_support_include_logs_title">Includi i log dell\'applicazione</string>
+    <string name="he_support_app_logs_label">Log applicazione (opzionale)</string>
+    <string name="he_support_skipped_files_header">File saltati: %1$s</string>
+    <string name="he_support_attachment_size_label">Limite allegato: %1$s di %2$s</string>
+    <string name="he_support_remove_screenshot">Rimuovi screenshot</string>
+    <string name="he_support_screenshot_preview">Anteprima dello screenshot</string>
+    <string name="he_support_add_screenshots_button">Screenshot</string>
+    <string name="he_support_screenshots_description">Allegare degli screenshot può aiutarci a capire e risolvere il tuo problema più velocemente.</string>
+    <string name="he_support_screenshots_label">Screenshot (opzionale)</string>
+    <string name="he_support_failed_to_load_image">Impossibile caricare l\'immagine</string>
+    <string name="he_support_attachment_image">Immagine allegato</string>
+    <string name="he_support_loading_image">Caricamento immagine</string>
+    <string name="he_support_downloading_attachment">Download di %1$s in corso…</string>
+    <string name="he_support_message_label">Messaggio</string>
+    <string name="he_support_send_button">Invia</string>
+    <string name="he_support_reply_button">Rispondi</string>
+    <string name="he_support_last_updated">Ultimo aggiornamento il %1$s</string>
+    <string name="he_support_message_count">%1$d messaggi</string>
+    <string name="he_support_empty_conversations_button">Avvia conversazione</string>
+    <string name="he_support_empty_conversations_message">Inizia una conversazione con il nostro team di supporto per ricevere aiuto con le tue domande.</string>
+    <string name="he_support_empty_conversations_title">Ancora nessuna conversazione</string>
+    <string name="he_support_new_conversation_content_description">Nuova conversazione</string>
+    <string name="he_support_conversations_title">Conversazioni di supporto</string>
+    <string name="ai_bot_time_weeks_ago">%1$d settimane fa</string>
+    <string name="ai_bot_time_week_ago">%1$d settimana fa</string>
+    <string name="ai_bot_time_days_ago">%1$d giorni fa</string>
+    <string name="ai_bot_time_day_ago">%1$d giorno fa</string>
+    <string name="ai_bot_time_hours_ago">%1$d ore fa</string>
+    <string name="ai_bot_time_hour_ago">%1$d ora fa</string>
+    <string name="ai_bot_time_minutes_ago">%1$d minuti fa</string>
+    <string name="ai_bot_time_minute_ago">%1$d minuto fa</string>
+    <string name="ai_bot_time_just_now">In questo momento</string>
+    <string name="ai_bot_default_conversation_title">Nuova conversazione</string>
+    <string name="ai_bot_welcome_message">Sono il tuo assistente IA personale. Posso aiutarti in caso tu abbia domande sul tuo sito o sul tuo account.</string>
+    <string name="ai_bot_welcome_greeting">Ciao, %1$s 👋</string>
+    <string name="ai_bot_message_input_placeholder">Invia un messaggio…</string>
+    <string name="ai_bot_send_button_content_description">Invia</string>
+    <string name="ai_bot_support_bot">Bot di supporto</string>
+    <string name="ai_bot_you">Tu</string>
+    <string name="ai_bot_empty_conversations_button">Avvia conversazione</string>
+    <string name="ai_bot_empty_conversations_message">Avvia una nuova conversazione per ricevere assistenza con il tuo sito o account WordPress.</string>
+    <string name="ai_bot_empty_conversations_title">Ancora nessuna conversazione</string>
+    <string name="ai_bot_generic_error">Si è verificato un problema. Riprova più tardi.</string>
+    <string name="ai_bot_new_conversation_content_description">Nuova conversazione</string>
+    <string name="ai_bot_back_button_content_description">Indietro</string>
+    <string name="ai_bot_conversations_title">Conversazioni</string>
+    <string name="create">Crea</string>
+    <string name="logs_screen_general_error">Si è verificato un problema…</string>
+    <string name="logs_screen_log_count">%d voci del log</string>
+    <string name="logs_screen_empty_state">Nessun log disponibile</string>
+    <string name="support_screen_user_avatar_content_description">Avatar utente</string>
+    <string name="support_screen_application_logs_description">Strumento avanzato per il debug dei problemi</string>
+    <string name="support_screen_application_logs_title">Log applicazione</string>
+    <string name="support_screen_diagnostics_section_title">Diagnostica</string>
+    <string name="support_screen_ask_happiness_engineers_description">Per domande difficili. Risponderemo via e-mail</string>
+    <string name="support_screen_ask_happiness_engineers_title">Chiedi agli Happiness Engineer</string>
+    <string name="support_screen_ask_bots_description">Ottieni risposte veloci alle domande comuni</string>
+    <string name="support_screen_ask_bots_title">Chiedi ai bot</string>
+    <string name="support_screen_help_center_description">Documentazione e tutorial per aiutarti a iniziare</string>
+    <string name="support_screen_help_center_title">Centro assistenza</string>
+    <string name="support_screen_how_can_we_help_title">Come possiamo aiutarti?</string>
+    <string name="support_screen_login_button">Accedi a WordPress.com</string>
+    <string name="support_screen_profile_section_title">Profilo di supporto</string>
+    <string name="support_screen_title">Supporto</string>
+    <string name="modern_support_description">Attiva la nuova esperienza di supporto moderna</string>
+    <string name="modern_support">Supporto moderno</string>
+    <string name="site_settings_use_theme_styles_summary">Rendi l\'editor a blocchi simile al tuo tema</string>
+    <string name="site_settings_use_theme_styles">Usa gli stili del tema</string>
     <string name="error_deleting_term">Si è verificato un errore durante l\'eliminazione del termine</string>
     <string name="error_saving_term">Si è verificato un errore durante il salvataggio del termine</string>
     <string name="add_term">Aggiungi termine</string>
@@ -142,7 +240,6 @@ Language: it
     <string name="experimental_features_feedback_dialog_message">Vuoi condividere un feedback sull\'editor sperimentale?</string>
     <string name="experimental_features_feedback_dialog_title">Condividi un feedback</string>
     <string name="experimental_block_editor_plugins">Plugin dell\'editor a blocchi sperimentale</string>
-    <string name="experimental_block_editor_theme_styles_description">Applica gli stili del tema all\'editor</string>
     <string name="experimental_block_editor_description">Accedi a tipi di blocco e impostazioni aggiuntivi</string>
     <string name="experimental_block_editor_note">L\'editor a blocchi sperimentale diventerà l\'editor predefinito in una prossima versione e verrà rimossa la possibilità di disattivarlo.</string>
     <string name="disable_experimental_block_editor_description">Annulla l\'adesione a tipi di blocco e impostazioni aggiuntivi</string>
@@ -175,7 +272,6 @@ Language: it
     <string name="more_content_description_promote_blaze">Diffondi altro</string>
     <string name="reader_toast_success_undo">Blog sbloccato</string>
     <string name="feedback_form_note_text">Questo non è un modulo di supporto e non potremo risponderti. Se hai bisogno di assistenza utilizza \"</string>
-    <string name="experimental_block_editor_theme_styles">Stili editor a blocchi sperimentale</string>
     <string name="experimental_block_editor">Editor a blocchi sperimentale</string>
     <string name="experimental_features_screen_title">Funzionalità sperimentali</string>
     <string name="back">Indietro</string>
@@ -1423,7 +1519,7 @@ Language: it
     <string name="gutenberg_native_four" tools:ignore="UnusedResources">Quattro</string>
     <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">In evidenza</string>
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Aggiungi immagine</string>
-    <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources">URL personalizzata</string>
+    <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources">URL personalizzato</string>
     <string name="gutenberg_native_create_embed" tools:ignore="UnusedResources">Crea l\'incorporamento</string>
     <string name="gutenberg_native_column_d" tools:ignore="UnusedResources">Colonna %d</string>
     <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ulteriori informazioni</string>

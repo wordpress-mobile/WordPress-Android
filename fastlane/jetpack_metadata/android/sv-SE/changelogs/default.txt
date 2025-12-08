@@ -1,4 +1,0 @@
-26.3:
-Vi har lagt till information om filstorlek i ditt mediabibliotek, så att du kan se exakt vad du arbetar med.
-
-Den experimentella redigeraren har också blivit smidigare. Ditt innehåll stannar kvar när du roterar din enhet eller slår på/av mörkt läge, och dialogrutorna svarar nu korrekt på Tillbaka-knappen. Lycka till med redigeringen!

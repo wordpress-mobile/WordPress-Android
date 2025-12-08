@@ -15,7 +15,9 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.ConversationReplyFormState
 import org.wordpress.android.support.he.model.MessageSendResult
+import org.wordpress.android.support.he.model.NewTicketFormState
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.VideoDownloadState
 import org.wordpress.android.support.he.repository.CreateConversationResult
@@ -47,10 +49,6 @@ class HESupportViewModel @Inject constructor(
     private val _messageSendResult = MutableStateFlow<MessageSendResult?>(null)
     val messageSendResult: StateFlow<MessageSendResult?> = _messageSendResult.asStateFlow()
 
-    // Unified attachment state (shared for both Detail and NewTicket screens)
-    private val _attachmentState = MutableStateFlow(AttachmentState())
-    val attachmentState: StateFlow<AttachmentState> = _attachmentState.asStateFlow()
-
     // Cache for downloaded video file paths (videoUrl -> file path)
     // Stores paths instead of File objects to minimize memory footprint
     private val videoCache = mutableMapOf<String, String>()
@@ -58,6 +56,14 @@ class HESupportViewModel @Inject constructor(
     // Video download state
     private val _videoDownloadState = MutableStateFlow<VideoDownloadState>(VideoDownloadState.Idle)
     val videoDownloadState: StateFlow<VideoDownloadState> = _videoDownloadState.asStateFlow()
+
+    // New ticket form state (survives configuration changes)
+    private val _newTicketFormState = MutableStateFlow(NewTicketFormState())
+    val newTicketFormState: StateFlow<NewTicketFormState> = _newTicketFormState.asStateFlow()
+
+    // Conversation reply form state (survives configuration changes)
+    private val _replyFormState = MutableStateFlow(ConversationReplyFormState())
+    val replyFormState: StateFlow<ConversationReplyFormState> = _replyFormState.asStateFlow()
 
     override fun initRepository(accessToken: String) {
         heSupportRepository.init(accessToken)
@@ -80,7 +86,8 @@ class HESupportViewModel @Inject constructor(
 
                 _isSendingMessage.value = true
 
-                val files = tempAttachmentsUtil.createTempFilesFrom(_attachmentState.value.acceptedUris)
+                val attachmentUris = _newTicketFormState.value.attachmentState.acceptedUris
+                val files = tempAttachmentsUtil.createTempFilesFrom(attachmentUris)
 
                 when (val result = heSupportRepository.createConversation(
                     subject = subject,
@@ -92,8 +99,8 @@ class HESupportViewModel @Inject constructor(
                         val newConversation = result.conversation
                         // update conversations locally
                         _conversations.value = listOf(newConversation) + _conversations.value
-                        // Clear attachments after successful creation
-                        _attachmentState.value = AttachmentState()
+                        // Clear form state after successful creation
+                        clearNewTicketForm()
                         onBackClick()
                     }
 
@@ -140,7 +147,8 @@ class HESupportViewModel @Inject constructor(
                 }
 
                 _isSendingMessage.value = true
-                val files = tempAttachmentsUtil.createTempFilesFrom(_attachmentState.value.acceptedUris)
+                val attachmentUris = _replyFormState.value.attachmentState.acceptedUris
+                val files = tempAttachmentsUtil.createTempFilesFrom(attachmentUris)
 
                 when (val result = heSupportRepository.addMessageToConversation(
                     conversationId = selectedConversation.id,
@@ -150,8 +158,8 @@ class HESupportViewModel @Inject constructor(
                     is CreateConversationResult.Success -> {
                         _selectedConversation.value = result.conversation
                         _messageSendResult.value = MessageSendResult.Success
-                        // Clear attachments after successful message send
-                        _attachmentState.value = AttachmentState()
+                        // Clear reply form after successful message send
+                        clearReplyForm()
                     }
 
                     is CreateConversationResult.Error.Forbidden -> {
@@ -183,23 +191,59 @@ class HESupportViewModel @Inject constructor(
         _messageSendResult.value = null
     }
 
-    fun addAttachments(uris: List<Uri>) {
+    fun addNewTicketAttachments(uris: List<Uri>) {
         viewModelScope.launch(ioDispatcher) {
-            _attachmentState.value = validateAndCreateAttachmentState(uris)
+            val currentState = _newTicketFormState.value.attachmentState
+            val newState = validateAndCreateAttachmentState(currentState, uris)
+            _newTicketFormState.value = _newTicketFormState.value.copy(attachmentState = newState)
         }
     }
 
+    fun removeNewTicketAttachment(uri: Uri) {
+        viewModelScope.launch {
+            val currentState = _newTicketFormState.value.attachmentState
+            val updatedState = removeAttachmentFromState(currentState, uri)
+            _newTicketFormState.value = _newTicketFormState.value.copy(attachmentState = updatedState)
+            addNewTicketAttachments(currentState.rejectedUris)
+        }
+    }
+
+    fun addReplyAttachments(uris: List<Uri>) {
+        viewModelScope.launch(ioDispatcher) {
+            val currentState = _replyFormState.value.attachmentState
+            val newState = validateAndCreateAttachmentState(currentState, uris)
+            _replyFormState.value = _replyFormState.value.copy(attachmentState = newState)
+        }
+    }
+
+    fun removeReplyAttachment(uri: Uri) {
+        viewModelScope.launch {
+            val currentState = _replyFormState.value.attachmentState
+            val updatedState = removeAttachmentFromState(currentState, uri)
+            _replyFormState.value = _replyFormState.value.copy(attachmentState = updatedState)
+            addReplyAttachments(currentState.rejectedUris)
+        }
+    }
+
+    private fun removeAttachmentFromState(currentState: AttachmentState, uri: Uri): AttachmentState {
+        val newAcceptedUris = currentState.acceptedUris.filter { it != uri }
+        return currentState.copy(acceptedUris = newAcceptedUris)
+    }
+
     @Suppress("LoopWithTooManyJumpStatements")
-    private suspend fun validateAndCreateAttachmentState(uris: List<Uri>): AttachmentState = withContext(ioDispatcher) {
+    private suspend fun validateAndCreateAttachmentState(
+        currentAttachmentState: AttachmentState,
+        uris: List<Uri>
+    ): AttachmentState = withContext(ioDispatcher) {
         if (uris.isEmpty()) {
-            return@withContext _attachmentState.value
+            return@withContext currentAttachmentState
         }
 
         val validUris = mutableListOf<Uri>()
         val skippedUris = mutableListOf<Uri>()
 
         // Calculate current total size
-        var currentTotalSize = calculateTotalSize(_attachmentState.value.acceptedUris)
+        var currentTotalSize = calculateTotalSize(currentAttachmentState.acceptedUris)
 
         // Validate each new attachment
         for (uri in uris) {
@@ -220,7 +264,7 @@ class HESupportViewModel @Inject constructor(
         }
 
         // Build the new attachment state
-        val currentAccepted = _attachmentState.value.acceptedUris
+        val currentAccepted = currentAttachmentState.acceptedUris
         val newAccepted = currentAccepted + validUris
 
         // Calculate rejected total size
@@ -261,26 +305,44 @@ class HESupportViewModel @Inject constructor(
         return totalSize
     }
 
-    /**
-     * Removes an attachment from the accepted list and attempts to re-include any previously
-     * skipped files that can now fit within the size limit.
-     *
-     * This function removes the specified URI and then re-validates all previously skipped files
-     * by calling [addAttachments], which ensures consistent validation logic and automatically
-     * includes files that now fit within the available space.
-     */
-    fun removeAttachment(uri: Uri) {
-        viewModelScope.launch {
-            // Remove the attachment and re-validate skipped files
-            val currentState = _attachmentState.value.copy()
-            val newAcceptedUris = currentState.acceptedUris.filter { it != uri }
-            _attachmentState.value = currentState.copy(acceptedUris = newAcceptedUris)
-            addAttachments(currentState.rejectedUris)
-        }
+    fun updateNewTicketCategory(category: SupportCategory?) {
+        _newTicketFormState.value = _newTicketFormState.value.copy(category = category)
     }
 
-    fun clearAttachments() {
-        _attachmentState.value = AttachmentState()
+    fun updateNewTicketSubject(subject: String) {
+        _newTicketFormState.value = _newTicketFormState.value.copy(subject = subject)
+    }
+
+    fun updateNewTicketSiteAddress(siteAddress: String) {
+        _newTicketFormState.value = _newTicketFormState.value.copy(siteAddress = siteAddress)
+    }
+
+    fun updateNewTicketMessage(message: String) {
+        _newTicketFormState.value = _newTicketFormState.value.copy(message = message)
+    }
+
+    fun updateNewTicketIncludeAppLogs(include: Boolean) {
+        _newTicketFormState.value = _newTicketFormState.value.copy(includeAppLogs = include)
+    }
+
+    fun clearNewTicketForm() {
+        _newTicketFormState.value = NewTicketFormState()
+    }
+
+    fun updateReplyMessage(message: String) {
+        _replyFormState.value = _replyFormState.value.copy(message = message)
+    }
+
+    fun updateReplyIncludeAppLogs(include: Boolean) {
+        _replyFormState.value = _replyFormState.value.copy(includeAppLogs = include)
+    }
+
+    fun updateReplyBottomSheetVisibility(isVisible: Boolean) {
+        _replyFormState.value = _replyFormState.value.copy(isBottomSheetVisible = isVisible)
+    }
+
+    fun clearReplyForm() {
+        _replyFormState.value = ConversationReplyFormState()
     }
 
     fun notifyGeneralError() {

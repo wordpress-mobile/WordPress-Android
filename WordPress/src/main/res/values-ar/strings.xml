@@ -1,11 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-10-15 13:16:18+0000
+Translation-Revision-Date: 2025-11-24 16:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.3
 Language: ar
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="he_support_forbidden_error">عذرًا، غير مسموح لك بتنفيذ هذا الإجراء.</string>
+    <string name="he_support_generic_error">حدث خطأ. يُرجى إعادة المحاولة لاحقًا.</string>
+    <string name="he_support_send_ticket_button">إرسال</string>
+    <string name="he_support_contact_email_message">سنرسل إليك رسالة عبر البريد الإلكتروني على هذا العنوان.</string>
+    <string name="he_support_contact_information">معلومات جهة الاتصال</string>
+    <string name="he_support_site_address_label">عنوان الموقع (اختياري)</string>
+    <string name="he_support_subject_placeholder">ملخص لمشكلتك</string>
+    <string name="he_support_subject_label">الموضوع</string>
+    <string name="he_support_issue_details">تفاصيل المشكلة</string>
+    <string name="he_support_category_other">أخرى</string>
+    <string name="he_support_category_technical_issues">المشكلات الفنية</string>
+    <string name="he_support_category_billing">الفوترة والاشتراكات</string>
+    <string name="he_support_category_site_management">إدارة الموقع</string>
+    <string name="he_support_category_jetpack_connection">اتصال Jetpack</string>
+    <string name="he_support_category_application">التطبيق</string>
+    <string name="he_support_need_help_with">أحتاج إلى المساعدة في</string>
+    <string name="he_support_contact_support_title">الاتصال بفريق الدعم</string>
+    <string name="he_support_download_video_button">تنزيل الفيديو</string>
+    <string name="he_support_video_playback_error_message">يتعذر تشغيل هذا الفيديو في نفس الصفحة. يُرجى تنزيل الفيديو لعرضه.</string>
+    <string name="he_support_video_playback_error_title">يتعذر تشغيل الفيديو</string>
+    <string name="he_support_conversation_closed_message">هذه المحادثة مغلقة. لا يمكنك الرد عليها بعد الآن.</string>
+    <string name="he_support_status_unknown">غير معروف</string>
+    <string name="he_support_status_closed">مغلق</string>
+    <string name="he_support_status_solved">تم الحل</string>
+    <string name="he_support_status_waiting_for_user">في انتظار المستخدم</string>
+    <string name="he_support_status_waiting_for_support">في انتظار الدعم</string>
+    <string name="he_support_select_attachments">تحديد المرفقات</string>
+    <string name="he_support_download_attachment">تنزيل المرفق</string>
+    <string name="he_support_include_logs_description">يمكن أن يساعد تضمين السجلات فريقنا في التحقيق في المشكلات. قد تحتوي السجلات على نشاط التطبيق الأخير.</string>
+    <string name="he_support_include_logs_title">إضافة سجلات التطبيق</string>
+    <string name="he_support_app_logs_label">سجلات التطبيق (اختياري)</string>
+    <string name="he_support_skipped_files_header">الملفات التي تم تخطيها: ⁦%1$s⁩</string>
+    <string name="he_support_attachment_size_label">حد المرفقات: ⁦%1$s⁩ من ⁦%2$s⁩</string>
+    <string name="he_support_remove_screenshot">إزالة لقطة الشاشة</string>
+    <string name="he_support_screenshot_preview">معاينة لقطة الشاشة</string>
+    <string name="he_support_add_screenshots_button">إضافة لقطات الشاشة</string>
+    <string name="he_support_screenshots_description">يمكن أن تساعدنا إضافة لقطات الشاشة على فهم مشكلتك وحلها بشكل أسرع.</string>
+    <string name="he_support_screenshots_label">لقطات الشاشة (اختياري)</string>
+    <string name="he_support_failed_to_load_image">فشل تحميل الصورة</string>
+    <string name="he_support_attachment_image">صورة المرفق</string>
+    <string name="he_support_loading_image">جارٍ تحميل الصورة</string>
+    <string name="he_support_downloading_attachment">جارٍ التنزيل ⁦%1$s⁩…</string>
+    <string name="he_support_message_label">الرسالة</string>
+    <string name="he_support_send_button">إرسال</string>
+    <string name="he_support_reply_button">الرد</string>
+    <string name="he_support_last_updated">آخر تحديث في ⁦%1$s⁩</string>
+    <string name="he_support_message_count">الرسائل ⁦%1$d⁩</string>
+    <string name="he_support_empty_conversations_button">بدء محادثة</string>
+    <string name="he_support_empty_conversations_message">ابدأ محادثة مع فريق الدعم للحصول على مساعدة بشأن أسئلتك.</string>
+    <string name="he_support_empty_conversations_title">لا توجد محادثات حتى الآن</string>
+    <string name="he_support_new_conversation_content_description">محادثة جديدة</string>
+    <string name="he_support_conversations_title">محادثات فريق الدعم</string>
+    <string name="ai_bot_time_weeks_ago">منذ ⁦%1$d⁩ من الأسابيع</string>
+    <string name="ai_bot_time_week_ago">منذ ⁦%1$d⁩ من الأسابيع</string>
+    <string name="ai_bot_time_days_ago">منذ ⁦%1$d⁩ من الأيام</string>
+    <string name="ai_bot_time_day_ago">منذ ⁦%1$d⁩ من الأيام</string>
+    <string name="ai_bot_time_hours_ago">منذ ⁦%1$d⁩ من الساعات</string>
+    <string name="ai_bot_time_hour_ago">منذ ⁦%1$d⁩ من الساعات</string>
+    <string name="ai_bot_time_minutes_ago">منذ ⁦%1$d⁩ من الدقائق</string>
+    <string name="ai_bot_time_minute_ago">منذ ⁦%1$d⁩ من الدقائق</string>
+    <string name="ai_bot_time_just_now">الآن</string>
+    <string name="ai_bot_default_conversation_title">محادثة جديدة</string>
+    <string name="ai_bot_welcome_message">أنا مساعد الذكاء الاصطناعي الشخصي الخاص بك. يمكنني مساعدتك في الإجابة عن أي أسئلة متعلقة بموقعك أو حسابك.</string>
+    <string name="ai_bot_welcome_greeting">مرحبًا [⁦%1$s⁩] 👋</string>
+    <string name="ai_bot_message_input_placeholder">اكتب رسالة …</string>
+    <string name="ai_bot_send_button_content_description">إرسال</string>
+    <string name="ai_bot_support_bot">روبوت الدعم</string>
+    <string name="ai_bot_you">أنت</string>
+    <string name="ai_bot_empty_conversations_button">بدء المحادثة</string>
+    <string name="ai_bot_empty_conversations_message">ابدأ محادثة جديدة للحصول على مساعدة بشأن موقعك أو حسابك على ووردبريس.</string>
+    <string name="ai_bot_empty_conversations_title">لا توجد محادثات حتى الآن</string>
+    <string name="ai_bot_generic_error">حدث خطأ ما. يُرجى إعادة المحاولة لاحقًا.</string>
+    <string name="ai_bot_new_conversation_content_description">محادثة جديدة</string>
+    <string name="ai_bot_back_button_content_description">الرجوع</string>
+    <string name="ai_bot_conversations_title">المحادثات</string>
+    <string name="create">إنشاء</string>
+    <string name="logs_screen_general_error">حدث خطأ ما…</string>
+    <string name="logs_screen_log_count">%d من إدخالات السجل</string>
+    <string name="logs_screen_empty_state">لا توجد سجلات متاحة</string>
+    <string name="support_screen_user_avatar_content_description">الصورة الرمزية للمستخدم</string>
+    <string name="support_screen_application_logs_description">أداة متقدمة لتصحيح الأخطاء</string>
+    <string name="support_screen_application_logs_title">سجلات التطبيق</string>
+    <string name="support_screen_diagnostics_section_title">التشخيصات</string>
+    <string name="support_screen_ask_happiness_engineers_description">لطرح أسئلتك الصعبة. سنرد عبر البريد الإلكتروني</string>
+    <string name="support_screen_ask_happiness_engineers_title">اسأل أحد أعضاء فريق الدعم</string>
+    <string name="support_screen_ask_bots_description">احصل على إجابات سريعة على الأسئلة الشائعة</string>
+    <string name="support_screen_ask_bots_title">سؤال الروبوتات</string>
+    <string name="support_screen_help_center_description">المستندات والبرامج التعليمية لمساعدتك على البدء</string>
+    <string name="support_screen_help_center_title">مركز المساعدة</string>
+    <string name="support_screen_how_can_we_help_title">كيف يمكننا مساعدتك؟</string>
+    <string name="support_screen_login_button">تسجيل الدخول إلى WordPress.com</string>
+    <string name="support_screen_profile_section_title">الملف الشخصي للدعم</string>
+    <string name="support_screen_title">الدعم</string>
+    <string name="modern_support_description">تمكين تجربة الدعم الحديث الجديدة</string>
+    <string name="modern_support">الدعم الحديث</string>
+    <string name="site_settings_use_theme_styles_summary">أجعل محرر المكونات يعكس مظهر قالبك</string>
+    <string name="site_settings_use_theme_styles">استخدم أنماط القالب</string>
     <string name="error_deleting_term">حدث خطأ في حذف المصطلح</string>
     <string name="error_saving_term">حدث خطأ في حفظ المصطلح</string>
     <string name="add_term">إضافة مصطلح</string>
@@ -121,7 +218,6 @@ Language: ar
     <string name="experimental_features_feedback_dialog_message">هل أنت مستعد لمشاركة ملاحظاتك حول المحرر التجريبي؟</string>
     <string name="experimental_features_feedback_dialog_title">مشاركة الملاحظات</string>
     <string name="experimental_block_editor_plugins">إضافات محرر المكوِّن التجريبي</string>
-    <string name="experimental_block_editor_theme_styles_description">تطبيق أنماط القالب على المحرر</string>
     <string name="experimental_block_editor_description">الوصول إلى أنواع المكونات الأخرى وإعداداتها</string>
     <string name="experimental_block_editor_note">سيصبح محرر المكوّنات التجريبي هو المحرر الافتراضي في الإصدارات المستقبلية وستتم إزالة إمكانية تعطيله.</string>
     <string name="disable_experimental_block_editor_description">إلغاء الاشتراك في أنواع المكوّنات والإعدادات الإضافية</string>
@@ -154,7 +250,6 @@ Language: ar
     <string name="more_content_description_promote_blaze">Blaze أكثر</string>
     <string name="reader_toast_success_undo">تم إلغاء حظر التدوينة</string>
     <string name="feedback_form_note_text">يرجى ملاحظة أن هذا ليس نموذج دعم، ولن نتمكن من الرد. إذا كنت تحتاج مساعدة، فيرجى استخدام \"</string>
-    <string name="experimental_block_editor_theme_styles">أنماط محرر المكوِّن التجريبي</string>
     <string name="experimental_block_editor">محرر المكوِّن التجريبي</string>
     <string name="experimental_features_screen_title">الميزات التجريبية</string>
     <string name="back">رجوع</string>

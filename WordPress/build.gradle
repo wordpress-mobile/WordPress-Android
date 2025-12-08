@@ -452,6 +452,7 @@ dependencies {
     implementation(libs.greenrobot.eventbus.main)
     implementation(libs.greenrobot.eventbus.java)
     implementation(libs.squareup.retrofit)
+    implementation(libs.chucker)
     implementation(libs.apache.commons.text)
     implementation(libs.airbnb.lottie.main)
     implementation(libs.facebook.shimmer)
@@ -493,6 +494,8 @@ dependencies {
     testImplementation(libs.assertj.core)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
 
     androidTestImplementation project(path:':libs:mocks')
 

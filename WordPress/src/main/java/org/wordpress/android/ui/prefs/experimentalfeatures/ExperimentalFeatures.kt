@@ -39,6 +39,11 @@ class ExperimentalFeatures @Inject constructor(
             "modern_support",
             R.string.modern_support,
             R.string.modern_support_description
+        ),
+        NETWORK_DEBUGGING(
+            "network_debugging",
+            R.string.experimental_network_debugging,
+            R.string.experimental_network_debugging_description
         );
     }
 }

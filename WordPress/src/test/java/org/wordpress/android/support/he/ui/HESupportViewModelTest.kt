@@ -461,109 +461,115 @@ class HESupportViewModelTest : BaseUnitTest() {
     // region Attachment management tests
 
     @Test
-    fun `addAttachments adds URIs to attachment state`() = test {
+    fun `addNewTicketAttachments adds URIs to new ticket form attachment state`() = test {
         val uri1 = mock<Uri>()
         val uri2 = mock<Uri>()
 
-        viewModel.addAttachments(listOf(uri1, uri2))
+        viewModel.addNewTicketAttachments(listOf(uri1, uri2))
         advanceUntilIdle()
 
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri2)
-        assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1, uri2)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.rejectedUris).isEmpty()
     }
 
     @Test
-    fun `addAttachments appends to existing attachments`() = test {
-        val uri1 = mock<Uri>()
-        val uri2 = mock<Uri>()
-        val uri3 = mock<Uri>()
-
-        viewModel.addAttachments(listOf(uri1))
-        advanceUntilIdle()
-        viewModel.addAttachments(listOf(uri2, uri3))
-        advanceUntilIdle()
-
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri2, uri3)
-    }
-
-    @Test
-    fun `removeAttachment removes specific URI from attachments list`() = test {
+    fun `addNewTicketAttachments appends to existing attachments`() = test {
         val uri1 = mock<Uri>()
         val uri2 = mock<Uri>()
         val uri3 = mock<Uri>()
 
-        viewModel.addAttachments(listOf(uri1, uri2, uri3))
+        viewModel.addNewTicketAttachments(listOf(uri1))
         advanceUntilIdle()
-        viewModel.removeAttachment(uri2)
+        viewModel.addNewTicketAttachments(listOf(uri2, uri3))
         advanceUntilIdle()
 
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri3)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1, uri2, uri3)
     }
 
     @Test
-    fun `removeAttachment does nothing when URI not in list`() = test {
+    fun `removeNewTicketAttachment removes specific URI from attachments list`() = test {
         val uri1 = mock<Uri>()
         val uri2 = mock<Uri>()
         val uri3 = mock<Uri>()
 
-        viewModel.addAttachments(listOf(uri1, uri2))
+        viewModel.addNewTicketAttachments(listOf(uri1, uri2, uri3))
         advanceUntilIdle()
-        viewModel.removeAttachment(uri3)
+        viewModel.removeNewTicketAttachment(uri2)
         advanceUntilIdle()
 
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri2)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1, uri3)
     }
 
     @Test
-    fun `clearAttachments removes all attachments`() = test {
+    fun `removeNewTicketAttachment does nothing when URI not in list`() = test {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+        val uri3 = mock<Uri>()
+
+        viewModel.addNewTicketAttachments(listOf(uri1, uri2))
+        advanceUntilIdle()
+        viewModel.removeNewTicketAttachment(uri3)
+        advanceUntilIdle()
+
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1, uri2)
+    }
+
+    @Test
+    fun `clearNewTicketForm removes all attachments`() = test {
         val uri1 = mock<Uri>()
         val uri2 = mock<Uri>()
 
-        viewModel.addAttachments(listOf(uri1, uri2))
+        viewModel.addNewTicketAttachments(listOf(uri1, uri2))
         advanceUntilIdle()
-        viewModel.clearAttachments()
+        viewModel.clearNewTicketForm()
 
-        assertThat(viewModel.attachmentState.value.acceptedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris).isEmpty()
+        assertThat(viewModel.newTicketFormState.value.attachmentState.rejectedUris).isEmpty()
     }
 
     @Test
-    fun `attachments list is empty initially`() {
-        assertThat(viewModel.attachmentState.value.acceptedUris).isEmpty()
+    fun `new ticket attachments list is empty initially`() {
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris).isEmpty()
     }
 
     @Test
-    fun `addAttachments rejects file larger than 20MB`() = test {
+    fun `addNewTicketAttachments rejects file larger than 20MB`() = test {
         val uri1 = mock<Uri>()
         val assetFileDescriptor = mock<AssetFileDescriptor>()
         whenever(assetFileDescriptor.length).thenReturn(21L * 1024L * 1024L) // 21MB
         whenever(contentResolver.openAssetFileDescriptor(eq(uri1), any())).thenReturn(assetFileDescriptor)
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addNewTicketAttachments(listOf(uri1))
         advanceUntilIdle()
 
-        assertThat(viewModel.attachmentState.value.acceptedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.rejectedUris).containsExactly(uri1)
-        assertThat(viewModel.attachmentState.value.rejectedTotalSizeBytes).isEqualTo(21L * 1024L * 1024L)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris).isEmpty()
+        assertThat(viewModel.newTicketFormState.value.attachmentState.rejectedUris).containsExactly(uri1)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.rejectedTotalSizeBytes)
+            .isEqualTo(21L * 1024L * 1024L)
     }
 
     @Test
-    fun `addAttachments accepts file smaller than 20MB`() = test {
+    fun `addNewTicketAttachments accepts file smaller than 20MB`() = test {
         val uri1 = mock<Uri>()
         val assetFileDescriptor = mock<AssetFileDescriptor>()
         whenever(assetFileDescriptor.length).thenReturn(10L * 1024L * 1024L) // 10MB
         whenever(contentResolver.openAssetFileDescriptor(eq(uri1), any())).thenReturn(assetFileDescriptor)
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addNewTicketAttachments(listOf(uri1))
         advanceUntilIdle()
 
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1)
-        assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(10L * 1024L * 1024L)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris).containsExactly(uri1)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.rejectedUris).isEmpty()
+        assertThat(viewModel.newTicketFormState.value.attachmentState.currentTotalSizeBytes)
+            .isEqualTo(10L * 1024L * 1024L)
     }
 
     @Test
-    fun `addAttachments rejects files when total size exceeds 20MB`() = test {
+    fun `addNewTicketAttachments rejects files when total size exceeds 20MB`() = test {
         val uri1 = mock<Uri>()
         val uri2 = mock<Uri>()
         val uri3 = mock<Uri>()
@@ -579,20 +585,24 @@ class HESupportViewModelTest : BaseUnitTest() {
         whenever(contentResolver.openAssetFileDescriptor(eq(uri2), any())).thenReturn(descriptor2)
         whenever(contentResolver.openAssetFileDescriptor(eq(uri3), any())).thenReturn(descriptor3)
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addNewTicketAttachments(listOf(uri1))
         advanceUntilIdle()
-        viewModel.addAttachments(listOf(uri2, uri3))
+        viewModel.addNewTicketAttachments(listOf(uri2, uri3))
         advanceUntilIdle()
 
-        // uri1 (12MB) accepted, uri2 (10MB) rejected (12+10=22 exceeds 20MB), uri3 (3MB) accepted (12+3=15MB)
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri3)
-        assertThat(viewModel.attachmentState.value.rejectedUris).containsExactly(uri2)
-        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(15L * 1024L * 1024L)
-        assertThat(viewModel.attachmentState.value.rejectedTotalSizeBytes).isEqualTo(10L * 1024L * 1024L)
+        // uri1 (12MB) accepted, uri2 (10MB) rejected (12+10=22 exceeds 20MB), uri3 (3MB) accepted
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1, uri3)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.rejectedUris)
+            .containsExactly(uri2)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.currentTotalSizeBytes)
+            .isEqualTo(15L * 1024L * 1024L)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.rejectedTotalSizeBytes)
+            .isEqualTo(10L * 1024L * 1024L)
     }
 
     @Test
-    fun `addAttachments accepts multiple files within total size limit`() = test {
+    fun `addNewTicketAttachments accepts multiple files within total size limit`() = test {
         val uri1 = mock<Uri>()
         val uri2 = mock<Uri>()
         val descriptor1 = mock<AssetFileDescriptor>()
@@ -604,33 +614,36 @@ class HESupportViewModelTest : BaseUnitTest() {
         whenever(contentResolver.openAssetFileDescriptor(eq(uri1), any())).thenReturn(descriptor1)
         whenever(contentResolver.openAssetFileDescriptor(eq(uri2), any())).thenReturn(descriptor2)
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addNewTicketAttachments(listOf(uri1))
         advanceUntilIdle()
-        viewModel.addAttachments(listOf(uri2))
+        viewModel.addNewTicketAttachments(listOf(uri2))
         advanceUntilIdle()
 
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri2)
-        assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(19L * 1024L * 1024L)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1, uri2)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.rejectedUris).isEmpty()
+        assertThat(viewModel.newTicketFormState.value.attachmentState.currentTotalSizeBytes)
+            .isEqualTo(19L * 1024L * 1024L)
     }
 
     @Test
-    fun `addAttachments accepts file exactly at 20MB limit`() = test {
+    fun `addNewTicketAttachments accepts file exactly at 20MB limit`() = test {
         val uri1 = mock<Uri>()
         val assetFileDescriptor = mock<AssetFileDescriptor>()
         whenever(assetFileDescriptor.length).thenReturn(20L * 1024L * 1024L) // Exactly 20MB
         whenever(contentResolver.openAssetFileDescriptor(eq(uri1), any())).thenReturn(assetFileDescriptor)
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addNewTicketAttachments(listOf(uri1))
         advanceUntilIdle()
 
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1)
-        assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(20L * 1024L * 1024L)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris).containsExactly(uri1)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.rejectedUris).isEmpty()
+        assertThat(viewModel.newTicketFormState.value.attachmentState.currentTotalSizeBytes)
+            .isEqualTo(20L * 1024L * 1024L)
     }
 
     @Test
-    fun `addAttachments accepts files when total is exactly 20MB`() = test {
+    fun `addNewTicketAttachments accepts files when total is exactly 20MB`() = test {
         val uri1 = mock<Uri>()
         val uri2 = mock<Uri>()
         val descriptor1 = mock<AssetFileDescriptor>()
@@ -642,32 +655,34 @@ class HESupportViewModelTest : BaseUnitTest() {
         whenever(contentResolver.openAssetFileDescriptor(eq(uri1), any())).thenReturn(descriptor1)
         whenever(contentResolver.openAssetFileDescriptor(eq(uri2), any())).thenReturn(descriptor2)
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addNewTicketAttachments(listOf(uri1))
         advanceUntilIdle()
-        viewModel.addAttachments(listOf(uri2))
+        viewModel.addNewTicketAttachments(listOf(uri2))
         advanceUntilIdle()
 
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri2)
-        assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(20L * 1024L * 1024L)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1, uri2)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.rejectedUris).isEmpty()
+        assertThat(viewModel.newTicketFormState.value.attachmentState.currentTotalSizeBytes)
+            .isEqualTo(20L * 1024L * 1024L)
     }
 
     @Test
-    fun `addAttachments accepts file when size cannot be determined`() = test {
+    fun `addNewTicketAttachments accepts file when size cannot be determined`() = test {
         val uri1 = mock<Uri>()
         whenever(contentResolver.openAssetFileDescriptor(eq(uri1), any())).thenReturn(null)
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addNewTicketAttachments(listOf(uri1))
         advanceUntilIdle()
 
         // File should be accepted since we can't determine size (fail open approach)
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1)
-        assertThat(viewModel.attachmentState.value.rejectedUris).isEmpty()
-        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(0L)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris).containsExactly(uri1)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.rejectedUris).isEmpty()
+        assertThat(viewModel.newTicketFormState.value.attachmentState.currentTotalSizeBytes).isEqualTo(0L)
     }
 
     @Test
-    fun `addAttachments rejects files that exceed total size even when individual files are valid`() = test {
+    fun `addNewTicketAttachments rejects files that exceed total size even when valid individually`() = test {
         val uri1 = mock<Uri>()
         val uri2 = mock<Uri>()
         val uri3 = mock<Uri>()
@@ -687,16 +702,181 @@ class HESupportViewModelTest : BaseUnitTest() {
         whenever(contentResolver.openAssetFileDescriptor(eq(uri3), any())).thenReturn(descriptor3)
         whenever(contentResolver.openAssetFileDescriptor(eq(uri4), any())).thenReturn(descriptor4)
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addNewTicketAttachments(listOf(uri1))
         advanceUntilIdle()
-        viewModel.addAttachments(listOf(uri2, uri3, uri4))
+        viewModel.addNewTicketAttachments(listOf(uri2, uri3, uri4))
         advanceUntilIdle()
 
-        // uri1 accepted (5MB), uri2 accepted (5+12=17 < 20), uri3 rejected (17+8=25 > 20), uri4 accepted (17+2=19 < 20)
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1, uri2, uri4)
-        assertThat(viewModel.attachmentState.value.rejectedUris).containsExactly(uri3)
-        assertThat(viewModel.attachmentState.value.currentTotalSizeBytes).isEqualTo(19L * 1024L * 1024L)
-        assertThat(viewModel.attachmentState.value.rejectedTotalSizeBytes).isEqualTo(8L * 1024L * 1024L)
+        // uri1 accepted (5MB), uri2 accepted (5+12=17 < 20), uri3 rejected (17+8=25 > 20),
+        // uri4 accepted (17+2=19 < 20)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1, uri2, uri4)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.rejectedUris)
+            .containsExactly(uri3)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.currentTotalSizeBytes)
+            .isEqualTo(19L * 1024L * 1024L)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.rejectedTotalSizeBytes)
+            .isEqualTo(8L * 1024L * 1024L)
+    }
+
+    // endregion
+
+    // region Reply form attachment tests
+
+    @Test
+    fun `addReplyAttachments adds URIs to reply form attachment state`() = test {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+
+        viewModel.addReplyAttachments(listOf(uri1, uri2))
+        advanceUntilIdle()
+
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1, uri2)
+        assertThat(viewModel.replyFormState.value.attachmentState.rejectedUris).isEmpty()
+    }
+
+    @Test
+    fun `addReplyAttachments appends to existing attachments`() = test {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+        val uri3 = mock<Uri>()
+
+        viewModel.addReplyAttachments(listOf(uri1))
+        advanceUntilIdle()
+        viewModel.addReplyAttachments(listOf(uri2, uri3))
+        advanceUntilIdle()
+
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1, uri2, uri3)
+    }
+
+    @Test
+    fun `removeReplyAttachment removes specific URI from attachments list`() = test {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+        val uri3 = mock<Uri>()
+
+        viewModel.addReplyAttachments(listOf(uri1, uri2, uri3))
+        advanceUntilIdle()
+        viewModel.removeReplyAttachment(uri2)
+        advanceUntilIdle()
+
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1, uri3)
+    }
+
+    @Test
+    fun `removeReplyAttachment does nothing when URI not in list`() = test {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+        val uri3 = mock<Uri>()
+
+        viewModel.addReplyAttachments(listOf(uri1, uri2))
+        advanceUntilIdle()
+        viewModel.removeReplyAttachment(uri3)
+        advanceUntilIdle()
+
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1, uri2)
+    }
+
+    @Test
+    fun `clearReplyForm removes all attachments`() = test {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+
+        viewModel.addReplyAttachments(listOf(uri1, uri2))
+        advanceUntilIdle()
+        viewModel.clearReplyForm()
+
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris).isEmpty()
+        assertThat(viewModel.replyFormState.value.attachmentState.rejectedUris).isEmpty()
+    }
+
+    @Test
+    fun `reply attachments list is empty initially`() {
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris).isEmpty()
+    }
+
+    @Test
+    fun `addReplyAttachments rejects file larger than 20MB`() = test {
+        val uri1 = mock<Uri>()
+        val assetFileDescriptor = mock<AssetFileDescriptor>()
+        whenever(assetFileDescriptor.length).thenReturn(21L * 1024L * 1024L) // 21MB
+        whenever(contentResolver.openAssetFileDescriptor(eq(uri1), any())).thenReturn(assetFileDescriptor)
+
+        viewModel.addReplyAttachments(listOf(uri1))
+        advanceUntilIdle()
+
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris).isEmpty()
+        assertThat(viewModel.replyFormState.value.attachmentState.rejectedUris).containsExactly(uri1)
+        assertThat(viewModel.replyFormState.value.attachmentState.rejectedTotalSizeBytes)
+            .isEqualTo(21L * 1024L * 1024L)
+    }
+
+    @Test
+    fun `addReplyAttachments accepts file smaller than 20MB`() = test {
+        val uri1 = mock<Uri>()
+        val assetFileDescriptor = mock<AssetFileDescriptor>()
+        whenever(assetFileDescriptor.length).thenReturn(10L * 1024L * 1024L) // 10MB
+        whenever(contentResolver.openAssetFileDescriptor(eq(uri1), any())).thenReturn(assetFileDescriptor)
+
+        viewModel.addReplyAttachments(listOf(uri1))
+        advanceUntilIdle()
+
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris).containsExactly(uri1)
+        assertThat(viewModel.replyFormState.value.attachmentState.rejectedUris).isEmpty()
+        assertThat(viewModel.replyFormState.value.attachmentState.currentTotalSizeBytes)
+            .isEqualTo(10L * 1024L * 1024L)
+    }
+
+    @Test
+    fun `new ticket and reply attachments are independent`() = test {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+
+        viewModel.addNewTicketAttachments(listOf(uri1))
+        advanceUntilIdle()
+        viewModel.addReplyAttachments(listOf(uri2))
+        advanceUntilIdle()
+
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1)
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri2)
+    }
+
+    @Test
+    fun `clearNewTicketForm does not clear reply attachments`() = test {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+
+        viewModel.addNewTicketAttachments(listOf(uri1))
+        advanceUntilIdle()
+        viewModel.addReplyAttachments(listOf(uri2))
+        advanceUntilIdle()
+        viewModel.clearNewTicketForm()
+
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris).isEmpty()
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri2)
+    }
+
+    @Test
+    fun `clearReplyForm does not clear new ticket attachments`() = test {
+        val uri1 = mock<Uri>()
+        val uri2 = mock<Uri>()
+
+        viewModel.addNewTicketAttachments(listOf(uri1))
+        advanceUntilIdle()
+        viewModel.addReplyAttachments(listOf(uri2))
+        advanceUntilIdle()
+        viewModel.clearReplyForm()
+
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris)
+            .containsExactly(uri1)
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris).isEmpty()
     }
 
     // endregion
@@ -720,7 +900,8 @@ class HESupportViewModelTest : BaseUnitTest() {
             attachments = listOf(tempFile1.path, tempFile2.path)
         )).thenReturn(CreateConversationResult.Success(newConversation))
 
-        viewModel.addAttachments(listOf(uri1, uri2))
+        viewModel.addNewTicketAttachments(listOf(uri1, uri2))
+        advanceUntilIdle()
         viewModel.onSendNewConversation(
             subject = "Test Subject",
             message = "Test Message",
@@ -747,9 +928,9 @@ class HESupportViewModelTest : BaseUnitTest() {
             any(), any(), any(), any()
         )).thenReturn(CreateConversationResult.Success(newConversation))
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addNewTicketAttachments(listOf(uri1))
         advanceUntilIdle()
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris).containsExactly(uri1)
 
         viewModel.onSendNewConversation(
             subject = "Test Subject",
@@ -758,7 +939,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         )
         advanceUntilIdle()
 
-        assertThat(viewModel.attachmentState.value.acceptedUris).isEmpty()
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris).isEmpty()
     }
 
     @Test
@@ -769,7 +950,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             any(), any(), any(), any()
         )).thenReturn(CreateConversationResult.Error.GeneralError)
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addNewTicketAttachments(listOf(uri1))
         advanceUntilIdle()
 
         viewModel.onSendNewConversation(
@@ -779,7 +960,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         )
         advanceUntilIdle()
 
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1)
+        assertThat(viewModel.newTicketFormState.value.attachmentState.acceptedUris).containsExactly(uri1)
     }
 
     @Test
@@ -793,7 +974,8 @@ class HESupportViewModelTest : BaseUnitTest() {
             any(), any(), any(), any()
         )).thenReturn(CreateConversationResult.Error.GeneralError)
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addNewTicketAttachments(listOf(uri1))
+        advanceUntilIdle()
         viewModel.onSendNewConversation(
             subject = "Test Subject",
             message = "Test Message",
@@ -825,7 +1007,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         viewModel.onConversationClick(existingConversation)
         advanceUntilIdle()
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addReplyAttachments(listOf(uri1))
+        advanceUntilIdle()
         viewModel.onAddMessageToConversation(
             message = "Test message"
         )
@@ -854,16 +1037,16 @@ class HESupportViewModelTest : BaseUnitTest() {
         viewModel.onConversationClick(existingConversation)
         advanceUntilIdle()
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addReplyAttachments(listOf(uri1))
         advanceUntilIdle()
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1)
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris).containsExactly(uri1)
 
         viewModel.onAddMessageToConversation(
             message = "Test message"
         )
         advanceUntilIdle()
 
-        assertThat(viewModel.attachmentState.value.acceptedUris).isEmpty()
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris).isEmpty()
     }
 
     @Test
@@ -879,7 +1062,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         viewModel.onConversationClick(existingConversation)
         advanceUntilIdle()
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addReplyAttachments(listOf(uri1))
         advanceUntilIdle()
 
         viewModel.onAddMessageToConversation(
@@ -887,7 +1070,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         )
         advanceUntilIdle()
 
-        assertThat(viewModel.attachmentState.value.acceptedUris).containsExactly(uri1)
+        assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris).containsExactly(uri1)
     }
 
     @Test
@@ -906,7 +1089,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         viewModel.onConversationClick(existingConversation)
         advanceUntilIdle()
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addReplyAttachments(listOf(uri1))
+        advanceUntilIdle()
         viewModel.onAddMessageToConversation(
             message = "Test message"
         )
@@ -922,7 +1106,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         whenever(tempAttachmentsUtil.createTempFilesFrom(listOf(uri1)))
             .thenThrow(RuntimeException("File creation failed"))
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addNewTicketAttachments(listOf(uri1))
+        advanceUntilIdle()
         viewModel.onSendNewConversation(
             subject = "Test Subject",
             message = "Test Message",
@@ -946,7 +1131,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         viewModel.onConversationClick(existingConversation)
         advanceUntilIdle()
 
-        viewModel.addAttachments(listOf(uri1))
+        viewModel.addReplyAttachments(listOf(uri1))
+        advanceUntilIdle()
         viewModel.onAddMessageToConversation(
             message = "Test message"
         )

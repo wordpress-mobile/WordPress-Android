@@ -225,12 +225,13 @@
     <!-- Delete Media -->
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
-    <string name="media_empty_list">You don\'t have any media</string>
+    <string name="media_empty_list">You don\'t have any media - yet!</string>
+    <string name="media_empty_list_subtitle">Why not upload something?</string>
     <string name="media_empty_search_list">No media matching your search</string>
-    <string name="media_empty_image_list">You don\'t have any images</string>
-    <string name="media_empty_videos_list">You don\'t have any videos</string>
-    <string name="media_empty_documents_list">You don\'t have any documents</string>
-    <string name="media_empty_audio_list">You don\'t have any audio</string>
+    <string name="media_empty_image_list">You don\'t have any images - yet!</string>
+    <string name="media_empty_videos_list">You don\'t have any videos - yet!</string>
+    <string name="media_empty_documents_list">You don\'t have any documents - yet!</string>
+    <string name="media_empty_audio_list">You don\'t have any audio - yet!</string>
     <string name="media_empty_upload_media">Upload media</string>
     <string name="delete">Delete</string>
     <string name="confirm_delete_media_image">Delete this image?</string>
@@ -983,6 +984,24 @@
     <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites</string>
     <string name="modern_support">Modern Support</string>
     <string name="modern_support_description">Enable the new modern support experience</string>
+    <string name="experimental_network_debugging">Network Debugging</string>
+    <string name="experimental_network_debugging_description">Show network request tracking tools in the Help screen</string>
+    <string name="experimental_network_debugging_disable_error_title">Disable Tracking First</string>
+    <string name="experimental_network_debugging_disable_error_message">Network tracking is currently enabled. Please go to Help and disable \"Track Network Requests\" before turning off this feature.</string>
+    <string name="track_network_requests">Track Network Requests</string>
+    <string name="track_network_requests_description">Record HTTP requests for troubleshooting. Logs stay on device unless you share them.</string>
+    <string name="view_network_requests">View Network Requests</string>
+    <string name="network_requests_retention">Retention Period</string>
+    <string name="network_requests_retention_one_hour">1 Hour</string>
+    <string name="network_requests_retention_one_day">1 Day</string>
+    <string name="network_requests_retention_one_week">1 Week</string>
+    <string name="network_requests_retention_until_cleared">Until Cleared</string>
+    <string name="network_requests_retention_info">Retention: %s</string>
+    <string name="network_requests_enable_dialog_description">Logs are stored only on your device and never shared unless you explicitly share them. You can clear logs anytime via \"View Network Requests\" using the trash icon. Select how long to retain logs.</string>
+    <string name="network_requests_enable">Enable</string>
+    <string name="network_requests_disable_tracking_title">Disable Tracking?</string>
+    <string name="network_requests_disable_tracking_description">Existing logs will expire based on the retention period. To clear logs now, tap \"View Network Requests\" and use the trash icon before disabling.</string>
+    <string name="network_requests_disable">Disable</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>
@@ -2337,6 +2356,7 @@
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_show_blog">Unable to show this blog</string>
+    <string name="reader_toast_err_blog_not_found">Error: Unable to find the blog</string>
     <string name="reader_toast_err_already_follow_this_blog">You are already subscribed to this blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Unable to subscribe to this blog</string>
     <string name="reader_toast_err_follow_blog_could_not_be_found">This blog could not be found</string>

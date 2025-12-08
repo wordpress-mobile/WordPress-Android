@@ -18,19 +18,35 @@
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/header_follow_button"
+        app:layout_constraintEnd_toStartOf="@id/header_follow_button_container"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <org.wordpress.android.ui.reader.views.ReaderFollowButton
-        android:id="@+id/header_follow_button"
-        style="@style/Reader.Follow.Button.New"
+    <FrameLayout
+        android:id="@+id/header_follow_button_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/layout_blog_section"
         app:layout_constraintBottom_toBottomOf="@id/layout_blog_section"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+        <org.wordpress.android.ui.reader.views.ReaderFollowButton
+            android:id="@+id/header_follow_button"
+            style="@style/Reader.Follow.Button.New"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <ProgressBar
+            android:id="@+id/header_follow_progress"
+            android:layout_width="@dimen/reader_follow_button_progress_size"
+            android:layout_height="@dimen/reader_follow_button_progress_size"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </FrameLayout>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_title"
