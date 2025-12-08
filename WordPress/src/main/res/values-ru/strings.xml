@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-11-26 12:42:34+0000
+Translation-Revision-Date: 2025-12-05 16:16:47+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: ru
@@ -11,6 +11,7 @@ Language: ru
     <string name="he_support_send_ticket_button">Отправить</string>
     <string name="he_support_contact_email_message">Мы отправим письмо по этому адресу.</string>
     <string name="he_support_contact_information">Контактная информация</string>
+    <string name="he_support_site_address_placeholder">https://yoursite.com</string>
     <string name="he_support_site_address_label">Адрес сайта (не обязательно)</string>
     <string name="he_support_subject_placeholder">Краткое описание проблемы</string>
     <string name="he_support_subject_label">Тема</string>
