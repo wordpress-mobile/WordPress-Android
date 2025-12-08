@@ -27,10 +27,10 @@ data class CptFlatPostListUiState(
 class CptFlatPostListViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    @Suppress("unused") // TODO: Will be used to fetch posts from wordpress-rs
+    @Suppress("unused") // Will be used to fetch posts from wordpress-rs
     private val site: SiteReference? = savedStateHandle.get<SiteReference>(BridgeConstants.EXTRA_SITE)
 
-    @Suppress("unused") // TODO: Will be used to fetch posts from wordpress-rs
+    @Suppress("unused") // Will be used to fetch posts from wordpress-rs
     private val postTypeSlug: String = savedStateHandle.get<String>(
         CptFlatPostListActivity.EXTRA_POST_TYPE_SLUG
     ) ?: ""
@@ -47,17 +47,21 @@ class CptFlatPostListViewModel @Inject constructor(
     )
     val uiState: StateFlow<CptFlatPostListUiState> = _uiState.asStateFlow()
 
+    @Suppress("MagicNumber") // Mock data - will be replaced with real data from wordpress-rs
     private fun generateMockPosts(): List<CptPostListItem> {
-        return listOf(
-            CptPostListItem(1, "First Post", "This is the first post excerpt...", "Published"),
-            CptPostListItem(2, "Second Post", "This is the second post excerpt...", "Draft"),
-            CptPostListItem(3, "Third Post", "This is the third post excerpt...", "Published"),
-            CptPostListItem(4, "Fourth Post", "This is the fourth post excerpt...", "Scheduled"),
-            CptPostListItem(5, "Fifth Post", "This is the fifth post excerpt...", "Published")
-        )
+        val statuses = listOf("Published", "Draft", "Scheduled")
+        return (1..5).map { id ->
+            CptPostListItem(
+                id = id.toLong(),
+                title = "Post $id",
+                excerpt = "This is the post $id excerpt...",
+                status = statuses[id % statuses.size]
+            )
+        }
     }
 
+    @Suppress("UnusedParameter") // Will navigate to post editor with wordpress-rs integration
     fun onPostClick(post: CptPostListItem) {
-        // TODO: Navigate to post editor or detail screen
+        // No-op: navigation will be implemented with wordpress-rs integration
     }
 }
