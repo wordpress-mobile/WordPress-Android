@@ -69,6 +69,7 @@ tasks.withType(KotlinCompile).configureEach {
 }
 
 dependencies {
+    implementation(libs.automattic.tracks.crashlogging)
     implementation libs.androidx.exifinterface
     implementation libs.androidx.security.crypto
 

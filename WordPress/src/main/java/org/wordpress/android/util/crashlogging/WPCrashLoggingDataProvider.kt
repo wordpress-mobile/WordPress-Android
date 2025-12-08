@@ -60,7 +60,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
 
     override fun crashLoggingEnabled(): Boolean {
         if (buildConfig.isDebug()) {
-            return false
+            return true
         }
 
         val hasUserAllowedReporting = sharedPreferences.getBoolean(

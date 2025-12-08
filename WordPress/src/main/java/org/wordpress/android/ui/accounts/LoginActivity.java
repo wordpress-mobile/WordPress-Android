@@ -93,6 +93,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.automattic.android.tracks.crashlogging.CrashLogging;
+
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
@@ -146,6 +148,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     @Inject protected ViewModelProvider.Factory mViewModelFactory;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
+    @Inject CrashLogging mCrashLogging;
 
     @Inject ExperimentalFeatures mExperimentalFeatures;
 
@@ -341,6 +344,12 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
+        mCrashLogging.sendReport(
+            null,
+            java.util.Collections.emptyMap(),
+            "Successful login event"
+        );
+
         AppPrefs.setIsJetpackMigrationEligible(false);
         AppPrefs.setIsJetpackMigrationInProgress(false);
         switch (getLoginMode()) {
