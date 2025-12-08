@@ -1,0 +1,54 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.google.dagger.hilt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.dependency.analysis)
+}
+
+android {
+    namespace "org.wordpress.android.posttypes"
+
+    defaultConfig {
+        compileSdk rootProject.compileSdkVersion
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+
+    compileOptions {
+        sourceCompatibility JvmTarget.fromTarget(libs.versions.java.get()).target
+        targetCompatibility JvmTarget.fromTarget(libs.versions.java.get()).target
+    }
+
+    buildFeatures {
+        compose true
+    }
+}
+
+dependencies {
+    // AndroidX
+    implementation libs.androidx.appcompat.main
+
+    // Compose
+    implementation platform(libs.androidx.compose.bom)
+    implementation libs.androidx.compose.ui.main
+    implementation libs.androidx.compose.material3
+    implementation libs.androidx.compose.material.icons.extended
+    implementation libs.androidx.compose.ui.tooling.preview
+    implementation libs.androidx.activity.compose
+
+    // Lifecycle & ViewModel
+    implementation libs.androidx.lifecycle.viewmodel.compose
+    implementation libs.androidx.lifecycle.runtime
+
+    // Hilt
+    implementation libs.google.dagger.hilt.android.main
+    ksp libs.google.dagger.hilt.compiler
+
+    // Debug
+    debugImplementation libs.androidx.compose.ui.tooling.main
+}

@@ -97,7 +97,8 @@ import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
-import org.wordpress.android.ui.posttypes.CptPostTypesActivity;
+import org.wordpress.android.posttypes.CptPostTypesActivity;
+import org.wordpress.android.posttypes.bridge.SiteReference;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
@@ -707,7 +708,12 @@ public class ActivityLauncher {
     }
 
     public static void viewPostTypes(@NonNull Context context, @NonNull SiteModel site) {
-        Intent intent = CptPostTypesActivity.Companion.createIntent(context, site);
+        SiteReference siteRef = SiteReference.Companion.create(
+                site.getSiteId(),
+                site.getName() != null ? site.getName() : "",
+                site.getUrl() != null ? site.getUrl() : ""
+        );
+        Intent intent = CptPostTypesActivity.Companion.createIntent(context, siteRef);
         context.startActivity(intent);
     }
 

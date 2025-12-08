@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posttypes.compose
+package org.wordpress.android.posttypes.compose
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -20,28 +20,27 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.R
-import org.wordpress.android.ui.posttypes.CptFlatPostListUiState
-import org.wordpress.android.ui.posttypes.CptPostListItem
+import org.wordpress.android.posttypes.CptPostTypeItem
+import org.wordpress.android.posttypes.CptPostTypesUiState
+import org.wordpress.android.posttypes.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CptFlatPostListScreen(
-    uiState: CptFlatPostListUiState,
+fun CptPostTypesScreen(
+    uiState: CptPostTypesUiState,
     onBackClick: () -> Unit,
-    onPostClick: (CptPostListItem) -> Unit
+    onPostTypeClick: (CptPostTypeItem) -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(uiState.postTypeLabel) },
+                title = { Text(stringResource(R.string.cpt_post_types_screen_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
+                            contentDescription = stringResource(R.string.cpt_back)
                         )
                     }
                 }
@@ -53,10 +52,10 @@ fun CptFlatPostListScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            items(uiState.posts) { post ->
-                CptPostListItemRow(
-                    post = post,
-                    onClick = { onPostClick(post) }
+            items(uiState.postTypes) { postType ->
+                CptPostTypeListItem(
+                    postType = postType,
+                    onClick = { onPostTypeClick(postType) }
                 )
                 HorizontalDivider()
             }
@@ -65,35 +64,19 @@ fun CptFlatPostListScreen(
 }
 
 @Composable
-private fun CptPostListItemRow(
-    post: CptPostListItem,
+private fun CptPostTypeListItem(
+    postType: CptPostTypeItem,
     onClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
         Text(
-            text = post.title,
-            style = MaterialTheme.typography.titleMedium,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(
-            text = post.excerpt,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(top = 4.dp)
-        )
-        Text(
-            text = post.status,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(top = 4.dp)
+            text = postType.label,
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posttypes
+package org.wordpress.android.posttypes
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -6,8 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.posttypes.bridge.BridgeConstants
+import org.wordpress.android.posttypes.bridge.SiteReference
 import javax.inject.Inject
 
 data class CptPostListItem(
@@ -27,10 +27,10 @@ data class CptFlatPostListUiState(
 class CptFlatPostListViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    @Suppress("unused") // TODO: Will be used to fetch posts from API
-    private val site: SiteModel? = savedStateHandle.get<SiteModel>(WordPress.SITE)
+    @Suppress("unused") // TODO: Will be used to fetch posts from wordpress-rs
+    private val site: SiteReference? = savedStateHandle.get<SiteReference>(BridgeConstants.EXTRA_SITE)
 
-    @Suppress("unused") // TODO: Will be used to fetch posts from API
+    @Suppress("unused") // TODO: Will be used to fetch posts from wordpress-rs
     private val postTypeSlug: String = savedStateHandle.get<String>(
         CptFlatPostListActivity.EXTRA_POST_TYPE_SLUG
     ) ?: ""

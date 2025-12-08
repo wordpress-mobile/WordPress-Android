@@ -1,28 +1,28 @@
-package org.wordpress.android.ui.posttypes
+package org.wordpress.android.posttypes
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.posttypes.compose.CptPostTypesScreen
-import org.wordpress.android.util.extensions.setContent
+import org.wordpress.android.posttypes.bridge.BridgeConstants
+import org.wordpress.android.posttypes.bridge.CptTheme
+import org.wordpress.android.posttypes.bridge.SiteReference
+import org.wordpress.android.posttypes.compose.CptPostTypesScreen
 
 @AndroidEntryPoint
-class CptPostTypesActivity : BaseAppCompatActivity() {
+class CptPostTypesActivity : AppCompatActivity() {
     private val viewModel: CptPostTypesViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppThemeM3 {
+            CptTheme {
                 val uiState by viewModel.uiState.collectAsState()
 
                 LaunchedEffect(Unit) {
@@ -56,9 +56,9 @@ class CptPostTypesActivity : BaseAppCompatActivity() {
     }
 
     companion object {
-        fun createIntent(context: Context, site: SiteModel): Intent {
+        fun createIntent(context: Context, site: SiteReference): Intent {
             return Intent(context, CptPostTypesActivity::class.java).apply {
-                putExtra(WordPress.SITE, site)
+                putExtra(BridgeConstants.EXTRA_SITE, site)
             }
         }
     }

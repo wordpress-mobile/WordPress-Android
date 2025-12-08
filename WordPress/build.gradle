@@ -395,6 +395,7 @@ dependencies {
         }
     }
     implementation project(":libs:login")
+    implementation project(":libs:posttypes")
     implementation("$gradle.ext.aboutAutomatticBinaryPath:${libs.versions.automattic.about.get()}")
 
     implementation("$gradle.ext.gutenbergKitBinaryPath:${libs.versions.gutenberg.kit.get()}")

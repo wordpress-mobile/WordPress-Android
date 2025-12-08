@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posttypes
+package org.wordpress.android.posttypes
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.posttypes.bridge.BridgeConstants
+import org.wordpress.android.posttypes.bridge.SiteReference
 import javax.inject.Inject
 
 data class CptPostTypeItem(
@@ -24,7 +24,7 @@ data class CptPostTypesUiState(
 
 sealed class CptNavigationAction {
     data class OpenPostTypeList(
-        val site: SiteModel,
+        val site: SiteReference,
         val postTypeSlug: String,
         val postTypeLabel: String
     ) : CptNavigationAction()
@@ -34,7 +34,7 @@ sealed class CptNavigationAction {
 class CptPostTypesViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val site: SiteModel? = savedStateHandle.get<SiteModel>(WordPress.SITE)
+    private val site: SiteReference? = savedStateHandle.get<SiteReference>(BridgeConstants.EXTRA_SITE)
 
     private val _uiState = MutableStateFlow(
         CptPostTypesUiState(
