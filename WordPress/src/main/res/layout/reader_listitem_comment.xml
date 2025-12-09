@@ -221,7 +221,7 @@
             style="?android:attr/progressBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_alignEnd="@+id/comment_body_container"
             android:layout_centerVertical="true"
             android:visibility="gone"
             tools:visibility="visible" />

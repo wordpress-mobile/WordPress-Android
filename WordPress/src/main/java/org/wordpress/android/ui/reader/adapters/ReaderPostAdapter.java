@@ -107,6 +107,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
+    private ReaderSiteHeaderView.OnBlogInfoFailedListener mBlogInfoFailedListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
@@ -300,6 +301,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (holder instanceof SiteHeaderViewHolder) {
             SiteHeaderViewHolder siteHolder = (SiteHeaderViewHolder) holder;
             siteHolder.mSiteHeaderView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
+            siteHolder.mSiteHeaderView.setOnBlogInfoFailedListener(mBlogInfoFailedListener);
             if (isDiscover()) {
                 siteHolder.mSiteHeaderView.loadBlogInfo(
                         ReaderConstants.DISCOVER_SITE_ID,
@@ -636,6 +638,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnBlogInfoLoadedListener(ReaderSiteHeaderView.OnBlogInfoLoadedListener listener) {
         mBlogInfoLoadedListener = listener;
+    }
+
+    public void setOnBlogInfoFailedListener(ReaderSiteHeaderView.OnBlogInfoFailedListener listener) {
+        mBlogInfoFailedListener = listener;
     }
 
     private ReaderTypes.ReaderPostListType getPostListType() {
