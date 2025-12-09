@@ -654,6 +654,9 @@ class ReaderPostDetailViewModel @Inject constructor(
             readerTracker.trackPost(Stat.READER_ARTICLE_RENDERED, it)
             _navigationEvents.postValue(Event(ShowPostInWebView(it)))
             _uiState.value = convertPostToUiState(it)
+            if (commentsSnippetFeatureConfig.isEnabled()) {
+                onRefreshCommentsData(it.blogId, it.postId)
+            }
         }
     }
 
