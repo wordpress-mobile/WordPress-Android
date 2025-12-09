@@ -215,6 +215,7 @@ class PostListFragment : ViewPagerFragment() {
             if (state.emptyViewVisible) {
                 emptyView.visibility = View.VISIBLE
                 uiHelpers.setTextOrHide(emptyView.title, state.title)
+                uiHelpers.setTextOrHide(emptyView.subtitle, "Subtitle")
                 uiHelpers.setImageOrHide(emptyView.image, state.imgResId)
                 setupButtonOrHide(emptyView.button, state.buttonText, state.onButtonClick)
             } else {
