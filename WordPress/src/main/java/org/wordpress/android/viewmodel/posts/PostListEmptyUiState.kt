@@ -21,10 +21,12 @@ sealed class PostListEmptyUiState(
 ) {
     class EmptyList(
         title: UiString,
+        subtitle: UiString? = null,
         buttonText: UiString? = null,
         onButtonClick: (() -> Unit)? = null,
     ) : PostListEmptyUiState(
         title = title,
+        subtitle = subtitle,
         buttonText = buttonText,
         onButtonClick = onButtonClick
     )
@@ -115,19 +117,20 @@ private fun createEmptyListUiState(
 ): PostListEmptyUiState.EmptyList {
     return when (postListType) {
         PUBLISHED -> PostListEmptyUiState.EmptyList(
-            UiStringRes(R.string.posts_published_empty),
-            UiStringRes(R.string.posts_empty_list_button),
-            newPost
+            title = UiStringRes(R.string.posts_published_empty),
+            subtitle = UiStringRes(R.string.posts_published_empty_subtitle),
+            buttonText = UiStringRes(R.string.posts_empty_list_button),
+            onButtonClick = newPost
         )
         DRAFTS -> PostListEmptyUiState.EmptyList(
-            UiStringRes(R.string.posts_draft_empty),
-            UiStringRes(R.string.posts_empty_list_button),
-            newPost
+            title = UiStringRes(R.string.posts_draft_empty),
+            buttonText = UiStringRes(R.string.posts_empty_list_button),
+            onButtonClick = newPost
         )
         SCHEDULED -> PostListEmptyUiState.EmptyList(
-            UiStringRes(R.string.posts_scheduled_empty),
-            UiStringRes(R.string.posts_empty_list_button),
-            newPost
+            title =UiStringRes(R.string.posts_scheduled_empty),
+            buttonText = UiStringRes(R.string.posts_empty_list_button),
+            onButtonClick = newPost
         )
         SEARCH -> {
             val messageResId = if (isSearchPromptRequired) {
