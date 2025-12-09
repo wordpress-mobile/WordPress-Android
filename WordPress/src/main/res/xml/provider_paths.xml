@@ -3,4 +3,7 @@
     <external-path
         name="external_files"
         path="."/>
+    <cache-path
+        name="shared_logs"
+        path="shared_logs/"/>
 </paths>

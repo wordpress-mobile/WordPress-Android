@@ -29,6 +29,8 @@ import org.wordpress.android.support.he.model.SupportMessage
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
 import org.wordpress.android.support.he.util.TempAttachmentsUtil
+import org.wordpress.android.util.EncryptedLogging
+import org.wordpress.android.util.LogFileProviderWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 
@@ -49,6 +51,12 @@ class HESupportViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var tempAttachmentsUtil: TempAttachmentsUtil
+
+    @Mock
+    private lateinit var encryptedLogging: EncryptedLogging
+
+    @Mock
+    private lateinit var logFileProvider: LogFileProviderWrapper
 
     @Mock
     private lateinit var application: Application
@@ -92,6 +100,8 @@ class HESupportViewModelTest : BaseUnitTest() {
             heSupportRepository = heSupportRepository,
             ioDispatcher = UnconfinedTestDispatcher(),
             tempAttachmentsUtil = tempAttachmentsUtil,
+            encryptedLogging = encryptedLogging,
+            logFileProvider = logFileProvider,
             application = application,
             accountStore = accountStore,
             appLogWrapper = appLogWrapper,
@@ -147,13 +157,15 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
-            attachments = emptyList()
+            attachments = emptyList(),
+            encryptedLogUuids = emptyList()
         )).thenReturn(CreateConversationResult.Success(newConversation))
 
         viewModel.onSendNewConversation(
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -161,7 +173,8 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
-            attachments = emptyList()
+            attachments = emptyList(),
+            encryptedLogUuids = emptyList()
         )
     }
 
@@ -171,13 +184,15 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
-            attachments = emptyList()
+            attachments = emptyList(),
+            encryptedLogUuids = emptyList()
         )).thenReturn(CreateConversationResult.Error.Forbidden)
 
         viewModel.onSendNewConversation(
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -191,13 +206,15 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
-            attachments = emptyList()
+            attachments = emptyList(),
+            encryptedLogUuids = emptyList()
         )).thenReturn(CreateConversationResult.Error.GeneralError)
 
         viewModel.onSendNewConversation(
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -208,13 +225,14 @@ class HESupportViewModelTest : BaseUnitTest() {
     @Test
     fun `onSendNewConversation resets isSendingNewConversation even when error occurs`() = test {
         whenever(heSupportRepository.createConversation(
-            any(), any(), any(), any()
+            any(), any(), any(), any(), any()
         )).thenReturn(CreateConversationResult.Error.GeneralError)
 
         viewModel.onSendNewConversation(
             subject = "Test Subject",
             message = "Test Message",
-            tags = emptyList()
+            tags = emptyList(),
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -228,7 +246,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         viewModel.onSendNewConversation(
             subject = "Test Subject",
             message = "Test Message",
-            tags = listOf("tag1")
+            tags = listOf("tag1"),
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -243,11 +262,12 @@ class HESupportViewModelTest : BaseUnitTest() {
         viewModel.onSendNewConversation(
             subject = "Test Subject",
             message = "Test Message",
-            tags = listOf("tag1")
+            tags = listOf("tag1"),
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
-        verify(heSupportRepository, never()).createConversation(any(), any(), any(), any())
+        verify(heSupportRepository, never()).createConversation(any(), any(), any(), any(), any())
     }
 
     // endregion
@@ -272,7 +292,8 @@ class HESupportViewModelTest : BaseUnitTest() {
     @Test
     fun `onAddMessageToConversation does nothing when no conversation is selected`() = test {
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -297,7 +318,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -325,7 +347,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -346,7 +369,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -368,7 +392,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -388,7 +413,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -408,7 +434,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -429,7 +456,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -449,7 +477,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -897,7 +926,8 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
-            attachments = listOf(tempFile1.path, tempFile2.path)
+            attachments = listOf(tempFile1.path, tempFile2.path),
+            encryptedLogUuids = emptyList()
         )).thenReturn(CreateConversationResult.Success(newConversation))
 
         viewModel.addNewTicketAttachments(listOf(uri1, uri2))
@@ -906,6 +936,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -914,7 +945,8 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
-            attachments = listOf(tempFile1.path, tempFile2.path)
+            attachments = listOf(tempFile1.path, tempFile2.path),
+            encryptedLogUuids = emptyList()
         )
         verify(tempAttachmentsUtil).removeTempFiles(listOf(tempFile1, tempFile2))
     }
@@ -925,7 +957,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         val newConversation = createTestConversation(1)
 
         whenever(heSupportRepository.createConversation(
-            any(), any(), any(), any()
+            any(), any(), any(), any(), any()
         )).thenReturn(CreateConversationResult.Success(newConversation))
 
         viewModel.addNewTicketAttachments(listOf(uri1))
@@ -936,6 +968,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -947,7 +980,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         val uri1 = mock<Uri>()
 
         whenever(heSupportRepository.createConversation(
-            any(), any(), any(), any()
+            any(), any(), any(), any(), any()
         )).thenReturn(CreateConversationResult.Error.GeneralError)
 
         viewModel.addNewTicketAttachments(listOf(uri1))
@@ -957,6 +990,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -971,7 +1005,7 @@ class HESupportViewModelTest : BaseUnitTest() {
         whenever(tempAttachmentsUtil.createTempFilesFrom(listOf(uri1)))
             .thenReturn(listOf(tempFile1))
         whenever(heSupportRepository.createConversation(
-            any(), any(), any(), any()
+            any(), any(), any(), any(), any()
         )).thenReturn(CreateConversationResult.Error.GeneralError)
 
         viewModel.addNewTicketAttachments(listOf(uri1))
@@ -980,6 +1014,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -1010,7 +1045,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         viewModel.addReplyAttachments(listOf(uri1))
         advanceUntilIdle()
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -1042,7 +1078,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         assertThat(viewModel.replyFormState.value.attachmentState.acceptedUris).containsExactly(uri1)
 
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -1066,7 +1103,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -1092,7 +1130,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         viewModel.addReplyAttachments(listOf(uri1))
         advanceUntilIdle()
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -1112,6 +1151,7 @@ class HESupportViewModelTest : BaseUnitTest() {
             subject = "Test Subject",
             message = "Test Message",
             tags = listOf("tag1"),
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
@@ -1134,7 +1174,8 @@ class HESupportViewModelTest : BaseUnitTest() {
         viewModel.addReplyAttachments(listOf(uri1))
         advanceUntilIdle()
         viewModel.onAddMessageToConversation(
-            message = "Test message"
+            message = "Test message",
+            includeAppLogs = false,
         )
         advanceUntilIdle()
 
