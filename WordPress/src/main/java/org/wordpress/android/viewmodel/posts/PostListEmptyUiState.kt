@@ -141,6 +141,12 @@ private fun createEmptyListUiState(
 
             PostListEmptyUiState.EmptyList(title = UiStringRes(messageResId))
         }
-        TRASHED -> PostListEmptyUiState.EmptyList(UiStringRes(R.string.posts_trashed_empty))
+        TRASHED -> {
+            PostListEmptyUiState.EmptyList(
+                title = UiStringRes(R.string.posts_trashed_empty),
+                buttonText = UiStringRes(R.string.posts_empty_list_button),
+                onButtonClick = newPost
+            )
+        }
     }
 }
