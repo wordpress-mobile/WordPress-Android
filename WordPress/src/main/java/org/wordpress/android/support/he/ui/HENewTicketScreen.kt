@@ -70,6 +70,7 @@ fun HENewTicketScreen(
         subject: String,
         messageText: String,
         siteAddress: String,
+        includeAppLogs: Boolean,
             ) -> Unit,
     userInfo: UserInfo,
     isSendingNewConversation: Boolean = false,
@@ -110,8 +111,9 @@ private fun HENewTicketScreenContent(
     onSubmit: (
         category: SupportCategory,
         subject: String,
-        messageText: String,
+        message: String,
         siteAddress: String,
+        includeAppLogs: Boolean,
             ) -> Unit,
     userInfo: UserInfo,
     isSendingNewConversation: Boolean,
@@ -143,7 +145,7 @@ private fun HENewTicketScreenContent(
                 isLoading = isSendingNewConversation,
                 onClick = {
                     selectedCategory?.let { category ->
-                        onSubmit(category, subject, messageText, siteAddress)
+                        onSubmit(category, subject, messageText, siteAddress, includeAppLogs)
                     }
                 }
             )
@@ -465,7 +467,7 @@ private fun HENewTicketScreenPreviewContent(snackbarHostState: SnackbarHostState
     HENewTicketScreenContent(
         snackbarHostState = snackbarHostState,
         onBackClick = { },
-        onSubmit = { _, _, _, _ -> },
+        onSubmit = { _, _, _, _, _ -> },
         userInfo = UserInfo("Test user", "test.user@automattic.com", null),
         isSendingNewConversation = false,
         attachmentState = AttachmentState(),

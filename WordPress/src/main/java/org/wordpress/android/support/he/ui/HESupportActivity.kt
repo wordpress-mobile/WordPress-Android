@@ -189,9 +189,10 @@ class HESupportActivity : AppCompatActivity() {
                                 viewModel.clearReplyForm()
                                 viewModel.onBackClick()
                             },
-                            onSendMessage = { message, _ ->
+                            onSendMessage = { message, includeAppLogs ->
                                 viewModel.onAddMessageToConversation(
                                     message = message,
+                                    includeAppLogs = includeAppLogs,
                                 )
                             },
                             onClearMessageSendResult = { viewModel.clearMessageSendResult() },
@@ -240,11 +241,12 @@ class HESupportActivity : AppCompatActivity() {
                             viewModel.clearNewTicketForm()
                             viewModel.onBackClick()
                         },
-                        onSubmit = { category, subject, message, _ ->
+                        onSubmit = { category, subject, message, _, includeAppLogs ->
                             viewModel.onSendNewConversation(
                                 subject = subject,
                                 message = message,
                                 tags = listOf(category.key),
+                                includeAppLogs = includeAppLogs,
                             )
                         },
                         userInfo = userInfo,
