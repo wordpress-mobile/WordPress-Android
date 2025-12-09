@@ -128,7 +128,7 @@ private fun createEmptyListUiState(
             onButtonClick = newPost
         )
         SCHEDULED -> PostListEmptyUiState.EmptyList(
-            title =UiStringRes(R.string.posts_scheduled_empty),
+            title = UiStringRes(R.string.posts_scheduled_empty),
             buttonText = UiStringRes(R.string.posts_empty_list_button),
             onButtonClick = newPost
         )
