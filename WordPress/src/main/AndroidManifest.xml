@@ -762,13 +762,15 @@
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/reader/feeds/.*/posts/.*"
-                    android:scheme="https" >
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
                 </data>
 
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/reader/feeds/.*/posts/.*"
-                    android:scheme="http" >
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
                 </data>
 
                 <data
