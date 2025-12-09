@@ -24,6 +24,8 @@ import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
 import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.EncryptedLogging
+import org.wordpress.android.util.LogFileProviderWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.io.File
 import javax.inject.Inject
@@ -34,6 +36,8 @@ class HESupportViewModel @Inject constructor(
     private val heSupportRepository: HESupportRepository,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val tempAttachmentsUtil: TempAttachmentsUtil,
+    private val encryptedLogging: EncryptedLogging,
+    private val logFileProvider: LogFileProviderWrapper,
     private val application: Application,
     accountStore: AccountStore,
     appLogWrapper: AppLogWrapper,
@@ -76,6 +80,7 @@ class HESupportViewModel @Inject constructor(
         subject: String,
         message: String,
         tags: List<String>,
+        includeAppLogs : Boolean,
     ) {
         viewModelScope.launch(ioDispatcher) {
             try {
@@ -86,14 +91,21 @@ class HESupportViewModel @Inject constructor(
 
                 _isSendingMessage.value = true
 
+                val logsIds: List<String> = if (includeAppLogs) {
+                     uploadLogs()
+                } else {
+                    emptyList()
+                }
+
                 val attachmentUris = _newTicketFormState.value.attachmentState.acceptedUris
-                val files = tempAttachmentsUtil.createTempFilesFrom(attachmentUris)
+                val attachments = tempAttachmentsUtil.createTempFilesFrom(attachmentUris)
 
                 when (val result = heSupportRepository.createConversation(
                     subject = subject,
                     message = message,
                     tags = tags,
-                    attachments = files.map { it.path }
+                    attachments = attachments.map { it.path },
+                    encryptedLogUuids = logsIds
                 )) {
                     is CreateConversationResult.Success -> {
                         val newConversation = result.conversation
@@ -115,7 +127,7 @@ class HESupportViewModel @Inject constructor(
                     }
                 }
 
-                tempAttachmentsUtil.removeTempFiles(files)
+                tempAttachmentsUtil.removeTempFiles(attachments)
                 _isSendingMessage.value = false
             } catch (e: Exception) {
                 _errorMessage.value = ErrorType.GENERAL
@@ -127,11 +139,32 @@ class HESupportViewModel @Inject constructor(
         }
     }
 
+    @Suppress("NestedBlockDepth", "TooGenericExceptionCaught")
+    private fun uploadLogs(): List<String> {
+        try {
+            val encryptedLogsUuid = mutableListOf<String>()
+            logFileProvider.getLogFiles().forEach { logFile ->
+                if (logFile.exists()) {
+                    encryptedLogging.encryptAndUploadLogFile(
+                        logFile = logFile,
+                        shouldStartUploadImmediately = true
+                    )?.let { uuid ->
+                        encryptedLogsUuid.add(uuid)
+                    }
+                }
+            }
+            return encryptedLogsUuid
+        } catch (throwable: Throwable) {
+            appLogWrapper.e(AppLog.T.SUPPORT, "Error uploading logs: ${throwable.stackTraceToString()}")
+            throw throwable
+        }
+    }
+
     override suspend fun getConversation(conversationId: Long): SupportConversation? =
         heSupportRepository.loadConversation(conversationId)
 
     @Suppress("TooGenericExceptionCaught")
-    fun onAddMessageToConversation(message: String) {
+    fun onAddMessageToConversation(message: String, includeAppLogs: Boolean) {
         viewModelScope.launch(ioDispatcher) {
             try {
                 if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -147,13 +180,18 @@ class HESupportViewModel @Inject constructor(
                 }
 
                 _isSendingMessage.value = true
+
+                if (includeAppLogs) {
+                    // We will add the logs when the RS layer is ready for this
+                }
+
                 val attachmentUris = _replyFormState.value.attachmentState.acceptedUris
-                val files = tempAttachmentsUtil.createTempFilesFrom(attachmentUris)
+                val attachments = tempAttachmentsUtil.createTempFilesFrom(attachmentUris)
 
                 when (val result = heSupportRepository.addMessageToConversation(
                     conversationId = selectedConversation.id,
                     message = message,
-                    attachments = files.map { it.path }
+                    attachments = attachments.map { it.path }
                 )) {
                     is CreateConversationResult.Success -> {
                         _selectedConversation.value = result.conversation
@@ -175,7 +213,7 @@ class HESupportViewModel @Inject constructor(
                     }
                 }
 
-                tempAttachmentsUtil.removeTempFiles(files)
+                tempAttachmentsUtil.removeTempFiles(attachments)
                 _isSendingMessage.value = false
             } catch (e: Exception) {
                 _errorMessage.value = ErrorType.GENERAL
