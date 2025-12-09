@@ -34,12 +34,14 @@ class DeepLinkUriUtils
     }
 
     /**
-     * Tracking URIs like `public-api.wordpress.com/mbar/...` come from emails and should be handled here
+     * Tracking URIs like `public-api.wordpress.com/mbar/...` or `public-api.wordpress.com/bar/...`
+     * come from emails and should be handled here
      */
     fun isTrackingUrl(uri: UriWrapper): Boolean {
-        // https://public-api.wordpress.com/mbar/
+        // https://public-api.wordpress.com/mbar/ or https://public-api.wordpress.com/bar/
+        val path = uri.pathSegments.firstOrNull()
         return uri.host == HOST_API_WORDPRESS_COM &&
-                uri.pathSegments.firstOrNull() == MOBILE_TRACKING_PATH
+                (path == MOBILE_TRACKING_PATH || path == REGULAR_TRACKING_PATH)
     }
 
     fun isWpLoginUrl(uri: UriWrapper): Boolean {
@@ -51,6 +53,7 @@ class DeepLinkUriUtils
     companion object {
         private const val HOST_API_WORDPRESS_COM = "public-api.wordpress.com"
         private const val MOBILE_TRACKING_PATH = "mbar"
+        private const val REGULAR_TRACKING_PATH = "bar"
         private const val WP_LOGIN = "wp-login.php"
         private const val REDIRECT_TO_PARAM = "redirect_to"
     }
