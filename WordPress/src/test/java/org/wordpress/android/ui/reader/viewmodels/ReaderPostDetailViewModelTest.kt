@@ -579,6 +579,34 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_signin_fallback))
         }
 
+    @Test
+    fun `given unauthorised with intercept uri, when error ui shown, then open in browser button is visible`() =
+        testWithoutLocalPost {
+            whenever(readerFetchPostUseCase.fetchPost(readerPost.blogId, readerPost.postId, viewModel.isFeed))
+                .thenReturn(FetchReaderPostState.Success)
+            val observers = init(offerSignIn = false, interceptedUrPresent = true)
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(Failed.NotAuthorised)
+
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+            assertThat((observers.uiStates.last() as ErrorUiState).openInBrowserButtonVisibility).isTrue
+        }
+
+    @Test
+    fun `given unauthorised without intercept uri, when error ui shown, then open in browser button is not visible`() =
+        testWithoutLocalPost {
+            whenever(readerFetchPostUseCase.fetchPost(readerPost.blogId, readerPost.postId, viewModel.isFeed))
+                .thenReturn(FetchReaderPostState.Success)
+            val observers = init(offerSignIn = false, interceptedUrPresent = false)
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(Failed.NotAuthorised)
+
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+            assertThat((observers.uiStates.last() as ErrorUiState).openInBrowserButtonVisibility).isFalse
+        }
+
     /* UPDATE POST */
     @Test
     fun `when post is updated, then ui is updated`() = test {
