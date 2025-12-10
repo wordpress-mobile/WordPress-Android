@@ -713,7 +713,8 @@ class ReaderPostDetailViewModel @Inject constructor(
 
         _uiState.value = ErrorUiState(
             message = UiStringRes(getNotAuthorisedErrorMessageRes()),
-            signInButtonVisibility = shouldOfferSignIn
+            signInButtonVisibility = shouldOfferSignIn,
+            openInBrowserButtonVisibility = interceptedUri != null
         )
     }
 
@@ -892,7 +893,8 @@ class ReaderPostDetailViewModel @Inject constructor(
 
         data class ErrorUiState(
             val message: UiString?,
-            val signInButtonVisibility: Boolean = false
+            val signInButtonVisibility: Boolean = false,
+            val openInBrowserButtonVisibility: Boolean = false
         ) : UiState(errorVisible = true)
 
         data class ReaderPostDetailsUiState(
