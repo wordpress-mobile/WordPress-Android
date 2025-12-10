@@ -474,6 +474,10 @@
                     android:host="public-api.wordpress.com"
                     android:pathPattern="/mbar/.*"
                     android:scheme="https" />
+                <data
+                    android:host="public-api.wordpress.com"
+                    android:pathPattern="/bar/.*"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
@@ -757,14 +761,72 @@
 
                 <data
                     android:host="wordpress.com"
-                    android:pathPattern="/reader/feeds/.*/posts/.*"
-                    android:scheme="https" >
+                    android:pathPattern="/reader/blogs/.*/posts/.*"
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
                 </data>
 
                 <data
                     android:host="wordpress.com"
+                    android:pathPattern="/reader/blogs/.*/posts/.*"
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
+                </data>
+
+                <data
+                    android:host="www.wordpress.com"
+                    android:pathPattern="/read/feeds/.*/posts/.*"
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
+                </data>
+
+                <data
+                    android:host="www.wordpress.com"
+                    android:pathPattern="/read/feeds/.*/posts/.*"
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
+                </data>
+
+                <data
+                    android:host="www.wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
+                </data>
+
+                <data
+                    android:host="www.wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
+                </data>
+
+                <data
+                    android:host="www.wordpress.com"
                     android:pathPattern="/reader/feeds/.*/posts/.*"
-                    android:scheme="http" >
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
+                </data>
+
+                <data
+                    android:host="www.wordpress.com"
+                    android:pathPattern="/reader/feeds/.*/posts/.*"
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
+                </data>
+
+                <data
+                    android:host="www.wordpress.com"
+                    android:pathPattern="/reader/blogs/.*/posts/.*"
+                    android:scheme="https"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
+                </data>
+
+                <data
+                    android:host="www.wordpress.com"
+                    android:pathPattern="/reader/blogs/.*/posts/.*"
+                    android:scheme="http"
+                    tools:ignore="IntentFilterUniqueDataAttributes" >
                 </data>
 
                 <action android:name="org.wordpress.android.action.VIEW_POST" />
