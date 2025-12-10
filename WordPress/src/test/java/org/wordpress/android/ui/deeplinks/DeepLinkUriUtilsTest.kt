@@ -11,7 +11,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.UriUtilsWrapper
 
-@RunWith(MockitoJUnitRunner::class)
+@RunWith(MockitoJUnitRunner.Silent::class)
 class DeepLinkUriUtilsTest {
     @Mock
     lateinit var siteStore: SiteStore
@@ -28,6 +28,42 @@ class DeepLinkUriUtilsTest {
         site = SiteModel()
         val buildUri = buildUri("example.com")
         whenever(uriUtilsWrapper.parse(host)).thenReturn(buildUri)
+    }
+
+    @Test
+    fun `isTrackingUrl returns true for mbar path`() {
+        val uri = buildUri("public-api.wordpress.com", "mbar")
+
+        val result = deepLinkUriUtils.isTrackingUrl(uri)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `isTrackingUrl returns true for bar path`() {
+        val uri = buildUri("public-api.wordpress.com", "bar")
+
+        val result = deepLinkUriUtils.isTrackingUrl(uri)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `isTrackingUrl returns false for other paths`() {
+        val uri = buildUri("public-api.wordpress.com", "other")
+
+        val result = deepLinkUriUtils.isTrackingUrl(uri)
+
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `isTrackingUrl returns false for different host`() {
+        val uri = buildUri("wordpress.com", "mbar")
+
+        val result = deepLinkUriUtils.isTrackingUrl(uri)
+
+        assertThat(result).isFalse()
     }
 
     @Test

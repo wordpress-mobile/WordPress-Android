@@ -10,6 +10,13 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_264"
+msgid ""
+"26.4:\n"
+"- The app icon has a single-color option to match your device’s other themed icons. #aesthetic\n"
+"- Large, high-resolution images are more likely to load (but might take a few seconds).\n"
+msgstr ""
+
 msgctxt "release_note_263"
 msgid ""
 "26.3:\n"
@@ -18,13 +25,6 @@ msgid ""
 "Increased the timeout for full-screen image loading, so some edge-cases and low connectivity cases have a higher chance to suncceed.\n"
 "\n"
 "The experimental editor just got smoother, too. Your content stays put when you rotate your device or toggle dark mode, and dialogs now respond properly to the back button. Happy editing!\n"
-msgstr ""
-
-msgctxt "release_note_262"
-msgid ""
-"26.2:\n"
-"- We've added support for mentions in the experimental editor—tag your friends and collaborators with ease.\n"
-"- Media selection just got more accessible for everyone.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

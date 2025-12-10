@@ -6,44 +6,75 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito.mock
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.support.logs.model.LogDay
-import java.lang.reflect.Method
+import org.wordpress.android.support.logs.model.LogFile
+import org.wordpress.android.util.LogFileProviderWrapper
+import java.io.File
+import java.util.Locale
+import java.util.TimeZone
+import kotlin.io.path.createTempDirectory
+import org.junit.After
 
 @ExperimentalCoroutinesApi
 class LogsViewModelTest : BaseUnitTest() {
-    @Mock
-    lateinit var appLogWrapper: AppLogWrapper
-
-    @Mock
-    lateinit var context: Context
-
+    private lateinit var appLogWrapper: AppLogWrapper
+    private lateinit var logFileProvider: LogFileProviderWrapper
+    private lateinit var context: Context
     private lateinit var viewModel: LogsViewModel
+
+    private lateinit var originalLocale: Locale
+    private lateinit var originalTimeZone: TimeZone
 
     @Before
     fun setUp() {
+        // Save original locale and timezone
+        originalLocale = Locale.getDefault()
+        originalTimeZone = TimeZone.getDefault()
+
+        // Set fixed locale and timezone for consistent test results
+        // Use GMT+1 to match the +0100 offset in test filenames
+        Locale.setDefault(Locale.US)
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+1"))
+
+        appLogWrapper = mock()
+        logFileProvider = mock()
+        context = mock()
+
+        // Create a real temporary directory for cache operations to avoid mocking File constructor
+        val tempCacheDir = createTempDirectory("test-cache").toFile()
+        tempCacheDir.deleteOnExit()
+        whenever(context.cacheDir).thenReturn(tempCacheDir)
+
         viewModel = LogsViewModel(
             appLogWrapper = appLogWrapper,
-            appContext = mock(),
+            logFileProvider = logFileProvider,
+            context = context,
             ioDispatcher = testDispatcher()
         )
+    }
+
+    @After
+    fun tearDown() {
+        // Restore original locale and timezone
+        Locale.setDefault(originalLocale)
+        TimeZone.setDefault(originalTimeZone)
     }
 
     // region Initial state tests
 
     @Test
-    fun `logDays is empty by default`() {
+    fun `logFiles is empty by default`() {
         // Then
-        assertThat(viewModel.logDays.value).isEmpty()
+        assertThat(viewModel.logFiles.value).isEmpty()
     }
 
     @Test
-    fun `selectedLogDay is null by default`() {
+    fun `selectedLogFile is null by default`() {
         // Then
-        assertThat(viewModel.selectedLogDay.value).isNull()
+        assertThat(viewModel.selectedLogFile.value).isNull()
     }
 
     @Test
@@ -54,62 +85,216 @@ class LogsViewModelTest : BaseUnitTest() {
 
     // endregion
 
-    // region selectLogDay() tests
+    // region init() tests
 
     @Test
-    fun `selectLogDay updates selectedLogDay state`() = test {
+    fun `init loads and sorts log files by last modified date`() = test {
         // Given
-        val logDay = LogDay(
-            date = "Oct-16",
-            displayDate = "October 16",
-            logEntries = listOf("[Oct-16 12:34:56.789] Test log"),
-            logCount = 1
+        val file1 = createMockFile("2025-11-21T10:42:06+0100.log", 1000L)
+        val file2 = createMockFile("2025-11-20T14:30:15+0100.log", 2000L)
+        val file3 = createMockFile("2025-11-19T09:15:42+0100.log", 500L)
+
+        whenever(logFileProvider.getLogFiles()).thenReturn(listOf(file1, file2, file3))
+
+        // When
+        viewModel.init()
+        testScheduler.advanceUntilIdle()
+
+        // Then
+        val logFiles = viewModel.logFiles.value
+        assertThat(logFiles).hasSize(3)
+        assertThat(logFiles[0].fileName).isEqualTo("2025-11-20T14:30:15+0100.log")
+        assertThat(logFiles[1].fileName).isEqualTo("2025-11-21T10:42:06+0100.log")
+        assertThat(logFiles[2].fileName).isEqualTo("2025-11-19T09:15:42+0100.log")
+    }
+
+    @Test
+    fun `init parses timestamp filenames into readable titles`() = test {
+        // Given
+        val file = createMockFile("2025-11-21T10:42:06+0100.log", 1000L)
+        whenever(logFileProvider.getLogFiles()).thenReturn(listOf(file))
+
+        // When
+        viewModel.init()
+        testScheduler.advanceUntilIdle()
+
+        // Then
+        val logFile = viewModel.logFiles.value.first()
+        assertThat(logFile.title).isEqualTo("November 21, 2025")
+        assertThat(logFile.subtitle).isEqualTo("10:42 AM")
+    }
+
+    @Test
+    fun `init handles unparseable filenames gracefully`() = test {
+        // Given
+        val file = createMockFile("invalid-filename.log", 1000L)
+        whenever(logFileProvider.getLogFiles()).thenReturn(listOf(file))
+
+        // When
+        viewModel.init()
+        testScheduler.advanceUntilIdle()
+
+        // Then
+        val logFile = viewModel.logFiles.value.first()
+        assertThat(logFile.title).isEqualTo("invalid-filename")
+        assertThat(logFile.subtitle).isEmpty()
+    }
+
+    @Test
+    fun `init does not load log content initially`() = test {
+        // Given
+        val file = createMockFile("2025-11-21T10:42:06+0100.log", 1000L)
+        whenever(logFileProvider.getLogFiles()).thenReturn(listOf(file))
+
+        // When
+        viewModel.init()
+        testScheduler.advanceUntilIdle()
+
+        // Then
+        val logFile = viewModel.logFiles.value.first()
+        assertThat(logFile.logLines).isNull()
+    }
+
+    @Test
+    fun `init sets error state when exception occurs`() = test {
+        // Given
+        whenever(logFileProvider.getLogFiles()).thenThrow(RuntimeException("Test error"))
+
+        // When
+        viewModel.init()
+        testScheduler.advanceUntilIdle()
+
+        // Then
+        assertThat(viewModel.errorMessage.value).isEqualTo(LogsViewModel.ErrorType.GENERAL)
+    }
+
+    // endregion
+
+    // region onLogFileClick() tests
+
+    @Test
+    fun `onLogFileClick loads file content and updates selectedLogFile`() = test {
+        // Given
+        val fileContent = "Line 1\nLine 2\nLine 3"
+        val file = createMockFileWithContent("2025-11-21T10:42:06+0100.log", fileContent)
+        val logFile = LogFile(
+            file = file,
+            fileName = "2025-11-21T10:42:06+0100.log",
+            title = "November 21, 2025",
+            subtitle = "10:42 AM",
+            logLines = null
         )
 
         // When
         viewModel.navigationEvents.test {
-            viewModel.onLogDayClick(logDay)
+            viewModel.onLogFileClick(logFile)
+            testScheduler.advanceUntilIdle()
 
             // Then
-            assertThat(viewModel.selectedLogDay.value).isEqualTo(logDay)
+            assertThat(viewModel.selectedLogFile.value).isNotNull
+            assertThat(viewModel.selectedLogFile.value?.logLines).containsExactly("Line 1", "Line 2", "Line 3")
+
             val event = awaitItem()
             assertThat(event).isInstanceOf(LogsViewModel.NavigationEvent.NavigateToDetail::class.java)
-            assertThat((event as LogsViewModel.NavigationEvent.NavigateToDetail).logDay).isEqualTo(logDay)
         }
     }
 
     @Test
-    fun `selectLogDay can be called multiple times and updates state each time`() = test {
+    fun `onLogFileClick does not reload content if already loaded`() = test {
         // Given
-        val logDay1 = LogDay(
-            date = "Oct-16",
-            displayDate = "October 16",
-            logEntries = listOf("[Oct-16 12:34:56.789] Test log"),
-            logCount = 1
-        )
-        val logDay2 = LogDay(
-            date = "Oct-15",
-            displayDate = "October 15",
-            logEntries = listOf("[Oct-15 12:34:56.789] Test log"),
-            logCount = 1
+        val existingLines = listOf("Line 1", "Line 2")
+        val file = createMockFile("2025-11-21T10:42:06+0100.log", 1000L)
+        val logFile = LogFile(
+            file = file,
+            fileName = "2025-11-21T10:42:06+0100.log",
+            title = "November 21, 2025",
+            subtitle = "10:42 AM",
+            logLines = existingLines
         )
 
         // When
         viewModel.navigationEvents.test {
-            viewModel.onLogDayClick(logDay1)
-            assertThat(viewModel.selectedLogDay.value).isEqualTo(logDay1)
-            val event1 = awaitItem()
-            assertThat(event1).isInstanceOf(LogsViewModel.NavigationEvent.NavigateToDetail::class.java)
-            assertThat((event1 as LogsViewModel.NavigationEvent.NavigateToDetail).logDay).isEqualTo(logDay1)
-
-            viewModel.onLogDayClick(logDay2)
+            viewModel.onLogFileClick(logFile)
+            testScheduler.advanceUntilIdle()
 
             // Then
-            assertThat(viewModel.selectedLogDay.value).isEqualTo(logDay2)
-            val event2 = awaitItem()
-            assertThat(event2).isInstanceOf(LogsViewModel.NavigationEvent.NavigateToDetail::class.java)
-            assertThat((event2 as LogsViewModel.NavigationEvent.NavigateToDetail).logDay).isEqualTo(logDay2)
+            assertThat(viewModel.selectedLogFile.value?.logLines).isEqualTo(existingLines)
+            awaitItem()
         }
+    }
+
+    @Test
+    fun `onLogFileClick truncates content to 100 lines`() = test {
+        // Given
+        val fileContent = (1..150).joinToString("\n") { "Line $it" }
+        val file = createMockFileWithContent("2025-11-21T10:42:06+0100.log", fileContent)
+        val logFile = LogFile(
+            file = file,
+            fileName = "2025-11-21T10:42:06+0100.log",
+            title = "November 21, 2025",
+            subtitle = "10:42 AM",
+            logLines = null
+        )
+
+        // When
+        viewModel.navigationEvents.test {
+            viewModel.onLogFileClick(logFile)
+            testScheduler.advanceUntilIdle()
+
+            // Then
+            val lines = viewModel.selectedLogFile.value?.logLines
+            assertThat(lines).hasSize(101) // 100 lines + truncation message
+            assertThat(lines?.last()).isEqualTo("... [truncated]")
+            awaitItem()
+        }
+    }
+
+    // endregion
+
+    // region onShareClick() tests
+
+    @Test
+    fun `onShareClick copies file to cache and emits ShareLogFile event`() = test {
+        // Given
+        val file = createMockFile("2025-11-21T10:42:06+0100.log", 1000L)
+        val logFile = LogFile(
+            file = file,
+            fileName = "2025-11-21T10:42:06+0100.log",
+            title = "November 21, 2025",
+            subtitle = "10:42 AM",
+            logLines = null
+        )
+
+        // When
+        viewModel.actionEvents.test {
+            viewModel.onShareClick(logFile)
+            testScheduler.advanceUntilIdle()
+
+            // Then
+            val event = awaitItem()
+            assertThat(event).isInstanceOf(LogsViewModel.ActionEvent.ShareLogFile::class.java)
+        }
+    }
+
+    @Test
+    fun `onShareClick sets error state when exception occurs`() = test {
+        // Given
+        val file = createMockFile("2025-11-21T10:42:06+0100.log", 1000L)
+        val logFile = LogFile(
+            file = file,
+            fileName = "2025-11-21T10:42:06+0100.log",
+            title = "November 21, 2025",
+            subtitle = "10:42 AM",
+            logLines = null
+        )
+        whenever(context.cacheDir).thenThrow(RuntimeException("Test error"))
+
+        // When
+        viewModel.onShareClick(logFile)
+        testScheduler.advanceUntilIdle()
+
+        // Then
+        assertThat(viewModel.errorMessage.value).isEqualTo(LogsViewModel.ErrorType.GENERAL)
     }
 
     // endregion
@@ -137,192 +322,30 @@ class LogsViewModelTest : BaseUnitTest() {
 
     // endregion
 
-    // region parseLogsByDay() tests (via reflection)
+    // Helper methods
 
-    @Test
-    fun `parseLogsByDay groups logs by date correctly`() {
-        // Given
-        val logs = listOf(
-            "[Oct-16 12:34:56.789] First log entry",
-            "[Oct-16 13:45:00.123] Second log entry",
-            "[Oct-15 10:20:30.456] Third log entry",
-            "[Oct-15 11:30:40.789] Fourth log entry"
-        )
-
-        // When
-        val logDays = invokeParseLogsByDay(logs)
-
-        // Then
-        assertThat(logDays).hasSize(2)
-
-        // Check that logs are sorted by date (most recent first)
-        assertThat(logDays[0].date).isEqualTo("Oct-16")
-        assertThat(logDays[1].date).isEqualTo("Oct-15")
-
-        // Check log counts
-        assertThat(logDays[0].logCount).isEqualTo(2)
-        assertThat(logDays[1].logCount).isEqualTo(2)
-
-        // Check log entries
-        assertThat(logDays[0].logEntries).containsExactly(
-            "[Oct-16 12:34:56.789] First log entry",
-            "[Oct-16 13:45:00.123] Second log entry"
-        )
-        assertThat(logDays[1].logEntries).containsExactly(
-            "[Oct-15 10:20:30.456] Third log entry",
-            "[Oct-15 11:30:40.789] Fourth log entry"
-        )
+    private fun createMockFile(name: String, lastModified: Long): File {
+        // Create a temporary directory with expected filename
+        val testDir = File(System.getProperty("java.io.tmpdir"), "test-logs")
+        testDir.mkdirs()
+        val file = File(testDir, name)
+        file.writeText("")
+        file.setLastModified(lastModified)
+        file.deleteOnExit()
+        testDir.deleteOnExit()
+        return file
     }
 
-    @Test
-    fun `parseLogsByDay handles logs with no date pattern`() {
-        // Given
-        val logs = listOf(
-            "[Oct-16 12:34:56.789] Valid log entry",
-            "Invalid log entry without date",
-            "[Oct-16 13:45:00.123] Another valid entry"
-        )
-
-        // When
-        val logDays = invokeParseLogsByDay(logs)
-
-        // Then
-        assertThat(logDays).hasSize(1)
-        assertThat(logDays[0].date).isEqualTo("Oct-16")
-        assertThat(logDays[0].logCount).isEqualTo(2)
-    }
-
-    @Test
-    fun `parseLogsByDay handles empty log list`() {
-        // Given
-        val logs = emptyList<String>()
-
-        // When
-        val logDays = invokeParseLogsByDay(logs)
-
-        // Then
-        assertThat(logDays).isEmpty()
-    }
-
-    @Test
-    fun `parseLogsByDay sorts dates in descending order`() {
-        // Given
-        val logs = listOf(
-            "[Oct-10 12:34:56.789] Log entry",
-            "[Oct-20 12:34:56.789] Log entry",
-            "[Oct-15 12:34:56.789] Log entry"
-        )
-
-        // When
-        val logDays = invokeParseLogsByDay(logs)
-
-        // Then
-        assertThat(logDays).hasSize(3)
-        assertThat(logDays[0].date).isEqualTo("Oct-20")
-        assertThat(logDays[1].date).isEqualTo("Oct-15")
-        assertThat(logDays[2].date).isEqualTo("Oct-10")
-    }
-
-    @Test
-    fun `parseLogsByDay handles single log entry`() {
-        // Given
-        val logs = listOf("[Oct-16 12:34:56.789] Single log entry")
-
-        // When
-        val logDays = invokeParseLogsByDay(logs)
-
-        // Then
-        assertThat(logDays).hasSize(1)
-        assertThat(logDays[0].date).isEqualTo("Oct-16")
-        assertThat(logDays[0].logCount).isEqualTo(1)
-        assertThat(logDays[0].logEntries).containsExactly("[Oct-16 12:34:56.789] Single log entry")
-    }
-
-    // endregion
-
-    // region formatDisplayDate() tests (via reflection)
-
-    @Test
-    fun `formatDisplayDate formats date correctly`() {
-        // Given
-        val date = "Oct-16"
-
-        // When
-        val formattedDate = invokeFormatDisplayDate(date)
-
-        // Then
-        assertThat(formattedDate).isEqualTo("October 16")
-    }
-
-    @Test
-    fun `formatDisplayDate handles different months`() {
-        // Given/When/Then
-        assertThat(invokeFormatDisplayDate("Jan-01")).isEqualTo("January 01")
-        assertThat(invokeFormatDisplayDate("Dec-31")).isEqualTo("December 31")
-        assertThat(invokeFormatDisplayDate("Jul-04")).isEqualTo("July 04")
-    }
-
-    @Test
-    fun `formatDisplayDate returns original string for invalid format`() {
-        // Given
-        val invalidDate = "Invalid-Date"
-
-        // When
-        val formattedDate = invokeFormatDisplayDate(invalidDate)
-
-        // Then
-        assertThat(formattedDate).isEqualTo(invalidDate)
-    }
-
-    @Test
-    fun `formatDisplayDate returns original string for empty input`() {
-        // Given
-        val emptyDate = ""
-
-        // When
-        val formattedDate = invokeFormatDisplayDate(emptyDate)
-
-        // Then
-        assertThat(formattedDate).isEqualTo(emptyDate)
-    }
-
-    // endregion
-
-    // region init() error handling tests
-
-    @Test
-    fun `init logs error when exception occurs`() {
-        // Note: We can't easily test the successful path without mocking AppLog.toHtmlList()
-        // which is a static method. However, we can verify that errors are logged properly
-        // by checking that the appLogWrapper is available for error logging.
-
-        // Given - This test verifies that the appLogWrapper dependency is properly injected
-        // and available for error logging
-
-        // When/Then - No exception should be thrown during construction
-        assertThat(viewModel).isNotNull()
-    }
-
-    // endregion
-
-    // Helper methods to invoke private methods via reflection
-
-    private fun invokeParseLogsByDay(logs: List<String>): List<LogDay> {
-        val method: Method = viewModel.javaClass.getDeclaredMethod(
-            "parseLogsByDay",
-            List::class.java
-        )
-        method.isAccessible = true
-        @Suppress("UNCHECKED_CAST")
-        return method.invoke(viewModel, logs) as List<LogDay>
-    }
-
-    private fun invokeFormatDisplayDate(date: String): String {
-        val method: Method = viewModel.javaClass.getDeclaredMethod(
-            "formatDisplayDate",
-            String::class.java
-        )
-        method.isAccessible = true
-        return method.invoke(viewModel, date) as String
+    @Suppress("DEPRECATION")
+    private fun createMockFileWithContent(name: String, content: String): File {
+        // Create a temporary directory with expected filename
+        val testDir = File(System.getProperty("java.io.tmpdir"), "test-logs")
+        testDir.mkdirs()
+        val file = File(testDir, name)
+        file.writeText(content)
+        file.setLastModified(1000L)
+        file.deleteOnExit()
+        testDir.deleteOnExit()
+        return file
     }
 }

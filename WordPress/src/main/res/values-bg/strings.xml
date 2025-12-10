@@ -1,11 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2018-12-10 19:56:03+0000
+Translation-Revision-Date: 2025-12-05 21:46:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: bg
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="he_support_forbidden_error">Нямате право да извършите това действие.</string>
+    <string name="he_support_generic_error">Възникна грешка. Моля опитайте по-късно.</string>
+    <string name="he_support_send_ticket_button">Изпращане</string>
+    <string name="he_support_contact_email_message">Ще ви пратим имейл на този адрес.</string>
+    <string name="he_support_contact_information">Информация за контакт</string>
+    <string name="he_support_site_address_placeholder">https://yoursite.com</string>
+    <string name="he_support_site_address_label">Адрес на сайта (по избор)</string>
+    <string name="he_support_subject_placeholder">Кратко описание на проблема</string>
+    <string name="he_support_subject_label">Тема</string>
+    <string name="he_support_issue_details">Подробности за проблема</string>
+    <string name="he_support_category_other">Друго</string>
+    <string name="he_support_category_technical_issues">Технически проблеми</string>
+    <string name="he_support_category_billing">Плащания и абонаменти</string>
+    <string name="he_support_category_site_management">Управление на сайта</string>
+    <string name="he_support_category_jetpack_connection">Връзка с Jetpack</string>
+    <string name="he_support_need_help_with">Имам нужда от помощ с</string>
+    <string name="he_support_contact_support_title">Връзка с отдела по поддръжка</string>
+    <string name="he_support_download_video_button">Сваляне на видео</string>
+    <string name="he_support_category_application">Приложение</string>
+    <string name="he_support_video_playback_error_message">Видеото не може да се пусне без изтегляне. Моля, изтеглете го за преглед.</string>
+    <string name="he_support_video_playback_error_title">Видеото не може да се пусне</string>
+    <string name="he_support_conversation_closed_message">Дискусията е затворена. Не може да отговорите.</string>
+    <string name="he_support_status_unknown">Неизвестно</string>
+    <string name="he_support_status_closed">Затворено</string>
+    <string name="he_support_status_solved">Разрешено</string>
+    <string name="he_support_status_waiting_for_user">Изчаква потребителя</string>
+    <string name="he_support_status_waiting_for_support">Изчаква поддръжката</string>
+    <string name="he_support_select_attachments">Избор на прикачени файлове</string>
+    <string name="he_support_download_attachment">Изтегляне на прикачен файл</string>
+    <string name="he_support_include_logs_description">Включването на дневници ще помогне на екипа ни да разреши проблема. Дневниците могат да съдържат скорошна дейност.</string>
+    <string name="he_support_include_logs_title">Включване на дневници от програмата</string>
+    <string name="he_support_app_logs_label">Дневници на приложението (по избор)</string>
+    <string name="he_support_skipped_files_header">Пропуснати файлове: %1$s</string>
+    <string name="he_support_attachment_size_label">Ограничение за прикачени файлове: %1$s от %2$s</string>
+    <string name="he_support_remove_screenshot">Премахване на скрийншот</string>
+    <string name="he_support_screenshot_preview">Преглед на скрийншот</string>
+    <string name="he_support_add_screenshots_button">Добавяне на скрийншоти</string>
+    <string name="he_support_screenshots_description">Добавянето на скрийншоти може да ни помогне да разберем и оправим проблема по-бързо.</string>
+    <string name="he_support_screenshots_label">Скрийншоти (по избор)</string>
+    <string name="he_support_failed_to_load_image">Неуспешно зареждане на изображение</string>
+    <string name="he_support_attachment_image">Прикачено изображение</string>
+    <string name="he_support_loading_image">Зареждане на изображение</string>
+    <string name="he_support_downloading_attachment">Изтегляне на %1$s…</string>
+    <string name="he_support_message_label">Съобщение</string>
+    <string name="he_support_send_button">Изпращане</string>
+    <string name="he_support_reply_button">Отговор</string>
+    <string name="he_support_last_updated">Последно обновяване %1$s</string>
+    <string name="he_support_message_count">%1$d Съобщения</string>
+    <string name="he_support_empty_conversations_button">Започване на дискусия</string>
+    <string name="he_support_empty_conversations_message">Започнете дискусия с екипа по поддръжка, за да получите помощ.</string>
+    <string name="he_support_empty_conversations_title">Няма дискусии засега</string>
+    <string name="he_support_new_conversation_content_description">Нова дискусия</string>
+    <string name="he_support_conversations_title">Дискусии с поддръжката</string>
+    <string name="ai_bot_time_weeks_ago">Преди %1$d седмици</string>
+    <string name="ai_bot_time_week_ago">преди %1$d седмица</string>
+    <string name="ai_bot_time_days_ago">преди %1$d дни</string>
+    <string name="ai_bot_time_day_ago">преди %1$d ден</string>
+    <string name="ai_bot_time_hours_ago">преди %1$d часа</string>
+    <string name="ai_bot_time_hour_ago">преди %1$d час</string>
+    <string name="ai_bot_time_minutes_ago">преди %1$d минути</string>
+    <string name="ai_bot_time_minute_ago">преди %1$d минута</string>
+    <string name="ai_bot_time_just_now">Току-що</string>
+    <string name="ai_bot_default_conversation_title">Нова дискусия</string>
+    <string name="ai_bot_welcome_message">Аз съм вашият личен ИИ асистент. Мога да помогна по въпроси за вашия сайт или профил.</string>
+    <string name="ai_bot_welcome_greeting">Здрасти, %1$s 👋</string>
+    <string name="ai_bot_message_input_placeholder">Въвеждане на съобщение…</string>
+    <string name="ai_bot_send_button_content_description">Изпращане</string>
+    <string name="ai_bot_support_bot">Бот за поддръжка</string>
+    <string name="ai_bot_you">Вие</string>
+    <string name="ai_bot_empty_conversations_button">Започване на дискусия</string>
+    <string name="ai_bot_empty_conversations_message">Започване на нова дискусия за помощ с вашия WordPress сайт или профил.</string>
+    <string name="ai_bot_empty_conversations_title">Няма дискусии засега</string>
+    <string name="ai_bot_generic_error">Нещо се обърка. Изчакайте малко и опитайте отново.</string>
+    <string name="ai_bot_new_conversation_content_description">Нова дискусия</string>
+    <string name="ai_bot_back_button_content_description">Обратно</string>
+    <string name="ai_bot_conversations_title">Дискусии</string>
+    <string name="create">Създаване</string>
+    <string name="logs_screen_general_error">Нещо се обърка…</string>
+    <string name="logs_screen_log_count">%d записа в дневника</string>
+    <string name="logs_screen_empty_state">Няма налични дневници</string>
+    <string name="support_screen_user_avatar_content_description">Потребителски аватар</string>
+    <string name="support_screen_application_logs_description">Инструмент за дебъг на проблеми</string>
+    <string name="support_screen_application_logs_title">Дневник на приложението</string>
+    <string name="support_screen_diagnostics_section_title">Диагностика</string>
+    <string name="support_screen_ask_happiness_engineers_description">За трудни въпроси. Ще отговорим по имейл</string>
+    <string name="support_screen_ask_happiness_engineers_title">Свържете се с инженер по поддръжката</string>
+    <string name="support_screen_ask_bots_description">Бързи отговори на често задавани въпроси</string>
+    <string name="support_screen_ask_bots_title">Попитайте ботовете</string>
+    <string name="support_screen_help_center_description">Документация и гидове за помощ да започнете</string>
+    <string name="support_screen_help_center_title">Център за помощ</string>
+    <string name="support_screen_how_can_we_help_title">Как можем да помогнем?</string>
+    <string name="support_screen_login_button">Влизане в WordPress.com</string>
+    <string name="support_screen_profile_section_title">Профил за поддръжката</string>
+    <string name="support_screen_title">Поддържа</string>
+    <string name="modern_support_description">Активиране на новата система за поддръжка</string>
+    <string name="modern_support">Модерна поддръжка</string>
+    <string name="site_settings_use_theme_styles_summary">Преобразете редактора в стила на темата ви</string>
+    <string name="site_settings_use_theme_styles">Използване на стиловете на темата</string>
+    <string name="error_deleting_term">Грешка при изтриване на термина</string>
+    <string name="error_saving_term">Грешка при записване на термина</string>
+    <string name="add_term">Добавяне на термин</string>
+    <string name="term_delete_confirmation_message">Наистина ли искате да изтриете \"%1$s\"?</string>
+    <string name="term_delete_confirmation_title">Изтриване на термин</string>
+    <string name="term_sort_by_count">Брой</string>
+    <string name="term_sort_by_name">Име</string>
+    <string name="term_parent_none">Без</string>
+    <string name="term_parent_label">Родителски:</string>
+    <string name="term_count">Брой: %1$d</string>
+    <string name="term_count_label">Брой:</string>
+    <string name="term_description_label">Описание:</string>
+    <string name="term_slug_label">Кратко име:</string>
+    <string name="term_name_label">Име:</string>
+    <string name="application_password_experimental_feature_note">\n\nЗабележка: Удостоверяването чрез парола за приложението на устройства с Android е експериментална функционалност.</string>
+    <string name="application_password_required_block_editor">Блоков редактор</string>
+    <string name="application_password_required_description">Паролите за приложения са по-сигурен начин за свързване към вашия хостнат сайт и позволяват поддръжката на функции като %1$s.</string>
+    <string name="application_password_required">Изисква се парола на приложението</string>
+    <string name="menu_html_mode">Редактор на код</string>
+    <string name="taxonomies_title">Категоризации</string>
+    <string name="media_edit_file_size_caption">Размер на файла</string>
+    <string name="jetpack_rest_connection_error_login_wpcom">Неуспешен вход в WordPress.com</string>
+    <string name="jetpack_rest_connection_step_connect_site">Свързване с WordPress.com</string>
+    <string name="dataview_default_empty_message">Тук няма нищо</string>
+    <string name="content_description_empty_view">Изображението показва, че изгледът е празен</string>
+    <string name="jetpack_rest_connection_error_activate_stats">Неуспешно активиране на статистика</string>
+    <string name="jetpack_rest_connection_error_access_token">Липсва token за достъп</string>
+    <string name="jetpack_rest_connection_error_connect_user">Неуспешно свързване с WordPress.com</string>
+    <string name="jetpack_rest_connection_error_connect_site">Неуспешна връзка със сайта</string>
+    <string name="jetpack_rest_connection_error_install_jetpack">Инсталацията е неуспешна</string>
+    <string name="jetpack_rest_connection_error_install_jetpack_inactive">Jetpack е инсталиран, но неактивен</string>
+    <string name="jetpack_rest_connection_setup_title">Настройка на Jetpack</string>
+    <string name="application_password_last_used_sort">Последно използванe</string>
+    <string name="application_password_created_sort">Създадена</string>
+    <string name="application_password_name_sort">Име</string>
+    <string name="application_password_no_ip">Няма записан IP адрес</string>
+    <string name="application_password_last_ip_label">Последно IP:</string>
+    <string name="application_password_last_used_label">Последно използвана:</string>
+    <string name="application_password_created_label">Създадена:</string>
+    <string name="application_password_name_label">Име:</string>
+    <string name="application_password_never_used">Не е ползвана</string>
+    <string name="enable">Активиране</string>
+    <string name="application_password_info_description_4">Моля, имайте предвид, че отмяната на пароли за приложения ще прекрати достъпа им до вашия сайт. Бъдете внимателни, когато отменяте пароли за приложения.</string>
+    <string name="application_password_info_description_3">Може да видите и управлявате тези пароли в своя профил, в рамките на административното табло.</string>
+    <string name="application_password_info_description_2">Когато добавяте сайтове в приложението, паролите за приложения ще бъдат създавани автоматично при необходимост.</string>
+    <string name="application_password_info_description_1">Паролите за приложения са сигурен начин приложенията да имат достъп до вашия сайт, без да използват паролата на профила.</string>
+    <string name="application_password_info_title">Пароли на приложения</string>
+    <string name="application_password_disable_feature_description">Деактивирането на паролите за приложения ще премахне входа за %1$s от вашите сайтове. Може да се наложи да добавите отново засегнатите сайтове, за да влезете пак.</string>
+    <string name="application_password_invalid_description">Паролата за приложението не е активна. Моля, влезте отново и създайте нова парола за приложението.</string>
+    <string name="subscribers_delete_failed">Неуспешно изтриване на абонат</string>
+    <string name="subscribers_delete_success_message">Абонатът беше изтрит, но може да отнеме няколко минути, за да влезе в сила изтриването</string>
+    <string name="subscribers_delete_success_title">Абонатът е изтрит</string>
+    <string name="subscribers_delete_confirmation_message">Сиурни ли сте, че искате да изтриете абоната?</string>
+    <string name="subscribers_delete_confirmation_title">Изтриване на абонат</string>
+    <string name="subscribers_sort_name">Име</string>
+    <string name="jetpack_rest_connection_error_connect_wpcom">Неуспешно свързване с WordPress.com</string>
+    <string name="jetpack_rest_connection_error_timeout">Времето изтече</string>
+    <string name="jetpack_rest_connection_cancel_message">Установяването на връзка с Jetpack е в процес на извършване. Сигурни ли сте, че искате да го отмените?</string>
+    <string name="jetpack_rest_connection_cancel_title">Отмяна на настройките на Jetpack?</string>
+    <string name="jetpack_rest_connection_status_failed">Неуспешно</string>
+    <string name="jetpack_rest_connection_status_completed">Готово</string>
+    <string name="jetpack_rest_connection_status_in_progress">В ход…</string>
+    <string name="jetpack_rest_connection_status_not_started">Не е започнато</string>
+    <string name="jetpack_rest_connection_step_finalize">Приключване на настройката</string>
+    <string name="jetpack_rest_connection_step_connect_user">Свързване на потребител с WordPress.com</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Инсталиране на разширението Jetpack</string>
+    <string name="jetpack_rest_connection_step_login_wpcom">Вход в WordPress.com</string>
+    <string name="jetpack_rest_connection_title">Връзка с Jetpack</string>
+    <string name="experimental_subscribers_feature_description">Преглед и управление на абонатите на бюлетина</string>
+    <string name="start">Начало</string>
+    <string name="descending">Низходящ ред</string>
+    <string name="ascending">Възходящ ред</string>
+    <string name="application_password_disable_feature_title">Изключване на паролата на приложението?</string>
+    <string name="application_password_invalid">Невалидна парола на приложението</string>
     <string name="change_password_dialog_message">Смяна на парола…</string>
     <string name="change_password">Промяна на паролата</string>
     <string name="change_password_confirmation">Паролата е променена успешно.</string>
@@ -32,11 +204,17 @@ Language: bg
     <string name="image_size_large_label">Голям</string>
     <string name="image_size_medium_label">Среден</string>
     <string name="menu_history">История</string>
+    <string name="image_size_thumbnail_label">Умалена картинка</string>
     <string name="pages_open_page_error">Избраната страница не е налице</string>
     <string name="pages_pending">Очаква се преглед</string>
     <string name="pages_delete_permanently">Изтриване за постоянно</string>
     <string name="pages_move_to_trash">Преместване в кошчето</string>
     <string name="pages_move_to_draft">Преместване в чернова</string>
+    <string name="pages_empty_search_result">Няма страници, съвпадащи с търсенето ви</string>
+    <string name="pages_empty_published">Вие не сте публикували страници още</string>
+    <string name="pages_empty_scheduled">Нямате планирани страници</string>
+    <string name="pages_search_suggestion">Търсене на страници</string>
+    <string name="pages_empty_drafts">Нямате чернови</string>
     <string name="pages_view">Преглед</string>
     <string name="pages_trashed" tools:ignore="UnusedResources">В кошчето</string>
     <string name="pages_drafts" tools:ignore="UnusedResources">Чернови</string>
@@ -47,6 +225,7 @@ Language: bg
     <string name="login_error_email_not_found_v2" tools:ignore="UnusedResources" a8c-src-lib="module:login">Няма профил в WordPress.com, съответстващ на този профил в Google.</string>
     <string name="site_picker_remove_site_empty">Няма сайтове, съответстващи на търсенето ви</string>
     <string name="page_parent_changed">Родителската страница е сменена</string>
+    <string name="reader_no_followed_blogs_search_title">Няма блогове, съответстващи на търсенето ви</string>
     <string name="page_permanently_deleted">Страницата е изтрита за постоянно</string>
     <string name="page_moved_to_published">Страницата е публикувана</string>
     <string name="page_moved_to_draft">Страницата бе преместена в чернови</string>
@@ -58,9 +237,44 @@ Language: bg
     <string name="set_parent">Задаване на родител</string>
     <string name="page_moved_to_trash">Страницата е преместена в кошчето</string>
     <string name="page_moved_to_scheduled">Насрочено е публикуване на страницата</string>
+    <string name="dismiss">Затваряне</string>
     <string name="quick_start_focus_point_description">докоснете тук</string>
     <string name="quick_start_list_create_site_title">Създайте своя сайт</string>
     <string name="quick_start_dialog_share_site_title">Споделете сайта си</string>
+    <string name="quick_start_dialog_view_site_title">Преглед на сайта</string>
+    <string name="quick_start_dialog_publish_post_title">Публикуване на публикация</string>
+    <string name="quick_start_dialog_need_help_button_negative">Не, благодаря</string>
+    <string name="quick_start_dialog_follow_sites_title">Следване на сайтове</string>
+    <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Отказ</string>
+    <string name="quick_start_button_negative" tools:ignore="UnusedResources">Не сега</string>
+    <string name="my_site_create_new_site_title">Нямате сайтове</string>
+    <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="module:login">Влезте в профила на WordPress.com, който сте използвали за свързването на Jetpack.</string>
+    <string name="stats_jetpack_connection_setup_info">За да използвате Статистики в сайта си, ще трябва да инсталирате разширението Jetpack .</string>
+    <string name="themes_empty_list">Няма теми, съответстващи на търсенето ви</string>
+    <string name="reader_label_post_search_explainer">Какво бихте искали да намерите?</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Излезте от WordPress?</string>
+    <string name="site_settings_tags_empty_title_search">Няма етикети, съответстващи на търсенето ви</string>
+    <string name="site_settings_tags_empty_title">Нямате етикети</string>
+    <string name="people_empty_list_filtered_users">Все още няма потребители</string>
+    <string name="people_empty_list_filtered_viewers">Все още няма посетители</string>
+    <string name="activity_log_empty_title">Още няма активност</string>
+    <string name="activity_log_empty_subtitle">Когато направите промени в страницата си, ще можете да видите историята на дейността тук</string>
+    <string name="posts_empty_list_button">Създаване на публикация</string>
+    <string name="pages_empty_list_button">Създаване на страница</string>
+    <string name="media_empty_upload_media">Качване на файлове</string>
+    <string name="reader_gallery_images_desc">галерия с изображения</string>
+    <string name="blavatar_desc">икона на сайта</string>
+    <string name="theme_image_desc">изображение на темата</string>
+    <string name="featured_image_desc">основно изображение</string>
+    <string name="reader_avatar_desc">снимка на профила</string>
+    <string name="support_identity_input_dialog_enter_email">Моля, въведете своя имейл адрес</string>
+    <string name="support_push_notification_message">Ново съобщение от \"Помощ и поддръжка\"</string>
+    <string name="support_push_notification_title">WordPress</string>
+    <string name="support_identity_input_dialog_email_label">Имейл</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">За да продължите, въведете своя имейл адрес и име</string>
+    <string name="support_contact_email">Имейл за връзка</string>
+    <string name="reader_empty_search_title">Няма намерени резултати</string>
+    <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">Имейл адрес за вход</string>
     <string name="login_error_suffix" tools:ignore="UnusedResources" a8c-src-lib="module:login">\nЗащо не пробвате с друг профил?</string>
     <string name="login_error_generic" tools:ignore="UnusedResources" a8c-src-lib="module:login">Възникна проблем при опит за връзка с Google профила.</string>
     <string name="login_error_button">Затваряне</string>
@@ -83,12 +297,19 @@ Language: bg
     <string name="confirm_delete_media_video">Да се изтрие ли това видео?</string>
     <string name="confirm_delete_media_image">Да се изтрие ли това изображение?</string>
     <string name="media_title_document_details">Детайли на документа</string>
+    <string name="connect_site">Свързване на сайт</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Изберете мелодия</string>
     <string name="notification_settings_item_other_comments_other_blogs">Коментари на други сайтове</string>
     <string name="notification_settings_category_other">Други</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Всички мои сайтове</string>
     <string name="notification_settings_category_your_sites">Вашите сайтове</string>
+    <string name="notification_settings_main_off_message">Изключването на състемата за известия ще спре изпращането на известия, независимо от вида им. Може да донастройте системата за известия след като я включите.</string>
+    <string name="notification_settings_main_off_title">За да получавате известия на устройството, активирайте известията.</string>
+    <string name="notification_settings_main_hint_off">Включване на известията</string>
+    <string name="notification_settings_main_hint_on">Изключване на известията</string>
+    <string name="notification_settings_main_status_off">Изключено</string>
     <string name="max_video_resolution">Максимален размер на видеото</string>
+    <string name="notification_settings_main_status_on">Включено</string>
     <string name="max_thumbnail_px_size">Максимален размер на изображенията</string>
     <string name="error_upload_post_media_param">Възникна грешка при качване на медиата в тази публикация %s.</string>
     <string name="error_upload_post_param">Възникна грешка при качването на тази публикация: %s.</string>
@@ -118,7 +339,9 @@ Language: bg
     <string name="login_already_logged_in_wpcom">Вече сте влезли в WordPress.com</string>
     <string name="enter_wpcom_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">Въведете вашата WordPress.com парола.</string>
     <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="module:login">Напред</string>
+    <string name="connect_more">Свързване на друг сайт</string>
     <string name="password_incorrect" tools:ignore="UnusedResources" a8c-src-lib="module:login">Изглежда вашата парола е грешна. Моля проверете информацията повторно и пробвайте отново.</string>
+    <string name="enter_verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Моля, въведете кода за потвърждение от вашето приложение Authenticator.</string>
     <string name="next">Следващ</string>
     <string name="me_profile_photo">Снимка на профила</string>
     <string name="error_media_parse_error">Неочакван отговор от сървъра</string>
@@ -149,6 +372,7 @@ Language: bg
     <string name="media_all">Всички</string>
     <string name="media_audio">Аудио</string>
     <string name="media_videos">Видео файлове</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">Достъпът на %1$s до вашите файлове беше ограничен. За да поправите това редактирайте вашите правомощия и включете %2$s.</string>
     <string name="reader_view_comments">Преглед на коментарите</string>
     <string name="site_settings_video_width_hint">Променя размера на видеоклиповете в публикациите до този</string>
     <string name="site_settings_optimize_video_summary">Включва преоразмеряването и компресията на видеото</string>
@@ -184,6 +408,7 @@ Language: bg
     <string name="share_btn_disconnect">Изключване на връзката</string>
     <string name="share_btn_reconnect">Повторен опит за свързване</string>
     <string name="button_not_now">Не сега</string>
+    <string name="my_site_btn_sharing">Социални</string>
     <string name="media_downloading">Запазване на медийни файлове на това устройство</string>
     <string name="editor_draft_saved_locally">Черновата е запазена на устройството</string>
     <string name="editor_draft_saved_online">Черновата е запазена онлайн</string>
@@ -215,9 +440,11 @@ Language: bg
     <string name="editor_post_saved_locally_failed_media">Тази публикация има незавършени качвания на изображения и беше запазена в локален режим</string>
     <string name="sure_to_remove_account">Премахване на сайта от приложението?</string>
     <string name="photo_picker_title">Избор на изображение</string>
+    <string name="error_publish_no_network">Устройството е офлайн. Промените бяха запазени в локален режим.</string>
     <string name="editor_post_saved_online">Публикацията е запазена онлайн.</string>
     <string name="site_settings_image_quality_hint">Качество на изображенията. Високите стойности означават снимки с по-високо качество.</string>
     <string name="media_upload_state_uploaded">Качено</string>
+    <string name="media_encoder_quality_maximum">Максимално</string>
     <string name="media_upload_state_deleted">Изтрито</string>
     <string name="media_upload_state_deleting">Изтрива се</string>
     <string name="media_upload_state_uploading">Качва се</string>
@@ -714,6 +941,7 @@ Language: bg
     <string name="reader_title_applog">Дневник на приложението</string>
     <string name="notifications_empty_all">Все още няма известявания.</string>
     <string name="invalid_site_url_message">Уверете се че въведения URL адрес на сайт е валиден</string>
+    <string name="error_refresh_media">Файлът не може да бъде обновен в момента</string>
     <string name="share_link">Споделяне на връзка</string>
     <string name="reader_empty_posts_in_tag_updating">Извличане на публикации…</string>
     <string name="reader_likes_you_and_multi">Вие и %,d още харесахте това</string>
@@ -737,6 +965,8 @@ Language: bg
     <string name="reader_toast_err_share_intent">Споделянето е неуспешно</string>
     <string name="reader_toast_err_view_image">Преглеждането на изображението е неуспешно</string>
     <string name="comments_empty_list">Все още няма коментари</string>
+    <string name="sign_up_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">Регистрация</string>
+    <string name="reader_view_reblog">Реблог</string>
     <string name="themes">Теми</string>
     <string name="media_edit_title_text">Заглавие</string>
     <string name="media_edit_caption_text">Подзаглавие</string>
@@ -781,6 +1011,7 @@ Language: bg
     <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Задаване като основно изображение на публикацията</string>
     <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Използване на снимката в съдържанието на публикацията</string>
     <string name="ok">ОК</string>
+    <string name="done">готово</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Качва се…</string>
     <string name="image_alignment">Подравняване</string>
@@ -811,4 +1042,5 @@ Language: bg
     <string name="add">Добавяне</string>
     <string name="preview">Предвариетелен преглед</string>
     <string name="reply">Отговор</string>
+    <string name="publish_now">Публикуване</string>
 </resources>

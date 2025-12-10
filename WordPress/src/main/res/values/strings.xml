@@ -225,12 +225,13 @@
     <!-- Delete Media -->
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
-    <string name="media_empty_list">You don\'t have any media</string>
+    <string name="media_empty_list">You don\'t have any media - yet!</string>
+    <string name="media_empty_list_subtitle">Why not upload something?</string>
     <string name="media_empty_search_list">No media matching your search</string>
-    <string name="media_empty_image_list">You don\'t have any images</string>
-    <string name="media_empty_videos_list">You don\'t have any videos</string>
-    <string name="media_empty_documents_list">You don\'t have any documents</string>
-    <string name="media_empty_audio_list">You don\'t have any audio</string>
+    <string name="media_empty_image_list">You don\'t have any images - yet!</string>
+    <string name="media_empty_videos_list">You don\'t have any videos - yet!</string>
+    <string name="media_empty_documents_list">You don\'t have any documents - yet!</string>
+    <string name="media_empty_audio_list">You don\'t have any audio - yet!</string>
     <string name="media_empty_upload_media">Upload media</string>
     <string name="delete">Delete</string>
     <string name="confirm_delete_media_image">Delete this image?</string>
@@ -287,7 +288,8 @@
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="posts_empty_list_button">Create a post</string>
     <string name="empty_list_default">This list is empty</string>
-    <string name="posts_published_empty">You haven\'t published any posts yet</string>
+    <string name="posts_published_empty">You haven\'t published any posts - yet!</string>
+    <string name="posts_published_empty_subtitle">Why not create one?</string>
     <string name="posts_scheduled_empty">You don\'t have any scheduled posts</string>
     <string name="posts_draft_empty">You don\'t have any draft posts</string>
     <string name="posts_trashed_empty">You don\'t have any trashed posts</string>
@@ -2355,6 +2357,7 @@
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_show_blog">Unable to show this blog</string>
+    <string name="reader_toast_err_blog_not_found">Error: Unable to find the blog</string>
     <string name="reader_toast_err_already_follow_this_blog">You are already subscribed to this blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Unable to subscribe to this blog</string>
     <string name="reader_toast_err_follow_blog_could_not_be_found">This blog could not be found</string>

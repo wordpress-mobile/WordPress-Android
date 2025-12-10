@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.discover.viewholders
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.databinding.ReaderRecommendedBlogItemBinding
@@ -29,12 +30,16 @@ class ReaderRecommendedBlogViewHolder(
         uiState: ReaderRecommendedBlogUiState,
         binding: ReaderRecommendedBlogItemBinding
     ) {
-        with(binding.siteFollowButton) {
-            isEnabled = uiState.isFollowEnabled
-            setIsFollowed(uiState.isFollowed)
-            contentDescription = context.getString(uiState.followContentDescription.stringRes)
-            setOnClickListener {
-                uiState.onFollowClicked(uiState)
+        with(binding) {
+            siteFollowProgress.visibility = if (uiState.isFollowActionRunning) View.VISIBLE else View.GONE
+            siteFollowButton.apply {
+                setIsLoading(uiState.isFollowActionRunning)
+                isEnabled = !uiState.isFollowActionRunning
+                setIsFollowed(uiState.isFollowed)
+                contentDescription = context.getString(uiState.followContentDescription.stringRes)
+                setOnClickListener {
+                    uiState.onFollowClicked(uiState)
+                }
             }
         }
     }

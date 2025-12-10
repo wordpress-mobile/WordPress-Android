@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.posts
 
-import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
@@ -15,19 +14,19 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 sealed class PostListEmptyUiState(
     val title: UiString? = null,
-    @DrawableRes val imgResId: Int? = null,
+    val subtitle: UiString? = null,
     val buttonText: UiString? = null,
     val onButtonClick: (() -> Unit)? = null,
     val emptyViewVisible: Boolean = true
 ) {
     class EmptyList(
         title: UiString,
+        subtitle: UiString? = null,
         buttonText: UiString? = null,
         onButtonClick: (() -> Unit)? = null,
-        @DrawableRes imageResId: Int = R.drawable.img_illustration_posts_75dp
     ) : PostListEmptyUiState(
         title = title,
-        imgResId = imageResId,
+        subtitle = subtitle,
         buttonText = buttonText,
         onButtonClick = onButtonClick
     )
@@ -36,7 +35,6 @@ sealed class PostListEmptyUiState(
 
     object Loading : PostListEmptyUiState(
         title = UiStringRes(R.string.posts_fetching),
-        imgResId = R.drawable.img_illustration_posts_75dp
     )
 
     class RefreshError(
@@ -45,14 +43,12 @@ sealed class PostListEmptyUiState(
         onButtonClick: (() -> Unit)? = null
     ) : PostListEmptyUiState(
         title = title,
-        imgResId = R.drawable.img_illustration_empty_results_216dp,
         buttonText = buttonText,
         onButtonClick = onButtonClick
     )
 
     object PermissionsError : PostListEmptyUiState(
         title = UiStringRes(R.string.error_refresh_unauthorized_posts),
-        imgResId = R.drawable.img_illustration_posts_75dp
     )
 }
 
@@ -121,19 +117,20 @@ private fun createEmptyListUiState(
 ): PostListEmptyUiState.EmptyList {
     return when (postListType) {
         PUBLISHED -> PostListEmptyUiState.EmptyList(
-            UiStringRes(R.string.posts_published_empty),
-            UiStringRes(R.string.posts_empty_list_button),
-            newPost
+            title = UiStringRes(R.string.posts_published_empty),
+            subtitle = UiStringRes(R.string.posts_published_empty_subtitle),
+            buttonText = UiStringRes(R.string.posts_empty_list_button),
+            onButtonClick = newPost
         )
         DRAFTS -> PostListEmptyUiState.EmptyList(
-            UiStringRes(R.string.posts_draft_empty),
-            UiStringRes(R.string.posts_empty_list_button),
-            newPost
+            title = UiStringRes(R.string.posts_draft_empty),
+            buttonText = UiStringRes(R.string.posts_empty_list_button),
+            onButtonClick = newPost
         )
         SCHEDULED -> PostListEmptyUiState.EmptyList(
-            UiStringRes(R.string.posts_scheduled_empty),
-            UiStringRes(R.string.posts_empty_list_button),
-            newPost
+            title = UiStringRes(R.string.posts_scheduled_empty),
+            buttonText = UiStringRes(R.string.posts_empty_list_button),
+            onButtonClick = newPost
         )
         SEARCH -> {
             val messageResId = if (isSearchPromptRequired) {
@@ -142,8 +139,14 @@ private fun createEmptyListUiState(
                 R.string.post_list_search_nothing_found
             }
 
-            PostListEmptyUiState.EmptyList(title = UiStringRes(messageResId), imageResId = 0)
+            PostListEmptyUiState.EmptyList(title = UiStringRes(messageResId))
         }
-        TRASHED -> PostListEmptyUiState.EmptyList(UiStringRes(R.string.posts_trashed_empty))
+        TRASHED -> {
+            PostListEmptyUiState.EmptyList(
+                title = UiStringRes(R.string.posts_trashed_empty),
+                buttonText = UiStringRes(R.string.posts_empty_list_button),
+                onButtonClick = newPost
+            )
+        }
     }
 }

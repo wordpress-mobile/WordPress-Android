@@ -725,9 +725,9 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     @Override
     public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
-        mMediaGridFragment.showActionableEmptyViewButton(true);
-        invalidateOptionsMenu();
+        mMediaGridFragment.onSearchClosed();
 
+        invalidateOptionsMenu();
         enableTabs(true);
         showQuota(true);
 

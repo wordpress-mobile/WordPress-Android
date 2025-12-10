@@ -1,4 +1,0 @@
-26.3:
-Tam olarak ne ile çalıştığınızı görebilmeniz için ortam kütüphanenize dosya boyutu bilgileri ekledik.
-
-Deneysel düzenleyici de daha pürüzsüz oldu. Cihazınızı döndürdüğünüzde veya karanlık modu değiştirdiğinizde içeriğiniz sabit kalır ve iletişim kutuları artık geri düğmesine doğru yanıt verir. İyi düzenlemeler!

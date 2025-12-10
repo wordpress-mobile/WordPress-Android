@@ -128,12 +128,7 @@ class ReaderPostRepository @Inject constructor(
             }
         }
         val listener = RestRequest.Listener { jsonObject ->
-            handleUpdatePostsResponse(
-                null,
-                jsonObject,
-                updateAction,
-                resultListener
-            )
+            handleUpdatePostsResponse(null, jsonObject, updateAction, resultListener)
         }
         val errorListener = RestRequest.ErrorListener { volleyError ->
             AppLog.e(AppLog.T.READER, volleyError)
@@ -156,12 +151,7 @@ class ReaderPostRepository @Inject constructor(
             }
         }
         val listener = RestRequest.Listener { jsonObject ->
-            handleUpdatePostsResponse(
-                null,
-                jsonObject,
-                updateAction,
-                resultListener
-            )
+            handleUpdatePostsResponse(null, jsonObject, updateAction, resultListener, feedId)
         }
         val errorListener = RestRequest.ErrorListener { volleyError ->
             AppLog.e(AppLog.T.READER, volleyError)
@@ -173,12 +163,17 @@ class ReaderPostRepository @Inject constructor(
 
     /**
      * called after requesting posts with a specific tag or in a specific blog/feed
+     *
+     * @param requestedFeedId If provided, ensures all posts have this feedId set. This is needed
+     *        because the API response may not include feed_ID for external feeds, but we need it
+     *        to properly query posts later.
      */
     private fun handleUpdatePostsResponse(
         tag: ReaderTag?,
         jsonObject: JSONObject?,
         updateAction: ReaderPostServiceStarter.UpdateAction,
-        resultListener: UpdateResultListener
+        resultListener: UpdateResultListener,
+        requestedFeedId: Long? = null
     ) {
         if (jsonObject == null) {
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
@@ -190,6 +185,14 @@ class ReaderPostRepository @Inject constructor(
         object : Thread() {
             override fun run() {
                 val serverPosts = ReaderPostList.fromJson(jsonObject)
+                // For feed requests, always set the feedId on all posts to the requested feedId.
+                // The API response may not include feed_ID, or may include a different value,
+                // but we need the feedId to match what we'll query for later.
+                if (requestedFeedId != null && requestedFeedId != 0L) {
+                    serverPosts.forEach { post ->
+                        post.feedId = requestedFeedId
+                    }
+                }
                 val updateResult = localSource.saveUpdatedPosts(serverPosts, updateAction, tag)
                 resultListener.onUpdateResult(updateResult)
             }
