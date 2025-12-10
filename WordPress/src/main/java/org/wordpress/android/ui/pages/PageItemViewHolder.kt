@@ -360,9 +360,6 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     emptyView.button.visibility = View.GONE
                 }
 
-                // TODO remove image
-                emptyView.image.visibility = if (pageItem.isImageVisible) View.VISIBLE else View.GONE
-
                 emptyView.updateLayoutForSearch(pageItem.isSearching, 0)
             }
         }

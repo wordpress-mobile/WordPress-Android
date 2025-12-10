@@ -261,9 +261,8 @@ class PageListViewModel @Inject constructor(
                 _pages.postValue(
                     listOf(
                         Empty(
-                            R.string.pages_fetching,
+                            titleResource = R.string.pages_fetching,
                             isButtonVisible = false,
-                            isImageVisible = false
                         )
                     )
                 )
@@ -358,8 +357,7 @@ class PageListViewModel @Inject constructor(
             }
             .let {
                 if (showVirtualHomepage) {
-                    // TODO listOf(VirtualHomepage) + it
-                    it
+                    listOf(VirtualHomepage) + it
                 } else {
                     it
                 }
