@@ -353,7 +353,8 @@ class PageListViewModel @Inject constructor(
             }
             .let {
                 if (showVirtualHomepage) {
-                    listOf(VirtualHomepage) + it
+                    // TODO listOf(VirtualHomepage) + it
+                    it
                 } else {
                     it
                 }
