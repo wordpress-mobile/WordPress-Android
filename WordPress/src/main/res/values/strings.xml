@@ -288,7 +288,8 @@
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="posts_empty_list_button">Create a post</string>
     <string name="empty_list_default">This list is empty</string>
-    <string name="posts_published_empty">You haven\'t published any posts yet</string>
+    <string name="posts_published_empty">You haven\'t published any posts - yet!</string>
+    <string name="posts_published_empty_subtitle">Why not create one?</string>
     <string name="posts_scheduled_empty">You don\'t have any scheduled posts</string>
     <string name="posts_draft_empty">You don\'t have any draft posts</string>
     <string name="posts_trashed_empty">You don\'t have any trashed posts</string>

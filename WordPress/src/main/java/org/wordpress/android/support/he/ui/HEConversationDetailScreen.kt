@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -124,15 +125,17 @@ fun HEConversationDetailScreen(
         bottomBar = {
             val status = ConversationStatus.fromStatus(conversation.status)
             val isClosed = status == ConversationStatus.CLOSED
-            if (isClosed) {
-                ClosedConversationBanner()
-            } else {
-                ReplyButton(
-                    enabled = !isLoading,
-                    onClick = {
-                        onReplyBottomSheetVisibilityChange(true)
-                    }
-                )
+            Box(modifier = Modifier.navigationBarsPadding()) {
+                if (isClosed) {
+                    ClosedConversationBanner()
+                } else {
+                    ReplyButton(
+                        enabled = !isLoading,
+                        onClick = {
+                            onReplyBottomSheetVisibilityChange(true)
+                        }
+                    )
+                }
             }
         }
     ) { contentPadding ->
@@ -148,35 +151,35 @@ fun HEConversationDetailScreen(
                 state = listState,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-            item {
-                ConversationHeader(
-                    status = conversation.status,
-                    lastUpdated = formatRelativeTime(conversation.lastMessageSentAt, resources),
-                    isLoading = isLoading
-                )
-            }
+                item {
+                    ConversationHeader(
+                        status = conversation.status,
+                        lastUpdated = formatRelativeTime(conversation.lastMessageSentAt, resources),
+                        isLoading = isLoading
+                    )
+                }
 
-            item {
-                ConversationTitleCard(title = conversation.title)
-            }
+                item {
+                    ConversationTitleCard(title = conversation.title)
+                }
 
-            items(
-                items = conversation.messages,
-                key = { it.id }
-            ) { message ->
-                MessageItem(
-                    message = message,
-                    timestamp = formatRelativeTime(message.createdAt, resources),
-                    onPreviewAttachment = { attachment -> previewAttachment = attachment },
-                    onDownloadAttachment = onDownloadAttachment,
-                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
-                )
-            }
+                items(
+                    items = conversation.messages,
+                    key = { it.id }
+                ) { message ->
+                    MessageItem(
+                        message = message,
+                        timestamp = formatRelativeTime(message.createdAt, resources),
+                        onPreviewAttachment = { attachment -> previewAttachment = attachment },
+                        onDownloadAttachment = onDownloadAttachment,
+                        onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
+                    )
+                }
 
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
-        }
 
             if (isLoading) {
                 CircularProgressIndicator(
@@ -238,6 +241,7 @@ fun HEConversationDetailScreen(
                     }
                 )
             }
+
             AttachmentType.Video -> {
                 AttachmentFullscreenVideoPlayer(
                     videoUrl = attachment.url,
@@ -252,6 +256,7 @@ fun HEConversationDetailScreen(
                     },
                 )
             }
+
             else -> {
                 // For other types (documents, etc.), do nothing
                 // They should only be downloadable, not previewable
@@ -269,12 +274,16 @@ private fun ConversationHeader(
     val statusText = when (ConversationStatus.fromStatus(status)) {
         ConversationStatus.WAITING_FOR_SUPPORT ->
             stringResource(R.string.he_support_status_waiting_for_support)
+
         ConversationStatus.WAITING_FOR_USER ->
             stringResource(R.string.he_support_status_waiting_for_user)
+
         ConversationStatus.SOLVED ->
             stringResource(R.string.he_support_status_solved)
+
         ConversationStatus.CLOSED ->
             stringResource(R.string.he_support_status_closed)
+
         ConversationStatus.UNKNOWN ->
             stringResource(R.string.he_support_status_unknown)
     }
@@ -478,7 +487,8 @@ private fun AttachmentItem(
         contentAlignment = Alignment.Center
     ) {
         if (attachment.type == AttachmentType.Image ||
-            attachment.type == AttachmentType.Video) {
+            attachment.type == AttachmentType.Video
+        ) {
             // Show image/video preview for image and video attachments
             SubcomposeAsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -602,8 +612,11 @@ private fun HEConversationDetailScreenPreviewContent(
 }
 
 private object ConversationDetailPreviewAttachmentActionsListener : AttachmentActionsListener {
-    override fun onAddImageClick() { /* Preview stub */ }
-    override fun onRemoveImage(uri: Uri) { /* Preview stub */ }
+    override fun onAddImageClick() { /* Preview stub */
+    }
+
+    override fun onRemoveImage(uri: Uri) { /* Preview stub */
+    }
 }
 
 @Preview(showBackground = true, name = "HE Conversation Detail")
