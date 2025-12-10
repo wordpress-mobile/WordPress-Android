@@ -269,7 +269,10 @@ class PageListViewModel @Inject constructor(
                 )
             } else {
                 when (listType) {
-                    PUBLISHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_published)))
+                    PUBLISHED -> _pages.postValue(listOf(
+                        Empty(R.string.pages_empty_published),
+                        Empty(R.string.pages_empty_published_subtitle))
+                    )
                     SCHEDULED -> _pages.postValue(listOf(Empty(R.string.pages_empty_scheduled)))
                     DRAFTS -> _pages.postValue(listOf(Empty(R.string.pages_empty_drafts)))
                     TRASHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_trashed)))

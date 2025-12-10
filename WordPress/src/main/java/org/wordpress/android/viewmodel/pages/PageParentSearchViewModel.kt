@@ -41,7 +41,9 @@ class PageParentSearchViewModel
         if (pageItems != null) {
             loadFoundPages(pageItems)
         } else {
-            _searchResult.value = listOf(Empty(R.string.pages_search_suggestion, true))
+            _searchResult.value = listOf(
+                Empty(titleResource = R.string.pages_search_suggestion, isSearching = true)
+            )
         }
     }
 
@@ -53,7 +55,9 @@ class PageParentSearchViewModel
         if (pageItems.isNotEmpty()) {
             _searchResult.value = pageItems
         } else {
-            _searchResult.value = listOf(Empty(R.string.pages_empty_search_result, true))
+            _searchResult.value = listOf(
+                Empty(titleResource = R.string.pages_empty_search_result, isSearching = true)
+            )
         }
     }
 }

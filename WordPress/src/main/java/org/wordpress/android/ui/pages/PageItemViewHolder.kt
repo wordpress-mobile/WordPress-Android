@@ -342,7 +342,14 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         @Suppress("DEPRECATION")
         override fun onBind(pageItem: PageItem) {
             (pageItem as Empty).apply {
-                emptyView.title.text = emptyView.resources.getString(pageItem.textResource)
+                emptyView.title.text = emptyView.resources.getString(pageItem.titleResource)
+
+                pageItem.subtitleResource?.let { subtitleResource ->
+                    emptyView.subtitle.text = emptyView.resources.getString(subtitleResource)
+                    emptyView.subtitle.visibility = View.VISIBLE
+                } ?: {
+                    emptyView.subtitle.visibility = View.GONE
+                }
 
                 if (pageItem.isButtonVisible) {
                     emptyView.button.setOnClickListener {
@@ -353,6 +360,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     emptyView.button.visibility = View.GONE
                 }
 
+                // TODO remove image
                 emptyView.image.visibility = if (pageItem.isImageVisible) View.VISIBLE else View.GONE
 
                 emptyView.updateLayoutForSearch(pageItem.isSearching, 0)
