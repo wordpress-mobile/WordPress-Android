@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -147,7 +148,8 @@ private fun HENewTicketScreenContent(
                     selectedCategory?.let { category ->
                         onSubmit(category, subject, messageText, siteAddress, includeAppLogs)
                     }
-                }
+                },
+                modifier = Modifier.navigationBarsPadding()
             )
         }
     ) { contentPadding ->
@@ -283,10 +285,11 @@ private fun SectionHeader(
 private fun SendButton(
     enabled: Boolean,
     isLoading: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surface,
         shadowElevation = 8.dp
     ) {
