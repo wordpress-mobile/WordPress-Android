@@ -38,14 +38,20 @@ class PageParentSearchViewModelTest : BaseUnitTest() {
     fun `show empty item on start`() {
         searchPages.value = null
 
-        assertThat(viewModel.searchResult.value).containsOnly(Empty(titleResource = R.string.pages_search_suggestion, isSearching = true))
+        assertThat(viewModel.searchResult.value).containsOnly(
+            Empty(titleResource = R.string.pages_search_suggestion, isSearching = true)
+        )
     }
 
     @Test
     fun `show no matches on empty search results`() {
-        searchPages.value = mutableListOf(Empty(titleResource = R.string.pages_empty_search_result, isSearching = false))
+        searchPages.value = mutableListOf(
+            Empty(titleResource = R.string.pages_empty_search_result, isSearching = false)
+        )
 
-        assertThat(viewModel.searchResult.value).containsOnly(Empty(titleResource = R.string.pages_empty_search_result, isSearching = false))
+        assertThat(viewModel.searchResult.value).containsOnly(
+            Empty(titleResource = R.string.pages_empty_search_result, isSearching = false)
+        )
     }
 
     @Test
