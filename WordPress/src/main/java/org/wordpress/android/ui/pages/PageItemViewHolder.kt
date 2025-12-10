@@ -347,7 +347,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 pageItem.subtitleResource?.let { subtitleResource ->
                     emptyView.subtitle.text = emptyView.resources.getString(subtitleResource)
                     emptyView.subtitle.visibility = View.VISIBLE
-                } ?: {
+                } ?: run {
                     emptyView.subtitle.visibility = View.GONE
                 }
 
