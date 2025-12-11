@@ -381,6 +381,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         initRelatedPostsView(view)
         initLayoutFooter(view)
         initSignInButton(view)
+        initOpenInBrowserButton(view)
         initProgressView(view)
 
         return view
@@ -499,6 +500,16 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         signInButton.setOnClickListener(mSignInClickListener)
     }
 
+    private fun initOpenInBrowserButton(view: View) {
+        view.findViewById<View>(R.id.open_in_browser_button).setOnClickListener {
+            viewModel.interceptedUri?.let { uri ->
+                readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, uri)
+                ReaderActivityLauncher.openUrl(requireActivity(), uri, OpenUrlType.EXTERNAL)
+                requireActivity().finish()
+            }
+        }
+    }
+
     private fun initProgressView(view: View) {
         val progress = view.findViewById<ProgressBar>(R.id.progress_loading)
         if (postSlugsResolutionUnderway) {
@@ -578,8 +589,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 is ReaderPostDetailsUiState -> renderUiState(it, binding)
                 is ErrorUiState -> {
                     uiHelpers.updateVisibility(signInButton, it.signInButtonVisibility)
+                    uiHelpers.updateVisibility(binding.openInBrowserButton, it.openInBrowserButtonVisibility)
                     val message = it.message?.let { msg -> uiHelpers.getTextOfUiString(requireContext(), msg) }
                     showError(message?.toString())
+                    hideMenu(toolBar.menu)
                 }
             }
         }
@@ -1088,6 +1101,16 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // reading preferences require the feature flag to be on
         val menuReadingPreferences = menu.findItem(R.id.menu_reading_preferences)
         menuReadingPreferences?.isVisible = readingPreferencesFeatureConfig.isEnabled()
+        // show more menu
+        val menuMore = menu.findItem(R.id.menu_more)
+        menuMore?.isVisible = true
+    }
+
+    private fun hideMenu(menu: Menu) {
+        menu.findItem(R.id.menu_browse)?.isVisible = false
+        menu.findItem(R.id.menu_share)?.isVisible = false
+        menu.findItem(R.id.menu_reading_preferences)?.isVisible = false
+        menu.findItem(R.id.menu_more)?.isVisible = false
     }
 
     private fun handleMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {

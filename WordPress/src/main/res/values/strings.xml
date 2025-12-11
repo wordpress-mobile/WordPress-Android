@@ -2382,9 +2382,10 @@
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
     <string name="reader_err_get_post_not_authorized">You\'re not authorized to view this post</string>
-    <string name="reader_err_get_post_not_authorized_fallback">You\'re not authorized to view this post. Use the top action button to try a browser instead.</string>
+    <string name="reader_err_get_post_not_authorized_fallback">You\'re not authorized to view this post</string>
     <string name="reader_err_get_post_not_authorized_signin">You\'re not authorized to view this post. Try signing in to WordPress.com first.</string>
-    <string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorized to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
+    <string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorized to view this post. Try signing in to WordPress.com first.</string>
+    <string name="reader_open_in_browser">Open in browser</string>
     <string name="reader_err_get_post_not_found">This post no longer exists</string>
 
     <!-- empty list/grid text -->
@@ -3597,7 +3598,8 @@
     <string name="pages_delete_permanently">Delete Permanently</string>
     <string name="pages_empty_search_result">No pages matching your search</string>
     <string name="pages_search_suggestion">Search pages</string>
-    <string name="pages_empty_published">You haven\'t published any pages yet</string>
+    <string name="pages_empty_published">You haven\'t published any pages - yet!</string>
+    <string name="pages_empty_published_subtitle">Why not create one?</string>
     <string name="pages_empty_drafts">You don\'t have any draft pages</string>
     <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
