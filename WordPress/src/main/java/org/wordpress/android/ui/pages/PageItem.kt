@@ -183,10 +183,10 @@ sealed class PageItem(open val type: Type) {
     data class Divider(val title: String = "") : PageItem(DIVIDER)
 
     data class Empty(
-        @StringRes val textResource: Int = R.string.empty_list_default,
+        @StringRes val titleResource: Int = R.string.empty_list_default,
+        @StringRes val subtitleResource: Int? = null,
         val isSearching: Boolean = false,
-        val isButtonVisible: Boolean = true,
-        val isImageVisible: Boolean = true
+        val isButtonVisible: Boolean = true
     ) : PageItem(EMPTY)
 
     object VirtualHomepage : PageItem(VIRTUAL_HOMEPAGE) {

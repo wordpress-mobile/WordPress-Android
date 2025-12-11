@@ -98,7 +98,9 @@ class SearchListViewModelTest : BaseUnitTest() {
     fun `show empty item on start`() {
         searchPages.value = null
 
-        assertThat(viewModel.searchResult.value).containsOnly(Empty(R.string.pages_search_suggestion, true))
+        assertThat(viewModel.searchResult.value).containsOnly(
+            Empty(titleResource = R.string.pages_search_suggestion, isSearching = true)
+        )
     }
 
     @Test

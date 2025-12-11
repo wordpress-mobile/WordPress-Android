@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:aevButton="@string/pages_empty_list_button"
-        app:aevImage="@drawable/img_illustration_pages_104dp"
         app:aevTitle="@string/empty_list_default" />
 
 </RelativeLayout>
