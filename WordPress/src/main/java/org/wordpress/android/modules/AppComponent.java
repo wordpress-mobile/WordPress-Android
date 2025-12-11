@@ -175,7 +175,6 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetList
 import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.StatsWeekWidget;
 import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekViewsWidgetListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekWidgetBlockListProviderFactory;
-import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
@@ -255,8 +254,6 @@ public interface AppComponent {
     void inject(MediaSettingsActivity object);
 
     void inject(PhotoPickerActivity object);
-
-    void inject(StockMediaPickerActivity object);
 
     void inject(SiteSettingsTagListActivity object);
 
