@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentTransaction
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.PhotoPickerActivityBinding
+import org.wordpress.android.databinding.MediaPickerActivityBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
@@ -109,7 +109,7 @@ class MediaPickerActivity : BaseAppCompatActivity(), MediaPickerListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        val binding = PhotoPickerActivityBinding.inflate(layoutInflater)
+        val binding = MediaPickerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.toolbarMain.setNavigationIcon(R.drawable.ic_close_white_24dp)
         setSupportActionBar(binding.toolbarMain)
