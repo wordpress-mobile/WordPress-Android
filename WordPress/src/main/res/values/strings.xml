@@ -3,6 +3,15 @@
 
     <string name="app_name" translatable="false">WordPress</string>
 
+    <!-- notification permission strings (used in WordPress AndroidManifest.xml) -->
+    <string name="notification_disable_broadcast_permission_label">disable WordPress notifications</string>
+    <string name="notification_disable_broadcast_permission_desc">Allows the app to disable WordPress notifications.</string>
+
+    <!-- login prologue strings (used by WordPress variant) -->
+    <string name="login_prologue_screen_title" translatable="false">@string/app_name</string>
+    <string name="login_prologue_revamped_tagline">Write, edit, and publish from anywhere.</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress icon</string>
+
     <!-- account setup -->
     <string name="xmlrpc_missing_method_error" a8c-src-lib="module:login">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
     <string name="xmlrpc_post_blocked_error" a8c-src-lib="module:login">Couldn\'t connect. Your host is blocking POST requests, and the app needs
