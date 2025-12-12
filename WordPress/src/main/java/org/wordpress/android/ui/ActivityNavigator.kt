@@ -242,6 +242,7 @@ class ActivityNavigator @Inject constructor() {
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun openInCustomTab(activity: Activity, url: String) {
         val intent = getCustomTabsIntent(activity)
         try {
