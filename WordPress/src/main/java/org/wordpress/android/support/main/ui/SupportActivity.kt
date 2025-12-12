@@ -10,7 +10,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -27,10 +26,15 @@ import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
 import org.wordpress.android.support.he.ui.HESupportActivity
 import org.wordpress.android.support.logs.ui.LogsActivity
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SupportActivity : AppCompatActivity() {
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
+
     private val viewModel by viewModels<SupportViewModel>()
 
     private lateinit var composeView: ComposeView
@@ -146,11 +150,7 @@ private fun getRetentionPeriodStringRes(period: NetworkRequestsRetentionPeriod):
     }
 
     private fun navigateToHelpCenter() {
-        val intent = Intent(Intent.ACTION_VIEW, "https://apps.wordpress.com/support/mobile".toUri()).apply {
-            addCategory(Intent.CATEGORY_BROWSABLE)
-            setPackage(null) // Ensure it doesn't match internal activities
-        }
-        startActivity(intent)
+        activityNavigator.openInCustomTab(this, HELP_CENTER_URL)
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
     }
 
@@ -163,6 +163,8 @@ private fun getRetentionPeriodStringRes(period: NetworkRequestsRetentionPeriod):
     }
 
     companion object {
+        private const val HELP_CENTER_URL = "https://apps.wordpress.com/support/mobile"
+
         @JvmStatic
         fun createIntent(context: Context): Intent = Intent(context, SupportActivity::class.java)
     }
