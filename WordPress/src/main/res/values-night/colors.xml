@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!--  Try no to put any colors here, unless you know what you are doing. Try Use styles instead. -->
 
     <!-- Switch to attribute after dropping support for api 21-23 -->
@@ -8,7 +8,7 @@
     <color name="bottom_bar_notification_badge">@color/background_dark_elevated</color>
 
     <!-- Login Prologue -->
-    <color name="promo_indicator_color_default">@color/white_translucent_20</color>
+    <color name="promo_indicator_color_default" tools:ignore="UnusedResources">@color/white_translucent_20</color>
     <color name="login_prologue_background_circle_purple">@color/green_60</color>
     <color name="login_prologue_background_circle_light_purple">@color/purple_60</color>
     <color name="login_prologue_background_circle_blue">@color/blue_60</color>
@@ -19,8 +19,8 @@
     <color name="login_prologue_background_circle_pink">@color/purple_60</color>
 
     <!-- Login Prologue Revamped -->
-    <color name="login_prologue_revamped_background">@color/gray_80</color>
-    <color name="login_prologue_revamped_icon">@color/white</color>
+    <color name="login_prologue_revamped_background" tools:ignore="UnusedResources">@color/gray_80</color>
+    <color name="login_prologue_revamped_icon" tools:ignore="UnusedResources">@color/white</color>
 
     <!-- Post History -->
 
