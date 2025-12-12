@@ -44,6 +44,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import static org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE;
+import static org.wordpress.android.ui.RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.posts.FeaturedImageHelperKt.EMPTY_LOCAL_POST_ID;
 
@@ -70,6 +71,7 @@ public class PhotoPickerActivity extends BaseAppCompatActivity
     @Inject MediaStore mMediaStore;
     @Inject FeaturedImageHelper mFeaturedImageHelper;
     @Inject ImageEditorTracker mImageEditorTracker;
+    @Inject MediaPickerLauncher mMediaPickerLauncher;
 
     public enum PhotoPickerMediaSource {
         ANDROID_CAMERA,
@@ -265,8 +267,8 @@ public class PhotoPickerActivity extends BaseAppCompatActivity
 
     private void launchStockMediaPicker() {
         if (mSite != null) {
-            ActivityLauncher.showStockMediaPickerForResult(this,
-                    mSite, RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT);
+            mMediaPickerLauncher.showStockMediaPickerForResult(
+                    this, mSite, STOCK_MEDIA_PICKER_SINGLE_SELECT, false);
         } else {
             ToastUtils.showToast(this, R.string.blog_not_found);
         }

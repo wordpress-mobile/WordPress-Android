@@ -124,7 +124,6 @@ import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
-import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.subscribers.SubscribersActivity;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
@@ -248,24 +247,6 @@ public class ActivityLauncher {
         intent.putExtra(ChooseSiteActivity.KEY_SITE_LOCAL_ID, site.getId());
         intent.putExtra(ChooseSiteActivity.KEY_SITE_PICKER_MODE, mode.name());
         return intent;
-    }
-
-    /**
-     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showStockMediaPickerForResult}  instead
-     */
-    @Deprecated
-    public static void showStockMediaPickerForResult(Activity activity,
-                                                     @NonNull SiteModel site,
-                                                     int requestCode) {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("from", activity.getClass().getSimpleName());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_ACCESSED, properties);
-
-        Intent intent = new Intent(activity, StockMediaPickerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(StockMediaPickerActivity.KEY_REQUEST_CODE, requestCode);
-
-        activity.startActivityForResult(intent, requestCode);
     }
 
     public static void startJetpackInstall(Context context, JetpackConnectionSource source, SiteModel site) {
