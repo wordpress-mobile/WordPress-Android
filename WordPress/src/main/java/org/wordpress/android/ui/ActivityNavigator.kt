@@ -242,6 +242,26 @@ class ActivityNavigator @Inject constructor() {
         }
     }
 
+    fun openInCustomTab(activity: Activity, url: String) {
+        val intent = getCustomTabsIntent(activity)
+        try {
+            intent.launchUrl(activity, url.toUri())
+        } catch (e: RuntimeException) {
+            when (e) {
+                is ActivityNotFoundException,
+                is SecurityException -> {
+                    AppLog.e(
+                        AppLog.T.UTILS,
+                        "Error opening URL in CustomTabsIntent, attempting external browser",
+                        e
+                    )
+                    ActivityLauncher.openUrlExternal(activity, url)
+                }
+                else -> throw e
+            }
+        }
+    }
+
     private fun getCustomTabsIntent(activity: Activity): CustomTabsIntent {
         return CustomTabsIntent.Builder()
             .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
