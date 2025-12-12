@@ -92,22 +92,22 @@
 
     <color name="celadon_30">#09b585</color>
 
-    <color name="wordpress_blue_90">#001d2d</color>
-    <color name="wordpress_blue_100">#00101c</color>
+    <color name="wordpress_blue_90" tools:ignore="UnusedResources">#001d2d</color>
+    <color name="wordpress_blue_100" tools:ignore="UnusedResources">#00101c</color>
 
 
 
-    <color name="jetpack_green">#069e08</color>
-    <color name="jetpack_green_0">#f0f2eb</color>
-    <color name="jetpack_green_5">#d0e6b8</color>
-    <color name="jetpack_green_10">#9dd977</color>
-    <color name="jetpack_green_20">#64ca43</color>
-    <color name="jetpack_green_30">#2fb41f</color>
-    <color name="jetpack_green_40">#069e08</color>
-    <color name="jetpack_green_50">#008710</color>
-    <color name="jetpack_green_60">#007117</color>
-    <color name="jetpack_green_70">#005b18</color>
-    <color name="jetpack_green_80">#004515</color>
-    <color name="jetpack_green_90">#003010</color>
-    <color name="jetpack_green_100">#001c09</color>
+    <color name="jetpack_green" tools:ignore="UnusedResources">#069e08</color>
+    <color name="jetpack_green_0" tools:ignore="UnusedResources">#f0f2eb</color>
+    <color name="jetpack_green_5" tools:ignore="UnusedResources">#d0e6b8</color>
+    <color name="jetpack_green_10" tools:ignore="UnusedResources">#9dd977</color>
+    <color name="jetpack_green_20" tools:ignore="UnusedResources">#64ca43</color>
+    <color name="jetpack_green_30" tools:ignore="UnusedResources">#2fb41f</color>
+    <color name="jetpack_green_40" tools:ignore="UnusedResources">#069e08</color>
+    <color name="jetpack_green_50" tools:ignore="UnusedResources">#008710</color>
+    <color name="jetpack_green_60" tools:ignore="UnusedResources">#007117</color>
+    <color name="jetpack_green_70" tools:ignore="UnusedResources">#005b18</color>
+    <color name="jetpack_green_80" tools:ignore="UnusedResources">#004515</color>
+    <color name="jetpack_green_90" tools:ignore="UnusedResources">#003010</color>
+    <color name="jetpack_green_100" tools:ignore="UnusedResources">#001c09</color>
 </resources>
