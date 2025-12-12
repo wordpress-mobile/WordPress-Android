@@ -125,7 +125,7 @@
         <item name="android:textColor">@color/on_surface_disabled_selector</item>
     </style>
 
-    <style name="DividerVertical" tools:ignore="UnusedResources">
+    <style name="DividerVertical">
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
@@ -133,7 +133,7 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <style name="DividerHorizontal" tools:ignore="UnusedResources">
+    <style name="DividerHorizontal">
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 

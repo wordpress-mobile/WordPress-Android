@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="accent">@color/pink_50</color>
     <color name="accent_0">@color/pink_0</color>
     <color name="accent_5">@color/pink_5</color>
