@@ -6,36 +6,18 @@ Generator: GlotPress/4.0.3
 Language: eu_ES
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="pages_copy_link">Kopiatu esteka</string>
     <string name="quick_start_list_upload_media_title">Igo argazki edo bideoak</string>
     <string name="quick_start_dialog_check_notifications_title">Egiaztatu zure jakinarazpenak</string>
     <string name="reader_comment_menu_edit">Editatu</string>
     <string name="reader_comment_menu_trash">Zakarrontzira mugitu</string>
     <string name="reader_comment_menu_spam">Markatu zabor bezala</string>
     <string name="reader_comment_menu_unapprove">Baztertu</string>
-    <string name="about_automattic_wordpress" a8c-src-lib="about">WordPress</string>
-    <string name="about_automattic_app_icon_description" a8c-src-lib="about">App ikonoa</string>
-    <string name="about_automattic_tumblr" a8c-src-lib="about">Tumblr</string>
-    <string name="about_automattic_source_code_item_title" a8c-src-lib="about">Iturburu Kodea</string>
-    <string name="about_automattic_privacy_policy_item_title" a8c-src-lib="about">Pribatutasun politika</string>
-    <string name="about_automattic_terms_of_service_item_title" a8c-src-lib="about">Zerbitzuaren terminoak</string>
-    <string name="about_automattic_instagram_item_title" a8c-src-lib="about">Instagram</string>
-    <string name="about_automattic_twitter_item_title" a8c-src-lib="about">Twitter</string>
-    <string name="about_automattic_rate_us_item_title" a8c-src-lib="about">Baloratu gaitzazu</string>
-    <string name="about_automattic_version_label" a8c-src-lib="about">%1$s bertsioa</string>
     <string name="about_blog">Bloga</string>
-    <string name="gutenberg_native_font_size">Letra-tipo tamaina</string>
-    <string name="about_automattic_main_page_title" a8c-src-lib="about">%1$s(r)i buruz</string>
     <string name="reader_comments_view_all">Ikusi iruzkin guztiak</string>
     <string name="reader_comments_follow_conversation">Elkarrizketa jarraitu</string>
     <string name="reader_comments_be_first_to_comment">Izan erantzuten lehena</string>
     <string name="me_btn_about">WordPressi buruz</string>
-    <string name="gutenberg_native_featured_image">Nabarmendutako irudia</string>
-    <string name="gutenberg_native_from_clipboard">Arbeletik</string>
-    <string name="my_site_post_card_link_create_post">Bidalketa sortu</string>
-    <string name="my_site_create_first_post_title">Sortu ezazu zure lehen bidalketa</string>
     <string name="my_site_untitled_post">Izenbururik gabe</string>
-    <string name="gutenberg_native_create_link">Sortu esteka</string>
     <string name="domains_title">Domeinuak</string>
     <string name="post_status_sticky">Itsaskorra</string>
     <string name="domains_search_for_a_domain_button">Bilatu domeinu bat</string>
@@ -46,16 +28,9 @@ Language: eu_ES
     <string name="comment_edit_email_address">E-posta helbidea</string>
     <string name="comment_edit_menu_done">Eginda</string>
     <string name="my_site_btn_domains">Domeinuak</string>
-    <string name="my_site_quick_actions_title">Esteka azkarrak</string>
-    <string name="gutenberg_native_selected_s">Hautatuta: %s</string>
-    <string name="gutenberg_native_move_blocks">Mugitu blokeak</string>
-    <string name="gutenberg_native_customize_blocks">Pertsonalizatu blokeak</string>
     <string name="create_site_notification_create_site_action">Sortu gunea</string>
-    <string name="gutenberg_native_what_is_a_block">Zer da blokea?</string>
     <string name="stats_disabled_title">Estatistiken bila?</string>
     <string name="login_epilogue_create_new_site_button">Sortu gune berria</string>
-    <string name="gutenberg_native_choose_images">Aukeratu irudiak</string>
-    <string name="gutenberg_native_customize_gradient">Pertsonalizatu gradientea</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">Utzi</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Zirrriborrora mugitu</string>
     <string name="post_status_post_published">Argitaratuta</string>
@@ -68,7 +43,6 @@ Language: eu_ES
     <string name="page_homepage_update_failed">Huts egin du hasierako orrialdea eguneratzean</string>
     <string name="page_homepage_successfully_updated">Hasiera orrialdea ondo eguneratuta</string>
     <string name="pages_and_posts_cancel_auto_upload">Utzi igotzeari</string>
-    <string name="gutenberg_native_customize">PERTSONALIZATU</string>
     <string name="post_list_tab_published_posts">Argitaratuta</string>
     <string name="post_list_tab_scheduled_posts">Programatuta</string>
     <string name="post_list_tab_trashed_posts">Zakarrontzian</string>
@@ -86,15 +60,6 @@ Language: eu_ES
     <string name="reader_my_likes_display_name">Atsegiteak</string>
     <string name="site_cannot_be_loaded">Ezin ditugu zure gunearentzako datuak kargatu orain. Mesedez, saiatu geroago</string>
     <string name="suffix_1_000">%sK</string>
-    <string name="gutenberg_native_wordpress_media_library">WordPress Media Liburutegia</string>
-    <string name="gutenberg_native_unsupported">Ez Bateragarria</string>
-    <string name="gutenberg_native_ungroup">Taldea desegin</string>
-    <string name="gutenberg_native_tap_to_hide_the_keyboard">Tap egin teklatua ezkutatzeko</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Tap egin hemen laguntza erakusteko</string>
-    <string name="gutenberg_native_start_writing">Hasi idazten…</string>
-    <string name="gutenberg_native_take_a_photo">Atera argazkia</string>
-    <string name="gutenberg_native_take_a_video">Grabatu Bideoa</string>
-    <string name="gutenberg_native_take_a_photo_or_video">Atera argazki edo bideo bat</string>
     <string name="notifications_tab_dialog_switch_desc">Jakinarazpenak</string>
     <string name="post_preview_saving_draft">Gordetzen…</string>
     <string name="post_list_tab_drafts">Zirriborroak</string>
@@ -175,9 +140,7 @@ Language: eu_ES
     <string name="sign_in_wpcom">Hasi saioa WordPress.com-en</string>
     <string name="reader_label_global_related_posts">Gehiago WordPress.com-en</string>
     <string name="invite_invalid_email">%s: e-posta baliogabea</string>
-    <string name="timespan_now">orain</string>
     <string name="role_viewer">Ikuslea</string>
-    <string name="error_post_my_profile_no_connection">Konexiorik ez, ezin izan da profila gorde</string>
     <string name="alignment_none">Bat ere ez</string>
     <string name="alignment_left">Ezkerrera</string>
     <string name="alignment_right">Eskuinera</string>
@@ -188,18 +151,9 @@ Language: eu_ES
     <string name="invite_message_usernames_limit">Gonbidatu gehienez 10 e-posta helbide eta WordPress.com erabiltzaile-izen. Erabiltzaile-izena behar dutenek bat sortzeko argibideak jasoko dituzte.</string>
     <string name="follower_subscribed_since">%1$s-(e)tik</string>
     <string name="error_remove_viewer">Ezin izan da ikuslea kendu</string>
-    <string name="visual_editor" a8c-src-lib="module:editor">Editore bisuala</string>
-    <string name="image_settings_save_toast">Aldaketak gorde dira</string>
-    <string name="image_alt_text" a8c-src-lib="module:editor">Testu alternatiboa</string>
-    <string name="image_link_to">Estekatu:</string>
-    <string name="image_width">Zabalera</string>
-    <string name="image_caption">Izenburua</string>
-    <string name="image_settings_dismiss_dialog_title">Gorde gabeko aldaketa baztertu?</string>
     <string name="stop_upload_dialog_title">Karga gelditu?</string>
-    <string name="alert_error_adding_media" a8c-src-lib="module:editor">Errore bat gertatu da mediak txertatzean</string>
     <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Mediak kargatzen ari zara. Mesedez itxaron kargak dirauen artean.</string>
     <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Ezin da media zuzenean txertatu HTML moduan. Itzuli modu bisualera, mesedez.</string>
-    <string name="uploading_gallery_placeholder" a8c-src-lib="module:editor">Galeria igotzen…</string>
     <string name="invite_sent">Gonbidapena ondo bidali da</string>
     <string name="tap_to_try_again">Egin tap berriro saiatzeko!</string>
     <string name="invite_error_some_failed">Gonbidapena bidalita baina errorea(k) gertatu da/dira!</string>
@@ -211,7 +165,6 @@ Language: eu_ES
     <string name="invite_message_title">Mezu pertsonalizatua</string>
     <string name="invite">Gonbidatu</string>
     <string name="invite_names_title">Erabiltzaile-izenak edo e-postak</string>
-    <string name="my_site_header_external">Kanpokoak</string>
     <string name="label_clear_search_history">Garbitu bilaketen historia</string>
     <string name="dlg_confirm_clear_search_history">Bilaketen historia garbitu?</string>
     <string name="send">Bidali</string>
@@ -391,19 +344,11 @@ Language: eu_ES
     <string name="account_settings">Kontuaren ezarpenak</string>
     <string name="site_picker_create_wpcom">Sortu WordPress.com gunea</string>
     <string name="site_picker_add_self_hosted">Gehitu zuk ostatatutako gunea</string>
-    <string name="site_picker_edit_visibility">Erakutsi/ezkutatu guneak</string>
-    <string name="my_site_btn_view_site">Ikusi gunea</string>
     <string name="site_picker_title">Aukeratu gunea</string>
     <string name="my_site_btn_switch_site">Aldatu gunez</string>
-    <string name="my_site_btn_view_admin">Ikusi Admin</string>
-    <string name="my_site_header_publish">Argitaratu</string>
-    <string name="my_site_header_look_and_feel">Itxura</string>
     <string name="my_site_btn_blog_posts">Bidalketak</string>
     <string name="my_site_btn_site_settings">Gune ezarpenak</string>
-    <string name="my_site_header_configuration">Konfigurazioa</string>
     <string name="reader_label_new_posts_subtitle">Egin tap berauek erakusteko</string>
-    <string name="show">Ikusi</string>
-    <string name="hide">Ezkutatu</string>
     <string name="select_all">Aukeratu denak</string>
     <string name="language">Hizkuntza</string>
     <string name="verification_code" a8c-src-lib="module:login">Egiaztaketa kodea</string>
@@ -495,7 +440,6 @@ Language: eu_ES
     <string name="local_changes">Aldaketa lokalak</string>
     <string name="wordpress_blog">WordPress-eko bloga</string>
     <string name="select_categories">Kategoriak aukeratu</string>
-    <string name="create_a_link" a8c-src-lib="module:editor">Esteka sortu</string>
     <string name="local_draft">Zirriborro lokala</string>
     <string name="view_in_browser">Nabigatzailean ikusi</string>
     <string name="horizontal_alignment" a8c-src-lib="module:editor">Lerrokatze horizontala</string>
@@ -518,7 +462,6 @@ Language: eu_ES
     <string name="notifications_empty_all">Jakinarazpenik ez… oraingoz.</string>
     <string name="page_settings">Orrialdearen ezarpenak</string>
     <string name="post_settings">Bidalketaren ezarpenak</string>
-    <string name="image_settings">Irudiaren ezarpenak</string>
     <string name="invalid_site_url_message">Egiaztatu sartutako URL gunea baliozkoa dela</string>
     <string name="delete_page">Orrialdea ezabatu?</string>
     <string name="delete_post">Bidalketa ezabatu?</string>
@@ -541,7 +484,6 @@ Language: eu_ES
     <string name="reader_btn_share">Partekatu</string>
     <string name="reader_btn_follow">Jarraitu</string>
     <string name="reader_untitled_post">(Izenbururik gabe)</string>
-    <string name="reader_label_removed_tag">%s ezabatua</string>
     <string name="reader_likes_one">Pertsona batek hau gustuko du</string>
     <string name="reader_likes_only_you">Hau gustuko duzu</string>
     <string name="reader_hint_comment_on_comment">Erantzun iruzkinari…</string>

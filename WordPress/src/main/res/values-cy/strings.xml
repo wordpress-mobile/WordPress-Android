@@ -15,7 +15,6 @@ Language: cy_GB
     <string name="error_media_not_found">Methu canfod cyfryngau</string>
     <string name="site_settings_optimize_images">Optimeiddio Delweddau</string>
     <string name="media_generic_error">Digwyddodd gwall cyfryngau</string>
-    <string name="media_upload_error">Digwyddodd gwall llwytho cyfrwng</string>
     <string name="retry">Ceisiwch eto</string>
     <string name="confirm">Cadarnhau</string>
     <string name="xmlrpc_post_blocked_error" a8c-src-lib="module:login">Methu cysylltu. Mae eich gwesteiwr yn rhwystro ceisiadau POST, ac mae\'r ap angen\n       hynny er mwyn cyfathrebu â\'ch gwefan. Cysylltwch â eich gwesteiwr i ddatrys y broblem.</string>
@@ -54,9 +53,7 @@ Language: cy_GB
     <string name="invite_username_not_found">%s: Heb ganfod y defnyddiwr</string>
     <string name="comment_moderated_approved">Sylw wedi ei gymeradwyo!</string>
     <string name="like">Hoffi</string>
-    <string name="timespan_now">nawr</string>
     <string name="role_viewer">Darllenydd</string>
-    <string name="error_post_my_profile_no_connection">Dim cysylltiad, methu cadw ei proffil</string>
     <string name="alignment_none">Dim</string>
     <string name="alignment_left">Chwith</string>
     <string name="alignment_right">De</string>
@@ -70,19 +67,9 @@ Language: cy_GB
     <string name="follower_subscribed_since">Ers %1$s</string>
     <string name="error_remove_viewer">Methu tynnu darllenydd</string>
     <string name="editor_failed_uploads_switch_html">Mae rhai lwythi cyfryngau wedi methu. Nid oes modd newid i\'r modd HTML\n       yn y cyflwr hwn. Tynnu pob cyfrwng sydd wedi methu a pharhau?</string>
-    <string name="visual_editor" a8c-src-lib="module:editor">Golygydd gweledol</string>
-    <string name="image_thumbnail" a8c-src-lib="module:editor">Llun bach delwedd</string>
-    <string name="image_settings_save_toast">Mae\'r newidiadau wedi eu cadw</string>
-    <string name="image_caption">Egluryn</string>
-    <string name="image_alt_text" a8c-src-lib="module:editor">Testun Amgen</string>
-    <string name="image_link_to">Cyswllt i</string>
-    <string name="image_width">Lled</string>
-    <string name="image_settings_dismiss_dialog_title">Dileu\'r newidiadau heb eu cadw?</string>
     <string name="stop_upload_dialog_title">Atal y llwytho?</string>
-    <string name="alert_error_adding_media" a8c-src-lib="module:editor">Digwyddodd gwall wrth fewnosod y cyfrwng</string>
     <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Rydych wrthi\'n llwytho cyfrwng. Arhoswch nes i hyn orffen.</string>
     <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Nid oes modd mewnosod y cyfrwng yn uniongyrchol yn y modd HTML.Ewch i\'r modd gweledol</string>
-    <string name="uploading_gallery_placeholder" a8c-src-lib="module:editor">Llwytho\'r oriel…</string>
     <string name="invite_sent">wedi anfon gwahoddiad yn llwyddiannus</string>
     <string name="tap_to_try_again">Tapiwch i geisio eto!</string>
     <string name="invite_error_some_failed">Wedi anfon y gwahoddiad ond digwyddodd gwall(au)!</string>
@@ -92,7 +79,6 @@ Language: cy_GB
     <string name="invite_error_invalid_usernames_one">Methu anfon: Mae yna enw defnyddiwr neu e-bost annilys</string>
     <string name="invite_error_no_usernames">Ychwanegwch o leiaf un enw defnyddiwr</string>
     <string name="invite">Gwahodd</string>
-    <string name="my_site_header_external">Allanol</string>
     <string name="label_clear_search_history">Clirio hanes chwilio</string>
     <string name="dlg_confirm_clear_search_history">Clirio hanes chwilio?</string>
     <string name="reader_title_related_post_detail">Cofnodion Perthnasol</string>
@@ -112,7 +98,6 @@ Language: cy_GB
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Ddim ar gael ar hyn o bryd. Rhowch eich cyfrinair</string>
     <string name="logging_in">Mewngofnodi</string>
     <string name="web_address_dialog_hint">Dangos yn gyhoeddus pan fyddwch yn gwneud sylw</string>
-    <string name="capture_or_pick_photo">Cipio neu ddewis llun</string>
     <string name="export_your_content_message">Bydd cofnodion, tudalennau a gosodiadau yn cael eu e-bost atoch i %s.</string>
     <string name="plan">Cynllun</string>
     <string name="plans">Cynlluniau</string>
@@ -358,21 +343,11 @@ Language: cy_GB
     <string name="stats_insights">Mewnwelediadau</string>
     <string name="me_btn_login_logout">Mewngofnodi/Allgofnodi</string>
     <string name="me_connect_to_wordpress_com">Mewngofnodwch i WordPress.com</string>
-    <string name="site_picker_cant_hide_current_site">Nid oedd \"%s\" wedi ei guddio gan taw hi yw\'r wefan gyfredol</string>
     <string name="account_settings">Gosodiadau\'r Cyfrif</string>
     <string name="site_picker_add_self_hosted">Ychwanegu gwefan hunanwesteio</string>
-    <string name="site_picker_edit_visibility">Dangos/cuddio gwefannau</string>
-    <string name="my_site_btn_view_admin">Gweld Gweinyddu</string>
-    <string name="my_site_btn_view_site">Gweld Gwefan</string>
     <string name="site_picker_title">Dewis gwefan</string>
     <string name="my_site_btn_switch_site">Newid Gwefan</string>
-    <string name="my_site_header_look_and_feel">Golwg a Theimlad</string>
-    <string name="my_site_header_publish">Cyhoeddi</string>
-    <string name="my_site_header_configuration">Ffurfweddiad</string>
     <string name="reader_label_new_posts_subtitle">Tapio i\'w dangos</string>
-    <string name="deselect_all">Dad-ddewis y cyfan</string>
-    <string name="show">Dangos</string>
-    <string name="hide">Cuddio</string>
     <string name="select_all">Dewis y cyfan</string>
     <string name="language">Iaith</string>
     <string name="verification_code" a8c-src-lib="module:login">Cod dilysu</string>
@@ -464,7 +439,6 @@ Language: cy_GB
     <string name="media_error_no_permission">Nid oes gennych ganiatâd i weld y llyfrgell cyfryngau</string>
     <string name="cannot_delete_multi_media_items">Nid oes modd dileu rhai cyfryngau ar hyn o bryd. Ceisiwch eto yn nes ymlaen.</string>
     <string name="link_enter_url_text">Testun dolen (dewisol)</string>
-    <string name="create_a_link" a8c-src-lib="module:editor">Creu dolen</string>
     <string name="page_settings">Gosodiadau tudalen</string>
     <string name="local_draft">Drafft lleol</string>
     <string name="horizontal_alignment" a8c-src-lib="module:editor">Alinio llorweddol</string>
@@ -490,7 +464,6 @@ Language: cy_GB
     <string name="new_post">Cofnod newydd</string>
     <string name="new_media">Cyfryngau newydd</string>
     <string name="local_changes">Newidiadau lleol</string>
-    <string name="image_settings">Gosodiadau delweddau</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="fatal_db_error">Digwyddodd gwall wrth greu cronfa ddata\'r ap. Ceisiwch ailosod yr ap.</string>
     <string name="reader_title_applog">Cofnod yr ap</string>
@@ -510,7 +483,6 @@ Language: cy_GB
     <string name="reader_btn_share">Rhannu</string>
     <string name="reader_btn_follow">Dilyn</string>
     <string name="reader_label_added_tag">Ychwanegu %s</string>
-    <string name="reader_label_removed_tag">Tynnu %s</string>
     <string name="reader_likes_one">Mae un person yn hoffi hwn</string>
     <string name="reader_likes_only_you">Rydych chi\'n hoffi hwn</string>
     <string name="reader_toast_err_comment_failed">Methu cofnodi\'ch sylw</string>

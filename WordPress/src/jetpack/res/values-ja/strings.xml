@@ -31,7 +31,5 @@ Language: ja_JP
     <string name="support_ticket_subject">Android サポート版 Jetpack</string>
     <string name="login_magic_links_sent_label">この端末でメールを確認して、Jetpack.com から届いたメールに記載されているリンクをタップしてください。</string>
     <string name="continue_with_wpcom_no_signup">WordPress.com で続ける</string>
-    <string name="app_tagline">サイトのセキュリティとパフォーマンスをポケットの中に</string>
     <string name="post_signup_interstitial_title">Jetpack へようこそ</string>
-    <string name="app_title">Android 版 Jetpack</string>
 </resources>

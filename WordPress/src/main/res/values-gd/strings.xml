@@ -14,19 +14,9 @@ Language: gd_GB
     <string name="follower_subscribed_since">A-mach o %1$s</string>
     <string name="error_remove_viewer">Cha b’ urrainn dhuinn an neach-coimhid a thoirt air falbh</string>
     <string name="editor_failed_uploads_switch_html">Cha deach gach meadhan a luchdadh suas. Chan urrainn dhut leum gun mhodh\n        HTML is cùisean mar seo. A bheil thu airson na dh’fhàillig a thoirt air falbh is leantainn air adhart?</string>
-    <string name="visual_editor" a8c-src-lib="module:editor">An deasaiche lèirsinneach</string>
-    <string name="image_thumbnail" a8c-src-lib="module:editor">Dealbhagan deilbh</string>
-    <string name="image_settings_save_toast">Chaidh na h-atharraichean a shàbhaladh</string>
-    <string name="image_caption">Caipsean</string>
-    <string name="image_alt_text" a8c-src-lib="module:editor">Roghainn teacsa</string>
-    <string name="image_link_to">Ceangal ri</string>
-    <string name="image_width">Leud</string>
-    <string name="image_settings_dismiss_dialog_title">A bheil thu airson na h-atharraichean nach deach a shàbhaladh a thilgeil air falbh?</string>
     <string name="stop_upload_dialog_title">A bheil thu airson sgur dhen luchdadh suas?</string>
-    <string name="alert_error_adding_media" a8c-src-lib="module:editor">Thachair mearachd fhad ’s a bha sinn a’ cur a-steach a’ mheadhain</string>
     <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Tha thu a’ luchdadh suas meadhanan. Fuirich ort gus am bi sin deiseil.</string>
     <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Chan urrainn dhut meadhanan a chur a-steach mar sin sa mhodh HTML. Cleachd am modh lèirsinneach airson sin.</string>
-    <string name="uploading_gallery_placeholder" a8c-src-lib="module:editor">A’ luchdadh suas a’ ghailearaidh…</string>
     <string name="invite_error_some_failed">Chaidh an cuireadh a chur ach thachair co-dhiù aon mhearachd!</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Chaidh an cuireadh a chur</string>
@@ -40,21 +30,11 @@ Language: gd_GB
     <string name="stats_insights_all_time">Puist, seallaidhean is aoighean air fad</string>
     <string name="stats_insights">Insights</string>
     <string name="me_btn_login_logout">Clàraich a-steach/a-mach</string>
-    <string name="site_picker_cant_hide_current_site">Cha deach “%s” a chur am falach a chionn ’s gur e sin an làrach làithreach</string>
     <string name="account_settings">Roghainnean a\' chunntais</string>
     <string name="site_picker_add_self_hosted">Cuir làrach air fèin-òstaireachd ris</string>
-    <string name="site_picker_edit_visibility">Seall/falaich làraichean</string>
-    <string name="my_site_btn_view_site">Seall an làrach agam</string>
     <string name="site_picker_title">Tagh làrach</string>
     <string name="my_site_btn_switch_site">Leum gu làrach eile</string>
-    <string name="my_site_btn_view_admin">Seall an rianachd</string>
-    <string name="my_site_header_look_and_feel">Coltas</string>
-    <string name="my_site_header_publish">Foillsich</string>
-    <string name="my_site_header_configuration">Rèiteachadh</string>
     <string name="reader_label_new_posts_subtitle">Thoir gnogag gus an sealltainn</string>
-    <string name="deselect_all">Dì-thagh na h-uile</string>
-    <string name="show">Seall</string>
-    <string name="hide">Falaich</string>
     <string name="select_all">Tagh na h-uile</string>
     <string name="language">Cànan</string>
     <string name="verification_code" a8c-src-lib="module:login">Còd dearbhaidh</string>
@@ -144,7 +124,6 @@ Language: gd_GB
     <string name="media_error_no_permission">Chan eil cead agad coimhead air leabhar-lann nam meadhanan</string>
     <string name="cannot_delete_multi_media_items">Tha meadhanan ann ach gabh an sguabadh às an-dràsta fhèin. Feuch ris a-rithist an ceann greis.</string>
     <string name="link_enter_url_text">Teacsa a’ cheangail (roghainneil)</string>
-    <string name="create_a_link" a8c-src-lib="module:editor">Cruthaich ceangal</string>
     <string name="page_settings">Roghainnean na duilleige</string>
     <string name="local_draft">Dreachd ionadail</string>
     <string name="horizontal_alignment" a8c-src-lib="module:editor">Co-thaobhadh còmhnard</string>
@@ -170,7 +149,6 @@ Language: gd_GB
     <string name="new_post">Post ùr</string>
     <string name="new_media">Meadhan ùr</string>
     <string name="local_changes">Atharraichean ionadail</string>
-    <string name="image_settings">Roghainnean an deilbh</string>
     <string name="wordpress_blog">Bloga WordPress</string>
     <string name="fatal_db_error">Thachair mearachd fhad ’s a bha sinn a’ cruthachadh stòr-dàta nan aplacaidean. Feuch is stàlaich an aplacaid às ùr.</string>
     <string name="reader_title_applog">Loga na h-aplacaid</string>
@@ -190,7 +168,6 @@ Language: gd_GB
     <string name="reader_btn_share">Co-roinn</string>
     <string name="reader_btn_follow">Lean</string>
     <string name="reader_label_added_tag">Chaidh %s a chur ris</string>
-    <string name="reader_label_removed_tag">Chaidh %s a thoirt air falbh</string>
     <string name="reader_likes_one">Tha aon duine ag ràdh gur toigh leotha seo</string>
     <string name="reader_likes_only_you">\'S toigh leat seo</string>
     <string name="reader_toast_err_comment_failed">Cha b\' urrainn dhuinn do bheachd a phostadh</string>

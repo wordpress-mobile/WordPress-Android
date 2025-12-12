@@ -53,38 +53,24 @@ Language: bg
     <string name="he_support_send_button">Изпращане</string>
     <string name="he_support_reply_button">Отговор</string>
     <string name="he_support_last_updated">Последно обновяване %1$s</string>
-    <string name="he_support_message_count">%1$d Съобщения</string>
     <string name="he_support_empty_conversations_button">Започване на дискусия</string>
     <string name="he_support_empty_conversations_message">Започнете дискусия с екипа по поддръжка, за да получите помощ.</string>
     <string name="he_support_empty_conversations_title">Няма дискусии засега</string>
     <string name="he_support_new_conversation_content_description">Нова дискусия</string>
     <string name="he_support_conversations_title">Дискусии с поддръжката</string>
-    <string name="ai_bot_time_weeks_ago">Преди %1$d седмици</string>
-    <string name="ai_bot_time_week_ago">преди %1$d седмица</string>
-    <string name="ai_bot_time_days_ago">преди %1$d дни</string>
-    <string name="ai_bot_time_day_ago">преди %1$d ден</string>
-    <string name="ai_bot_time_hours_ago">преди %1$d часа</string>
-    <string name="ai_bot_time_hour_ago">преди %1$d час</string>
-    <string name="ai_bot_time_minutes_ago">преди %1$d минути</string>
-    <string name="ai_bot_time_minute_ago">преди %1$d минута</string>
     <string name="ai_bot_time_just_now">Току-що</string>
-    <string name="ai_bot_default_conversation_title">Нова дискусия</string>
     <string name="ai_bot_welcome_message">Аз съм вашият личен ИИ асистент. Мога да помогна по въпроси за вашия сайт или профил.</string>
     <string name="ai_bot_welcome_greeting">Здрасти, %1$s 👋</string>
     <string name="ai_bot_message_input_placeholder">Въвеждане на съобщение…</string>
     <string name="ai_bot_send_button_content_description">Изпращане</string>
     <string name="ai_bot_support_bot">Бот за поддръжка</string>
     <string name="ai_bot_you">Вие</string>
-    <string name="ai_bot_empty_conversations_button">Започване на дискусия</string>
-    <string name="ai_bot_empty_conversations_message">Започване на нова дискусия за помощ с вашия WordPress сайт или профил.</string>
-    <string name="ai_bot_empty_conversations_title">Няма дискусии засега</string>
     <string name="ai_bot_generic_error">Нещо се обърка. Изчакайте малко и опитайте отново.</string>
     <string name="ai_bot_new_conversation_content_description">Нова дискусия</string>
     <string name="ai_bot_back_button_content_description">Обратно</string>
     <string name="ai_bot_conversations_title">Дискусии</string>
     <string name="create">Създаване</string>
     <string name="logs_screen_general_error">Нещо се обърка…</string>
-    <string name="logs_screen_log_count">%d записа в дневника</string>
     <string name="logs_screen_empty_state">Няма налични дневници</string>
     <string name="support_screen_user_avatar_content_description">Потребителски аватар</string>
     <string name="support_screen_application_logs_description">Инструмент за дебъг на проблеми</string>
@@ -98,7 +84,6 @@ Language: bg
     <string name="support_screen_help_center_title">Център за помощ</string>
     <string name="support_screen_how_can_we_help_title">Как можем да помогнем?</string>
     <string name="support_screen_login_button">Влизане в WordPress.com</string>
-    <string name="support_screen_profile_section_title">Профил за поддръжката</string>
     <string name="support_screen_title">Поддържа</string>
     <string name="modern_support_description">Активиране на новата система за поддръжка</string>
     <string name="modern_support">Модерна поддръжка</string>
@@ -114,7 +99,6 @@ Language: bg
     <string name="term_parent_none">Без</string>
     <string name="term_parent_label">Родителски:</string>
     <string name="term_count">Брой: %1$d</string>
-    <string name="term_count_label">Брой:</string>
     <string name="term_description_label">Описание:</string>
     <string name="term_slug_label">Кратко име:</string>
     <string name="term_name_label">Име:</string>
@@ -159,7 +143,6 @@ Language: bg
     <string name="subscribers_delete_confirmation_message">Сиурни ли сте, че искате да изтриете абоната?</string>
     <string name="subscribers_delete_confirmation_title">Изтриване на абонат</string>
     <string name="subscribers_sort_name">Име</string>
-    <string name="jetpack_rest_connection_error_connect_wpcom">Неуспешно свързване с WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">Времето изтече</string>
     <string name="jetpack_rest_connection_cancel_message">Установяването на връзка с Jetpack е в процес на извършване. Сигурни ли сте, че искате да го отмените?</string>
     <string name="jetpack_rest_connection_cancel_title">Отмяна на настройките на Jetpack?</string>
@@ -171,8 +154,6 @@ Language: bg
     <string name="jetpack_rest_connection_step_connect_user">Свързване на потребител с WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Инсталиране на разширението Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Вход в WordPress.com</string>
-    <string name="jetpack_rest_connection_title">Връзка с Jetpack</string>
-    <string name="experimental_subscribers_feature_description">Преглед и управление на абонатите на бюлетина</string>
     <string name="start">Начало</string>
     <string name="descending">Низходящ ред</string>
     <string name="ascending">Възходящ ред</string>
@@ -218,7 +199,6 @@ Language: bg
     <string name="pages_view">Преглед</string>
     <string name="pages_trashed">В кошчето</string>
     <string name="pages_drafts">Чернови</string>
-    <string name="pages_set_parent">Задаване на родител</string>
     <string name="pages_scheduled">Планирана</string>
     <string name="pages_published">Публикувана</string>
     <string name="login_error_sms_throttled" a8c-src-lib="module:login">Направихте прекалено много опити да изпратите SMS кода за потвърждение - спрете за кратко и подайте нова заявка след минута.</string>
@@ -245,8 +225,6 @@ Language: bg
     <string name="quick_start_dialog_publish_post_title">Публикуване на публикация</string>
     <string name="quick_start_dialog_need_help_button_negative">Не, благодаря</string>
     <string name="quick_start_dialog_follow_sites_title">Следване на сайтове</string>
-    <string name="quick_start_button_negative_short">Отказ</string>
-    <string name="quick_start_button_negative">Не сега</string>
     <string name="my_site_create_new_site_title">Нямате сайтове</string>
     <string name="login_to_to_connect_jetpack" a8c-src-lib="module:login">Влезте в профила на WordPress.com, който сте използвали за свързването на Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">За да използвате Статистики в сайта си, ще трябва да инсталирате разширението Jetpack .</string>
@@ -348,7 +326,6 @@ Language: bg
     <string name="post_title">Заглавие</string>
     <string name="menu_redo">Стъпка напред</string>
     <string name="menu_undo">Стъпка назад</string>
-    <string name="media_insert_unimplemented" a8c-src-lib="module:editor">За съжаление тази функционалност не е налична все още :(</string>
     <string name="error_media_small">Файлът е твърде малък, за да се покаже</string>
     <string name="editor_content_hint">Споделете вашата история тук…</string>
     <string name="post_status_pending_review">Очаква коментар</string>
@@ -414,7 +391,6 @@ Language: bg
     <string name="editor_draft_saved_online">Черновата е запазена онлайн</string>
     <string name="editor_post_saved_locally">Публикациите са запазени на устройството </string>
     <string name="button_sync">Синхронизиране</string>
-    <string name="smart_toast_comments_long_press">Натиснете и задръжте за избиране на няколко коментара</string>
     <string name="photo_picker_choose_video">Избор на видео от устройството</string>
     <string name="photo_picker_choose_photo">Избор на изображение от устройството</string>
     <string name="media_insert_as_gallery">Добавяне като галерия</string>
@@ -492,9 +468,7 @@ Language: bg
     <string name="invite_username_not_found">%s: потребителят не е намерен</string>
     <string name="comment_moderated_approved">Коментарът бе одобрен.</string>
     <string name="like">Харесвам</string>
-    <string name="timespan_now">сега</string>
     <string name="role_viewer">Потребител</string>
-    <string name="error_post_my_profile_no_connection">Няма връзка, профилът не беше запазен</string>
     <string name="alignment_none">Без</string>
     <string name="alignment_left">Ляво</string>
     <string name="alignment_right">Дясно</string>
@@ -508,19 +482,9 @@ Language: bg
     <string name="follower_subscribed_since">От %1$s</string>
     <string name="error_remove_viewer">Неуспешно премахване на потребителя</string>
     <string name="editor_failed_uploads_switch_html">Някои файлове не се качиха. Преминете в режим HTML\n        на сайта. Премахване на всички неуспешно качени файлове и напред?</string>
-    <string name="visual_editor" a8c-src-lib="module:editor">Визуален редактор</string>
-    <string name="image_thumbnail" a8c-src-lib="module:editor">Малка картинка</string>
-    <string name="image_alt_text" a8c-src-lib="module:editor">Алт текст</string>
-    <string name="image_link_to">Връзка към</string>
-    <string name="image_width">Ширина</string>
-    <string name="image_settings_save_toast">Промените са запазени</string>
-    <string name="image_caption">Описание</string>
-    <string name="image_settings_dismiss_dialog_title">Отказ от промените?</string>
     <string name="stop_upload_dialog_title">Спиране на качването?</string>
-    <string name="alert_error_adding_media" a8c-src-lib="module:editor">Грешка при добавянето на файла</string>
     <string name="alert_action_while_uploading" a8c-src-lib="module:editor">В момента качвате файл. Изчакайте докато процесът приключи.</string>
     <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Файлове не могат да се добавят в режим HTML. Превключете обратно към визуален режим.</string>
-    <string name="uploading_gallery_placeholder" a8c-src-lib="module:editor">Качване на галерията…</string>
     <string name="invite_sent">Успешно изпращане на поканата</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="tap_to_try_again">Тап за повторен опит</string>
@@ -530,7 +494,6 @@ Language: bg
     <string name="invite_error_invalid_usernames_one">Неуспешно изпращане: Невалиден имейл адрес или име</string>
     <string name="invite_error_no_usernames">Нужно е поне едно потребителско име</string>
     <string name="invite">Покана</string>
-    <string name="my_site_header_external">Външна</string>
     <string name="label_clear_search_history">Изчистване на историята на търсенето</string>
     <string name="dlg_confirm_clear_search_history">Изчистване на историята на търсенето?</string>
     <string name="reader_title_related_post_detail">Свързана публикация</string>
@@ -550,7 +513,6 @@ Language: bg
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">В момента не е налично. Въведете вашата парола</string>
     <string name="logging_in">Влизане</string>
     <string name="web_address_dialog_hint">Ще се показва когато коментирате.</string>
-    <string name="capture_or_pick_photo">Заснемане или избор на снимка</string>
     <string name="plan">План</string>
     <string name="plans">Планове</string>
     <string name="export_your_content_message">Публикациите, страниците и настройките ви ще ви бъдат изпратени по имейл на %s.</string>
@@ -801,22 +763,12 @@ Language: bg
     <string name="me_disconnect_from_wordpress_com">Излизане от WordPress.com</string>
     <string name="me_btn_login_logout">Вход/Изход</string>
     <string name="me_connect_to_wordpress_com">Влизане в WordPress.com</string>
-    <string name="site_picker_cant_hide_current_site">\"%s\" не беше скрит защото е текущият уебсайт</string>
     <string name="account_settings">Настройки на профила</string>
-    <string name="site_picker_edit_visibility">Показване/скриване на сайтовете</string>
     <string name="site_picker_add_self_hosted">Добавяне на самостоятелно хостван уебсайт</string>
-    <string name="my_site_btn_view_admin">Преглед на администрацията</string>
     <string name="site_picker_title">Избор на сайт</string>
-    <string name="my_site_btn_view_site">Преглед на сайта</string>
     <string name="my_site_btn_switch_site">Превключване на сайта</string>
-    <string name="my_site_header_look_and_feel">Изглед</string>
-    <string name="my_site_header_publish">Публикуване</string>
-    <string name="my_site_header_configuration">Настройки</string>
     <string name="reader_label_new_posts_subtitle">Натиснете за да ги прегледате</string>
-    <string name="hide">Скриване</string>
     <string name="select_all">Избор на всичко</string>
-    <string name="deselect_all">От-маркиране на всичко</string>
-    <string name="show">Показване</string>
     <string name="invalid_verification_code" a8c-src-lib="module:login">Невалиден верификационен код</string>
     <string name="language">Език</string>
     <string name="verification_code" a8c-src-lib="module:login">Верификационен код</string>
@@ -910,7 +862,6 @@ Language: bg
     <string name="saving_changes">Промените се запазват</string>
     <string name="new_post">Нова публикация</string>
     <string name="category_name">Име на категорията</string>
-    <string name="image_settings">Настройки на изображението</string>
     <string name="horizontal_alignment" a8c-src-lib="module:editor">Хоризонтална подредба</string>
     <string name="connection_error">Грешка при свързване</string>
     <string name="post_settings">Настройки на публикацията</string>
@@ -927,7 +878,6 @@ Language: bg
     <string name="media_gallery_type_thumbnail_grid">Решетка с малки изображения</string>
     <string name="learn_more">Още</string>
     <string name="cannot_delete_multi_media_items">Някои от файловете не могат да бъдат изтрити в момента. Опитайте по-късно.</string>
-    <string name="create_a_link" a8c-src-lib="module:editor">Създаване на връзка</string>
     <string name="edit_comment">Редактиране на коментар</string>
     <string name="mnu_comment_approve">Одобряване</string>
     <string name="mnu_comment_unapprove">Неодобряване</string>
@@ -960,7 +910,6 @@ Language: bg
     <string name="reader_btn_share">Споделяне</string>
     <string name="reader_btn_follow">Последване</string>
     <string name="reader_label_added_tag">%s е добавен</string>
-    <string name="reader_label_removed_tag">%s е премахнат</string>
     <string name="reader_toast_err_comment_failed">Коментарът не беше публикуван</string>
     <string name="reader_toast_err_share_intent">Споделянето е неуспешно</string>
     <string name="reader_toast_err_view_image">Преглеждането на изображението е неуспешно</string>

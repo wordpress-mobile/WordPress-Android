@@ -65,34 +65,19 @@ Language: hr
     <string name="login_prologue_fifth_tag_one">Umjetnost</string>
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="media_loading_failed">Učitavanje sadržaja nije uspjelo</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Dajemo sve od sebe da uz svaku objavu dodajemo nove blokove.</string>
-    <string name="gutenberg_native_help_button">Gumb za pomoć</string>
-    <string name="gutenberg_native_edit_using_web_editor">Uređujte pomoću web uređivača</string>
-    <string name="gutenberg_native_choose_images">Odaberite slike</string>
     <string name="mlp_notice_blank_page_created">Izrađena je prazna stranica</string>
     <string name="mlp_notice_page_created">Stranica kreirana</string>
     <string name="reader_label_toolbar_back">Povratak</string>
     <string name="reader_discover_empty_button_text">Započnite</string>
-    <string name="reader_post_details_header_by_author_name">Od</string>
     <string name="mlp_selected_description">%s odabrano</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="reader_menu_report_post">Prijavi ovaj članak</string>
-    <string name="reader_welcome_banner">Dobrodošli u čitateljicu. Otkrijte milijune blogova na dohvat ruke.</string>
     <string name="error_media_xmlrcp_server_error">Dogodila se interna pogreška poslužitelja</string>
     <string name="error_media_xmlrpc_not_allowed">Vaša radnja nije dopuštena</string>
     <string name="show_n_hidden_items_desc">Još %1$s stavki</string>
-    <string name="gutenberg_native_select_a_layout">Odaberite raspored</string>
     <string name="create_page_fab_tooltip">Stvorite stranicu</string>
     <string name="create_post_fab_tooltip">Napravite članak</string>
-    <string name="reader_discover_interests_header">Možda ti se sviđa</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Sakriti</string>
-    <string name="gutenberg_native_video_caption_empty">Video natpis. Prazan</string>
-    <string name="gutenberg_native_updates_the_title">Ažurira naslov.</string>
-    <string name="gutenberg_native_paste_block_after">Zalijepite blok nakon</string>
-    <string name="gutenberg_native_page_title_s">Naslov stranice. %s</string>
-    <string name="gutenberg_native_page_title_empty">Naslov stranice. Prazan</string>
-    <string name="toast_error_playing_video">Došlo je do pogreške tijekom reprodukcije vašeg videozapisa</string>
-    <string name="camera_error">Ovaj uređaj ne podržava API Camera2.</string>
     <string name="label_close_button">Zatvori</string>
     <string name="comment_q_action_replying">Odgovaram …</string>
     <string name="comment_q_action_approving">Odobravam …</string>
@@ -111,9 +96,7 @@ Language: hr
     <string name="invite_already_a_member">%s: Već ste član</string>
     <string name="comment_moderated_approved">Komentar odobren!</string>
     <string name="like">Kao</string>
-    <string name="timespan_now">sada</string>
     <string name="role_viewer">Pregledavač</string>
-    <string name="error_post_my_profile_no_connection">Nema internetske veze, nije moguće spremiti vaš profil</string>
     <string name="alignment_none">Ništa</string>
     <string name="alignment_right">Desno</string>
     <string name="alignment_left">Lijevo</string>
@@ -126,19 +109,9 @@ Language: hr
     <string name="follower_subscribed_since">Od %1$s</string>
     <string name="error_remove_viewer">Nije moguće ukloniti pregledavača</string>
     <string name="editor_failed_uploads_switch_html">Neki od medijskih zapisa koje ste prenijeli nisu uspješno preneseni. Trenutačno se ne možete prebaciti na HTML način. Želite li ukloniti sve neuspjele medijske zapise i nastaviti?</string>
-    <string name="visual_editor" a8c-src-lib="module:editor">Vizualni uređivač</string>
-    <string name="image_thumbnail" a8c-src-lib="module:editor">Sličica</string>
-    <string name="image_width">Širina</string>
-    <string name="image_link_to">Poveznica za</string>
-    <string name="image_caption">Naslov</string>
-    <string name="image_settings_save_toast">Promijene spremljene.</string>
-    <string name="image_alt_text" a8c-src-lib="module:editor">Alternativni tekst</string>
-    <string name="image_settings_dismiss_dialog_title">Odbaciti spremljene promjene?</string>
     <string name="stop_upload_dialog_title">Zaustaviti prijenos?</string>
-    <string name="alert_error_adding_media" a8c-src-lib="module:editor">Došlo je do pogreške tijekom unosa medijskog zapisa</string>
     <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Trenutno prenosite medijske zapise. Pričekajte dok se prijenos ne završi.</string>
     <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Nije moguće izravno umetnuti medijske zapise u kodnom HTML uređivaču. Prijeđite na vizualni način rada.</string>
-    <string name="uploading_gallery_placeholder" a8c-src-lib="module:editor">Prijenos galerije …</string>
     <string name="tap_to_try_again">Dodirnite za ponovni pokušaj!</string>
     <string name="invite_sent">Pozivnica je uspješno poslana</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -150,7 +123,6 @@ Language: hr
     <string name="invite_message_title">Prilagođena poruka</string>
     <string name="invite">Pozovi</string>
     <string name="invite_names_title">Korisnička imena ili adrese e-pošte</string>
-    <string name="my_site_header_external">Vanjski</string>
     <string name="label_clear_search_history">Obriši povijest pretraživanja</string>
     <string name="dlg_confirm_clear_search_history">Očistiti povijest pretraživanja?</string>
     <string name="reader_hint_post_search">Pretražite WordPress</string>
@@ -170,7 +142,6 @@ Language: hr
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Trenutačno nedostupno. Molimo unesite svoju lozinku</string>
     <string name="logging_in">Prijavljivanje</string>
     <string name="web_address_dialog_hint">Prikazuje se javno kada komentirate.</string>
-    <string name="capture_or_pick_photo">Snimite fotografiju fotoaparatom ili odaberite fotografiju</string>
     <string name="plan">Plan</string>
     <string name="plans">Planovi</string>
     <string name="export_your_content_message">Vaše će objave, stranice i postavke biti poslani e-poštom na %s.</string>
@@ -437,25 +408,15 @@ Language: hr
     <string name="me_btn_login_logout">Prijava/Odjava</string>
     <string name="me_connect_to_wordpress_com">Spoji se u WordPress.com</string>
     <string name="account_settings">Postavke računa</string>
-    <string name="site_picker_cant_hide_current_site">\"%s\" nije skriven jer je to trenutna web-stranica.</string>
     <string name="site_picker_create_wpcom">Kreiraj WordPress.com web-stranicu</string>
-    <string name="site_picker_edit_visibility">Prikaži/sakrij web-stranice</string>
     <string name="site_picker_add_self_hosted">Dodaj samostalno hostanu web-stranicu</string>
     <string name="site_picker_add_a_site">Dodaj novu web-stranicu</string>
-    <string name="my_site_btn_view_site">Pogledaj stranicu</string>
     <string name="site_picker_title">Odaberi stranicu</string>
-    <string name="my_site_btn_view_admin">Prikaži Admin</string>
     <string name="my_site_btn_switch_site">Promjeni web-stranicu</string>
-    <string name="my_site_header_publish">Objavi</string>
-    <string name="my_site_header_look_and_feel">Izgled i dojam</string>
     <string name="my_site_btn_site_settings">Postavke web-stranice </string>
     <string name="my_site_btn_blog_posts">Objave</string>
-    <string name="my_site_header_configuration">Konfiguracija</string>
     <string name="reader_label_new_posts_subtitle">Pritisni za prikaz</string>
-    <string name="show">Prikaži</string>
-    <string name="hide">Sakrij</string>
     <string name="select_all">Odaberi sve</string>
-    <string name="deselect_all">Odznači sve</string>
     <string name="language">Jezik</string>
     <string name="verification_code" a8c-src-lib="module:login">Kod za provjeru</string>
     <string name="invalid_verification_code" a8c-src-lib="module:login">Neispravan verifikacijski kod</string>
@@ -547,7 +508,6 @@ Language: hr
     <string name="trash">Smeće</string>
     <string name="mnu_comment_trash">Smeće</string>
     <string name="mnu_comment_spam">Spam</string>
-    <string name="create_a_link" a8c-src-lib="module:editor">Kreiraj poveznicu</string>
     <string name="reader_title_applog">Aplikacijski zapisnik</string>
     <string name="notifications_empty_all">Nema obavijesti… još.</string>
     <string name="post_settings">Postavke objave</string>
@@ -574,7 +534,6 @@ Language: hr
     <string name="new_post">Nova objava</string>
     <string name="new_media">Novi medijski zapis</string>
     <string name="local_changes">Lokalne promjene</string>
-    <string name="image_settings">Postavke slike</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="post_not_found">Dogodila se greška tijekom učitavanja objave. Osvježite objave i pokušajte ponovno.</string>
     <string name="file_not_found">Nije moguće pronaći medijski zapis za prijenos. Jeli obrisan ili premješten?</string>
@@ -602,7 +561,6 @@ Language: hr
     <string name="reader_btn_share">Podjeli</string>
     <string name="reader_hint_comment_on_comment">Odgovor na komentar…</string>
     <string name="reader_label_added_tag">Dodano %s</string>
-    <string name="reader_label_removed_tag">Uklonjeno %s</string>
     <string name="reader_likes_one">Jednoj osobi se ovo sviđa</string>
     <string name="reader_likes_only_you">Vama se ovo sviđa</string>
     <string name="reader_toast_err_comment_failed">Vaš komentar nije moguće objavaiti</string>

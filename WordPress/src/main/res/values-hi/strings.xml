@@ -6,7 +6,6 @@ Generator: GlotPress/4.0.3
 Language: hi_IN
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="gutenberg_native_tap_to_edit" a8c-src-lib="gutenberg">संपादित करने के लिए टैप करें</string>
     <string name="reader_dropdown_menu_tags">आपके टैग</string>
     <string name="stats_subscribers_marker_view_plural">अभिदाता</string>
     <string name="stats_subscribers_marker_view_singular">अभिदाता</string>
@@ -15,11 +14,8 @@ Language: hi_IN
     <string name="about_news">समाचार</string>
     <string name="dialog_button_ok" a8c-src-lib="module:editor">ठीक है</string>
     <string name="stop_upload_dialog_button_no" a8c-src-lib="module:editor">नहीं</string>
-    <string name="stop_save_dialog_ok_button" a8c-src-lib="module:editor">ठीक हैं</string>
     <string name="my_site_menu_tab_title">मेनू</string>
     <string name="user_profile_site_section_header">साइट</string>
-    <string name="gutenberg_native_new" a8c-src-lib="gutenberg">नया</string>
-    <string name="reader_post_details_header_by_author_name">द्वारा</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">छिपायें</string>
     <string name="login_or" a8c-src-lib="module:login">या</string>
@@ -33,7 +29,6 @@ Language: hi_IN
     <string name="main_switch_default_title_off">ऑफ</string>
     <string name="site_settings_site_accelerator_off">ऑफ</string>
     <string name="site_settings_site_accelerator_on">ऑन</string>
-    <string name="link_dialog_button_ok">ठीक है</string>
     <string name="domain_contact_information_city_hint">शहर</string>
     <string name="stats_months_and_years_views_label">व्यू</string>
     <string name="stats_insights_today_stats">आज</string>
@@ -95,7 +90,6 @@ Language: hi_IN
     <string name="login_site_address" a8c-src-lib="module:login">साइट का पता</string>
     <string name="login_continue" a8c-src-lib="module:login">जारी रखें</string>
     <string name="next">अगला</string>
-    <string name="open_mail" a8c-src-lib="module:login">मेल खोलें</string>
     <string name="post_title">शीर्षक</string>
     <string name="media_audio">ऑडियो</string>
     <string name="permission_camera">कैमरा</string>
@@ -121,9 +115,6 @@ Language: hi_IN
     <string name="notifications_label_new_notifications_subtitle">उन्हें दिखाने के लिए टैप करेंI</string>
     <string name="notifications_label_new_notifications">नई सूचनाएं I</string>
     <string name="like">लाइक</string>
-    <string name="timespan_now">अब</string>
-    <string name="visual_editor" a8c-src-lib="module:editor">विजुअल सम्पादक</string>
-    <string name="image_width">चौड़ाई </string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="send">भेजें</string>
     <string name="post_format_video">विडियो </string>
@@ -199,13 +190,8 @@ Language: hi_IN
     <string name="stats_insights_today">आज के आँकड़े</string>
     <string name="account_settings">अकाउंट सेटिंग्स</string>
     <string name="site_picker_add_self_hosted">सेल्फ-होस्टेड साइट डाले </string>
-    <string name="site_picker_edit_visibility">साइट्स दिखाए या छिपाये</string>
-    <string name="my_site_btn_view_site">साईट पर जाये</string>
     <string name="my_site_btn_switch_site">साइट स्विच करे</string>
-    <string name="my_site_header_publish">प्रकाशित</string>
     <string name="my_site_btn_blog_posts">पोस्ट</string>
-    <string name="show">दिखाएँ</string>
-    <string name="hide">छुपाएँ</string>
     <string name="select_all">सभी चुनें</string>
     <string name="language">भाषा</string>
     <string name="verification_code" a8c-src-lib="module:login">सत्यापन कोड</string>
@@ -262,8 +248,6 @@ Language: hi_IN
     <string name="http_authorization_required" a8c-src-lib="module:login">प्रमाणीकरण आवश्यक</string>
     <string name="edit_comment">टिप्पणी संपादित करें</string>
     <string name="category_name">श्रेणी नाम</string>
-    <string name="create_a_link" a8c-src-lib="module:editor">एक कड़ी बनाएं</string>
-    <string name="image_settings">छवि सेटिंग्स</string>
     <string name="learn_more">और जानें</string>
     <string name="link_enter_url_text">कड़ी शब्द (वैकल्पिक)</string>
     <string name="new_media">नया मीडिया</string>
@@ -314,7 +298,6 @@ Language: hi_IN
     <string name="reader_btn_share">साझा करे</string>
     <string name="reader_likes_only_you">आपने इसे पसंद किया</string>
     <string name="reader_btn_follow">अनुसरण करे</string>
-    <string name="reader_label_removed_tag">हटाये गए %s</string>
     <string name="reader_toast_err_url_intent">खोलने में असमर्थ %s</string>
     <string name="reader_toast_err_share_intent">साझा करने में असमर्थ</string>
     <string name="reader_toast_err_view_image">छवि को देखने में असमर्थ</string>

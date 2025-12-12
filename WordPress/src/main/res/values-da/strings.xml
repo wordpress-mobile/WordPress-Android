@@ -29,7 +29,6 @@ Language: da_DK
     <string name="sign_in_wpcom">Log ind i WordPress.com</string>
     <string name="reader_label_local_related_posts">Mere fra %s</string>
     <string name="invite_invalid_email">%s: ugyldig e-mail</string>
-    <string name="error_post_my_profile_no_connection">Der er ingen forbindelse, din profil kunne ikke gemmes</string>
     <string name="alignment_left">Venstre</string>
     <string name="error_fetch_users_list">Kunne ikke hente sidens brugere</string>
     <string name="people_dropdown_item_team">Hold</string>
@@ -83,23 +82,13 @@ Language: da_DK
     <string name="me_connect_to_wordpress_com">Forbind til WordPress.com</string>
     <string name="me_btn_login_logout">Log ind/ud</string>
     <string name="account_settings">Kontoindstillinger</string>
-    <string name="site_picker_cant_hide_current_site">\"%s\" blev ikke skjult, fordi det er det aktuelle websted</string>
     <string name="site_picker_create_wpcom">Opret WordPress.com websted</string>
-    <string name="site_picker_edit_visibility">Vis/skjul websteder</string>
     <string name="site_picker_add_self_hosted">Tilføj websted fra egen udbyder</string>
     <string name="site_picker_add_a_site">Tilføj nyt websted</string>
-    <string name="my_site_btn_view_site">Vis websted</string>
     <string name="site_picker_title">Vælg websted</string>
     <string name="my_site_btn_switch_site">Skift websted</string>
-    <string name="my_site_btn_view_admin">Vis administration</string>
-    <string name="my_site_header_publish">Udgiv</string>
     <string name="my_site_btn_blog_posts">Blogindlæg</string>
-    <string name="my_site_header_look_and_feel">Udseende</string>
     <string name="my_site_btn_site_settings">Webstedsindstillinger</string>
-    <string name="my_site_header_configuration">Konfiguration</string>
-    <string name="deselect_all">Fravælg alle</string>
-    <string name="show">Vis</string>
-    <string name="hide">Skjul</string>
     <string name="select_all">Vælg alle</string>
     <string name="language">Sprog</string>
     <string name="auth_required" a8c-src-lib="module:login">Log ind igen for at fortsætte.</string>
@@ -186,7 +175,6 @@ Language: da_DK
     <string name="error_moderate_comment">Kunne ikke moderere</string>
     <string name="error_edit_comment">Kunne ikke redigere kommentaren</string>
     <string name="error_load_comment">Kunne ikke loade kommentaren</string>
-    <string name="create_a_link" a8c-src-lib="module:editor">Opret et link</string>
     <string name="select_categories">Vælg kategorier</string>
     <string name="connection_error">Forbindelsesfejl</string>
     <string name="learn_more">Lær mere</string>
@@ -210,7 +198,6 @@ Language: da_DK
     <string name="new_post">Nyt indlæg</string>
     <string name="new_media">Nyt medie</string>
     <string name="wordpress_blog">WordPress-blog</string>
-    <string name="image_settings">Billedeindstillinger</string>
     <string name="local_draft">Lokal kladde</string>
     <string name="reader_title_applog">Applikationslog</string>
     <string name="horizontal_alignment" a8c-src-lib="module:editor">Vandret justering</string>
@@ -238,7 +225,6 @@ Language: da_DK
     <string name="reader_btn_share">Del</string>
     <string name="reader_btn_follow">Følg</string>
     <string name="reader_label_added_tag">Tilføjede %s</string>
-    <string name="reader_label_removed_tag">Fjernede %s</string>
     <string name="reader_likes_only_you">Du synes godt om dette</string>
     <string name="empty_list_default">Listen er tom</string>
     <string name="reader_untitled_post">(Ingen titel)</string>

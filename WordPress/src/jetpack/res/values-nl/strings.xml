@@ -31,7 +31,5 @@ Language: nl
     <string name="support_ticket_subject">Jetpack voor Android Support</string>
     <string name="login_magic_links_sent_label">Controleer je e-mail op dit apparaat en tik op de link in de e-mail die je van Jetpack.com hebt ontvangen.</string>
     <string name="continue_with_wpcom_no_signup">Doorgaan met WordPress.com</string>
-    <string name="app_tagline">Veiligheid en prestaties van de site vanuit je broekzak</string>
     <string name="post_signup_interstitial_title">Welkom bij Jetpack</string>
-    <string name="app_title">Jetpack voor Android</string>
 </resources>

@@ -78,7 +78,6 @@ Language: mk
     <string name="connection_error">Грешка во поврзувањето</string>
     <string name="post_not_found">Настана грешка при вчитување на написот. Освежи ги написите и обиди се повторно.</string>
     <string name="learn_more">Научи повеќе</string>
-    <string name="create_a_link" a8c-src-lib="module:editor">Креирај врска</string>
     <string name="page_settings">Подесувања на страницата</string>
     <string name="http_authorization_required" a8c-src-lib="module:login">Ауторизација е потребна</string>
     <string name="mnu_comment_spam">Спам</string>
@@ -88,7 +87,6 @@ Language: mk
     <string name="comment_status_approved">Одобрено</string>
     <string name="comment_status_unapproved">Чекање</string>
     <string name="saving_changes">Зачувување на подесувањата</string>
-    <string name="image_settings">Подесувања на сликата</string>
     <string name="wordpress_blog">WordPress блог</string>
     <string name="select_categories">Избери категории</string>
     <string name="fatal_db_error">Настана грешка при креирање на базата на податоци за апликацијата. Направи преинсталирање на апликацијата.</string>
@@ -121,7 +119,6 @@ Language: mk
     <string name="reader_toast_err_get_post">Неможе да се вчита овој напис</string>
     <string name="pick_video">Избери видео</string>
     <string name="reader_likes_you_and_one">На вас и на уште еден му се допаѓа ова</string>
-    <string name="reader_label_removed_tag">Одстранети %s</string>
     <string name="empty_list_default">Оваа листа е празна</string>
     <string name="reader_untitled_post">(без наслов)</string>
     <string name="reader_btn_share">Сподели</string>

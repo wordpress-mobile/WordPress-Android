@@ -53,38 +53,24 @@ Language: sq_AL
     <string name="he_support_send_button">Dërgoje</string>
     <string name="he_support_reply_button">Përgjigjuni</string>
     <string name="he_support_last_updated">Përditësuar së fundi më %1$s</string>
-    <string name="he_support_message_count">%1$d Mesazhe</string>
     <string name="he_support_empty_conversations_button">Nisni Bisedë</string>
     <string name="he_support_empty_conversations_message">Nisni një bisedë me ekipin tonë të asistencës, për të marrë ndihmë lidhur me pyetjet tuaja.</string>
     <string name="he_support_empty_conversations_title">Ende pa biseda</string>
     <string name="he_support_new_conversation_content_description">Bisedë e re</string>
     <string name="he_support_conversations_title">Biseda Me Asistencën</string>
-    <string name="ai_bot_time_weeks_ago">%1$d javë më parë</string>
-    <string name="ai_bot_time_week_ago">%1$d javë më parë</string>
-    <string name="ai_bot_time_days_ago">%1$d ditë më parë</string>
-    <string name="ai_bot_time_day_ago">%1$d ditë më parë</string>
-    <string name="ai_bot_time_hours_ago">%1$d orë më parë</string>
-    <string name="ai_bot_time_hour_ago">%1$d orë më parë</string>
-    <string name="ai_bot_time_minutes_ago">%1$d minuta më parë</string>
-    <string name="ai_bot_time_minute_ago">%1$d minutë më parë</string>
     <string name="ai_bot_time_just_now">Mu tani</string>
-    <string name="ai_bot_default_conversation_title">Bisedë e Re</string>
     <string name="ai_bot_welcome_message">Jam asistenti juaj IA personal. Mund t’ju ndihmoj me çfarëdo pyetjesh rreth sajtit apo llogarisë tuaj.</string>
     <string name="ai_bot_welcome_greeting">Njatjeta %1$s 👋</string>
     <string name="ai_bot_message_input_placeholder">Shtypni një mesazh…</string>
     <string name="ai_bot_send_button_content_description">Dërgoje</string>
     <string name="ai_bot_support_bot">Robot Asistence</string>
     <string name="ai_bot_you">Ju</string>
-    <string name="ai_bot_empty_conversations_button">Nisni bisedë</string>
-    <string name="ai_bot_empty_conversations_message">Nisni një bisedë të re, që të merrni ndihmë rreth sajtit apo llogarisë tuaj WordPress.</string>
-    <string name="ai_bot_empty_conversations_title">Ende pa biseda</string>
     <string name="ai_bot_generic_error">Diç shkoi ters. Ju lutemi, riprovoni më vonë.</string>
     <string name="ai_bot_new_conversation_content_description">Bisedë e re</string>
     <string name="ai_bot_back_button_content_description">Mbrapsht</string>
     <string name="ai_bot_conversations_title">Biseda</string>
     <string name="create">Krijoje</string>
     <string name="logs_screen_general_error">Diç shkoi ters…</string>
-    <string name="logs_screen_log_count">%d zëra regjistri</string>
     <string name="logs_screen_empty_state">S’ka regjistra</string>
     <string name="support_screen_user_avatar_content_description">Avatar përdoruesi</string>
     <string name="support_screen_application_logs_description">Mjet i thelluar për të diagnostikuar probleme</string>
@@ -98,7 +84,6 @@ Language: sq_AL
     <string name="support_screen_help_center_title">Qendër Ndihme</string>
     <string name="support_screen_how_can_we_help_title">Si mund të ndihmojmë?</string>
     <string name="support_screen_login_button">Bëni hyrjen në WordPress.com</string>
-    <string name="support_screen_profile_section_title">Profil Asistence</string>
     <string name="support_screen_title">Asistencë</string>
     <string name="modern_support_description">Aktivizoni funksionimin e ri, modern të asistencës</string>
     <string name="modern_support">Asistencë Moderne</string>
@@ -114,7 +99,6 @@ Language: sq_AL
     <string name="term_parent_none">Asnjë</string>
     <string name="term_parent_label">Mëmë:</string>
     <string name="term_count">Numër: %1$d</string>
-    <string name="term_count_label">Numër:</string>
     <string name="term_description_label">Përshkrim:</string>
     <string name="term_slug_label">Identifikues:</string>
     <string name="term_name_label">Emër:</string>
@@ -159,7 +143,6 @@ Language: sq_AL
     <string name="subscribers_delete_confirmation_message">Jeni i sigurt se doni të fshihet ky pajtimtar?</string>
     <string name="subscribers_delete_confirmation_title">Fshi pajtimtar</string>
     <string name="subscribers_sort_name">Emër</string>
-    <string name="jetpack_rest_connection_error_connect_wpcom">S’arrihet të lidhet me WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">I mbaroi koha</string>
     <string name="jetpack_rest_connection_cancel_message">Procesi i lidhjes së Jetpack-ut është në kryerje e sipër. Jeni i sigurt se doni të anulohet?</string>
     <string name="jetpack_rest_connection_cancel_title">Të anulohet Ujdisja e Jetpack-ut?</string>
@@ -171,8 +154,6 @@ Language: sq_AL
     <string name="jetpack_rest_connection_step_connect_user">Lidheni përdoruesin te WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Instaloni shtojcën Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Hyni në WordPress.com</string>
-    <string name="jetpack_rest_connection_title">Lidhja e Jetpack-ut</string>
-    <string name="experimental_subscribers_feature_description">Shihni dhe administroni pajtimtarë buletini</string>
     <string name="start">Fillo</string>
     <string name="descending">Zbritës</string>
     <string name="ascending">Rritës</string>
@@ -207,7 +188,6 @@ Language: sq_AL
     <string name="subscribers_clicked_label">I klikuar</string>
     <string name="subscribers_opened_label">Hapur</string>
     <string name="subscribers_emails_sent_label">Email-e</string>
-    <string name="subscribers_subscription_status">Gjendje pajtimi</string>
     <string name="subscribers_error_title">Diç shkoi ters</string>
     <string name="subscribers_empty_search">S’u gjetën përfundime</string>
     <string name="subscribers_empty">S’ka pajtimtarë</string>
@@ -225,9 +205,7 @@ Language: sq_AL
     <string name="invite_users">Ftoni përdorues</string>
     <string name="experimental_application_password_feature_description">Që të hyhet në sajte të vetëstrehuar, aktivizoni Fjalëkalim Aplikacionesh</string>
     <string name="experimental_application_password_feature">Hyrje me Fjalëkalim Aplikacioni</string>
-    <string name="experimental_subscribers_feature">Pajtimtarë eksperimentalë</string>
     <string name="cant_share_no_blog">S’mund të ndani me të tjerët në WordPress pa një blog</string>
-    <string name="coming_soon">Së afërmi!</string>
     <string name="me_email_verification_generic_error">S’arrihet të dërgohet lidhje verifikimi</string>
     <string name="me_email_verification_resend">Ridërgo lidhje verifikimi</string>
     <string name="me_email_verification_sent_description">Kontrolloni te email-et tuaj te %s për email-in e ripohimit</string>
@@ -240,7 +218,6 @@ Language: sq_AL
     <string name="experimental_features_feedback_dialog_decline">Jo tani</string>
     <string name="experimental_features_feedback_dialog_message">Dëshironi të ndani me të tjerë përshtypje rreth përpunuesit eksperimental?</string>
     <string name="experimental_features_feedback_dialog_title">Jepni përshtypje</string>
-    <string name="experimental_block_editor_plugins">Shtojca eksperimentale përpunuesi me blloqe</string>
     <string name="experimental_block_editor_description">Përdorni lloje blloqesh dhe rregullime shtesë</string>
     <string name="experimental_block_editor_note">Përpunuesi eksprerimental me blloqe do të bëhet parazgjedhja, në një hedhje të ardhshme në qarkullim dhe aftësia për ta aktivizuar do të hiqet.</string>
     <string name="disable_experimental_block_editor_description">Zgjidhni lënien jashtë nga lloje blloqesh dhe rregullime shtesë</string>
@@ -260,7 +237,6 @@ Language: sq_AL
     <string name="nickname">Nofkë</string>
     <string name="name">Emër</string>
     <string name="no_users">S’ka përdorues</string>
-    <string name="user">Përdorues</string>
     <string name="users">Përdorues</string>
     <string name="me_btn_help_and_support">Ndihmë &amp; Asistencë</string>
     <string name="me_btn_experimental_features">Veçori Eksperimentale</string>
@@ -283,7 +259,6 @@ Language: sq_AL
     <string name="send_feedback">Dërgoni përshtypje</string>
     <string name="media_pager_remove_item_content_description">Hiq objektin %1$d</string>
     <string name="feedback_form_add_attachments">Shtoni bashkëngjitje</string>
-    <string name="feedback_form_unable_to_create_tempfile">S’arrihet të krijohet kartelë e përkohshme</string>
     <string name="feedback_form_attachment_already_added">Bashkëngjitje e shtuar tashmë</string>
     <string name="feedback_form_attachment_too_large">Bashkëngjitjet duhet të jenë 32MB, ose më të vogla</string>
     <string name="feedback_form_unsupported_attachment">Ky lloj kartelash nuk mbulohet</string>
@@ -307,7 +282,6 @@ Language: sq_AL
     <string name="voice_to_content_processing_label">Përpunim</string>
     <string name="voice_to_content_error_label">Gabim</string>
     <string name="voice_to_content_processing">Po përpunohet</string>
-    <string name="gutenberg_native_tap_to_edit" a8c-src-lib="gutenberg">Prekeni që ta përpunoni</string>
     <string name="voice_to_content_permissions_required_msg">Që të incizojë audio, ky aplikacion lyp leje përdorimi të mikrofonit tuaj. Këtë leje e keni mohuar më herët. Ju lutemi, që të përdoret kjo veçori, jepni leje mikrofoni, që nga rregullimet e aplikacionit.</string>
     <string name="voice_to_content_permissions_required_title">Lypset Leje Për Incizim Audio</string>
     <string name="permission_access_media_location">Vendndodhje Mediash</string>
@@ -356,7 +330,6 @@ Language: sq_AL
     <string name="stats_view_emails">Email-e</string>
     <string name="stats_view_subscribers">Pajtimtarë</string>
     <string name="stats_view_total_subscribers">Pajtimtarë Gjithsej</string>
-    <string name="stats_view_subscriber_totals">Pajtimtarë Gjithsej</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
     <string name="stats_emails_clicks_label">Klikime</string>
     <string name="stats_emails_opens_label">Hapje</string>
@@ -394,9 +367,7 @@ Language: sq_AL
     <string name="reader_preferences_screen_font_size_label">Madhësi Shkronjash</string>
     <string name="reader_preferences_screen_font_family_label">Shkronja</string>
     <string name="reader_preferences_screen_theme_label">Skemë Ngjyrash</string>
-    <string name="reader_preferences_screen_preview_text_feedback_label">jepni përshtypjet tuaja</string>
     <string name="experimental_badge">&lt;Eksperimentale&gt;</string>
-    <string name="gutenberg_native_clear_selected_color" a8c-src-lib="gutenberg">Hiqe ngjyrën e përzgjedhur</string>
     <string name="reader_no_followed_tags_text_title">Pa etiketa të ndjekura</string>
     <string name="reader_toast_err_tag_already_following">E ndiqni tashmë këtë etiketë</string>
     <string name="reader_menu_reading_preferences">Parapëlqime Leximi</string>
@@ -408,25 +379,11 @@ Language: sq_AL
     <string name="reader_preferences_theme_sepia">Sepia</string>
     <string name="reader_preferences_theme_soft">Butë</string>
     <string name="reader_preferences_theme_system">Parazgjedhje</string>
-    <string name="reader_preferences_screen_preview_text_feedback_link">jepni përshtypjet tuaja</string>
-    <string name="reader_preferences_screen_preview_text_feedback">Kjo është veçori e re ende në zhvillim. Që të na ndihmoni ta përmirësojmë, %s.</string>
     <string name="reader_preferences_screen_preview_text">Zgjidhni ngjyra, shkronja dhe madhësi tuajat. Bëni këtu paraparje të përzgjedhjes tuaj dhe lexoni postime me stilet tuaja, pasi të keni mbaruar.</string>
     <string name="reader_preferences_screen_preview_title">Parapëlqime Leximi</string>
     <string name="reader_filter_empty_tags_action_follow">Ndiqni një etiketë</string>
     <string name="button_read">Lexoni</string>
-    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" a8c-src-lib="gutenberg">Mund ta kopjoni tekstin e  postimit tuaj, në rast se preket lënda juaj. Kopjoni hollësi gabimi, për diagnostikim dhe për t’ia dhënë asistencës.</string>
-    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" a8c-src-lib="gutenberg">Përpunuesi hasi një gabim të papritur</string>
-    <string name="gutenberg_native_tap_here_to_copy_post_text" a8c-src-lib="gutenberg">Prekeni këtu, që të kopjohet tekstin e postimit</string>
-    <string name="gutenberg_native_tap_here_to_copy_error_details" a8c-src-lib="gutenberg">Prekeni këtu, që të kopjohen hollësi gabimi</string>
-    <string name="gutenberg_native_copy_post_text" a8c-src-lib="gutenberg">Kopjo tekst postimi</string>
-    <string name="gutenberg_native_copy_error_details" a8c-src-lib="gutenberg">Kopjo hollësi gabimi</string>
-    <string name="gutenberg_native_button_to_copy_post_text" a8c-src-lib="gutenberg">Buton për “Kopjo tekst postimi”</string>
-    <string name="gutenberg_native_button_to_copy_error_details" a8c-src-lib="gutenberg">Buton për “Kopjo hollësi gabimi”</string>
     <string name="editor_updating_content_failed">S’u arrit të përditësohet lëndë</string>
-    <string name="gutenberg_native_video_caption_s_0141bd20" a8c-src-lib="gutenberg">Legjendë videoje. %s</string>
-    <string name="gutenberg_native_video_caption_empty_663aab49" a8c-src-lib="gutenberg">Legjendë videoje. E zbrazët</string>
-    <string name="gutenberg_native_edit_video_024aee6d" a8c-src-lib="gutenberg">Përpunoni video</string>
-    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" a8c-src-lib="gutenberg">Vetëluajtja mund të shkaktojë probleme përdorimi për disa përdorues.</string>
     <string name="notifications_action_mark_all_as_read">Vëru krejt shenjë si të lexuar</string>
     <string name="notifications_unread_content_description">Të palexuar</string>
     <string name="qrcode_media_deeplink_error">Sajti s’u gjet. Kontrolloni nëse keni bërë hyrjen te llogaria e saktë.</string>
@@ -455,13 +412,11 @@ Language: sq_AL
     <string name="reader_label_choose_interests">Zgjidhni ç’ju intereson</string>
     <string name="reader_label_subscribers_count_single">1 pajtimtar</string>
     <string name="reader_label_subscribers_count">%s pajtimtarë</string>
-    <string name="reader_label_subscribe_count">%,d Pajtimtarë</string>
     <string name="reader_label_blog_subscribed">U pajtuat në blog</string>
     <string name="reader_hint_search_subscribed_blogs">Kërkoni te blogje të pajtuar</string>
     <string name="reader_btn_subscribed">I pajtuar</string>
     <string name="reader_btn_subscribe">Pajtohuni</string>
     <string name="reader_menu_block_this_blog">Bllokoje këtë blog</string>
-    <string name="reader_menu_tags_and_blogs">Përpunoni etiketa dhe blogje</string>
     <string name="reader_page_followed_blogs_title">Blogje me pajtime</string>
     <string name="reader_title_tags">Ndiqni etiketa</string>
     <string name="reader_activity_title_manage_tags_blogs">Administroni Etiketa &amp; Blogje</string>
@@ -482,24 +437,15 @@ Language: sq_AL
     <string name="reader_dropdown_menu_discover">Zbuloni</string>
     <string name="reader_search_content_description">Kërko</string>
     <string name="reader_discover_no_posts_button_tags_text_follow">Ndiqni etiketa</string>
-    <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogje ku të pajtoheni</string>
     <string name="reader_filter_empty_tags_action_suggested">Etiketa të sugjeruara</string>
     <string name="reader_filter_empty_blogs_action_search">Kërkoni për një blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Ndiqni një etiketë dhe do të jeni në gjendje të shihni këtu postimet më të mira.</string>
     <string name="reader_filter_empty_tags_list_title">Pa etiketa</string>
     <string name="reader_filter_empty_blogs_list_text">Pajtohuni në blogje te Zbuloni dhe do të shihni këtu postimet e tyre më të reja. Ose kërkoni për një blog që ju pëlqen tashmë.</string>
     <string name="reader_filter_empty_blogs_list_title">S’ka pajtime në blog</string>
-    <string name="reader_filter_empty_blogs_action">Pajtohuni te një blog</string>
-    <string name="reader_filter_empty_blogs_list">Shihni postimet më të reja prej blogjesh ku jeni pajtuar</string>
     <string name="reader_filter_by_tag_title">Filtroji sipas etiketash</string>
     <string name="reader_filter_by_blog_title">Filtroji sipas blogjesh</string>
-    <string name="gutenberg_native_waiting_for_connection" a8c-src-lib="gutenberg">Po pritet për lidhje</string>
     <string name="stats_traffic">Trafik</string>
-    <string name="gutenberg_native_working_offline" a8c-src-lib="gutenberg">Punim i Palidhur</string>
-    <string name="gutenberg_native_network_connection_re_established" a8c-src-lib="gutenberg">Lidhja me rrjetin u rivendos</string>
-    <string name="gutenberg_native_network_connection_lost_working_offline" a8c-src-lib="gutenberg">Humbi lidhja me rrjetin, po punohet pa u lidhur</string>
-    <string name="gutenberg_native_font_size_1_s" a8c-src-lib="gutenberg">Madhësi Shkronjash, %1$s</string>
-    <string name="gutenberg_native_file_type_not_supported_as_a_media_file" a8c-src-lib="gutenberg">Lloj kartelash i pambuluar si kartelë media.</string>
     <string name="media_cannot_be_started">S’hapim dot media tani. Ju lutemi, riprovoni më vonë</string>
     <string name="domains_just_search_for_a_domain_button">Thjesht kërko për një përkatësi</string>
     <string name="domains_upgrade_to_a_plan_button">Përmirësojeni me një plan</string>
@@ -521,18 +467,12 @@ Language: sq_AL
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">Për muajin janar, cytjet për blogim do të vijnë nga Bloganuary — sfida e bashkësisë tonë për të krijuar një zakon blogimi për vitin e ri.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary po vjen!</string>
-    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" a8c-src-lib="gutenberg">Për këtë arsye, rekomandojmë përpunimin e bllokut duke përdorur shfletuesin tuaj.</string>
-    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" a8c-src-lib="gutenberg">Për këtë arsye, rekomandojmë përpunimin e bllokut duke përdorur përpunuesin web.</string>
-    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" a8c-src-lib="gutenberg">Ndryshe, mund ta sheshoni lëndën duke hequr bllokun nga grupi.</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Kaloni te rregullimet</string>
     <string name="barcode_scanning_alert_dialog_dismiss_label">Anuloje</string>
     <string name="barcode_scanning_alert_dialog_rationale_cta_label">Akordoje</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_message">Keni mohuar përgjithmonë leje Kamerës. Është e domosdoshme për të skanuar kodin me vija. Ju lutemi, aktivizojeni që prej rregullimeve të aplikacionit</string>
     <string name="barcode_scanning_alert_dialog_rationale_message">Që të skanohet kodi me vija, lypsen leje mbi kamerën</string>
     <string name="barcode_scanning_alert_dialog_title">Akordoni Leje Mbi Kameran</string>
-    <string name="barcode_scanning_camera_permission_denied">Që të skanohet kodi me vija, lypsen leje mbi kamerën.</string>
-    <string name="barcode_scanning_title">Skanoni Kod Me Vija</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" a8c-src-lib="gutenberg">Blloqe brenda njëri-tjetri më thellë se %d nivele mund të mos funksionojnë si duhet te përpunuesi për celular.</string>
     <string name="jp_migration_lets_go_button">Shkojmë</string>
     <string name="jp_migration_done_no_sites_message">Ka ardhur koha a vazhdoni udhëtimin tuaj WordPress te aplikacioni Jetpack.</string>
     <string name="domain_management_clear_search">Spastroje kërkimin</string>
@@ -554,10 +494,7 @@ Language: sq_AL
     <string name="domain_management_error_title">S’u morën dot përkatësitë tuaja</string>
     <string name="site_domain_title">Përkatësi Sajti</string>
     <string name="my_site_blogging_prompt_card_attribution_bloganuary">Nga &lt;b&gt;Bloganuary&lt;/b&gt;</string>
-    <string name="post_status_post_edited">I përpunuar</string>
     <string name="post_list_toggle_author_filter">Filtroji sipas autorësh</string>
-    <string name="gutenberg_native_s_block_converted_to_blocks" a8c-src-lib="gutenberg">Blloku “%s ” u shndërrua në blloqe</string>
-    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks" a8c-src-lib="gutenberg">Ndryshe, mund ta shndërroni lëndën në blloqe.</string>
     <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Shkurtore Joaktive</string>
     <string name="personalization_screen_tab_shortcuts_active_shortcuts">Shkurtore Aktive</string>
     <string name="personalization_screen_shortcuts_tab_title">Shkurtore</string>
@@ -588,17 +525,10 @@ Language: sq_AL
     <string name="reader_secondary_bookmarked">U ruajt</string>
     <string name="reader_secondary_bookmark">Ruaje</string>
     <string name="reader_discover_recommended_header_new">Mund t’ju pëlqente edhe</string>
-    <string name="gutenberg_native_ungroup_block" a8c-src-lib="gutenberg">Hiqe bllokun nga grupi</string>
-    <string name="gutenberg_native_tap_here_to_show_more_details" a8c-src-lib="gutenberg">Prekeni këtu, që të shihni më tepër hollësi.</string>
-    <string name="gutenberg_native_synced_patterns" a8c-src-lib="gutenberg">Modele të njëkohësuar</string>
-    <string name="gutenberg_native_deeply_nested_block" a8c-src-lib="gutenberg">Bllok i futur thellë brenda të tjerësh</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78" a8c-src-lib="gutenberg">Blloqe brenda të tjerësh më thellë se %d shkallë mund të mos vizatohen si duhet në përpunuesin për celular. Për këtë arsye, rekomandojmë sheshimin e lëndë duke hequr grupin e bllokut, ose përpunimin e bllokut duke përdorur përpunuesin web.</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for" a8c-src-lib="gutenberg">Blloku s’vizatohet dot, ngaqë është i futur thellë të tjerësh. Për më tepër hollësi, prekni këtu.</string>
     <string name="pages_no_site_something_went_wrong">Hëm, diç shkoi ters. Ju lutemi, riprovoni më vonë.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Kaloni në web</string>
     <string name="my_site_dashboard_no_cards_message_description">Që të shfaqen më tepër karta, prekni butonin e personalizimit.</string>
     <string name="my_site_dashboard_no_cards_message_title">Krejt kartat janë të fshehura</string>
-    <string name="personalization_screen_next_steps_card_description">Mësoni se si të përfitoni përmes aplikacionit maksimumin prej sajtit tuaj.</string>
     <string name="personalization_screen_activity_log_card_description">Veprime të ndërmarra së fundi në sajtin tuaj.</string>
     <string name="personalization_screen_pages_card_description">Përmbledhje e faqeve të sajtit tuaj.</string>
     <string name="personalization_screen_blogging_prompts_card_description">Ide të përditshme për postime në blogun tuaj.</string>
@@ -620,28 +550,18 @@ Language: sq_AL
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Shihni krejt fushatat</string>
     <string name="dashboard_activity_card_menu_all_activity">Krejt veprimtaria</string>
     <string name="dashboard_pages_card_more_menu_all_pages">Krejt faqet</string>
-    <string name="gutenberg_native_choose_a_file" a8c-src-lib="gutenberg">Zgjidhni kartelë</string>
-    <string name="gutenberg_native_add_image_or_video" a8c-src-lib="gutenberg">Shtoni figurë ose video</string>
     <string name="my_site_post_card_menu_view_all_scheduled_posts">Shihni krejt postimet e planifikuar</string>
     <string name="my_site_post_card_menu_view_all_drafts">Shihni krejt skicat</string>
     <string name="my_site_todays_stats_menu_view_stats">Shihni statistika</string>
     <string name="my_site_dashboard_card_more_menu_hide_card">Fshihe këtë</string>
     <string name="contact_support_first_message_hint">Nëse s’i përgjigjem dot pyetjes tuaj, do t’ju ndihmoj të hapni një çështje asistence për ekipin tonë!</string>
     <string name="contact_support_first_message_hi">Njatjeta, jam Asistenti IA i Jetpack-ut.</string>
-    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" a8c-src-lib="gutenberg">Për rregullime të mëtejshme, hapeni këtë bllok Paywall në shfletuesin tuaj.</string>
     <string name="contact_support_bot_ticket_comment_answer">Përgjigje:</string>
     <string name="contact_support_bot_ticket_comment_question">Pyetje:</string>
     <string name="contact_support_bot_ticket_comment_start">Transkriptim Nga Roboti Jetpack Mobile:</string>
     <string name="contact_support_bot_ticket_error">Gabim gjatë parashtrimit të kërkesës për asistencë</string>
     <string name="contact_support_bot_ticket_message">Çështja u krijua</string>
     <string name="contact_support_bot_ticket_loading">Po krijohet kërkesë për asistencë…</string>
-    <string name="contact_support_question_six">Si mund ta përdor përkatësinë time vetjake te aplikacioni?</string>
-    <string name="contact_support_question_five">Harrova hollësitë e mia për hyrje</string>
-    <string name="contact_support_question_four">Pse s’bëj dot hyrjen?</string>
-    <string name="contact_support_question_three">S’ngarkoj dot foto/video</string>
-    <string name="contact_support_question_two">Ndihmë, sajti im është jashtë pune!</string>
-    <string name="contact_support_question_one">Cila është adresa e sajtit tim?</string>
-    <string name="contact_support_suggestions">S’jeni i sigurt për çfarë të pyesni?</string>
     <string name="contact_support_get_support">Lidhuni me asistencën</string>
     <string name="contact_support_first_message">Me se mund t’ju ndihmoj?</string>
     <string name="contact_support_input_placeholder">Dërgoni një mesazh…</string>
@@ -665,10 +585,6 @@ Language: sq_AL
     <string name="post_settings_jetpack_social_share_message_title">Përshtateni mesazhin</string>
     <string name="post_settings_jetpack_social_connect_not_now_button">Jo tani</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">Lidhni llogari</string>
-    <string name="gutenberg_native_insert_video_block" a8c-src-lib="gutenberg">Futni Bllok Video</string>
-    <string name="gutenberg_native_insert_image_block" a8c-src-lib="gutenberg">Futni Bllok Figure</string>
-    <string name="gutenberg_native_insert_gallery_block" a8c-src-lib="gutenberg">Futni Bllok Galerie</string>
-    <string name="gutenberg_native_insert_audio_block" a8c-src-lib="gutenberg">Futni Bllok Audio</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Krijoni</string>
     <string name="campaign_listing_page_no_campaigns_message_description">S’keni krijuar ende ndonjë fushatë. Klikoni mbi “Krijoni”, që t’ia filloni.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">S’keni fushata</string>
@@ -685,7 +601,6 @@ Language: sq_AL
     <string name="campaign_status_active">AKTIVE</string>
     <string name="blaze_campaigns_card_footer_label">Krijoni Fushatë</string>
     <string name="blaze_campaigns_card_title">Fushatë Blaze</string>
-    <string name="promote_blaze_flow_error">S’u ngarkua dot rrjedhë promocioni Blaze</string>
     <string name="prepublishing_nudges_social_new_connection_text">Shtoni trafikun tuaj, duke ndarë automatikisht postimet tuaja me shokët në tuaja në media shoqërore.</string>
     <string name="menu_close_editor">Mbylle përpunuesin</string>
     <string name="menu_redo_context">Ribëj ndryshimin e fundit</string>
@@ -694,10 +609,6 @@ Language: sq_AL
     <string name="post_settings_jetpack_social_subscribe_share_more">Pajtohuni, që të ndani më tepër me të tjerët</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Shtoni trafikun tuaj, duke ndarë automatikisht postimet tuaja me shokët në tuaja në media shoqërore.</string>
     <string name="post_settings_jetpack_social_header">Ndarje Me të Tjerë Në Rrjete Shoqërorë</string>
-    <string name="gutenberg_native_s_detached" a8c-src-lib="gutenberg">%s u shkëput</string>
-    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios" a8c-src-lib="gutenberg">Përpunimi i blloqeve të njëkohësuar nuk mbulohet ende në %s për iOS</string>
-    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android" a8c-src-lib="gutenberg">Përpunimi i blloqeve të njëkohësuar nuk mbulohet ende në %s për Android</string>
-    <string name="gutenberg_native_reusable" a8c-src-lib="gutenberg">I ripërdorshëm</string>
     <string name="privacy_banner_error_save">Pati një gabim në ruajtjen e zgjedhjeve tuaja për privatësinë.</string>
     <string name="privacy_banner_save">Ruaje</string>
     <string name="privacy_banner_settings">Rregullime</string>
@@ -707,8 +618,6 @@ Language: sq_AL
     <string name="privacy_banner_description">Privatësia juaj është në mënyrë kritike e rëndësishme për ne dhe ka qenë përherë. Ne përdorim, depozitojmë dhe përpunojmë të dhënat tuaja personale për të bërë sa më optimal aplikacionin tonë (dhe punimin tuaj) në rrugë të ndryshme. Disa përdorime të të dhënave tuaja na duhen absolutisht, që të mund t’i bëjmë gjërat të funksionojnë, të tjerat mund t’i përshtatni që nga Rregullimet tuaja.</string>
     <string name="tabbar_accessibility_label_me">Unë. Administroni hollësitë e profilit tuaj.</string>
     <string name="social_item_message_title">Mesazh</string>
-    <string name="gutenberg_native_block_ungrouped" a8c-src-lib="gutenberg">Blloku u hoq nga grupi</string>
-    <string name="gutenberg_native_block_grouped" a8c-src-lib="gutenberg">Blloku u grupua</string>
     <string name="dashboard_card_plans_checkout_success_info">Mund të duhen deri në 30 minuta që përkatësia juaj vetjake të fillojë të funksionojë.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Përkatësia juaj e re &lt;b&gt;%s&lt;/b&gt; po ujdiset.</string>
     <string name="dashboard_card_plans_checkout_success_title">Gati për punë!</string>
@@ -731,13 +640,10 @@ Language: sq_AL
     <string name="sharing_twitter_deprecation_notice_find_out_more">Shihni më tepër</string>
     <string name="sharing_twitter_deprecation_notice_description">Ndarja e automatizuar me të tjerë që nga Twitter s’mund të përdoret më, për shkak ndryshimesh në kushte dhe çmim nga ana e Twitter-it.</string>
     <string name="sharing_twitter_deprecation_notice_title">Ndarja e automatizuar me të tjerë që nga Twitter s’mund të përdoret më</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios" a8c-src-lib="gutenberg">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në %s për iOS</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android" a8c-src-lib="gutenberg">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në %s për Android</string>
     <string name="jp_migration_notifications_allow_title">Lejoni njoftime, që të jeni në dijeni se ç’ndodh në sajtin tuaj</string>
     <string name="wp_jp_static_poster_message">Aplikacioni Jetpack ka krejt anët e aplikacionit WordPress dhe tanimë edhe hyrje përjashtimore te Statistika, Lexues, Njoftime, etj.</string>
     <string name="wp_jp_static_poster_title_plural">Përdorni WordPress-in me %s në Jetpack\u00A0app.</string>
     <string name="wp_jp_static_poster_title">Përdorni WordPress-in me %s në Jetpack\u00A0app.</string>
-    <string name="gutenberg_native_unlabeled_color_s" a8c-src-lib="gutenberg">Ngjyrë pa etiketë. %s</string>
     <string name="dashboard_activity_card_title">Veprimtari së fundi</string>
     <string name="site_creation_search_domain_example_body">Në ngjashmëri me shembullin më sipër, një përkatësi u lejon njerëzve të gjejnë dhe vizitojnë sajtin tuaj që nga shfletuesi.</string>
     <string name="site_creation_search_domain_example_title">EmriiSajtitTuaj.com</string>
@@ -753,13 +659,6 @@ Language: sq_AL
     <string name="jp_migration_delete_title">S’ju duhet më aplikacioni WordPress në pajisjen tuaj</string>
     <string name="jp_migration_done_delete_wp_message">Rekomandojmë &lt;b&gt;çinstalimin e aplikacionit WordPress&lt;/b&gt; në pajisjen tuaj, për të shmangur përplasje të dhënash.</string>
     <string name="jp_migration_success_card_message">Mirë se vini te aplikacioni Jetpack. Mund të çinstaloni aplikacionin WordPress.</string>
-    <string name="gutenberg_native_remove_blocks" a8c-src-lib="gutenberg">Hiqi blloqet</string>
-    <string name="gutenberg_native_privacy_and_rating" a8c-src-lib="gutenberg">Privatësi dhe Vlerësim</string>
-    <string name="gutenberg_native_playback_settings" a8c-src-lib="gutenberg">Rregullime Luajtjeje</string>
-    <string name="gutenberg_native_playback_bar_color" a8c-src-lib="gutenberg">Ngjyrë Shtylle Luajtjeje</string>
-    <string name="gutenberg_native_manual" a8c-src-lib="gutenberg">Dorazi</string>
-    <string name="gutenberg_native_dynamic" a8c-src-lib="gutenberg">Dinamike</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative" a8c-src-lib="gutenberg">Përshkruani qëllimin e figurës. Lëreni të zbrazët, në qoftë dekorative.</string>
     <string name="dashboard_pages_card_create_another_page_description">Fillojani me skema të qepura me porosi, të përshtatshme për celular</string>
     <string name="dashboard_pages_card_create_another_page_button">Krijoni Një Faqe Tjetër</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Shtoni Faqe te sajti juaj</string>
@@ -816,14 +715,12 @@ Language: sq_AL
     <string name="site_creation_domain_tag_sale">Ulje çmimesh</string>
     <string name="site_creation_domain_tag_recommended">E rekomanduar</string>
     <string name="site_creation_domain_tag_best_alternative">Alternativa Më e Mirë</string>
-    <string name="site_creation_domain_cost">në vit</string>
     <string name="support_faq_caption">Për përgjigje pyetjesh të rëndomta që mund të keni, shihni PBR-të tona.</string>
     <string name="support_faq_title">Faleminderit që kaloni te aplikacioni Jetpack!</string>
     <string name="logs_button">Regjistra</string>
     <string name="tickets">Bileta</string>
     <string name="free">Falas</string>
     <string name="help_buttons_screen_title">Ndihmë</string>
-    <string name="gutenberg_native_blocks_menu" a8c-src-lib="gutenberg">Menu blloqesh</string>
     <string name="promote_blaze_card_sub_title">Shfaqeni punën tuaj nëpër miliona sajte.</string>
     <string name="promote_blaze_card_title">Promovoni lëndën tuaj përmes Blaze-i</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Mbylle</string>
@@ -913,7 +810,6 @@ Language: sq_AL
     <string name="blogging_prompts_list_answered_prompt">✓ Me Përgjigje</string>
     <string name="blogging_prompts_list_title">Cytje</string>
     <string name="close_desc">mbylle</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" a8c-src-lib="gutenberg">Ndryshe, mund ta shkëputni dhe përpunoni ndarazi këtë bllok, duke prekur “Shkëpute”.</string>
     <string name="dlg_confirm_delete_category">Të fshihet përgjithmonë Kategoria \'%s\'?</string>
     <string name="deleting_cat_success">Kategoria u fshi me sukses</string>
     <string name="deleting_cat_failed">Fshirja e kategorisëdështoi</string>
@@ -958,8 +854,6 @@ Language: sq_AL
     <string name="jp_migration_notifications_subtitle">Do të merrni të njëjtat njoftime, por tani do të vijnë nga aplikacioni Jetpack.</string>
     <string name="wordpress_help_center_button">Qendër ndihme WordPress</string>
     <string name="support_title">Asistencë</string>
-    <string name="notification_disable_broadcast_permission_desc">E lejon aplikacionin të çaktivizojë njoftimet nga WordPress-i.</string>
-    <string name="notification_disable_broadcast_permission_label">çaktivizoni njoftimet WordPress</string>
     <string name="jp_migration_help_button">Ju duhet ndihmë?</string>
     <string name="jp_migration_continue_button">Vazhdo</string>
     <string name="jp_migration_welcome_site_found_message">E gjetëm sajtin tuaj. Vazhdoni,  që të shpërngulen krejt të dhënat tuaja dhe të bëhet automatikisht hyrja në Jetpack.</string>
@@ -972,19 +866,12 @@ Language: sq_AL
     <string name="post_settings_page_attributes">Atribute Faqeje</string>
     <string name="about_automattic_contribute_item_title" a8c-src-lib="about">Kontribuoni</string>
     <string name="about_news">Lajme</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 përgjigje</string>
-    <string name="login_prologue_revamped_content_description_wordpress_icon">Ikonë WordPress-i</string>
-    <string name="login_prologue_revamped_tagline">Shkruani, përpunoni dhe botoni prej ngado.</string>
     <string name="error_fetch_authors_list">S’u morën dot autorë</string>
     <string name="post_settings_author">Autor</string>
-    <string name="app_rating_title">Ju pëlqen %s?</string>
     <string name="connection_service_label">Ndajeni postimin me të tjerë në %s</string>
     <string name="connections_label">Lidhje Jetpack Social</string>
     <string name="stats_widget_log_in_to_add_message">Ju lutemi, që të shtoni një &lt;em&gt;widget&lt;/em&gt;, bëni hyrjen te aplikacioni Jetpack.</string>
     <string name="stats_view_publicize">Lidhje Jetpack Social</string>
-    <string name="login_magic_links_email_sent" a8c-src-lib="module:login">Sapo dërguam një lidhje magjike te</string>
-    <string name="login_magic_links_sent_label_short" a8c-src-lib="module:login">Shihni email-in tuaj në këtë pajisje!</string>
-    <string name="or_use_password" a8c-src-lib="module:login">Përdorni fjalëkalimin për hyrje</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Jini gjithnjë në dijeni me përditësime aty për aty për komente të reja, trafik sajti, raporte mbi sigurinë, etj.</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Njoftimet sillen nga Jetpack-u</string>
     <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Shihni si shtohet trafiku juaj dhe mësoni rreth publikut tuaj, me “Statistika dhe Prirje” të ripunuar, tanimë të përdorshme edhe në aplikacionin e ri Jetpack.</string>
@@ -993,16 +880,10 @@ Language: sq_AL
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">Lexuesi bazohet në Jetpack</string>
     <string name="wp_jetpack_powered_features">Aplikacioni i ri Jetpack ka Statistika, Lexues, Njoftime, etj, që e bëjnë më të mirë WordPress-in tuaj.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress-i është më i mirë me Jetpack-un</string>
-    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers" a8c-src-lib="gutenberg">Që të përdorni kapakë video, përmirësoni planin tuaj</string>
-    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" a8c-src-lib="gutenberg">Që të ngarkoni audio, përmirësoni planin tuaj</string>
-    <string name="gutenberg_native_jetpack_powered" a8c-src-lib="gutenberg">Bazuar në Jetpack</string>
-    <string name="gutenberg_native_invalid_url" a8c-src-lib="gutenberg">URL e pavlefshme.</string>
-    <string name="gutenberg_native_gradient" a8c-src-lib="gutenberg">Gradient</string>
     <string name="wp_jetpack_continue_to_notifications">Vazhdoni te Njoftime</string>
     <string name="wp_jetpack_continue_to_stats">Vazhdoni te Statistika</string>
     <string name="wp_jetpack_continue_to_reader">Vazhdoni te Lexuesi</string>
     <string name="wp_jetpack_get_new_jetpack_app">Provoni aplikacionin e ri Jetpack</string>
-    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" a8c-src-lib="gutenberg">Problem me shfaqje blloku. \nPrekeni që të provohet rikthim blloku.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Javën e kaluar patët %1$s parje dhe %2$s komente</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Javën e kaluar patët %1$s parje dhe %2$s pëlqime</string>
     <string name="weekly_roundup_notification_text_views_only">Javën e kaluar patët %1$s parje.</string>
@@ -1011,7 +892,6 @@ Language: sq_AL
     <string name="wp_jetpack_powered">Bazuar në Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Figurë që tregon skanim kodi hyrjeje në punë e sipër</string>
     <string name="qrcode_auth_flow_error_content_description">Figurë që tregon një gabim</string>
-    <string name="qrcode_auth_flow_dismiss_dialog_message">Jeni i sigurt se doni të vazhdohet?</string>
     <string name="qrcode_auth_flow_error_auth_failed_subtitle">S’u bë dot futja juaj duke përdorur këtë kod hyrjeje. Ju lutemi, prekni butonin “Riskanoje” që të riskanohet kodi.</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Mirëfilltësimi Dështoi</string>
     <string name="qrcode_auth_flow_error_expired_subtitle">Ky kod hyrjeje ka skaduar. Ju lutemi, prekni butonin “Riskanoje” që të riskanohet kodi.</string>
@@ -1055,12 +935,6 @@ Language: sq_AL
     <string name="stats_action_card_blogging_reminders_title">Ujdisni kujtuesit tuaj për blogim</string>
     <string name="stats_action_card_grow_audience_button_label">Hidhini një sy kursit</string>
     <string name="stats_action_card_grow_audience_title">Shtoni publikun tuaj</string>
-    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" a8c-src-lib="gutenberg">Blloqet mund t’i risistemoni edhe duke prekur mbi një bllok dhe mandej duke prekur shigjetat për sipër dhe poshtë që shfaqen në anën e poshtme majtas bllokut, për t’i kaluar sipër ose poshtë blloqesh të tjerë.</string>
-    <string name="gutenberg_native_image_file_not_found" a8c-src-lib="gutenberg">S’u gjet kartelë figure.</string>
-    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b" a8c-src-lib="gutenberg">“Merr &amp; vër” e bën të rrufeshëm risistemimin e blloqeve. Shtypeni dhe mbajeni të shtypur mbi një bllok, mandej tërhiqeni te vendndodhja e re për të dhe lëshojeni.</string>
-    <string name="gutenberg_native_drag_drop" a8c-src-lib="gutenberg">Merr &amp; vër</string>
-    <string name="gutenberg_native_arrow_buttons" a8c-src-lib="gutenberg">Butona shigjetë</string>
-    <string name="gutenberg_native_1_s_currently_selected_2_s" a8c-src-lib="gutenberg">%1$s. Përzgjedhur aktualisht: %2$s</string>
     <string name="quick_start_sites_type_all_tasks_completed">Krejt punët të mbaruara</string>
     <string name="quick_start_list_task_complete">Punë e plotësuar</string>
     <string name="me_btn_scan_login_code">Skanoni Kod Hyrje</string>
@@ -1068,7 +942,6 @@ Language: sq_AL
     <string name="stats_most_popular_percent_views_empty">Pa veprimtari të mjaftueshme. Kontrolloni më vonë, kur sajti juaj të ketë më tepër vizitorë!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s%% e pajtimtarëve gjithsej</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="pages_copy_link">Kopjoji lidhjen</string>
     <string name="quick_start_completed_tour_title">Përgëzime! Dini nga shkoni&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Njihuni me aplikacionin</string>
     <string name="quick_start_list_upload_media_subtitle">Sillni te sajti juaj media drejt e nga pajisja apo kamera juaj</string>
@@ -1112,8 +985,6 @@ Language: sq_AL
     <string name="scan_vault_press_active_on_site_title">Sajti juaj ka VaultPress</string>
     <string name="locale_picker_current_language">Gjuhë e tanishme:</string>
     <string name="hpp_choose_and_create_site">Krijoni sajt</string>
-    <string name="gutenberg_native_add_blocks_11d0841f">Shtoni blloqe</string>
-    <string name="initial_screen">Skena Fillestare</string>
     <string name="blogging_prompts_onboarding_notification_action">Mësoni më tepër</string>
     <string name="blogging_prompts_onboarding_notification_text">Bëhuni një shkrues më i mirë, duke krijuar një zakon shkrimi. Prekeni që të mësoni më tepër.</string>
     <string name="blogging_prompts_onboarding_notification_title">E re në aplikacionin celular për WordPress: Cytje</string>
@@ -1133,7 +1004,6 @@ Language: sq_AL
     <string name="dialog_title_try_block_editor" translatable="true" a8c-src-lib="module:editor">Provoni Përpunuesin e ri me Blloqe</string>
     <string name="menu_toolbar_title" a8c-src-lib="module:editor">Përpunoni bllok %s</string>
     <string name="long_post_dlg_saving" a8c-src-lib="module:editor">Po ruhet</string>
-    <string name="retry_failed_upload_retry_all" a8c-src-lib="module:editor">Riprovoji krejt</string>
     <string name="retry_failed_upload_remove" a8c-src-lib="module:editor">Hiqe ngarkimin</string>
     <string name="retry_failed_upload_yes" a8c-src-lib="module:editor">Riprovo</string>
     <string name="retry_failed_upload_title" a8c-src-lib="module:editor">S’u ngarkua dot kartelë</string>
@@ -1141,9 +1011,6 @@ Language: sq_AL
     <string name="stop_upload_dialog_button_yes" a8c-src-lib="module:editor">Po</string>
     <string name="dialog_button_cancel" a8c-src-lib="module:editor">Anuloje</string>
     <string name="dialog_button_ok" a8c-src-lib="module:editor">OK</string>
-    <string name="dialog_edit_hint" a8c-src-lib="module:editor">http(s)://</string>
-    <string name="dialog_title" a8c-src-lib="module:editor">Futni lidhje</string>
-    <string name="editor_title_beta" a8c-src-lib="module:editor">Beta</string>
     <string name="toast_content_info_editor_not_ready" a8c-src-lib="module:editor">Përpunuesi ende po ngarkohet</string>
     <string name="toast_content_info_failed" a8c-src-lib="module:editor">S’u arrit të merret strukturë lënde</string>
     <string name="dialog_content_info_body" a8c-src-lib="module:editor">Blloqe: %1$d\nFjalë: %2$d\nShenja: %3$d</string>
@@ -1151,11 +1018,6 @@ Language: sq_AL
     <string name="media_bar_description_library" a8c-src-lib="module:editor">Zgjidhni një media prej mediatekës WordPress</string>
     <string name="media_bar_description_gallery" a8c-src-lib="module:editor">Zgjidhni një media nga galeria</string>
     <string name="media_bar_description_camera" a8c-src-lib="module:editor">Bëni Foto ose Video me kamerë</string>
-    <string name="pixel_suffix" a8c-src-lib="module:editor">%dpx</string>
-    <string name="stop_save_dialog_ok_button" a8c-src-lib="module:editor">OK</string>
-    <string name="stop_save_dialog_message" a8c-src-lib="module:editor">Ju lutemi, pritni deri sa të jenë ruajtur krejt kartelat</string>
-    <string name="stop_save_dialog_title" a8c-src-lib="module:editor">Ruajtje kartelash</string>
-    <string name="post_content" a8c-src-lib="module:editor">Lëndë</string>
     <string name="blogging_prompts_onboarding_card_prompt">Hidheni në film jetën tuaj.</string>
     <string name="blogging_prompts_onboarding_remind_me">Kujtoma</string>
     <string name="blogging_prompts_onboarding_try_it_now">Provojeni tani</string>
@@ -1200,15 +1062,11 @@ Language: sq_AL
     <string name="quick_start_site_menu_tab_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të vazhdohet.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Anashkaloje për sot</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Shihni më tepër cytje</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d përgjigje</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Ndani me të tjerë cytje blogimi</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Me Përgjigje</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Përgjigjuni cytjes</string>
     <string name="my_site_blogging_prompt_card_title">Cytje</string>
     <string name="my_site_all_tab_title">Krejt</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Kjo ndërthurje ngjyrash mund të vështirësojë leximin nga njerëzit. Provoni të përdorni një ngjyrë sfondi më të ndritshme dhe/ose një ngjyrë të errët teksti.</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Kjo ndërthurje ngjyrash mund të vështirësojë leximin nga njerëzit. Provoni të përdorni një ngjyrë sfondi më të errët dhe/ose një ngjyrë të ndritshme teksti.</string>
-    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">S’u arrit të futej media.\nPrekeni për më tepër hollësi.</string>
     <string name="new_site_creation_intents_header_subtitle">Zgjidhni një temë nga lista më poshtë, ose shtypni tuajën.</string>
     <string name="new_site_creation_intents_header_title">Për çfarë është sajti juaj?</string>
     <string name="notification_channel_weekly_roundup_title">Përmbledhje Javore</string>
@@ -1229,84 +1087,31 @@ Language: sq_AL
     <string name="reader_comment_menu_trash">Shpjere te Hedhurinat</string>
     <string name="reader_comment_menu_spam">Shënoje si të Padëshiruar</string>
     <string name="reader_comment_menu_unapprove">Shmiratojeni</string>
-    <string name="gutenberg_native_tiled_gallery_settings">Rregullime galerie mozaik</string>
-    <string name="gutenberg_native_navigates_to_layout_selection_screen">Kalohet te skena e përzgjedhjes së skemës</string>
-    <string name="gutenberg_native_gallery_style">Stil galerie</string>
     <string name="sharing_connect_via_web_warning_message">Mund ta lidhni llogarinë tuaj %s në sajtin WordPress.com. Kur të keni mbaruar, kthehuni te aplikacioni, që të ndryshoni rregullimet tuaja për Shoqërorë.</string>
-    <string name="about_automattic_app_icon_description" a8c-src-lib="about">Ikonë aplikacioni</string>
-    <string name="about_automattic_back_icon_description" a8c-src-lib="about">Ikonë për mbrapsht</string>
-    <string name="about_automattic_logo_description" a8c-src-lib="about">Stemë e Automattic-ut</string>
-    <string name="about_automattic_wordpress" a8c-src-lib="about">WordPress</string>
-    <string name="about_automattic_woocommerce" a8c-src-lib="about">WooCommerce</string>
-    <string name="about_automattic_tumblr" a8c-src-lib="about">Tumblr</string>
-    <string name="about_automattic_simplenote" a8c-src-lib="about">Simplenote</string>
-    <string name="about_automattic_jetpack" a8c-src-lib="about">Jetpack</string>
-    <string name="about_automattic_dayone" a8c-src-lib="about">Dita e Parë</string>
-    <string name="about_automattic_source_code_item_title" a8c-src-lib="about">Kod Burim</string>
-    <string name="about_automattic_privacy_policy_item_title" a8c-src-lib="about">Rregulla Privatësie</string>
-    <string name="about_automattic_terms_of_service_item_title" a8c-src-lib="about">Kushte Shërbimi</string>
     <string name="about_automattic_work_with_us_item_subtitle" a8c-src-lib="about">Punoni prej Ngado</string>
     <string name="about_automattic_work_with_us_item_title" a8c-src-lib="about">Punoni Me Ne</string>
-    <string name="about_automattic_family_item_title" a8c-src-lib="about">Familja Automattic</string>
-    <string name="about_automattic_legal_and_more_item_title" a8c-src-lib="about">Ligjore dhe Të tjera</string>
-    <string name="about_automattic_twitter_item_title" a8c-src-lib="about">Twitter</string>
-    <string name="about_automattic_instagram_item_title" a8c-src-lib="about">Instagram</string>
-    <string name="about_automattic_rate_us_item_title" a8c-src-lib="about">Vlerësonani</string>
-    <string name="about_automattic_share_with_friends_item_title" a8c-src-lib="about">Ndajeni me Shokët</string>
-    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Këtë bllok mund ta përpunoni duke përdorur versionin web të përpunuesit.</string>
-    <string name="gutenberg_native_open_jetpack_security_settings">Hapni Rregullime Sigurie Jetpack-u</string>
-    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Shënim: Duhet të lejoni që hyrja me WordPress.com të përpunojë këtë bllok te përpunuesi për celular.</string>
-    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Shënim: Skema mund të jetë ndryshojë sipas temash dhe madhësish ekrani</string>
-    <string name="gutenberg_native_address_settings">Rregullime Adrese</string>
-    <string name="gutenberg_native_add_media">SHTONI MEDIA</string>
     <string name="my_site_error_card_subtitle">Po kemi probleme me ngarkimin e të dhënave të sajtit tuaj këtë çast.</string>
     <string name="my_site_error_card_title">S’u ngarkuan ca të dhëna</string>
     <string name="my_site_dashboard_stale_message">Pulti nuk është përditësuar. Ju lutemi, kontrolloni lidhjen tuaj dhe mandej kryeni “pull” për ta rifreskuar.</string>
     <string name="my_site_dashboard_update_error">S’u përditësua dot pulti.</string>
     <string name="error_media_video_duration_exceeds_limit">Videoja s’u ngarkua! Ngarkimi i videove më të gjata se 5 minuta lyp një plan me pagesë.</string>
-    <string name="about_automattic_acknowledgements_item_title" a8c-src-lib="about">Falënderime</string>
-    <string name="about_automattic_california_privacy_notice_item_title" a8c-src-lib="about">Shënim mbi Privatësinë në Kaliforni</string>
-    <string name="about_automattic_version_label" a8c-src-lib="about">Version %1$s</string>
-    <string name="about_automattic_acknowledgements_page_title" a8c-src-lib="about">Falënderime</string>
-    <string name="about_automattic_legal_page_title" a8c-src-lib="about">Ligjore dhe Të tjera</string>
-    <string name="about_automattic_main_page_title" a8c-src-lib="about">Mbi %1$s-in</string>
     <string name="about_blog">Blog</string>
-    <string name="gutenberg_native_the_basics">Bazat</string>
-    <string name="gutenberg_native_selected_default">Përzgjedhur: Parazgjedhje</string>
-    <string name="gutenberg_native_more_support_options">Më tepër mundësi asistence</string>
-    <string name="gutenberg_native_get_support">Merrni asistencë</string>
-    <string name="gutenberg_native_font_size">Madhësi Shkronjash</string>
-    <string name="gutenberg_native_double_tap_to_select_font_size">Prekeni dy herë që të përzgjidhet madhësi shkronjash</string>
-    <string name="gutenberg_native_double_tap_to_select_default_font_size">Prekeni dyfish që të përzgjidhet madhësi parazgjedhje shkronjash</string>
-    <string name="gutenberg_native_contact_support">Lidhuni me asistencën</string>
-    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="reader_comments_follow_conversation">Ndiqe Bisedën</string>
     <string name="reader_comments_be_first_to_comment">Jini i pari që komentoni</string>
     <string name="reader_comments_view_all">Shihini krejt komentet</string>
     <string name="reader_comments_post_fetch_failure">Pati një gabim teksa merreshin të dhëna postimi</string>
     <string name="reader_comments_fetch_failure">Pati një gabim në marrje komentesh</string>
     <string name="reader_btn_follow_conversation_settings">Rregullime për ndjekje bisedash</string>
-    <string name="gutenberg_native_from_clipboard">Prej së papastre</string>
-    <string name="gutenberg_native_featured_image">Figurë e Zgjedhur</string>
-    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Kopjoje URL-në prej të papastre, %s</string>
     <string name="me_btn_about">Rreth WordPress-it</string>
-    <string name="my_site_post_card_link_create_post">Krijoni një postim</string>
-    <string name="my_site_create_next_post_excerpt">Postimi rregullisht ndihmon të krijoni publikun tuaj!</string>
-    <string name="my_site_create_next_post_title">Krijoni postimin tuaj pasues</string>
     <string name="menu_visual_mode_switched_notice">U kalua nën Përpunues Pamor</string>
     <string name="menu_html_mode_switched_notice">U kalua nën Përpunues Kodi</string>
-    <string name="post_link_copied_to_clipboard">Lidhja u kopjua në të papastër</string>
     <string name="comment_author_badge">Autori</string>
-    <string name="button_copy_link">Kopjoji lidhjen</string>
     <string name="domains_paid_plan_add_your_domain_caption">Shtimi i një përkatësie vetjake e bën të lehtë gjetjen e sajtit për vizitorët</string>
     <string name="domains_paid_plan_add_your_domain_title">Shtoni përkatësinë tuaj</string>
-    <string name="my_site_create_first_post_excerpt">Në faqen tuaj të blogut postimet shfaqen në rend të përmbysur kohor. Erdhi koha të ndani idetë tuaja me botën!</string>
-    <string name="my_site_create_first_post_title">Krijoni postimin tuaj të parë</string>
     <string name="my_site_untitled_post">E patitull</string>
     <string name="my_site_post_card_scheduled_title">Postime të ardhshme të planifikuara</string>
     <string name="my_site_post_card_draft_title">Merruni me një skicë postimi</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Falas për vitin e parë &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /vit&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="gutenberg_native_create_link">Krijo lidhje</string>
     <string name="domains_suggestions_select_domain">Përzgjidhni përkatësi</string>
     <string name="domains_title">Përkatësi</string>
     <string name="post_status_sticky">Ngjitës</string>
@@ -1342,50 +1147,19 @@ Language: sq_AL
     <string name="comment_edit_comment">Koment</string>
     <string name="comment_edit_user_name">Emër</string>
     <string name="comment_edit_menu_done">U bë</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Paraparjet e trupëzimeve të blloqeve vijnë së shpejti</string>
     <string name="weekly_roundup">Përmbledhje Javore</string>
-    <string name="gutenberg_native_embed_options">Mundësi trupëzimi</string>
-    <string name="gutenberg_native_double_tap_to_view_embed_options">Prekeni dy herë që të shihni mundësi trupëzimi.</string>
     <string name="quick_start_list_create_site_message">Sajti u krijua! Plotësoni hap tjetër.</string>
-    <string name="gutenberg_native_line_height">Lartësi Rreshti</string>
     <string name="domains_free_plan_get_your_domain_title">Merrni përkatësinë tuaj</string>
     <string name="recommend_app_generic_get_template_error">Gabim i panjohur në prurje gjedheje aplikacioni të rekomanduar</string>
     <string name="recommend_app_bad_format_response">U mor përgjigje e pavlefshme</string>
     <string name="recommend_app_null_response">S’u mor përgjigje</string>
     <string name="recommend_app_subject">Aplikacione Automattic - Aplikacione për çfarëdo ekrani</string>
     <string name="me_btn_share">Jepjani WordPress-in një shoku</string>
-    <string name="my_site_quick_actions_title">Lidhje të Shpejta</string>
     <string name="my_site_btn_domains">Përkatësi</string>
     <string name="weekly_roundup_notification_title">Përmbledhje Javore: %s</string>
     <string name="blogging_reminders_notification_time">Kohë njoftimi</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Do të merrni kujtues për të bloguar &lt;b&gt;çdo ditë&lt;/b&gt; më &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s në javë më %2$s</string>
-    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Kontrollet për formatim teksti gjenden brenda panelit të vendosur mbi tastierën, kur përpunohet një bllok teksti</string>
-    <string name="gutenberg_native_selected_s">Të përzgjedhur: %s</string>
-    <string name="gutenberg_native_select_a_color_above">Përzgjidhni një ngjyrë më sipër</string>
-    <string name="gutenberg_native_navigates_to_select_s">Kalohet për të përzgjedhur %s</string>
-    <string name="gutenberg_native_move_blocks">Lëvizni blloqe</string>
-    <string name="gutenberg_native_how_to_edit_your_post">Si të përpunoni postimin tuaj</string>
-    <string name="gutenberg_native_how_to_edit_your_page">Si të përpunoni faqen tuaj</string>
-    <string name="gutenberg_native_customize_blocks">Përshtatni blloqe</string>
-    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Ndryshimet te figura e zgjedhur s’do të preken nga butonat Zhbëje/Ribëje.</string>
-    <string name="gutenberg_native_applies_the_setting">Aplikon rregullimet</string>
-    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Blloqet mund t’i risistemoni duke prekur mbi një bllok dhe mandej duke prekur shigjetat sipër dhe poshtë që shfaqen në anën e poshtme majtas bllokut, për t’i kaluar sipër ose poshtë blloqesh të tjerë.</string>
-    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Mirë se vini në botën e blloqeve</string>
-    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Që të hiqni një bllok, përzgjidhni bllokun dhe klikoni tre pikat poshtë djathtas bllokut që të shihni rregullimet. Prej andej, zgjidhni mundësinë për heqjen e bllokut.</string>
-    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Disa blloqe kanë rregullime shtesë. Që të shihni më tepër mundësi, prekni ikonën e rregullimeve poshtë djathtas bllokut.</string>
-    <string name="gutenberg_native_s_block_newly_available">%s bllok, i passhëm rishtas</string>
-    <string name="gutenberg_native_rich_text_editing">Përpunim i pasur teksti</string>
-    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Pasi të familjarizoheni me emrat e blloqeve të ndryshëm, një bllok mund ta shtoni duke shtypur një pjerrake përpara pasuar nga emri i bllokut — për shembull, /figurë, ose /krye.</string>
-    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Nxirreni në pah lëndën tuaj duke shtuar te faqet tuaja figura, gif-e, video, dhe media të trupëzuar.</string>
-    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Provojeni, duke shtuar ca blloqe te postimi ose faqja juaj!</string>
-    <string name="gutenberg_native_embed_media">Trupëzo media</string>
-    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">Çdo bllok ka rregullimet e veta. Për t’i gjetur, klikoni mbi një bllok. Rregullimet e tij do të shfaqen te paneli në fund të ekranit.</string>
-    <string name="gutenberg_native_build_layouts">Ndërtoni skema</string>
-    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blloqet janë pjesë lënde që mund t’i futni, risistemoni dhe stilizoni pa u dashur të dini si të programoni. Blloqet janë një rrugë e lehtë dhe moderne për të krijuar skema të hijshme.</string>
-    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blloqet ju lejojnë të përqendroheni në shkrimin e lëndës tuaj, duke e ditur se krejt mjetet e formatimit që ju duhen janë aty, për t’ju ndihmuar të përcillni mesazhin tuaj.</string>
-    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Sistemojeni lëndën tuaj në shtylla, shtoni butona “Thirrje për Veprim”, dhe tekst përmbi figura.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Shtoni një bllok të ri në çfarëdo kohe, duke prekur mbi ikonën + te paneli poshtë majtas.</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s të plotësuar nga %2$s gjithsej</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Mësoni bazat, me një kalim të shpejtë nëpër to.</string>
     <string name="comment_batch_moderation_error">S’u arrit të moderohet një ose më shumë komente</string>
@@ -1396,16 +1170,6 @@ Language: sq_AL
     <string name="stats_disabled_enable_stats_button">Aktivizoni statistika sajti</string>
     <string name="stats_disabled_subtitle">Që të shihni të dhëna të hollësishme mbi trafikun tuaj, pëlqimet, komentet dhe pajtimtarët, aktivizoni statistika sajti.</string>
     <string name="stats_disabled_title">Po shihni për statistika?</string>
-    <string name="gutenberg_native_what_is_a_block">Ç’është një bllok?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Po punojmë fort për të shtuar mbulim për paraparje %s. Ndërkohë, mund të bëni paraparje të lëndës së trupëzuar që nga postimi.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Po punojmë fort për të shtuar mbulim për paraparje %s. Ndërkohë, mund të bëni paraparje të lëndës së trupëzuar që nga faqja.</string>
-    <string name="gutenberg_native_unable_to_embed_media">S’arrihet të trupëzohet media</string>
-    <string name="gutenberg_native_try_another_search_term">Provoni një tjetër term kërkimi</string>
-    <string name="gutenberg_native_no_blocks_found">S’u gjetën blloqe</string>
-    <string name="gutenberg_native_s_previews_not_yet_available">Paraparje %s ende jo gati</string>
-    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">Paraparjet e blloqeve %s vijnë së shpejti</string>
-    <string name="gutenberg_native_double_tap_to_preview_post">Që të parashihni postimin, prekeni dy herë.</string>
-    <string name="gutenberg_native_double_tap_to_preview_page">Që të parashihni faqen, prekeni dy herë.</string>
     <string name="quick_start_list_upload_icon_subtitle">Shfaqur te skeda e shfletuesit të vizitorit tuaj dhe në vende të tjera në internet.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Tregomani ca</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Doni pakëz ndihmë me administrimin e këtij sajti përmes aplikacionit?</string>
@@ -1414,9 +1178,6 @@ Language: sq_AL
     <string name="login_epilogue_mysites_heading">Zgjidhni një sajt për hapje</string>
     <string name="scan_multisite_not_supported_subtitle">Na ndjeni, Jetpack Scan s’është i përputhshëm me instalime shumësajtëshe WordPress hëpërhë.</string>
     <string name="scan_multisite_not_supported_title">Instalimet shumësajtëshe WordPress nuk mbulohen</string>
-    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL e pavlefshme. Ju lutemi, jepni një URL të vlefshme.</string>
-    <string name="gutenberg_native_embed_caption_s">Titull trupëzimi. %s</string>
-    <string name="gutenberg_native_embed_caption_empty">Titull trupëzimi. I zbrazët</string>
     <string name="activity_log_visit_our_documentation_page">vizitoni faqen tonë të dokumentimit</string>
     <string name="activity_log_multisite_message">Jetpack Backup për instalim Shumësajtësh furnizon kopjeruajtje të shkarkueshme, jo rikthime me një klikim. Për më tepër hollësi, %1$s.</string>
     <string name="blogging_reminders_tip_message">Postimi rregullisht mund të ndihmojë t’i mbani lexuesit tuaj të angazhuar, dhe të tërhiqni vizitorë të rinj te sajti juaj.</string>
@@ -1437,45 +1198,19 @@ Language: sq_AL
     <string name="set_your_blogging_reminders_title">Caktoni kujtuesit tuaj për blogimin</string>
     <string name="blogging_reminders_notification_text">Ky kujtuesi juaj për të krijuar diçka sot</string>
     <string name="blogging_reminders_notification_title">Është koha të blogoni te %s</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në WordPress për iOS</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në WordPress për Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" a8c-src-lib="gutenberg">Ndryshe, mund t’i shkëputni dhe përpunoni ndarazi këto blloqe, duke prekur “Shkëputi modelet”.</string>
     <string name="blogging_reminders_done">U bë</string>
     <string name="blogging_reminders_notify_me">Njoftomë</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;, që të aktivizoni rikthime sajti me një klikim, prej kopjeruajtjesh.</string>
-    <string name="gutenberg_native_set_as_featured_image">Vëre si Figurë të Zgjedhur</string>
-    <string name="gutenberg_native_remove_as_featured_image">Hiqe si Figurë të Zgjedhur</string>
     <string name="fab_add_category_desc">Krijoni Kategori</string>
     <string name="support_ticket_subject">Asistencë për WordPress për Android</string>
     <string name="site_settings_categories_hint">Administroni kategoritë e sajtit tuaj</string>
     <string name="site_settings_categories_title">Kategori</string>
     <string name="site_settings_blogging_reminders_title">Kujtues</string>
     <string name="page_is_posts_page_warning">Lënda e faqes tuaj të postimeve më të reja prodhohet automatikisht dhe s’mund të përpunohet.</string>
-    <string name="gutenberg_native_border_settings">Rregullime Anësh</string>
     <string name="storage_utils_dialog_dont_show_button">Mos e Shfaq Sërish</string>
     <string name="storage_utils_dialog_ok_button">Shihni Depozitim</string>
     <string name="storage_utils_dialog_message">Na duhet të ruajmë lëndën tuaj te pajisja, përpara se të mund të botohet. Shqyrtoni rregullimet tuaja për depozitim dhe hiqni kartela për të liruar vend.</string>
     <string name="storage_utils_dialog_title">Pajisje e pamjaftueshme depozitimi</string>
-    <string name="gutenberg_native_y_axis_position">Pozicion në boshtin Y</string>
-    <string name="gutenberg_native_x_axis_position">Pozicion në boshtin X</string>
-    <string name="gutenberg_native_type_a_url">Shtypni një URL</string>
-    <string name="gutenberg_native_s_has_url_set">%s ka të caktuar URL</string>
-    <string name="gutenberg_native_s_has_no_url_set">%s s’ka të caktuar URL</string>
-    <string name="gutenberg_native_s_converted_to_regular_blocks">%s shndërruar në blloqe të rregullt</string>
-    <string name="gutenberg_native_s_block">Bllok %s</string>
-    <string name="gutenberg_native_opacity" a8c-src-lib="gutenberg">Patejdukshmëri</string>
-    <string name="gutenberg_native_media_options">Mundësi media</string>
-    <string name="gutenberg_native_invalid_url_audio_file_not_found">URL e pavlefshme. S’u gjet kartelë audio.</string>
-    <string name="gutenberg_native_insert_crosspost">Futni “crosspost”</string>
-    <string name="gutenberg_native_drag_to_adjust_focal_point">Që të rregulloni vatrën, tërhiqeni</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Prekeni dyfish që të hapet Fleta e Poshtme për shtim figure ose videoje</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Prekeni dyfish që të hapet Fleta e Veprimeve për shtim figure ose videoje</string>
-    <string name="gutenberg_native_current_unit_is_s">Njësia e tanishme është %s</string>
-    <string name="gutenberg_native_s_converted_to_regular_block" a8c-src-lib="gutenberg">%s u shndërrua në bllok të rregullt</string>
-    <string name="gutenberg_native_columns_settings">Rregullime Shtyllash</string>
-    <string name="gutenberg_native_add_link_to_s">Shtoni lidhje për te %s</string>
-    <string name="gutenberg_native_add_link_text">Shtoni tekst lidhjeje</string>
-    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Shtoni figurë ose video</string>
     <string name="error_media_path_is_directory">Shtegu u dhënë është drejtori, në vend se një kartelë media</string>
     <string name="error_media_could_not_find_media_in_path">S’u gjet kartelë media te shtegu</string>
     <string name="error_media_unexpected_empty_media_file_path">Shteg i papritur i zbrazët kartele për Media</string>
@@ -1483,102 +1218,35 @@ Language: sq_AL
     <string name="error_media_unexpected_null_value">Media qe e zbrazët</string>
     <string name="threat_fix_enter_server_creds_msg_plural">Që të zgjidhen kërcënimet, &lt;a href=\"%1$s\"&gt;jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Që të zgjidhet kërcënimit, &lt;a href=\"%1$s\"&gt;jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;.</string>
-    <string name="gutenberg_native_double_tap_to_add_a_link">Që të shtoni një lidhje, prekeni dyfish.</string>
     <string name="login_empty_view_try_another_account">Provoni me tjetër llogari</string>
     <string name="login_empty_view_see_instructions">Shihni udhëzimet</string>
     <string name="login_no_jetpack_sites_error_message">Nëse keni tashmë një sajt, do t’ju duhet të instaloni shtojcën e lirë Jetpack dhe ta lidhni me llogarinë tuaj WordPress.com.</string>
     <string name="login_empty_view_avatar_content_description">Fotoja e profilit tuaj</string>
     <string name="login_not_a_jetpack_site">Që të përdorni këtë aplikacion për %1$s, do t’ju duhet të keni të instaluar shtojcën Jetpack dhe të lidhur me llogarinë tuaj WordPress.com.</string>
-    <string name="gutenberg_native_move_image_forward">Shpjere Figurën Përpara</string>
-    <string name="gutenberg_native_move_image_backward">Shpjere Figurën Prapa</string>
-    <string name="gutenberg_native_width_settings">Rregullime Gjerësie</string>
-    <string name="gutenberg_native_link_rel" a8c-src-lib="gutenberg">Atribut “Rel” Lidhjeje</string>
-    <string name="gutenberg_native_column_settings">Rregullime Shtylle</string>
-    <string name="gutenberg_native_no_description" a8c-src-lib="gutenberg">Pa përshkrim</string>
     <string name="user_profile_untitled_site">(I patitull)</string>
     <string name="user_profile_site_section_header">Sajt</string>
     <string name="user_profile_bottom_sheet_description">Hollësi profili përdoruesi në fund të fletës</string>
     <string name="likes_list_screen_title">Listë %s Pëlqimesh</string>
-    <string name="gutenberg_native_two">Dy</string>
-    <string name="gutenberg_native_three">Tre</string>
-    <string name="gutenberg_native_no_title" a8c-src-lib="gutenberg">Pa titull</string>
-    <string name="gutenberg_native_s_social_icon">Ikonë shoqërorësh %s</string>
-    <string name="gutenberg_native_mention">Përmendje</string>
-    <string name="gutenberg_native_new" a8c-src-lib="gutenberg">I RI</string>
-    <string name="gutenberg_native_preview_post">Parashiheni postimin</string>
-    <string name="gutenberg_native_preview_page">Parashiheni faqen</string>
-    <string name="gutenberg_native_retry">Riprovoni</string>
-    <string name="gutenberg_native_gif">GIF</string>
-    <string name="gutenberg_native_one">Një</string>
-    <string name="gutenberg_native_add_title" a8c-src-lib="gutenberg">Shtoni titull</string>
-    <string name="gutenberg_native_no_preview_available">S’ka paraparje gati</string>
-    <string name="gutenberg_native_loading" a8c-src-lib="gutenberg">Po ngarkohet</string>
-    <string name="gutenberg_native_link_label" a8c-src-lib="gutenberg">Etiketë lidhjeje</string>
-    <string name="gutenberg_native_text_color">Ngjyrë teksti</string>
-    <string name="gutenberg_native_s_link" a8c-src-lib="gutenberg">Lidhje %s</string>
-    <string name="gutenberg_native_padding">Mbushje</string>
-    <string name="gutenberg_native_four">Katër</string>
-    <string name="gutenberg_native_featured" a8c-src-lib="gutenberg">Të zgjedhura</string>
-    <string name="gutenberg_native_add_image" a8c-src-lib="gutenberg">Shtoni figurë</string>
-    <string name="gutenberg_native_custom_url">URL Vetjake</string>
-    <string name="gutenberg_native_create_embed">Krijo trupëzim</string>
-    <string name="gutenberg_native_column_d">Shtylla %d</string>
-    <string name="gutenberg_native_more" a8c-src-lib="gutenberg">Më tepër</string>
-    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Përshkruajeni shkurt lidhjen, që të ndihmoni përdoruesin e lexuesit të ekranit</string>
-    <string name="gutenberg_native_add_blocks" a8c-src-lib="gutenberg">Shtoni blloqe</string>
     <string name="login_no_jetpack_sites">S’u gjetën sajte Jetpack</string>
-    <string name="gutenberg_native_what_is_alt_text">Ç’është teksti alternativ?</string>
-    <string name="gutenberg_native_transform_s_to">Shndërroje %s në</string>
-    <string name="gutenberg_native_transform_block">Shndërroni bllokun…</string>
-    <string name="gutenberg_native_failed_to_insert_media">S’u arrit të futej media.</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file">S’u arrit të futej kartelë audio.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Përshkruani qëllimin e figurës. Lëreni të zbrazët, nëse figura është thjesht dekorative.</string>
-    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s u shndërrua në %2$s</string>
     <string name="like_faces_error_loading_message">Gabim gjatë ngarkimi të dhënash pëlqimesh. %s.</string>
     <string name="like_title_plural">%d Pëlqime</string>
     <string name="like_title_singular">1 Pëlqim</string>
     <string name="suggestion">Sugjerim:</string>
-    <string name="gutenberg_native_use_icon_button">Përdor buton ikone</string>
-    <string name="gutenberg_native_search_input_field">Fushë dhëniesh kërkimi.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Buton kërkimi. Teksti i tanishëm i butonit është</string>
-    <string name="gutenberg_native_search_blocks">Kërkon në blloqe</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Etiketë për kërkoni në blloqe. Teksti i tanishëm është</string>
-    <string name="gutenberg_native_outside">Jashtë</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">S’është caktuar vendmbajtëse vetjake</string>
-    <string name="gutenberg_native_inside">Brenda</string>
-    <string name="gutenberg_native_hide_search_heading">Fshih kryet e kërkimit</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Që të përpunoni tekstin e vendmbajtëses, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Që të përpunoni tekstin e etiketës, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Që të përpunoni tekstin e butonit, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">që të ndryshoni njësinë, prekeni dyfish</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Teksti i tanishëm i vendmbajtëses është</string>
-    <string name="gutenberg_native_clear_search">Spastroje kërkimin</string>
-    <string name="gutenberg_native_cancel_search">Anuloje kërkimin</string>
-    <string name="gutenberg_native_button_position">Pozicion butoni</string>
-    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s është %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Ndodhi një gabim teksa merreshin të dhëna pëlqimesh</string>
     <string name="get_likes_unknown_error">Ndodhi një gabim i panjohur teksa merreshin pëlqimet.</string>
     <string name="get_likes_no_network_error">S’ka rrjet.</string>
     <string name="comments_empty_list_filtered_unreplied">S’ka komente pa përgjigje</string>
     <string name="comment_status_unreplied">Pa përgjigje</string>
-    <string name="gutenberg_native_add_link">SHTONI LIDHJE</string>
-    <string name="gutenberg_native_search_settings">Rregullime kërkimi</string>
     <string name="jetpack_brute_force_allowlist_title">Adresa IP të lejuara përgjithnjë</string>
     <string name="site_settings_denylist_title">Komente të palejuara</string>
-    <string name="gutenberg_native_add_button_text">Tekst butoni Shtoni</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Hidhe tej</string>
     <string name="activity_log_backup_download_notice_download_action">Shkarkoje</string>
     <string name="threat_fix_all_status_success_message_plural">Kërcënimet u zgjidhën me sukses.</string>
     <string name="threat_fix_all_confirmation_message_plural">Ju lutemi, ripohoni se doni të zgjidhni krejt %s kërcënimet aktive.</string>
     <string name="scan_idle_threats_description_plural">Kontrolli gjeti %1$s kërcënime potenciale me %2$s. Ju lutemi, shqyrtojini më poshtë dhe ndërmerrni një veprim ose prekni butonin “Ndreqi krejt”. Jemi %3$s, nëse keni nevojë për ne.</string>
     <string name="scan_fixing_threats_description_plural">Jemi duke punuar fort për t’i zgjidhur pa zhurmë këto kërcënime. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kurdo qoftë.</string>
-    <string name="gutenberg_native_edit_focal_point">Përpunoni pikë vatrore</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Prekeni dy herë që të hapet Fleta e Poshtme për përpunim, zëvendësim ose spastrim të figurës</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Prekeni dy herë që të hapet Fleta e Veprimeve për përpunim, zëvendësim ose spastrim të figurës</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">Shtypni një emër për sajtin tuaj</string>
-    <string name="quick_start_completed_type_grow_message">&lt;b&gt;Krejt punët të mbaruara&lt;/b&gt;&lt;br/&gt;Do të mbërrini në më shumë njerëz. Punë e paqme!</string>
-    <string name="quick_start_completed_type_customize_message">&lt;b&gt;Krejt punët të mbaruara&lt;/b&gt;&lt;br/&gt;E keni përshtatur sajtin tuaj. Ju lumtë!</string>
     <string name="magic_link_not_meaning_to_create_account" a8c-src-lib="module:login">S’e kishit fjalën të krijonit një llogari të re? Kthehuni mbrapsht, që të jepni adresën tuaj email.</string>
     <string name="invite_links_disable_dialog_message">Pasi të jetë çaktivizuar kjo lidhje ftese, askush s’do të jetë në gjendje të bëhet pjesë e ekipit tuaj. Jeni i sigurt?</string>
     <string name="invite_links_disable_dialog_title">Çaktivizo lidhje ftese</string>
@@ -1626,22 +1294,6 @@ Language: sq_AL
     <string name="backup_item_contents">Drejtoria WP-content</string>
     <string name="backup_item_roots">Rrënjë WordPress-i</string>
     <string name="backup_download_details_choose_items_header">Elementë të përfshirë në këtë shkarkim</string>
-    <string name="gutenberg_native_uploading">Po ngarkohet…</string>
-    <string name="gutenberg_native_replace_file">Zëvendësoni kartelë</string>
-    <string name="gutenberg_native_replace_audio">Zëvendësoni audio</string>
-    <string name="gutenberg_native_problem_opening_the_audio">Problem me hapjen e audios</string>
-    <string name="gutenberg_native_open">HAPE</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request">S’ka aplikacion për ta trajtuar këtë kërkesë.</string>
-    <string name="gutenberg_native_lock_icon">Ikonë kyçjeje</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">S’u arrit të futej kartelë audio. Ju lutemi, prekeni për mundësi.</string>
-    <string name="gutenberg_native_double_tap_to_select_an_audio_file">Prekeni dy herë që të përzgjidhni një kartelë audio</string>
-    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Prekeni dy herë që të dëgjoni kartelën audio</string>
-    <string name="gutenberg_native_choose_audio">Zgjidhni audio</string>
-    <string name="gutenberg_native_audio_player">Luajtës Audio</string>
-    <string name="gutenberg_native_audio_file">kartelë audio</string>
-    <string name="gutenberg_native_audio_caption_s">Marrje audio. %s</string>
-    <string name="gutenberg_native_audio_caption_empty">Marrje audio. E zbrazët</string>
-    <string name="gutenberg_native_add_audio" a8c-src-lib="gutenberg">Shtoni audio</string>
     <string name="continue_with_wpcom">Hyni ose regjistrohuni me WordPress.com</string>
     <string name="photo_picker_use_audio">Përdor këtë audio</string>
     <string name="photo_picker_choose_audio">Zgjidhni audio prej pajisjes</string>
@@ -1699,7 +1351,6 @@ Language: sq_AL
     <string name="quick_start_dialog_review_pages_message_short">Që të shihni listën e faqeve tuaja, përzgjidhni %1$s Faqe %2$s.</string>
     <string name="quick_start_dialog_review_pages_message">Ndryshoni, shtoni ose hiqni faqe të sajtit tuaj.</string>
     <string name="quick_start_dialog_review_pages_title">Shqyrtoni faqe sajti</string>
-    <string name="quick_start_dialog_edit_homepage_message_pages_short">Që të përpunoni Faqen tuaj hyrëse, përzgjidhni %1$s Faqe hyrëse %2$s.</string>
     <string name="reader_menu_mark_as_unseen">Hiqi shenjë si i parë</string>
     <string name="reader_menu_mark_as_seen">Vëri shenjë si i parë</string>
     <string name="error_media_upload_failed_for_reason">Ngarkimi i medias dështoi.\n%1$s</string>
@@ -1732,8 +1383,6 @@ Language: sq_AL
     <string name="backup_empty_subtitle">Kopjeruajtja juaj e parë do të shfaqet këtu brenda 34 orësh dhe ju do të merrni një njoftim sapo kopjeruajtja të jetë plotësuar</string>
     <string name="backup_empty_title">Kopjeruajtja juaj e parë do të jetë gati së shpejti</string>
     <string name="request_failed_message">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni më vonë.</string>
-    <string name="gutenberg_native_move_to_bottom">Kaloje në fund</string>
-    <string name="gutenberg_native_change_block_position">Ndryshoni pozicion blloku</string>
     <string name="jetpack_icon_content_description">ikonë</string>
     <string name="backup_download_complete_info">Ju dërguam gjithashtu me email një lidhje për te kartela juaj.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Buton “Ndajeni lidhjen me të tjerët”</string>
@@ -1821,8 +1470,6 @@ Language: sq_AL
     <string name="backup_download_details_header">Krijoni kopjeruajtje të shkarkueshme</string>
     <string name="backup_download_details_page_title">Shkarkoni Kopjeruatjen</string>
     <string name="backup_download">Shkarkim Kopjeruajtjeje</string>
-    <string name="gutenberg_native_error">Gabim</string>
-    <string name="gutenberg_native_choose_file">Zgjidhni kartelë</string>
     <string name="activity_log_item_menu_download_backup_label">Shkarko kopjeruajtje</string>
     <string name="activity_log_item_menu_restore_label">Riktheje në këtë pikë</string>
     <string name="activity_log_activity_type_filter_label">Lloj Veprimtarie</string>
@@ -1833,16 +1480,7 @@ Language: sq_AL
     <string name="dialog_confirm_copy_local_message">Postimi që po rrekeni të kopjoni, ka dy versione që kanë përplasje, ose keni bërë ndryshime tani afër, por nuk i ruajtët ato.\nSë pari përpunoni postimin, që të zgjidhet çfarëdo përplasje ose që të vazhdohet kopjimi i versionit prej këtij aplikacioni.</string>
     <string name="dialog_confirm_copy_local_title">Përplasje pas njëkohësimi</string>
     <string name="button_copy">Përsëdyte</string>
-    <string name="gutenberg_native_file_name">Emër kartele</string>
-    <string name="gutenberg_native_file_block_settings">Rregullime blloku kartelash</string>
-    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">S’u arrit të ngarkohen kartela.\nJu lutemi, prekeni për mundësi.</string>
-    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">S’u arrit të ruhen kartela.\nJu lutemi, prekeni për mundësi.</string>
-    <string name="gutenberg_native_edit_file">Përpunoni kartelën</string>
-    <string name="gutenberg_native_copy_file_url">Kopjoni URL-në e kartelës</string>
     <string name="new_site_creation_domain_header_title">Zgjidhni përkatësi</string>
-    <string name="my_site_header_jetpack">Jetpack</string>
-    <string name="reader_btn_following_comments">Ndjekje bisede përmes email-i</string>
-    <string name="reader_btn_follow_comments">Ndiqeni bisedën përmes email-i</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">S’u bë dot shpajtimi nga komentet për këtë postim</string>
     <string name="reader_follow_comments_could_not_subscribe_error">S’u bë dot pajtimi te komentet për këtë postim</string>
     <string name="reader_follow_comments_get_status_error">Gabim në sjellje gjendjeje pajtimi për këtë postim</string>
@@ -1864,8 +1502,6 @@ Language: sq_AL
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Durim Cerova&lt;/b&gt; iu përgjigj postimit tuaj</string>
     <string name="login_prologue_third_subtitle_two">Sot në sajtin tuaj patët &lt;b&gt;50 pëlqeim&lt;/b&gt;</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Maqo Senko&lt;/b&gt; pëlqeu postimin tuaj</string>
-    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">U hap me blloqesh. Përzgjidhni një bllok.</string>
-    <string name="gutenberg_native_scrollable_block_menu_closed">Menuja e blloqeve u mbyll.</string>
     <string name="hpp_choose_button">Zgjidhni</string>
     <string name="mlp_network_error_subtitle">Prekni &lt;code&gt;Retry&lt;/code&gt;, kur të jeni prapë të lidhur, ose krijoni një faqe të zbrazët duke përdorur butonin më poshtë.</string>
     <string name="mlp_network_error_title">S’mund të kihen skema, teksa jeni jashtë linje</string>
@@ -1896,11 +1532,6 @@ Language: sq_AL
     <string name="login_prologue_title_second">Me fuqinë e përpunuesit mund të postoni kudo që ndodheni.</string>
     <string name="login_prologue_title_first">Mirë se vini te krijuesi më popullor në botë i sajteve.</string>
     <string name="media_loading_failed">Dështoi ngarkimi i medias</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Po punojmë fort për të shtuar më tepër blloqe me çdo hedhje në qarkullim.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' s’mbulohet plotësisht</string>
-    <string name="gutenberg_native_help_button">Buton ndihme</string>
-    <string name="gutenberg_native_edit_using_web_editor">Përpunojeni duke përdorur përpunuesin web</string>
-    <string name="gutenberg_native_choose_images">Zgjidhni figura</string>
     <string name="mlp_notice_blank_page_created">U krijua faqe e zbrazët</string>
     <string name="mlp_notice_page_created">Faqja u krijua</string>
     <string name="media_insert_failed">Dështoi futje medie.</string>
@@ -1909,7 +1540,6 @@ Language: sq_AL
     <string name="reader_label_toolbar_back">Mbrapsht</string>
     <string name="reader_discover_empty_button_text">Fillojani</string>
     <string name="reader_discover_empty_subtitle_follow">Ndiqni etiketa, që të zbuloni blogje të rinj</string>
-    <string name="reader_post_details_header_by_author_name">Nga</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Këtij referuesi s’mund t’i vihet shenjë si i padëshiruar</string>
     <string name="stats_referrer_popup_unmark_as_spam">Hiqja Shenjën Si i Padëshiruar</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Vëri Shenjë si I padëshiruar</string>
@@ -1917,10 +1547,6 @@ Language: sq_AL
     <string name="media_uploading_gif_library_photo">Po ngarkohet media gif</string>
     <string name="media_uploading_stock_library_photo">Po ngarkohet media stok</string>
     <string name="media_uploading_default">Po ngarkohet media</string>
-    <string name="gutenberg_native_search_or_type_url">Kërkoni ose shtypni URL</string>
-    <string name="gutenberg_native_add_this_telephone_link">Shtoni këtë lidhje telefoni</string>
-    <string name="gutenberg_native_add_this_link">Shtoje këtë lidhje</string>
-    <string name="gutenberg_native_add_this_email_link">Shtoni këtë lidhje email</string>
     <string name="suggestion_no_connection">S’ka lidhje në internet.\nS’merren dot sugjerime.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s të përzgjedhura</string>
@@ -1930,23 +1556,12 @@ Language: sq_AL
     <string name="comment_unable_to_show_error">S’arrihet të shfaqet ky koment</string>
     <string name="media_browse_for_items">Shfletoni për objekte</string>
     <string name="reader_menu_report_post">Njoftoni për këtë postim</string>
-    <string name="reader_welcome_banner">Mirë se vini te Reader. Zbuloni në pëllëmbë të dorës miliona blogje.</string>
     <string name="error_media_xmlrcp_server_error">Ndodhi një gabim i brendshëm shërbyesi</string>
     <string name="error_media_xmlrpc_not_allowed">Veprimi juaj s’lejohet</string>
     <string name="show_n_hidden_items_desc">%1$s objekte të tjerë</string>
-    <string name="gutenberg_native_select_a_layout">Përzgjidhni një skemë</string>
-    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Shënim: Skema e shtyllave mund të jetë ndryshojë sipas temash dhe madhësish ekrani</string>
     <string name="create_page_fab_tooltip">Krijoni një faqe</string>
     <string name="create_post_fab_tooltip">Krijoni një postim</string>
-    <string name="reader_discover_interests_header">Mund t’ju pëlqente edhe</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Fshihe</string>
-    <string name="gutenberg_native_video_caption_empty">Legjendë videoje. E zbrazët</string>
-    <string name="gutenberg_native_updates_the_title">Përditëson titullin.</string>
-    <string name="gutenberg_native_paste_block_after">Ngjite bllokun pas</string>
-    <string name="gutenberg_native_page_title_s">Titull faqeje. %s</string>
-    <string name="gutenberg_native_page_title_empty">Titull faqeje. I zbrazët</string>
-    <string name="toast_error_playing_video">Ndodhi një gabim teksa luhej videoja juaj</string>
-    <string name="camera_error">Kjo pajisje nuk mbulon API-n Camera2.</string>
     <string name="label_close_button">Mbylle</string>
     <string name="mlp_preview_page">Paraparje</string>
     <string name="mlp_create_page">Krijoni faqe</string>
@@ -1957,16 +1572,8 @@ Language: sq_AL
     <string name="photo_picker_choose_file">Zgjidhni nga pajisje</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Përpunimi i ikonave të sajtit në sajte WordPress të vetëstrehuar lyp doemos shtojcën Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">S’arrihet të gjendet hedhja te faqja e lidhur</string>
-    <string name="error_media_quota_exceeded_toast">S’ngarkohet dot kartela.\nJanë tejkaluar kuota depozitimi.</string>
     <string name="error_media_quota_exceeded">Janë tejkaluar kuota depozitim</string>
     <string name="pick_file">Shtoni kartelë</string>
-    <string name="gutenberg_native_replace_video">Zëvendësoni video</string>
-    <string name="gutenberg_native_replace_image_or_video">Zëvendësoni figurë ose video</string>
-    <string name="gutenberg_native_convert_to_link">Shndërroje në lidhje</string>
-    <string name="gutenberg_native_choose_video">Zgjidhni video</string>
-    <string name="gutenberg_native_choose_image_or_video">Zgjidhni figurë ose video</string>
-    <string name="gutenberg_native_choose_image">Zgjidhni figurë</string>
-    <string name="gutenberg_native_block_removed">Blloku u hoq</string>
     <string name="enter_your_site_address">Jepni adresën e sajtit tuaj ekzistues</string>
     <string name="signup_confirmation_title" a8c-src-lib="module:login">Ripohim regjistrimi</string>
     <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">Nëse vazhdoni me Google dhe ende s’keni një llogari WordPress.com, po krijoni një llogari dhe pajtoheni me %1$sKushtet tona të Shërbimit%2$s.</string>
@@ -1992,33 +1599,14 @@ Language: sq_AL
     <string name="quick_start_list_update_site_title_title">Kontrolloni titullin e sajtit tuaj</string>
     <string name="quick_start_dialog_update_site_title_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të caktoni një titull të ri</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Shpënia te hedhurinat e këtij postimi do të hedhë tej edhe ndryshimet e paruajtura, jeni i sigurt se doni të vazhdohet?</string>
-    <string name="gutenberg_native_s_block_options">Mundësi blloku %s</string>
-    <string name="gutenberg_native_remove_block">Hiqe bllokun</string>
-    <string name="gutenberg_native_duplicate_block">Bllok Përsëdyte</string>
-    <string name="gutenberg_native_copy_block">Bllok Kopjoje</string>
-    <string name="gutenberg_native_copied_block">Blloku u kopjua</string>
-    <string name="gutenberg_native_block_pasted">Blloku u ngjit</string>
-    <string name="gutenberg_native_block_duplicated">Blloku u përsëdyt</string>
-    <string name="gutenberg_native_block_cut">Blloku u pre</string>
-    <string name="gutenberg_native_block_copied">Blloku u kopjua</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Titulli i Sajtit mund të ndryshohet vetëm nga një përdorues në rolin e përgjegjësit.</string>
     <string name="my_site_title_changer_dialog_hint">Titulli i Sajtit shfaqet te shtylla e titujve e një shfletuesi dhe, për shumicën e temave, shfaqet te kryet.</string>
     <string name="error_update_site_title_network">S’u përditësua dot titull sajti. Kontrolloni lidhjen në rrjet dhe riprovoni.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ndryshime të paruajtura</string>
-    <string name="gutenberg_native_open_link_in_a_browser">Hape lidhjen në një shfletues</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Kalohet te fleta e mëparshme e lëndës</string>
-    <string name="gutenberg_native_navigates_to_customize_the_gradient">Kalohet te përshtatja e gradientit</string>
-    <string name="gutenberg_native_navigates_to_custom_color_picker">Kalohet te zgjedhësi i ngjyrës vetjake</string>
-    <string name="gutenberg_native_gradient_type">Lloj Gradienti</string>
-    <string name="gutenberg_native_go_back">Shko mbrapsht</string>
-    <string name="gutenberg_native_double_tap_to_select_the_option">Që të përzgjidhni mundësinë, prekeni dyfish</string>
-    <string name="gutenberg_native_customize_gradient">Përshtatni Gradientë</string>
-    <string name="pages_list_author">Autor faqeje</string>
     <string name="error_media_thumbnail_not_loaded">S’u ngarkua dot miniaturë mediash</string>
     <string name="menu_content_info">Strukturë lënde</string>
     <string name="everyone">Gjithkush</string>
     <string name="me">Unë</string>
-    <string name="gutenberg_native_dismiss">Hidhe tej</string>
     <string name="prepublishing_nudges_home_tags_not_set">E pacaktuar</string>
     <string name="prepublishing_tags_description">Etiketat ndihmojnë t’u tregohet lexuesve se për çfarë është një postim</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Datë Botimi</string>
@@ -2047,11 +1635,6 @@ Language: sq_AL
     <string name="status_and_visibility">Gjendje &amp; Dukshmëri</string>
     <string name="update_now">Përditësojeni Tani</string>
     <string name="pages_item_subtitle">%1$s ·</string>
-    <string name="gutenberg_native_open_block_actions_menu">Hap Menu Veprimesh Blloqesh</string>
-    <string name="gutenberg_native_move_to_top">Ngjite në krye</string>
-    <string name="gutenberg_native_insert_mention">Futni përmendje</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Prekeni dyfish që të hapet Fleta e Poshtme me mundësitë e gatshme</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Prekeni dyfish që të hapet Fleta e Veprimeve me mundësitë e gatshme</string>
     <string name="pages_cannot_be_started">S’hapim dot faqe tani. Ju lutemi, riprovoni më vonë</string>
     <string name="pages_set_as_posts_page">Caktojeni Faqe Postimesh</string>
     <string name="pages_set_as_homepage">Caktojeni si Faqen hyrëse</string>
@@ -2075,8 +1658,6 @@ Language: sq_AL
     <string name="page_homepage_successfully_updated">Faqja hyrëse u krijua me sukses</string>
     <string name="page_cannot_set_posts_page">Që të caktoni faqe Postimesh, aktivizoni te Rregullime Sajti \"Faqe hyrëse Statike\"</string>
     <string name="page_cannot_set_homepage">Që të caktoni Faqe hyrëse, aktivizoni te Rregullime Sajti \"Faqe hyrëse Statike\"</string>
-    <string name="gutenberg_native_select_a_color">Përzgjidhni një ngjyrë</string>
-    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Prekeni dyfish që të kaloni te rregullimet e ngjyrave</string>
     <string name="feature_announcement_find_out_mode">Shihni më tepër</string>
     <string name="feature_announcement_dialog_label">Ç’ka të Re Në %s</string>
     <string name="insert_label_with_count">Fut %d</string>
@@ -2087,8 +1668,6 @@ Language: sq_AL
     <string name="photo_picker_use_video">Përdor këtë video</string>
     <string name="photo_picker_photo_or_video_title">Zgjidhni media</string>
     <string name="photo_picker_video_title">Zgjidhni video</string>
-    <string name="site_picker_ask_site_select">S’u përzgjodh dot sajt. Ju lutemi, riprovoni.</string>
-    <string name="sitepicker_continue_flow">Vazhdo</string>
     <string name="reader_reblog_error">Riblogimi dështoi</string>
     <string name="reader_no_blog_to_reblog_action">Administroni Blogje</string>
     <string name="reader_no_blog_to_reblog_detail">Pasi të krijoni një blog WordPress.com, mund të riblogoni në sajtin tuaj lëndën që doni.</string>
@@ -2101,14 +1680,6 @@ Language: sq_AL
     <string name="button_insert">Fute</string>
     <string name="continue_label">Vazhdo</string>
     <string name="copy_text">Kopjoje</string>
-    <string name="gutenberg_native_number_of_columns">Numër shtyllash</string>
-    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Kaloje bllokun djathtas nga pozicioni %1$s sipër në pozicionin %2$s</string>
-    <string name="gutenberg_native_move_block_right">Shpjere bllokun djathtas</string>
-    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Kaloje bllokun majtas nga pozicioni %1$s në pozicionin %2$s</string>
-    <string name="gutenberg_native_move_block_left">Shpjere bllokun majtas</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Që ta lëvizni bllokun djathtas, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Që ta lëvizni bllokun majtas, prekeni dyfish</string>
-    <string name="gutenberg_native_block_settings">Rregullime blloku</string>
     <string name="new_site_creation_creating_site_loading_4">Po krijohet pulti</string>
     <string name="new_site_creation_creating_site_loading_3">Po ujdiset tema</string>
     <string name="new_site_creation_creating_site_loading_2">Po shtohen veçori sajti</string>
@@ -2163,17 +1734,6 @@ Language: sq_AL
     <string name="app_theme_light">E çelët</string>
     <string name="app_theme">Dukje</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Së fundi keni bëtë ndryshime te kjo faqe, por nuk i ruajtët. Zgjidhni një version për ngarkim:\n\n</string>
-    <string name="gutenberg_native_warning_message" a8c-src-lib="gutenberg">Mesazh sinjalizimi</string>
-    <string name="gutenberg_native_show_post_content">Shfaq lëndë postimi</string>
-    <string name="gutenberg_native_only_show_excerpt">Shfaq vetëm copëz</string>
-    <string name="gutenberg_native_link_to">Lidhje Te</string>
-    <string name="gutenberg_native_link_settings">Rregullime Lidhjesh</string>
-    <string name="gutenberg_native_excerpt_length_words">Gjatësi copëzash (fjalë)</string>
-    <string name="gutenberg_native_edit_cover_media">Përpunoni media mbulesë</string>
-    <string name="gutenberg_native_customize">PËRSHTATENI</string>
-    <string name="gutenberg_native_button_link_url">URL Lidhjeje Butoni</string>
-    <string name="gutenberg_native_border_radius">Rreze Anësh</string>
-    <string name="gutenberg_native_add_paragraph_block">Shtoni bllok paragraf</string>
     <string name="create_post_page_fab_tooltip_contributors">Krijoni një postim</string>
     <string name="post_list_tab_trashed_posts">Shpënë te hedhurinat</string>
     <string name="post_list_tab_scheduled_posts">Vënë në plan</string>
@@ -2190,24 +1750,11 @@ Language: sq_AL
     <string name="stats_insights_management_general">Të përgjithshme</string>
     <string name="stats_management_screen_title">Shtoni Kartë të Re</string>
     <string name="stats_management_add_new_stats_card">Shtoni kartë të re statistikash</string>
-    <string name="reader_self_hosted_select_filter">Përdorni butonin e filtrave që të gjeni postime rreth subjektesh specifike</string>
     <string name="reader_bottom_sheet_select_content_description">Përzgjidhni një Etiketë ose Blog, Dritare Flluskë</string>
-    <string name="reader_btn_remove_filter_content_description">Hiqe filtrin e tanishme</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Hyni te WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tags_list">Që të shihni postimet më të reja në etiketat te të cilat jeni pajtuar, bëni hyrjen te llogaria juaj në WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_blogs_list">Bëni hyrjen te llogaria juaj në WordPress.com që të shihni postimet më të reja prej blogjesh ku jepni pajtuar</string>
-    <string name="gutenberg_native_replace_current_block">Zëvendëso Bllokun e Tanishëm</string>
-    <string name="gutenberg_native_add_to_end">Shtoje Në Fund</string>
-    <string name="gutenberg_native_add_to_beginning">Shtoje Në Fillim</string>
-    <string name="gutenberg_native_add_block_before">Shtoje Përpara Bllokut</string>
-    <string name="gutenberg_native_add_block_after">Shtoje Pas Bllokut</string>
-    <string name="reader_filter_empty_tags_add_action">Shtoni një etiketë</string>
     <string name="reader_filter_cta">Filtër</string>
-    <string name="gutenberg_native_video_caption_s">Legjendë videoje. %s</string>
-    <string name="gutenberg_native_edit_video">Përpunoni videon</string>
-    <string name="gutenberg_native_edit_media">Përpunoni media</string>
-    <string name="gutenberg_native_add_a_shortcode">Shtoni kod të shkurtër…</string>
-    <string name="post_list_author">Autor postimi</string>
     <string name="fab_create_desc">Krijoni një postim</string>
     <string name="stats_posting_activity_end_description">Keni dëgjuar krejt statistika për këtë periudhë.\n        Prekja sërish do të shkaktojë rinisje nga e para.</string>
     <string name="stats_posting_activity_empty_description">S’ka statistika në këtë periudhë.</string>
@@ -2220,8 +1767,6 @@ Language: sq_AL
     <string name="stats_box_type_low">i ulët</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_replace_image" a8c-src-lib="gutenberg">Zëvendëso figurën</string>
-    <string name="gutenberg_native_gallery_caption_s">Përshkrim galerie. %s</string>
     <string name="create_post_page_fab_tooltip">Krijoni një postim ose faqe</string>
     <string name="content_description_person_building_website">Personi që po krijon sajt</string>
     <string name="post_signup_interstitial_not_right_now">Jo tani</string>
@@ -2258,56 +1803,6 @@ Language: sq_AL
     <string name="suffix_1_000">%sK</string>
     <string name="posts_cannot_be_started">S’i hapim dot postimet tani. Ju lutemi, riprovoni më vonë</string>
     <string name="site_cannot_be_loaded">S’ngarkojmë dot të dhënat për sajtin tuaj tani. Ju lutemi, riprovoni më vonë</string>
-    <string name="gutenberg_native_wordpress_media_library">Mediatekë WordPress</string>
-    <string name="gutenberg_native_unsupported">E pambuluar</string>
-    <string name="gutenberg_native_ungroup">Hiqi Grupin</string>
-    <string name="gutenberg_native_tap_to_hide_the_keyboard">Prekeni që të fshihet tastiera</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Prekeni këtu që të shfaqet ndihmë</string>
-    <string name="gutenberg_native_take_a_video">Bëni një Video</string>
-    <string name="gutenberg_native_take_a_photo_or_video">Bëni Foto ose Video</string>
-    <string name="gutenberg_native_take_a_photo">Bëni një Foto</string>
-    <string name="gutenberg_native_start_writing">Nisni të shkruani…</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bllok %s. Ky bllok ka lëndë të pavlefshme</string>
-    <string name="gutenberg_native_s_block_empty">Bllok %s. I zbrazët</string>
-    <string name="gutenberg_native_cut_block">Bllok Prije</string>
-    <string name="gutenberg_native_problem_opening_the_video">Problem me hapjen e videos</string>
-    <string name="gutenberg_native_problem_displaying_block">Problem me shfaqjen e bllokut</string>
-    <string name="gutenberg_native_post_title_s">Titull postimi. %s</string>
-    <string name="gutenberg_native_post_title_empty">Titull postimi. I zbrazët</string>
-    <string name="gutenberg_native_paste_url">Ngjitni URL</string>
-    <string name="gutenberg_native_page_break_block_s">Bllok ndërprerjeje faqeje. %s</string>
-    <string name="gutenberg_native_open_settings">Hap Rregullimet</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">S’ka aplikacion për ta trajtuar këtë kërkesë. Ju lutemi, instaloni një shfletues.</string>
-    <string name="gutenberg_native_navigate_up">Ngjituni</string>
-    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Kaloje bllokun nga rreshti %1$s sipër te rreshti %2$s</string>
-    <string name="gutenberg_native_move_block_up">Shpjere bllokun më sipër</string>
-    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Kaloje bllokun nga rreshti %1$s poshtë te rreshti %2$s</string>
-    <string name="gutenberg_native_move_block_down">Shpjere bllokun më poshtë</string>
-    <string name="gutenberg_native_link_text">Tekst lidhjeje</string>
-    <string name="gutenberg_native_link_inserted">Lidhja u fut</string>
-    <string name="gutenberg_native_image_caption_s">Titull figure. %s</string>
-    <string name="gutenberg_native_hide_keyboard">Fshihe tastierën</string>
-    <string name="gutenberg_native_help_icon">Ikonë ndihme</string>
-    <string name="gutenberg_native_double_tap_to_undo_last_change">Që të zhbëhet ndryshimi i fundit, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_toggle_setting">Që shfaqet/fshihet rregullimi, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_select_an_image">Që të përzgjidhni një figurë, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_select_a_video">Që të përzgjidhni një video, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_select">Që të përzgjidhet, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_redo_last_change">Që të ribëhet ndryshimi i fundit, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_up">Që ta ngrini bllokun sipër, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_down">Që ta ulni bllokun poshtë, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_edit_this_value">Që të përpunoni këtë vlerë, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_add_a_block">Që të shtoni një bllok, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">Për përpunim, prekeni dyfish dhe mbajeni të prekur</string>
-    <string name="gutenberg_native_current_value_is_s">Vlera e tanishme është %s</string>
-    <string name="gutenberg_native_choose_from_device">Zgjidhni nga pajisje</string>
-    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ndodhi një gabim i panjohur. Ju lutemi, riprovoni.</string>
-    <string name="gutenberg_native_alt_text">Tekst Alternativ</string>
-    <string name="gutenberg_native_add_video" a8c-src-lib="gutenberg">Shtoni video</string>
-    <string name="gutenberg_native_add_url">Shtoni URL</string>
-    <string name="gutenberg_native_add_alt_text">Shtoni tekst alternativ</string>
-    <string name="gutenberg_native_add_block_here">SHTONI BLLOK KËTU</string>
-    <string name="gutenberg_native_add_description" a8c-src-lib="gutenberg">Shtoni përshkrim</string>
     <string name="reader_empty_saved_posts_content_description">Prekni butonin “Shtoje te Postime të Ruajtur” që të ruhet një postim te lista juaj.</string>
     <string name="reader_acessibility_list_loaded">\"Lista është ngarkuar me %1$d zëra.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Njoftime</string>
@@ -2425,11 +1920,6 @@ Language: sq_AL
     <string name="description_collapse">Tkurre</string>
     <string name="my_site_verify_your_email_without_email">Kontrolloni adresën tuaj email - udhëzimet u dërguan te email-i juaj</string>
     <string name="my_site_verify_your_email">Verifikoni adresën tuaj email - udhëzimet u dërguan te %s</string>
-    <string name="link_dialog_button_cancel">Anuloje</string>
-    <string name="link_dialog_button_ok">OK</string>
-    <string name="link_dialog_edit_hint">http(s)://</string>
-    <string name="link_dialog_button_remove_link">Hiqe Lidhjen</string>
-    <string name="link_dialog_title">Futni lidhje</string>
     <string name="post_settings_retry_featured_image">Riprovoni ngarkimin</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Po ngarkohet media.\nJu lutemi, prekeni për mundësi.</string>
     <string name="link_open_new_window">Hape lidhjen në dritare/skedë të re</string>
@@ -2495,7 +1985,6 @@ Language: sq_AL
     <string name="stats_management_news_card_message">Zgjidhni ç’statistika të shihen, dhe përqendrohuni në të dhënat që keni më për zemër. Që të përshtatni statistikat, prekni %1$s në fund të faqes Prirje.</string>
     <string name="stats_manage_your_stats">Administroni Statistikat Tuaja</string>
     <string name="history_fetching_revisions">Po sillen rishikimet…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options" a8c-src-lib="module:editor">S’u arrit të futej media.\nJu lutemi, prekeni për mundësi.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">S’u arrit të futej media.\nJu lutemi, prekeni që të riprovohet.</string>
     <string name="editor_uploading_draft">Skica juaj po ngarkohet</string>
     <string name="post_uploading_draft">Po ngarkohet skicë</string>
@@ -2519,8 +2008,6 @@ Language: sq_AL
     <string name="dialog_confirm_trash_losing_unsaved_changes_message">Shpënia te hedhurinat e këtij postimi do të hedhë tej ndryshimet e paruajtura, jeni i sigurt se doni të vazhdohet?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Ndryshime vendore</string>
     <string name="button_move_to_draft">Kaloje te Skica</string>
-    <string name="post_list_toggle_item_layout_list_view">Kalo te pamja listë</string>
-    <string name="post_list_toggle_item_layout_cards_view">Kalo te pamja karta</string>
     <string name="posts_trashed_empty">S’keni postime të shpëna te hedhurinat</string>
     <string name="posts_draft_empty">S’keni ndonjë postim skicë</string>
     <string name="posts_scheduled_empty">S’keni postime të planifikuara për botim</string>
@@ -2552,15 +2039,10 @@ Language: sq_AL
     <string name="stats_months_and_years_views_label">Parje</string>
     <string name="stats_months_and_years_period_label">Periudhë</string>
     <string name="stats_detail_months_and_years">Muaj dhe Vite</string>
-    <string name="stats_insights_load_more">Ngarko më tepër</string>
     <string name="stats_insights_today_stats">Sot</string>
     <string name="stats_insights_best_hour">Ora Më e Mirë</string>
     <string name="stats_insights_best_day">Dita Më e Mirë</string>
     <string name="showing_stats_for">Po shfaqen statistika për:</string>
-    <string name="app_rating_rate_never">Jo, faleminderit</string>
-    <string name="app_rating_rate_later">Më vonë</string>
-    <string name="app_rating_rate_now">Vlerësojeni tani</string>
-    <string name="app_rating_message">Na bëhet qejfi t’ju rishohim! Nëse jua ka ënda aplikacionin, do të na pëlqente të vlerësim te Google Play Store.</string>
     <string name="editor_post_converted_back_to_draft">Postimi i shndërrua sërish në skicë</string>
     <string name="stats_insights_posting_activity">Veprimtari Postimi</string>
     <string name="stats_site_not_loaded_yet">Sajt ende i pangarkuar</string>
@@ -2587,8 +2069,6 @@ Language: sq_AL
     <string name="quick_start_dialog_check_stats_message_short">Përzgjidhni %1$s Statistika %2$s që të shihni se si po ecën sajti juaj.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Prekni %1$s Ikona e Sajtit Tuaj %2$s që të ngarkoni një të re</string>
     <string name="quick_start_dialog_publish_post_message">Hartoni dhe botoni një postim.</string>
-    <string name="quick_start_dialog_enable_sharing_title">Aktivizo ndarje postimesh me të tjerët</string>
-    <string name="quick_start_dialog_enable_sharing_message">Kryeni ndarje të vetvetishme me të tjerët në rrjetet tuaja shoqërore të postimeve të reja.</string>
     <string name="quick_start_dialog_check_stats_title">Ndiqni statistikat e sajtit tuaj</string>
     <string name="quick_start_dialog_check_stats_message">Ndiqni funksionimin e sajtit tuaj.</string>
     <string name="quick_start_task_skip_menu_title">Anashkaloje punën</string>
@@ -2620,10 +2100,8 @@ Language: sq_AL
     <string name="local_post_is_conflicted">Përplasje versionesh</string>
     <string name="preference_crash_reports_summary">Lejoni njoftime të vetvetishme vithisjesh, që të na ndihmoni të përmirësojmë punimin e aplikacionit.</string>
     <string name="preference_crash_reports">Njoftime vithisjesh</string>
-    <string name="snackbar_conflict_undo">Zhbëje</string>
     <string name="snackbar_conflict_web_version_discarded">Versioni Web u hodh tej</string>
     <string name="snackbar_conflict_local_version_discarded">Ndryshimet vendore u hodhën tej</string>
-    <string name="toast_conflict_updating_post">Përditësim postimi</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Hidh tej versionin Web</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Hidh tej versionin Vendor</string>
     <string name="dialog_confirm_load_remote_post_body_2">Vendor\nRuajtur në %1$s\n\nWeb\nRuajtur në %2$s\n</string>
@@ -2723,7 +2201,6 @@ Language: sq_AL
     <string name="pages_delete_permanently">Fshije Përgjithmonë</string>
     <string name="pages_move_to_trash">Shpjere te Hedhurinat</string>
     <string name="pages_move_to_draft">Shpjere te Skica</string>
-    <string name="pages_set_parent">Caktoje prind</string>
     <string name="pages_view">Shihni</string>
     <string name="pages_trashed">Shpënë te Hedhurinat</string>
     <string name="pages_scheduled">Planifikuar</string>
@@ -2757,12 +2234,9 @@ Language: sq_AL
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Prekni %1$s Lidhje %2$s që të shtoni llogari tuajat nga media shoqërore</string>
     <string name="quick_start_dialog_share_site_message">Lidhni llogaritë tuaja nga media shoqërore — sajti juaj do të ndajë vetvetiu me të tjerët postimet e reja.</string>
     <string name="quick_start_dialog_publish_post_title">Botoni një postim</string>
-    <string name="quick_start_dialog_publish_post_message_short">Prekni %1$s Krijo Postim %2$s që të krijohet një postim i ri</string>
     <string name="quick_start_dialog_need_help_button_negative">Jo, faleminderit</string>
     <string name="quick_start_dialog_follow_sites_title">Lidhuni me sajte të tjerë</string>
     <string name="quick_start_button_positive">Jepi</string>
-    <string name="quick_start_button_negative_short">Anuloje</string>
-    <string name="quick_start_button_negative">Jo tani</string>
     <string name="content_description_more">Më tepër</string>
     <string name="my_site_create_new_site_title">S’keni ende ndonjë sajt</string>
     <string name="reader_empty_subscribed_tags_subtitle">Shtoni këtu etiketa që të gjeni postime rreth temave tuaja të parapëlqyera</string>
@@ -2901,7 +2375,6 @@ Language: sq_AL
     <string name="photo_picker_stock_media">Zgjidhni prej Fototeke të Lirë</string>
     <string name="error_save_empty_draft">S’mund të ruhet skicë e zbrazët</string>
     <string name="site_settings_quota_space_unlimited">%1$s e pakufizuar</string>
-    <string name="preview_count">Paraparje %d</string>
     <string name="add_count">Shtoni %d</string>
     <string name="fab_add_tag_desc">Krijoje Etiketën</string>
     <string name="navigate_up_desc">lëvizni</string>
@@ -2966,7 +2439,6 @@ Language: sq_AL
     <string name="me_section_screen_title">Unë</string>
     <string name="my_site_section_screen_title">Sajti Im</string>
     <string name="notif_settings_screen_title">Rregullime njoftimesh</string>
-    <string name="signup_epilogue_error_avatar_view">Avatari juaj u ngarkua dhe do të jetë gati për përdorim pas pak.</string>
     <string name="permissions_denied_message">Duket se i keni çaktivizuar lejet e domosdoshme për funksionimin e kësaj veçorie.&lt;br/&gt;&lt;br/&gt;Për ta ndryshuar këtë, përpunoni lejet tuaja dhe sigurohuni që &lt;strong&gt;%s&lt;/strong&gt; është e aktivizuar.</string>
     <string name="permissions_denied_title">Leje</string>
     <string name="plugin_caption_featured">Të zgjedhura</string>
@@ -3071,7 +2543,6 @@ Language: sq_AL
     <string name="plugin_installed_version">Version i instaluar %s</string>
     <string name="plugin_version">Versioni %s</string>
     <string name="plugin_byline">nga %s</string>
-    <string name="change_photo">Ndryshoni foton</string>
     <string name="plugin_fetch_error">S’arrihet të ngarkohen shtojca</string>
     <string name="my_site_btn_site_pages">Faqe</string>
     <string name="site_settings_tags_hint">Administroni etiketat e sajtit tuaj</string>
@@ -3089,7 +2560,6 @@ Language: sq_AL
     <string name="site_settings_format_hint_custom">Format vetjak</string>
     <string name="site_settings_format_entry_custom">Vetjake</string>
     <string name="site_settings_posts_per_page_title">Postime për faqe</string>
-    <string name="site_settings_timezone_subtitle">Zgjidhni një qytet në zonën tuaj kohore</string>
     <string name="site_settings_timezone_title">Zonë kohore</string>
     <string name="site_settings_time_format_title">Format Kohe</string>
     <string name="site_settings_date_format_title">Format Datash</string>
@@ -3259,7 +2729,6 @@ Language: sq_AL
     <string name="requesting_otp" a8c-src-lib="module:login">Po kërkohet një kod verifikimi përmes SMS-je.</string>
     <string name="login_text_otp" a8c-src-lib="module:login">Më mirë më dërgoni kod me tekst</string>
     <string name="enter_verification_code" a8c-src-lib="module:login">Thuajse arritëm! Ju lutemi, jepni kodin e verifikimit për WordPress.com prej aplikacionit tuaj të mirëfilltësimeve.</string>
-    <string name="open_mail" a8c-src-lib="module:login">Hap Postën</string>
     <string name="next">Pasuesi</string>
     <string name="enter_email_wordpress_com" a8c-src-lib="module:login">Që të administroni krejt sajtet tuaj WordPress, bëni hyrjen te WordPress.com.</string>
     <string name="me_profile_photo">Foto Profili</string>
@@ -3268,7 +2737,6 @@ Language: sq_AL
     <string name="post_title">Titull</string>
     <string name="menu_redo">Ribëje</string>
     <string name="menu_undo">Zhbëje</string>
-    <string name="media_insert_unimplemented" a8c-src-lib="module:editor">Na ndjeni! Veçori ende e pasendërtuar :(</string>
     <string name="error_media_small">Media shumë e vogël për shfaqje</string>
     <string name="editor_dropped_unsupported_files">Kujdes: jo krejt objektet e lëna mbulohen!</string>
     <string name="editor_dropped_title_images_not_allowed">Lënia e Figura te Titulli nuk lejohet</string>
@@ -3366,7 +2834,6 @@ Language: sq_AL
     <string name="editor_draft_saved_online">Skica u ruajt &lt;em&gt;online&lt;/em&gt;</string>
     <string name="editor_post_saved_locally">Postimi u ruaj në pajisje</string>
     <string name="button_sync">Njëkohësoje</string>
-    <string name="smart_toast_comments_long_press">Që të përzgjidhni disa komente njëherësh, prekeni dhe mbajeni të prekur</string>
     <string name="photo_picker_choose_video">Zgjidhni video prej pajisjes</string>
     <string name="photo_picker_choose_photo">Zgjidhni foto prej pajisjes</string>
     <string name="wp_media_title">Media WordPress</string>
@@ -3423,7 +2890,6 @@ Language: sq_AL
     <string name="error_media_insufficient_fs_permissions">S’u dhanë leje leximi mbi media në pajisje</string>
     <string name="site_settings_optimize_images">Optimizo Figurat</string>
     <string name="media_generic_error">Ndodhi një gabim mediash</string>
-    <string name="media_upload_error">Ndodhi një gabim ngarkimi mediash</string>
     <string name="retry">Riprovoni</string>
     <string name="confirm">Ripohojeni</string>
     <string name="xmlrpc_endpoint_forbidden_error" a8c-src-lib="module:login">S’u bë dot lidhja. Morëm një gabim 403, kur provuam të hyjmë\n        te pikëmbarimi XMLRPC i sajtit tuaj. Kjo i duhet aplikacionit, që të mund të komunikojë me sajtin tuaj.\n        Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
@@ -3465,9 +2931,7 @@ Language: sq_AL
     <string name="invite_username_not_found">%s: Përdoruesi s’u gjet</string>
     <string name="comment_moderated_approved">Komenti u miratua!</string>
     <string name="like">Pëlqejeni</string>
-    <string name="timespan_now">tani</string>
     <string name="role_viewer">Shikues</string>
-    <string name="error_post_my_profile_no_connection">S’ka lidhje, s’u ruajt dot profili juaj</string>
     <string name="alignment_right">Djathtas</string>
     <string name="alignment_left">Majtas</string>
     <string name="alignment_none">Pa drejtim</string>
@@ -3482,19 +2946,9 @@ Language: sq_AL
     <string name="follower_subscribed_since">Që prej %1$s</string>
     <string name="error_remove_viewer">S’u hoq dot shikuesi</string>
     <string name="editor_failed_uploads_switch_html">Disa ngarkime mediash dështuan. S’mund të kaloni nën mënyrën HTML\n        në këtë gjendje. Të hiqen krejt ngarkimet e dështuara dhe të vazhdohet?</string>
-    <string name="image_thumbnail" a8c-src-lib="module:editor">Miniaturë figure</string>
-    <string name="visual_editor" a8c-src-lib="module:editor">Përpunues pamor</string>
-    <string name="image_width">Gjerësi</string>
-    <string name="image_link_to">Lidhje për te</string>
-    <string name="image_alt_text" a8c-src-lib="module:editor">Tekst alternativ</string>
-    <string name="image_caption">Titull</string>
-    <string name="image_settings_save_toast">Ndryshimet u ruajtën</string>
-    <string name="image_settings_dismiss_dialog_title">Të hidhen tej ndryshimet e paruajtura?</string>
     <string name="stop_upload_dialog_title">Të ndalet ngarkimi?</string>
-    <string name="alert_error_adding_media" a8c-src-lib="module:editor">Ndodhi një gabim gjatë futjes së medias</string>
     <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Po ngarkoni media. Ju lutemi, pritni deri sa kjo të plotësohet.</string>
     <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">S’futen dot media drejt e nën mënyrën HTML. Ju lutemi, kaloni nën mënyrën pamore.</string>
-    <string name="uploading_gallery_placeholder" a8c-src-lib="module:editor">Po ngarkohet galeria…</string>
     <string name="tap_to_try_again">Prekeni që të riprovohet!</string>
     <string name="invite_sent">Ftesa u dërgua me sukses</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -3506,7 +2960,6 @@ Language: sq_AL
     <string name="invite_message_title">Mesazh vetjak</string>
     <string name="invite">Ftoji</string>
     <string name="invite_names_title">Emra përdoruesish ose email-e</string>
-    <string name="my_site_header_external">I jashtëm</string>
     <string name="label_clear_search_history">Spastro historikun e kërkimeve</string>
     <string name="dlg_confirm_clear_search_history">Të spastrohet historiku?</string>
     <string name="reader_empty_search_description">S’u gjetën përfundime në gjuhën tuaj për %s</string>
@@ -3529,7 +2982,6 @@ Language: sq_AL
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Jo e mundshme këtë çast. Ju lutemi, jepni fjalëkalimin tuaj</string>
     <string name="logging_in">Po hyhet</string>
     <string name="web_address_dialog_hint">E shfaqur publikisht kur komentoni.</string>
-    <string name="capture_or_pick_photo">Bëni ose përzgjidhni foto</string>
     <string name="plans">Plane</string>
     <string name="plan">Plan</string>
     <string name="export_your_content_message">Postimet, faqet dhe rregullimet tuaja do t’ju dërgohen me email te %s.</string>
@@ -3802,25 +3254,15 @@ Language: sq_AL
     <string name="me_connect_to_wordpress_com">Hyni te WordPress.com</string>
     <string name="me_btn_login_logout">Hyrje/Dalje</string>
     <string name="account_settings">Rregullime Llogarie</string>
-    <string name="site_picker_cant_hide_current_site">\"%s\" s’u fsheh, ngaqë është sajti i tanishëm</string>
     <string name="site_picker_create_wpcom">Ndërtoni një sajt te WordPress.com</string>
     <string name="site_picker_add_self_hosted">Shto sajt të vetëstrehuar</string>
     <string name="site_picker_add_a_site">Shtoni një sajt</string>
-    <string name="site_picker_edit_visibility">Shfaq/fshih sajte</string>
     <string name="site_picker_title">Zgjidhni një sajt</string>
-    <string name="my_site_btn_view_site">Shihni Sajtin</string>
-    <string name="my_site_btn_view_admin">Shihni Përgjegjësin</string>
     <string name="my_site_btn_switch_site">Këmbe Sajt</string>
     <string name="my_site_btn_site_settings">Rregullime Sajti</string>
     <string name="my_site_btn_blog_posts">Postime</string>
-    <string name="my_site_header_publish">Botoje</string>
-    <string name="my_site_header_look_and_feel">Pamja dhe Ndjesitë</string>
-    <string name="my_site_header_configuration">Formësim</string>
     <string name="reader_label_new_posts_subtitle">Prekeni që të shfaqen</string>
-    <string name="deselect_all">Shpërzgjidhe krejt</string>
     <string name="select_all">Përzgjidhe krejt</string>
-    <string name="hide">Fshihe</string>
-    <string name="show">Shfaqe</string>
     <string name="auth_required" a8c-src-lib="module:login">Hyni sërish që të vazhdohet.</string>
     <string name="invalid_verification_code" a8c-src-lib="module:login">Kod verifikimi i pavlefshëm</string>
     <string name="verification_code" a8c-src-lib="module:login">Kod verifikimi</string>
@@ -3914,7 +3356,6 @@ Language: sq_AL
     <string name="fatal_db_error">Ndodhi një gabim gjatë krijimit të bazës së të dhënave për aplikacionin. Provoni të riinstaloni aplikacionin.</string>
     <string name="error_refresh_media">Media s’u rifreskua dot tani</string>
     <string name="wordpress_blog">Blog WordPress</string>
-    <string name="image_settings">Rregullime figurash</string>
     <string name="local_changes">Ndryshime vendore</string>
     <string name="new_media">Media e re</string>
     <string name="new_post">Postim i ri</string>
@@ -3945,7 +3386,6 @@ Language: sq_AL
     <string name="horizontal_alignment" a8c-src-lib="module:editor">Drejtim horizontal</string>
     <string name="local_draft">Skicë vendore</string>
     <string name="page_settings">Rregullime faqeje</string>
-    <string name="create_a_link" a8c-src-lib="module:editor">Krijoni një lidhje</string>
     <string name="link_enter_url_text">Tekst lidhjeje (opsional)</string>
     <string name="cannot_delete_multi_media_items">Disa media s’fshihen dot hëpërhë. Riprovoni më vonë.</string>
     <string name="media_error_no_permission">S’keni leje të shihni mediatekën</string>
@@ -3973,7 +3413,6 @@ Language: sq_AL
     <string name="reader_toast_err_comment_failed">S’u postua dot komenti juaj</string>
     <string name="reader_likes_only_you">E pëlqeni</string>
     <string name="reader_likes_one">Kjo i pëlqen një personi</string>
-    <string name="reader_label_removed_tag">U hoq %s</string>
     <string name="reader_label_added_tag">U shtua %s</string>
     <string name="reader_hint_comment_on_comment">Përgjigjuni komentit…</string>
     <string name="reader_btn_follow">Ndiqe</string>

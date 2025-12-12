@@ -52,38 +52,24 @@ Language: zh_CN
     <string name="he_support_send_button">发送</string>
     <string name="he_support_reply_button">回复</string>
     <string name="he_support_last_updated">上次更新时间：%1$s</string>
-    <string name="he_support_message_count">%1$d 条消息</string>
     <string name="he_support_empty_conversations_button">开始对话</string>
     <string name="he_support_empty_conversations_message">与我们的支持团队开始对话，获取解决问题所需的帮助。</string>
     <string name="he_support_empty_conversations_title">尚无对话</string>
     <string name="he_support_new_conversation_content_description">新建对话</string>
     <string name="he_support_conversations_title">支持对话</string>
-    <string name="ai_bot_time_weeks_ago">%1$d 周前</string>
-    <string name="ai_bot_time_week_ago">%1$d 周前</string>
-    <string name="ai_bot_time_days_ago">%1$d 天前</string>
-    <string name="ai_bot_time_day_ago">%1$d 天前</string>
-    <string name="ai_bot_time_hours_ago">%1$d 小时前</string>
-    <string name="ai_bot_time_hour_ago">%1$d 小时前</string>
-    <string name="ai_bot_time_minutes_ago">%1$d 分钟前</string>
-    <string name="ai_bot_time_minute_ago">%1$d 分钟前</string>
     <string name="ai_bot_time_just_now">刚才</string>
-    <string name="ai_bot_default_conversation_title">新建对话</string>
     <string name="ai_bot_welcome_message">我是您的个人 AI 助手。 我可以协助解答关于您站点或账户的任何问题。</string>
     <string name="ai_bot_welcome_greeting">您好，%1$s 👋</string>
     <string name="ai_bot_message_input_placeholder">输入消息…</string>
     <string name="ai_bot_send_button_content_description">发送</string>
     <string name="ai_bot_support_bot">支持机器人</string>
     <string name="ai_bot_you">您</string>
-    <string name="ai_bot_empty_conversations_button">开始对话</string>
-    <string name="ai_bot_empty_conversations_message">开始新对话，获取有关您 WordPress 站点或账户的帮助。</string>
-    <string name="ai_bot_empty_conversations_title">尚无对话</string>
     <string name="ai_bot_generic_error">出错了。 请稍后重试。</string>
     <string name="ai_bot_new_conversation_content_description">新建对话</string>
     <string name="ai_bot_back_button_content_description">返回</string>
     <string name="ai_bot_conversations_title">对话</string>
     <string name="create">创建</string>
     <string name="logs_screen_general_error">出错了…</string>
-    <string name="logs_screen_log_count">%d 条日志条目</string>
     <string name="logs_screen_empty_state">没有可用的日志</string>
     <string name="support_screen_user_avatar_content_description">用户头像</string>
     <string name="support_screen_application_logs_description">用于调试问题的高级工具</string>
@@ -97,7 +83,6 @@ Language: zh_CN
     <string name="support_screen_help_center_title">帮助中心</string>
     <string name="support_screen_how_can_we_help_title">我们能提供哪些帮助？</string>
     <string name="support_screen_login_button">登录 WordPress.com</string>
-    <string name="support_screen_profile_section_title">支持个人资料</string>
     <string name="support_screen_title">支持</string>
     <string name="modern_support_description">启用全新现代支持体验</string>
     <string name="modern_support">现代支持</string>
@@ -113,7 +98,6 @@ Language: zh_CN
     <string name="term_parent_none">无</string>
     <string name="term_parent_label">父级：</string>
     <string name="term_count">数量：%1$d</string>
-    <string name="term_count_label">数量：</string>
     <string name="term_description_label">描述：</string>
     <string name="term_slug_label">别名：</string>
     <string name="term_name_label">名称：</string>
@@ -158,7 +142,6 @@ Language: zh_CN
     <string name="subscribers_delete_confirmation_message">是否确定要删除此订阅者？</string>
     <string name="subscribers_delete_confirmation_title">删除订阅者</string>
     <string name="subscribers_sort_name">名称</string>
-    <string name="jetpack_rest_connection_error_connect_wpcom">无法关联到 WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">超时</string>
     <string name="jetpack_rest_connection_cancel_message">正在连接 Jetpack。 是否确定要取消？</string>
     <string name="jetpack_rest_connection_cancel_title">取消 Jetpack 设置？</string>
@@ -170,8 +153,6 @@ Language: zh_CN
     <string name="jetpack_rest_connection_step_connect_user">将用户关联到 WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">安装 Jetpack 插件</string>
     <string name="jetpack_rest_connection_step_login_wpcom">登录 WordPress.com</string>
-    <string name="jetpack_rest_connection_title">Jetpack 连接</string>
-    <string name="experimental_subscribers_feature_description">查看和管理电子报订阅者</string>
     <string name="start">开始</string>
     <string name="descending">降序</string>
     <string name="ascending">升序</string>
@@ -206,7 +187,6 @@ Language: zh_CN
     <string name="subscribers_clicked_label">已点击</string>
     <string name="subscribers_opened_label">已打开</string>
     <string name="subscribers_emails_sent_label">电子邮件</string>
-    <string name="subscribers_subscription_status">订阅状态</string>
     <string name="subscribers_error_title">出错了</string>
     <string name="subscribers_empty_search">未找到结果</string>
     <string name="subscribers_empty">无订阅者</string>
@@ -224,9 +204,7 @@ Language: zh_CN
     <string name="invite_users">邀请用户</string>
     <string name="experimental_application_password_feature_description">启用应用程序密码，以登录自托管站点</string>
     <string name="experimental_application_password_feature">应用程序密码登录</string>
-    <string name="experimental_subscribers_feature">实验性订阅者</string>
     <string name="cant_share_no_blog">没有博客，您就不能分享到 WordPress</string>
-    <string name="coming_soon">即将推出！</string>
     <string name="me_email_verification_generic_error">无法发送验证链接</string>
     <string name="me_email_verification_resend">重新发送验证链接</string>
     <string name="me_email_verification_sent_description">请在您的 %s 收件箱中查看确认电子邮件</string>
@@ -239,7 +217,6 @@ Language: zh_CN
     <string name="experimental_features_feedback_dialog_decline">稍后再说</string>
     <string name="experimental_features_feedback_dialog_message">您是否愿意分享关于实验性编辑器的反馈？</string>
     <string name="experimental_features_feedback_dialog_title">分享反馈</string>
-    <string name="experimental_block_editor_plugins">实验性区块编辑器插件</string>
     <string name="experimental_block_editor_description">启用更多区块类型和设置</string>
     <string name="experimental_block_editor_note">实验性区块编辑器将在今后的版本中成为默认设置，并且将无法禁用。</string>
     <string name="disable_experimental_block_editor_description">停用更多区块类型和设置</string>
@@ -259,7 +236,6 @@ Language: zh_CN
     <string name="nickname">昵称</string>
     <string name="name">姓名</string>
     <string name="no_users">无用户</string>
-    <string name="user">用户</string>
     <string name="users">用户</string>
     <string name="me_btn_help_and_support">帮助与支持</string>
     <string name="me_btn_experimental_features">实验性功能</string>
@@ -283,7 +259,6 @@ Language: zh_CN
     <string name="send_feedback">发送反馈</string>
     <string name="media_pager_remove_item_content_description">移除商品 %1$d</string>
     <string name="feedback_form_add_attachments">添加附件</string>
-    <string name="feedback_form_unable_to_create_tempfile">无法创建临时文件</string>
     <string name="feedback_form_attachment_already_added">附件已添加</string>
     <string name="feedback_form_attachment_too_large">附件不得大于 32MB</string>
     <string name="feedback_form_unsupported_attachment">不支持此文件类型</string>
@@ -307,7 +282,6 @@ Language: zh_CN
     <string name="voice_to_content_processing_label">正在处理</string>
     <string name="voice_to_content_error_label">错误</string>
     <string name="voice_to_content_processing">正在处理</string>
-    <string name="gutenberg_native_tap_to_edit" a8c-src-lib="gutenberg">轻点以编辑</string>
     <string name="voice_to_content_permissions_required_msg">要录制音频，此应用程序需要获得您麦克风的使用权限。 您之前已拒绝授予这项权限。 请在应用程序设置中启用麦克风权限，以使用此功能。</string>
     <string name="voice_to_content_permissions_required_title">需要音频录制权限</string>
     <string name="permission_access_media_location">媒体位置</string>
@@ -356,7 +330,6 @@ Language: zh_CN
     <string name="stats_view_emails">电子邮件</string>
     <string name="stats_view_subscribers">订阅者</string>
     <string name="stats_view_total_subscribers">订阅者总数</string>
-    <string name="stats_view_subscriber_totals">订阅者总数</string>
     <string name="stats_list_item_with_two_values_description">%1$s：%2$s，%3$s：%4$s，%5$s：%6$s</string>
     <string name="stats_emails_clicks_label">点击次数</string>
     <string name="stats_emails_opens_label">打开次数</string>
@@ -394,9 +367,7 @@ Language: zh_CN
     <string name="reader_preferences_screen_font_size_label">字体大小</string>
     <string name="reader_preferences_screen_font_family_label">字体</string>
     <string name="reader_preferences_screen_theme_label">配色方案</string>
-    <string name="reader_preferences_screen_preview_text_feedback_label">发送您的反馈</string>
     <string name="experimental_badge">&lt;Experimental&gt;</string>
-    <string name="gutenberg_native_clear_selected_color" a8c-src-lib="gutenberg">清除选定的颜色</string>
     <string name="reader_no_followed_tags_text_title">无关注的标签</string>
     <string name="reader_toast_err_tag_already_following">您已关注此标签</string>
     <string name="reader_menu_reading_preferences">阅读偏好</string>
@@ -408,25 +379,11 @@ Language: zh_CN
     <string name="reader_preferences_theme_sepia">棕褐色</string>
     <string name="reader_preferences_theme_soft">柔和</string>
     <string name="reader_preferences_theme_system">默认</string>
-    <string name="reader_preferences_screen_preview_text_feedback_link">发送您的反馈</string>
-    <string name="reader_preferences_screen_preview_text_feedback">这是一项仍在开发中的新功能。 如需帮助我们改进，请 %s。</string>
     <string name="reader_preferences_screen_preview_text">选择您想要的颜色、字体和尺寸。 在此处预览您的选择，并在完成后阅读以您所选样式呈现的文章。</string>
     <string name="reader_preferences_screen_preview_title">阅读偏好</string>
     <string name="reader_filter_empty_tags_action_follow">关注标签</string>
     <string name="button_read">阅读</string>
-    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" a8c-src-lib="gutenberg">您可以复制文章文本，以防内容受到影响。 将错误详情复制到调试程序并与支持人员共享。</string>
-    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" a8c-src-lib="gutenberg">编辑器发生未知错误</string>
-    <string name="gutenberg_native_tap_here_to_copy_post_text" a8c-src-lib="gutenberg">点击此处复制文章文本</string>
-    <string name="gutenberg_native_tap_here_to_copy_error_details" a8c-src-lib="gutenberg">点击此处复制错误详情</string>
-    <string name="gutenberg_native_copy_post_text" a8c-src-lib="gutenberg">复制文章文本</string>
-    <string name="gutenberg_native_copy_error_details" a8c-src-lib="gutenberg">复制错误详情</string>
-    <string name="gutenberg_native_button_to_copy_post_text" a8c-src-lib="gutenberg">点击此按钮即可复制文章文本</string>
-    <string name="gutenberg_native_button_to_copy_error_details" a8c-src-lib="gutenberg">点击此按钮即可复制错误详情</string>
     <string name="editor_updating_content_failed">更新内容失败</string>
-    <string name="gutenberg_native_video_caption_s_0141bd20" a8c-src-lib="gutenberg">视频说明。 %s</string>
-    <string name="gutenberg_native_video_caption_empty_663aab49" a8c-src-lib="gutenberg">视频说明。 空</string>
-    <string name="gutenberg_native_edit_video_024aee6d" a8c-src-lib="gutenberg">编辑视频</string>
-    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" a8c-src-lib="gutenberg">自动播放可能会给某些用户带来使用方面的问题。</string>
     <string name="notifications_action_mark_all_as_read">全部标为已读</string>
     <string name="notifications_unread_content_description">未读</string>
     <string name="qrcode_media_deeplink_error">未找到站点。 检查您是否已登录到正确的账户。</string>
@@ -455,13 +412,11 @@ Language: zh_CN
     <string name="reader_label_choose_interests">选择您的兴趣</string>
     <string name="reader_label_subscribers_count_single">1 位订阅者</string>
     <string name="reader_label_subscribers_count">%s 位订阅者</string>
-    <string name="reader_label_subscribe_count">%,d 位订阅者</string>
     <string name="reader_label_blog_subscribed">已订阅博客</string>
     <string name="reader_hint_search_subscribed_blogs">搜索已订阅的博客</string>
     <string name="reader_btn_subscribed">已订阅</string>
     <string name="reader_btn_subscribe">订阅</string>
     <string name="reader_menu_block_this_blog">阻止此博客</string>
-    <string name="reader_menu_tags_and_blogs">编辑标签和博客</string>
     <string name="reader_page_followed_blogs_title">已订阅的博客</string>
     <string name="reader_title_tags">关注标签</string>
     <string name="reader_activity_title_manage_tags_blogs">管理标签和博客</string>
@@ -482,24 +437,15 @@ Language: zh_CN
     <string name="reader_dropdown_menu_discover">发现</string>
     <string name="reader_search_content_description">搜索</string>
     <string name="reader_discover_no_posts_button_tags_text_follow">关注标签</string>
-    <string name="reader_discover_recommended_blogs_to_subscribe_header">要订阅的博客</string>
     <string name="reader_filter_empty_tags_action_suggested">建议标签</string>
     <string name="reader_filter_empty_blogs_action_search">搜索博客</string>
     <string name="reader_filter_empty_tags_list_follow_text">关注一个标签，您就能在此处看到该标签下的最佳文章。</string>
     <string name="reader_filter_empty_tags_list_title">无标签</string>
     <string name="reader_filter_empty_blogs_list_text">在“发现”中订阅博客，您就能在此处看到他们的最新文章。 或者搜索一个您已点赞过的博客。</string>
     <string name="reader_filter_empty_blogs_list_title">无博客订阅</string>
-    <string name="reader_filter_empty_blogs_action">订阅博客</string>
-    <string name="reader_filter_empty_blogs_list">查看您所订阅的博客的最新文章</string>
     <string name="reader_filter_by_tag_title">按标签筛选</string>
     <string name="reader_filter_by_blog_title">按博客筛选</string>
-    <string name="gutenberg_native_waiting_for_connection" a8c-src-lib="gutenberg">正在等待连接</string>
     <string name="stats_traffic">流量</string>
-    <string name="gutenberg_native_working_offline" a8c-src-lib="gutenberg">离线工作</string>
-    <string name="gutenberg_native_network_connection_re_established" a8c-src-lib="gutenberg">已重新建立网络连接</string>
-    <string name="gutenberg_native_network_connection_lost_working_offline" a8c-src-lib="gutenberg">网络连接中断，正在离线工作</string>
-    <string name="gutenberg_native_font_size_1_s" a8c-src-lib="gutenberg">字体大小，%1$s</string>
-    <string name="gutenberg_native_file_type_not_supported_as_a_media_file" a8c-src-lib="gutenberg">不支持的媒体文件类型。</string>
     <string name="media_cannot_be_started">我们现在无法打开媒体。 请稍后再试</string>
     <string name="domains_just_search_for_a_domain_button">只需搜索域名</string>
     <string name="domains_upgrade_to_a_plan_button">升级到套餐</string>
@@ -521,18 +467,12 @@ Language: zh_CN
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">在一月份，Bloganuary 将向您发送博客提示，这是我们发起的一项社区挑战，旨在帮助广大用户在新的一年养成写博客的习惯。</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary 即将上线！</string>
-    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" a8c-src-lib="gutenberg">因此，我们建议使用 Web 浏览器编辑该区块。</string>
-    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" a8c-src-lib="gutenberg">因此，我们建议使用 Web 编辑器编辑该区块。</string>
-    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" a8c-src-lib="gutenberg">或者，您也可以取消区块分组，以使内容扁平化。</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">转至设置</string>
     <string name="barcode_scanning_alert_dialog_dismiss_label">取消</string>
     <string name="barcode_scanning_alert_dialog_rationale_cta_label">授予</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_message">您已经永久拒绝了相机权限。 需要该权限才能扫描条形码。 请通过应用程序设置启用该权限</string>
     <string name="barcode_scanning_alert_dialog_rationale_message">需要相机权限才能扫描条形码</string>
     <string name="barcode_scanning_alert_dialog_title">授予相机权限</string>
-    <string name="barcode_scanning_camera_permission_denied">需要相机权限才能扫描条形码。</string>
-    <string name="barcode_scanning_title">扫描条形码</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" a8c-src-lib="gutenberg">嵌套深度超过 %d 层级的区块在移动端编辑器中可能无法正常渲染。</string>
     <string name="jp_migration_lets_go_button">开始使用</string>
     <string name="jp_migration_done_no_sites_message">是时候在 Jetpack 应用程序上继续您的 WordPress 之旅了。</string>
     <string name="domain_management_clear_search">清除搜索</string>
@@ -554,10 +494,7 @@ Language: zh_CN
     <string name="domain_management_error_title">无法检索您的域名</string>
     <string name="site_domain_title">站点域名</string>
     <string name="my_site_blogging_prompt_card_attribution_bloganuary">来自 &lt;b&gt;Bloganuary&lt;/b&gt;</string>
-    <string name="post_status_post_edited">已编辑</string>
     <string name="post_list_toggle_author_filter">按作者筛选</string>
-    <string name="gutenberg_native_s_block_converted_to_blocks" a8c-src-lib="gutenberg">‘%s’区块已转换为多个区块</string>
-    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks" a8c-src-lib="gutenberg">或者，您可以将内容转换为多个区块。</string>
     <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">禁用快捷键</string>
     <string name="personalization_screen_tab_shortcuts_active_shortcuts">启用快捷键</string>
     <string name="personalization_screen_shortcuts_tab_title">快捷键</string>
@@ -588,17 +525,10 @@ Language: zh_CN
     <string name="reader_secondary_bookmarked">已保存</string>
     <string name="reader_secondary_bookmark">保存</string>
     <string name="reader_discover_recommended_header_new">您可能会喜欢</string>
-    <string name="gutenberg_native_ungroup_block" a8c-src-lib="gutenberg">取消区块分组</string>
-    <string name="gutenberg_native_tap_here_to_show_more_details" a8c-src-lib="gutenberg">轻点此处以显示更多详细信息。</string>
-    <string name="gutenberg_native_synced_patterns" a8c-src-lib="gutenberg">已同步的样板</string>
-    <string name="gutenberg_native_deeply_nested_block" a8c-src-lib="gutenberg">深度嵌套区块</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78" a8c-src-lib="gutenberg">嵌套深度超过 %d 层级的区块在移动端编辑器中可能无法正常渲染。  因此，我们建议取消区块分组或使用 Web 编辑器编辑区块，以使内容扁平化。</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for" a8c-src-lib="gutenberg">区块深度嵌套，因此无法渲染。 轻点此处以了解更多详细信息。</string>
     <string name="pages_no_site_something_went_wrong">糟糕，出错了。 请稍后重试。</string>
     <string name="sharing_connect_via_web_warning_positive_button">转到网页</string>
     <string name="my_site_dashboard_no_cards_message_description">轻点个性化按钮，显示更多卡片。</string>
     <string name="my_site_dashboard_no_cards_message_title">所有卡片已隐藏</string>
-    <string name="personalization_screen_next_steps_card_description">了解如何通过这一应用程序充分利用您的站点。</string>
     <string name="personalization_screen_activity_log_card_description">您站点近期的操作记录。</string>
     <string name="personalization_screen_pages_card_description">您站点页面的概览。</string>
     <string name="personalization_screen_blogging_prompts_card_description">适用于您的博文的每日创意。</string>
@@ -620,28 +550,18 @@ Language: zh_CN
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">查看所有广告活动</string>
     <string name="dashboard_activity_card_menu_all_activity">所有动态</string>
     <string name="dashboard_pages_card_more_menu_all_pages">所有页面</string>
-    <string name="gutenberg_native_choose_a_file" a8c-src-lib="gutenberg">选择文件</string>
-    <string name="gutenberg_native_add_image_or_video" a8c-src-lib="gutenberg">添加图片或视频</string>
     <string name="my_site_post_card_menu_view_all_scheduled_posts">查看所有已排定的文章</string>
     <string name="my_site_post_card_menu_view_all_drafts">查看所有草稿</string>
     <string name="my_site_todays_stats_menu_view_stats">查看统计信息</string>
     <string name="my_site_dashboard_card_more_menu_hide_card">隐藏此内容</string>
     <string name="contact_support_first_message_hint">如果我不能回答您的问题，我会帮您向我们的团队提交一张支持申请单！</string>
     <string name="contact_support_first_message_hi">你好，我是 Jetpack AI Assistant。</string>
-    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" a8c-src-lib="gutenberg">访问您的 Web 浏览器上的这一“付费墙”区块，进行高级设置。</string>
     <string name="contact_support_bot_ticket_comment_answer">答案：</string>
     <string name="contact_support_bot_ticket_comment_question">问题：</string>
     <string name="contact_support_bot_ticket_comment_start">Jetpack Mobile Bot 文字转录稿：</string>
     <string name="contact_support_bot_ticket_error">提交支持申请单时出错</string>
     <string name="contact_support_bot_ticket_message">申请单已创建</string>
     <string name="contact_support_bot_ticket_loading">正在创建支持申请单……</string>
-    <string name="contact_support_question_six">我如何能在该应用程序中使用自定义域名？</string>
-    <string name="contact_support_question_five">我忘记了自己的登录信息</string>
-    <string name="contact_support_question_four">为什么我无法登录？</string>
-    <string name="contact_support_question_three">我无法上传照片/视频</string>
-    <string name="contact_support_question_two">帮帮我，我的站点宕机了！</string>
-    <string name="contact_support_question_one">我的站点地址是什么？</string>
-    <string name="contact_support_suggestions">不确定提问内容？</string>
     <string name="contact_support_get_support">联系支持人员</string>
     <string name="contact_support_first_message">我能为您提供什么帮助？</string>
     <string name="contact_support_input_placeholder">发送消息……</string>
@@ -665,10 +585,6 @@ Language: zh_CN
     <string name="post_settings_jetpack_social_share_message_title">自定义消息</string>
     <string name="post_settings_jetpack_social_connect_not_now_button">不是现在</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">连接账户</string>
-    <string name="gutenberg_native_insert_video_block" a8c-src-lib="gutenberg">插入视频区块</string>
-    <string name="gutenberg_native_insert_image_block" a8c-src-lib="gutenberg">插入图像区块</string>
-    <string name="gutenberg_native_insert_gallery_block" a8c-src-lib="gutenberg">插入画廊区块</string>
-    <string name="gutenberg_native_insert_audio_block" a8c-src-lib="gutenberg">插入音频区块</string>
     <string name="campaign_listing_page_no_campaigns_button_text">创建</string>
     <string name="campaign_listing_page_no_campaigns_message_description">您还没有创建任何活动。 点击“创建”开始。</string>
     <string name="campaign_listing_page_no_campaigns_message_title">您没有活动</string>
@@ -685,7 +601,6 @@ Language: zh_CN
     <string name="campaign_status_active">启用</string>
     <string name="blaze_campaigns_card_footer_label">创建活动</string>
     <string name="blaze_campaigns_card_title">Blaze 活动</string>
-    <string name="promote_blaze_flow_error">无法加载 Blaze 宣传流</string>
     <string name="prepublishing_nudges_social_new_connection_text">通过在社交媒体上自动与好友共享文章来增加流量。</string>
     <string name="menu_close_editor">关闭编辑器</string>
     <string name="menu_redo_context">重做上一次更改</string>
@@ -694,10 +609,6 @@ Language: zh_CN
     <string name="post_settings_jetpack_social_subscribe_share_more">订阅以共享更多</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">通过在社交媒体上自动与好友共享文章来增加流量。</string>
     <string name="post_settings_jetpack_social_header">社交共享</string>
-    <string name="gutenberg_native_s_detached" a8c-src-lib="gutenberg">%s 已分离</string>
-    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios" a8c-src-lib="gutenberg">iOS 版 %s 尚不支持编辑已同步的区块样板</string>
-    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android" a8c-src-lib="gutenberg">Android 版 %s 尚不支持编辑已同步的样板</string>
-    <string name="gutenberg_native_reusable" a8c-src-lib="gutenberg">可重用</string>
     <string name="privacy_banner_error_save">保存您的隐私选项时出现错误。</string>
     <string name="privacy_banner_save">保存</string>
     <string name="privacy_banner_settings">设置</string>
@@ -707,8 +618,6 @@ Language: zh_CN
     <string name="privacy_banner_description">我们自始至终都非常重视您的隐私。 我们使用、存储和处理您的个人数据，以多种方式优化我们的应用程序（以及您的体验）。 我们必须使用您的部分数据，来确保系统正常运行，而至于其他数据，您可以在“设置”中进行定制。</string>
     <string name="tabbar_accessibility_label_me">本人。 管理您的个人资料详情。</string>
     <string name="social_item_message_title">消息</string>
-    <string name="gutenberg_native_block_ungrouped" a8c-src-lib="gutenberg">未分组区块</string>
-    <string name="gutenberg_native_block_grouped" a8c-src-lib="gutenberg">已分组区块</string>
     <string name="dashboard_card_plans_checkout_success_info">您的域名最多可能需要 30 分钟时间才能开始正常运行。</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">正在设置您的新域名 &lt;b&gt;%s&lt;/b&gt;。</string>
     <string name="dashboard_card_plans_checkout_success_title">一切准备就绪！</string>
@@ -731,13 +640,10 @@ Language: zh_CN
     <string name="sharing_twitter_deprecation_notice_find_out_more">了解更多</string>
     <string name="sharing_twitter_deprecation_notice_description">由于 Twitter 更改了条款和定价，Twitter 自动共享功能已无法使用。</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter 自动分享功能已无法使用</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios" a8c-src-lib="gutenberg">iOS 版 %s 尚不支持编辑可重用区块</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android" a8c-src-lib="gutenberg">Android 版 %s 尚不支持编辑可重用区块</string>
     <string name="jp_migration_notifications_allow_title">允许通知，持续关注您的站点</string>
     <string name="wp_jp_static_poster_message">Jetpack 应用拥有 WordPress 应用的所有功能，现在可以独家访问统计信息、阅读器、通知等功能。</string>
     <string name="wp_jp_static_poster_title_plural">在 Jetpack\u00A0应用中结合使用 WordPress 和 %s。</string>
     <string name="wp_jp_static_poster_title">在 Jetpack\u00A0应用中结合使用 WordPress 和 %s。</string>
-    <string name="gutenberg_native_unlabeled_color_s" a8c-src-lib="gutenberg">未标记的颜色 %s</string>
     <string name="dashboard_activity_card_title">近期的动态</string>
     <string name="site_creation_search_domain_example_body">如以上示例所示，域名允许访客从其 Web 浏览器查找和访问您的站点。</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
@@ -753,13 +659,6 @@ Language: zh_CN
     <string name="jp_migration_delete_title">您的设备上不再需要 WordPress 应用</string>
     <string name="jp_migration_done_delete_wp_message">我们建议您&lt;b&gt;卸载设备上的 WordPress 应用&lt;/b&gt;以避免发生数据冲突。</string>
     <string name="jp_migration_success_card_message">欢迎使用 Jetpack app。您可以卸载 WordPress 应用。</string>
-    <string name="gutenberg_native_remove_blocks" a8c-src-lib="gutenberg">移除区块</string>
-    <string name="gutenberg_native_privacy_and_rating" a8c-src-lib="gutenberg">隐私和评级</string>
-    <string name="gutenberg_native_playback_settings" a8c-src-lib="gutenberg">播放设置</string>
-    <string name="gutenberg_native_playback_bar_color" a8c-src-lib="gutenberg">播放栏颜色</string>
-    <string name="gutenberg_native_manual" a8c-src-lib="gutenberg">手动</string>
-    <string name="gutenberg_native_dynamic" a8c-src-lib="gutenberg">动态</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative" a8c-src-lib="gutenberg">描述图片的用途。 如果图片仅作装饰用，请留空。</string>
     <string name="dashboard_pages_card_create_another_page_description">从适用于移动设备的定制布局开始</string>
     <string name="dashboard_pages_card_create_another_page_button">创建其他页面</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">向您的站点添加页面</string>
@@ -817,14 +716,12 @@ Language: zh_CN
     <string name="site_creation_domain_tag_sale">销售</string>
     <string name="site_creation_domain_tag_recommended">推荐</string>
     <string name="site_creation_domain_tag_best_alternative">更好的替代方案</string>
-    <string name="site_creation_domain_cost">/年</string>
     <string name="support_faq_caption">查看我们的常见问题解答，为您可能遇到的常见问题寻找答案。</string>
     <string name="support_faq_title">感谢您切换至 Jetpack 应用程序！</string>
     <string name="logs_button">日志</string>
     <string name="tickets">票据</string>
     <string name="free">免费</string>
     <string name="help_buttons_screen_title">帮助</string>
-    <string name="gutenberg_native_blocks_menu" a8c-src-lib="gutenberg">区块菜单</string>
     <string name="promote_blaze_card_sub_title">在数以百万计的站点上展示您的作品。</string>
     <string name="promote_blaze_card_title">使用 Blaze 推广您的内容</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">关闭</string>
@@ -914,7 +811,6 @@ Language: zh_CN
     <string name="blogging_prompts_list_answered_prompt">✓ 已回复</string>
     <string name="blogging_prompts_list_title">提示</string>
     <string name="close_desc">关闭</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" a8c-src-lib="gutenberg">或者，您也可以轻点“分离”来分离并单独编辑此区块。</string>
     <string name="dlg_confirm_delete_category">是否永久删除“%s”分类？</string>
     <string name="deleting_cat_success">已成功删除分类</string>
     <string name="deleting_cat_failed">删除分类失败</string>
@@ -959,8 +855,6 @@ Language: zh_CN
     <string name="jp_migration_notifications_subtitle">您将收到所有相同的通知，但现在这些通知来自 Jetpack 应用。</string>
     <string name="wordpress_help_center_button">WordPress 帮助中心</string>
     <string name="support_title">支持</string>
-    <string name="notification_disable_broadcast_permission_desc">允许此应用禁用 WordPress 通知功能。</string>
-    <string name="notification_disable_broadcast_permission_label">禁用 WordPress 通知功能</string>
     <string name="jp_migration_help_button">需要帮助？</string>
     <string name="jp_migration_continue_button">继续</string>
     <string name="jp_migration_welcome_site_found_message">我们找到了您的站点。 继续转移您的所有数据并自动登录至 Jetpack。</string>
@@ -973,19 +867,12 @@ Language: zh_CN
     <string name="post_settings_page_attributes">页面属性</string>
     <string name="about_automattic_contribute_item_title" a8c-src-lib="about">贡献</string>
     <string name="about_news">新闻</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 条回复</string>
-    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress 图标</string>
-    <string name="login_prologue_revamped_tagline">随时随地撰写、编辑和发布内容。</string>
     <string name="error_fetch_authors_list">无法检索作者</string>
     <string name="post_settings_author">作者</string>
-    <string name="app_rating_title">喜欢 %s？</string>
     <string name="connection_service_label">将文章共享至 %s</string>
     <string name="connections_label">Jetpack Social 连接</string>
     <string name="stats_widget_log_in_to_add_message">请登录 Jetpack 应用程序以添加小工具。</string>
     <string name="stats_view_publicize">Jetpack Social 连接</string>
-    <string name="login_magic_links_email_sent" a8c-src-lib="module:login">我们刚刚发送了一个免密链接至</string>
-    <string name="login_magic_links_sent_label_short" a8c-src-lib="module:login">检查此设备上的电子邮件地址！</string>
-    <string name="or_use_password" a8c-src-lib="module:login">使用密码登录</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">通过实时更新，随时了解新评论、站点流量、安全报告等。</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack">通知功能由 Jetpack 提供支持</string>
     <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">在新版 Jetpack 应用程序中，您可以通过全新设计的“统计信息”和“数据分析”，观察流量增长情况并了解受众。</string>
@@ -994,16 +881,10 @@ Language: zh_CN
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">阅读器由 Jetpack 提供支持</string>
     <string name="wp_jetpack_powered_features">新的 Jetpack 应用程序具有“统计信息”、“阅读器”、“通知”等功能，让您的 WordPress 变得更好。</string>
     <string name="wp_jetpack_powered_better_with_jetpack">安装 Jetpack 的 WordPress 性能更优</string>
-    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers" a8c-src-lib="gutenberg">升级您的套餐即可使用视频封面</string>
-    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" a8c-src-lib="gutenberg">升级您的套餐即可上传音频</string>
-    <string name="gutenberg_native_jetpack_powered" a8c-src-lib="gutenberg">由 Jetpack 提供支持</string>
-    <string name="gutenberg_native_invalid_url" a8c-src-lib="gutenberg">无效的 URL。</string>
-    <string name="gutenberg_native_gradient" a8c-src-lib="gutenberg">渐变色</string>
     <string name="wp_jetpack_continue_to_notifications">继续以使用通知功能</string>
     <string name="wp_jetpack_continue_to_stats">继续以使用统计信息功能</string>
     <string name="wp_jetpack_continue_to_reader">继续以使用阅读器功能</string>
     <string name="wp_jetpack_get_new_jetpack_app">试用新版 Jetpack 应用程序</string>
-    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" a8c-src-lib="gutenberg">显示区块时出现问题。 \n点击尝试恢复区块。</string>
     <string name="weekly_roundup_notification_text_views_and_comments">上周共计 %1$s 次查看和 %2$s 条评论</string>
     <string name="weekly_roundup_notification_text_views_and_likes">上周共计 %1$s 次查看和 %2$s 个赞</string>
     <string name="weekly_roundup_notification_text_views_only">上周共计 %1$s 次查看。</string>
@@ -1012,8 +893,6 @@ Language: zh_CN
     <string name="wp_jetpack_powered">由 Jetpack 提供支持</string>
     <string name="qrcode_auth_flow_content_description">图片显示正在扫描登录代码</string>
     <string name="qrcode_auth_flow_error_content_description">图片指示错误</string>
-    <string name="qrcode_auth_flow_dismiss_dialog_message">是否确定要继续？</string>
-    <string name="qrcode_auth_flow_dismiss_dialog_title">退出扫描登录代码流程</string>
     <string name="qrcode_auth_flow_error_auth_failed_subtitle">无法使用此登录代码登录。 请点击“再次扫描”按钮，重新扫描代码。</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">验证失败</string>
     <string name="qrcode_auth_flow_error_expired_subtitle">此登录代码已过期。 请点击“再次扫描”按钮，重新扫描代码。</string>
@@ -1057,12 +936,6 @@ Language: zh_CN
     <string name="stats_action_card_blogging_reminders_title">设置您的博客提醒</string>
     <string name="stats_action_card_grow_audience_button_label">查看课程</string>
     <string name="stats_action_card_grow_audience_title">增加您的受众</string>
-    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" a8c-src-lib="gutenberg">您现在也可以重新排列区块，方法是点击一个区块，然后点击该区块左下角出现的向上和向下箭头，从而上下移动该区块。</string>
-    <string name="gutenberg_native_image_file_not_found" a8c-src-lib="gutenberg">找不到图像文件。</string>
-    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b" a8c-src-lib="gutenberg">拖放让重新排列区块轻而易举。 按住区块，将其拖动至新位置然后释放。</string>
-    <string name="gutenberg_native_drag_drop" a8c-src-lib="gutenberg">拖放</string>
-    <string name="gutenberg_native_arrow_buttons" a8c-src-lib="gutenberg">箭头按钮</string>
-    <string name="gutenberg_native_1_s_currently_selected_2_s" a8c-src-lib="gutenberg">%1$s. 当前已选择：%2$s</string>
     <string name="quick_start_sites_type_all_tasks_completed">已完成所有任务</string>
     <string name="quick_start_list_task_complete">完成任务</string>
     <string name="me_btn_scan_login_code">扫描登录码</string>
@@ -1070,7 +943,6 @@ Language: zh_CN
     <string name="stats_most_popular_percent_views_empty">动态数量不足。 请在您的站点拥有更多访客时回来查看！</string>
     <string name="stats_total_subscribers_content_description">%1$s 订阅者，占总数的 %2$s%%</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="pages_copy_link">复制链接</string>
     <string name="quick_start_completed_tour_title">恭喜！ 您搞明白了&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">了解此应用程序</string>
     <string name="quick_start_list_upload_media_subtitle">将媒体直接从您的设备或照相机中传输到站点</string>
@@ -1114,8 +986,6 @@ Language: zh_CN
     <string name="scan_vault_press_active_on_site_title">您的站点使用 VaultPress</string>
     <string name="locale_picker_current_language">当前语言：</string>
     <string name="hpp_choose_and_create_site">创建站点</string>
-    <string name="gutenberg_native_add_blocks_11d0841f">添加区块</string>
-    <string name="initial_screen">初始屏幕</string>
     <string name="blogging_prompts_onboarding_notification_action">了解更多</string>
     <string name="blogging_prompts_onboarding_notification_text">培养写作习惯，成为更优秀的作家。 轻点了解详情。</string>
     <string name="blogging_prompts_onboarding_notification_title">WordPress 移动应用新功能：提示</string>
@@ -1135,7 +1005,6 @@ Language: zh_CN
     <string name="dialog_title_try_block_editor" translatable="true" a8c-src-lib="module:editor">试试新的区块编辑器</string>
     <string name="menu_toolbar_title" a8c-src-lib="module:editor">编辑“%s”区块</string>
     <string name="long_post_dlg_saving" a8c-src-lib="module:editor">正在保存</string>
-    <string name="retry_failed_upload_retry_all" a8c-src-lib="module:editor">全部重试</string>
     <string name="retry_failed_upload_remove" a8c-src-lib="module:editor">移除上传</string>
     <string name="retry_failed_upload_yes" a8c-src-lib="module:editor">重试</string>
     <string name="retry_failed_upload_title" a8c-src-lib="module:editor">无法上传文件</string>
@@ -1143,9 +1012,6 @@ Language: zh_CN
     <string name="stop_upload_dialog_button_yes" a8c-src-lib="module:editor">是</string>
     <string name="dialog_button_cancel" a8c-src-lib="module:editor">取消</string>
     <string name="dialog_button_ok" a8c-src-lib="module:editor">确定</string>
-    <string name="dialog_edit_hint" a8c-src-lib="module:editor">http(s)://</string>
-    <string name="dialog_title" a8c-src-lib="module:editor">插入链接</string>
-    <string name="editor_title_beta" a8c-src-lib="module:editor">测试版</string>
     <string name="toast_content_info_editor_not_ready" a8c-src-lib="module:editor">编辑器仍在加载</string>
     <string name="toast_content_info_failed" a8c-src-lib="module:editor">无法获取内容结构</string>
     <string name="dialog_content_info_body" a8c-src-lib="module:editor">区块数：%1$d\n字数：%2$d\n字符数：%3$d</string>
@@ -1153,11 +1019,6 @@ Language: zh_CN
     <string name="media_bar_description_library" a8c-src-lib="module:editor">从 WordPress 媒体库中选择媒体</string>
     <string name="media_bar_description_gallery" a8c-src-lib="module:editor">从图库中选择媒体</string>
     <string name="media_bar_description_camera" a8c-src-lib="module:editor">使用相机拍摄照片或视频</string>
-    <string name="pixel_suffix" a8c-src-lib="module:editor">%d 像素</string>
-    <string name="stop_save_dialog_ok_button" a8c-src-lib="module:editor">确定</string>
-    <string name="stop_save_dialog_message" a8c-src-lib="module:editor">请等待所有文件均已保存</string>
-    <string name="stop_save_dialog_title" a8c-src-lib="module:editor">正在保存文件</string>
-    <string name="post_content" a8c-src-lib="module:editor">内容</string>
     <string name="blogging_prompts_onboarding_card_prompt">将您的生活拍成电影。</string>
     <string name="blogging_prompts_onboarding_remind_me">提醒我</string>
     <string name="blogging_prompts_onboarding_try_it_now">立即试用</string>
@@ -1204,15 +1065,11 @@ Language: zh_CN
     <string name="quick_start_site_menu_tab_message_short">轻点“&lt;b&gt;%1$s&lt;/b&gt;”继续。</string>
     <string name="my_site_blogging_prompt_card_menu_skip">跳过今天</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">查看更多提示</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d 条回复</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">共享博客提示</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ 已回复</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">回复提示</string>
     <string name="my_site_blogging_prompt_card_title">提示</string>
     <string name="my_site_all_tab_title">所有</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">此颜色搭配可能不便于用户阅读。 不妨尝试使用较浅的背景颜色和/或较深的文本颜色。</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">此颜色搭配可能不便于用户阅读。 不妨尝试使用较深的背景颜色和/或较浅的文本颜色。</string>
-    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">未能插入媒体。\n点按获取更多信息。</string>
     <string name="new_site_creation_intents_header_subtitle">请从以下列表中选择一个主题，或输入自己的主题</string>
     <string name="new_site_creation_intents_header_title">您的网站是关于什么的？</string>
     <string name="notification_channel_weekly_roundup_title">每周综述</string>
@@ -1233,85 +1090,31 @@ Language: zh_CN
     <string name="reader_comment_menu_trash">移至回收站</string>
     <string name="reader_comment_menu_spam">标记为垃圾评论</string>
     <string name="reader_comment_menu_unapprove">不批准</string>
-    <string name="gutenberg_native_tiled_gallery_settings">平铺图片库设置</string>
-    <string name="gutenberg_native_navigates_to_layout_selection_screen">导航至布局选择界面</string>
-    <string name="gutenberg_native_gallery_style">画廊样式</string>
     <string name="sharing_connect_via_web_warning_message">您可以在 WordPress.com 网站上关联您的 %s 账户。 完成后，请返回应用程序更改您的“社交”设置。</string>
-    <string name="about_automattic_app_icon_description" a8c-src-lib="about">应用程序图标</string>
-    <string name="about_automattic_back_icon_description" a8c-src-lib="about">返回图标</string>
-    <string name="about_automattic_logo_description" a8c-src-lib="about">Automattic 徽标</string>
-    <string name="about_automattic_wordpress" a8c-src-lib="about">WordPress</string>
-    <string name="about_automattic_woocommerce" a8c-src-lib="about">WooCommerce</string>
-    <string name="about_automattic_tumblr" a8c-src-lib="about">Tumblr</string>
-    <string name="about_automattic_simplenote" a8c-src-lib="about">Simplenote</string>
-    <string name="about_automattic_pocketcasts" a8c-src-lib="about">Pocket Casts</string>
-    <string name="about_automattic_jetpack" a8c-src-lib="about">Jetpack</string>
-    <string name="about_automattic_dayone" a8c-src-lib="about">Day One</string>
-    <string name="about_automattic_source_code_item_title" a8c-src-lib="about">源代码</string>
-    <string name="about_automattic_privacy_policy_item_title" a8c-src-lib="about">隐私政策</string>
-    <string name="about_automattic_terms_of_service_item_title" a8c-src-lib="about">服务条款</string>
     <string name="about_automattic_work_with_us_item_subtitle" a8c-src-lib="about">随时随地工作</string>
     <string name="about_automattic_work_with_us_item_title" a8c-src-lib="about">加入我们</string>
-    <string name="about_automattic_family_item_title" a8c-src-lib="about">Automattic 家族</string>
-    <string name="about_automattic_legal_and_more_item_title" a8c-src-lib="about">法律及更多信息</string>
-    <string name="about_automattic_twitter_item_title" a8c-src-lib="about">Twitter</string>
-    <string name="about_automattic_instagram_item_title" a8c-src-lib="about">Instagram</string>
-    <string name="about_automattic_rate_us_item_title" a8c-src-lib="about">给我们评分</string>
-    <string name="about_automattic_share_with_friends_item_title" a8c-src-lib="about">分享给朋友</string>
-    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">您可以使用编辑器的 Web 版本编辑此区块。</string>
-    <string name="gutenberg_native_open_jetpack_security_settings">打开 Jetpack Security 设置</string>
-    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">注意：您必须允许 WordPress.com 登录，才能在移动设备编辑器中编辑此区块。</string>
-    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">注意：主题和屏幕尺寸之间的布局可能会有所不同</string>
-    <string name="gutenberg_native_address_settings">地址设置</string>
-    <string name="gutenberg_native_add_media">添加媒体</string>
     <string name="my_site_error_card_subtitle">目前加载您站点的数据时出现问题。</string>
     <string name="my_site_error_card_title">某些数据无法加载</string>
     <string name="my_site_dashboard_stale_message">仪表盘未更新。 请检查连接是否正常然后刷新。</string>
     <string name="my_site_dashboard_update_error">无法更新仪表盘。</string>
     <string name="error_media_video_duration_exceeds_limit">视频无法上传！ 上传超过 5 分钟的视频需要使用付费套餐。</string>
-    <string name="about_automattic_acknowledgements_item_title" a8c-src-lib="about">确认</string>
-    <string name="about_automattic_california_privacy_notice_item_title" a8c-src-lib="about">加州隐私声明</string>
-    <string name="about_automattic_version_label" a8c-src-lib="about">版本 %1$s</string>
-    <string name="about_automattic_acknowledgements_page_title" a8c-src-lib="about">确认</string>
-    <string name="about_automattic_legal_page_title" a8c-src-lib="about">法律及更多信息</string>
-    <string name="about_automattic_main_page_title" a8c-src-lib="about">关于 %1$s</string>
     <string name="about_blog">博客</string>
-    <string name="gutenberg_native_the_basics">基础知识</string>
-    <string name="gutenberg_native_selected_default">已选：默认</string>
-    <string name="gutenberg_native_more_support_options">更多支持选项</string>
-    <string name="gutenberg_native_get_support">获取支持</string>
-    <string name="gutenberg_native_font_size">字体大小</string>
-    <string name="gutenberg_native_double_tap_to_select_font_size">轻按两下选择字体大小</string>
-    <string name="gutenberg_native_double_tap_to_select_default_font_size">轻按两下选择默认字体大小</string>
-    <string name="gutenberg_native_contact_support">联系支持</string>
-    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="reader_comments_follow_conversation">关注对话</string>
     <string name="reader_comments_be_first_to_comment">成为第一个发表评论的用户</string>
     <string name="reader_comments_view_all">查看所有评论</string>
     <string name="reader_comments_post_fetch_failure">获取文章数据时出错</string>
     <string name="reader_comments_fetch_failure">获取评论时出错</string>
     <string name="reader_btn_follow_conversation_settings">关注对话设置</string>
-    <string name="gutenberg_native_from_clipboard">从剪贴板</string>
-    <string name="gutenberg_native_featured_image">特色图片</string>
-    <string name="gutenberg_native_copy_url_from_the_clipboard_s">从剪贴板复制 URL，%s</string>
     <string name="me_btn_about">关于 WordPress</string>
-    <string name="my_site_post_card_link_create_post">撰写文章</string>
-    <string name="my_site_create_next_post_excerpt">定期发表有助于吸引受众！</string>
-    <string name="my_site_create_next_post_title">撰写下一篇文章</string>
     <string name="menu_visual_mode_switched_notice">已切换至可视化编辑器</string>
     <string name="menu_html_mode_switched_notice">已切换至代码编辑器</string>
-    <string name="post_link_copied_to_clipboard">已将链接复制到剪贴板</string>
     <string name="comment_author_badge">作者</string>
-    <string name="button_copy_link">复制链接</string>
     <string name="domains_paid_plan_add_your_domain_caption">添加自定义域，使访客可以轻松地找到您的站点</string>
     <string name="domains_paid_plan_add_your_domain_title">添加您的域</string>
-    <string name="my_site_create_first_post_excerpt">文章在您的博客页面上按时间顺序倒序显示。 立即与全世界分享您的观点！</string>
-    <string name="my_site_create_first_post_title">创建您的第一篇文章</string>
     <string name="my_site_untitled_post">未命名</string>
     <string name="my_site_post_card_scheduled_title">即将发布的预发布文章</string>
     <string name="my_site_post_card_draft_title">继续撰写文章草稿</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;第一年免费，&lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/年&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="gutenberg_native_create_link">创建链接</string>
     <string name="domains_suggestions_select_domain">选择域</string>
     <string name="domains_title">域名</string>
     <string name="post_status_sticky">置顶</string>
@@ -1347,50 +1150,19 @@ Language: zh_CN
     <string name="comment_edit_comment">评论</string>
     <string name="comment_edit_user_name">名称</string>
     <string name="comment_edit_menu_done">完成</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">嵌入区块预览即将推出</string>
     <string name="weekly_roundup">每周综述</string>
-    <string name="gutenberg_native_embed_options">嵌入选项</string>
-    <string name="gutenberg_native_double_tap_to_view_embed_options">双击可查看嵌入选项。</string>
     <string name="quick_start_list_create_site_message">站点已创建！ 完成另一项任务。</string>
-    <string name="gutenberg_native_line_height">行高</string>
     <string name="domains_free_plan_get_your_domain_title">获取您的域名</string>
     <string name="recommend_app_generic_get_template_error">当获取推荐应用的模板时发生未知错误</string>
     <string name="recommend_app_bad_format_response">收到无效响应</string>
     <string name="recommend_app_null_response">未收到任何响应</string>
     <string name="recommend_app_subject">Automattic 应用程序 - 适合各种设备的应用程序</string>
     <string name="me_btn_share">将 WordPress 与您的朋友分享</string>
-    <string name="my_site_quick_actions_title">快速链接</string>
     <string name="my_site_btn_domains">域名</string>
     <string name="weekly_roundup_notification_title">每周综述：%s</string>
     <string name="blogging_reminders_notification_time">通知间隔</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">您会收到提醒，要在&lt;b&gt;每天&lt;/b&gt;&lt;b&gt;%s&lt;/b&gt;写博客。</string>
     <string name="blogging_reminders_site_settings_label">每周%1$s次（%2$s）。</string>
-    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">编辑文本区块时，文本格式控件位于键盘上方的工具栏内</string>
-    <string name="gutenberg_native_selected_s">已选择：%s</string>
-    <string name="gutenberg_native_select_a_color_above">从上方选择颜色</string>
-    <string name="gutenberg_native_navigates_to_select_s">导航至选择%s</string>
-    <string name="gutenberg_native_move_blocks">移动区块</string>
-    <string name="gutenberg_native_how_to_edit_your_post">如何编辑您的文章</string>
-    <string name="gutenberg_native_how_to_edit_your_page">如何编辑您的页面</string>
-    <string name="gutenberg_native_customize_blocks">自定义区块</string>
-    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">更改特色图片的操作不受撤销、恢复按钮影响。</string>
-    <string name="gutenberg_native_applies_the_setting">使用此设置</string>
-    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">您现在可以重新排列区块，方法是轻点一个区块，然后轻点该区块左下角出现的向上和向下箭头，将该区块移动到其他区块上方或下方。</string>
-    <string name="gutenberg_native_welcome_to_the_world_of_blocks">欢迎来到区块的世界</string>
-    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">要移除某个区块，请选中该区块，然后点击该区块右上角的三个点，以查看设置。 从该处，选择用于移除区块的选项。</string>
-    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">某些区块具有其他设置。 轻点区块右上角的“设置”图标，以查看更多选项。</string>
-    <string name="gutenberg_native_s_block_newly_available">%s 区块全新推出</string>
-    <string name="gutenberg_native_rich_text_editing">富文本编辑</string>
-    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">熟悉不同区块的名称之后，您可以输入正斜杠，后跟区块名称（例如，/image 或 /heading），以此方式来添加区块。</string>
-    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">将图像、GIF、视频和嵌入式媒体添加到您的页面，让您的内容脱颖而出。</string>
-    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">将一些区块添加到您的博文或页面，试试看吧！</string>
-    <string name="gutenberg_native_embed_media">嵌入媒体</string>
-    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">每个区块都有各自的设置。要找到这些设置，请点击一个区块。区块的设置将出现在屏幕底部的工具栏上。</string>
-    <string name="gutenberg_native_build_layouts">构建布局</string>
-    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">区块是您不需要知道如何编写代码就能够插入、重新排列和设置样式的内容。 区块让您能够以轻松而现代的方式创建精美的布局。</string>
-    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">区块让您能够专注于编写您的内容，因为您需要的所有格式化工具将帮助您清楚地传达您的消息。</string>
-    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">将您的内容排成列，添加调用操作按钮，并用文字覆盖图片。</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">随时可通过点按左下角工具栏中的“+”图标添加新区块。</string>
     <string name="quick_start_sites_type_tasks_completed">总计 %2$s 项任务，其中 %1$s 项已完成</string>
     <string name="quick_start_dialog_need_help_manage_site_message">通过快速练习了解基础知识。</string>
     <string name="comment_batch_moderation_error">未能对一条或多条评论进行审核</string>
@@ -1401,16 +1173,6 @@ Language: zh_CN
     <string name="stats_disabled_enable_stats_button">启用站点统计</string>
     <string name="stats_disabled_subtitle">启用站点统计以查看有关您的流量、喜欢、评论和订阅者的详情。</string>
     <string name="stats_disabled_title">查找统计？</string>
-    <string name="gutenberg_native_what_is_a_block">什么是区块？</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">我们正在努力添加对预览%s的支持。 同时，您可以预览文章上的嵌入内容。</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">我们正在努力添加对预览%s的支持。 同时，您可以预览页面上的嵌入内容。</string>
-    <string name="gutenberg_native_unable_to_embed_media">无法嵌入媒体</string>
-    <string name="gutenberg_native_try_another_search_term">尝试其他搜索词</string>
-    <string name="gutenberg_native_no_blocks_found">未找到区块</string>
-    <string name="gutenberg_native_s_previews_not_yet_available">%s 预览尚不可用</string>
-    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">%s 嵌入区块预览即将推出</string>
-    <string name="gutenberg_native_double_tap_to_preview_post">双击可预览文章</string>
-    <string name="gutenberg_native_double_tap_to_preview_page">双击可预览页面。</string>
     <string name="quick_start_list_upload_icon_subtitle">显示在访问者的浏览器选项卡和其他在线位置。</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">带我看看</string>
     <string name="quick_start_dialog_need_help_manage_site_title">需要获取有关使用该应用管理此站点的帮助吗？</string>
@@ -1419,9 +1181,6 @@ Language: zh_CN
     <string name="login_epilogue_mysites_heading">选择要打开的站点</string>
     <string name="scan_multisite_not_supported_subtitle">很抱歉，Jetpack Scan 目前不兼容多站点的 WordPress 安装。</string>
     <string name="scan_multisite_not_supported_title">不支持 WordPress 多站点</string>
-    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">无效 URL。请输入有效 URL。</string>
-    <string name="gutenberg_native_embed_caption_s">嵌入说明文字。%s</string>
-    <string name="gutenberg_native_embed_caption_empty">嵌入说明文字。空</string>
     <string name="activity_log_visit_our_documentation_page">访问我们的文档页面</string>
     <string name="activity_log_multisite_message">多站点安装的 Jetpack Backup 只提供可下载的备份，没有一键还原。更多信息 %1$s。</string>
     <string name="blogging_reminders_tip_message">定期发布文章有助于留住读者以及吸引新访客访问您的站点。</string>
@@ -1442,47 +1201,19 @@ Language: zh_CN
     <string name="set_your_blogging_reminders_title">设置您的博客提醒</string>
     <string name="blogging_reminders_notification_text">此为今日提醒，提醒您发布一些内容</string>
     <string name="blogging_reminders_notification_title">在 %s 上发布博客的时间到了！</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">iOS 版 WordPress 尚未支持编辑可重用区块</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Android 版 WordPress 尚未支持编辑可重用区块</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" a8c-src-lib="gutenberg">或者，您可以轻点“分离样板”来单独分离和编辑这些区块。</string>
     <string name="blogging_reminders_done">完成</string>
     <string name="blogging_reminders_notify_me">通知我</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以启用从备份中一键恢复站点的功能。</string>
-    <string name="gutenberg_native_set_as_featured_image">设为特色图片</string>
-    <string name="gutenberg_native_remove_as_featured_image">移除特色图片</string>
     <string name="fab_add_category_desc">创建分类</string>
     <string name="support_ticket_subject">Android 版 WordPress 支持</string>
     <string name="site_settings_categories_hint">管理您的站点分类</string>
     <string name="site_settings_categories_title">分类</string>
     <string name="site_settings_blogging_reminders_title">提醒</string>
     <string name="page_is_posts_page_warning">最新文章页面的内容是自动生成的，无法编辑。</string>
-    <string name="gutenberg_native_border_settings">边框设置</string>
     <string name="storage_utils_dialog_dont_show_button">不再显示</string>
     <string name="storage_utils_dialog_ok_button">查看存储</string>
     <string name="storage_utils_dialog_message">我们需要在设备上保存您的内容才能发布。查看您的存储设置并删除文件以释放空间。</string>
     <string name="storage_utils_dialog_title">设备存储不足</string>
-    <string name="gutenberg_native_y_axis_position">Y 轴位置</string>
-    <string name="gutenberg_native_x_axis_position">X 轴位置</string>
-    <string name="gutenberg_native_type_a_url">键入URL</string>
-    <string name="gutenberg_native_slash_inserter_results">斜杠插入器结果</string>
-    <string name="gutenberg_native_s_has_url_set">%s已设置URL</string>
-    <string name="gutenberg_native_s_has_no_url_set">%s没有URL集</string>
-    <string name="gutenberg_native_s_converted_to_regular_blocks">%s 已转换为常规区块</string>
-    <string name="gutenberg_native_s_block">%s区块</string>
-    <string name="gutenberg_native_opacity" a8c-src-lib="gutenberg">不透明度</string>
-    <string name="gutenberg_native_media_options">媒体选项</string>
-    <string name="gutenberg_native_invalid_url_audio_file_not_found">无效的URL。找不到音频文件。</string>
-    <string name="gutenberg_native_insert_crosspost">插入交叉发表</string>
-    <string name="gutenberg_native_drag_to_adjust_focal_point">拖动以调整焦点</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">双击打开底页以添加图像或视频</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">双击打开操作表以添加图像或视频</string>
-    <string name="gutenberg_native_current_unit_is_s">当前单位为%s</string>
-    <string name="gutenberg_native_crosspost">交叉发表</string>
-    <string name="gutenberg_native_s_converted_to_regular_block" a8c-src-lib="gutenberg">%s 转换为常规区块</string>
-    <string name="gutenberg_native_columns_settings">列设置</string>
-    <string name="gutenberg_native_add_link_to_s">添加到%s的链接</string>
-    <string name="gutenberg_native_add_link_text">添加链接文字</string>
-    <string name="gutenberg_native_add_image_or_video_b7b3d22b">添加图像或视频</string>
     <string name="error_media_path_is_directory">指定的路径是目录而不是媒体文件</string>
     <string name="error_media_could_not_find_media_in_path">在路径中找不到媒体文件</string>
     <string name="error_media_unexpected_empty_media_file_path">媒体的意外空文件路径</string>
@@ -1490,102 +1221,35 @@ Language: zh_CN
     <string name="error_media_unexpected_null_value">媒体为空</string>
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以修复威胁。</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以修复威胁。</string>
-    <string name="gutenberg_native_double_tap_to_add_a_link">双击可添加链接。</string>
     <string name="login_empty_view_try_another_account">使用其他账户尝试</string>
     <string name="login_empty_view_see_instructions">请参阅说明</string>
     <string name="login_no_jetpack_sites_error_message">如果您已经拥有一个站点，则需要安装免费的 Jetpack 插件并将其连接到您的 WordPress.com 账户。</string>
     <string name="login_empty_view_avatar_content_description">您的个人资料照片</string>
     <string name="login_not_a_jetpack_site">要将此应用用于 %1$s，您需要安装并启用 Jetpack 插件。</string>
-    <string name="gutenberg_native_move_image_forward">前移图像</string>
-    <string name="gutenberg_native_move_image_backward">后移图像</string>
-    <string name="gutenberg_native_width_settings">宽度设置</string>
-    <string name="gutenberg_native_link_rel" a8c-src-lib="gutenberg">链接 Rel</string>
-    <string name="gutenberg_native_column_settings">列设置</string>
-    <string name="gutenberg_native_no_description" a8c-src-lib="gutenberg">无描述</string>
     <string name="user_profile_untitled_site">（无标题）</string>
     <string name="user_profile_site_section_header">站点</string>
     <string name="user_profile_bottom_sheet_description">用户个人资料底部信息</string>
     <string name="likes_list_screen_title">作者 %s</string>
-    <string name="gutenberg_native_two">二</string>
-    <string name="gutenberg_native_three">三</string>
-    <string name="gutenberg_native_no_title" a8c-src-lib="gutenberg">无标题</string>
-    <string name="gutenberg_native_s_social_icon">%s 社交图标</string>
-    <string name="gutenberg_native_mention">提及</string>
-    <string name="gutenberg_native_new" a8c-src-lib="gutenberg">新建</string>
-    <string name="gutenberg_native_preview_post">预览文章</string>
-    <string name="gutenberg_native_preview_page">预览页面</string>
-    <string name="gutenberg_native_retry">重试</string>
-    <string name="gutenberg_native_gif">GIF</string>
-    <string name="gutenberg_native_one">一</string>
-    <string name="gutenberg_native_add_title" a8c-src-lib="gutenberg">添加标题</string>
-    <string name="gutenberg_native_no_preview_available">无可用预览</string>
-    <string name="gutenberg_native_loading" a8c-src-lib="gutenberg">正在载入</string>
-    <string name="gutenberg_native_link_label" a8c-src-lib="gutenberg">链接标签</string>
-    <string name="gutenberg_native_text_color">文字颜色</string>
-    <string name="gutenberg_native_s_link" a8c-src-lib="gutenberg">%s 链接</string>
-    <string name="gutenberg_native_padding">内边距</string>
-    <string name="gutenberg_native_four">四</string>
-    <string name="gutenberg_native_featured" a8c-src-lib="gutenberg">文章特色图片</string>
-    <string name="gutenberg_native_add_image" a8c-src-lib="gutenberg">添加图片</string>
-    <string name="gutenberg_native_custom_url">自定义 URL</string>
-    <string name="gutenberg_native_create_embed">创建嵌入</string>
-    <string name="gutenberg_native_column_d">列 %d</string>
-    <string name="gutenberg_native_more" a8c-src-lib="gutenberg">更多</string>
-    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">简短描述此链接以帮助使用读屏软件的用户。</string>
-    <string name="gutenberg_native_add_blocks" a8c-src-lib="gutenberg">添加区块</string>
     <string name="login_no_jetpack_sites">未找到Jetpack站点</string>
-    <string name="gutenberg_native_what_is_alt_text">什么是alt文字？</string>
-    <string name="gutenberg_native_transform_s_to">将%s转换为</string>
-    <string name="gutenberg_native_transform_block">转换区块…</string>
-    <string name="gutenberg_native_failed_to_insert_media">未能插入媒体。</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file">未能插入音频文件。</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">描述图片的用途。 如果图片仅作装饰用，请留空。</string>
-    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s转换为%2$s</string>
     <string name="like_faces_error_loading_message">数据加载错误。%s.</string>
     <string name="like_title_plural">%d 喜欢</string>
     <string name="like_title_singular">1 喜欢</string>
     <string name="suggestion">建议：</string>
-    <string name="gutenberg_native_use_icon_button">使用图标按钮</string>
-    <string name="gutenberg_native_search_input_field">搜索输入字段。</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">搜索按钮。当前按钮文字为</string>
-    <string name="gutenberg_native_search_blocks">搜索区块</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">搜索区块标签。当前文字为</string>
-    <string name="gutenberg_native_outside">外部</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">未设置自定义占位符</string>
-    <string name="gutenberg_native_inside">内部</string>
-    <string name="gutenberg_native_hide_search_heading">隐藏搜索标题</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">双击可编辑占位符文字</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">双击可编辑标签文字</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">双击编辑按钮文字</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">双击更改单位</string>
-    <string name="gutenberg_native_current_placeholder_text_is">当前占位符文本</string>
-    <string name="gutenberg_native_clear_search">清除搜索</string>
-    <string name="gutenberg_native_cancel_search">取消搜索</string>
-    <string name="gutenberg_native_button_position">按钮位置</string>
-    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s是%3$s%4$s。</string>
     <string name="get_likes_empty_state_title">获取数据时出错</string>
     <string name="get_likes_unknown_error">获取数据时发生未知错误。</string>
     <string name="get_likes_no_network_error">无网络可用。</string>
     <string name="comments_empty_list_filtered_unreplied">没有未回复的评论</string>
     <string name="comment_status_unreplied">未回复</string>
-    <string name="gutenberg_native_add_link">添加链接</string>
-    <string name="gutenberg_native_search_settings">搜索设置</string>
     <string name="jetpack_brute_force_allowlist_title">始终允许的 IP 地址</string>
     <string name="site_settings_denylist_title">不允许的评论</string>
-    <string name="gutenberg_native_add_button_text">添加按钮文本</string>
     <string name="activity_log_backup_download_notice_dismiss_action">忽略</string>
     <string name="activity_log_backup_download_notice_download_action">下载</string>
     <string name="threat_fix_all_status_success_message_plural">已成功修复威胁。</string>
     <string name="threat_fix_all_confirmation_message_plural">请确认您要修复所有 %s 个活跃威胁。</string>
     <string name="scan_idle_threats_description_plural">扫描发现 %2$s 存在 %1$s 项潜在威胁。 请在下面查看这些威胁并采取行动，或者轻点“全部修复”按钮。 如果您需要，我们位于%3$s。</string>
     <string name="scan_fixing_threats_description_plural">我们正在后台努力修复这些威胁。 在此期间，您可以继续正常使用您的站点，您可以随时查看进度。</string>
-    <string name="gutenberg_native_edit_focal_point">编辑焦点</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">双击“底部表页”，将其打开，以编辑、替换或清除图片</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">双击“操作表页”，将其打开，以编辑、替换或清除图片</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">为您的站点输入名称</string>
-    <string name="quick_start_completed_type_grow_message">&lt;b&gt;已完成所有任务&lt;/b&gt;&lt;br/&gt;您将吸引更多用户。 做得漂亮！</string>
-    <string name="quick_start_completed_type_customize_message">&lt;b&gt;已完成所有任务&lt;/b&gt;&lt;br/&gt;您将自定义您的站点。 大功告成了！</string>
     <string name="magic_link_not_meaning_to_create_account" a8c-src-lib="module:login">不打算创建新账户？返回以重新输入您的电子邮箱地址。</string>
     <string name="invite_links_disable_dialog_message">禁用此邀请链接后，任何人都无法再使用它来加入您的团队。 是否确定？</string>
     <string name="invite_links_disable_dialog_title">禁用邀请链接</string>
@@ -1633,22 +1297,6 @@ Language: zh_CN
     <string name="backup_item_contents">WP-content 目录</string>
     <string name="backup_item_roots">WordPress 根</string>
     <string name="backup_download_details_choose_items_header">此下载包含的项目</string>
-    <string name="gutenberg_native_uploading">正在上传…</string>
-    <string name="gutenberg_native_replace_file">替换文件</string>
-    <string name="gutenberg_native_replace_audio">替换音频</string>
-    <string name="gutenberg_native_problem_opening_the_audio">打开音频时出现问题</string>
-    <string name="gutenberg_native_open">打开</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request">没有可以处理此请求的应用程序。</string>
-    <string name="gutenberg_native_lock_icon">锁形图标</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">无法插入音频文件。 请轻点以查看选项。</string>
-    <string name="gutenberg_native_double_tap_to_select_an_audio_file">轻点两次以选择音频文件</string>
-    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">轻点两次以倾听音频文件</string>
-    <string name="gutenberg_native_choose_audio">选择音频</string>
-    <string name="gutenberg_native_audio_player">音频播放器</string>
-    <string name="gutenberg_native_audio_file">音频文件</string>
-    <string name="gutenberg_native_audio_caption_s">音频说明。 %s</string>
-    <string name="gutenberg_native_audio_caption_empty">音频说明。 空</string>
-    <string name="gutenberg_native_add_audio" a8c-src-lib="gutenberg">添加音频</string>
     <string name="continue_with_wpcom">使用 WordPress.com 登录或注册</string>
     <string name="photo_picker_use_audio">使用此音频</string>
     <string name="photo_picker_choose_audio">从设备中选择音频</string>
@@ -1706,7 +1354,6 @@ Language: zh_CN
     <string name="quick_start_dialog_review_pages_message_short">选择%1$s页面%2$s以查看您的页面列表。</string>
     <string name="quick_start_dialog_review_pages_message">更改、添加或删除您站点的页面。</string>
     <string name="quick_start_dialog_review_pages_title">评论站点页面</string>
-    <string name="quick_start_dialog_edit_homepage_message_pages_short">选择%1$s主页%2$s以编辑您的主页。</string>
     <string name="reader_menu_mark_as_unseen">标记为未读</string>
     <string name="reader_menu_mark_as_seen">标记为已读</string>
     <string name="error_media_upload_failed_for_reason">媒体上传失败。\n%1$s</string>
@@ -1739,8 +1386,6 @@ Language: zh_CN
     <string name="backup_empty_subtitle">您的第一个备份将在 24 小时显示在此处，备份完成后，您会收到通知。</string>
     <string name="backup_empty_title">您的第一个备份即将准备就绪</string>
     <string name="request_failed_message">处理请求时出现问题。 请稍后重试。</string>
-    <string name="gutenberg_native_move_to_bottom">移到底部</string>
-    <string name="gutenberg_native_change_block_position">移动区块位置</string>
     <string name="jetpack_icon_content_description">图标</string>
     <string name="backup_download_complete_info">我们还通过电子邮件向您发送了文件链接。</string>
     <string name="backup_download_complete_download_share_action_button_content_description">“分享链接”按钮</string>
@@ -1829,8 +1474,6 @@ Language: zh_CN
     <string name="backup_download_details_header">创建可下载的备份</string>
     <string name="backup_download_details_page_title">下载备份</string>
     <string name="backup_download">备份下载</string>
-    <string name="gutenberg_native_error">错误</string>
-    <string name="gutenberg_native_choose_file">选择文件</string>
     <string name="activity_log_item_menu_download_backup_label">下载备份</string>
     <string name="activity_log_item_menu_restore_label">恢复到此点</string>
     <string name="activity_log_activity_type_filter_label">活动类型</string>
@@ -1841,16 +1484,7 @@ Language: zh_CN
     <string name="dialog_confirm_copy_local_message">您正尝试编辑的文章有两个版本，均与您最近编辑但暂未保存的内容有冲突。\n请先编辑文章以解决所有冲突，或请从应用程序中先复制现有的文章版本。</string>
     <string name="dialog_confirm_copy_local_title">文章同步冲突</string>
     <string name="button_copy">复制</string>
-    <string name="gutenberg_native_file_name">文件名</string>
-    <string name="gutenberg_native_file_block_settings">文件区块设置</string>
-    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">无法上传文件。\n请轻点以查看选项。</string>
-    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">无法保存文件。\n请轻点以查看选项。</string>
-    <string name="gutenberg_native_edit_file">编辑文件</string>
-    <string name="gutenberg_native_copy_file_url">复制文件 URL</string>
     <string name="new_site_creation_domain_header_title">选择域</string>
-    <string name="my_site_header_jetpack">Jetpack</string>
-    <string name="reader_btn_following_comments">通过电子邮件关注对话</string>
-    <string name="reader_btn_follow_comments">通过电子邮件关注对话</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">无法取消订阅本博客的评论</string>
     <string name="reader_follow_comments_could_not_subscribe_error">无法订阅本博客的评论</string>
     <string name="reader_follow_comments_get_status_error">获取博客订阅状态时出错</string>
@@ -1872,8 +1506,6 @@ Language: zh_CN
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; 回复了您的文章</string>
     <string name="login_prologue_third_subtitle_two">您的站点今天收到了&lt;b&gt;50个喜欢&lt;/b&gt;</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; 喜欢了您的文章</string>
-    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">滚动区块菜单打开。 选择区块。</string>
-    <string name="gutenberg_native_scrollable_block_menu_closed">滚动区块菜单关闭。</string>
     <string name="hpp_choose_button">选择</string>
     <string name="mlp_network_error_subtitle">重新上线后，点击“重试”，或使用下面的按钮创建空白页。</string>
     <string name="mlp_network_error_title">离线时布局不可用</string>
@@ -1904,11 +1536,6 @@ Language: zh_CN
     <string name="login_prologue_title_second">有了这个功能强大的编辑器，您可以随时随地发表内容。</string>
     <string name="login_prologue_title_first">欢迎使用全球最热门的网站构建器。</string>
     <string name="media_loading_failed">媒体加载失败</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">我们正在努力在每个版本中添加更多区块。</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">不完全支持 \'%s\'</string>
-    <string name="gutenberg_native_help_button">“帮助”按钮</string>
-    <string name="gutenberg_native_edit_using_web_editor">使用 Web 编辑器进行编辑</string>
-    <string name="gutenberg_native_choose_images">选择图片</string>
     <string name="mlp_notice_blank_page_created">创建了空白页面</string>
     <string name="mlp_notice_page_created">页面已创建</string>
     <string name="media_insert_failed">媒体插入失败。</string>
@@ -1917,7 +1544,6 @@ Language: zh_CN
     <string name="reader_label_toolbar_back">返回</string>
     <string name="reader_discover_empty_button_text">开始</string>
     <string name="reader_discover_empty_subtitle_follow">关注标签以发现新博客</string>
-    <string name="reader_post_details_header_by_author_name">作者</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">不能将此推荐来源标记为垃圾信息</string>
     <string name="stats_referrer_popup_unmark_as_spam">取消标记为垃圾信息</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">标记为垃圾信息</string>
@@ -1925,10 +1551,6 @@ Language: zh_CN
     <string name="media_uploading_gif_library_photo">正在上传 GIF 媒体</string>
     <string name="media_uploading_stock_library_photo">正在上传库存媒体</string>
     <string name="media_uploading_default">正在上传媒体</string>
-    <string name="gutenberg_native_search_or_type_url">搜索或键入 URL</string>
-    <string name="gutenberg_native_add_this_telephone_link">添加此电话链接</string>
-    <string name="gutenberg_native_add_this_link">添加此链接</string>
-    <string name="gutenberg_native_add_this_email_link">添加此电子邮件链接</string>
     <string name="suggestion_no_connection">未连接互联网。\n建议不可用。</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s 已选择</string>
@@ -1938,23 +1560,12 @@ Language: zh_CN
     <string name="comment_unable_to_show_error">无法显示此评论</string>
     <string name="media_browse_for_items">浏览商品</string>
     <string name="reader_menu_report_post">报告此文章</string>
-    <string name="reader_welcome_banner">欢迎使用阅读器。 动动手指即可发现数百万个博客。</string>
     <string name="error_media_xmlrcp_server_error">发生内部服务器错误</string>
     <string name="error_media_xmlrpc_not_allowed">您不能执行此操作</string>
     <string name="show_n_hidden_items_desc">%1$s 更多项目</string>
-    <string name="gutenberg_native_select_a_layout">选择布局</string>
-    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">注意：主题和屏幕尺寸之间的分栏布局可能会有所不同</string>
     <string name="create_page_fab_tooltip">创建页面</string>
     <string name="create_post_fab_tooltip">撰写文章</string>
-    <string name="reader_discover_interests_header">您可能会喜欢</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">隐藏</string>
-    <string name="gutenberg_native_video_caption_empty">视频说明.空</string>
-    <string name="gutenberg_native_updates_the_title">更新标题。</string>
-    <string name="gutenberg_native_paste_block_after">在以下位置后粘贴区块</string>
-    <string name="gutenberg_native_page_title_s">“页面”标题。 %s</string>
-    <string name="gutenberg_native_page_title_empty">“页面”标题。 清空</string>
-    <string name="toast_error_playing_video">播放您的视频时出错</string>
-    <string name="camera_error">此设备不支持 Camera2 API。</string>
     <string name="label_close_button">关闭</string>
     <string name="mlp_preview_page">预览</string>
     <string name="mlp_create_page">创建页面</string>
@@ -1965,16 +1576,8 @@ Language: zh_CN
     <string name="photo_picker_choose_file">从设备中选择</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">在自托管 WordPress 站点上编辑站点图标需要使用 Jetpack 插件。</string>
     <string name="reader_toast_err_page_jump_not_found">找不到链接页面跳转</string>
-    <string name="error_media_quota_exceeded_toast">无法上传文件。\n已超出存储空间配额。</string>
     <string name="error_media_quota_exceeded">已超出存储空间配额</string>
     <string name="pick_file">添加文件</string>
-    <string name="gutenberg_native_replace_video">替换视频</string>
-    <string name="gutenberg_native_replace_image_or_video">替换图片或视频</string>
-    <string name="gutenberg_native_convert_to_link">转换为链接</string>
-    <string name="gutenberg_native_choose_video">选择视频</string>
-    <string name="gutenberg_native_choose_image_or_video">选择图片或视频</string>
-    <string name="gutenberg_native_choose_image">选择图像</string>
-    <string name="gutenberg_native_block_removed">区块已删除</string>
     <string name="enter_your_site_address">输入您的现有站点地址</string>
     <string name="signup_confirmation_title" a8c-src-lib="module:login">注册确认</string>
     <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">如果您继续使用 Google，并且还没有 WordPress.com 账户，则需要创建一个账户，并同意我们的%1$s服务条款%2$s。</string>
@@ -2000,33 +1603,14 @@ Language: zh_CN
     <string name="quick_start_list_update_site_title_title">检查您的站点标题</string>
     <string name="quick_start_dialog_update_site_title_message_short">轻点 &lt;b&gt;%1$s&lt;/b&gt; 以设置新标题</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">将此文章放入回收站还将放弃本地更改，是否确定要继续？</string>
-    <string name="gutenberg_native_s_block_options">%s 区块选项</string>
-    <string name="gutenberg_native_remove_block">移除区块</string>
-    <string name="gutenberg_native_duplicate_block">复制区块</string>
-    <string name="gutenberg_native_copy_block">拷贝区块</string>
-    <string name="gutenberg_native_copied_block">已拷贝区块</string>
-    <string name="gutenberg_native_block_pasted">已粘贴区块</string>
-    <string name="gutenberg_native_block_duplicated">已复制区块</string>
-    <string name="gutenberg_native_block_cut">已剪切区块</string>
-    <string name="gutenberg_native_block_copied">已拷贝区块</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">站点标题只能由担任管理员角色的用户更改。</string>
     <string name="my_site_title_changer_dialog_hint">站点标题显示在网络浏览器的标题栏中，以及大部分主题的页眉中。</string>
     <string name="error_update_site_title_network">无法更新站点标题。 请检查您的网络连接，然后重试。</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">未保存的更改</string>
-    <string name="gutenberg_native_open_link_in_a_browser">在浏览器中打开链接</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">导航到上一个内容工作表</string>
-    <string name="gutenberg_native_navigates_to_customize_the_gradient">导航以自定义渐变</string>
-    <string name="gutenberg_native_navigates_to_custom_color_picker">导航至自定义颜色选择器</string>
-    <string name="gutenberg_native_gradient_type">渐变类型</string>
-    <string name="gutenberg_native_go_back">返回</string>
-    <string name="gutenberg_native_double_tap_to_select_the_option">轻点两下以选择选项</string>
-    <string name="gutenberg_native_customize_gradient">自定义渐变</string>
-    <string name="pages_list_author">页面作者</string>
     <string name="error_media_thumbnail_not_loaded">无法加载媒体缩略图</string>
     <string name="menu_content_info">内容结构</string>
     <string name="everyone">所有人</string>
     <string name="me">我</string>
-    <string name="gutenberg_native_dismiss">忽略</string>
     <string name="prepublishing_nudges_home_tags_not_set">未设置</string>
     <string name="prepublishing_tags_description">标签有助于读者了解文章内容</string>
     <string name="prepublishing_nudges_toolbar_title_publish">发布日期</string>
@@ -2055,11 +1639,6 @@ Language: zh_CN
     <string name="status_and_visibility">状态和可见性</string>
     <string name="update_now">现在更新</string>
     <string name="pages_item_subtitle">%1$s ·</string>
-    <string name="gutenberg_native_open_block_actions_menu">打开区块操作菜单</string>
-    <string name="gutenberg_native_move_to_top">移到顶部</string>
-    <string name="gutenberg_native_insert_mention">插入提及</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">双击以打开带有可用选项的底部表页</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">双击以打开带有可用选项的操作表页</string>
     <string name="pages_cannot_be_started">目前我们无法打开页面。请稍后重试</string>
     <string name="pages_set_as_posts_page">设为文章页面</string>
     <string name="pages_set_as_homepage">设为主页</string>
@@ -2083,8 +1662,6 @@ Language: zh_CN
     <string name="page_homepage_successfully_updated">主页更新成功</string>
     <string name="page_cannot_set_posts_page">要设置文章页面，请在“站点设置”中启用“静态主页”</string>
     <string name="page_cannot_set_homepage">要设置主页，请在“站点设置”中启用“静态主页”</string>
-    <string name="gutenberg_native_select_a_color">选择一种颜色</string>
-    <string name="gutenberg_native_double_tap_to_go_to_color_settings">点击两下以进入颜色设置</string>
     <string name="feature_announcement_find_out_mode">了解更多</string>
     <string name="feature_announcement_dialog_label">%s 中有何新内容？</string>
     <string name="insert_label_with_count">插入 %d</string>
@@ -2095,8 +1672,6 @@ Language: zh_CN
     <string name="photo_picker_use_video">使用该视频</string>
     <string name="photo_picker_photo_or_video_title">选择媒体</string>
     <string name="photo_picker_video_title">选择视频</string>
-    <string name="site_picker_ask_site_select">无法选择站点。请再试一次。</string>
-    <string name="sitepicker_continue_flow">继续</string>
     <string name="reader_reblog_error">转载失败</string>
     <string name="reader_no_blog_to_reblog_action">管理博客</string>
     <string name="reader_no_blog_to_reblog_detail">创建 WordPress.com 博客之后，您可以将喜欢的内容转载到您自己的站点。</string>
@@ -2109,14 +1684,6 @@ Language: zh_CN
     <string name="button_insert">插入</string>
     <string name="continue_label">继续</string>
     <string name="copy_text">复制</string>
-    <string name="gutenberg_native_number_of_columns">列数</string>
-    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">将区块从位置 %1$s 向右移动到位置 %2$s</string>
-    <string name="gutenberg_native_move_block_right">向右移动区块</string>
-    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">将区块从位置 %1$s 向左移动到位置 %2$s</string>
-    <string name="gutenberg_native_move_block_left">向左移动区块</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">轻按两下以向右移动区块</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">轻按两下以向左移动区块</string>
-    <string name="gutenberg_native_block_settings">区块设置</string>
     <string name="new_site_creation_creating_site_loading_4">正在创建控制面板</string>
     <string name="new_site_creation_creating_site_loading_3">正在设置主题</string>
     <string name="new_site_creation_creating_site_loading_2">正在添加站点功能</string>
@@ -2171,17 +1738,6 @@ Language: zh_CN
     <string name="app_theme_light">浅色</string>
     <string name="app_theme">外观</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">您最近对此页面所做的更改没有保存。选择要加载的版本：\n\n</string>
-    <string name="gutenberg_native_warning_message" a8c-src-lib="gutenberg">警告消息</string>
-    <string name="gutenberg_native_show_post_content">显示文章内容</string>
-    <string name="gutenberg_native_only_show_excerpt">仅显示摘录</string>
-    <string name="gutenberg_native_link_to">链接到</string>
-    <string name="gutenberg_native_link_settings">链接设置</string>
-    <string name="gutenberg_native_excerpt_length_words">摘录长度（字数）</string>
-    <string name="gutenberg_native_edit_cover_media">编辑封面媒体文件</string>
-    <string name="gutenberg_native_customize">定制</string>
-    <string name="gutenberg_native_button_link_url">按钮链接 URL</string>
-    <string name="gutenberg_native_border_radius">边框半径</string>
-    <string name="gutenberg_native_add_paragraph_block">添加段落区块</string>
     <string name="create_post_page_fab_tooltip_contributors">撰写文章</string>
     <string name="post_list_tab_trashed_posts">已放入回收站</string>
     <string name="post_list_tab_scheduled_posts">预发布</string>
@@ -2198,24 +1754,11 @@ Language: zh_CN
     <string name="stats_insights_management_general">常规</string>
     <string name="stats_management_screen_title">添加新卡片</string>
     <string name="stats_management_add_new_stats_card">添加新统计信息卡片</string>
-    <string name="reader_self_hosted_select_filter">使用“过滤器”按钮查找特定主题的文章</string>
     <string name="reader_bottom_sheet_select_content_description">选择标签或博客，弹出窗口</string>
-    <string name="reader_btn_remove_filter_content_description">删除当前过滤器</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">登录 WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tags_list">登录 WordPress.com 以查看您所订阅的标签下的最新文章</string>
     <string name="reader_filter_self_hosted_empty_blogs_list">登录 WordPress.com 以查看您所订阅的博客的最新文章</string>
-    <string name="gutenberg_native_replace_current_block">替换现有区块</string>
-    <string name="gutenberg_native_add_to_end">添加到结尾</string>
-    <string name="gutenberg_native_add_to_beginning">添加到开始</string>
-    <string name="gutenberg_native_add_block_before">在之前添加区块</string>
-    <string name="gutenberg_native_add_block_after">在之后添加区块</string>
-    <string name="reader_filter_empty_tags_add_action">添加标签</string>
     <string name="reader_filter_cta">过滤器</string>
-    <string name="gutenberg_native_video_caption_s">视频说明。%s</string>
-    <string name="gutenberg_native_edit_video">编辑视频</string>
-    <string name="gutenberg_native_edit_media">编辑媒体</string>
-    <string name="gutenberg_native_add_a_shortcode">添加短代码…</string>
-    <string name="post_list_author">文章作者</string>
     <string name="fab_create_desc">撰写文章</string>
     <string name="stats_posting_activity_end_description">您已获得这段时间的所有统计数据。\n再次点击将从头开始。</string>
     <string name="stats_posting_activity_empty_description">此段时间无统计数据。</string>
@@ -2228,8 +1771,6 @@ Language: zh_CN
     <string name="stats_box_type_low">低</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  以及 %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_replace_image" a8c-src-lib="gutenberg">更换图像</string>
-    <string name="gutenberg_native_gallery_caption_s">图库说明。%s</string>
     <string name="create_post_page_fab_tooltip">创建文章或页面</string>
     <string name="content_description_person_building_website">网站构建者</string>
     <string name="post_signup_interstitial_not_right_now">现在不行</string>
@@ -2266,56 +1807,6 @@ Language: zh_CN
     <string name="suffix_1_000">%sK</string>
     <string name="posts_cannot_be_started">我们现在无法打开文章。请稍后重试</string>
     <string name="site_cannot_be_loaded">我们现在无法为您的站点加载数据。请稍后重试</string>
-    <string name="gutenberg_native_wordpress_media_library">WordPress 媒体库</string>
-    <string name="gutenberg_native_unsupported">不受支持</string>
-    <string name="gutenberg_native_ungroup">取消分组</string>
-    <string name="gutenberg_native_tap_to_hide_the_keyboard">轻按可隐藏键盘</string>
-    <string name="gutenberg_native_tap_here_to_show_help">轻按此处以显示帮助</string>
-    <string name="gutenberg_native_take_a_video">拍摄视频</string>
-    <string name="gutenberg_native_take_a_photo_or_video">拍摄照片或视频</string>
-    <string name="gutenberg_native_take_a_photo">拍照</string>
-    <string name="gutenberg_native_start_writing">开始撰写…</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 区块。此区块包含无效内容</string>
-    <string name="gutenberg_native_s_block_empty">%s 区块。空白</string>
-    <string name="gutenberg_native_cut_block">剪切区块</string>
-    <string name="gutenberg_native_problem_opening_the_video">打开视频时出现问题</string>
-    <string name="gutenberg_native_problem_displaying_block">显示区块时出现问题</string>
-    <string name="gutenberg_native_post_title_s">文章标题。%s</string>
-    <string name="gutenberg_native_post_title_empty">文章标题。空白</string>
-    <string name="gutenberg_native_paste_url">粘贴 URL</string>
-    <string name="gutenberg_native_page_break_block_s">分页符区块。%s</string>
-    <string name="gutenberg_native_open_settings">打开设置</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">没有可以处理此请求的应用程序。请安装 Web 浏览器。</string>
-    <string name="gutenberg_native_navigate_up">向上导航</string>
-    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">将区块从第 %1$s 行向上移动到第 %2$s 行</string>
-    <string name="gutenberg_native_move_block_up">向上移动区块</string>
-    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">将区块从第 %1$s 行向下移动到第 %2$s 行</string>
-    <string name="gutenberg_native_move_block_down">向下移动区块</string>
-    <string name="gutenberg_native_link_text">链接文字</string>
-    <string name="gutenberg_native_link_inserted">已插入链接</string>
-    <string name="gutenberg_native_image_caption_s">图片说明。%s</string>
-    <string name="gutenberg_native_hide_keyboard">隐藏键盘</string>
-    <string name="gutenberg_native_help_icon">“帮助”图标</string>
-    <string name="gutenberg_native_double_tap_to_undo_last_change">轻按两下以撤销上次的更改</string>
-    <string name="gutenberg_native_double_tap_to_toggle_setting">轻按两下以切换设置</string>
-    <string name="gutenberg_native_double_tap_to_select_an_image">轻按两下以选择图片</string>
-    <string name="gutenberg_native_double_tap_to_select_a_video">轻按两下以选择视频</string>
-    <string name="gutenberg_native_double_tap_to_select">轻按两下以选择</string>
-    <string name="gutenberg_native_double_tap_to_redo_last_change">轻按两下以恢复上次的更改</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_up">轻按两下以向上移动区块</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_down">轻按两下以向下移动区块</string>
-    <string name="gutenberg_native_double_tap_to_edit_this_value">轻按两下以编辑此值</string>
-    <string name="gutenberg_native_double_tap_to_add_a_block">轻按两下以添加区块</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">轻按两下并按住以进行编辑</string>
-    <string name="gutenberg_native_current_value_is_s">当前值为 %s</string>
-    <string name="gutenberg_native_choose_from_device">从设备中选择</string>
-    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">发生了未知错误。请重试。</string>
-    <string name="gutenberg_native_alt_text">替代文本</string>
-    <string name="gutenberg_native_add_video" a8c-src-lib="gutenberg">添加视频</string>
-    <string name="gutenberg_native_add_url">添加 URL</string>
-    <string name="gutenberg_native_add_alt_text">添加alt文字</string>
-    <string name="gutenberg_native_add_block_here">在此处添加区块</string>
-    <string name="gutenberg_native_add_description" a8c-src-lib="gutenberg">添加描述</string>
     <string name="reader_empty_saved_posts_content_description">轻按“添加以保存文章”按钮，将文章保存到您的列表中。</string>
     <string name="reader_acessibility_list_loaded">“列表已加载 %1$d 项。”</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
@@ -2433,11 +1924,6 @@ Language: zh_CN
     <string name="description_collapse">折叠</string>
     <string name="my_site_verify_your_email_without_email">请验证您的电子邮件地址（说明已发送至您的电子邮件地址）</string>
     <string name="my_site_verify_your_email">请验证您的电子邮件地址（说明已发送至 %s）</string>
-    <string name="link_dialog_button_cancel">取消</string>
-    <string name="link_dialog_button_ok">确定</string>
-    <string name="link_dialog_edit_hint">http(s)://</string>
-    <string name="link_dialog_button_remove_link">移除链接</string>
-    <string name="link_dialog_title">插入链接</string>
     <string name="post_settings_retry_featured_image">重试上传</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">正在上传媒体。\n请轻按以查看选项。</string>
     <string name="link_open_new_window">在新窗口/选项卡中打开链接</string>
@@ -2503,7 +1989,6 @@ Language: zh_CN
     <string name="stats_management_news_card_message">选择要查看的统计数据，重点关注您最关心的数据。点按“数据分析”底部的“%1$s”，以自定义您的统计数据。</string>
     <string name="stats_manage_your_stats">管理您的统计数据</string>
     <string name="history_fetching_revisions">正在获取修订版…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options" a8c-src-lib="module:editor">无法插入媒体。\n请轻点以查看选项。</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">无法插入媒体。\n请轻按以重试。</string>
     <string name="editor_uploading_draft">正在上传您的草稿</string>
     <string name="post_uploading_draft">正在上传草稿</string>
@@ -2527,8 +2012,6 @@ Language: zh_CN
     <string name="dialog_confirm_trash_losing_unsaved_changes_message">将此文章放入回收站还将放弃未保存的更改，是否确定要继续？</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">本地更改</string>
     <string name="button_move_to_draft">移动到草稿</string>
-    <string name="post_list_toggle_item_layout_list_view">切换到列表视图</string>
-    <string name="post_list_toggle_item_layout_cards_view">切换到卡片视图</string>
     <string name="posts_trashed_empty">您未将任何文章放至回收站</string>
     <string name="posts_draft_empty">您没有任何草稿文章</string>
     <string name="posts_scheduled_empty">您没有任何预发布的文章</string>
@@ -2560,15 +2043,10 @@ Language: zh_CN
     <string name="stats_months_and_years_views_label">浏览量</string>
     <string name="stats_months_and_years_period_label">时段</string>
     <string name="stats_detail_months_and_years">月和年</string>
-    <string name="stats_insights_load_more">加载更多</string>
     <string name="stats_insights_today_stats">今天</string>
     <string name="stats_insights_best_hour">最佳时刻</string>
     <string name="stats_insights_best_day">最佳日期</string>
     <string name="showing_stats_for">显示以下内容的统计数据：</string>
-    <string name="app_rating_rate_never">不用了，谢谢</string>
-    <string name="app_rating_rate_later">以后再说</string>
-    <string name="app_rating_rate_now">立即评分</string>
-    <string name="app_rating_message">欢迎您再次到来！如果您喜欢此应用，我们希望您能在Google Play Store上给我们一个评价。</string>
     <string name="editor_post_converted_back_to_draft">文章已转换回草稿</string>
     <string name="stats_insights_posting_activity">文章发布活动</string>
     <string name="stats_site_not_loaded_yet">站点尚未加载</string>
@@ -2595,8 +2073,6 @@ Language: zh_CN
     <string name="quick_start_dialog_check_stats_message_short">选择%1$s统计信息%2$s，查看您站点的表现。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">点击%1$s您的站点图标%2$s上传一个新图标</string>
     <string name="quick_start_dialog_publish_post_message">起草并发布文章。</string>
-    <string name="quick_start_dialog_enable_sharing_title">启用文章共享</string>
-    <string name="quick_start_dialog_enable_sharing_message">自动将新文章共享到社交媒体账户。</string>
     <string name="quick_start_dialog_check_stats_title">查看站点统计信息</string>
     <string name="quick_start_dialog_check_stats_message">及时了解您站点的表现。</string>
     <string name="quick_start_task_skip_menu_title">跳过任务</string>
@@ -2628,10 +2104,8 @@ Language: zh_CN
     <string name="local_post_is_conflicted">版本冲突</string>
     <string name="preference_crash_reports_summary">允许自动发送崩溃报告，以帮助我们改进此应用程序的性能。</string>
     <string name="preference_crash_reports">崩溃报告</string>
-    <string name="snackbar_conflict_undo">撤消</string>
     <string name="snackbar_conflict_web_version_discarded">已放弃 Web 版本</string>
     <string name="snackbar_conflict_local_version_discarded">已放弃本地版本</string>
-    <string name="toast_conflict_updating_post">正在更新文章</string>
     <string name="dialog_confirm_load_remote_post_discard_web">放弃 Web</string>
     <string name="dialog_confirm_load_remote_post_discard_local">放弃本地</string>
     <string name="dialog_confirm_load_remote_post_body_2">本地\n保存时间：%1$s\n\nWeb\n保存时间：%2$s\n</string>
@@ -2731,7 +2205,6 @@ Language: zh_CN
     <string name="pages_delete_permanently">永久删除</string>
     <string name="pages_move_to_trash">移动到回收站</string>
     <string name="pages_move_to_draft">移动到“草稿”</string>
-    <string name="pages_set_parent">设置父项</string>
     <string name="pages_view">查看</string>
     <string name="pages_trashed">回收站</string>
     <string name="pages_scheduled">预发布</string>
@@ -2765,12 +2238,9 @@ Language: zh_CN
     <string name="quick_start_dialog_enable_sharing_message_short_connections">轻按 %1$s 连接 %2$s 可添加您的社交媒体账户</string>
     <string name="quick_start_dialog_share_site_message">连接至您的社交媒体账户 - 您的站点将自动共享新文章。</string>
     <string name="quick_start_dialog_publish_post_title">发布文章</string>
-    <string name="quick_start_dialog_publish_post_message_short">轻按%1$s“创建文章”%2$s，撰写一篇新文章</string>
     <string name="quick_start_dialog_need_help_button_negative">不，谢谢</string>
     <string name="quick_start_dialog_follow_sites_title">连接其他站点</string>
     <string name="quick_start_button_positive">前往</string>
-    <string name="quick_start_button_negative_short">取消</string>
-    <string name="quick_start_button_negative">现在不行</string>
     <string name="content_description_more">更多</string>
     <string name="my_site_create_new_site_title">您没有任何站点</string>
     <string name="reader_empty_subscribed_tags_subtitle">在此处添加标签，以查找有关您喜爱的主题的文章</string>
@@ -2909,7 +2379,6 @@ Language: zh_CN
     <string name="photo_picker_stock_media">从免费照片库中选择</string>
     <string name="error_save_empty_draft">无法保存空白草稿</string>
     <string name="site_settings_quota_space_unlimited">%1$s/无限</string>
-    <string name="preview_count">预览 %d</string>
     <string name="add_count">添加 %d</string>
     <string name="fab_add_tag_desc">创建标签</string>
     <string name="navigate_up_desc">向上导航</string>
@@ -2973,7 +2442,6 @@ Language: zh_CN
     <string name="me_section_screen_title">我</string>
     <string name="my_site_section_screen_title">我的站点</string>
     <string name="notif_settings_screen_title">通知设置</string>
-    <string name="signup_epilogue_error_avatar_view">您的头像已上传，很快便会显示。</string>
     <string name="permissions_denied_message">您似乎关闭了此功能所需的权限。&lt;br/&gt;&lt;br/&gt;要对此进行更改，请编辑您的权限并确保已启用&lt;strong&gt;%s&lt;/strong&gt;。</string>
     <string name="permissions_denied_title">权限</string>
     <string name="plugin_caption_featured">精选</string>
@@ -3078,7 +2546,6 @@ Language: zh_CN
     <string name="plugin_installed_version">已安装版本 %s</string>
     <string name="plugin_version">版本 %s</string>
     <string name="plugin_byline">作者：%s</string>
-    <string name="change_photo">更改照片</string>
     <string name="plugin_fetch_error">无法加载插件</string>
     <string name="my_site_btn_site_pages">页面</string>
     <string name="site_settings_tags_hint">管理站点标签</string>
@@ -3096,7 +2563,6 @@ Language: zh_CN
     <string name="site_settings_format_hint_custom">自定义格式</string>
     <string name="site_settings_format_entry_custom">自定义</string>
     <string name="site_settings_posts_per_page_title">篇文章/页</string>
-    <string name="site_settings_timezone_subtitle">选择您所处时区内的一座城市</string>
     <string name="site_settings_timezone_title">时区</string>
     <string name="site_settings_time_format_title">时间格式</string>
     <string name="site_settings_date_format_title">日期格式</string>
@@ -3266,7 +2732,6 @@ Language: zh_CN
     <string name="requesting_otp" a8c-src-lib="module:login">正在请求短信验证码。</string>
     <string name="login_text_otp" a8c-src-lib="module:login">通过短信向我发送代码</string>
     <string name="enter_verification_code" a8c-src-lib="module:login">马上就好！ 请输入身份验证器应用程序中的 WordPress.com 验证码。</string>
-    <string name="open_mail" a8c-src-lib="module:login">打开邮件</string>
     <string name="next">下一步</string>
     <string name="enter_email_wordpress_com" a8c-src-lib="module:login">使用电子邮件地址登录 WordPress.com 以便管理您的所有 WordPress 站点。</string>
     <string name="me_profile_photo">个人资料照片</string>
@@ -3275,7 +2740,6 @@ Language: zh_CN
     <string name="post_title">标题</string>
     <string name="menu_redo">重做</string>
     <string name="menu_undo">撤消</string>
-    <string name="media_insert_unimplemented" a8c-src-lib="module:editor">抱歉! 功能尚未实现 :(</string>
     <string name="error_media_small">媒体过小，无法显示</string>
     <string name="editor_dropped_unsupported_files">警告：并非所有拖入的项目都支持!</string>
     <string name="editor_dropped_title_images_not_allowed">不允许将图片拖入标题</string>
@@ -3373,7 +2837,6 @@ Language: zh_CN
     <string name="editor_draft_saved_online">草稿已在线保存</string>
     <string name="editor_post_saved_locally">文章已保存到设备</string>
     <string name="button_sync">同步</string>
-    <string name="smart_toast_comments_long_press">按住可选择多条评论</string>
     <string name="photo_picker_choose_video">从设备中选择视频</string>
     <string name="photo_picker_choose_photo">从设备中选择照片</string>
     <string name="wp_media_title">WordPress 媒体</string>
@@ -3430,7 +2893,6 @@ Language: zh_CN
     <string name="error_media_insufficient_fs_permissions">设备媒体的读取权限被拒绝</string>
     <string name="site_settings_optimize_images">优化图片</string>
     <string name="media_generic_error">发生媒体错误</string>
-    <string name="media_upload_error">发生媒体上传错误</string>
     <string name="retry">重试</string>
     <string name="confirm">确认</string>
     <string name="xmlrpc_endpoint_forbidden_error" a8c-src-lib="module:login">无法连接。尝试访问您的站点 XMLRPC 终端时\n收到 403 错误。与您的站点进行通信所需要的应用程序。请联系您的托管服务提供商\n以解决此问题。</string>
@@ -3472,9 +2934,7 @@ Language: zh_CN
     <string name="invite_username_not_found">%s：没有找到用户</string>
     <string name="comment_moderated_approved">评论已批准！</string>
     <string name="like">喜欢</string>
-    <string name="timespan_now">现在</string>
     <string name="role_viewer">查看者</string>
-    <string name="error_post_my_profile_no_connection">网络未连接，无法保存您的个人资料</string>
     <string name="alignment_right">右</string>
     <string name="alignment_left">左</string>
     <string name="alignment_none">无</string>
@@ -3489,19 +2949,9 @@ Language: zh_CN
     <string name="follower_subscribed_since">从 %1$s开始</string>
     <string name="error_remove_viewer">无法删除查看者</string>
     <string name="editor_failed_uploads_switch_html">部分媒体上传失败。在此状态下，您无法切换\n到 HTML 模式。删除所有失败的上传并继续？</string>
-    <string name="image_thumbnail" a8c-src-lib="module:editor">图片缩略图</string>
-    <string name="visual_editor" a8c-src-lib="module:editor">可视化编辑器</string>
-    <string name="image_width">宽度</string>
-    <string name="image_link_to">链接到</string>
-    <string name="image_alt_text" a8c-src-lib="module:editor">替代文本</string>
-    <string name="image_caption">标题</string>
-    <string name="image_settings_save_toast">更改已保存</string>
-    <string name="image_settings_dismiss_dialog_title">放弃未保存的更改？</string>
     <string name="stop_upload_dialog_title">停止上传？</string>
-    <string name="alert_error_adding_media" a8c-src-lib="module:editor">插入媒体时出错</string>
     <string name="alert_action_while_uploading" a8c-src-lib="module:editor">您目前正在上传媒体。请等待，直到此任务完成。</string>
     <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">无法在 HTML 模式中直接插入媒体。请切换回可视模式。</string>
-    <string name="uploading_gallery_placeholder" a8c-src-lib="module:editor">正在上传图库…</string>
     <string name="tap_to_try_again">轻按即可重试！</string>
     <string name="invite_sent">已成功发送邀请</string>
     <string name="invite_error_for_username">%1$s：%2$s</string>
@@ -3513,7 +2963,6 @@ Language: zh_CN
     <string name="invite_message_title">自定义消息</string>
     <string name="invite">邀请</string>
     <string name="invite_names_title">用户名或电子邮箱地址</string>
-    <string name="my_site_header_external">外部</string>
     <string name="label_clear_search_history">清除搜索历史记录</string>
     <string name="dlg_confirm_clear_search_history">清除搜索历史记录？</string>
     <string name="reader_empty_search_description">未找到与您的语言对应的符合“%s”搜索条件的结果</string>
@@ -3536,7 +2985,6 @@ Language: zh_CN
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">目前不可用。请输入密码</string>
     <string name="logging_in">正在登录</string>
     <string name="web_address_dialog_hint">公开显示您的评论。</string>
-    <string name="capture_or_pick_photo">拍摄或选择照片</string>
     <string name="plans">套餐</string>
     <string name="plan">套餐</string>
     <string name="export_your_content_message">系统会将您的文章、页面和设置发送到以下电子邮件地址：%s。</string>
@@ -3809,25 +3257,15 @@ Language: zh_CN
     <string name="me_connect_to_wordpress_com">登录 WordPress.com</string>
     <string name="me_btn_login_logout">登录/退出</string>
     <string name="account_settings">账户设置</string>
-    <string name="site_picker_cant_hide_current_site">「%s」未隐藏，因为它是当前站点</string>
     <string name="site_picker_create_wpcom">创建 WordPress.com 站点</string>
     <string name="site_picker_add_self_hosted">添加自托管站点</string>
     <string name="site_picker_add_a_site">添加站点</string>
-    <string name="site_picker_edit_visibility">显示/隐藏站点</string>
     <string name="site_picker_title">选择站点</string>
-    <string name="my_site_btn_view_site">查看站点</string>
-    <string name="my_site_btn_view_admin">查看管理员</string>
     <string name="my_site_btn_switch_site">切换站点</string>
     <string name="my_site_btn_site_settings">站点设置</string>
     <string name="my_site_btn_blog_posts">文章</string>
-    <string name="my_site_header_publish">发布</string>
-    <string name="my_site_header_look_and_feel">外观</string>
-    <string name="my_site_header_configuration">配置</string>
     <string name="reader_label_new_posts_subtitle">轻按以显示文章</string>
-    <string name="deselect_all">全部不选</string>
     <string name="select_all">选择全部</string>
-    <string name="hide">隐藏</string>
-    <string name="show">显示</string>
     <string name="auth_required" a8c-src-lib="module:login">再次登录以继续操作。</string>
     <string name="invalid_verification_code" a8c-src-lib="module:login">验证码无效</string>
     <string name="verification_code" a8c-src-lib="module:login">验证码</string>
@@ -3921,7 +3359,6 @@ Language: zh_CN
     <string name="fatal_db_error">创建程序数据库时出错，请重新安装程序.</string>
     <string name="error_refresh_media">此时无法刷新媒体</string>
     <string name="wordpress_blog">WordPress 博客</string>
-    <string name="image_settings">图片设置</string>
     <string name="local_changes">本地修改</string>
     <string name="new_media">新媒体</string>
     <string name="new_post">新文章</string>
@@ -3952,7 +3389,6 @@ Language: zh_CN
     <string name="horizontal_alignment" a8c-src-lib="module:editor">水平对齐</string>
     <string name="local_draft">本地草稿</string>
     <string name="page_settings">页面设置</string>
-    <string name="create_a_link" a8c-src-lib="module:editor">创建一个链接</string>
     <string name="link_enter_url_text">链接文字 (可选)</string>
     <string name="cannot_delete_multi_media_items">一些媒体文件现在不能删除.请稍后再试.</string>
     <string name="media_error_no_permission">您无权查看媒体库</string>
@@ -3980,7 +3416,6 @@ Language: zh_CN
     <string name="reader_toast_err_comment_failed">无法发表评论</string>
     <string name="reader_likes_only_you">您喜欢了</string>
     <string name="reader_likes_one">1人喜欢了</string>
-    <string name="reader_label_removed_tag">已移除 %s</string>
     <string name="reader_label_added_tag">已添加 %s</string>
     <string name="reader_hint_comment_on_comment">回复评论</string>
     <string name="reader_btn_follow">订阅</string>

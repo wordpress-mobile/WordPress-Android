@@ -12,7 +12,6 @@ Language: el_GR
     <string name="help_buttons_screen_title">Βοήθεια</string>
     <string name="free">Δωρεάν</string>
     <string name="tickets">Εισιτήρια</string>
-    <string name="site_creation_domain_cost">ανά έτος</string>
     <string name="jetpack_plugin_install_error_title">Παρουσιάστηκε ένα πρόβλημα</string>
     <string name="jetpack_plugin_install_error_image_content_description">Εικονίδιο σφάλματος</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d Απαντήσεις</string>
@@ -29,20 +28,9 @@ Language: el_GR
     <string name="post_settings_parent">Γονική σελίδα</string>
     <string name="post_settings_page_attributes">Χαρακτηριστικά σελίδας</string>
     <string name="login_select_email_client">Ποια εφαρμογή διαχείρισης email χρησιμοποιείτε;</string>
-    <string name="gutenberg_native_move_image_forward">Μετακίνηση εικόνας εμπρός</string>
-    <string name="gutenberg_native_move_image_backward">Μετακίνηση εικόνας πίσω</string>
-    <string name="gutenberg_native_width_settings">Ρυθμίσεις πλάτους</string>
-    <string name="gutenberg_native_column_settings">Ρυθμίσεις Στήλης</string>
-    <string name="gutenberg_native_link_rel" a8c-src-lib="gutenberg">Σχέση συνδέσμου (Rel)</string>
-    <string name="gutenberg_native_no_description" a8c-src-lib="gutenberg">Χωρίς περιγραφή</string>
     <string name="user_profile_untitled_site">(Χωρίς τίτλο)</string>
     <string name="user_profile_site_section_header">Ιστότοπος</string>
-    <string name="gutenberg_native_mention">Αναφορά</string>
-    <string name="gutenberg_native_cancel_search">Ακύρωση αναζήτησης</string>
-    <string name="gutenberg_native_error">Σφάλμα </string>
-    <string name="gutenberg_native_choose_file">Επιλέξτε αρχείο</string>
     <string name="button_copy">Διπλότυπο</string>
-    <string name="gutenberg_native_file_name">Όνομα αρχείου</string>
     <string name="activity_log_activity_type_filter_apply">Εκτέλεση</string>
     <string name="activity_log_activity_type_filter_clear">Καθαρισμός</string>
     <string name="label_done_button">Ολοκληρώθηκε</string>
@@ -52,9 +40,6 @@ Language: el_GR
     <string name="prepublishing_nudges_home_categories_not_set">Δεν έχει οριστεί</string>
     <string name="prepublishing_nudges_categories_action">Κατηγορίες</string>
     <string name="login_prologue_fifth_caption_three">Μουσεία στο Λονδίνο</string>
-    <string name="gutenberg_native_help_button">Κουμπί Βοήθειας</string>
-    <string name="gutenberg_native_choose_images">Επιλέξτε εικόνες</string>
-    <string name="gutenberg_native_replace_image" a8c-src-lib="gutenberg">Αντικατάσταση εικόνας</string>
     <string name="post_signup_interstitial_not_right_now">Όχι τώρα</string>
     <string name="post_signup_interstitial_title">Καλώς ήρθατε στο WordPress!</string>
     <string name="photo_picker_image_selected">, Επιλεγμένο</string>
@@ -63,13 +48,6 @@ Language: el_GR
     <string name="negative_prefix">-%s</string>
     <string name="my_site_bottom_sheet_add_page">Σελίδες του ιστότοπου</string>
     <string name="reader_save_for_later_display_name">Αποθηκεύτηκε</string>
-    <string name="gutenberg_native_take_a_video">Λήψη βίντεο</string>
-    <string name="gutenberg_native_take_a_photo">Λήψη φωτογραφίας</string>
-    <string name="gutenberg_native_start_writing">Ξεκινήστε να γράφετε …</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s μπλοκ. Αυτό το μπλοκ έχει μη έγκυρο περιεχόμενο</string>
-    <string name="gutenberg_native_s_block_empty">%s μπλοκ. Είναι άδειο</string>
-    <string name="gutenberg_native_link_inserted">Έγινε εισαγωγή συνδέσμου</string>
-    <string name="gutenberg_native_help_icon">Εικονίδιο βοήθειας</string>
     <string name="post_list_tab_drafts">Προσχέδια</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>
     <string name="quick_start_sites">Επόμενα βήματα</string>
@@ -85,7 +63,6 @@ Language: el_GR
     <string name="site_creation_fetch_suggestions_error_unknown">Παρουσιάστηκε ένα πρόβλημα</string>
     <string name="new_site_creation_screen_title_general">Δημιουργία ιστότοπου</string>
     <string name="new_site_creation_screen_title_step_count">%1$d από %2$d</string>
-    <string name="snackbar_conflict_undo">Αναίρεση</string>
     <string name="stats_search_terms_views_label">Προβολές</string>
     <string name="stats_author_views_label">Προβολές</string>
     <string name="stats_videos_views_label">Προβολές</string>
@@ -182,9 +159,7 @@ Language: el_GR
     <string name="quick_start_dialog_view_site_title">Προβολή ιστοτόπου</string>
     <string name="quick_start_dialog_publish_post_title">Δημοσίευστε ένα άρθρο</string>
     <string name="quick_start_dialog_follow_sites_title">Συνδεθείτε με άλλους ιστότοπους</string>
-    <string name="quick_start_button_negative_short">Άκυρο</string>
     <string name="quick_start_button_positive">Μετάβαση</string>
-    <string name="quick_start_button_negative">Οχι τώρα</string>
     <string name="my_site_create_new_site_title">Δεν έχετε ιστότοπους</string>
     <string name="content_description_more">Περισσότερα</string>
     <string name="jetpack">Jetpack</string>
@@ -248,7 +223,6 @@ Language: el_GR
     <string name="notification_channel_important_title">Σημαντικό</string>
     <string name="photo_picker_use_photo">Χρήση της φωτογραφίας</string>
     <string name="media_preview_title">%1$d από %2$d</string>
-    <string name="preview_count">Προεπισκόπηση %d</string>
     <string name="photo_picker_stock_media">Επιλέξτε από δωρεάν βιβλιοθήκη φωτογραφιών</string>
     <string name="stock_media_picker_initial_empty_subtext">Φωτογραφίες που παρέχονται από το %s</string>
     <string name="stock_media_picker_search_hint">Αναζήτηση δωρεάν βιβλιοθήκη φωτογραφιών</string>
@@ -336,7 +310,6 @@ Language: el_GR
     <string name="plugin_installed">Εγκαταστάθηκε</string>
     <string name="plugin_byline">από %s</string>
     <string name="plugin_version">Έκδοση %s</string>
-    <string name="change_photo">Αλλαγή φωτογραφίας</string>
     <string name="dlg_saving_tag">Αποθήκευση</string>
     <string name="dlg_deleting_tag">Διαγραφή</string>
     <string name="my_site_btn_site_pages">Σελίδες</string>
@@ -348,7 +321,6 @@ Language: el_GR
     <string name="site_settings_format_help">Μάθετε περισσότερα για τη μορφοποίηση ημερομηνίας και ώρας</string>
     <string name="site_settings_format_entry_custom">Προσαρμογή</string>
     <string name="site_settings_posts_per_page_title">Άρθρα ανά σελίδα</string>
-    <string name="site_settings_timezone_subtitle">Διαλέξτε μία πόλη στη ζώνη ώρας σας</string>
     <string name="site_settings_timezone_title">Ζώνη ώρας</string>
     <string name="site_settings_time_format_title">Μορφή Ώρας</string>
     <string name="site_settings_date_format_title">Μορφή Ημερομηνίας</string>
@@ -512,7 +484,6 @@ Language: el_GR
     <string name="editor_draft_saved_online">Το προσχέδιο αποθηκεύτηκε διαδικτυακά</string>
     <string name="editor_post_saved_locally">Το άρθρο αποθηκεύτηκε στη συσκευή</string>
     <string name="button_sync">Συγχρονισμός</string>
-    <string name="smart_toast_comments_long_press">Πατήστε και κρατήστε για να επιλέξετε πολλαπλά σχόλια</string>
     <string name="photo_picker_choose_video">Επιλέξτε βίντεο από τη συσκευή</string>
     <string name="photo_picker_choose_photo">Επιλέξτε φωτογραφία από τη συσκευή</string>
     <string name="media_insert_as_gallery">Προσθήκη ως συλλογή</string>
@@ -569,7 +540,6 @@ Language: el_GR
     <string name="error_media_insufficient_fs_permissions">Απαιτείται άδεια ανάγνωσης για το αρχείο πολυμέσων</string>
     <string name="site_settings_optimize_images">Βελτιστοποίηση εικόνων</string>
     <string name="media_generic_error">Σφάλμα πολυμέσων</string>
-    <string name="media_upload_error">Σφάλμα μεταφόρτωσης πολυμέσων</string>
     <string name="retry">Δοκιμάστε ξανά</string>
     <string name="confirm">Επιβεβαίωση</string>
     <string name="xmlrpc_endpoint_forbidden_error" a8c-src-lib="module:login">Αδυναμία σύνδεσης. Λάβαμε ένα σφάλμα 403 προσπαθώντας να προσπελάσουμε\nτο σημείο επαφής XMLRPC του ιστοτόπου σας. Η εφαρμογή το χρειάζεται ώστε επικοινωνήσει με τον ιστότοπό σας. Επικοινωνήστε με τον πάροχο φιλοξενίας σας για να λύσετε\nαυτό το πρόβλημα.</string>
@@ -611,9 +581,7 @@ Language: el_GR
     <string name="invite_username_not_found">%s: Ο χρήστης δεν βρέθηκε</string>
     <string name="comment_moderated_approved">Το σχόλιο εγκρίθηκε!</string>
     <string name="like">Μου αρέσει</string>
-    <string name="timespan_now">τώρα</string>
     <string name="role_viewer">Αναγνώστης</string>
-    <string name="error_post_my_profile_no_connection">Χωρίς σύνδεση, αδυναμία αποθήκευσης προφίλ</string>
     <string name="alignment_none">Καμμία</string>
     <string name="alignment_left">Αριστερά</string>
     <string name="alignment_right">Δεξιά</string>
@@ -628,19 +596,9 @@ Language: el_GR
     <string name="follower_subscribed_since">Από %1$s</string>
     <string name="error_remove_viewer">Αδυναμία αφαίρεσης αναγνώστη</string>
     <string name="editor_failed_uploads_switch_html">Μερικές μεταφορτώσεις πολυμέσων απέτυχαν. Δεν μπορείτε να μεταβείτε σε λειτουργία HTML \n        σε αυτή την κατάσταση. Αφαίρεση όλων των αποτυχημένων μεταφορτώσεων και συνέχεια;</string>
-    <string name="visual_editor" a8c-src-lib="module:editor">Κειμενογράφος</string>
-    <string name="image_thumbnail" a8c-src-lib="module:editor">Μικρογραφία εικόνας</string>
-    <string name="image_settings_save_toast">Οι αλλαγές αποθηκεύτηκαν</string>
-    <string name="image_caption">Λεζάντα</string>
-    <string name="image_alt_text" a8c-src-lib="module:editor">Εναλλακτικό κείμενο</string>
-    <string name="image_link_to">Σύνδεση στο</string>
-    <string name="image_width">Πλάτος</string>
-    <string name="image_settings_dismiss_dialog_title">Απόρριψη μη αποθηκευμένων αλλαγών;</string>
     <string name="stop_upload_dialog_title">Διακοπή μεταφόρτωσης;</string>
-    <string name="alert_error_adding_media" a8c-src-lib="module:editor">Παρουσιάστηκε σφάλμα κατά την εισαγωγή πολυμέσων</string>
     <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Αυτή την στιγμή μεταφορτώνετε πολυμέσα. Παρακαλώ περιμένετε μέχρι να ολοκληρωθεί.</string>
     <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Δεν μπορείτε να προσθέσετε πολυμέσα απευθείας σε λειτουργία HTML. Παρακαλώ επιστρέψτε σε λειτουργία κειμενογράφου.</string>
-    <string name="uploading_gallery_placeholder" a8c-src-lib="module:editor">Μεταφόρτωση συλλογής…</string>
     <string name="tap_to_try_again">Πατήστε για να δοκιμάσετε ξανά!</string>
     <string name="invite_error_some_failed">Η πρόσκληση στάλθηκε αλλά παρουσιάστηκε(αν) σφάλμα(τα)!</string>
     <string name="invite_sent">Η πρόσκληση στάλθηκε επιτυχώς</string>
@@ -652,7 +610,6 @@ Language: el_GR
     <string name="invite_message_title">Προσαρμοσμένο Μήνυμα</string>
     <string name="invite">Πρόσκληση</string>
     <string name="invite_names_title">Ονόματα Χρήστη ή Ηλ. Διευθύνσεις</string>
-    <string name="my_site_header_external">Εξωτερική</string>
     <string name="label_clear_search_history">Καθαρισμός ιστορικού αναζήτησης</string>
     <string name="dlg_confirm_clear_search_history">Καθαρισμός ιστορικού αναζήτησης;</string>
     <string name="reader_empty_search_description">Δεν βρέθηκαν άρθρα στην γλώσσα σας για %s</string>
@@ -675,7 +632,6 @@ Language: el_GR
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Μη διαθέσιμο αυτή τη στιγμή. Παρακαλούμε εισάγετε το συνθηματικό σας</string>
     <string name="logging_in">Γίνεται σύνδεση</string>
     <string name="web_address_dialog_hint">Εμφανίζεται δημοσίως όταν σχολιάζετε.</string>
-    <string name="capture_or_pick_photo">Τραβήξτε ή επιλέξτε φωτογραφία</string>
     <string name="export_your_content_message">Τα άρθρα, οι σελίδες και οι ρυθμίσεις σας θα σας αποσταλούν με ηλ. ταχυδρομείο στο %s.</string>
     <string name="plan">Πρόγραμμα</string>
     <string name="plans">Προγράμματα</string>
@@ -948,24 +904,14 @@ Language: el_GR
     <string name="me_connect_to_wordpress_com">Συνδεθείτε στο WordPress.com</string>
     <string name="me_btn_login_logout">Σύνδεση/Αποσύνδεση</string>
     <string name="account_settings">Ρυθμίσεις Λογαριασμού</string>
-    <string name="site_picker_cant_hide_current_site">Το \"%s\" δεν κρύφτηκε επειδή είναι ο τρέχων ιστότοπος</string>
     <string name="site_picker_create_wpcom">Δημιουργία WordPress.com ιστότοπου</string>
     <string name="site_picker_add_a_site">Προσθήκη ιστότοπου</string>
-    <string name="site_picker_edit_visibility">Εμφάνιση/απόκρυψη ιστότοπων</string>
     <string name="site_picker_add_self_hosted">Προσθήκη αυτο-φιλοξενούμενου ιστότοπου</string>
-    <string name="my_site_btn_view_site">Προβολή ιστότοπου</string>
     <string name="my_site_btn_switch_site">Αλλαγή Ιστότοπου</string>
-    <string name="my_site_btn_view_admin">Προβολή Διαχείρισης</string>
     <string name="site_picker_title">Επιλογή ιστότοπου</string>
-    <string name="my_site_header_look_and_feel">Κοίτα και Νιώσε</string>
-    <string name="my_site_header_publish">Δημοσιεύω</string>
     <string name="my_site_btn_blog_posts">Άρθρα</string>
     <string name="my_site_btn_site_settings">Ρυθμίσεις ιστότοπου</string>
-    <string name="my_site_header_configuration">Ρυθμίσεις</string>
     <string name="reader_label_new_posts_subtitle">Πατήστε για να τα δείτε</string>
-    <string name="deselect_all">Αποεπιλογή όλων</string>
-    <string name="show">Προβολή</string>
-    <string name="hide">Απόκρυψη</string>
     <string name="select_all">Επιλογή όλων</string>
     <string name="language">Γλώσσα</string>
     <string name="verification_code" a8c-src-lib="module:login">Κωδικός επαλήθευσης</string>
@@ -1062,7 +1008,6 @@ Language: el_GR
     <string name="saving_changes">Αποθήκευση αλλαγών</string>
     <string name="new_post">Νέα ανάρτηση</string>
     <string name="local_changes">Τοπικές αλλαγές</string>
-    <string name="image_settings">Ρυθμίσεις εικόνας</string>
     <string name="page_settings">Ρυθμίσεις σελίδας</string>
     <string name="post_settings">Ρυθμίσεις άρθρου</string>
     <string name="dlg_confirm_trash_comments">Αποστολή στα σκουπίδια;</string>
@@ -1074,7 +1019,6 @@ Language: el_GR
     <string name="media_error_no_permission">Δεν έχετε δικαίωμα προβολής της βιβλιοθήκης πολυμέσων</string>
     <string name="cannot_delete_multi_media_items">Μερικά πολυμέσα δεν ήταν δυνατόν να διαγραφούν αυτή τη στιγμή. Δοκιμάστε ξανά αργότερα.</string>
     <string name="link_enter_url_text">Κείμενο συνδέσμου (προαιρετικά)</string>
-    <string name="create_a_link" a8c-src-lib="module:editor">Δημιουργία συνδέσμου</string>
     <string name="local_draft">Τοπικό προσχέδιο</string>
     <string name="horizontal_alignment" a8c-src-lib="module:editor">Οριζόντια ευθυγράμμιση</string>
     <string name="file_not_found">Αδυναμία εύρεσης του αρχείου πολυμέσων για μεταφόρτωση. Μήπως διαγράφηκε ή μετακινήθηκε;</string>
@@ -1125,7 +1069,6 @@ Language: el_GR
     <string name="reader_toast_err_url_intent">Δε στάθηκε δυνατό να ανοιχθεί το %s</string>
     <string name="empty_list_default">Αυτή η λίστα είναι κενή</string>
     <string name="reader_hint_comment_on_comment">Απάντηση σ\' αυτό το σχόλιο…</string>
-    <string name="reader_label_removed_tag">Αφαιρέθηκε το %s</string>
     <string name="sign_up_label" a8c-src-lib="module:login">Εγγραφή</string>
     <string name="stats">Στατιστικά</string>
     <string name="themes">Θέμα</string>

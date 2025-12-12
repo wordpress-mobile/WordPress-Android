@@ -133,7 +133,6 @@ Language: ms
     <string name="me_profile_photo">Gambar Profail</string>
     <string name="error_media_parse_error">Respons tidak disangka dari pelayan</string>
     <string name="upload_finished_toast">Tidak boleh memuat naik kerana ianya telahpun selesai</string>
-    <string name="media_insert_unimplemented" a8c-src-lib="module:editor">Maaf! Ciri belum lagi dilaksanakan :(</string>
     <string name="menu_redo">Buat Semula</string>
     <string name="post_title">Tajuk</string>
     <string name="menu_undo">Kembali ke asal</string>
@@ -232,7 +231,6 @@ Language: ms
     <string name="editor_draft_saved_online">Draf disimpan secara atas talian</string>
     <string name="editor_post_saved_locally">Kiriman disimpan di peranti</string>
     <string name="button_sync">Selaras</string>
-    <string name="smart_toast_comments_long_press">Tap dan tahan untuk memilih ulasan berbilang</string>
     <string name="photo_picker_choose_video">Pilih video dari peranti</string>
     <string name="photo_picker_choose_photo">Pilih gambar dari peranti</string>
     <string name="media_insert_as_gallery">Tambah sebagai galeri</string>
@@ -283,7 +281,6 @@ Language: ms
     <string name="error_media_insufficient_fs_permissions">Kebenaran membaca tidak diberikan pada media peranti</string>
     <string name="site_settings_optimize_images">Optimumkan Imej</string>
     <string name="media_generic_error">Ralat media berlaku</string>
-    <string name="media_upload_error">Ralat muat naik media berlaku</string>
     <string name="confirm">Sahkan</string>
     <string name="retry">Cuba Semula</string>
     <string name="xmlrpc_post_blocked_error" a8c-src-lib="module:login">Tidak boleh berhubung. Hos anda menyekat permintaan POST, dan aplikasi\n        memerlukannya untuk berkomunikasi dengan laman anda. Hubungi hos anda untuk menyelesaikan masalah ini.</string>
@@ -322,9 +319,7 @@ Language: ms
     <string name="invite_username_not_found">%s: Pengguna tidak dijumpai</string>
     <string name="comment_moderated_approved">Ulasan diluluskan!</string>
     <string name="like">Suka</string>
-    <string name="timespan_now">sekarang</string>
     <string name="role_viewer">Penonton</string>
-    <string name="error_post_my_profile_no_connection">Tiada sambungan, tidak dapat menyimpan profail anda</string>
     <string name="alignment_none">Tiada</string>
     <string name="alignment_left">Kiri</string>
     <string name="alignment_right">Kanan</string>
@@ -338,19 +333,9 @@ Language: ms
     <string name="follower_subscribed_since">Sejak %1$s</string>
     <string name="error_remove_viewer">Tidak dapat membuang penonton</string>
     <string name="editor_failed_uploads_switch_html">Sebahagian muat naik media telah gagal. Anda tidak boleh menukar ke mod HTML\ndalam keadaan ini. in this state. Buang semua muat naik yang gagal dan bersambung?</string>
-    <string name="visual_editor" a8c-src-lib="module:editor">Penyunting visual</string>
-    <string name="image_thumbnail" a8c-src-lib="module:editor">Imej kecil</string>
-    <string name="image_caption">Sari Kata</string>
-    <string name="image_alt_text" a8c-src-lib="module:editor">Teks alt</string>
-    <string name="image_link_to">Paut ke</string>
-    <string name="image_width">Lebar</string>
-    <string name="image_settings_save_toast">Penukaran disimpan</string>
-    <string name="image_settings_dismiss_dialog_title">Buang penukaran yang tidak disimpan?</string>
     <string name="stop_upload_dialog_title">Berhenti memuat naik?</string>
-    <string name="alert_error_adding_media" a8c-src-lib="module:editor">Ralat berlaku semasa menyisip media</string>
     <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Anda sedang memuat naik media. Sila tunggu sehingga ianya selesai.</string>
     <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Tidak dapat menyisip media terus dalam mod HTML. Sila tukar kembali ke mod visual.</string>
-    <string name="uploading_gallery_placeholder" a8c-src-lib="module:editor">Memuat naik galeri…</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_error_some_failed">Jemputan dihantar tetapi ralat berlaku!</string>
     <string name="invite_sent">Jemputan berjaya dihantar</string>
@@ -360,7 +345,6 @@ Language: ms
     <string name="invite_error_invalid_usernames_one">Tidak dapat menghantar: Nama pengguna atau emel adalah tidak sah</string>
     <string name="invite_error_no_usernames">Sila tambah sekurang-kurangnya satu nama pengguna</string>
     <string name="invite">Jemput</string>
-    <string name="my_site_header_external">Luaran</string>
     <string name="label_clear_search_history">Kosongkan sejarah carian</string>
     <string name="dlg_confirm_clear_search_history">Kosongkan sejarah carian?</string>
     <string name="reader_title_related_post_detail">Kiriman Berkaitan</string>
@@ -380,7 +364,6 @@ Language: ms
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Tidak terdapat pada masa ini. Sila masukkan kata laluan anda</string>
     <string name="logging_in">Melog masuk</string>
     <string name="web_address_dialog_hint">Tunjukkan kepada umum apabila anda mengulas.</string>
-    <string name="capture_or_pick_photo">Tangkap atau pilih gambar</string>
     <string name="export_your_content_message">Kiriman, halaman, dan tetapan anda akan diemel kepada anda di %s.</string>
     <string name="plan">Pelan</string>
     <string name="plans">Pelan</string>
@@ -631,21 +614,11 @@ Language: ms
     <string name="me_disconnect_from_wordpress_com">Log keluar dari WordPress.com</string>
     <string name="me_btn_login_logout">Log Masuk/Log Keluar</string>
     <string name="me_connect_to_wordpress_com">Log masuk ke WordPress.com</string>
-    <string name="site_picker_cant_hide_current_site">\"%s\" tidak disembunyikan kerana ianya laman semasa</string>
     <string name="account_settings">Tetapan Akaun</string>
     <string name="site_picker_add_self_hosted">Tambah laman yang dihos sendiri</string>
-    <string name="site_picker_edit_visibility">Tunjuk/sembunyi laman</string>
     <string name="site_picker_title">Pilih laman</string>
-    <string name="my_site_btn_view_admin">Lihat Pentadbir</string>
-    <string name="my_site_btn_view_site">Lihat Laman</string>
     <string name="my_site_btn_switch_site">Tukar Laman</string>
-    <string name="my_site_header_look_and_feel">Rupa dan Bentuk</string>
-    <string name="my_site_header_publish">Terbit</string>
-    <string name="my_site_header_configuration">Konfigurasi</string>
     <string name="reader_label_new_posts_subtitle">Tap untuk menunjukkannya</string>
-    <string name="deselect_all">Nyahpilih semua</string>
-    <string name="hide">Sembunyi</string>
-    <string name="show">Tunjuk</string>
     <string name="select_all">Pilih semua</string>
     <string name="invalid_verification_code" a8c-src-lib="module:login">Kod pengesahan tidak sah</string>
     <string name="language">Bahasa</string>
@@ -734,7 +707,6 @@ Language: ms
     <string name="media_gallery_type_thumbnail_grid">Grid gambar kenit</string>
     <string name="cannot_delete_multi_media_items">Sesetengah media tidak boleh dihapuskan pada masa ini. Cuba sebentar lagi.</string>
     <string name="link_enter_url_text">Teks pautan (pilihan)</string>
-    <string name="create_a_link" a8c-src-lib="module:editor">Cipta pautan</string>
     <string name="local_draft">Draf setempat</string>
     <string name="select_categories">Pilih kategori</string>
     <string name="post_not_found">Ralat berlaku apabila kiriman dimuatkan. Segar semula kiriman anda dan cuba lagi.</string>
@@ -761,7 +733,6 @@ Language: ms
     <string name="http_authorization_required" a8c-src-lib="module:login">Kebenaran diperlukan</string>
     <string name="new_post">Kiriman baharu</string>
     <string name="new_media">Media baharu</string>
-    <string name="image_settings">Tetapan imej</string>
     <string name="page_settings">Tetapan laman</string>
     <string name="post_settings">Tetapan kiriman</string>
     <string name="remove_account">Buang laman</string>
@@ -788,7 +759,6 @@ Language: ms
     <string name="reader_btn_follow">Ikut</string>
     <string name="reader_toast_err_url_intent">Tidak dapat membuka %s</string>
     <string name="reader_label_added_tag">%s ditambah</string>
-    <string name="reader_label_removed_tag">%s dibuang</string>
     <string name="reader_likes_one">Seorang menyukainya</string>
     <string name="reader_likes_only_you">Anda menyukainya</string>
     <string name="reader_toast_err_comment_failed">Tidak dapat mengirim komen anda</string>

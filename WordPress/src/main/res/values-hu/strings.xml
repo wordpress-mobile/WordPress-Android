@@ -6,7 +6,6 @@ Generator: GlotPress/4.0.3
 Language: hu
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="timespan_now">most</string>
     <string name="language">Nyelv</string>
     <string name="auth_required" a8c-src-lib="module:login">A folytatáshoz lépjünk be újra.</string>
     <string name="stats_view_authors">Szerzők</string>
