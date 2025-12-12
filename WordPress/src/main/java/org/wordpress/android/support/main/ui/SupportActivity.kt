@@ -146,7 +146,7 @@ private fun getRetentionPeriodStringRes(period: NetworkRequestsRetentionPeriod):
     }
 
     private fun navigateToHelpCenter() {
-        val intent = Intent(Intent.ACTION_VIEW, "https://wordpress.com/support/".toUri()).apply {
+        val intent = Intent(Intent.ACTION_VIEW, "https://apps.wordpress.com/support/mobile".toUri()).apply {
             addCategory(Intent.CATEGORY_BROWSABLE)
             setPackage(null) // Ensure it doesn't match internal activities
         }
