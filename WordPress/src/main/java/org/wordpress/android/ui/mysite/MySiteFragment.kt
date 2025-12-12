@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.mysite
 
 import android.app.Activity
@@ -53,6 +55,7 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
+import org.wordpress.android.ui.photopicker.PhotoPickerFragment
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.EditorConstants
 import org.wordpress.android.ui.posts.PostListType
@@ -271,7 +274,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                         ) ?: return
 
                         val source =
-                            org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.fromString(
+                            PhotoPickerFragment.PhotoPickerMediaSource.fromString(
                                 data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
                             )
                         val iconUrl = mediaUriStringsArray.getOrNull(0) ?: return

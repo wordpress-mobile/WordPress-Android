@@ -34,7 +34,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.PermissionUtils
-import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
@@ -49,6 +48,28 @@ import javax.inject.Inject
             "{@link org.wordpress.android.ui.mediapicker.MediaPickerFragment}"
 )
 class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
+    enum class PhotoPickerMediaSource {
+        ANDROID_CAMERA,
+        ANDROID_PICKER,
+        APP_PICKER,
+        WP_MEDIA_PICKER,
+        STOCK_MEDIA_PICKER;
+
+        companion object {
+            @JvmStatic
+            fun fromString(strSource: String?): PhotoPickerMediaSource? {
+                if (strSource != null) {
+                    for (source in entries) {
+                        if (source.name.equals(strSource, ignoreCase = true)) {
+                            return source
+                        }
+                    }
+                }
+                return null
+            }
+        }
+    }
+
     enum class PhotoPickerIcon(private val mRequiresUploadPermission: Boolean) {
         ANDROID_CHOOSE_PHOTO(true),
         ANDROID_CHOOSE_VIDEO(true),
@@ -512,14 +533,6 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
     fun doIconClicked(wpMedia: PhotoPickerIcon) {
         viewModel.clickIcon(wpMedia)
-    }
-
-    fun urisSelectedFromSystemPicker(uris: List<Uri>) {
-        viewModel.urisSelectedFromSystemPicker(uris.map { UriWrapper(it) })
-    }
-
-    fun mediaIdsSelectedFromWPMediaPicker(mediaIds: List<Long>) {
-        viewModel.mediaIdsSelectedFromWPMediaPicker(mediaIds)
     }
 
     companion object {

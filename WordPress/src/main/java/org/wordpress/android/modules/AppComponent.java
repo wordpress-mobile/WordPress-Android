@@ -77,7 +77,6 @@ import org.wordpress.android.ui.people.PeopleListFragment;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.plans.PlanDetailsFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
@@ -252,8 +251,6 @@ public interface AppComponent {
     void inject(MediaPreviewFragment object);
 
     void inject(MediaSettingsActivity object);
-
-    void inject(PhotoPickerActivity object);
 
     void inject(SiteSettingsTagListActivity object);
 

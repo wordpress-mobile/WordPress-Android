@@ -916,10 +916,6 @@
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
-            android:name=".ui.photopicker.PhotoPickerActivity"
-            android:theme="@style/WordPress.NoActionBar" />
-
-        <activity
             android:name=".ui.mediapicker.MediaPickerActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
