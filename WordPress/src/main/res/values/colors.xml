@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources xmlns:tools="http://schemas.android.com/tools">>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- APPLICATION -->
     <color name="background_dark">#121212</color>
