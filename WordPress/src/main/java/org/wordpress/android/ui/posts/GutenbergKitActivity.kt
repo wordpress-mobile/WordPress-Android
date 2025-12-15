@@ -146,8 +146,9 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOpera
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewHelperFunctions
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider
-import org.wordpress.android.ui.posts.editor.EditorPhotoPicker
 import org.wordpress.android.ui.posts.editor.EditorMediaActions
+import org.wordpress.android.ui.posts.editor.EditorMenuHelper
+import org.wordpress.android.ui.posts.editor.EditorPhotoPicker
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener
 import org.wordpress.android.ui.posts.editor.EditorTracker
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker
@@ -1435,75 +1436,42 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Suppress("LongMethod", "CyclomaticComplexMethod", "SwallowedException")
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val currentDestination = editPostNavigationViewModel.currentDestination.value ?: EditPostDestination.default()
-        val showMenuItems = currentDestination == EditPostDestination.Editor
 
-        val undoItem = menu.findItem(R.id.menu_undo_action)
-        val redoItem = menu.findItem(R.id.menu_redo_action)
-        val secondaryAction = menu.findItem(R.id.menu_secondary_action)
-        val previewMenuItem = menu.findItem(R.id.menu_preview_post)
-        val viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode)
-        val historyMenuItem = menu.findItem(R.id.menu_history)
-        val settingsMenuItem = menu.findItem(R.id.menu_post_settings)
         val helpMenuItem = menu.findItem(R.id.menu_editor_help)
         val sendFeedbackItem = menu.findItem(R.id.menu_editor_send_feedback)
 
-        if (undoItem != null) {
-            undoItem.setEnabled(menuHasUndo && !isModalDialogOpen)
-            undoItem.setVisible(!htmlModeMenuStateOn)
-        }
-        if (redoItem != null) {
-            redoItem.setEnabled(menuHasRedo && !isModalDialogOpen)
-            redoItem.setVisible(!htmlModeMenuStateOn)
-        }
-        if (secondaryAction != null && editPostRepository.hasPost()) {
-            secondaryAction.setVisible(showMenuItems && this.secondaryAction.isVisible)
-            secondaryAction.setTitle(secondaryActionText)
-        }
-        previewMenuItem?.setVisible(showMenuItems)
-        if (viewHtmlModeMenuItem != null) {
-            viewHtmlModeMenuItem.isVisible = showMenuItems
-            viewHtmlModeMenuItem.setTitle(
-                if (htmlModeMenuStateOn) R.string.menu_visual_mode else R.string.menu_html_mode)
-        }
-        if (historyMenuItem != null) {
-            val hasHistory = !isNewPost && siteModel.isUsingWpComRestApi
-            historyMenuItem.setVisible(showMenuItems && hasHistory)
-        }
-        if (settingsMenuItem != null) {
-            settingsMenuItem.setTitle(if (isPage) R.string.page_settings else R.string.post_settings)
-            settingsMenuItem.setVisible(showMenuItems)
-        }
+        EditorMenuHelper.prepareMenu(
+            menu = menu,
+            state = EditorMenuHelper.MenuState(
+                currentDestination = currentDestination,
+                hasPost = editPostRepository.hasPost(),
+                menuHasUndo = menuHasUndo,
+                menuHasRedo = menuHasRedo,
+                htmlModeMenuStateOn = htmlModeMenuStateOn,
+                isNewPost = isNewPost,
+                isPage = isPage,
+                isUsingWpComRestApi = siteModel.isUsingWpComRestApi,
+                secondaryActionVisible = secondaryAction.isVisible,
+                secondaryActionText = secondaryActionText,
+                primaryActionText = primaryActionText,
+                isModalDialogOpen = isModalDialogOpen
+            ),
+            checkModalForUndoRedo = true,
+            disablePrimaryWhenModal = true
+        )
 
-        // Set text of the primary action button in the ActionBar
-        if (editPostRepository.hasPost()) {
-            val primaryAction = menu.findItem(R.id.menu_primary_action)
-            if (primaryAction != null) {
-                primaryAction.setTitle(primaryActionText)
-                primaryAction.setVisible(
-                    currentDestination != EditPostDestination.History &&
-                    currentDestination != EditPostDestination.PublishSettings
-                )
-                primaryAction.setEnabled(!isModalDialogOpen)
-            }
-        }
         // Note: This menu is shared with EditPostActivity. The following items are not needed
         // for GutenbergKitActivity but are hidden rather than removed to avoid duplicating
         // menu resources until a more comprehensive menu cleanup is undertaken.
 
         // Hide "Switch to Gutenberg" - not needed since we're already using GutenbergKit
-        val switchToGutenbergMenuItem = menu.findItem(R.id.menu_switch_to_gutenberg)
-        if (switchToGutenbergMenuItem != null) {
-            switchToGutenbergMenuItem.setVisible(false)
-        }
+        menu.findItem(R.id.menu_switch_to_gutenberg)?.isVisible = false
 
         // Hide "Content Info" - not supported in GutenbergKit editor
-        val contentInfo = menu.findItem(R.id.menu_content_info)
-        contentInfo.isVisible = false
+        menu.findItem(R.id.menu_content_info)?.isVisible = false
 
         // Hide "Help" - not supported in GutenbergKit editor
-        if (helpMenuItem != null) {
-            helpMenuItem.setVisible(false)
-        }
+        helpMenuItem?.isVisible = false
 
         if (sendFeedbackItem != null) {
             sendFeedbackItem.isVisible = editorFragment is GutenbergKitEditorFragment
