@@ -182,7 +182,7 @@ class EditorPhotoPicker(
         } else {
             photoPickerOrientation = Configuration.ORIENTATION_PORTRAIT
             val displayHeight = DisplayUtils.getWindowPixelHeight(activity)
-            updatePickerContainerHeight((displayHeight * 0.5f).toInt())
+            updatePickerContainerHeight((displayHeight * PORTRAIT_HEIGHT_RATIO).toInt())
         }
     }
 
@@ -286,4 +286,8 @@ class EditorPhotoPicker(
     }
 
     // endregion
+
+    companion object {
+        private const val PORTRAIT_HEIGHT_RATIO = 0.5f
+    }
 }
