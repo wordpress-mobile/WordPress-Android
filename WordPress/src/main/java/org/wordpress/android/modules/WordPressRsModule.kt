@@ -16,12 +16,15 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.posttypes.bridge.WpSelfHostedServiceFactory
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.cache.kotlin.WordPressApiCache
+import uniffi.wp_api.ApiUrlResolver
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpApiClientDelegate
 import uniffi.wp_api.WpApiMiddlewarePipeline
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
+import uniffi.wp_api.WpComBaseUrl
+import uniffi.wp_api.WpComDotOrgApiUrlResolver
 import uniffi.wp_api.WpOrgSiteApiUrlResolver
 import uniffi.wp_mobile.WpSelfHostedService
 import java.io.File
@@ -80,6 +83,7 @@ class WpSelfHostedServiceFactoryImpl @Inject constructor(
 
         val apiRoot = site.wpApiRestUrl?.takeIf { it.isNotEmpty() } ?: "$siteUrl/wp-json"
         val authProvider = createAuthProvider(site)
+        val apiUrlResolver = createApiUrlResolver(site, apiRoot)
 
         val delegate = WpApiClientDelegate(
             authProvider,
@@ -91,10 +95,23 @@ class WpSelfHostedServiceFactoryImpl @Inject constructor(
         return WpSelfHostedService(
             siteUrl = siteUrl,
             apiRoot = apiRoot,
-            apiUrlResolver = WpOrgSiteApiUrlResolver(ParsedUrl.parse(apiRoot)),
+            apiUrlResolver = apiUrlResolver,
             delegate = delegate,
             cache = cache.cache
         )
+    }
+
+    private fun createApiUrlResolver(site: SiteModel, apiRoot: String): ApiUrlResolver {
+        // WordPress.com sites use WP.com API URL resolver (public-api.wordpress.com)
+        if (site.isWPCom || site.isUsingWpComRestApi) {
+            return WpComDotOrgApiUrlResolver(
+                siteId = site.siteId.toString(),
+                baseUrl = WpComBaseUrl.Production
+            )
+        }
+
+        // Self-hosted sites use the site's own API root
+        return WpOrgSiteApiUrlResolver(ParsedUrl.parse(apiRoot))
     }
 
     private fun createAuthProvider(site: SiteModel): WpAuthenticationProvider {

@@ -2,4 +2,5 @@
 <resources>
     <string name="cpt_post_types_screen_title">Post Types</string>
     <string name="cpt_back">Back</string>
+    <string name="cpt_refresh">Refresh</string>
 </resources>

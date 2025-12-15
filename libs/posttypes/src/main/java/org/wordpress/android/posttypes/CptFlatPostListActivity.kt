@@ -29,7 +29,10 @@ class CptFlatPostListActivity : AppCompatActivity(), CptActivity {
                 CptFlatPostListScreen(
                     uiState = uiState,
                     onBackClick = { onBackPressedDispatcher.onBackPressed() },
-                    onPostClick = viewModel::onPostClick
+                    onPostClick = viewModel::onPostClick,
+                    onFilterChange = viewModel::setFilter,
+                    onRefreshClick = viewModel::refresh,
+                    onLoadMoreClick = viewModel::loadNextPage
                 )
             }
         }
