@@ -125,7 +125,7 @@ class EditorPhotoPicker(
     }
 
     fun isPhotoPickerShowing(): Boolean {
-        return photoPickerContainer != null && photoPickerContainer?.visibility == View.VISIBLE
+        return photoPickerContainer?.visibility == View.VISIBLE
     }
 
     /*
