@@ -140,10 +140,6 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.media.MediaSettingsActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
-import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.EditPostCustomerSupportHelper.onContactCustomerSupport
@@ -167,6 +163,7 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewHelp
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker
+import org.wordpress.android.ui.posts.editor.EditorMediaActions
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener
 import org.wordpress.android.ui.posts.editor.EditorTracker
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker
@@ -269,7 +266,7 @@ private const val VIEW_PAGER_OFFSCREEN_PAGE_LIMIT = 4
 @Suppress("LargeClass")
 class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
-    ActivityCompat.OnRequestPermissionsResultCallback, MediaPickerFragment.MediaPickerListener,
+    ActivityCompat.OnRequestPermissionsResultCallback, EditorMediaActions,
     EditorPhotoPickerListener, EditorMediaListener, EditPostSettingsFragment.EditorDataProvider,
     HistoryItemClickInterface, PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger,
     SiteSettingsListener {
@@ -815,7 +812,15 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         //  cannot be cast to androidx.preference.Preference'
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false)
         showAztecEditor = AppPrefs.isAztecEditorEnabled()
-        editorPhotoPicker = EditorPhotoPicker(this, this, this, showAztecEditor)
+        editorPhotoPicker = EditorPhotoPicker(
+            activity = this,
+            editorPhotoPickerListener = this,
+            editorMediaActions = this,
+            editorMedia = editorMedia,
+            mediaPickerLauncher = mediaPickerLauncher,
+            siteModelProvider = { siteModel },
+            showAztecEditor = showAztecEditor
+        )
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (showAztecEditor) {
@@ -1458,90 +1463,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         if (editorFragment is AztecEditorFragment) {
             (editorFragment as AztecEditorFragment).enableMediaMode(false)
         }
-    }
-
-    /*
-     * called by MediaPickerFragment when media is selected - may be a single item or a list of items
-     */
-    override fun onItemsChosen(identifiers: List<Identifier>) {
-        editorPhotoPicker?.hidePhotoPicker()
-        val uriList = identifiers.mapNotNull { identifier ->
-            when (identifier) {
-                is Identifier.LocalUri -> identifier.value.uri
-                is Identifier.GifMediaIdentifier -> identifier.largeImageUri.uri
-                else -> null
-            }
-        }
-        if (uriList.isNotEmpty()) {
-            editorMedia.addNewMediaItemsToEditorAsync(uriList, false)
-        }
-    }
-
-    /*
-     * called by MediaPickerFragment when user clicks an icon to launch the camera, native
-     * picker, or WP media picker
-     */
-    override fun onIconClicked(action: MediaPickerAction) {
-        editorPhotoPicker?.hidePhotoPicker()
-        when (action) {
-            is MediaPickerAction.OpenCameraForPhotos -> {
-                if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
-                    launchCamera()
-                } else {
-                    showNoUploadPermissionSnackbar()
-                }
-            }
-            is MediaPickerAction.OpenSystemPicker -> {
-                if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
-                    editorPhotoPicker?.allowMultipleSelection = action.allowMultipleSelection
-                    WPMediaUtils.launchMediaLibrary(this, action.allowMultipleSelection)
-                } else {
-                    showNoUploadPermissionSnackbar()
-                }
-            }
-            is MediaPickerAction.SwitchMediaPicker -> {
-                // Handle switching to different data sources (WP Media, Stock, GIF)
-                val setup = action.mediaPickerSetup
-                when (setup.primaryDataSource) {
-                    MediaPickerSetup.DataSource.WP_LIBRARY -> {
-                        mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
-                            this,
-                            siteModel,
-                            MediaBrowserType.EDITOR_PICKER
-                        )
-                    }
-                    MediaPickerSetup.DataSource.STOCK_LIBRARY -> {
-                        val requestCode = if (setup.canMultiselect) {
-                            RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT
-                        } else {
-                            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK
-                        }
-                        mediaPickerLauncher.showStockMediaPickerForResult(
-                            this,
-                            siteModel,
-                            requestCode,
-                            setup.canMultiselect
-                        )
-                    }
-                    MediaPickerSetup.DataSource.GIF_LIBRARY -> {
-                        mediaPickerLauncher.showGifPickerForResult(
-                            this,
-                            siteModel,
-                            setup.canMultiselect
-                        )
-                    }
-                    else -> { /* Device is handled by OpenSystemPicker */ }
-                }
-            }
-        }
-    }
-
-    private fun showNoUploadPermissionSnackbar() {
-        make(
-            findViewById(R.id.editor_activity),
-            R.string.media_error_no_permission_upload,
-            Snackbar.LENGTH_SHORT
-        ).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -2767,7 +2688,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    private fun launchCamera() {
+    override fun launchCamera() {
         WPMediaUtils.launchCamera(
             this,
             BuildConfig.APPLICATION_ID,
@@ -3329,7 +3250,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
             launchCamera()
         } else {
-            showNoUploadPermissionSnackbar()
+            editorPhotoPicker?.showNoUploadPermissionSnackbar()
         }
     }
 
@@ -3409,7 +3330,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
             launchVideoCamera()
         } else {
-            showNoUploadPermissionSnackbar()
+            editorPhotoPicker?.showNoUploadPermissionSnackbar()
         }
     }
 

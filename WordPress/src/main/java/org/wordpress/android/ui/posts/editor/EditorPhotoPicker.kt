@@ -8,14 +8,22 @@ import androidx.recyclerview.widget.RecyclerView.Orientation
 import org.wordpress.android.R
 import org.wordpress.android.editor.MediaToolbarAction
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.media.MediaBrowserType
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource
 import org.wordpress.android.ui.mediapicker.MediaType
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
+import org.wordpress.android.ui.posts.editor.media.EditorMedia
+import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.WPMediaUtils
 
 private const val MEDIA_PICKER_TAG = "media_picker"
 
@@ -25,17 +33,28 @@ interface EditorPhotoPickerListener {
 }
 
 /**
- * This class is extracted from EditPostActivity as part of a huge refactor. Although some effort was made to improve
- * the code, it still contains the full logic from EditPostActivity to make the refactor less error-prone. As such,
- * it is heavily coupled with the `EditPostActivity` and contains logic and dependencies it shouldn't and in dire need
- * of further refactoring.
+ * Callback interface for activity-specific media actions that cannot be handled
+ * generically by EditorPhotoPicker.
  */
+interface EditorMediaActions {
+    fun launchCamera()
+}
+
+/**
+ * This class is extracted from EditPostActivity as part of a huge refactor. It manages the embedded
+ * photo picker fragment and handles media picker listener callbacks, delegating activity-specific
+ * actions through [EditorMediaActions].
+ */
+@Suppress("LongParameterList")
 class EditorPhotoPicker(
     private val activity: AppCompatActivity,
-    private val mediaPickerListener: MediaPickerFragment.MediaPickerListener,
     private val editorPhotoPickerListener: EditorPhotoPickerListener,
+    private val editorMediaActions: EditorMediaActions,
+    private val editorMedia: EditorMedia,
+    private val mediaPickerLauncher: MediaPickerLauncher,
+    private val siteModelProvider: () -> SiteModel,
     private val showAztecEditor: Boolean
-) : MediaToolbarAction.MediaToolbarButtonClickListener {
+) : MediaToolbarAction.MediaToolbarButtonClickListener, MediaPickerFragment.MediaPickerListener {
     private var photoPickerContainer: View? = null
 
     private var mediaPickerFragment: MediaPickerFragment? = null
@@ -57,7 +76,7 @@ class EditorPhotoPicker(
             val mediaPickerSetup = buildEditorMediaPickerSetup(site)
 
             MediaPickerFragment.newInstance(
-                mediaPickerListener,
+                this,
                 mediaPickerSetup,
                 site
             ).let {
@@ -121,7 +140,7 @@ class EditorPhotoPicker(
         if (!isAlreadyShowing) {
             AniUtils.animateBottomBar(photoPickerContainer, true, AniUtils.Duration.MEDIUM)
             mediaPickerFragment?.refresh()
-            mediaPickerFragment?.setMediaPickerListener(mediaPickerListener)
+            mediaPickerFragment?.setMediaPickerListener(this)
         }
 
         editorPhotoPickerListener.onPhotoPickerShown()
@@ -173,4 +192,88 @@ class EditorPhotoPicker(
             resizePhotoPicker()
         }
     }
+
+    // region MediaPickerListener implementation
+
+    override fun onItemsChosen(identifiers: List<Identifier>) {
+        hidePhotoPicker()
+        val uriList = identifiers.mapNotNull { identifier ->
+            when (identifier) {
+                is Identifier.LocalUri -> identifier.value.uri
+                is Identifier.GifMediaIdentifier -> identifier.largeImageUri.uri
+                else -> null
+            }
+        }
+        if (uriList.isNotEmpty()) {
+            editorMedia.addNewMediaItemsToEditorAsync(uriList, false)
+        }
+    }
+
+    /**
+     * Called by MediaPickerFragment when user clicks an icon to launch the camera, native
+     * picker, or WP media picker.
+     */
+    override fun onIconClicked(action: MediaPickerAction) {
+        hidePhotoPicker()
+        val siteModel = siteModelProvider()
+        when (action) {
+            is MediaPickerAction.OpenCameraForPhotos -> {
+                if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
+                    editorMediaActions.launchCamera()
+                } else {
+                    showNoUploadPermissionSnackbar()
+                }
+            }
+            is MediaPickerAction.OpenSystemPicker -> {
+                if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
+                    allowMultipleSelection = action.allowMultipleSelection
+                    WPMediaUtils.launchMediaLibrary(activity, action.allowMultipleSelection)
+                } else {
+                    showNoUploadPermissionSnackbar()
+                }
+            }
+            is MediaPickerAction.SwitchMediaPicker -> {
+                // Handle switching to different data sources (WP Media, Stock, GIF)
+                val setup = action.mediaPickerSetup
+                when (setup.primaryDataSource) {
+                    DataSource.WP_LIBRARY -> {
+                        mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
+                            activity,
+                            siteModel,
+                            MediaBrowserType.EDITOR_PICKER
+                        )
+                    }
+                    DataSource.STOCK_LIBRARY -> {
+                        val requestCode = if (setup.canMultiselect) {
+                            RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT
+                        } else {
+                            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK
+                        }
+                        mediaPickerLauncher.showStockMediaPickerForResult(
+                            activity,
+                            siteModel,
+                            requestCode,
+                            setup.canMultiselect
+                        )
+                    }
+                    DataSource.GIF_LIBRARY -> {
+                        mediaPickerLauncher.showGifPickerForResult(
+                            activity,
+                            siteModel,
+                            setup.canMultiselect
+                        )
+                    }
+                    else -> { /* Device is handled by OpenSystemPicker */ }
+                }
+            }
+        }
+    }
+
+    fun showNoUploadPermissionSnackbar() {
+        activity.findViewById<View>(R.id.editor_activity)?.let { view ->
+            Snackbar.make(view, R.string.media_error_no_permission_upload, Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    // endregion
 }
