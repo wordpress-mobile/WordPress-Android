@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!--  Try no to put any colors here, unless you know what you are doing. Try Use styles instead. -->
 
     <!-- Switch to attribute after dropping support for api 21-23 -->
@@ -8,7 +8,7 @@
     <color name="bottom_bar_notification_badge">@color/background_dark_elevated</color>
 
     <!-- Login Prologue -->
-    <color name="promo_indicator_color_default">@color/white_translucent_20</color>
+    <color name="promo_indicator_color_default" tools:ignore="UnusedResources">@color/white_translucent_20</color>
     <color name="login_prologue_background_circle_purple">@color/green_60</color>
     <color name="login_prologue_background_circle_light_purple">@color/purple_60</color>
     <color name="login_prologue_background_circle_blue">@color/blue_60</color>
@@ -19,8 +19,8 @@
     <color name="login_prologue_background_circle_pink">@color/purple_60</color>
 
     <!-- Login Prologue Revamped -->
-    <color name="login_prologue_revamped_background">@color/gray_80</color>
-    <color name="login_prologue_revamped_icon">@color/white</color>
+    <color name="login_prologue_revamped_background" tools:ignore="UnusedResources">@color/gray_80</color>
+    <color name="login_prologue_revamped_icon" tools:ignore="UnusedResources">@color/white</color>
 
     <!-- Post History -->
 
@@ -35,18 +35,9 @@
     <!-- Reader -->
 
     <!-- Reader Following empty view -->
-    <color name="reader_following_empty_view_upper_right_plus">@color/red_70</color>
-    <color name="reader_following_empty_view_mid_left_plus">@color/celadon_60</color>
-    <color name="reader_following_empty_view_center_circle">@color/gray_90</color>
-    <color name="reader_following_empty_view_left_lower_plus">@color/orange_70</color>
-    <color name="reader_following_empty_view_outline">@color/transparent</color>
-    <color name="reader_following_empty_view_middle_plus">@color/gray_60</color>
-    <color name="reader_following_empty_view_background">@color/transparent</color>
 
     <!-- Reader Post Card -->
     <color name="reader_post_list_background">@color/background_dark</color>
-    <color name="reader_welcome_card_background">@color/background_dark</color>
-    <color name="reader_welcome_card_text">@color/white</color>
 
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_10</color>

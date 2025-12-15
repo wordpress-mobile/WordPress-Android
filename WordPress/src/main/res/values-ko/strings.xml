@@ -53,38 +53,24 @@ Language: ko_KR
     <string name="he_support_send_button">보내기</string>
     <string name="he_support_reply_button">답글</string>
     <string name="he_support_last_updated">마지막 업데이트 %1$s</string>
-    <string name="he_support_message_count">메시지 %1$d개</string>
     <string name="he_support_empty_conversations_button">대화 시작</string>
     <string name="he_support_empty_conversations_message">지원팀과 대화를 시작하여 질문에 대한 도움을 받으세요.</string>
     <string name="he_support_empty_conversations_title">아직 대화 없음</string>
     <string name="he_support_new_conversation_content_description">새 대화</string>
     <string name="he_support_conversations_title">지원 대화</string>
-    <string name="ai_bot_time_weeks_ago">%1$d주 전</string>
-    <string name="ai_bot_time_week_ago">%1$d주 전</string>
-    <string name="ai_bot_time_days_ago">%1$d일 전</string>
-    <string name="ai_bot_time_day_ago">%1$d일 전</string>
-    <string name="ai_bot_time_hours_ago">%1$d시간 전</string>
-    <string name="ai_bot_time_hour_ago">%1$d시간 전</string>
-    <string name="ai_bot_time_minutes_ago">%1$d분 전</string>
-    <string name="ai_bot_time_minute_ago">%1$d분 전</string>
     <string name="ai_bot_time_just_now">지금</string>
-    <string name="ai_bot_default_conversation_title">새 대화</string>
     <string name="ai_bot_welcome_message">저는 개인 AI 도우미입니다. 사이트 또는 계정에 대한 질문에 도움을 드릴 수 있습니다.</string>
     <string name="ai_bot_welcome_greeting">%1$s 님, 안녕하세요. 👋</string>
     <string name="ai_bot_message_input_placeholder">메시지 입력 …</string>
     <string name="ai_bot_send_button_content_description">보내기</string>
     <string name="ai_bot_support_bot">지원 봇</string>
     <string name="ai_bot_you">귀하</string>
-    <string name="ai_bot_empty_conversations_button">대화 시작</string>
-    <string name="ai_bot_empty_conversations_message">새 대화를 시작하여 워드프레스 사이트 또는 계정에 대한 도움말을 받으세요.</string>
-    <string name="ai_bot_empty_conversations_title">아직 대화 없음</string>
     <string name="ai_bot_generic_error">문제가 발생했습니다. 나중에 다시 시도해 보세요.</string>
     <string name="ai_bot_new_conversation_content_description">새 대화</string>
     <string name="ai_bot_back_button_content_description">뒤로</string>
     <string name="ai_bot_conversations_title">대화</string>
     <string name="create">생성</string>
     <string name="logs_screen_general_error">문제가 발생했습니다…</string>
-    <string name="logs_screen_log_count">로그 항목 %d개</string>
     <string name="logs_screen_empty_state">사용 가능한 로그 없음</string>
     <string name="support_screen_user_avatar_content_description">사용자 아바타</string>
     <string name="support_screen_application_logs_description">문제를 디버깅하는 고급 도구</string>
@@ -98,7 +84,6 @@ Language: ko_KR
     <string name="support_screen_help_center_title">도움말 센터</string>
     <string name="support_screen_how_can_we_help_title">어떻게 도와드릴까요?</string>
     <string name="support_screen_login_button">워드프레스닷컴 로그인</string>
-    <string name="support_screen_profile_section_title">지원 프로필</string>
     <string name="support_screen_title">지원</string>
     <string name="modern_support_description">새 현대적 지원 환경 활성화</string>
     <string name="modern_support">현대적 지원</string>
@@ -114,7 +99,6 @@ Language: ko_KR
     <string name="term_parent_none">없음</string>
     <string name="term_parent_label">상위 항목:</string>
     <string name="term_count">개수: %1$d</string>
-    <string name="term_count_label">개수:</string>
     <string name="term_description_label">설명:</string>
     <string name="term_slug_label">슬러그</string>
     <string name="term_name_label">이름:</string>
@@ -159,7 +143,6 @@ Language: ko_KR
     <string name="subscribers_delete_confirmation_message">이 구독자를 삭제하시겠습니까?</string>
     <string name="subscribers_delete_confirmation_title">구독자 삭제</string>
     <string name="subscribers_sort_name">이름</string>
-    <string name="jetpack_rest_connection_error_connect_wpcom">워드프레스닷컴에 연결할 수 없음</string>
     <string name="jetpack_rest_connection_error_timeout">시간 초과됨</string>
     <string name="jetpack_rest_connection_cancel_message">젯팩 연결 프로세스가 진행 중입니다. 취소하시겠어요?</string>
     <string name="jetpack_rest_connection_cancel_title">젯팩 설정 취소 여부</string>
@@ -171,8 +154,6 @@ Language: ko_KR
     <string name="jetpack_rest_connection_step_connect_user">워드프레스닷컴에 사용자 연결</string>
     <string name="jetpack_rest_connection_step_install_jetpack">젯팩 플러그인을 설치하세요</string>
     <string name="jetpack_rest_connection_step_login_wpcom">워드프레스닷컴에 로그인</string>
-    <string name="jetpack_rest_connection_title">젯팩 연결</string>
-    <string name="experimental_subscribers_feature_description">뉴스레터 구독자 보기 및 관리</string>
     <string name="start">시작</string>
     <string name="descending">내림차순</string>
     <string name="ascending">오름차순</string>
@@ -207,7 +188,6 @@ Language: ko_KR
     <string name="subscribers_clicked_label">클릭됨</string>
     <string name="subscribers_opened_label">열림</string>
     <string name="subscribers_emails_sent_label">이메일</string>
-    <string name="subscribers_subscription_status">구독 상태</string>
     <string name="subscribers_error_title">문제가 발생했습니다</string>
     <string name="subscribers_empty_search">결과를 찾을 수 없음</string>
     <string name="subscribers_empty">구독자가 없습니다.</string>
@@ -225,9 +205,7 @@ Language: ko_KR
     <string name="invite_users">사용자 초대</string>
     <string name="experimental_application_password_feature_description">독립 호스트 사이트에 로그인하려면 애플리케이션 비밀번호 활성화</string>
     <string name="experimental_application_password_feature">애플리케이션 비밀번호 로그인</string>
-    <string name="experimental_subscribers_feature">실험 구독자</string>
     <string name="cant_share_no_blog">블로그가 없으면 WordPress에 공유할 수 없습니다.</string>
-    <string name="coming_soon">곧 출시됩니다!</string>
     <string name="me_email_verification_generic_error">인증 링크를 보낼 수 없음</string>
     <string name="me_email_verification_resend">인증 링크 다시 보내기</string>
     <string name="me_email_verification_sent_description">%s의 받은 편지함에서 확정 이메일 확인</string>
@@ -240,7 +218,6 @@ Language: ko_KR
     <string name="experimental_features_feedback_dialog_decline">지금 안 함</string>
     <string name="experimental_features_feedback_dialog_message">실험 버전 편집기에 대한 피드백을 공유하시겠어요?</string>
     <string name="experimental_features_feedback_dialog_title">피드백 공유</string>
-    <string name="experimental_block_editor_plugins">실험 버전 블록 편집기 플러그인</string>
     <string name="experimental_block_editor_description">추가 블록 유형 및 설정에 접근</string>
     <string name="experimental_block_editor_note">실험 버전 블록 편집기가 향후 릴리스에서 기본값이 되며 비활성화하는 기능은 제거될 예정입니다.</string>
     <string name="disable_experimental_block_editor_description">추가 블록 유형 및 설정 수신 거부</string>
@@ -260,7 +237,6 @@ Language: ko_KR
     <string name="nickname">닉네임</string>
     <string name="name">이름</string>
     <string name="no_users">사용자 없음</string>
-    <string name="user">사용자</string>
     <string name="users">사용자</string>
     <string name="me_btn_help_and_support">도움말 및 지원</string>
     <string name="me_btn_experimental_features">실험적 기능</string>
@@ -284,7 +260,6 @@ Language: ko_KR
     <string name="send_feedback">피드백 보내기</string>
     <string name="media_pager_remove_item_content_description">항목 %1$d 제거</string>
     <string name="feedback_form_add_attachments">첨부 파일 추가</string>
-    <string name="feedback_form_unable_to_create_tempfile">임시 파일 삭제 불가</string>
     <string name="feedback_form_attachment_already_added">첨부 파일이 이미 추가됨</string>
     <string name="feedback_form_attachment_too_large">첨부 파일은 32MB 이하여야 합니다.</string>
     <string name="feedback_form_unsupported_attachment">이 파일 유형은 지원되지 않습니다.</string>
@@ -308,7 +283,6 @@ Language: ko_KR
     <string name="voice_to_content_processing_label">처리 중</string>
     <string name="voice_to_content_error_label">오류</string>
     <string name="voice_to_content_processing">처리 중</string>
-    <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">눌러서 편집</string>
     <string name="voice_to_content_permissions_required_msg">오디오를 녹음하려면 앱에 마이크 액세스 권한이 필요합니다. 이전에 이 권한을 거부하셨습니다. 이 기능을 사용하려면 앱 설정에서 마이크 권한을 활성화하세요.</string>
     <string name="voice_to_content_permissions_required_title">오디오 녹음 권한 필수</string>
     <string name="permission_access_media_location">미디어 위치</string>
@@ -357,7 +331,6 @@ Language: ko_KR
     <string name="stats_view_emails">이메일</string>
     <string name="stats_view_subscribers">구독자</string>
     <string name="stats_view_total_subscribers">총 구독자 수</string>
-    <string name="stats_view_subscriber_totals">구독자 합계</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
     <string name="stats_emails_clicks_label">클릭 수</string>
     <string name="stats_emails_opens_label">열린 횟수</string>
@@ -395,9 +368,7 @@ Language: ko_KR
     <string name="reader_preferences_screen_font_size_label">글꼴 크기</string>
     <string name="reader_preferences_screen_font_family_label">글꼴</string>
     <string name="reader_preferences_screen_theme_label">색상표</string>
-    <string name="reader_preferences_screen_preview_text_feedback_label">피드백 보내기</string>
     <string name="experimental_badge">&lt;Experimental&gt;</string>
-    <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">선택한 색상 지우기</string>
     <string name="reader_no_followed_tags_text_title">팔로우한 태그 없음</string>
     <string name="reader_toast_err_tag_already_following">이미 이 태그 팔로우 중</string>
     <string name="reader_menu_reading_preferences">읽기 기본 설정</string>
@@ -409,25 +380,11 @@ Language: ko_KR
     <string name="reader_preferences_theme_sepia">세피아</string>
     <string name="reader_preferences_theme_soft">부드러운</string>
     <string name="reader_preferences_theme_system">기본</string>
-    <string name="reader_preferences_screen_preview_text_feedback_link">피드백 보내기</string>
-    <string name="reader_preferences_screen_preview_text_feedback">아직 개발 중인 새 기능입니다. 개선에 동참해 주세요(%s).</string>
     <string name="reader_preferences_screen_preview_text">색상, 글꼴과 크기를 선택하세요. 선택한 상태를 여기에서 미리 보며 완료한 후 스타일이 적용된 글을 읽어보세요.</string>
     <string name="reader_preferences_screen_preview_title">읽기 기본 설정</string>
     <string name="reader_filter_empty_tags_action_follow">태그 팔로우</string>
     <string name="button_read">읽기</string>
-    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">콘텐츠가 영향을 받는 때를 대비하여 글 텍스트를 복사할 수 있습니다. 디버깅할 오류 상세 정보를 복사하고 지원팀과 공유하세요.</string>
-    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">편집기에서 예기치 않은 오류가 발생했습니다.</string>
-    <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">여기를 눌러 글 텍스트 복사</string>
-    <string name="gutenberg_native_tap_here_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">여기를 눌러 오류 상세 정보 복사</string>
-    <string name="gutenberg_native_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">글 텍스트 복사</string>
-    <string name="gutenberg_native_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">오류 상세 정보 복사</string>
-    <string name="gutenberg_native_button_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">글 텍스트 복사 버튼</string>
-    <string name="gutenberg_native_button_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">오류 상세 정보 복사 버튼</string>
     <string name="editor_updating_content_failed">콘텐츠를 업데이트하지 못했습니다.</string>
-    <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">비디오 캡션. %s</string>
-    <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">비디오 캡션. 비우기</string>
-    <string name="gutenberg_native_edit_video_024aee6d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">비디오 편집</string>
-    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">비디오를 자동 재생하면 일부 사용자에게 유용성 문제가 발생할 수 있습니다.</string>
     <string name="notifications_action_mark_all_as_read">모두 읽음으로 표시</string>
     <string name="notifications_unread_content_description">읽지 않음</string>
     <string name="qrcode_media_deeplink_error">사이트를 찾을 수 없습니다. 올바른 계정에 로그인했는지 확인하세요.</string>
@@ -456,13 +413,11 @@ Language: ko_KR
     <string name="reader_label_choose_interests">관심사 선택</string>
     <string name="reader_label_subscribers_count_single">구독자 1명</string>
     <string name="reader_label_subscribers_count">구독자 %s명</string>
-    <string name="reader_label_subscribe_count">구독자 %,d명</string>
     <string name="reader_label_blog_subscribed">구독하는 블로그</string>
     <string name="reader_hint_search_subscribed_blogs">구독하는 블로그 검색</string>
     <string name="reader_btn_subscribed">구독됨</string>
     <string name="reader_btn_subscribe">구독</string>
     <string name="reader_menu_block_this_blog">이 블로그 차단</string>
-    <string name="reader_menu_tags_and_blogs">태그 및 블로그 편집</string>
     <string name="reader_page_followed_blogs_title">구독한 블로그</string>
     <string name="reader_title_tags">태그 팔로우</string>
     <string name="reader_activity_title_manage_tags_blogs">블로그 및 블로그 관리</string>
@@ -483,24 +438,15 @@ Language: ko_KR
     <string name="reader_dropdown_menu_discover">발견</string>
     <string name="reader_search_content_description">검색</string>
     <string name="reader_discover_no_posts_button_tags_text_follow">태그 팔로우</string>
-    <string name="reader_discover_recommended_blogs_to_subscribe_header">구독할 블로그</string>
     <string name="reader_filter_empty_tags_action_suggested">제안된 태그</string>
     <string name="reader_filter_empty_blogs_action_search">블로그 검색</string>
     <string name="reader_filter_empty_tags_list_follow_text">태그를 팔로우하면 여기에서 인기 글을 확인할 수 있습니다.</string>
     <string name="reader_filter_empty_tags_list_title">태그 없음</string>
     <string name="reader_filter_empty_blogs_list_text">발견에서 블로그를 구독하면 여기에 최신 글이 표시됩니다. 아니면 이미 좋아하는 블로그를 검색하세요.</string>
     <string name="reader_filter_empty_blogs_list_title">블로그 구독 없음</string>
-    <string name="reader_filter_empty_blogs_action">블로그 구독</string>
-    <string name="reader_filter_empty_blogs_list">구독하는 블로그의 최신 글 확인</string>
     <string name="reader_filter_by_tag_title">태그로 필터링</string>
     <string name="reader_filter_by_blog_title">블로그로 필터링</string>
-    <string name="gutenberg_native_waiting_for_connection" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">연결 대기 중</string>
     <string name="stats_traffic">트래픽</string>
-    <string name="gutenberg_native_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">오프라인 작업 중</string>
-    <string name="gutenberg_native_network_connection_re_established" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">네트워크 연결 다시 설정됨</string>
-    <string name="gutenberg_native_network_connection_lost_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">네트워크 연결 해제됨, 오프라인 작업 중</string>
-    <string name="gutenberg_native_font_size_1_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">글꼴 크기, %1$s</string>
-    <string name="gutenberg_native_file_type_not_supported_as_a_media_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">파일 유형이 미디어 파일로 지원되지 않습니다.</string>
     <string name="media_cannot_be_started">지금은 미디어를 열 수 없습니다. 나중에 다시 시도하세요.</string>
     <string name="domains_just_search_for_a_domain_button">바로 도메인 검색</string>
     <string name="domains_upgrade_to_a_plan_button">요금제로 업그레이드</string>
@@ -522,25 +468,19 @@ Language: ko_KR
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">새해에 블로깅 습관을 들이는 커뮤니티 챌린지인 Bloganuary에서 1월 한 달 동안 블로깅 프롬프트가 제공됩니다.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary가 다가오고 있습니다!</string>
-    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">따라서 웹 브라우저를 사용하여 블록을 편집하는 것이 좋습니다.</string>
-    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">따라서 웹 편집기를 사용하여 블록을 편집하는 것이 좋습니다.</string>
-    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">그 대신에 블록 그룹 해제를 통해 콘텐츠를 평평하게 하실 수 있습니다.</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">설정으로 이동</string>
     <string name="barcode_scanning_alert_dialog_dismiss_label">취소</string>
     <string name="barcode_scanning_alert_dialog_rationale_cta_label">권한 부여</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_message">카메라 권한을 영구적으로 거부하셨습니다. 바코드를 스캔하려면 이 권한이 필요합니다. 앱 설정에서 활성화해 주세요.</string>
     <string name="barcode_scanning_alert_dialog_rationale_message">바코드를 스캔하려면 카메라 권한이 필요합니다.</string>
     <string name="barcode_scanning_alert_dialog_title">카메라 권한 부여</string>
-    <string name="barcode_scanning_camera_permission_denied">바코드를 스캔하려면 카메라 권한이 필요합니다.</string>
-    <string name="barcode_scanning_title">바코드 스캔</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%d 레벨보다 깊숙이 중첩된 블록은 모바일 편집기에서 올바르게 렌더링되지 않을 수 있습니다.</string>
     <string name="jp_migration_lets_go_button">지금 시작</string>
     <string name="jp_migration_done_no_sites_message">젯팩 앱에서 워드프레스 여정을 계속하실 때가 되었습니다.</string>
     <string name="domain_management_clear_search">검색 지우기</string>
     <string name="media_encoder_quality_very_high">매우 높음</string>
-    <string name="notification_security_key_needed" tools:ignore="UnusedResources" a8c-src-lib="module:login">계속하려면 보안 키를 입력하세요.</string>
-    <string name="login_error_security_key" tools:ignore="UnusedResources" a8c-src-lib="module:login">보안 키 로그인 문제 발생</string>
-    <string name="login_text_security_key" tools:ignore="UnusedResources" a8c-src-lib="module:login">보안 키 사용</string>
+    <string name="notification_security_key_needed" a8c-src-lib="module:login">계속하려면 보안 키를 입력하세요.</string>
+    <string name="login_error_security_key" a8c-src-lib="module:login">보안 키 로그인 문제 발생</string>
+    <string name="login_text_security_key" a8c-src-lib="module:login">보안 키 사용</string>
     <string name="new_domain_search_screen_error_title">도메인을 검색할 수 없음</string>
     <string name="new_domain_search_screen_list_item_sale_price">첫 1년 동안 %s</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s/년</string>
@@ -555,10 +495,7 @@ Language: ko_KR
     <string name="domain_management_error_title">도메인을 검색할 수 없음</string>
     <string name="site_domain_title">사이트 도메인</string>
     <string name="my_site_blogging_prompt_card_attribution_bloganuary">&lt;b&gt;Bloganuary&lt;/b&gt;에서</string>
-    <string name="post_status_post_edited">편집됨</string>
     <string name="post_list_toggle_author_filter">글쓴이 기준 필터</string>
-    <string name="gutenberg_native_s_block_converted_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록으로 \'%s\' 블록 변환됨</string>
-    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">콘텐츠를 블록으로 변환할 수도 있습니다.</string>
     <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">비활성 단축키</string>
     <string name="personalization_screen_tab_shortcuts_active_shortcuts">활성 단축키</string>
     <string name="personalization_screen_shortcuts_tab_title">단축키</string>
@@ -589,17 +526,10 @@ Language: ko_KR
     <string name="reader_secondary_bookmarked">저장됨</string>
     <string name="reader_secondary_bookmark">저장</string>
     <string name="reader_discover_recommended_header_new">좋아할 수도 있습니다</string>
-    <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록 그룹 해제</string>
-    <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">자세히 알아보려면 여기를 누르세요.</string>
-    <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">동기화된 패턴</string>
-    <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">깊숙이 중첩된 블록</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%d 레벨보다 깊숙이 중첩된 블록은 모바일 편집기에서 올바르게 렌더링되지 않을 수 있습니다. 따라서 블록 그룹 해제를 통해 콘텐츠를 평평하게 하거나 웹 편집기를 사용하여 블록을 편집하는 것이 좋습니다.</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">깊숙이 중첩되어서 블록을 렌더링할 수 없습니다. 자세히 알아보려면 여기를 누르세요.</string>
     <string name="pages_no_site_something_went_wrong">죄송합니다. 문제가 발생했습니다. 나중에 다시 시도하세요.</string>
     <string name="sharing_connect_via_web_warning_positive_button">웹으로 이동</string>
     <string name="my_site_dashboard_no_cards_message_description">개인 설정 버튼을 눌러 더 많은 카드를 표시하세요.</string>
     <string name="my_site_dashboard_no_cards_message_title">모든 카드가 숨겨짐</string>
-    <string name="personalization_screen_next_steps_card_description">앱으로 사이트를 최대한 활용하는 방법을 알아보세요.</string>
     <string name="personalization_screen_activity_log_card_description">사이트에서 최근에 취한 조치입니다.</string>
     <string name="personalization_screen_pages_card_description">사이트 페이지 개요입니다.</string>
     <string name="personalization_screen_blogging_prompts_card_description">블로그 글에 대한 일일 아이디어입니다.</string>
@@ -621,28 +551,18 @@ Language: ko_KR
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">모든 캠페인 보기</string>
     <string name="dashboard_activity_card_menu_all_activity">모든 활동</string>
     <string name="dashboard_pages_card_more_menu_all_pages">모든 페이지</string>
-    <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">파일 선택</string>
-    <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">이미지 또는 비디오 추가</string>
     <string name="my_site_post_card_menu_view_all_scheduled_posts">예약된 글 모두 보기</string>
     <string name="my_site_post_card_menu_view_all_drafts">모든 임시글 보기</string>
     <string name="my_site_todays_stats_menu_view_stats">통계 보기</string>
     <string name="my_site_dashboard_card_more_menu_hide_card">숨기기</string>
     <string name="contact_support_first_message_hint">질문에 답변해 드릴 수 없는 경우에는 담당 팀에 지원 티켓을 접수하도록 도와드리겠습니다!</string>
     <string name="contact_support_first_message_hi">안녕하세요. 젯팩 AI 도우미입니다.</string>
-    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">웹 브라우저에서 유료 서비스 블록의 고급 설정에 접근하세요.</string>
     <string name="contact_support_bot_ticket_comment_answer">답변:</string>
     <string name="contact_support_bot_ticket_comment_question">질문:</string>
     <string name="contact_support_bot_ticket_comment_start">젯팩 모바일 봇 대본:</string>
     <string name="contact_support_bot_ticket_error">지원 티켓 제출 중 오류 발생</string>
     <string name="contact_support_bot_ticket_message">티켓 생성됨</string>
     <string name="contact_support_bot_ticket_loading">지원 티켓 생성 중…</string>
-    <string name="contact_support_question_six">앱에서 사용자 정의 도메인을 사용하려면 어떻게 해야 하나요?</string>
-    <string name="contact_support_question_five">로그인 정보가 기억나지 않습니다.</string>
-    <string name="contact_support_question_four">로그인할 수 없는 이유가 무엇인가요?</string>
-    <string name="contact_support_question_three">사진/비디오를 업로드할 수 없습니다.</string>
-    <string name="contact_support_question_two">내 사이트가 중단되었습니다.</string>
-    <string name="contact_support_question_one">내 사이트 주소가 무엇인가요?</string>
-    <string name="contact_support_suggestions">어떤 질문을 해야 할지 잘 모르시겠나요?</string>
     <string name="contact_support_get_support">지원팀에 문의</string>
     <string name="contact_support_first_message">무엇을 도와드릴까요?</string>
     <string name="contact_support_input_placeholder">메시지 보내기…</string>
@@ -666,10 +586,6 @@ Language: ko_KR
     <string name="post_settings_jetpack_social_share_message_title">메시지 사용자 정의</string>
     <string name="post_settings_jetpack_social_connect_not_now_button">지금 안 함</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">계정 연결</string>
-    <string name="gutenberg_native_insert_video_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">비디오 블록 삽입</string>
-    <string name="gutenberg_native_insert_image_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">이미지 블록 삽입</string>
-    <string name="gutenberg_native_insert_gallery_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">갤러리 블록 삽입</string>
-    <string name="gutenberg_native_insert_audio_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">오디오 블록 삽입</string>
     <string name="campaign_listing_page_no_campaigns_button_text">생성</string>
     <string name="campaign_listing_page_no_campaigns_message_description">아직 캠페인을 생성하지 않았습니다. 시작하려면 생성을 클릭하세요.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">캠페인이 없습니다.</string>
@@ -686,7 +602,6 @@ Language: ko_KR
     <string name="campaign_status_active">활성</string>
     <string name="blaze_campaigns_card_footer_label">캠페인 생성</string>
     <string name="blaze_campaigns_card_title">Blaze 캠페인</string>
-    <string name="promote_blaze_flow_error">Blaze 홍보 절차를 로드할 수 없습니다.</string>
     <string name="prepublishing_nudges_social_new_connection_text">소셜 미디어에서 글을 친구와 자동으로 공유하여 트래픽을 늘려보세요.</string>
     <string name="menu_close_editor">편집기 닫기</string>
     <string name="menu_redo_context">마지막 변경 다시 실행</string>
@@ -695,10 +610,6 @@ Language: ko_KR
     <string name="post_settings_jetpack_social_subscribe_share_more">구독 후 더 공유</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">소셜 미디어에서 글을 친구와 자동으로 공유하여 트래픽을 늘려보세요.</string>
     <string name="post_settings_jetpack_social_header">소셜 공유</string>
-    <string name="gutenberg_native_s_detached" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s 분리됨</string>
-    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">동기화된 패턴 편집은 아직 iOS용 %s에서 지원되지 않습니다.</string>
-    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">동기화된 패턴 편집은 아직 Android용 %s에서 지원되지 않습니다.</string>
-    <string name="gutenberg_native_reusable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">재사용 가능</string>
     <string name="privacy_banner_error_save">개인정보 선택 사항을 저장하는 중 오류가 발생했습니다.</string>
     <string name="privacy_banner_save">저장</string>
     <string name="privacy_banner_settings">설정</string>
@@ -708,8 +619,6 @@ Language: ko_KR
     <string name="privacy_banner_description">회원님의 개인정보는 언제나 그렇듯이 당사에 매우 중요합니다. 회원님의 개인 데이터를 사용하고, 저장하고, 처리하여 다양한 방법으로 앱과 회원님의 환경을 최적화합니다. 일을 제대로 진행하려면 회원님의 데이터 중 일부를 반드시 사용해야 하고, 나머지는 회원님이 설정에서 사용자 정의할 수 있습니다.</string>
     <string name="tabbar_accessibility_label_me">나. 프로필 상세 정보를 관리합니다.</string>
     <string name="social_item_message_title">안내문</string>
-    <string name="gutenberg_native_block_ungrouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록 그룹 해제됨</string>
-    <string name="gutenberg_native_block_grouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록 그룹 지정됨</string>
     <string name="dashboard_card_plans_checkout_success_info">도메인이 올바르게 작동하기 시작하려면 최대 30분이 걸릴 수 있습니다.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">새 도메인(&lt;b&gt;%s&lt;/b&gt;)을 설정하는 중입니다.</string>
     <string name="dashboard_card_plans_checkout_success_title">모든 준비를 마쳤습니다!</string>
@@ -732,13 +641,10 @@ Language: ko_KR
     <string name="sharing_twitter_deprecation_notice_find_out_more">더 알아보기</string>
     <string name="sharing_twitter_deprecation_notice_description">Twitter의 약관 및 가격 변경으로 인해 Twitter 자동 공유를 더 이상 사용할 수 없습니다.</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter 자동 공유를 더 이상 사용할 수 없습니다.</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">재사용 가능한 블록 편집은 아직 iOS용 %s에서 지원되지 않습니다.</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">재사용 가능한 블록 편집은 아직 Android용 %s에서 지원되지 않습니다.</string>
     <string name="jp_migration_notifications_allow_title">알림이 사이트에 계속 표시되도록 허용</string>
     <string name="wp_jp_static_poster_message">젯팩 앱에서는 워드프레스 앱의 모든 기능을 보유하며, 이제 통계, 리더, 알림 등에 독점적으로 접근할 수 있습니다.</string>
     <string name="wp_jp_static_poster_title_plural">젯팩\u00A0앱에서 %s과(와) 함께 워드프레스를 사용하세요.</string>
     <string name="wp_jp_static_poster_title">젯팩\u00A0앱에서 %s과(와) 함께 워드프레스를 사용하세요.</string>
-    <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">레이블이 없는 색상입니다. %s</string>
     <string name="dashboard_activity_card_title">최근 활동</string>
     <string name="site_creation_search_domain_example_body">위의 예와 같이 사용자가 웹 브라우저에서 도메인을 통해 사이트를 찾고 방문할 수 있습니다.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
@@ -754,13 +660,6 @@ Language: ko_KR
     <string name="jp_migration_delete_title">더는 기기에 워드프레스 앱이 필요하지 않습니다.</string>
     <string name="jp_migration_done_delete_wp_message">데이터가 충돌하지 않도록 기기에서 &lt;b&gt;워드프레스 앱을 제거&lt;/b&gt;하는 것이 좋습니다.</string>
     <string name="jp_migration_success_card_message">젯팩 앱에 오신 것을 환영합니다. 워드프레스 앱을 제거하실 수 있습니다.</string>
-    <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록 제거</string>
-    <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">개인정보 보호 및 평점</string>
-    <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">재생 설정</string>
-    <string name="gutenberg_native_playback_bar_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">재생 표시줄 색상</string>
-    <string name="gutenberg_native_manual" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">수동</string>
-    <string name="gutenberg_native_dynamic" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">동적</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">이미지의 용도를 설명합니다. 장식용이면 비워둡니다.</string>
     <string name="dashboard_pages_card_create_another_page_description">모바일 친화적인 맞춤형 레이아웃으로 시작</string>
     <string name="dashboard_pages_card_create_another_page_button">다른 페이지 생성</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">사이트에 페이지 추가</string>
@@ -818,14 +717,12 @@ Language: ko_KR
     <string name="site_creation_domain_tag_sale">세일</string>
     <string name="site_creation_domain_tag_recommended">권장</string>
     <string name="site_creation_domain_tag_best_alternative">최선의 대안</string>
-    <string name="site_creation_domain_cost">연간</string>
     <string name="support_faq_caption">궁금할 수도 있는 일반적인 질문에 대한 답변은 FAQ를 참조하세요.</string>
     <string name="support_faq_title">젯팩 앱으로 전환해 주셔서 감사합니다!</string>
     <string name="logs_button">로그</string>
     <string name="tickets">티켓</string>
     <string name="free">무료</string>
     <string name="help_buttons_screen_title">도움말</string>
-    <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록 메뉴</string>
     <string name="promote_blaze_card_sub_title">수백만 개 사이트에 작업을 표시하세요.</string>
     <string name="promote_blaze_card_title">Blaze로 콘텐츠 홍보</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">닫기</string>
@@ -915,7 +812,6 @@ Language: ko_KR
     <string name="blogging_prompts_list_answered_prompt">✓ 답변됨</string>
     <string name="blogging_prompts_list_title">프롬프트</string>
     <string name="close_desc">닫기</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">그 대신에 \"분리\"를 눌러 이 블록을 분리하고 따로 편집하실 수 있습니다.</string>
     <string name="dlg_confirm_delete_category">\'%s\'을(를) 영구적으로 삭제하시겠어요?</string>
     <string name="deleting_cat_success">카테고리 삭제 성공</string>
     <string name="deleting_cat_failed">카테고리 삭제 실패</string>
@@ -960,8 +856,6 @@ Language: ko_KR
     <string name="jp_migration_notifications_subtitle">동일한 알림을 모두 받겠지만, 이제는 젯팩 앱에서 알림을 보냅니다.</string>
     <string name="wordpress_help_center_button">워드프레스 도움말 센터</string>
     <string name="support_title">지원</string>
-    <string name="notification_disable_broadcast_permission_desc" tools:ignore="UnusedResources">앱에 워드프레스 알림 비활성화를 허용하세요.</string>
-    <string name="notification_disable_broadcast_permission_label" tools:ignore="UnusedResources">워드프레스 알림 비활성화</string>
     <string name="jp_migration_help_button">도움말이 필요하신가요?</string>
     <string name="jp_migration_continue_button">계속</string>
     <string name="jp_migration_welcome_site_found_message">사이트를 찾았습니다. 자동으로 모든 데이터를 계속 이전하고 젯팩에 로그인합니다.</string>
@@ -972,21 +866,14 @@ Language: ko_KR
     <string name="icon_desc">아이콘</string>
     <string name="post_settings_parent">상위 페이지</string>
     <string name="post_settings_page_attributes">페이지 속성</string>
-    <string name="about_automattic_contribute_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">참여</string>
+    <string name="about_automattic_contribute_item_title" a8c-src-lib="about">참여</string>
     <string name="about_news">뉴스</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers_one">1개 답변</string>
-    <string name="login_prologue_revamped_content_description_wordpress_icon" tools:ignore="UnusedResources">워드프레스 아이콘</string>
-    <string name="login_prologue_revamped_tagline" tools:ignore="UnusedResources">어디에서나 쓰고, 편집하고 발생합니다.</string>
     <string name="error_fetch_authors_list">글쓴이를 검색할 수 없음</string>
     <string name="post_settings_author">글쓴이</string>
-    <string name="app_rating_title">%s을(를) 사용하시나요?</string>
     <string name="connection_service_label">%s에 글 공유 </string>
     <string name="connections_label">젯팩 소셜 연결</string>
     <string name="stats_widget_log_in_to_add_message">위젯을 추가하려면 젯팩 앱에 로그인하세요.</string>
     <string name="stats_view_publicize">젯팩 소셜 연결</string>
-    <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="module:login">방금 다음으로 매직 링크를 보내드렸습니다.</string>
-    <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="module:login">이 기기에서 이메일을 확인하세요!</string>
-    <string name="or_use_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">로그인 비밀번호 사용</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">실시간으로 업데이트하여 새 댓글, 사이트 트래픽, 보안 보고서 등에 대한 알림을 계속 받으세요.</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack">젯팩에서 알림을 제공합니다.</string>
     <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">새로운 젯팩 앱에서 지금 사용할 수 있는 새로 설계한 통계와 인사이트로 트래픽 증가를 지켜보고 잠재 고객에 대해 알아보세요.</string>
@@ -995,16 +882,10 @@ Language: ko_KR
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">젯팩에서 리더를 제공합니다.</string>
     <string name="wp_jetpack_powered_features">신규 젯팩 앱에는 통계, 리더, 알림 등의 기능이 포함되어 있으며 워드프레스를 개선하는 데 도움이 됩니다.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">워드프레스는 젯팩과 함께 사용하면 더 좋습니다.</string>
-    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">비디오 커버를 사용하려면 요금제를 업그레이드하세요.</string>
-    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">오디오를 업로드하려면 요금제를 업그레이드하세요.</string>
-    <string name="gutenberg_native_jetpack_powered" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">젯팩 제공</string>
-    <string name="gutenberg_native_invalid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">유효하지 않은 URL.</string>
-    <string name="gutenberg_native_gradient" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">기울기</string>
     <string name="wp_jetpack_continue_to_notifications">알림으로 계속</string>
     <string name="wp_jetpack_continue_to_stats">통계로 계속</string>
     <string name="wp_jetpack_continue_to_reader">리더로 계속</string>
     <string name="wp_jetpack_get_new_jetpack_app">새로운 젯팩 앱 체험하기</string>
-    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록 표시 중 문제가 발생했습니다. \n눌러서 블록 복구를 시도하세요.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">지난주에는 조회수 %1$s개와 댓글 %2$s개가 있습니다.</string>
     <string name="weekly_roundup_notification_text_views_and_likes">지난주에는 조회수 %1$s개와 좋아요 %2$s개가 있습니다.</string>
     <string name="weekly_roundup_notification_text_views_only">지난주에는 조회수 %1$s개가 있습니다.</string>
@@ -1013,8 +894,6 @@ Language: ko_KR
     <string name="wp_jetpack_powered">Jetpack powered</string>
     <string name="qrcode_auth_flow_content_description">진행 중인 로그인 코드 스캔을 나타내는 이미지</string>
     <string name="qrcode_auth_flow_error_content_description">오류를 나타내는 이미지</string>
-    <string name="qrcode_auth_flow_dismiss_dialog_message">계속하시겠나요?</string>
-    <string name="qrcode_auth_flow_dismiss_dialog_title">로그인 코드 스캔 흐름 종료</string>
     <string name="qrcode_auth_flow_error_auth_failed_subtitle">이 로그인 코드를 사용하여 로그인할 수 없습니다. 다시 스캔 버튼을 눌러 코드를 다시 스캔하세요.</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">인증 실패</string>
     <string name="qrcode_auth_flow_error_expired_subtitle">이 로그인 코드는 만료되었습니다. 다시 스캔 버튼을 눌러 코드를 다시 스캔하세요.</string>
@@ -1058,12 +937,6 @@ Language: ko_KR
     <string name="stats_action_card_blogging_reminders_title">블로깅 알림 설정</string>
     <string name="stats_action_card_grow_audience_button_label">과정 확인</string>
     <string name="stats_action_card_grow_audience_title">잠재 고객 성장</string>
-    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록을 누른 다음에 블록의 왼쪽 하단에 표시되는 위쪽 및 아래쪽 화살표를 눌러 위쪽 또는 아래쪽으로 이동하면서 블록을 다시 정렬할 수도 있습니다.</string>
-    <string name="gutenberg_native_image_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">이미지 파일을 찾을 수 없습니다.</string>
-    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">끌어서 놓기를 사용하면 블록 재정렬이 쉬워집니다. 블록을 길게 누른 다음 새로운 위치로 끌어서 놓으세요.</string>
-    <string name="gutenberg_native_drag_drop" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">끌어서 놓기</string>
-    <string name="gutenberg_native_arrow_buttons" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">화살표 버튼</string>
-    <string name="gutenberg_native_1_s_currently_selected_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. 현재 선택됨: %2$s</string>
     <string name="quick_start_sites_type_all_tasks_completed">모든 작업이 완료됨</string>
     <string name="quick_start_list_task_complete">작업 완료</string>
     <string name="me_btn_scan_login_code">로그인 코드 검사</string>
@@ -1071,7 +944,6 @@ Language: ko_KR
     <string name="stats_most_popular_percent_views_empty">활동이 충분하지 않습니다. 나중에 사이트의 방문자가 증가하면 다시 확인하세요!</string>
     <string name="stats_total_subscribers_content_description">%1$s, 총 구독자 중 %2$s%%</string>
     <string name="stats_value_percent">%1$s(%2$s%%)</string>
-    <string name="pages_copy_link">링크 복사</string>
     <string name="quick_start_completed_tour_title">축하합니다! 척척박사&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">앱 알아보기</string>
     <string name="quick_start_list_upload_media_subtitle">미디어를 기기 또는 카메라에서 사이트로 바로 가져오기</string>
@@ -1081,7 +953,7 @@ Language: ko_KR
     <string name="quick_start_dialog_check_notifications_message">간편하게 실시간 업데이트를 받으세요.</string>
     <string name="quick_start_dialog_check_notifications_title">알림 확인</string>
     <string name="quick_start_dialog_check_notifications_message_short">상시 업데이트를 받으려면 %1$s 알림 탭 %2$s을(를) 선택하세요.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus" tools:ignore="UnusedResources">미디어를 업로드하려면 %1$s 및 %2$s을(를) 선택하세요. 어떤 기기에서나 글/페이지에 추가할 수 있습니다.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus">미디어를 업로드하려면 %1$s 및 %2$s을(를) 선택하세요. 어떤 기기에서나 글/페이지에 추가할 수 있습니다.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">사이트와 태그를 찾으려면 &lt;b&gt; 검색 &lt;/b&gt;을(를) 사용하세요.</string>
     <string name="photo_picker_video_thumbnail_content_description">비디오 썸네일</string>
     <string name="stats_details_top_commentators">최상위 댓글 작성자</string>
@@ -1102,8 +974,8 @@ Language: ko_KR
     <string name="blogging_prompts_answer_prompt_notification_answer_action">답변</string>
     <string name="blogging_prompts_answer_prompt_notification_title">일일 프롬프트</string>
     <string name="blogging_prompts_onboarding_got_it">알겠습니다</string>
-    <string name="quick_start_dialog_view_your_site_message_short" tools:ignore="UnusedResources">&lt;b&gt;%1$s&lt;/b&gt;을(를) 눌러서 사이트 보기</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">다른 사이트를 찾으려면 %1$s 리더 %2$s을(를) 선택하세요.</string>
+    <string name="quick_start_dialog_view_your_site_message_short">&lt;b&gt;%1$s&lt;/b&gt;을(를) 눌러서 사이트 보기</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">다른 사이트를 찾으려면 %1$s 리더 %2$s을(를) 선택하세요.</string>
     <string name="blogging_reminders_prompt_help_button_desc">프롬프트 더 알아보기</string>
     <string name="photo_picker_video_thumbnail_unselected">비디오 선택 안 됨</string>
     <string name="photo_picker_video_thumbnail_selected">비디오 선택됨</string>
@@ -1115,8 +987,6 @@ Language: ko_KR
     <string name="scan_vault_press_active_on_site_title">사이트에 VaultPress가 있음</string>
     <string name="locale_picker_current_language">현재 언어:</string>
     <string name="hpp_choose_and_create_site">사이트 만들기</string>
-    <string name="gutenberg_native_add_blocks_11d0841f" tools:ignore="UnusedResources">블록 추가</string>
-    <string name="initial_screen">초기 화면</string>
     <string name="blogging_prompts_onboarding_notification_action">더 알아보기</string>
     <string name="blogging_prompts_onboarding_notification_text">글쓰기를 습관화하여 더 좋은 작가 되기 눌러서 자세히 알아보세요.</string>
     <string name="blogging_prompts_onboarding_notification_title">워드프레스 모바일 앱 신규 기능: 프롬프트</string>
@@ -1125,40 +995,31 @@ Language: ko_KR
     <string name="new_site_creation_site_name_title">사이트 이름</string>
     <string name="my_site_todays_stats_get_more_views_message">잠재 고객 유치에 관심이 있으신가요? &lt;a href=\"%1$s\"&gt;최고의 팁&lt;/a&gt; 확인</string>
     <string name="stats_insights_views_and_visitors">조회수와 방문자 수</string>
-    <string name="featured_image_removed_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">특성 이미지로서 제거됨</string>
-    <string name="featured_image_confirmation_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">특성 이미지로 설정</string>
-    <string name="featured_image_replace_dialog_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">현재 상태 유지</string>
-    <string name="featured_image_replace_dialog_confirm" tools:ignore="UnusedResources" a8c-src-lib="module:editor">특성 이미지 교체</string>
-    <string name="featured_image_replace_dialog_description" tools:ignore="UnusedResources" a8c-src-lib="module:editor">이미 특성 이미지가 설정되어 있습니다. 새 이미지로 바꾸시겠어요?</string>
-    <string name="featured_image_replace_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">현재 특성 이미지를 교체할까요?</string>
-    <string name="dialog_dismiss_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">해제</string>
-    <string name="dialog_body_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">곧 새 글에 대한 구 버전 편집기가 제거되지만, 기존 글 또는 페이지 편집은 영향을 받지 않습니다. 지금 사이트 설정에서 블록 편집기를 활성화하여 유리하게 시작하세요.</string>
-    <string name="dialog_title_try_block_editor" tools:ignore="UnusedResources" translatable="true" a8c-src-lib="module:editor">새 블록 편집기 시도</string>
-    <string name="menu_toolbar_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">%s 블록 편집</string>
-    <string name="long_post_dlg_saving" tools:ignore="UnusedResources" a8c-src-lib="module:editor">저장하기</string>
-    <string name="retry_failed_upload_retry_all" tools:ignore="UnusedResources" a8c-src-lib="module:editor">모두 다시 시도</string>
-    <string name="retry_failed_upload_remove" tools:ignore="UnusedResources" a8c-src-lib="module:editor">업로드 제거</string>
-    <string name="retry_failed_upload_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">다시 시도</string>
-    <string name="retry_failed_upload_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">파일을 업로드할 수 없음</string>
-    <string name="stop_upload_dialog_button_no" tools:ignore="UnusedResources" a8c-src-lib="module:editor">아니요</string>
-    <string name="stop_upload_dialog_button_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">예</string>
-    <string name="dialog_button_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">취소</string>
-    <string name="dialog_button_ok" tools:ignore="UnusedResources" a8c-src-lib="module:editor">확인</string>
-    <string name="dialog_edit_hint" tools:ignore="UnusedResources" a8c-src-lib="module:editor">http(s)://</string>
-    <string name="dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">링크 삽입</string>
-    <string name="editor_title_beta" tools:ignore="UnusedResources" a8c-src-lib="module:editor">베타</string>
-    <string name="toast_content_info_editor_not_ready" tools:ignore="UnusedResources" a8c-src-lib="module:editor">편집기를 아직 로드하는 중</string>
-    <string name="toast_content_info_failed" tools:ignore="UnusedResources" a8c-src-lib="module:editor">콘텐츠 구조 가져오기 실패</string>
-    <string name="dialog_content_info_body" tools:ignore="UnusedResources" a8c-src-lib="module:editor">블록: %1$d\n개단어: %2$d\n개문자: %3$d자</string>
-    <string name="dialog_content_info_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">콘텐츠 구조</string>
-    <string name="media_bar_description_library" tools:ignore="UnusedResources" a8c-src-lib="module:editor">워드프레스닷컴 미디어 라이브러리에서 미디어 선택</string>
-    <string name="media_bar_description_gallery" tools:ignore="UnusedResources" a8c-src-lib="module:editor">갤러리에서 미디어 선택</string>
-    <string name="media_bar_description_camera" tools:ignore="UnusedResources" a8c-src-lib="module:editor">카메라로 사진 또는 비디오 촬영</string>
-    <string name="pixel_suffix" tools:ignore="UnusedResources" a8c-src-lib="module:editor">%dpx</string>
-    <string name="stop_save_dialog_ok_button" tools:ignore="UnusedResources" a8c-src-lib="module:editor">확인</string>
-    <string name="stop_save_dialog_message" tools:ignore="UnusedResources" a8c-src-lib="module:editor">모든 파일이 저장될 때까지 기다려 주세요</string>
-    <string name="stop_save_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">파일 저장 중</string>
-    <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">콘텐츠</string>
+    <string name="featured_image_removed_notice" a8c-src-lib="module:editor">특성 이미지로서 제거됨</string>
+    <string name="featured_image_confirmation_notice" a8c-src-lib="module:editor">특성 이미지로 설정</string>
+    <string name="featured_image_replace_dialog_cancel" a8c-src-lib="module:editor">현재 상태 유지</string>
+    <string name="featured_image_replace_dialog_confirm" a8c-src-lib="module:editor">특성 이미지 교체</string>
+    <string name="featured_image_replace_dialog_description" a8c-src-lib="module:editor">이미 특성 이미지가 설정되어 있습니다. 새 이미지로 바꾸시겠어요?</string>
+    <string name="featured_image_replace_dialog_title" a8c-src-lib="module:editor">현재 특성 이미지를 교체할까요?</string>
+    <string name="dialog_dismiss_try_block_editor" translatable="true" a8c-src-lib="module:editor">해제</string>
+    <string name="dialog_body_try_block_editor" translatable="true" a8c-src-lib="module:editor">곧 새 글에 대한 구 버전 편집기가 제거되지만, 기존 글 또는 페이지 편집은 영향을 받지 않습니다. 지금 사이트 설정에서 블록 편집기를 활성화하여 유리하게 시작하세요.</string>
+    <string name="dialog_title_try_block_editor" translatable="true" a8c-src-lib="module:editor">새 블록 편집기 시도</string>
+    <string name="menu_toolbar_title" a8c-src-lib="module:editor">%s 블록 편집</string>
+    <string name="long_post_dlg_saving" a8c-src-lib="module:editor">저장하기</string>
+    <string name="retry_failed_upload_remove" a8c-src-lib="module:editor">업로드 제거</string>
+    <string name="retry_failed_upload_yes" a8c-src-lib="module:editor">다시 시도</string>
+    <string name="retry_failed_upload_title" a8c-src-lib="module:editor">파일을 업로드할 수 없음</string>
+    <string name="stop_upload_dialog_button_no" a8c-src-lib="module:editor">아니요</string>
+    <string name="stop_upload_dialog_button_yes" a8c-src-lib="module:editor">예</string>
+    <string name="dialog_button_cancel" a8c-src-lib="module:editor">취소</string>
+    <string name="dialog_button_ok" a8c-src-lib="module:editor">확인</string>
+    <string name="toast_content_info_editor_not_ready" a8c-src-lib="module:editor">편집기를 아직 로드하는 중</string>
+    <string name="toast_content_info_failed" a8c-src-lib="module:editor">콘텐츠 구조 가져오기 실패</string>
+    <string name="dialog_content_info_body" a8c-src-lib="module:editor">블록: %1$d\n개단어: %2$d\n개문자: %3$d자</string>
+    <string name="dialog_content_info_title" a8c-src-lib="module:editor">콘텐츠 구조</string>
+    <string name="media_bar_description_library" a8c-src-lib="module:editor">워드프레스닷컴 미디어 라이브러리에서 미디어 선택</string>
+    <string name="media_bar_description_gallery" a8c-src-lib="module:editor">갤러리에서 미디어 선택</string>
+    <string name="media_bar_description_camera" a8c-src-lib="module:editor">카메라로 사진 또는 비디오 촬영</string>
     <string name="blogging_prompts_onboarding_card_prompt">자신의 인생을 영화로 만들어 보세요.</string>
     <string name="blogging_prompts_onboarding_remind_me">나에게 알림</string>
     <string name="blogging_prompts_onboarding_try_it_now">지금 시도하기</string>
@@ -1205,25 +1066,21 @@ Language: ko_KR
     <string name="quick_start_site_menu_tab_message_short">계속하려면 &lt;b&gt;%1$s&lt;/b&gt;을(를) 누르세요.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">오늘 건너뛰기</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">더 많은 프롬프트 보기</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d개 답변</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">블로깅 프롬프트 공유</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ 답변됨</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">답변 프롬프트</string>
     <string name="my_site_blogging_prompt_card_title">프롬프트</string>
     <string name="my_site_all_tab_title">전체</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3" tools:ignore="UnusedResources">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 밝은 배경 색상 및/또는 더 어두운 텍스트 색상을 사용해 보세요.</string>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a" tools:ignore="UnusedResources">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 어두운 배경 색상 및/또는 더 밝은 텍스트 색상을 사용해 보세요.</string>
-    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info" tools:ignore="UnusedResources">미디어를 삽입하지 못했습니다.\n자세히 알아보려면 누르세요.</string>
     <string name="new_site_creation_intents_header_subtitle">아래 목록에서 테마를 선택하거나 원하는 테마를 입력하세요.</string>
     <string name="new_site_creation_intents_header_title">웹사이트의 주제가 무엇인가요?</string>
     <string name="notification_channel_weekly_roundup_title">주간 총정리</string>
     <string name="my_site_dashboard_tab_title">홈</string>
     <string name="adding_cat">카테고리 추가하기</string>
     <string name="login_select_email_client">어떤 이메일 앱을 사용하시나요?</string>
-    <string name="login_error_xml_rpc_auth_error_communicating" tools:ignore="UnusedResources" a8c-src-lib="module:login">사이트와 통신하는 중 문제가 발생했습니다. HTTP 오류 코드 401이 반환되었습니다.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">XML-RPC 호출이 이 사이트에서 차단된 것 같습니다(오류 코드 401). 로그인 시도가 실패하면 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
-    <string name="login_error_xml_rpc_cannot_read_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">해당 URL에서 워드프레스 사이트를 읽을 수 없습니다. 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
-    <string name="login_error_xml_rpc_services_disabled" tools:ignore="UnusedResources" a8c-src-lib="module:login">XML-RPC 서비스가 이 사이트에서 비활성화되었습니다.</string>
+    <string name="login_error_xml_rpc_auth_error_communicating" a8c-src-lib="module:login">사이트와 통신하는 중 문제가 발생했습니다. HTTP 오류 코드 401이 반환되었습니다.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required" a8c-src-lib="module:login">XML-RPC 호출이 이 사이트에서 차단된 것 같습니다(오류 코드 401). 로그인 시도가 실패하면 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
+    <string name="login_error_xml_rpc_cannot_read_site" a8c-src-lib="module:login">해당 URL에서 워드프레스 사이트를 읽을 수 없습니다. 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
+    <string name="login_error_xml_rpc_services_disabled" a8c-src-lib="module:login">XML-RPC 서비스가 이 사이트에서 비활성화되었습니다.</string>
     <string name="my_site_menu_tab_title">메뉴</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">검색어에 워드프레스닷컴 도메인에 지원되지 않는 문자가 있습니다. 허용되는 문자는 A–Z, a–z, 0–9입니다.</string>
     <string name="my_site_error_within_card_subtitle">인터넷 연결을 확인하고 페이지를 새로 고치세요.</string>
@@ -1234,85 +1091,31 @@ Language: ko_KR
     <string name="reader_comment_menu_trash">휴지통으로 이동</string>
     <string name="reader_comment_menu_spam">스팸으로 표시하기</string>
     <string name="reader_comment_menu_unapprove">미승인</string>
-    <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources">바둑판식 갤러리 설정</string>
-    <string name="gutenberg_native_navigates_to_layout_selection_screen" tools:ignore="UnusedResources">레이아웃 선택 화면으로 이동</string>
-    <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources">갤러리 스타일</string>
     <string name="sharing_connect_via_web_warning_message">워드프레스닷컴 웹사이트에서 %s 계정을 연결할 수 있습니다. 완료하면 앱으로 돌아가서 소셜 설정을 변경하세요.</string>
-    <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">앱 아이콘</string>
-    <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">뒤로 아이콘</string>
-    <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic 로고</string>
-    <string name="about_automattic_wordpress" tools:ignore="UnusedResources" a8c-src-lib="about">워드프레스</string>
-    <string name="about_automattic_woocommerce" tools:ignore="UnusedResources" a8c-src-lib="about">WooCommerce</string>
-    <string name="about_automattic_tumblr" tools:ignore="UnusedResources" a8c-src-lib="about">Tumblr</string>
-    <string name="about_automattic_simplenote" tools:ignore="UnusedResources" a8c-src-lib="about">Simplenote</string>
-    <string name="about_automattic_pocketcasts" tools:ignore="UnusedResources" a8c-src-lib="about">Pocket Casts</string>
-    <string name="about_automattic_jetpack" tools:ignore="UnusedResources" a8c-src-lib="about">젯팩</string>
-    <string name="about_automattic_dayone" tools:ignore="UnusedResources" a8c-src-lib="about">Day One</string>
-    <string name="about_automattic_source_code_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">소스 코드</string>
-    <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">개인정보 취급방침</string>
-    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">서비스 약관</string>
-    <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources" a8c-src-lib="about">어디에서나 근무</string>
-    <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">워드프레스닷컴 사용</string>
-    <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic 회원</string>
-    <string name="about_automattic_legal_and_more_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">법적 고지 사항 및 기타</string>
-    <string name="about_automattic_twitter_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Twitter</string>
-    <string name="about_automattic_instagram_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">인스타그램</string>
-    <string name="about_automattic_rate_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">평가하기</string>
-    <string name="about_automattic_share_with_friends_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">친구와 공유</string>
-    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources">편집기의 웹 버전을 사용하여 이 블록을 편집하실 수 있습니다.</string>
-    <string name="gutenberg_native_open_jetpack_security_settings" tools:ignore="UnusedResources">젯팩 보안 설정 열기</string>
-    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the" tools:ignore="UnusedResources">참고: 모바일 편집기에서 이 블록을 편집하려면 워드프레스닷컴 로그인을 허용해야 합니다.</string>
-    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">참고: 레이아웃은 테마와 화면 크기에 따라 달라질 수 있습니다.</string>
-    <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">주소 설정</string>
-    <string name="gutenberg_native_add_media" tools:ignore="UnusedResources">미디어 추가</string>
+    <string name="about_automattic_work_with_us_item_subtitle" a8c-src-lib="about">어디에서나 근무</string>
+    <string name="about_automattic_work_with_us_item_title" a8c-src-lib="about">워드프레스닷컴 사용</string>
     <string name="my_site_error_card_subtitle">지금 사이트의 데이터를 로드하는 중 문제가 발했습니다.</string>
     <string name="my_site_error_card_title">일부 데이터가 로드되지 않았습니다.</string>
     <string name="my_site_dashboard_stale_message">알림판이 업데이트되지 않았습니다. 새로 고치려면 연결을 확인하고 끌어오세요.</string>
     <string name="my_site_dashboard_update_error">알림판을 업데이트할 수 없습니다.</string>
     <string name="error_media_video_duration_exceeds_limit">비디오가 업로드되지 않았습니다! 5분을 초과하는 비디오를 업로드하려면 유료 요금제가 필요합니다.</string>
-    <string name="about_automattic_acknowledgements_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">승인</string>
-    <string name="about_automattic_california_privacy_notice_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">캘리포니아주 개인정보 공지</string>
-    <string name="about_automattic_version_label" tools:ignore="UnusedResources" a8c-src-lib="about">버전 %1$s</string>
-    <string name="about_automattic_acknowledgements_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">승인</string>
-    <string name="about_automattic_legal_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">법적 고지 사항 및 기타</string>
-    <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">%1$s 소개</string>
     <string name="about_blog">블로그</string>
-    <string name="gutenberg_native_the_basics" tools:ignore="UnusedResources">기본 사항</string>
-    <string name="gutenberg_native_selected_default" tools:ignore="UnusedResources">선택됨: 기본값</string>
-    <string name="gutenberg_native_more_support_options" tools:ignore="UnusedResources">추가 지원 옵션</string>
-    <string name="gutenberg_native_get_support" tools:ignore="UnusedResources">지원받기</string>
-    <string name="gutenberg_native_font_size" tools:ignore="UnusedResources">글꼴 크기</string>
-    <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources">두 번 눌러 글꼴 크기 선택</string>
-    <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources">두 번 눌러 기본 글꼴 크기 선택</string>
-    <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources">지원팀에 문의</string>
-    <string name="gutenberg_native_1_s_2_s" tools:ignore="UnusedResources">%1$s(%2$s)</string>
     <string name="reader_comments_follow_conversation">대화 팔로우</string>
     <string name="reader_comments_be_first_to_comment">첫 번째 댓글 달기</string>
     <string name="reader_comments_view_all">모든 댓글 보기</string>
     <string name="reader_comments_post_fetch_failure">글 데이터를 가져오는 중 오류가 발생했습니다.</string>
     <string name="reader_comments_fetch_failure">댓글을 가져오는 중 오류가 발생했습니다.</string>
     <string name="reader_btn_follow_conversation_settings">대화 팔로우 설정</string>
-    <string name="gutenberg_native_from_clipboard" tools:ignore="UnusedResources">클립보드에서</string>
-    <string name="gutenberg_native_featured_image" tools:ignore="UnusedResources">대표 이미지</string>
-    <string name="gutenberg_native_copy_url_from_the_clipboard_s" tools:ignore="UnusedResources">클립보드에서 URL 복사, %s</string>
     <string name="me_btn_about">워드프레스 소개</string>
-    <string name="my_site_post_card_link_create_post">글 작성</string>
-    <string name="my_site_create_next_post_excerpt">정기적으로 글을 작성하면 잠재 고객 유치에 도움이 됩니다!</string>
-    <string name="my_site_create_next_post_title">다음 글 작성</string>
     <string name="menu_visual_mode_switched_notice">비주얼 편집기로 전환됨</string>
     <string name="menu_html_mode_switched_notice">코드 편집기로 전환됨</string>
-    <string name="post_link_copied_to_clipboard">링크가 클립보드에 복사됨</string>
     <string name="comment_author_badge">글쓴이</string>
-    <string name="button_copy_link">링크 복사</string>
     <string name="domains_paid_plan_add_your_domain_caption">방문자가 사이트를 쉽게 찾을 수 있도록 사용자 정의 도메인 추가하기</string>
     <string name="domains_paid_plan_add_your_domain_title">도메인 추가</string>
-    <string name="my_site_create_first_post_excerpt">글은 시간 역순으로 블로그 페이지에 표시됩니다. 전 세계와 아이디어 공유할 때가 되었습니다!</string>
-    <string name="my_site_create_first_post_title">첫 번째 글 작성</string>
     <string name="my_site_untitled_post">제목 없음</string>
     <string name="my_site_post_card_scheduled_title">공개 예정된 글</string>
     <string name="my_site_post_card_draft_title">임시글로 글 작업</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;첫해 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/년 무료&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="gutenberg_native_create_link" tools:ignore="UnusedResources">링크 생성</string>
     <string name="domains_suggestions_select_domain">도메인 선택</string>
     <string name="domains_title">도메인</string>
     <string name="post_status_sticky">붙박이</string>
@@ -1348,50 +1151,19 @@ Language: ko_KR
     <string name="comment_edit_comment">댓글</string>
     <string name="comment_edit_user_name">이름</string>
     <string name="comment_edit_menu_done">완료</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">임베드 블록 미리보기는 곧 공개 예정</string>
     <string name="weekly_roundup">주간 총정리</string>
-    <string name="gutenberg_native_embed_options" tools:ignore="UnusedResources">임베드 옵션</string>
-    <string name="gutenberg_native_double_tap_to_view_embed_options" tools:ignore="UnusedResources">임베드 옵션을 보려면 두 번 누릅니다.</string>
     <string name="quick_start_list_create_site_message">사이트가 생성되었습니다! 다른 작업을 완료하세요.</string>
-    <string name="gutenberg_native_line_height" tools:ignore="UnusedResources">줄 높이</string>
     <string name="domains_free_plan_get_your_domain_title">도메인 가져오기</string>
     <string name="recommend_app_generic_get_template_error">권장 앱 템플릿 가져오기 중 알 수 없는 오류 발생</string>
     <string name="recommend_app_bad_format_response">유효하지 않은 응답 수신됨</string>
     <string name="recommend_app_null_response">수신된 응답 없음</string>
     <string name="recommend_app_subject">Automattic 앱 - 어느 화면에서나 사용할 수 있는 앱</string>
     <string name="me_btn_share">친구와 WordPress 공유</string>
-    <string name="my_site_quick_actions_title">퀵 링크</string>
     <string name="my_site_btn_domains">도메인</string>
     <string name="weekly_roundup_notification_title">주간 총정리: %s</string>
     <string name="blogging_reminders_notification_time">알림 시간</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">블로깅에 대한 알림을 &lt;b&gt;매일&lt;/b&gt; &lt;b&gt;%s&lt;/b&gt;에 받게 됩니다.</string>
     <string name="blogging_reminders_site_settings_label">일주일에 %1$s번 %2$s</string>
-    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources">텍스트 서식 지정 컨트롤은 텍스트 블록을 편집하는 동안 키보드 위에 배치되는 도구 모음 내에 있습니다.</string>
-    <string name="gutenberg_native_selected_s" tools:ignore="UnusedResources">선택됨: %s</string>
-    <string name="gutenberg_native_select_a_color_above" tools:ignore="UnusedResources">위의 색상 선택</string>
-    <string name="gutenberg_native_navigates_to_select_s" tools:ignore="UnusedResources">%s 선택으로 이동</string>
-    <string name="gutenberg_native_move_blocks" tools:ignore="UnusedResources">블록 이동</string>
-    <string name="gutenberg_native_how_to_edit_your_post" tools:ignore="UnusedResources">글 편집 방법</string>
-    <string name="gutenberg_native_how_to_edit_your_page" tools:ignore="UnusedResources">페이지 편집 방법</string>
-    <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources">블록 사용자 정의</string>
-    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b" tools:ignore="UnusedResources">특성 이미지 변경 사항은 실행 취소/다시 실행 버튼의 영향을 받지 않습니다.</string>
-    <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources">설정 적용</string>
-    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the" tools:ignore="UnusedResources">블록을 누른 다음에 블록의 왼쪽 하단에 표시되는 위쪽 및 아래쪽 화살표를 눌러 다른 블록 위쪽 또는 아래쪽으로 이동하면서 블록을 다시 정렬할 수 있습니다.</string>
-    <string name="gutenberg_native_welcome_to_the_world_of_blocks" tools:ignore="UnusedResources">블록 세상 시작</string>
-    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources">블록을 제거하려면 블록을 선택하고 블록의 오른쪽 하단에 있는 점 3개를 클릭하여 설정을 봅니다. 블록을 제거하는 옵션을 설정에서 선택합니다.</string>
-    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the" tools:ignore="UnusedResources">일부 블록에는 추가 설정이 있습니다. 블록의 오른쪽 하단에 있는 설정 아이콘을 눌러 추가 옵션을 봅니다.</string>
-    <string name="gutenberg_native_s_block_newly_available" tools:ignore="UnusedResources">새로 사용 가능한 %s 블록</string>
-    <string name="gutenberg_native_rich_text_editing" tools:ignore="UnusedResources">서식 있는 텍스트 편집</string>
-    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c" tools:ignore="UnusedResources">다양한 블록의 이름에 익숙해지면 슬래시 다음에 블록 이름을 입력하여 블록을 추가할 수 있습니다(예: /image 또는 /heading).</string>
-    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe" tools:ignore="UnusedResources">이미지, gif 파일, 비디오 또는 임베드된 미디어를 페이지에 추가하여 콘텐츠를 돋보이게 만드세요.</string>
-    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources">글 또는 페이지에 블록을 몇 개만 추가하여 시도해 보세요!</string>
-    <string name="gutenberg_native_embed_media" tools:ignore="UnusedResources">미디어 임베드</string>
-    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s" tools:ignore="UnusedResources">각 블록에는 자체 설정이 있습니다. 설정을 찾으려면 블록을 누르세요. 화면 하단의 도구 모음에 해당 설정이 표시됩니다.</string>
-    <string name="gutenberg_native_build_layouts" tools:ignore="UnusedResources">레이아웃 구축</string>
-    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st" tools:ignore="UnusedResources">블록은 코드를 작성하는 방법을 몰라도 삽입, 재정렬 및 스타일 지정이 가능한 콘텐츠 조각입니다. 블록은 아름다운 레이아웃을 생성할 수 있는 쉽고 현대적인 방법입니다.</string>
-    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources">블록을 사용하면 메시지를 전달하는 데 도움이 되도록 필요한 모든 형식 지정 도구가 준비되어 있으므로 콘텐츠 작성에 집중할 수 있습니다.</string>
-    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">콘텐츠를 열로 정렬하고, 행동 유도 버튼을 추가하고, 이미지에 텍스트를 입히세요.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources">왼쪽 하단의 도구 모음에서 + 아이콘을 눌러 언제든지 새 블록을 추가하세요.</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s/%2$s개 완료</string>
     <string name="quick_start_dialog_need_help_manage_site_message">간단한 연습을 통해 기본 사항을 알아보세요.</string>
     <string name="comment_batch_moderation_error">하나 이상의 댓글 검토 실패</string>
@@ -1402,16 +1174,6 @@ Language: ko_KR
     <string name="stats_disabled_enable_stats_button">사이트 통계 활성화</string>
     <string name="stats_disabled_subtitle">트래픽, 좋아요, 댓글, 구독자에 대한 자세한 내용을 참조하려면 사이트 통계를 활성화하세요.</string>
     <string name="stats_disabled_title">통계를 찾으시나요?</string>
-    <string name="gutenberg_native_what_is_a_block" tools:ignore="UnusedResources">블록이란 무엇인가요?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e" tools:ignore="UnusedResources">%s 미리보기에 대한 지원을 추가하려고 노력하고 있습니다. 그동안에는 글에 임베드된 콘텐츠를 미리 볼 수 있습니다.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti" tools:ignore="UnusedResources">%s 미리보기에 대한 지원을 추가하려고 노력하고 있습니다. 그동안에는 페이지에 임베드된 콘텐츠를 미리 볼 수 있습니다.</string>
-    <string name="gutenberg_native_unable_to_embed_media" tools:ignore="UnusedResources">미디어를 임베드할 수 없음</string>
-    <string name="gutenberg_native_try_another_search_term" tools:ignore="UnusedResources">다른 검색어 시도</string>
-    <string name="gutenberg_native_no_blocks_found" tools:ignore="UnusedResources">블록을 찾을 수 없음</string>
-    <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources">아직 %s 미리보기 사용할 수 없음</string>
-    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">%s 임베드 블록 미리보기 곧 공개 예정</string>
-    <string name="gutenberg_native_double_tap_to_preview_post" tools:ignore="UnusedResources">글을 미리 보려면 두 번 누르세요.</string>
-    <string name="gutenberg_native_double_tap_to_preview_page" tools:ignore="UnusedResources">페이지를 미리 보려면 두 번 누르세요.</string>
     <string name="quick_start_list_upload_icon_subtitle">방문자의 브라우저 탭과 다른 온라인 위치에 표시됩니다.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">주변 보여주기</string>
     <string name="quick_start_dialog_need_help_manage_site_title">앱으로 이 사이트를 관리하는 도움말이 조금 필요하신가요?</string>
@@ -1420,9 +1182,6 @@ Language: ko_KR
     <string name="login_epilogue_mysites_heading">개설할 사이트 선택</string>
     <string name="scan_multisite_not_supported_subtitle">죄송합니다. 지금은 Jetpack Scan이 멀티사이트 WordPress 설치와 호환되지 않습니다.</string>
     <string name="scan_multisite_not_supported_title">WordPress 멀티사이트는 지원되지 않습니다.</string>
-    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url" tools:ignore="UnusedResources">유효하지 않은 URL입니다. 유효한 URL을 입력하세요.</string>
-    <string name="gutenberg_native_embed_caption_s" tools:ignore="UnusedResources">캡션을 임베드합니다. %s</string>
-    <string name="gutenberg_native_embed_caption_empty" tools:ignore="UnusedResources">캡션을 임베드합니다. 비어 있음</string>
     <string name="activity_log_visit_our_documentation_page">설명서 페이지 방문</string>
     <string name="activity_log_multisite_message">멀티사이트 설치용 Jetpack Backup에서는 다운로드 가능한 백업이 제공되며, 원클릭 복원은 없습니다. 자세한 내용은 %1$s.</string>
     <string name="blogging_reminders_tip_message">정기적으로 게시하면 독자의 참여도를 높이고 새 방문자를 사이트로 유도하는 데 도움이 됩니다.</string>
@@ -1443,47 +1202,19 @@ Language: ko_KR
     <string name="set_your_blogging_reminders_title">블로깅 알림 설정</string>
     <string name="blogging_reminders_notification_text">오늘의 내용을 생성하라는 알림입니다.</string>
     <string name="blogging_reminders_notification_title">%s의 블로깅 시간입니다.</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">재활용 가능한 블록 편집은 아직 iOS용 WordPress에서 지원되지 않습니다.</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and" tools:ignore="UnusedResources">재활용 가능한 블록 편집은 아직 Android용 WordPress에서 지원되지 않습니다.</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">또는 \"일반 블록으로 변환\"을 눌러 이러한 블록을 분리하고 따로 편집할 수 있습니다.</string>
     <string name="blogging_reminders_done">완료</string>
     <string name="blogging_reminders_notify_me">알림 받기</string>
     <string name="restore_details_enter_server_creds_msg">클릭 한 번으로 백업에서 사이트를 복원할 수 있도록 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
-    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">특성 이미지로 설정</string>
-    <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">특성 이미지 제거</string>
     <string name="fab_add_category_desc">카테고리 생성</string>
     <string name="support_ticket_subject">Android용 WordPress 지원</string>
     <string name="site_settings_categories_hint">사이트의 카테고리 관리</string>
     <string name="site_settings_categories_title">카테고리</string>
     <string name="site_settings_blogging_reminders_title">알림</string>
     <string name="page_is_posts_page_warning">최신 글 페이지의 콘텐츠는 자동으로 생성되며 편집할 수 없습니다.</string>
-    <string name="gutenberg_native_border_settings" tools:ignore="UnusedResources">경계선 설정</string>
     <string name="storage_utils_dialog_dont_show_button">다시 보지 않음</string>
     <string name="storage_utils_dialog_ok_button">저장 공간 보기</string>
     <string name="storage_utils_dialog_message">콘텐츠를 기기에 저장해야 발행할 수 있습니다. 저장 공간 설정을 검토하고 파일을 제거하여 공간을 확보하세요.</string>
     <string name="storage_utils_dialog_title">부족한 기기 저장 공간</string>
-    <string name="gutenberg_native_y_axis_position" tools:ignore="UnusedResources">Y-축 위치</string>
-    <string name="gutenberg_native_x_axis_position" tools:ignore="UnusedResources">X-축 위치</string>
-    <string name="gutenberg_native_type_a_url" tools:ignore="UnusedResources">URL 입력</string>
-    <string name="gutenberg_native_slash_inserter_results" tools:ignore="UnusedResources">슬래시 삽입기 결과</string>
-    <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources">%s에 설정된 URL 있음</string>
-    <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources">%s에 설정된 URL 없음</string>
-    <string name="gutenberg_native_s_converted_to_regular_blocks" tools:ignore="UnusedResources">일반 블록으로 %s 변환됨</string>
-    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s 블록</string>
-    <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">불투명도</string>
-    <string name="gutenberg_native_media_options" tools:ignore="UnusedResources">미디어 옵션</string>
-    <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources">유효하지 않은 URL입니다. 오디오 파일을 찾을 수 없습니다.</string>
-    <string name="gutenberg_native_insert_crosspost" tools:ignore="UnusedResources">교차 글 삽입</string>
-    <string name="gutenberg_native_drag_to_adjust_focal_point" tools:ignore="UnusedResources">끌어서 초점 조정</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video" tools:ignore="UnusedResources">두 번 눌러 이미지 또는 비디오를 추가할 하단 시트 열기</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video" tools:ignore="UnusedResources">두 번 눌러 이미지 또는 비디오를 추가할 작업 시트 열기</string>
-    <string name="gutenberg_native_current_unit_is_s" tools:ignore="UnusedResources">현재 단위는 %s입니다.</string>
-    <string name="gutenberg_native_crosspost" tools:ignore="UnusedResources">교차 글</string>
-    <string name="gutenberg_native_s_converted_to_regular_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">일반 블록으로 %s 변환됨</string>
-    <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">열 설정</string>
-    <string name="gutenberg_native_add_link_to_s" tools:ignore="UnusedResources">%s에 링크 추가</string>
-    <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">링크 텍스트 추가</string>
-    <string name="gutenberg_native_add_image_or_video_b7b3d22b" tools:ignore="UnusedResources">이미지 또는 비디오 추가</string>
     <string name="error_media_path_is_directory">지정한 경로가 미디어 파일이 아니라 디렉터리입니다.</string>
     <string name="error_media_could_not_find_media_in_path">경로에서 미디어 파일을 찾을 수 없음</string>
     <string name="error_media_unexpected_empty_media_file_path">예기치 않은 미디어의 빈 파일 경로</string>
@@ -1491,103 +1222,36 @@ Language: ko_KR
     <string name="error_media_unexpected_null_value">미디어가 비었습니다.</string>
     <string name="threat_fix_enter_server_creds_msg_plural">위협을 해결하려면 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">위협을 해결하려면 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
-    <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources">링크를 두 번 눌러 추가하세요.</string>
     <string name="login_empty_view_try_another_account">다른 계정으로 시도</string>
     <string name="login_empty_view_see_instructions">지침 참조</string>
     <string name="login_no_jetpack_sites_error_message">이미 사이트가 있으면 무료 젯팩 플러그인을 설치하고 워드프레스닷컴 계정에 연결해야 합니다.</string>
     <string name="login_empty_view_avatar_content_description">프로필 사진</string>
     <string name="login_not_a_jetpack_site">%1$s에 이 앱을 사용하려면 설치되고 워드프레스닷컴 계정에 연결된 젯팩 플러그인이 있어야 합니다.</string>
-    <string name="gutenberg_native_move_image_forward" tools:ignore="UnusedResources">이미지를 앞으로 이동</string>
-    <string name="gutenberg_native_move_image_backward" tools:ignore="UnusedResources">이미지를 뒤로 이동</string>
-    <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources">폭 설정</string>
-    <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">링크 관계</string>
-    <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources">열 설정</string>
-    <string name="gutenberg_native_no_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">설명 없음</string>
     <string name="user_profile_untitled_site">(제목이 없습니다)</string>
     <string name="user_profile_site_section_header">사이트</string>
     <string name="user_profile_bottom_sheet_description">사용자 프로필 하단 시트 정보</string>
     <string name="likes_list_screen_title">좋아요 목록 %s</string>
-    <string name="gutenberg_native_two" tools:ignore="UnusedResources">2</string>
-    <string name="gutenberg_native_three" tools:ignore="UnusedResources">3</string>
-    <string name="gutenberg_native_no_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">제목 없음</string>
-    <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources">%s 소셜 아이콘</string>
-    <string name="gutenberg_native_mention" tools:ignore="UnusedResources">멘션</string>
-    <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">신규</string>
-    <string name="gutenberg_native_preview_post" tools:ignore="UnusedResources">글 미리 보기</string>
-    <string name="gutenberg_native_preview_page" tools:ignore="UnusedResources">페이지 미리 보기</string>
-    <string name="gutenberg_native_retry" tools:ignore="UnusedResources">재시도</string>
-    <string name="gutenberg_native_gif" tools:ignore="UnusedResources">GIF</string>
-    <string name="gutenberg_native_one" tools:ignore="UnusedResources">1</string>
-    <string name="gutenberg_native_add_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">제목 추가</string>
-    <string name="gutenberg_native_no_preview_available" tools:ignore="UnusedResources">사용 가능한 미리보기 없음</string>
-    <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">로드하는 중</string>
-    <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">링크 래이블</string>
-    <string name="gutenberg_native_text_color" tools:ignore="UnusedResources">텍스트 색상</string>
-    <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s 링크</string>
-    <string name="gutenberg_native_padding" tools:ignore="UnusedResources">안쪽 여백</string>
-    <string name="gutenberg_native_four" tools:ignore="UnusedResources">4</string>
-    <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">대표</string>
-    <string name="gutenberg_native_add_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">이미지 추가</string>
-    <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources">사용자 정의 URL</string>
-    <string name="gutenberg_native_create_embed" tools:ignore="UnusedResources">임베드 생성</string>
-    <string name="gutenberg_native_column_d" tools:ignore="UnusedResources">열 %d</string>
-    <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">더 보기</string>
-    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources">화면 리더 사용자에게 도움이 되도록 간략하게 링크 설명</string>
-    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록 추가</string>
     <string name="login_no_jetpack_sites">젯팩 사이트를 찾을 수 없음</string>
-    <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources">대체 텍스트란 무엇인가요?</string>
-    <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources">다음으로 %s 변형</string>
-    <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources">블록 변형…</string>
-    <string name="gutenberg_native_failed_to_insert_media" tools:ignore="UnusedResources">미디어를 삽입하는 데 실패했습니다.</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">오디오 파일 삽입에 실패했습니다.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur" tools:ignore="UnusedResources">이미지의 용도를 설명합니다. 이미지가 장식용이면 비워둡니다.</string>
-    <string name="gutenberg_native_1_s_transformed_to_2_s" tools:ignore="UnusedResources">%2$s(으)로 변형된 %1$s</string>
     <string name="like_faces_error_loading_message">좋아요 데이터 로드 중 오류가 발생했습니다. %s.</string>
     <string name="like_title_plural">%d 좋아요</string>
     <string name="like_title_singular">좋아요 1개</string>
     <string name="suggestion">제안:</string>
-    <string name="gutenberg_native_use_icon_button" tools:ignore="UnusedResources">아이콘 버튼 사용</string>
-    <string name="gutenberg_native_search_input_field" tools:ignore="UnusedResources">입력 필드를 검색합니다.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is" tools:ignore="UnusedResources">검색 버튼입니다. 현재 버튼 텍스트는</string>
-    <string name="gutenberg_native_search_blocks" tools:ignore="UnusedResources">블록 검색</string>
-    <string name="gutenberg_native_search_block_label_current_text_is" tools:ignore="UnusedResources">블록 레이블을 검색합니다. 현재 텍스트는</string>
-    <string name="gutenberg_native_outside" tools:ignore="UnusedResources">외부</string>
-    <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources">설정된 사용자 정의 플레이스홀더 없음</string>
-    <string name="gutenberg_native_inside" tools:ignore="UnusedResources">내부</string>
-    <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources">검색 헤딩요소 숨기기</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text" tools:ignore="UnusedResources">두 번 눌러 플레이스홀더 텍스트 편집하기</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text" tools:ignore="UnusedResources">두 번 눌러 레이블 텍스트 편집하기</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text" tools:ignore="UnusedResources">두 번 눌러 버튼 텍스트 편집하기</string>
-    <string name="gutenberg_native_double_tap_to_change_unit" tools:ignore="UnusedResources">두 번 눌러 단위 변경하기</string>
-    <string name="gutenberg_native_current_placeholder_text_is" tools:ignore="UnusedResources">현재 플레이스홀더 텍스트는</string>
-    <string name="gutenberg_native_clear_search" tools:ignore="UnusedResources">검색 지우기</string>
-    <string name="gutenberg_native_cancel_search" tools:ignore="UnusedResources">검색 취소</string>
-    <string name="gutenberg_native_button_position" tools:ignore="UnusedResources">버튼 위치</string>
-    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources">%1$s. %2$s은(는) %3$s %4$s입니다.</string>
     <string name="get_likes_empty_state_title">좋아요 데이터를 가져오는 중 오류가 발생함</string>
     <string name="get_likes_unknown_error">좋아요를 가져오는 중 알 수 없는 오류가 발생했습니다.</string>
     <string name="get_likes_no_network_error">사용 가능한 네트워크가 없습니다.</string>
     <string name="comments_empty_list_filtered_unreplied">응답 없는 댓글 없음</string>
     <string name="comment_status_unreplied">응답 없음</string>
-    <string name="gutenberg_native_add_link" tools:ignore="UnusedResources">링크 추가</string>
-    <string name="gutenberg_native_search_settings" tools:ignore="UnusedResources">설정 검색</string>
     <string name="jetpack_brute_force_allowlist_title">항상 허용되는 IP 주소</string>
     <string name="site_settings_denylist_title">허용되지 않는 댓글</string>
-    <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">추가 버튼 텍스트</string>
     <string name="activity_log_backup_download_notice_dismiss_action">해제</string>
     <string name="activity_log_backup_download_notice_download_action">다운로드하기</string>
     <string name="threat_fix_all_status_success_message_plural">위협이 해결되었습니다.</string>
     <string name="threat_fix_all_confirmation_message_plural">%s개의 활성 위협을 모두 해결할지 확인해 주세요.</string>
     <string name="scan_idle_threats_description_plural">스캔에서 %2$s에 대한 잠재적 위협 %1$s개를 찾았습니다. 아래 내용을 검토하고 조치를 취하거나 모두 해결 버튼을 누르세요. 도움말이 필요하면 %3$s을(를) 클릭하세요.</string>
     <string name="scan_fixing_threats_description_plural">이러한 위협을 해결하기 위해 백그라운드에서 노력하는 중입니다. 그동안 정상적으로 사이트를 계속 사용하면서 언제든지 진행률을 확인하실 수 있습니다.</string>
-    <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources">초점 편집하기</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">이미지를 편집, 교체 또는 지울 하단 시트를 두 번 눌러 열기</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">이미지를 편집, 교체 또는 지울 작업 시트를 두 번 눌러 열기</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">사이트의 이름 입력</string>
-    <string name="quick_start_completed_type_grow_message">&lt;b&gt;모든 작업 완료됨&lt;/b&gt;&lt;br/&gt;더 많은 사람에게 도달하게 됩니다. 훌륭합니다!</string>
-    <string name="quick_start_completed_type_customize_message">&lt;b&gt;모든 작업 완료됨&lt;/b&gt;&lt;br/&gt;사이트를 사용자 정의하셨습니다. 잘하셨습니다!</string>
-    <string name="magic_link_not_meaning_to_create_account" tools:ignore="UnusedResources" a8c-src-lib="module:login">새 계정을 만들 계획이 없으신가요? 뒤로 이동하여 이메일 주소를 다시 입력하세요.</string>
+    <string name="magic_link_not_meaning_to_create_account" a8c-src-lib="module:login">새 계정을 만들 계획이 없으신가요? 뒤로 이동하여 이메일 주소를 다시 입력하세요.</string>
     <string name="invite_links_disable_dialog_message">초대 링크를 비활성화하면 아무도 이 링크를 사용해서 이 팀에 참여할 수 없습니다. 계속할까요?</string>
     <string name="invite_links_disable_dialog_title">초대 링크 비활성화</string>
     <string name="invite_links_bad_format_response">유효하지 않은 반응을 받았습니다</string>
@@ -1634,22 +1298,6 @@ Language: ko_KR
     <string name="backup_item_contents">WP-content 디렉터리</string>
     <string name="backup_item_roots">워드프레스 루터</string>
     <string name="backup_download_details_choose_items_header">이 다운로드에 포함된 항목</string>
-    <string name="gutenberg_native_uploading" tools:ignore="UnusedResources">업로드 중…</string>
-    <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">파일 바꾸기</string>
-    <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources">오디오 교체</string>
-    <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources">오디오 열기 문제</string>
-    <string name="gutenberg_native_open" tools:ignore="UnusedResources">열기</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources">이 요청을 처리할 수 있는 애플리케이션이 없습니다.</string>
-    <string name="gutenberg_native_lock_icon" tools:ignore="UnusedResources">잠금 아이콘</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options" tools:ignore="UnusedResources">오디오 파일 삽입에 실패했습니다. 옵션을 보려면 누르세요.</string>
-    <string name="gutenberg_native_double_tap_to_select_an_audio_file" tools:ignore="UnusedResources">오디오 파일을 두 번 눌러 선택하기</string>
-    <string name="gutenberg_native_double_tap_to_listen_the_audio_file" tools:ignore="UnusedResources">오디오 파일을 두 번 눌러 듣기</string>
-    <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources">오디오 선택</string>
-    <string name="gutenberg_native_audio_player" tools:ignore="UnusedResources">오디오 플레이어</string>
-    <string name="gutenberg_native_audio_file" tools:ignore="UnusedResources">오디오 파일</string>
-    <string name="gutenberg_native_audio_caption_s" tools:ignore="UnusedResources">오디오 캡션. %s</string>
-    <string name="gutenberg_native_audio_caption_empty" tools:ignore="UnusedResources">오디오 캡션. 비었음</string>
-    <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">오디오 추가</string>
     <string name="continue_with_wpcom">워드프레스닷컴을 통해 로그인하거나 가입</string>
     <string name="photo_picker_use_audio">이 오디오 사용</string>
     <string name="photo_picker_choose_audio">기기에서 오디오 선택</string>
@@ -1704,10 +1352,9 @@ Language: ko_KR
     <string name="backup_download_complete_failed_title">다운로드 실패</string>
     <string name="web_preview_tablet">태블릿</string>
     <string name="web_preview_mobile">모바일</string>
-    <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">페이지 목록을 참조하려면 %1$s 페이지 %2$s을(를) 선택하세요.</string>
+    <string name="quick_start_dialog_review_pages_message_short">페이지 목록을 참조하려면 %1$s 페이지 %2$s을(를) 선택하세요.</string>
     <string name="quick_start_dialog_review_pages_message">사이트의 페이지를 변경, 추가 또는 제거합니다.</string>
     <string name="quick_start_dialog_review_pages_title">사이트 페이지 검토</string>
-    <string name="quick_start_dialog_edit_homepage_message_pages_short" tools:ignore="UnusedResources">홈페이지를 편집하려면 %1$s 홈페이지 %2$s을(를) 선택하세요.</string>
     <string name="reader_menu_mark_as_unseen">안 읽음으로 표시</string>
     <string name="reader_menu_mark_as_seen">읽음으로 표시</string>
     <string name="error_media_upload_failed_for_reason">미디어 업로드에 실패했습니다.\n%1$s</string>
@@ -1740,8 +1387,6 @@ Language: ko_KR
     <string name="backup_empty_subtitle">첫 번째 백업이 24시간 이내에 여기에 표시되고 백업이 완료되면 알림이 수신됩니다.</string>
     <string name="backup_empty_title">첫 번째 백업이 곧 준비됩니다</string>
     <string name="request_failed_message">요청 처리 중 문제가 발생했습니다. 나중에 다시 시도하세요.</string>
-    <string name="gutenberg_native_move_to_bottom" tools:ignore="UnusedResources">아래로 이동하기</string>
-    <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources">블록 위치 변경</string>
     <string name="jetpack_icon_content_description">아이콘</string>
     <string name="backup_download_complete_info">파일에 연결하는 링크도 이메일했습니다.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">링크 버튼 공유하기</string>
@@ -1830,8 +1475,6 @@ Language: ko_KR
     <string name="backup_download_details_header">다운로드 할 수 있는 백업 만들기</string>
     <string name="backup_download_details_page_title">백업 다운로드하기</string>
     <string name="backup_download">백업 다운로드</string>
-    <string name="gutenberg_native_error" tools:ignore="UnusedResources">오류</string>
-    <string name="gutenberg_native_choose_file" tools:ignore="UnusedResources">파일 선택하기</string>
     <string name="activity_log_item_menu_download_backup_label">백업 다운로드하기</string>
     <string name="activity_log_item_menu_restore_label">이 지점으로 복원하기</string>
     <string name="activity_log_activity_type_filter_label">활동 유형</string>
@@ -1842,16 +1485,7 @@ Language: ko_KR
     <string name="dialog_confirm_copy_local_message">복사하려고 한 글은 충돌하거나 최근 만들고 저장하지 않은 두 버전이 있습니다.\n충돌을 해결하거나 이 앱으로부터 버전 복사를 진행하려면 먼저 글을 편집하세요.</string>
     <string name="dialog_confirm_copy_local_title">글 동기화 충돌</string>
     <string name="button_copy">복제하기</string>
-    <string name="gutenberg_native_file_name" tools:ignore="UnusedResources">파일 이름</string>
-    <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources">파일 블록 설정</string>
-    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources">파일 업로드를 실패했습니다.\n옵션을 열려면 누르시기 바랍니다.</string>
-    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">파일 저장을 실패했습니다.\n옵션을 열려면 누르시기 바랍니다.</string>
-    <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources">파일 편집하기</string>
-    <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">파일 URL 복사하기</string>
     <string name="new_site_creation_domain_header_title">도메인 선택하기</string>
-    <string name="my_site_header_jetpack">젯팩</string>
-    <string name="reader_btn_following_comments">이메일로 대화 팔로우 중</string>
-    <string name="reader_btn_follow_comments">이메일로 대화 팔로우</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">이 글에 대한 댓글을 구독 해제할 수 없습니다</string>
     <string name="reader_follow_comments_could_not_subscribe_error">이 글에 대한 댓글을 구독할 수 없습니다</string>
     <string name="reader_follow_comments_get_status_error">글에 대한 구독상태를 가져오는데 오류가 있습니다</string>
@@ -1864,8 +1498,8 @@ Language: ko_KR
     <string name="hpp_retry_error">인터넷 연결을 확인하고 재시도하시기 바랍니다.</string>
     <string name="hpp_error_subtitle">온라인으로 돌아오면 재시도를 누르세요.</string>
     <string name="hpp_error_title">레이아웃은 오프라인에서 사용할 수 없습니다</string>
-    <string name="continue_site_credentials" tools:ignore="UnusedResources" a8c-src-lib="module:login">상점 자격증명으로 계속하기</string>
-    <string name="login_find_your_connected_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">연결한 이메일 찾기</string>
+    <string name="continue_site_credentials" a8c-src-lib="module:login">상점 자격증명으로 계속하기</string>
+    <string name="login_find_your_connected_email" a8c-src-lib="module:login">연결한 이메일 찾기</string>
     <string name="reader_discover_no_posts_follow_subtitle">검색 범위가 넓어지도록 추가 태그를 팔로우해 보세요.</string>
     <string name="reader_discover_no_posts_title">최근 글이 없습니다</string>
     <string name="reader_discover_empty_title">환영합니다!</string>
@@ -1873,8 +1507,6 @@ Language: ko_KR
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;요한 브란트&lt;/b&gt;가 글에 답했습니다</string>
     <string name="login_prologue_third_subtitle_two">오늘 사이트에서 &lt;b&gt;50개의 좋아요&lt;/b&gt;를 받았습니다</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;메디슨 루이즈&lt;/b&gt;가 글을 좋아합니다</string>
-    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">스크롤 할 수 있는 블록 메뉴가 열렸습니다. 블록을 선택하세요.</string>
-    <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">스크롤 할 수 있는 블록 메뉴를 닫았습니다.</string>
     <string name="hpp_choose_button">선택하기</string>
     <string name="mlp_network_error_subtitle">온라인으로 돌아가면 재시도를 누르거나 아래의 단추를 이용하여 빈 페이지를 만드세요.</string>
     <string name="mlp_network_error_title">레이아웃은 오프라인 중에 사용할 수 없습니다</string>
@@ -1905,11 +1537,6 @@ Language: ko_KR
     <string name="login_prologue_title_second">강력한 편집기로 이동 중에도 글을 쓸 수 있습니다.</string>
     <string name="login_prologue_title_first">세계적으로 가장 잘 알려진 웹사이트 제작기에 오신 것을 환영합니다.</string>
     <string name="media_loading_failed">미디어 로딩을 실패했습니다</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources">매 릴리즈마다 더 많은 블록을 추가하려고 열심히 일하고 있습니다.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\'은(는) 완전히 지원되지 않음</string>
-    <string name="gutenberg_native_help_button" tools:ignore="UnusedResources">도움 버튼</string>
-    <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">웹 편집기를 이용하여 편집하기</string>
-    <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources">이미지 고르기</string>
     <string name="mlp_notice_blank_page_created">빈 페이지를 만들었습니다</string>
     <string name="mlp_notice_page_created">페이지를 만들었습니다</string>
     <string name="media_insert_failed">미디어 삽입을 실패했습니다.</string>
@@ -1918,7 +1545,6 @@ Language: ko_KR
     <string name="reader_label_toolbar_back">돌아가기</string>
     <string name="reader_discover_empty_button_text">시작하기</string>
     <string name="reader_discover_empty_subtitle_follow">태그를 팔로우하여 새 블로그 발견하기</string>
-    <string name="reader_post_details_header_by_author_name">작성자</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">이 리퍼러는 스팸으로 표시할 수 없습니다.</string>
     <string name="stats_referrer_popup_unmark_as_spam">스팸 표시 해제하기</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">스팸으로 표시하기</string>
@@ -1926,108 +1552,66 @@ Language: ko_KR
     <string name="media_uploading_gif_library_photo">gif 미디어 업로드 중</string>
     <string name="media_uploading_stock_library_photo">스톡 미디어 업로드 중</string>
     <string name="media_uploading_default">미디어 업로드 중</string>
-    <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">검색하거나 URL 입력하기</string>
-    <string name="gutenberg_native_add_this_telephone_link" tools:ignore="UnusedResources">이 전화 링크 추가하기</string>
-    <string name="gutenberg_native_add_this_link" tools:ignore="UnusedResources">이 링크 추가하기</string>
-    <string name="gutenberg_native_add_this_email_link" tools:ignore="UnusedResources">이 이메일 링크 추가하기</string>
     <string name="suggestion_no_connection">인터넷에 연결되지 않았습니다.\n제안을 사용할 수 없습니다.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s 선택했습니다</string>
-    <string name="login_get_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">이메일로 로그인 링크 얻기</string>
-    <string name="email_not_registered_wpcom" tools:ignore="UnusedResources" a8c-src-lib="module:login">음, 이 이메일 주소와 연결된 워드프레스닷컴 계정을 찾을 수 없습니다.</string>
+    <string name="login_get_link_by_email" a8c-src-lib="module:login">이메일로 로그인 링크 얻기</string>
+    <string name="email_not_registered_wpcom" a8c-src-lib="module:login">음, 이 이메일 주소와 연결된 워드프레스닷컴 계정을 찾을 수 없습니다.</string>
     <string name="permission_microphone">마이크</string>
     <string name="comment_unable_to_show_error">이 댓글을 볼 수 없습니다</string>
     <string name="media_browse_for_items">항목 탐색하기</string>
     <string name="reader_menu_report_post">이 글 신고하기</string>
-    <string name="reader_welcome_banner">리더에 오신 것을 환영합니다. 손끝에서 백만의 블로그를 발견하세요.</string>
     <string name="error_media_xmlrcp_server_error">내부 서버 오류가 생겼습니다</string>
     <string name="error_media_xmlrpc_not_allowed">동작을 허용하지 않습니다</string>
     <string name="show_n_hidden_items_desc">%1$s 추가 항목</string>
-    <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">레이아웃 선택하기</string>
-    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">안내: 컬럼 레이아웃은 테마와 화면 크기에 따라 달라질 수도 있습니다</string>
     <string name="create_page_fab_tooltip">페이지 만들기</string>
     <string name="create_post_fab_tooltip">글 만들기</string>
-    <string name="reader_discover_interests_header">좋아할 수도 있습니다</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">숨기기</string>
-    <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">비디오 캡션입니다. 비었습니다</string>
-    <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">제목을 업데이트합니다.</string>
-    <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">이후에 블록 붙여넣기</string>
-    <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources">페이지 제목입니다. %s</string>
-    <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources">페이지 제목입니다. 비었습니다</string>
-    <string name="toast_error_playing_video" tools:ignore="UnusedResources">비디오를 재생하는 중에 오류가 생겼습니다</string>
-    <string name="camera_error" tools:ignore="UnusedResources">이 장치는 카메라2 API를 지원하지 않습니다.</string>
     <string name="label_close_button">닫기</string>
     <string name="mlp_preview_page">미리보기</string>
     <string name="mlp_create_page">페이지 만들기</string>
     <string name="mlp_create_blank_page">빈 페이지 만들기</string>
     <string name="mlp_choose_layout_subtitle">넓고 다양한 이전에 만들어진 페이지 레이아웃에서 선택하여 시작하세요. 또는 빈 페이지로 시작하세요.</string>
     <string name="mlp_choose_layout_title">레이아웃을 선택하기</string>
-    <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">%1$s 만들기를 %2$s탭하세요. 다음 &lt;b&gt;블로그 글&lt;/b&gt;을 선택하세요</string>
+    <string name="quick_start_dialog_create_new_post_message_short">%1$s 만들기를 %2$s탭하세요. 다음 &lt;b&gt;블로그 글&lt;/b&gt;을 선택하세요</string>
     <string name="photo_picker_choose_file">장치에서 선택하기</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">자체 호스팅 워드프레스 사이트의 사이트 아이콘 편집은 잿펙 플러그인이 필요합니다.</string>
     <string name="reader_toast_err_page_jump_not_found">연결한 페이지 점프를 찾을 수 없습니다</string>
-    <string name="error_media_quota_exceeded_toast">파일을 업로드할 수 없습니다.\n저장소 한도를 초과했습니다.</string>
     <string name="error_media_quota_exceeded">저장소 한도를 초과했습니다</string>
     <string name="pick_file">파일 추가하기</string>
-    <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">비디오 대체하기</string>
-    <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">이미지나 비디오를 대체하기</string>
-    <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources">링크로 변환</string>
-    <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">비디오 고르기</string>
-    <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">이미지나 비디오 고르기</string>
-    <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">이미지 고르기</string>
-    <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources">블록을 제거했습니다</string>
     <string name="enter_your_site_address">이미 있는 사이트 주소 입력하기</string>
-    <string name="signup_confirmation_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">등록 확인</string>
-    <string name="continue_with_google_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="module:login">워드프레스닷컴 계정이 없는 상태에서 Google로 계속하기를 선택하는 경우, 계정을 만들고 %1$s서비스 약관%2$s에 동의하는 것으로 간주됩니다.</string>
-    <string name="continue_terms_of_service_text" tools:ignore="UnusedResources" a8c-src-lib="module:login">계속하면 %1$s서비스 약관%2$s에 동의하는 것입니다.</string>
-    <string name="signup_confirmation_message" tools:ignore="UnusedResources" a8c-src-lib="module:login">이 이메일 주소를 사용하여 새 워드프레스닷컴 계정을 만들 것입니다.</string>
-    <string name="signup_magic_link_message" tools:ignore="UnusedResources" a8c-src-lib="module:login">워드프레스닷컴 계정을 만드는 등록 링크를 이메일 하였습니다. 이 장치에서 이메일을 확인하고, 워드프레스닷컴에서 받은 이메일에 있는 링크를 누르세요.</string>
-    <string name="enter_account_info_for_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">%1$s에 대한 계정 정보를 입력합니다.</string>
-    <string name="login_or" tools:ignore="UnusedResources" a8c-src-lib="module:login">또는</string>
-    <string name="continue_google_button_suffix" tools:ignore="UnusedResources" a8c-src-lib="module:login">Google로 계속하기</string>
-    <string name="login_find_your_site_adress" tools:ignore="UnusedResources" a8c-src-lib="module:login">사이트 주소 찾기</string>
+    <string name="signup_confirmation_title" a8c-src-lib="module:login">등록 확인</string>
+    <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">워드프레스닷컴 계정이 없는 상태에서 Google로 계속하기를 선택하는 경우, 계정을 만들고 %1$s서비스 약관%2$s에 동의하는 것으로 간주됩니다.</string>
+    <string name="continue_terms_of_service_text" a8c-src-lib="module:login">계속하면 %1$s서비스 약관%2$s에 동의하는 것입니다.</string>
+    <string name="signup_confirmation_message" a8c-src-lib="module:login">이 이메일 주소를 사용하여 새 워드프레스닷컴 계정을 만들 것입니다.</string>
+    <string name="signup_magic_link_message" a8c-src-lib="module:login">워드프레스닷컴 계정을 만드는 등록 링크를 이메일 하였습니다. 이 장치에서 이메일을 확인하고, 워드프레스닷컴에서 받은 이메일에 있는 링크를 누르세요.</string>
+    <string name="enter_account_info_for_site" a8c-src-lib="module:login">%1$s에 대한 계정 정보를 입력합니다.</string>
+    <string name="login_or" a8c-src-lib="module:login">또는</string>
+    <string name="continue_google_button_suffix" a8c-src-lib="module:login">Google로 계속하기</string>
+    <string name="login_find_your_site_adress" a8c-src-lib="module:login">사이트 주소 찾기</string>
     <string name="login_done">완료</string>
-    <string name="magic_link_not_seeing_email_message" tools:ignore="UnusedResources" a8c-src-lib="module:login">이메일이 보이지 않으세요? 스팸이나 정크 메일 폴더를 확인하세요.</string>
-    <string name="login_magic_links_sent_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">이 장치에서 이메일을 확인하여 워드프레스닷컴에서 받은 이메일의 링크를 누르세요.</string>
-    <string name="login_magic_links_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">비밀번호가 필요하지 않고 바로 로그인할 수 있는 링크를 이메일 할 것입니다.</string>
-    <string name="check_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">이메일 확인하기</string>
-    <string name="get_started" tools:ignore="UnusedResources" a8c-src-lib="module:login">시작하기</string>
-    <string name="enter_email_to_continue_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="module:login">이메일 주소를 입력하여 로그인하거나 워드프레스닷컴 계정을 만드세요.</string>
-    <string name="or_type_your_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">또는 비밀번호 입력하기</string>
-    <string name="create_account" tools:ignore="UnusedResources" a8c-src-lib="module:login">계정 만들기</string>
-    <string name="send_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">이메일로 링크 보내기</string>
-    <string name="reset_your_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">비밀번호 재설정하기</string>
+    <string name="magic_link_not_seeing_email_message" a8c-src-lib="module:login">이메일이 보이지 않으세요? 스팸이나 정크 메일 폴더를 확인하세요.</string>
+    <string name="login_magic_links_sent_label" a8c-src-lib="module:login">이 장치에서 이메일을 확인하여 워드프레스닷컴에서 받은 이메일의 링크를 누르세요.</string>
+    <string name="login_magic_links_label" a8c-src-lib="module:login">비밀번호가 필요하지 않고 바로 로그인할 수 있는 링크를 이메일 할 것입니다.</string>
+    <string name="check_email" a8c-src-lib="module:login">이메일 확인하기</string>
+    <string name="get_started" a8c-src-lib="module:login">시작하기</string>
+    <string name="enter_email_to_continue_wordpress_com" a8c-src-lib="module:login">이메일 주소를 입력하여 로그인하거나 워드프레스닷컴 계정을 만드세요.</string>
+    <string name="or_type_your_password" a8c-src-lib="module:login">또는 비밀번호 입력하기</string>
+    <string name="create_account" a8c-src-lib="module:login">계정 만들기</string>
+    <string name="send_link_by_email" a8c-src-lib="module:login">이메일로 링크 보내기</string>
+    <string name="reset_your_password" a8c-src-lib="module:login">비밀번호 재설정하기</string>
     <string name="reader_error_request_failed_title">요청을 처리하는 중에 문제가 있었습니다. 나중에 다시 시도하시기 바랍니다.</string>
     <string name="quick_start_list_update_site_title_title">사이트 제목 확인</string>
     <string name="quick_start_dialog_update_site_title_message_short">&lt;b&gt;%1$s&lt;/b&gt;(을)를 눌러 새 제목 설정하기</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">이 글을 휴지통에 버리면 로컬 변경사항도 취소될 것입니다. 계속하기 원하시는게 맞나요?</string>
-    <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources">%s 블록 옵션</string>
-    <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">블록 제거</string>
-    <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">블록 복제하기</string>
-    <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">블록 복사하기</string>
-    <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">복사된 블록</string>
-    <string name="gutenberg_native_block_pasted" tools:ignore="UnusedResources">블록을 붙여넣었습니다</string>
-    <string name="gutenberg_native_block_duplicated" tools:ignore="UnusedResources">블록을 복제하였습니다</string>
-    <string name="gutenberg_native_block_cut" tools:ignore="UnusedResources">블록을 잘라내었습니다</string>
-    <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">블록을 복사하였습니다</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">사이트 제목은 사용자가 관리자 역할일 때만 바꿀 수 있습니다.</string>
     <string name="my_site_title_changer_dialog_hint">사이트 제목은 웹브라우저의 제목표시줄에 보이고 대부분의 테마에서 헤더에 보입니다.</string>
     <string name="error_update_site_title_network">사이트 제목을 업데이트할 수 없습니다. 네트워크 연결을 확인하고 다시 시도하세요.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">저장하지 않은 변경사항</string>
-    <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">브라우저에서 링크 열기</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources">이전 내용 시트로 탐색하기</string>
-    <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">사용자 정의 그라디언트로 탐색하기</string>
-    <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources">사용자 정의 색상 선택기로 탐색하기</string>
-    <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">그라디언트 유형</string>
-    <string name="gutenberg_native_go_back" tools:ignore="UnusedResources">뒤로 가기</string>
-    <string name="gutenberg_native_double_tap_to_select_the_option" tools:ignore="UnusedResources">옵션을 선택하려면 두 번 탭하기</string>
-    <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">그라디언트 사용자 정의하기</string>
-    <string name="pages_list_author">페이지 작성자</string>
     <string name="error_media_thumbnail_not_loaded">미디어 썸네일을 불러 올 수 없습니다</string>
     <string name="menu_content_info">콘텐츠 구조</string>
     <string name="everyone">모두</string>
     <string name="me">나</string>
-    <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">해제</string>
     <string name="prepublishing_nudges_home_tags_not_set">설정하지 않음</string>
     <string name="prepublishing_tags_description">태그는 게시물의 내용을 독자에게 알리는 데 도움이 됩니다.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">발행일</string>
@@ -2056,11 +1640,6 @@ Language: ko_KR
     <string name="status_and_visibility">상태 &amp; 가시성</string>
     <string name="update_now">지금 업데이트하기</string>
     <string name="pages_item_subtitle">%1$s ·</string>
-    <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">블록 동작 메뉴 열기</string>
-    <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources">위로 이동하기</string>
-    <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">언급 넣기</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options" tools:ignore="UnusedResources">두 번 눌러 사용 가능한 선택지가 있는 하단 시트 열기</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options" tools:ignore="UnusedResources">두 번 눌러 사용 가능한 선택지가 있는 동작 시트를 열기</string>
     <string name="pages_cannot_be_started">지금은 페이지를 열 수 없습니다. 나중에 다시 시도하시기 바랍니다</string>
     <string name="pages_set_as_posts_page">글 페이지로 설정</string>
     <string name="pages_set_as_homepage">홈페이지로 설정</string>
@@ -2084,8 +1663,6 @@ Language: ko_KR
     <string name="page_homepage_successfully_updated">홈페이지를 성공적으로 업데이트하였습니다</string>
     <string name="page_cannot_set_posts_page">사이트 설정에서 글 페이지를 “정적 홈페이지” 활성화로 설정하기</string>
     <string name="page_cannot_set_homepage">사이트 설정에서 홈페이지를 “정적 홈페이지” 활성화로 설정하기</string>
-    <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">색상 선택</string>
-    <string name="gutenberg_native_double_tap_to_go_to_color_settings" tools:ignore="UnusedResources">색상 설정으로 이동하려면 두 번 탭하세요.</string>
     <string name="feature_announcement_find_out_mode">더 알아보기</string>
     <string name="feature_announcement_dialog_label">%s의 새로운 기능</string>
     <string name="insert_label_with_count">%d 삽입</string>
@@ -2096,8 +1673,6 @@ Language: ko_KR
     <string name="photo_picker_use_video">이 비디오 사용하기</string>
     <string name="photo_picker_photo_or_video_title">미디어 선택</string>
     <string name="photo_picker_video_title">비디오 선택</string>
-    <string name="site_picker_ask_site_select">사이트를 선택할 수 없습니다. 다시 시도해 보시기 바랍니다.</string>
-    <string name="sitepicker_continue_flow">계속</string>
     <string name="reader_reblog_error">리블로그에 실패하였습니다</string>
     <string name="reader_no_blog_to_reblog_action">블로그 관리</string>
     <string name="reader_no_blog_to_reblog_detail">워드프레스닷컴 블로그를 생성하면 좋아하는 콘텐츠를 자신의 블로그에 리블로그할 수 있습니다.</string>
@@ -2110,14 +1685,6 @@ Language: ko_KR
     <string name="button_insert">삽입</string>
     <string name="continue_label">계속</string>
     <string name="copy_text">복사</string>
-    <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">열 수</string>
-    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">블록을 %1$s 위치에서 %2$s(으)로 이동</string>
-    <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources">블록 오른쪽으로 움직이기</string>
-    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">블록을 %1$s 위치에서 %2$s (으)로 이동</string>
-    <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources">블록 왼쪽으로 움직이기</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right" tools:ignore="UnusedResources">블록을 오른쪽으로 움직이려면 두 번 탭</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left" tools:ignore="UnusedResources">블록을 왼쪽으로 움직이려면 두 번 탭</string>
-    <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">블록 설정</string>
     <string name="new_site_creation_creating_site_loading_4">알림판을 만드는 중</string>
     <string name="new_site_creation_creating_site_loading_3">테마를 설정 중</string>
     <string name="new_site_creation_creating_site_loading_2">사이트 기능 추가 중</string>
@@ -2125,7 +1692,7 @@ Language: ko_KR
     <string name="new_site_creation_creating_site_loading_subtitle">사이트가 금새 준비될 것입니다</string>
     <string name="new_site_creation_creating_site_loading_title">씬난다!\n거의 다 됐습니다</string>
     <string name="pages_and_posts_cancel_auto_upload">업로드 취소</string>
-    <string name="gif_list_search_returned_unknown_error" tools:ignore="UnusedResources">요청을 다루는데 문제가 있습니다</string>
+    <string name="gif_list_search_returned_unknown_error">요청을 다루는데 문제가 있습니다</string>
     <string name="gif_powered_by_tenor">테너 제공</string>
     <string name="photo_picker_gif">테너에서 선택</string>
     <string name="weekday_saturday">토요일</string>
@@ -2172,17 +1739,6 @@ Language: ko_KR
     <string name="app_theme_light">밝음</string>
     <string name="app_theme">외관</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">최근 이 페이지를 변경했지만 저장하지 않았습니다. 불러올 버전을 선택하세요:\n</string>
-    <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">경고 메시지</string>
-    <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">글 콘텐츠 보기</string>
-    <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">요악문만 표시</string>
-    <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">링크</string>
-    <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">링크 설정</string>
-    <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">요약문 길이(단어)</string>
-    <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources">커버 미디어 편집</string>
-    <string name="gutenberg_native_customize" tools:ignore="UnusedResources">사용자 정의</string>
-    <string name="gutenberg_native_button_link_url" tools:ignore="UnusedResources">버튼 링크 URL</string>
-    <string name="gutenberg_native_border_radius" tools:ignore="UnusedResources">경계선 반경</string>
-    <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources">단락 블록 추가</string>
     <string name="create_post_page_fab_tooltip_contributors">게시물 작성</string>
     <string name="post_list_tab_trashed_posts">삭제된</string>
     <string name="post_list_tab_scheduled_posts">예약됨</string>
@@ -2199,24 +1755,11 @@ Language: ko_KR
     <string name="stats_insights_management_general">일반</string>
     <string name="stats_management_screen_title">새 카드 추가</string>
     <string name="stats_management_add_new_stats_card">새 스탯 카드 추가</string>
-    <string name="reader_self_hosted_select_filter">필터 버튼을 사용하여 특정 주제에 대한 글을 찾습니다.</string>
     <string name="reader_bottom_sheet_select_content_description">태그 또는 블로그, 팝업 창 선택</string>
-    <string name="reader_btn_remove_filter_content_description">현재 필터 제거</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">워드프레스닷컴에 로그인</string>
     <string name="reader_filter_self_hosted_empty_tags_list">워드프레스닷컴에 로그인하여 구독하는 태그의 최신 글 확인</string>
     <string name="reader_filter_self_hosted_empty_blogs_list">워드프레스닷컴에 로그인하여 구독하는 블로그의 최신 글 확인</string>
-    <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">현재 블록 대체하기</string>
-    <string name="gutenberg_native_add_to_end" tools:ignore="UnusedResources">끝에 추가하기</string>
-    <string name="gutenberg_native_add_to_beginning" tools:ignore="UnusedResources">처음에 추가하기</string>
-    <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">이전에 블록 추가</string>
-    <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">다음에 블록 추가</string>
-    <string name="reader_filter_empty_tags_add_action">태그 추가</string>
     <string name="reader_filter_cta">필터</string>
-    <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources">비디오 캡션. %s</string>
-    <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">비디오 편집</string>
-    <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources">미디어 편집</string>
-    <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">쇼트코드 추가…</string>
-    <string name="post_list_author">작성자</string>
     <string name="fab_create_desc">게시물 작성</string>
     <string name="stats_posting_activity_end_description">이 기간의 통계를 모두 들었습니다.\n 다시 누르면 처음부터 다시 시작합니다.</string>
     <string name="stats_posting_activity_empty_description">이 기간에는 통계가 없습니다.</string>
@@ -2229,8 +1772,6 @@ Language: ko_KR
     <string name="stats_box_type_low">낮음</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">이미지 교체</string>
-    <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">갤러리 캡션. %s</string>
     <string name="create_post_page_fab_tooltip">글 또는 페이지 만들기</string>
     <string name="content_description_person_building_website">사람 건물 웹사이트</string>
     <string name="post_signup_interstitial_not_right_now">나중에</string>
@@ -2249,12 +1790,12 @@ Language: ko_KR
     <string name="dialog_confirm_scheduled_post_sync_title">동기화할 준비가 되셨습니까?</string>
     <string name="new_site_creation_unavailable_domain">이 도메인을 사용할 수 없습니다.</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic" tools:ignore="UnusedResources" a8c-src-lib="module:login">사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
-    <string name="login_discovery_error_ssl" tools:ignore="UnusedResources" a8c-src-lib="module:login">&lt;b&gt;SSL 인증서&lt;/b&gt; 문제로 인해 사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
-    <string name="login_discovery_error_http_auth" tools:ignore="UnusedResources" a8c-src-lib="module:login">&lt;b&gt;HTTP 인증&lt;/b&gt;이 필요하므로 사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
-    <string name="login_discovery_error_xmlrpc" tools:ignore="UnusedResources" a8c-src-lib="module:login">사이트에서 &lt;b&gt;XMLRPC 파일&lt;/b&gt;에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
-    <string name="login_site_credentials_magic_link_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">마지막 부분입니다! 젯팩에 연결된 이메일 주소 &lt;b&gt;%1$s&lt;/b&gt;만 확인하면 됩니다.</string>
-    <string name="enter_credentials_for_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">%1$s 사이트 자격 증명으로 로그인</string>
+    <string name="login_discovery_error_generic" a8c-src-lib="module:login">사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
+    <string name="login_discovery_error_ssl" a8c-src-lib="module:login">&lt;b&gt;SSL 인증서&lt;/b&gt; 문제로 인해 사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
+    <string name="login_discovery_error_http_auth" a8c-src-lib="module:login">&lt;b&gt;HTTP 인증&lt;/b&gt;이 필요하므로 사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
+    <string name="login_discovery_error_xmlrpc" a8c-src-lib="module:login">사이트에서 &lt;b&gt;XMLRPC 파일&lt;/b&gt;에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
+    <string name="login_site_credentials_magic_link_label" a8c-src-lib="module:login">마지막 부분입니다! 젯팩에 연결된 이메일 주소 &lt;b&gt;%1$s&lt;/b&gt;만 확인하면 됩니다.</string>
+    <string name="enter_credentials_for_site" a8c-src-lib="module:login">%1$s 사이트 자격 증명으로 로그인</string>
     <string name="my_site_bottom_sheet_add_page">사이트 페이지</string>
     <string name="reader_my_likes_display_name">좋아요</string>
     <string name="reader_discover_display_name">검색</string>
@@ -2267,56 +1808,6 @@ Language: ko_KR
     <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">지금 이 글을 열 수 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="site_cannot_be_loaded">사이트의 데이터를 현재 로드할 수 없습니다. 나중에 다시 시도해 주세요.</string>
-    <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">워드프레스 미디어 라이브러리</string>
-    <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">지원되지 않음</string>
-    <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">그룹 해제</string>
-    <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">키보드를 숨기려면 탭</string>
-    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">도움말을 보려면 여기를 탭</string>
-    <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">비디오 촬영</string>
-    <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">사진 찍기 또는 비디오 촬영</string>
-    <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">사진 촬영</string>
-    <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">글쓰기 시작…</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">%s 블록. 이 블록에는 잘못된 내용이 있습니다.</string>
-    <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources">%s 블록. 비어 있음</string>
-    <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">블록 잘라내기</string>
-    <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">비디오 열기 문제</string>
-    <string name="gutenberg_native_problem_displaying_block" tools:ignore="UnusedResources">블록 표시 문제</string>
-    <string name="gutenberg_native_post_title_s" tools:ignore="UnusedResources">글 제목. %s</string>
-    <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources">글 제목. 비어 있음</string>
-    <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">URL 붙여 넣기</string>
-    <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">페이지 바꾸기 블록. %s</string>
-    <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">설정 열기</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">이 요청을 처리할 수 있는 애플리케이션이 없습니다. 웹 브라우저를 설치하세요.</string>
-    <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">위로 탐색</string>
-    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">블록을 위로(%1$s 행에서 %2$s 행으로) 이동</string>
-    <string name="gutenberg_native_move_block_up" tools:ignore="UnusedResources">블록을 위로 이동</string>
-    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">블록을 아래로(%1$s 행에서 %2$s 행으로) 이동</string>
-    <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">블록을 아래로 이동</string>
-    <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">링크 텍스트</string>
-    <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">링크 삽입됨</string>
-    <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">이미지 캡션. %s</string>
-    <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">키보드 숨기기</string>
-    <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources">도움말 아이콘</string>
-    <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">마지막 변경을 취소하려면 두 번 탭하세요.</string>
-    <string name="gutenberg_native_double_tap_to_toggle_setting" tools:ignore="UnusedResources">설정을 전환하려면 두 번 탭하세요.</string>
-    <string name="gutenberg_native_double_tap_to_select_an_image" tools:ignore="UnusedResources">이미지를 선택하려면 두 번 탭하세요.</string>
-    <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources">비디오를 선택하려면 두 번 탭하세요.</string>
-    <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources">선택하려면 두 번 탭하세요.</string>
-    <string name="gutenberg_native_double_tap_to_redo_last_change" tools:ignore="UnusedResources">마지막 변경을 다시 실행하려면 두 번 탭하세요.</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_up" tools:ignore="UnusedResources">블록을 위로 이동하려면 두 번 탭하세요.</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_down" tools:ignore="UnusedResources">블록을 아래로 이동하려면 두 번 탭하세요.</string>
-    <string name="gutenberg_native_double_tap_to_edit_this_value" tools:ignore="UnusedResources">이 값을 편집하려면 두 번 탭하세요.</string>
-    <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources">블록을 추가하려면 두 번 탭하세요.</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit" tools:ignore="UnusedResources">편집하려면 두 번 탭하고 길게 누르세요.</string>
-    <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">현재 값은 %s입니다.</string>
-    <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">기기에서 선택</string>
-    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">알 수 없는 오류가 발생했습니다. 다시 시도하세요.</string>
-    <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">대체 텍스트</string>
-    <string name="gutenberg_native_add_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">비디오 추가</string>
-    <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">URL 추가</string>
-    <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources">대체 텍스트 추가</string>
-    <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">블록을 여기에 추가</string>
-    <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">설명 추가</string>
     <string name="reader_empty_saved_posts_content_description">“글을 목록에 저장하려면 글 저장 버튼을 탭합니다.”</string>
     <string name="reader_acessibility_list_loaded">\"목록에 %1$d개 항목이 로드되었습니다. \"</string>
     <string name="notifications_tab_dialog_switch_desc">알림</string>
@@ -2417,8 +1908,8 @@ Language: ko_KR
     <string name="post_settings_add_to_calendar">달력에 추가</string>
     <string name="post_settings_notification">알림</string>
     <string name="post_settings_time_and_date">날짜와 시간</string>
-    <string name="login_invalid_site_url" tools:ignore="UnusedResources" a8c-src-lib="module:login">example.com과 같은 완전한 웹사이트 주소를 입력하세요.</string>
-    <string name="enter_email_for_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">%1$s에 연결하려면 워드프레스닷컴에 로그인하세요.</string>
+    <string name="login_invalid_site_url" a8c-src-lib="module:login">example.com과 같은 완전한 웹사이트 주소를 입력하세요.</string>
+    <string name="enter_email_for_site" a8c-src-lib="module:login">%1$s에 연결하려면 워드프레스닷컴에 로그인하세요.</string>
     <string name="stats_post_views_label">조회수</string>
     <string name="stats_post_label">글</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2434,11 +1925,6 @@ Language: ko_KR
     <string name="description_collapse">Collapse</string>
     <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
     <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
-    <string name="link_dialog_button_cancel" tools:ignore="UnusedResources">취소</string>
-    <string name="link_dialog_button_ok" tools:ignore="UnusedResources">확인</string>
-    <string name="link_dialog_edit_hint" tools:ignore="UnusedResources">http(s)://</string>
-    <string name="link_dialog_button_remove_link" tools:ignore="UnusedResources">링크 제거</string>
-    <string name="link_dialog_title" tools:ignore="UnusedResources">링크 삽입</string>
     <string name="post_settings_retry_featured_image">Retry uploading</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\n옵션을 보려면 누르세요.</string>
     <string name="link_open_new_window">Open link in a new window/tab</string>
@@ -2504,7 +1990,6 @@ Language: ko_KR
     <string name="stats_management_news_card_message">확인하려는 통계를 선택하고 중요한 데이터에 집중하세요. 인사이트 하단의 %1$s을(를) 눌러 통계를 사용자 정의하세요.</string>
     <string name="stats_manage_your_stats">통계 관리</string>
     <string name="history_fetching_revisions">리비전을 가져오는 중…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="module:editor">미디어를 삽입하지 못했습니다.\n옵션을 보려면 누르세요.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">미디어를 삽입하지 못했습니다.\n눌러서 다시 시도하세요.</string>
     <string name="editor_uploading_draft">임시글을 업로드하고 있습니다.</string>
     <string name="post_uploading_draft">임시글 업로드 중</string>
@@ -2528,14 +2013,12 @@ Language: ko_KR
     <string name="dialog_confirm_trash_losing_unsaved_changes_message">이 글을 휴지통에 버리면 로컬 변경 사항이 취소됩니다. 계속하시겠습니까?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">로컬 변경</string>
     <string name="button_move_to_draft">임시글로 이동하기</string>
-    <string name="post_list_toggle_item_layout_list_view">목록 보기로 전환</string>
-    <string name="post_list_toggle_item_layout_cards_view">카드 보기로 전환</string>
     <string name="posts_trashed_empty">휴지통에 버린 글이 없습니다.</string>
     <string name="posts_draft_empty">임시글이 없습니다.</string>
     <string name="posts_scheduled_empty">예약한 글이 없습니다.</string>
     <string name="posts_published_empty">아직 글을 발행하지 않았습니다.</string>
-    <string name="notification_wpcom_username_needed" tools:ignore="UnusedResources" a8c-src-lib="module:login">사용자 이름과 비밀번호를 사용하여 로그인하세요.</string>
-    <string name="error_user_username_instead_of_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">이메일 주소가 아닌 워드프레스닷컴 사용자 이름을 사용하여 로그인하세요.</string>
+    <string name="notification_wpcom_username_needed" a8c-src-lib="module:login">사용자 이름과 비밀번호를 사용하여 로그인하세요.</string>
+    <string name="error_user_username_instead_of_email" a8c-src-lib="module:login">이메일 주소가 아닌 워드프레스닷컴 사용자 이름을 사용하여 로그인하세요.</string>
     <string name="stats_insights_average_words">평균 단어 수/글 수</string>
     <string name="stats_insights_total_words">총 단어 수</string>
     <string name="stats_insights_average_likes">평균 좋아요 클릭 수/글 수</string>
@@ -2545,7 +2028,7 @@ Language: ko_KR
     <string name="stats_insights_posts">글</string>
     <string name="stats_insights_year">년</string>
     <string name="stats_insights_this_year_site_stats">올해</string>
-    <string name="no_site_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">이 주소의 사이트는 워드프레스 사이트가 아닙니다. 연결하려면 사이트에서 워드프레스를 사용해야 합니다.</string>
+    <string name="no_site_error" a8c-src-lib="module:login">이 주소의 사이트는 워드프레스 사이트가 아닙니다. 연결하려면 사이트에서 워드프레스를 사용해야 합니다.</string>
     <string name="plugin_check_domain_credit_error">사용 가능한 도메인 크레딧을 확인하지 못함</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">도메인 크레딧 확인 중</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">도메인 등록</string>
@@ -2561,18 +2044,13 @@ Language: ko_KR
     <string name="stats_months_and_years_views_label">조회수</string>
     <string name="stats_months_and_years_period_label">기간</string>
     <string name="stats_detail_months_and_years">월 및 연도</string>
-    <string name="stats_insights_load_more" tools:ignore="UnusedResources">더 보기</string>
     <string name="stats_insights_today_stats">오늘</string>
     <string name="stats_insights_best_hour">최고의 시간</string>
     <string name="stats_insights_best_day">안녕히 계세요.</string>
     <string name="showing_stats_for">다음에 대한 통계 표시:</string>
-    <string name="app_rating_rate_never">안 함</string>
-    <string name="app_rating_rate_later">나중에</string>
-    <string name="app_rating_rate_now">지금 평가</string>
-    <string name="app_rating_message">다시 만나서 반가워요! 앱을 알아보고 있다면 Google Play 스토어에서 평가를 확인하는 것이 좋습니다.</string>
     <string name="editor_post_converted_back_to_draft">글을 임시글로 되돌림</string>
     <string name="stats_insights_posting_activity">게시 활동</string>
-    <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">사이트가 아직 로드되지 않음</string>
+    <string name="stats_site_not_loaded_yet">사이트가 아직 로드되지 않음</string>
     <string name="stats_more_posts">글 더 보기</string>
     <string name="stats_fewer_posts">글 적게 보기</string>
     <string name="new_site_creation_preview_back_pressed_warning">진행 상황을 놓칠 수 있습니다. 종료하시겠습니까?</string>
@@ -2593,15 +2071,13 @@ Language: ko_KR
     <string name="quick_start_sites">다음 단계</string>
     <string name="quick_start_dialog_upload_icon_title">고유한 사이트 아이콘 선택</string>
     <string name="quick_start_dialog_upload_icon_message">방문자의 브라우저에 아이콘이 표시됩니다. 깔끔하고 전문적인 모양을 만들려면 사용자 정의 아이콘을 추가하세요.</string>
-    <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">사이트의 성과를 참조하려면 %1$s 통계 %2$s을(를) 선택합니다.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">새로 업로드하려면 %1$s사이트 아이콘%2$s을 탭합니다.</string>
+    <string name="quick_start_dialog_check_stats_message_short">사이트의 성과를 참조하려면 %1$s 통계 %2$s을(를) 선택합니다.</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short">새로 업로드하려면 %1$s사이트 아이콘%2$s을 탭합니다.</string>
     <string name="quick_start_dialog_publish_post_message">임시글을 작성하여 글을 게시하세요.</string>
-    <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">글 공유 설정</string>
-    <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">새 글을 소셜 미디어 계정에 자동으로 공유합니다.</string>
     <string name="quick_start_dialog_check_stats_title">사이트 통계 확인</string>
     <string name="quick_start_dialog_check_stats_message">사이트의 성과를 최신 상태로 유지하세요.</string>
     <string name="quick_start_task_skip_menu_title">작업 건너뛰기</string>
-    <string name="notification_channel_reminder_title" tools:ignore="UnusedResources">알림</string>
+    <string name="notification_channel_reminder_title">알림</string>
     <string name="stats_select_next_period_description">다음 기간 선택</string>
     <string name="stats_select_previous_period_description">이전 기간 선택</string>
     <string name="stats_most_popular_percent_views">조회수 %1$s</string>
@@ -2629,10 +2105,8 @@ Language: ko_KR
     <string name="local_post_is_conflicted">버전 충돌</string>
     <string name="preference_crash_reports_summary">자동 충돌 보고서를 사용하면 앱의 성능을 향상하는 데 도움이 됩니다.</string>
     <string name="preference_crash_reports">충돌 보고서</string>
-    <string name="snackbar_conflict_undo">실행 취소</string>
     <string name="snackbar_conflict_web_version_discarded">웹 버전이 취소됨</string>
     <string name="snackbar_conflict_local_version_discarded">로컬 버전이 취소됨</string>
-    <string name="toast_conflict_updating_post">글 업데이트 중</string>
     <string name="dialog_confirm_load_remote_post_discard_web">웹 취소</string>
     <string name="dialog_confirm_load_remote_post_discard_local">로컬 취소</string>
     <string name="dialog_confirm_load_remote_post_body_2">로컬\n%1$s\n에 저장됨\n웹\n%2$s\n에 저장됨\n</string>
@@ -2641,7 +2115,7 @@ Language: ko_KR
     <string name="stats_no_data_for_period">이 기간에 데이터 없음</string>
     <string name="preference_strip_image_location">미디어에서 위치 제거</string>
     <string name="stats_cannot_be_started">지금은 통계를 열 수 없습니다. 나중에 다시 시도해 주세요.</string>
-    <string name="gif_picker_empty_search_list" tools:ignore="UnusedResources">검색과 일치하는 미디어 없음</string>
+    <string name="gif_picker_empty_search_list">검색과 일치하는 미디어 없음</string>
     <string name="gif_picker_initial_empty_text">GIF를 검색하여 미디어 라이브러리에 추가하세요!</string>
     <string name="stats_author_views_label">조회수</string>
     <string name="stats_author_label">글쓴이</string>
@@ -2706,7 +2180,7 @@ Language: ko_KR
     <string name="history_detail_button_previous">이전</string>
     <string name="history_detail_button_next">다음</string>
     <string name="media_space_used">%1$s 사용</string>
-    <string name="enter_wpcom_or_jetpack_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">워드프레스닷컴 또는 젯팩에 연결된 독립 호스트 워드프레스 사이트를 입력하세요.</string>
+    <string name="enter_wpcom_or_jetpack_site" a8c-src-lib="module:login">워드프레스닷컴 또는 젯팩에 연결된 독립 호스트 워드프레스 사이트를 입력하세요.</string>
     <string name="history_loading_revision">리비전 로드하는 중</string>
     <string name="history_loaded_revision">리비전 로드됨</string>
     <string name="history_load_dialog_button_positive">로드</string>
@@ -2732,14 +2206,13 @@ Language: ko_KR
     <string name="pages_delete_permanently">영구적으로 삭제하기</string>
     <string name="pages_move_to_trash">휴지통으로 이동하기</string>
     <string name="pages_move_to_draft">임시글로 이동하기</string>
-    <string name="pages_set_parent">상위 항목 설정</string>
     <string name="pages_view">보기</string>
-    <string name="pages_trashed" tools:ignore="UnusedResources">삭제된</string>
-    <string name="pages_scheduled" tools:ignore="UnusedResources">예약됨</string>
-    <string name="pages_drafts" tools:ignore="UnusedResources">임시글</string>
-    <string name="pages_published" tools:ignore="UnusedResources">발행됨</string>
-    <string name="login_error_sms_throttled" tools:ignore="UnusedResources" a8c-src-lib="module:login">SMS 확인 코드를 보내려는 시도가 너무 많았습니다. 잠시 후 다시 요청하세요.</string>
-    <string name="login_error_email_not_found_v2" tools:ignore="UnusedResources" a8c-src-lib="module:login">이 Google 계정과 일치하는 워드프레스닷컴 계정이 없습니다.</string>
+    <string name="pages_trashed">삭제된</string>
+    <string name="pages_scheduled">예약됨</string>
+    <string name="pages_drafts">임시글</string>
+    <string name="pages_published">발행됨</string>
+    <string name="login_error_sms_throttled" a8c-src-lib="module:login">SMS 확인 코드를 보내려는 시도가 너무 많았습니다. 잠시 후 다시 요청하세요.</string>
+    <string name="login_error_email_not_found_v2" a8c-src-lib="module:login">이 Google 계정과 일치하는 워드프레스닷컴 계정이 없습니다.</string>
     <string name="site_picker_remove_site_empty">검색어와 일치하는 사이트 없음</string>
     <string name="reader_no_followed_blogs_search_title">검색과 일치하는 블로그 없음</string>
     <string name="page_parent_changed">페이지 상위 항목이 변경되었습니다.</string>
@@ -2762,20 +2235,17 @@ Language: ko_KR
     <string name="quick_start_dialog_view_site_title">사이트 보기</string>
     <string name="quick_start_dialog_view_site_message">새 사이트를 미리 보며 방문자에게 표시되는 내용을 참조하세요.</string>
     <string name="quick_start_dialog_share_site_title">사이트 공유</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">계속하려면 %1$s소셜%2$s 탭하기</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">계속하려면 %1$s소셜%2$s 탭하기</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">%1$s 연결 %2$s을 탭하여 소셜 미디어 계정 추가</string>
     <string name="quick_start_dialog_share_site_message">소셜 미디어 계정을 연결하세요. 그러면 사이트에서 새 글을 자동으로 공유합니다.</string>
     <string name="quick_start_dialog_publish_post_title">글 게시</string>
-    <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">%1$s 게시물 작성 %2$s을 탭하여 새 게시물 작성하기</string>
     <string name="quick_start_dialog_need_help_button_negative">안 함</string>
     <string name="quick_start_dialog_follow_sites_title">다른 사이트와 연결</string>
-    <string name="quick_start_button_positive" tools:ignore="UnusedResources">이동</string>
-    <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">취소</string>
-    <string name="quick_start_button_negative" tools:ignore="UnusedResources">지금 안 함</string>
+    <string name="quick_start_button_positive">이동</string>
     <string name="content_description_more">더 보기</string>
     <string name="my_site_create_new_site_title">사이트가 없습니다</string>
     <string name="reader_empty_subscribed_tags_subtitle">즐겨 찾는 주제에 대한 글을 찾으려면 여기에 태그 추가</string>
-    <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="module:login">젯팩에 연결하는 데 사용한 워드프레스닷컴 계정으로 로그인하세요.</string>
+    <string name="login_to_to_connect_jetpack" a8c-src-lib="module:login">젯팩에 연결하는 데 사용한 워드프레스닷컴 계정으로 로그인하세요.</string>
     <string name="jetpack">젯팩</string>
     <string name="stats_jetpack_connection_faq">젯팩 자주 찾는 질문</string>
     <string name="stats_jetpack_connection_setup_info">워드프레스 사이트에서 통계를 사용하려면 젯팩 플러그인을 설치해야 합니다.</string>
@@ -2807,7 +2277,7 @@ Language: ko_KR
     <string name="featured_image_desc">대표 이미지</string>
     <string name="button_discard">취소</string>
     <string name="reader_avatar_desc">프로필 사진</string>
-    <string name="notification_channel_transient_title" tools:ignore="UnusedResources">임시</string>
+    <string name="notification_channel_transient_title">임시</string>
     <string name="support_identity_input_dialog_email_label">이메일</string>
     <string name="support_identity_input_dialog_enter_email">이메일 주소를 입력하세요.</string>
     <string name="support_identity_input_dialog_enter_email_and_name">계속하려면 이메일 주소와 이름을 입력하세요.</string>
@@ -2829,13 +2299,13 @@ Language: ko_KR
     <string name="reader_empty_search_title">일치하는 결과 없음</string>
     <string name="comment_read_source_post">원글 읽기</string>
     <string name="sites">사이트</string>
-    <string name="signup_magic_link_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">매직 링크가 전송됨</string>
-    <string name="verification_2fa_screen_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">코드 확인</string>
-    <string name="selfhosted_site_login_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">로그인 자격 증명</string>
-    <string name="magic_link_sent_login_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">매직 링크가 전송됨</string>
-    <string name="magic_link_login_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">매직 링크 로그인</string>
-    <string name="site_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">사이트 주소 로그인</string>
-    <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">이메일 주소 로그인</string>
+    <string name="signup_magic_link_title" a8c-src-lib="module:login">매직 링크가 전송됨</string>
+    <string name="verification_2fa_screen_title" a8c-src-lib="module:login">코드 확인</string>
+    <string name="selfhosted_site_login_title" a8c-src-lib="module:login">로그인 자격 증명</string>
+    <string name="magic_link_sent_login_title" a8c-src-lib="module:login">매직 링크가 전송됨</string>
+    <string name="magic_link_login_title" a8c-src-lib="module:login">매직 링크 로그인</string>
+    <string name="site_address_login_title" a8c-src-lib="module:login">사이트 주소 로그인</string>
+    <string name="email_address_login_title" a8c-src-lib="module:login">이메일 주소 로그인</string>
     <string name="reader_empty_saved_posts_description">%s을(를) 탭하여 목록에 글을 저장합니다.</string>
     <string name="reader_empty_saved_posts_title">글이 아직 저장되지 않았습니다!</string>
     <string name="reader_bookmark_snack_title">글이 저장됨</string>
@@ -2900,8 +2370,8 @@ Language: ko_KR
     <string name="content_description_people_looking_charts">그래프와 차트를 보는 사람들</string>
     <string name="comment_title">%2$s의 %1$s</string>
     <string name="dialog_confirm_delete_permanently_post">이 글을 영구적으로 삭제하시겠습니까?</string>
-    <string name="notification_channel_important_title" tools:ignore="UnusedResources">중요</string>
-    <string name="notification_channel_general_title" tools:ignore="UnusedResources">일반</string>
+    <string name="notification_channel_important_title">중요</string>
+    <string name="notification_channel_general_title">일반</string>
     <string name="photo_picker_use_photo">이 사진 사용</string>
     <string name="media_preview_title">%1$d/%2$d</string>
     <string name="stock_media_picker_initial_empty_subtext">사진 제공: %s</string>
@@ -2910,7 +2380,6 @@ Language: ko_KR
     <string name="photo_picker_stock_media">무료 사진 라이브러리에서 선택</string>
     <string name="error_save_empty_draft">비어 있는 임시글을 저장할 수 없음</string>
     <string name="site_settings_quota_space_unlimited">%1$s 무제한</string>
-    <string name="preview_count">%d 미리보기</string>
     <string name="add_count">%d 추가</string>
     <string name="fab_add_tag_desc">태그 작성</string>
     <string name="navigate_up_desc">위로 탐색</string>
@@ -2938,7 +2407,7 @@ Language: ko_KR
     <string name="invite_user_delete_desc">%s 제거</string>
     <string name="profile_picture">%s의 프로필 사진</string>
     <string name="comment_checkmark_desc">확인 표시</string>
-    <string name="signup_with_google_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">Google로 가입하는 중…</string>
+    <string name="signup_with_google_progress" a8c-src-lib="module:login">Google로 가입하는 중…</string>
     <string name="jetpack_connection_failed_with_reason">젯팩에 연결 실패: %s</string>
     <string name="jetpack_already_connected_toast">이미 젯팩에 연결되어 있습니다.</string>
     <string name="menu_visual_mode">비주얼 편집기</string>
@@ -2975,7 +2444,6 @@ Language: ko_KR
     <string name="me_section_screen_title">나</string>
     <string name="my_site_section_screen_title">내 사이트</string>
     <string name="notif_settings_screen_title">알림 설정</string>
-    <string name="signup_epilogue_error_avatar_view">고객님의 아바타가 업로드되었으며 곧 사용할 수 있습니다.</string>
     <string name="permissions_denied_message">이 기능에 대한 필수 권한이 해제되어 있는 것 같습니다.&lt;br/&gt;&lt;br/&gt;변경하려면 권한을 편집하고 &lt;strong&gt;%s&lt;/strong&gt;이(가) 활성화되어 있는지 확인하세요.</string>
     <string name="permissions_denied_title">권한</string>
     <string name="plugin_caption_featured">특성</string>
@@ -3018,7 +2486,7 @@ Language: ko_KR
     <string name="site_creation_domain_finish_button">사이트 생성</string>
     <string name="notification_site_creation_created">계속하려면 누르세요.</string>
     <string name="notification_site_creation_title_success">사이트를 생성했습니다!</string>
-    <string name="google_error_timeout" tools:ignore="UnusedResources" a8c-src-lib="module:login">Google에서 응답하는 데 너무 오래 걸립니다. 더 강한 인터넷 연결이 있을 때까지 기다려야 할 수 있습니다.</string>
+    <string name="google_error_timeout" a8c-src-lib="module:login">Google에서 응답하는 데 너무 오래 걸립니다. 더 강한 인터넷 연결이 있을 때까지 기다려야 할 수 있습니다.</string>
     <string name="username_changer_title">사용자 이름 변경</string>
     <string name="username_changer_hint">더 많은 제안을 받으려면 입력하세요.</string>
     <string name="username_changer_header">회원님의 현재 사용자명은 %1$s%2$s%3$s입니다. 몇 가지 예외가 있지만 다른 사람들은 회원님의 공개 이름, %4$s%5$s%6$s만 볼 수 있습니다.</string>
@@ -3030,10 +2498,10 @@ Language: ko_KR
     <string name="content_description_add_avatar">아바타 추가</string>
     <string name="signup_user_exists">이메일이 이미 워드프레스닷컴에 있습니다.\n로그인을 통해 진행 중입니다.</string>
     <string name="signup_updating_account">계정 업데이트 중…</string>
-    <string name="signup_magic_link_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">이메일 전송 중</string>
-    <string name="signup_magic_link_error_button_positive" tools:ignore="UnusedResources" a8c-src-lib="module:login">다시 시도</string>
-    <string name="signup_magic_link_error_button_negative" tools:ignore="UnusedResources" a8c-src-lib="module:login">닫기</string>
-    <string name="signup_magic_link_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">이메일을 보내는 중에 문제가 발생했습니다. 지금 다시 시도하거나 닫고 나중에 다시 시도할 수 있습니다.</string>
+    <string name="signup_magic_link_progress" a8c-src-lib="module:login">이메일 전송 중</string>
+    <string name="signup_magic_link_error_button_positive" a8c-src-lib="module:login">다시 시도</string>
+    <string name="signup_magic_link_error_button_negative" a8c-src-lib="module:login">닫기</string>
+    <string name="signup_magic_link_error" a8c-src-lib="module:login">이메일을 보내는 중에 문제가 발생했습니다. 지금 다시 시도하거나 닫고 나중에 다시 시도할 수 있습니다.</string>
     <string name="signup_epilogue_hint_username">사용자 이름</string>
     <string name="signup_epilogue_hint_password_detail">방금 사용한 것과 같은 링크로 항상 로그인할 수 있지만, 원하는 경우 비밀번호를 설정할 수도 있습니다.</string>
     <string name="signup_epilogue_hint_password">암호(옵션)</string>
@@ -3080,7 +2548,6 @@ Language: ko_KR
     <string name="plugin_installed_version">%s 버전이 설치됨</string>
     <string name="plugin_version">%s 버전</string>
     <string name="plugin_byline">제작자: %s</string>
-    <string name="change_photo">사진 변경</string>
     <string name="plugin_fetch_error">플러그인을 로드할 수 없음</string>
     <string name="my_site_btn_site_pages">페이지</string>
     <string name="site_settings_tags_hint">사이트의 태그 관리</string>
@@ -3098,7 +2565,6 @@ Language: ko_KR
     <string name="site_settings_format_hint_custom">사용자 정의 포맷</string>
     <string name="site_settings_format_entry_custom">사용자 정의</string>
     <string name="site_settings_posts_per_page_title">페이지당 글 수</string>
-    <string name="site_settings_timezone_subtitle">시간대에 해당하는 도시를 선택하세요.</string>
     <string name="site_settings_timezone_title">시간대</string>
     <string name="site_settings_time_format_title">시간 형식</string>
     <string name="site_settings_date_format_title">날짜 형식</string>
@@ -3129,18 +2595,18 @@ Language: ko_KR
     <string name="my_site_btn_plugins">플러그인</string>
     <string name="media_edit_link_hint">새 창/탭에 링크 열기</string>
     <string name="media_edit_link_text">링크 연결 대상:</string>
-    <string name="notification_login_failed" tools:ignore="UnusedResources" a8c-src-lib="module:login">오류가 발생했습니다.</string>
-    <string name="notification_2fa_needed" tools:ignore="UnusedResources" a8c-src-lib="module:login">계속하려면 인증 코드를 입력하세요.</string>
-    <string name="notification_error_wrong_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">계속하려면 비밀번호를 다시 확인하세요.</string>
-    <string name="notification_login_title_stopped" tools:ignore="UnusedResources" a8c-src-lib="module:login">로그인 중지됨</string>
-    <string name="notification_logging_in" tools:ignore="UnusedResources" a8c-src-lib="module:login">로그인하는 동안 잠시 기다려 주세요.</string>
-    <string name="notification_login_title_in_progress" tools:ignore="UnusedResources" a8c-src-lib="module:login">로그인 진행 중…</string>
-    <string name="notification_logged_in" tools:ignore="UnusedResources" a8c-src-lib="module:login">계속하려면 누르세요.</string>
-    <string name="notification_login_title_success" tools:ignore="UnusedResources" a8c-src-lib="module:login">로그인됨!</string>
-    <string name="login_error_generic_start" tools:ignore="UnusedResources" a8c-src-lib="module:login">Google 로그인을 시작할 수 없습니다.</string>
-    <string name="login_empty_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">비밀번호를 입력하세요.</string>
-    <string name="login_text_otp_another" tools:ignore="UnusedResources" a8c-src-lib="module:login">대신 다른 코드를 문자로 받습니다.</string>
-    <string name="enter_verification_code_sms" tools:ignore="UnusedResources" a8c-src-lib="module:login">%s(으)로 끝나는 전화 번호로 문자 메시지를 보냈습니다. SMS의 확인 코드를 입력하세요.</string>
+    <string name="notification_login_failed" a8c-src-lib="module:login">오류가 발생했습니다.</string>
+    <string name="notification_2fa_needed" a8c-src-lib="module:login">계속하려면 인증 코드를 입력하세요.</string>
+    <string name="notification_error_wrong_password" a8c-src-lib="module:login">계속하려면 비밀번호를 다시 확인하세요.</string>
+    <string name="notification_login_title_stopped" a8c-src-lib="module:login">로그인 중지됨</string>
+    <string name="notification_logging_in" a8c-src-lib="module:login">로그인하는 동안 잠시 기다려 주세요.</string>
+    <string name="notification_login_title_in_progress" a8c-src-lib="module:login">로그인 진행 중…</string>
+    <string name="notification_logged_in" a8c-src-lib="module:login">계속하려면 누르세요.</string>
+    <string name="notification_login_title_success" a8c-src-lib="module:login">로그인됨!</string>
+    <string name="login_error_generic_start" a8c-src-lib="module:login">Google 로그인을 시작할 수 없습니다.</string>
+    <string name="login_empty_password" a8c-src-lib="module:login">비밀번호를 입력하세요.</string>
+    <string name="login_text_otp_another" a8c-src-lib="module:login">대신 다른 코드를 문자로 받습니다.</string>
+    <string name="enter_verification_code_sms" a8c-src-lib="module:login">%s(으)로 끝나는 전화 번호로 문자 메시지를 보냈습니다. SMS의 확인 코드를 입력하세요.</string>
     <string name="image_size">크기</string>
     <string name="uploading_subtitle_media_only_one">1개 파일 남음</string>
     <string name="uploading_subtitle_media_only">%1$d/%2$d개 파일 남음</string>
@@ -3157,15 +2623,15 @@ Language: ko_KR
     <string name="confirm_remove_media_image">글에서 이 이미지를 제거할까요?</string>
     <string name="media_edit_customize_card_caption">사용자 정의</string>
     <string name="media_edit_file_details_card_caption">파일 세부정보</string>
-    <string name="login_error_suffix" tools:ignore="UnusedResources" a8c-src-lib="module:login">\n다른 계정을 사용해 보세요.</string>
-    <string name="login_error_generic" tools:ignore="UnusedResources" a8c-src-lib="module:login">Google 계정과 연결하는 데 문제가 발생했습니다.</string>
+    <string name="login_error_suffix" a8c-src-lib="module:login">\n다른 계정을 사용해 보세요.</string>
+    <string name="login_error_generic" a8c-src-lib="module:login">Google 계정과 연결하는 데 문제가 발생했습니다.</string>
     <string name="login_error_button">닫기</string>
-    <string name="enter_wpcom_password_google" tools:ignore="UnusedResources" a8c-src-lib="module:login">이 Google 계정으로 진행하려면 일치하는 워드프레스닷컴 비밀번호를 제공하세요. 이 메시지는 한 번만 표시됩니다.</string>
+    <string name="enter_wpcom_password_google" a8c-src-lib="module:login">이 Google 계정으로 진행하려면 일치하는 워드프레스닷컴 비밀번호를 제공하세요. 이 메시지는 한 번만 표시됩니다.</string>
     <string name="error_generic_network">네트워크 오류가 발생했습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="post_settings_remove_featured_image">특성 이미지 제거</string>
     <string name="post_settings_choose_featured_image">특성 이미지 선택</string>
-    <string name="login_log_in_for_share_intent" tools:ignore="UnusedResources" a8c-src-lib="module:login">콘텐츠를 공유하려면 워드프레스닷컴에 로그인하세요.</string>
-    <string name="enter_site_address_share_intent" tools:ignore="UnusedResources" a8c-src-lib="module:login">콘텐츠를 공유하려는 워드프레스 사이트의 주소를 입력하세요.</string>
+    <string name="login_log_in_for_share_intent" a8c-src-lib="module:login">콘텐츠를 공유하려면 워드프레스닷컴에 로그인하세요.</string>
+    <string name="enter_site_address_share_intent" a8c-src-lib="module:login">콘텐츠를 공유하려는 워드프레스 사이트의 주소를 입력하세요.</string>
     <string name="jetpack_disconnect_error_toast">사이트 연결 해제 중 오류 발생</string>
     <string name="jetpack_disconnect_success_toast">사이트 연결이 해제됨</string>
     <string name="jetpack_disconnect_confirm">연결 해제</string>
@@ -3249,35 +2715,33 @@ Language: ko_KR
     <string name="login_epilogue_mysites_other">내 사이트</string>
     <string name="login_epilogue_mysites_one">내 사이트</string>
     <string name="login_email_client_not_found">이메일 클라이언트 앱을 감지할 수 없습니다.</string>
-    <string name="login_empty_2fa" tools:ignore="UnusedResources" a8c-src-lib="module:login">확인 코드를 입력하세요.</string>
-    <string name="login_empty_username" tools:ignore="UnusedResources" a8c-src-lib="module:login">사용자명을 입력하세요.</string>
-    <string name="login_log_in_for_deeplink" tools:ignore="UnusedResources" a8c-src-lib="module:login">글에 액세스하려면 워드프레스닷컴에 로그인하세요.</string>
-    <string name="login_error_while_adding_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">사이트를 추가하는 동안 오류가 발생했습니다. 에러 코드: %s</string>
-    <string name="login_checking_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">사이트 주소 확인 중</string>
-    <string name="login_site_address_more_help" tools:ignore="UnusedResources" a8c-src-lib="module:login">더 많은 도움이 필요하세요?</string>
-    <string name="login_site_address_help_content" tools:ignore="UnusedResources" a8c-src-lib="module:login">Chrome에서 사이트를 방문할 때 화면 위쪽의 표시줄에 사이트 주소가 표시됩니다.</string>
-    <string name="login_site_address_help_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">내 사이트 주소는 무엇인가요?</string>
-    <string name="login_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">사이트 주소</string>
-    <string name="enter_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">연결하려는 워드프레스 사이트의 주소를 입력하세요.</string>
+    <string name="login_empty_2fa" a8c-src-lib="module:login">확인 코드를 입력하세요.</string>
+    <string name="login_empty_username" a8c-src-lib="module:login">사용자명을 입력하세요.</string>
+    <string name="login_log_in_for_deeplink" a8c-src-lib="module:login">글에 액세스하려면 워드프레스닷컴에 로그인하세요.</string>
+    <string name="login_error_while_adding_site" a8c-src-lib="module:login">사이트를 추가하는 동안 오류가 발생했습니다. 에러 코드: %s</string>
+    <string name="login_checking_site_address" a8c-src-lib="module:login">사이트 주소 확인 중</string>
+    <string name="login_site_address_more_help" a8c-src-lib="module:login">더 많은 도움이 필요하세요?</string>
+    <string name="login_site_address_help_content" a8c-src-lib="module:login">Chrome에서 사이트를 방문할 때 화면 위쪽의 표시줄에 사이트 주소가 표시됩니다.</string>
+    <string name="login_site_address_help_title" a8c-src-lib="module:login">내 사이트 주소는 무엇인가요?</string>
+    <string name="login_site_address" a8c-src-lib="module:login">사이트 주소</string>
+    <string name="enter_site_address" a8c-src-lib="module:login">연결하려는 워드프레스 사이트의 주소를 입력하세요.</string>
     <string name="login_already_logged_in_wpcom">워드프레스닷컴에 이미 로그인되어 있습니다.</string>
-    <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="module:login">계속</string>
+    <string name="login_continue" a8c-src-lib="module:login">계속</string>
     <string name="connect_more">다른 사이트 연결하기</string>
-    <string name="enter_wpcom_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">워드프레스닷컴 비밀번호를 입력합니다.</string>
-    <string name="login_magic_link_email_requesting" tools:ignore="UnusedResources" a8c-src-lib="module:login">로그인 이메일 요청 중</string>
-    <string name="password_incorrect" tools:ignore="UnusedResources" a8c-src-lib="module:login">이 비밀번호가 올바르지 않은 것 같습니다. 정보를 확인하고 다시 시도하세요.</string>
-    <string name="requesting_otp" tools:ignore="UnusedResources" a8c-src-lib="module:login">SMS를 통해 확인 코드를 요청 중입니다.</string>
-    <string name="login_text_otp" tools:ignore="UnusedResources" a8c-src-lib="module:login">대신 코드를 문자로 받기</string>
-    <string name="enter_verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">마무리 단계입니다! 인증 앱의 워드프레스닷컴 확인 코드를 입력하세요.</string>
-    <string name="open_mail" tools:ignore="UnusedResources" a8c-src-lib="module:login">메일 열기</string>
+    <string name="enter_wpcom_password" a8c-src-lib="module:login">워드프레스닷컴 비밀번호를 입력합니다.</string>
+    <string name="login_magic_link_email_requesting" a8c-src-lib="module:login">로그인 이메일 요청 중</string>
+    <string name="password_incorrect" a8c-src-lib="module:login">이 비밀번호가 올바르지 않은 것 같습니다. 정보를 확인하고 다시 시도하세요.</string>
+    <string name="requesting_otp" a8c-src-lib="module:login">SMS를 통해 확인 코드를 요청 중입니다.</string>
+    <string name="login_text_otp" a8c-src-lib="module:login">대신 코드를 문자로 받기</string>
+    <string name="enter_verification_code" a8c-src-lib="module:login">마무리 단계입니다! 인증 앱의 워드프레스닷컴 확인 코드를 입력하세요.</string>
     <string name="next">다음</string>
-    <string name="enter_email_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="module:login">이메일 주소를 입력하여 워드프레스닷컴에 로그인하고 회원님의 모든 WordPress 사이트를 관리하세요.</string>
+    <string name="enter_email_wordpress_com" a8c-src-lib="module:login">이메일 주소를 입력하여 워드프레스닷컴에 로그인하고 회원님의 모든 WordPress 사이트를 관리하세요.</string>
     <string name="me_profile_photo">프로필 사진</string>
     <string name="error_media_parse_error">서버에서 예기치 않은 응답을 받았습니다</string>
     <string name="upload_finished_toast">업로드가 이미 완료되었기 때문에 업로드를 중지할 수 있습니다</string>
     <string name="post_title">제목</string>
     <string name="menu_redo">다시하기</string>
     <string name="menu_undo">실행 취소</string>
-    <string name="media_insert_unimplemented" tools:ignore="UnusedResources" a8c-src-lib="module:editor">죄송합니다! 기능이 아직 구현되지 않았습니다.</string>
     <string name="error_media_small">미디어가 너무 작아서 표시할 수 없습니다</string>
     <string name="editor_dropped_unsupported_files">경고: 삭제된 항목이 모두 지원되는 것은 아닙니다!</string>
     <string name="editor_dropped_title_images_not_allowed">제목에서 이미지를 삭제할 수 없습니다</string>
@@ -3375,7 +2839,6 @@ Language: ko_KR
     <string name="editor_draft_saved_online">임시글을 온라인으로 저장했습니다.</string>
     <string name="editor_post_saved_locally">장치에 글을 저장했습니다.</string>
     <string name="button_sync">동기화</string>
-    <string name="smart_toast_comments_long_press">길게 눌러 여러 댓글 선택</string>
     <string name="photo_picker_choose_video">기기에서 비디오 선택</string>
     <string name="photo_picker_choose_photo">기기에서 사진 선택</string>
     <string name="wp_media_title">워드프레스 미디어</string>
@@ -3422,8 +2885,8 @@ Language: ko_KR
     <string name="error_unknown_post_type">알 수 없는 글 형식입니다.</string>
     <string name="submit_for_review">제출하기</string>
     <string name="title_subscriber">구독자</string>
-    <string name="duplicate_site_detected" tools:ignore="UnusedResources" a8c-src-lib="module:login">중복 사이트가 감지되었습니다.</string>
-    <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">이 사이트가 이미 앱에 있으므로, 추가할 수 없습니다.</string>
+    <string name="duplicate_site_detected" a8c-src-lib="module:login">중복 사이트가 감지되었습니다.</string>
+    <string name="cannot_add_duplicate_site" a8c-src-lib="module:login">이 사이트가 이미 앱에 있으므로, 추가할 수 없습니다.</string>
     <string name="already_logged_in_wpcom">이미 워드프레스닷컴 계정에 로그인되어 있으므로 다른 계정에 연결된 워드프레스닷컴 사이트를 추가할 수 없습니다.</string>
     <string name="error_media_load">미디어를 로드할 수 없음</string>
     <string name="error_media_refresh_no_connection">라이브러리를 새로 고치려면 연결해야 함</string>
@@ -3432,11 +2895,10 @@ Language: ko_KR
     <string name="error_media_insufficient_fs_permissions">미디어 파일에 대한 읽기 권한이 필요함</string>
     <string name="site_settings_optimize_images">이미지 최적화</string>
     <string name="media_generic_error">미디어 오류가 발생했습니다.</string>
-    <string name="media_upload_error">미디어 업로드 오류가 발생했습니다.</string>
     <string name="retry">다시 시도</string>
     <string name="confirm">확인</string>
-    <string name="xmlrpc_endpoint_forbidden_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">연결할 수 없습니다. 사이트\n XMLRPC 엔드포인트에 액세스를 시도할 때 403 오류가 발생했습니다. 사이트와 통신하려면 이 앱에 필요합니다. 호스트에 문의하여\n 이 문제를 해결하세요.</string>
-    <string name="xmlrpc_post_blocked_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">연결할 수 없습니다. 호스트가 POST 요청을 차단하고 있으므로, 사이트와 통신하려면 이 앱에\n 필요합니다. 호스트에 문의하여 이 문제를 해결하세요.</string>
+    <string name="xmlrpc_endpoint_forbidden_error" a8c-src-lib="module:login">연결할 수 없습니다. 사이트\n XMLRPC 엔드포인트에 액세스를 시도할 때 403 오류가 발생했습니다. 사이트와 통신하려면 이 앱에 필요합니다. 호스트에 문의하여\n 이 문제를 해결하세요.</string>
+    <string name="xmlrpc_post_blocked_error" a8c-src-lib="module:login">연결할 수 없습니다. 호스트가 POST 요청을 차단하고 있으므로, 사이트와 통신하려면 이 앱에\n 필요합니다. 호스트에 문의하여 이 문제를 해결하세요.</string>
     <string name="pending_draft_one_generic">중단된 상태로 두지 마세요! \'%1$s\'이(가) 발행될 때까지 기다리는 중입니다.</string>
     <string name="pending_draft_one_month">중단된 상태로 두지 마세요! \'%1$s\'이(가) 발행될 때까지 기다리는 중입니다.</string>
     <string name="pending_draft_one_week_2">\'%1$s\'이(가) 임시글로 남아 있습니다. 발행하는 것을 잊지 마세요!</string>
@@ -3474,9 +2936,7 @@ Language: ko_KR
     <string name="invite_username_not_found">%s: 사용자가 없습니다.</string>
     <string name="comment_moderated_approved">댓글이 수락됨</string>
     <string name="like">좋아함.</string>
-    <string name="timespan_now" tools:ignore="UnusedResources">지금</string>
     <string name="role_viewer">독자</string>
-    <string name="error_post_my_profile_no_connection">인터넷에 연결되어 있지 않아 프로필을 저장할 수 없습니다.</string>
     <string name="alignment_right">오른쪽</string>
     <string name="alignment_left">왼쪽</string>
     <string name="alignment_none">없음</string>
@@ -3491,19 +2951,9 @@ Language: ko_KR
     <string name="follower_subscribed_since">%1$s 이후</string>
     <string name="error_remove_viewer">방문자를 제거할 수 없습니다.</string>
     <string name="editor_failed_uploads_switch_html">일부 미디어 업로드에 실패했습니다. 이 상태에서는 HTML 모드로 전환할 수\n 없습니다. 실패한 업로드를 모두 제거하고 계속할까요?</string>
-    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">이미지 썸네일</string>
-    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">비주얼 편집기</string>
-    <string name="image_width">가로</string>
-    <string name="image_link_to">링크 연결 대상:</string>
-    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">대체 텍스트</string>
-    <string name="image_caption">캡션</string>
-    <string name="image_settings_save_toast">변경사항 저장됨</string>
-    <string name="image_settings_dismiss_dialog_title">저장되지 않은 변경 사항을 취소할까요?</string>
     <string name="stop_upload_dialog_title">업로드를 중지할까요?</string>
-    <string name="alert_error_adding_media" tools:ignore="UnusedResources" a8c-src-lib="module:editor">미디어를 삽입하는 동안 오류가 발생했습니다.</string>
-    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">미디어를 업로드 중입니다. 완료될 때까지 기다려 주세요.</string>
-    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">HTML 모드에서 직접 미디어를 삽입할 수 없습니다. 비주얼 모드로 전환하세요.</string>
-    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">갤러리 업데이트 중…</string>
+    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">미디어를 업로드 중입니다. 완료될 때까지 기다려 주세요.</string>
+    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">HTML 모드에서 직접 미디어를 삽입할 수 없습니다. 비주얼 모드로 전환하세요.</string>
     <string name="tap_to_try_again">눌러서 다시 시도하세요!</string>
     <string name="invite_sent">초대를 전송했습니다.</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -3515,7 +2965,6 @@ Language: ko_KR
     <string name="invite_message_title">사용자 정의 메시지</string>
     <string name="invite">초대</string>
     <string name="invite_names_title">사용자명 또는 이메일</string>
-    <string name="my_site_header_external">외부</string>
     <string name="label_clear_search_history">검색 내역 지우기</string>
     <string name="dlg_confirm_clear_search_history">검색 내역을 지울까요?</string>
     <string name="reader_empty_search_description">사용자 언어로 된 %s에 대한 글을 찾을 수 없습니다.</string>
@@ -3534,11 +2983,10 @@ Language: ko_KR
     <string name="error_refreshing_gravatar">Gravatar를 다시 로드하는 중 오류가 발생했습니다.</string>
     <string name="error_locating_image">잘린 이미지를 찾는 중 오류가 발생했습니다.</string>
     <string name="error_cropping_image">이미지를 자르는 중 오류가 발생했습니다.</string>
-    <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">이메일 확인 중</string>
-    <string name="magic_link_unavailable_error_message" tools:ignore="UnusedResources" a8c-src-lib="module:login">현재 사용할 수 없습니다. 비밀번호를 입력하세요.</string>
+    <string name="checking_email" a8c-src-lib="module:login">이메일 확인 중</string>
+    <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">현재 사용할 수 없습니다. 비밀번호를 입력하세요.</string>
     <string name="logging_in">로그인 중</string>
     <string name="web_address_dialog_hint">댓글을 달 때 공개적으로 표시합니다.</string>
-    <string name="capture_or_pick_photo">사진 캡처 또는 선택</string>
     <string name="plans">계획</string>
     <string name="plan">계획</string>
     <string name="export_your_content_message">글, 페이지, 설정을 %s로 발송할 것입니다.</string>
@@ -3571,7 +3019,7 @@ Language: ko_KR
     <string name="comments_empty_list_filtered_pending">대기중인 댓글 없음</string>
     <string name="comments_empty_list_filtered_approved">승인한 댓글 없음</string>
     <string name="button_skip">넘어가기</string>
-    <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">연결할 수 없습니다. 필수 XML-RPC 함수가 서버에 없습니다.</string>
+    <string name="xmlrpc_missing_method_error" a8c-src-lib="module:login">연결할 수 없습니다. 필수 XML-RPC 함수가 서버에 없습니다.</string>
     <string name="alignment_center">가운데</string>
     <string name="post_format_video">비디오</string>
     <string name="post_format_status">상태</string>
@@ -3631,7 +3079,7 @@ Language: ko_KR
     <string name="about_the_app">앱 정보</string>
     <string name="error_post_account_settings">계정 설정을 저장할 수 없습니다.</string>
     <string name="error_fetch_account_settings">계정 설정을 검색할 수 없습니다.</string>
-    <string name="error_fetch_my_profile" tools:ignore="UnusedResources" a8c-src-lib="module:login">프로필을 검색할 수 없습니다.</string>
+    <string name="error_fetch_my_profile" a8c-src-lib="module:login">프로필을 검색할 수 없습니다.</string>
     <string name="site_settings_unknown_language_code_error">언어 코드가 인식되지 않음</string>
     <string name="site_settings_threading_dialog_description">스레드에서 댓글이 계층화되도록 허용합니다.</string>
     <string name="site_settings_threading_dialog_header">최대 스레드</string>
@@ -3811,28 +3259,18 @@ Language: ko_KR
     <string name="me_connect_to_wordpress_com">WordPress.com에 로그인</string>
     <string name="me_btn_login_logout">로그인/로그아웃</string>
     <string name="account_settings">계정 설정</string>
-    <string name="site_picker_cant_hide_current_site">\"%s\"은(는) 현재 사이트이기 때문에 숨길 수 없습니다.</string>
     <string name="site_picker_create_wpcom">워드프레스닷컴 사이트 생성</string>
     <string name="site_picker_add_self_hosted">독립 호스트 사이트 추가</string>
     <string name="site_picker_add_a_site">사이트 추가</string>
-    <string name="site_picker_edit_visibility">사이트 표시/숨기기</string>
     <string name="site_picker_title">사이트 선택</string>
-    <string name="my_site_btn_view_site">사이트 보기</string>
-    <string name="my_site_btn_view_admin">관리자 보기</string>
     <string name="my_site_btn_switch_site">사이트 전환</string>
     <string name="my_site_btn_site_settings">사이트 설정</string>
     <string name="my_site_btn_blog_posts">글</string>
-    <string name="my_site_header_publish">게시</string>
-    <string name="my_site_header_look_and_feel">모양과 느낌</string>
-    <string name="my_site_header_configuration">설정</string>
     <string name="reader_label_new_posts_subtitle">눌러서 표시</string>
-    <string name="deselect_all">모두 선택 해제</string>
     <string name="select_all">모두 선택</string>
-    <string name="hide">숨기기</string>
-    <string name="show">표시</string>
-    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">계속하려면 다시 로그인하세요.</string>
-    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">잘못된 확인 코드</string>
-    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">확인 코드</string>
+    <string name="auth_required" a8c-src-lib="module:login">계속하려면 다시 로그인하세요.</string>
+    <string name="invalid_verification_code" a8c-src-lib="module:login">잘못된 확인 코드</string>
+    <string name="verification_code" a8c-src-lib="module:login">확인 코드</string>
     <string name="language">언어</string>
     <string name="reader_empty_posts_request_failed">글을 가져올 수 없음</string>
     <string name="error_notification_open">알림을 열 수 없음</string>
@@ -3896,7 +3334,7 @@ Language: ko_KR
     <string name="ssl_certificate_error">잘못된 SSL 인증서</string>
     <string name="help">도우미</string>
     <string name="username_or_password_incorrect">입력된 사용자 이름이나 암호가 잘못되었습니다.</string>
-    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="module:login">유효한 이메일 주소를 입력 하십시오.</string>
+    <string name="email_invalid" a8c-src-lib="module:login">유효한 이메일 주소를 입력 하십시오.</string>
     <string name="invalid_email_message">잘못된 이메일 주소입니다.</string>
     <string name="error_downloading_image">이미지를 다운로드하는 중에 오류가 발생했습니다. 다시 시도하십시오.</string>
     <string name="error_load_comment">코멘트 를 로드 할 수 없습니다. 다시 시도 하십시오.</string>
@@ -3904,7 +3342,7 @@ Language: ko_KR
     <string name="error_moderate_comment">진행중에 에러가 발생했습니다.</string>
     <string name="error_generic">오류가 발생 했습니다. 나중에 다시 시도 하십시오.</string>
     <string name="error_refresh_comments">댓글을 다시로드 할 수 없습니다 .</string>
-    <string name="error_refresh_pages" tools:ignore="UnusedResources">고정 페이지를 다시로드 할 수 없습니다.</string>
+    <string name="error_refresh_pages">고정 페이지를 다시로드 할 수 없습니다.</string>
     <string name="error_refresh_posts">게시물을 다시로드 할 수 없습니다.</string>
     <string name="error_deleting_post">를 삭제하는 동안 에러가 발생했습니다.</string>
     <string name="notifications_empty_list">알림이 없습니다.</string>
@@ -3923,12 +3361,11 @@ Language: ko_KR
     <string name="fatal_db_error">앱 데이터베이스를 생성하는 동안 에러가 발생했습니다. 앱을 다시 설치하시기 바랍니다.</string>
     <string name="error_refresh_media">현재 미디어를 새로 고칠 수 없습니다</string>
     <string name="wordpress_blog">WordPress 블로그</string>
-    <string name="image_settings">이미지 설정</string>
     <string name="local_changes">로컬 변경</string>
     <string name="new_media">새 미디어</string>
     <string name="new_post">새 게시물</string>
     <string name="notifications_empty_all">알림이 없습니다.</string>
-    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">인증이 필요합니다</string>
+    <string name="http_authorization_required" a8c-src-lib="module:login">인증이 필요합니다</string>
     <string name="invalid_site_url_message">입력한 사이트 URL이 올바른지 확인합니다.</string>
     <string name="file_error_create">미디어 업로드시에 임시 파일을 만들 수 없습니다 . 장치에 여유 공간이 있는지 확인 하십시오.</string>
     <string name="category_name">카테고리 이름</string>
@@ -3951,10 +3388,9 @@ Language: ko_KR
     <string name="delete_post">게시물 삭제</string>
     <string name="post_settings">작성 설정</string>
     <string name="file_not_found">올라간 미디어 파일을 찾을 수 없습니다. 삭제 또는 이동 된 것 같습니다.</string>
-    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">가로</string>
+    <string name="horizontal_alignment" a8c-src-lib="module:editor">가로</string>
     <string name="local_draft">로컬 초안</string>
     <string name="page_settings">페이지 설정</string>
-    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">링크 만들기</string>
     <string name="link_enter_url_text">링크 텍스트(옵션) :</string>
     <string name="cannot_delete_multi_media_items">일부 미디어를 다시로드 할 수 없습니다. 나중에 다시 시도하십시오.</string>
     <string name="media_error_no_permission">미디어 라이브러리를 볼 수 있는 권한이 없습니다</string>
@@ -3974,7 +3410,7 @@ Language: ko_KR
     <string name="reader_likes_you_and_one">당신과 다른 1명이 \"좋아요\"를 눌렀습니다.</string>
     <string name="pick_video">동영상을 선택</string>
     <string name="pick_photo">이미지를 선택</string>
-    <string name="sign_up_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">가입</string>
+    <string name="sign_up_label" a8c-src-lib="module:login">가입</string>
     <string name="reader_toast_err_url_intent">%s를 열 수 없습니다</string>
     <string name="reader_toast_err_view_image">이미지를 표시 할 수 없습니다</string>
     <string name="reader_toast_err_share_intent">공유에 실패</string>
@@ -3982,7 +3418,6 @@ Language: ko_KR
     <string name="reader_toast_err_comment_failed">의견을 게시 할 수 없습니다</string>
     <string name="reader_likes_only_you">\"좋아요\"를 클릭 했습니다</string>
     <string name="reader_likes_one">1명이 \"좋아요\"를 달았습니다</string>
-    <string name="reader_label_removed_tag">%s를 제거</string>
     <string name="reader_label_added_tag">%s를 추가</string>
     <string name="reader_hint_comment_on_comment">답변 달기</string>
     <string name="reader_btn_follow">팔로우</string>
@@ -4018,18 +3453,18 @@ Language: ko_KR
     <string name="note_reply_successful">답장을 공개했습니다</string>
     <string name="sign_in">로그인</string>
     <string name="loading">로드 중입니다…</string>
-    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="module:login">HTTP 암호</string>
-    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="module:login">HTTP 사용자 이름</string>
+    <string name="httppassword" a8c-src-lib="module:login">HTTP 암호</string>
+    <string name="httpuser" a8c-src-lib="module:login">HTTP 사용자 이름</string>
     <string name="error_media_upload">미디어를 업로드할때 오류가 발생했습니다</string>
     <string name="incorrect_credentials">사용자 이름이나 암호가 올바르지 않습니다 .</string>
-    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="module:login">로그인</string>
+    <string name="log_in" a8c-src-lib="module:login">로그인</string>
     <string name="username">사용자 이름</string>
     <string name="password">암호</string>
     <string name="reader">리더</string>
-    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">게시물 본문에 이미지를 포함</string>
-    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">같은 기능을 갖춘 이미지를 사용</string>
-    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">가로</string>
-    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">캡션(옵션)</string>
+    <string name="featured_in_post" a8c-src-lib="module:editor">게시물 본문에 이미지를 포함</string>
+    <string name="featured" a8c-src-lib="module:editor">같은 기능을 갖춘 이미지를 사용</string>
+    <string name="width" a8c-src-lib="module:editor">가로</string>
+    <string name="caption" a8c-src-lib="module:editor">캡션(옵션)</string>
     <string name="pages">페이지</string>
     <string name="posts">작성</string>
     <string name="anonymous">익명</string>
@@ -4037,7 +3472,7 @@ Language: ko_KR
     <string name="done">완료</string>
     <string name="ok">확인</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">업로드 중…</string>
+    <string name="uploading" a8c-src-lib="module:editor">업로드 중…</string>
     <string name="image_alignment">배치</string>
     <string name="refresh">다시 로드</string>
     <string name="untitled">제목 미설정</string>
