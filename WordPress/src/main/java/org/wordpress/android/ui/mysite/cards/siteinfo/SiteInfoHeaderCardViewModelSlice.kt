@@ -27,7 +27,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment
+import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.FluxCUtilsWrapper
@@ -244,9 +244,8 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
         }
     }
 
-    @Suppress("DEPRECATION")
-    fun handleTakenSiteIcon(iconUrl: String?, source: PhotoPickerFragment.PhotoPickerMediaSource?) {
-        val stat = if (source == PhotoPickerFragment.PhotoPickerMediaSource.ANDROID_CAMERA) {
+    fun handleTakenSiteIcon(iconUrl: String?, source: MediaPickerActivity.MediaPickerMediaSource?) {
+        val stat = if (source == MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA) {
             AnalyticsTracker.Stat.MY_SITE_ICON_SHOT_NEW
         } else {
             AnalyticsTracker.Stat.MY_SITE_ICON_GALLERY_PICKED

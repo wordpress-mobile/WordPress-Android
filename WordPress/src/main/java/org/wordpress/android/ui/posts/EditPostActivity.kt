@@ -140,10 +140,12 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.media.MediaSettingsActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerListener
 import org.wordpress.android.ui.posts.EditPostCustomerSupportHelper.onContactCustomerSupport
 import org.wordpress.android.ui.posts.EditPostCustomerSupportHelper.onGotoCustomerSupportOptions
 import org.wordpress.android.ui.posts.EditPostPublishSettingsFragment.Companion.newInstance
@@ -267,9 +269,10 @@ private const val VIEW_PAGER_OFFSCREEN_PAGE_LIMIT = 4
 @Suppress("LargeClass")
 class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
-    ActivityCompat.OnRequestPermissionsResultCallback, PhotoPickerListener, EditorPhotoPickerListener,
-    EditorMediaListener, EditPostSettingsFragment.EditorDataProvider, HistoryItemClickInterface,
-    PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger, SiteSettingsListener {
+    ActivityCompat.OnRequestPermissionsResultCallback, MediaPickerFragment.MediaPickerListener,
+    EditorPhotoPickerListener, EditorMediaListener, EditPostSettingsFragment.EditorDataProvider,
+    HistoryItemClickInterface, PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger,
+    SiteSettingsListener {
     // External Access to the Image Loader
     var aztecImageLoader: AztecImageLoader? = null
 
@@ -1458,60 +1461,87 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     /*
-     * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
+     * called by MediaPickerFragment when media is selected - may be a single item or a list of items
      */
-    override fun onPhotoPickerMediaChosen(uriList: List<Uri>) {
+    override fun onItemsChosen(identifiers: List<Identifier>) {
         editorPhotoPicker?.hidePhotoPicker()
-        editorMedia.addNewMediaItemsToEditorAsync(uriList, false)
+        val uriList = identifiers.mapNotNull { identifier ->
+            when (identifier) {
+                is Identifier.LocalUri -> identifier.value.uri
+                is Identifier.GifMediaIdentifier -> identifier.largeImageUri.uri
+                else -> null
+            }
+        }
+        if (uriList.isNotEmpty()) {
+            editorMedia.addNewMediaItemsToEditorAsync(uriList, false)
+        }
     }
 
     /*
-     * called by PhotoPickerFragment when user clicks an icon to launch the camera, native
+     * called by MediaPickerFragment when user clicks an icon to launch the camera, native
      * picker, or WP media picker
      */
-    override fun onPhotoPickerIconClicked(icon: PhotoPickerIcon, allowMultipleSelection: Boolean) {
+    override fun onIconClicked(action: MediaPickerAction) {
         editorPhotoPicker?.hidePhotoPicker()
-        if (!icon.requiresUploadPermission() || WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
-            editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
-            when (icon) {
-                PhotoPickerIcon.ANDROID_CAPTURE_PHOTO -> launchCamera()
-                PhotoPickerIcon.ANDROID_CAPTURE_VIDEO -> launchVideoCamera()
-                PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO -> WPMediaUtils.launchMediaLibrary(
-                    this,
-                    allowMultipleSelection
-                )
-
-                PhotoPickerIcon.ANDROID_CHOOSE_PHOTO -> launchPictureLibrary()
-                PhotoPickerIcon.ANDROID_CHOOSE_VIDEO -> launchVideoLibrary()
-                PhotoPickerIcon.WP_MEDIA -> mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
-                    this,
-                    siteModel, MediaBrowserType.EDITOR_PICKER
-                )
-
-                PhotoPickerIcon.STOCK_MEDIA -> {
-                    val requestCode =
-                        if (allowMultipleSelection) RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT
-                        else RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK
-                    mediaPickerLauncher.showStockMediaPickerForResult(
-                        this,
-                        siteModel,
-                        requestCode,
-                        allowMultipleSelection
-                    )
+        when (action) {
+            is MediaPickerAction.OpenCameraForPhotos -> {
+                if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
+                    launchCamera()
+                } else {
+                    showNoUploadPermissionSnackbar()
                 }
-
-                PhotoPickerIcon.GIF -> mediaPickerLauncher.showGifPickerForResult(
-                    this,
-                    siteModel,
-                    allowMultipleSelection
-                )
             }
-        } else {
-            make(
-                findViewById(R.id.editor_activity), R.string.media_error_no_permission_upload,
-                Snackbar.LENGTH_SHORT
-            ).show()
+            is MediaPickerAction.OpenSystemPicker -> {
+                if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
+                    editorPhotoPicker?.allowMultipleSelection = action.allowMultipleSelection
+                    WPMediaUtils.launchMediaLibrary(this, action.allowMultipleSelection)
+                } else {
+                    showNoUploadPermissionSnackbar()
+                }
+            }
+            is MediaPickerAction.SwitchMediaPicker -> {
+                // Handle switching to different data sources (WP Media, Stock, GIF)
+                val setup = action.mediaPickerSetup
+                when (setup.primaryDataSource) {
+                    MediaPickerSetup.DataSource.WP_LIBRARY -> {
+                        mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
+                            this,
+                            siteModel,
+                            MediaBrowserType.EDITOR_PICKER
+                        )
+                    }
+                    MediaPickerSetup.DataSource.STOCK_LIBRARY -> {
+                        val requestCode = if (setup.canMultiselect) {
+                            RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT
+                        } else {
+                            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK
+                        }
+                        mediaPickerLauncher.showStockMediaPickerForResult(
+                            this,
+                            siteModel,
+                            requestCode,
+                            setup.canMultiselect
+                        )
+                    }
+                    MediaPickerSetup.DataSource.GIF_LIBRARY -> {
+                        mediaPickerLauncher.showGifPickerForResult(
+                            this,
+                            siteModel,
+                            setup.canMultiselect
+                        )
+                    }
+                    else -> { /* Device is handled by OpenSystemPicker */ }
+                }
+            }
         }
+    }
+
+    private fun showNoUploadPermissionSnackbar() {
+        make(
+            findViewById(R.id.editor_activity),
+            R.string.media_error_no_permission_upload,
+            Snackbar.LENGTH_SHORT
+        ).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -3296,7 +3326,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onCapturePhotoClicked() {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO, false)
+        if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
+            launchCamera()
+        } else {
+            showNoUploadPermissionSnackbar()
+        }
     }
 
     override fun onAddVideoClicked(allowMultipleSelection: Boolean) {
@@ -3328,11 +3362,21 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onAddStockMediaClicked(allowMultipleSelection: Boolean) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.STOCK_MEDIA, allowMultipleSelection)
+        val requestCode = if (allowMultipleSelection) {
+            RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT
+        } else {
+            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK
+        }
+        mediaPickerLauncher.showStockMediaPickerForResult(
+            this,
+            siteModel,
+            requestCode,
+            allowMultipleSelection
+        )
     }
 
     override fun onAddGifClicked(allowMultipleSelection: Boolean) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.GIF, allowMultipleSelection)
+        mediaPickerLauncher.showGifPickerForResult(this, siteModel, allowMultipleSelection)
     }
 
     override fun onAddFileClicked(allowMultipleSelection: Boolean) {
@@ -3362,7 +3406,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onCaptureVideoClicked() {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO, false)
+        if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
+            launchVideoCamera()
+        } else {
+            showNoUploadPermissionSnackbar()
+        }
     }
 
     override fun onMediaDropped(mediaUris: ArrayList<Uri>) {
