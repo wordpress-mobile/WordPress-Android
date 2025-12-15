@@ -6,7 +6,7 @@ Generator: GlotPress/4.0.3
 Language: da_DK
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="signup_magic_link_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">Magisk link sendt</string>
+    <string name="signup_magic_link_title" a8c-src-lib="module:login">Magisk link sendt</string>
     <string name="error_media_save">Kunne ikke gemme medie</string>
     <string name="editor_draft_saved_locally">Kladde gemt på enheden</string>
     <string name="editor_draft_saved_online">Kladde gemt online</string>
@@ -29,7 +29,6 @@ Language: da_DK
     <string name="sign_in_wpcom">Log ind i WordPress.com</string>
     <string name="reader_label_local_related_posts">Mere fra %s</string>
     <string name="invite_invalid_email">%s: ugyldig e-mail</string>
-    <string name="error_post_my_profile_no_connection">Der er ingen forbindelse, din profil kunne ikke gemmes</string>
     <string name="alignment_left">Venstre</string>
     <string name="error_fetch_users_list">Kunne ikke hente sidens brugere</string>
     <string name="people_dropdown_item_team">Hold</string>
@@ -83,28 +82,18 @@ Language: da_DK
     <string name="me_connect_to_wordpress_com">Forbind til WordPress.com</string>
     <string name="me_btn_login_logout">Log ind/ud</string>
     <string name="account_settings">Kontoindstillinger</string>
-    <string name="site_picker_cant_hide_current_site">\"%s\" blev ikke skjult, fordi det er det aktuelle websted</string>
     <string name="site_picker_create_wpcom">Opret WordPress.com websted</string>
-    <string name="site_picker_edit_visibility">Vis/skjul websteder</string>
     <string name="site_picker_add_self_hosted">Tilføj websted fra egen udbyder</string>
     <string name="site_picker_add_a_site">Tilføj nyt websted</string>
-    <string name="my_site_btn_view_site">Vis websted</string>
     <string name="site_picker_title">Vælg websted</string>
     <string name="my_site_btn_switch_site">Skift websted</string>
-    <string name="my_site_btn_view_admin">Vis administration</string>
-    <string name="my_site_header_publish">Udgiv</string>
     <string name="my_site_btn_blog_posts">Blogindlæg</string>
-    <string name="my_site_header_look_and_feel">Udseende</string>
     <string name="my_site_btn_site_settings">Webstedsindstillinger</string>
-    <string name="my_site_header_configuration">Konfiguration</string>
-    <string name="deselect_all">Fravælg alle</string>
-    <string name="show">Vis</string>
-    <string name="hide">Skjul</string>
     <string name="select_all">Vælg alle</string>
     <string name="language">Sprog</string>
-    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Log ind igen for at fortsætte.</string>
-    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Godkendelseskode</string>
-    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Ugyldig godkendelseskode</string>
+    <string name="auth_required" a8c-src-lib="module:login">Log ind igen for at fortsætte.</string>
+    <string name="verification_code" a8c-src-lib="module:login">Godkendelseskode</string>
+    <string name="invalid_verification_code" a8c-src-lib="module:login">Ugyldig godkendelseskode</string>
     <string name="reader_empty_posts_request_failed">Kunne ikke hente indlæg</string>
     <string name="stats_view_authors">Forfattere</string>
     <string name="stats_view_search_terms">Søgeord</string>
@@ -173,10 +162,10 @@ Language: da_DK
     <string name="error_generic">Der opstod en fejl</string>
     <string name="blog_not_found">Der skete en fejl ved tilgangen til denne blog</string>
     <string name="error_refresh_comments">Kommentarer kunne ikke genindlæses</string>
-    <string name="error_refresh_pages" tools:ignore="UnusedResources">Sider kunne ikke genindlæses</string>
+    <string name="error_refresh_pages">Sider kunne ikke genindlæses</string>
     <string name="error_refresh_posts">Indlæg kunne ikke genindlæses </string>
     <string name="invalid_email_message">Din e-mailadresse er ikke gyldig</string>
-    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="module:login">Indtast en gyldig e-mailadresse</string>
+    <string name="email_invalid" a8c-src-lib="module:login">Indtast en gyldig e-mailadresse</string>
     <string name="theme_fetch_failed">Det lykkedes ikke at hente temaer</string>
     <string name="sdcard_message">Et SD-kort skal være stukket ind og tilgængeligt for at kunne uploade medier</string>
     <string name="gallery_error">Mediet kunne ikke hentes</string>
@@ -186,7 +175,6 @@ Language: da_DK
     <string name="error_moderate_comment">Kunne ikke moderere</string>
     <string name="error_edit_comment">Kunne ikke redigere kommentaren</string>
     <string name="error_load_comment">Kunne ikke loade kommentaren</string>
-    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Opret et link</string>
     <string name="select_categories">Vælg kategorier</string>
     <string name="connection_error">Forbindelsesfejl</string>
     <string name="learn_more">Lær mere</string>
@@ -210,13 +198,12 @@ Language: da_DK
     <string name="new_post">Nyt indlæg</string>
     <string name="new_media">Nyt medie</string>
     <string name="wordpress_blog">WordPress-blog</string>
-    <string name="image_settings">Billedeindstillinger</string>
     <string name="local_draft">Lokal kladde</string>
     <string name="reader_title_applog">Applikationslog</string>
-    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vandret justering</string>
+    <string name="horizontal_alignment" a8c-src-lib="module:editor">Vandret justering</string>
     <string name="link_enter_url_text">Linktekst (valgfri)</string>
     <string name="local_changes">Lokale ændringer</string>
-    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Godkendelse påkrævet</string>
+    <string name="http_authorization_required" a8c-src-lib="module:login">Godkendelse påkrævet</string>
     <string name="remove_account">Fjern websted</string>
     <string name="media_error_no_permission">Du har ikke tilladelse til at se mediebiblioteket</string>
     <string name="cannot_delete_multi_media_items">Nogle medier kan ikke slettes på nuværende tidspunkt. Prøv igen senere.</string>
@@ -238,7 +225,6 @@ Language: da_DK
     <string name="reader_btn_share">Del</string>
     <string name="reader_btn_follow">Følg</string>
     <string name="reader_label_added_tag">Tilføjede %s</string>
-    <string name="reader_label_removed_tag">Fjernede %s</string>
     <string name="reader_likes_only_you">Du synes godt om dette</string>
     <string name="empty_list_default">Listen er tom</string>
     <string name="reader_untitled_post">(Ingen titel)</string>
@@ -273,24 +259,24 @@ Language: da_DK
     <string name="new_notifications">%d nye notifikationer</string>
     <string name="note_reply_successful">Svar sendt</string>
     <string name="loading">Indlæser…</string>
-    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="module:login">HTTP-brugernavn</string>
-    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="module:login">HTTP-adgangskode</string>
+    <string name="httpuser" a8c-src-lib="module:login">HTTP-brugernavn</string>
+    <string name="httppassword" a8c-src-lib="module:login">HTTP-adgangskode</string>
     <string name="error_media_upload">Der opstod en fejl under overførsel af medie</string>
     <string name="incorrect_credentials">Forkert brugernavn eller adgangskode.</string>
     <string name="password">Kodeord</string>
     <string name="username">Brugernavn</string>
     <string name="reader">Læser</string>
     <string name="pages">Sider</string>
-    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Bredde</string>
+    <string name="width" a8c-src-lib="module:editor">Bredde</string>
     <string name="posts">Indlæg</string>
     <string name="anonymous">Anonym</string>
     <string name="no_network_title">Intet netværk tilgængeligt</string>
-    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Billedtekst (valgfri)</string>
-    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Brug som fremhævet billede</string>
-    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Inkluder billede i indhold</string>
+    <string name="caption" a8c-src-lib="module:editor">Billedtekst (valgfri)</string>
+    <string name="featured" a8c-src-lib="module:editor">Brug som fremhævet billede</string>
+    <string name="featured_in_post" a8c-src-lib="module:editor">Inkluder billede i indhold</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Uploader</string>
+    <string name="uploading" a8c-src-lib="module:editor">Uploader</string>
     <string name="image_alignment">Justering</string>
     <string name="refresh">Genindlæs</string>
     <string name="untitled">Ikke-navngivet</string>

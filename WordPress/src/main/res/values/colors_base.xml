@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorPrimary">@color/primary</color>
     <color name="colorPrimaryVariant">@color/primary_70</color>
     <color name="colorSecondary">@color/primary</color>
@@ -15,13 +15,8 @@
     <color name="primary_30">@color/blue_30</color>
     <color name="primary_40">@color/blue_40</color>
     <color name="primary_50">@color/blue_50</color>
-    <color name="primary_60">@color/blue_60</color>
     <color name="primary_70">@color/blue_70</color>
-    <color name="primary_80">@color/blue_80</color>
-    <color name="primary_90">@color/blue_90</color>
-    <color name="primary_100">@color/blue_100</color>
     <color name="primary_dark">@color/blue_80</color>
-    <color name="primary_light">@color/blue_30</color>
 
     <color name="nav_bar">@color/colorPrimary</color>
     <color name="tab_indicator">@color/colorPrimary</color>

@@ -65,34 +65,19 @@ Language: hr
     <string name="login_prologue_fifth_tag_one">Umjetnost</string>
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="media_loading_failed">Učitavanje sadržaja nije uspjelo</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources">Dajemo sve od sebe da uz svaku objavu dodajemo nove blokove.</string>
-    <string name="gutenberg_native_help_button" tools:ignore="UnusedResources">Gumb za pomoć</string>
-    <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">Uređujte pomoću web uređivača</string>
-    <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources">Odaberite slike</string>
     <string name="mlp_notice_blank_page_created">Izrađena je prazna stranica</string>
     <string name="mlp_notice_page_created">Stranica kreirana</string>
     <string name="reader_label_toolbar_back">Povratak</string>
     <string name="reader_discover_empty_button_text">Započnite</string>
-    <string name="reader_post_details_header_by_author_name">Od</string>
     <string name="mlp_selected_description">%s odabrano</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="reader_menu_report_post">Prijavi ovaj članak</string>
-    <string name="reader_welcome_banner">Dobrodošli u čitateljicu. Otkrijte milijune blogova na dohvat ruke.</string>
     <string name="error_media_xmlrcp_server_error">Dogodila se interna pogreška poslužitelja</string>
     <string name="error_media_xmlrpc_not_allowed">Vaša radnja nije dopuštena</string>
     <string name="show_n_hidden_items_desc">Još %1$s stavki</string>
-    <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Odaberite raspored</string>
     <string name="create_page_fab_tooltip">Stvorite stranicu</string>
     <string name="create_post_fab_tooltip">Napravite članak</string>
-    <string name="reader_discover_interests_header">Možda ti se sviđa</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Sakriti</string>
-    <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">Video natpis. Prazan</string>
-    <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">Ažurira naslov.</string>
-    <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">Zalijepite blok nakon</string>
-    <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources">Naslov stranice. %s</string>
-    <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources">Naslov stranice. Prazan</string>
-    <string name="toast_error_playing_video" tools:ignore="UnusedResources">Došlo je do pogreške tijekom reprodukcije vašeg videozapisa</string>
-    <string name="camera_error" tools:ignore="UnusedResources">Ovaj uređaj ne podržava API Camera2.</string>
     <string name="label_close_button">Zatvori</string>
     <string name="comment_q_action_replying">Odgovaram …</string>
     <string name="comment_q_action_approving">Odobravam …</string>
@@ -111,9 +96,7 @@ Language: hr
     <string name="invite_already_a_member">%s: Već ste član</string>
     <string name="comment_moderated_approved">Komentar odobren!</string>
     <string name="like">Kao</string>
-    <string name="timespan_now" tools:ignore="UnusedResources">sada</string>
     <string name="role_viewer">Pregledavač</string>
-    <string name="error_post_my_profile_no_connection">Nema internetske veze, nije moguće spremiti vaš profil</string>
     <string name="alignment_none">Ništa</string>
     <string name="alignment_right">Desno</string>
     <string name="alignment_left">Lijevo</string>
@@ -126,19 +109,9 @@ Language: hr
     <string name="follower_subscribed_since">Od %1$s</string>
     <string name="error_remove_viewer">Nije moguće ukloniti pregledavača</string>
     <string name="editor_failed_uploads_switch_html">Neki od medijskih zapisa koje ste prenijeli nisu uspješno preneseni. Trenutačno se ne možete prebaciti na HTML način. Želite li ukloniti sve neuspjele medijske zapise i nastaviti?</string>
-    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vizualni uređivač</string>
-    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Sličica</string>
-    <string name="image_width">Širina</string>
-    <string name="image_link_to">Poveznica za</string>
-    <string name="image_caption">Naslov</string>
-    <string name="image_settings_save_toast">Promijene spremljene.</string>
-    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Alternativni tekst</string>
-    <string name="image_settings_dismiss_dialog_title">Odbaciti spremljene promjene?</string>
     <string name="stop_upload_dialog_title">Zaustaviti prijenos?</string>
-    <string name="alert_error_adding_media" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Došlo je do pogreške tijekom unosa medijskog zapisa</string>
-    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Trenutno prenosite medijske zapise. Pričekajte dok se prijenos ne završi.</string>
-    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nije moguće izravno umetnuti medijske zapise u kodnom HTML uređivaču. Prijeđite na vizualni način rada.</string>
-    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Prijenos galerije …</string>
+    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Trenutno prenosite medijske zapise. Pričekajte dok se prijenos ne završi.</string>
+    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Nije moguće izravno umetnuti medijske zapise u kodnom HTML uređivaču. Prijeđite na vizualni način rada.</string>
     <string name="tap_to_try_again">Dodirnite za ponovni pokušaj!</string>
     <string name="invite_sent">Pozivnica je uspješno poslana</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -150,7 +123,6 @@ Language: hr
     <string name="invite_message_title">Prilagođena poruka</string>
     <string name="invite">Pozovi</string>
     <string name="invite_names_title">Korisnička imena ili adrese e-pošte</string>
-    <string name="my_site_header_external">Vanjski</string>
     <string name="label_clear_search_history">Obriši povijest pretraživanja</string>
     <string name="dlg_confirm_clear_search_history">Očistiti povijest pretraživanja?</string>
     <string name="reader_hint_post_search">Pretražite WordPress</string>
@@ -166,11 +138,10 @@ Language: hr
     <string name="error_refreshing_gravatar">Pogreška tijekom učitavanja vašeg Gravatara</string>
     <string name="error_locating_image">Pogreška tijekom pronalaženja izrezane slike</string>
     <string name="error_cropping_image">Pogreška tijekom izrezivanja slike</string>
-    <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">Provjeravam e-poštu</string>
-    <string name="magic_link_unavailable_error_message" tools:ignore="UnusedResources" a8c-src-lib="module:login">Trenutačno nedostupno. Molimo unesite svoju lozinku</string>
+    <string name="checking_email" a8c-src-lib="module:login">Provjeravam e-poštu</string>
+    <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Trenutačno nedostupno. Molimo unesite svoju lozinku</string>
     <string name="logging_in">Prijavljivanje</string>
     <string name="web_address_dialog_hint">Prikazuje se javno kada komentirate.</string>
-    <string name="capture_or_pick_photo">Snimite fotografiju fotoaparatom ili odaberite fotografiju</string>
     <string name="plan">Plan</string>
     <string name="plans">Planovi</string>
     <string name="export_your_content_message">Vaše će objave, stranice i postavke biti poslani e-poštom na %s.</string>
@@ -260,7 +231,7 @@ Language: hr
     <string name="about_the_app">O aplikaciji</string>
     <string name="error_post_account_settings">Neuspjelo snimanje postavki vašeg računa</string>
     <string name="error_fetch_account_settings">Neuspjelo dohvaćanje postavki vašeg računa</string>
-    <string name="error_fetch_my_profile" tools:ignore="UnusedResources" a8c-src-lib="module:login">Neuspjelo dohvaćanje vašeg profila</string>
+    <string name="error_fetch_my_profile" a8c-src-lib="module:login">Neuspjelo dohvaćanje vašeg profila</string>
     <string name="site_settings_unknown_language_code_error">Jezični kod nije prepoznat</string>
     <string name="site_settings_threading_dialog_description">Dopusti grananje komentara.</string>
     <string name="site_settings_threading_dialog_header">Grananje do </string>
@@ -437,29 +408,19 @@ Language: hr
     <string name="me_btn_login_logout">Prijava/Odjava</string>
     <string name="me_connect_to_wordpress_com">Spoji se u WordPress.com</string>
     <string name="account_settings">Postavke računa</string>
-    <string name="site_picker_cant_hide_current_site">\"%s\" nije skriven jer je to trenutna web-stranica.</string>
     <string name="site_picker_create_wpcom">Kreiraj WordPress.com web-stranicu</string>
-    <string name="site_picker_edit_visibility">Prikaži/sakrij web-stranice</string>
     <string name="site_picker_add_self_hosted">Dodaj samostalno hostanu web-stranicu</string>
     <string name="site_picker_add_a_site">Dodaj novu web-stranicu</string>
-    <string name="my_site_btn_view_site">Pogledaj stranicu</string>
     <string name="site_picker_title">Odaberi stranicu</string>
-    <string name="my_site_btn_view_admin">Prikaži Admin</string>
     <string name="my_site_btn_switch_site">Promjeni web-stranicu</string>
-    <string name="my_site_header_publish">Objavi</string>
-    <string name="my_site_header_look_and_feel">Izgled i dojam</string>
     <string name="my_site_btn_site_settings">Postavke web-stranice </string>
     <string name="my_site_btn_blog_posts">Objave</string>
-    <string name="my_site_header_configuration">Konfiguracija</string>
     <string name="reader_label_new_posts_subtitle">Pritisni za prikaz</string>
-    <string name="show">Prikaži</string>
-    <string name="hide">Sakrij</string>
     <string name="select_all">Odaberi sve</string>
-    <string name="deselect_all">Odznači sve</string>
     <string name="language">Jezik</string>
-    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Kod za provjeru</string>
-    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Neispravan verifikacijski kod</string>
-    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Ponovno se prijavite za nastavak.</string>
+    <string name="verification_code" a8c-src-lib="module:login">Kod za provjeru</string>
+    <string name="invalid_verification_code" a8c-src-lib="module:login">Neispravan verifikacijski kod</string>
+    <string name="auth_required" a8c-src-lib="module:login">Ponovno se prijavite za nastavak.</string>
     <string name="error_notification_open">Ne mogu otvoriti obavjesti</string>
     <string name="pages_fetching">Dohvaćanje stranica…</string>
     <string name="posts_fetching">Dohvaćanje objava…</string>
@@ -531,7 +492,7 @@ Language: hr
     <string name="cat_name_required">Polje imena kategorije je obavezno</string>
     <string name="sdcard_message">Za prijenos medijskih zapisa potrebna je montirana SD kartica</string>
     <string name="error_refresh_posts">Trenutno nije moguće osvježiti objave</string>
-    <string name="error_refresh_pages" tools:ignore="UnusedResources">Trenutno nije moguće osvježiti stranice</string>
+    <string name="error_refresh_pages">Trenutno nije moguće osvježiti stranice</string>
     <string name="error_refresh_comments">Trenutno nije moguće osvježiti komentare</string>
     <string name="error_generic">Dogodila se greška</string>
     <string name="error_moderate_comment">Dogodila se greška tijekom moderiranja</string>
@@ -540,14 +501,13 @@ Language: hr
     <string name="error_downloading_image">Greška pri preuzimanju slike</string>
     <string name="username_or_password_incorrect">Korisničko ime ili lozinka koje ste unijeli nisu točni</string>
     <string name="invalid_email_message">Vaša adresa e-pošte nije valjana</string>
-    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="module:login">Unesite ispravnu adresu e-pošte</string>
+    <string name="email_invalid" a8c-src-lib="module:login">Unesite ispravnu adresu e-pošte</string>
     <string name="error_deleting_post">Dogodila se greška prilikom brisanja posta</string>
     <string name="add_new_category">Dodaj novu kategoriju</string>
     <string name="category_name">Ime kategorije</string>
     <string name="trash">Smeće</string>
     <string name="mnu_comment_trash">Smeće</string>
     <string name="mnu_comment_spam">Spam</string>
-    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Kreiraj poveznicu</string>
     <string name="reader_title_applog">Aplikacijski zapisnik</string>
     <string name="notifications_empty_all">Nema obavijesti… još.</string>
     <string name="post_settings">Postavke objave</string>
@@ -560,7 +520,7 @@ Language: hr
     <string name="link_enter_url_text">Tekst poveznice (opcionalno)</string>
     <string name="page_settings">Postavke stranice</string>
     <string name="local_draft">Lokalna skica</string>
-    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Horizontalno poravnanje</string>
+    <string name="horizontal_alignment" a8c-src-lib="module:editor">Horizontalno poravnanje</string>
     <string name="comment_status_approved">Odobreno</string>
     <string name="comment_status_unapproved">Na čekanju</string>
     <string name="comment_status_spam">Spam</string>
@@ -574,12 +534,11 @@ Language: hr
     <string name="new_post">Nova objava</string>
     <string name="new_media">Novi medijski zapis</string>
     <string name="local_changes">Lokalne promjene</string>
-    <string name="image_settings">Postavke slike</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="post_not_found">Dogodila se greška tijekom učitavanja objave. Osvježite objave i pokušajte ponovno.</string>
     <string name="file_not_found">Nije moguće pronaći medijski zapis za prijenos. Jeli obrisan ili premješten?</string>
     <string name="file_error_create">Nije moguće kreirati privremeni zapis za prijenos medijskog zapisa. Provjerite da ima dovoljno slobodnog mjesta na vašem uređaju.</string>
-    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Potrebna autorizacija</string>
+    <string name="http_authorization_required" a8c-src-lib="module:login">Potrebna autorizacija</string>
     <string name="fatal_db_error">Pojavila se greška prilikom kreiranja app baze podataka. Pokušajte ponovno instalirati app.</string>
     <string name="remove_account">Ukloni web-stranicu</string>
     <string name="delete_post">Obriši objavu?</string>
@@ -602,7 +561,6 @@ Language: hr
     <string name="reader_btn_share">Podjeli</string>
     <string name="reader_hint_comment_on_comment">Odgovor na komentar…</string>
     <string name="reader_label_added_tag">Dodano %s</string>
-    <string name="reader_label_removed_tag">Uklonjeno %s</string>
     <string name="reader_likes_one">Jednoj osobi se ovo sviđa</string>
     <string name="reader_likes_only_you">Vama se ovo sviđa</string>
     <string name="reader_toast_err_comment_failed">Vaš komentar nije moguće objavaiti</string>
@@ -610,7 +568,7 @@ Language: hr
     <string name="reader_toast_err_view_image">Nije moguće prikazati sliku</string>
     <string name="reader_toast_err_url_intent">Nije moguće otvoriti %s</string>
     <string name="comments_empty_list">Još nema komentara</string>
-    <string name="sign_up_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">Prijavite se</string>
+    <string name="sign_up_label" a8c-src-lib="module:login">Prijavite se</string>
     <string name="stats_timeframe_days">Dani</string>
     <string name="stats_timeframe_weeks">Tjedni</string>
     <string name="stats_timeframe_months">Mjeseci</string>
@@ -638,26 +596,26 @@ Language: hr
     <string name="more_notifications">i %d više.</string>
     <string name="note_reply_successful">Odgovor objavljen</string>
     <string name="loading">Učitavanje…</string>
-    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="module:login">HTTP korisničko ime</string>
-    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="module:login">HTTP lozinka</string>
+    <string name="httpuser" a8c-src-lib="module:login">HTTP korisničko ime</string>
+    <string name="httppassword" a8c-src-lib="module:login">HTTP lozinka</string>
     <string name="error_media_upload">Dogodila se greška tijekom prijenosa medijskog zapisa</string>
     <string name="incorrect_credentials">Neispravno korisničko ime ili lozinka.</string>
     <string name="password">Lozinka</string>
     <string name="username">Korisničko ime</string>
-    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="module:login">Prijavi se</string>
+    <string name="log_in" a8c-src-lib="module:login">Prijavi se</string>
     <string name="reader">Čitač</string>
     <string name="no_network_title">Nema dostupne mreže</string>
-    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Širina</string>
+    <string name="width" a8c-src-lib="module:editor">Širina</string>
     <string name="anonymous">Anonimno</string>
     <string name="pages">Stranice</string>
-    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Opis (opcionalan)</string>
-    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Upotrijebi kao istaknutu sliku</string>
+    <string name="caption" a8c-src-lib="module:editor">Opis (opcionalan)</string>
+    <string name="featured" a8c-src-lib="module:editor">Upotrijebi kao istaknutu sliku</string>
     <string name="posts">Objave</string>
-    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Uključi sliku u sadržaj objave</string>
+    <string name="featured_in_post" a8c-src-lib="module:editor">Uključi sliku u sadržaj objave</string>
     <string name="ok">OK</string>
     <string name="done">Gotovo</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Prijenos…</string>
+    <string name="uploading" a8c-src-lib="module:editor">Prijenos…</string>
     <string name="image_alignment">Poravnanje</string>
     <string name="refresh">Osvježi</string>
     <string name="untitled">Nenaslovljeno</string>

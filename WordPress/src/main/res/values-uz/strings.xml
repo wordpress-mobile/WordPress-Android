@@ -23,7 +23,6 @@ Language: uz
     <string name="reader_toast_err_view_image">Rasm ko‘rinmayapti</string>
     <string name="reader_toast_err_url_intent">%s ochilmayapti</string>
     <string name="reader_label_added_tag">%s qo‘shildi</string>
-    <string name="reader_label_removed_tag">%s o‘chirildi</string>
     <string name="reader_likes_one">Bir kishi yoqtirgan</string>
     <string name="reader_likes_only_you">Siz yoqtirgansiz</string>
     <string name="reader_hint_comment_on_comment">Fikrga javob yozish</string>
@@ -54,25 +53,25 @@ Language: uz
     <string name="more_notifications">va yana %d ta.</string>
     <string name="sign_in">Kirish</string>
     <string name="loading">Yuklanmoqda…</string>
-    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="module:login">HTTP parol</string>
-    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="module:login">HTTP foydalanuvchi nomi</string>
+    <string name="httppassword" a8c-src-lib="module:login">HTTP parol</string>
+    <string name="httpuser" a8c-src-lib="module:login">HTTP foydalanuvchi nomi</string>
     <string name="error_media_upload">Media yuklash jarayonida xatolik yuz berdi.</string>
     <string name="incorrect_credentials">Foydalanuvchi nomi yoki parol xato.</string>
-    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="module:login">Kirish</string>
+    <string name="log_in" a8c-src-lib="module:login">Kirish</string>
     <string name="password">Parol</string>
     <string name="username">Foydalanuvchi nomi</string>
     <string name="reader">Rider</string>
     <string name="anonymous">Anonim</string>
-    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Yuz rasm sifatida foydalanish</string>
-    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Postga rasm qo‘shish</string>
+    <string name="featured" a8c-src-lib="module:editor">Yuz rasm sifatida foydalanish</string>
+    <string name="featured_in_post" a8c-src-lib="module:editor">Postga rasm qo‘shish</string>
     <string name="no_network_title">Netvork mavjud emas</string>
     <string name="pages">Sahifalar</string>
-    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">En</string>
+    <string name="width" a8c-src-lib="module:editor">En</string>
     <string name="posts">Postlar</string>
-    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Titr (ixtiyoriy)</string>
+    <string name="caption" a8c-src-lib="module:editor">Titr (ixtiyoriy)</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Yuklanmoqda</string>
+    <string name="uploading" a8c-src-lib="module:editor">Yuklanmoqda</string>
     <string name="image_alignment">Tekislash</string>
     <string name="refresh">Yangila</string>
     <string name="untitled">Nomsiz</string>

@@ -12,8 +12,8 @@ Language: ms
     <string name="wordpress_dot_org_plugin_page">Halaman Pemalam WordPress.org</string>
     <string name="plugin_remove_progress_dialog_message">Membuang %s…</string>
     <string name="plugin_remove_dialog_title">Buang Pemalam</string>
-    <string name="login_empty_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">Sila masukkan kata laluan</string>
-    <string name="enter_verification_code_sms" tools:ignore="UnusedResources" a8c-src-lib="module:login">Kami telah menghantar mesej teks ke nombor telefon berakhir dengan %s. Sila masukkan kod pengesahan dalam SMS.</string>
+    <string name="login_empty_password" a8c-src-lib="module:login">Sila masukkan kata laluan</string>
+    <string name="enter_verification_code_sms" a8c-src-lib="module:login">Kami telah menghantar mesej teks ke nombor telefon berakhir dengan %s. Sila masukkan kod pengesahan dalam SMS.</string>
     <string name="uploading_subtitle_media_only">Tinggal %1$d daripada %2$d fail</string>
     <string name="uploading_subtitle_media_only_one">Tinggal 1 fail</string>
     <string name="image_size">Saiz</string>
@@ -29,15 +29,15 @@ Language: ms
     <string name="confirm_remove_media_image">Buang imej ini dari kiriman?</string>
     <string name="media_edit_customize_card_caption">Suai Langgan</string>
     <string name="media_edit_file_details_card_caption">Perincian Fail</string>
-    <string name="login_error_suffix" tools:ignore="UnusedResources" a8c-src-lib="module:login">\nMungkin cuba akaun yang lain?</string>
-    <string name="login_error_generic" tools:ignore="UnusedResources" a8c-src-lib="module:login">Terdapat kesusahan bersambung dengan akaun Google.</string>
+    <string name="login_error_suffix" a8c-src-lib="module:login">\nMungkin cuba akaun yang lain?</string>
+    <string name="login_error_generic" a8c-src-lib="module:login">Terdapat kesusahan bersambung dengan akaun Google.</string>
     <string name="login_error_button">Tutup</string>
-    <string name="enter_wpcom_password_google" tools:ignore="UnusedResources" a8c-src-lib="module:login">Untuk teruskan dengan akaun Google ini, sila berikan kata laluan WordPress.com yang sepadan. Ianya hanya akan diminta sekali.</string>
+    <string name="enter_wpcom_password_google" a8c-src-lib="module:login">Untuk teruskan dengan akaun Google ini, sila berikan kata laluan WordPress.com yang sepadan. Ianya hanya akan diminta sekali.</string>
     <string name="error_generic_network">Ralat rangkaian terjadi. Sila periksa sambungan anda dan cuba lagi.</string>
     <string name="post_settings_remove_featured_image">Buang imej terencana</string>
     <string name="post_settings_choose_featured_image">Pilih imej terencana</string>
-    <string name="login_log_in_for_share_intent" tools:ignore="UnusedResources" a8c-src-lib="module:login">Log masuk ke WordPress.com untuk berkongsi kandungan.</string>
-    <string name="enter_site_address_share_intent" tools:ignore="UnusedResources" a8c-src-lib="module:login">Masukkan alaman laman WordPress anda yang ingin anda kongsikan kandungannya.</string>
+    <string name="login_log_in_for_share_intent" a8c-src-lib="module:login">Log masuk ke WordPress.com untuk berkongsi kandungan.</string>
+    <string name="enter_site_address_share_intent" a8c-src-lib="module:login">Masukkan alaman laman WordPress anda yang ingin anda kongsikan kandungannya.</string>
     <string name="jetpack_disconnect_success_toast">Laman diputuskan</string>
     <string name="jetpack_disconnect_error_toast">Ralat memutuskan laman</string>
     <string name="jetpack_disconnect_confirmation_message">Anda pasti anda ingin memutuskan Jetpack daripada laman?</string>
@@ -113,27 +113,26 @@ Language: ms
     <string name="login_epilogue_mysites_one">Laman saya</string>
     <string name="login_epilogue_mysites_other">Laman-laman saya</string>
     <string name="login_email_client_not_found">Tidak dapat mengesan aplikasi klien emel anda</string>
-    <string name="login_empty_2fa" tools:ignore="UnusedResources" a8c-src-lib="module:login">Sila masukkan kod pengesahan</string>
-    <string name="login_empty_username" tools:ignore="UnusedResources" a8c-src-lib="module:login">Sila masukkan nama pengguna</string>
-    <string name="login_log_in_for_deeplink" tools:ignore="UnusedResources" a8c-src-lib="module:login">Log masuk ke WordPress.com untuk mencapai kiriman.</string>
-    <string name="login_error_while_adding_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">Ralat semasa menambah laman. Kod ralat: %s</string>
-    <string name="login_checking_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">Memeriksa alamat laman</string>
-    <string name="login_site_address_more_help" tools:ignore="UnusedResources" a8c-src-lib="module:login">Perlukan bantuan lebih lanjut?</string>
-    <string name="login_site_address_help_content" tools:ignore="UnusedResources" a8c-src-lib="module:login">Alamat laman anda muncul dalam palang pada atas skrin apabila anda melawat laman anda dalam Chrome.</string>
-    <string name="login_site_address_help_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">Apa alamat laman saya?</string>
-    <string name="login_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">Alamat laman</string>
+    <string name="login_empty_2fa" a8c-src-lib="module:login">Sila masukkan kod pengesahan</string>
+    <string name="login_empty_username" a8c-src-lib="module:login">Sila masukkan nama pengguna</string>
+    <string name="login_log_in_for_deeplink" a8c-src-lib="module:login">Log masuk ke WordPress.com untuk mencapai kiriman.</string>
+    <string name="login_error_while_adding_site" a8c-src-lib="module:login">Ralat semasa menambah laman. Kod ralat: %s</string>
+    <string name="login_checking_site_address" a8c-src-lib="module:login">Memeriksa alamat laman</string>
+    <string name="login_site_address_more_help" a8c-src-lib="module:login">Perlukan bantuan lebih lanjut?</string>
+    <string name="login_site_address_help_content" a8c-src-lib="module:login">Alamat laman anda muncul dalam palang pada atas skrin apabila anda melawat laman anda dalam Chrome.</string>
+    <string name="login_site_address_help_title" a8c-src-lib="module:login">Apa alamat laman saya?</string>
+    <string name="login_site_address" a8c-src-lib="module:login">Alamat laman</string>
     <string name="login_already_logged_in_wpcom">Telahpun log masuk ke WordPress.com</string>
-    <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="module:login">Teruskan</string>
-    <string name="enter_wpcom_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">Masukkan kata laluan WordPress.com anda.</string>
-    <string name="login_magic_link_email_requesting" tools:ignore="UnusedResources" a8c-src-lib="module:login">Memohon emel log masuk</string>
-    <string name="password_incorrect" tools:ignore="UnusedResources" a8c-src-lib="module:login">Nampaknya seperti kata laluan ini tidak betul. Sila periksa semula maklumat anda dan cuba lagi.</string>
-    <string name="requesting_otp" tools:ignore="UnusedResources" a8c-src-lib="module:login">Memohon ko pengesahan melalui SMS.</string>
-    <string name="enter_email_wordpress_com" tools:ignore="UnusedResources" a8c-src-lib="module:login">Log masuk ke WordPress.com menggunakan alamat emel untuk mengurus semua laman WordPress anda.</string>
+    <string name="login_continue" a8c-src-lib="module:login">Teruskan</string>
+    <string name="enter_wpcom_password" a8c-src-lib="module:login">Masukkan kata laluan WordPress.com anda.</string>
+    <string name="login_magic_link_email_requesting" a8c-src-lib="module:login">Memohon emel log masuk</string>
+    <string name="password_incorrect" a8c-src-lib="module:login">Nampaknya seperti kata laluan ini tidak betul. Sila periksa semula maklumat anda dan cuba lagi.</string>
+    <string name="requesting_otp" a8c-src-lib="module:login">Memohon ko pengesahan melalui SMS.</string>
+    <string name="enter_email_wordpress_com" a8c-src-lib="module:login">Log masuk ke WordPress.com menggunakan alamat emel untuk mengurus semua laman WordPress anda.</string>
     <string name="next">Seterusnya</string>
     <string name="me_profile_photo">Gambar Profail</string>
     <string name="error_media_parse_error">Respons tidak disangka dari pelayan</string>
     <string name="upload_finished_toast">Tidak boleh memuat naik kerana ianya telahpun selesai</string>
-    <string name="media_insert_unimplemented" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Maaf! Ciri belum lagi dilaksanakan :(</string>
     <string name="menu_redo">Buat Semula</string>
     <string name="post_title">Tajuk</string>
     <string name="menu_undo">Kembali ke asal</string>
@@ -232,7 +231,6 @@ Language: ms
     <string name="editor_draft_saved_online">Draf disimpan secara atas talian</string>
     <string name="editor_post_saved_locally">Kiriman disimpan di peranti</string>
     <string name="button_sync">Selaras</string>
-    <string name="smart_toast_comments_long_press">Tap dan tahan untuk memilih ulasan berbilang</string>
     <string name="photo_picker_choose_video">Pilih video dari peranti</string>
     <string name="photo_picker_choose_photo">Pilih gambar dari peranti</string>
     <string name="media_insert_as_gallery">Tambah sebagai galeri</string>
@@ -273,8 +271,8 @@ Language: ms
     <string name="error_all_media_upload_canceled">Semua muat naik media telah dibatalkan disebabkan ralat yang tidak diketahui. Sila cuba muat naik semula</string>
     <string name="error_unknown_post_type">Format kiriman tidak diketahui</string>
     <string name="submit_for_review">Hantar</string>
-    <string name="duplicate_site_detected" tools:ignore="UnusedResources" a8c-src-lib="module:login">Laman duplikasi telah dikesan.</string>
-    <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">Laman ini telahpun wujud dalam aplikasi, anda tidak boleh menambahnya.</string>
+    <string name="duplicate_site_detected" a8c-src-lib="module:login">Laman duplikasi telah dikesan.</string>
+    <string name="cannot_add_duplicate_site" a8c-src-lib="module:login">Laman ini telahpun wujud dalam aplikasi, anda tidak boleh menambahnya.</string>
     <string name="already_logged_in_wpcom">Anda sudahpun log masuk ke dalam akaun WordPress.com, anda tidak boleh menambah laman WordPress.com site yang diikat ke akaun lain.</string>
     <string name="error_media_load">Tidak dapat memuat media</string>
     <string name="error_media_refresh_no_connection">Sambungan diperlukan untuk menyegar semula pustaka</string>
@@ -283,10 +281,9 @@ Language: ms
     <string name="error_media_insufficient_fs_permissions">Kebenaran membaca tidak diberikan pada media peranti</string>
     <string name="site_settings_optimize_images">Optimumkan Imej</string>
     <string name="media_generic_error">Ralat media berlaku</string>
-    <string name="media_upload_error">Ralat muat naik media berlaku</string>
     <string name="confirm">Sahkan</string>
     <string name="retry">Cuba Semula</string>
-    <string name="xmlrpc_post_blocked_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">Tidak boleh berhubung. Hos anda menyekat permintaan POST, dan aplikasi\n        memerlukannya untuk berkomunikasi dengan laman anda. Hubungi hos anda untuk menyelesaikan masalah ini.</string>
+    <string name="xmlrpc_post_blocked_error" a8c-src-lib="module:login">Tidak boleh berhubung. Hos anda menyekat permintaan POST, dan aplikasi\n        memerlukannya untuk berkomunikasi dengan laman anda. Hubungi hos anda untuk menyelesaikan masalah ini.</string>
     <string name="pending_draft_one_generic">Jangan biarkannya bergantung! \'%1$s\' sedang menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_month">Jangan biarkannya bergantung! \'%1$s\' sedang menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' kekal sebagai draf. Ingat untuk menerbitkannya!</string>
@@ -322,9 +319,7 @@ Language: ms
     <string name="invite_username_not_found">%s: Pengguna tidak dijumpai</string>
     <string name="comment_moderated_approved">Ulasan diluluskan!</string>
     <string name="like">Suka</string>
-    <string name="timespan_now" tools:ignore="UnusedResources">sekarang</string>
     <string name="role_viewer">Penonton</string>
-    <string name="error_post_my_profile_no_connection">Tiada sambungan, tidak dapat menyimpan profail anda</string>
     <string name="alignment_none">Tiada</string>
     <string name="alignment_left">Kiri</string>
     <string name="alignment_right">Kanan</string>
@@ -338,19 +333,9 @@ Language: ms
     <string name="follower_subscribed_since">Sejak %1$s</string>
     <string name="error_remove_viewer">Tidak dapat membuang penonton</string>
     <string name="editor_failed_uploads_switch_html">Sebahagian muat naik media telah gagal. Anda tidak boleh menukar ke mod HTML\ndalam keadaan ini. in this state. Buang semua muat naik yang gagal dan bersambung?</string>
-    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Penyunting visual</string>
-    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Imej kecil</string>
-    <string name="image_caption">Sari Kata</string>
-    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Teks alt</string>
-    <string name="image_link_to">Paut ke</string>
-    <string name="image_width">Lebar</string>
-    <string name="image_settings_save_toast">Penukaran disimpan</string>
-    <string name="image_settings_dismiss_dialog_title">Buang penukaran yang tidak disimpan?</string>
     <string name="stop_upload_dialog_title">Berhenti memuat naik?</string>
-    <string name="alert_error_adding_media" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ralat berlaku semasa menyisip media</string>
-    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Anda sedang memuat naik media. Sila tunggu sehingga ianya selesai.</string>
-    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Tidak dapat menyisip media terus dalam mod HTML. Sila tukar kembali ke mod visual.</string>
-    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Memuat naik galeri…</string>
+    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Anda sedang memuat naik media. Sila tunggu sehingga ianya selesai.</string>
+    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Tidak dapat menyisip media terus dalam mod HTML. Sila tukar kembali ke mod visual.</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_error_some_failed">Jemputan dihantar tetapi ralat berlaku!</string>
     <string name="invite_sent">Jemputan berjaya dihantar</string>
@@ -360,7 +345,6 @@ Language: ms
     <string name="invite_error_invalid_usernames_one">Tidak dapat menghantar: Nama pengguna atau emel adalah tidak sah</string>
     <string name="invite_error_no_usernames">Sila tambah sekurang-kurangnya satu nama pengguna</string>
     <string name="invite">Jemput</string>
-    <string name="my_site_header_external">Luaran</string>
     <string name="label_clear_search_history">Kosongkan sejarah carian</string>
     <string name="dlg_confirm_clear_search_history">Kosongkan sejarah carian?</string>
     <string name="reader_title_related_post_detail">Kiriman Berkaitan</string>
@@ -376,11 +360,10 @@ Language: ms
     <string name="error_refreshing_gravatar">Ralat memuatkan Gravatar anda</string>
     <string name="error_locating_image">Ralat mencari imej dipangkas</string>
     <string name="error_cropping_image">Ralat memangkas imej</string>
-    <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">Menyemak emel</string>
-    <string name="magic_link_unavailable_error_message" tools:ignore="UnusedResources" a8c-src-lib="module:login">Tidak terdapat pada masa ini. Sila masukkan kata laluan anda</string>
+    <string name="checking_email" a8c-src-lib="module:login">Menyemak emel</string>
+    <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Tidak terdapat pada masa ini. Sila masukkan kata laluan anda</string>
     <string name="logging_in">Melog masuk</string>
     <string name="web_address_dialog_hint">Tunjukkan kepada umum apabila anda mengulas.</string>
-    <string name="capture_or_pick_photo">Tangkap atau pilih gambar</string>
     <string name="export_your_content_message">Kiriman, halaman, dan tetapan anda akan diemel kepada anda di %s.</string>
     <string name="plan">Pelan</string>
     <string name="plans">Pelan</string>
@@ -408,7 +391,7 @@ Language: ms
     <string name="editor_remove_failed_uploads">Buangkan muatnaik yang gagal</string>
     <string name="site_settings_advanced_header">Lanjutan</string>
     <string name="button_skip">Langkau</string>
-    <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">Tidak boleh berhubung. Kaedah XML-RPC yang diperlukan tiada pada pelayan.</string>
+    <string name="xmlrpc_missing_method_error" a8c-src-lib="module:login">Tidak boleh berhubung. Kaedah XML-RPC yang diperlukan tiada pada pelayan.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>
     <string name="alignment_center">Tengah</string>
@@ -466,7 +449,7 @@ Language: ms
     <string name="about_the_app">Mengenai aplikasi</string>
     <string name="error_post_account_settings">Tidak boleh menyimpan tetapan akaun anda</string>
     <string name="error_fetch_account_settings">Tidak boleh mendapatkan tetapan akaun anda</string>
-    <string name="error_fetch_my_profile" tools:ignore="UnusedResources" a8c-src-lib="module:login">Tidak boleh mendapatkan profil anda</string>
+    <string name="error_fetch_my_profile" a8c-src-lib="module:login">Tidak boleh mendapatkan profil anda</string>
     <string name="site_settings_unknown_language_code_error">Kod bahasa tidak dikenali</string>
     <string name="site_settings_threading_dialog_description">Benarkan ulasan disarang dalam jalur.</string>
     <string name="site_settings_threading_dialog_header">Jalur sehingga</string>
@@ -631,26 +614,16 @@ Language: ms
     <string name="me_disconnect_from_wordpress_com">Log keluar dari WordPress.com</string>
     <string name="me_btn_login_logout">Log Masuk/Log Keluar</string>
     <string name="me_connect_to_wordpress_com">Log masuk ke WordPress.com</string>
-    <string name="site_picker_cant_hide_current_site">\"%s\" tidak disembunyikan kerana ianya laman semasa</string>
     <string name="account_settings">Tetapan Akaun</string>
     <string name="site_picker_add_self_hosted">Tambah laman yang dihos sendiri</string>
-    <string name="site_picker_edit_visibility">Tunjuk/sembunyi laman</string>
     <string name="site_picker_title">Pilih laman</string>
-    <string name="my_site_btn_view_admin">Lihat Pentadbir</string>
-    <string name="my_site_btn_view_site">Lihat Laman</string>
     <string name="my_site_btn_switch_site">Tukar Laman</string>
-    <string name="my_site_header_look_and_feel">Rupa dan Bentuk</string>
-    <string name="my_site_header_publish">Terbit</string>
-    <string name="my_site_header_configuration">Konfigurasi</string>
     <string name="reader_label_new_posts_subtitle">Tap untuk menunjukkannya</string>
-    <string name="deselect_all">Nyahpilih semua</string>
-    <string name="hide">Sembunyi</string>
-    <string name="show">Tunjuk</string>
     <string name="select_all">Pilih semua</string>
-    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Kod pengesahan tidak sah</string>
+    <string name="invalid_verification_code" a8c-src-lib="module:login">Kod pengesahan tidak sah</string>
     <string name="language">Bahasa</string>
-    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Kod pengesahan</string>
-    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Log masuk semula untuk meneruskan.</string>
+    <string name="verification_code" a8c-src-lib="module:login">Kod pengesahan</string>
+    <string name="auth_required" a8c-src-lib="module:login">Log masuk semula untuk meneruskan.</string>
     <string name="stats_view_authors">Pengarang</string>
     <string name="error_notification_open">Tidak dapat membuka pemberitahuan</string>
     <string name="media_fetching">Mengambil media…</string>
@@ -713,14 +686,14 @@ Language: ms
     <string name="cat_name_required">Medan nama kategori dikehendaki</string>
     <string name="notifications_empty_list">Tiada notifikasi</string>
     <string name="error_refresh_posts">Kiriman tidak dapat disegar semula pada masa ini</string>
-    <string name="error_refresh_pages" tools:ignore="UnusedResources">Laman tidak dapat disegar semula pada masa ini</string>
+    <string name="error_refresh_pages">Laman tidak dapat disegar semula pada masa ini</string>
     <string name="error_generic">Ralat berlaku</string>
     <string name="error_moderate_comment">Ralat berlaku semasa penyederhanaan</string>
     <string name="error_edit_comment">Ralat berlaku semasa mengedit komen</string>
     <string name="error_load_comment">Tidak dapat memuatkan komen</string>
     <string name="error_downloading_image">Ralat memuat turun imej</string>
     <string name="username_or_password_incorrect">Nama pengguna atau kata laluan yang anda masukkan adalah tidak betul</string>
-    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="module:login">Masukkan alamat emel yang sah</string>
+    <string name="email_invalid" a8c-src-lib="module:login">Masukkan alamat emel yang sah</string>
     <string name="no_network_message">Tiada rangkaian tersedia</string>
     <string name="gallery_error">Butir media tidak boleh didapatkan kembali</string>
     <string name="blog_not_found">Ralat berlaku apabila mencapai blog ini</string>
@@ -734,7 +707,6 @@ Language: ms
     <string name="media_gallery_type_thumbnail_grid">Grid gambar kenit</string>
     <string name="cannot_delete_multi_media_items">Sesetengah media tidak boleh dihapuskan pada masa ini. Cuba sebentar lagi.</string>
     <string name="link_enter_url_text">Teks pautan (pilihan)</string>
-    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Cipta pautan</string>
     <string name="local_draft">Draf setempat</string>
     <string name="select_categories">Pilih kategori</string>
     <string name="post_not_found">Ralat berlaku apabila kiriman dimuatkan. Segar semula kiriman anda dan cuba lagi.</string>
@@ -742,7 +714,7 @@ Language: ms
     <string name="dlg_confirm_trash_comments">Hantar ke sampah?</string>
     <string name="trash">Sampah</string>
     <string name="saving_changes">Simpan perubahan</string>
-    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Jajaran melintang</string>
+    <string name="horizontal_alignment" a8c-src-lib="module:editor">Jajaran melintang</string>
     <string name="comment_status_approved">Diluluskan</string>
     <string name="comment_status_unapproved">Menunggu</string>
     <string name="comment_status_spam">Spam</string>
@@ -758,10 +730,9 @@ Language: ms
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="fatal_db_error">Ralat berlaku semasa mencipta pangkalan data aplikasi. Cuba memasangnya semula.</string>
     <string name="reader_title_applog">Log aplikasi</string>
-    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Kebenaran diperlukan</string>
+    <string name="http_authorization_required" a8c-src-lib="module:login">Kebenaran diperlukan</string>
     <string name="new_post">Kiriman baharu</string>
     <string name="new_media">Media baharu</string>
-    <string name="image_settings">Tetapan imej</string>
     <string name="page_settings">Tetapan laman</string>
     <string name="post_settings">Tetapan kiriman</string>
     <string name="remove_account">Buang laman</string>
@@ -788,7 +759,6 @@ Language: ms
     <string name="reader_btn_follow">Ikut</string>
     <string name="reader_toast_err_url_intent">Tidak dapat membuka %s</string>
     <string name="reader_label_added_tag">%s ditambah</string>
-    <string name="reader_label_removed_tag">%s dibuang</string>
     <string name="reader_likes_one">Seorang menyukainya</string>
     <string name="reader_likes_only_you">Anda menyukainya</string>
     <string name="reader_toast_err_comment_failed">Tidak dapat mengirim komen anda</string>
@@ -822,25 +792,25 @@ Language: ms
     <string name="more_notifications">dan %d lagi.</string>
     <string name="sign_in">Log masuk</string>
     <string name="loading">Sedang memuat…</string>
-    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="module:login">Nama pengguna HTTP</string>
-    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="module:login">Kata laluan HTTP</string>
+    <string name="httpuser" a8c-src-lib="module:login">Nama pengguna HTTP</string>
+    <string name="httppassword" a8c-src-lib="module:login">Kata laluan HTTP</string>
     <string name="error_media_upload">Ralat berlaku semasa memuat naik media</string>
     <string name="incorrect_credentials">Nama pengguna atau kata laluan tidak betul.</string>
     <string name="username">Nama pengguna</string>
     <string name="password">Kata laluan</string>
-    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="module:login">Log masuk</string>
+    <string name="log_in" a8c-src-lib="module:login">Log masuk</string>
     <string name="reader">Pembaca</string>
-    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Guna sebagai imej yang diketengahkan</string>
-    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Sertakan imej dalam kandungan kiriman</string>
+    <string name="featured" a8c-src-lib="module:editor">Guna sebagai imej yang diketengahkan</string>
+    <string name="featured_in_post" a8c-src-lib="module:editor">Sertakan imej dalam kandungan kiriman</string>
     <string name="no_network_title">Tiada rangkaian yang tersedia</string>
     <string name="pages">Laman</string>
-    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Sari kata (pilihan)</string>
-    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Lebar</string>
+    <string name="caption" a8c-src-lib="module:editor">Sari kata (pilihan)</string>
+    <string name="width" a8c-src-lib="module:editor">Lebar</string>
     <string name="posts">Kiriman</string>
     <string name="anonymous">Tak bernama</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Memuat naik…</string>
+    <string name="uploading" a8c-src-lib="module:editor">Memuat naik…</string>
     <string name="image_alignment">Penjajaran</string>
     <string name="refresh">Segar semula</string>
     <string name="untitled">Tiada tajuk</string>
