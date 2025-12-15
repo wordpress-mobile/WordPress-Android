@@ -36,7 +36,7 @@ object EditorMenuHelper {
      * @param checkModalForUndoRedo If true, undo/redo enabled state also checks isModalDialogOpen
      * @param disablePrimaryWhenModal If true, primary action is disabled when modal is open
      */
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "CyclomaticComplexMethod")
     fun prepareMenu(
         menu: Menu,
         state: MenuState,
