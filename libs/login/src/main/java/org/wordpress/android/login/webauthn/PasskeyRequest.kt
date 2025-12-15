@@ -3,7 +3,7 @@ package org.wordpress.android.login.webauthn
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.CancellationSignal
-import android.util.Log
+import org.wordpress.android.util.AppLog
 import androidx.credentials.CredentialManager
 import androidx.credentials.CredentialManagerCallback
 import androidx.credentials.GetCredentialRequest
@@ -36,7 +36,6 @@ class PasskeyRequest private constructor(
         val passkeyRequestCallback = object : CredentialManagerCallback<GetCredentialResponse, GetCredentialException> {
             override fun onError(e: GetCredentialException) {
                 CoroutineScope(Dispatchers.Main).launch { onFailure(e) }
-                Log.e(TAG, e.stackTraceToString())
             }
 
             override fun onResult(result: GetCredentialResponse) {
@@ -59,7 +58,6 @@ class PasskeyRequest private constructor(
                     callback = passkeyRequestCallback
             )
         } catch (e: GetCredentialException) {
-            Log.e(TAG, e.stackTraceToString())
             onFailure(e)
         }
     }
@@ -68,7 +66,7 @@ class PasskeyRequest private constructor(
         return when (val credential = this.credential) {
             is PublicKeyCredential -> credential.authenticationResponseJson
             else -> {
-                Log.e(TAG, "Unexpected type of credential")
+                AppLog.e(AppLog.T.API, "Unexpected type of credential")
                 null
             }
         }
@@ -81,8 +79,6 @@ class PasskeyRequest private constructor(
     )
 
     companion object {
-        private const val TAG = "PasskeyRequest"
-
         @JvmStatic
         fun create(
             context: Context,
