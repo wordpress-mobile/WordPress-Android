@@ -4,7 +4,7 @@
     android:height="32dp"
     android:viewportHeight="24.0"
     android:viewportWidth="24.0"
-    tools:ignore="UnusedResources">
+   >
 
     <path
         android:fillColor="#0675C4"
