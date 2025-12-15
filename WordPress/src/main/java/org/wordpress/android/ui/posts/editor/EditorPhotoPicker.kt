@@ -24,6 +24,7 @@ import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.widgets.WPSnackbar
 
 private const val MEDIA_PICKER_TAG = "media_picker"
 
@@ -271,7 +272,10 @@ class EditorPhotoPicker(
 
     fun showNoUploadPermissionSnackbar() {
         activity.findViewById<View>(R.id.editor_activity)?.let { view ->
-            Snackbar.make(view, R.string.media_error_no_permission_upload, Snackbar.LENGTH_SHORT).show()
+            WPSnackbar.make(
+                view = view,
+                textRes = R.string.media_error_no_permission_upload,
+                duration = Snackbar.LENGTH_SHORT).show()
         }
     }
 
