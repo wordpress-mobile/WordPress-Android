@@ -63,7 +63,7 @@ Language: mk
     <string name="invalid_email_message">Вашата е-пошта е невалидна</string>
     <string name="adding_cat_failed">Додавањето категорија е неуспешно</string>
     <string name="cat_name_required">Полето со името на категоријата е задолжително</string>
-    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="module:login">Воведи валидна е-поштта</string>
+    <string name="email_invalid" a8c-src-lib="module:login">Воведи валидна е-поштта</string>
     <string name="username_or_password_incorrect">Корисничкото име или лозинката се неточни</string>
     <string name="error_downloading_image">Грешно превземање на слика</string>
     <string name="sdcard_message">Сврзана SD карта е потребна за качување на медиа</string>
@@ -72,23 +72,21 @@ Language: mk
     <string name="error_refresh_comments">Коментарите неможат да бидат освежени во овој момент</string>
     <string name="error_edit_comment">Настана грешка додека се уредуваше коментар</string>
     <string name="blog_not_found">Настана грешка додека се достапувше блогот</string>
-    <string name="error_refresh_pages" tools:ignore="UnusedResources">Страниците неможат да се ажурират во моментот</string>
+    <string name="error_refresh_pages">Страниците неможат да се ажурират во моментот</string>
     <string name="error_refresh_posts">Напсите неможат да се ажурират во моментот</string>
     <string name="gallery_error">Неможе да биде превземена медиата.</string>
     <string name="connection_error">Грешка во поврзувањето</string>
     <string name="post_not_found">Настана грешка при вчитување на написот. Освежи ги написите и обиди се повторно.</string>
     <string name="learn_more">Научи повеќе</string>
-    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Креирај врска</string>
     <string name="page_settings">Подесувања на страницата</string>
-    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Ауторизација е потребна</string>
+    <string name="http_authorization_required" a8c-src-lib="module:login">Ауторизација е потребна</string>
     <string name="mnu_comment_spam">Спам</string>
-    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Хоризонтално порамнување</string>
+    <string name="horizontal_alignment" a8c-src-lib="module:editor">Хоризонтално порамнување</string>
     <string name="dlg_confirm_trash_comments">Испрати во корпа?</string>
     <string name="post_settings">Подесувања на напис</string>
     <string name="comment_status_approved">Одобрено</string>
     <string name="comment_status_unapproved">Чекање</string>
     <string name="saving_changes">Зачувување на подесувањата</string>
-    <string name="image_settings">Подесувања на сликата</string>
     <string name="wordpress_blog">WordPress блог</string>
     <string name="select_categories">Избери категории</string>
     <string name="fatal_db_error">Настана грешка при креирање на базата на податоци за апликацијата. Направи преинсталирање на апликацијата.</string>
@@ -121,7 +119,6 @@ Language: mk
     <string name="reader_toast_err_get_post">Неможе да се вчита овој напис</string>
     <string name="pick_video">Избери видео</string>
     <string name="reader_likes_you_and_one">На вас и на уште еден му се допаѓа ова</string>
-    <string name="reader_label_removed_tag">Одстранети %s</string>
     <string name="empty_list_default">Оваа листа е празна</string>
     <string name="reader_untitled_post">(без наслов)</string>
     <string name="reader_btn_share">Сподели</string>
@@ -157,21 +154,21 @@ Language: mk
     <string name="more_notifications">и уште %d .</string>
     <string name="note_reply_successful">Одговори на објавено</string>
     <string name="loading">Вчитување…</string>
-    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="module:login">HTTP корисничко име</string>
-    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="module:login">HTTP лозинка</string>
+    <string name="httpuser" a8c-src-lib="module:login">HTTP корисничко име</string>
+    <string name="httppassword" a8c-src-lib="module:login">HTTP лозинка</string>
     <string name="error_media_upload">Настана грешка при качување на медиа</string>
     <string name="incorrect_credentials">Невалидно корисничко име или лозинка.</string>
     <string name="password">Лозинка</string>
     <string name="username">Корисничко име</string>
     <string name="reader">Читач</string>
-    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Широчина</string>
+    <string name="width" a8c-src-lib="module:editor">Широчина</string>
     <string name="anonymous">Анонимно</string>
     <string name="posts">Написи</string>
-    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Наслов (изборно)</string>
+    <string name="caption" a8c-src-lib="module:editor">Наслов (изборно)</string>
     <string name="pages">Страници</string>
     <string name="no_network_title">Не е достапна мрежа</string>
-    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Вклучете ги сликите во содржината на написот</string>
-    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Користи како избрана слика</string>
+    <string name="featured_in_post" a8c-src-lib="module:editor">Вклучете ги сликите во содржината на написот</string>
+    <string name="featured" a8c-src-lib="module:editor">Користи како избрана слика</string>
     <string name="ok">Добро</string>
     <string name="link_enter_url">URL</string>
     <string name="image_alignment">Усогласување</string>

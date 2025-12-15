@@ -53,38 +53,24 @@ Language: bg
     <string name="he_support_send_button">Изпращане</string>
     <string name="he_support_reply_button">Отговор</string>
     <string name="he_support_last_updated">Последно обновяване %1$s</string>
-    <string name="he_support_message_count">%1$d Съобщения</string>
     <string name="he_support_empty_conversations_button">Започване на дискусия</string>
     <string name="he_support_empty_conversations_message">Започнете дискусия с екипа по поддръжка, за да получите помощ.</string>
     <string name="he_support_empty_conversations_title">Няма дискусии засега</string>
     <string name="he_support_new_conversation_content_description">Нова дискусия</string>
     <string name="he_support_conversations_title">Дискусии с поддръжката</string>
-    <string name="ai_bot_time_weeks_ago">Преди %1$d седмици</string>
-    <string name="ai_bot_time_week_ago">преди %1$d седмица</string>
-    <string name="ai_bot_time_days_ago">преди %1$d дни</string>
-    <string name="ai_bot_time_day_ago">преди %1$d ден</string>
-    <string name="ai_bot_time_hours_ago">преди %1$d часа</string>
-    <string name="ai_bot_time_hour_ago">преди %1$d час</string>
-    <string name="ai_bot_time_minutes_ago">преди %1$d минути</string>
-    <string name="ai_bot_time_minute_ago">преди %1$d минута</string>
     <string name="ai_bot_time_just_now">Току-що</string>
-    <string name="ai_bot_default_conversation_title">Нова дискусия</string>
     <string name="ai_bot_welcome_message">Аз съм вашият личен ИИ асистент. Мога да помогна по въпроси за вашия сайт или профил.</string>
     <string name="ai_bot_welcome_greeting">Здрасти, %1$s 👋</string>
     <string name="ai_bot_message_input_placeholder">Въвеждане на съобщение…</string>
     <string name="ai_bot_send_button_content_description">Изпращане</string>
     <string name="ai_bot_support_bot">Бот за поддръжка</string>
     <string name="ai_bot_you">Вие</string>
-    <string name="ai_bot_empty_conversations_button">Започване на дискусия</string>
-    <string name="ai_bot_empty_conversations_message">Започване на нова дискусия за помощ с вашия WordPress сайт или профил.</string>
-    <string name="ai_bot_empty_conversations_title">Няма дискусии засега</string>
     <string name="ai_bot_generic_error">Нещо се обърка. Изчакайте малко и опитайте отново.</string>
     <string name="ai_bot_new_conversation_content_description">Нова дискусия</string>
     <string name="ai_bot_back_button_content_description">Обратно</string>
     <string name="ai_bot_conversations_title">Дискусии</string>
     <string name="create">Създаване</string>
     <string name="logs_screen_general_error">Нещо се обърка…</string>
-    <string name="logs_screen_log_count">%d записа в дневника</string>
     <string name="logs_screen_empty_state">Няма налични дневници</string>
     <string name="support_screen_user_avatar_content_description">Потребителски аватар</string>
     <string name="support_screen_application_logs_description">Инструмент за дебъг на проблеми</string>
@@ -98,7 +84,6 @@ Language: bg
     <string name="support_screen_help_center_title">Център за помощ</string>
     <string name="support_screen_how_can_we_help_title">Как можем да помогнем?</string>
     <string name="support_screen_login_button">Влизане в WordPress.com</string>
-    <string name="support_screen_profile_section_title">Профил за поддръжката</string>
     <string name="support_screen_title">Поддържа</string>
     <string name="modern_support_description">Активиране на новата система за поддръжка</string>
     <string name="modern_support">Модерна поддръжка</string>
@@ -114,7 +99,6 @@ Language: bg
     <string name="term_parent_none">Без</string>
     <string name="term_parent_label">Родителски:</string>
     <string name="term_count">Брой: %1$d</string>
-    <string name="term_count_label">Брой:</string>
     <string name="term_description_label">Описание:</string>
     <string name="term_slug_label">Кратко име:</string>
     <string name="term_name_label">Име:</string>
@@ -159,7 +143,6 @@ Language: bg
     <string name="subscribers_delete_confirmation_message">Сиурни ли сте, че искате да изтриете абоната?</string>
     <string name="subscribers_delete_confirmation_title">Изтриване на абонат</string>
     <string name="subscribers_sort_name">Име</string>
-    <string name="jetpack_rest_connection_error_connect_wpcom">Неуспешно свързване с WordPress.com</string>
     <string name="jetpack_rest_connection_error_timeout">Времето изтече</string>
     <string name="jetpack_rest_connection_cancel_message">Установяването на връзка с Jetpack е в процес на извършване. Сигурни ли сте, че искате да го отмените?</string>
     <string name="jetpack_rest_connection_cancel_title">Отмяна на настройките на Jetpack?</string>
@@ -171,8 +154,6 @@ Language: bg
     <string name="jetpack_rest_connection_step_connect_user">Свързване на потребител с WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Инсталиране на разширението Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Вход в WordPress.com</string>
-    <string name="jetpack_rest_connection_title">Връзка с Jetpack</string>
-    <string name="experimental_subscribers_feature_description">Преглед и управление на абонатите на бюлетина</string>
     <string name="start">Начало</string>
     <string name="descending">Низходящ ред</string>
     <string name="ascending">Възходящ ред</string>
@@ -198,7 +179,7 @@ Language: bg
     <string name="history_empty_subtitle_post">Когато направите промени в публикацията си, ще можете да видите историята тук</string>
     <string name="history_empty_subtitle_page">Когато направите промени в страницата си, ще можете да видите историята тук</string>
     <string name="history_footer_page">Страницата е създадена на %1$s в %2$s</string>
-    <string name="enter_wpcom_or_jetpack_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">Въведете сайт на WordPress.com или самостоятелно хостван такъв, сръзан с Jetpack.</string>
+    <string name="enter_wpcom_or_jetpack_site" a8c-src-lib="module:login">Въведете сайт на WordPress.com или самостоятелно хостван такъв, сръзан с Jetpack.</string>
     <string name="description_user">Потребителски аватар</string>
     <string name="image_size_full_label">Пълен размер</string>
     <string name="image_size_large_label">Голям</string>
@@ -216,13 +197,12 @@ Language: bg
     <string name="pages_search_suggestion">Търсене на страници</string>
     <string name="pages_empty_drafts">Нямате чернови</string>
     <string name="pages_view">Преглед</string>
-    <string name="pages_trashed" tools:ignore="UnusedResources">В кошчето</string>
-    <string name="pages_drafts" tools:ignore="UnusedResources">Чернови</string>
-    <string name="pages_set_parent">Задаване на родител</string>
-    <string name="pages_scheduled" tools:ignore="UnusedResources">Планирана</string>
-    <string name="pages_published" tools:ignore="UnusedResources">Публикувана</string>
-    <string name="login_error_sms_throttled" tools:ignore="UnusedResources" a8c-src-lib="module:login">Направихте прекалено много опити да изпратите SMS кода за потвърждение - спрете за кратко и подайте нова заявка след минута.</string>
-    <string name="login_error_email_not_found_v2" tools:ignore="UnusedResources" a8c-src-lib="module:login">Няма профил в WordPress.com, съответстващ на този профил в Google.</string>
+    <string name="pages_trashed">В кошчето</string>
+    <string name="pages_drafts">Чернови</string>
+    <string name="pages_scheduled">Планирана</string>
+    <string name="pages_published">Публикувана</string>
+    <string name="login_error_sms_throttled" a8c-src-lib="module:login">Направихте прекалено много опити да изпратите SMS кода за потвърждение - спрете за кратко и подайте нова заявка след минута.</string>
+    <string name="login_error_email_not_found_v2" a8c-src-lib="module:login">Няма профил в WordPress.com, съответстващ на този профил в Google.</string>
     <string name="site_picker_remove_site_empty">Няма сайтове, съответстващи на търсенето ви</string>
     <string name="page_parent_changed">Родителската страница е сменена</string>
     <string name="reader_no_followed_blogs_search_title">Няма блогове, съответстващи на търсенето ви</string>
@@ -245,10 +225,8 @@ Language: bg
     <string name="quick_start_dialog_publish_post_title">Публикуване на публикация</string>
     <string name="quick_start_dialog_need_help_button_negative">Не, благодаря</string>
     <string name="quick_start_dialog_follow_sites_title">Следване на сайтове</string>
-    <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Отказ</string>
-    <string name="quick_start_button_negative" tools:ignore="UnusedResources">Не сега</string>
     <string name="my_site_create_new_site_title">Нямате сайтове</string>
-    <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources" a8c-src-lib="module:login">Влезте в профила на WordPress.com, който сте използвали за свързването на Jetpack.</string>
+    <string name="login_to_to_connect_jetpack" a8c-src-lib="module:login">Влезте в профила на WordPress.com, който сте използвали за свързването на Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">За да използвате Статистики в сайта си, ще трябва да инсталирате разширението Jetpack .</string>
     <string name="themes_empty_list">Няма теми, съответстващи на търсенето ви</string>
     <string name="reader_label_post_search_explainer">Какво бихте искали да намерите?</string>
@@ -274,9 +252,9 @@ Language: bg
     <string name="support_identity_input_dialog_enter_email_and_name">За да продължите, въведете своя имейл адрес и име</string>
     <string name="support_contact_email">Имейл за връзка</string>
     <string name="reader_empty_search_title">Няма намерени резултати</string>
-    <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">Имейл адрес за вход</string>
-    <string name="login_error_suffix" tools:ignore="UnusedResources" a8c-src-lib="module:login">\nЗащо не пробвате с друг профил?</string>
-    <string name="login_error_generic" tools:ignore="UnusedResources" a8c-src-lib="module:login">Възникна проблем при опит за връзка с Google профила.</string>
+    <string name="email_address_login_title" a8c-src-lib="module:login">Имейл адрес за вход</string>
+    <string name="login_error_suffix" a8c-src-lib="module:login">\nЗащо не пробвате с друг профил?</string>
+    <string name="login_error_generic" a8c-src-lib="module:login">Възникна проблем при опит за връзка с Google профила.</string>
     <string name="login_error_button">Затваряне</string>
     <string name="post_settings_remove_featured_image">Премахване картинката на публикацията</string>
     <string name="post_settings_choose_featured_image">Избор на картинка за публикацията</string>
@@ -329,26 +307,25 @@ Language: bg
     <string name="connection_to_server_lost">Връзката със сървъра бе прекъсната</string>
     <string name="login_epilogue_mysites_other">Моите сайтове</string>
     <string name="login_epilogue_mysites_one">Моя сайт</string>
-    <string name="login_empty_2fa" tools:ignore="UnusedResources" a8c-src-lib="module:login">Моля въведете потвърждаващия код</string>
+    <string name="login_empty_2fa" a8c-src-lib="module:login">Моля въведете потвърждаващия код</string>
     <string name="login_email_client_not_found">Не можахме да засечем вашия имейл клиент</string>
-    <string name="login_empty_username" tools:ignore="UnusedResources" a8c-src-lib="module:login">Въведете име</string>
-    <string name="login_checking_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">Проверяване на адреса на сайта</string>
-    <string name="login_site_address_more_help" tools:ignore="UnusedResources" a8c-src-lib="module:login">Имате нужда от помощ?</string>
-    <string name="login_site_address_help_title" tools:ignore="UnusedResources" a8c-src-lib="module:login">Какъв е адресът на сайта ми?</string>
-    <string name="login_site_address" tools:ignore="UnusedResources" a8c-src-lib="module:login">Адрес на сайта</string>
+    <string name="login_empty_username" a8c-src-lib="module:login">Въведете име</string>
+    <string name="login_checking_site_address" a8c-src-lib="module:login">Проверяване на адреса на сайта</string>
+    <string name="login_site_address_more_help" a8c-src-lib="module:login">Имате нужда от помощ?</string>
+    <string name="login_site_address_help_title" a8c-src-lib="module:login">Какъв е адресът на сайта ми?</string>
+    <string name="login_site_address" a8c-src-lib="module:login">Адрес на сайта</string>
     <string name="login_already_logged_in_wpcom">Вече сте влезли в WordPress.com</string>
-    <string name="enter_wpcom_password" tools:ignore="UnusedResources" a8c-src-lib="module:login">Въведете вашата WordPress.com парола.</string>
-    <string name="login_continue" tools:ignore="UnusedResources" a8c-src-lib="module:login">Напред</string>
+    <string name="enter_wpcom_password" a8c-src-lib="module:login">Въведете вашата WordPress.com парола.</string>
+    <string name="login_continue" a8c-src-lib="module:login">Напред</string>
     <string name="connect_more">Свързване на друг сайт</string>
-    <string name="password_incorrect" tools:ignore="UnusedResources" a8c-src-lib="module:login">Изглежда вашата парола е грешна. Моля проверете информацията повторно и пробвайте отново.</string>
-    <string name="enter_verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Моля, въведете кода за потвърждение от вашето приложение Authenticator.</string>
+    <string name="password_incorrect" a8c-src-lib="module:login">Изглежда вашата парола е грешна. Моля проверете информацията повторно и пробвайте отново.</string>
+    <string name="enter_verification_code" a8c-src-lib="module:login">Моля, въведете кода за потвърждение от вашето приложение Authenticator.</string>
     <string name="next">Следващ</string>
     <string name="me_profile_photo">Снимка на профила</string>
     <string name="error_media_parse_error">Неочакван отговор от сървъра</string>
     <string name="post_title">Заглавие</string>
     <string name="menu_redo">Стъпка напред</string>
     <string name="menu_undo">Стъпка назад</string>
-    <string name="media_insert_unimplemented" tools:ignore="UnusedResources" a8c-src-lib="module:editor">За съжаление тази функционалност не е налична все още :(</string>
     <string name="error_media_small">Файлът е твърде малък, за да се покаже</string>
     <string name="editor_content_hint">Споделете вашата история тук…</string>
     <string name="post_status_pending_review">Очаква коментар</string>
@@ -414,7 +391,6 @@ Language: bg
     <string name="editor_draft_saved_online">Черновата е запазена онлайн</string>
     <string name="editor_post_saved_locally">Публикациите са запазени на устройството </string>
     <string name="button_sync">Синхронизиране</string>
-    <string name="smart_toast_comments_long_press">Натиснете и задръжте за избиране на няколко коментара</string>
     <string name="photo_picker_choose_video">Избор на видео от устройството</string>
     <string name="photo_picker_choose_photo">Избор на изображение от устройството</string>
     <string name="media_insert_as_gallery">Добавяне като галерия</string>
@@ -453,8 +429,8 @@ Language: bg
     <string name="error_all_media_upload_canceled">Качването на всички файлове беше прекъснато по неизвестна причина. Моля повторете качването</string>
     <string name="error_unknown_post_type">Непознат формат на публикацията</string>
     <string name="submit_for_review">Изпращане</string>
-    <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources" a8c-src-lib="module:login">Сайтът вече съществува в приложението и не може да го добавите</string>
-    <string name="duplicate_site_detected" tools:ignore="UnusedResources" a8c-src-lib="module:login">Сайт - дубликат беше засечен.</string>
+    <string name="cannot_add_duplicate_site" a8c-src-lib="module:login">Сайтът вече съществува в приложението и не може да го добавите</string>
+    <string name="duplicate_site_detected" a8c-src-lib="module:login">Сайт - дубликат беше засечен.</string>
     <string name="error_media_unauthorized">Нямате разрешение да преглеждате или редактирате файловете</string>
     <string name="error_media_not_found">Файлът не може да бъде намерен</string>
     <string name="error_media_insufficient_fs_permissions">Нужно е разрешение за четене на медийни файлове.</string>
@@ -492,9 +468,7 @@ Language: bg
     <string name="invite_username_not_found">%s: потребителят не е намерен</string>
     <string name="comment_moderated_approved">Коментарът бе одобрен.</string>
     <string name="like">Харесвам</string>
-    <string name="timespan_now" tools:ignore="UnusedResources">сега</string>
     <string name="role_viewer">Потребител</string>
-    <string name="error_post_my_profile_no_connection">Няма връзка, профилът не беше запазен</string>
     <string name="alignment_none">Без</string>
     <string name="alignment_left">Ляво</string>
     <string name="alignment_right">Дясно</string>
@@ -508,19 +482,9 @@ Language: bg
     <string name="follower_subscribed_since">От %1$s</string>
     <string name="error_remove_viewer">Неуспешно премахване на потребителя</string>
     <string name="editor_failed_uploads_switch_html">Някои файлове не се качиха. Преминете в режим HTML\n        на сайта. Премахване на всички неуспешно качени файлове и напред?</string>
-    <string name="visual_editor" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Визуален редактор</string>
-    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Малка картинка</string>
-    <string name="image_alt_text" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Алт текст</string>
-    <string name="image_link_to">Връзка към</string>
-    <string name="image_width">Ширина</string>
-    <string name="image_settings_save_toast">Промените са запазени</string>
-    <string name="image_caption">Описание</string>
-    <string name="image_settings_dismiss_dialog_title">Отказ от промените?</string>
     <string name="stop_upload_dialog_title">Спиране на качването?</string>
-    <string name="alert_error_adding_media" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Грешка при добавянето на файла</string>
-    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">В момента качвате файл. Изчакайте докато процесът приключи.</string>
-    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Файлове не могат да се добавят в режим HTML. Превключете обратно към визуален режим.</string>
-    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Качване на галерията…</string>
+    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">В момента качвате файл. Изчакайте докато процесът приключи.</string>
+    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Файлове не могат да се добавят в режим HTML. Превключете обратно към визуален режим.</string>
     <string name="invite_sent">Успешно изпращане на поканата</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="tap_to_try_again">Тап за повторен опит</string>
@@ -530,7 +494,6 @@ Language: bg
     <string name="invite_error_invalid_usernames_one">Неуспешно изпращане: Невалиден имейл адрес или име</string>
     <string name="invite_error_no_usernames">Нужно е поне едно потребителско име</string>
     <string name="invite">Покана</string>
-    <string name="my_site_header_external">Външна</string>
     <string name="label_clear_search_history">Изчистване на историята на търсенето</string>
     <string name="dlg_confirm_clear_search_history">Изчистване на историята на търсенето?</string>
     <string name="reader_title_related_post_detail">Свързана публикация</string>
@@ -546,11 +509,10 @@ Language: bg
     <string name="error_locating_image">Неуспешно откриване на изрязаното изображение</string>
     <string name="error_refreshing_gravatar">Грешка при презареждането на вашия аватар в Gravatar</string>
     <string name="error_cropping_image">Грешка при изрязване на изображението</string>
-    <string name="checking_email" tools:ignore="UnusedResources" a8c-src-lib="module:login">Проверяване на имейл</string>
-    <string name="magic_link_unavailable_error_message" tools:ignore="UnusedResources" a8c-src-lib="module:login">В момента не е налично. Въведете вашата парола</string>
+    <string name="checking_email" a8c-src-lib="module:login">Проверяване на имейл</string>
+    <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">В момента не е налично. Въведете вашата парола</string>
     <string name="logging_in">Влизане</string>
     <string name="web_address_dialog_hint">Ще се показва когато коментирате.</string>
-    <string name="capture_or_pick_photo">Заснемане или избор на снимка</string>
     <string name="plan">План</string>
     <string name="plans">Планове</string>
     <string name="export_your_content_message">Публикациите, страниците и настройките ви ще ви бъдат изпратени по имейл на %s.</string>
@@ -578,7 +540,7 @@ Language: bg
     <string name="editor_remove_failed_uploads">Премахване на неуспешно качените файлове</string>
     <string name="site_settings_advanced_header">Разширени</string>
     <string name="button_skip">Пропускане</string>
-    <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources" a8c-src-lib="module:login">Грешка при свързването. Задължителни XML-RPC методи липсват на този сървър.</string>
+    <string name="xmlrpc_missing_method_error" a8c-src-lib="module:login">Грешка при свързването. Задължителни XML-RPC методи липсват на този сървър.</string>
     <string name="post_format_status">Състояние</string>
     <string name="post_format_video">Видео клип</string>
     <string name="alignment_center">В средата</string>
@@ -636,7 +598,7 @@ Language: bg
     <string name="about_the_app">За приложението</string>
     <string name="error_post_account_settings">Грешка при запазване на вашите профилни настройки</string>
     <string name="error_fetch_account_settings">Грешка при зареждане на вашите профилни настройки</string>
-    <string name="error_fetch_my_profile" tools:ignore="UnusedResources" a8c-src-lib="module:login">Грешка при зареждане на вашия профил</string>
+    <string name="error_fetch_my_profile" a8c-src-lib="module:login">Грешка при зареждане на вашия профил</string>
     <string name="site_settings_unknown_language_code_error">Неразпознат код на езика</string>
     <string name="site_settings_threading_dialog_description">Позволяване на подреждането на коментарите дървовидно.</string>
     <string name="site_settings_threading_dialog_header">Подкоментари до</string>
@@ -801,26 +763,16 @@ Language: bg
     <string name="me_disconnect_from_wordpress_com">Излизане от WordPress.com</string>
     <string name="me_btn_login_logout">Вход/Изход</string>
     <string name="me_connect_to_wordpress_com">Влизане в WordPress.com</string>
-    <string name="site_picker_cant_hide_current_site">\"%s\" не беше скрит защото е текущият уебсайт</string>
     <string name="account_settings">Настройки на профила</string>
-    <string name="site_picker_edit_visibility">Показване/скриване на сайтовете</string>
     <string name="site_picker_add_self_hosted">Добавяне на самостоятелно хостван уебсайт</string>
-    <string name="my_site_btn_view_admin">Преглед на администрацията</string>
     <string name="site_picker_title">Избор на сайт</string>
-    <string name="my_site_btn_view_site">Преглед на сайта</string>
     <string name="my_site_btn_switch_site">Превключване на сайта</string>
-    <string name="my_site_header_look_and_feel">Изглед</string>
-    <string name="my_site_header_publish">Публикуване</string>
-    <string name="my_site_header_configuration">Настройки</string>
     <string name="reader_label_new_posts_subtitle">Натиснете за да ги прегледате</string>
-    <string name="hide">Скриване</string>
     <string name="select_all">Избор на всичко</string>
-    <string name="deselect_all">От-маркиране на всичко</string>
-    <string name="show">Показване</string>
-    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Невалиден верификационен код</string>
+    <string name="invalid_verification_code" a8c-src-lib="module:login">Невалиден верификационен код</string>
     <string name="language">Език</string>
-    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">Верификационен код</string>
-    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">За да продължите, влезте отново.</string>
+    <string name="verification_code" a8c-src-lib="module:login">Верификационен код</string>
+    <string name="auth_required" a8c-src-lib="module:login">За да продължите, влезте отново.</string>
     <string name="stats_view_authors">Автори</string>
     <string name="media_fetching">Извличане на файлове…</string>
     <string name="pages_fetching">Извличане на страници…</string>
@@ -880,7 +832,7 @@ Language: bg
     <string name="ssl_certificate_error">Невалиден SSL сертификат</string>
     <string name="ssl_certificate_ask_trust">Ако обикновено се свързвате с този сайт без проблеми, тази грешка може да означава, че някой се опитва да имитира този сайт и не трябва да продължавате. Искате ли да се доверите на този сертификат въпреки това?</string>
     <string name="mnu_comment_unspam">Не е спам</string>
-    <string name="error_refresh_pages" tools:ignore="UnusedResources">Страниците не могат да бъдат обновени в момента</string>
+    <string name="error_refresh_pages">Страниците не могат да бъдат обновени в момента</string>
     <string name="error_refresh_comments">Коментарите не могат да бъдат обновени в момента</string>
     <string name="error_load_comment">Коментарът не можеше да бъде зареден</string>
     <string name="blog_not_found">Възникна грешка при достъпване на този блог</string>
@@ -898,7 +850,7 @@ Language: bg
     <string name="error_refresh_posts">Публикациите не могат да бъдат обновени в момента</string>
     <string name="error_moderate_comment">Възникна грешка по време на модерирането</string>
     <string name="invalid_email_message">Адресът на електронната поща не е валиден</string>
-    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="module:login">Добавете валидна електронна поща</string>
+    <string name="email_invalid" a8c-src-lib="module:login">Добавете валидна електронна поща</string>
     <string name="username_or_password_incorrect">Името или паролата, които зададохте, са грешни</string>
     <string name="error_deleting_post">Грешка при изтриване на публикацията</string>
     <string name="comment_status_spam">Спам</string>
@@ -910,8 +862,7 @@ Language: bg
     <string name="saving_changes">Промените се запазват</string>
     <string name="new_post">Нова публикация</string>
     <string name="category_name">Име на категорията</string>
-    <string name="image_settings">Настройки на изображението</string>
-    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Хоризонтална подредба</string>
+    <string name="horizontal_alignment" a8c-src-lib="module:editor">Хоризонтална подредба</string>
     <string name="connection_error">Грешка при свързване</string>
     <string name="post_settings">Настройки на публикацията</string>
     <string name="page_settings">Настройки на страницата</string>
@@ -927,7 +878,6 @@ Language: bg
     <string name="media_gallery_type_thumbnail_grid">Решетка с малки изображения</string>
     <string name="learn_more">Още</string>
     <string name="cannot_delete_multi_media_items">Някои от файловете не могат да бъдат изтрити в момента. Опитайте по-късно.</string>
-    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Създаване на връзка</string>
     <string name="edit_comment">Редактиране на коментар</string>
     <string name="mnu_comment_approve">Одобряване</string>
     <string name="mnu_comment_unapprove">Неодобряване</string>
@@ -936,7 +886,7 @@ Language: bg
     <string name="view_in_browser">Преглед в браузър</string>
     <string name="add_new_category">Добавяне на нова категория</string>
     <string name="file_error_create">Грешка при създаване на временния файл. Уверете се че има достатъчно свободно място на вашето устройство.</string>
-    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">Нужна е оторизация</string>
+    <string name="http_authorization_required" a8c-src-lib="module:login">Нужна е оторизация</string>
     <string name="wordpress_blog">Блог от вида WordPress</string>
     <string name="reader_title_applog">Дневник на приложението</string>
     <string name="notifications_empty_all">Все още няма известявания.</string>
@@ -960,12 +910,11 @@ Language: bg
     <string name="reader_btn_share">Споделяне</string>
     <string name="reader_btn_follow">Последване</string>
     <string name="reader_label_added_tag">%s е добавен</string>
-    <string name="reader_label_removed_tag">%s е премахнат</string>
     <string name="reader_toast_err_comment_failed">Коментарът не беше публикуван</string>
     <string name="reader_toast_err_share_intent">Споделянето е неуспешно</string>
     <string name="reader_toast_err_view_image">Преглеждането на изображението е неуспешно</string>
     <string name="comments_empty_list">Все още няма коментари</string>
-    <string name="sign_up_label" tools:ignore="UnusedResources" a8c-src-lib="module:login">Регистрация</string>
+    <string name="sign_up_label" a8c-src-lib="module:login">Регистрация</string>
     <string name="reader_view_reblog">Реблог</string>
     <string name="themes">Теми</string>
     <string name="media_edit_title_text">Заглавие</string>
@@ -994,26 +943,26 @@ Language: bg
     <string name="note_reply_successful">Отговорът е публикуван</string>
     <string name="sign_in">Влизане</string>
     <string name="loading">Зареждане…</string>
-    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="module:login">HTTP Парола</string>
-    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="module:login">Потребител за HTTP</string>
+    <string name="httppassword" a8c-src-lib="module:login">HTTP Парола</string>
+    <string name="httpuser" a8c-src-lib="module:login">Потребител за HTTP</string>
     <string name="error_media_upload">Грешка при качването на медийния файл</string>
     <string name="incorrect_credentials">Грешно име и/или парола</string>
     <string name="password">Парола</string>
     <string name="username">Име</string>
-    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="module:login">Вход</string>
+    <string name="log_in" a8c-src-lib="module:login">Вход</string>
     <string name="reader">Читател</string>
     <string name="no_network_title">Няма активна мрежа</string>
     <string name="pages">Страници</string>
-    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Надпис (незадължителен)</string>
-    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ширина</string>
+    <string name="caption" a8c-src-lib="module:editor">Надпис (незадължителен)</string>
+    <string name="width" a8c-src-lib="module:editor">Ширина</string>
     <string name="posts">Публикации</string>
     <string name="anonymous">Анонимен</string>
-    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Задаване като основно изображение на публикацията</string>
-    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Използване на снимката в съдържанието на публикацията</string>
+    <string name="featured" a8c-src-lib="module:editor">Задаване като основно изображение на публикацията</string>
+    <string name="featured_in_post" a8c-src-lib="module:editor">Използване на снимката в съдържанието на публикацията</string>
     <string name="ok">ОК</string>
     <string name="done">готово</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Качва се…</string>
+    <string name="uploading" a8c-src-lib="module:editor">Качва се…</string>
     <string name="image_alignment">Подравняване</string>
     <string name="refresh">Презареждане</string>
     <string name="untitled">Неозаглавен</string>
