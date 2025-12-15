@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Soft Theme -->
     <color name="reader_theme_soft_background">#EEECED</color>
     <color name="reader_theme_soft_text">#302F2F</color>

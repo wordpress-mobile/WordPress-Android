@@ -6,16 +6,13 @@ Generator: GlotPress/4.0.3
 Language: th
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="timespan_now" tools:ignore="UnusedResources">ตอนนี้</string>
     <string name="role_viewer">ผู้ชม</string>
-    <string name="error_post_my_profile_no_connection">ไม่มีการเชื่อมต่อ ไม่สามารถบันทึกประวัติส่วนตัวของคุณได้</string>
     <string name="alignment_none">ไม่มี</string>
     <string name="alignment_left">ซ้าย</string>
     <string name="alignment_right">ขวา</string>
     <string name="site_settings_list_editor_action_mode_title">เลือก %1$d แล้ว</string>
     <string name="error_fetch_users_list">ไม่สามารถดึงข้อมูลผู้ใช้งานเว็บไซต์</string>
     <string name="people_dropdown_item_viewers">ผู้ชม</string>
-    <string name="image_thumbnail" tools:ignore="UnusedResources" a8c-src-lib="module:editor">รูปย่อ</string>
     <string name="remove">ลบออก</string>
     <string name="search">ค้นหา</string>
     <string name="disabled">ปิดการใช้งาน</string>
@@ -144,26 +141,16 @@ Language: th
     <string name="stats_insights">แบบละเอียด</string>
     <string name="me_btn_login_logout">เข้าสู่ระบบ/ออกจากระบบ</string>
     <string name="me_connect_to_wordpress_com">เชื่อมต่อกับ WordPress.com</string>
-    <string name="site_picker_cant_hide_current_site">ไม่ได้ซ่อน \"%s\" เพราะว่ามันเป็นเว็บปัจจุบัน</string>
     <string name="account_settings">ตั้งค่าบัญชี</string>
     <string name="site_picker_add_self_hosted">เพิ่มเว็บไซต์บนโฮสท์ติดตั้งเอง</string>
-    <string name="site_picker_edit_visibility">แสดง/ซ่อน เว็บไซต์</string>
-    <string name="my_site_btn_view_admin">ดูผู้ควบคุม</string>
-    <string name="my_site_btn_view_site">ดูเว็บไซต์</string>
     <string name="site_picker_title">เลือกเว็บไซต์</string>
     <string name="my_site_btn_switch_site">สลับเว็บไซต์</string>
-    <string name="my_site_header_look_and_feel">หน้าตาและสัมผัส (Look and Feel)</string>
-    <string name="my_site_header_publish">เผยแพร่</string>
-    <string name="my_site_header_configuration">การปรับแต่ง</string>
     <string name="reader_label_new_posts_subtitle">แตะเพื่อแสดงมัน</string>
-    <string name="deselect_all">ไม่เลือกทั้งหมด</string>
-    <string name="show">แสดง</string>
-    <string name="hide">ซ่อน</string>
     <string name="select_all">เลือกทั้งหมด</string>
     <string name="language">ภาษา</string>
-    <string name="verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">โค้ดยืนยัน</string>
-    <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="module:login">โค้ดยืนยันไม่ถูกต้อง</string>
-    <string name="auth_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">เข้าสู่ระบบอีกครั้งเพื่อทำต่อ</string>
+    <string name="verification_code" a8c-src-lib="module:login">โค้ดยืนยัน</string>
+    <string name="invalid_verification_code" a8c-src-lib="module:login">โค้ดยืนยันไม่ถูกต้อง</string>
+    <string name="auth_required" a8c-src-lib="module:login">เข้าสู่ระบบอีกครั้งเพื่อทำต่อ</string>
     <string name="reader_empty_posts_request_failed">ไม่สามารถดึงเรื่องได้</string>
     <string name="error_notification_open">ไม่สามารถเปิดคำเตือนได้</string>
     <string name="stats_search_terms_unknown_search_terms">เงื่อนไขการค้นหาที่ไม่รู้จัก</string>
@@ -238,12 +225,11 @@ Language: th
     <string name="theme_fetch_failed">ล้มเหลวในการดึง themes</string>
     <string name="sdcard_message">ต้องมี SD card เพื่อใช้ในการอัปโหลดไฟล์สื่อ</string>
     <string name="error_refresh_posts">ไม่สามารถโหลดใหม่เรื่องในตอนนี้</string>
-    <string name="error_refresh_pages" tools:ignore="UnusedResources">ไม่สามารถโหลดใหม่หน้าในตอนนี้</string>
+    <string name="error_refresh_pages">ไม่สามารถโหลดใหม่หน้าในตอนนี้</string>
     <string name="error_refresh_comments">ไม่สามารถโหลดใหม่ความเห็นในตอนนี้</string>
     <string name="invalid_email_message">ที่อยู่อีเมลของคุณไม่ถูกต้อง</string>
-    <string name="email_invalid" tools:ignore="UnusedResources" a8c-src-lib="module:login">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
+    <string name="email_invalid" a8c-src-lib="module:login">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
     <string name="new_media">ไฟล์สื่อใหม่</string>
-    <string name="image_settings">การตั้งค่ารูปภาพ</string>
     <string name="wordpress_blog">บล็อกเวิร์ดเพรส</string>
     <string name="fatal_db_error">มีความผิดพลาดเกิดขึ้นระหว่างการสร้างฐานข้อมูลแอพ  โปรดลองติดตั้งแอพใหม่อีกครั้ง</string>
     <string name="new_post">เรื่องใหม่</string>
@@ -265,7 +251,6 @@ Language: th
     <string name="connection_error">การเชื่อมต่อผิดพลาด</string>
     <string name="post_settings">การตั้งค่าเรื่อง</string>
     <string name="link_enter_url_text">ลิงก์ข้อความ (ทางเลือก)</string>
-    <string name="create_a_link" tools:ignore="UnusedResources" a8c-src-lib="module:editor">สร้างลิงก์</string>
     <string name="page_settings">การตั้งค่าหน้า</string>
     <string name="local_draft">ฉบับร่างที่บันทึกในเครื่อง</string>
     <string name="select_categories">เลือกหมวดหมู่</string>
@@ -276,8 +261,8 @@ Language: th
     <string name="file_error_create">ไม่สามารถสร้างไฟล์ชั่วคราวสำหรับการอัปโหลดไฟล์สื่อ โปรดตรวจสอบว่าอุปกรณ์ของคุณมีพื้นที่ว่างเพียงพอสำหรับการอัปโหลด</string>
     <string name="local_changes">การเปลี่ยนแปลงบนอุปกรณ์</string>
     <string name="media_gallery_type_thumbnail_grid">ตารางรูปขนาดย่อ</string>
-    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">การเรียงในแนวนอน</string>
-    <string name="http_authorization_required" tools:ignore="UnusedResources" a8c-src-lib="module:login">ต้องการการอนุญาติ</string>
+    <string name="horizontal_alignment" a8c-src-lib="module:editor">การเรียงในแนวนอน</string>
+    <string name="http_authorization_required" a8c-src-lib="module:login">ต้องการการอนุญาติ</string>
     <string name="reader_title_applog">log แอพพลิเคชั่น</string>
     <string name="remove_account">ลบเว็บ</string>
     <string name="notifications_empty_all">ยังไม่มีคำเตือน</string>
@@ -298,7 +283,6 @@ Language: th
     <string name="reader_toast_err_comment_failed">ไม่สามารถเขียนความเห็นของคุณ</string>
     <string name="reader_toast_err_share_intent">ไม่สามารถแบ่งปันได้</string>
     <string name="reader_label_added_tag">เพิ่ม %s แล้ว</string>
-    <string name="reader_label_removed_tag">ลบ %s แล้ว</string>
     <string name="reader_btn_share">แบ่งปัน</string>
     <string name="reader_btn_follow">ติดตาม</string>
     <string name="reader_untitled_post">(ไม่มีหัวข้อ)</string>
@@ -331,25 +315,25 @@ Language: th
     <string name="more_notifications">และ %d เพิ่มเติม</string>
     <string name="sign_in">เข้าสู่ระบบ</string>
     <string name="loading">กำลังโหลดข้อมูล…</string>
-    <string name="httpuser" tools:ignore="UnusedResources" a8c-src-lib="module:login">ชื่อผู้ใช้ HTTP</string>
-    <string name="httppassword" tools:ignore="UnusedResources" a8c-src-lib="module:login">รหัสผ่าน HTTP</string>
+    <string name="httpuser" a8c-src-lib="module:login">ชื่อผู้ใช้ HTTP</string>
+    <string name="httppassword" a8c-src-lib="module:login">รหัสผ่าน HTTP</string>
     <string name="error_media_upload">มีความผิดพลาดเกิดขึ้นขณะทำการอัปโหลดไฟล์สื่อ</string>
     <string name="incorrect_credentials">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</string>
     <string name="password">รหัสผ่าน</string>
     <string name="username">ชื่อผู้ใช้</string>
-    <string name="log_in" tools:ignore="UnusedResources" a8c-src-lib="module:login">เข้าสู่ระบบ</string>
+    <string name="log_in" a8c-src-lib="module:login">เข้าสู่ระบบ</string>
     <string name="reader">ผู้อ่าน</string>
     <string name="pages">หน้า</string>
-    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ป้ายชื่อ (ทางเลือก)</string>
-    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ความกว้าง</string>
+    <string name="caption" a8c-src-lib="module:editor">ป้ายชื่อ (ทางเลือก)</string>
+    <string name="width" a8c-src-lib="module:editor">ความกว้าง</string>
     <string name="posts">เรื่อง</string>
     <string name="anonymous">นิรนาม</string>
-    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ใช้เป็นรูปเด่น</string>
-    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">รวมรูปภาพในเนื้อหาเรื่อง</string>
+    <string name="featured" a8c-src-lib="module:editor">ใช้เป็นรูปเด่น</string>
+    <string name="featured_in_post" a8c-src-lib="module:editor">รวมรูปภาพในเนื้อหาเรื่อง</string>
     <string name="no_network_title">ไม่มีเครือข่ายใช้งานได้</string>
     <string name="ok">ตกลง</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">กำลังอัปโหลด…</string>
+    <string name="uploading" a8c-src-lib="module:editor">กำลังอัปโหลด…</string>
     <string name="image_alignment">จัดหน้า</string>
     <string name="refresh">รีเฟรช</string>
     <string name="untitled">ไม่มีหัวข้อ</string>
