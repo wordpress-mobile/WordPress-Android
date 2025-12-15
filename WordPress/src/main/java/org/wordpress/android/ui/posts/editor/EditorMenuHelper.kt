@@ -75,7 +75,7 @@ object EditorMenuHelper {
 
         if (secondaryAction != null && state.hasPost) {
             secondaryAction.isVisible = showMenuItems && state.secondaryActionVisible
-            secondaryAction.title = state.secondaryActionText
+            secondaryAction.title = state.secondaryActionText ?: ""
         }
 
         previewMenuItem?.isVisible = showMenuItems
@@ -103,7 +103,7 @@ object EditorMenuHelper {
         if (state.hasPost) {
             val primaryAction = menu.findItem(R.id.menu_primary_action)
             if (primaryAction != null) {
-                primaryAction.title = state.primaryActionText
+                primaryAction.title = state.primaryActionText ?: ""
                 primaryAction.isVisible =
                     state.currentDestination != EditPostDestination.History &&
                     state.currentDestination != EditPostDestination.PublishSettings
