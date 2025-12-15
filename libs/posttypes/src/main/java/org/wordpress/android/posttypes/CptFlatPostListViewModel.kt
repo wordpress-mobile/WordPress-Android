@@ -16,7 +16,7 @@ import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
 import uniffi.wp_api.parsePostStatus
 import uniffi.wp_mobile.AnyPostFilter
-import uniffi.wp_mobile.EntityState
+import uniffi.wp_mobile.PostItemState
 import uniffi.wp_mobile.PostMetadataCollectionItem
 import uniffi.wp_mobile.WpSelfHostedService
 import uniffi.wp_mobile_cache.ListState
@@ -39,22 +39,68 @@ data class CptPostListItem(
     val title: String,
     val excerpt: String,
     val status: String,
-    val entityState: EntityState = EntityState.Missing,
+    val itemState: PostItemState = PostItemState.Missing,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 ) {
     companion object {
         fun fromCollectionItem(item: PostMetadataCollectionItem): CptPostListItem {
-            val data = item.data
-            return CptPostListItem(
-                id = item.id,
-                entityState = item.state,
-                title = data?.data?.title?.rendered ?: "Post ${item.id}",
-                excerpt = data?.data?.content?.rendered?.take(EXCERPT_MAX_LENGTH) ?: "",
-                status = data?.data?.status?.toString()?.replaceFirstChar { it.uppercase() } ?: "",
-                isLoading = item.state is EntityState.Fetching,
-                errorMessage = (item.state as? EntityState.Failed)?.error
-            )
+            val state = item.state
+            return when (state) {
+                is PostItemState.Missing -> CptPostListItem(
+                    id = item.id,
+                    itemState = state,
+                    title = "Post ${item.id}",
+                    excerpt = "",
+                    status = ""
+                )
+                is PostItemState.Fetching -> CptPostListItem(
+                    id = item.id,
+                    itemState = state,
+                    title = "Post ${item.id}",
+                    excerpt = "",
+                    status = "",
+                    isLoading = true
+                )
+                is PostItemState.FetchingWithData -> CptPostListItem(
+                    id = item.id,
+                    itemState = state,
+                    title = state.data.data.title.rendered,
+                    excerpt = state.data.data.content.rendered.take(EXCERPT_MAX_LENGTH),
+                    status = state.data.data.status.toString().replaceFirstChar { it.uppercase() },
+                    isLoading = true
+                )
+                is PostItemState.Cached -> CptPostListItem(
+                    id = item.id,
+                    itemState = state,
+                    title = state.data.data.title.rendered,
+                    excerpt = state.data.data.content.rendered.take(EXCERPT_MAX_LENGTH),
+                    status = state.data.data.status.toString().replaceFirstChar { it.uppercase() }
+                )
+                is PostItemState.Stale -> CptPostListItem(
+                    id = item.id,
+                    itemState = state,
+                    title = state.data.data.title.rendered,
+                    excerpt = state.data.data.content.rendered.take(EXCERPT_MAX_LENGTH),
+                    status = state.data.data.status.toString().replaceFirstChar { it.uppercase() }
+                )
+                is PostItemState.Failed -> CptPostListItem(
+                    id = item.id,
+                    itemState = state,
+                    title = "Post ${item.id}",
+                    excerpt = "",
+                    status = "",
+                    errorMessage = state.error
+                )
+                is PostItemState.FailedWithData -> CptPostListItem(
+                    id = item.id,
+                    itemState = state,
+                    title = state.data.data.title.rendered,
+                    excerpt = state.data.data.content.rendered.take(EXCERPT_MAX_LENGTH),
+                    status = state.data.data.status.toString().replaceFirstChar { it.uppercase() },
+                    errorMessage = state.error
+                )
+            }
         }
 
         private const val EXCERPT_MAX_LENGTH = 100

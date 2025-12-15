@@ -41,7 +41,7 @@ import org.wordpress.android.posttypes.CptFlatPostListUiState
 import org.wordpress.android.posttypes.CptPostListItem
 import org.wordpress.android.posttypes.PostStatusFilter
 import org.wordpress.android.posttypes.R
-import uniffi.wp_mobile.EntityState
+import uniffi.wp_mobile.PostItemState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -155,7 +155,7 @@ private fun CptPostListItemRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // State indicator
-        EntityStateIndicator(state = post.entityState)
+        PostItemStateIndicator(state = post.itemState)
 
         Spacer(modifier = Modifier.width(12.dp))
 
@@ -217,13 +217,15 @@ private fun CptPostListItemRow(
 }
 
 @Composable
-private fun EntityStateIndicator(state: EntityState) {
+private fun PostItemStateIndicator(state: PostItemState) {
     val color = when (state) {
-        is EntityState.Missing -> Color.Gray
-        is EntityState.Fetching -> Color.Blue
-        is EntityState.Cached -> Color.Green
-        is EntityState.Stale -> Color.Yellow
-        is EntityState.Failed -> Color.Red
+        is PostItemState.Missing -> Color.Gray
+        is PostItemState.Fetching -> Color.Blue
+        is PostItemState.FetchingWithData -> Color.Blue
+        is PostItemState.Cached -> Color.Green
+        is PostItemState.Stale -> Color.Yellow
+        is PostItemState.Failed -> Color.Red
+        is PostItemState.FailedWithData -> Color.Red
     }
 
     Box(
