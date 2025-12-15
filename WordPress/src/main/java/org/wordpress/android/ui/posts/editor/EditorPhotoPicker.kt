@@ -186,6 +186,7 @@ class EditorPhotoPicker(
         }
     }
 
+    @Deprecated("Used only by AztecEditorFragment")
     override fun onMediaToolbarButtonClicked(action: MediaToolbarAction?) {
         // MediaPickerFragment handles its own toolbar actions through FAB and menu,
         // so this method is no longer needed for the embedded picker.
