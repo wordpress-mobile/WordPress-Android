@@ -49,6 +49,9 @@ dependencies {
     implementation libs.google.dagger.hilt.android.main
     ksp libs.google.dagger.hilt.compiler
 
+    // wordpress-rs
+    implementation libs.wordpress.rs.android
+
     // Debug
     debugImplementation libs.androidx.compose.ui.tooling.main
 }

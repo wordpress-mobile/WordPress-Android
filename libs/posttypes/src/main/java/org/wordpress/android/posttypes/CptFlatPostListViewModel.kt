@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.posttypes.bridge.BridgeConstants
 import org.wordpress.android.posttypes.bridge.SiteReference
+import org.wordpress.android.posttypes.bridge.WpSelfHostedServiceFactory
+import uniffi.wp_mobile.WpSelfHostedService
 import javax.inject.Inject
 
 data class CptPostListItem(
@@ -25,12 +27,11 @@ data class CptFlatPostListUiState(
 
 @HiltViewModel
 class CptFlatPostListViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    serviceFactory: WpSelfHostedServiceFactory
 ) : ViewModel() {
-    @Suppress("unused") // Will be used to fetch posts from wordpress-rs
     private val site: SiteReference? = savedStateHandle.get<SiteReference>(BridgeConstants.EXTRA_SITE)
 
-    @Suppress("unused") // Will be used to fetch posts from wordpress-rs
     private val postTypeSlug: String = savedStateHandle.get<String>(
         CptFlatPostListActivity.EXTRA_POST_TYPE_SLUG
     ) ?: ""
@@ -38,6 +39,11 @@ class CptFlatPostListViewModel @Inject constructor(
     private val postTypeLabel: String = savedStateHandle.get<String>(
         CptFlatPostListActivity.EXTRA_POST_TYPE_LABEL
     ) ?: ""
+
+    @Suppress("unused") // Will be used to fetch posts from wordpress-rs
+    private val selfHostedService: WpSelfHostedService? = site?.let {
+        serviceFactory.create(it.id, it.url)
+    }
 
     private val _uiState = MutableStateFlow(
         CptFlatPostListUiState(
