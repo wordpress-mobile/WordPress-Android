@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/photo_picker_item_padding">
+    android:layout_margin="@dimen/media_picker_item_padding">
 
     <RelativeLayout
         android:id="@+id/media_grid_item_file_container"

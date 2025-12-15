@@ -53,6 +53,8 @@
     <dimen name="media_selection_dot">24dp</dimen>
     <dimen name="media_picker_selection_dot">20dp</dimen>
     <dimen name="media_picker_action_mode_dot">16dp</dimen>
+    <dimen name="media_picker_item_padding">2dp</dimen>
+    <dimen name="media_picker_preview_icon">28dp</dimen>
     <item name="media_grid_item_ratio" type="string" format="string">4:3</item>
 
     <dimen name="default_dialog_button_height">36dp</dimen>
@@ -389,11 +391,6 @@
     <dimen name="people_list_row_role_margin_top">20dp</dimen>
     <dimen name="people_chips_min_target">40dp</dimen>
     <dimen name="people_default_margin_top">5dp</dimen>
-
-    <!-- photo picker -->
-    <dimen name="photo_picker_item_padding">2dp</dimen>
-    <dimen name="photo_picker_icon">48dp</dimen>
-    <dimen name="photo_picker_preview_icon">28dp</dimen>
 
     <dimen name="smart_toast_offset_y">48dp</dimen>
 
