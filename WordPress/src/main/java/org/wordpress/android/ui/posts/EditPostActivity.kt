@@ -3063,7 +3063,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             // if allowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
             editorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids)
             if (showGutenbergEditor && editorPhotoPicker?.allowMultipleSelection == true) {
-                editorPhotoPicker?.allowMultipleSelection = false
+                editorPhotoPicker?.setAllowMultipleSelection(false)
             }
         }
     }
@@ -3167,7 +3167,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onAddMediaImageClicked(allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
+        editorPhotoPicker?.setAllowMultipleSelection(allowMultipleSelection)
         mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
             this,
             siteModel,
@@ -3176,7 +3176,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onAddMediaVideoClicked(allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
+        editorPhotoPicker?.setAllowMultipleSelection(allowMultipleSelection)
         mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
             this,
             siteModel,
@@ -3185,7 +3185,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onAddLibraryMediaClicked(allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
+        editorPhotoPicker?.setAllowMultipleSelection(allowMultipleSelection)
         if (allowMultipleSelection) {
             mediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, siteModel, MediaBrowserType.EDITOR_PICKER)
         } else {
@@ -3195,7 +3195,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onAddLibraryFileClicked(allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
+        editorPhotoPicker?.setAllowMultipleSelection(allowMultipleSelection)
         mediaPickerLauncher
             .viewWPMediaLibraryPickerForResult(this, siteModel, MediaBrowserType.GUTENBERG_SINGLE_FILE_PICKER)
     }

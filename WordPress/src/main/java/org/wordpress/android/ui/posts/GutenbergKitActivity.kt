@@ -2752,7 +2752,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         // if allowMultipleSelection, pass all ids to addExistingMediaToEditor at once
         editorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids)
         if (editorPhotoPicker?.allowMultipleSelection == true) {
-            editorPhotoPicker?.allowMultipleSelection = false
+            editorPhotoPicker?.setAllowMultipleSelection(false)
         }
     }
 
@@ -3228,7 +3228,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     }
 
     override fun onOpenMediaLibraryRequested(config: GutenbergView.OpenMediaLibraryConfig) {
-        editorPhotoPicker?.allowMultipleSelection = config.multiple
+        editorPhotoPicker?.setAllowMultipleSelection(config.multiple)
         val mediaType = EditorUnitFunctions.mapAllowedTypesToMediaBrowserType(
             config.allowedTypes,
             config.multiple
