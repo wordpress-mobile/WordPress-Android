@@ -7,7 +7,7 @@ import androidx.annotation.StringRes;
 
 import org.wordpress.android.R;
 
-public class PhotoPickerUtils {
+public class MediaPickerUtils {
     public static void announceSelectedMediaForAccessibility(@NonNull ImageView imageThumbnail,
                                                              boolean isVideo,
                                                              boolean itemSelected) {

@@ -34,7 +34,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.PhotoPickerUtils;
+import org.wordpress.android.util.MediaPickerUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -638,7 +638,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
         }
 
-        PhotoPickerUtils.announceSelectedMediaForAccessibility(holder.mImageView, isVideo, selected);
+        MediaPickerUtils.announceSelectedMediaForAccessibility(holder.mImageView, isVideo, selected);
     }
 
     private void toggleItemSelected(GridViewHolder holder, int position) {
