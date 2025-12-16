@@ -51,14 +51,16 @@ class CptPostTypesActivity : AppCompatActivity(), CptActivity {
                         context = this,
                         site = action.site,
                         postTypeSlug = action.postTypeSlug,
-                        postTypeLabel = action.postTypeLabel
+                        postTypeLabel = action.postTypeLabel,
+                        endpointTypeId = action.endpointTypeId
                     )
                 } else {
                     CptFlatPostListActivity.createIntent(
                         context = this,
                         site = action.site,
                         postTypeSlug = action.postTypeSlug,
-                        postTypeLabel = action.postTypeLabel
+                        postTypeLabel = action.postTypeLabel,
+                        endpointTypeId = action.endpointTypeId
                     )
                 }
                 startActivity(intent)

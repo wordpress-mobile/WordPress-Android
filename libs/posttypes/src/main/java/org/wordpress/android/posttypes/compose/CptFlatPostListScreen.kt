@@ -256,12 +256,12 @@ private fun LoadMoreSection(
                     modifier = Modifier.padding(top = 8.dp)
                 )
             }
-            uiState.hasMorePages && uiState.currentPage > 0u -> {
+            uiState.hasMorePages && uiState.currentPage > 0L -> {
                 Button(onClick = onLoadMoreClick) {
                     Text("Load More")
                 }
             }
-            uiState.currentPage > 0u -> {
+            uiState.currentPage > 0L -> {
                 Text(
                     text = "All posts loaded",
                     style = MaterialTheme.typography.bodySmall,

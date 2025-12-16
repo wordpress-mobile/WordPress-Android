@@ -8,7 +8,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.posttypes.bridge.BridgeConstants
 import org.wordpress.android.posttypes.bridge.SiteReference
+import uniffi.wp_api.PostEndpointType
 import javax.inject.Inject
+
+/**
+ * Convert a string identifier to PostEndpointType.
+ *
+ * @see PostEndpointTypeId for the standard identifiers.
+ */
+private fun String.toPostEndpointType(): PostEndpointType = when (this) {
+    PostEndpointTypeId.POSTS -> PostEndpointType.Posts
+    PostEndpointTypeId.PAGES -> PostEndpointType.Pages
+    else -> PostEndpointType.Custom(this)
+}
 
 data class CptHierarchicalPostItem(
     val id: Long,
@@ -38,6 +50,11 @@ class CptHierarchicalPostListViewModel @Inject constructor(
     private val postTypeLabel: String = savedStateHandle.get<String>(
         CptHierarchicalPostListActivity.EXTRA_POST_TYPE_LABEL
     ) ?: ""
+
+    @Suppress("unused") // Will be used when wordpress-rs integration is added
+    private val endpointType: PostEndpointType = savedStateHandle.get<String>(
+        CptHierarchicalPostListActivity.EXTRA_ENDPOINT_TYPE_ID
+    )?.toPostEndpointType() ?: PostEndpointType.Pages
 
     private val _uiState = MutableStateFlow(
         CptHierarchicalPostListUiState(

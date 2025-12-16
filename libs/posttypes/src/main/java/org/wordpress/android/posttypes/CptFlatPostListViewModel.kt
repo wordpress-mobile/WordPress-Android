@@ -14,13 +14,27 @@ import org.wordpress.android.posttypes.bridge.SiteReference
 import org.wordpress.android.posttypes.bridge.WpSelfHostedServiceFactory
 import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
+import rs.wordpress.cache.kotlin.hasMorePages
+import rs.wordpress.cache.kotlin.isSyncing
+import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostListParams
 import uniffi.wp_api.parsePostStatus
+import uniffi.wp_mobile.ListInfo
 import uniffi.wp_mobile.PostItemState
 import uniffi.wp_mobile.PostMetadataCollectionItem
 import uniffi.wp_mobile.WpSelfHostedService
-import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
+
+/**
+ * Convert a string identifier to PostEndpointType.
+ *
+ * @see PostEndpointTypeId for the standard identifiers.
+ */
+private fun String.toPostEndpointType(): PostEndpointType = when (this) {
+    PostEndpointTypeId.POSTS -> PostEndpointType.Posts
+    PostEndpointTypeId.PAGES -> PostEndpointType.Pages
+    else -> PostEndpointType.Custom(this)
+}
 
 /**
  * Represents a filter option for the post list.
@@ -114,21 +128,21 @@ data class CptFlatPostListUiState(
     val postTypeLabel: String = "",
     val posts: List<CptPostListItem> = emptyList(),
     val currentFilter: PostStatusFilter = PostStatusFilter.ALL,
-    val syncState: ListState = ListState.IDLE,
-    val currentPage: UInt = 0u,
-    val totalPages: UInt? = null,
+    val listInfo: ListInfo? = null,
     val errorMessage: String? = null
 ) {
     /**
      * Whether a sync operation is in progress.
-     * Derived from syncState - the single source of truth from the database.
+     * Derived from listInfo.state - the single source of truth from the database.
      */
     val isSyncing: Boolean
-        get() = syncState == ListState.FETCHING_FIRST_PAGE ||
-            syncState == ListState.FETCHING_NEXT_PAGE
+        get() = listInfo?.isSyncing ?: false
 
     val hasMorePages: Boolean
-        get() = totalPages?.let { currentPage < it } ?: true
+        get() = listInfo?.hasMorePages ?: true
+
+    val currentPage: Long
+        get() = listInfo?.currentPage ?: 0L
 }
 
 @HiltViewModel
@@ -146,6 +160,10 @@ class CptFlatPostListViewModel @Inject constructor(
     private val postTypeLabel: String = savedStateHandle.get<String>(
         CptFlatPostListActivity.EXTRA_POST_TYPE_LABEL
     ) ?: ""
+
+    private val endpointType: PostEndpointType = savedStateHandle.get<String>(
+        CptFlatPostListActivity.EXTRA_ENDPOINT_TYPE_ID
+    )?.toPostEndpointType() ?: PostEndpointType.Posts
 
     private val selfHostedService: WpSelfHostedService? = site?.let {
         serviceFactory.create(it.id, it.url)
@@ -174,28 +192,22 @@ class CptFlatPostListViewModel @Inject constructor(
         observableCollection?.close()
         createObservableCollection(filter)
 
-        // Read persisted pagination state from database (sync values)
-        val collection = observableCollection
+        // Read persisted state from database (single query)
         _uiState.value = _uiState.value.copy(
             currentFilter = filter,
-            currentPage = collection?.currentPage() ?: 0u,
-            totalPages = collection?.totalPages(),
-            errorMessage = null,
-            syncState = ListState.IDLE
+            listInfo = observableCollection?.listInfo(),
+            errorMessage = null
         )
 
-        // Load items and syncState (async)
-        viewModelScope.launch(Dispatchers.Default) {
-            loadItemsFromCollectionInternal()
-            updateSyncState()
-        }
+        // Load items (async)
+        loadItemsFromCollection()
     }
 
     /**
      * Refresh the collection (fetch first page, sync missing/stale items).
      *
-     * Note: syncState is managed by the database and observed via state observer.
-     * We don't manually toggle isSyncing - it's derived from syncState.
+     * Note: syncState is managed by the database and observed via listInfo observer.
+     * We don't manually toggle isSyncing - it's derived from listInfo.state.
      */
     fun refresh() {
         if (_uiState.value.isSyncing) return
@@ -208,8 +220,7 @@ class CptFlatPostListViewModel @Inject constructor(
                 collection.refresh()
 
                 _uiState.value = _uiState.value.copy(
-                    currentPage = collection.currentPage(),
-                    totalPages = collection.totalPages(),
+                    listInfo = collection.listInfo(),
                     errorMessage = null
                 )
             } catch (e: Exception) {
@@ -223,15 +234,15 @@ class CptFlatPostListViewModel @Inject constructor(
     /**
      * Load the next page of items.
      *
-     * Note: syncState is managed by the database and observed via state observer.
-     * We don't manually toggle isSyncing - it's derived from syncState.
+     * Note: syncState is managed by the database and observed via listInfo observer.
+     * We don't manually toggle isSyncing - it's derived from listInfo.state.
      */
     fun loadNextPage() {
         if (_uiState.value.isSyncing) return
         if (!_uiState.value.hasMorePages) return
 
         // If no pages have been loaded yet, do a refresh instead
-        if (_uiState.value.currentPage == 0u) {
+        if (_uiState.value.currentPage == 0L) {
             refresh()
             return
         }
@@ -244,8 +255,7 @@ class CptFlatPostListViewModel @Inject constructor(
                 collection.loadNextPage()
 
                 _uiState.value = _uiState.value.copy(
-                    currentPage = collection.currentPage(),
-                    totalPages = collection.totalPages(),
+                    listInfo = collection.listInfo(),
                     errorMessage = null
                 )
             } catch (e: Exception) {
@@ -275,7 +285,10 @@ class CptFlatPostListViewModel @Inject constructor(
             status = if (postStatus != null) listOf(postStatus) else emptyList()
         )
 
-        val observable = postService.getObservablePostMetadataCollectionWithEditContext(params)
+        val observable = postService.getObservablePostMetadataCollectionWithEditContext(
+            endpointType,
+            params
+        )
 
         // Data observer: refresh list contents when data changes
         observable.addDataObserver {
@@ -284,20 +297,19 @@ class CptFlatPostListViewModel @Inject constructor(
             }
         }
 
-        // State observer: update sync state indicator when state changes
-        observable.addStateObserver {
+        // ListInfo observer: update pagination and sync state when they change
+        observable.addListInfoObserver {
             viewModelScope.launch(Dispatchers.Default) {
-                updateSyncState()
+                updateListInfo()
             }
         }
 
         observableCollection = observable
     }
 
-    private suspend fun updateSyncState() {
-        val collection = observableCollection ?: return
-        val newSyncState = collection.syncState()
-        _uiState.value = _uiState.value.copy(syncState = newSyncState)
+    private fun updateListInfo() {
+        val newListInfo = observableCollection?.listInfo()
+        _uiState.value = _uiState.value.copy(listInfo = newListInfo)
     }
 
     private suspend fun loadItemsFromCollectionInternal() {

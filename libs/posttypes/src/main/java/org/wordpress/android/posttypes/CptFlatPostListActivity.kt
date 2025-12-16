@@ -41,17 +41,20 @@ class CptFlatPostListActivity : AppCompatActivity(), CptActivity {
     companion object {
         const val EXTRA_POST_TYPE_SLUG = "post_type_slug"
         const val EXTRA_POST_TYPE_LABEL = "post_type_label"
+        const val EXTRA_ENDPOINT_TYPE_ID = "endpoint_type_id"
 
         fun createIntent(
             context: Context,
             site: SiteReference,
             postTypeSlug: String,
-            postTypeLabel: String
+            postTypeLabel: String,
+            endpointTypeId: String
         ): Intent {
             return Intent(context, CptFlatPostListActivity::class.java).apply {
                 putExtra(BridgeConstants.EXTRA_SITE, site)
                 putExtra(EXTRA_POST_TYPE_SLUG, postTypeSlug)
                 putExtra(EXTRA_POST_TYPE_LABEL, postTypeLabel)
+                putExtra(EXTRA_ENDPOINT_TYPE_ID, endpointTypeId)
             }
         }
     }

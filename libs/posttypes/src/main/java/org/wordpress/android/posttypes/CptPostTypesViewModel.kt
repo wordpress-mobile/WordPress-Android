@@ -23,12 +23,26 @@ data class CptPostTypesUiState(
     val postTypes: List<CptPostTypeItem> = emptyList()
 )
 
+/**
+ * String identifiers for PostEndpointType that can be passed through Intent extras.
+ *
+ * These map to wordpress-rs PostEndpointType variants:
+ * - [ENDPOINT_TYPE_POSTS] -> PostEndpointType.Posts
+ * - [ENDPOINT_TYPE_PAGES] -> PostEndpointType.Pages
+ * - Any other value -> PostEndpointType.Custom(value)
+ */
+object PostEndpointTypeId {
+    const val POSTS = "Posts"
+    const val PAGES = "Pages"
+}
+
 sealed class CptNavigationAction {
     data class OpenPostTypeList(
         val site: SiteReference,
         val postTypeSlug: String,
         val postTypeLabel: String,
-        val hierarchical: Boolean
+        val hierarchical: Boolean,
+        val endpointTypeId: String
     ) : CptNavigationAction()
 }
 
@@ -58,9 +72,24 @@ class CptPostTypesViewModel @Inject constructor(
                     site = it,
                     postTypeSlug = postType.slug,
                     postTypeLabel = postType.label,
-                    hierarchical = postType.hierarchical
+                    hierarchical = postType.hierarchical,
+                    endpointTypeId = resolveEndpointTypeId(postType.slug)
                 )
             )
+        }
+    }
+
+    /**
+     * Resolve the PostEndpointType identifier from a post type slug.
+     *
+     * Standard WordPress post types ("post", "page") map to their respective endpoint types.
+     * Custom post types use the slug as the identifier for PostEndpointType.Custom.
+     */
+    private fun resolveEndpointTypeId(slug: String): String {
+        return when (slug) {
+            "post" -> PostEndpointTypeId.POSTS
+            "page" -> PostEndpointTypeId.PAGES
+            else -> slug // Custom post type slug
         }
     }
 }
