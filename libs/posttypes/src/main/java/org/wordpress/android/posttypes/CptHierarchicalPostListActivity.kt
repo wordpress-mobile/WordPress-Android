@@ -29,7 +29,9 @@ class CptHierarchicalPostListActivity : AppCompatActivity(), CptActivity {
                 CptHierarchicalPostListScreen(
                     uiState = uiState,
                     onBackClick = { onBackPressedDispatcher.onBackPressed() },
-                    onPostClick = viewModel::onPostClick
+                    onPostClick = viewModel::onPostClick,
+                    onRefreshClick = viewModel::refresh,
+                    onLoadMoreClick = viewModel::loadNextPage
                 )
             }
         }
