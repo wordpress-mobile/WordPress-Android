@@ -49,6 +49,28 @@ import javax.inject.Inject
             "{@link org.wordpress.android.ui.mediapicker.MediaPickerFragment}"
 )
 class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
+    enum class PhotoPickerMediaSource {
+        ANDROID_CAMERA,
+        ANDROID_PICKER,
+        APP_PICKER,
+        WP_MEDIA_PICKER,
+        STOCK_MEDIA_PICKER;
+
+        companion object {
+            @JvmStatic
+            fun fromString(strSource: String?): PhotoPickerMediaSource? {
+                if (strSource != null) {
+                    for (source in entries) {
+                        if (source.name.equals(strSource, ignoreCase = true)) {
+                            return source
+                        }
+                    }
+                }
+                return null
+            }
+        }
+    }
+
     enum class PhotoPickerIcon(private val mRequiresUploadPermission: Boolean) {
         ANDROID_CHOOSE_PHOTO(true),
         ANDROID_CHOOSE_VIDEO(true),

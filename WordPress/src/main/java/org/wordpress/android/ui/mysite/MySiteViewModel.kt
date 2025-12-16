@@ -33,7 +33,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity
+import org.wordpress.android.ui.photopicker.PhotoPickerFragment
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTracker
@@ -249,7 +249,8 @@ class MySiteViewModel @Inject constructor(
 
     fun handleSelectedSiteIcon(mediaId: Long) = siteInfoHeaderCardViewModelSlice.handleSelectedSiteIcon(mediaId)
 
-    fun handleTakenSiteIcon(iconUrl: String, source: PhotoPickerActivity.PhotoPickerMediaSource?) {
+    @Suppress("DEPRECATION")
+    fun handleTakenSiteIcon(iconUrl: String, source: PhotoPickerFragment.PhotoPickerMediaSource?) {
         siteInfoHeaderCardViewModelSlice.handleTakenSiteIcon(iconUrl, source)
     }
 
