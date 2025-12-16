@@ -209,6 +209,7 @@ class CptFlatPostListViewModel @Inject constructor(
      * Note: syncState is managed by the database and observed via listInfo observer.
      * We don't manually toggle isSyncing - it's derived from listInfo.state.
      */
+    @Suppress("TooGenericExceptionCaught") // FFI exceptions from wordpress-rs
     fun refresh() {
         if (_uiState.value.isSyncing) return
 
@@ -237,17 +238,18 @@ class CptFlatPostListViewModel @Inject constructor(
      * Note: syncState is managed by the database and observed via listInfo observer.
      * We don't manually toggle isSyncing - it's derived from listInfo.state.
      */
+    @Suppress("TooGenericExceptionCaught") // FFI exceptions from wordpress-rs
     fun loadNextPage() {
-        if (_uiState.value.isSyncing) return
-        if (!_uiState.value.hasMorePages) return
+        val state = _uiState.value
+        if (state.isSyncing || !state.hasMorePages) return
 
         // If no pages have been loaded yet, do a refresh instead
-        if (_uiState.value.currentPage == 0L) {
+        if (state.currentPage == 0L) {
             refresh()
             return
         }
 
-        _uiState.value = _uiState.value.copy(errorMessage = null)
+        _uiState.value = state.copy(errorMessage = null)
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -266,8 +268,9 @@ class CptFlatPostListViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UnusedParameter") // Navigation will be implemented later
     fun onPostClick(post: CptPostListItem) {
-        // No-op: navigation will be implemented later
+        // No-op
     }
 
     override fun onCleared() {
@@ -312,6 +315,7 @@ class CptFlatPostListViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(listInfo = newListInfo)
     }
 
+    @Suppress("TooGenericExceptionCaught") // FFI exceptions from wordpress-rs
     private suspend fun loadItemsFromCollectionInternal() {
         try {
             val collection = observableCollection ?: return

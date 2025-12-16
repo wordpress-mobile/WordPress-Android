@@ -50,18 +50,21 @@ data class CptHierarchicalPostItem(
 ) {
     companion object {
         fun fromCollectionItem(item: PostMetadataCollectionItem): CptHierarchicalPostItem {
+            // Parent is always available from metadata, regardless of post data fetch state
+            val parentId = item.parent
+
             val state = item.state
             return when (state) {
                 is PostItemState.Missing -> CptHierarchicalPostItem(
                     id = item.id,
-                    parentId = null,
+                    parentId = parentId,
                     itemState = state,
                     title = "Page ${item.id}",
                     status = ""
                 )
                 is PostItemState.Fetching -> CptHierarchicalPostItem(
                     id = item.id,
-                    parentId = null,
+                    parentId = parentId,
                     itemState = state,
                     title = "Page ${item.id}",
                     status = "",
@@ -69,7 +72,7 @@ data class CptHierarchicalPostItem(
                 )
                 is PostItemState.FetchingWithData -> CptHierarchicalPostItem(
                     id = item.id,
-                    parentId = state.data.data.parent,
+                    parentId = parentId,
                     itemState = state,
                     title = state.data.data.title.rendered,
                     status = state.data.data.status.toString().replaceFirstChar { it.uppercase() },
@@ -77,21 +80,21 @@ data class CptHierarchicalPostItem(
                 )
                 is PostItemState.Cached -> CptHierarchicalPostItem(
                     id = item.id,
-                    parentId = state.data.data.parent,
+                    parentId = parentId,
                     itemState = state,
                     title = state.data.data.title.rendered,
                     status = state.data.data.status.toString().replaceFirstChar { it.uppercase() }
                 )
                 is PostItemState.Stale -> CptHierarchicalPostItem(
                     id = item.id,
-                    parentId = state.data.data.parent,
+                    parentId = parentId,
                     itemState = state,
                     title = state.data.data.title.rendered,
                     status = state.data.data.status.toString().replaceFirstChar { it.uppercase() }
                 )
                 is PostItemState.Failed -> CptHierarchicalPostItem(
                     id = item.id,
-                    parentId = null,
+                    parentId = parentId,
                     itemState = state,
                     title = "Page ${item.id}",
                     status = "",
@@ -99,7 +102,7 @@ data class CptHierarchicalPostItem(
                 )
                 is PostItemState.FailedWithData -> CptHierarchicalPostItem(
                     id = item.id,
-                    parentId = state.data.data.parent,
+                    parentId = parentId,
                     itemState = state,
                     title = state.data.data.title.rendered,
                     status = state.data.data.status.toString().replaceFirstChar { it.uppercase() },
@@ -167,6 +170,7 @@ class CptHierarchicalPostListViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught") // FFI exceptions from wordpress-rs
     fun refresh() {
         if (_uiState.value.isSyncing) return
 
@@ -189,16 +193,17 @@ class CptHierarchicalPostListViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught") // FFI exceptions from wordpress-rs
     fun loadNextPage() {
-        if (_uiState.value.isSyncing) return
-        if (!_uiState.value.hasMorePages) return
+        val state = _uiState.value
+        if (state.isSyncing || !state.hasMorePages) return
 
-        if (_uiState.value.currentPage == 0L) {
+        if (state.currentPage == 0L) {
             refresh()
             return
         }
 
-        _uiState.value = _uiState.value.copy(errorMessage = null)
+        _uiState.value = state.copy(errorMessage = null)
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -217,8 +222,9 @@ class CptHierarchicalPostListViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UnusedParameter") // Navigation will be implemented later
     fun onPostClick(post: CptHierarchicalPostItem) {
-        // No-op: navigation will be implemented later
+        // No-op
     }
 
     override fun onCleared() {
@@ -258,6 +264,7 @@ class CptHierarchicalPostListViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(listInfo = newListInfo)
     }
 
+    @Suppress("TooGenericExceptionCaught") // FFI exceptions from wordpress-rs
     private suspend fun loadItemsFromCollectionInternal() {
         try {
             val collection = observableCollection ?: return

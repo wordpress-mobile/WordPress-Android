@@ -24,7 +24,7 @@ import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
 import uniffi.wp_api.WpComBaseUrl
-import uniffi.wp_api.WpComDotOrgApiUrlResolver
+import uniffi.wp_api.WpComDotOrgApiUrlResolver as WpComSelfHostedApiUrlResolver // checkstyle ignore
 import uniffi.wp_api.WpOrgSiteApiUrlResolver
 import uniffi.wp_mobile.WpSelfHostedService
 import java.io.File
@@ -75,7 +75,6 @@ class WpSelfHostedServiceFactoryImpl @Inject constructor(
     private val accountStore: AccountStore,
     private val cache: WordPressApiCache
 ) : WpSelfHostedServiceFactory {
-
     override fun create(siteId: Long, siteUrl: String): WpSelfHostedService {
         // siteId is the remote WordPress.com site ID, not the local database ID
         val site = siteStore.getSiteBySiteId(siteId)
@@ -104,7 +103,7 @@ class WpSelfHostedServiceFactoryImpl @Inject constructor(
     private fun createApiUrlResolver(site: SiteModel, apiRoot: String): ApiUrlResolver {
         // WordPress.com sites use WP.com API URL resolver (public-api.wordpress.com)
         if (site.isWPCom || site.isUsingWpComRestApi) {
-            return WpComDotOrgApiUrlResolver(
+            return WpComSelfHostedApiUrlResolver(
                 siteId = site.siteId.toString(),
                 baseUrl = WpComBaseUrl.Production
             )
