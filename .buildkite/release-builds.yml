@@ -66,6 +66,7 @@ steps:
         retry:
           manual:
             # If those jobs fail, one should always prefer re-triggering a new build from ReleaseV2 rather than retrying the individual job from Buildkite
+            reason: If release jobs fail, you should always re-trigger the task from ReleaseV2 rather than retrying the individual job from Buildkite
             allowed: false
 
       - label: ":jetpack: :android: Release Build"
@@ -81,6 +82,7 @@ steps:
         retry:
           manual:
             # If those jobs fail, one should always prefer re-triggering a new build from ReleaseV2 rather than retrying the individual job from Buildkite
+            reason: If release jobs fail, you should always re-trigger the task from ReleaseV2 rather than retrying the individual job from Buildkite
             allowed: false
 
   #################
