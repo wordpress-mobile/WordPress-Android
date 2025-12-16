@@ -61,7 +61,7 @@ steps:
           - slack: "#build-and-ship"
         retry:
           manual:
-            # If those jobs fail, one should always prefer re-triggering a new build from ReleaseV2 rather than retrying the individual job from Buildkite
+            # If those jobs fail, one should always prefer re-triggering a new build from Releases V2 rather than retrying the individual job from Buildkite
             allowed: false
         artifact_paths:
           - "**/build/build.log"
@@ -77,7 +77,7 @@ steps:
           - slack: "#build-and-ship"
         retry:
           manual:
-            # If those jobs fail, one should always prefer re-triggering a new build from ReleaseV2 rather than retrying the individual job from Buildkite
+            # If those jobs fail, one should always prefer re-triggering a new build from Releases V2 rather than retrying the individual job from Buildkite
             allowed: false
         artifact_paths:
           - "**/build/build.log"
