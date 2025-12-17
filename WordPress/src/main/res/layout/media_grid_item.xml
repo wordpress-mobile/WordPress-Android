@@ -188,8 +188,8 @@
 
         <ImageView
             android:id="@+id/image_video_overlay"
-            android:layout_width="@dimen/photo_picker_preview_icon"
-            android:layout_height="@dimen/photo_picker_preview_icon"
+            android:layout_width="@dimen/media_picker_preview_icon"
+            android:layout_height="@dimen/media_picker_preview_icon"
             android:padding="@dimen/margin_extra_small"
             android:contentDescription="@string/media_grid_item_play_video_desc"
             android:src="@drawable/ic_play_white_black_24dp" />

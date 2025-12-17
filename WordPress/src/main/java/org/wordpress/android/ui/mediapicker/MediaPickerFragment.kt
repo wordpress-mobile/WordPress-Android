@@ -633,6 +633,24 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         this.listener = listener
     }
 
+    /**
+     * Refreshes the media list data.
+     */
+    fun refresh() {
+        if (::viewModel.isInitialized) {
+            viewModel.refreshData(false)
+        }
+    }
+
+    /**
+     * Clears the current selection and finishes action mode if active.
+     */
+    fun clearSelection() {
+        if (::viewModel.isInitialized) {
+            viewModel.clearSelection()
+        }
+    }
+
     /*
      * load the photos if we have the necessary permission, otherwise show the "soft ask" view
      * which asks the user to allow the permission

@@ -130,8 +130,6 @@ import org.wordpress.android.ui.media.MediaSettingsActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerListener
 import org.wordpress.android.ui.posts.EditPostPublishSettingsFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
@@ -148,6 +146,8 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOpera
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewHelperFunctions
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider
+import org.wordpress.android.ui.posts.editor.EditorMediaActions
+import org.wordpress.android.ui.posts.editor.EditorMenuHelper
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener
 import org.wordpress.android.ui.posts.editor.EditorTracker
@@ -247,9 +247,10 @@ private const val DISABLED_ALPHA = 0.5f
 @Suppress("LargeClass")
 class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorFragmentListener,
-    ActivityCompat.OnRequestPermissionsResultCallback, PhotoPickerListener, EditorPhotoPickerListener,
-    EditorMediaListener, EditPostSettingsFragment.EditorDataProvider, HistoryItemClickInterface,
-    PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger, SiteSettingsListener {
+    ActivityCompat.OnRequestPermissionsResultCallback, EditorMediaActions,
+    EditorPhotoPickerListener, EditorMediaListener, EditPostSettingsFragment.EditorDataProvider,
+    HistoryItemClickInterface, PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger,
+    SiteSettingsListener {
     private var restartEditorOption: RestartEditorOptions = RestartEditorOptions.NO_RESTART
     private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
     private var isConfigChange: Boolean = false
@@ -817,7 +818,15 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         //  throw this 'java.lang.ClassCastException': 'org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
         //  cannot be cast to androidx.preference.Preference'
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false)
-        editorPhotoPicker = EditorPhotoPicker(this, this, this, showAztecEditor = false)
+        editorPhotoPicker = EditorPhotoPicker(
+            activity = this,
+            editorPhotoPickerListener = this,
+            editorMediaActions = this,
+            editorMedia = editorMedia,
+            mediaPickerLauncher = mediaPickerLauncher,
+            siteModelProvider = { siteModel },
+            showAztecEditor = false
+        )
     }
 
     private fun setupToolbar(){
@@ -1418,63 +1427,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         hideOverlay()
     }
 
-    /*
-     * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
-     */
-    override fun onPhotoPickerMediaChosen(uriList: List<Uri>) {
-        editorPhotoPicker?.hidePhotoPicker()
-        editorMedia.addNewMediaItemsToEditorAsync(uriList, false)
-    }
-
-    /*
-     * called by PhotoPickerFragment when user clicks an icon to launch the camera, native
-     * picker, or WP media picker
-     */
-    override fun onPhotoPickerIconClicked(icon: PhotoPickerIcon, allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.hidePhotoPicker()
-        if (!icon.requiresUploadPermission() || WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
-            editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
-            when (icon) {
-                PhotoPickerIcon.ANDROID_CAPTURE_PHOTO -> launchCamera()
-                PhotoPickerIcon.ANDROID_CAPTURE_VIDEO -> launchVideoCamera()
-                PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO -> WPMediaUtils.launchMediaLibrary(
-                    this,
-                    allowMultipleSelection
-                )
-
-                PhotoPickerIcon.ANDROID_CHOOSE_PHOTO -> launchPictureLibrary()
-                PhotoPickerIcon.ANDROID_CHOOSE_VIDEO -> launchVideoLibrary()
-                PhotoPickerIcon.WP_MEDIA -> mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
-                    this,
-                    siteModel, MediaBrowserType.EDITOR_PICKER
-                )
-
-                PhotoPickerIcon.STOCK_MEDIA -> {
-                    val requestCode =
-                        if (allowMultipleSelection) RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT
-                        else RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK
-                    mediaPickerLauncher.showStockMediaPickerForResult(
-                        this,
-                        siteModel,
-                        requestCode,
-                        allowMultipleSelection
-                    )
-                }
-
-                PhotoPickerIcon.GIF -> mediaPickerLauncher.showGifPickerForResult(
-                    this,
-                    siteModel,
-                    allowMultipleSelection
-                )
-            }
-        } else {
-            make(
-                findViewById(R.id.editor_activity), R.string.media_error_no_permission_upload,
-                Snackbar.LENGTH_SHORT
-            ).show()
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.edit_post, menu)
@@ -1484,75 +1436,42 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Suppress("LongMethod", "CyclomaticComplexMethod", "SwallowedException")
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val currentDestination = editPostNavigationViewModel.currentDestination.value ?: EditPostDestination.default()
-        val showMenuItems = currentDestination == EditPostDestination.Editor
 
-        val undoItem = menu.findItem(R.id.menu_undo_action)
-        val redoItem = menu.findItem(R.id.menu_redo_action)
-        val secondaryAction = menu.findItem(R.id.menu_secondary_action)
-        val previewMenuItem = menu.findItem(R.id.menu_preview_post)
-        val viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode)
-        val historyMenuItem = menu.findItem(R.id.menu_history)
-        val settingsMenuItem = menu.findItem(R.id.menu_post_settings)
         val helpMenuItem = menu.findItem(R.id.menu_editor_help)
         val sendFeedbackItem = menu.findItem(R.id.menu_editor_send_feedback)
 
-        if (undoItem != null) {
-            undoItem.setEnabled(menuHasUndo && !isModalDialogOpen)
-            undoItem.setVisible(!htmlModeMenuStateOn)
-        }
-        if (redoItem != null) {
-            redoItem.setEnabled(menuHasRedo && !isModalDialogOpen)
-            redoItem.setVisible(!htmlModeMenuStateOn)
-        }
-        if (secondaryAction != null && editPostRepository.hasPost()) {
-            secondaryAction.setVisible(showMenuItems && this.secondaryAction.isVisible)
-            secondaryAction.setTitle(secondaryActionText)
-        }
-        previewMenuItem?.setVisible(showMenuItems)
-        if (viewHtmlModeMenuItem != null) {
-            viewHtmlModeMenuItem.isVisible = showMenuItems
-            viewHtmlModeMenuItem.setTitle(
-                if (htmlModeMenuStateOn) R.string.menu_visual_mode else R.string.menu_html_mode)
-        }
-        if (historyMenuItem != null) {
-            val hasHistory = !isNewPost && siteModel.isUsingWpComRestApi
-            historyMenuItem.setVisible(showMenuItems && hasHistory)
-        }
-        if (settingsMenuItem != null) {
-            settingsMenuItem.setTitle(if (isPage) R.string.page_settings else R.string.post_settings)
-            settingsMenuItem.setVisible(showMenuItems)
-        }
+        EditorMenuHelper.prepareMenu(
+            menu = menu,
+            state = EditorMenuHelper.MenuState(
+                currentDestination = currentDestination,
+                hasPost = editPostRepository.hasPost(),
+                menuHasUndo = menuHasUndo,
+                menuHasRedo = menuHasRedo,
+                htmlModeMenuStateOn = htmlModeMenuStateOn,
+                isNewPost = isNewPost,
+                isPage = isPage,
+                isUsingWpComRestApi = siteModel.isUsingWpComRestApi,
+                secondaryActionVisible = secondaryAction.isVisible,
+                secondaryActionText = secondaryActionText,
+                primaryActionText = primaryActionText,
+                isModalDialogOpen = isModalDialogOpen
+            ),
+            checkModalForUndoRedo = true,
+            disablePrimaryWhenModal = true
+        )
 
-        // Set text of the primary action button in the ActionBar
-        if (editPostRepository.hasPost()) {
-            val primaryAction = menu.findItem(R.id.menu_primary_action)
-            if (primaryAction != null) {
-                primaryAction.setTitle(primaryActionText)
-                primaryAction.setVisible(
-                    currentDestination != EditPostDestination.History &&
-                    currentDestination != EditPostDestination.PublishSettings
-                )
-                primaryAction.setEnabled(!isModalDialogOpen)
-            }
-        }
         // Note: This menu is shared with EditPostActivity. The following items are not needed
         // for GutenbergKitActivity but are hidden rather than removed to avoid duplicating
         // menu resources until a more comprehensive menu cleanup is undertaken.
 
         // Hide "Switch to Gutenberg" - not needed since we're already using GutenbergKit
-        val switchToGutenbergMenuItem = menu.findItem(R.id.menu_switch_to_gutenberg)
-        if (switchToGutenbergMenuItem != null) {
-            switchToGutenbergMenuItem.setVisible(false)
-        }
+        menu.findItem(R.id.menu_switch_to_gutenberg)?.isVisible = false
 
         // Hide "Content Info" - not supported in GutenbergKit editor
-        val contentInfo = menu.findItem(R.id.menu_content_info)
-        contentInfo.isVisible = false
+        menu.findItem(R.id.menu_content_info)?.isVisible = false
 
         // Hide "Help" - not supported in GutenbergKit editor
-        if (helpMenuItem != null) {
-            helpMenuItem.setVisible(false)
-        }
+        helpMenuItem?.isVisible = false
 
         if (sendFeedbackItem != null) {
             sendFeedbackItem.isVisible = editorFragment is GutenbergKitEditorFragment
@@ -2473,7 +2392,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         }
     }
 
-    private fun launchCamera() {
+    override fun launchCamera() {
         WPMediaUtils.launchCamera(
             this,
             BuildConfig.APPLICATION_ID,
@@ -2833,7 +2752,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         // if allowMultipleSelection, pass all ids to addExistingMediaToEditor at once
         editorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids)
         if (editorPhotoPicker?.allowMultipleSelection == true) {
-            editorPhotoPicker?.allowMultipleSelection = false
+            editorPhotoPicker?.setAllowMultipleSelection(false)
         }
     }
 
@@ -2872,11 +2791,19 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     }
 
     override fun onCapturePhotoClicked() {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO, false)
+        if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
+            launchCamera()
+        } else {
+            editorPhotoPicker?.showNoUploadPermissionSnackbar()
+        }
     }
 
     override fun onCaptureVideoClicked() {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO, false)
+        if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
+            launchVideoCamera()
+        } else {
+            editorPhotoPicker?.showNoUploadPermissionSnackbar()
+        }
     }
 
     override fun onAuthHeaderRequested(url: String): Map<String, String> {
@@ -3301,7 +3228,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     }
 
     override fun onOpenMediaLibraryRequested(config: GutenbergView.OpenMediaLibraryConfig) {
-        editorPhotoPicker?.allowMultipleSelection = config.multiple
+        editorPhotoPicker?.setAllowMultipleSelection(config.multiple)
         val mediaType = EditorUnitFunctions.mapAllowedTypesToMediaBrowserType(
             config.allowedTypes,
             config.multiple

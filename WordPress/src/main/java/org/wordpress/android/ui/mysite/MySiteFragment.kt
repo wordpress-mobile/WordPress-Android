@@ -270,9 +270,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                             MediaPickerConstants.EXTRA_MEDIA_URIS
                         ) ?: return
 
-                        @Suppress("DEPRECATION")
                         val source =
-                            org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerMediaSource.fromString(
+                            org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.fromString(
                                 data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
                             )
                         val iconUrl = mediaUriStringsArray.getOrNull(0) ?: return

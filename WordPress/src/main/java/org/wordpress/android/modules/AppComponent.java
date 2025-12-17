@@ -77,7 +77,6 @@ import org.wordpress.android.ui.people.PeopleListFragment;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.plans.PlanDetailsFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plans.PlansListAdapter;
@@ -464,8 +463,6 @@ public interface AppComponent {
     void inject(CrashLogging object);
 
     void inject(AztecVideoLoader object);
-
-    void inject(PhotoPickerFragment object);
 
     void inject(ReaderDiscoverLogic object);
 
