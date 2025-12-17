@@ -17,10 +17,10 @@ import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditCont
 import rs.wordpress.cache.kotlin.hasMorePages
 import rs.wordpress.cache.kotlin.isSyncing
 import uniffi.wp_api.PostEndpointType
-import uniffi.wp_api.PostListParams
 import uniffi.wp_api.parsePostStatus
 import uniffi.wp_mobile.ListInfo
 import uniffi.wp_mobile.PostItemState
+import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile.PostMetadataCollectionItem
 import uniffi.wp_mobile.WpSelfHostedService
 import javax.inject.Inject
@@ -284,13 +284,13 @@ class CptFlatPostListViewModel @Inject constructor(
         val postService = service.posts()
 
         val postStatus = filter.apiValue?.let { parsePostStatus(it) }
-        val params = PostListParams(
+        val listFilter = PostListFilter(
             status = if (postStatus != null) listOf(postStatus) else emptyList()
         )
 
         val observable = postService.getObservablePostMetadataCollectionWithEditContext(
             endpointType,
-            params
+            listFilter
         )
 
         // Data observer: refresh list contents when data changes

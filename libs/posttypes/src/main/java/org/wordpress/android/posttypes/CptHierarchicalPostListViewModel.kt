@@ -17,8 +17,8 @@ import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditCont
 import rs.wordpress.cache.kotlin.hasMorePages
 import rs.wordpress.cache.kotlin.isSyncing
 import uniffi.wp_api.PostEndpointType
-import uniffi.wp_api.PostListParams
 import uniffi.wp_mobile.ListInfo
+import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile.PostItemState
 import uniffi.wp_mobile.PostMetadataCollectionItem
 import uniffi.wp_mobile.WpSelfHostedService
@@ -237,11 +237,11 @@ class CptHierarchicalPostListViewModel @Inject constructor(
         val service = selfHostedService ?: return
         val postService = service.posts()
 
-        val params = PostListParams()
+        val listFilter = PostListFilter()
 
         val observable = postService.getObservablePostMetadataCollectionWithEditContext(
             endpointType,
-            params
+            listFilter
         )
 
         observable.addDataObserver {
