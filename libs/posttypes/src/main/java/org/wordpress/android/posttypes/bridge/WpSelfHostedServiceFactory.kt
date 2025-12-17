@@ -22,9 +22,9 @@ interface WpSelfHostedServiceFactory {
     /**
      * Creates a [WpSelfHostedService] for the given site.
      *
-     * @param siteId The local site ID used to look up credentials
+     * @param localSiteId The local database site ID used to look up credentials
      * @param siteUrl The site's base URL (e.g., "https://example.com")
      * @return A configured [WpSelfHostedService] ready to make API requests
      */
-    fun create(siteId: Long, siteUrl: String): WpSelfHostedService
+    fun create(localSiteId: Int, siteUrl: String): WpSelfHostedService
 }

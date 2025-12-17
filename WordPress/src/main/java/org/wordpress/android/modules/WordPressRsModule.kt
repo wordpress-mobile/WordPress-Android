@@ -75,10 +75,9 @@ class WpSelfHostedServiceFactoryImpl @Inject constructor(
     private val accountStore: AccountStore,
     private val cache: WordPressApiCache
 ) : WpSelfHostedServiceFactory {
-    override fun create(siteId: Long, siteUrl: String): WpSelfHostedService {
-        // siteId is the remote WordPress.com site ID, not the local database ID
-        val site = siteStore.getSiteBySiteId(siteId)
-            ?: throw IllegalArgumentException("Site not found for remote site id: $siteId")
+    override fun create(localSiteId: Int, siteUrl: String): WpSelfHostedService {
+        val site = siteStore.getSiteByLocalId(localSiteId)
+            ?: throw IllegalArgumentException("Site not found for local site id: $localSiteId")
 
         val apiRoot = site.wpApiRestUrl?.takeIf { it.isNotEmpty() } ?: "$siteUrl/wp-json"
         val authProvider = createAuthProvider(site)

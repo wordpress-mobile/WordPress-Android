@@ -709,7 +709,7 @@ public class ActivityLauncher {
 
     public static void viewPostTypes(@NonNull Context context, @NonNull SiteModel site) {
         SiteReference siteRef = SiteReference.Companion.create(
-                site.getSiteId(),
+                site.getId(),
                 site.getName() != null ? site.getName() : "",
                 site.getUrl() != null ? site.getUrl() : ""
         );

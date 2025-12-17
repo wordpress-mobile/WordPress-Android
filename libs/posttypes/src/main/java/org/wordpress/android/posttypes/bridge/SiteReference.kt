@@ -23,7 +23,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class SiteReference(
-    val id: Long,
+    val id: Int,
     val name: String,
     val url: String
 ) : Parcelable {
@@ -35,12 +35,12 @@ data class SiteReference(
          * module-internal representation. The main app module should call this when
          * launching Post Types activities.
          *
-         * @param siteId The site's local or remote ID
+         * @param localSiteId The site's local database ID
          * @param siteName The site's display name
          * @param siteUrl The site's URL
          */
-        fun create(siteId: Long, siteName: String, siteUrl: String): SiteReference {
-            return SiteReference(id = siteId, name = siteName, url = siteUrl)
+        fun create(localSiteId: Int, siteName: String, siteUrl: String): SiteReference {
+            return SiteReference(id = localSiteId, name = siteName, url = siteUrl)
         }
     }
 }
