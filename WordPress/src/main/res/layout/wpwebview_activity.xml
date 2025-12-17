@@ -64,7 +64,7 @@
             app:aevSubtitle="@string/error_network_connection"
             app:aevTitle="@string/error_browser_no_network"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
