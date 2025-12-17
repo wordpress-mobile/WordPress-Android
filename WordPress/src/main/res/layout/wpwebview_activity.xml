@@ -59,6 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
+            android:background="@color/background"
             app:aevButton="@string/retry"
             app:aevImage="@drawable/img_illustration_cloud_off_152dp"
             app:aevSubtitle="@string/error_network_connection"

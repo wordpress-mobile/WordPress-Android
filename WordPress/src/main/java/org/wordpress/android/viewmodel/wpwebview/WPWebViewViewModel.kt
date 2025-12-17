@@ -102,15 +102,13 @@ class WPWebViewViewModel
 
         if (WPWebViewUsageCategory.isActionableDirectUsage(wpWebViewUsageCategory)) {
             updateUiState(WPWebViewUsageCategory.actionableDirectUsageToWebPreviewUiState(wpWebViewUsageCategory))
-        } else if (isNetworkAvailable()) {
+        } else if (networkUtils.isNetworkAvailable()) {
             updateUiState(WebPreviewFullscreenProgressUiState)
         } else {
             updateUiState(WebPreviewFullscreenErrorUiState())
         }
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.STARTED
     }
-
-    fun isNetworkAvailable() = networkUtils.isNetworkAvailable()
 
     override fun onCleared() {
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
