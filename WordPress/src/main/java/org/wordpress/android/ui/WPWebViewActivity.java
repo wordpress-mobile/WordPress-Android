@@ -295,8 +295,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                     mUiHelpers.setTextOrHide(mActionableEmptyView.title, state.getTitleText());
                     mUiHelpers.setTextOrHide(mActionableEmptyView.subtitle, state.getSubtitleText());
                     mUiHelpers.updateVisibility(mActionableEmptyView.button, state.getButtonVisibility());
-                    // hide the web view when the empty view is visible to prevent it showing an error message
-                    if (mActionableEmptyView.getVisibility() == View.VISIBLE) {
+                    // hide the web view when when there's no connection to prevent it showing an error message
+                    if (mActionableEmptyView.getVisibility() == View.VISIBLE && !mViewModel.isNetworkAvailable()) {
                         mWebView.setVisibility(View.GONE);
                     } else {
                         mWebView.setVisibility(View.VISIBLE);
