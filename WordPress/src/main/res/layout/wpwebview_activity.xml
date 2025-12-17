@@ -59,12 +59,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
+            android:background="@color/background_color"
             app:aevButton="@string/retry"
             app:aevImage="@drawable/img_illustration_cloud_off_152dp"
             app:aevSubtitle="@string/error_network_connection"
             app:aevTitle="@string/error_browser_no_network"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
