@@ -50,7 +50,6 @@
             android:layout_height="match_parent"
             android:visibility="gone"
             app:aevButton="@string/site_settings_tags_empty_button"
-            app:aevImage="@drawable/img_illustration_empty_results_216dp"
             app:aevSubtitle="@string/site_settings_tags_empty_subtitle"
             app:aevTitle="@string/site_settings_tags_empty_title"
             tools:visibility="visible" />
