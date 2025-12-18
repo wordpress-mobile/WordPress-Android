@@ -225,13 +225,13 @@ public class PeopleListFragment extends Fragment {
         );
     }
 
-    private void showEmptyView() {
+    private void showEmptyPeopleView() {
         showActionableEmptyView(
                 R.string.people_empty_list_filtered_users,
                 R.string.people_empty_list_filtered_users_subtitle,
                 R.string.people_empty_list_filtered_users_button,
                 v -> {
-                    if (requireActivity() instanceof PeopleManagementActivity) {
+                    if (isAdded() && requireActivity() instanceof PeopleManagementActivity) {
                         ((PeopleManagementActivity) requireActivity()).inviteUser();
                     }
                 }
@@ -244,7 +244,6 @@ public class PeopleListFragment extends Fragment {
         }
 
         List<Person> peopleList = PeopleTable.getUsers(mSite.getId());
-        peopleList.clear(); // TODO remove this before merging
 
         if (mPeopleAdapter == null) {
             mPeopleAdapter = new PeopleAdapter(requireActivity(), peopleList);
@@ -259,7 +258,7 @@ public class PeopleListFragment extends Fragment {
             mActionableEmptyView.setVisibility(View.GONE);
         } else if (!isFetching) {
             // if we are not fetching and list is empty, show no content message
-            showEmptyView();
+            showEmptyPeopleView();
         }
     }
 
