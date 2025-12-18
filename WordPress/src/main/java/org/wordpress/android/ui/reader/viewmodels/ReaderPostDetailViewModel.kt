@@ -554,12 +554,9 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    fun onUpdatePost(post: ReaderPost, contentChanged: Boolean = false) {
+    fun onUpdatePost(post: ReaderPost) {
         viewModelScope.launch {
             _uiState.value = convertPostToUiState(post)
-            if (contentChanged) {
-                _navigationEvents.postValue(Event(ShowPostInWebView(post)))
-            }
         }
     }
 
