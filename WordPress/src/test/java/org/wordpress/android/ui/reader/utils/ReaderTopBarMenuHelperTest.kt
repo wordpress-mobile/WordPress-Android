@@ -27,13 +27,14 @@ class ReaderTopBarMenuHelperTest {
         val tags = ReaderTagList().apply {
             add(mockFollowingTag()) // item 0
             add(mockDiscoverTag()) // item 1
-            add(mockSavedTag()) // item 2
-            add(mockLikedTag()) // item 3
-            add(mockA8CTag()) // item 4
-            add(mockFollowedP2sTag()) // item 5
-            add(createCustomListTag("custom-list-1")) // item 6
-            add(createCustomListTag("custom-list-2")) // item 7
-            add(createCustomListTag("custom-list-3")) // item 8
+            add(mockFreshlyPressedTag()) // item 2
+            add(mockSavedTag()) // item 3
+            add(mockLikedTag()) // item 4
+            add(mockA8CTag()) // item 5
+            add(mockFollowedP2sTag()) // item 6
+            add(createCustomListTag("custom-list-1")) // item 7
+            add(createCustomListTag("custom-list-2")) // item 8
+            add(createCustomListTag("custom-list-3")) // item 9
         }
 
         val menu = helper.createMenu(tags)
@@ -42,19 +43,22 @@ class ReaderTopBarMenuHelperTest {
         val discoverItem = menu.findSingleItem { it.id == "1" }!!
         assertThat(discoverItem.text).isEqualTo(UiStringRes(R.string.reader_dropdown_menu_discover))
 
+        val freshlyPressedItem = menu.findSingleItem { it.id == "2" }!!
+        assertThat(freshlyPressedItem.text).isEqualTo(UiStringRes(R.string.reader_dropdown_menu_freshly_pressed))
+
         val subscriptionsItem = menu.findSingleItem { it.id == "0" }!!
         assertThat(subscriptionsItem.text).isEqualTo(UiStringRes(R.string.reader_dropdown_menu_subscriptions))
 
-        val savedItem = menu.findSingleItem { it.id == "2" }!!
+        val savedItem = menu.findSingleItem { it.id == "3" }!!
         assertThat(savedItem.text).isEqualTo(UiStringRes(R.string.reader_dropdown_menu_saved))
 
-        val likedItem = menu.findSingleItem { it.id == "3" }!!
+        val likedItem = menu.findSingleItem { it.id == "4" }!!
         assertThat(likedItem.text).isEqualTo(UiStringRes(R.string.reader_dropdown_menu_liked))
 
-        val a8cItem = menu.findSingleItem { it.id == "4" }!!
+        val a8cItem = menu.findSingleItem { it.id == "5" }!!
         assertThat(a8cItem.text).isEqualTo(UiStringRes(R.string.reader_dropdown_menu_automattic))
 
-        val followedP2sItem = menu.findSingleItem { it.id == "5" }!!
+        val followedP2sItem = menu.findSingleItem { it.id == "6" }!!
         assertThat(followedP2sItem.text).isEqualTo(UiStringText("Followed P2s"))
 
         assertThat(menu).contains(JetpackMenuElementData.Divider)
@@ -62,13 +66,13 @@ class ReaderTopBarMenuHelperTest {
         val customListsItem = menu.findSubMenu()!!
         assertThat(customListsItem.text).isEqualTo(UiStringRes(R.string.reader_dropdown_menu_lists))
 
-        val customList1Item = customListsItem.children.findSingleItem { it.id == "6" }!!
+        val customList1Item = customListsItem.children.findSingleItem { it.id == "7" }!!
         assertThat(customList1Item.text).isEqualTo(UiStringText("custom-list-1"))
 
-        val customList2Item = customListsItem.children.findSingleItem { it.id == "7" }!!
+        val customList2Item = customListsItem.children.findSingleItem { it.id == "8" }!!
         assertThat(customList2Item.text).isEqualTo(UiStringText("custom-list-2"))
 
-        val customList3Item = customListsItem.children.findSingleItem { it.id == "8" }!!
+        val customList3Item = customListsItem.children.findSingleItem { it.id == "9" }!!
         assertThat(customList3Item.text).isEqualTo(UiStringText("custom-list-3"))
     }
 
@@ -245,6 +249,40 @@ class ReaderTopBarMenuHelperTest {
     }
 
     @Test
+    fun `GIVEN freshly pressed not present WHEN createMenu THEN freshly pressed menu item not created`() {
+        val tags = ReaderTagList().apply {
+            add(mockDiscoverTag()) // item 0
+            add(mockFollowingTag()) // item 1
+            add(mockSavedTag()) // item 2
+            add(mockLikedTag()) // item 3
+        }
+
+        val menu = helper.createMenu(tags)
+
+        val freshlyPressedItem = menu
+            .findSingleItem { it.text == UiStringRes(R.string.reader_dropdown_menu_freshly_pressed) }
+        assertThat(freshlyPressedItem).isNull()
+    }
+
+    @Test
+    fun `GIVEN freshly pressed present WHEN createMenu THEN freshly pressed appears after discover`() {
+        val tags = ReaderTagList().apply {
+            add(mockDiscoverTag()) // item 0
+            add(mockFreshlyPressedTag()) // item 1
+            add(mockFollowingTag()) // item 2
+        }
+
+        val menu = helper.createMenu(tags)
+
+        val singleItems = menu.filterIsInstance<JetpackMenuElementData.Item.Single>()
+
+        // Verify order: Discover first, then Freshly Pressed, then Subscriptions
+        assertThat(singleItems[0].text).isEqualTo(UiStringRes(R.string.reader_dropdown_menu_discover))
+        assertThat(singleItems[1].text).isEqualTo(UiStringRes(R.string.reader_dropdown_menu_freshly_pressed))
+        assertThat(singleItems[2].text).isEqualTo(UiStringRes(R.string.reader_dropdown_menu_subscriptions))
+    }
+
+    @Test
     fun `GIVEN custom lists not present WHEN createMenu THEN custom lists menu item not created`() {
         val tags = ReaderTagList().apply {
             add(mockDiscoverTag()) // item 0
@@ -325,6 +363,12 @@ class ReaderTopBarMenuHelperTest {
     private fun mockDiscoverTag(): ReaderTag {
         return mock {
             on { isDiscover } doReturn true
+        }
+    }
+
+    private fun mockFreshlyPressedTag(): ReaderTag {
+        return mock {
+            on { isFreshlyPressed } doReturn true
         }
     }
 

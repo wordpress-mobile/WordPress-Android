@@ -70,6 +70,7 @@ public final class AnalyticsTracker {
         READER_LIST_UNFOLLOWED,
         READER_TAG_FOLLOWED("reader_reader_tag_followed"),
         READER_TAG_LOADED,
+        READER_FRESHLY_PRESSED_LOADED,
         READER_TAG_PREVIEWED,
         READER_TAG_UNFOLLOWED("reader_reader_tag_unfollowed"),
         READER_SEARCH_LOADED,
