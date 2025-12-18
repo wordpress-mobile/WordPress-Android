@@ -13,6 +13,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.editor.MediaToolbarAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
@@ -366,6 +367,24 @@ class EditorPhotoPickerTest {
 
         // Assert
         verify(mediaPickerLauncher).viewWPMediaLibraryPickerForResult(any(), any(), any(), any())
+    }
+
+    @Test
+    fun `onMediaToolbarButtonClicked with GALLERY notifies listener that picker is shown`() {
+        // Arrange - set up fragment manager mock for showPhotoPicker
+        val fragmentManager = mock<androidx.fragment.app.FragmentManager>()
+        val fragmentTransaction = mock<androidx.fragment.app.FragmentTransaction>()
+        whenever(activity.supportFragmentManager).thenReturn(fragmentManager)
+        whenever(fragmentManager.findFragmentByTag(any())).thenReturn(null)
+        whenever(fragmentManager.beginTransaction()).thenReturn(fragmentTransaction)
+        whenever(fragmentTransaction.add(any<Int>(), any<androidx.fragment.app.Fragment>(), any()))
+            .thenReturn(fragmentTransaction)
+
+        // Act
+        editorPhotoPicker.onMediaToolbarButtonClicked(MediaToolbarAction.GALLERY)
+
+        // Assert
+        verify(editorPhotoPickerListener).onPhotoPickerShown()
     }
 
     // endregion
