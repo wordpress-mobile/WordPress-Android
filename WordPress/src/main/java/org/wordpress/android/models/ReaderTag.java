@@ -16,8 +16,11 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public static final String LIKED_PATH = "/read/liked";
     public static final String DISCOVER_PATH = String.format(Locale.US, "read/sites/%d/posts",
             ReaderConstants.DISCOVER_SITE_ID);
+    public static final String FRESHLY_PRESSED_PATH = "/freshly-pressed";
 
     public static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
+    public static final String TAG_TITLE_FRESHLY_PRESSED = "Freshly Pressed";
+    public static final String TAG_SLUG_FRESHLY_PRESSED = "freshly-pressed";
     public static final String TAG_SLUG_P2 = "p2";
     public static final String TAG_SLUG_BOOKMARKED = "bookmarked-posts";
     public static final String TAG_TITLE_DEFAULT = TAG_TITLE_FOLLOWED_SITES;
@@ -174,6 +177,10 @@ public class ReaderTag implements Serializable, FilterCriteria {
 
     public boolean isFollowedSites() {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(FOLLOWING_PATH);
+    }
+
+    public boolean isFreshlyPressed() {
+        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(FRESHLY_PRESSED_PATH);
     }
 
     public boolean isDefaultInMemoryTag() {
