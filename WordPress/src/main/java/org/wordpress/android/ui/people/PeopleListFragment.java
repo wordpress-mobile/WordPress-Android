@@ -80,6 +80,7 @@ public class PeopleListFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mActionableEmptyView.button.setOnClickListener(null);
         // Reset adapter so it gets recreated with the new RecyclerView when the view is recreated
         mPeopleAdapter = null;
     }
@@ -231,8 +232,8 @@ public class PeopleListFragment extends Fragment {
                 R.string.people_empty_list_filtered_users_subtitle,
                 R.string.people_empty_list_filtered_users_button,
                 v -> {
-                    if (isAdded() && requireActivity() instanceof PeopleManagementActivity) {
-                        ((PeopleManagementActivity) requireActivity()).inviteUser();
+                    if (isAdded() && getActivity() instanceof PeopleManagementActivity) {
+                        ((PeopleManagementActivity) getActivity()).inviteUser();
                     }
                 }
         );
@@ -264,10 +265,11 @@ public class PeopleListFragment extends Fragment {
 
     // Refresh the role display names after user roles is fetched
     public void refreshUserRoles() {
-        if (mPeopleAdapter != null) {
-            mPeopleAdapter.refreshUserRoles();
-            mPeopleAdapter.notifyDataSetChanged();
+        if (mPeopleAdapter == null) {
+            return;
         }
+        mPeopleAdapter.refreshUserRoles();
+        mPeopleAdapter.notifyDataSetChanged();
     }
 
     public void fetchingRequestFinished(PeopleListFilter filter, boolean isFirstPage, boolean isSuccessful) {
@@ -291,13 +293,13 @@ public class PeopleListFragment extends Fragment {
     public interface OnFetchPeopleListener {
         boolean onFetchFirstPage(PeopleListFilter filter);
 
-        boolean onFetchMorePeople(PeopleListFilter filter);
+        void onFetchMorePeople(PeopleListFilter filter);
     }
 
     public class PeopleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final LayoutInflater mInflater;
+        private final int mAvatarSz;
         private List<Person> mPeopleList;
-        private int mAvatarSz;
         private List<RoleModel> mUserRoles;
 
         public PeopleAdapter(Context context, List<Person> peopleList) {
