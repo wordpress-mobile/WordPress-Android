@@ -17,10 +17,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
-
-import com.google.android.material.appbar.AppBarLayout;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
@@ -34,11 +33,8 @@ import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.ActionableEmptyView;
-import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.utils.UiHelpers;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.WPAvatarUtils;
@@ -55,7 +51,8 @@ public class PeopleListFragment extends Fragment {
     private OnPersonSelectedListener mOnPersonSelectedListener;
     private OnFetchPeopleListener mOnFetchPeopleListener;
     private ActionableEmptyView mActionableEmptyView;
-    private FilteredRecyclerView mFilteredRecyclerView;
+    private RecyclerView mRecyclerView;
+    private PeopleAdapter mPeopleAdapter;
     private final PeopleListFilter mPeopleListFilter = PeopleListFilter.TEAM;
 
     @Inject SiteStore mSiteStore;
@@ -122,119 +119,11 @@ public class PeopleListFragment extends Fragment {
             }
         });
 
-        mFilteredRecyclerView = rootView.findViewById(R.id.filtered_recycler_view);
-        mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
-        mFilteredRecyclerView.setSwipeToRefreshEnabled(false);
-        mFilteredRecyclerView.addItemDecoration(
-                new DividerItemDecoration(mFilteredRecyclerView.getContext(), DividerItemDecoration.VERTICAL)
+        mRecyclerView = rootView.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        mRecyclerView.addItemDecoration(
+                new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL)
         );
-
-        // the following will change the look and feel of the toolbar to match the current design
-        mFilteredRecyclerView.setToolbarLeftAndRightPadding(
-                getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
-                getResources().getDimensionPixelSize(R.dimen.margin_none));
-
-
-        // We hid the app bar layout in July 2025 because we don't want the filter to be visible. This is because the
-        // logic and UI for subscribers is now in the separate subscribers feature. At some point we'll want to simplify
-        // this fragment and remove the filter entirely, but since so much of the logic relies on FilteredRecyclerView
-        // we'll leave it as is for now.
-        mFilteredRecyclerView.hideAppBarLayout();
-
-        /*mFilteredRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
-            @Override
-            public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
-                ArrayList<FilterCriteria> list = new ArrayList<>();
-                Collections.addAll(list, PeopleListFilter.values());
-                // Only a private blog can have viewers
-                if (!isPrivate) {
-                    list.remove(PeopleListFilter.VIEWERS);
-                }
-                return list;
-            }
-
-            @Override
-            public void onLoadFilterCriteriaOptionsAsync(
-                    FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
-                // no-op
-            }
-
-            @Override
-            public FilterCriteria onRecallSelection() {
-                mPeopleListFilter = AppPrefs.getPeopleListFilter();
-
-                // if viewers is not available for this blog, set the filter to TEAM
-                if (mPeopleListFilter == PeopleListFilter.VIEWERS && !isPrivate) {
-                    mPeopleListFilter = PeopleListFilter.TEAM;
-                    AppPrefs.setPeopleListFilter(mPeopleListFilter);
-                }
-                return mPeopleListFilter;
-            }
-
-            @Override
-            public void onLoadData(boolean forced) {
-                updatePeople(false);
-            }
-
-            @Override
-            public void onFilterSelected(int position, FilterCriteria criteria) {
-                AnalyticsTracker.track(Stat.PEOPLE_MANAGEMENT_FILTER_CHANGED);
-                mPeopleListFilter = (PeopleListFilter) criteria;
-                AppPrefs.setPeopleListFilter(mPeopleListFilter);
-            }
-
-            @Override
-            public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
-                mActionableEmptyView.setVisibility(View.GONE);
-                mFilteredRecyclerView.setToolbarScrollFlags(LayoutParams.SCROLL_FLAG_SCROLL);
-
-                switch (emptyViewMsgType) {
-                    case LOADING:
-                        return getString(R.string.people_fetching);
-                    case NETWORK_ERROR:
-                        return getString(R.string.no_network_message);
-                    case NO_CONTENT:
-                        String title = "";
-
-                        switch (mPeopleListFilter) {
-                            case TEAM:
-                                title = getString(R.string.people_empty_list_filtered_users);
-                                break;
-                            case SUBSCRIBERS:
-                                title = getString(R.string.people_empty_list_filtered_subscribers);
-                                break;
-                            case EMAIL_SUBSCRIBERS:
-                                title = getString(R.string.people_empty_list_filtered_email_subscribers);
-                                break;
-                            case VIEWERS:
-                                title = getString(R.string.people_empty_list_filtered_viewers);
-                                break;
-                        }
-
-                        mActionableEmptyView.title.setText(title);
-                        mActionableEmptyView.setVisibility(View.VISIBLE);
-                        mFilteredRecyclerView.setToolbarScrollFlags(0);
-                        return "";
-                    case GENERIC_ERROR:
-                        switch (mPeopleListFilter) {
-                            case TEAM:
-                                return getString(R.string.error_fetch_users_list);
-                            case SUBSCRIBERS:
-                                return getString(R.string.error_fetch_subscribers_list);
-                            case EMAIL_SUBSCRIBERS:
-                                return getString(R.string.error_fetch_email_subscribers_list);
-                            case VIEWERS:
-                                return getString(R.string.error_fetch_viewers_list);
-                        }
-                    default:
-                        return "";
-                }
-            }
-
-            @Override
-            public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
-            }
-        });*/
 
         showJetpackBannerIfNeeded(rootView);
 
@@ -251,7 +140,7 @@ public class PeopleListFragment extends Fragment {
                             requireContext(),
                             mJetpackBrandingUtils.getBrandingTextForScreen(screen))
             );
-            RecyclerView scrollableView = mFilteredRecyclerView.getInternalRecyclerView();
+            RecyclerView scrollableView = mRecyclerView;
 
             mJetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView);
             mJetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView);
@@ -281,25 +170,16 @@ public class PeopleListFragment extends Fragment {
 
     private void updatePeople(boolean loadMore) {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            mFilteredRecyclerView.setRefreshing(false);
+            mRecyclerView.setVisibility(View.GONE);
+            mActionableEmptyView.setVisibility(View.VISIBLE);
             return;
         }
 
         if (mOnFetchPeopleListener != null) {
             if (loadMore) {
-                boolean isFetching = mOnFetchPeopleListener.onFetchMorePeople(mPeopleListFilter);
-                if (isFetching) {
-                    mFilteredRecyclerView.showLoadingProgress();
-                }
+                mOnFetchPeopleListener.onFetchMorePeople(mPeopleListFilter);
             } else {
                 boolean isFetching = mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
-                if (isFetching) {
-                    mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.LOADING);
-                } else {
-                    mFilteredRecyclerView.hideEmptyView();
-                    mFilteredRecyclerView.setRefreshing(false);
-                }
                 refreshPeopleList(isFetching);
             }
         }
@@ -313,52 +193,40 @@ public class PeopleListFragment extends Fragment {
         List<Person> peopleList = PeopleTable.getUsers(mSite.getId());
         peopleList.clear(); // TODO remove this before merging
 
-        PeopleAdapter peopleAdapter = (PeopleAdapter) mFilteredRecyclerView.getAdapter();
-        if (peopleAdapter == null) {
-            peopleAdapter = new PeopleAdapter(requireActivity(), peopleList);
-            mFilteredRecyclerView.setAdapter(peopleAdapter);
+        if (mPeopleAdapter == null) {
+            mPeopleAdapter = new PeopleAdapter(requireActivity(), peopleList);
+            mRecyclerView.setAdapter(mPeopleAdapter);
         } else {
-            peopleAdapter.setPeopleList(peopleList);
+            mPeopleAdapter.setPeopleList(peopleList);
         }
 
         if (!peopleList.isEmpty()) {
             // if the list is not empty, don't show any message
-            mFilteredRecyclerView.setVisibility(View.VISIBLE);
-            mFilteredRecyclerView.hideEmptyView();
-            mFilteredRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
+            mRecyclerView.setVisibility(View.VISIBLE);
             mActionableEmptyView.setVisibility(View.GONE);
         } else if (!isFetching) {
             // if we are not fetching and list is empty, show no content message
-            mFilteredRecyclerView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
             mActionableEmptyView.setVisibility(View.VISIBLE);
         }
     }
 
     // Refresh the role display names after user roles is fetched
     public void refreshUserRoles() {
-        if (mFilteredRecyclerView == null) {
-            // bail when list is not available
-            return;
-        }
-
-        PeopleAdapter peopleAdapter = (PeopleAdapter) mFilteredRecyclerView.getAdapter();
-        if (peopleAdapter != null) {
-            peopleAdapter.refreshUserRoles();
-            peopleAdapter.notifyDataSetChanged();
+        if (mPeopleAdapter != null) {
+            mPeopleAdapter.refreshUserRoles();
+            mPeopleAdapter.notifyDataSetChanged();
         }
     }
 
     public void fetchingRequestFinished(PeopleListFilter filter, boolean isFirstPage, boolean isSuccessful) {
         if (mPeopleListFilter == filter) {
             if (isFirstPage) {
-                mFilteredRecyclerView.setRefreshing(false);
                 if (!isSuccessful) {
-                    mActionableEmptyView.setVisibility(View.VISIBLE); // TODO handle error
+                    mActionableEmptyView.setVisibility(View.VISIBLE);
                 } else {
                     mActionableEmptyView.setVisibility(View.GONE);
                 }
-            } else {
-                mFilteredRecyclerView.hideLoadingProgress();
             }
         }
     }
