@@ -77,8 +77,6 @@ import org.wordpress.android.ui.people.PeopleListFragment;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.plans.PlanDetailsFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plans.PlansListAdapter;
@@ -175,7 +173,6 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetList
 import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.StatsWeekWidget;
 import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekViewsWidgetListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekWidgetBlockListProviderFactory;
-import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
@@ -253,10 +250,6 @@ public interface AppComponent {
     void inject(MediaPreviewFragment object);
 
     void inject(MediaSettingsActivity object);
-
-    void inject(PhotoPickerActivity object);
-
-    void inject(StockMediaPickerActivity object);
 
     void inject(SiteSettingsTagListActivity object);
 
@@ -470,8 +463,6 @@ public interface AppComponent {
     void inject(CrashLogging object);
 
     void inject(AztecVideoLoader object);
-
-    void inject(PhotoPickerFragment object);
 
     void inject(ReaderDiscoverLogic object);
 

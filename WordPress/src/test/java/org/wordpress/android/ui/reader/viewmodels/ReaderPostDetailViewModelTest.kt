@@ -579,6 +579,34 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_signin_fallback))
         }
 
+    @Test
+    fun `given unauthorised with intercept uri, when error ui shown, then open in browser button is visible`() =
+        testWithoutLocalPost {
+            whenever(readerFetchPostUseCase.fetchPost(readerPost.blogId, readerPost.postId, viewModel.isFeed))
+                .thenReturn(FetchReaderPostState.Success)
+            val observers = init(offerSignIn = false, interceptedUrPresent = true)
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(Failed.NotAuthorised)
+
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+            assertThat((observers.uiStates.last() as ErrorUiState).openInBrowserButtonVisibility).isTrue
+        }
+
+    @Test
+    fun `given unauthorised without intercept uri, when error ui shown, then open in browser button is not visible`() =
+        testWithoutLocalPost {
+            whenever(readerFetchPostUseCase.fetchPost(readerPost.blogId, readerPost.postId, viewModel.isFeed))
+                .thenReturn(FetchReaderPostState.Success)
+            val observers = init(offerSignIn = false, interceptedUrPresent = false)
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(Failed.NotAuthorised)
+
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+            assertThat((observers.uiStates.last() as ErrorUiState).openInBrowserButtonVisibility).isFalse
+        }
+
     /* UPDATE POST */
     @Test
     fun `when post is updated, then ui is updated`() = test {
@@ -1141,6 +1169,90 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         verify(readerTracker).track(AnalyticsTracker.Stat.READER_ARTICLE_TEXT_HIGHLIGHTED)
     }
 
+    /* FOLLOW BUTTON LOADING STATE */
+    @Test
+    fun `when follow status changes and is not final, isFollowActionRunning is true`() = test {
+        // Arrange
+        val observers = init()
+
+        // Act
+        fakePostFollowStatusChangedFeed.value = FollowStatusChanged(
+            blogId = readerPost.blogId,
+            feedId = readerPost.feedId,
+            following = true,
+            isChangeFinal = false
+        )
+
+        // Assert
+        val uiState = observers.uiStates.last() as ReaderPostDetailsUiState
+        assertThat(uiState.headerUiState.followButtonUiState.isFollowActionRunning).isTrue
+    }
+
+    @Test
+    fun `when follow status changes and is final, isFollowActionRunning is false`() = test {
+        // Arrange
+        val observers = init()
+
+        // Act
+        fakePostFollowStatusChangedFeed.value = FollowStatusChanged(
+            blogId = readerPost.blogId,
+            feedId = readerPost.feedId,
+            following = true,
+            isChangeFinal = true
+        )
+
+        // Assert
+        val uiState = observers.uiStates.last() as ReaderPostDetailsUiState
+        assertThat(uiState.headerUiState.followButtonUiState.isFollowActionRunning).isFalse
+    }
+
+    @Test
+    fun `when post updates during follow action, isFollowActionRunning state is preserved`() = test {
+        // Arrange
+        val observers = init()
+
+        // Simulate follow action starting (not final)
+        fakePostFollowStatusChangedFeed.value = FollowStatusChanged(
+            blogId = readerPost.blogId,
+            feedId = readerPost.feedId,
+            following = true,
+            isChangeFinal = false
+        )
+
+        // Act - simulate post update while follow action is running
+        viewModel.onUpdatePost(readerPost)
+
+        // Assert - the running state should be preserved
+        val uiState = observers.uiStates.last() as ReaderPostDetailsUiState
+        assertThat(uiState.headerUiState.followButtonUiState.isFollowActionRunning).isTrue
+    }
+
+    @Test
+    fun `when follow action completes, isFollowActionRunning becomes false`() = test {
+        // Arrange
+        val observers = init()
+
+        // Simulate follow action starting (not final)
+        fakePostFollowStatusChangedFeed.value = FollowStatusChanged(
+            blogId = readerPost.blogId,
+            feedId = readerPost.feedId,
+            following = true,
+            isChangeFinal = false
+        )
+
+        // Act - complete the follow action
+        fakePostFollowStatusChangedFeed.value = FollowStatusChanged(
+            blogId = readerPost.blogId,
+            feedId = readerPost.feedId,
+            following = true,
+            isChangeFinal = true
+        )
+
+        // Assert
+        val uiState = observers.uiStates.last() as ReaderPostDetailsUiState
+        assertThat(uiState.headerUiState.followButtonUiState.isFollowActionRunning).isFalse
+    }
+
     private fun <T> testWithoutLocalPost(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(null, false))
@@ -1197,7 +1309,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 FollowButtonUiState(
                     onFollowButtonClicked = mock(),
                     isFollowed = false,
-                    isEnabled = true,
                     isVisible = true
                 ),
                 "",

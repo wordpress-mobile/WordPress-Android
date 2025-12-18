@@ -1,4 +1,0 @@
-26,3:
-Kami menambahkan info ukuran berkas ke pustaka media Anda agar Anda dapat melihat dengan tepat apa yang sedang Anda kerjakan.
-
-Penyunting eksperimental juga makin lancar. Konten Anda tidak berubah posisi saat Anda memutar perangkat atau mengaktifkan mode gelap, dan dialog kini merespons dengan baik saat tombol kembali ditekan. Selamat menyunting!

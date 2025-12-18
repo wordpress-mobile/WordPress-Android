@@ -124,7 +124,6 @@ import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
-import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.subscribers.SubscribersActivity;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
@@ -250,24 +249,6 @@ public class ActivityLauncher {
         return intent;
     }
 
-    /**
-     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showStockMediaPickerForResult}  instead
-     */
-    @Deprecated
-    public static void showStockMediaPickerForResult(Activity activity,
-                                                     @NonNull SiteModel site,
-                                                     int requestCode) {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("from", activity.getClass().getSimpleName());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_ACCESSED, properties);
-
-        Intent intent = new Intent(activity, StockMediaPickerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(StockMediaPickerActivity.KEY_REQUEST_CODE, requestCode);
-
-        activity.startActivityForResult(intent, requestCode);
-    }
-
     public static void startJetpackInstall(Context context, JetpackConnectionSource source, SiteModel site) {
         Intent intent = new Intent(context, JetpackRemoteInstallActivity.class);
         intent.putExtra(WordPress.SITE, site);
@@ -336,6 +317,43 @@ public class ActivityLauncher {
         Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
         context.startActivity(intent);
+    }
+
+    public static void viewReaderDiscoverInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        intent.putExtra(WPMainActivity.ARG_READER_DISCOVER_TAB, true);
+        context.startActivity(intent);
+    }
+
+    public static void viewReaderFeedInNewStack(Context context, long feedId) {
+        Intent mainActivityIntent = getMainActivityInNewStack(context)
+                .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        Intent feedIntent = ReaderActivityLauncher.buildReaderFeedIntent(context, feedId, "deeplink");
+        TaskStackBuilder.create(context)
+                        .addNextIntent(mainActivityIntent)
+                        .addNextIntent(feedIntent)
+                        .startActivities();
+    }
+
+    public static void viewReaderSearchInNewStack(Context context) {
+        Intent mainActivityIntent = getMainActivityInNewStack(context)
+                .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        Intent searchIntent = ReaderActivityLauncher.createReaderSearchIntent(context);
+        TaskStackBuilder.create(context)
+                        .addNextIntent(mainActivityIntent)
+                        .addNextIntent(searchIntent)
+                        .startActivities();
+    }
+
+    public static void viewReaderTagInNewStack(@NonNull Context context, @NonNull String tagSlug) {
+        Intent mainActivityIntent = getMainActivityInNewStack(context)
+                .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        Intent tagIntent = ReaderActivityLauncher.buildReaderTagIntent(context, tagSlug, "deeplink");
+        TaskStackBuilder.create(context)
+                        .addNextIntent(mainActivityIntent)
+                        .addNextIntent(tagIntent)
+                        .startActivities();
     }
 
     public static void viewPostDeeplinkInNewStack(Context context, Uri uri) {
@@ -1413,6 +1431,14 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, SiteCreationActivity.class);
         intent.putExtra(SiteCreationActivity.ARG_CREATE_SITE_SOURCE, source.getLabel());
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
+    }
+
+    public static void showMainActivityAndMeScreen(Context context) {
+        Intent intent = new Intent(context, WPMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_ME);
+        context.startActivity(intent);
     }
 
     public static void showMainActivityAndSiteCreationActivity(Activity activity, SiteCreationSource source) {

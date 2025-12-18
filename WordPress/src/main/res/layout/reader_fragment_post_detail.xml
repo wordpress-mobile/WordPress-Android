@@ -155,6 +155,21 @@
             android:layout_marginEnd="@dimen/reader_detail_margin"
             android:layout_marginStart="@dimen/reader_detail_margin"/>
 
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/open_in_browser_button"
+            style="@style/WordPress.NUXPrimaryButton"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:layout_below="@+id/text_error"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/reader_open_in_browser"
+            android:visibility="gone"
+            android:layout_marginEnd="@dimen/reader_detail_margin"
+            android:layout_marginStart="@dimen/reader_detail_margin"
+            tools:visibility="visible"/>
+
     </RelativeLayout>
 
     <ViewStub

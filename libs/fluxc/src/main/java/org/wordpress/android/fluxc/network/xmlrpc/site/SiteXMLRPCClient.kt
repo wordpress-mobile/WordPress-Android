@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
 import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.util.MapUtils
 import java.util.ArrayList
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -36,7 +37,7 @@ import javax.inject.Singleton
 @Singleton
 class SiteXMLRPCClient @Inject constructor(
     dispatcher: Dispatcher?,
-    @Named("custom-ssl") requestQueue: RequestQueue?,
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL) requestQueue: RequestQueue?,
     userAgent: UserAgent?,
     httpAuthManager: HTTPAuthManager?,
     private val xmlrpcRequestBuilder: XMLRPCRequestBuilder

@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -28,8 +29,8 @@ import kotlin.coroutines.resume
 internal class WPApiApplicationPasswordsRestClient @Inject constructor(
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     private val cookieNonceAuthenticator: CookieNonceAuthenticator,
-    @Named("no-cookies") private val noCookieRequestQueue: RequestQueue,
-    @Named("regular") requestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.NO_COOKIES) private val noCookieRequestQueue: RequestQueue,
+    @Named(OkHttpClientQualifiers.REGULAR) requestQueue: RequestQueue,
     dispatcher: Dispatcher,
     private val userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {

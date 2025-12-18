@@ -31,6 +31,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.R as MaterialR
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
@@ -127,6 +128,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoFailedListener
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoLoadedListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
@@ -143,6 +145,7 @@ import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
@@ -835,6 +838,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     override fun onDetach() {
         super.onDetach()
         bottomNavController = null
+        readerPostAdapter?.setOnBlogInfoLoadedListener(null)
+        readerPostAdapter?.setOnBlogInfoFailedListener(null)
     }
 
     override fun onStart() {
@@ -1849,6 +1854,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             requireContext(),
             R.drawable.ic_bookmark_grey_dark_18dp
         )
+
+        val tint = requireContext().getColorFromAttribute(MaterialR.attr.colorOnBackground)
+        drawable?.setTint(tint)
+        drawable?.alpha = BOOKMARK_IMAGE_ALPHA
+
         drawable!!.setBounds(
             0,
             0,
@@ -2028,6 +2038,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             readerPostAdapter!!.setOnDataRequestedListener(dataRequestedListener)
             if (activity is OnBlogInfoLoadedListener) {
                 readerPostAdapter!!.setOnBlogInfoLoadedListener(activity as OnBlogInfoLoadedListener?)
+            }
+            if (activity is OnBlogInfoFailedListener) {
+                readerPostAdapter!!.setOnBlogInfoFailedListener(activity as OnBlogInfoFailedListener?)
             }
             if (getPostListType().isTagType) {
                 readerPostAdapter!!.setCurrentTag(currentTag)
@@ -2819,6 +2832,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
     }
 
+    override fun onFollowTappedWhenLoggedOut() {
+        ReaderLoginRequiredBottomSheetFragment.newInstance()
+            .show(childFragmentManager, ReaderLoginRequiredBottomSheetFragment.TAG)
+    }
+
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSubscriptionUpdated(event: OnSubscriptionUpdated) {
@@ -2897,6 +2915,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         private const val NO_POSITION = -1
         private const val RECYCLER_DELAY_MS = 1000L
         private const val BOOKMARK_IMAGE_MULTIPLIER = 1.2
+        private const val BOOKMARK_IMAGE_ALPHA = 150
         private var hasPurgedReaderDb = false
 
         /*

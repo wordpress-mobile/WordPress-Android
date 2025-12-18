@@ -21,6 +21,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.viewmodel.ScopedViewModel
 import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.WpApiParamOrder
@@ -43,6 +44,7 @@ open class DataViewViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     @Named(IO_THREAD) protected val ioDispatcher: CoroutineDispatcher,
+    private val trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableStateFlow(DataViewUiState())
     val uiState: StateFlow<DataViewUiState> = _uiState.asStateFlow()
@@ -81,11 +83,12 @@ open class DataViewViewModel @Inject constructor(
     // TODO this is strictly for wp.com sites, we'll need different auth for self-hosted
     protected val wpComApiClient: WpComApiClient by lazy {
         WpComApiClient(
-            WpAuthenticationProvider.staticWithAuth(
+            authProvider = WpAuthenticationProvider.staticWithAuth(
                 requireNotNull(accountStore.accessToken) { "Access token is required but was null" }.let { token ->
                     WpAuthentication.Bearer(token = token)
                 }
-            )
+            ),
+            interceptors = listOf(trackNetworkRequestsInterceptor)
         )
     }
 

@@ -19,6 +19,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -130,6 +131,9 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     private lateinit var dispatcher: Dispatcher
 
     @Mock
+    private lateinit var accountStore: AccountStore
+
+    @Mock
     private lateinit var resourceProvider: ResourceProvider
 
     @Mock
@@ -155,12 +159,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
             mock(),
             seenStatusToggleUseCase,
             readerBlogTableWrapper,
+            accountStore,
             testDispatcher()
         )
         actionHandler.initScope(testScope())
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(any(), anyVararg())).thenReturn(mock())
         whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(mock())
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
     }
 
     /** BOOKMARK ACTION begin **/

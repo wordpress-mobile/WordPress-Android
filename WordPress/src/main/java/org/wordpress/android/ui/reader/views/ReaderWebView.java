@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.ui.WPWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
@@ -27,11 +28,16 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /*
  * WebView descendant used by ReaderPostDetailFragment - handles
@@ -81,6 +87,7 @@ public class ReaderWebView extends WPWebView {
 
     @Inject UserAgent mUserAgent;
     @Inject AccountStore mAccountStore;
+    @Inject @Named(OkHttpClientQualifiers.REGULAR) OkHttpClient mOkHttpClient;
 
     public ReaderWebView(Context context) {
         super(context);
@@ -106,7 +113,7 @@ public class ReaderWebView extends WPWebView {
 
             mReaderChromeClient = new ReaderWebChromeClient(this);
             this.setWebChromeClient(mReaderChromeClient);
-            this.setWebViewClient(new ReaderWebViewClient(this, mUserAgent));
+            this.setWebViewClient(new ReaderWebViewClient(this, mUserAgent, mOkHttpClient));
             this.getSettings().setUserAgentString(mUserAgent.getWebViewUserAgent());
 
             // Enable third-party cookies since they are disabled by default;
@@ -265,13 +272,15 @@ public class ReaderWebView extends WPWebView {
     private static class ReaderWebViewClient extends WebViewClient {
         private final ReaderWebView mReaderWebView;
         private final UserAgent mUserAgent;
+        private final OkHttpClient mOkHttpClient;
 
-        ReaderWebViewClient(ReaderWebView readerWebView, UserAgent userAgent) {
+        ReaderWebViewClient(ReaderWebView readerWebView, UserAgent userAgent, OkHttpClient okHttpClient) {
             if (readerWebView == null) {
                 throw new IllegalArgumentException("ReaderWebViewClient requires readerWebView");
             }
             mReaderWebView = readerWebView;
             mUserAgent = userAgent;
+            mOkHttpClient = okHttpClient;
         }
 
 
@@ -310,15 +319,26 @@ public class ReaderWebView extends WPWebView {
             if (imageUrl != null && WPUrlUtils.safeToAddWordPressComAuthToken(imageUrl)
                 && !TextUtils.isEmpty(mToken)) {
                 try {
-                    HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
-                    conn.setRequestProperty("Authorization", "Bearer " + mToken);
-                    conn.setReadTimeout(TIMEOUT_MS);
-                    conn.setConnectTimeout(TIMEOUT_MS);
-                    conn.setRequestProperty("User-Agent", mUserAgent.getWebViewUserAgent());
-                    conn.setRequestProperty("Connection", "Keep-Alive");
-                    return new WebResourceResponse(conn.getContentType(),
-                            conn.getContentEncoding(),
-                            conn.getInputStream());
+                    Request request = new Request.Builder()
+                            .url(imageUrl)
+                            .addHeader("Authorization", "Bearer " + mToken)
+                            .addHeader("User-Agent", mUserAgent.getWebViewUserAgent())
+                            .addHeader("Connection", "Keep-Alive")
+                            .build();
+
+                    OkHttpClient client = mOkHttpClient.newBuilder()
+                            .connectTimeout(TIMEOUT_MS, TimeUnit.MILLISECONDS)
+                            .readTimeout(TIMEOUT_MS, TimeUnit.MILLISECONDS)
+                            .build();
+
+                    Response okResponse = client.newCall(request).execute();
+                    if (okResponse.body() != null) {
+                        return new WebResourceResponse(
+                                okResponse.header("Content-Type"),
+                                okResponse.header("Content-Encoding"),
+                                okResponse.body().byteStream()
+                        );
+                    }
                 } catch (IOException e) {
                     AppLog.e(AppLog.T.READER, e);
                 }

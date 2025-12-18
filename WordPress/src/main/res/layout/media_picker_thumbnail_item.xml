@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/photo_picker_item_padding">
+    android:layout_margin="@dimen/media_picker_item_padding">
 
     <ImageView
         android:id="@+id/image_thumbnail"
@@ -24,8 +24,8 @@
 
     <ImageView
         android:id="@+id/image_video_overlay"
-        android:layout_width="@dimen/photo_picker_preview_icon"
-        android:layout_height="@dimen/photo_picker_preview_icon"
+        android:layout_width="@dimen/media_picker_preview_icon"
+        android:layout_height="@dimen/media_picker_preview_icon"
         android:layout_gravity="center"
         android:contentDescription="@string/photo_picker_thumbnail_desc"
         android:padding="@dimen/margin_extra_small"

@@ -271,7 +271,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                         ) ?: return
 
                         val source =
-                            org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.fromString(
+                            org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.fromString(
                                 data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
                             )
                         val iconUrl = mediaUriStringsArray.getOrNull(0) ?: return

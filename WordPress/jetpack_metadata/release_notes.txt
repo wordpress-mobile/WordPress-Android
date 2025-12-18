@@ -1,2 +1,3 @@
-* [*] Monochrome icon support for the WordPress app [#22321]
-* [*] Fixed high-resolution image loading issues [#22235]
+- The app icon has a single-color option to match your device’s other themed icons. #aesthetic
+- Large, high-resolution images are more likely to load (but might take a few seconds).
+- We removed HTML tags from the Reader comment editor and fixed the “Subscribe” button.

@@ -12,5 +12,5 @@
     android:resizeMode="horizontal"
     android:updatePeriodMillis="600000"
     android:widgetCategory="home_screen"
-    tools:ignore="UnusedResources">
+   >
 </appwidget-provider>

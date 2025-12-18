@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -32,10 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,6 +54,7 @@ import androidx.compose.material3.SnackbarHostState
 import org.wordpress.android.R
 import org.wordpress.android.support.common.model.UserInfo
 import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.NewTicketFormState
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
@@ -72,18 +71,66 @@ fun HENewTicketScreen(
         subject: String,
         messageText: String,
         siteAddress: String,
+        includeAppLogs: Boolean,
             ) -> Unit,
     userInfo: UserInfo,
     isSendingNewConversation: Boolean = false,
-    attachmentState: AttachmentState = AttachmentState(),
-    attachmentActionsListener: AttachmentActionsListener
+    attachmentActionsListener: AttachmentActionsListener,
+    formState: NewTicketFormState,
+    onCategoryChange: (SupportCategory) -> Unit,
+    onSubjectChange: (String) -> Unit,
+    onSiteAddressChange: (String) -> Unit,
+    onMessageTextChange: (String) -> Unit,
+    onIncludeAppLogsChange: (Boolean) -> Unit,
 ) {
-    var selectedCategory by remember { mutableStateOf<SupportCategory?>(null) }
-    var subject by remember { mutableStateOf("") }
-    var siteAddress by remember { mutableStateOf("") }
-    var messageText by remember { mutableStateOf("") }
-    var includeAppLogs by remember { mutableStateOf(false) }
+    HENewTicketScreenContent(
+        snackbarHostState = snackbarHostState,
+        onBackClick = onBackClick,
+        onSubmit = onSubmit,
+        userInfo = userInfo,
+        isSendingNewConversation = isSendingNewConversation,
+        attachmentState = formState.attachmentState,
+        attachmentActionsListener = attachmentActionsListener,
+        selectedCategory = formState.category,
+        onCategoryChange = onCategoryChange,
+        subject = formState.subject,
+        onSubjectChange = onSubjectChange,
+        siteAddress = formState.siteAddress,
+        onSiteAddressChange = onSiteAddressChange,
+        messageText = formState.message,
+        onMessageTextChange = onMessageTextChange,
+        includeAppLogs = formState.includeAppLogs,
+        onIncludeAppLogsChange = onIncludeAppLogsChange,
+    )
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HENewTicketScreenContent(
+    snackbarHostState: SnackbarHostState,
+    onBackClick: () -> Unit,
+    onSubmit: (
+        category: SupportCategory,
+        subject: String,
+        message: String,
+        siteAddress: String,
+        includeAppLogs: Boolean,
+            ) -> Unit,
+    userInfo: UserInfo,
+    isSendingNewConversation: Boolean,
+    attachmentState: AttachmentState,
+    attachmentActionsListener: AttachmentActionsListener,
+    selectedCategory: SupportCategory?,
+    onCategoryChange: (SupportCategory) -> Unit,
+    subject: String,
+    onSubjectChange: (String) -> Unit,
+    siteAddress: String,
+    onSiteAddressChange: (String) -> Unit,
+    messageText: String,
+    onMessageTextChange: (String) -> Unit,
+    includeAppLogs: Boolean,
+    onIncludeAppLogsChange: (Boolean) -> Unit,
+) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
@@ -99,9 +146,10 @@ fun HENewTicketScreen(
                 isLoading = isSendingNewConversation,
                 onClick = {
                     selectedCategory?.let { category ->
-                        onSubmit(category, subject, messageText, siteAddress)
+                        onSubmit(category, subject, messageText, siteAddress, includeAppLogs)
                     }
-                }
+                },
+                modifier = Modifier.navigationBarsPadding()
             )
         }
     ) { contentPadding ->
@@ -121,7 +169,7 @@ fun HENewTicketScreen(
                     icon = category.icon,
                     label = stringResource(category.labelRes),
                     isSelected = selectedCategory == category,
-                    onClick = { selectedCategory = category }
+                    onClick = { onCategoryChange(category) }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }
@@ -142,7 +190,7 @@ fun HENewTicketScreen(
 
             OutlinedTextField(
                 value = subject,
-                onValueChange = { subject = it },
+                onValueChange = onSubjectChange,
                 modifier = Modifier
                     .fillMaxWidth()
                     .semantics { contentDescription = subjectLabel },
@@ -172,7 +220,7 @@ fun HENewTicketScreen(
 
             OutlinedTextField(
                 value = siteAddress,
-                onValueChange = { siteAddress = it },
+                onValueChange = onSiteAddressChange,
                 modifier = Modifier
                     .fillMaxWidth()
                     .semantics { contentDescription = siteAddressLabel },
@@ -196,8 +244,8 @@ fun HENewTicketScreen(
             TicketMainContentView(
                 messageText = messageText,
                 includeAppLogs = includeAppLogs,
-                onMessageChanged = { message -> messageText = message },
-                onIncludeAppLogsChanged = { checked -> includeAppLogs = checked },
+                onMessageChanged = onMessageTextChange,
+                onIncludeAppLogsChanged = onIncludeAppLogsChange,
                 attachmentState = attachmentState,
                 attachmentActionsListener = attachmentActionsListener
             )
@@ -237,10 +285,11 @@ private fun SectionHeader(
 private fun SendButton(
     enabled: Boolean,
     isLoading: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surface,
         shadowElevation = 8.dp
     ) {
@@ -416,25 +465,40 @@ private fun CategoryOption(
     }
 }
 
+@Composable
+private fun HENewTicketScreenPreviewContent(snackbarHostState: SnackbarHostState) {
+    HENewTicketScreenContent(
+        snackbarHostState = snackbarHostState,
+        onBackClick = { },
+        onSubmit = { _, _, _, _, _ -> },
+        userInfo = UserInfo("Test user", "test.user@automattic.com", null),
+        isSendingNewConversation = false,
+        attachmentState = AttachmentState(),
+        attachmentActionsListener = PreviewAttachmentActionsListener,
+        selectedCategory = null,
+        onCategoryChange = {},
+        subject = "",
+        onSubjectChange = {},
+        siteAddress = "",
+        onSiteAddressChange = {},
+        messageText = "",
+        onMessageTextChange = {},
+        includeAppLogs = false,
+        onIncludeAppLogsChange = {},
+    )
+}
+
+private object PreviewAttachmentActionsListener : AttachmentActionsListener {
+    override fun onAddImageClick() { /* Preview stub */ }
+    override fun onRemoveImage(uri: Uri) { /* Preview stub */ }
+}
+
 @Preview(showBackground = true, name = "HE New Ticket Screen")
 @Composable
 private fun HENewTicketScreenPreview() {
     val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = false) {
-        HENewTicketScreen(
-            snackbarHostState = snackbarHostState,
-            onBackClick = { },
-            onSubmit = { _, _, _, _-> },
-            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {
-                    // stub
-                }
-                override fun onRemoveImage(uri: Uri) {
-                    // stub
-                }
-            }
-        )
+        HENewTicketScreenPreviewContent(snackbarHostState)
     }
 }
 
@@ -443,20 +507,7 @@ private fun HENewTicketScreenPreview() {
 private fun HENewTicketScreenPreviewDark() {
     val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = true) {
-        HENewTicketScreen(
-            snackbarHostState = snackbarHostState,
-            onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
-            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {
-                    // stub
-                }
-                override fun onRemoveImage(uri: Uri) {
-                    // stub
-                }
-            }
-        )
+        HENewTicketScreenPreviewContent(snackbarHostState)
     }
 }
 
@@ -465,20 +516,7 @@ private fun HENewTicketScreenPreviewDark() {
 private fun HENewTicketScreenWordPressPreview() {
     val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = false, isJetpackApp = false) {
-        HENewTicketScreen(
-            snackbarHostState = snackbarHostState,
-            onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
-            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {
-                    // stub
-                }
-                override fun onRemoveImage(uri: Uri) {
-                    // stub
-                }
-            }
-        )
+        HENewTicketScreenPreviewContent(snackbarHostState)
     }
 }
 
@@ -487,19 +525,6 @@ private fun HENewTicketScreenWordPressPreview() {
 private fun HENewTicketScreenPreviewWordPressDark() {
     val snackbarHostState = remember { SnackbarHostState() }
     AppThemeM3(isDarkTheme = true, isJetpackApp = false) {
-        HENewTicketScreen(
-            snackbarHostState = snackbarHostState,
-            onBackClick = { },
-            onSubmit = { _, _, _, _ -> },
-            userInfo = UserInfo("Test user", "test.user@automattic.com", null),
-            attachmentActionsListener = object : AttachmentActionsListener {
-                override fun onAddImageClick() {
-                    // stub
-                }
-                override fun onRemoveImage(uri: Uri) {
-                    // stub
-                }
-            }
-        )
+        HENewTicketScreenPreviewContent(snackbarHostState)
     }
 }

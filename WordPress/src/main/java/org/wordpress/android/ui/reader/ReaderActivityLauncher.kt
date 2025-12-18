@@ -14,6 +14,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.WPWebViewActivity
@@ -194,6 +195,28 @@ object ReaderActivityLauncher {
         )
     }
 
+    /**
+     * Build an intent to show posts from a specific feed (for deeplinks)
+     */
+    @JvmStatic
+    fun buildReaderFeedIntent(context: Context, feedId: Long, source: String): Intent {
+        return Intent(context, ReaderPostListActivity::class.java).apply {
+            putExtra(ReaderConstants.ARG_SOURCE, source)
+            putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW)
+            putExtra(ReaderConstants.ARG_FEED_ID, feedId)
+            putExtra(ReaderConstants.ARG_IS_FEED, true)
+        }
+    }
+
+    /**
+     * Build an intent to show posts with a specific tag (for deeplinks)
+     */
+    @JvmStatic
+    fun buildReaderTagIntent(context: Context, tagSlug: String, source: String): Intent {
+        val tag = ReaderUtils.createTagFromTagName(tagSlug, ReaderTagType.FOLLOWED)
+        return createReaderTagPreviewIntent(context, tag, source)
+    }
+
     /*
      * show a list of posts with a specific tag
      */
@@ -228,6 +251,7 @@ object ReaderActivityLauncher {
         context.startActivity(createReaderSearchIntent(context))
     }
 
+    @JvmStatic
     fun createReaderSearchIntent(context: Context): Intent {
         return Intent(context, ReaderSearchActivity::class.java)
     }

@@ -99,7 +99,6 @@ class SiteCreationPlansFragment : Fragment(), SiteCreationPlansWebViewClientList
     }
 
     @Composable
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     fun SiteCreationPlansPage(
         navigationUp: () -> Unit = { },
         viewModel: SiteCreationPlansViewModel = viewModel(),
@@ -113,7 +112,11 @@ class SiteCreationPlansFragment : Fragment(), SiteCreationPlansWebViewClientList
                     onNavigationIconClick = navigationUp
                 )
             },
-            content = { SiteCreationPlansContent(uiState) }
+            content = { paddingValues ->
+                Box(modifier = Modifier.padding(paddingValues)) {
+                    SiteCreationPlansContent(uiState)
+                }
+            }
         )
     }
 

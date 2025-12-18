@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.preference.PreferenceManager;
 
@@ -36,8 +37,11 @@ import org.wordpress.android.util.audio.VoiceToContentStrategy;
 import org.wordpress.android.util.config.InAppUpdatesFeatureConfig;
 import org.wordpress.android.util.config.RemoteConfigWrapper;
 import org.wordpress.android.util.wizard.WizardManager;
+import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
+
+import java.util.Collections;
 
 import javax.inject.Named;
 
@@ -151,7 +155,9 @@ public abstract class ApplicationModule {
     }
 
     @Provides
-    public static WpLoginClient provideWpLoginClient() {
-        return new WpLoginClient();
+    public static WpLoginClient provideWpLoginClient(
+            @NonNull TrackNetworkRequestsInterceptor trackNetworkRequestsInterceptor
+    ) {
+        return new WpLoginClient(Collections.singletonList(trackNetworkRequestsInterceptor));
     }
 }

@@ -19,8 +19,6 @@ end
 
 common_release_checker.check_internal_release_notes_changed(report_type: :message)
 
-android_release_checker.check_modified_strings_on_release
-
 view_changes_checker.check
 
 pr_size_checker.check_diff_size(

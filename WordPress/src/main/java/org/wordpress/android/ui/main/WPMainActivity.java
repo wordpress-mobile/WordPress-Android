@@ -231,6 +231,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
     public static final String ARG_READER_BOOKMARK_TAB = "show_reader_bookmark_tab";
+    public static final String ARG_READER_DISCOVER_TAB = "show_reader_discover_tab";
     public static final String ARG_EDITOR = "show_editor";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
     public static final String ARG_STATS = "show_stats";
@@ -247,6 +248,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public static final String ARG_IS_CHANGING_CONFIGURATION = "IS_CHANGING_CONFIGURATION";
     public static final String ARG_BYPASS_MIGRATION = "bypass_migration";
     public static final String ARG_MEDIA = "show_media";
+    public static final String ARG_ME = "show_me";
     public static final String ARG_OPEN_PAGE_MESSAGE = "open_page_message";
     private boolean mIsChangingConfiguration = false;
     private WPMainNavigationView mBottomNav;
@@ -901,11 +903,13 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
                         break;
                     }
+                    if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.READER);
                     if (intent.getBooleanExtra(ARG_READER_BOOKMARK_TAB, false) && mBottomNav != null && mBottomNav
                             .getActiveFragment() instanceof ReaderFragment) {
                         ((ReaderFragment) mBottomNav.getActiveFragment()).requestBookmarkTab();
-                    } else {
-                        if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.READER);
+                    } else if (intent.getBooleanExtra(ARG_READER_DISCOVER_TAB, false) && mBottomNav != null
+                            && mBottomNav.getActiveFragment() instanceof ReaderFragment) {
+                        ((ReaderFragment) mBottomNav.getActiveFragment()).requestDiscoverTab();
                     }
                     break;
                 case ARG_EDITOR:
@@ -955,6 +959,9 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                         initSelectedSite();
                     }
                     mActivityNavigator.viewCurrentBlogMedia(this, getSelectedSite());
+                    break;
+                case ARG_ME:
+                    if (mBottomNav != null) mBottomNav.setCurrentSelectedPage(PageType.ME);
                     break;
             }
         } else {

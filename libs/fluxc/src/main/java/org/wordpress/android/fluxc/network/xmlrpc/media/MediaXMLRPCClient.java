@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.fluxc.utils.MimeType;
 import org.wordpress.android.fluxc.utils.extensions.SiteModelExtensionsKt;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -69,6 +70,7 @@ import okhttp3.Request.Builder;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+
 @Singleton
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
     private static final String[] REQUIRED_UPLOAD_RESPONSE_FIELDS = {
@@ -81,8 +83,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
     @Inject public MediaXMLRPCClient(
             Dispatcher dispatcher,
-            @Named("custom-ssl") RequestQueue requestQueue,
-            @NonNull @Named("custom-ssl") OkHttpClient okHttpClient,
+            @Named(OkHttpClientQualifiers.CUSTOM_SSL) RequestQueue requestQueue,
+            @NonNull @Named(OkHttpClientQualifiers.CUSTOM_SSL) OkHttpClient okHttpClient,
             UserAgent userAgent,
             HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);

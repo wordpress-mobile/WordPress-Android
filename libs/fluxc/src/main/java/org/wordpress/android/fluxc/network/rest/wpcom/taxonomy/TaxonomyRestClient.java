@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermResponsePayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
     @Inject public TaxonomyRestClient(
             Context appContext,
             Dispatcher dispatcher,
-            @Named("regular") RequestQueue requestQueue,
+            @Named(OkHttpClientQualifiers.REGULAR) RequestQueue requestQueue,
             AccessToken accessToken,
             UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);

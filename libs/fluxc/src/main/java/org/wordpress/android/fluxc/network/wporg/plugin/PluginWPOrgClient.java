@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginDirectoryPaylo
 import org.wordpress.android.fluxc.store.PluginStore.FetchedWPOrgPluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.PluginDirectoryError;
 import org.wordpress.android.fluxc.store.PluginStore.PluginDirectoryErrorType;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.fluxc.store.PluginStore.SearchedPluginDirectoryPayload;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
     private final Dispatcher mDispatcher;
 
     @Inject public PluginWPOrgClient(Dispatcher dispatcher,
-                                     @Named("regular") RequestQueue requestQueue,
+                                     @Named(OkHttpClientQualifiers.REGULAR) RequestQueue requestQueue,
                                      UserAgent userAgent) {
         super(dispatcher, requestQueue, userAgent);
         mDispatcher = dispatcher;

@@ -28,7 +28,6 @@
                 android:layout_height="match_parent"
                 android:visibility="gone"
                 app:aevButton="@string/posts_empty_list_button"
-                app:aevImage="@drawable/img_illustration_posts_75dp"
                 app:aevTitle="@string/posts_empty_list"
                 tools:visibility="visible" />
 

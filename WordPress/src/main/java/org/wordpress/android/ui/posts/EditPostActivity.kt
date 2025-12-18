@@ -142,8 +142,6 @@ import org.wordpress.android.ui.media.MediaSettingsActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerListener
 import org.wordpress.android.ui.posts.EditPostCustomerSupportHelper.onContactCustomerSupport
 import org.wordpress.android.ui.posts.EditPostCustomerSupportHelper.onGotoCustomerSupportOptions
 import org.wordpress.android.ui.posts.EditPostPublishSettingsFragment.Companion.newInstance
@@ -164,6 +162,8 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOpera
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewHelperFunctions
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider
+import org.wordpress.android.ui.posts.editor.EditorMediaActions
+import org.wordpress.android.ui.posts.editor.EditorMenuHelper
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener
 import org.wordpress.android.ui.posts.editor.EditorTracker
@@ -267,9 +267,10 @@ private const val VIEW_PAGER_OFFSCREEN_PAGE_LIMIT = 4
 @Suppress("LargeClass")
 class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
-    ActivityCompat.OnRequestPermissionsResultCallback, PhotoPickerListener, EditorPhotoPickerListener,
-    EditorMediaListener, EditPostSettingsFragment.EditorDataProvider, HistoryItemClickInterface,
-    PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger, SiteSettingsListener {
+    ActivityCompat.OnRequestPermissionsResultCallback, EditorMediaActions,
+    EditorPhotoPickerListener, EditorMediaListener, EditPostSettingsFragment.EditorDataProvider,
+    HistoryItemClickInterface, PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger,
+    SiteSettingsListener {
     // External Access to the Image Loader
     var aztecImageLoader: AztecImageLoader? = null
 
@@ -812,7 +813,15 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         //  cannot be cast to androidx.preference.Preference'
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false)
         showAztecEditor = AppPrefs.isAztecEditorEnabled()
-        editorPhotoPicker = EditorPhotoPicker(this, this, this, showAztecEditor)
+        editorPhotoPicker = EditorPhotoPicker(
+            activity = this,
+            editorPhotoPickerListener = this,
+            editorMediaActions = this,
+            editorMedia = editorMedia,
+            mediaPickerLauncher = mediaPickerLauncher,
+            siteModelProvider = { siteModel },
+            showAztecEditor = showAztecEditor
+        )
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (showAztecEditor) {
@@ -1457,63 +1466,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    /*
-     * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
-     */
-    override fun onPhotoPickerMediaChosen(uriList: List<Uri>) {
-        editorPhotoPicker?.hidePhotoPicker()
-        editorMedia.addNewMediaItemsToEditorAsync(uriList, false)
-    }
-
-    /*
-     * called by PhotoPickerFragment when user clicks an icon to launch the camera, native
-     * picker, or WP media picker
-     */
-    override fun onPhotoPickerIconClicked(icon: PhotoPickerIcon, allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.hidePhotoPicker()
-        if (!icon.requiresUploadPermission() || WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
-            editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
-            when (icon) {
-                PhotoPickerIcon.ANDROID_CAPTURE_PHOTO -> launchCamera()
-                PhotoPickerIcon.ANDROID_CAPTURE_VIDEO -> launchVideoCamera()
-                PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO -> WPMediaUtils.launchMediaLibrary(
-                    this,
-                    allowMultipleSelection
-                )
-
-                PhotoPickerIcon.ANDROID_CHOOSE_PHOTO -> launchPictureLibrary()
-                PhotoPickerIcon.ANDROID_CHOOSE_VIDEO -> launchVideoLibrary()
-                PhotoPickerIcon.WP_MEDIA -> mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
-                    this,
-                    siteModel, MediaBrowserType.EDITOR_PICKER
-                )
-
-                PhotoPickerIcon.STOCK_MEDIA -> {
-                    val requestCode =
-                        if (allowMultipleSelection) RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT
-                        else RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK
-                    mediaPickerLauncher.showStockMediaPickerForResult(
-                        this,
-                        siteModel,
-                        requestCode,
-                        allowMultipleSelection
-                    )
-                }
-
-                PhotoPickerIcon.GIF -> mediaPickerLauncher.showGifPickerForResult(
-                    this,
-                    siteModel,
-                    allowMultipleSelection
-                )
-            }
-        } else {
-            make(
-                findViewById(R.id.editor_activity), R.string.media_error_no_permission_upload,
-                Snackbar.LENGTH_SHORT
-            ).show()
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.edit_post, menu)
@@ -1525,54 +1477,26 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         val currentDestination = editPostNavigationViewModel.currentDestination.value ?: EditPostDestination.default()
         val showMenuItems = currentDestination == EditPostDestination.Editor
 
-        val undoItem = menu.findItem(R.id.menu_undo_action)
-        val redoItem = menu.findItem(R.id.menu_redo_action)
-        val secondaryAction = menu.findItem(R.id.menu_secondary_action)
-        val previewMenuItem = menu.findItem(R.id.menu_preview_post)
-        val viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode)
-        val historyMenuItem = menu.findItem(R.id.menu_history)
-        val settingsMenuItem = menu.findItem(R.id.menu_post_settings)
         val helpMenuItem = menu.findItem(R.id.menu_editor_help)
         val sendFeedbackItem = menu.findItem(R.id.menu_editor_send_feedback)
 
-        if (undoItem != null) {
-            undoItem.setEnabled(menuHasUndo)
-            undoItem.setVisible(!htmlModeMenuStateOn)
-        }
-        if (redoItem != null) {
-            redoItem.setEnabled(menuHasRedo)
-            redoItem.setVisible(!htmlModeMenuStateOn)
-        }
-        if (secondaryAction != null && editPostRepository.hasPost()) {
-            secondaryAction.setVisible(showMenuItems && this.secondaryAction.isVisible)
-            secondaryAction.setTitle(secondaryActionText)
-        }
-        previewMenuItem?.setVisible(showMenuItems)
-        if (viewHtmlModeMenuItem != null) {
-            viewHtmlModeMenuItem.isVisible = showMenuItems
-            viewHtmlModeMenuItem.setTitle(
-                if (htmlModeMenuStateOn) R.string.menu_visual_mode else R.string.menu_html_mode)
-        }
-        if (historyMenuItem != null) {
-            val hasHistory = !isNewPost && siteModel.isUsingWpComRestApi
-            historyMenuItem.setVisible(showMenuItems && hasHistory)
-        }
-        if (settingsMenuItem != null) {
-            settingsMenuItem.setTitle(if (isPage) R.string.page_settings else R.string.post_settings)
-            settingsMenuItem.setVisible(showMenuItems)
-        }
+        EditorMenuHelper.prepareMenu(
+            menu = menu,
+            state = EditorMenuHelper.MenuState(
+                currentDestination = currentDestination,
+                hasPost = editPostRepository.hasPost(),
+                menuHasUndo = menuHasUndo,
+                menuHasRedo = menuHasRedo,
+                htmlModeMenuStateOn = htmlModeMenuStateOn,
+                isNewPost = isNewPost,
+                isPage = isPage,
+                isUsingWpComRestApi = siteModel.isUsingWpComRestApi,
+                secondaryActionVisible = secondaryAction.isVisible,
+                secondaryActionText = secondaryActionText,
+                primaryActionText = primaryActionText
+            )
+        )
 
-        // Set text of the primary action button in the ActionBar
-        if (editPostRepository.hasPost()) {
-            val primaryAction = menu.findItem(R.id.menu_primary_action)
-            if (primaryAction != null) {
-                primaryAction.setTitle(primaryActionText)
-                primaryAction.setVisible(
-                    currentDestination != EditPostDestination.History &&
-                    currentDestination != EditPostDestination.PublishSettings
-                )
-            }
-        }
         val switchToGutenbergMenuItem = menu.findItem(R.id.menu_switch_to_gutenberg)
 
         // The following null checks should basically be redundant but were added to manage
@@ -2737,7 +2661,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    private fun launchCamera() {
+    override fun launchCamera() {
         WPMediaUtils.launchCamera(
             this,
             BuildConfig.APPLICATION_ID,
@@ -3139,7 +3063,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             // if allowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
             editorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids)
             if (showGutenbergEditor && editorPhotoPicker?.allowMultipleSelection == true) {
-                editorPhotoPicker?.allowMultipleSelection = false
+                editorPhotoPicker?.setAllowMultipleSelection(false)
             }
         }
     }
@@ -3243,7 +3167,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onAddMediaImageClicked(allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
+        editorPhotoPicker?.setAllowMultipleSelection(allowMultipleSelection)
         mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
             this,
             siteModel,
@@ -3252,7 +3176,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onAddMediaVideoClicked(allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
+        editorPhotoPicker?.setAllowMultipleSelection(allowMultipleSelection)
         mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
             this,
             siteModel,
@@ -3261,7 +3185,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onAddLibraryMediaClicked(allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
+        editorPhotoPicker?.setAllowMultipleSelection(allowMultipleSelection)
         if (allowMultipleSelection) {
             mediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, siteModel, MediaBrowserType.EDITOR_PICKER)
         } else {
@@ -3271,7 +3195,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onAddLibraryFileClicked(allowMultipleSelection: Boolean) {
-        editorPhotoPicker?.allowMultipleSelection = allowMultipleSelection
+        editorPhotoPicker?.setAllowMultipleSelection(allowMultipleSelection)
         mediaPickerLauncher
             .viewWPMediaLibraryPickerForResult(this, siteModel, MediaBrowserType.GUTENBERG_SINGLE_FILE_PICKER)
     }
@@ -3296,7 +3220,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onCapturePhotoClicked() {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO, false)
+        if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
+            launchCamera()
+        } else {
+            editorPhotoPicker?.showNoUploadPermissionSnackbar()
+        }
     }
 
     override fun onAddVideoClicked(allowMultipleSelection: Boolean) {
@@ -3328,11 +3256,21 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onAddStockMediaClicked(allowMultipleSelection: Boolean) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.STOCK_MEDIA, allowMultipleSelection)
+        val requestCode = if (allowMultipleSelection) {
+            RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT
+        } else {
+            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK
+        }
+        mediaPickerLauncher.showStockMediaPickerForResult(
+            this,
+            siteModel,
+            requestCode,
+            allowMultipleSelection
+        )
     }
 
     override fun onAddGifClicked(allowMultipleSelection: Boolean) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.GIF, allowMultipleSelection)
+        mediaPickerLauncher.showGifPickerForResult(this, siteModel, allowMultipleSelection)
     }
 
     override fun onAddFileClicked(allowMultipleSelection: Boolean) {
@@ -3362,7 +3300,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onCaptureVideoClicked() {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO, false)
+        if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
+            launchVideoCamera()
+        } else {
+            editorPhotoPicker?.showNoUploadPermissionSnackbar()
+        }
     }
 
     override fun onMediaDropped(mediaUris: ArrayList<Uri>) {

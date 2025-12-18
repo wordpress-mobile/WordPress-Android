@@ -8,15 +8,18 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.util.AppLog
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.File
-import java.net.HttpURLConnection
-import java.net.URL
+import java.util.concurrent.TimeUnit
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.collections.forEach
 
 class TempAttachmentsUtil @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
+    @Named(OkHttpClientQualifiers.REGULAR) private val okHttpClient: OkHttpClient,
     private val appLogWrapper: AppLogWrapper,
     private val application: Application,
     private val accountStore: AccountStore
@@ -97,44 +100,46 @@ class TempAttachmentsUtil @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     suspend fun createVideoTempFile(videoUrl: String): File? = withContext(ioDispatcher) {
         var tempFile: File? = null
-        var connection: HttpURLConnection? = null
 
         try {
             tempFile = File.createTempFile("video_", ".mp4", application.cacheDir)
-            connection = (URL(videoUrl).openConnection() as HttpURLConnection).apply {
-                requestMethod = "GET"
-                setRequestProperty("Authorization", "Bearer ${accountStore.accessToken}")
-                instanceFollowRedirects = true
-                connectTimeout = CONNECTION_TIMEOUT_MS
-                readTimeout = READ_TIMEOUT_MS
-            }
 
-            connection.connect()
+            val request = Request.Builder()
+                .url(videoUrl)
+                .addHeader("Authorization", "Bearer ${accountStore.accessToken}")
+                .build()
 
-            val responseCode = connection.responseCode
-            AppLog.d(AppLog.T.SUPPORT, "Download response code: $responseCode")
+            val client = okHttpClient.newBuilder()
+                .connectTimeout(CONNECTION_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
+                .readTimeout(READ_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
+                .build()
 
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                connection.inputStream.use { input ->
-                    tempFile.outputStream().use { output ->
-                        input.copyTo(output)
+            client.newCall(request).execute().use { response ->
+                val responseCode = response.code
+                AppLog.d(AppLog.T.SUPPORT, "Download response code: $responseCode")
+
+                if (response.isSuccessful) {
+                    response.body?.byteStream()?.use { input ->
+                        tempFile.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
                     }
-                }
 
-                AppLog.d(AppLog.T.SUPPORT, "Video downloaded: ${tempFile.absolutePath}")
-                tempFile
-            } else {
-                val deleted = tempFile?.delete()
-                AppLog.e(AppLog.T.SUPPORT, "Failed to download video. Deleted: ${deleted} - " +
-                        "Response code: $responseCode")
-                null
+                    AppLog.d(AppLog.T.SUPPORT, "Video downloaded: ${tempFile.absolutePath}")
+                    tempFile
+                } else {
+                    val deleted = tempFile?.delete()
+                    AppLog.e(
+                        AppLog.T.SUPPORT,
+                        "Failed to download video. Deleted: $deleted - Response code: $responseCode"
+                    )
+                    null
+                }
             }
         } catch (e: Exception) {
             val deleted = tempFile?.delete()
-            AppLog.e(AppLog.T.SUPPORT, "Error downloading video: ${e.message} Deleted: ${deleted}")
+            AppLog.e(AppLog.T.SUPPORT, "Error downloading video: ${e.message} Deleted: $deleted")
             null
-        } finally {
-            connection?.disconnect()
         }
     }
 }

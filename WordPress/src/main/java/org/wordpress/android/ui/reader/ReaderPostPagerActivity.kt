@@ -431,11 +431,12 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         val segments = uri.pathSegments
 
         // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
-        // with the first segment being 'read'.
+        // or http[s]://wordpress.com/reader/feeds/{feedId}/posts/{feedItemId}
+        // with the first segment being 'read' or 'reader'.
         if (segments != null) {
             // Builds stripped URI for tracking purposes
             val wrappedUri = UriWrapper(uri)
-            if (segments[0] == "read") {
+            if (segments[0] == "read" || segments[0] == "reader") {
                 if (segments.size > 2) {
                     blogIdentifier = segments[2]
 

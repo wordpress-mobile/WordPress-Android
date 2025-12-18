@@ -54,6 +54,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     private var openMediaLibraryListener: OpenMediaLibraryListener? = null
     private var onLogJsExceptionListener: LogJsExceptionListener? = null
     private var modalDialogStateListener: GutenbergView.ModalDialogStateListener? = null
+    private var networkRequestListener: GutenbergView.NetworkRequestListener? = null
 
     private var editorStarted = false
     private var isEditorDidMount = false
@@ -177,6 +178,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             openMediaLibraryListener?.let(gutenbergView::setOpenMediaLibraryListener)
             onLogJsExceptionListener?.let(gutenbergView::setLogJsExceptionListener)
             modalDialogStateListener?.let(gutenbergView::setModalDialogStateListener)
+            networkRequestListener?.let(gutenbergView::setNetworkRequestListener)
 
             // Set up autocomplete listener for user mentions and cross-post suggestions
             gutenbergView.setAutocompleterTriggeredListener(object : GutenbergView.AutocompleterTriggeredListener {
@@ -464,6 +466,11 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
     fun setXPostsEnabled(enabled: Boolean) {
         isXPostsEnabled = enabled
+    }
+
+    fun setNetworkRequestListener(listener: GutenbergView.NetworkRequestListener) {
+        networkRequestListener = listener
+        gutenbergView?.setNetworkRequestListener(listener)
     }
 
     private fun buildEditorConfiguration(editorSettings: String): EditorConfiguration {

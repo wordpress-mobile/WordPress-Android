@@ -43,6 +43,7 @@ import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.utils.extensions.SiteModelExtensionsKt;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -63,7 +64,7 @@ import javax.inject.Singleton;
 @Singleton
 public class PostXMLRPCClient extends BaseXMLRPCClient {
     @Inject public PostXMLRPCClient(Dispatcher dispatcher,
-                            @Named("custom-ssl") RequestQueue requestQueue,
+                            @Named(OkHttpClientQualifiers.CUSTOM_SSL) RequestQueue requestQueue,
                             UserAgent userAgent,
                             HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);

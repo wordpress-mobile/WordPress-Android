@@ -23,6 +23,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
+import org.wordpress.android.ui.reader.ReaderLoginRequiredBottomSheetFragment
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_POST_CARD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
@@ -39,6 +40,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReade
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowLoginRequiredBottomSheet
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -220,7 +222,13 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             OpenUrlType.INTERNAL
         )
         is ShowReaderSubs -> ReaderActivityLauncher.showReaderSubs(requireActivity())
+        is ShowLoginRequiredBottomSheet -> showLoginRequiredBottomSheet()
         else -> Unit // Do Nothing
+    }
+
+    private fun showLoginRequiredBottomSheet() {
+        ReaderLoginRequiredBottomSheetFragment.newInstance()
+            .show(childFragmentManager, ReaderLoginRequiredBottomSheetFragment.TAG)
     }
 
     private fun showBookmarkSavedLocallyDialog(bookmarkDialog: ShowBookmarkedSavedOnlyLocallyDialog) {

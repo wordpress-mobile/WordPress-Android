@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient;
 import org.wordpress.android.fluxc.network.rest.wpapi.OnWPAPIErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequest;
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.AppLog;
 
 import java.util.List;
@@ -30,7 +31,7 @@ import static org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFi
 public class DiscoveryWPAPIRestClient extends BaseWPAPIRestClient {
     @Inject public DiscoveryWPAPIRestClient(
             Dispatcher dispatcher,
-            @Named("custom-ssl") RequestQueue requestQueue,
+            @Named(OkHttpClientQualifiers.CUSTOM_SSL) RequestQueue requestQueue,
             UserAgent userAgent) {
         super(dispatcher, requestQueue, userAgent);
     }

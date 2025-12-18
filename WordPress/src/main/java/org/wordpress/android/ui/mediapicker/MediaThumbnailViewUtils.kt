@@ -10,7 +10,7 @@ import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.SHORT
 import org.wordpress.android.util.ColorUtils.setImageResourceWithTint
-import org.wordpress.android.util.PhotoPickerUtils
+import org.wordpress.android.util.MediaPickerUtils
 import org.wordpress.android.util.ViewUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
@@ -30,7 +30,7 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
         addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
         imgThumbnail.setOnClickListener {
             toggleAction.toggle()
-            PhotoPickerUtils.announceSelectedMediaForAccessibility(
+            MediaPickerUtils.announceSelectedMediaForAccessibility(
                 imgThumbnail,
                 isVideo,
                 !isSelected
@@ -66,7 +66,7 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
         addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
         container.setOnClickListener {
             toggleAction.toggle()
-            PhotoPickerUtils.announceSelectedMediaForAccessibility(
+            MediaPickerUtils.announceSelectedMediaForAccessibility(
                 imgThumbnail,
                 false,
                 !isSelected

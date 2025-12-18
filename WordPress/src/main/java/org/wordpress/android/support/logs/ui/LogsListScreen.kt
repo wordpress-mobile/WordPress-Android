@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.support.logs.model.LogDay
+import org.wordpress.android.support.logs.model.LogFile
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -34,8 +34,8 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogsListScreen(
-    logDays: List<LogDay>,
-    onLogDayClick: (LogDay) -> Unit,
+    logFiles: List<LogFile>,
+    onLogFileClick: (LogFile) -> Unit,
     onBackClick: () -> Unit
 ) {
     Scaffold(
@@ -47,7 +47,7 @@ fun LogsListScreen(
             )
         }
     ) { contentPadding ->
-        if (logDays.isEmpty()) {
+        if (logFiles.isEmpty()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -69,12 +69,12 @@ fun LogsListScreen(
                     .padding(contentPadding)
             ) {
                 items(
-                    items = logDays,
-                    key = { it.date }
-                ) { logDay ->
-                    LogDayListItem(
-                        logDay = logDay,
-                        onClick = { onLogDayClick(logDay) }
+                    items = logFiles,
+                    key = { it.fileName }
+                ) { logFile ->
+                    LogFileListItem(
+                        logFile = logFile,
+                        onClick = { onLogFileClick(logFile) }
                     )
                     HorizontalDivider(
                         color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
@@ -86,8 +86,8 @@ fun LogsListScreen(
 }
 
 @Composable
-private fun LogDayListItem(
-    logDay: LogDay,
+private fun LogFileListItem(
+    logFile: LogFile,
     onClick: () -> Unit
 ) {
     Row(
@@ -101,17 +101,19 @@ private fun LogDayListItem(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = logDay.displayDate,
+                text = logFile.title,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            Text(
-                modifier = Modifier.padding(top = 4.dp),
-                text = stringResource(R.string.logs_screen_log_count, logDay.logCount),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            if (logFile.subtitle.isNotEmpty()) {
+                Text(
+                    modifier = Modifier.padding(top = 4.dp),
+                    text = logFile.subtitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
 
         Icon(
@@ -126,11 +128,11 @@ private fun LogDayListItem(
 @Preview(showBackground = true, name = "Logs List Screen - Light")
 @Composable
 private fun LogsListScreenPreview() {
-    val exampleList = getExampleLogDaysList()
+    val exampleList = getExampleLogFilesList()
     AppThemeM3(isDarkTheme = false) {
         LogsListScreen(
-            logDays = exampleList,
-            onLogDayClick = {},
+            logFiles = exampleList,
+            onLogFileClick = {},
             onBackClick = {}
         )
     }
@@ -139,11 +141,11 @@ private fun LogsListScreenPreview() {
 @Preview(showBackground = true, name = "Logs List Screen - Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun LogsListScreenPreviewDark() {
-    val exampleList = getExampleLogDaysList()
+    val exampleList = getExampleLogFilesList()
     AppThemeM3(isDarkTheme = true) {
         LogsListScreen(
-            logDays = exampleList,
-            onLogDayClick = {},
+            logFiles = exampleList,
+            onLogFileClick = {},
             onBackClick = {}
         )
     }
@@ -154,31 +156,37 @@ private fun LogsListScreenPreviewDark() {
 private fun LogsListScreenPreviewEmpty() {
     AppThemeM3(isDarkTheme = false) {
         LogsListScreen(
-            logDays = emptyList(),
-            onLogDayClick = {},
+            logFiles = emptyList(),
+            onLogFileClick = {},
             onBackClick = {}
         )
     }
 }
 
 @Suppress("MagicNumber")
-private fun getExampleLogDaysList(): List<LogDay> = listOf(
-    LogDay(
-        date = "Oct-16",
-        displayDate = "October 16",
-        logEntries = List(50) { "[Oct-16 12:34:56.789] Sample log entry $it" },
-        logCount = 50
-    ),
-    LogDay(
-        date = "Oct-15",
-        displayDate = "October 15",
-        logEntries = List(32) { "[Oct-15 12:34:56.789] Sample log entry $it" },
-        logCount = 32
-    ),
-    LogDay(
-        date = "Oct-14",
-        displayDate = "October 14",
-        logEntries = List(28) { "[Oct-14 12:34:56.789] Sample log entry $it" },
-        logCount = 28
+private fun getExampleLogFilesList(): List<LogFile> {
+    val mockFile = java.io.File("")
+    return listOf(
+        LogFile(
+            file = mockFile,
+            fileName = "2025-11-21T10:42:06+0100.log",
+            title = "November 21, 2025",
+            subtitle = "10:42 AM",
+            logLines = null
+        ),
+        LogFile(
+            file = mockFile,
+            fileName = "2025-11-20T14:30:15+0100.log",
+            title = "November 20, 2025",
+            subtitle = "02:30 PM",
+            logLines = null
+        ),
+        LogFile(
+            file = mockFile,
+            fileName = "2025-11-19T09:15:42+0100.log",
+            title = "November 19, 2025",
+            subtitle = "09:15 AM",
+            logLines = null
+        )
     )
-)
+}

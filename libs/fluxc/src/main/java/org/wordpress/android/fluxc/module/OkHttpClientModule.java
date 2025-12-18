@@ -30,27 +30,27 @@ import okhttp3.internal.tls.OkHostnameVerifier;
 public abstract class OkHttpClientModule {
     @Singleton
     @Provides
-    @Named("no-cookies")
+    @Named(OkHttpClientQualifiers.NO_COOKIES)
     public static OkHttpClient provideNoCookiesOkHttpClientBuilder(
-            @Named("regular") final OkHttpClient okHttpRegularClient) {
+            @Named(OkHttpClientQualifiers.REGULAR) final OkHttpClient okHttpRegularClient) {
         return okHttpRegularClient.newBuilder()
                                   .cookieJar(CookieJar.NO_COOKIES)
                                   .build();
     }
 
     @Provides
-    @Named("no-redirects")
+    @Named(OkHttpClientQualifiers.NO_REDIRECTS)
     public static OkHttpClient provideNoRedirectsOkHttpClientBuilder(
-            @Named("custom-ssl") final OkHttpClient okHttpRegularClient) {
+            @Named(OkHttpClientQualifiers.CUSTOM_SSL) final OkHttpClient okHttpRegularClient) {
         return okHttpRegularClient.newBuilder()
                                   .followRedirects(false)
                                   .build();
     }
 
     @Provides
-    @Named("custom-ssl-custom-redirects")
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL_CUSTOM_REDIRECTS)
     public static OkHttpClient provideCustomRedirectsOkHttpClientBuilder(
-            @Named("custom-ssl") final OkHttpClient okHttpRegularClient) {
+            @Named(OkHttpClientQualifiers.CUSTOM_SSL) final OkHttpClient okHttpRegularClient) {
         OkHttpClient.Builder builder = okHttpRegularClient.newBuilder().followRedirects(false);
         CustomRedirectInterceptor customRedirectInterceptor = new CustomRedirectInterceptor();
         builder.addInterceptor(customRedirectInterceptor);
@@ -59,9 +59,9 @@ public abstract class OkHttpClientModule {
 
     @Singleton
     @Provides
-    @Named("custom-ssl")
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL)
     public static OkHttpClient provideMediaOkHttpClientInstanceCustomSSL(
-            @Named("regular") final OkHttpClient okHttpClient,
+            @Named(OkHttpClientQualifiers.REGULAR) final OkHttpClient okHttpClient,
             final MemorizingTrustManager memorizingTrustManager) {
         final OkHttpClient.Builder builder = okHttpClient.newBuilder();
         try {
@@ -76,17 +76,21 @@ public abstract class OkHttpClientModule {
         return builder.build();
     }
 
-    @Multibinds abstract @Named("interceptors") Set<Interceptor> interceptorSet();
+    @Multibinds
+    @Named(OkHttpClientQualifiers.INTERCEPTORS)
+    abstract Set<Interceptor> interceptorSet();
 
-    @Multibinds abstract @Named("network-interceptors") Set<Interceptor> networkInterceptorSet();
+    @Multibinds
+    @Named(OkHttpClientQualifiers.NETWORK_INTERCEPTORS)
+    abstract Set<Interceptor> networkInterceptorSet();
 
     @Singleton
     @Provides
-    @Named("regular")
+    @Named(OkHttpClientQualifiers.REGULAR)
     public static OkHttpClient provideMediaOkHttpClientInstance(
             final CookieJar cookieJar,
-            @Named("interceptors") Set<Interceptor> interceptors,
-            @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
+            @Named(OkHttpClientQualifiers.INTERCEPTORS) Set<Interceptor> interceptors,
+            @Named(OkHttpClientQualifiers.NETWORK_INTERCEPTORS) Set<Interceptor> networkInterceptors) {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         for (Interceptor interceptor : interceptors) {
