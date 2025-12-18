@@ -76,6 +76,16 @@ WordPress/src/main/java/org/wordpress/android/
 ### Build Configuration Details
 - Uses Gradle Version Catalog for dependency management (`gradle/libs.versions.toml`)
 
+### Dependencies
+- Add new dependencies to `gradle/libs.versions.toml` (version catalog)
+- Never add dependencies directly in build.gradle files
+- Check for existing similar dependencies before adding new ones
+
+### UI Development
+- Prefer Jetpack Compose for new screens
+- Use View Binding for existing XML layouts (not findViewById)
+- Follow Material Design 3 guidelines
+
 ### Testing Strategy
 - **Unit Tests**: Located in `src/test/` using JUnit, Mockito, AssertJ
 - **Instrumented Tests**: Located in `src/androidTest/` using Espresso
@@ -87,6 +97,9 @@ WordPress/src/main/java/org/wordpress/android/
 - **Checkstyle**: Java code style enforcement (`config/checkstyle.xml`)
 - **Detekt**: Kotlin code analysis (`config/detekt/detekt.yml`)
 - **Android Lint**: Built-in Android static analysis
+- **IMPORTANT**: Do NOT run static analysis tools (checkstyle, detekt, lint) automatically during
+  coding. Only run them when explicitly requested or when working on a static analysis-related task.
+  This saves processing time.
 - **Line Length**: 120 characters max - **ALWAYS respect this limit in all code, comments, and strings**
 - **No FIXME**: Use TODO instead of FIXME in committed code
 - **No Deprecated APIs**: Avoid using deprecated methods and classes in new code
