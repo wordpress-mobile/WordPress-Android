@@ -84,7 +84,6 @@ public class PeopleListFragment extends Fragment {
         super.onDestroyView();
         mActionableEmptyView.button.setOnClickListener(null);
         // Reset adapter so it gets recreated with the new RecyclerView when the view is recreated
-        mRecyclerView.setAdapter(null);
         mPeopleAdapter = null;
     }
 
@@ -279,7 +278,7 @@ public class PeopleListFragment extends Fragment {
     }
 
     public void fetchingRequestFinished(PeopleListFilter filter, boolean isFirstPage, boolean isSuccessful) {
-        if (PEOPLE_LIST_FILTER == filter) {
+        if (PEOPLE_LIST_FILTER.equals(filter)) {
             if (isFirstPage) {
                 if (isSuccessful) {
                     // Refresh the list with the newly fetched data
