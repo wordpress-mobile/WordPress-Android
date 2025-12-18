@@ -240,18 +240,7 @@ public class PeopleManagementActivity extends BaseAppCompatActivity
             confirmRemovePerson();
             return true;
         } else if (item.getItemId() == R.id.invite) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
-
-            if (peopleInviteFragment == null) {
-                peopleInviteFragment = PeopleInviteFragment.newInstance(mSite);
-            }
-            if (!peopleInviteFragment.isAdded()) {
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, peopleInviteFragment, KEY_PEOPLE_INVITE_FRAGMENT);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
+            inviteUser();
         } else if (item.getItemId() == R.id.send_invitation) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PEOPLE_INVITE_FRAGMENT);
@@ -260,6 +249,21 @@ public class PeopleManagementActivity extends BaseAppCompatActivity
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void inviteUser() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+
+        if (peopleInviteFragment == null) {
+            peopleInviteFragment = PeopleInviteFragment.newInstance(mSite);
+        }
+        if (!peopleInviteFragment.isAdded()) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, peopleInviteFragment, KEY_PEOPLE_INVITE_FRAGMENT);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
     }
 
     private boolean fetchUsersList(final SiteModel site, final int offset) {

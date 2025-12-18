@@ -21,18 +21,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.AppBarLayout.LayoutParams;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
@@ -41,7 +37,6 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JetpackBrandingUtils;
@@ -51,8 +46,6 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,7 +56,7 @@ public class PeopleListFragment extends Fragment {
     private OnFetchPeopleListener mOnFetchPeopleListener;
     private ActionableEmptyView mActionableEmptyView;
     private FilteredRecyclerView mFilteredRecyclerView;
-    private PeopleListFilter mPeopleListFilter;
+    private final PeopleListFilter mPeopleListFilter = PeopleListFilter.TEAM;
 
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
@@ -121,9 +114,14 @@ public class PeopleListFragment extends Fragment {
         }
 
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-        final boolean isPrivate = mSite != null && mSite.isPrivate();
 
         mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view);
+        mActionableEmptyView.button.setOnClickListener(v -> {
+            if (requireActivity() instanceof PeopleManagementActivity) {
+                ((PeopleManagementActivity) requireActivity()).inviteUser();
+            }
+        });
+
         mFilteredRecyclerView = rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
         mFilteredRecyclerView.setSwipeToRefreshEnabled(false);
@@ -142,10 +140,8 @@ public class PeopleListFragment extends Fragment {
         // this fragment and remove the filter entirely, but since so much of the logic relies on FilteredRecyclerView
         // we'll leave it as is for now.
         mFilteredRecyclerView.hideAppBarLayout();
-        mPeopleListFilter = PeopleListFilter.TEAM;
-        AppPrefs.setPeopleListFilter(mPeopleListFilter);
 
-        mFilteredRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
+        /*mFilteredRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
                 ArrayList<FilterCriteria> list = new ArrayList<>();
@@ -238,7 +234,7 @@ public class PeopleListFragment extends Fragment {
             @Override
             public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
             }
-        });
+        });*/
 
         showJetpackBannerIfNeeded(rootView);
 
@@ -314,30 +310,12 @@ public class PeopleListFragment extends Fragment {
             return;
         }
 
-        List<Person> peopleList;
-        switch (mPeopleListFilter) {
-            case TEAM:
-                peopleList = PeopleTable.getUsers(mSite.getId());
-                break;
-            case SUBSCRIBERS:
-                peopleList = PeopleTable.getFollowers(mSite.getId());
-                break;
-            case EMAIL_SUBSCRIBERS:
-                peopleList = PeopleTable.getEmailFollowers(mSite.getId());
-                break;
-            case VIEWERS:
-                peopleList = PeopleTable.getViewers(mSite.getId());
-                break;
-            default:
-                peopleList = new ArrayList<>();
-                break;
-        }
-
+        List<Person> peopleList = PeopleTable.getUsers(mSite.getId());
         peopleList.clear(); // TODO remove this before merging
 
         PeopleAdapter peopleAdapter = (PeopleAdapter) mFilteredRecyclerView.getAdapter();
         if (peopleAdapter == null) {
-            peopleAdapter = new PeopleAdapter(getActivity(), peopleList);
+            peopleAdapter = new PeopleAdapter(requireActivity(), peopleList);
             mFilteredRecyclerView.setAdapter(peopleAdapter);
         } else {
             peopleAdapter.setPeopleList(peopleList);
@@ -345,16 +323,14 @@ public class PeopleListFragment extends Fragment {
 
         if (!peopleList.isEmpty()) {
             // if the list is not empty, don't show any message
+            mFilteredRecyclerView.setVisibility(View.VISIBLE);
             mFilteredRecyclerView.hideEmptyView();
             mFilteredRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
             mActionableEmptyView.setVisibility(View.GONE);
         } else if (!isFetching) {
             // if we are not fetching and list is empty, show no content message
-            mActionableEmptyView.updateContent(
-                    R.string.people_empty_list_filtered_users,
-                    R.string.people_empty_list_filtered_users_subtitle,
-                    R.string.people_empty_list_filtered_users_button
-            );
+            mFilteredRecyclerView.setVisibility(View.GONE);
+            mActionableEmptyView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -377,7 +353,9 @@ public class PeopleListFragment extends Fragment {
             if (isFirstPage) {
                 mFilteredRecyclerView.setRefreshing(false);
                 if (!isSuccessful) {
-                    mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+                    mActionableEmptyView.setVisibility(View.VISIBLE); // TODO handle error
+                } else {
+                    mActionableEmptyView.setVisibility(View.GONE);
                 }
             } else {
                 mFilteredRecyclerView.hideLoadingProgress();

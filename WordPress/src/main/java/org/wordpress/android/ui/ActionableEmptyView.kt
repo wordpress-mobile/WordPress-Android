@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.withStyledAttributes
 import androidx.core.view.isVisible
@@ -86,7 +85,7 @@ class ActionableEmptyView : LinearLayout {
         if (imageResource != 0) {
             image.setImageResource(imageResource)
             if (!hideImageInLandscape || !DisplayUtils.isLandscape(context)) {
-                image.visibility = View.VISIBLE
+                image.visibility = VISIBLE
             }
         }
 
@@ -164,27 +163,6 @@ class ActionableEmptyView : LinearLayout {
         } ?: ""
 
         announceForAccessibility("${title.text}.$subTitle")
-    }
-
-    fun updateContent(
-        @StringRes titleRes: Int,
-        @StringRes subtitleRes: Int? = null,
-        @StringRes buttonRes: Int? = null
-    ) {
-        this.title.setText(titleRes)
-        subtitleRes?.let {
-            this.subtitle.setText(it)
-            this.subtitle.visibility = View.VISIBLE
-        } ?: run {
-            this.subtitle.visibility = View.GONE
-        }
-        buttonRes?.let {
-            this.button.setText(it)
-            this.button.visibility = View.VISIBLE
-        } ?: run {
-            this.button.visibility = View.GONE
-        }
-        this.visibility = View.VISIBLE
     }
 
     companion object {
