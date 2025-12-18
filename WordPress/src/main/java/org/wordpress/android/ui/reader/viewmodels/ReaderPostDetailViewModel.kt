@@ -391,6 +391,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         launch { getOrFetchReaderPost(blogId = blogId, postId = postId) }
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
         getReaderPostFromDb(blogId = blogId, postId = postId)
 
