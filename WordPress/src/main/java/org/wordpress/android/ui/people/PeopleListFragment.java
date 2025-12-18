@@ -78,6 +78,13 @@ public class PeopleListFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Reset adapter so it gets recreated with the new RecyclerView when the view is recreated
+        mPeopleAdapter = null;
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mOnPersonSelectedListener = null;
@@ -192,7 +199,7 @@ public class PeopleListFragment extends Fragment {
         }
 
         List<Person> peopleList = PeopleTable.getUsers(mSite.getId());
-        peopleList.clear(); // TODO remove this before merging
+        // peopleList.clear(); // TODO remove this before merging
 
         if (mPeopleAdapter == null) {
             mPeopleAdapter = new PeopleAdapter(requireActivity(), peopleList);
@@ -223,10 +230,11 @@ public class PeopleListFragment extends Fragment {
     public void fetchingRequestFinished(PeopleListFilter filter, boolean isFirstPage, boolean isSuccessful) {
         if (PEOPLE_LIST_FILTER == filter) {
             if (isFirstPage) {
-                if (!isSuccessful) {
-                    mActionableEmptyView.setVisibility(View.VISIBLE);
+                if (isSuccessful) {
+                    // Refresh the list with the newly fetched data
+                    refreshPeopleList(false);
                 } else {
-                    mActionableEmptyView.setVisibility(View.GONE);
+                    mActionableEmptyView.setVisibility(View.VISIBLE);
                 }
             }
         }
