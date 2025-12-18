@@ -332,6 +332,9 @@ public class PeopleListFragment extends Fragment {
                 peopleList = new ArrayList<>();
                 break;
         }
+
+        peopleList.clear(); // TODO remove this before merging
+
         PeopleAdapter peopleAdapter = (PeopleAdapter) mFilteredRecyclerView.getAdapter();
         if (peopleAdapter == null) {
             peopleAdapter = new PeopleAdapter(getActivity(), peopleList);
@@ -347,7 +350,11 @@ public class PeopleListFragment extends Fragment {
             mActionableEmptyView.setVisibility(View.GONE);
         } else if (!isFetching) {
             // if we are not fetching and list is empty, show no content message
-            mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+            mActionableEmptyView.updateContent(
+                    R.string.people_empty_list_filtered_users,
+                    R.string.people_empty_list_filtered_users_subtitle,
+                    R.string.people_empty_list_filtered_users_button
+            );
         }
     }
 
