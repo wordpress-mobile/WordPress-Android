@@ -84,6 +84,7 @@ public class PeopleListFragment extends Fragment {
         super.onDestroyView();
         mActionableEmptyView.button.setOnClickListener(null);
         // Reset adapter so it gets recreated with the new RecyclerView when the view is recreated
+        mRecyclerView.setAdapter(null);
         mPeopleAdapter = null;
     }
 
@@ -196,6 +197,9 @@ public class PeopleListFragment extends Fragment {
             int buttonTextResId,
             View.OnClickListener buttonClickListener
     ) {
+        if (!isAdded()) {
+            return;
+        }
         mRecyclerView.setVisibility(View.GONE);
         mActionableEmptyView.title.setText(titleResId);
         if (subtitleResId != 0) {
