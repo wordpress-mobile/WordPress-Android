@@ -22,6 +22,9 @@ class ReaderTopBarMenuHelper @Inject constructor(
             readerTagsList.indexOrNull { it.isDiscover }?.let { discoverIndex ->
                 add(createDiscoverItem(getMenuItemIdFromReaderTagIndex(discoverIndex)))
             }
+            readerTagsList.indexOrNull { it.isFreshlyPressed }?.let { freshlyPressedIndex ->
+                add(createFreshlyPressedItem(getMenuItemIdFromReaderTagIndex(freshlyPressedIndex)))
+            }
             readerTagsList.indexOrNull { it.isFollowedSites }?.let { followingIndex ->
                 add(createSubscriptionsItem(getMenuItemIdFromReaderTagIndex(followingIndex)))
             }
@@ -84,6 +87,14 @@ class ReaderTopBarMenuHelper @Inject constructor(
             id = id,
             text = UiString.UiStringRes(R.string.reader_dropdown_menu_discover),
             leadingIcon = R.drawable.ic_reader_discover_24dp,
+        )
+    }
+
+    private fun createFreshlyPressedItem(id: String): JetpackMenuElementData.Item.Single {
+        return JetpackMenuElementData.Item.Single(
+            id = id,
+            text = UiString.UiStringRes(R.string.reader_dropdown_menu_freshly_pressed),
+            leadingIcon = R.drawable.ic_star_white_24dp,
         )
     }
 

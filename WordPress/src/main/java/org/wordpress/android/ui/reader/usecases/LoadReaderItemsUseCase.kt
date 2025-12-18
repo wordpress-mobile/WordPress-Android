@@ -29,6 +29,17 @@ class LoadReaderItemsUseCase @Inject constructor(
         return withContext(bgDispatcher) {
             val tagList = ReaderTagTable.getDefaultTags()
 
+            // Add "Freshly Pressed" item if not already present
+            if (tagList.none { it.isFreshlyPressed }) {
+                tagList.add(ReaderTag(
+                    ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
+                    ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
+                    ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
+                    ReaderTag.FRESHLY_PRESSED_PATH,
+                    ReaderTagType.DEFAULT
+                ))
+            }
+
             /* Creating custom tag lists isn't supported anymore. However, we need to keep the support here
             for users who created custom lists in the past.*/
             tagList.addAll(ReaderTagTable.getCustomListTags())
