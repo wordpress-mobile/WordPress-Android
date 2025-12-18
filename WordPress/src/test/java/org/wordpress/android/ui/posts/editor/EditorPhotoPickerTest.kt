@@ -13,6 +13,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.wordpress.android.editor.MediaToolbarAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
@@ -322,12 +323,49 @@ class EditorPhotoPickerTest {
 
     // region onMediaToolbarButtonClicked tests
 
-    @Suppress("DEPRECATION")
     @Test
-    fun `onMediaToolbarButtonClicked does nothing (no-op implementation)`() {
-        // This method is intentionally empty as noted in the implementation
-        // Just verify it doesn't throw
+    fun `onMediaToolbarButtonClicked with null does nothing`() {
+        // null action is a no-op - just verify it doesn't throw
         editorPhotoPicker.onMediaToolbarButtonClicked(null)
+
+        // Verify no interactions occurred
+        verify(editorMediaActions, never()).launchCamera()
+        verify(mediaPickerLauncher, never()).viewWPMediaLibraryPickerForResult(
+            any(), any(), any(), any()
+        )
+    }
+
+    @Test
+    fun `onMediaToolbarButtonClicked with CAMERA launches camera when user can upload`() {
+        // Arrange
+        setupSiteWithUploadPermission()
+
+        // Act
+        editorPhotoPicker.onMediaToolbarButtonClicked(MediaToolbarAction.CAMERA)
+
+        // Assert
+        verify(editorMediaActions).launchCamera()
+    }
+
+    @Test
+    fun `onMediaToolbarButtonClicked with CAMERA does not launch camera when user cannot upload`() {
+        // Arrange - set up a WPCom site without upload permission
+        setupSiteWithoutUploadPermission()
+
+        // Act
+        editorPhotoPicker.onMediaToolbarButtonClicked(MediaToolbarAction.CAMERA)
+
+        // Assert
+        verify(editorMediaActions, never()).launchCamera()
+    }
+
+    @Test
+    fun `onMediaToolbarButtonClicked with LIBRARY launches WP media library`() {
+        // Act
+        editorPhotoPicker.onMediaToolbarButtonClicked(MediaToolbarAction.LIBRARY)
+
+        // Assert
+        verify(mediaPickerLauncher).viewWPMediaLibraryPickerForResult(any(), any(), any(), any())
     }
 
     // endregion
@@ -337,6 +375,13 @@ class EditorPhotoPickerTest {
     private fun setupSiteWithUploadPermission() {
         // Set up a site where user can upload media
         siteModel.hasCapabilityUploadFiles = true
+    }
+
+    private fun setupSiteWithoutUploadPermission() {
+        // Set up a WPCom site without upload permission
+        // (self-hosted sites always allow uploads, so we need a WPCom site to test no permission)
+        siteModel.setIsWPCom(true)
+        siteModel.hasCapabilityUploadFiles = false
     }
 
     // endregion
