@@ -2681,7 +2681,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         if (tag == null) {
             return
         }
-        val stat = if (tag.isTagTopic) {
+        val stat = if (tag.isFreshlyPressed) {
+            AnalyticsTracker.Stat.READER_FRESHLY_PRESSED_LOADED
+        } else if (tag.isTagTopic) {
             AnalyticsTracker.Stat.READER_TAG_LOADED
         } else if (tag.isListTopic) {
             AnalyticsTracker.Stat.READER_LIST_LOADED

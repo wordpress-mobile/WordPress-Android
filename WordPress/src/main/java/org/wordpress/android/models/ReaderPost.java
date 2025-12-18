@@ -132,10 +132,21 @@ public class ReaderPost {
         // parse the author section
         assignAuthorFromJson(post, json.optJSONObject("author"));
 
-        post.mFeaturedImage = JSONUtils.getString(json, "featured_image");
-        post.mBlogName = JSONUtils.getStringDecoded(json, "site_name");
+        // only freshly-pressed posts have the "editorial" section
+        JSONObject jsonEditorial = json.optJSONObject("editorial");
+        if (jsonEditorial != null) {
+            post.blogId = jsonEditorial.optLong("blog_id");
+            post.mBlogName = JSONUtils.getStringDecoded(jsonEditorial, "blog_name");
+            post.mFeaturedImage = getEditorialImage(JSONUtils.getString(jsonEditorial, "image"));
+            post.setPrimaryTag(JSONUtils.getString(jsonEditorial, "highlight_topic_title"));
+            // freshly-pressed posts show the date they were chosen rather than the day published
+            post.mDatePublished = JSONUtils.getString(jsonEditorial, "displayed_on");
+        } else {
+            post.mFeaturedImage = JSONUtils.getString(json, "featured_image");
+            post.mBlogName = JSONUtils.getStringDecoded(json, "site_name");
+            post.mDatePublished = JSONUtils.getString(json, "date");
+        }
 
-        post.mDatePublished = JSONUtils.getString(json, "date");
         post.mDateLiked = JSONUtils.getString(json, "date_liked");
         post.mDateTagged = JSONUtils.getString(json, "tagged_on");
 
@@ -338,6 +349,18 @@ public class ReaderPost {
         }
         post.setSecondaryTag(nextMostPopularTag);
         post.setTags(tags);
+    }
+
+    /*
+     * Returns the editorial image URL for Freshly Pressed posts, filtering out mshots images.
+     * The app does not support mshots images and we don't want to show screenshots of posts
+     * as featured images.
+     */
+    private static String getEditorialImage(String imageUrl) {
+        if (imageUrl != null && imageUrl.contains("wp.com/mshots/")) {
+            return null;
+        }
+        return imageUrl;
     }
 
     // --------------------------------------------------------------------------------------------
