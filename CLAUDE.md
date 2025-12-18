@@ -87,6 +87,9 @@ WordPress/src/main/java/org/wordpress/android/
 - **Checkstyle**: Java code style enforcement (`config/checkstyle.xml`)
 - **Detekt**: Kotlin code analysis (`config/detekt/detekt.yml`)
 - **Android Lint**: Built-in Android static analysis
+- **IMPORTANT**: Do NOT run static analysis tools (checkstyle, detekt, lint) automatically during
+  coding. Only run them when explicitly requested or when working on a static analysis-related task.
+  This saves processing time.
 - **Line Length**: 120 characters max - **ALWAYS respect this limit in all code, comments, and strings**
 - **No FIXME**: Use TODO instead of FIXME in committed code
 - **No Deprecated APIs**: Avoid using deprecated methods and classes in new code
