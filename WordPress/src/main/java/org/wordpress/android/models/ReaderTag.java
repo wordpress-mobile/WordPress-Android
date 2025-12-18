@@ -180,7 +180,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     public boolean isFreshlyPressed() {
-        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/freshly-pressed");
+        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(FRESHLY_PRESSED_PATH);
     }
 
     public boolean isDefaultInMemoryTag() {

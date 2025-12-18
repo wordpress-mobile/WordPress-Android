@@ -166,17 +166,6 @@ public class ReaderUpdateLogic {
                         )
                 );
 
-                // manually insert Freshly Pressed tag
-                serverTopics.add(
-                        new ReaderTag(
-                                ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
-                                ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-                                ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-                                ReaderTag.FRESHLY_PRESSED_PATH,
-                                ReaderTagType.DEFAULT
-                        )
-                );
-
                 // manually insert DISCOVER_POST_CARDS tag which is used to store posts for the discover tab
                 serverTopics.add(ReaderTag.createDiscoverPostCardsTag());
 
