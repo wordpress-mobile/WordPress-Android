@@ -11,7 +11,6 @@ import java.lang.reflect.Method
  * These tests focus on the mshots filtering logic using reflection to access the private method.
  */
 class ReaderPostTest {
-
     @Test
     fun `GIVEN mshots image url WHEN getEditorialImage THEN returns null`() {
         val mshotsUrl = "https://s0.wp.com/mshots/v1/https://example.com"

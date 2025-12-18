@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class ReaderTagTest {
-
     @Test
     fun `GIVEN tag with freshly pressed endpoint WHEN isFreshlyPressed THEN returns true`() {
         val tag = ReaderTag(
