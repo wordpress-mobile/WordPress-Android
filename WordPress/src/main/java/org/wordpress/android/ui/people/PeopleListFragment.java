@@ -54,6 +54,8 @@ public class PeopleListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private PeopleAdapter mPeopleAdapter;
 
+    // previously this fragment enabled selecting a PeopleListFilter but this was changed to
+    // show only users (TEAM) so we hard-code the filter here
     private static final PeopleListFilter PEOPLE_LIST_FILTER = PeopleListFilter.TEAM;
 
     @Inject SiteStore mSiteStore;
