@@ -121,11 +121,6 @@ public class PeopleListFragment extends Fragment {
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
 
         mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view);
-        mActionableEmptyView.button.setOnClickListener(v -> {
-            if (requireActivity() instanceof PeopleManagementActivity) {
-                ((PeopleManagementActivity) requireActivity()).inviteUser();
-            }
-        });
 
         mRecyclerView = rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -178,8 +173,7 @@ public class PeopleListFragment extends Fragment {
 
     private void updatePeople(boolean loadMore) {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            mRecyclerView.setVisibility(View.GONE);
-            mActionableEmptyView.setVisibility(View.VISIBLE);
+            showNetworkError();
             return;
         }
 
@@ -193,13 +187,49 @@ public class PeopleListFragment extends Fragment {
         }
     }
 
+    private void showNetworkError() {
+        mRecyclerView.setVisibility(View.GONE);
+        mActionableEmptyView.title.setText(R.string.no_network_title);
+        mActionableEmptyView.subtitle.setText(R.string.no_network_message);
+        mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
+        mActionableEmptyView.button.setText(R.string.retry);
+        mActionableEmptyView.button.setVisibility(View.VISIBLE);
+        mActionableEmptyView.button.setOnClickListener(v -> updatePeople(false));
+        mActionableEmptyView.setVisibility(View.VISIBLE);
+    }
+
+    private void showFetchError() {
+        mRecyclerView.setVisibility(View.GONE);
+        mActionableEmptyView.title.setText(R.string.error_fetch_users_list);
+        mActionableEmptyView.subtitle.setVisibility(View.GONE);
+        mActionableEmptyView.button.setText(R.string.retry);
+        mActionableEmptyView.button.setVisibility(View.VISIBLE);
+        mActionableEmptyView.button.setOnClickListener(v -> updatePeople(false));
+        mActionableEmptyView.setVisibility(View.VISIBLE);
+    }
+
+    private void showEmptyView() {
+        mRecyclerView.setVisibility(View.GONE);
+        mActionableEmptyView.title.setText(R.string.people_empty_list_filtered_users);
+        mActionableEmptyView.subtitle.setText(R.string.people_empty_list_filtered_users_subtitle);
+        mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
+        mActionableEmptyView.button.setText(R.string.people_empty_list_filtered_users_button);
+        mActionableEmptyView.button.setVisibility(View.VISIBLE);
+        mActionableEmptyView.button.setOnClickListener(v -> {
+            if (requireActivity() instanceof PeopleManagementActivity) {
+                ((PeopleManagementActivity) requireActivity()).inviteUser();
+            }
+        });
+        mActionableEmptyView.setVisibility(View.VISIBLE);
+    }
+
     public void refreshPeopleList(boolean isFetching) {
         if (!isAdded()) {
             return;
         }
 
         List<Person> peopleList = PeopleTable.getUsers(mSite.getId());
-        // peopleList.clear(); // TODO remove this before merging
+        peopleList.clear(); // TODO remove this before merging
 
         if (mPeopleAdapter == null) {
             mPeopleAdapter = new PeopleAdapter(requireActivity(), peopleList);
@@ -214,8 +244,7 @@ public class PeopleListFragment extends Fragment {
             mActionableEmptyView.setVisibility(View.GONE);
         } else if (!isFetching) {
             // if we are not fetching and list is empty, show no content message
-            mRecyclerView.setVisibility(View.GONE);
-            mActionableEmptyView.setVisibility(View.VISIBLE);
+            showEmptyView();
         }
     }
 
@@ -231,11 +260,10 @@ public class PeopleListFragment extends Fragment {
         if (PEOPLE_LIST_FILTER == filter) {
             if (isFirstPage) {
                 if (isSuccessful) {
-                    mActionableEmptyView.setVisibility(View.GONE);
                     // Refresh the list with the newly fetched data
                     refreshPeopleList(false);
                 } else {
-                    mActionableEmptyView.setVisibility(View.VISIBLE);
+                    showFetchError();
                 }
             }
         }
