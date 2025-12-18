@@ -231,6 +231,7 @@ public class PeopleListFragment extends Fragment {
         if (PEOPLE_LIST_FILTER == filter) {
             if (isFirstPage) {
                 if (isSuccessful) {
+                    mActionableEmptyView.setVisibility(View.GONE);
                     // Refresh the list with the newly fetched data
                     refreshPeopleList(false);
                 } else {
