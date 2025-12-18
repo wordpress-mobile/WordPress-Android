@@ -53,7 +53,8 @@ public class PeopleListFragment extends Fragment {
     private ActionableEmptyView mActionableEmptyView;
     private RecyclerView mRecyclerView;
     private PeopleAdapter mPeopleAdapter;
-    private final PeopleListFilter mPeopleListFilter = PeopleListFilter.TEAM;
+
+    private static final PeopleListFilter PEOPLE_LIST_FILTER = PeopleListFilter.TEAM;
 
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
@@ -177,9 +178,9 @@ public class PeopleListFragment extends Fragment {
 
         if (mOnFetchPeopleListener != null) {
             if (loadMore) {
-                mOnFetchPeopleListener.onFetchMorePeople(mPeopleListFilter);
+                mOnFetchPeopleListener.onFetchMorePeople(PEOPLE_LIST_FILTER);
             } else {
-                boolean isFetching = mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
+                boolean isFetching = mOnFetchPeopleListener.onFetchFirstPage(PEOPLE_LIST_FILTER);
                 refreshPeopleList(isFetching);
             }
         }
@@ -220,7 +221,7 @@ public class PeopleListFragment extends Fragment {
     }
 
     public void fetchingRequestFinished(PeopleListFilter filter, boolean isFirstPage, boolean isSuccessful) {
-        if (mPeopleListFilter == filter) {
+        if (PEOPLE_LIST_FILTER == filter) {
             if (isFirstPage) {
                 if (!isSuccessful) {
                     mActionableEmptyView.setVisibility(View.VISIBLE);
