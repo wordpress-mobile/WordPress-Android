@@ -29,17 +29,6 @@ class LoadReaderItemsUseCase @Inject constructor(
         return withContext(bgDispatcher) {
             val tagList = ReaderTagTable.getDefaultTags()
 
-            // Add "Freshly Pressed" item if not already present
-            if (tagList.none { it.isFreshlyPressed }) {
-                tagList.add(ReaderTag(
-                    ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
-                    ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-                    ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-                    ReaderTag.FRESHLY_PRESSED_PATH,
-                    ReaderTagType.DEFAULT
-                ))
-            }
-
             /* Creating custom tag lists isn't supported anymore. However, we need to keep the support here
             for users who created custom lists in the past.*/
             tagList.addAll(ReaderTagTable.getCustomListTags())
@@ -60,7 +49,23 @@ class LoadReaderItemsUseCase @Inject constructor(
                 tagList.add(readerUtilsWrapper.getDefaultTagFromDbOrCreateInMemory())
             }
 
-            ReaderUtils.getOrderedTagsList(tagList, ReaderUtils.getDefaultTagInfo())
+            val orderedList = ReaderUtils.getOrderedTagsList(tagList, ReaderUtils.getDefaultTagInfo())
+
+            // Add "Freshly Pressed" after ordering to ensure it appears after Discover in the list
+            if (orderedList.none { it.isFreshlyPressed }) {
+                // Find Discover index and insert Freshly Pressed right after it
+                val discoverIndex = orderedList.indexOfFirst { it.isDiscover }
+                val insertIndex = if (discoverIndex >= 0) discoverIndex + 1 else orderedList.size
+                orderedList.add(insertIndex, ReaderTag(
+                    ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
+                    ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
+                    ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
+                    ReaderTag.FRESHLY_PRESSED_PATH,
+                    ReaderTagType.DEFAULT
+                ))
+            }
+
+            orderedList
         }
     }
 }
