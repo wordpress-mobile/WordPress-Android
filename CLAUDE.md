@@ -76,6 +76,16 @@ WordPress/src/main/java/org/wordpress/android/
 ### Build Configuration Details
 - Uses Gradle Version Catalog for dependency management (`gradle/libs.versions.toml`)
 
+### Dependencies
+- Add new dependencies to `gradle/libs.versions.toml` (version catalog)
+- Never add dependencies directly in build.gradle files
+- Check for existing similar dependencies before adding new ones
+
+### UI Development
+- Prefer Jetpack Compose for new screens
+- Use View Binding for existing XML layouts (not findViewById)
+- Follow Material Design 3 guidelines
+
 ### Testing Strategy
 - **Unit Tests**: Located in `src/test/` using JUnit, Mockito, AssertJ
 - **Instrumented Tests**: Located in `src/androidTest/` using Espresso
