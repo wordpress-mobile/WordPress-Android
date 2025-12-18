@@ -335,6 +335,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         whenever(commentsSnippetFeatureConfig.isEnabled()).thenReturn(true)
 
         likesCaptor = argumentCaptor()
+
+        // Default mock for fetch post - returns Success
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(FetchReaderPostState.Success)
     }
 
     /* SHOW POST - LOADING */

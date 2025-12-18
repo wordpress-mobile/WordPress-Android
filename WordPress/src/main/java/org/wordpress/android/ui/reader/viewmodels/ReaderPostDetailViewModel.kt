@@ -393,32 +393,56 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
         getReaderPostFromDb(blogId = blogId, postId = postId)
-        if (post == null) {
+
+        // Show cached content immediately if available, otherwise show loading
+        val hasCachedPost = post != null
+        if (hasCachedPost) {
+            updatePostDetailsUi()
+        } else {
             _uiState.value = LoadingUiState
-            when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
-                FetchReaderPostState.Success -> {
-                    getReaderPostFromDb(blogId, postId)
+        }
+
+        // Always fetch fresh content from the server
+        val oldPostText = post?.text
+        when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
+            FetchReaderPostState.Success -> {
+                getReaderPostFromDb(blogId, postId)
+                // Update UI if content changed or we didn't have cached content
+                if (!hasCachedPost || post?.text != oldPostText) {
                     updatePostDetailsUi()
                 }
+            }
 
-                FetchReaderPostState.AlreadyRunning -> {
+            FetchReaderPostState.AlreadyRunning -> {
+                if (!hasCachedPost) {
                     AppLog.i(T.READER, "reader post detail > fetch post already running")
                     _uiState.value = ErrorUiState(null)
                 }
-
-                FetchReaderPostState.Failed.NoNetwork ->
-                    _uiState.value = ErrorUiState(UiStringRes(R.string.no_network_message))
-
-                FetchReaderPostState.Failed.RequestFailed ->
-                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
-
-                FetchReaderPostState.Failed.NotAuthorised -> trackAndUpdateNotAuthorisedErrorState()
-
-                FetchReaderPostState.Failed.PostNotFound ->
-                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found))
             }
-        } else {
-            updatePostDetailsUi()
+
+            FetchReaderPostState.Failed.NoNetwork -> {
+                if (!hasCachedPost) {
+                    _uiState.value = ErrorUiState(UiStringRes(R.string.no_network_message))
+                }
+            }
+
+            FetchReaderPostState.Failed.RequestFailed -> {
+                if (!hasCachedPost) {
+                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
+                }
+            }
+
+            FetchReaderPostState.Failed.NotAuthorised -> {
+                if (!hasCachedPost) {
+                    trackAndUpdateNotAuthorisedErrorState()
+                }
+            }
+
+            FetchReaderPostState.Failed.PostNotFound -> {
+                if (!hasCachedPost) {
+                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found))
+                }
+            }
         }
     }
 
@@ -529,9 +553,12 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    fun onUpdatePost(post: ReaderPost) {
+    fun onUpdatePost(post: ReaderPost, contentChanged: Boolean = false) {
         viewModelScope.launch {
             _uiState.value = convertPostToUiState(post)
+            if (contentChanged) {
+                _navigationEvents.postValue(Event(ShowPostInWebView(post)))
+            }
         }
     }
 

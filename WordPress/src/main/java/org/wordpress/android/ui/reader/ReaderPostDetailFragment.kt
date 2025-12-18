@@ -1385,12 +1385,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result.isNewOrChanged) {
-                    viewModel.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
-                    viewModel.post?.let {
+                    val newPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
+                    newPost?.let {
+                        // Check if the post content has changed - if so, re-render the WebView
+                        val contentChanged = viewModel.post?.text != it.text
+                        viewModel.post = it
                         if (likesEnhancementsFeatureConfig.isEnabled()) {
                             viewModel.onRefreshLikersData(it)
                         }
-                        viewModel.onUpdatePost(it)
+                        viewModel.onUpdatePost(it, contentChanged)
                     }
                 }
 
