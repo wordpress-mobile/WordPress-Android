@@ -187,40 +187,55 @@ public class PeopleListFragment extends Fragment {
         }
     }
 
-    private void showNetworkError() {
+    private void showActionableEmptyView(
+            int titleResId,
+            int subtitleResId,
+            int buttonTextResId,
+            View.OnClickListener buttonClickListener
+    ) {
         mRecyclerView.setVisibility(View.GONE);
-        mActionableEmptyView.title.setText(R.string.no_network_title);
-        mActionableEmptyView.subtitle.setText(R.string.no_network_message);
-        mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
-        mActionableEmptyView.button.setText(R.string.retry);
+        mActionableEmptyView.title.setText(titleResId);
+        if (subtitleResId != 0) {
+            mActionableEmptyView.subtitle.setText(subtitleResId);
+            mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
+        } else {
+            mActionableEmptyView.subtitle.setVisibility(View.GONE);
+        }
+        mActionableEmptyView.button.setText(buttonTextResId);
         mActionableEmptyView.button.setVisibility(View.VISIBLE);
-        mActionableEmptyView.button.setOnClickListener(v -> updatePeople(false));
+        mActionableEmptyView.button.setOnClickListener(buttonClickListener);
         mActionableEmptyView.setVisibility(View.VISIBLE);
+    }
+
+    private void showNetworkError() {
+        showActionableEmptyView(
+                R.string.no_network_title,
+                R.string.no_network_message,
+                R.string.retry,
+                v -> updatePeople(false)
+        );
     }
 
     private void showFetchError() {
-        mRecyclerView.setVisibility(View.GONE);
-        mActionableEmptyView.title.setText(R.string.error_fetch_users_list);
-        mActionableEmptyView.subtitle.setVisibility(View.GONE);
-        mActionableEmptyView.button.setText(R.string.retry);
-        mActionableEmptyView.button.setVisibility(View.VISIBLE);
-        mActionableEmptyView.button.setOnClickListener(v -> updatePeople(false));
-        mActionableEmptyView.setVisibility(View.VISIBLE);
+        showActionableEmptyView(
+                R.string.error_fetch_users_list,
+                0,
+                R.string.retry,
+                v -> updatePeople(false)
+        );
     }
 
     private void showEmptyView() {
-        mRecyclerView.setVisibility(View.GONE);
-        mActionableEmptyView.title.setText(R.string.people_empty_list_filtered_users);
-        mActionableEmptyView.subtitle.setText(R.string.people_empty_list_filtered_users_subtitle);
-        mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
-        mActionableEmptyView.button.setText(R.string.people_empty_list_filtered_users_button);
-        mActionableEmptyView.button.setVisibility(View.VISIBLE);
-        mActionableEmptyView.button.setOnClickListener(v -> {
-            if (requireActivity() instanceof PeopleManagementActivity) {
-                ((PeopleManagementActivity) requireActivity()).inviteUser();
-            }
-        });
-        mActionableEmptyView.setVisibility(View.VISIBLE);
+        showActionableEmptyView(
+                R.string.people_empty_list_filtered_users,
+                R.string.people_empty_list_filtered_users_subtitle,
+                R.string.people_empty_list_filtered_users_button,
+                v -> {
+                    if (requireActivity() instanceof PeopleManagementActivity) {
+                        ((PeopleManagementActivity) requireActivity()).inviteUser();
+                    }
+                }
+        );
     }
 
     public void refreshPeopleList(boolean isFetching) {
