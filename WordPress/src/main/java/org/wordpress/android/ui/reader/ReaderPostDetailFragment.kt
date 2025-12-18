@@ -1387,13 +1387,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 if (result.isNewOrChanged) {
                     val newPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
                     newPost?.let {
-                        // Check if the post content has changed - if so, re-render the WebView
-                        val contentChanged = viewModel.post?.text != it.text
                         viewModel.post = it
                         if (likesEnhancementsFeatureConfig.isEnabled()) {
                             viewModel.onRefreshLikersData(it)
                         }
-                        viewModel.onUpdatePost(it, contentChanged)
+                        viewModel.onUpdatePost(it)
+                        // Re-render the WebView with updated content
+                        showPostInWebView(it)
                     }
                 }
 
