@@ -137,7 +137,12 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     }
 
     private fun ActivityLogTypeFilterFragmentBinding.refreshErrorScreen(uiState: Error) {
-        actionableEmptyView.image.setImageResource(uiState.image)
+        uiState.image?.let { image ->
+            actionableEmptyView.image.setImageResource(image)
+            actionableEmptyView.image.visibility = View.VISIBLE
+        } ?: run {
+            actionableEmptyView.image.visibility = View.GONE
+        }
         uiHelpers.setTextOrHide(actionableEmptyView.title, uiState.title)
         uiHelpers.setTextOrHide(actionableEmptyView.subtitle, uiState.subtitle)
         uiHelpers.setTextOrHide(actionableEmptyView.button, uiState.buttonText)
