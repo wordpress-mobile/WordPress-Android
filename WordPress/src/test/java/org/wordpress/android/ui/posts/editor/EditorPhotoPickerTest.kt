@@ -345,7 +345,7 @@ class EditorPhotoPickerTest {
         editorPhotoPicker.onMediaToolbarButtonClicked(MediaToolbarAction.CAMERA)
 
         // Assert
-        verify(editorMediaActions).launchCamera()
+        verify(editorMediaActions).checkCameraPermissionAndLaunch()
     }
 
     @Test
@@ -357,7 +357,7 @@ class EditorPhotoPickerTest {
         editorPhotoPicker.onMediaToolbarButtonClicked(MediaToolbarAction.CAMERA)
 
         // Assert
-        verify(editorMediaActions, never()).launchCamera()
+        verify(editorMediaActions, never()).checkCameraPermissionAndLaunch()
     }
 
     @Test
