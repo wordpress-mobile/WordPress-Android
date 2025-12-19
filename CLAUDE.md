@@ -216,6 +216,7 @@ Test case title 2:
 ```
 
 ### Format Rules
+- **Always output PR descriptions as raw markdown inside a code block** so users can copy them directly
 - Use numbered lists for action steps
 - Use checkboxes (`- [ ]`) for verifications and expected outcomes
 - Organize by test case titles when there are multiple scenarios
