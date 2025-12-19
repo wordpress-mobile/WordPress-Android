@@ -56,7 +56,7 @@ class ActionableEmptyView : LinearLayout {
         gravity = Gravity.CENTER
         orientation = VERTICAL
 
-        layout = View.inflate(context, R.layout.actionable_empty_view, this)
+        layout = inflate(context, R.layout.actionable_empty_view, this)
 
         image = layout.findViewById(R.id.image)
         title = layout.findViewById(R.id.title)
@@ -85,7 +85,7 @@ class ActionableEmptyView : LinearLayout {
         if (imageResource != 0) {
             image.setImageResource(imageResource)
             if (!hideImageInLandscape || !DisplayUtils.isLandscape(context)) {
-                image.visibility = View.VISIBLE
+                image.visibility = VISIBLE
             }
         }
 
@@ -97,12 +97,12 @@ class ActionableEmptyView : LinearLayout {
 
         if (!subtitleAttribute.isNullOrEmpty()) {
             subtitle.text = subtitleAttribute
-            subtitle.visibility = View.VISIBLE
+            subtitle.visibility = VISIBLE
         }
 
         if (!buttonAttribute.isNullOrEmpty()) {
             button.text = buttonAttribute
-            button.visibility = View.VISIBLE
+            button.visibility = VISIBLE
         }
 
             if (buttonStyleAttribute == BUTTON_STYLE_READER) {
@@ -134,8 +134,8 @@ class ActionableEmptyView : LinearLayout {
                 0
             )
 
-            image.visibility = View.GONE
-            button.visibility = View.GONE
+            image.visibility = GONE
+            button.visibility = GONE
         } else {
             params.width = MarginLayoutParams.MATCH_PARENT
             params.height = MarginLayoutParams.MATCH_PARENT
