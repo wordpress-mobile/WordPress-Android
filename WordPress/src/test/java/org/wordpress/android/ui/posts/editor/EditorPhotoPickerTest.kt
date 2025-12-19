@@ -220,7 +220,7 @@ class EditorPhotoPickerTest {
         editorPhotoPicker.onIconClicked(action)
 
         // Assert
-        verify(editorMediaActions).launchCamera()
+        verify(editorMediaActions).checkCameraPermissionAndLaunch()
     }
 
     @Test
