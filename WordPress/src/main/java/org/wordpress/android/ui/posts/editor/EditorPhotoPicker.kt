@@ -186,11 +186,31 @@ class EditorPhotoPicker(
         }
     }
 
-    @Deprecated("Used only by AztecEditorFragment")
     override fun onMediaToolbarButtonClicked(action: MediaToolbarAction?) {
-        // MediaPickerFragment handles its own toolbar actions through FAB and menu,
-        // so this method is no longer needed for the embedded picker.
-        // The actions are now handled through MediaPickerListener.onIconClicked()
+        val siteModel = siteModelProvider()
+        when (action) {
+            MediaToolbarAction.GALLERY -> {
+                // Show the embedded photo picker for selecting media from device
+                showPhotoPicker(siteModel)
+            }
+            MediaToolbarAction.CAMERA -> {
+                // Launch the camera to capture a photo
+                if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
+                    editorMediaActions.launchCamera()
+                } else {
+                    showNoUploadPermissionSnackbar()
+                }
+            }
+            MediaToolbarAction.LIBRARY -> {
+                // Open the WP Media Library
+                mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
+                    activity,
+                    siteModel,
+                    MediaBrowserType.EDITOR_PICKER
+                )
+            }
+            null -> { /* no-op */ }
+        }
     }
 
     fun onOrientationChanged(@Orientation newOrientation: Int) {
