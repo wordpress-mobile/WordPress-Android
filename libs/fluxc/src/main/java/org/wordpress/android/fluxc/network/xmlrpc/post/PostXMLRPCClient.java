@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -388,7 +389,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         return new PostsModel(postArray);
     }
 
-    private static PostModel postResponseObjectToPostModel(@NonNull Map postObject, SiteModel site) {
+    @VisibleForTesting
+    static PostModel postResponseObjectToPostModel(@NonNull Map postObject, SiteModel site) {
         Map<?, ?> postMap = (Map<?, ?>) postObject;
         PostModel post = new PostModel();
 
@@ -476,7 +478,11 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         if (post.isPage()) {
             post.setParentId(MapUtils.getMapLong(postMap, "post_parent"));
             post.setParentTitle(MapUtils.getMapStr(postMap, "wp_page_parent"));
-            post.setSlug(MapUtils.getMapStr(postMap, "wp_slug"));
+            // Only use wp_slug if it's not empty; otherwise keep post_name (set earlier)
+            String wpSlug = MapUtils.getMapStr(postMap, "wp_slug");
+            if (!TextUtils.isEmpty(wpSlug)) {
+                post.setSlug(wpSlug);
+            }
         } else {
             // Extract featured image ID from post_thumbnail struct
             Object featuredImageObject = postMap.get("post_thumbnail");
