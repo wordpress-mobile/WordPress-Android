@@ -13,6 +13,9 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.COMMENTS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.MEDIA
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.POSTS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.POST_TYPES
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -21,7 +24,8 @@ import javax.inject.Inject
 class SiteItemsBuilder @Inject constructor(
     private val siteListItemBuilder: SiteListItemBuilder,
     private val quickStartRepository: QuickStartRepository,
-    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
+    private val experimentalFeatures: ExperimentalFeatures
 ) {
     @Suppress("LongMethod")
     fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
@@ -49,6 +53,7 @@ class SiteItemsBuilder @Inject constructor(
                 listItemAction = POSTS
             ),
             siteListItemBuilder.buildPagesItemIfAvailable(params.site, params.onClick, showPagesFocusPoint),
+            buildPostTypesItemIfEnabled(params.onClick),
             ListItem(
                 R.drawable.ic_media_white_24dp,
                 UiStringRes(R.string.media),
@@ -63,6 +68,19 @@ class SiteItemsBuilder @Inject constructor(
                 listItemAction = COMMENTS
             )
         )
+    }
+
+    private fun buildPostTypesItemIfEnabled(onClick: (ListItemAction) -> Unit): ListItem? {
+        return if (experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_POST_TYPES)) {
+            ListItem(
+                R.drawable.ic_posts_white_24dp,
+                UiStringRes(R.string.post_types_screen_title),
+                onClick = ListItemInteraction.create(POST_TYPES, onClick),
+                listItemAction = POST_TYPES
+            )
+        } else {
+            null
+        }
     }
 
     private fun getTrafficSiteItems(

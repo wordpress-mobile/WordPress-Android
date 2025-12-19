@@ -616,6 +616,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
         is SiteNavigationAction.OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
         is SiteNavigationAction.OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
+        is SiteNavigationAction.OpenPostTypes ->
+            ActivityLauncher.viewPostTypes(requireActivity(), action.site)
         is SiteNavigationAction.OpenHomepage -> ActivityLauncher.editLandingPageForResult(
             this,
             action.site,

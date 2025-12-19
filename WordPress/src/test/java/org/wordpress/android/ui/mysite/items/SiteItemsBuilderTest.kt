@@ -16,6 +16,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsB
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.quickstart.QuickStartType
 
 @RunWith(MockitoJUnitRunner::class)
@@ -35,6 +36,9 @@ class SiteItemsBuilderTest {
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
+    @Mock
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
     private lateinit var siteItemsBuilder: SiteItemsBuilder
 
     @Before
@@ -45,7 +49,8 @@ class SiteItemsBuilderTest {
         siteItemsBuilder = SiteItemsBuilder(
             siteListItemBuilder,
             quickStartRepository,
-            jetpackFeatureRemovalOverlayUtil
+            jetpackFeatureRemovalOverlayUtil,
+            experimentalFeatures
         )
     }
 

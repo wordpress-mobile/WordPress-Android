@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Activities in this module are declared here and merged into the main app's manifest.
+    Using Material3 NoActionBar theme to avoid inheriting the app's action bar.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application
+        android:allowBackup="false"
+        android:usesCleartextTraffic="false"
+        tools:ignore="UnusedAttribute">
+        <activity
+            android:name="org.wordpress.android.posttypes.CptPostTypesActivity"
+            android:theme="@style/Cpt.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name="org.wordpress.android.posttypes.CptFlatPostListActivity"
+            android:theme="@style/Cpt.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name="org.wordpress.android.posttypes.CptHierarchicalPostListActivity"
+            android:theme="@style/Cpt.NoActionBar"
+            android:exported="false" />
+    </application>
+</manifest>
