@@ -240,18 +240,7 @@ public class PeopleManagementActivity extends BaseAppCompatActivity
             confirmRemovePerson();
             return true;
         } else if (item.getItemId() == R.id.invite) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
-
-            if (peopleInviteFragment == null) {
-                peopleInviteFragment = PeopleInviteFragment.newInstance(mSite);
-            }
-            if (!peopleInviteFragment.isAdded()) {
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, peopleInviteFragment, KEY_PEOPLE_INVITE_FRAGMENT);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
+            inviteUser();
         } else if (item.getItemId() == R.id.send_invitation) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PEOPLE_INVITE_FRAGMENT);
@@ -260,6 +249,21 @@ public class PeopleManagementActivity extends BaseAppCompatActivity
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void inviteUser() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PEOPLE_INVITE_FRAGMENT);
+
+        if (peopleInviteFragment == null) {
+            peopleInviteFragment = PeopleInviteFragment.newInstance(mSite);
+        }
+        if (!peopleInviteFragment.isAdded()) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, peopleInviteFragment, KEY_PEOPLE_INVITE_FRAGMENT);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
     }
 
     private boolean fetchUsersList(final SiteModel site, final int offset) {
@@ -641,21 +645,20 @@ public class PeopleManagementActivity extends BaseAppCompatActivity
     }
 
     @Override
-    public boolean onFetchMorePeople(PeopleListFilter filter) {
+    public void onFetchMorePeople(PeopleListFilter filter) {
         if (filter == PeopleListFilter.TEAM && !mUsersEndOfListReached) {
             int count = PeopleTable.getUsersCountForLocalBlogId(mSite.getId());
-            return fetchUsersList(mSite, count);
+            fetchUsersList(mSite, count);
         } else if (filter == PeopleListFilter.SUBSCRIBERS && !mFollowersEndOfListReached) {
             int pageToFetch = mFollowersLastFetchedPage + 1;
-            return fetchFollowersList(mSite, pageToFetch);
+            fetchFollowersList(mSite, pageToFetch);
         } else if (filter == PeopleListFilter.EMAIL_SUBSCRIBERS && !mEmailFollowersEndOfListReached) {
             int pageToFetch = mEmailFollowersLastFetchedPage + 1;
-            return fetchEmailFollowersList(mSite, pageToFetch);
+            fetchEmailFollowersList(mSite, pageToFetch);
         } else if (filter == PeopleListFilter.VIEWERS && !mViewersEndOfListReached) {
             int count = PeopleTable.getViewersCountForLocalBlogId(mSite.getId());
-            return fetchViewersList(mSite, count);
+            fetchViewersList(mSite, count);
         }
-        return false;
     }
 
     private PeopleListFragment getListFragment() {

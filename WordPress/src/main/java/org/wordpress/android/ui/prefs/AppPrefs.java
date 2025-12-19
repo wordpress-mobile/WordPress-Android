@@ -17,7 +17,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.JetpackCapability;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
-import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
@@ -89,9 +88,6 @@ public class AppPrefs {
 
         // index of the last active item in Stats activity
         STATS_ITEM_INDEX,
-
-        // index of the last active people list filter in People Management activity
-        PEOPLE_LIST_FILTER_INDEX,
 
         // selected site in the main activity
         SELECTED_SITE_LOCAL_ID,
@@ -501,26 +497,6 @@ public class AppPrefs {
 
     public static void setReaderSubsPageTitle(String pageTitle) {
         setString(DeletablePrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
-    }
-
-    public static PeopleListFilter getPeopleListFilter() {
-        int idx = getInt(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX);
-        PeopleListFilter[] values = PeopleListFilter.values();
-        if (values.length < idx) {
-            return values[0];
-        } else {
-            return values[idx];
-        }
-    }
-
-    public static void setPeopleListFilter(PeopleListFilter peopleListFilter) {
-        if (peopleListFilter != null) {
-            setInt(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX, peopleListFilter.ordinal());
-        } else {
-            prefs().edit()
-                   .remove(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX.name())
-                   .apply();
-        }
     }
 
     // Store the version code of the app. Used to check it the app was upgraded.

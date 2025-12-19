@@ -30,12 +30,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
-            app:aevImage="@drawable/img_illustration_empty_results_216dp"
-            app:aevTitle="@string/people_empty_list_filtered_subscribers"
+            app:aevTitle="@string/people_empty_list_filtered_users"
+            app:aevSubtitle="@string/people_empty_list_filtered_users_subtitle"
+            app:aevButton="@string/people_empty_list_filtered_users_button"
             tools:visibility="visible" />
 
-        <org.wordpress.android.ui.FilteredRecyclerView
-            android:id="@+id/filtered_recycler_view"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
