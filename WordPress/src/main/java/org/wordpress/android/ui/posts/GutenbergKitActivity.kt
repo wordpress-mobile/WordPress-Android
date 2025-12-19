@@ -2798,7 +2798,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     override fun onCapturePhotoClicked() {
         if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
-            launchCamera()
+            checkCameraPermissionAndLaunch()
         } else {
             editorPhotoPicker?.showNoUploadPermissionSnackbar()
         }
