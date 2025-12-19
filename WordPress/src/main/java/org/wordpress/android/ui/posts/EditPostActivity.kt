@@ -1560,6 +1560,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     super.openContextMenu(menuView)
                     menuView = null
                 }
+                WPPermissionUtils.AZTEC_EDITOR_CAMERA_PERMISSION_REQUEST_CODE -> {
+                    launchCamera()
+                }
             }
         }
     }
@@ -1934,14 +1937,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private fun onUploadProgress(media: MediaModel?, progress: Float) {
         val localMediaId = media?.id.toString()
         editorMediaUploadListener?.onMediaUploadProgress(localMediaId, progress)
-    }
-
-    private fun launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this, editorPhotoPicker?.allowMultipleSelection == true)
-    }
-
-    private fun launchVideoLibrary() {
-        WPMediaUtils.launchVideoLibrary(this, editorPhotoPicker?.allowMultipleSelection == true)
     }
 
     private fun launchVideoCamera() {
@@ -2679,6 +2674,16 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 }
             }
         )
+    }
+
+    override fun checkCameraPermissionAndLaunch() {
+        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(
+                this,
+                WPPermissionUtils.AZTEC_EDITOR_CAMERA_PERMISSION_REQUEST_CODE
+            )
+        ) {
+            launchCamera()
+        }
     }
 
     private fun setPostContentFromShareAction() {
