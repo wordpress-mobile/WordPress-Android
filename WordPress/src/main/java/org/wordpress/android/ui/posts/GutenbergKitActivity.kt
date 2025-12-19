@@ -146,6 +146,7 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOpera
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewHelperFunctions
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider
+import org.wordpress.android.ui.posts.editor.EditorCameraHelper
 import org.wordpress.android.ui.posts.editor.EditorMediaActions
 import org.wordpress.android.ui.posts.editor.EditorMenuHelper
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker
@@ -201,7 +202,6 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.StorageUtilsProvider
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
@@ -1496,11 +1496,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                     super.openContextMenu(menuView)
                     menuView = null
                 }
-                WPPermissionUtils.AZTEC_EDITOR_CAMERA_PERMISSION_REQUEST_CODE -> {
-                    launchCamera()
-                }
             }
         }
+        EditorCameraHelper.handlePermissionResult(requestCode, allGranted, ::launchCamera)
     }
 
     private fun handleBackPressed(): Boolean {
@@ -2417,13 +2415,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     }
 
     override fun checkCameraPermissionAndLaunch() {
-        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(
-                this,
-                WPPermissionUtils.AZTEC_EDITOR_CAMERA_PERMISSION_REQUEST_CODE
-            )
-        ) {
-            launchCamera()
-        }
+        EditorCameraHelper.checkCameraPermissionAndLaunch(this, ::launchCamera)
     }
 
     private fun setPostContentFromShareAction() {

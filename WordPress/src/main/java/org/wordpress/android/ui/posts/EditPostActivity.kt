@@ -162,6 +162,7 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOpera
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewHelperFunctions
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider
+import org.wordpress.android.ui.posts.editor.EditorCameraHelper
 import org.wordpress.android.ui.posts.editor.EditorMediaActions
 import org.wordpress.android.ui.posts.editor.EditorMenuHelper
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker
@@ -1560,11 +1561,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     super.openContextMenu(menuView)
                     menuView = null
                 }
-                WPPermissionUtils.AZTEC_EDITOR_CAMERA_PERMISSION_REQUEST_CODE -> {
-                    launchCamera()
-                }
             }
         }
+        EditorCameraHelper.handlePermissionResult(requestCode, allGranted, ::launchCamera)
     }
 
     private fun handleBackPressed(): Boolean {
@@ -2685,13 +2684,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun checkCameraPermissionAndLaunch() {
-        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(
-                this,
-                WPPermissionUtils.AZTEC_EDITOR_CAMERA_PERMISSION_REQUEST_CODE
-            )
-        ) {
-            launchCamera()
-        }
+        EditorCameraHelper.checkCameraPermissionAndLaunch(this, ::launchCamera)
     }
 
     private fun setPostContentFromShareAction() {
