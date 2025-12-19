@@ -476,7 +476,11 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         if (post.isPage()) {
             post.setParentId(MapUtils.getMapLong(postMap, "post_parent"));
             post.setParentTitle(MapUtils.getMapStr(postMap, "wp_page_parent"));
-            post.setSlug(MapUtils.getMapStr(postMap, "wp_slug"));
+            // Only use wp_slug if it's not empty; otherwise keep post_name (set earlier)
+            String wpSlug = MapUtils.getMapStr(postMap, "wp_slug");
+            if (!TextUtils.isEmpty(wpSlug)) {
+                post.setSlug(wpSlug);
+            }
         } else {
             // Extract featured image ID from post_thumbnail struct
             Object featuredImageObject = postMap.get("post_thumbnail");
