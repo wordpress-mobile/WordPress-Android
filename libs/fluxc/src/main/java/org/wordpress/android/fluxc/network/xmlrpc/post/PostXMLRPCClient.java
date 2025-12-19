@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -388,7 +389,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         return new PostsModel(postArray);
     }
 
-    private static PostModel postResponseObjectToPostModel(@NonNull Map postObject, SiteModel site) {
+    @VisibleForTesting
+    static PostModel postResponseObjectToPostModel(@NonNull Map postObject, SiteModel site) {
         Map<?, ?> postMap = (Map<?, ?>) postObject;
         PostModel post = new PostModel();
 
