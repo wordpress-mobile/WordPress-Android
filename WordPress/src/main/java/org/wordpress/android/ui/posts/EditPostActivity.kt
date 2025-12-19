@@ -1938,14 +1938,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         editorMediaUploadListener?.onMediaUploadProgress(localMediaId, progress)
     }
 
-    private fun launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this, editorPhotoPicker?.allowMultipleSelection == true)
-    }
-
-    private fun launchVideoLibrary() {
-        WPMediaUtils.launchVideoLibrary(this, editorPhotoPicker?.allowMultipleSelection == true)
-    }
-
     private fun launchVideoCamera() {
         WPMediaUtils.launchVideoCamera(this)
     }
