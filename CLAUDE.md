@@ -188,3 +188,34 @@ Document any process refinements discovered during execution.
 - **Exclude**: CI changes, code refactoring, dependency updates, internal technical changes
 - **Language**: Positive sentiment, avoid "fix" terminology, focus on improvements and enhancements
 - **Priority Order**: New features → Improvements → Performance → Other user-facing changes
+
+## PR Description Format
+
+When writing PR descriptions, follow this format:
+
+```markdown
+## Description
+
+[Description of the changes]
+
+## Testing instructions
+
+Test case title:
+
+1. Step 1
+2. Step 2
+- [ ] Verify expected outcome
+3. Step 3
+- [ ] Verify another expected outcome
+
+Test case title 2:
+
+1. Step 1
+2. Step 2
+- [ ] Expected outcome
+```
+
+### Format Rules
+- Use numbered lists for action steps
+- Use checkboxes (`- [ ]`) for verifications and expected outcomes
+- Organize by test case titles when there are multiple scenarios
