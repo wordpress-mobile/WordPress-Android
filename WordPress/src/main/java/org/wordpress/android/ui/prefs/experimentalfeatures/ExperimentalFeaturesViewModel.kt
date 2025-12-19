@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -50,7 +51,10 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     }
 
     private fun shouldShowFeature(feature: Feature): Boolean {
-        return if (gutenbergKitFeature.isEnabled()) {
+        // Only show Post Types feature in debug builds
+        return if (feature == Feature.EXPERIMENTAL_POST_TYPES) {
+            BuildConfig.DEBUG
+        } else if (gutenbergKitFeature.isEnabled()) {
             feature != Feature.EXPERIMENTAL_BLOCK_EDITOR
         } else {
             feature != Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR

@@ -24,6 +24,7 @@ sealed class SiteNavigationAction {
     data class OpenPlan(val site: SiteModel) : SiteNavigationAction()
     data class OpenPosts(val site: SiteModel) : SiteNavigationAction()
     data class OpenPages(val site: SiteModel) : SiteNavigationAction()
+    data class OpenPostTypes(val site: SiteModel) : SiteNavigationAction()
     data class OpenHomepage(
         val site: SiteModel,
         val homepageLocalId: Int,

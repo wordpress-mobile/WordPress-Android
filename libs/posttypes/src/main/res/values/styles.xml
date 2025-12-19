@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Theme for Post Types module activities.
+        Uses Material3 DayNight as base, removes action bar, sets transparent status bar.
+
+        Migration Note: When merging back to main module, replace with WordPress.NoActionBar
+    -->
+    <style name="Cpt.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+</resources>

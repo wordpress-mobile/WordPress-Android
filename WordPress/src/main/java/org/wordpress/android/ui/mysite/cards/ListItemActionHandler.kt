@@ -28,6 +28,7 @@ class ListItemActionHandler @Inject constructor(
             ListItemAction.PLAN -> SiteNavigationAction.OpenPlan(selectedSite)
             ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
             ListItemAction.PAGES -> SiteNavigationAction.OpenPages(selectedSite)
+            ListItemAction.POST_TYPES -> SiteNavigationAction.OpenPostTypes(selectedSite)
             ListItemAction.ADMIN -> SiteNavigationAction.OpenAdmin(selectedSite)
             ListItemAction.SUBSCRIBERS -> SiteNavigationAction.OpenSubscribers(selectedSite)
             ListItemAction.PEOPLE -> SiteNavigationAction.OpenPeople(selectedSite)

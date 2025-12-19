@@ -993,6 +993,9 @@
     <string name="network_requests_disable_tracking_title">Disable Tracking?</string>
     <string name="network_requests_disable_tracking_description">Existing logs will expire based on the retention period. To clear logs now, tap \"View Network Requests\" and use the trash icon before disabling.</string>
     <string name="network_requests_disable">Disable</string>
+    <string name="experimental_post_types">Post Types</string>
+    <string name="experimental_post_types_description">Enable experimental post types screen</string>
+    <string name="post_types_screen_title">Post Types</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug Settings</string>
