@@ -71,8 +71,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             if (response.isError) {
                 _uiState.value = buildErrorUiState()
             } else {
-               // _uiState.value = buildContentUiState(response.activityTypeModels)
-                _uiState.value = buildContentUiState(emptyList()) // TODO remove
+                _uiState.value = buildContentUiState(response.activityTypeModels)
             }
         }
     }

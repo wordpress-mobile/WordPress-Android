@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
@@ -174,12 +173,11 @@ class ActivityLogViewModel @Inject constructor(
     ) {
         currentRestoreEvent = restoreEvent
         currentBackupDownloadEvent = backupDownloadEvent
-        /*val eventList = activityLogStore.getActivityLogForSite(
+        val eventList = activityLogStore.getActivityLogForSite(
             site = site,
             ascending = false,
             rewindableOnly = rewindableOnly
-        )*/
-        val eventList = ArrayList<ActivityLogModel>() // TODO remove
+        )
         val items = mutableListOf<ActivityLogListItem>()
         var moveToTop = false
         val withRestoreProgressItem = restoreEvent.displayProgress && !restoreEvent.isCompleted
