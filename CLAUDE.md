@@ -196,7 +196,7 @@ When writing PR descriptions, follow this format:
 ```markdown
 ## Description
 
-[Description of the changes]
+[Brief description of what this PR changes and why]
 
 ## Testing instructions
 
