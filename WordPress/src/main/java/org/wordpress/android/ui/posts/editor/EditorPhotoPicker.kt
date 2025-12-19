@@ -39,6 +39,13 @@ interface EditorPhotoPickerListener {
  */
 interface EditorMediaActions {
     fun launchCamera()
+
+    /**
+     * Checks for camera permissions and launches the camera if granted.
+     * If permissions are not granted, requests them from the user.
+     * The activity should handle the permission result and call launchCamera() when granted.
+     */
+    fun checkCameraPermissionAndLaunch()
 }
 
 /**
@@ -194,9 +201,9 @@ class EditorPhotoPicker(
                 showPhotoPicker(siteModel)
             }
             MediaToolbarAction.CAMERA -> {
-                // Launch the camera to capture a photo
+                // Launch the camera to capture a photo (after checking permissions)
                 if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
-                    editorMediaActions.launchCamera()
+                    editorMediaActions.checkCameraPermissionAndLaunch()
                 } else {
                     showNoUploadPermissionSnackbar()
                 }
@@ -246,7 +253,7 @@ class EditorPhotoPicker(
         when (action) {
             is MediaPickerAction.OpenCameraForPhotos -> {
                 if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
-                    editorMediaActions.launchCamera()
+                    editorMediaActions.checkCameraPermissionAndLaunch()
                 } else {
                     showNoUploadPermissionSnackbar()
                 }

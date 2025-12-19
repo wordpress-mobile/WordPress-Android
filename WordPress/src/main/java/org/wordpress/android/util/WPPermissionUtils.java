@@ -35,6 +35,7 @@ public class WPPermissionUtils {
     public static final int MEDIA_PREVIEW_PERMISSION_REQUEST_CODE = 30;
     public static final int PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE = 40;
     public static final int PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE = 41;
+    public static final int AZTEC_EDITOR_CAMERA_PERMISSION_REQUEST_CODE = 42;
     public static final int EDITOR_MEDIA_PERMISSION_REQUEST_CODE = 60;
     public static final int READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE = 80;
 

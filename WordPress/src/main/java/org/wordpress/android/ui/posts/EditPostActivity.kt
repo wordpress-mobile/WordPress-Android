@@ -1560,6 +1560,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     super.openContextMenu(menuView)
                     menuView = null
                 }
+                WPPermissionUtils.AZTEC_EDITOR_CAMERA_PERMISSION_REQUEST_CODE -> {
+                    launchCamera()
+                }
             }
         }
     }
@@ -2679,6 +2682,16 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 }
             }
         )
+    }
+
+    override fun checkCameraPermissionAndLaunch() {
+        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(
+                this,
+                WPPermissionUtils.AZTEC_EDITOR_CAMERA_PERMISSION_REQUEST_CODE
+            )
+        ) {
+            launchCamera()
+        }
     }
 
     private fun setPostContentFromShareAction() {
