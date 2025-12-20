@@ -1496,11 +1496,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                     super.openContextMenu(menuView)
                     menuView = null
                 }
-                WPPermissionUtils.AZTEC_EDITOR_CAMERA_PERMISSION_REQUEST_CODE -> {
-                    launchCamera()
-                }
             }
         }
+        editorCameraHelper.handleCameraPermissionResult(requestCode, allGranted) { launchCamera() }
     }
 
     private fun handleBackPressed(): Boolean {

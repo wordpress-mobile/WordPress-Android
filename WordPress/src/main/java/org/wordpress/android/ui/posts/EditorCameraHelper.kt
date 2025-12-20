@@ -77,4 +77,25 @@ class EditorCameraHelper @Inject constructor() {
     fun launchVideoCamera(activity: Activity) {
         WPMediaUtils.launchVideoCamera(activity)
     }
+
+    /**
+     * Handles the camera permission result. Call this from onRequestPermissionsResult.
+     *
+     * @param requestCode The permission request code
+     * @param allGranted Whether all requested permissions were granted
+     * @param onLaunchCamera Callback to launch the camera if permission was granted
+     * @return true if this was a camera permission request and it was handled, false otherwise
+     */
+    fun handleCameraPermissionResult(
+        requestCode: Int,
+        allGranted: Boolean,
+        onLaunchCamera: () -> Unit
+    ): Boolean {
+        return if (requestCode == WPPermissionUtils.AZTEC_EDITOR_CAMERA_PERMISSION_REQUEST_CODE && allGranted) {
+            onLaunchCamera()
+            true
+        } else {
+            false
+        }
+    }
 }
