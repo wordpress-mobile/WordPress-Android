@@ -51,7 +51,6 @@ import kotlinx.parcelize.parcelableCreator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.WordPress.Companion.getContext
@@ -202,7 +201,6 @@ import org.wordpress.android.util.StorageUtilsProvider
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
-import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPUrlUtils
@@ -330,6 +328,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
 
     @Inject lateinit var featuredImageHelper: FeaturedImageHelper
+
+    @Inject lateinit var editorCameraHelper: EditorCameraHelper
 
     @Inject lateinit var reactNativeRequestHandler: ReactNativeRequestHandler
 
@@ -2396,34 +2396,18 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         }
     }
 
-    override fun launchCamera() {
-        WPMediaUtils.launchCamera(
-            this,
-            BuildConfig.APPLICATION_ID,
-            object : WPMediaUtils.LaunchCameraCallback {
-                override fun onMediaCapturePathReady(mediaCapturePath: String?) {
-                  this@GutenbergKitActivity.mediaCapturePath = mediaCapturePath
-                }
+    private val cameraCallback = object : EditorCameraHelper.CameraCallback {
+        override fun onMediaCapturePathReady(mediaCapturePath: String?) {
+            this@GutenbergKitActivity.mediaCapturePath = mediaCapturePath
+        }
+    }
 
-                override fun onCameraError(errorMessage: String?) {
-                    ToastUtils.showToast(
-                        this@GutenbergKitActivity,
-                        errorMessage,
-                        ToastUtils.Duration.SHORT
-                    )
-                }
-            }
-        )
+    override fun launchCamera() {
+        editorCameraHelper.launchCamera(this, cameraCallback)
     }
 
     override fun checkCameraPermissionAndLaunch() {
-        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(
-                this,
-                WPPermissionUtils.AZTEC_EDITOR_CAMERA_PERMISSION_REQUEST_CODE
-            )
-        ) {
-            launchCamera()
-        }
+        editorCameraHelper.checkCameraPermissionAndLaunch(this, cameraCallback)
     }
 
     private fun setPostContentFromShareAction() {

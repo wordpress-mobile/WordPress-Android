@@ -52,7 +52,6 @@ import kotlinx.parcelize.parcelableCreator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.WordPress.Companion.getContext
@@ -353,6 +352,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
 
     @Inject lateinit var featuredImageHelper: FeaturedImageHelper
+
+    @Inject lateinit var editorCameraHelper: EditorCameraHelper
 
     @Inject lateinit var reactNativeRequestHandler: ReactNativeRequestHandler
 
@@ -2656,34 +2657,18 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    override fun launchCamera() {
-        WPMediaUtils.launchCamera(
-            this,
-            BuildConfig.APPLICATION_ID,
-            object : WPMediaUtils.LaunchCameraCallback {
-                override fun onMediaCapturePathReady(mediaCapturePath: String?) {
-                  this@EditPostActivity.mediaCapturePath = mediaCapturePath
-                }
+    private val cameraCallback = object : EditorCameraHelper.CameraCallback {
+        override fun onMediaCapturePathReady(mediaCapturePath: String?) {
+            this@EditPostActivity.mediaCapturePath = mediaCapturePath
+        }
+    }
 
-                override fun onCameraError(errorMessage: String?) {
-                    ToastUtils.showToast(
-                        this@EditPostActivity,
-                        errorMessage,
-                        ToastUtils.Duration.SHORT
-                    )
-                }
-            }
-        )
+    override fun launchCamera() {
+        editorCameraHelper.launchCamera(this, cameraCallback)
     }
 
     override fun checkCameraPermissionAndLaunch() {
-        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(
-                this,
-                WPPermissionUtils.AZTEC_EDITOR_CAMERA_PERMISSION_REQUEST_CODE
-            )
-        ) {
-            launchCamera()
-        }
+        editorCameraHelper.checkCameraPermissionAndLaunch(this, cameraCallback)
     }
 
     private fun setPostContentFromShareAction() {
