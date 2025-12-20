@@ -68,4 +68,13 @@ class EditorCameraHelper @Inject constructor() {
             false
         }
     }
+
+    /**
+     * Launches the video camera for capturing videos.
+     *
+     * @param activity The activity context
+     */
+    fun launchVideoCamera(activity: Activity) {
+        WPMediaUtils.launchVideoCamera(activity)
+    }
 }

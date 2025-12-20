@@ -1832,7 +1832,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     }
 
     private fun launchVideoCamera() {
-        WPMediaUtils.launchVideoCamera(this)
+        editorCameraHelper.launchVideoCamera(this)
     }
 
     private fun showErrorAndFinish(errorMessageId: Int) {
