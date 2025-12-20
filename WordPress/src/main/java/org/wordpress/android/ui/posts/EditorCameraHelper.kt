@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import android.app.Activity
 import dagger.Reusable
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPMediaUtils
@@ -95,6 +96,50 @@ class EditorCameraHelper @Inject constructor() {
             onLaunchCamera()
             true
         } else {
+            false
+        }
+    }
+
+    /**
+     * Checks if the user can upload media and launches the photo camera if allowed.
+     *
+     * @param site The site to check upload permissions for
+     * @param onLaunchCamera Callback to launch the camera if upload is allowed
+     * @param onNoPermission Callback when user doesn't have upload permission
+     * @return true if user can upload and camera launch was initiated
+     */
+    fun capturePhotoIfAllowed(
+        site: SiteModel,
+        onLaunchCamera: () -> Unit,
+        onNoPermission: () -> Unit
+    ): Boolean {
+        return if (WPMediaUtils.currentUserCanUploadMedia(site)) {
+            onLaunchCamera()
+            true
+        } else {
+            onNoPermission()
+            false
+        }
+    }
+
+    /**
+     * Checks if the user can upload media and launches the video camera if allowed.
+     *
+     * @param activity The activity context
+     * @param site The site to check upload permissions for
+     * @param onNoPermission Callback when user doesn't have upload permission
+     * @return true if user can upload and video camera was launched
+     */
+    fun captureVideoIfAllowed(
+        activity: Activity,
+        site: SiteModel,
+        onNoPermission: () -> Unit
+    ): Boolean {
+        return if (WPMediaUtils.currentUserCanUploadMedia(site)) {
+            launchVideoCamera(activity)
+            true
+        } else {
+            onNoPermission()
             false
         }
     }

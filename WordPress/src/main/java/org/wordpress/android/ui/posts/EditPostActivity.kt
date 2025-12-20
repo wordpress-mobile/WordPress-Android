@@ -1938,10 +1938,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         editorMediaUploadListener?.onMediaUploadProgress(localMediaId, progress)
     }
 
-    private fun launchVideoCamera() {
-        editorCameraHelper.launchVideoCamera(this)
-    }
-
     private fun showErrorAndFinish(errorMessageId: Int) {
         ToastUtils.showToast(this, errorMessageId, ToastUtils.Duration.LONG)
         finish()
@@ -3208,11 +3204,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onCapturePhotoClicked() {
-        if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
-            launchCamera()
-        } else {
-            editorPhotoPicker?.showNoUploadPermissionSnackbar()
-        }
+        editorCameraHelper.capturePhotoIfAllowed(
+            siteModel,
+            onLaunchCamera = { launchCamera() },
+            onNoPermission = { editorPhotoPicker?.showNoUploadPermissionSnackbar() }
+        )
     }
 
     override fun onAddVideoClicked(allowMultipleSelection: Boolean) {
@@ -3288,11 +3284,11 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     override fun onCaptureVideoClicked() {
-        if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
-            launchVideoCamera()
-        } else {
-            editorPhotoPicker?.showNoUploadPermissionSnackbar()
-        }
+        editorCameraHelper.captureVideoIfAllowed(
+            this,
+            siteModel,
+            onNoPermission = { editorPhotoPicker?.showNoUploadPermissionSnackbar() }
+        )
     }
 
     override fun onMediaDropped(mediaUris: ArrayList<Uri>) {
