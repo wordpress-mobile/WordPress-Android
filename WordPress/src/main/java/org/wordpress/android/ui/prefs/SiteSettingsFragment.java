@@ -1100,6 +1100,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                                             && mSite.getPlanId() != PlansConstants.JETPACK_PREMIUM_PLAN_ID
                                             && mSite.getPlanId() != PlansConstants.BUSINESS_PLAN_ID)) {
             removeJetpackMediaSettings();
+        } else if (mSiteQuotaSpacePref != null) {
+            // Premium plans show quota but don't need the long press hint
+            mSiteQuotaSpacePref.setHint(null);
         }
 
         // Simple WPCom Sites now always default to Gutenberg Editor
