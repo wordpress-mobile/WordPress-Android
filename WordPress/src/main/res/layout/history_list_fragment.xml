@@ -20,7 +20,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"
-                app:aevImage="@drawable/img_illustration_empty_results_216dp"
                 app:aevSubtitle="@string/history_empty_subtitle_page"
                 app:aevTitle="@string/history_empty_title"
                 tools:visibility="visible" />
