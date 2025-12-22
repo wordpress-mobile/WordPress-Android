@@ -20,9 +20,13 @@ class QuotaPreference(
     context: Context,
     attrs: AttributeSet
 ) : Preference(context, attrs), PreferenceHint {
-
     private var hint: String? = null
-    private var progress: Int = 0
+    private var progress: Int = MIN_PROGRESS
+
+    companion object {
+        private const val MIN_PROGRESS = 0
+        private const val MAX_PROGRESS = 100
+    }
 
     init {
         layoutResource = R.layout.quota_preference
@@ -91,7 +95,7 @@ class QuotaPreference(
      * @param value The progress value (0-100)
      */
     fun setProgress(value: Int) {
-        progress = value.coerceIn(0, 100)
+        progress = value.coerceIn(MIN_PROGRESS, MAX_PROGRESS)
         notifyChanged()
     }
 
