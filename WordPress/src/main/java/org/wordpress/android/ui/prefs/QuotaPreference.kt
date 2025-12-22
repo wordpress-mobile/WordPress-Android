@@ -69,10 +69,7 @@ class QuotaPreference(
                     com.google.android.material.R.dimen.material_emphasis_disabled
                 )
             } else {
-                ResourcesCompat.getFloat(
-                    res,
-                    com.google.android.material.R.dimen.material_emphasis_medium
-                )
+                1f
             }
         }
 

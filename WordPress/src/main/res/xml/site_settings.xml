@@ -211,7 +211,6 @@
 
         <org.wordpress.android.ui.prefs.QuotaPreference
             android:id="@+id/pref_site_quota_space"
-            android:enabled="false"
             android:key="@string/pref_key_site_quota_space"
             android:title="@string/site_settings_quota_space_title"
             app:longClickHint="@string/site_settings_quota_space_hint" />
