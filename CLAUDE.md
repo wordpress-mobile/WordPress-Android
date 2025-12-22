@@ -114,6 +114,12 @@ WordPress/src/main/java/org/wordpress/android/
   - Breaking parameter lists across multiple lines
   - Using proper indentation for continuation lines
 
+### Kotlin Conventions
+- **Kotlin First**: All new classes must be written in Kotlin; avoid Java for new code
+- **No Empty Lines After Braces**: Do not add empty lines immediately after opening braces (`{`)
+- **Companion Object Placement**: Place `companion object` at the bottom of the class, after all
+  other members (properties, init blocks, constructors, functions)
+
 ### Development Workflow
 - Default development flavor: `jetpackWasabi` (Jetpack app with beta suffix)
 - Remote build cache available for faster builds (requires setup)
