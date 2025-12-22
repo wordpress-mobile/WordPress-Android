@@ -1097,7 +1097,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             removeJetpackSiteAcceleratorSettings();
         }
         if (!mSite.isJetpackConnected() || (mSite.getPlanId() != PlansConstants.JETPACK_BUSINESS_PLAN_ID
-                                            && mSite.getPlanId() != PlansConstants.JETPACK_PREMIUM_PLAN_ID)) {
+                                            && mSite.getPlanId() != PlansConstants.JETPACK_PREMIUM_PLAN_ID
+                                            && mSite.getPlanId() != PlansConstants.BUSINESS_PLAN_ID)) {
             removeJetpackMediaSettings();
         }
 
