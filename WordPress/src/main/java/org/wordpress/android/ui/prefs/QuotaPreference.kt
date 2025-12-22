@@ -3,6 +3,7 @@
 package org.wordpress.android.ui.prefs
 
 import android.content.Context
+import android.content.res.Resources
 import android.preference.Preference
 import android.util.AttributeSet
 import android.view.View
@@ -22,11 +23,6 @@ class QuotaPreference(
 ) : Preference(context, attrs), PreferenceHint {
     private var hint: String? = null
     private var progress: Int = MIN_PROGRESS
-
-    companion object {
-        private const val MIN_PROGRESS = 0
-        private const val MAX_PROGRESS = 100
-    }
 
     init {
         layoutResource = R.layout.quota_preference
@@ -52,14 +48,7 @@ class QuotaPreference(
                 this,
                 com.google.android.material.R.style.TextAppearance_MaterialComponents_Subtitle1
             )
-            alpha = if (!isEnabled) {
-                ResourcesCompat.getFloat(
-                    res,
-                    com.google.android.material.R.dimen.material_emphasis_disabled
-                )
-            } else {
-                1f
-            }
+            updateAlphaForEnabledState(res)
         }
 
         view.findViewById<TextView>(android.R.id.summary)?.apply {
@@ -67,26 +56,23 @@ class QuotaPreference(
                 this,
                 com.google.android.material.R.style.TextAppearance_MaterialComponents_Body2
             )
-            alpha = if (!isEnabled) {
-                ResourcesCompat.getFloat(
-                    res,
-                    com.google.android.material.R.dimen.material_emphasis_disabled
-                )
-            } else {
-                1f
-            }
+            updateAlphaForEnabledState(res)
         }
 
         view.findViewById<LinearProgressIndicator>(R.id.quota_progress)?.apply {
             setProgress(progress)
-            alpha = if (!isEnabled) {
-                ResourcesCompat.getFloat(
-                    res,
-                    com.google.android.material.R.dimen.material_emphasis_disabled
-                )
-            } else {
-                1f
-            }
+            updateAlphaForEnabledState(res)
+        }
+    }
+
+    private fun View.updateAlphaForEnabledState(res: Resources) {
+        alpha = if (!isEnabled) {
+            ResourcesCompat.getFloat(
+                res,
+                com.google.android.material.R.dimen.material_emphasis_disabled
+            )
+        } else {
+            1f
         }
     }
 
@@ -111,5 +97,10 @@ class QuotaPreference(
 
     override fun setHint(hint: String?) {
         this.hint = hint
+    }
+
+    companion object {
+        private const val MIN_PROGRESS = 0
+        private const val MAX_PROGRESS = 100
     }
 }
