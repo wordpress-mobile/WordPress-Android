@@ -165,7 +165,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 
         sealed class Error : UiState() {
             override val errorVisibility = true
-            abstract val image: Int
+            abstract val image: Int?
             abstract val title: UiString
             abstract val subtitle: UiString
             open val buttonText: UiString? = null
@@ -180,8 +180,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             }
 
             object NoActivitiesError : Error() {
-                @DrawableRes
-                override val image = R.drawable.img_illustration_empty_results_216dp
+                override val image = null
                 override val title = UiStringRes(R.string.activity_log_activity_type_empty_title)
                 override val subtitle = UiStringRes(R.string.activity_log_activity_type_empty_subtitle)
             }
