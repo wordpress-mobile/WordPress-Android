@@ -60,8 +60,13 @@ class QuotaPreference(
         }
 
         view.findViewById<LinearProgressIndicator>(R.id.quota_progress)?.apply {
-            setProgress(progress)
-            updateAlphaForEnabledState(res)
+            if (progress < 0) {
+                visibility = View.GONE
+            } else {
+                visibility = View.VISIBLE
+                setProgress(progress)
+                updateAlphaForEnabledState(res)
+            }
         }
     }
 
@@ -78,11 +83,14 @@ class QuotaPreference(
 
     /**
      * Sets the progress value for the quota progress bar.
-     * @param value The progress value (0-100)
+     * @param value The progress value (0-100), or negative for unlimited storage
      */
     fun setProgress(value: Int) {
-        progress = value.coerceIn(MIN_PROGRESS, MAX_PROGRESS)
-        notifyChanged()
+        val newProgress = if (value < 0) value else value.coerceIn(MIN_PROGRESS, MAX_PROGRESS)
+        if (progress != newProgress) {
+            progress = newProgress
+            notifyChanged()
+        }
     }
 
     /**
