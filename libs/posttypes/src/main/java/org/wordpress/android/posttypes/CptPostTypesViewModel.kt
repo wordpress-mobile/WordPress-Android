@@ -1,5 +1,6 @@
 package org.wordpress.android.posttypes
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -66,17 +67,23 @@ class CptPostTypesViewModel @Inject constructor(
     val navigation: SharedFlow<CptNavigationAction> = _navigation.asSharedFlow()
 
     fun onPostTypeClick(postType: CptPostTypeItem) {
-        site?.let {
-            _navigation.tryEmit(
-                CptNavigationAction.OpenPostTypeList(
-                    site = it,
-                    postTypeSlug = postType.slug,
-                    postTypeLabel = postType.label,
-                    hierarchical = postType.hierarchical,
-                    endpointTypeId = resolveEndpointTypeId(postType.slug)
-                )
-            )
+        if (site == null) {
+            Log.e(TAG, "Site is null, cannot navigate to post type list")
+            return
         }
+        _navigation.tryEmit(
+            CptNavigationAction.OpenPostTypeList(
+                site = site,
+                postTypeSlug = postType.slug,
+                postTypeLabel = postType.label,
+                hierarchical = postType.hierarchical,
+                endpointTypeId = resolveEndpointTypeId(postType.slug)
+            )
+        )
+    }
+
+    companion object {
+        private const val TAG = "CptPostTypesViewModel"
     }
 
     /**

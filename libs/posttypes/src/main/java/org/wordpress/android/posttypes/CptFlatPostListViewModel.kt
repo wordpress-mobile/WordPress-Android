@@ -155,11 +155,11 @@ class CptFlatPostListViewModel @Inject constructor(
     @Suppress("unused") // Will be used for post type specific queries
     private val postTypeSlug: String = savedStateHandle.get<String>(
         CptFlatPostListActivity.EXTRA_POST_TYPE_SLUG
-    ) ?: ""
+    ).orEmpty()
 
     private val postTypeLabel: String = savedStateHandle.get<String>(
         CptFlatPostListActivity.EXTRA_POST_TYPE_LABEL
-    ) ?: ""
+    ).orEmpty()
 
     private val endpointType: PostEndpointType = savedStateHandle.get<String>(
         CptFlatPostListActivity.EXTRA_ENDPOINT_TYPE_ID

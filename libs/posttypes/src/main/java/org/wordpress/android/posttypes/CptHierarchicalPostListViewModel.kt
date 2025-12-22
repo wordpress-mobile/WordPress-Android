@@ -142,11 +142,11 @@ class CptHierarchicalPostListViewModel @Inject constructor(
     @Suppress("unused") // Reserved for future use
     private val postTypeSlug: String = savedStateHandle.get<String>(
         CptHierarchicalPostListActivity.EXTRA_POST_TYPE_SLUG
-    ) ?: ""
+    ).orEmpty()
 
     private val postTypeLabel: String = savedStateHandle.get<String>(
         CptHierarchicalPostListActivity.EXTRA_POST_TYPE_LABEL
-    ) ?: ""
+    ).orEmpty()
 
     private val endpointType: PostEndpointType = savedStateHandle.get<String>(
         CptHierarchicalPostListActivity.EXTRA_ENDPOINT_TYPE_ID
