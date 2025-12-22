@@ -243,7 +243,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mCategoriesPref;
 
     // Media settings
-    private EditTextPreference mSiteQuotaSpacePref;
+    private QuotaPreference mSiteQuotaSpacePref;
 
     // Discussion settings preview
     private WPSwitchPreference mAllowCommentsPref;
@@ -1028,7 +1028,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mHomepagePref = (WPPreference) getChangePref(R.string.pref_key_homepage_settings);
         updateHomepageSummary();
         mAmpPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_amp);
-        mSiteQuotaSpacePref = (EditTextPreference) getChangePref(R.string.pref_key_site_quota_space);
+        mSiteQuotaSpacePref = (QuotaPreference) getChangePref(R.string.pref_key_site_quota_space);
         sortLanguages();
         mGutenbergDefaultForNewPosts =
                 (WPSwitchPreference) getChangePref(R.string.pref_key_gutenberg_default_for_new_posts);
@@ -1575,7 +1575,17 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         mPostsPerPagePref.setSummary(String.valueOf(mSiteSettings.getPostsPerPage()));
         setTimezonePref(mSiteSettings.getTimezone());
-        changeEditTextPreferenceValue(mSiteQuotaSpacePref, mSiteSettings.getQuotaDiskSpace());
+        updateQuotaSpacePreference();
+    }
+
+    private void updateQuotaSpacePreference() {
+        if (mSiteQuotaSpacePref == null) {
+            return;
+        }
+        mSiteQuotaSpacePref.setSummary(mSiteSettings.getQuotaDiskSpace());
+        if (mSite != null && mSite.hasDiskSpaceQuotaInformation()) {
+            mSiteQuotaSpacePref.setProgress((int) mSite.getSpacePercentUsed());
+        }
     }
 
     private boolean isShowingImproveSearchPreference() {
