@@ -51,7 +51,6 @@ import kotlinx.parcelize.parcelableCreator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.WordPress.Companion.getContext
@@ -329,6 +328,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
 
     @Inject lateinit var featuredImageHelper: FeaturedImageHelper
+
+    @Inject lateinit var editorCameraHelper: EditorCameraHelper
 
     @Inject lateinit var reactNativeRequestHandler: ReactNativeRequestHandler
 
@@ -1497,6 +1498,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 }
             }
         }
+        editorCameraHelper.handleCameraPermissionResult(requestCode, allGranted) { launchCamera() }
     }
 
     private fun handleBackPressed(): Boolean {
@@ -1825,18 +1827,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 setFeaturedImageId(media.mediaId, imagePicked = false, isGutenbergEditor = false)
             }
         }
-    }
-
-    private fun launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this, editorPhotoPicker?.allowMultipleSelection == true)
-    }
-
-    private fun launchVideoLibrary() {
-        WPMediaUtils.launchVideoLibrary(this, editorPhotoPicker?.allowMultipleSelection == true)
-    }
-
-    private fun launchVideoCamera() {
-        WPMediaUtils.launchVideoCamera(this)
     }
 
     private fun showErrorAndFinish(errorMessageId: Int) {
@@ -2392,24 +2382,18 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         }
     }
 
-    override fun launchCamera() {
-        WPMediaUtils.launchCamera(
-            this,
-            BuildConfig.APPLICATION_ID,
-            object : WPMediaUtils.LaunchCameraCallback {
-                override fun onMediaCapturePathReady(mediaCapturePath: String?) {
-                  this@GutenbergKitActivity.mediaCapturePath = mediaCapturePath
-                }
+    private val cameraCallback = object : EditorCameraHelper.CameraCallback {
+        override fun onMediaCapturePathReady(mediaCapturePath: String?) {
+            this@GutenbergKitActivity.mediaCapturePath = mediaCapturePath
+        }
+    }
 
-                override fun onCameraError(errorMessage: String?) {
-                    ToastUtils.showToast(
-                        this@GutenbergKitActivity,
-                        errorMessage,
-                        ToastUtils.Duration.SHORT
-                    )
-                }
-            }
-        )
+    override fun launchCamera() {
+        editorCameraHelper.launchCamera(this, cameraCallback)
+    }
+
+    override fun checkCameraPermissionAndLaunch() {
+        editorCameraHelper.checkCameraPermissionAndLaunch(this, cameraCallback)
     }
 
     private fun setPostContentFromShareAction() {
@@ -2791,19 +2775,19 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     }
 
     override fun onCapturePhotoClicked() {
-        if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
-            launchCamera()
-        } else {
-            editorPhotoPicker?.showNoUploadPermissionSnackbar()
-        }
+        editorCameraHelper.capturePhotoIfAllowed(
+            siteModel,
+            onLaunchCamera = { launchCamera() },
+            onNoPermission = { editorPhotoPicker?.showNoUploadPermissionSnackbar() }
+        )
     }
 
     override fun onCaptureVideoClicked() {
-        if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
-            launchVideoCamera()
-        } else {
-            editorPhotoPicker?.showNoUploadPermissionSnackbar()
-        }
+        editorCameraHelper.captureVideoIfAllowed(
+            this,
+            siteModel,
+            onNoPermission = { editorPhotoPicker?.showNoUploadPermissionSnackbar() }
+        )
     }
 
     override fun onAuthHeaderRequested(url: String): Map<String, String> {

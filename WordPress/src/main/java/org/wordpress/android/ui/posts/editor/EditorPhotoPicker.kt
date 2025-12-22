@@ -39,6 +39,13 @@ interface EditorPhotoPickerListener {
  */
 interface EditorMediaActions {
     fun launchCamera()
+
+    /**
+     * Checks for camera permissions and launches the camera if granted.
+     * If permissions are not granted, requests them from the user.
+     * The activity should handle the permission result and call launchCamera() when granted.
+     */
+    fun checkCameraPermissionAndLaunch()
 }
 
 /**
@@ -186,11 +193,31 @@ class EditorPhotoPicker(
         }
     }
 
-    @Deprecated("Used only by AztecEditorFragment")
     override fun onMediaToolbarButtonClicked(action: MediaToolbarAction?) {
-        // MediaPickerFragment handles its own toolbar actions through FAB and menu,
-        // so this method is no longer needed for the embedded picker.
-        // The actions are now handled through MediaPickerListener.onIconClicked()
+        val siteModel = siteModelProvider()
+        when (action) {
+            MediaToolbarAction.GALLERY -> {
+                // Show the embedded photo picker for selecting media from device
+                showPhotoPicker(siteModel)
+            }
+            MediaToolbarAction.CAMERA -> {
+                // Launch the camera to capture a photo (after checking permissions)
+                if (WPMediaUtils.currentUserCanUploadMedia(siteModel)) {
+                    editorMediaActions.checkCameraPermissionAndLaunch()
+                } else {
+                    showNoUploadPermissionSnackbar()
+                }
+            }
+            MediaToolbarAction.LIBRARY -> {
+                // Open the WP Media Library
+                mediaPickerLauncher.viewWPMediaLibraryPickerForResult(
+                    activity,
+                    siteModel,
+                    MediaBrowserType.EDITOR_PICKER
+                )
+            }
+            null -> { /* no-op */ }
+        }
     }
 
     fun onOrientationChanged(@Orientation newOrientation: Int) {
