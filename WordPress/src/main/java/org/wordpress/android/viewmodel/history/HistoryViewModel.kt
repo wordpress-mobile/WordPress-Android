@@ -200,7 +200,7 @@ class HistoryViewModel @Inject constructor(
             items.add(HistoryListItem.Footer(footer))
         }
 
-        return emptyList() // TODO items
+        return items
     }
 
     override fun onCleared() {
