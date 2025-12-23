@@ -64,6 +64,11 @@
         <attr name="longClickHint" />
     </declare-styleable>
 
+    <!-- QuotaPreference attributes -->
+    <declare-styleable name="QuotaPreference">
+        <attr name="longClickHint" />
+    </declare-styleable>
+
     <declare-styleable name="WPStartOverPreference">
         <attr name="preficon" format="reference" />
         <attr name="buttonText" format="string" />

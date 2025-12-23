@@ -209,14 +209,11 @@
         android:key="@string/pref_key_site_quota"
         android:title="@string/site_settings_quota_header">
 
-        <org.wordpress.android.ui.prefs.SummaryEditTextPreference
+        <org.wordpress.android.ui.prefs.QuotaPreference
             android:id="@+id/pref_site_quota_space"
-            android:enabled="false"
             android:key="@string/pref_key_site_quota_space"
             android:title="@string/site_settings_quota_space_title"
-            app:longClickHint="@string/site_settings_quota_space_hint"
-            app:maxSummaryLines="1"
-            app:summaryLines="1" />
+            app:longClickHint="@string/site_settings_quota_space_hint" />
     </PreferenceCategory>
     <!-- Traffic settings -->
     <PreferenceCategory
