@@ -1969,8 +1969,8 @@
     <string name="history_detail_button_next">Next</string>
     <string name="history_detail_button_previous">Previous</string>
     <string name="history_detail_title">Revision</string>
-    <string name="history_empty_subtitle_page">When you make changes to your page you\'ll be able to see the history here</string>
-    <string name="history_empty_subtitle_post">When you make changes to your post you\'ll be able to see the history here</string>
+    <string name="history_empty_subtitle_page">You\'ll see this page\'s history when you make changes to it</string>
+    <string name="history_empty_subtitle_post">You\'ll see this post\'s history when you make changes to it</string>
     <string name="history_empty_title">No history yet</string>
     <string name="history_footer_page">Page Created on %1$s at %2$s</string>
     <string name="history_footer_post">Post Created on %1$s at %2$s</string>

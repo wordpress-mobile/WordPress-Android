@@ -97,11 +97,9 @@
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/errorView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:visibility="gone"
         app:aevButton="@string/retry"
-        app:aevImage="@drawable/img_illustration_empty_results_216dp"
-        app:aevImageHiddenInLandscape="true"
         app:aevSubtitle="@string/hpp_error_subtitle"
         app:aevTitle="@string/hpp_error_title"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
