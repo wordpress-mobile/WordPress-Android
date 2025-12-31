@@ -37,7 +37,8 @@ class CptPostTypesActivity : AppCompatActivity(), CptActivity {
                 CptPostTypesScreen(
                     uiState = uiState,
                     onBackClick = { onBackPressedDispatcher.onBackPressed() },
-                    onPostTypeClick = viewModel::onPostTypeClick
+                    onPostTypeClick = viewModel::onPostTypeClick,
+                    onRefreshClick = viewModel::fetch
                 )
             }
         }
