@@ -142,7 +142,7 @@ data class CptFlatPostListUiState(
         get() = listInfo?.hasMorePages ?: true
 
     val currentPage: Long
-        get() = listInfo?.currentPage ?: 0L
+        get() = listInfo?.currentPage?.toLong() ?: 0L
 }
 
 @HiltViewModel
