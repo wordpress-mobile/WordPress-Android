@@ -87,6 +87,9 @@ class MenuActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var quickStartUtils: QuickStartUtilsWrapper
 
+    @Inject
+    lateinit var accountStore: org.wordpress.android.fluxc.store.AccountStore
+
     private val viewModel: MenuViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -133,7 +136,8 @@ class MenuActivity : BaseAppCompatActivity() {
             is SiteNavigationAction.OpenPlan -> ActivityLauncher.viewBlogPlans(this, action.site)
             is SiteNavigationAction.OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(this, action.site)
             is SiteNavigationAction.OpenPages -> ActivityLauncher.viewCurrentBlogPages(this, action.site)
-            is SiteNavigationAction.OpenPostTypes -> ActivityLauncher.viewPostTypes(this, action.site)
+            is SiteNavigationAction.OpenPostTypes ->
+                ActivityLauncher.viewPostTypes(this, action.site, accountStore.account.userId)
             is SiteNavigationAction.OpenAdmin -> ActivityLauncher.viewBlogAdmin(this, action.site)
             is SiteNavigationAction.OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(this, action.site)
             is SiteNavigationAction.OpenSharing -> ActivityLauncher.viewBlogSharing(this, action.site)

@@ -25,7 +25,8 @@ import kotlinx.parcelize.Parcelize
 data class SiteReference(
     val id: Int,
     val name: String,
-    val url: String
+    val url: String,
+    val userId: Long
 ) : Parcelable {
     companion object {
         /**
@@ -38,9 +39,20 @@ data class SiteReference(
          * @param localSiteId The site's local database ID
          * @param siteName The site's display name
          * @param siteUrl The site's URL
+         * @param userId The current user's ID for author filtering
          */
-        fun create(localSiteId: Int, siteName: String, siteUrl: String): SiteReference {
-            return SiteReference(id = localSiteId, name = siteName, url = siteUrl)
+        fun create(
+            localSiteId: Int,
+            siteName: String,
+            siteUrl: String,
+            userId: Long
+        ): SiteReference {
+            return SiteReference(
+                id = localSiteId,
+                name = siteName,
+                url = siteUrl,
+                userId = userId
+            )
         }
     }
 }

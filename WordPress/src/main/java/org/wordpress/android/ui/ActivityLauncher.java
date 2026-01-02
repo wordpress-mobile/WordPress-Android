@@ -707,11 +707,12 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
 
-    public static void viewPostTypes(@NonNull Context context, @NonNull SiteModel site) {
+    public static void viewPostTypes(@NonNull Context context, @NonNull SiteModel site, long userId) {
         SiteReference siteRef = SiteReference.Companion.create(
                 site.getId(),
                 site.getName() != null ? site.getName() : "",
-                site.getUrl() != null ? site.getUrl() : ""
+                site.getUrl() != null ? site.getUrl() : "",
+                userId
         );
         Intent intent = CptPostTypesActivity.Companion.createIntent(context, siteRef);
         context.startActivity(intent);

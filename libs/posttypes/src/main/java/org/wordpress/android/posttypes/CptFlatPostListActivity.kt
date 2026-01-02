@@ -31,6 +31,7 @@ class CptFlatPostListActivity : AppCompatActivity(), CptActivity {
                     onBackClick = { onBackPressedDispatcher.onBackPressed() },
                     onPostClick = viewModel::onPostClick,
                     onFilterChange = viewModel::setFilter,
+                    onAuthorFilterChange = viewModel::setAuthorFilter,
                     onRefreshClick = viewModel::refresh,
                     onLoadMoreClick = viewModel::loadNextPage
                 )

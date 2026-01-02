@@ -128,6 +128,7 @@ data class CptFlatPostListUiState(
     val postTypeLabel: String = "",
     val posts: List<CptPostListItem> = emptyList(),
     val currentFilter: PostStatusFilter = PostStatusFilter.ALL,
+    val currentAuthorFilter: AuthorFilter = AuthorFilter.EVERYONE,
     val listInfo: ListInfo? = null,
     val errorMessage: String? = null
 ) {
@@ -178,23 +179,43 @@ class CptFlatPostListViewModel @Inject constructor(
 
     init {
         if (selfHostedService != null) {
-            createObservableCollection(PostStatusFilter.ALL)
+            createObservableCollection(PostStatusFilter.ALL, AuthorFilter.EVERYONE)
             loadItemsFromCollection()
         }
     }
 
     /**
-     * Change the filter and load persisted state from database.
+     * Change the status filter and load persisted state from database.
      */
     fun setFilter(filter: PostStatusFilter) {
         if (_uiState.value.currentFilter == filter) return
 
         observableCollection?.close()
-        createObservableCollection(filter)
+        createObservableCollection(filter, _uiState.value.currentAuthorFilter)
 
         // Read persisted state from database (single query)
         _uiState.value = _uiState.value.copy(
             currentFilter = filter,
+            listInfo = observableCollection?.listInfo(),
+            errorMessage = null
+        )
+
+        // Load items (async)
+        loadItemsFromCollection()
+    }
+
+    /**
+     * Change the author filter and load persisted state from database.
+     */
+    fun setAuthorFilter(authorFilter: AuthorFilter) {
+        if (_uiState.value.currentAuthorFilter == authorFilter) return
+
+        observableCollection?.close()
+        createObservableCollection(_uiState.value.currentFilter, authorFilter)
+
+        // Read persisted state from database (single query)
+        _uiState.value = _uiState.value.copy(
+            currentAuthorFilter = authorFilter,
             listInfo = observableCollection?.listInfo(),
             errorMessage = null
         )
@@ -279,13 +300,22 @@ class CptFlatPostListViewModel @Inject constructor(
         observableCollection = null
     }
 
-    private fun createObservableCollection(filter: PostStatusFilter) {
+    private fun createObservableCollection(
+        statusFilter: PostStatusFilter,
+        authorFilter: AuthorFilter
+    ) {
         val service = selfHostedService ?: return
         val postService = service.posts()
 
-        val postStatus = filter.apiValue?.let { parsePostStatus(it) }
+        val postStatus = statusFilter.apiValue?.let { parsePostStatus(it) }
+        val authorIds = when (authorFilter) {
+            AuthorFilter.ME -> site?.userId?.let { listOf(it) } ?: emptyList()
+            AuthorFilter.EVERYONE -> emptyList()
+        }
+
         val listFilter = PostListFilter(
-            status = if (postStatus != null) listOf(postStatus) else emptyList()
+            status = if (postStatus != null) listOf(postStatus) else emptyList(),
+            author = authorIds
         )
 
         val observable = postService.getObservablePostMetadataCollectionWithEditContext(

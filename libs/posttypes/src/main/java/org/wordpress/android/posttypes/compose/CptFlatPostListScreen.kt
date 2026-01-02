@@ -17,9 +17,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -28,8 +31,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import org.wordpress.android.posttypes.AuthorFilter
 import org.wordpress.android.posttypes.CptFlatPostListUiState
 import org.wordpress.android.posttypes.CptPostListItem
 import org.wordpress.android.posttypes.PostStatusFilter
@@ -50,6 +59,7 @@ fun CptFlatPostListScreen(
     onBackClick: () -> Unit,
     onPostClick: (CptPostListItem) -> Unit,
     onFilterChange: (PostStatusFilter) -> Unit,
+    onAuthorFilterChange: (AuthorFilter) -> Unit,
     onRefreshClick: () -> Unit,
     onLoadMoreClick: () -> Unit
 ) {
@@ -91,11 +101,18 @@ fun CptFlatPostListScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Filter chips
+            // Status filter chips
             FilterChipsRow(
                 currentFilter = uiState.currentFilter,
                 onFilterChange = onFilterChange,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+
+            // Author filter dropdown
+            AuthorFilterDropdown(
+                currentAuthorFilter = uiState.currentAuthorFilter,
+                onAuthorFilterChange = onAuthorFilterChange,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp)
             )
 
             // Post list
@@ -138,6 +155,52 @@ private fun FilterChipsRow(
                 onClick = { onFilterChange(filter) },
                 label = { Text(filter.displayName) }
             )
+        }
+    }
+}
+
+@Composable
+private fun AuthorFilterDropdown(
+    currentAuthorFilter: AuthorFilter,
+    onAuthorFilterChange: (AuthorFilter) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Author:",
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.padding(end = 8.dp)
+        )
+
+        Box {
+            TextButton(onClick = { expanded = true }) {
+                Text(currentAuthorFilter.displayName)
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = null,
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                AuthorFilter.entries.forEach { filter ->
+                    DropdownMenuItem(
+                        text = { Text(filter.displayName) },
+                        onClick = {
+                            onAuthorFilterChange(filter)
+                            expanded = false
+                        }
+                    )
+                }
+            }
         }
     }
 }
