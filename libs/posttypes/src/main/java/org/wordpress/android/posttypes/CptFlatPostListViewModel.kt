@@ -84,7 +84,7 @@ data class CptPostListItem(
                     status = state.data.data.status.toString().replaceFirstChar { it.uppercase() },
                     isLoading = true
                 )
-                is PostItemState.Cached -> CptPostListItem(
+                is PostItemState.Fresh -> CptPostListItem(
                     id = item.id,
                     itemState = state,
                     title = state.data.data.title.rendered,

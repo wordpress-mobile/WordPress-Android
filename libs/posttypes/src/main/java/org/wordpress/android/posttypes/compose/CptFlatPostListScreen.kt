@@ -285,7 +285,7 @@ private fun PostItemStateIndicator(state: PostItemState) {
         is PostItemState.Missing -> Color.Gray
         is PostItemState.Fetching -> Color.Blue
         is PostItemState.FetchingWithData -> Color.Blue
-        is PostItemState.Cached -> Color.Green
+        is PostItemState.Fresh -> Color.Green
         is PostItemState.Stale -> Color.Yellow
         is PostItemState.Failed -> Color.Red
         is PostItemState.FailedWithData -> Color.Red

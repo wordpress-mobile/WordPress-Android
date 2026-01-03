@@ -78,7 +78,7 @@ data class CptHierarchicalPostItem(
                     status = state.data.data.status.toString().replaceFirstChar { it.uppercase() },
                     isLoading = true
                 )
-                is PostItemState.Cached -> CptHierarchicalPostItem(
+                is PostItemState.Fresh -> CptHierarchicalPostItem(
                     id = item.id,
                     parentId = parentId,
                     itemState = state,
