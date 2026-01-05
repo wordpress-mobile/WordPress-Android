@@ -52,6 +52,8 @@ declare -A TEST_RESULT_DIRS=(
   ["login"]="libs/login/build/test-results/testDebugUnitTest"
 )
 
+exit 1
+
 # Create temporary directory for collecting all test results
 temp_test_results_dir=$(mktemp -d)
 
