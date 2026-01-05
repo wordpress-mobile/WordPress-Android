@@ -17,7 +17,7 @@ steps:
       echo '--- :memo: Update Release Notes'
       bundle exec fastlane update_appstore_strings version:${RELEASE_VERSION}
     agents:
-       queue: "tumblr-metal"
+       queue: "mac-metal"
     retry:
       manual:
         # If those jobs fail, one should always prefer re-triggering a new build from Releases V2 rather than retrying the individual job from Buildkite
