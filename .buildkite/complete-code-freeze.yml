@@ -16,7 +16,7 @@ steps:
       echo '--- :snowflake: Complete Code Freeze'
       bundle exec fastlane complete_code_freeze skip_confirm:true
     agents:
-       queue: "tumblr-metal"
+       queue: "mac-metal"
     retry:
       manual:
         # If those jobs fail, one should always prefer re-triggering a new build from Releases V2 rather than retrying the individual job from Buildkite
