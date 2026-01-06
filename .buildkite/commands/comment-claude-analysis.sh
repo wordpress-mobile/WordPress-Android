@@ -1,16 +1,14 @@
 #!/bin/bash -eu
 
-# Check if unit tests failed (matches both hard_failed and soft_failed outcomes)
-if buildkite-agent step get outcome --step unit-tests | grep -q "failed"; then
-  comment_on_pr --id claude-test-analysis "$(cat <<EOF
+# The claude-analysis step only runs when there are build failures,
+# so if it ran (and soft_failed), it means there were failures that Claude analyzed.
+CLAUDE_OUTCOME=$(buildkite-agent step get outcome --step claude-analysis 2>/dev/null || echo "not_run")
 
-## 🤖 Test Failure Analysis
+if [[ "${CLAUDE_OUTCOME}" == "soft_failed" ]]; then
+  comment_on_pr --id claude-build-analysis "## 🤖 Build Failure Analysis
 
-Your tests failed. Claude has analyzed the failures - <a href="${BUILDKITE_BUILD_URL}/annotations#annotation-claude-analysis-${BUILDKITE_BUILD_ID}" target="_blank">check the annotation</a> for details.
-EOF
-)"
-
+This build has failures. Claude has analyzed them - <a href=\"${BUILDKITE_BUILD_URL}/annotations\" target=\"_blank\">check the build annotations</a> for details."
 else
-  # Remove the comment if tests are now passing
-  comment_on_pr --id claude-test-analysis --if-exist delete
+  # Remove the comment if the build is now passing (claude-analysis did not run)
+  comment_on_pr --id claude-build-analysis --if-exist delete
 fi
