@@ -79,7 +79,6 @@ class CommentListUiModelHelper @Inject constructor(
 
         data class Empty(
             val title: UiString,
-            val image: Int? = null
         ) : CommentsListUiModel()
 
         object Loading : CommentsListUiModel()
@@ -299,7 +298,6 @@ class CommentListUiModelHelper @Inject constructor(
                 if (commentsDataResult.data.comments.isEmpty()) {
                     CommentsListUiModel.Empty(
                         UiStringRes(getEmptyViewMessageResId(commentFilter)),
-                        R.drawable.img_illustration_empty_results_216dp
                     )
                 } else {
                     WithData
@@ -317,7 +315,6 @@ class CommentListUiModelHelper @Inject constructor(
                     }
                     CommentsListUiModel.Empty(
                         errorString,
-                        R.drawable.img_illustration_empty_results_216dp
                     )
                 } else {
                     return WithData
