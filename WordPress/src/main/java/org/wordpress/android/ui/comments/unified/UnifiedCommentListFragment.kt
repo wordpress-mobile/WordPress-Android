@@ -217,13 +217,6 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 
         when (uiModel) {
             is CommentsListUiModel.Empty -> {
-                if (uiModel.image != null) {
-                    actionableEmptyView.image.visibility = View.VISIBLE
-                    actionableEmptyView.image.setImageResource(uiModel.image)
-                } else {
-                    actionableEmptyView.image.visibility = View.GONE
-                }
-
                 actionableEmptyView.title.text = uiHelpers.getTextOfUiString(
                     requireContext(),
                     uiModel.title
