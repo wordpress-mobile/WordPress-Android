@@ -151,21 +151,6 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         assertTrue(shouldShowOverlay)
     }
 
-    // @Test
-    @Suppress("MaxLineLength")
-    fun `given feature is accessed after globalOverlayFrequency, when shouldShowFeatureSpecificJetpackOverlay invoked, then return true`() {
-        setupMockForWpComSite()
-        // The feature was accessed 3 days ago and the globalOverlayFrequency for phase one is 2
-        // The passed number should not exceed feature specific globalOverlayFrequency
-        // but should be less than global overlay frequency
-        setUpMockForEarliestAccessedFeature(3L)
-
-        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-            .shouldShowFeatureSpecificJetpackOverlay(STATS)
-
-        assertTrue(shouldShowOverlay)
-    }
-
     @Test
     fun `shouldShowSiteCreationOverlay always returns false`() {
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
