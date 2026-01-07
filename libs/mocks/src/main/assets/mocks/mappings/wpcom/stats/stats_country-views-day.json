@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPathPattern": "/rest/v1.1/sites/([0-9]+)/stats/country-views/",
+        "urlPathPattern": "/rest/v1.1/sites/([0-9]+)/stats/location-views/country",
         "queryParameters": {
             "period": {
                 "equalTo": "day"
@@ -27,7 +27,7 @@
                         {
                             "country_code": "US",
                             "views": 7
-                        }            
+                        }
                     ],
                     "other_views": 0,
                     "total_views": 17

@@ -122,7 +122,7 @@
 /sites/$site/stats/referrers/spam/new
 /sites/$site/stats/referrers/spam/delete
 /sites/$site/stats/clicks
-/sites/$site/stats/country-views
+/sites/$site/stats/location-views/country
 /sites/$site/stats/top-authors
 /sites/$site/stats/video-plays
 /sites/$site/stats/comments

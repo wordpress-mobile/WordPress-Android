@@ -39,7 +39,7 @@ class CountryViewsRestClient
         itemsToLoad: Int,
         forced: Boolean
     ): FetchStatsPayload<CountryViewsResponse> {
-        val url = WPCOMREST.sites.site(site.siteId).stats.country_views.urlV1_1
+        val url = WPCOMREST.sites.site(site.siteId).stats.location_views.country.urlV1_1
         val params = mapOf(
                 "period" to granularity.toString(),
                 "max" to itemsToLoad.toString(),
