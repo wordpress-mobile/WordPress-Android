@@ -51,7 +51,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     }
 
     fun shouldShowSiteCreationOverlay(): Boolean {
-        return !buildConfigWrapper.isJetpackApp && isInSiteCreationPhase()
+        return false
     }
 
     fun shouldDisableSiteCreation(): Boolean {
