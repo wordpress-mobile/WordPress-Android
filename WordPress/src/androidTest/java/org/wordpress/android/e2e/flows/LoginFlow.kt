@@ -127,7 +127,7 @@ class LoginFlow {
 
     fun enterSiteAddress(siteAddress: String?): LoginFlow {
         // Site Address Screen – Fill it in and click "Continue"
-        // See LoginSiteAddressFragment
+        // See LoginSiteApplicationPasswordFragment
         WPSupportUtils.populateTextField(R.id.input, siteAddress)
         WPSupportUtils.clickOn(R.id.bottom_button)
         return this
