@@ -202,11 +202,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 case JETPACK_SELFHOSTED:
                 case SELFHOSTED_ONLY:
                     mUnifiedLoginTracker.setSource(Source.SELF_HOSTED);
-                    if (mExperimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)) {
-                        showFragment(new LoginSiteApplicationPasswordFragment(), LoginSiteAddressFragment.TAG);
-                    } else {
-                        showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
-                    }
+                    showFragment(new LoginSiteApplicationPasswordFragment(), LoginSiteAddressFragment.TAG);
                     break;
                 case JETPACK_STATS:
                     mUnifiedLoginTracker.setSource(Source.JETPACK);
@@ -579,13 +575,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
 
     @Override
     public void loginViaSiteAddress() {
-        final Fragment loginSiteAddressFragment;
-        if (mExperimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)) {
-            loginSiteAddressFragment = new LoginSiteApplicationPasswordFragment();
-        } else {
-            loginSiteAddressFragment = new LoginSiteAddressFragment();
-        }
-        slideInFragment(loginSiteAddressFragment, true, LoginSiteAddressFragment.TAG);
+        slideInFragment(new LoginSiteApplicationPasswordFragment(), true, LoginSiteAddressFragment.TAG);
     }
 
     @Override
