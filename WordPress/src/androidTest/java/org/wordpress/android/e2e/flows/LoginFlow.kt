@@ -14,6 +14,7 @@ import org.hamcrest.CoreMatchers
 import org.hamcrest.Matchers
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.support.E2ECredentials
 import org.wordpress.android.e2e.pages.HelpScreen
 import org.wordpress.android.e2e.pages.LandingPage.tapContinueWithWpCom
 import org.wordpress.android.e2e.pages.LandingPage.tapEnterYourSiteAddress
@@ -48,8 +49,8 @@ class LoginFlow {
         // If we get bumped to the "enter your username and password" screen, fill it in
         if (WPSupportUtils.atLeastOneElementWithIdIsDisplayed(LoginR.id.login_password_row)) {
             enterUsernameAndPassword(
-                BuildConfig.E2E_WP_COM_USER_USERNAME,
-                BuildConfig.E2E_WP_COM_USER_PASSWORD
+                E2ECredentials.WP_COM_USER_USERNAME,
+                E2ECredentials.WP_COM_USER_PASSWORD
             )
         }
 

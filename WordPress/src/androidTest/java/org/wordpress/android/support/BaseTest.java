@@ -34,9 +34,9 @@ import static androidx.compose.ui.test.junit4.AndroidComposeTestRule_androidKt.c
 import static com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesTypes;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
-import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
-import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
-import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
+import static org.wordpress.android.support.E2ECredentials.SELF_HOSTED_USER_SITE_ADDRESS;
+import static org.wordpress.android.support.E2ECredentials.WP_COM_USER_EMAIL;
+import static org.wordpress.android.support.E2ECredentials.WP_COM_USER_PASSWORD;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
 public class BaseTest {
@@ -83,7 +83,7 @@ public class BaseTest {
         MePage mePage = new MePage();
         boolean isSelfHosted = mePage.go().isSelfHosted();
         if (isSelfHosted) { // Logged in from self hosted connected
-            new MySitesPage().go().removeSite(E2E_SELF_HOSTED_USER_SITE_ADDRESS);
+            new MySitesPage().go().removeSite(SELF_HOSTED_USER_SITE_ADDRESS);
         } else {
             wpLogout();
         }
@@ -98,8 +98,8 @@ public class BaseTest {
     protected void wpLogin() {
         logoutIfNecessary();
         new LoginFlow().chooseContinueWithWpCom(mComposeTestRule)
-                       .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
-                       .enterPassword(E2E_WP_COM_USER_PASSWORD)
+                       .enterEmailAddress(WP_COM_USER_EMAIL)
+                       .enterPassword(WP_COM_USER_PASSWORD)
                        .confirmLogin();
     }
 
