@@ -3734,9 +3734,9 @@
     <string name="mlp_notice_page_created">Page created</string>
     <string name="mlp_notice_blank_page_created">Blank page created</string>
     <string name="mlp_error_title">Layouts not available due to an error</string>
-    <string name="mlp_error_subtitle">Tap retry or create a blank page using the button below.</string>
+    <string name="mlp_error_subtitle">Tap retry or create a blank page</string>
     <string name="mlp_network_error_title">Layouts not available while offline</string>
-    <string name="mlp_network_error_subtitle">Tap retry when you\'re back online or create a blank page using the button below.</string>
+    <string name="mlp_network_error_subtitle">Tap retry when you\'re back online or create a blank page</string>
 
     <!-- Home Page Picker -->
     <string name="hpp_title">Choose a theme</string>
