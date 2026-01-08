@@ -11,7 +11,7 @@ import org.wordpress.android.util.helpers.Debouncer;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Encapsulates the site address validation, cleaning, and error reporting of {@link LoginSiteAddressFragment}.
+ * Encapsulates the site address validation, cleaning, and error reporting of site address login fragments.
  */
 public class LoginSiteAddressValidator {
     private static final int SECONDS_DELAY_BEFORE_SHOWING_ERROR_MESSAGE = 2;
