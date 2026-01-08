@@ -17,7 +17,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayVi
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.PackageManagerWrapper;
@@ -130,9 +129,7 @@ public class DeepLinkingIntentReceiverActivity extends BaseAppCompatActivity {
         JetpackFeatureFullScreenOverlayFragment
                 .newInstance(
                         null,
-                        false,
                         true,
-                        SiteCreationSource.UNSPECIFIED,
                         false,
                         JetpackFeatureCollectionOverlaySource.UNSPECIFIED)
                 .show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);

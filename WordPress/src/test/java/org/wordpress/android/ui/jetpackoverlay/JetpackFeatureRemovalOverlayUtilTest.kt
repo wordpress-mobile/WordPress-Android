@@ -159,6 +159,14 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         assertFalse(shouldShowOverlay)
     }
 
+    @Test
+    fun `shouldDisableSiteCreation always returns false`() {
+        val shouldDisable = jetpackFeatureRemovalOverlayUtil
+            .shouldDisableSiteCreation()
+
+        assertFalse(shouldDisable)
+    }
+
     private fun setupMockForWpComSite() {
         val fakeSiteModel = SiteModel()
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(fakeSiteModel)

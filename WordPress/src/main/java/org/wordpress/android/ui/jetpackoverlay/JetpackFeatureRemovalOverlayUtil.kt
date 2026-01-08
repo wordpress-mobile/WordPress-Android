@@ -16,7 +16,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseT
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseStaticPosters
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -55,10 +54,9 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         return false
     }
 
+    @Suppress("FunctionOnlyReturningConstant")
     fun shouldDisableSiteCreation(): Boolean {
-        return shouldShowSiteCreationOverlay() &&
-                jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase() ==
-                JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
+        return false
     }
 
     fun shouldShowFeatureCollectionJetpackOverlayForFirstTime(): Boolean {
@@ -222,40 +220,6 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
             mapOf(
                 CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
                 SCREEN_TYPE_KEY to screenType.trackingName
-            )
-        )
-    }
-
-    fun trackSiteCreationOverlayShown(siteCreationSource: SiteCreationSource) {
-        analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISPLAYED,
-            mapOf(
-                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
-                SCREEN_TYPE_KEY to siteCreationSource.label
-            )
-        )
-    }
-
-    fun trackInstallJetpackTappedInSiteCreationOverlay(siteCreationSource: SiteCreationSource) {
-        analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
-            mapOf(
-                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
-                SCREEN_TYPE_KEY to siteCreationSource.label
-            )
-        )
-    }
-
-    fun trackBottomSheetDismissedInSiteCreationOverlay(
-        siteCreationSource: SiteCreationSource,
-        dismissalType: JetpackOverlayDismissalType
-    ) {
-        analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISMISSED,
-            mapOf(
-                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
-                SCREEN_TYPE_KEY to siteCreationSource.label,
-                DISMISSAL_TYPE_KEY to dismissalType.trackingName
             )
         )
     }
