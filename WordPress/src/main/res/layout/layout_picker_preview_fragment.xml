@@ -30,7 +30,7 @@
                 android:backgroundTint="@color/transparent"
                 android:contentDescription="@string/navigate_back_desc"
                 android:src="@drawable/ic_arrow_left_white_24dp"
-                android:tint="?attr/colorOnSurface" />
+                app:tint="?attr/colorOnSurface" />
 
             <TextView
                 android:id="@+id/title"
@@ -77,12 +77,10 @@
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/errorView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:visibility="gone"
         app:aevButton="@string/retry"
-        app:aevImage="@drawable/img_illustration_empty_results_216dp"
-        app:aevImageHiddenInLandscape="true"
         app:aevSubtitle="@string/hpp_error_subtitle"
         app:aevTitle="@string/hpp_error_title" />
 
