@@ -7,7 +7,7 @@ import org.wordpress.android.e2e.flows.LoginFlow
 import org.wordpress.android.e2e.pages.ContactSupportScreen
 import org.wordpress.android.support.BaseTest
 import org.wordpress.android.support.ComposeEspressoLink
-import org.wordpress.android.test.BuildConfig
+import org.wordpress.android.support.E2ECredentials
 
 @HiltAndroidTest
 class ContactUsTests : BaseTest() {
@@ -48,7 +48,7 @@ class ContactUsTests : BaseTest() {
     fun e2eHelpCanBeOpenedWhileEnteringPassword() {
         LoginFlow()
             .chooseContinueWithWpCom(super.mComposeTestRule)
-            .enterEmailAddress(BuildConfig.E2E_WP_COM_USER_EMAIL)
+            .enterEmailAddress(E2ECredentials.WP_COM_USER_EMAIL)
             .tapHelp()
             .assertHelpScreenLoaded()
     }
