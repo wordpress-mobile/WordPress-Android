@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -18,6 +19,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.BuildConfigWrapper
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -37,6 +40,9 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var appLogWrapper: AppLogWrapper
 
+    @Mock
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
     private lateinit var viewModel: ApplicationPasswordAutoAuthDialogViewModel
 
     private val testSite = SiteModel().apply {
@@ -45,6 +51,8 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
         password = "testpass123"
     }
 
+    private val testAuthUrl = "https://example.com/wp-admin/authorize-application.php"
+
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
@@ -52,13 +60,60 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             wpApiClientProvider,
             applicationPasswordLoginHelper,
             buildConfigWrapper,
-            appLogWrapper
+            appLogWrapper,
+            experimentalFeatures
         )
     }
 
     @Test
-    fun `createApplicationPassword with exception during API call emits Error`() = runTest {
+    fun `createApplicationPassword enables experimental feature at start`() = runTest {
         // Given
+        whenever(experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE))
+            .thenReturn(false)
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(any()))
+            .thenReturn(testAuthUrl)
+        val testException = RuntimeException("API client creation failed")
+        whenever(wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(eq(testSite)))
+            .doThrow(testException)
+
+        // When
+        viewModel.navigationEvent.test {
+            viewModel.createApplicationPassword(testSite)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        // Then
+        verify(experimentalFeatures).setEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
+    }
+
+    @Test
+    fun `createApplicationPassword does not enable experimental feature if already enabled`() = runTest {
+        // Given
+        whenever(experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE))
+            .thenReturn(true)
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(any()))
+            .thenReturn(testAuthUrl)
+        val testException = RuntimeException("API client creation failed")
+        whenever(wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(eq(testSite)))
+            .doThrow(testException)
+
+        // When
+        viewModel.navigationEvent.test {
+            viewModel.createApplicationPassword(testSite)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        // Then
+        verify(experimentalFeatures, never()).setEnabled(any(), any())
+    }
+
+    @Test
+    fun `createApplicationPassword with exception during API call falls back to manual login`() = runTest {
+        // Given
+        whenever(experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE))
+            .thenReturn(true)
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(testSite.url))
+            .thenReturn(testAuthUrl)
         val testException = RuntimeException("API client creation failed")
         whenever(wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(eq(testSite)))
             .doThrow(testException)
@@ -80,10 +135,10 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
                 cancelAndIgnoreRemainingEvents()
             }
 
-            // Should emit error event
+            // Should emit fallback event with auth URL
             val navigationEvent = awaitItem()
             assertEquals(
-                ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Error,
+                ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.FallbackToManualLogin(testAuthUrl),
                 navigationEvent
             )
 
@@ -91,25 +146,33 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             verify(appLogWrapper, times(1)).e(any(), any())
 
             // Should NOT store credentials
-            verify(applicationPasswordLoginHelper, times(0)).storeApplicationPasswordCredentialsFrom(any())
+            verify(applicationPasswordLoginHelper, never()).storeApplicationPasswordCredentialsFrom(any())
 
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `createApplicationPassword with blank username emits Error`() = runTest {
+    fun `createApplicationPassword with blank username falls back to manual login`() = runTest {
         // Given
-        val invalidSite = testSite.apply { username = "" }
+        val invalidSite = SiteModel().apply {
+            url = "https://example.com"
+            username = ""
+            password = "testpass123"
+        }
+        whenever(experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE))
+            .thenReturn(true)
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(invalidSite.url))
+            .thenReturn(testAuthUrl)
 
         // When & Then
         viewModel.navigationEvent.test {
             viewModel.createApplicationPassword(invalidSite)
 
-            // Should emit error event
+            // Should emit fallback event
             val navigationEvent = awaitItem()
             assertEquals(
-                ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Error,
+                ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.FallbackToManualLogin(testAuthUrl),
                 navigationEvent
             )
 
@@ -117,25 +180,33 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             verify(appLogWrapper, times(1)).e(any(), any())
 
             // Should NOT make API call
-            verify(wpApiClientProvider, times(0)).getWpApiClientCookiesNonceAuthentication(any())
+            verify(wpApiClientProvider, never()).getWpApiClientCookiesNonceAuthentication(any())
 
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `createApplicationPassword with blank password emits Error`() = runTest {
+    fun `createApplicationPassword with blank password falls back to manual login`() = runTest {
         // Given
-        val invalidSite = testSite.apply { password = "" }
+        val invalidSite = SiteModel().apply {
+            url = "https://example.com"
+            username = "testuser"
+            password = ""
+        }
+        whenever(experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE))
+            .thenReturn(true)
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(invalidSite.url))
+            .thenReturn(testAuthUrl)
 
         // When & Then
         viewModel.navigationEvent.test {
             viewModel.createApplicationPassword(invalidSite)
 
-            // Should emit error event
+            // Should emit fallback event
             val navigationEvent = awaitItem()
             assertEquals(
-                ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Error,
+                ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.FallbackToManualLogin(testAuthUrl),
                 navigationEvent
             )
 
@@ -143,7 +214,35 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             verify(appLogWrapper, times(1)).e(any(), any())
 
             // Should NOT make API call
-            verify(wpApiClientProvider, times(0)).getWpApiClientCookiesNonceAuthentication(any())
+            verify(wpApiClientProvider, never()).getWpApiClientCookiesNonceAuthentication(any())
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `createApplicationPassword emits Error when fallback also fails`() = runTest {
+        // Given
+        val invalidSite = SiteModel().apply {
+            url = "https://example.com"
+            username = ""
+            password = "testpass123"
+        }
+        whenever(experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE))
+            .thenReturn(true)
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(any()))
+            .doThrow(RuntimeException("Failed to get auth URL"))
+
+        // When & Then
+        viewModel.navigationEvent.test {
+            viewModel.createApplicationPassword(invalidSite)
+
+            // Should emit error event when fallback also fails
+            val navigationEvent = awaitItem()
+            assertEquals(
+                ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Error,
+                navigationEvent
+            )
 
             cancelAndIgnoreRemainingEvents()
         }
