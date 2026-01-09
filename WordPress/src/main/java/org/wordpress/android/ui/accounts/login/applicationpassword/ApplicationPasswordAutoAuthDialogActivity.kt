@@ -41,6 +41,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -82,6 +83,10 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
                         finish()
                     }
                     is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Error -> {
+                        ToastUtils.showToast(
+                            this@ApplicationPasswordAutoAuthDialogActivity,
+                            R.string.error_generic
+                        )
                         setResult(RESULT_ERROR)
                         finish()
                     }
@@ -107,7 +112,7 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
     companion object {
         private const val EXTRA_SITE = "extra_site"
         const val RESULT_SUCCESS = -1
-        const val RESULT_ERROR = -0
+        const val RESULT_ERROR = 0
         const val RESULT_DISMISSED = 1
 
         fun createIntent(context: Context, site: SiteModel): Intent {

@@ -30,6 +30,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -71,6 +72,10 @@ class ApplicationPasswordRequiredDialogActivity : ComponentActivity() {
                         finish()
                     }
                     is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Error -> {
+                        ToastUtils.showToast(
+                            this@ApplicationPasswordRequiredDialogActivity,
+                            R.string.error_generic
+                        )
                         setResult(RESULT_CANCELED)
                         finish()
                     }
