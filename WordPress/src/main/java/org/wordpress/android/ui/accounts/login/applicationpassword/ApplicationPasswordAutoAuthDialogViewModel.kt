@@ -47,11 +47,11 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     fun createApplicationPassword(site: SiteModel) {
         viewModelScope.launch {
             try {
-                require(site.username.isNotBlank()) { "Site username is required for cookie authentication" }
-                require(site.password.isNotBlank()) { "Site password is required for cookie authentication" }
-
                 // Assume that the Application Password experimental feature can be enabled
                 enableApplicationPasswordIfNecessary()
+
+                require(site.username.isNotBlank()) { "Site username is required for cookie authentication" }
+                require(site.password.isNotBlank()) { "Site password is required for cookie authentication" }
 
                 _isLoading.value = true
                 val client = wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(
