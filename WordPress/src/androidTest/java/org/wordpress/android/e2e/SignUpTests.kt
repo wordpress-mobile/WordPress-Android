@@ -3,10 +3,10 @@ package org.wordpress.android.e2e
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Test
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.e2e.flows.SignupFlow
 import org.wordpress.android.support.BaseTest
 import org.wordpress.android.support.ComposeEspressoLink
+import org.wordpress.android.support.E2ECredentials
 
 @HiltAndroidTest
 class SignUpTests : BaseTest() {
@@ -20,13 +20,13 @@ class SignUpTests : BaseTest() {
     fun e2eSignUpWithMagicLink() {
         try {
             SignupFlow().chooseContinueWithWpCom(super.mComposeTestRule)
-                .enterEmail(BuildConfig.E2E_SIGNUP_EMAIL)
+                .enterEmail(E2ECredentials.SIGNUP_EMAIL)
                 .openMagicLink()
                 .checkEpilogue(
-                    BuildConfig.E2E_SIGNUP_DISPLAY_NAME,
-                    BuildConfig.E2E_SIGNUP_USERNAME
+                    E2ECredentials.SIGNUP_DISPLAY_NAME,
+                    E2ECredentials.SIGNUP_USERNAME
                 )
-                .enterPassword(BuildConfig.E2E_SIGNUP_PASSWORD)
+                .enterPassword(E2ECredentials.SIGNUP_PASSWORD)
                 .dismissInterstitial()
                 .dismissJetpackAd()
                 .confirmSignup()

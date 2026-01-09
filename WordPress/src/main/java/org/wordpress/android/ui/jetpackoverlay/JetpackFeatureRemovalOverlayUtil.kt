@@ -50,8 +50,9 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         return jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
     }
 
+    @Suppress("FunctionOnlyReturningConstant")
     fun shouldShowSiteCreationOverlay(): Boolean {
-        return !buildConfigWrapper.isJetpackApp && isInSiteCreationPhase()
+        return false
     }
 
     fun shouldDisableSiteCreation(): Boolean {
@@ -94,6 +95,10 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         return false
     }
 
+    @Suppress("UnusedPrivateMember")
+    // This function was added when creating wp.com sites was disabled in WPAndroid.
+    // We re-enabled site creation in WPAndroid in Jan 2026, but this is left here
+    // in case we want to disable site creation in the future.
     private fun isInSiteCreationPhase(): Boolean {
         return when (jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()) {
             null -> false
