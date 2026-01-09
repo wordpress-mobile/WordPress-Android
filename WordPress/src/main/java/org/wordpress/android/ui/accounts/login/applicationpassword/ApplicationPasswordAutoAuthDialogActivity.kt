@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.login.applicationpassword
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -72,7 +73,7 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
             viewModel.navigationEvent.collect { event ->
                 when (event) {
                     is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Success -> {
-                        setResult(RESULT_SUCCESS)
+                        setResult(RESULT_OK)
                         finish()
                     }
                     is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.FallbackToManualLogin -> {
@@ -87,7 +88,7 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
                             this@ApplicationPasswordAutoAuthDialogActivity,
                             R.string.error_generic
                         )
-                        setResult(RESULT_ERROR)
+                        setResult(RESULT_CANCELED)
                         finish()
                     }
                 }
@@ -111,8 +112,11 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
 
     companion object {
         private const val EXTRA_SITE = "extra_site"
-        const val RESULT_SUCCESS = -1
-        const val RESULT_ERROR = 0
+
+        // Use standard Android result codes for consistency
+        // Keeping these constants for backward compatibility with existing callers
+        const val RESULT_SUCCESS = Activity.RESULT_OK
+        const val RESULT_ERROR = Activity.RESULT_CANCELED
         const val RESULT_DISMISSED = 1
 
         fun createIntent(context: Context, site: SiteModel): Intent {
