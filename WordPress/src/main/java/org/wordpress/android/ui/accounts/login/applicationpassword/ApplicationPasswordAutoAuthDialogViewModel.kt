@@ -17,6 +17,8 @@ import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.ANDROID_JETPACK_CLIENT
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.ANDROID_WORDPRESS_CLIENT
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -33,6 +35,7 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appLogWrapper: AppLogWrapper,
+    private val experimentalFeatures: ExperimentalFeatures,
 ) : ViewModel() {
     private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
     val navigationEvent: SharedFlow<NavigationEvent> = _navigationEvent.asSharedFlow()
@@ -46,6 +49,9 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
             try {
                 require(site.username.isNotBlank()) { "Site username is required for cookie authentication" }
                 require(site.password.isNotBlank()) { "Site password is required for cookie authentication" }
+
+                // Assume that the Application Password experimental feature can be enabled
+                enableApplicationPasswordIfNecessary()
 
                 _isLoading.value = true
                 val client = wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(
@@ -93,6 +99,12 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
             } finally {
                 _isLoading.value = false
             }
+        }
+    }
+
+    private fun enableApplicationPasswordIfNecessary() {
+        if (!experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)) {
+            experimentalFeatures.setEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
         }
     }
 
