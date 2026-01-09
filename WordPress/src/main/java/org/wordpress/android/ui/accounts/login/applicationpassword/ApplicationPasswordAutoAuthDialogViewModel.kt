@@ -49,7 +49,7 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
             try {
                 // Assume that the Application Password experimental feature can be enabled
                 enableApplicationPasswordIfNecessary()
-                
+
                 require(site.username.isNotBlank()) { "Site username is required for cookie authentication" }
                 require(site.password.isNotBlank()) { "Site password is required for cookie authentication" }
 
@@ -102,12 +102,14 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun enableApplicationPasswordIfNecessary() {
         if (!experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)) {
             experimentalFeatures.setEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun fallbackToManualLogin(siteUrl: String) {
         try {
             val authUrl = applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)
