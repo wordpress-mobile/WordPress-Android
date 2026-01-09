@@ -38,11 +38,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
+
     private val viewModel: ApplicationPasswordAutoAuthDialogViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +72,13 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
                 when (event) {
                     is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Success -> {
                         setResult(RESULT_SUCCESS)
+                        finish()
+                    }
+                    is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.FallbackToManualLogin -> {
+                        activityNavigator.openApplicationPasswordLogin(
+                            this@ApplicationPasswordAutoAuthDialogActivity,
+                            event.authUrl
+                        )
                         finish()
                     }
                     is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Error -> {
