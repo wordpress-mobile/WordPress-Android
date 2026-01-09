@@ -38,11 +38,17 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.util.ToastUtils
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
+
     private val viewModel: ApplicationPasswordAutoAuthDialogViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,11 +72,22 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
             viewModel.navigationEvent.collect { event ->
                 when (event) {
                     is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Success -> {
-                        setResult(RESULT_SUCCESS)
+                        setResult(RESULT_OK)
+                        finish()
+                    }
+                    is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.FallbackToManualLogin -> {
+                        activityNavigator.openApplicationPasswordLogin(
+                            this@ApplicationPasswordAutoAuthDialogActivity,
+                            event.authUrl
+                        )
                         finish()
                     }
                     is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Error -> {
-                        setResult(RESULT_ERROR)
+                        ToastUtils.showToast(
+                            this@ApplicationPasswordAutoAuthDialogActivity,
+                            R.string.error_generic
+                        )
+                        setResult(RESULT_CANCELED, Intent().putExtra(EXTRA_RESULT_ERROR, true))
                         finish()
                     }
                 }
@@ -83,9 +100,9 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
                 ApplicationPasswordAutoAuthDialog(
                     isLoading = isLoading.value,
                     onDismiss = {
-                        setResult(RESULT_DISMISSED)
+                        setResult(RESULT_CANCELED)
                         finish()
-                                },
+                    },
                     onConfirm = { viewModel.createApplicationPassword(site) }
                 )
             }
@@ -94,9 +111,7 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
 
     companion object {
         private const val EXTRA_SITE = "extra_site"
-        const val RESULT_SUCCESS = -1
-        const val RESULT_ERROR = -0
-        const val RESULT_DISMISSED = 1
+        const val EXTRA_RESULT_ERROR = "extra_result_error"
 
         fun createIntent(context: Context, site: SiteModel): Intent {
             return Intent(context, ApplicationPasswordAutoAuthDialogActivity::class.java).apply {
