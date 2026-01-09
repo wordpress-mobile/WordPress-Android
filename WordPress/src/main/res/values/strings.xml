@@ -973,7 +973,7 @@
     <string name="experimental_features_feedback_dialog_message">Are you willing to share feedback on the experimental editor?</string>
     <string name="experimental_features_feedback_dialog_decline">Not now</string>
     <string name="experimental_application_password_feature">Application Password log in</string>
-    <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites</string>
+    <string name="experimental_application_password_feature_description">Enable Application Password for existing self-hosted sites. New sites use it by default.</string>
     <string name="modern_support">Modern Support</string>
     <string name="modern_support_description">Enable the new modern support experience</string>
     <string name="experimental_network_debugging">Network Debugging</string>
@@ -4551,7 +4551,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_disable_feature_description">Disabling Application Password will remove the login for %1$s of your sites. You may need to re-add affected sites to login again.</string>
     <string name="application_password_info_title">Application Passwords</string>
     <string name="application_password_info_description_1">Application passwords are a secure way for apps to access your site without using your account password.</string>
-    <string name="application_password_info_description_2">When you add sites to the app, application passwords will be created automatically as needed.</string>
+    <string name="application_password_info_description_2">New self-hosted sites added to the app are already using application passwords. Enabling this feature will also apply it to your existing sites.</string>
     <string name="application_password_info_description_3">You can view and manage these passwords in your user profile within your WordPress site\'s admin panel.</string>
     <string name="application_password_info_description_4">Please note that revoking application passwords used by the app will terminate the app\'s access to your site. Be cautious when revoking application passwords created by the app.</string>
     <string name="enable">Enable</string>
