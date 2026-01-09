@@ -585,6 +585,61 @@ public class MediaStoreTest {
     }
 
     @Test
+    public void testSearchSiteImagesByFileName() {
+        final String testImagePath1 = "/test/vacation_photo.jpg";
+        final String testImagePath2 = "/test/birthday_cake.jpg";
+
+        final int testSiteId = 777;
+        final long testImageId1 = 111;
+        final long testImageId2 = 222;
+
+        // generate images with specific file names but generic titles
+        MediaModel imageMedia1 = generateMediaFromPath(testSiteId, testImageId1, testImagePath1);
+        imageMedia1.setTitle("Generic Title");
+        imageMedia1.setFileName("vacation_photo.jpg");
+
+        MediaModel imageMedia2 = generateMediaFromPath(testSiteId, testImageId2, testImagePath2);
+        imageMedia2.setTitle("Another Title");
+        imageMedia2.setFileName("birthday_cake.jpg");
+
+        // insert media
+        insertMediaIntoDatabase(imageMedia1);
+        insertMediaIntoDatabase(imageMedia2);
+
+        // search by filename - should find vacation_photo
+        final List<MediaModel> storeImages = mMediaStore
+                .searchSiteImages(getTestSiteWithLocalId(testSiteId), "vacation");
+
+        assertNotNull(storeImages);
+        assertEquals(1, storeImages.size());
+        assertEquals(testImageId1, storeImages.get(0).getMediaId());
+        assertEquals("vacation_photo.jpg", storeImages.get(0).getFileName());
+    }
+
+    @Test
+    public void testSearchSiteMediaByFileName() {
+        final int testSiteId = 888;
+        final long testMediaId = 333;
+
+        // create media with specific filename but no matching title/caption/description
+        MediaModel media = generateMedia("Untitled", "", "", "");
+        media.setLocalSiteId(testSiteId);
+        media.setMediaId(testMediaId);
+        media.setFileName("important_document.pdf");
+        media.setMimeType("application/pdf");
+
+        insertMediaIntoDatabase(media);
+
+        // search by filename
+        final List<MediaModel> storeMedia = mMediaStore
+                .searchSiteMedia(getTestSiteWithLocalId(testSiteId), "important_document");
+
+        assertNotNull(storeMedia);
+        assertEquals(1, storeMedia.size());
+        assertEquals(testMediaId, storeMedia.get(0).getMediaId());
+    }
+
+    @Test
     public void testGetPostMedia() {
         final int testSiteId = 11235813;
         final int testLocalPostId = 213253;
