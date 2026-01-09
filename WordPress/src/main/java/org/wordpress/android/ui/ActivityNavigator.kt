@@ -288,10 +288,9 @@ class ActivityNavigator @Inject constructor() {
         activity.startActivity(intent)
     }
 
-    fun navigateToApplicationPasswordRequired(activity: Activity, authenticationUrl: String, featureName: String) {
-        val intent = Intent(activity, ApplicationPasswordRequiredDialogActivity::class.java)
-        intent.putExtra(ApplicationPasswordDialogActivity.EXTRA_SITE_URL, authenticationUrl)
-        intent.putExtra(ApplicationPasswordRequiredDialogActivity.EXTRA_FEATURE_NAME, featureName)
-        activity.startActivity(intent)
+    fun navigateToApplicationPasswordRequired(activity: Activity, site: SiteModel, featureName: String) {
+        activity.startActivity(
+            ApplicationPasswordRequiredDialogActivity.createIntent(activity, site, featureName)
+        )
     }
 }

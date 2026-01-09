@@ -17,6 +17,8 @@ import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.ANDROID_JETPACK_CLIENT
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.ANDROID_WORDPRESS_CLIENT
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -33,6 +35,7 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appLogWrapper: AppLogWrapper,
+    private val experimentalFeatures: ExperimentalFeatures,
 ) : ViewModel() {
     private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
     val navigationEvent: SharedFlow<NavigationEvent> = _navigationEvent.asSharedFlow()
@@ -44,6 +47,9 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     fun createApplicationPassword(site: SiteModel) {
         viewModelScope.launch {
             try {
+                // Assume that the Application Password experimental feature can be enabled
+                enableApplicationPasswordIfNecessary()
+
                 require(site.username.isNotBlank()) { "Site username is required for cookie authentication" }
                 require(site.password.isNotBlank()) { "Site password is required for cookie authentication" }
 
@@ -84,20 +90,39 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
 
                     else -> {
                         appLogWrapper.e(AppLog.T.API, "Error creating application password")
-                        _navigationEvent.emit(NavigationEvent.Error)
+                        fallbackToManualLogin(site.url)
                     }
                 }
             } catch (e: Exception) {
                 appLogWrapper.e(AppLog.T.API, "Exception creating application password: ${e.message}")
-                _navigationEvent.emit(NavigationEvent.Error)
+                fallbackToManualLogin(site.url)
             } finally {
                 _isLoading.value = false
             }
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
+    private fun enableApplicationPasswordIfNecessary() {
+        if (!experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)) {
+            experimentalFeatures.setEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun fallbackToManualLogin(siteUrl: String) {
+        try {
+            val authUrl = applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)
+            _navigationEvent.emit(NavigationEvent.FallbackToManualLogin(authUrl))
+        } catch (e: Exception) {
+            appLogWrapper.e(AppLog.T.API, "Failed to get authorization URL: ${e.message}")
+            _navigationEvent.emit(NavigationEvent.Error)
+        }
+    }
+
     sealed class NavigationEvent {
         object Success : NavigationEvent()
+        data class FallbackToManualLogin(val authUrl: String) : NavigationEvent()
         object Error : NavigationEvent()
     }
 }
