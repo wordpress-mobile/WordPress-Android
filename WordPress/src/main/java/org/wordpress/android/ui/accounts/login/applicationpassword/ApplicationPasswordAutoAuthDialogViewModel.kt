@@ -94,7 +94,7 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                appLogWrapper.e(AppLog.T.API, "Exception creating application password: ${e.message}")
+                appLogWrapper.e(AppLog.T.API, "Exception creating application password", e)
                 fallbackToManualLogin(site.url)
             } finally {
                 _isLoading.value = false
