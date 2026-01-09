@@ -158,16 +158,19 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     ) { result ->
         pendingApplicationPasswordSite?.let { site ->
             when (result.resultCode) {
-                ApplicationPasswordAutoAuthDialogActivity.RESULT_SUCCESS -> {
+                Activity.RESULT_OK -> {
                     viewModel.onApplicationPasswordCreated(site)
                 }
-                ApplicationPasswordAutoAuthDialogActivity.RESULT_ERROR -> {
-                    pendingApplicationPasswordUrl?.let {
-                        activityNavigator.openApplicationPasswordLogin(requireActivity(), it)
-                    } ?: viewModel.onApplicationPasswordCreationError(site)
-                }
-                ApplicationPasswordAutoAuthDialogActivity.RESULT_DISMISSED -> {
-                    // User dismissed the dialog, no action needed
+                Activity.RESULT_CANCELED -> {
+                    val wasError = result.data
+                        ?.getBooleanExtra(ApplicationPasswordAutoAuthDialogActivity.EXTRA_RESULT_ERROR, false)
+                        ?: false
+                    if (wasError) {
+                        pendingApplicationPasswordUrl?.let {
+                            activityNavigator.openApplicationPasswordLogin(requireActivity(), it)
+                        } ?: viewModel.onApplicationPasswordCreationError(site)
+                    }
+                    // If not an error, user dismissed the dialog - no action needed
                 }
             }
             pendingApplicationPasswordSite = null
