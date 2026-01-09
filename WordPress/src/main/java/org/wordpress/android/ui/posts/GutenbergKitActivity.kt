@@ -519,8 +519,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         if (shouldRequireApplicationPassword()) {
             activityNavigator.navigateToApplicationPasswordRequired(
                 this,
-               siteModel.url,
-               resources.getString(R.string.application_password_required_block_editor)
+                siteModel,
+                resources.getString(R.string.application_password_required_block_editor)
             )
             finish()
             return
