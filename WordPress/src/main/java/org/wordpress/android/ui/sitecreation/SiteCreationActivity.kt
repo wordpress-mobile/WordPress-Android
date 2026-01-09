@@ -57,7 +57,6 @@ import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.config.SiteNameFeatureConfig
 import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.wizard.WizardNavigationTarget
-import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 import android.R as AndroidR
 
