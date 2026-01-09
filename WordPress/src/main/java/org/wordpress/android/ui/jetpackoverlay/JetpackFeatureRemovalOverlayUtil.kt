@@ -49,16 +49,6 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         return jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
     }
 
-    @Suppress("FunctionOnlyReturningConstant")
-    fun shouldShowSiteCreationOverlay(): Boolean {
-        return false
-    }
-
-    @Suppress("FunctionOnlyReturningConstant")
-    fun shouldDisableSiteCreation(): Boolean {
-        return false
-    }
-
     fun shouldShowFeatureCollectionJetpackOverlayForFirstTime(): Boolean {
         val phase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() ?: return false
         return shouldShowFeatureCollectionOverlayInCurrentPhase(phase)
@@ -91,18 +81,6 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
             return daysPastOverlayShown >= phaseFourOverlayFrequency
         }
         return false
-    }
-
-    @Suppress("UnusedPrivateMember")
-    // This function was added when creating wp.com sites was disabled in WPAndroid.
-    // We re-enabled site creation in WPAndroid in Jan 2026, but this is left here
-    // in case we want to disable site creation in the future.
-    private fun isInSiteCreationPhase(): Boolean {
-        return when (jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()) {
-            null -> false
-            JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE,
-            JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO -> true
-        }
     }
 
     private fun isInFeatureSpecificRemovalPhase(): Boolean {

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
@@ -21,7 +20,6 @@ import org.wordpress.android.networking.MShot
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.ui.domains.DomainsRegistrationTracker
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
@@ -43,7 +41,6 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
-import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleEventObservable
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -109,7 +106,6 @@ class SiteCreationMainVM @Inject constructor(
     private val dispatcher: Dispatcher,
     private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase,
     private val imageManager: ImageManager,
-    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val domainsRegistrationTracker: DomainsRegistrationTracker,
 ) : ViewModel() {
     init {
@@ -121,7 +117,6 @@ class SiteCreationMainVM @Inject constructor(
         dispatcher.unregister(fetchHomePageLayoutsUseCase)
     }
 
-    var siteCreationDisabled: Boolean = false
     private var isStarted = false
 
     private lateinit var siteCreationState: SiteCreationState
@@ -149,9 +144,6 @@ class SiteCreationMainVM @Inject constructor(
     private val _onBackPressedObservable = SingleLiveEvent<Unit?>()
     val onBackPressedObservable: LiveData<Unit?> = _onBackPressedObservable
 
-    private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
-    val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
-
     private val _showDomainCheckout = SingleLiveEvent<CheckoutDetails>()
     val showDomainCheckout: LiveData<CheckoutDetails> = _showDomainCheckout
 
@@ -160,12 +152,7 @@ class SiteCreationMainVM @Inject constructor(
         if (savedInstanceState == null) {
             tracker.trackSiteCreationAccessed(siteCreationSource)
             siteCreationState = SiteCreationState()
-            if (jetpackFeatureRemovalOverlayUtil.shouldShowSiteCreationOverlay())
-                showJetpackOverlay()
-            if (jetpackFeatureRemovalOverlayUtil.shouldDisableSiteCreation())
-                siteCreationDisabled = true
-            else
-                showSiteCreationNextStep()
+            showSiteCreationNextStep()
         } else {
             siteCreationState = requireNotNull(savedInstanceState.getParcelableCompat(KEY_SITE_CREATION_STATE))
             val currentStepIndex = savedInstanceState.getInt(KEY_CURRENT_STEP)
@@ -184,14 +171,7 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    private fun showJetpackOverlay() {
-        _showJetpackOverlay.value = Event(true)
-    }
-
     fun preloadThumbnails(context: Context) {
-        if (jetpackFeatureRemovalOverlayUtil.shouldDisableSiteCreation()) {
-            return // no need to preload thumbnails if site creation is disabled
-        }
         if (preloadingJob == null) {
             preloadingJob = viewModelScope.launch(Dispatchers.IO) {
                 if (networkUtils.isNetworkAvailable()) {
