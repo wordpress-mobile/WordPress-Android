@@ -207,49 +207,6 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         )
     }
 
-    fun buildSiteCreationOverlayState(
-        siteCreationPhase: JetpackFeatureRemovalSiteCreationPhase,
-        isRtl: Boolean
-    ): JetpackFeatureOverlayUIState {
-        return when (siteCreationPhase) {
-            JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE -> getStateForSiteCreationPhaseOne(isRtl)
-            JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO -> getStateForSiteCreationPhaseTwo(isRtl)
-        }
-    }
-
-    private fun getStateForSiteCreationPhaseOne(isRtl: Boolean): JetpackFeatureOverlayUIState {
-        val componentVisibility = JetpackFeatureOverlayComponentVisibility
-            .SiteCreationPhase.PhaseOne()
-        val content = getContentForSiteCreationPhaseOne(isRtl)
-        return JetpackFeatureOverlayUIState(componentVisibility, content)
-    }
-
-    private fun getContentForSiteCreationPhaseOne(rtl: Boolean): JetpackFeatureOverlayContent {
-        return JetpackFeatureOverlayContent(
-            illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
-            title = R.string.wp_jetpack_feature_removal_site_creation_overlay_title,
-            caption = UiStringRes(R.string.wp_jetpack_feature_removal_site_creation_overlay_phase_one_description),
-            primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
-            secondaryButtonText = R.string.wp_jetpack_continue_without_jetpack
-        )
-    }
-
-    private fun getStateForSiteCreationPhaseTwo(rtl: Boolean): JetpackFeatureOverlayUIState {
-        val componentVisibility = JetpackFeatureOverlayComponentVisibility
-            .SiteCreationPhase.PhaseTwo()
-        val content = getContentForSiteCreationPhaseTwo(rtl)
-        return JetpackFeatureOverlayUIState(componentVisibility, content)
-    }
-
-    private fun getContentForSiteCreationPhaseTwo(rtl: Boolean): JetpackFeatureOverlayContent {
-        return JetpackFeatureOverlayContent(
-            illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
-            title = R.string.wp_jetpack_feature_removal_site_creation_overlay_title,
-            caption = UiStringRes(R.string.wp_jetpack_feature_removal_site_creation_overlay_phase_two_description),
-            primaryButtonText = R.string.wp_jetpack_feature_removal_site_creation_overlay_phase_two_primary_button,
-        )
-    }
-
     fun buildDeepLinkOverlayState(isRtl: Boolean): JetpackFeatureOverlayUIState {
         return getStateForDeepLink(isRtl)
     }

@@ -9,8 +9,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CLOSE_BUTTON
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CONTINUE_BUTTON
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.UNSPECIFIED
 import org.wordpress.android.util.config.JPDeadlineConfig
 import org.wordpress.android.util.config.PhaseFourBlogPostLinkConfig
 import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
@@ -39,18 +37,13 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     val action: LiveData<JetpackFeatureOverlayActions> = _action
 
     private lateinit var screenType: JetpackFeatureOverlayScreenType
-    private var isSiteCreationOverlayScreen: Boolean = false
-    private var siteCreationOrigin: SiteCreationSource = UNSPECIFIED
     private var isDeepLinkOverlayScreen: Boolean = false
     private var isFeatureCollectionOverlayScreen: Boolean = false
     private var featureCollectionOverlayOrigin: JetpackFeatureCollectionOverlaySource =
         JetpackFeatureCollectionOverlaySource.UNSPECIFIED
 
     fun openJetpackAppDownloadLink() {
-        if (isSiteCreationOverlayScreen) {
-            _action.value = JetpackFeatureOverlayActions.OpenPlayStore
-            jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInSiteCreationOverlay(siteCreationOrigin)
-        } else if (isDeepLinkOverlayScreen) {
+        if (isDeepLinkOverlayScreen) {
             _action.value = JetpackFeatureOverlayActions.ForwardToJetpack
             jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInDeepLinkOverlay()
         } else if (isFeatureCollectionOverlayScreen) {
@@ -66,12 +59,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
 
     fun continueToFeature() {
         _action.value = JetpackFeatureOverlayActions.DismissDialog
-        if (isSiteCreationOverlayScreen)
-            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(
-                siteCreationOrigin,
-                CONTINUE_BUTTON
-            )
-        else if (isDeepLinkOverlayScreen)
+        if (isDeepLinkOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CONTINUE_BUTTON)
         else if (isFeatureCollectionOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInFeatureCollectionOverlay(
@@ -83,12 +71,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
 
     fun closeBottomSheet() {
         _action.value = JetpackFeatureOverlayActions.DismissDialog
-        if (isSiteCreationOverlayScreen)
-            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(
-                siteCreationOrigin,
-                CLOSE_BUTTON
-            )
-        else if (isDeepLinkOverlayScreen)
+        if (isDeepLinkOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CLOSE_BUTTON)
         else if (isFeatureCollectionOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInFeatureCollectionOverlay(
@@ -101,26 +84,11 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     @Suppress("ReturnCount", "LongParameterList")
     fun init(
         overlayScreenType: JetpackFeatureOverlayScreenType?,
-        isSiteCreationOverlay: Boolean,
         isDeepLinkOverlay: Boolean,
-        siteCreationSource: SiteCreationSource,
         isFeatureCollectionOverlay: Boolean,
         featureCollectionOverlaySource: JetpackFeatureCollectionOverlaySource,
         rtlLayout: Boolean
     ) {
-        if (isSiteCreationOverlay) {
-            isSiteCreationOverlayScreen = true
-            siteCreationOrigin = siteCreationSource
-            _uiState.postValue(
-                jetpackFeatureOverlayContentBuilder.buildSiteCreationOverlayState(
-                    getSiteCreationPhase()!!,
-                    rtlLayout
-                )
-            )
-            jetpackFeatureRemovalOverlayUtil.trackSiteCreationOverlayShown(siteCreationOrigin)
-            return
-        }
-
         if (isDeepLinkOverlay) {
             isDeepLinkOverlayScreen = true
             _uiState.postValue(jetpackFeatureOverlayContentBuilder.buildDeepLinkOverlayState(rtlLayout))
@@ -156,8 +124,6 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     }
 
     private fun getCurrentPhase() = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
-
-    private fun getSiteCreationPhase() = jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()
 
     fun openJetpackMigrationInfoLink(migrationInfoRedirectUrl: String) {
         if (isFeatureCollectionOverlayScreen) {

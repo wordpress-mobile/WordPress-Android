@@ -114,6 +114,7 @@ public class MediaStore extends Store {
         @NonNull public SiteModel site;
         public boolean loadMore;
         @Nullable public MimeType.Type mimeType;
+        @Nullable public String searchTerm;
         public int number = DEFAULT_NUM_MEDIA_PER_FETCH;
 
         @SuppressWarnings("unused")
@@ -139,6 +140,19 @@ public class MediaStore extends Store {
             this.loadMore = loadMore;
             this.mimeType = mimeType;
             this.number = number;
+        }
+
+        public FetchMediaListPayload(
+                @NonNull SiteModel site,
+                int number,
+                boolean loadMore,
+                @Nullable MimeType.Type mimeType,
+                @Nullable String searchTerm) {
+            this.site = site;
+            this.loadMore = loadMore;
+            this.mimeType = mimeType;
+            this.number = number;
+            this.searchTerm = searchTerm;
         }
     }
 
@@ -967,14 +981,18 @@ public class MediaStore extends Store {
             }
         }
         if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+            mMediaRSApiRestClient.fetchMediaList(
+                    payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
         } else if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+            mMediaRestClient.fetchMediaList(
+                    payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
         } else if (payload.site.isJetpackCPConnected()) {
-            mWPComV2MediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+            mWPComV2MediaRestClient.fetchMediaList(
+                    payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
         } else if (payload.site.getOrigin() == SiteModel.ORIGIN_WPAPI
                    && mApplicationPasswordsConfiguration.isEnabled()) {
-            mApplicationPasswordsMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+            mApplicationPasswordsMediaRestClient.fetchMediaList(
+                    payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
         } else {
             mMediaXmlrpcClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         }
