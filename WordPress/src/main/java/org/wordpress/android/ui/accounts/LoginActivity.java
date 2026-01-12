@@ -69,6 +69,9 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
+import org.wordpress.android.ui.accounts.login.LoginCompletionUseCase;
+import org.wordpress.android.ui.accounts.login.LoginCompletionUseCase.LoginCompletionAction;
+import org.wordpress.android.ui.accounts.login.LoginCompletionUseCase.MainNavigationDestination;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper;
@@ -162,6 +165,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
 
     @Inject ExperimentalFeatures mExperimentalFeatures;
+    @Inject LoginCompletionUseCase mLoginCompletionUseCase;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -344,16 +348,16 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
      * This is the common exit point for successful logins.
      */
     private void navigateToMainActivityOrFinish() {
-        switch (getLoginMode()) {
-            case FULL:
-            case JETPACK_LOGIN_ONLY:
-            case WPCOM_LOGIN_ONLY:
-                if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial()) {
-                    ActivityLauncher.showPostSignupInterstitial(this);
-                } else {
-                    ActivityLauncher.showMainActivity(this);
-                }
+        MainNavigationDestination destination =
+                mLoginCompletionUseCase.getMainNavigationDestination(getLoginMode(), mSiteStore.hasSite());
+        switch (destination) {
+            case POST_SIGNUP_INTERSTITIAL:
+                ActivityLauncher.showPostSignupInterstitial(this);
                 break;
+            case MAIN_ACTIVITY:
+                ActivityLauncher.showMainActivity(this);
+                break;
+            case FINISH_ONLY:
             default:
                 // For other modes (JETPACK_STATS, JETPACK_REST_CONNECT, WPCOM_LOGIN_DEEPLINK,
                 // WPCOM_REAUTHENTICATE, etc.), just finish and let the caller handle navigation
@@ -363,18 +367,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         finish();
     }
 
-    /**
-     * Navigates to the main activity (or post-signup interstitial) and finishes the login flow.
-     * This is the common exit point for successful logins.
-     *
-     * Navigation behavior by LoginMode:
-     * - FULL/JETPACK_LOGIN_ONLY/WPCOM_LOGIN_ONLY: Show main activity or post-signup interstitial
-     * - Other modes: Finish and let caller handle navigation (e.g., returning to settings)
-     *
-     * Post-signup interstitial is shown when:
-     * 1. User has no sites yet
-     * 2. AppPrefs indicates they should see onboarding
-     */
     private void showFragment(Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
@@ -438,7 +430,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
 
         // If doLoginUpdate is true, we need to fetch account and sites before navigating.
         // This happens after WordPress.com OAuth login where we only have the token.
-        if (doLoginUpdate && !mSiteStore.hasSite()) {
+        if (mLoginCompletionUseCase.shouldWaitForSitesToLoad(doLoginUpdate, mSiteStore.hasSite())) {
             AppLog.i(T.MAIN, "Fetching account and sites before proceeding");
             mIsWaitingForSitesToLoad = true;
             mOldSitesIdsForLoginUpdate = oldSitesIds;
@@ -446,16 +438,16 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
             return; // Wait for onAccountChanged -> onSiteChanged before navigating
         }
 
-        switch (getLoginMode()) {
-            case SHARE_INTENT:
-            case JETPACK_SELFHOSTED:
-            case SELFHOSTED_ONLY:
+        LoginCompletionAction action = mLoginCompletionUseCase.getLoginCompletionAction(getLoginMode());
+        switch (action) {
+            case FINISH_WITH_NEW_SITE:
                 // Handle self-hosted site login - find the newly added site and return its ID
                 finishWithNewlyAddedSiteId(oldSitesIds);
                 break;
-            case WOO_LOGIN_MODE:
+            case FINISH_ONLY:
                 // WooCommerce handles its own navigation
                 break;
+            case NAVIGATE_TO_MAIN:
             default:
                 // For all other modes, use the common navigation logic
                 navigateToMainActivityOrFinish();
