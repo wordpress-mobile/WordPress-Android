@@ -1606,7 +1606,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     if (mJetpackConnectSource != null) {
                         ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, getSelectedSite());
                     } else {
-                        // Skip the site picker - just auto-select a site
                         initSelectedSite();
                     }
                 }
