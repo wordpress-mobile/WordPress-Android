@@ -57,7 +57,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
                 appLogWrapper.d(
                     AppLog.T.API,
-                    "AP: Found authorization for $siteUrl URL: $authorizationUrlComplete " +
+                    "A_P: Found authorization for $siteUrl URL: $authorizationUrlComplete " +
                             "API_ROOT_URL $apiRootUrl")
                 AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
                 authorizationUrlComplete
@@ -75,7 +75,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     private fun handleAuthenticationDiscoveryError(siteUrl: String, throwable: Throwable): String {
-        appLogWrapper.e(AppLog.T.API, "AP: Error during API discovery for $siteUrl - ${throwable.message}")
+        appLogWrapper.e(AppLog.T.API, "A_P: Error during API discovery for $siteUrl - ${throwable.message}")
         AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
         return ""
     }
@@ -90,7 +90,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             ) {
             appLogWrapper.e(
                 AppLog.T.DB,
-                "AP: Cannot save application password credentials for: ${urlLogin.siteUrl} - bad data"
+                "A_P: Cannot save application password credentials for: ${urlLogin.siteUrl} - bad data"
             )
             return false
         }
@@ -115,7 +115,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             } else {
                 appLogWrapper.e(
                     AppLog.T.DB,
-                    "AP: Cannot save application password credentials for: ${urlLogin.siteUrl} - null site"
+                    "A_P: Cannot save application password credentials for: ${urlLogin.siteUrl} - null site"
                 )
                 false
             }
@@ -134,7 +134,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             },
             properties
         )
-        appLogWrapper.d(AppLog.T.DB, "AP: Saved application password credentials for: $siteUrl")
+        appLogWrapper.d(AppLog.T.DB, "A_P: Saved application password credentials for: $siteUrl")
     }
 
     fun getSiteUrlLoginFromRawData(url: String): UriLogin {
@@ -160,7 +160,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
                 dispatcherWrapper.removeApplicationPassword(site)
             }
-            appLogWrapper.d(AppLog.T.DB, "AP: Removed application password credentials for: $affectedSites sites")
+            appLogWrapper.d(AppLog.T.DB, "A_P: Removed application password credentials for: $affectedSites sites")
             affectedSites
         }
     }
