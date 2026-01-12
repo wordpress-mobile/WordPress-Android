@@ -14,4 +14,5 @@ sealed class LoginNavigationEvents {
     object showWPcomLoginScreen : LoginNavigationEvents()
     object ShowLoginViaSiteAddressScreen : LoginNavigationEvents()
     object ShowJetpackIndividualPluginOverlay : LoginNavigationEvents()
+    object ShowSitePickerUI : LoginNavigationEvents()
 }

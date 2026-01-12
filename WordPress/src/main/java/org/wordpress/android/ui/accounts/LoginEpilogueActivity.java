@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents.SelectSite;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowJetpackIndividualPluginOverlay;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowPostSignupInterstitialScreen;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSitePickerUI;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
@@ -52,10 +54,21 @@ public class LoginEpilogueActivity extends BaseAppCompatActivity implements Logi
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
 
+        boolean doLoginUpdate = getIntent().getBooleanExtra(EXTRA_DO_LOGIN_UPDATE, false);
+
+        // If not waiting for login to complete, try to auto-select the default site immediately
+        // without showing the site picker UI
+        if (savedInstanceState == null && !doLoginUpdate) {
+            Integer defaultSiteLocalId = mViewModel.getDefaultSiteLocalId();
+            if (defaultSiteLocalId != null) {
+                selectSite(defaultSiteLocalId);
+                return;
+            }
+        }
+
         setContentView(R.layout.login_epilogue_activity);
 
         if (savedInstanceState == null) {
-            boolean doLoginUpdate = getIntent().getBooleanExtra(EXTRA_DO_LOGIN_UPDATE, false);
             boolean showAndReturn = getIntent().getBooleanExtra(EXTRA_SHOW_AND_RETURN, false);
             ArrayList<Integer> oldSitesIds = getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS);
 
@@ -85,8 +98,17 @@ public class LoginEpilogueActivity extends BaseAppCompatActivity implements Logi
                 showNoJetpackSites();
             } else if (loginEvent instanceof ShowJetpackIndividualPluginOverlay) {
                 showJetpackIndividualPluginOverlay();
+            } else if (loginEvent instanceof ShowSitePickerUI) {
+                showSitePickerUI();
             }
         });
+    }
+
+    private void showSitePickerUI() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginEpilogueFragment.TAG);
+        if (fragment != null && fragment.getView() != null) {
+            fragment.getView().setVisibility(View.VISIBLE);
+        }
     }
 
     protected void addPostLoginFragment(boolean doLoginUpdate, boolean showAndReturn, ArrayList<Integer> oldSitesIds) {

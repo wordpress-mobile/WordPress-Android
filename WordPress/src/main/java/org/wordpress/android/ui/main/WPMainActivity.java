@@ -477,12 +477,19 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             UpdateTokenPayload payload = new UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
-            ActivityLauncher.showLoginEpilogue(
-                    this,
-                    getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
-                    getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
-                    mBuildConfigWrapper.isSiteCreationEnabled()
-            );
+            boolean doLoginUpdate = getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false);
+            // If not waiting for login to complete and sites are available,
+            // skip the site picker and auto-select the default site
+            if (!doLoginUpdate && mSiteStore.hasSite()) {
+                initSelectedSite();
+            } else {
+                ActivityLauncher.showLoginEpilogue(
+                        this,
+                        doLoginUpdate,
+                        getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
+                        mBuildConfigWrapper.isSiteCreationEnabled()
+                );
+            }
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showSignupEpilogue(this,
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),

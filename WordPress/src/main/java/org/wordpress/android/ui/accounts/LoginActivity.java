@@ -360,7 +360,13 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 break;
             case WPCOM_LOGIN_DEEPLINK:
             case WPCOM_REAUTHENTICATE:
-                ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, false);
+                // If sites exist, skip the site picker and return with the existing selected site
+                if (mSiteStore.hasSite()) {
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                } else {
+                    ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, false);
+                }
                 break;
             case SHARE_INTENT:
             case JETPACK_SELFHOSTED:

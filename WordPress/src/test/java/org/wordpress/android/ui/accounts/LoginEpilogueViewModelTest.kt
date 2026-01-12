@@ -7,8 +7,12 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.fluxc.model.AccountModel
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 
@@ -17,10 +21,16 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: LoginEpilogueViewModel
 
     @Mock
+    lateinit var accountStore: AccountStore
+
+    @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
+
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Mock
     lateinit var siteStore: SiteStore
@@ -30,9 +40,16 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
+        whenever(selectedSiteRepository.getSelectedSiteLocalId(true))
+            .thenReturn(SelectedSiteRepository.UNAVAILABLE)
+        whenever(accountStore.account).thenReturn(AccountModel())
+        whenever(siteStore.sites).thenReturn(emptyList())
+
         viewModel = LoginEpilogueViewModel(
+            accountStore,
             appPrefsWrapper,
             buildConfigWrapper,
+            selectedSiteRepository,
             siteStore,
             wpJetpackIndividualPluginHelper
         )
@@ -272,7 +289,7 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when onSiteListLoaded is invoked then show jetpack individual plugin overlay`() =
+    fun `given no sites, when onSiteListLoaded is invoked then show jetpack individual plugin overlay`() =
         test {
             val navigationEvents = initObservers().navigationEvents
             whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(true)
@@ -284,7 +301,7 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when onSiteListLoaded is invoked then don't show jetpack individual plugin overlay`() =
+    fun `given no sites, when onSiteListLoaded is invoked then show site picker UI`() =
         test {
             val navigationEvents = initObservers().navigationEvents
             whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
@@ -292,8 +309,62 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
             viewModel.onSiteListLoaded()
             advanceUntilIdle()
 
-            assertThat(navigationEvents.lastOrNull()).isNull()
+            assertThat(navigationEvents.first()).isEqualTo(LoginNavigationEvents.ShowSitePickerUI)
         }
+
+    @Test
+    fun `given previously selected site exists, when onSiteListLoaded, then auto-select that site`() {
+        val localId = 123
+        val site = SiteModel().apply { id = localId }
+        whenever(selectedSiteRepository.getSelectedSiteLocalId(true)).thenReturn(localId)
+        whenever(siteStore.getSiteByLocalId(localId)).thenReturn(site)
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onSiteListLoaded()
+
+        val event = navigationEvents.first() as LoginNavigationEvents.SelectSite
+        assertThat(event.localId).isEqualTo(localId)
+    }
+
+    @Test
+    fun `given primary site exists, when onSiteListLoaded, then auto-select primary site`() {
+        val primarySiteId = 456L
+        val localId = 789
+        val account = AccountModel().apply { setPrimarySiteId(primarySiteId) }
+        val primarySite = SiteModel().apply { id = localId }
+        whenever(accountStore.account).thenReturn(account)
+        whenever(siteStore.getSiteBySiteId(primarySiteId)).thenReturn(primarySite)
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onSiteListLoaded()
+
+        val event = navigationEvents.first() as LoginNavigationEvents.SelectSite
+        assertThat(event.localId).isEqualTo(localId)
+    }
+
+    @Test
+    fun `given sites exist, when onSiteListLoaded, then auto-select first site`() {
+        val localId = 111
+        val site = SiteModel().apply { id = localId }
+        whenever(siteStore.sites).thenReturn(listOf(site))
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onSiteListLoaded()
+
+        val event = navigationEvents.first() as LoginNavigationEvents.SelectSite
+        assertThat(event.localId).isEqualTo(localId)
+    }
+
+    @Test
+    fun `given no default site but firstSiteLocalId provided, when onSiteListLoaded, then auto-select first site`() {
+        val firstSiteLocalId = 222
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onSiteListLoaded(firstSiteLocalId)
+
+        val event = navigationEvents.first() as LoginNavigationEvents.SelectSite
+        assertThat(event.localId).isEqualTo(firstSiteLocalId)
+    }
 
     private data class Observers(val navigationEvents: List<LoginNavigationEvents>)
 

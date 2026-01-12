@@ -58,10 +58,12 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     private RecyclerView mSitesList;
     @Nullable private View mBottomShadow;
+    @Nullable private View mRootView;
 
     private SitePickerAdapter mAdapter;
     private boolean mDoLoginUpdate;
     private boolean mShowAndReturn;
+    private boolean mLoginFinished;
     private ArrayList<Integer> mOldSitesIds;
 
     private LoginEpilogueListener mLoginEpilogueListener;
@@ -105,7 +107,11 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Override
     protected ViewGroup createMainView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return (ViewGroup) inflater.inflate(loginEpilogueScreenResource(), container, false);
+        ViewGroup view = (ViewGroup) inflater.inflate(loginEpilogueScreenResource(), container, false);
+        mRootView = view;
+        // Start with content invisible - will be shown in onAfterLoad() if we need user interaction
+        view.setVisibility(View.INVISIBLE);
+        return view;
     }
 
     @LayoutRes
@@ -160,6 +166,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         mDoLoginUpdate = requireArguments().getBoolean(ARG_DO_LOGIN_UPDATE, false);
         mShowAndReturn = requireArguments().getBoolean(ARG_SHOW_AND_RETURN, false);
         mOldSitesIds = requireArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
+        // If not waiting for login update, consider login already finished
+        mLoginFinished = !mDoLoginUpdate;
 
         initAdapter();
     }
@@ -221,6 +229,12 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                         return;
                     }
 
+                    // Don't proceed until login has finished (for doLoginUpdate=true case)
+                    // The adapter will be recreated in onLoginFinished() and this will be called again
+                    if (!mLoginFinished) {
+                        return;
+                    }
+
                     if (mBottomShadow != null) {
                         if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
                             mBottomShadow.setVisibility(View.VISIBLE);
@@ -229,7 +243,15 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                         }
                     }
 
-                    mParentViewModel.onSiteListLoaded();
+                    // Get the first site's local ID from the adapter (position 1 accounts for header)
+                    int firstSiteLocalId = -1;
+                    if (mAdapter != null && mAdapter.getItemCount() > 1) {
+                        long itemId = mAdapter.getItemId(1);
+                        if (itemId > 0) {
+                            firstSiteLocalId = (int) itemId;
+                        }
+                    }
+                    mParentViewModel.onSiteListLoaded(firstSiteLocalId);
                 });
             }
         };
@@ -389,6 +411,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Override
     protected void onLoginFinished() {
         // we needed to complete the login process so, now just show an updated screen to the user
+        mLoginFinished = true;
 
         AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
