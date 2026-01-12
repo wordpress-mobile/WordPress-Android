@@ -439,14 +439,14 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean isValidPosition(int position) {
-        if (isNewLoginEpilogueScreenEnabled()) {
+        if (shouldShowAddSiteFooter()) {
             return (position >= 0 && position <= mSites.size());
         } else {
             return (position >= 0 && position < mSites.size());
         }
     }
 
-    private boolean isNewLoginEpilogueScreenEnabled() {
+    private boolean shouldShowAddSiteFooter() {
         return mBuildConfigWrapper.isSiteCreationEnabled()
                && !mShowAndReturn;
     }
