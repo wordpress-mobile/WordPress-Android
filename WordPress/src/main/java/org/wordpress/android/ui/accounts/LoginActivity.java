@@ -21,13 +21,23 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.login.AuthOptions;
 import org.wordpress.android.login.GoogleFragment;
 import org.wordpress.android.login.GoogleFragment.GoogleListener;
@@ -141,7 +151,13 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     @Inject ZendeskHelper mZendeskHelper;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SiteStore mSiteStore;
+    @Inject protected AccountStore mAccountStore;
+    @Inject protected Dispatcher mDispatcher;
     @Inject protected ViewModelProvider.Factory mViewModelFactory;
+
+    // Flag to track when we're waiting for account/sites to load after OAuth login
+    private boolean mIsWaitingForSitesToLoad = false;
+    private ArrayList<Integer> mOldSitesIdsForLoginUpdate;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
 
@@ -277,6 +293,76 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mDispatcher.unregister(this);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccountChanged(OnAccountChanged event) {
+        if (mIsWaitingForSitesToLoad && mAccountStore.hasAccessToken()) {
+            if (event.isError()) {
+                AppLog.e(T.MAIN, "Account fetch failed: " + event.error.type + " - " + event.error.message);
+                // Continue to main activity even if account fetch failed
+                finishLoginAfterSitesLoaded();
+            } else if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
+                // Account fetched, now fetch sites
+                AppLog.i(T.MAIN, "Account fetched, now fetching sites");
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        if (mIsWaitingForSitesToLoad) {
+            if (event.isError()) {
+                AppLog.e(T.MAIN, "Site fetch failed: " + event.error.type);
+            }
+            // Sites loaded (or failed), proceed to main activity
+            AppLog.i(T.MAIN, "Sites loaded, proceeding to main activity");
+            finishLoginAfterSitesLoaded();
+        }
+    }
+
+    private void finishLoginAfterSitesLoaded() {
+        mIsWaitingForSitesToLoad = false;
+        navigateToMainActivityOrFinish();
+    }
+
+    /**
+     * Navigates to the main activity (or post-signup interstitial) and finishes the login flow.
+     * This is the common exit point for successful logins.
+     */
+    private void navigateToMainActivityOrFinish() {
+        switch (getLoginMode()) {
+            case FULL:
+            case JETPACK_LOGIN_ONLY:
+            case WPCOM_LOGIN_ONLY:
+                if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial()) {
+                    ActivityLauncher.showPostSignupInterstitial(this);
+                } else {
+                    ActivityLauncher.showMainActivity(this);
+                }
+                break;
+            default:
+                // For other modes (JETPACK_STATS, JETPACK_REST_CONNECT, WPCOM_LOGIN_DEEPLINK,
+                // WPCOM_REAUTHENTICATE, etc.), just finish and let the caller handle navigation
+                break;
+        }
+        setResult(Activity.RESULT_OK);
+        finish();
+    }
+
     private void showFragment(Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
@@ -337,59 +423,55 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         AppPrefs.setIsJetpackMigrationEligible(false);
         AppPrefs.setIsJetpackMigrationInProgress(false);
+
+        // If doLoginUpdate is true, we need to fetch account and sites before navigating.
+        // This happens after WordPress.com OAuth login where we only have the token.
+        if (doLoginUpdate && !mSiteStore.hasSite()) {
+            AppLog.i(T.MAIN, "Fetching account and sites before proceeding");
+            mIsWaitingForSitesToLoad = true;
+            mOldSitesIdsForLoginUpdate = oldSitesIds;
+            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+            return; // Wait for onAccountChanged -> onSiteChanged before navigating
+        }
+
         switch (getLoginMode()) {
-            case FULL:
-            case JETPACK_LOGIN_ONLY:
-            case WPCOM_LOGIN_ONLY:
-                if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial() && !doLoginUpdate) {
-                    ActivityLauncher.showPostSignupInterstitial(this);
-                } else {
-                    ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
-                }
-                setResult(Activity.RESULT_OK);
-                finish();
-                break;
-            case JETPACK_STATS:
-                ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, true);
-                break;
-            case JETPACK_REST_CONNECT:
-                // for the Jetpack REST connection we want to return to the caller activity instead of
-                // showing the login epilogue
-                setResult(Activity.RESULT_OK);
-                finish();
-                break;
-            case WPCOM_LOGIN_DEEPLINK:
-            case WPCOM_REAUTHENTICATE:
-                ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, false);
-                break;
             case SHARE_INTENT:
             case JETPACK_SELFHOSTED:
             case SELFHOSTED_ONLY:
-                // We are comparing list of site ID's before self-hosted site was added and after, trying to find a
-                // newly added self-hosted site's ID, so we can select it
-                ArrayList<Integer> newSitesIds = new ArrayList<>();
-                for (SiteModel site : mSiteStore.getSites()) {
-                    newSitesIds.add(site.getId());
-                }
-                newSitesIds.removeAll(oldSitesIds);
-
-                if (newSitesIds.size() > 0) {
-                    Intent intent = new Intent();
-                    intent.putExtra(ChooseSiteActivity.KEY_SITE_LOCAL_ID, newSitesIds.get(0));
-                    setResult(Activity.RESULT_OK, intent);
-                } else {
-                    AppLog.e(T.MAIN, "Couldn't detect newly added self-hosted site. "
-                                     + "Expected at least 1 site ID but was 0.");
-                    ToastUtils.showToast(this, R.string.site_picker_failed_selecting_added_site);
-                    setResult(Activity.RESULT_OK);
-                }
-
-                // skip the epilogue when only added a self-hosted site or sharing to WordPress
-                finish();
+                // Handle self-hosted site login - find the newly added site and return its ID
+                finishWithNewlyAddedSiteId(oldSitesIds);
                 break;
             case WOO_LOGIN_MODE:
+                // WooCommerce handles its own navigation
+                break;
+            default:
+                // For all other modes, use the common navigation logic
+                navigateToMainActivityOrFinish();
                 break;
         }
+    }
+
+    /**
+     * Finds the newly added self-hosted site and finishes with its ID in the result intent.
+     */
+    private void finishWithNewlyAddedSiteId(ArrayList<Integer> oldSitesIds) {
+        ArrayList<Integer> newSitesIds = new ArrayList<>();
+        for (SiteModel site : mSiteStore.getSites()) {
+            newSitesIds.add(site.getId());
+        }
+        newSitesIds.removeAll(oldSitesIds);
+
+        if (!newSitesIds.isEmpty()) {
+            Intent intent = new Intent();
+            intent.putExtra(ChooseSiteActivity.KEY_SITE_LOCAL_ID, newSitesIds.get(0));
+            setResult(Activity.RESULT_OK, intent);
+        } else {
+            AppLog.e(T.MAIN, "Couldn't detect newly added self-hosted site. "
+                             + "Expected at least 1 site ID but was 0.");
+            ToastUtils.showToast(this, R.string.site_picker_failed_selecting_added_site);
+            setResult(Activity.RESULT_OK);
+        }
+        finish();
     }
 
     @Override
@@ -398,7 +480,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN:
             case RequestCodes.SHOW_SIGNUP_EPILOGUE_AND_RETURN:
                 // we showed the epilogue screen as informational and sites got loaded so, just
                 // return to login caller now

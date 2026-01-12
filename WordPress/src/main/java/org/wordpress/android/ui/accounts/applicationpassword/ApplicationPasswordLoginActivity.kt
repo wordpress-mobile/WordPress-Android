@@ -76,8 +76,9 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
         if (navigationActionData.isError) {
             ActivityLauncher.showMainActivity(this)
         } else if (navigationActionData.showSiteSelector) {
+            // Skip the site picker - just go to main activity which will auto-select a site
             unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.value)
-            ActivityLauncher.showMainActivityAndLoginEpilogue(this, navigationActionData.oldSitesIDs, false)
+            ActivityLauncher.showMainActivity(this)
         } else if (navigationActionData.showPostSignupInterstitial) {
             unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.value)
             ActivityLauncher.showPostSignupInterstitial(this)
