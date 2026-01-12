@@ -66,21 +66,11 @@ class LoginEpilogueViewModel @Inject constructor(
         val siteToSelect = getDefaultSiteLocalId()
             ?: if (firstSiteLocalId != -1) firstSiteLocalId else null
 
-        siteToSelect?.let { localId ->
-            onSiteClick(localId)
-            return
-        }
-
-        // No sites found - show the site picker UI for user interaction
-        _navigationEvents.postValue(Event(LoginNavigationEvents.ShowSitePickerUI))
-
-        // Check if we should show overlays
-        viewModelScope.launch {
-            val showOverlay = wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()
-            if (showOverlay) {
-                delay(DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY)
-                _navigationEvents.postValue(Event(LoginNavigationEvents.ShowJetpackIndividualPluginOverlay))
-            }
+        if (siteToSelect != null) {
+            onSiteClick(siteToSelect)
+        } else {
+            // No sites found - close and let main activity handle it
+            _navigationEvents.postValue(Event(LoginNavigationEvents.CloseWithResultOk))
         }
     }
 

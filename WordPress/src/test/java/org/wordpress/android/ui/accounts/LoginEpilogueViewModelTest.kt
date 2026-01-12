@@ -289,28 +289,13 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no sites, when onSiteListLoaded is invoked then show jetpack individual plugin overlay`() =
-        test {
-            val navigationEvents = initObservers().navigationEvents
-            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(true)
+    fun `given no sites, when onSiteListLoaded is invoked then close with result ok`() {
+        val navigationEvents = initObservers().navigationEvents
 
-            viewModel.onSiteListLoaded()
-            advanceUntilIdle()
+        viewModel.onSiteListLoaded()
 
-            assertThat(navigationEvents.last()).isEqualTo(LoginNavigationEvents.ShowJetpackIndividualPluginOverlay)
-        }
-
-    @Test
-    fun `given no sites, when onSiteListLoaded is invoked then show site picker UI`() =
-        test {
-            val navigationEvents = initObservers().navigationEvents
-            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
-
-            viewModel.onSiteListLoaded()
-            advanceUntilIdle()
-
-            assertThat(navigationEvents.first()).isEqualTo(LoginNavigationEvents.ShowSitePickerUI)
-        }
+        assertThat(navigationEvents.first()).isEqualTo(LoginNavigationEvents.CloseWithResultOk)
+    }
 
     @Test
     fun `given previously selected site exists, when onSiteListLoaded, then auto-select that site`() {

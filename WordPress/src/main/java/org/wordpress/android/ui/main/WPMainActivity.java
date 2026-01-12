@@ -478,9 +478,9 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
             boolean doLoginUpdate = getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false);
-            // If not waiting for login to complete and sites are available,
-            // skip the site picker and auto-select the default site
-            if (!doLoginUpdate && mSiteStore.hasSite()) {
+            // If not waiting for login to complete, skip the epilogue entirely
+            // (main activity/MySiteFragment handles the no-sites case)
+            if (!doLoginUpdate) {
                 initSelectedSite();
             } else {
                 ActivityLauncher.showLoginEpilogue(

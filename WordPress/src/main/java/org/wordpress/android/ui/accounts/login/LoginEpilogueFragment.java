@@ -58,7 +58,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     private RecyclerView mSitesList;
     @Nullable private View mBottomShadow;
-    @Nullable private View mRootView;
 
     private SitePickerAdapter mAdapter;
     private boolean mDoLoginUpdate;
@@ -107,11 +106,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Override
     protected ViewGroup createMainView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup view = (ViewGroup) inflater.inflate(loginEpilogueScreenResource(), container, false);
-        mRootView = view;
-        // Start with content invisible - will be shown in onAfterLoad() if we need user interaction
-        view.setVisibility(View.INVISIBLE);
-        return view;
+        return (ViewGroup) inflater.inflate(loginEpilogueScreenResource(), container, false);
     }
 
     @LayoutRes
