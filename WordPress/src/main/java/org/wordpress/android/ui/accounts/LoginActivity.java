@@ -363,6 +363,18 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         finish();
     }
 
+    /**
+     * Navigates to the main activity (or post-signup interstitial) and finishes the login flow.
+     * This is the common exit point for successful logins.
+     *
+     * Navigation behavior by LoginMode:
+     * - FULL/JETPACK_LOGIN_ONLY/WPCOM_LOGIN_ONLY: Show main activity or post-signup interstitial
+     * - Other modes: Finish and let caller handle navigation (e.g., returning to settings)
+     *
+     * Post-signup interstitial is shown when:
+     * 1. User has no sites yet
+     * 2. AppPrefs indicates they should see onboarding
+     */
     private void showFragment(Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
