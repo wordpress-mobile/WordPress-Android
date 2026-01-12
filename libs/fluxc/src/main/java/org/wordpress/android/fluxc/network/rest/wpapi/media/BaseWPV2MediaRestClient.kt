@@ -86,9 +86,15 @@ abstract class BaseWPV2MediaRestClient constructor(
         }
     }
 
-    fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
+    fun fetchMediaList(
+        site: SiteModel,
+        number: Int,
+        offset: Int,
+        mimeType: MimeType.Type?,
+        searchTerm: String? = null
+    ) {
         coroutineEngine.launch(MEDIA, this, "Fetching Media using WPCom's v2 API") {
-            val payload = syncFetchMediaList(site, number, offset, mimeType)
+            val payload = syncFetchMediaList(site, number, offset, mimeType, searchTerm)
             dispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload))
         }
     }
@@ -226,7 +232,8 @@ abstract class BaseWPV2MediaRestClient constructor(
         site: SiteModel,
         perPage: Int,
         offset: Int,
-        mimeType: MimeType.Type?
+        mimeType: MimeType.Type?,
+        searchTerm: String? = null
     ): FetchMediaListResponsePayload {
         val params = mutableMapOf(
             "per_page" to perPage.toString()
@@ -236,6 +243,9 @@ abstract class BaseWPV2MediaRestClient constructor(
         }
         if (mimeType != null) {
             params["mime_type"] = mimeType.value
+        }
+        if (!searchTerm.isNullOrEmpty()) {
+            params["search"] = searchTerm
         }
         val response = executeGetGsonRequest(
             site,

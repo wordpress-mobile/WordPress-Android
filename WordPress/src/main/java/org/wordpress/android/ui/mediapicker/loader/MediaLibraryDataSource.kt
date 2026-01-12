@@ -70,7 +70,8 @@ class MediaLibraryDataSource(
                     loadPage(
                         siteModel,
                         loadMore,
-                        mediaType.toMimeType()
+                        mediaType.toMimeType(),
+                        filter
                     )
                 }
             }.awaitAll()
@@ -154,14 +155,20 @@ class MediaLibraryDataSource(
         }.toMediaItems(mediaType)
     }
 
-    private suspend fun loadPage(siteModel: SiteModel, loadMore: Boolean, filter: MimeType.Type): OnMediaListFetched =
+    private suspend fun loadPage(
+        siteModel: SiteModel,
+        loadMore: Boolean,
+        mimeType: MimeType.Type,
+        searchTerm: String?
+    ): OnMediaListFetched =
         suspendCoroutine { cont ->
-            loadContinuations[filter] = cont
+            loadContinuations[mimeType] = cont
             val payload = FetchMediaListPayload(
                 siteModel,
                 NUM_MEDIA_PER_FETCH,
                 loadMore,
-                filter
+                mimeType,
+                searchTerm
             )
             dispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload))
         }

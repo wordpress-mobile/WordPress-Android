@@ -297,7 +297,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             @NonNull final SiteModel site,
             final int number,
             final int offset,
-            @Nullable final MimeType.Type mimeType) {
+            @Nullable final MimeType.Type mimeType,
+            @Nullable final String searchTerm) {
         final Map<String, String> params = new HashMap<>();
         params.put("number", String.valueOf(number));
         if (offset > 0) {
@@ -305,6 +306,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
         if (mimeType != null) {
             params.put("mime_type", mimeType.getValue());
+        }
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            params.put("search", searchTerm);
         }
         String url = WPCOMREST.sites.site(site.getSiteId()).media.getUrlV1_1();
         add(WPComGsonRequest.buildGetRequest(url, params, MultipleMediaResponse.class,
