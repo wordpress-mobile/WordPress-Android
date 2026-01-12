@@ -7,11 +7,4 @@ sealed class LoginNavigationEvents {
     object ShowNoJetpackSites : LoginNavigationEvents()
     object ShowSignInForResultJetpackOnly : LoginNavigationEvents()
     data class ShowInstructions(val url: String = INSTRUCTIONS_URL) : LoginNavigationEvents()
-    object ShowPostSignupInterstitialScreen : LoginNavigationEvents()
-    data class SelectSite(val localId: Int) : LoginNavigationEvents()
-    object CreateNewSite : LoginNavigationEvents()
-    object CloseWithResultOk : LoginNavigationEvents()
-    object showWPcomLoginScreen : LoginNavigationEvents()
-    object ShowLoginViaSiteAddressScreen : LoginNavigationEvents()
-    object ShowJetpackIndividualPluginOverlay : LoginNavigationEvents()
 }

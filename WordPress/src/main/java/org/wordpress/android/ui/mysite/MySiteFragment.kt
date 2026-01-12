@@ -32,7 +32,6 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.accounts.LoginEpilogueActivity
 import org.wordpress.android.ui.accounts.login.applicationpassword.ApplicationPasswordAutoAuthDialogActivity
 import org.wordpress.android.ui.bloganuary.learnmore.BloganuaryNudgeLearnMoreOverlayFragment
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity
@@ -303,13 +302,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     data.getStringExtra(DomainRegistrationActivity.RESULT_REGISTERED_DOMAIN_EMAIL)
                 )
             }
-            RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
-                val isNewSite = requestCode == RequestCodes.CREATE_SITE ||
-                        data.getBooleanExtra(LoginEpilogueActivity.KEY_SITE_CREATED_FROM_LOGIN_EPILOGUE, false)
                 viewModel.performFirstStepAfterSiteCreation(
                     data.getBooleanExtra(ChooseSiteActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
-                    isNewSite = isNewSite
+                    isNewSite = true
                 )
             }
             RequestCodes.SITE_PICKER -> {

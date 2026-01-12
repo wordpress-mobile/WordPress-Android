@@ -38,7 +38,6 @@ import org.wordpress.android.support.main.ui.SupportActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginActivity;
-import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordsListActivity;
@@ -189,16 +188,6 @@ public class ActivityLauncher {
         Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
         context.startActivity(intent);
-    }
-
-    public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
-                                                        boolean doLoginUpdate) {
-        Intent intent = new Intent(activity, WPMainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra(WPMainActivity.ARG_DO_LOGIN_UPDATE, doLoginUpdate);
-        intent.putExtra(WPMainActivity.ARG_SHOW_LOGIN_EPILOGUE, true);
-        intent.putIntegerArrayListExtra(WPMainActivity.ARG_OLD_SITES_IDS, oldSitesIds);
-        activity.startActivity(intent);
     }
 
     public static void showMainActivityAndSignupEpilogue(Activity activity, String name, String email, String photoUrl,
@@ -1537,31 +1526,6 @@ public class ActivityLauncher {
                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         JETPACK_LOGIN_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
-    }
-
-    public static void showLoginEpilogue(
-            Activity activity,
-            boolean doLoginUpdate,
-            ArrayList<Integer> oldSitesIds,
-            boolean isSiteCreationEnabled
-    ) {
-        Intent intent = new Intent(activity, LoginEpilogueActivity.class);
-        intent.putExtra(LoginEpilogueActivity.EXTRA_DO_LOGIN_UPDATE, doLoginUpdate);
-        intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
-        if (isSiteCreationEnabled) {
-            activity.startActivityForResult(intent, RequestCodes.LOGIN_EPILOGUE);
-        } else {
-            activity.startActivity(intent);
-        }
-    }
-
-    public static void showLoginEpilogueForResult(Activity activity,
-                                                  ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
-        Intent intent = new Intent(activity, LoginEpilogueActivity.class);
-        intent.putExtra(LoginEpilogueActivity.EXTRA_DO_LOGIN_UPDATE, doLoginUpdate);
-        intent.putExtra(LoginEpilogueActivity.EXTRA_SHOW_AND_RETURN, true);
-        intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
-        activity.startActivityForResult(intent, RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN);
     }
 
     public static void showSignupEpilogue(Activity activity, String name, String email, String photoUrl,
