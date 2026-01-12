@@ -24,7 +24,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.ui.domains.DomainsRegistrationTracker
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
@@ -88,9 +87,6 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
     @Mock
     lateinit var imageManager: ImageManager
-
-    @Mock
-    lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
     @Mock
     lateinit var domainsRegistrationTracker: DomainsRegistrationTracker
@@ -386,7 +382,6 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         dispatcher,
         fetchHomePageLayoutsUseCase,
         imageManager,
-        jetpackFeatureRemovalOverlayUtil,
         domainsRegistrationTracker,
     )
 }

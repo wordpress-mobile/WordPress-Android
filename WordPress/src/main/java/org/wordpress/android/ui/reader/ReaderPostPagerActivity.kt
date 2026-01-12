@@ -69,7 +69,6 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
 import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
@@ -608,9 +607,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         deepLinkOpenWebLinksWithJetpackHelper.onOverlayShown()
         newInstance(
             null,
-            isSiteCreationOverlay = false,
             isDeepLinkOverlay = true,
-            siteCreationSource = SiteCreationSource.UNSPECIFIED,
             isFeatureCollectionOverlay = false,
             featureCollectionOverlaySource = JetpackFeatureCollectionOverlaySource.UNSPECIFIED
         )

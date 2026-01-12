@@ -151,14 +151,6 @@ class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
         assertTrue(shouldShowOverlay)
     }
 
-    @Test
-    fun `shouldShowSiteCreationOverlay always returns false`() {
-        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-            .shouldShowSiteCreationOverlay()
-
-        assertFalse(shouldShowOverlay)
-    }
-
     private fun setupMockForWpComSite() {
         val fakeSiteModel = SiteModel()
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(fakeSiteModel)

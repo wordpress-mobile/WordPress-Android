@@ -577,8 +577,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         JetpackFeatureFullScreenOverlayFragment.newInstance(
                 null,
                 false,
-                false,
-                SiteCreationSource.UNSPECIFIED,
                 true,
                 JetpackFeatureCollectionOverlaySource.DISABLED_ENTRY_POINT
         ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
@@ -634,8 +632,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             JetpackFeatureFullScreenOverlayFragment.newInstance(
                     null,
                     false,
-                    false,
-                    SiteCreationSource.UNSPECIFIED,
                     true,
                     JetpackFeatureCollectionOverlaySource.APP_OPEN
             ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);

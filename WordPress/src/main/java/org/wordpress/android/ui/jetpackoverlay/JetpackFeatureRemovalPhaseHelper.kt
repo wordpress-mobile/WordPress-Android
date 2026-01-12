@@ -59,14 +59,6 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         else null
     }
 
-    fun getSiteCreationPhase(): JetpackFeatureRemovalSiteCreationPhase? {
-        val currentPhase = getCurrentPhase() ?: return null
-        return when (currentPhase) {
-            is PhaseOne, PhaseTwo, PhaseThree -> PHASE_ONE
-            is PhaseFour, PhaseStaticPosters, PhaseNewUsers, PhaseSelfHostedUsers -> PHASE_TWO
-        }
-    }
-
     fun getDeepLinkPhase(): JetpackFeatureRemovalSiteCreationPhase? {
         val currentPhase = getCurrentPhase() ?: return null
         return when (currentPhase) {

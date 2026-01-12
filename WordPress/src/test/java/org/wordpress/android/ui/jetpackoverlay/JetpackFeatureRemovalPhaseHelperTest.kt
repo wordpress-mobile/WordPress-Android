@@ -21,8 +21,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseO
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
 import org.wordpress.android.ui.main.WPMainNavigationView
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -157,43 +155,6 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
         val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertEquals(currentPhase, JetpackFeatureRemovalPhase.PhaseStaticPosters)
-    }
-
-    // site creation phase tests
-    @Test
-    fun `given jetpack app, when current site creation phase is fetched, then return null`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()
-
-        assertNull(currentPhase)
-    }
-
-    @Test
-    fun `given phase one config true, when current site creation phase is fetched, then return phase one`() {
-        whenever(jetpackFeatureRemovalPhaseOneConfig.isEnabled()).thenReturn(true)
-
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()
-
-        assertEquals(currentPhase, PHASE_ONE)
-    }
-
-    @Test
-    fun `given phase four config true, when current site creation phase is fetched, then return phase two`() {
-        whenever(jetpackFeatureRemovalNewUsersConfig.isEnabled()).thenReturn(true)
-
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()
-
-        assertEquals(currentPhase, PHASE_TWO)
-    }
-
-    @Test
-    fun `given static posters config true, when current site creation phase is fetched, then return phase two`() {
-        whenever(jetpackFeatureRemovalStaticPostersConfig.isEnabled()).thenReturn(true)
-
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()
-
-        assertEquals(currentPhase, PHASE_TWO)
     }
 
     @Test

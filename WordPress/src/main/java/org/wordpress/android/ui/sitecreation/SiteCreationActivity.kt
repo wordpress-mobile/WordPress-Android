@@ -10,19 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.ActivityLauncherWrapper
-import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.CAMPAIGN_SITE_CREATION
-import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenPlayStore
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
@@ -64,10 +55,8 @@ import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewMo
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.config.SiteNameFeatureConfig
-import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.wizard.WizardNavigationTarget
-import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 import android.R as AndroidR
 
@@ -91,15 +80,8 @@ class SiteCreationActivity : BaseAppCompatActivity(),
     private val hppViewModel: HomePagePickerViewModel by viewModels()
     private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
     private val siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel by viewModels()
-    private val jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
     private val progressViewModel: SiteCreationProgressViewModel by viewModels()
     private val previewViewModel: SitePreviewViewModel by viewModels()
-
-    @Inject
-    internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
-
-    @Inject
-    internal lateinit var activityLauncherWrapper: ActivityLauncherWrapper
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -121,7 +103,6 @@ class SiteCreationActivity : BaseAppCompatActivity(),
         mainViewModel.preloadThumbnails(this)
 
         observeVMState()
-        observeOverlayEvents()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -170,35 +151,6 @@ class SiteCreationActivity : BaseAppCompatActivity(),
         progressViewModel.onFreeSiteCreated.observe(this, mainViewModel::onFreeSiteCreated)
         progressViewModel.onCartCreated.observe(this, mainViewModel::onCartCreated)
         previewViewModel.onOkButtonClicked.observe(this, mainViewModel::onWizardFinished)
-    }
-
-    private fun observeOverlayEvents() {
-        if(BuildConfig.IS_JETPACK_APP)
-            return
-
-        val fragment = supportFragmentManager.findFragmentByTag(JetpackFeatureFullScreenOverlayFragment.TAG)
-                    as? JetpackFeatureFullScreenOverlayFragment ?: JetpackFeatureFullScreenOverlayFragment
-                        .newInstance(isSiteCreationOverlay = true, siteCreationSource = getSiteCreationSource())
-
-        jetpackFullScreenViewModel.action.observe(this) { action ->
-            if (mainViewModel.siteCreationDisabled) finish()
-            when (action) {
-                is OpenPlayStore -> {
-                    fragment.dismiss()
-                    activityLauncherWrapper.openPlayStoreLink(this, JETPACK_PACKAGE_NAME, CAMPAIGN_SITE_CREATION)
-                }
-                is DismissDialog -> {
-                    fragment.dismiss()
-                }
-                else -> fragment.dismiss()
-            }.exhaustive
-        }
-
-        mainViewModel.showJetpackOverlay.observeEvent(this) {
-            if (mainViewModel.siteCreationDisabled)
-                showFragment(fragment, JetpackFeatureFullScreenOverlayFragment.TAG)
-            else fragment.show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
-        }
     }
 
     private fun getSiteCreationSource(): SiteCreationSource {
