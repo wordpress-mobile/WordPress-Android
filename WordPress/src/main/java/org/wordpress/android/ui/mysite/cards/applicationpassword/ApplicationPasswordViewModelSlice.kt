@@ -58,16 +58,16 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         scope.launch {
             // If the site is already authorized, no need to run the discovery
             val storedSite = siteStore.sites.firstOrNull { it.id == site.id }
-            if (storedSite != null && !applicationPasswordLoginHelper.siteHasBadCredentials(site)) {
+            if (storedSite != null && !applicationPasswordLoginHelper.siteHasBadCredentials(storedSite)) {
                 uiModelMutable.postValue(null)
-                appLogWrapper.d(AppLog.T.MAIN, "AP: Hiding card for ${site.url} - authenticated")
+                appLogWrapper.d(AppLog.T.MAIN, "A_P: Hiding card for ${site.url} - authenticated")
                 return@launch
             }
 
             val authorizationUrlComplete = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
             if (authorizationUrlComplete.isEmpty()) {
                 uiModelMutable.postValue(null)
-                appLogWrapper.d(AppLog.T.MAIN, "AP: Hiding card for ${site.url} - bad discovery")
+                appLogWrapper.d(AppLog.T.MAIN, "A_P: Hiding card for ${site.url} - bad discovery")
             } else {
                 showApplicationPasswordCreateCard(site, authorizationUrlComplete)
             }
@@ -86,7 +86,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 )
             )
         )
-        appLogWrapper.d(AppLog.T.MAIN, "AP: Showing card for ${site.url}")
+        appLogWrapper.d(AppLog.T.MAIN, "A_P: Showing card for ${site.url}")
     }
 
 
