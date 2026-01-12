@@ -981,15 +981,18 @@ public class MediaStore extends Store {
             }
         }
         if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+            mMediaRSApiRestClient.fetchMediaList(
+                    payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
         } else if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMediaList(
                     payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
         } else if (payload.site.isJetpackCPConnected()) {
-            mWPComV2MediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+            mWPComV2MediaRestClient.fetchMediaList(
+                    payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
         } else if (payload.site.getOrigin() == SiteModel.ORIGIN_WPAPI
                    && mApplicationPasswordsConfiguration.isEnabled()) {
-            mApplicationPasswordsMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+            mApplicationPasswordsMediaRestClient.fetchMediaList(
+                    payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
         } else {
             mMediaXmlrpcClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         }

@@ -52,7 +52,13 @@ class MediaRSApiRestClient @Inject constructor(
     // Map to store upload handles keyed by media ID for cancellation
     private val uploadHandles = ConcurrentHashMap<Int, UploadHandle>()
 
-    fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
+    fun fetchMediaList(
+        site: SiteModel,
+        number: Int,
+        offset: Int,
+        mimeType: MimeType.Type?,
+        searchTerm: String? = null
+    ) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
 
@@ -61,7 +67,8 @@ class MediaRSApiRestClient @Inject constructor(
                     MediaListParams(
                         perPage = number.toUInt(),
                         offset = offset.toUInt(),
-                        mimeType = mimeType?.name
+                        mimeType = mimeType?.name,
+                        search = searchTerm
                     )
                 )
             }
