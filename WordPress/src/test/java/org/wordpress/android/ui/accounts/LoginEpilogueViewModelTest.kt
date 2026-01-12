@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
@@ -35,9 +34,6 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var siteStore: SiteStore
 
-    @Mock
-    private lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
-
     @Before
     fun setUp() {
         whenever(selectedSiteRepository.getSelectedSiteLocalId(true))
@@ -50,8 +46,7 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
             appPrefsWrapper,
             buildConfigWrapper,
             selectedSiteRepository,
-            siteStore,
-            wpJetpackIndividualPluginHelper
+            siteStore
         )
     }
 

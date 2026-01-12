@@ -3,12 +3,8 @@ package org.wordpress.android.ui.accounts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
@@ -21,7 +17,6 @@ class LoginEpilogueViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteStore: SiteStore,
-    private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
 ) : ViewModel() {
     private val _navigationEvents = MediatorLiveData<Event<LoginNavigationEvents>>()
     val navigationEvents: LiveData<Event<LoginNavigationEvents>> = _navigationEvents
@@ -106,7 +101,4 @@ class LoginEpilogueViewModel @Inject constructor(
         return null
     }
 
-    companion object {
-        private const val DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY = 500L
-    }
 }
