@@ -2500,7 +2500,6 @@
     <string name="more_content_description_promote_blaze">Blaze more</string>
     <string name="more_content_description_blogging_prompts">Prompts more</string>
     <string name="more_content_description_today_stats">Today\'s stats more</string>
-    <string name="more_content_description_quick_start">Quick start more</string>
     <string name="more_content_description_posts">Posts more</string>
     <string name="more_content_description_pages">Pages more</string>
     <string name="more_content_description_recent_activity">Recent activity more</string>
@@ -3405,84 +3404,6 @@
     <string name="icon_desc">icon</string>
 
     <string name="content_description_more">More</string>
-
-    <!-- Quick Start Promo Dialog -->
-    <string name="quick_start_dialog_need_help_manage_site_title">Want a little help managing this site with the app?</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Learn the basics with a quick walkthrough.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Show me around</string>
-    <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
-
-    <string name="quick_start_button_positive">Go</string>
-    <string name="quick_start_task_skip_menu_title">Skip task</string>
-    <string name="quick_start_hide_next_steps_menu_title" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
-    <string name="quick_start_dialog_check_stats_message">Keep up to date with your site\'s performance.</string>
-    <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tap %1$s Social %2$s to continue</string>
-    <string name="quick_start_dialog_follow_sites_message" translatable="false">@string/quick_start_list_follow_site_subtitle</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Select %1$s Reader %2$s to find other sites.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Use &lt;b&gt;Discover&lt;/b&gt; to find sites and tags. Try selecting &lt;b&gt;Subscriptions&lt;/b&gt; to view subscribed content and manage your subscriptions.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Use &lt;b&gt; Discover &lt;/b&gt; to find sites and tags.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Select %1$s plus %2$s to upload media. You can add it to your posts/ pages from any device.</string>
-    <string name="quick_start_dialog_follow_sites_title">Connect with other sites</string>
-    <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
-    <string name="quick_start_dialog_publish_post_title">Publish a post</string>
-    <string name="quick_start_dialog_share_site_title">Share your site</string>
-    <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
-    <string name="quick_start_dialog_check_stats_message_short">Select %1$s Stats %2$s to see how your site is performing.</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Tap %1$s Create. %2$s Then select &lt;b&gt;Blog post&lt;/b&gt;</string>
-    <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
-    <string name="quick_start_dialog_upload_icon_title">Choose a unique site icon</string>
-    <string name="quick_start_dialog_view_site_message">Preview your site to see what your visitors will see.</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to view your site</string>
-    <string name="quick_start_dialog_view_site_title">View your site</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to set a new title</string>
-    <string name="quick_start_dialog_check_notifications_message_short">Select the %1$s Notifications tab %2$s to get updates on the go.</string>
-    <string name="quick_start_dialog_review_pages_title">Review site pages</string>
-    <string name="quick_start_dialog_check_notifications_title">Check your notifications</string>
-    <string name="quick_start_dialog_check_notifications_message">Get real time updates from your pocket.</string>
-    <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
-    <string name="quick_start_dialog_review_pages_message_short">Select %1$s Pages %2$s to see your page list.</string>
-    <string name="quick_start_dialog_upload_media_message">Select %1$s Media %2$s to see your current library.</string>
-    <string name="quick_start_list_check_stats_subtitle" translatable="false">@string/quick_start_dialog_check_stats_message</string>
-    <string name="quick_start_list_check_stats_title">Check your site stats</string>
-    <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
-    <string name="quick_start_list_create_site_title">Create your site</string>
-    <string name="quick_start_list_create_site_message">Site created! Complete another task.</string>
-    <string name="quick_start_list_update_site_title_title">Check your site title</string>
-    <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic.</string>
-    <string name="quick_start_list_enable_sharing_subtitle">Automatically share new posts to your social media.</string>
-    <string name="quick_start_list_enable_sharing_title">Social sharing</string>
-    <string name="quick_start_list_follow_site_subtitle">Discover and follow sites that inspire you.</string>
-    <string name="quick_start_list_follow_site_title" translatable="false">@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_publish_post_subtitle" translatable="false">@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_publish_post_title" translatable="false">@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_upload_icon_subtitle">Shown in your visitor\'s browser tab and other places online.</string>
-    <string name="quick_start_list_upload_icon_title" translatable="false">@string/quick_start_dialog_upload_icon_title</string>
-    <string name="quick_start_list_view_site_subtitle" translatable="false">@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_view_site_title">View your site</string>
-    <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
-    <string name="quick_start_list_review_pages_title" translatable="false">@string/quick_start_dialog_review_pages_title</string>
-    <string name="quick_start_list_check_notification_subtitle">Get real time updates from your pocket</string>
-    <string name="quick_start_list_check_notification_title" translatable="false">@string/quick_start_dialog_check_notifications_title</string>
-    <string name="quick_start_list_upload_media_title">Upload photos or videos</string>
-    <string name="quick_start_list_upload_media_subtitle">Bring media straight from your device or camera to your site</string>
-    <string name="quick_start_list_task_complete">Task complete</string>
-    <string name="quick_start_sites">Next Steps</string>
-    <string name="quick_start_sites_type_customize">Customize your site</string>
-    <string name="quick_start_sites_type_grow">Grow your audience</string>
-    <string name="quick_start_sites_type_get_to_know_app">Get to know the app</string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s out of %2$s complete</string>
-    <string name="quick_start_sites_type_all_tasks_completed">All tasks completed</string>
-    <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
-    <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
-    <string name="quick_start_focus_point_description">tap here</string>
-    <string name="quick_start_site_menu_tab_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to continue.</string>
-
-    <string name="quick_start_completed_tour_title">Congrats! You know your way around&lt;br/&gt;</string>
-    <string name="quick_start_completed_tour_subtitle">Doesn\'t it feel good to cross things off a list?</string>
-
 
     <!-- Pages -->
     <string name="pages_published">Published</string>
