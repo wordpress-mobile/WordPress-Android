@@ -92,6 +92,7 @@ import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.config.ContactSupportFeatureConfig;
@@ -315,8 +316,8 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         if (mIsWaitingForSitesToLoad && mAccountStore.hasAccessToken()) {
             if (event.isError()) {
                 AppLog.e(T.MAIN, "Account fetch failed: " + event.error.type + " - " + event.error.message);
-                // Continue to main activity even if account fetch failed
-                finishLoginAfterSitesLoaded();
+                String errMsg = this.getString(R.string.error_fetching_account, event.error.message);
+                ToastUtils.showToast(this, errMsg, Duration.LONG);
             } else if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
                 // Account fetched, now fetch sites
                 AppLog.i(T.MAIN, "Account fetched, now fetching sites");

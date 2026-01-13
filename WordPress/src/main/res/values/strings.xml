@@ -2421,6 +2421,7 @@
     <string name="cannot_add_duplicate_site" a8c-src-lib="module:login">This site already exists in the app, you can\'t add it.</string>
     <string name="duplicate_site_detected" a8c-src-lib="module:login">A duplicate site has been detected.</string>
     <string name="error_user_username_instead_of_email" a8c-src-lib="module:login">Please log in using your WordPress.com username instead of your email address.</string>
+    <string name="error_fetching_account">Unable to fetch account: %s"</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
