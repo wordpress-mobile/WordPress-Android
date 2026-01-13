@@ -281,6 +281,14 @@ class SiteSqlUtils
                 .equals(SiteModelTable.IS_DELETED, false)
                 .endGroup().endWhere()
 
+    val sitesAccessedViaWPAPI: List<SiteModel>
+        get() = WellSql.select(SiteModel::class.java)
+                .where().beginGroup()
+                .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPAPI)
+                .endGroup().endWhere()
+            .asModel
+            .decryptAPIRestCredentials()
+
     fun getPostFormats(site: SiteModel): List<PostFormatModel> {
         return WellSql.select(PostFormatModel::class.java)
                 .where()

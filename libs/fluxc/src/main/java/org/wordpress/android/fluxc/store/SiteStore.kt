@@ -1246,6 +1246,20 @@ open class SiteStore @Inject constructor(
     }
 
     /**
+     * Returns the number of sites accessed via WP REST API (self-hosted sites using Application Passwords).
+     */
+    val sitesAccessedViaWPAPICount: Int
+        get() = siteSqlUtils.sitesAccessedViaWPAPI.count()
+
+    /**
+     * Checks whether the store contains at least one site accessed via WP REST API
+     * (self-hosted sites using Application Passwords).
+     */
+    fun hasSiteAccessedViaWPAPI(): Boolean {
+        return sitesAccessedViaWPAPICount != 0
+    }
+
+    /**
      * Given a (remote) site id, returns the corresponding (local) id.
      */
     fun getLocalIdForRemoteSiteId(siteId: Long): Int {
