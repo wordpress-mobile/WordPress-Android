@@ -519,4 +519,32 @@ class SiteStoreTest {
         val expectedErrorType = AllDomainsError(AllDomainsErrorType.GENERIC_ERROR, null).type
         assertThat(onAllDomainsFetched.error.type).isEqualTo(expectedErrorType)
     }
+
+    @Test
+    fun `hasSiteAccessedViaWPAPI returns true when WPAPI sites exist`() {
+        val wpapiSite = SiteModel().apply {
+            origin = SiteModel.ORIGIN_WPAPI
+        }
+        whenever(siteSqlUtils.sitesAccessedViaWPAPI).thenReturn(listOf(wpapiSite))
+
+        assertThat(siteStore.hasSiteAccessedViaWPAPI()).isTrue()
+    }
+
+    @Test
+    fun `hasSiteAccessedViaWPAPI returns false when no WPAPI sites exist`() {
+        whenever(siteSqlUtils.sitesAccessedViaWPAPI).thenReturn(emptyList())
+
+        assertThat(siteStore.hasSiteAccessedViaWPAPI()).isFalse()
+    }
+
+    @Test
+    fun `sitesAccessedViaWPAPICount returns correct count`() {
+        val wpapiSites = listOf(
+            SiteModel().apply { origin = SiteModel.ORIGIN_WPAPI },
+            SiteModel().apply { origin = SiteModel.ORIGIN_WPAPI }
+        )
+        whenever(siteSqlUtils.sitesAccessedViaWPAPI).thenReturn(wpapiSites)
+
+        assertThat(siteStore.sitesAccessedViaWPAPICount).isEqualTo(2)
+    }
 }
