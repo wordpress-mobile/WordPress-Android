@@ -1301,7 +1301,6 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".ui.quickstart.QuickStartReminderReceiver" />
         <receiver android:name=".ui.posts.PublishNotificationReceiver" />
 
 
