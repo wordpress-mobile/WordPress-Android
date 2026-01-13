@@ -54,7 +54,6 @@ class UserFlagsProviderHelper @Inject constructor(
         DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2.name,
         DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name,
         DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN.name,
-        DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED.name,
         DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK.name,
         DeletablePrefKey.POST_LIST_AUTHOR_FILTER.name,
         DeletablePrefKey.POST_LIST_VIEW_LAYOUT_TYPE.name,

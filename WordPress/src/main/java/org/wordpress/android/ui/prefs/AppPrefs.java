@@ -124,7 +124,6 @@ public class AppPrefs {
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
         GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN,
 
-        IS_QUICK_START_NOTICE_REQUIRED,
         LAST_SKIPPED_QUICK_START_TASK,
         LAST_SELECTED_QUICK_START_TYPE,
 
@@ -1016,14 +1015,6 @@ public class AppPrefs {
 
     public static boolean isPostListFabTooltipDisabled() {
         return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
-    }
-
-    public static void setQuickStartNoticeRequired(Boolean shown) {
-        setBoolean(DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED, shown);
-    }
-
-    public static boolean isQuickStartNoticeRequired() {
-        return getBoolean(DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED, false);
     }
 
     public static void setInstallationReferrerObtained(Boolean isObtained) {
