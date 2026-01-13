@@ -441,10 +441,10 @@ fun <A, B, C, D, E, F, G, H, I, J, Z> merge(
  * @param sourceE fifth source
  * @param sourceF sixth source
  * @param sourceG seventh source
- * @param sourceH eightth source
- * @param sourceH eightth source
- * @param sourceH eightth source
- * @param sourceH eightth source
+ * @param sourceH eighth source
+ * @param sourceI ninth source
+ * @param sourceJ tenth source
+ * @param sourceK eleventh source
  * @return new data source
  */
 @Suppress("DestructuringDeclarationWithTooManyEntries", "LongParameterList", "CyclomaticComplexMethod", "LongMethod")
