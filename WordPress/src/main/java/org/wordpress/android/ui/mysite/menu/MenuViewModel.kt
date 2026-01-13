@@ -163,10 +163,6 @@ class MenuViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun onResume() {
-        // No-op - Quick Start was removed
-    }
-
     fun handleSiteRemoved() {
         selectedSiteRepository.removeSite()
         _onSelectedSiteMissing.value = Unit
