@@ -1423,6 +1423,17 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
+                    // If a new site was added (self-hosted login), save its ID to prefs so
+                    // initSelectedSite() will select it
+                    if (data != null) {
+                        int newSiteLocalId = data.getIntExtra(
+                                ChooseSiteActivity.KEY_SITE_LOCAL_ID,
+                                SelectedSiteRepository.UNAVAILABLE
+                        );
+                        if (newSiteLocalId != SelectedSiteRepository.UNAVAILABLE) {
+                            AppPrefs.setSelectedSite(newSiteLocalId);
+                        }
+                    }
                     // Register for Cloud messaging
                     startWithNewAccount();
                 } else if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
@@ -1688,6 +1699,9 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         }
         if (mViewModel.getHasMultipleSites() && !ChooseSiteActivity.isRunning()) {
             ActivityLauncher.showSitePickerForResult(this, mViewModel.getFirstSite());
+        } else if (mViewModel.getFirstSite() != null) {
+            // Only one site remaining, select it automatically
+            setSelectedSite(mViewModel.getFirstSite());
         }
     }
 
