@@ -54,8 +54,7 @@ class LoginFlow {
             )
         }
 
-        // New Epilogue Screen - Choose the first site from the list of site.
-        // See LoginEpilogueFragment
+        // Choose the first site from the list of site.
         val sitesList = Espresso.onView(ViewMatchers.withId(R.id.recycler_view))
         WPSupportUtils.waitForElementToBeDisplayed(sitesList)
         ComposeEspressoLink().unregister()
