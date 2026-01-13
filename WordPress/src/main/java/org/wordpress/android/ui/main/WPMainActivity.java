@@ -1709,6 +1709,9 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         }
         if (mViewModel.getHasMultipleSites() && !ChooseSiteActivity.isRunning()) {
             ActivityLauncher.showSitePickerForResult(this, mViewModel.getFirstSite());
+        } else if (mViewModel.getFirstSite() != null) {
+            // Only one site remaining, select it automatically
+            setSelectedSite(mViewModel.getFirstSite());
         }
     }
 
