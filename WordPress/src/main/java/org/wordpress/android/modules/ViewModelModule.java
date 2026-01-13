@@ -93,7 +93,6 @@ import org.wordpress.android.viewmodel.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.pages.SearchListViewModel;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.posts.PostListViewModel;
-import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
 import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
@@ -150,11 +149,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SubfilterPageViewModel.class)
     abstract ViewModel subfilterPageViewModel(SubfilterPageViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(QuickStartViewModel.class)
-    abstract ViewModel quickStartViewModel(QuickStartViewModel viewModel);
 
     @Binds
     @IntoMap

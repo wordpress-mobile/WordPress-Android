@@ -77,7 +77,6 @@ import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity.OnActivityBackPressedListener
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -138,7 +137,6 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.StringUtils
@@ -186,16 +184,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     lateinit var tagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider
 
     @Inject
-    lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
-
-    @Inject
     lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-
-    @Inject
-    lateinit var quickStartRepository: QuickStartRepository
 
     @Inject
     lateinit var readerTracker: ReaderTracker

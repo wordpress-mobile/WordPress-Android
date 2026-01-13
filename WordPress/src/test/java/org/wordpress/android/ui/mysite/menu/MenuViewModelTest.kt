@@ -21,7 +21,6 @@ import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.ListItemActionHandler
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -36,7 +35,6 @@ class MenuViewModelTest : BaseUnitTest() {
     private val blazeFeatureUtils: BlazeFeatureUtils = mock()
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase = mock()
     private val listItemActionHandler: ListItemActionHandler = mock()
-    private val quickStartRepository: QuickStartRepository = mock()
     private val selectedSiteRepository: SelectedSiteRepository = mock()
     private val siteItemsBuilder: SiteItemsBuilder = mock()
     private val contextProvider: ContextProvider = mock()
@@ -57,7 +55,6 @@ class MenuViewModelTest : BaseUnitTest() {
             blazeFeatureUtils,
             jetpackCapabilitiesUseCase,
             listItemActionHandler,
-            quickStartRepository,
             selectedSiteRepository,
             siteItemsBuilder,
             contextProvider,

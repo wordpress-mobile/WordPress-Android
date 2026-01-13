@@ -8,16 +8,11 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.quickstart.QuickStartType
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsBuilderTest {
@@ -26,12 +21,6 @@ class SiteItemsBuilderTest {
 
     @Mock
     lateinit var siteModel: SiteModel
-
-    @Mock
-    lateinit var quickStartRepository: QuickStartRepository
-
-    @Mock
-    lateinit var quickStartType: QuickStartType
 
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
@@ -43,12 +32,8 @@ class SiteItemsBuilderTest {
 
     @Before
     fun setUp() {
-        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-            .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
         siteItemsBuilder = SiteItemsBuilder(
             siteListItemBuilder,
-            quickStartRepository,
             jetpackFeatureRemovalOverlayUtil,
             experimentalFeatures
         )
@@ -128,82 +113,6 @@ class SiteItemsBuilderTest {
             EMPTY_HEADER,
             ADMIN_ITEM
         )
-    }
-
-    @Test
-    fun `given new site QS stats task focus point enabled, when card built, then stats item focus point shown`() {
-        setupHeaders()
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-            .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
-        val enableStatsFocusPoint = true
-
-        val buildSiteItems = siteItemsBuilder.build(
-            SiteItemsBuilderParams(
-                site = siteModel,
-                onClick = SITE_ITEM_ACTION,
-                activeTask = QuickStartNewSiteTask.CHECK_STATS,
-                enableFocusPoints = enableStatsFocusPoint
-            )
-        )
-
-        assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = enableStatsFocusPoint))
-    }
-
-    @Test
-    fun `given new site QS stats task focus point disabled, when card built, then stats item focus point hidden`() {
-        setupHeaders()
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-            .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
-        val enableStatsFocusPoint = false
-
-        val buildSiteItems = siteItemsBuilder.build(
-            SiteItemsBuilderParams(
-                site = siteModel,
-                onClick = SITE_ITEM_ACTION,
-                activeTask = QuickStartNewSiteTask.CHECK_STATS,
-                enableFocusPoints = enableStatsFocusPoint
-            )
-        )
-
-        assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = enableStatsFocusPoint))
-    }
-
-    @Test
-    fun `given existing site QS stats task focus point enabled, when card built, then stats item focus point shown`() {
-        setupHeaders()
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-            .thenReturn(QuickStartExistingSiteTask.CHECK_STATS)
-        val enableStatsFocusPoint = true
-
-        val buildSiteItems = siteItemsBuilder.build(
-            SiteItemsBuilderParams(
-                site = siteModel,
-                onClick = SITE_ITEM_ACTION,
-                activeTask = QuickStartExistingSiteTask.CHECK_STATS,
-                enableFocusPoints = enableStatsFocusPoint
-            )
-        )
-
-        assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = enableStatsFocusPoint))
-    }
-
-    @Test
-    fun `given existing site QS stats task focus point disabled, when card built, then stats item focus pt hidden`() {
-        setupHeaders()
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-            .thenReturn(QuickStartExistingSiteTask.CHECK_STATS)
-        val enableStatsFocusPoint = false
-
-        val buildSiteItems = siteItemsBuilder.build(
-            SiteItemsBuilderParams(
-                site = siteModel,
-                onClick = SITE_ITEM_ACTION,
-                activeTask = QuickStartExistingSiteTask.CHECK_STATS,
-                enableFocusPoints = enableStatsFocusPoint
-            )
-        )
-
-        assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = enableStatsFocusPoint))
     }
 
     @Test

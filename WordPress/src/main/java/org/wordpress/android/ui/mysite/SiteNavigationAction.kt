@@ -1,14 +1,11 @@
 package org.wordpress.android.ui.mysite
 
-import androidx.annotation.StringRes
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.UriWrapper
 
@@ -41,7 +38,7 @@ sealed class SiteNavigationAction {
     data class OpenThemes(val site: SiteModel) : SiteNavigationAction()
     data class OpenPlugins(val site: SiteModel) : SiteNavigationAction()
     data class OpenMedia(val site: SiteModel) : SiteNavigationAction()
-    data class OpenMore(val site:SiteModel, val quickStartEvent: QuickStartEvent?) : SiteNavigationAction()
+    data class OpenMore(val site: SiteModel) : SiteNavigationAction()
     data class OpenUnifiedComments(val site: SiteModel) : SiteNavigationAction()
     object StartWPComLoginForJetpackStats : SiteNavigationAction()
     data class OpenStats(val site: SiteModel) : SiteNavigationAction()
@@ -50,19 +47,6 @@ sealed class SiteNavigationAction {
     data class OpenPaidDomainSearch(val site: SiteModel) : SiteNavigationAction()
     data class OpenFreeDomainSearch(val site: SiteModel) : SiteNavigationAction()
     data class AddNewSite(val hasAccessToken: Boolean, val source: SiteCreationSource) : SiteNavigationAction()
-    data class ShowQuickStartDialog(
-        @StringRes val title: Int,
-        @StringRes val message: Int,
-        @StringRes val positiveButtonLabel: Int,
-        @StringRes val negativeButtonLabel: Int,
-        val isNewSite: Boolean
-    ) : SiteNavigationAction()
-
-    data class OpenQuickStartFullScreenDialog(
-        val type: QuickStartTaskType,
-        @StringRes val title: Int
-    ) : SiteNavigationAction()
-
     data class OpenDraftsPosts(val site: SiteModel) : SiteNavigationAction()
     data class OpenScheduledPosts(val site: SiteModel) : SiteNavigationAction()
     data class EditDraftPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()

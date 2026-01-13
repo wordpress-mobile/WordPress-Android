@@ -102,7 +102,6 @@ import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.ProfilingUtils
-import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.RateLimitedTask
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.VolleyUtils
@@ -710,9 +709,6 @@ class AppInitializer @Inject constructor(
 
         // clear App config data
         appConfig.clear()
-
-        // Cancel QuickStart reminders
-        QuickStartUtils.cancelQuickStartReminder(context)
 
         // Remove private Atomic cookie
         privateAtomicCookie.clearCookie()

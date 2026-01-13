@@ -14,7 +14,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.To
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.BlazeSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
-import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
@@ -116,15 +115,6 @@ class CardsShownTracker @Inject constructor(
         )
 
         else -> {}
-    }
-
-    fun trackQuickStartCardShown(quickStartType: QuickStartType) {
-        trackCardShown(
-            Pair(
-                MySiteCardAndItem.Type.QUICK_START_CARD.toTypeValue().label,
-                "quick_start_${quickStartType.trackingLabel}"
-            )
-        )
     }
 
     private fun trackCardShown(pair: Pair<String, String>) {

@@ -275,16 +275,6 @@
         <attr name="wpMaxNumberChips" format="integer" />
     </declare-styleable>
 
-    <!--
-        QuickStartFocusPoint attributes
-    -->
-    <declare-styleable name="QuickStartFocusPoint">
-        <attr name="size" format="enum">
-            <enum name="small" value="0" />
-            <enum name="normal" value="1" />
-        </attr>
-    </declare-styleable>
-
     <!-- Stats Widgets attributes -->
     <attr name="widgetTitle1" format="string" />
     <attr name="widgetContent1" format="string" />

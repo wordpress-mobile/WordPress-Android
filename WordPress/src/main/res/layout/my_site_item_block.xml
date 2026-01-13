@@ -40,20 +40,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toEndOf="@+id/my_site_item_primary_text"/>
-    <org.wordpress.android.widgets.QuickStartFocusPoint
-        android:id="@+id/my_site_item_quick_start_focus_point"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center"
-        android:contentDescription="@string/quick_start_focus_point_description"
-        android:elevation="@dimen/quick_start_focus_point_elevation"
-        android:gravity="end"
-        android:textAlignment="viewEnd"
-        android:layout_marginEnd="@dimen/design_fab_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:size="small" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"

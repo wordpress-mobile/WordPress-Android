@@ -10,12 +10,8 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.UiString
 
@@ -26,24 +22,12 @@ sealed class MySiteCardAndItemBuilderParams {
         val titleClick: () -> Unit,
         val iconClick: () -> Unit,
         val urlClick: () -> Unit,
-        val switchSiteClick: () -> Unit,
-        val activeTask: QuickStartTask?
+        val switchSiteClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
     data class InfoItemBuilderParams(
         val isStaleMessagePresent: Boolean
     ) : MySiteCardAndItemBuilderParams()
-
-    data class QuickStartCardBuilderParams(
-        val quickStartCategories: List<QuickStartCategory>,
-        val onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit,
-        val moreMenuClickParams: MoreMenuParams
-    ) : MySiteCardAndItemBuilderParams() {
-        data class MoreMenuParams(
-            val onMoreMenuClick: (type: QuickStartCardType) -> Unit,
-            val onHideThisMenuItemClick: (type: QuickStartCardType) -> Unit,
-        )
-    }
 
     data class TodaysStatsCardBuilderParams(
         val todaysStatsCard: TodaysStatsCardModel?,
@@ -108,7 +92,6 @@ sealed class MySiteCardAndItemBuilderParams {
 
     data class SiteItemsBuilderParams(
         val site: SiteModel,
-        val activeTask: QuickStartTask? = null,
         val backupAvailable: Boolean = false,
         val scanAvailable: Boolean = false,
         val enableFocusPoints: Boolean = false,

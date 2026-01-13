@@ -64,17 +64,12 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.SiteSettingsFragment
-import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import javax.inject.Inject
-
-const val KEY_QUICK_START_EVENT = "key_quick_start_event"
 
 @AndroidEntryPoint
 class MenuActivity : BaseAppCompatActivity() {
@@ -84,9 +79,6 @@ class MenuActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
 
-    @Inject
-    lateinit var quickStartUtils: QuickStartUtilsWrapper
-
     private val viewModel: MenuViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,7 +87,7 @@ class MenuActivity : BaseAppCompatActivity() {
         setContent {
             AppThemeM3 {
                 CompositionLocalProvider {
-                    viewModel.start(intent.getParcelableExtraCompat(KEY_QUICK_START_EVENT))
+                    viewModel.start()
                     MenuScreen(
                         onBackPressed = onBackPressedDispatcher::onBackPressed
                     )
@@ -115,7 +107,6 @@ class MenuActivity : BaseAppCompatActivity() {
     private fun initObservers() {
         viewModel.navigation.observe(this) { handleNavigationAction(it.getContentIfNotHandled()) }
         viewModel.onSnackbarMessage.observe(this) { showSnackbar(it.getContentIfNotHandled()) }
-        viewModel.onQuickStartMySitePrompts.observe(this) { handleActiveTutorialPrompt(it.getContentIfNotHandled()) }
         viewModel.onSelectedSiteMissing.observe(this) { finish() }
 
         // Set the Compose callback for SnackbarSequencer
@@ -189,18 +180,6 @@ class MenuActivity : BaseAppCompatActivity() {
                     dismissCallback = { _, event -> holder.onDismissAction(event) }
                 )
             )
-        }
-    }
-
-    private fun handleActiveTutorialPrompt(activeTutorialPrompt: QuickStartMySitePrompts?) {
-        activeTutorialPrompt?.let {
-            val message = quickStartUtils.stylizeQuickStartPrompt(
-                this,
-                activeTutorialPrompt.shortMessagePrompt,
-                activeTutorialPrompt.iconId
-            )
-
-            showSnackbar(SnackbarMessageHolder(UiString.UiStringText(message)))
         }
     }
 
@@ -361,36 +340,9 @@ fun MySiteListItem(item: MenuItemState.MenuListItem, modifier: Modifier = Modifi
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
                     )
                 }
-
-                if (item.showFocusPoint) CustomXMLWidgetView()
             })
     }
 }
-
-@Composable
-fun CustomXMLWidgetView(modifier: Modifier = Modifier) {
-    // Load the custom XML widget using AndroidView
-    var customView: View? by remember { mutableStateOf(null) }
-    val context = LocalContext.current
-
-    DisposableEffect(context) {
-        // Perform the side effect (inflate view) when the composable is composed
-        customView = FrameLayout(context).apply {
-            addView(LayoutInflater.from(context).inflate(R.layout.quick_start_focus_point, this, false))
-        }
-
-        onDispose {
-            customView = null
-        }
-    }
-    customView?.let { view ->
-        AndroidView(
-            factory = { view },
-            modifier = modifier.wrapContentSize(Alignment.Center)
-        )
-    }
-}
-
 
 @Preview
 @Composable

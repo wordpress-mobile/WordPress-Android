@@ -38,7 +38,6 @@ class MySiteListItemViewHolder(
         uiHelpers.setTextOrHide(mySiteItemPrimaryText, cardAndItem.primaryText)
         uiHelpers.setTextOrHide(mySiteItemSecondaryText, cardAndItem.secondaryText)
         itemView.setOnClickListener { cardAndItem.onClick.click() }
-        mySiteItemQuickStartFocusPoint.setVisibleOrGone(cardAndItem.showFocusPoint)
     }
 
     private fun loadGravatar(imgIcon: ImageView, avatarUrl: String) {

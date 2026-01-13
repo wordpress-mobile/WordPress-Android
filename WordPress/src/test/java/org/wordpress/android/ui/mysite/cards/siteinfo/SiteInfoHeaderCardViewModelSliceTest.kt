@@ -17,16 +17,13 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel
-import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -50,9 +47,6 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
 
     @Mock
     lateinit var contextProvider: ContextProvider
-
-    @Mock
-    lateinit var quickStartRepository: QuickStartRepository
 
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -81,22 +75,16 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
     private val siteIcon = "http://site.com/icon.jpg"
     private val siteName = "Site"
 
-    private val activeTask = MutableLiveData<QuickStartStore.QuickStartTask>()
-
-    @Mock
-    lateinit var quickStartType: QuickStartType
-
     @Mock
     lateinit var siteModel: SiteModel
+
     @Before
     fun setUp() {
-        whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(MutableLiveData(false))
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(MutableLiveData(siteModel))
 
         viewModelSlice = SiteInfoHeaderCardViewModelSlice(
             testDispatcher(),
-            quickStartRepository,
             selectedSiteRepository,
             analyticsTrackerWrapper,
             networkUtilsWrapper,
@@ -146,9 +134,6 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
         site.siteId = siteLocalId.toLong()
 
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
-            .thenReturn(QuickStartStore.QuickStartNewSiteTask.VIEW_SITE)
 
         viewModelSlice.initialize(testScope())
     }
@@ -308,26 +293,11 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given new site QS View Site task, when site info url clicked, site opened + View Site task completed`() =
-        test {
-            whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
-                .thenReturn(QuickStartStore.QuickStartNewSiteTask.VIEW_SITE)
-            invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
+    fun `site info card url click opens site`() = test {
+        invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
 
-            verify(quickStartRepository).completeTask(QuickStartStore.QuickStartNewSiteTask.VIEW_SITE)
-            Assertions.assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
-        }
-
-    @Test
-    fun `given existing site QS View Site task, when site info url clicked, site opened + View Site task completed`() =
-        test {
-            whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
-                .thenReturn(QuickStartStore.QuickStartExistingSiteTask.VIEW_SITE)
-            invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
-
-            verify(quickStartRepository).completeTask(QuickStartStore.QuickStartExistingSiteTask.VIEW_SITE)
-            Assertions.assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
-        }
+        Assertions.assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
+    }
 
     @Test
     fun `site info card switch click opens site picker`() = test {
@@ -339,7 +309,6 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
     private suspend fun invokeSiteInfoCardAction(action: SiteInfoHeaderCardAction) {
         val siteInfoCard = viewModelSlice.getParams(
             site,
-            activeTask.value,
             false
         )
         when (action) {
@@ -351,51 +320,6 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
     }
 
     /* ADD SITE ICON DIALOG */
-
-    @Test
-    fun `when add site icon dialog +ve btn is clicked, then upload site icon task marked complete without refresh`() {
-        viewModelSlice.onDialogInteraction(
-            BasicDialogViewModel.DialogInteraction.Positive(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG)
-        )
-
-        verify(quickStartRepository).completeTask(task = QuickStartStore.QuickStartNewSiteTask.UPLOAD_SITE_ICON)
-    }
-
-    @Test
-    fun `when change site icon dialog +ve btn clicked, then upload site icon task marked complete without refresh`() {
-        viewModelSlice.onDialogInteraction(
-            BasicDialogViewModel.DialogInteraction.Positive(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG)
-        )
-
-        verify(quickStartRepository).completeTask(task = QuickStartStore.QuickStartNewSiteTask.UPLOAD_SITE_ICON)
-    }
-
-    @Test
-    fun `when add site icon dialog -ve btn is clicked, then upload site icon task marked complete without refresh`() {
-        viewModelSlice.onDialogInteraction(
-            BasicDialogViewModel.DialogInteraction.Negative(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG)
-        )
-
-        verify(quickStartRepository).completeTask(task = QuickStartStore.QuickStartNewSiteTask.UPLOAD_SITE_ICON)
-    }
-
-    @Test
-    fun `when change site icon dialog -ve btn is clicked, then upload site icon task marked complete no refresh`() {
-        viewModelSlice.onDialogInteraction(
-            BasicDialogViewModel.DialogInteraction.Negative(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG)
-        )
-
-        verify(quickStartRepository).completeTask(task = QuickStartStore.QuickStartNewSiteTask.UPLOAD_SITE_ICON)
-    }
-
-    @Test
-    fun `when site icon dialog is dismissed, then upload site icon task is marked complete without refresh`() {
-        viewModelSlice.onDialogInteraction(
-            BasicDialogViewModel.DialogInteraction.Dismissed(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG)
-        )
-
-        verify(quickStartRepository).completeTask(task = QuickStartStore.QuickStartNewSiteTask.UPLOAD_SITE_ICON)
-    }
 
     @Test
     fun `when add site icon dialog positive button is clicked, then media picker is opened`() {
@@ -417,52 +341,6 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
         )
 
         Assertions.assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenMediaPicker(site))
-    }
-
-    @Test
-    fun `when add site icon dialog negative button is clicked, then check and show quick start notice`() {
-        viewModelSlice.onDialogInteraction(
-            BasicDialogViewModel.DialogInteraction.Negative(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG)
-        )
-
-        verify(quickStartRepository).checkAndShowQuickStartNotice()
-    }
-
-    @Test
-    fun `when change site icon dialog negative button is clicked, then check and show quick start notice`() {
-        viewModelSlice.onDialogInteraction(
-                BasicDialogViewModel.DialogInteraction.Negative(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG)
-            )
-
-        verify(quickStartRepository).checkAndShowQuickStartNotice()
-    }
-
-    @Test
-    fun `when add site icon dialog is dismissed, then check and show quick start notice`() {
-        viewModelSlice.onDialogInteraction(
-            BasicDialogViewModel.DialogInteraction.Dismissed(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG)
-        )
-
-        verify(quickStartRepository).checkAndShowQuickStartNotice()
-    }
-
-    @Test
-    fun `when change site icon dialog is dismissed, then check and show quick start notice`() {
-        viewModelSlice
-            .onDialogInteraction(
-                BasicDialogViewModel
-                    .DialogInteraction
-                    .Dismissed(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG)
-            )
-
-        verify(quickStartRepository).checkAndShowQuickStartNotice()
-    }
-
-    @Test
-    fun `when site chooser is dismissed, then check and show quick start notice`() {
-        viewModelSlice.onSiteNameChooserDismissed()
-
-        verify(quickStartRepository).checkAndShowQuickStartNotice()
     }
 
     @Test

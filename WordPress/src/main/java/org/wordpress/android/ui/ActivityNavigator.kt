@@ -30,10 +30,8 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
-import org.wordpress.android.ui.mysite.menu.KEY_QUICK_START_EVENT
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorType
 import org.wordpress.android.util.AppLog
@@ -92,15 +90,7 @@ class ActivityNavigator @Inject constructor() {
         context.startActivity(Intent(context, PersonalizationActivity::class.java))
     }
 
-    fun openUnifiedMySiteMenu(context: Context, quickStartEvent: QuickStartEvent? = null) {
-        if (quickStartEvent != null) {
-            context.startActivity(
-                Intent(context, MenuActivity::class.java).apply {
-                    putExtra(KEY_QUICK_START_EVENT, quickStartEvent)
-                }
-            )
-            return
-        }
+    fun openUnifiedMySiteMenu(context: Context) {
         context.startActivity(Intent(context, MenuActivity::class.java))
     }
 

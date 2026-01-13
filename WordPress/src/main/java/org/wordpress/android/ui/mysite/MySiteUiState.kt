@@ -4,16 +4,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 
 data class MySiteUiState(
     val currentAvatarUrl: String? = null,
@@ -23,22 +20,16 @@ data class MySiteUiState(
     val isDomainCreditAvailable: Boolean = false,
     val scanAvailable: Boolean = false,
     val backupAvailable: Boolean = false,
-    val activeTask: QuickStartTask? = null,
-    val quickStartCategories: List<QuickStartCategory> = listOf(),
     val cardsUpdate: CardsUpdate? = null,
     val bloggingPromptsUpdate: BloggingPromptUpdate? = null,
     val blazeCardUpdate: PartialState.BlazeCardUpdate? = null,
 ) {
     sealed class PartialState {
-        data class AccountData(val url: String, val name:String) : PartialState()
+        data class AccountData(val url: String, val name: String) : PartialState()
         data class SelectedSite(val site: SiteModel?) : PartialState()
         data class ShowSiteIconProgressBar(val showSiteIconProgressBar: Boolean) : PartialState()
         data class DomainCreditAvailable(val isDomainCreditAvailable: Boolean) : PartialState()
         data class JetpackCapabilities(val scanAvailable: Boolean, val backupAvailable: Boolean) : PartialState()
-        data class QuickStartUpdate(
-            val activeTask: QuickStartTask? = null,
-            val categories: List<QuickStartCategory> = listOf()
-        ) : PartialState()
 
         data class CardsUpdate(
             val cards: List<CardModel>? = null,
@@ -68,10 +59,6 @@ data class MySiteUiState(
             is JetpackCapabilities -> uiState.copy(
                 scanAvailable = partialState.scanAvailable,
                 backupAvailable = partialState.backupAvailable
-            )
-            is QuickStartUpdate -> uiState.copy(
-                activeTask = partialState.activeTask,
-                quickStartCategories = partialState.categories
             )
             is CardsUpdate -> uiState.copy(cardsUpdate = partialState)
             is BloggingPromptUpdate -> uiState.copy(bloggingPromptsUpdate = partialState)

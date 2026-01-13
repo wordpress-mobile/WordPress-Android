@@ -2,12 +2,9 @@ package org.wordpress.android.ui.publicize;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,11 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -29,7 +21,6 @@ import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.ActionEvent;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.ActionEvent.OpenServiceDetails;
@@ -39,17 +30,10 @@ import org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeAnaly
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
-import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.utils.UiHelpers;
-import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.QuickStartUtils;
-import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.SnackbarItem;
-import org.wordpress.android.util.SnackbarItem.Info;
-import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -58,8 +42,6 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import kotlin.Unit;
-
-import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING;
 
 @AndroidEntryPoint
 public class PublicizeListFragment extends PublicizeBaseFragment {
@@ -74,12 +56,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private TextView mEmptyView;
     private View mNestedScrollView;
 
-    private QuickStartEvent mQuickStartEvent;
-
     @Inject AccountStore mAccountStore;
-    @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
-    @Inject QuickStartRepository mQuickStartRepository;
-    @Inject SnackbarSequencer mSnackbarSequencer;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject UiHelpers mUiHelpers;
     @Inject ImageManager mImageManager;
@@ -109,10 +86,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
-        }
-
-        if (savedInstanceState != null) {
-            mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY);
         }
     }
 
@@ -151,10 +124,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             });
         } else {
             manageContainer.setVisibility(View.GONE);
-        }
-
-        if (mQuickStartEvent != null) {
-            showQuickStartFocusPoint();
         }
 
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
@@ -248,67 +217,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         }
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEvent(final QuickStartEvent event) {
-        if (!isAdded() || getView() == null) {
-            return;
-        }
-
-        mQuickStartEvent = event;
-        EventBus.getDefault().removeStickyEvent(event);
-
-        if (mQuickStartEvent.getTask() == ENABLE_POST_SHARING) {
-            showQuickStartFocusPoint();
-            showQuickStartSnackbar();
-        }
-    }
-
-    private void showQuickStartFocusPoint() {
-        // we are waiting for RecyclerView to populate itself with views and then grab the first one when it's ready
-        mRecycler.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override public void onGlobalLayout() {
-                RecyclerView.ViewHolder holder = mRecycler.findViewHolderForAdapterPosition(0);
-                if (holder != null) {
-                    final View quickStartTarget = holder.itemView;
-
-                    quickStartTarget.post(new Runnable() {
-                        @Override public void run() {
-                            if (getView() == null) {
-                                return;
-                            }
-                            ViewGroup focusPointContainer = getView().findViewById(R.id.publicize_scroll_view_child);
-                            int focusPointSize =
-                                    getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
-
-                            int verticalOffset = (((quickStartTarget.getHeight()) - focusPointSize) / 2);
-
-                            QuickStartUtils.addQuickStartFocusPointAboveTheView(focusPointContainer, quickStartTarget,
-                                    0, verticalOffset);
-                        }
-                    });
-                    mRecycler.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-            }
-        });
-    }
-
-    private void showQuickStartSnackbar() {
-        Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
-                requireContext(),
-                R.string.quick_start_dialog_enable_sharing_message_short_connections
-        );
-        new Handler().postDelayed(() -> mSnackbarSequencer.enqueue(
-                new SnackbarItem(new Info(mRecycler, new UiStringText(title), Snackbar.LENGTH_LONG))
-        ), 500L);
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
-    }
-
     @Override
     public void onAttach(@NonNull Activity activity) {
         super.onAttach(activity);
@@ -359,26 +267,10 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     }
 
     private void onServiceClick(@NonNull final PublicizeService service) {
-        mQuickStartRepository.completeTask(ENABLE_POST_SHARING);
-
-        if (getView() != null) {
-            QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
-        }
-        mQuickStartEvent = null;
         ((OnServiceClickListener) getActivity()).onServiceClicked(service);
     }
 
     void reload() {
         getAdapter().refresh();
-    }
-
-    @Override public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
     }
 }
