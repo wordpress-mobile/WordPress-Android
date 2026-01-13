@@ -683,6 +683,42 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `isSignedInWPComOrHasWPOrgSite should be true when user has WPCom access token`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(siteStore.hasSiteAccessedViaXMLRPC()).thenReturn(false)
+        whenever(siteStore.hasSiteAccessedViaWPAPI()).thenReturn(false)
+
+        assertThat(viewModel.isSignedInWPComOrHasWPOrgSite).isTrue()
+    }
+
+    @Test
+    fun `isSignedInWPComOrHasWPOrgSite should be true when user has XMLRPC site`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(siteStore.hasSiteAccessedViaXMLRPC()).thenReturn(true)
+        whenever(siteStore.hasSiteAccessedViaWPAPI()).thenReturn(false)
+
+        assertThat(viewModel.isSignedInWPComOrHasWPOrgSite).isTrue()
+    }
+
+    @Test
+    fun `isSignedInWPComOrHasWPOrgSite should be true when user has WPAPI site`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(siteStore.hasSiteAccessedViaXMLRPC()).thenReturn(false)
+        whenever(siteStore.hasSiteAccessedViaWPAPI()).thenReturn(true)
+
+        assertThat(viewModel.isSignedInWPComOrHasWPOrgSite).isTrue()
+    }
+
+    @Test
+    fun `isSignedInWPComOrHasWPOrgSite should be false when user has no account and no sites`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(siteStore.hasSiteAccessedViaXMLRPC()).thenReturn(false)
+        whenever(siteStore.hasSiteAccessedViaWPAPI()).thenReturn(false)
+
+        assertThat(viewModel.isSignedInWPComOrHasWPOrgSite).isFalse()
+    }
+
+    @Test
     fun `Should track analytics event when onHelpPromptActionClicked is called`() = test {
         whenever(mainCreateSheetHelper.canCreatePromptAnswer()).thenReturn(true)
         startViewModelWithDefaultParameters()
