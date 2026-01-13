@@ -201,7 +201,7 @@ public class ShareIntentReceiverFragment extends Fragment {
 
         HeaderViewHolder(View view) {
             super(view);
-            mHeaderTextView = view.findViewById(R.id.login_epilogue_header_sites_subheader);
+            mHeaderTextView = view.findViewById(R.id.share_intent_sites_subheader);
         }
 
         void bindText(String text) {

@@ -14,11 +14,9 @@ import org.hamcrest.CoreMatchers
 import org.hamcrest.Matchers
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.support.E2ECredentials
 import org.wordpress.android.e2e.pages.HelpScreen
 import org.wordpress.android.e2e.pages.LandingPage.tapContinueWithWpCom
 import org.wordpress.android.e2e.pages.LandingPage.tapEnterYourSiteAddress
-import org.wordpress.android.support.ComposeEspressoLink
 import org.wordpress.android.support.WPSupportUtils
 import org.wordpress.android.login.R as LoginR
 
@@ -43,30 +41,6 @@ class LoginFlow {
         WPSupportUtils.populateTextField(R.id.input, password)
         WPSupportUtils.clickOn(R.id.bottom_button)
         return this
-    }
-
-    fun confirmLogin() {
-        // If we get bumped to the "enter your username and password" screen, fill it in
-        if (WPSupportUtils.atLeastOneElementWithIdIsDisplayed(LoginR.id.login_password_row)) {
-            enterUsernameAndPassword(
-                E2ECredentials.WP_COM_USER_USERNAME,
-                E2ECredentials.WP_COM_USER_PASSWORD
-            )
-        }
-
-        // New Epilogue Screen - Choose the first site from the list of site.
-        // See LoginEpilogueFragment
-        val sitesList = Espresso.onView(ViewMatchers.withId(R.id.recycler_view))
-        WPSupportUtils.waitForElementToBeDisplayed(sitesList)
-        ComposeEspressoLink().unregister()
-        Espresso.pressBack()
-
-        if (BuildConfig.IS_JETPACK_APP) {
-            dismissNewFeaturesDialogIfDisplayed()
-        }
-
-        WPSupportUtils.waitForElementToBeDisplayed(R.id.nav_sites)
-        ComposeEspressoLink().unregister()
     }
 
     fun chooseMagicLink(): LoginFlow {
@@ -137,13 +111,5 @@ class LoginFlow {
     fun tapHelp(): HelpScreen {
         WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withId(R.id.help)))
         return HelpScreen()
-    }
-
-    companion object {
-        fun dismissNewFeaturesDialogIfDisplayed() {
-            if (WPSupportUtils.isElementDisplayed(R.id.blogging_prompts_onboarding_button_container)) {
-                WPSupportUtils.clickOn(R.id.close_button)
-            }
-        }
     }
 }

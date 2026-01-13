@@ -172,11 +172,6 @@
         </activity>
 
         <activity
-            android:name=".ui.accounts.LoginEpilogueActivity"
-            android:label="@string/login_epilogue_screen_title"
-            android:theme="@style/LoginTheme" />
-
-        <activity
             android:name=".ui.accounts.SignupEpilogueActivity"
             android:label="@string/signup_epilogue_screen_title"
             android:theme="@style/LoginTheme" />

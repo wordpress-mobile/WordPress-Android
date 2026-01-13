@@ -47,7 +47,6 @@
     <string name="publicize_buttons_screen_title">Sharing buttons</string>
     <string name="media_settings_screen_title">File details</string>
     <string name="person_detail_screen_title">Person detail</string>
-    <string name="login_epilogue_screen_title">Logged in as</string>
     <string name="signup_epilogue_screen_title">New account</string>
     <string name="share_intent_screen_title">Pick site</string>
     <string name="edit_photo_screen_title">Edit Photo</string>
@@ -2422,6 +2421,7 @@
     <string name="cannot_add_duplicate_site" a8c-src-lib="module:login">This site already exists in the app, you can\'t add it.</string>
     <string name="duplicate_site_detected" a8c-src-lib="module:login">A duplicate site has been detected.</string>
     <string name="error_user_username_instead_of_email" a8c-src-lib="module:login">Please log in using your WordPress.com username instead of your email address.</string>
+    <string name="error_fetching_account">Unable to fetch account: %s"</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -3238,11 +3238,6 @@
     <string name="login_empty_2fa" a8c-src-lib="module:login">Please enter a verification code</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_select_email_client">Which email app do you use?</string>
-    <string name="login_epilogue_mysites_one">My site</string>
-    <string name="login_epilogue_mysites_other">My sites</string>
-    <string name="login_epilogue_mysites_heading">Choose a site to open</string>
-    <string name="login_epilogue_mysites_subheading">You can switch sites any time.</string>
-    <string name="login_epilogue_create_new_site_button">Create a new site</string>
     <string name="continue_google_button_suffix" a8c-src-lib="module:login">Continue with Google</string>
     <string name="continue_site_credentials" a8c-src-lib="module:login">Continue with store credentials</string>
     <string name="login_or" a8c-src-lib="module:login">or</string>

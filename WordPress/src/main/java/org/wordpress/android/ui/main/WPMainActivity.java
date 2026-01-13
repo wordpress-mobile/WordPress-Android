@@ -215,13 +215,10 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         WpAppNotifierHandler.NotifierListener {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
-    public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
     public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
     public static final String ARG_IS_MAGIC_LINK_SIGNUP = "ARG_IS_MAGIC_LINK_SIGNUP";
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
-    public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
-    public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
     public static final String ARG_SHOW_SITE_CREATION = "show_site_creation";
     public static final String ARG_SITE_CREATION_SOURCE = "ARG_SITE_CREATION_SOURCE";
@@ -476,13 +473,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.
             UpdateTokenPayload payload = new UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
-        } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
-            ActivityLauncher.showLoginEpilogue(
-                    this,
-                    getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
-                    getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
-                    mBuildConfigWrapper.isSiteCreationEnabled()
-            );
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showSignupEpilogue(this,
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
@@ -1446,12 +1436,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     mGCMRegistrationScheduler.scheduleRegistration();
                 }
                 break;
-            case RequestCodes.LOGIN_EPILOGUE:
-                if (resultCode == RESULT_OK) {
-                    setSite(data);
-                    passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
-                }
-                break;
             case RequestCodes.SITE_PICKER:
                 boolean isSameSiteSelected = data != null
                                              && data.getIntExtra(
@@ -1622,12 +1606,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     if (mJetpackConnectSource != null) {
                         ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, getSelectedSite());
                     } else {
-                        ActivityLauncher.showLoginEpilogue(
-                                this,
-                                true,
-                                getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
-                                mBuildConfigWrapper.isSiteCreationEnabled()
-                        );
+                        initSelectedSite();
                     }
                 }
             }
@@ -1759,7 +1738,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         if (!sites.isEmpty()) {
             setSelectedSite(sites.get(0));
         } else {
-            // Else no site selected
+            // No site selected
             AppLog.w(T.MAIN, "No site selected");
         }
     }

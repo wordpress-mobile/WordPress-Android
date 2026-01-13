@@ -5,5 +5,5 @@
     android:paddingEnd="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large">
 
-    <include layout="@layout/login_include_epilogue_sites_subheader" />
+    <include layout="@layout/share_intent_sites_subheader" />
 </FrameLayout>

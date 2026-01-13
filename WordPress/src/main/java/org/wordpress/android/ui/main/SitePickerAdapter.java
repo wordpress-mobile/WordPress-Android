@@ -131,7 +131,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView mTxtTitle;
         private final TextView mTxtDomain;
         private final ImageView mImgBlavatar;
-        @Nullable private final View mItemDivider;
         @Nullable private final View mDivider;
         private final RadioButton mSelectedRadioButton;
 
@@ -141,7 +140,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mTxtTitle = view.findViewById(R.id.text_title);
             mTxtDomain = view.findViewById(R.id.text_domain);
             mImgBlavatar = view.findViewById(R.id.image_blavatar);
-            mItemDivider = view.findViewById(R.id.item_divider);
             mDivider = view.findViewById(R.id.divider);
             mSelectedRadioButton = view.findViewById(R.id.radio_selected);
         }
@@ -324,10 +322,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mLayoutContainer.setBackground(null);
         }
 
-        if (holder.mItemDivider != null) {
-            boolean showDivider = position < getItemCount() - 1;
-            holder.mItemDivider.setVisibility(showDivider ? View.VISIBLE : View.GONE);
-        }
         if (holder.mDivider != null) {
             // only show divider after last recent pick
             boolean showDivider = site.isRecentPick()
@@ -445,14 +439,14 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean isValidPosition(int position) {
-        if (isNewLoginEpilogueScreenEnabled()) {
+        if (shouldShowAddSiteFooter()) {
             return (position >= 0 && position <= mSites.size());
         } else {
             return (position >= 0 && position < mSites.size());
         }
     }
 
-    private boolean isNewLoginEpilogueScreenEnabled() {
+    private boolean shouldShowAddSiteFooter() {
         return mBuildConfigWrapper.isSiteCreationEnabled()
                && !mShowAndReturn;
     }
