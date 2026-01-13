@@ -42,13 +42,12 @@ class SiteItemsBuilder @Inject constructor(
                 onClick = ListItemInteraction.create(POSTS, params.onClick),
                 listItemAction = POSTS
             ),
-            siteListItemBuilder.buildPagesItemIfAvailable(params.site, params.onClick, showFocusPoint = false),
+            siteListItemBuilder.buildPagesItemIfAvailable(params.site, params.onClick),
             buildPostTypesItemIfEnabled(params.onClick),
             ListItem(
                 R.drawable.ic_media_white_24dp,
                 UiStringRes(R.string.media),
                 onClick = ListItemInteraction.create(MEDIA, params.onClick),
-                showFocusPoint = false,
                 listItemAction = MEDIA
             ),
             ListItem(
@@ -85,7 +84,6 @@ class SiteItemsBuilder @Inject constructor(
                 R.drawable.ic_stats_alt_white_24dp,
                 UiStringRes(R.string.stats),
                 onClick = ListItemInteraction.create(ListItemAction.STATS, params.onClick),
-                showFocusPoint = false,
                 listItemAction = ListItemAction.STATS
             ),
             siteListItemBuilder.buildSubscribersItemIfAvailable(params.site, params.onClick),
@@ -157,11 +155,7 @@ class SiteItemsBuilder @Inject constructor(
                 siteListItemBuilder.buildPeopleItemIfAvailable(params.site, params.onClick),
                 siteListItemBuilder.buildSelfHostedUserListItemIfAvailable(params.site, params.onClick),
                 siteListItemBuilder.buildPluginItemIfAvailable(params.site, params.onClick),
-                siteListItemBuilder.buildShareItemIfAvailable(
-                    params.site,
-                    params.onClick,
-                    showFocusPoint = false
-                )
+                siteListItemBuilder.buildShareItemIfAvailable(params.site, params.onClick)
             )
         } else emptyList()
     }

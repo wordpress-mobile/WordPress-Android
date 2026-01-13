@@ -18,7 +18,6 @@ sealed class MenuItemState {
         val primaryText: UiString,
         @DrawableRes val secondaryIcon: Int? = null,
         val secondaryText: UiString? = null,
-        val showFocusPoint: Boolean = false,
         val onClick: ListItemInteraction,
         val disablePrimaryIconTint: Boolean = false,
         val listItemAction: ListItemAction
@@ -34,7 +33,6 @@ fun MySiteCardAndItem.Item.toMenuItemState(): MenuItemState {
             primaryText = primaryText,
             secondaryIcon = secondaryIcon,
             secondaryText = secondaryText,
-            showFocusPoint = showFocusPoint,
             onClick = onClick,
             disablePrimaryIconTint = disablePrimaryIconTint,
             listItemAction = listItemAction

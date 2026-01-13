@@ -47,11 +47,7 @@ class QuickLinksItemAdapter : Adapter<QuickLinksItemViewHolder>() {
             oldItemPosition: Int,
             newItemPosition: Int
         ): Boolean {
-            return if (oldList[oldItemPosition].showFocusPoint || newList[newItemPosition].showFocusPoint) {
-                false
-            } else {
-                oldList[oldItemPosition] == newList[newItemPosition]
-            }
+            return oldList[oldItemPosition] == newList[newItemPosition]
         }
     }
 }

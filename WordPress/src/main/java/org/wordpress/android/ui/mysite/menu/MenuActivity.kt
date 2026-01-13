@@ -347,24 +347,6 @@ fun MySiteListItemPreviewBase() {
             primaryText = UiString.UiStringText("Blog Posts"),
             secondaryIcon = null,
             secondaryText = null,
-            showFocusPoint = false,
-            onClick = ListItemInteraction.create { onClick() },
-            listItemAction = ListItemAction.POSTS
-        )
-    )
-}
-
-@Preview
-@Composable
-fun MySiteListItemPreviewWithFocusPoint() {
-    val onClick = remember { {} }
-    MySiteListItem(
-        MenuItemState.MenuListItem(
-            primaryIcon = R.drawable.ic_posts_white_24dp,
-            primaryText = UiString.UiStringText("Blog Posts"),
-            secondaryIcon = null,
-            secondaryText = null,
-            showFocusPoint = true,
             onClick = ListItemInteraction.create { onClick() },
             listItemAction = ListItemAction.POSTS
         )
@@ -381,7 +363,6 @@ fun MySiteListItemPreviewWithSecondaryText() {
             primaryText = UiString.UiStringText("Plans"),
             secondaryIcon = null,
             secondaryText = UiString.UiStringText("Basic"),
-            showFocusPoint = false,
             onClick = ListItemInteraction.create { onClick() },
             listItemAction = ListItemAction.PLAN
         )
@@ -398,7 +379,6 @@ fun MySiteListItemPreviewWithSecondaryImage() {
             primaryText = UiString.UiStringText("Plans"),
             secondaryIcon = R.drawable.ic_pages_white_24dp,
             secondaryText = null,
-            showFocusPoint = false,
             onClick = ListItemInteraction.create { onClick() },
             listItemAction = ListItemAction.PLAN
         )

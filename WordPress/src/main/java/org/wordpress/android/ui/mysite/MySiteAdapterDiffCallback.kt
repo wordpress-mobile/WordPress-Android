@@ -74,7 +74,6 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
 
 
     override fun areContentsTheSame(oldItem: MySiteCardAndItem, newItem: MySiteCardAndItem): Boolean {
-        if (oldItem.activeQuickStartItem || newItem.activeQuickStartItem) return false
         return oldItem == newItem
     }
 }

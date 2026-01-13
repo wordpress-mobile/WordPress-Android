@@ -196,11 +196,10 @@ class SiteListItemBuilderTest {
             isWPCom = true,
             isAutomatedTransfer = false
         )
-        val showFocusPoint = true
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, showFocusPoint, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(PLAN_ITEM.copy(showFocusPoint = showFocusPoint))
+        assertThat(item).isEqualTo(PLAN_ITEM)
     }
 
     @Ignore("Ignored after a decision was made to hide the Plans screen.")
@@ -214,7 +213,7 @@ class SiteListItemBuilderTest {
             isAutomatedTransfer = true
         )
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, false, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isEqualTo(PLAN_ITEM)
     }
@@ -224,7 +223,7 @@ class SiteListItemBuilderTest {
     fun `plan item not built when plan name is empty`() {
         setupPlanItem(planShortName = "")
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, false, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -234,7 +233,7 @@ class SiteListItemBuilderTest {
     fun `plan item not built when site cannot manage options`() {
         setupPlanItem(canManageOptions = false)
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, false, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -244,7 +243,7 @@ class SiteListItemBuilderTest {
     fun `plan item not built when site is WP for teams`() {
         setupPlanItem(isWpForTeams = true)
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, false, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -254,7 +253,7 @@ class SiteListItemBuilderTest {
     fun `plan item not built when site is neither WP com nor AT`() {
         setupPlanItem(isWPCom = false, isAutomatedTransfer = false)
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, false, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -277,7 +276,7 @@ class SiteListItemBuilderTest {
     fun `pages item not built when not self-hosted admin and cannot edit pages`() {
         setupPagesItem(isSelfHostedAdmin = false, canEditPages = false)
 
-        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION, showFocusPoint = false)
+        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -285,21 +284,19 @@ class SiteListItemBuilderTest {
     @Test
     fun `pages item built when self-hosted admin`() {
         setupPagesItem(isSelfHostedAdmin = true)
-        val showFocusPoint = true
 
-        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION, showFocusPoint)
+        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(PAGES_ITEM.copy(showFocusPoint = showFocusPoint))
+        assertThat(item).isEqualTo(PAGES_ITEM)
     }
 
     @Test
     fun `pages item built when can edit pages`() {
         setupPagesItem(canEditPages = true)
-        val showFocusPoint = true
 
-        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION, showFocusPoint)
+        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(PAGES_ITEM.copy(showFocusPoint = showFocusPoint))
+        assertThat(item).isEqualTo(PAGES_ITEM)
     }
 
     private fun setupPagesItem(isSelfHostedAdmin: Boolean = false, canEditPages: Boolean = false) {

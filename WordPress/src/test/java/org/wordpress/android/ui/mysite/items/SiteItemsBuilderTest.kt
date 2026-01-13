@@ -160,20 +160,15 @@ class SiteItemsBuilderTest {
         addSiteSettingsItem: Boolean = false,
         addThemesItem: Boolean = false,
         addBackupItem: Boolean = false,
-        addScanItem: Boolean = false,
-        showPlansFocusPoint: Boolean = false,
-        showPagesFocusPoint: Boolean = false
+        addScanItem: Boolean = false
     ) {
         if (addPlanItem) {
             whenever(
                 siteListItemBuilder.buildPlanItemIfAvailable(
                     siteModel,
-                    showPlansFocusPoint,
                     SITE_ITEM_ACTION
                 )
-            ).thenReturn(
-                PLAN_ITEM.copy(showFocusPoint = showPlansFocusPoint)
-            )
+            ).thenReturn(PLAN_ITEM)
         }
         if (addActivityLogItem) {
             whenever(siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
@@ -199,12 +194,9 @@ class SiteItemsBuilderTest {
             whenever(
                 siteListItemBuilder.buildPagesItemIfAvailable(
                     siteModel,
-                    SITE_ITEM_ACTION,
-                    showPagesFocusPoint
+                    SITE_ITEM_ACTION
                 )
-            ).thenReturn(
-                PAGES_ITEM.copy(showFocusPoint = showPagesFocusPoint)
-            )
+            ).thenReturn(PAGES_ITEM)
         }
         if (addAdminItem) {
             whenever(siteListItemBuilder.buildAdminItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
