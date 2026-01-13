@@ -1246,6 +1246,14 @@ open class SiteStore @Inject constructor(
     }
 
     /**
+     * Checks whether the store contains at least one site accessed via WP REST API
+     * (self-hosted sites using Application Passwords).
+     */
+    fun hasSiteAccessedViaWPAPI(): Boolean {
+        return siteSqlUtils.sitesAccessedViaWPAPI.isNotEmpty()
+    }
+
+    /**
      * Given a (remote) site id, returns the corresponding (local) id.
      */
     fun getLocalIdForRemoteSiteId(siteId: Long): Int {
