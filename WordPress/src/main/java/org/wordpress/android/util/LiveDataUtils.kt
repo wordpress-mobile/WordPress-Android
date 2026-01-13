@@ -351,9 +351,18 @@ fun <S, T, U, V, W, X, Y> merge(
     }
 }
 
-
 /**
  * Merges ten LiveData sources using a given function. The function returns an object of a new type.
+ * @param sourceA first source
+ * @param sourceB second source
+ * @param sourceC third source
+ * @param sourceD fourth source
+ * @param sourceE fifth source
+ * @param sourceF sixth source
+ * @param sourceG seventh source
+ * @param sourceH eighth source
+ * @param sourceI ninth source
+ * @param sourceJ tenth source
  * @return new data source
  */
 @Suppress("DestructuringDeclarationWithTooManyEntries", "LongParameterList", "CyclomaticComplexMethod", "LongMethod")
@@ -368,6 +377,7 @@ fun <A, B, C, D, E, F, G, H, I, J, Z> merge(
     sourceH: LiveData<H>,
     sourceI: LiveData<I>,
     sourceJ: LiveData<J>,
+    distinct: Boolean = false,
     merger: (A?, B?, C?, D?, E?, F?, G?, H?, I?, J?) -> Z?
 ): LiveData<Z> {
     data class TenItemContainer(
@@ -387,53 +397,71 @@ fun <A, B, C, D, E, F, G, H, I, J, Z> merge(
     mediator.value = TenItemContainer()
     mediator.addSource(sourceA) {
         val container = mediator.value
-        mediator.value = container?.copy(first = it)
+        if (container?.first != it || !distinct) {
+            mediator.value = container?.copy(first = it)
+        }
     }
     mediator.addSource(sourceB) {
         val container = mediator.value
-        mediator.value = container?.copy(second = it)
+        if (container?.second != it || !distinct) {
+            mediator.value = container?.copy(second = it)
+        }
     }
     mediator.addSource(sourceC) {
         val container = mediator.value
-        mediator.value = container?.copy(third = it)
+        if (container?.third != it || !distinct) {
+            mediator.value = container?.copy(third = it)
+        }
     }
     mediator.addSource(sourceD) {
         val container = mediator.value
-        mediator.value = container?.copy(fourth = it)
+        if (container?.fourth != it || !distinct) {
+            mediator.value = container?.copy(fourth = it)
+        }
     }
     mediator.addSource(sourceE) {
         val container = mediator.value
-        mediator.value = container?.copy(fifth = it)
+        if (container?.fifth != it || !distinct) {
+            mediator.value = container?.copy(fifth = it)
+        }
     }
     mediator.addSource(sourceF) {
         val container = mediator.value
-        mediator.value = container?.copy(sixth = it)
+        if (container?.sixth != it || !distinct) {
+            mediator.value = container?.copy(sixth = it)
+        }
     }
     mediator.addSource(sourceG) {
         val container = mediator.value
-        mediator.value = container?.copy(seventh = it)
+        if (container?.seventh != it || !distinct) {
+            mediator.value = container?.copy(seventh = it)
+        }
     }
     mediator.addSource(sourceH) {
         val container = mediator.value
-        mediator.value = container?.copy(eighth = it)
+        if (container?.eighth != it || !distinct) {
+            mediator.value = container?.copy(eighth = it)
+        }
     }
     mediator.addSource(sourceI) {
         val container = mediator.value
-        mediator.value = container?.copy(ninth = it)
+        if (container?.ninth != it || !distinct) {
+            mediator.value = container?.copy(ninth = it)
+        }
     }
     mediator.addSource(sourceJ) {
         val container = mediator.value
-        mediator.value = container?.copy(tenth = it)
+        if (container?.tenth != it || !distinct) {
+            mediator.value = container?.copy(tenth = it)
+        }
     }
-    return mediator.mapSafe {
-        (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) ->
+    return mediator.mapSafe { (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) ->
         merger(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth)
     }
 }
 
-
 /**
- * Merges five LiveData sources using a given function. The function returns an object of a new type.
+ * Merges eleven LiveData sources using a given function. The function returns an object of a new type.
  * @param sourceA first source
  * @param sourceB second source
  * @param sourceC third source
