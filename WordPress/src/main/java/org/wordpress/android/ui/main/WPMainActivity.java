@@ -1423,6 +1423,16 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
+                    // If a new self-hosted site was added, save its ID to prefs so it becomes selected
+                    if (data != null) {
+                        int newSiteLocalId = data.getIntExtra(
+                                ChooseSiteActivity.KEY_SITE_LOCAL_ID,
+                                SelectedSiteRepository.UNAVAILABLE
+                        );
+                        if (newSiteLocalId != SelectedSiteRepository.UNAVAILABLE) {
+                            AppPrefs.setSelectedSite(newSiteLocalId);
+                        }
+                    }
                     // Register for Cloud messaging
                     startWithNewAccount();
                 } else if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
@@ -1805,6 +1815,38 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public void onSiteChanged(OnSiteChanged event) {
         // "Reload" selected site from the db
         // It would be better if the OnSiteChanged provided the list of changed sites.
+
+        // Check if prefs has a site that should be selected (e.g., after self-hosted login)
+        int prefsSelectedSiteId = mSelectedSiteRepository.getSelectedSiteLocalId(true);
+        if (prefsSelectedSiteId != SelectedSiteRepository.UNAVAILABLE) {
+            SiteModel prefsSite = mSiteStore.getSiteByLocalId(prefsSelectedSiteId);
+            if (prefsSite != null) {
+                SiteModel currentSite = getSelectedSite();
+                if (currentSite == null || currentSite.getId() != prefsSite.getId()) {
+                    setSelectedSite(prefsSite);
+                    return;
+                }
+            }
+        }
+
+        // After wp.com login, select the primary site if currently selected site is not a wp.com site
+        if (mAccountStore.hasAccessToken()) {
+            SiteModel currentSite = getSelectedSite();
+            boolean currentSiteIsWpCom = currentSite != null
+                    && (currentSite.isWPCom() || currentSite.isJetpackConnected());
+            if (!currentSiteIsWpCom) {
+                long primarySiteId = mAccountStore.getAccount().getPrimarySiteId();
+                if (primarySiteId > 0) {
+                    SiteModel primarySite = mSiteStore.getSiteBySiteId(primarySiteId);
+                    if (primarySite != null) {
+                        AppPrefs.setSelectedSite(primarySite.getId());
+                        setSelectedSite(primarySite);
+                        return;
+                    }
+                }
+            }
+        }
+
         if (getSelectedSite() == null && mSiteStore.hasSite()) {
             setSelectedSite(mSiteStore.getSites().get(0));
         }
