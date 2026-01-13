@@ -180,6 +180,7 @@ import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationScheduler;
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -264,6 +265,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "BLOGGING_REMINDERS_BOTTOM_SHEET_TAG";
     private final Handler mHandler = new Handler();
     private FocusPointInfo mCurrentActiveFocusPoint = null;
+    private int mPreviousSiteCount = 0;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -1631,6 +1633,12 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             if (AppPrefs.getShouldTrackMagicLinkSignup()) {
                 trackMagicLinkSignupIfNeeded();
             }
+            
+            // Check if we need to update site selection after account login
+            // This handles the case where wp.com login brings in new sites
+            if (!mSelectedSiteRepository.hasSelectedSite() || shouldUpdateSelectedSiteAfterAccountChange()) {
+                initSelectedSite();
+            }
         }
     }
 
@@ -1711,6 +1719,10 @@ public class WPMainActivity extends BaseAppCompatActivity implements
      * Activity and the selected site parameter is passed along to other activities / fragments.
      */
     private void initSelectedSite() {
+        // Initialize the site count for tracking site additions
+        List<SiteModel> allSites = mSiteStore.getSites();
+        mPreviousSiteCount = allSites.size();
+        
         int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId(true);
         if (selectedSiteLocalId != SelectedSiteRepository.UNAVAILABLE) {
             // Site previously selected, use it
@@ -1734,13 +1746,91 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         }
 
         // Else select the first site in the list
-        List<SiteModel> sites = mSiteStore.getSites();
-        if (!sites.isEmpty()) {
-            setSelectedSite(sites.get(0));
+        if (!allSites.isEmpty()) {
+            setSelectedSite(allSites.get(0));
         } else {
             // No site selected
             AppLog.w(T.MAIN, "No site selected");
         }
+    }
+
+    /**
+     * Finds the most recently added site from the list.
+     * For wp.com sites, this is typically the site with the highest siteId.
+     * For self-hosted sites, this is typically the site with the highest local ID.
+     */
+    private SiteModel findLatestAddedSite(List<SiteModel> sites) {
+        if (sites.isEmpty()) {
+            return null;
+        }
+        
+        // Separate wp.com and self-hosted sites
+        List<SiteModel> wpComSites = new ArrayList<>();
+        List<SiteModel> selfHostedSites = new ArrayList<>();
+        
+        for (SiteModel site : sites) {
+            if (site.isWPCom() || site.isJetpackInstalled()) {
+                wpComSites.add(site);
+            } else {
+                selfHostedSites.add(site);
+            }
+        }
+        
+        SiteModel latestSite = null;
+        
+        // First check for the latest wp.com site (highest siteId)
+        if (!wpComSites.isEmpty()) {
+            latestSite = wpComSites.get(0);
+            for (SiteModel site : wpComSites) {
+                if (site.getSiteId() > latestSite.getSiteId()) {
+                    latestSite = site;
+                }
+            }
+        }
+        
+        // Then check for the latest self-hosted site (highest local ID)
+        if (!selfHostedSites.isEmpty()) {
+            SiteModel latestSelfHosted = selfHostedSites.get(0);
+            for (SiteModel site : selfHostedSites) {
+                if (site.getId() > latestSelfHosted.getId()) {
+                    latestSelfHosted = site;
+                }
+            }
+            
+            // If we found both wp.com and self-hosted sites, compare their local IDs
+            // since the local ID reflects the order they were added to the local database
+            if (latestSite != null && latestSelfHosted.getId() > latestSite.getId()) {
+                latestSite = latestSelfHosted;
+            } else if (latestSite == null) {
+                latestSite = latestSelfHosted;
+            }
+        }
+        
+        return latestSite;
+    }
+
+    /**
+     * Determines if we should update the selected site after an account change.
+     * This handles the case where wp.com login adds the primary site and we should switch to it.
+     */
+    private boolean shouldUpdateSelectedSiteAfterAccountChange() {
+        // If we have a wp.com account and there's a primary site, prefer it over self-hosted sites
+        if (mAccountStore.hasAccessToken()) {
+            long primarySiteId = mAccountStore.getAccount().getPrimarySiteId();
+            if (primarySiteId > 0) {
+                SiteModel primarySite = mSiteStore.getSiteBySiteId(primarySiteId);
+                SiteModel currentSelected = getSelectedSite();
+                
+                // Switch to primary wp.com site if:
+                // 1. We have a primary wp.com site available
+                // 2. Current selection is either null or a self-hosted site
+                if (primarySite != null && (currentSelected == null || 
+                    (!currentSelected.isWPCom() && !currentSelected.isJetpackInstalled()))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     // FluxC events
@@ -1802,9 +1892,26 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public void onSiteChanged(OnSiteChanged event) {
         // "Reload" selected site from the db
         // It would be better if the OnSiteChanged provided the list of changed sites.
+        List<SiteModel> currentSites = mSiteStore.getSites();
+        
+        // Check if this is a new site addition by comparing site counts
+        boolean isNewSiteAdded = currentSites.size() > mPreviousSiteCount;
+        
         if (getSelectedSite() == null && mSiteStore.hasSite()) {
-            setSelectedSite(mSiteStore.getSites().get(0));
+            setSelectedSite(currentSites.get(0));
+        } else if (isNewSiteAdded && !currentSites.isEmpty()) {
+            // A new site was added - select the most recently added site
+            // The most recently added site is typically at the end of the list for wp.com sites
+            // or might be the site with the highest local ID for self-hosted sites
+            SiteModel latestSite = findLatestAddedSite(currentSites);
+            if (latestSite != null) {
+                setSelectedSite(latestSite);
+            }
         }
+        
+        // Update the site count for next comparison
+        mPreviousSiteCount = currentSites.size();
+        
         SiteModel selectedSite = getSelectedSite();
         if (selectedSite != null) {
             SiteModel site = mSiteStore.getSiteByLocalId(selectedSite.getId());
