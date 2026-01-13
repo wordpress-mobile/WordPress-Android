@@ -685,8 +685,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `isSignedInWPComOrHasWPOrgSite should be true when user has WPCom access token`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(siteStore.hasSiteAccessedViaXMLRPC()).thenReturn(false)
-        whenever(siteStore.hasSiteAccessedViaWPAPI()).thenReturn(false)
+        // No need to stub site methods - short-circuit evaluation means they won't be called
 
         assertThat(viewModel.isSignedInWPComOrHasWPOrgSite).isTrue()
     }
@@ -695,7 +694,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `isSignedInWPComOrHasWPOrgSite should be true when user has XMLRPC site`() {
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(siteStore.hasSiteAccessedViaXMLRPC()).thenReturn(true)
-        whenever(siteStore.hasSiteAccessedViaWPAPI()).thenReturn(false)
+        // No need to stub hasSiteAccessedViaWPAPI - short-circuit evaluation
 
         assertThat(viewModel.isSignedInWPComOrHasWPOrgSite).isTrue()
     }
