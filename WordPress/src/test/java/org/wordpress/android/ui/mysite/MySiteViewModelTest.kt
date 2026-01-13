@@ -40,10 +40,8 @@ import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewMode
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -72,16 +70,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var homePageDataLoader: HomePageDataLoader
 
     @Mock
-    lateinit var snackbarSequencer: SnackbarSequencer
-
-    @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
 
     @Mock
     lateinit var getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase
-
-    @Mock
-    lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Mock
     private lateinit var dispatcher: Dispatcher
@@ -151,9 +143,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             siteIconUploadHandler,
             homePageDataLoader,
-            snackbarSequencer,
             buildConfigWrapper,
-            appPrefsWrapper,
             dispatcher,
             getShowJetpackFullPluginInstallOnboardingUseCase,
             wpJetpackIndividualPluginHelper,

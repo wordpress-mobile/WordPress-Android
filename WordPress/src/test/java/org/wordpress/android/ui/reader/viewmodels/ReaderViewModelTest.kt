@@ -10,12 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.models.ReaderTag.DISCOVER_PATH
-import org.wordpress.android.models.ReaderTag.FOLLOWING_PATH
-import org.wordpress.android.models.ReaderTag.LIKED_PATH
 import org.wordpress.android.models.ReaderTagList
-import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -111,16 +106,6 @@ class ReaderViewModelTest : BaseUnitTest() {
         viewModel.start()
         // Assert
         assertThat(viewModel.updateTags.value?.getContentIfNotHandled()).isNotNull
-    }
-
-    private fun createNonMockedNonEmptyReaderTagList(): ReaderTagList {
-        return ReaderTagList().apply {
-            add(ReaderTag("Following", "Following", "Following", FOLLOWING_PATH, ReaderTagType.DEFAULT))
-            add(ReaderTag("Discover", "Discover", "Discover", DISCOVER_PATH, ReaderTagType.DEFAULT))
-            add(ReaderTag("Liked", "Liked", "Liked", LIKED_PATH, ReaderTagType.DEFAULT))
-            add(ReaderTag("Saved", "Saved", "Saved", "Saved", ReaderTagType.DEFAULT))
-            add(ReaderTag("A-Z", "A-Z", "A-Z", "A-Z", ReaderTagType.DEFAULT))
-        }
     }
 
     private companion object {

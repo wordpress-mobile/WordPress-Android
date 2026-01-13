@@ -21,8 +21,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
@@ -33,10 +31,8 @@ import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.merge
@@ -58,9 +54,7 @@ class MySiteViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val homePageDataLoader: HomePageDataLoader,
-    private val snackbarSequencer: SnackbarSequencer,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper,
     private val dispatcher: Dispatcher,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,

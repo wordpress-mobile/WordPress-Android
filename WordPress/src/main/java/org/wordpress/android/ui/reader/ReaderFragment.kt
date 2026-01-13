@@ -29,7 +29,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
@@ -53,12 +52,8 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.reader.views.compose.ReaderTopAppBar
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.SnackbarItem
-import org.wordpress.android.util.SnackbarItem.Action
-import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
@@ -346,26 +341,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                     .newInstance(JetpackFeatureOverlayScreenType.READER)
                     .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
             }
-    }
-
-    private fun ReaderFragmentLayoutBinding.showSnackbar(holder: SnackbarMessageHolder) {
-        if (!isAdded || view == null) return
-        snackbarSequencer.enqueue(
-            SnackbarItem(
-                info = Info(
-                    view = coordinatorLayout,
-                    textRes = holder.message,
-                    duration = holder.duration,
-                    isImportant = holder.isImportant
-                ),
-                action = holder.buttonTitle?.let {
-                    Action(
-                        textRes = holder.buttonTitle,
-                        clickListener = { holder.buttonAction() }
-                    )
-                }
-            )
-        )
     }
 
     fun requestBookmarkTab() {
