@@ -176,9 +176,173 @@ class SiteUtilsTest {
     }
 
     @Test
-    fun `returns correct timezone`() {
+    fun `returns correct timezone for positive offset with plus sign`() {
         val timeZone = SiteUtils.getNormalizedTimezone("+10")
 
         Assertions.assertThat(timeZone.displayName).isEqualTo("GMT+10:00")
+    }
+
+    @Test
+    fun `returns correct timezone for positive numeric offset`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("5")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT+05:00")
+    }
+
+    @Test
+    fun `returns correct timezone for negative numeric offset`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("-8")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT-08:00")
+    }
+
+    @Test
+    fun `returns correct timezone for fractional offset`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("5.5")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT+05:30")
+    }
+
+    @Test
+    fun `returns GMT for null timezone`() {
+        val timeZone = SiteUtils.getNormalizedTimezone(null)
+
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT")
+    }
+
+    @Test
+    fun `returns GMT for empty timezone`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT")
+    }
+
+    @Test
+    fun `returns GMT for zero timezone`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("0")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT")
+    }
+
+    @Test
+    fun `returns named timezone for Europe Madrid`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("Europe/Madrid")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("Europe/Madrid")
+    }
+
+    @Test
+    fun `returns named timezone for America New_York`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("America/New_York")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("America/New_York")
+    }
+
+    @Test
+    fun `returns named timezone for Asia Tokyo`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("Asia/Tokyo")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("Asia/Tokyo")
+    }
+
+    @Test
+    fun `returns named timezone for Australia Sydney`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("Australia/Sydney")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("Australia/Sydney")
+    }
+
+    @Test
+    fun `falls back to numeric parsing for invalid named timezone`() {
+        // An invalid named timezone that contains "/" should fall back to numeric parsing
+        // which will also fail, resulting in GMT
+        val timeZone = SiteUtils.getNormalizedTimezone("Invalid/Timezone")
+
+        // Falls back to numeric parsing, which creates "GMT+Invalid/Timezone"
+        // TimeZone.getTimeZone returns GMT for unrecognized IDs
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT")
+    }
+
+    @Test
+    fun `verifies DST transition for Europe Madrid - winter time is UTC+1`() {
+        val madridSite = SiteModel().apply { timezone = "Europe/Madrid" }
+
+        // Winter time (CET, UTC+1): January 15, 2025
+        val winterDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).apply {
+            timeZone = java.util.TimeZone.getTimeZone("UTC")
+        }.parse("2025-01-15 12:00:00")
+
+        val offsetFormat = SimpleDateFormat("XXX", Locale.ROOT)
+        val winterFormatted = SiteUtils.getDateTimeForSite(madridSite, offsetFormat, winterDate)
+
+        Assertions.assertThat(winterFormatted).isEqualTo("+01:00")
+    }
+
+    @Test
+    fun `verifies DST transition for Europe Madrid - summer time is UTC+2`() {
+        val madridSite = SiteModel().apply { timezone = "Europe/Madrid" }
+
+        // Summer time (CEST, UTC+2): July 15, 2025
+        val summerDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).apply {
+            timeZone = java.util.TimeZone.getTimeZone("UTC")
+        }.parse("2025-07-15 12:00:00")
+
+        val offsetFormat = SimpleDateFormat("XXX", Locale.ROOT)
+        val summerFormatted = SiteUtils.getDateTimeForSite(madridSite, offsetFormat, summerDate)
+
+        Assertions.assertThat(summerFormatted).isEqualTo("+02:00")
+    }
+
+    @Test
+    fun `verifies DST transition for America New_York - winter time is UTC-5`() {
+        val newYorkSite = SiteModel().apply { timezone = "America/New_York" }
+
+        // Winter time (EST, UTC-5): January 15, 2025
+        val winterDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).apply {
+            timeZone = java.util.TimeZone.getTimeZone("UTC")
+        }.parse("2025-01-15 12:00:00")
+
+        val offsetFormat = SimpleDateFormat("XXX", Locale.ROOT)
+        val winterFormatted = SiteUtils.getDateTimeForSite(newYorkSite, offsetFormat, winterDate)
+
+        Assertions.assertThat(winterFormatted).isEqualTo("-05:00")
+    }
+
+    @Test
+    fun `verifies DST transition for America New_York - summer time is UTC-4`() {
+        val newYorkSite = SiteModel().apply { timezone = "America/New_York" }
+
+        // Summer time (EDT, UTC-4): July 15, 2025
+        val summerDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).apply {
+            timeZone = java.util.TimeZone.getTimeZone("UTC")
+        }.parse("2025-07-15 12:00:00")
+
+        val offsetFormat = SimpleDateFormat("XXX", Locale.ROOT)
+        val summerFormatted = SiteUtils.getDateTimeForSite(newYorkSite, offsetFormat, summerDate)
+
+        Assertions.assertThat(summerFormatted).isEqualTo("-04:00")
+    }
+
+    @Test
+    fun `numeric offset does not change between winter and summer - demonstrates the bug`() {
+        // This test demonstrates why numeric offsets are problematic:
+        // They don't adjust for DST, so the offset stays the same year-round
+        val numericOffsetSite = SiteModel().apply { timezone = "1" } // UTC+1
+
+        val winterDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).apply {
+            timeZone = java.util.TimeZone.getTimeZone("UTC")
+        }.parse("2025-01-15 12:00:00")
+
+        val summerDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).apply {
+            timeZone = java.util.TimeZone.getTimeZone("UTC")
+        }.parse("2025-07-15 12:00:00")
+
+        val offsetFormat = SimpleDateFormat("XXX", Locale.ROOT)
+        val winterFormatted = SiteUtils.getDateTimeForSite(numericOffsetSite, offsetFormat, winterDate)
+        val summerFormatted = SiteUtils.getDateTimeForSite(numericOffsetSite, offsetFormat, summerDate)
+
+        // Both are +01:00 because numeric offset doesn't account for DST
+        Assertions.assertThat(winterFormatted).isEqualTo("+01:00")
+        Assertions.assertThat(summerFormatted).isEqualTo("+01:00")
     }
 }
