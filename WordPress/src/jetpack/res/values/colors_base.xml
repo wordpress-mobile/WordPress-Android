@@ -8,7 +8,6 @@
     <color name="colorPrimaryEditor">@color/colorPrimary</color>
 
     <color name="primary">@color/jetpack_green_50</color>
-    <color name="primary_0">@color/jetpack_green_0</color>
     <color name="primary_5">@color/jetpack_green_5</color>
     <color name="primary_10">@color/jetpack_green_10</color>
     <color name="primary_20">@color/jetpack_green_20</color>

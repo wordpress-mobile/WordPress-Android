@@ -24,7 +24,6 @@ import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlic
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.plans.PlansCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewModelSlice
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -41,7 +40,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
     private val cardViewModelSlice: CardViewModelSlice,
     private val personalizeCardViewModelSlice: PersonalizeCardViewModelSlice,
     private val bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice,
-    private val quickStartCardViewModelSlice: QuickStartCardViewModelSlice,
     private val noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice,
     private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice,
     private val bloganuaryNudgeCardViewModelSlice: BloganuaryNudgeCardViewModelSlice,
@@ -73,7 +71,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickLinksItemViewModelSlice.navigation,
         plansCardViewModelSlice.onNavigation,
         jpMigrationSuccessCardViewModelSlice.onNavigation,
-        quickStartCardViewModelSlice.onNavigation,
         domainRegistrationCardViewModelSlice.onNavigation,
     )
 
@@ -86,13 +83,11 @@ class DashboardCardsViewModelSlice @Inject constructor(
         blazeCardViewModelSlice.isRefreshing,
         cardViewModelSlice.isRefreshing,
         bloggingPromptCardViewModelSlice.isRefreshing,
-        quickStartCardViewModelSlice.isRefreshing,
         domainRegistrationCardViewModelSlice.isRefreshing
     )
 
     val uiModel: MutableLiveData<List<MySiteCardAndItem>> = merge(
         quickLinksItemViewModelSlice.uiState,
-        quickStartCardViewModelSlice.uiModel,
         blazeCardViewModelSlice.uiModel,
         cardViewModelSlice.uiModel,
         bloggingPromptCardViewModelSlice.uiModel,
@@ -103,7 +98,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
         jetpackInstallFullPluginCardViewModelSlice.uiModel,
         domainRegistrationCardViewModelSlice.uiModel
     ) { quicklinks,
-        quickStart,
         blazeCard,
         cardsState,
         bloggingPromptCard,
@@ -115,7 +109,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
         domainRegistrationCard ->
         return@merge mergeUiModels(
             quicklinks,
-            quickStart,
             blazeCard,
             cardsState,
             bloggingPromptCard,
@@ -131,7 +124,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
     @Suppress("CyclomaticComplexMethod", "LongMethod")
     private fun mergeUiModels(
         quicklinks: MySiteCardAndItem.Card.QuickLinksItem?,
-        quickStart: MySiteCardAndItem.Card.QuickStartCard?,
         blazeCard: MySiteCardAndItem.Card.BlazeCard?,
         cardsState: CardsState?,
         bloggingPromptCard: MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData?,
@@ -147,7 +139,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
         jpFullInstallFullPlugin?.let { cards.add(it) }
         domainRegistrationCard?.let { cards.add(it) }
         quicklinks?.let { cards.add(it) }
-        quickStart?.let { cards.add(it) }
         cardsState?.let {
             if (cardsState is CardsState.Success) {
                 cards.addAll(cardsState.topCards)
@@ -188,7 +179,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
         personalizeCardViewModelSlice.initialize(scope)
         quickLinksItemViewModelSlice.initialization(scope)
         cardViewModelSlice.initialize(scope)
-        quickStartCardViewModelSlice.initialize(scope)
         domainRegistrationCardViewModelSlice.initialize(scope)
     }
 
@@ -204,7 +194,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
             quickLinksItemViewModelSlice.buildCard(site)
             plansCardViewModelSlice.buildCard(site)
             cardViewModelSlice.buildCard(site)
-            quickStartCardViewModelSlice.build(site)
             domainRegistrationCardViewModelSlice.buildCard(site)
         }
     }
@@ -220,7 +209,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickLinksItemViewModelSlice.clearValue()
         plansCardViewModelSlice.clearValue()
         cardViewModelSlice.clearValue()
-        quickStartCardViewModelSlice.clearValue()
         domainRegistrationCardViewModelSlice.clearValue()
     }
 
@@ -256,10 +244,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
                 personalizeCardViewModelSlice.trackShown()
             }
 
-            filterIsInstance<MySiteCardAndItem.Card.QuickStartCard>().forEach {
-                quickStartCardViewModelSlice.trackShown(it)
-            }
-
             filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>().forEach {
                 noCardsMessageViewModelSlice.trackShown(it.type)
             }
@@ -279,13 +263,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
         jetpackInstallFullPluginCardViewModelSlice.resetShownTracker()
         domainRegistrationCardViewModelSlice.resetCardShown()
         personalizeCardViewModelSlice.resetShown()
-        quickStartCardViewModelSlice.resetShown()
         noCardsMessageViewModelSlice.resetShown()
         plansCardViewModelSlice.resetShown()
-    }
-
-    fun startQuickStart(siteModel: SiteModel) {
-        quickStartCardViewModelSlice.build(siteModel)
     }
 }
 

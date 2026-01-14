@@ -99,7 +99,6 @@ import org.wordpress.android.ui.posts.PostSettingsTagsFragment;
 import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PublishNotificationReceiver;
-import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment;
@@ -131,7 +130,6 @@ import org.wordpress.android.ui.publicize.PublicizeListFragment;
 import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
-import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
 import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment;
 import org.wordpress.android.ui.reader.ReaderBlogFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
@@ -365,8 +363,6 @@ public interface AppComponent {
 
     void inject(WordPressGlideModule object);
 
-    void inject(QuickStartFullScreenDialogFragment object);
-
     void inject(MediaGridAdapter object);
 
     void inject(PagesFragment object);
@@ -517,8 +513,6 @@ public interface AppComponent {
     void inject(LayoutPreviewFragment object);
 
     void inject(DesignPreviewFragment object);
-
-    void inject(QuickStartPromptDialogFragment object);
 
     void inject(BloggingReminderTimePicker object);
 

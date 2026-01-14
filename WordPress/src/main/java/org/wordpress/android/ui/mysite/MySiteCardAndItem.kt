@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.mysite
 
-import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.MenuRes
 import androidx.annotation.StringRes
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_EMPTY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
@@ -15,13 +13,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_BADGE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_FEATURE_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_LINK_RIBBON
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SINGLE_ACTION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
 import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
@@ -29,12 +25,11 @@ import org.wordpress.android.ui.utils.UiString
 typealias PromptID = Int
 typealias TagURL = String
 
-sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartItem: Boolean = false) {
+sealed class MySiteCardAndItem(open val type: Type) {
     enum class Type {
         SITE_INFO_CARD,
         QUICK_LINK_RIBBON,
         DOMAIN_REGISTRATION_CARD,
-        QUICK_START_CARD,
         INFO_ITEM,
         CATEGORY_HEADER_ITEM,
         CATEGORY_EMPTY_HEADER_ITEM,
@@ -64,24 +59,17 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
     }
 
     sealed class Card(
-        override val type: Type,
-        override val activeQuickStartItem: Boolean = false
-    ) : MySiteCardAndItem(type, activeQuickStartItem) {
+        override val type: Type
+    ) : MySiteCardAndItem(type) {
         data class SiteInfoHeaderCard(
             val title: String,
             val url: String,
             val iconState: IconState,
-            val showTitleFocusPoint: Boolean,
-            val showSubtitleFocusPoint: Boolean,
-            val showIconFocusPoint: Boolean,
             val onTitleClick: ListItemInteraction? = null,
             val onIconClick: ListItemInteraction,
             val onUrlClick: ListItemInteraction,
             val onSwitchSiteClick: ListItemInteraction
-        ) : Card(
-            SITE_INFO_CARD,
-            activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint || showSubtitleFocusPoint
-        ) {
+        ) : Card(SITE_INFO_CARD) {
             sealed class IconState {
                 object Progress : IconState()
                 data class Visible(val url: String? = null) : IconState()
@@ -90,46 +78,17 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
 
         data class QuickLinksItem(
-            val quickLinkItems: List<QuickLinkItem>,
-            val showMoreFocusPoint: Boolean = false
-        ) : Card(
-            QUICK_LINK_RIBBON,
-            activeQuickStartItem = showMoreFocusPoint
-        ) {
+            val quickLinkItems: List<QuickLinkItem>
+        ) : Card(QUICK_LINK_RIBBON) {
             data class QuickLinkItem(
                 val label: UiString.UiStringRes,
                 @DrawableRes val icon: Int,
                 val disableTint: Boolean = false,
-                val onClick: ListItemInteraction,
-                val showFocusPoint: Boolean = false
+                val onClick: ListItemInteraction
             )
         }
 
         data class DomainRegistrationCard(val onClick: ListItemInteraction) : Card(DOMAIN_REGISTRATION_CARD)
-
-        data class QuickStartCard(
-            val title: UiString,
-            val toolbarVisible: Boolean = true,
-            val quickStartCardType: QuickStartCardType,
-            val taskTypeItems: List<QuickStartTaskTypeItem>,
-            val moreMenuOptions: MoreMenuOptions,
-        ) : Card(QUICK_START_CARD) {
-            data class QuickStartTaskTypeItem(
-                val quickStartTaskType: QuickStartTaskType,
-                val title: UiString,
-                val titleEnabled: Boolean,
-                val subtitle: UiString,
-                val strikeThroughTitle: Boolean,
-                @ColorRes val progressColor: Int,
-                val progress: Int,
-                val onClick: ListItemInteraction
-            )
-
-            data class MoreMenuOptions(
-                val onMoreMenuClick: (type: QuickStartCardType) -> Unit,
-                val onHideThisMenuItemClick: (type: QuickStartCardType) -> Unit
-            )
-        }
 
         data class JetpackFeatureCard(
             val content: UiString?,
@@ -419,9 +378,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
     }
 
     sealed class Item(
-        override val type: Type,
-        override val activeQuickStartItem: Boolean = false
-    ) : MySiteCardAndItem(type, activeQuickStartItem) {
+        override val type: Type
+    ) : MySiteCardAndItem(type) {
         data class InfoItem(val title: UiString) : Item(INFO_ITEM)
 
         data class SingleActionCard(
@@ -439,11 +397,10 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val primaryText: UiString,
             @DrawableRes val secondaryIcon: Int? = null,
             val secondaryText: UiString? = null,
-            val showFocusPoint: Boolean = false,
             val onClick: ListItemInteraction,
             val disablePrimaryIconTint: Boolean = false,
             val listItemAction: ListItemAction
-        ) : Item(LIST_ITEM, activeQuickStartItem = showFocusPoint)
+        ) : Item(LIST_ITEM)
     }
 
     data class JetpackBadge(

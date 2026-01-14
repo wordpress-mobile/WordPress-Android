@@ -2,8 +2,6 @@ package org.wordpress.android.ui.reader.viewmodels
 
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.core.os.BundleCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,10 +15,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
@@ -28,11 +23,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.views.compose.dropdown.JetpackMenuElementData
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTab
@@ -48,8 +40,6 @@ import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.QuickStartUtils
-import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
 import org.wordpress.android.util.distinct
@@ -72,10 +62,7 @@ class ReaderViewModel @Inject constructor(
     private val loadReaderItemsUseCase: LoadReaderItemsUseCase,
     private val readerTracker: ReaderTracker,
     private val accountStore: AccountStore,
-    private val quickStartRepository: QuickStartRepository,
-    private val selectedSiteRepository: SelectedSiteRepository,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
-    private val snackbarSequencer: SnackbarSequencer,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val readerTopBarMenuHelper: ReaderTopBarMenuHelper,
     private val urlUtilsWrapper: UrlUtilsWrapper,
@@ -84,7 +71,6 @@ class ReaderViewModel @Inject constructor(
     private var initialized: Boolean = false
     private var wasPaused: Boolean = false
     private var trackReaderTabJob: Job? = null
-    private var isQuickStartPromptShown: Boolean = false
     private var pendingTabRequest: PendingTabRequest? = null
 
     private val _uiState = MutableLiveData<ReaderUiState>()
@@ -104,9 +90,6 @@ class ReaderViewModel @Inject constructor(
 
     private val _closeReaderInterests = MutableLiveData<Event<Unit>>()
     val closeReaderInterests: LiveData<Event<Unit>> = _closeReaderInterests
-
-    private val _quickStartPromptEvent = MutableLiveData<Event<QuickStartReaderPrompt>>()
-    val quickStartPromptEvent = _quickStartPromptEvent as LiveData<Event<QuickStartReaderPrompt>>
 
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
@@ -284,20 +267,13 @@ class ReaderViewModel @Inject constructor(
         _showJetpackOverlay.value = Event(true)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onScreenInBackground(isChangingConfigurations: Boolean) {
         readerTracker.stop(MAIN_READER)
         wasPaused = true
-        if (!isChangingConfigurations) {
-            dismissQuickStartSnackbarIfNeeded()
-            if (quickStartRepository.isPendingTask(getFollowSiteTask())) {
-                quickStartRepository.clearPendingTask()
-            }
-        }
     }
 
     private fun isSearchSupported() = accountStore.hasAccessToken()
-
-    private fun isSettingsSupported() = accountStore.hasAccessToken()
 
     private fun trackReaderTabShownIfNecessary(it: ReaderTag) {
         trackReaderTabJob?.cancel()
@@ -307,49 +283,6 @@ class ReaderViewModel @Inject constructor(
             readerTracker.trackReaderTabIfNecessary(ReaderTab.transformTagToTab(it))
         }
     }
-
-    /* QUICK START */
-
-    fun onQuickStartPromptDismissed() {
-        isQuickStartPromptShown = false
-    }
-
-    fun onQuickStartEventReceived(event: QuickStartEvent) {
-        if (event.task == getFollowSiteTask()) startQuickStartFollowSiteTask()
-    }
-
-    private fun startQuickStartFollowSiteTask() {
-        val shortMessagePrompt = if (isSettingsSupported()) {
-            R.string.quick_start_dialog_follow_sites_message_short_discover_and_subscriptions
-        } else {
-            R.string.quick_start_dialog_follow_sites_message_short_discover
-        }
-        isQuickStartPromptShown = true
-        _quickStartPromptEvent.value = Event(
-            QuickStartReaderPrompt(
-                getFollowSiteTask(),
-                shortMessagePrompt,
-                QuickStartUtils.ICON_NOT_SET,
-            )
-        )
-        completeQuickStartFollowSiteTaskIfNeeded()
-    }
-
-    private fun completeQuickStartFollowSiteTaskIfNeeded() {
-        if (quickStartRepository.isPendingTask(getFollowSiteTask())) {
-            selectedSiteRepository.getSelectedSite()?.let {
-                quickStartRepository.completeTask(getFollowSiteTask())
-            }
-        }
-    }
-
-    fun dismissQuickStartSnackbarIfNeeded() {
-        if (isQuickStartPromptShown) snackbarSequencer.dismissLastSnackbar()
-        isQuickStartPromptShown = false
-    }
-
-    private fun getFollowSiteTask() =
-        quickStartRepository.quickStartType.getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL)
 
     private fun selectedReaderTag(): ReaderTag? =
         _topBarUiState.value?.let {
@@ -582,15 +515,7 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-    data class QuickStartReaderPrompt(
-        val task: QuickStartTask,
-        @StringRes val shortMessagePrompt: Int,
-        @DrawableRes val iconId: Int,
-        val duration: Int = QUICK_START_PROMPT_DURATION
-    )
-
     companion object {
-        private const val QUICK_START_PROMPT_DURATION = 5000
         private const val FILTER_UPDATE_DELAY = 50L
 
         private const val KEY_TOP_BAR_UI_STATE_SELECTED_ITEM_ID = "topBarUiState_selectedItem_id"

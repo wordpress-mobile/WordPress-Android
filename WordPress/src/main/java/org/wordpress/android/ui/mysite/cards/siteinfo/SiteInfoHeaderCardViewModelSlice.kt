@@ -17,7 +17,6 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
@@ -25,7 +24,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel
@@ -46,7 +44,6 @@ import javax.inject.Named
 
 class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val quickStartRepository: QuickStartRepository,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -71,14 +68,14 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     val onMediaUpload = _onMediaUpload
 
+    @Suppress("UNCHECKED_CAST")
     val uiModel: LiveData<SiteInfoHeaderCard?> =
-        merge(quickStartRepository.activeTask,
+        merge(
             selectedSiteRepository.showSiteIconProgressBar,
             selectedSiteRepository.selectedSiteChange)
-        { activeTask, showSiteIconProgressBar, site ->
-            val siteHeaderCard = buildCard(activeTask, showSiteIconProgressBar, site)
-            siteHeaderCard
-        }.distinctUntilChanged()
+        { showSiteIconProgressBar, site ->
+            buildCard(showSiteIconProgressBar, site)
+        }.distinctUntilChanged() as LiveData<SiteInfoHeaderCard?>
 
     private lateinit var scope: CoroutineScope
 
@@ -89,11 +86,10 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     }
 
     fun buildCard(siteModel: SiteModel) {
-        buildCard(null, null, siteModel = siteModel)
+        buildCard(null, siteModel = siteModel)
     }
 
     private fun buildCard(
-        activeTask: QuickStartStore.QuickStartTask?,
         showSiteIconProgressBar: Boolean?,
         siteModel: SiteModel?
     ): SiteInfoHeaderCard? {
@@ -101,16 +97,14 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
             return siteInfoHeaderCardBuilder.buildSiteInfoCard(
                 getParams(
                     site,
-                    activeTask,
-                    showSiteIconProgressBar?: false
+                    showSiteIconProgressBar ?: false
                 )
             )
-        }?: return null
+        } ?: return null
     }
 
     fun getParams(
         site: SiteModel,
-        activeTask: QuickStartStore.QuickStartTask? = null,
         showSiteIconProgressBar: Boolean = false
     ): MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams {
         return MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams(
@@ -119,8 +113,7 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
             titleClick = this::titleClick,
             iconClick = this::iconClick,
             urlClick = this::urlClick,
-            switchSiteClick = this::switchSiteClick,
-            activeTask = activeTask
+            switchSiteClick = this::switchSiteClick
         )
     }
 
@@ -177,9 +170,6 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
 
     private fun urlClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        quickStartRepository.completeTask(
-            quickStartRepository.quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL)
-        )
         _onNavigation.value = Event(SiteNavigationAction.OpenSite(selectedSite))
     }
 
@@ -199,18 +189,15 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
         }
     }
 
+    @Suppress("EmptyFunctionBlock")
     fun onSiteNameChooserDismissed() {
-        // This callback is called even when the dialog interaction is positive,
-        // otherwise we would need to call 'completeTask' on 'onSiteNameChosen' as well.
-        quickStartRepository.completeTask(QuickStartStore.QuickStartNewSiteTask.UPDATE_SITE_TITLE)
-        quickStartRepository.checkAndShowQuickStartNotice()
+        // No-op - Quick Start was removed
     }
 
     fun onDialogInteraction(interaction: BasicDialogViewModel.DialogInteraction) {
         when (interaction) {
             is BasicDialogViewModel.DialogInteraction.Positive -> when (interaction.tag) {
                 MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG, MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG -> {
-                    quickStartRepository.completeTask(QuickStartStore.QuickStartNewSiteTask.UPLOAD_SITE_ICON)
                     _onNavigation.postValue(
                         Event(
                             SiteNavigationAction.OpenMediaPicker(
@@ -222,24 +209,14 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
             }
 
             is BasicDialogViewModel.DialogInteraction.Negative -> when (interaction.tag) {
-                MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG -> {
-                    quickStartRepository.completeTask(QuickStartStore.QuickStartNewSiteTask.UPLOAD_SITE_ICON)
-                    quickStartRepository.checkAndShowQuickStartNotice()
-                }
-
                 MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG -> {
                     analyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ICON_REMOVED)
-                    quickStartRepository.completeTask(QuickStartStore.QuickStartNewSiteTask.UPLOAD_SITE_ICON)
-                    quickStartRepository.checkAndShowQuickStartNotice()
                     selectedSiteRepository.updateSiteIconMediaId(0, true)
                 }
             }
 
-            is BasicDialogViewModel.DialogInteraction.Dismissed -> when (interaction.tag) {
-                MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG, MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG -> {
-                    quickStartRepository.completeTask(QuickStartStore.QuickStartNewSiteTask.UPLOAD_SITE_ICON)
-                    quickStartRepository.checkAndShowQuickStartNotice()
-                }
+            is BasicDialogViewModel.DialogInteraction.Dismissed -> {
+                // No-op
             }
         }
     }

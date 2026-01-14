@@ -18,9 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ReaderFragmentLayoutBinding
 import org.wordpress.android.models.JetpackPoweredScreen
@@ -32,8 +29,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
@@ -57,13 +52,8 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.reader.views.compose.ReaderTopAppBar
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.SnackbarItem
-import org.wordpress.android.util.SnackbarItem.Action
-import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
@@ -79,9 +69,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     @Inject
     lateinit var uiHelpers: UiHelpers
-
-    @Inject
-    lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
 
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
@@ -291,25 +278,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             closeReaderInterests()
         }
 
-        viewModel.quickStartPromptEvent.observeEvent(viewLifecycleOwner) { prompt ->
-            val message = quickStartUtilsWrapper.stylizeQuickStartPrompt(
-                requireActivity(),
-                prompt.shortMessagePrompt,
-                prompt.iconId
-            )
-
-            showSnackbar(
-                SnackbarMessageHolder(
-                    message = UiStringText(message),
-                    duration = prompt.duration,
-                    onDismissAction = {
-                        viewModel.onQuickStartPromptDismissed()
-                    },
-                    isImportant = false
-                )
-            )
-        }
-
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             JetpackPoweredBottomSheetFragment
                 .newInstance(it, READER)
@@ -375,26 +343,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             }
     }
 
-    private fun ReaderFragmentLayoutBinding.showSnackbar(holder: SnackbarMessageHolder) {
-        if (!isAdded || view == null) return
-        snackbarSequencer.enqueue(
-            SnackbarItem(
-                info = Info(
-                    view = coordinatorLayout,
-                    textRes = holder.message,
-                    duration = holder.duration,
-                    isImportant = holder.isImportant
-                ),
-                action = holder.buttonTitle?.let {
-                    Action(
-                        textRes = holder.buttonTitle,
-                        clickListener = { holder.buttonAction() }
-                    )
-                }
-            )
-        )
-    }
-
     fun requestBookmarkTab() {
         if (!::viewModel.isInitialized) {
             viewModel = ViewModelProvider(this@ReaderFragment, viewModelFactory)[ReaderViewModel::class.java]
@@ -457,25 +405,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 }
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
-    }
-
-    @Subscribe(sticky = true, threadMode = MAIN)
-    fun onEvent(event: QuickStartEvent) {
-        if (!isAdded || view == null) {
-            return
-        }
-        viewModel.onQuickStartEventReceived(event)
-        EventBus.getDefault().removeStickyEvent(event)
     }
 
     private fun getCurrentFeedFragment(): Fragment? {

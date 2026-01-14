@@ -9,7 +9,6 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.MainActionListItemBinding
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
-import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.util.image.ImageManager
 
@@ -25,7 +24,6 @@ class ActionListItemViewHolder(
     fun bind(action: CreateAction) {
         val actionIcon: ImageView = this.itemView.findViewById(R.id.action_icon)
         val actionTitle: TextView = this.itemView.findViewById(R.id.action_title)
-        val actionRowContainer: ViewGroup = this.itemView.findViewById(R.id.action_row_container)
 
         if (action.iconRes > 0) {
             imageManager.load(actionIcon, action.iconRes)
@@ -55,19 +53,6 @@ class ActionListItemViewHolder(
                 action.onClickAction.invoke(action.actionType)
             }
             this.itemView.isClickable = true
-        }
-
-        if (action.showQuickStartFocusPoint) {
-            val focusPointSize = actionRowContainer.resources.getDimensionPixelOffset(
-                R.dimen.quick_start_focus_point_size
-            )
-            actionRowContainer.post {
-                val verticalOffset = (actionRowContainer.width - focusPointSize) / 2
-                QuickStartUtils.addQuickStartFocusPointAboveTheView(
-                    actionRowContainer, actionTitle,
-                    verticalOffset, 0
-                )
-            }
         }
     }
 }

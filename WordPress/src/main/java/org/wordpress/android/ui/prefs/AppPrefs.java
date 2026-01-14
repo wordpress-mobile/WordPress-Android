@@ -16,7 +16,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.JetpackCapability;
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
@@ -24,8 +23,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
-import org.wordpress.android.ui.quickstart.QuickStartType;
-import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.usecase.social.JetpackSocialFlow;
@@ -126,10 +123,6 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
         GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN,
-
-        IS_QUICK_START_NOTICE_REQUIRED,
-        LAST_SKIPPED_QUICK_START_TASK,
-        LAST_SELECTED_QUICK_START_TYPE,
 
         POST_LIST_AUTHOR_FILTER,
         POST_LIST_VIEW_LAYOUT_TYPE,
@@ -1021,14 +1014,6 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
     }
 
-    public static void setQuickStartNoticeRequired(Boolean shown) {
-        setBoolean(DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED, shown);
-    }
-
-    public static boolean isQuickStartNoticeRequired() {
-        return getBoolean(DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED, false);
-    }
-
     public static void setInstallationReferrerObtained(Boolean isObtained) {
         setBoolean(UndeletablePrefKey.IS_INSTALLATION_REFERRER_OBTAINED, isObtained);
     }
@@ -1241,40 +1226,6 @@ public class AppPrefs {
         return tag != null
                && tag.getTagSlug().equals(ReaderUtils.sanitizeWithDashes(ReaderTag.TAG_TITLE_FOLLOWED_SITES))
                && getBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, true);
-    }
-
-    public static QuickStartTask getLastSkippedQuickStartTask(QuickStartType quickStartType) {
-        String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
-        if (TextUtils.isEmpty(taskName)) {
-            return null;
-        }
-        return quickStartType.getTaskFromString(taskName);
-    }
-
-    public static void setLastSkippedQuickStartTask(@Nullable QuickStartTask task) {
-        if (task == null) {
-            remove(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
-            return;
-        }
-        setString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK, task.toString());
-    }
-
-    public static void setLastSelectedQuickStartTypeForSite(QuickStartType quickStartType, long siteLocalId) {
-        Editor editor = prefs().edit();
-        editor.putString(
-                DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE + String.valueOf(siteLocalId),
-                quickStartType.getLabel()
-        );
-        editor.apply();
-    }
-
-    public static QuickStartType getLastSelectedQuickStartTypeForSite(long siteLocalId) {
-        return QuickStartType.Companion.fromLabel(
-                prefs().getString(
-                        DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE + String.valueOf(siteLocalId),
-                        NewSiteQuickStartType.INSTANCE.getLabel()
-                )
-        );
     }
 
     public static void setManualFeatureConfig(boolean isEnabled, String featureKey) {

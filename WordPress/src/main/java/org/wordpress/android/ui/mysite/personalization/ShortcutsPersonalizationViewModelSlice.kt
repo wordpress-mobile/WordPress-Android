@@ -46,7 +46,6 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
             items = siteItemsBuilder.build(
                 MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
                     site = site,
-                    activeTask = null,
                     backupAvailable = false,
                     scanAvailable = false,
                     enableFocusPoints = false,
@@ -87,7 +86,6 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
                     items = siteItemsBuilder.build(
                         MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
                             site = site,
-                            activeTask = null,
                             backupAvailable = it.backup,
                             scanAvailable = (it.scan && !site.isWPCom && !site.isWPComAtomic),
                             enableFocusPoints = false,

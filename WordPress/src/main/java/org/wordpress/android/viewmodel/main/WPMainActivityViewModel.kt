@@ -4,17 +4,12 @@ package org.wordpress.android.viewmodel.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.firstOrNull
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.UI_THREAD
@@ -34,7 +29,6 @@ import org.wordpress.android.ui.main.analytics.MainCreateSheetTracker
 import org.wordpress.android.ui.main.utils.MainCreateSheetHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.privacy.banner.domain.ShouldAskPrivacyConsent
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -43,13 +37,9 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.mapNullable
-import org.wordpress.android.util.mapSafe
-import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import java.io.Serializable
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -61,7 +51,6 @@ class WPMainActivityViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val quickStartRepository: QuickStartRepository,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
@@ -74,35 +63,10 @@ class WPMainActivityViewModel @Inject constructor(
     private var isStarted = false
 
     private val _fabUiState = MutableLiveData<MainFabUiState>()
-    val fabUiState: LiveData<MainFabUiState> = merge(
-        _fabUiState,
-        quickStartRepository.activeTask
-    ) { fabUiState, activeTask ->
-        val isFocusPointVisible = activeTask == PUBLISH_POST && fabUiState?.isFabVisible == true
-        if (isFocusPointVisible != fabUiState?.isFocusPointVisible) {
-            fabUiState?.copy(isFocusPointVisible = isFocusPointVisible)
-        } else {
-            fabUiState
-        }
-    }
-
-    private val _showQuickStarInBottomSheet = MutableLiveData<Boolean>()
+    val fabUiState: LiveData<MainFabUiState> = _fabUiState
 
     private val _mainActions = MutableLiveData<List<MainActionListItem>>()
-    val mainActions: LiveData<List<MainActionListItem>> = merge(
-        _mainActions,
-        _showQuickStarInBottomSheet
-    ) { mainActions, showQuickStart ->
-        if (showQuickStart != null && mainActions != null) {
-            mainActions.map {
-                if (it is CreateAction && it.actionType == CREATE_NEW_POST) it.copy(
-                    showQuickStartFocusPoint = showQuickStart
-                ) else it
-            }
-        } else {
-            mainActions
-        }
-    }
+    val mainActions: LiveData<List<MainActionListItem>> = _mainActions
     private val _createAction = SingleLiveEvent<ActionType>()
     val createAction: LiveData<ActionType> = _createAction
 
@@ -132,11 +96,6 @@ class WPMainActivityViewModel @Inject constructor(
 
     private val _mySiteDashboardRefreshRequested = MutableLiveData<Event<Unit>>()
     val mySiteDashboardRefreshRequested: LiveData<Event<Unit>> = _mySiteDashboardRefreshRequested
-
-    val onFocusPointVisibilityChange = quickStartRepository.activeTask
-        .mapNullable { getExternalFocusPointInfo(it) }
-        .distinctUntilChanged()
-        .mapSafe { Event(it) } as LiveData<Event<List<FocusPointInfo>>>
 
     val hasMultipleSites: Boolean
         get() = siteStore.sitesCount > ONE_SITE
@@ -245,13 +204,6 @@ class WPMainActivityViewModel @Inject constructor(
         mainCreateSheetTracker.trackActionTapped(page, actionType)
         _isBottomSheetShowing.postValue(Event(false))
         _createAction.postValue(actionType)
-
-        _showQuickStarInBottomSheet.value?.let { showQuickStart ->
-            if (showQuickStart) {
-                if (actionType == CREATE_NEW_POST) quickStartRepository.completeTask(PUBLISH_POST)
-                _showQuickStarInBottomSheet.postValue(false)
-            }
-        }
     }
 
     private fun onAnswerPromptActionClicked(promptId: Int, attribution: BloggingPromptAttribution, page: PageType) {
@@ -267,8 +219,6 @@ class WPMainActivityViewModel @Inject constructor(
 
     fun onFabClicked(site: SiteModel?, page: PageType) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
-
-        _showQuickStarInBottomSheet.postValue(quickStartRepository.activeTask.value == PUBLISH_POST)
 
         if (hasFullAccessToContent(site)) {
             launch {
@@ -362,17 +312,6 @@ class WPMainActivityViewModel @Inject constructor(
                         appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion)
     }
 
-    private fun getExternalFocusPointInfo(task: QuickStartTask?): List<FocusPointInfo> {
-        val followSiteTask = quickStartRepository.quickStartType
-            .getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL)
-        val followSitesTaskFocusPointInfo = FocusPointInfo(followSiteTask, task == followSiteTask)
-        val checkNotifsTaskFocusPointInfo = FocusPointInfo(
-            QuickStartExistingSiteTask.CHECK_NOTIFICATIONS,
-            task == QuickStartExistingSiteTask.CHECK_NOTIFICATIONS
-        )
-        return listOf(followSitesTaskFocusPointInfo, checkNotifsTaskFocusPointInfo)
-    }
-
     fun handleSiteRemoved() {
         selectedSiteRepository.removeSite()
     }
@@ -391,14 +330,5 @@ class WPMainActivityViewModel @Inject constructor(
 
     fun requestMySiteDashboardRefresh() {
         this._mySiteDashboardRefreshRequested.value = Event(Unit)
-    }
-
-    data class FocusPointInfo(
-        val task: QuickStartTask,
-        val isVisible: Boolean
-    ) : Serializable {
-        companion object {
-            private const val serialVersionUID: Long = 1L
-        }
     }
 }

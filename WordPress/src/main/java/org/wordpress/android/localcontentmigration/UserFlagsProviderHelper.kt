@@ -26,7 +26,6 @@ class UserFlagsProviderHelper @Inject constructor(
         userFlagsKeysSet.contains(flag.key) || userFlagsCompositeKeysSet.any { flag.key.startsWith(it) }
 
     private val userFlagsCompositeKeysSet: Set<String> = setOf(
-        DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE.name,
         DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name,
     )
 
@@ -54,8 +53,6 @@ class UserFlagsProviderHelper @Inject constructor(
         DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2.name,
         DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name,
         DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN.name,
-        DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED.name,
-        DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK.name,
         DeletablePrefKey.POST_LIST_AUTHOR_FILTER.name,
         DeletablePrefKey.POST_LIST_VIEW_LAYOUT_TYPE.name,
         DeletablePrefKey.AZTEC_EDITOR_DISABLE_HW_ACC_KEYS.name,

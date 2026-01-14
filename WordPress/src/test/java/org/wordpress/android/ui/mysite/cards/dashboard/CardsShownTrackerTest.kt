@@ -16,7 +16,6 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.ActivityLogS
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
-import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -29,13 +28,6 @@ class CardsShownTrackerTest {
     @Before
     fun setUp() {
         cardsShownTracker = CardsShownTracker(analyticsTracker)
-    }
-
-    @Test
-    fun `when quick start card is shown on dashboard tab, then quick start card shown event is tracked`() {
-        cardsShownTracker.trackQuickStartCardShown(NewSiteQuickStartType)
-
-        verifyQuickStartCardShownTracked(Type.QUICK_START.label, "quick_start_${NewSiteQuickStartType.trackingLabel}")
     }
 
     @Test
@@ -70,13 +62,6 @@ class CardsShownTrackerTest {
     }
 
     private fun verifyCardShownTracked(type: String, subtype: String) {
-        verify(analyticsTracker).track(
-            Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
-            mapOf(CardsTracker.TYPE to type, CardsTracker.SUBTYPE to subtype)
-        )
-    }
-
-    private fun verifyQuickStartCardShownTracked(type: String, subtype: String) {
         verify(analyticsTracker).track(
             Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
             mapOf(CardsTracker.TYPE to type, CardsTracker.SUBTYPE to subtype)

@@ -60,7 +60,6 @@ import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.push.NotificationType;
@@ -73,7 +72,6 @@ import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.photopicker.MediaPickerConstants;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
@@ -95,7 +93,6 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.AppReviewManager;
-import org.wordpress.android.widgets.QuickStartFocusPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +127,6 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject MediaUtilsWrapper mMediaUtilsWrapper;
-    @Inject QuickStartRepository mQuickStartRepository;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
     @Inject ActivityNavigator mActivityNavigator;
@@ -154,7 +150,6 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     private MediaBrowserType mBrowserType;
     private AddMenuItem mLastAddMediaItemClicked;
     private MenuItem menuNewMediaItem;
-    private QuickStartFocusPoint mMenuNewMediaQuickStartFocusPoint;
 
     private boolean mShowAudioTab;
 
@@ -650,13 +645,9 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         mSearchView.setMaxWidth(Integer.MAX_VALUE);
 
         menuNewMediaItem = menu.findItem(R.id.menu_new_media);
-        mMenuNewMediaQuickStartFocusPoint = menuNewMediaItem.getActionView()
-                                                            .findViewById(R.id.menu_add_media_quick_start_focus_point);
 
         menuNewMediaItem.getActionView().setOnClickListener(v -> {
             showAddMediaPopup();
-            completeUploadMediaQuickStartTask();
-            updateMenuNewMediaQuickStartFocusPoint(false);
         });
 
         // open search bar if we were searching for something before
@@ -1035,13 +1026,6 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         popup.show();
     }
 
-    private void completeUploadMediaQuickStartTask() {
-        if (mSelectedSiteRepository.getSelectedSite() != null
-            && mQuickStartRepository.isPendingTask(QuickStartExistingSiteTask.UPLOAD_MEDIA)) {
-            mQuickStartRepository.completeTask(QuickStartExistingSiteTask.UPLOAD_MEDIA);
-        }
-    }
-
     private void doAddMediaItemClicked(@NonNull AddMenuItem item) {
         mLastAddMediaItemClicked = item;
 
@@ -1254,12 +1238,6 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
             mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(this, snackbarAttachView, false, event.mediaModelList,
                     mSite, event.successMessage);
             updateMediaGridForTheseMedia(event.mediaModelList);
-        }
-    }
-
-    public void updateMenuNewMediaQuickStartFocusPoint(boolean shouldShow) {
-        if (mMenuNewMediaQuickStartFocusPoint != null && menuNewMediaItem.isVisible()) {
-            mMenuNewMediaQuickStartFocusPoint.setVisibleOrGone(shouldShow);
         }
     }
 }

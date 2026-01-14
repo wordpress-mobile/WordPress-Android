@@ -28,7 +28,6 @@ import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlic
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.plans.PlansCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewModelSlice
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewModelSlice
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -47,8 +46,6 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
     lateinit var personalizeCardViewModelSlice: PersonalizeCardViewModelSlice
     @Mock
     lateinit var bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice
-    @Mock
-    lateinit var quickStartCardViewModelSlice: QuickStartCardViewModelSlice
     @Mock
     lateinit var noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice
     @Mock
@@ -71,7 +68,6 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         whenever(cardViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(personalizeCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(bloggingPromptCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(quickStartCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(quickLinksItemViewModelSlice.uiState).thenReturn(MutableLiveData())
         whenever(bloganuaryNudgeCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(plansCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
@@ -85,7 +81,6 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
             cardViewModelSlice,
             personalizeCardViewModelSlice,
             bloggingPromptCardViewModelSlice,
-            quickStartCardViewModelSlice,
             noCardsMessageViewModelSlice,
             quickLinksItemViewModelSlice,
             bloganuaryNudgeCardViewModelSlice,
@@ -106,7 +101,6 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         verify(personalizeCardViewModelSlice).initialize(scope)
         verify(quickLinksItemViewModelSlice).initialization(scope)
         verify(cardViewModelSlice).initialize(scope)
-        verify(quickStartCardViewModelSlice).initialize(scope)
     }
 
     @Test
@@ -125,7 +119,6 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         verify(quickLinksItemViewModelSlice, atMost(1)).buildCard(mockSite)
         verify(plansCardViewModelSlice, atMost(1)).buildCard(mockSite)
         verify(cardViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(quickStartCardViewModelSlice, atMost(1)).build(mockSite)
     }
 
     @Test
@@ -140,7 +133,6 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         verify(cardViewModelSlice).clearValue()
         verify(personalizeCardViewModelSlice).clearValue()
         verify(bloggingPromptCardViewModelSlice).clearValue()
-        verify(quickStartCardViewModelSlice).clearValue()
         verify(quickLinksItemViewModelSlice).clearValue()
         verify(bloganuaryNudgeCardViewModelSlice).clearValue()
         verify(plansCardViewModelSlice).clearValue()

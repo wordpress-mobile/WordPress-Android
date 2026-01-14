@@ -10,8 +10,8 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -39,10 +39,10 @@ class MySiteUiStateTest : BaseUnitTest() {
     @Test
     fun `given cards update with snackbar, when ui state is updated with different update, then snackbar not shown`() {
         val cardsUpdate = CardsUpdate(cards = listOf(postsCardModel), showSnackbarError = true)
-        val quickStartUpdate = QuickStartUpdate()
+        val bloggingPromptUpdate = BloggingPromptUpdate(promptModel = null)
 
         var updatedUiState = mySiteUiState.update(cardsUpdate)
-        updatedUiState = updatedUiState.update(quickStartUpdate)
+        updatedUiState = updatedUiState.update(bloggingPromptUpdate)
 
         assertThat(updatedUiState.cardsUpdate?.showSnackbarError).isFalse
     }
@@ -61,10 +61,10 @@ class MySiteUiStateTest : BaseUnitTest() {
     @Test
     fun `given cards update with stale msg, when ui state is updated with different update, then stale msg shown`() {
         val cardsUpdate = CardsUpdate(cards = listOf(postsCardModel), showStaleMessage = true)
-        val quickStartUpdate = QuickStartUpdate()
+        val bloggingPromptUpdate = BloggingPromptUpdate(promptModel = null)
 
         var updatedUiState = mySiteUiState.update(cardsUpdate)
-        updatedUiState = updatedUiState.update(quickStartUpdate)
+        updatedUiState = updatedUiState.update(bloggingPromptUpdate)
 
         assertThat(updatedUiState.cardsUpdate?.showStaleMessage).isTrue
     }

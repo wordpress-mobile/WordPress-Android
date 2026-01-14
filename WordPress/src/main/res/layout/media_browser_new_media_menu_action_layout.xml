@@ -19,16 +19,4 @@
         app:tint="?attr/colorOnSurface"
         tools:text="@string/my_site_menu_tab_title" />
 
-    <org.wordpress.android.widgets.QuickStartFocusPoint
-        android:id="@+id/menu_add_media_quick_start_focus_point"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/quick_start_focus_point_description"
-        android:elevation="@dimen/quick_start_focus_point_elevation"
-        android:gravity="end"
-        android:textAlignment="viewEnd"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:size="small" />
 </androidx.constraintlayout.widget.ConstraintLayout>

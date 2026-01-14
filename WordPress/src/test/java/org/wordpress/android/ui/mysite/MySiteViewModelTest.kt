@@ -20,7 +20,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
@@ -29,35 +28,21 @@ import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.cards.DashboardCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
-import org.wordpress.android.ui.quickstart.QuickStartTracker
-import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import java.util.Date
 
 private const val TEST_URL = "https://www.test.com"
@@ -82,22 +67,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var siteIconUploadHandler: SiteIconUploadHandler
 
     @Mock
-    lateinit var quickStartRepository: QuickStartRepository
-
-    @Mock
     lateinit var homePageDataLoader: HomePageDataLoader
-
-    @Mock
-    lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
-
-    @Mock
-    lateinit var snackbarSequencer: SnackbarSequencer
-
-    @Mock
-    lateinit var landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig
-
-    @Mock
-    lateinit var cardsTracker: CardsTracker
 
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
@@ -106,22 +76,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase
 
     @Mock
-    lateinit var appPrefsWrapper: AppPrefsWrapper
-
-    @Mock
-    lateinit var quickStartType: QuickStartType
-
-    @Mock
-    lateinit var quickStartTracker: QuickStartTracker
-
-    @Mock
     private lateinit var dispatcher: Dispatcher
-
-    @Mock
-    lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
-
-    @Mock
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Mock
     lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
@@ -160,13 +115,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val selectedSite = MediatorLiveData<SelectedSite>()
 
     private val currentAvatar = MutableLiveData(AccountData("",""))
-    private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
-    private val quickStartCategory: QuickStartCategory
-        get() = QuickStartCategory(
-            taskType = QuickStartTaskType.CUSTOMIZE,
-            uncompletedTasks = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE),
-            completedTasks = emptyList()
-        )
 
     @Suppress("LongMethod")
     @Before
@@ -180,7 +128,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
         selectedSite.value = null
-        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
 
         whenever(siteInfoHeaderCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(accountDataViewModelSlice.uiModel).thenReturn(MutableLiveData())
@@ -195,18 +142,10 @@ class MySiteViewModelTest : BaseUnitTest() {
             accountStore,
             selectedSiteRepository,
             siteIconUploadHandler,
-            quickStartRepository,
             homePageDataLoader,
-            quickStartUtilsWrapper,
-            snackbarSequencer,
-            landOnTheEditorFeatureConfig,
             buildConfigWrapper,
-            appPrefsWrapper,
-            quickStartTracker,
             dispatcher,
-            jetpackFeatureRemovalOverlayUtil,
             getShowJetpackFullPluginInstallOnboardingUseCase,
-            jetpackFeatureRemovalPhaseHelper,
             wpJetpackIndividualPluginHelper,
             siteInfoHeaderCardViewModelSlice,
             accountDataViewModelSlice,
@@ -333,117 +272,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    /* ON RESUME */
-    @Test
-    fun `when clear active quick start task is triggered, then clear active quick start task`() {
-        viewModel.clearActiveQuickStartTask()
-
-        verify(quickStartRepository).clearActiveTask()
-    }
-
-    @Test
-    fun `when check and show quick start notice is triggered, then check and show quick start notice`() {
-        viewModel.checkAndShowQuickStartNotice()
-
-        verify(quickStartRepository).checkAndShowQuickStartNotice()
-    }
-
-    /* START/IGNORE QUICK START + QUICK START DIALOG */
-    @Test
-    fun `given no selected site, when check and start QS is triggered, then QSP is not shown`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
-
-        viewModel.checkAndStartQuickStart(isSiteTitleTaskCompleted = false, isNewSite = false)
-
-        assertThat(navigationActions).isEmpty()
-    }
-
-    @Test
-    fun `given QS is not available for new site, when check and start QS is triggered, then QSP is not shown`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
-        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteTest)).thenReturn(false)
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
-
-        viewModel.checkAndStartQuickStart(isSiteTitleTaskCompleted = false, isNewSite = true)
-
-        assertThat(navigationActions).isEmpty()
-    }
-
-    @Test
-    fun `given QS is not available for existing site, when check and start QS is triggered, then QSP is not shown`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
-        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteTest)).thenReturn(false)
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
-
-        viewModel.checkAndStartQuickStart(isSiteTitleTaskCompleted = false, isNewSite = false)
-
-        assertThat(navigationActions).isEmpty()
-    }
-
-    @Test
-    fun `given new site, when check and start QS is triggered, then QSP is shown`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
-        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteTest)).thenReturn(true)
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
-
-        viewModel.checkAndStartQuickStart(false, isNewSite = true)
-
-        assertThat(navigationActions).containsExactly(
-            SiteNavigationAction.ShowQuickStartDialog(
-                R.string.quick_start_dialog_need_help_manage_site_title,
-                R.string.quick_start_dialog_need_help_manage_site_message,
-                R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                R.string.quick_start_dialog_need_help_button_negative,
-                true
-            )
-        )
-    }
-
-    @Test
-    fun `given existing site, when check and start QS is triggered, then QSP is shown`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
-        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteTest)).thenReturn(true)
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()).thenReturn(true)
-
-        viewModel.checkAndStartQuickStart(false, isNewSite = false)
-
-        assertThat(navigationActions).containsExactly(
-            SiteNavigationAction.ShowQuickStartDialog(
-                R.string.quick_start_dialog_need_help_manage_site_title,
-                R.string.quick_start_dialog_need_help_manage_site_message,
-                R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                R.string.quick_start_dialog_need_help_button_negative,
-                false
-            )
-        )
-    }
-
-    @Test
-    fun `when start QS is triggered, then QS request dialog positive tapped is tracked`() {
-        viewModel.startQuickStart()
-
-        verify(quickStartTracker).track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
-    }
-
-    @Test
-    fun `when start QS is triggered, then QS starts`() {
-        whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(siteTest.id)
-
-        viewModel.startQuickStart()
-
-        verify(quickStartUtilsWrapper)
-            .startQuickStart(siteTest.id, false, quickStartRepository.quickStartType, quickStartTracker)
-        verify(dashboardCardsViewModelSlice).startQuickStart(siteTest)
-    }
-
-    @Test
-    fun `when ignore QS is triggered, then QS request dialog negative tapped is tracked`() {
-        viewModel.ignoreQuickStart()
-
-        verify(quickStartTracker).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
-    }
-
     /* DASHBOARD BLOGGING PROMPT */
     @Test
     fun `when blogging prompt answer is uploaded, refresh prompt card`() = test {
@@ -526,24 +354,13 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* LAND ON THE EDITOR A/B EXPERIMENT */
     @Test
-    fun `given the land on the editor feature is enabled, then the home page editor is shown`() = test {
-        whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(true)
-
+    fun `when performFirstStepAfterSiteCreation called, then home page editor is shown`() = test {
         viewModel.performFirstStepAfterSiteCreation(isSiteTitleTaskCompleted = false, isNewSite = true)
 
         verify(analyticsTrackerWrapper).track(Stat.LANDING_EDITOR_SHOWN)
         assertThat(navigationActions).containsExactly(
             SiteNavigationAction.OpenHomepage(siteTest, homepageLocalId = localHomepageId, isNewSite = true)
         )
-    }
-
-    @Test
-    fun `given the land on the editor feature is not enabled, then the home page editor is not shown`() = test {
-        whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(false)
-
-        viewModel.performFirstStepAfterSiteCreation(isSiteTitleTaskCompleted = false, isNewSite = true)
-
-        assertThat(navigationActions).isEmpty()
     }
 
     @Test
@@ -581,13 +398,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Suppress("LongParameterList")
     private fun initSelectedSite(
-        isQuickStartInProgress: Boolean = false,
         isSiteUsingWpComRestApi: Boolean = true,
         isJetpackApp: Boolean = false
     ) {
-        quickStartUpdate.value = QuickStartUpdate(
-            categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
-        )
         // in order to build the dashboard cards, this value should be true along with isSiteUsingWpComRestApi
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(isJetpackApp)
 

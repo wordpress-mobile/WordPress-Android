@@ -25,18 +25,14 @@ import org.wordpress.android.databinding.ThemeBrowserFragmentBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.ThemeModel
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.ThemeStore
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.plans.PlansConstants
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
@@ -72,22 +68,15 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     private var searchMenuItem: MenuItem? = null
     private var searchView: SearchView? = null
     private var callback: ThemeBrowserFragmentCallback? = null
-    private var quickStartEvent: QuickStartEvent? = null
 
     @Inject
     lateinit var themeStore: ThemeStore
-
-    @Inject
-    lateinit var quickStartStore: QuickStartStore
 
     @Inject
     lateinit var dispatcher: Dispatcher
 
     @Inject
     lateinit var imageManager: ImageManager
-
-    @Inject
-    lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
 
     private val sortedWpComThemes: List<ThemeModel>
         get() {
@@ -142,7 +131,6 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
         savedInstanceState?.let {
             lastSearch = it.getString(KEY_LAST_SEARCH)
-            quickStartEvent = it.getParcelableCompat(QuickStartEvent.KEY)
         }
     }
 
@@ -196,7 +184,6 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         if (searchMenuItem != null && requireNotNull(searchMenuItem).isActionViewExpanded) {
             outState.putString(KEY_LAST_SEARCH, searchView?.query.toString())
         }
-        outState.putParcelable(QuickStartEvent.KEY, quickStartEvent)
     }
 
     @Suppress("OVERRIDE_DEPRECATION")

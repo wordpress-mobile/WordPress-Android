@@ -2,9 +2,6 @@ package org.wordpress.android.ui.mysite.menu
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.FrameLayout
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
@@ -34,25 +31,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
@@ -64,17 +56,12 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.SiteSettingsFragment
-import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import javax.inject.Inject
-
-const val KEY_QUICK_START_EVENT = "key_quick_start_event"
 
 @AndroidEntryPoint
 class MenuActivity : BaseAppCompatActivity() {
@@ -84,9 +71,6 @@ class MenuActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
 
-    @Inject
-    lateinit var quickStartUtils: QuickStartUtilsWrapper
-
     private val viewModel: MenuViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,7 +79,7 @@ class MenuActivity : BaseAppCompatActivity() {
         setContent {
             AppThemeM3 {
                 CompositionLocalProvider {
-                    viewModel.start(intent.getParcelableExtraCompat(KEY_QUICK_START_EVENT))
+                    viewModel.start()
                     MenuScreen(
                         onBackPressed = onBackPressedDispatcher::onBackPressed
                     )
@@ -115,7 +99,6 @@ class MenuActivity : BaseAppCompatActivity() {
     private fun initObservers() {
         viewModel.navigation.observe(this) { handleNavigationAction(it.getContentIfNotHandled()) }
         viewModel.onSnackbarMessage.observe(this) { showSnackbar(it.getContentIfNotHandled()) }
-        viewModel.onQuickStartMySitePrompts.observe(this) { handleActiveTutorialPrompt(it.getContentIfNotHandled()) }
         viewModel.onSelectedSiteMissing.observe(this) { finish() }
 
         // Set the Compose callback for SnackbarSequencer
@@ -190,23 +173,6 @@ class MenuActivity : BaseAppCompatActivity() {
                 )
             )
         }
-    }
-
-    private fun handleActiveTutorialPrompt(activeTutorialPrompt: QuickStartMySitePrompts?) {
-        activeTutorialPrompt?.let {
-            val message = quickStartUtils.stylizeQuickStartPrompt(
-                this,
-                activeTutorialPrompt.shortMessagePrompt,
-                activeTutorialPrompt.iconId
-            )
-
-            showSnackbar(SnackbarMessageHolder(UiString.UiStringText(message)))
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.onResume()
     }
 
     override fun onStop() {
@@ -361,36 +327,9 @@ fun MySiteListItem(item: MenuItemState.MenuListItem, modifier: Modifier = Modifi
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
                     )
                 }
-
-                if (item.showFocusPoint) CustomXMLWidgetView()
             })
     }
 }
-
-@Composable
-fun CustomXMLWidgetView(modifier: Modifier = Modifier) {
-    // Load the custom XML widget using AndroidView
-    var customView: View? by remember { mutableStateOf(null) }
-    val context = LocalContext.current
-
-    DisposableEffect(context) {
-        // Perform the side effect (inflate view) when the composable is composed
-        customView = FrameLayout(context).apply {
-            addView(LayoutInflater.from(context).inflate(R.layout.quick_start_focus_point, this, false))
-        }
-
-        onDispose {
-            customView = null
-        }
-    }
-    customView?.let { view ->
-        AndroidView(
-            factory = { view },
-            modifier = modifier.wrapContentSize(Alignment.Center)
-        )
-    }
-}
-
 
 @Preview
 @Composable
@@ -402,24 +341,6 @@ fun MySiteListItemPreviewBase() {
             primaryText = UiString.UiStringText("Blog Posts"),
             secondaryIcon = null,
             secondaryText = null,
-            showFocusPoint = false,
-            onClick = ListItemInteraction.create { onClick() },
-            listItemAction = ListItemAction.POSTS
-        )
-    )
-}
-
-@Preview
-@Composable
-fun MySiteListItemPreviewWithFocusPoint() {
-    val onClick = remember { {} }
-    MySiteListItem(
-        MenuItemState.MenuListItem(
-            primaryIcon = R.drawable.ic_posts_white_24dp,
-            primaryText = UiString.UiStringText("Blog Posts"),
-            secondaryIcon = null,
-            secondaryText = null,
-            showFocusPoint = true,
             onClick = ListItemInteraction.create { onClick() },
             listItemAction = ListItemAction.POSTS
         )
@@ -436,7 +357,6 @@ fun MySiteListItemPreviewWithSecondaryText() {
             primaryText = UiString.UiStringText("Plans"),
             secondaryIcon = null,
             secondaryText = UiString.UiStringText("Basic"),
-            showFocusPoint = false,
             onClick = ListItemInteraction.create { onClick() },
             listItemAction = ListItemAction.PLAN
         )
@@ -453,7 +373,6 @@ fun MySiteListItemPreviewWithSecondaryImage() {
             primaryText = UiString.UiStringText("Plans"),
             secondaryIcon = R.drawable.ic_pages_white_24dp,
             secondaryText = null,
-            showFocusPoint = false,
             onClick = ListItemInteraction.create { onClick() },
             listItemAction = ListItemAction.PLAN
         )

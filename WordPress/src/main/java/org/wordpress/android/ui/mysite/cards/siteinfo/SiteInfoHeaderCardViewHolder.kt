@@ -24,18 +24,13 @@ class SiteInfoHeaderCardViewHolder(
             mySiteIconProgress.visibility = View.VISIBLE
             mySiteBlavatar.visibility = View.GONE
         }
-        quickStartIconFocusPoint.setVisibleOrGone(item.showIconFocusPoint)
         if (item.onTitleClick != null) {
             siteInfoContainer.title.setOnClickListener { item.onTitleClick.click() }
         } else {
             siteInfoContainer.title.setOnClickListener(null)
         }
-        quickStartTitleFocusPoint.setVisibleOrGone(item.showTitleFocusPoint)
-        quickStartSubTitleFocusPoint.setVisibleOrGone(item.showSubtitleFocusPoint)
         siteInfoContainer.subtitle.text = item.url
         siteInfoContainer.title.text = item.title
-        quickStartTitleFocusPoint.setVisibleOrGone(item.showTitleFocusPoint)
-        siteInfoContainer.subtitle.text = item.url
         siteInfoContainer.subtitle.setOnClickListener { item.onUrlClick.click() }
         switchSite.setOnClickListener { item.onSwitchSiteClick.click() }
     }

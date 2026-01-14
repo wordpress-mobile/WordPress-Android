@@ -351,9 +351,8 @@ fun <S, T, U, V, W, X, Y> merge(
     }
 }
 
-
 /**
- * Merges five LiveData sources using a given function. The function returns an object of a new type.
+ * Merges ten LiveData sources using a given function. The function returns an object of a new type.
  * @param sourceA first source
  * @param sourceB second source
  * @param sourceC third source
@@ -361,14 +360,13 @@ fun <S, T, U, V, W, X, Y> merge(
  * @param sourceE fifth source
  * @param sourceF sixth source
  * @param sourceG seventh source
- * @param sourceH eightth source
- * @param sourceH eightth source
- * @param sourceH eightth source
- * @param sourceH eightth source
+ * @param sourceH eighth source
+ * @param sourceI ninth source
+ * @param sourceJ tenth source
  * @return new data source
  */
 @Suppress("DestructuringDeclarationWithTooManyEntries", "LongParameterList", "CyclomaticComplexMethod", "LongMethod")
-fun <A, B, C, D, E, F, G, H, I, J, K, Z> merge(
+fun <A, B, C, D, E, F, G, H, I, J, Z> merge(
     sourceA: LiveData<A>,
     sourceB: LiveData<B>,
     sourceC: LiveData<C>,
@@ -379,11 +377,10 @@ fun <A, B, C, D, E, F, G, H, I, J, K, Z> merge(
     sourceH: LiveData<H>,
     sourceI: LiveData<I>,
     sourceJ: LiveData<J>,
-    sourceK: LiveData<K>,
     distinct: Boolean = false,
-    merger: (A?, B?, C?, D?, E?, F?, G?, H?, I?, J?, K?) -> Z?
+    merger: (A?, B?, C?, D?, E?, F?, G?, H?, I?, J?) -> Z?
 ): LiveData<Z> {
-    data class ElevenItemContainer(
+    data class TenItemContainer(
         val first: A? = null,
         val second: B? = null,
         val third: C? = null,
@@ -393,12 +390,11 @@ fun <A, B, C, D, E, F, G, H, I, J, K, Z> merge(
         val seventh: G? = null,
         val eighth: H? = null,
         val ninth: I? = null,
-        val tenth: J? = null,
-        val eleventh: K? = null
+        val tenth: J? = null
     )
 
-    val mediator = MediatorLiveData<ElevenItemContainer>()
-    mediator.value = ElevenItemContainer()
+    val mediator = MediatorLiveData<TenItemContainer>()
+    mediator.value = TenItemContainer()
     mediator.addSource(sourceA) {
         val container = mediator.value
         if (container?.first != it || !distinct) {
@@ -453,23 +449,14 @@ fun <A, B, C, D, E, F, G, H, I, J, K, Z> merge(
             mediator.value = container?.copy(ninth = it)
         }
     }
-
     mediator.addSource(sourceJ) {
         val container = mediator.value
         if (container?.tenth != it || !distinct) {
             mediator.value = container?.copy(tenth = it)
         }
     }
-
-    mediator.addSource(sourceK) {
-        val container = mediator.value
-        if (container?.eleventh != it || !distinct) {
-            mediator.value = container?.copy(eleventh = it)
-        }
-    }
-
-    return mediator.mapSafe { (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh) ->
-        merger(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh)
+    return mediator.mapSafe { (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) ->
+        merger(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth)
     }
 }
 

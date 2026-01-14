@@ -89,7 +89,6 @@ class SiteListItemBuilder @Inject constructor(
     @Suppress("ComplexCondition")
     fun buildPlanItemIfAvailable(
         site: SiteModel,
-        showFocusPoint: Boolean,
         onClick: (ListItemAction) -> Unit
     ): ListItem? {
         val planShortName = site.planShortName
@@ -103,7 +102,6 @@ class SiteListItemBuilder @Inject constructor(
                 UiStringRes(R.string.plan),
                 secondaryText = UiStringText(planShortName),
                 onClick = ListItemInteraction.create(PLAN, onClick),
-                showFocusPoint = showFocusPoint,
                 listItemAction = PLAN
             )
         } else null
@@ -111,15 +109,13 @@ class SiteListItemBuilder @Inject constructor(
 
     fun buildPagesItemIfAvailable(
         site: SiteModel,
-        onClick: (ListItemAction) -> Unit,
-        showFocusPoint: Boolean
+        onClick: (ListItemAction) -> Unit
     ): ListItem? {
         return if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) {
             ListItem(
                 R.drawable.ic_pages_white_24dp,
                 UiStringRes(R.string.my_site_btn_site_pages),
                 onClick = ListItemInteraction.create(PAGES, onClick),
-                showFocusPoint = showFocusPoint,
                 listItemAction = PAGES
             )
         } else null
@@ -188,14 +184,12 @@ class SiteListItemBuilder @Inject constructor(
 
     fun buildShareItemIfAvailable(
         site: SiteModel,
-        onClick: (ListItemAction) -> Unit,
-        showFocusPoint: Boolean = false
+        onClick: (ListItemAction) -> Unit
     ): ListItem? {
         return if (site.supportsSharing()) {
             ListItem(
                 R.drawable.ic_share_white_24dp,
                 UiStringRes(R.string.my_site_btn_sharing),
-                showFocusPoint = showFocusPoint,
                 onClick = ListItemInteraction.create(SHARING, onClick),
                 listItemAction = SHARING
             )

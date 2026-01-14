@@ -19,31 +19,21 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.cards.DashboardCardsViewModelSlice
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.quickstart.QuickStartTracker
-import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -63,18 +53,10 @@ class MySiteViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteIconUploadHandler: SiteIconUploadHandler,
-    private val quickStartRepository: QuickStartRepository,
     private val homePageDataLoader: HomePageDataLoader,
-    private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
-    private val snackbarSequencer: SnackbarSequencer,
-    private val landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper,
-    private val quickStartTracker: QuickStartTracker,
     private val dispatcher: Dispatcher,
-    private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
     private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice,
     private val accountDataViewModelSlice: AccountDataViewModelSlice,
@@ -96,13 +78,11 @@ class MySiteViewModel @Inject constructor(
 
     val onSnackbarMessage = merge(
         _onSnackbarMessage,
-        quickStartRepository.onSnackbar,
         dashboardItemsViewModelSlice.onSnackbarMessage,
         siteInfoHeaderCardViewModelSlice.onSnackbarMessage,
         dashboardCardsViewModelSlice.onSnackbarMessage,
         applicationPasswordViewModelSlice.onSnackbarMessage
     )
-    val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
 
     val onTextInputDialogShown = siteInfoHeaderCardViewModelSlice.onTextInputDialogShown
 
@@ -136,8 +116,6 @@ class MySiteViewModel @Inject constructor(
         dashboardItemsViewModelSlice.isRefreshing,
         accountDataViewModelSlice.isRefreshing
     )
-
-    private var shouldMarkUpdateSiteTitleTaskComplete = false
 
     val uiModel: LiveData<State> = merge(
         siteInfoHeaderCardViewModelSlice.uiModel,
@@ -181,15 +159,6 @@ class MySiteViewModel @Inject constructor(
         )
     }
 
-    fun onQuickStartTaskCardClick(task: QuickStartTask) {
-        onScrollTo.postValue(Event(0))
-        quickStartRepository.setActiveTask(task)
-    }
-
-    fun onQuickStartFullScreenDialogDismiss() {
-//        mySiteSourceManager.refreshQuickStart()
-    }
-
     fun refresh(isPullToRefresh: Boolean = false) {
         if (isPullToRefresh) analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH)
         selectedSiteRepository.getSelectedSite()?.let {
@@ -202,7 +171,6 @@ class MySiteViewModel @Inject constructor(
     fun onResume() {
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
-        checkAndShowQuickStartNotice()
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         selectedSiteRepository.getSelectedSite()?.let {
             buildDashboardOrSiteItems(it)
@@ -217,18 +185,6 @@ class MySiteViewModel @Inject constructor(
                 _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
             }
         }
-    }
-
-    fun clearActiveQuickStartTask() {
-        quickStartRepository.clearActiveTask()
-    }
-
-    fun checkAndShowQuickStartNotice() {
-        quickStartRepository.checkAndShowQuickStartNotice()
-    }
-
-    fun dismissQuickStartNotice() {
-        if (quickStartRepository.isQuickStartNoticeShown) snackbarSequencer.dismissLastSnackbar()
     }
 
     fun onSiteNameChosen(input: String) {
@@ -282,7 +238,6 @@ class MySiteViewModel @Inject constructor(
 
     override fun onCleared() {
         siteIconUploadHandler.clear()
-        quickStartRepository.clear()
         dispatcher.unregister(this)
         siteInfoHeaderCardViewModelSlice.onCleared()
         dashboardCardsViewModelSlice.onCleared()
@@ -294,25 +249,18 @@ class MySiteViewModel @Inject constructor(
 
     fun onSitePicked() {
         selectedSiteRepository.getSelectedSite()?.let {
-            val siteLocalId = it.id.toLong()
-            val lastSelectedQuickStartType = appPrefsWrapper.getLastSelectedQuickStartTypeForSite(siteLocalId)
-            quickStartRepository.checkAndSetQuickStartType(lastSelectedQuickStartType == NewSiteQuickStartType)
             onSitePicked(it)
         } ?: run {
             accountDataViewModelSlice.onResume()
         }
     }
 
-
+    @Suppress("UNUSED_PARAMETER")
     fun performFirstStepAfterSiteCreation(
         isSiteTitleTaskCompleted: Boolean,
         isNewSite: Boolean
     ) {
-        if (landOnTheEditorFeatureConfig.isEnabled()) {
-            checkAndStartLandOnTheEditor(isNewSite)
-        } else {
-            checkAndStartQuickStart(isSiteTitleTaskCompleted, isNewSite)
-        }
+        checkAndStartLandOnTheEditor(isNewSite)
     }
 
     private fun checkAndStartLandOnTheEditor(isNewSite: Boolean) {
@@ -326,61 +274,6 @@ class MySiteViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    fun checkAndStartQuickStart(
-        isSiteTitleTaskCompleted: Boolean,
-        isNewSite: Boolean
-    ) {
-        if (!jetpackFeatureRemovalPhaseHelper.shouldShowQuickStart()) return
-        quickStartRepository.checkAndSetQuickStartType(isNewSite = isNewSite)
-        shouldMarkUpdateSiteTitleTaskComplete = isSiteTitleTaskCompleted
-        showQuickStartDialog(selectedSiteRepository.getSelectedSite(), isNewSite)
-    }
-
-    private fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
-        if (siteLocalId != SelectedSiteRepository.UNAVAILABLE) {
-            quickStartUtilsWrapper
-                .startQuickStart(
-                    siteLocalId,
-                    isSiteTitleTaskCompleted,
-                    quickStartRepository.quickStartType,
-                    quickStartTracker
-                )
-            quickStartRepository.checkAndShowQuickStartNotice()
-        }
-    }
-
-    private fun showQuickStartDialog(siteModel: SiteModel?, isNewSite: Boolean) {
-        if (siteModel != null && quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteModel) &&
-            !jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()
-        ) {
-            _onNavigation.postValue(
-                Event(
-                    SiteNavigationAction.ShowQuickStartDialog(
-                        R.string.quick_start_dialog_need_help_manage_site_title,
-                        R.string.quick_start_dialog_need_help_manage_site_message,
-                        R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                        R.string.quick_start_dialog_need_help_button_negative,
-                        isNewSite
-                    )
-                )
-            )
-        }
-    }
-
-    fun startQuickStart() {
-        selectedSiteRepository.getSelectedSite()?.let {
-            quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
-            startQuickStart(selectedSiteRepository.getSelectedSiteLocalId(), shouldMarkUpdateSiteTitleTaskComplete)
-            shouldMarkUpdateSiteTitleTaskComplete = false
-            dashboardCardsViewModelSlice.startQuickStart(it)
-        }
-    }
-
-    fun ignoreQuickStart() {
-        shouldMarkUpdateSiteTitleTaskComplete = false
-        quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
     private fun buildDashboardOrSiteItems(site: SiteModel) {
@@ -503,7 +396,6 @@ class MySiteViewModel @Inject constructor(
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
-        const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
         private const val DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY = 500L
         private const val DAY_ONE_EXTERNAL_URL = "https://dayoneapp.com/?utm_source=jetpack&utm_medium=prompts"

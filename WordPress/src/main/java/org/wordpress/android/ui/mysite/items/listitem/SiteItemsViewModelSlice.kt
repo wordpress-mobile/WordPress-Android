@@ -7,7 +7,6 @@ import androidx.lifecycle.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -66,7 +65,6 @@ class SiteItemsViewModelSlice @Inject constructor(
                     getParams(
                         shouldEnableFocusPoints = false,
                         site = site,
-                        activeTask = null,
                         backupAvailable = purchasedProducts.backup,
                         scanAvailable = purchasedProducts.scan && !site.isWPCom && !site.isWPComAtomic
                     )
@@ -79,13 +77,11 @@ class SiteItemsViewModelSlice @Inject constructor(
     fun getParams(
         shouldEnableFocusPoints: Boolean = false,
         site: SiteModel,
-        activeTask: QuickStartStore.QuickStartTask? = null,
         backupAvailable: Boolean = false,
         scanAvailable: Boolean = false
     ): MySiteCardAndItemBuilderParams.SiteItemsBuilderParams {
         return MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
             site = site,
-            activeTask = activeTask,
             backupAvailable = backupAvailable,
             scanAvailable = scanAvailable,
             enableFocusPoints = shouldEnableFocusPoints,

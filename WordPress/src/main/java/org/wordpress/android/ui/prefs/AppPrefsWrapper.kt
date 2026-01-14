@@ -3,13 +3,11 @@ package org.wordpress.android.ui.prefs
 import androidx.core.content.edit
 import com.google.gson.Gson
 import org.wordpress.android.fluxc.model.JetpackCapability
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.prefs.AppPrefs.PrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.getBoolean
-import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
@@ -240,18 +238,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun getSelectedSite() = AppPrefs.getSelectedSite()
 
     fun setSelectedSite(siteLocalId: Int) = AppPrefs.setSelectedSite(siteLocalId)
-
-    fun isQuickStartNoticeRequired() = AppPrefs.isQuickStartNoticeRequired()
-
-    fun setQuickStartNoticeRequired(shown: Boolean) = AppPrefs.setQuickStartNoticeRequired(shown)
-
-    fun setLastSkippedQuickStartTask(task: QuickStartTask) = AppPrefs.setLastSkippedQuickStartTask(task)
-
-    fun getLastSelectedQuickStartTypeForSite(siteLocalId: Long): QuickStartType =
-        AppPrefs.getLastSelectedQuickStartTypeForSite(siteLocalId)
-
-    fun setLastSelectedQuickStartTypeForSite(quickStartType: QuickStartType, siteLocalId: Long) =
-        AppPrefs.setLastSelectedQuickStartTypeForSite(quickStartType, siteLocalId)
 
     fun getMySiteInitialScreen(isJetpackApp: Boolean): String = AppPrefs.getMySiteInitialScreen(isJetpackApp)
 

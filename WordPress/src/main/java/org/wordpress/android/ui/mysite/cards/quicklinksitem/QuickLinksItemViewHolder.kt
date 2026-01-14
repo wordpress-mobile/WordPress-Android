@@ -14,7 +14,6 @@ class QuickLinksItemViewHolder(
         quickLinkItem.setText(item.label.stringRes)
         quickLinkItem.setIconResource(item.icon)
         quickLinkItem.setOnClickListener { item.onClick.click() }
-        quickLinkItemQuickStartFocusPoint.setVisibleOrGone(item.showFocusPoint)
         if (item.disableTint) quickLinkItem.iconTint = null
     }
 }

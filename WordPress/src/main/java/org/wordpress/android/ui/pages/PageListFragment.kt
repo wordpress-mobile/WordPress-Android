@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -38,9 +37,6 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
 
     @Inject
     lateinit var dispatcher: Dispatcher
-
-    @Inject
-    lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
 
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer

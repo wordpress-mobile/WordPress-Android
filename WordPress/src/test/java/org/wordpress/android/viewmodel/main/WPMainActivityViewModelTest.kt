@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.main
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -24,13 +23,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMEN
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask.CHECK_NOTIFICATIONS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.UPDATE_SITE_TITLE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.VIEW_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
@@ -47,17 +39,14 @@ import org.wordpress.android.ui.main.analytics.MainCreateSheetTracker
 import org.wordpress.android.ui.main.utils.MainCreateSheetHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.privacy.banner.domain.ShouldAskPrivacyConsent
-import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 import java.util.Date
 import kotlin.test.assertNotNull
 
@@ -86,9 +75,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     @Mock
-    lateinit var quickStartRepository: QuickStartRepository
-
-    @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Mock
@@ -99,9 +85,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var bloggingPromptsStore: BloggingPromptsStore
-
-    @Mock
-    lateinit var quickStartType: QuickStartType
 
     @Mock
     private lateinit var openBloggingPromptsOnboardingObserver: Observer<Unit?>
@@ -145,20 +128,12 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             answeredLink = "https://wordpress.com/tag/dailyprompt-123",
         )
     )
-    private lateinit var activeTask: MutableLiveData<QuickStartTask?>
-    private lateinit var externalFocusPointEvents: MutableList<List<FocusPointInfo>>
     private var fabUiState: MainFabUiState? = null
 
     @Before
     fun setUp() = runBlocking {
         whenever(buildConfigWrapper.getAppVersionCode()).thenReturn(850)
         whenever(buildConfigWrapper.getAppVersionName()).thenReturn("14.7")
-        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL))
-            .thenReturn(FOLLOW_SITE)
-        activeTask = MutableLiveData()
-        externalFocusPointEvents = mutableListOf()
-        whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
         whenever(shouldAskPrivacyConsent()).thenReturn(false)
         whenever(mainCreateSheetHelper.canCreatePost()).thenReturn(true)
@@ -168,7 +143,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             buildConfigWrapper,
             appPrefsWrapper,
             analyticsTrackerWrapper,
-            quickStartRepository,
             selectedSiteRepository,
             accountStore,
             siteStore,
@@ -181,11 +155,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.onFeatureAnnouncementRequested.observeForever(
             onFeatureAnnouncementRequestedObserver
         )
-        viewModel.onFocusPointVisibilityChange.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                externalFocusPointEvents.add(it)
-            }
-        }
         // mainActions is MediatorLiveData and needs observer in order for us to access it's value
         viewModel.mainActions.observeForever { }
         viewModel.fabUiState.observeForever { fabUiState = it }
@@ -234,35 +203,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.onResume(site = initSite(hasFullAccessToContent = true), hasValidSite = true, page = mock())
 
         assertThat(fabUiState?.isFabVisible).isFalse
-    }
-
-    @Test
-    fun `fab focus point visible when active task is PUBLISH_POST`() {
-        startViewModelWithDefaultParameters()
-        whenever(mainCreateSheetHelper.shouldShowFabForPage(any())).thenReturn(true)
-
-        activeTask.value = PUBLISH_POST
-        viewModel.onPageChanged(site = initSite(hasFullAccessToContent = true), hasValidSite = true, page = mock())
-
-        assertThat(fabUiState?.isFocusPointVisible).isTrue
-    }
-
-    @Test
-    fun `fab focus point gone when active task is different`() {
-        startViewModelWithDefaultParameters()
-        activeTask.value = UPDATE_SITE_TITLE
-        viewModel.onPageChanged(site = initSite(hasFullAccessToContent = true), hasValidSite = true, page = mock())
-
-        assertThat(fabUiState?.isFocusPointVisible).isFalse
-    }
-
-    @Test
-    fun `fab focus point gone when active task is null`() {
-        startViewModelWithDefaultParameters()
-        activeTask.value = null
-        viewModel.onPageChanged(site = initSite(hasFullAccessToContent = true), hasValidSite = true, page = mock())
-
-        assertThat(fabUiState?.isFocusPointVisible).isFalse
     }
 
     @Test
@@ -315,70 +255,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         val createPostWithBloggingPromptValue = viewModel.createPostWithBloggingPrompt.value
         assertNotNull(createPostWithBloggingPromptValue)
         assertThat(createPostWithBloggingPromptValue).isEqualTo(promptId)
-    }
-
-    @Test
-    fun `bottom sheet does not show quick start focus point by default`() {
-        startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), page = PageType.MY_SITE)
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
-        assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
-            false
-        )
-    }
-
-    @Test
-    fun `CREATE_NEW_POST action in bottom sheet with active Quick Start completes task and hides the focus point`() {
-        startViewModelWithDefaultParameters()
-        activeTask.value = PUBLISH_POST
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), page = PageType.MY_SITE)
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
-        assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
-            true
-        )
-
-        val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
-        assertThat(action).isNotNull
-        action.onClickAction?.invoke(CREATE_NEW_POST)
-        verify(quickStartRepository).completeTask(any())
-
-        assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
-            false
-        )
-    }
-
-    @Test
-    fun `CREATE_NEW_POST action sets task as done in QuickStartRepository`() {
-        startViewModelWithDefaultParameters()
-        activeTask.value = PUBLISH_POST
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), page = PageType.MY_SITE)
-
-        val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
-        assertThat(action).isNotNull
-        action.onClickAction?.invoke(CREATE_NEW_POST)
-
-        verify(quickStartRepository).completeTask(PUBLISH_POST)
-    }
-
-    @Test
-    fun `actions that are not CREATE_NEW_POST will not complete quick start task`() {
-        whenever(mainCreateSheetHelper.canCreatePage(any(), any())).thenReturn(true)
-        startViewModelWithDefaultParameters()
-
-        activeTask.value = PUBLISH_POST
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), page = PageType.MY_SITE)
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
-        assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
-            true
-        )
-
-        val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_PAGE } as CreateAction
-        assertThat(action).isNotNull
-        action.onClickAction?.invoke(CREATE_NEW_PAGE)
-
-        assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
-            false
-        )
     }
 
     @Test
@@ -532,57 +408,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         resumeViewModelWithDefaultParameters()
 
         verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
-    }
-
-    @Test
-    fun `when follow site is active task, then only follow site visible focus point shown`() {
-        activeTask.value = FOLLOW_SITE
-
-        assertThat(externalFocusPointEvents).containsExactly(
-            listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
-        )
-    }
-
-    @Test
-    fun `when check notifications is active task, then only check notifications visible focus point shown`() {
-        activeTask.value = CHECK_NOTIFICATIONS
-
-        assertThat(externalFocusPointEvents).containsExactly(
-            listOf(invisibleFollowSiteFocusPointInfo, visibleCheckNotificationsFocusPointInfo)
-        )
-    }
-
-    @Test
-    fun `when the active task doesn't need to show an external focus point, emit invisible focus point info`() {
-        activeTask.value = VIEW_SITE
-
-        assertThat(externalFocusPointEvents).containsExactly(
-            listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
-        )
-    }
-
-    @Test
-    fun `when the active task is null, emit invisible focus point info`() {
-        activeTask.value = null
-
-        assertThat(externalFocusPointEvents).containsExactly(
-            listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
-        )
-    }
-
-    @Test
-    fun `when the active task changes more than once, only emit focus point event if its value has changed`() {
-        activeTask.value = FOLLOW_SITE
-        activeTask.value = FOLLOW_SITE
-        activeTask.value = VIEW_SITE
-        activeTask.value = null
-        activeTask.value = FOLLOW_SITE
-
-        assertThat(externalFocusPointEvents).containsExactly(
-            listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo),
-            listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo),
-            listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
-        )
     }
 
     @Test
@@ -810,7 +635,11 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     private fun resumeViewModelWithDefaultParameters() {
-        viewModel.onResume(site = initSite(hasFullAccessToContent = true), hasValidSite = true, page = PageType.MY_SITE)
+        viewModel.onResume(
+            site = initSite(hasFullAccessToContent = true),
+            hasValidSite = true,
+            page = PageType.MY_SITE
+        )
     }
 
     private fun initSite(
@@ -822,13 +651,5 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             setIsWPCom(isWpcomOrJpSite)
             setIsJetpackConnected(isWpcomOrJpSite)
         }
-    }
-
-    companion object {
-        val visibleFollowSiteFocusPointInfo = FocusPointInfo(FOLLOW_SITE, true)
-        val invisibleFollowSiteFocusPointInfo = FocusPointInfo(FOLLOW_SITE, false)
-
-        val visibleCheckNotificationsFocusPointInfo = FocusPointInfo(CHECK_NOTIFICATIONS, true)
-        val invisibleCheckNotificationsFocusPointInfo = FocusPointInfo(CHECK_NOTIFICATIONS, false)
     }
 }

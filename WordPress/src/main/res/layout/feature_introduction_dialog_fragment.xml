@@ -117,7 +117,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/secondary_button"
-                    style="@style/QuickStartPromptDialogSecondaryButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_extra_large"

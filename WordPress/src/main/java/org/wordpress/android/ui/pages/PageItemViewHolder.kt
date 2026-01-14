@@ -36,7 +36,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
-import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.extensions.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.util.extensions.currentLocale
 import org.wordpress.android.util.extensions.getColorFromAttribute
@@ -110,7 +109,6 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 uiHelper.updateVisibility(labels, page.labels.isNotEmpty())
 
                 itemView.setOnClickListener {
-                    QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
                     onItemTapped(page)
                 }
 
@@ -123,21 +121,6 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 uiHelper.updateVisibility(disabledOverlay, page.showOverlay)
                 updateProgressBarState(page.progressBarUiState)
-
-                // Clean up focus tip if there
-                QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
-                if (page.showQuickStartFocusPoint) {
-                    pageItemContainer.post {
-                        val horizontalOffset = pageItemContainer.width / 2
-                        val verticalOffset = (pageItemContainer.height)
-                        QuickStartUtils.addQuickStartFocusPointAboveTheView(
-                            pageItemContainer,
-                            pageMore,
-                            horizontalOffset,
-                            -verticalOffset
-                        )
-                    }
-                }
             }
         }
 
@@ -374,7 +357,6 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
         override fun onBind(pageItem: PageItem) {
             itemView.setOnClickListener {
-                QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
                 onAction(Action.OpenSiteEditor)
             }
             pageItemInfo.setOnClickListener {

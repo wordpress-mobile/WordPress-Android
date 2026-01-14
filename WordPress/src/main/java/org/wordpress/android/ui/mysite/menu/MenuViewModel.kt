@@ -10,9 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
@@ -21,17 +18,14 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.ListItemActionHandler
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LONG_DURATION_MS
 import org.wordpress.android.util.SHORT_DURATION_MS
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -45,7 +39,6 @@ class MenuViewModel @Inject constructor(
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
     private val listItemActionHandler: ListItemActionHandler,
-    private val quickStartRepository: QuickStartRepository,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteItemsBuilder: SiteItemsBuilder,
     private val contextProvider: ContextProvider,
@@ -57,9 +50,7 @@ class MenuViewModel @Inject constructor(
     val navigation = _onNavigation
 
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
-    val onSnackbarMessage = merge(_onSnackbarMessage, quickStartRepository.onSnackbar)
-
-    val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
+    val onSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _onSnackbarMessage
 
     private val _uiState = MutableStateFlow(MenuViewState(items = emptyList()))
     val uiState: StateFlow<MenuViewState> = _uiState
@@ -70,10 +61,9 @@ class MenuViewModel @Inject constructor(
     private val _onSelectedSiteMissing = MutableLiveData<Unit>()
     val onSelectedSiteMissing = _onSelectedSiteMissing as LiveData<Unit>
 
-    private var quickStartEvent: QuickStartEvent? = null
     private var isStarted = false
 
-    fun start(quickStartEvent: QuickStartEvent? = null) {
+    fun start() {
         if (isStarted) {
             return
         }
@@ -84,20 +74,17 @@ class MenuViewModel @Inject constructor(
             return
         }
 
-        this.quickStartEvent = quickStartEvent
-        if (quickStartEvent != null) {
-            quickStartRepository.setActiveTask(quickStartEvent.task, true)
-        }
-        buildSiteMenu(site)
+        buildSiteMenu()
         isStarted = true
     }
 
-    private fun buildSiteMenu(site: SiteModel) {
+    private fun buildSiteMenu() {
+        val site = selectedSiteRepository.getSelectedSite() ?: return
+
         val currentItems = siteItemsBuilder.build(
             MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
-                enableFocusPoints = true,
+                enableFocusPoints = false,
                 site = site,
-                activeTask = quickStartEvent?.task,
                 onClick = this::onClick,
                 isBlazeEligible = isSiteBlazeEligible()
             )
@@ -105,21 +92,20 @@ class MenuViewModel @Inject constructor(
             it.toMenuItemState()
         }.toList()
 
-        _uiState.value = MenuViewState(
-            items = applyFocusPointIfNeeded(currentItems)
-        )
+        _uiState.value = MenuViewState(items = currentItems)
 
-        rebuildSiteItemsForJetpackCapabilities(site)
+        rebuildSiteItemsForJetpackCapabilities()
     }
 
-    private fun rebuildSiteItemsForJetpackCapabilities(site: SiteModel) {
+    private fun rebuildSiteItemsForJetpackCapabilities() {
+        val site = selectedSiteRepository.getSelectedSite() ?: return
+
         launch(bgDispatcher) {
             jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
                 val currentItems = siteItemsBuilder.build(
                     MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
-                        enableFocusPoints = true,
+                        enableFocusPoints = false,
                         site = site,
-                        activeTask = quickStartEvent?.task,
                         onClick = this@MenuViewModel::onClick,
                         isBlazeEligible = isSiteBlazeEligible(),
                         scanAvailable = (it.scan && !site.isWPCom && !site.isWPComAtomic)
@@ -128,8 +114,8 @@ class MenuViewModel @Inject constructor(
                     item.toMenuItemState()
                 }.toList()
 
-                _uiState.value = MenuViewState(items = applyFocusPointIfNeeded(currentItems))
-            } // end collect
+                _uiState.value = MenuViewState(items = currentItems)
+            }
         }
     }
 
@@ -137,69 +123,12 @@ class MenuViewModel @Inject constructor(
         blazeFeatureUtils.isSiteBlazeEligible(selectedSiteRepository.getSelectedSite()!!)
 
     private fun onClick(action: ListItemAction) {
-        clearQuickStartEvent()
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
-            when (action) {
-                ListItemAction.PAGES -> {
-                    quickStartRepository.completeTask(QuickStartStore.QuickStartNewSiteTask.REVIEW_PAGES)
-                }
-                ListItemAction.SHARING -> {
-                    quickStartRepository.requestNextStepOfTask(
-                        QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING
-                    )
-                }
-
-                ListItemAction.STATS -> {
-                    quickStartRepository.completeTask(
-                        quickStartRepository.quickStartType.getTaskFromString(
-                            QuickStartStore.QUICK_START_CHECK_STATS_LABEL
-                        )
-                    )
-                }
-
-                ListItemAction.MEDIA -> {
-                    quickStartRepository.requestNextStepOfTask(
-                        quickStartRepository.quickStartType.getTaskFromString(
-                            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL
-                        )
-                    )
-                }
-
-                else -> {}
-            }
             analyticsTrackerWrapper.track(
                 AnalyticsTracker.Stat.MORE_MENU_ITEM_TAPPED,
                 mapOf(MENU_ITEM_TRACKING_PARAMETER to action.trackingLabel)
             )
             _onNavigation.postValue(Event(listItemActionHandler.handleAction(action, selectedSite)))
-        }
-    }
-
-    private fun applyFocusPointIfNeeded(items: List<MenuItemState>): List<MenuItemState> {
-        return quickStartEvent?.let {
-            val showFocusPointOn = convertQuickStartTaskToListItemAction(it.task)
-            items.map { item ->
-                if (item is MenuItemState.MenuListItem) {
-                    if (item.listItemAction == showFocusPointOn) {
-                        item.copy(showFocusPoint = true)
-                    } else {
-                        item
-                    }
-                } else {
-                    item
-                }
-            }.toList()
-        } ?: items
-    }
-
-    private fun convertQuickStartTaskToListItemAction(task: QuickStartTask): ListItemAction {
-        return when (task) {
-            QuickStartStore.QuickStartNewSiteTask.REVIEW_PAGES -> ListItemAction.PAGES
-            QuickStartStore.QuickStartNewSiteTask.CHECK_STATS -> ListItemAction.STATS
-            QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING -> ListItemAction.SHARING
-            QuickStartStore.QuickStartExistingSiteTask.UPLOAD_MEDIA -> ListItemAction.MEDIA
-            QuickStartStore.QuickStartExistingSiteTask.CHECK_STATS -> ListItemAction.STATS
-            else -> ListItemAction.MORE
         }
     }
 
@@ -209,27 +138,9 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    private fun removeFocusPoints() {
-        if (quickStartEvent == null) {
-            val items = _uiState.value.items.map { item ->
-                if (item is MenuItemState.MenuListItem) {
-                    item.copy(showFocusPoint = false)
-                } else {
-                    item
-                }
-            }.toList()
-            _uiState.value = MenuViewState(items = items)
-        }
-    }
-
-    private fun clearQuickStartEvent() {
-        quickStartEvent = null
-    }
-
     /*
-    * This creates a very lightweight snackbar messages for quick start. No action events and no icons. At the
-    * point of this function execution, the snackbar is already created and ready to be shown. If in the future,
-    * the entire snackbar creation process should be refactored to be handle both compose and non-compose.
+    * This creates a very lightweight snackbar messages. No action events and no icons. At the
+    * point of this function execution, the snackbar is already created and ready to be shown.
      */
     private suspend fun handleShowSnackbarRequest(item: SnackbarItem) {
         val snackbarMessage = SnackbarMessage(
@@ -250,10 +161,6 @@ class MenuViewModel @Inject constructor(
     override fun onCleared() {
         jetpackCapabilitiesUseCase.clear()
         super.onCleared()
-    }
-
-    fun onResume() {
-        removeFocusPoints()
     }
 
     fun handleSiteRemoved() {

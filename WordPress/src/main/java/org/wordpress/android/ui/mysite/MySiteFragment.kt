@@ -9,7 +9,6 @@ import android.os.Parcelable
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.StringRes
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -20,14 +19,11 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.MySiteFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
-import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
@@ -53,13 +49,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.BasicDialogViewModel
-import org.wordpress.android.ui.posts.EditorConstants
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostUtils
-import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
-import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
-import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
-import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.StatsTimeframe
@@ -73,13 +64,11 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageManagerWrapper
-import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.extensions.getColorFromAttribute
-import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
@@ -93,9 +82,6 @@ import javax.inject.Inject
 @Suppress("LargeClass")
 class MySiteFragment : Fragment(R.layout.my_site_fragment),
     TextInputDialogFragment.Callback,
-    QuickStartPromptClickInterface,
-    FullScreenDialogFragment.OnConfirmListener,
-    FullScreenDialogFragment.OnDismissListener,
     OnScrollToTopListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -120,12 +106,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     @Inject
     lateinit var readerTracker: ReaderTracker
-
-    @Inject
-    lateinit var quickStartTracker: QuickStartTracker
-
-    @Inject
-    lateinit var quickStartUtils: QuickStartUtilsWrapper
 
     @Inject
     lateinit var htmlCompatWrapper: HtmlCompatWrapper
@@ -204,11 +184,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onPause() {
         super.onPause()
-        activity?.let {
-            if (!it.isChangingConfigurations) {
-                viewModel.clearActiveQuickStartTask()
-            }
-        }
     }
 
     override fun onResume() {
@@ -227,25 +202,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onTextInputDialogDismissed(callbackId: Int) {
         viewModel.onSiteNameChooserDismissed()
-    }
-
-    override fun onPositiveClicked(instanceTag: String) {
-        viewModel.startQuickStart()
-    }
-
-    override fun onNegativeClicked(instanceTag: String) {
-        viewModel.ignoreQuickStart()
-    }
-
-    override fun onConfirm(result: Bundle?) {
-        val task = result?.getSerializableCompat<java.io.Serializable>(
-            QuickStartFullScreenDialogFragment.RESULT_TASK
-        ) as? QuickStartStore.QuickStartTask
-        task?.let { viewModel.onQuickStartTaskCardClick(it) }
-    }
-
-    override fun onDismiss() {
-        viewModel.onQuickStartFullScreenDialogDismiss()
     }
 
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION", "ReturnCount", "LongMethod", "ComplexMethod")
@@ -317,14 +273,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 } else {
                     viewModel.onSitePicked()
                 }
-            }
-            RequestCodes.EDIT_LANDING_PAGE -> {
-                viewModel.checkAndStartQuickStart(
-                    data.getBooleanExtra(ChooseSiteActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
-                    isNewSite = data.getBooleanExtra(
-                        EditorConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false
-                    )
-                )
             }
         }
     }
@@ -441,14 +389,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
         viewModel.onNavigation.observeEvent(viewLifecycleOwner) { handleNavigationAction(it) }
         viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner) { showSnackbar(it) }
-        viewModel.onQuickStartMySitePrompts.observeEvent(viewLifecycleOwner) { activeTutorialPrompt ->
-            val message = quickStartUtils.stylizeQuickStartPrompt(
-                requireContext(),
-                activeTutorialPrompt.shortMessagePrompt,
-                activeTutorialPrompt.iconId
-            )
-            showSnackbar(SnackbarMessageHolder(UiString.UiStringText(message)))
-        }
         viewModel.onMediaUpload.observeEvent(viewLifecycleOwner) {
             UploadService.uploadMedia(requireActivity(), it, "MySiteFragment onMediaUpload")
         }
@@ -639,8 +579,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
         is SiteNavigationAction.OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
         is SiteNavigationAction.OpenMore -> activityNavigator.openUnifiedMySiteMenu(
-            requireActivity(),
-            action.quickStartEvent
+            requireActivity()
         )
         is SiteNavigationAction.OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
         is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(
@@ -676,14 +615,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         is SiteNavigationAction.AddNewSite ->
             AddSiteHandler.addSite(requireActivity(), action.hasAccessToken, action.source)
-        is SiteNavigationAction.ShowQuickStartDialog -> showQuickStartDialog(
-            action.title,
-            action.message,
-            action.positiveButtonLabel,
-            action.negativeButtonLabel,
-            action.isNewSite
-        )
-        is SiteNavigationAction.OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
         is SiteNavigationAction.OpenDraftsPosts ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
         is SiteNavigationAction.OpenScheduledPosts ->
@@ -860,16 +791,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             .show(requireActivity().supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
     }
 
-    private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {
-        val bundle = QuickStartFullScreenDialogFragment.newBundle(action.type)
-        FullScreenDialogFragment.Builder(requireContext())
-            .setOnConfirmListener(this)
-            .setOnDismissListener(this)
-            .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)
-            .build()
-            .show(requireActivity().supportFragmentManager, FullScreenDialogFragment.TAG)
-    }
-
     private fun startCropActivity(imageUri: UriWrapper) {
         val context = activity ?: return
         val options = UCrop.Options()
@@ -889,34 +810,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             .start(requireActivity(), this)
     }
 
-    private fun showQuickStartDialog(
-        @StringRes title: Int,
-        @StringRes message: Int,
-        @StringRes positiveButtonLabel: Int,
-        @StringRes negativeButtonLabel: Int,
-        isNewSite: Boolean
-    ) {
-        val tag = TAG_QUICK_START_DIALOG
-        val quickStartPromptDialogFragment = QuickStartPromptDialogFragment()
-        quickStartPromptDialogFragment.initialize(
-            tag,
-            getString(title),
-            getString(message),
-            getString(positiveButtonLabel),
-            R.drawable.img_illustration_site_about_280dp,
-            getString(negativeButtonLabel),
-            isNewSite
-        )
-        quickStartPromptDialogFragment.show(parentFragmentManager, tag)
-        quickStartTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
-    }
-
     companion object {
         @JvmField
         var TAG: String = MySiteFragment::class.java.simpleName
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
-        private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
         private const val FIRST_ITEM = 0
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
