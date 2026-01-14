@@ -75,19 +75,19 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
 
         if (navigationActionData.isError) {
             ActivityLauncher.showMainActivity(this)
-        } else if (navigationActionData.showSiteSelector) {
-            // Skip the site picker - just go to main activity which will auto-select a site
-            unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.value)
-            ActivityLauncher.showMainActivity(this)
         } else if (navigationActionData.showPostSignupInterstitial) {
             unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.value)
             ActivityLauncher.showPostSignupInterstitial(this)
         } else {
+            unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.value)
             val mainActivityIntent = Intent(this, WPMainActivity::class.java)
             mainActivityIntent.setFlags(
                 (Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                         or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             )
+            navigationActionData.newSiteLocalId?.let {
+                mainActivityIntent.putExtra(WPMainActivity.ARG_SELECTED_SITE, it)
+            }
             startActivity(mainActivityIntent)
         }
         finish()
