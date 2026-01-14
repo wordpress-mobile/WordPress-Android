@@ -176,9 +176,90 @@ class SiteUtilsTest {
     }
 
     @Test
-    fun `returns correct timezone`() {
+    fun `returns correct timezone for positive offset with plus sign`() {
         val timeZone = SiteUtils.getNormalizedTimezone("+10")
 
         Assertions.assertThat(timeZone.displayName).isEqualTo("GMT+10:00")
+    }
+
+    @Test
+    fun `returns correct timezone for positive numeric offset`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("5")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT+05:00")
+    }
+
+    @Test
+    fun `returns correct timezone for negative numeric offset`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("-8")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT-08:00")
+    }
+
+    @Test
+    fun `returns correct timezone for fractional offset`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("5.5")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT+05:30")
+    }
+
+    @Test
+    fun `returns GMT for null timezone`() {
+        val timeZone = SiteUtils.getNormalizedTimezone(null)
+
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT")
+    }
+
+    @Test
+    fun `returns GMT for empty timezone`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT")
+    }
+
+    @Test
+    fun `returns GMT for zero timezone`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("0")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT")
+    }
+
+    @Test
+    fun `returns named timezone for Europe Madrid`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("Europe/Madrid")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("Europe/Madrid")
+    }
+
+    @Test
+    fun `returns named timezone for America New_York`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("America/New_York")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("America/New_York")
+    }
+
+    @Test
+    fun `returns named timezone for Asia Tokyo`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("Asia/Tokyo")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("Asia/Tokyo")
+    }
+
+    @Test
+    fun `returns named timezone for Australia Sydney`() {
+        val timeZone = SiteUtils.getNormalizedTimezone("Australia/Sydney")
+
+        Assertions.assertThat(timeZone.id).isEqualTo("Australia/Sydney")
+    }
+
+    @Test
+    fun `falls back to numeric parsing for invalid named timezone`() {
+        // An invalid named timezone that contains "/" should fall back to numeric parsing
+        // which will also fail, resulting in GMT
+        val timeZone = SiteUtils.getNormalizedTimezone("Invalid/Timezone")
+
+        // Falls back to numeric parsing, which creates "GMT+Invalid/Timezone"
+        // TimeZone.getTimeZone returns GMT for unrecognized IDs
+        Assertions.assertThat(timeZone.id).isEqualTo("GMT")
     }
 }

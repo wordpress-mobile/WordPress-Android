@@ -23,6 +23,7 @@ public class SiteWPComRestResponse implements Response {
         public String admin_url;
         public String login_url;
         public String gmt_offset;
+        public String timezone_string;
         public String frame_nonce;
         public String unmapped_url;
         public String max_upload_size;
