@@ -165,8 +165,10 @@ import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -241,6 +243,9 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
     private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "BLOGGING_REMINDERS_BOTTOM_SHEET_TAG";
     private final Handler mHandler = new Handler();
+
+    // Tracks site IDs before navigating away, used to detect newly added sites
+    private static Set<Integer> sSiteIdsBeforeNavigation = null;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -1062,6 +1067,9 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         mWpAppNotifierHandler.addListener(this);
 
+        // Check if a new site was added while we were away (e.g., during login)
+        selectNewlyAddedSiteIfNeeded();
+
         // Load selected site
         initSelectedSite();
 
@@ -1319,6 +1327,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
                     startWithNewAccount();
+                    // Select the newly added site if one was returned
+                    setSite(data);
                 } else if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                     // can't do anything if user isn't signed in (either to wp.com or self-hosted)
                     finish();
@@ -1552,6 +1562,28 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     /**
+     * Checks if a new site was added while the activity was paused (e.g., during self-hosted login)
+     * and selects it if so.
+     */
+    private void selectNewlyAddedSiteIfNeeded() {
+        if (sSiteIdsBeforeNavigation == null) {
+            return;
+        }
+
+        // Find any newly added sites
+        for (SiteModel site : mSiteStore.getSites()) {
+            if (!sSiteIdsBeforeNavigation.contains(site.getId())) {
+                // Found a new site, select it
+                setSelectedSite(site);
+                break;
+            }
+        }
+
+        // Clear the saved IDs
+        sSiteIdsBeforeNavigation = null;
+    }
+
+    /**
      * This should not be moved to a SiteUtils.getSelectedSite() or similar static method. We don't want
      * this to be used globally like WordPress.getCurrentBlog() was used. The state is maintained by this
      * Activity and the selected site parameter is passed along to other activities / fragments.
@@ -1736,6 +1768,12 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         super.onPause();
 
         mWpAppNotifierHandler.removeListener(this);
+
+        // Save current site IDs so we can detect newly added sites when we resume
+        sSiteIdsBeforeNavigation = new HashSet<>();
+        for (SiteModel site : mSiteStore.getSites()) {
+            sSiteIdsBeforeNavigation.add(site.getId());
+        }
     }
 
     private void enableDeepLinkingComponentsIfNeeded() {
