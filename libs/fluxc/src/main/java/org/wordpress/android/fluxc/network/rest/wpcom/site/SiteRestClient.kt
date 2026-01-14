@@ -1087,7 +1087,11 @@ class SiteRestClient @Inject constructor(
             site.hasWooCommerce = from.options.woocommerce_is_active
             site.adminUrl = from.options.admin_url
             site.loginUrl = from.options.login_url
-            site.timezone = from.options.gmt_offset
+            site.timezone = if (!from.options.timezone_string.isNullOrEmpty()) {
+                from.options.timezone_string
+            } else {
+                from.options.gmt_offset
+            }
             site.frameNonce = from.options.frame_nonce
             site.unmappedUrl = from.options.unmapped_url
             site.jetpackVersion = from.options.jetpack_version

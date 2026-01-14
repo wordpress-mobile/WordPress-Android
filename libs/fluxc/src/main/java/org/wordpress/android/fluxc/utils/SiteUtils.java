@@ -65,46 +65,59 @@ public class SiteUtils {
     }
 
     /**
-     * Given a {@link SiteModel} timezone returns a standard Java timezone
-     * @param wpTimeZone from SiteModel
-     * @return
+     * Given a {@link SiteModel} timezone returns a standard Java timezone.
+     * Supports both named timezones (e.g., "Europe/Madrid") and numeric GMT offsets (e.g., "1", "-5.5").
+     * Named timezones are preferred as they correctly handle Daylight Saving Time transitions.
+     * @param wpTimeZone from SiteModel - can be a named timezone or numeric offset
+     * @return TimeZone object
      */
     public static TimeZone getNormalizedTimezone(String wpTimeZone) {
+        if (wpTimeZone == null || wpTimeZone.isEmpty() || wpTimeZone.equals("0") || wpTimeZone.equals("0.0")) {
+            return TimeZone.getTimeZone("GMT");
+        }
+
+        // Check if it's a named timezone (e.g., "Europe/Madrid", "America/New_York")
+        // Named timezones contain "/" and properly handle DST transitions
+        if (wpTimeZone.contains("/")) {
+            TimeZone tz = TimeZone.getTimeZone(wpTimeZone);
+            // TimeZone.getTimeZone returns "GMT" for unknown IDs, verify it resolved correctly
+            if (!tz.getID().equals("GMT") || wpTimeZone.equals("GMT")) {
+                return tz;
+            }
+            // Fall through to numeric offset handling if the named timezone wasn't recognized
+        }
+
         /*
-        Convert the timezone to a form that is compatible with Java TimeZone class
+        Convert numeric timezone offset to a form compatible with Java TimeZone class.
         WordPress returns something like the following:
            UTC+0:30 ----> 0.5
            UTC+1 ----> 1.0
-           UTC-0:30 ----> -1.0
+           UTC-0:30 ----> -0.5
         */
         String timezoneNormalized;
-        if (wpTimeZone == null || wpTimeZone.isEmpty() || wpTimeZone.equals("0") || wpTimeZone.equals("0.0")) {
-            timezoneNormalized = "GMT";
-        } else {
-            String[] timezoneSplit = StringUtils.split(wpTimeZone, ".");
-            timezoneNormalized = timezoneSplit[0];
-            if (timezoneSplit.length > 1) {
-                switch (timezoneSplit[1]) {
-                    case "5":
-                        timezoneNormalized += ":30";
-                        break;
-                    case "75":
-                        timezoneNormalized += ":45";
-                        break;
-                    case "25":
-                        // Not used by any timezones as of current writing, but you never know
-                        timezoneNormalized += ":15";
-                        break;
-                }
+        String[] timezoneSplit = StringUtils.split(wpTimeZone, ".");
+        timezoneNormalized = timezoneSplit[0];
+        if (timezoneSplit.length > 1) {
+            switch (timezoneSplit[1]) {
+                case "5":
+                    timezoneNormalized += ":30";
+                    break;
+                case "75":
+                    timezoneNormalized += ":45";
+                    break;
+                case "25":
+                    // Not used by any timezones as of current writing, but you never know
+                    timezoneNormalized += ":15";
+                    break;
             }
-            if (timezoneNormalized.startsWith("-")) {
+        }
+        if (timezoneNormalized.startsWith("-")) {
+            timezoneNormalized = "GMT" + timezoneNormalized;
+        } else {
+            if (timezoneNormalized.startsWith("+")) {
                 timezoneNormalized = "GMT" + timezoneNormalized;
             } else {
-                if (timezoneNormalized.startsWith("+")) {
-                    timezoneNormalized = "GMT" + timezoneNormalized;
-                } else {
-                    timezoneNormalized = "GMT+" + timezoneNormalized;
-                }
+                timezoneNormalized = "GMT+" + timezoneNormalized;
             }
         }
 
