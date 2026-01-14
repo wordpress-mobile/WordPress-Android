@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login
 
-import androidx.annotation.VisibleForTesting
 import androidx.core.net.toUri
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
