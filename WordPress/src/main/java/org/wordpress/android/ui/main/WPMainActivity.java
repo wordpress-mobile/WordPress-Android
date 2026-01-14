@@ -460,6 +460,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         // Check if a specific site should be selected (e.g., after adding a self-hosted site)
         int selectedSiteId = getIntent().getIntExtra(ARG_SELECTED_SITE, SelectedSiteRepository.UNAVAILABLE);
         if (selectedSiteId != SelectedSiteRepository.UNAVAILABLE) {
+            getIntent().removeExtra(ARG_SELECTED_SITE);
             SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteId);
             if (site != null) {
                 setSelectedSite(site);
