@@ -1678,8 +1678,15 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
+        // Select newly added self-hosted site
+        for (SiteModel site : event.updatedSites) {
+            if (!site.isWPCom()) {
+                setSelectedSite(site);
+                return;
+            }
+        }
+
         // "Reload" selected site from the db
-        // It would be better if the OnSiteChanged provided the list of changed sites.
         if (getSelectedSite() == null && mSiteStore.hasSite()) {
             setSelectedSite(mSiteStore.getSites().get(0));
         }
