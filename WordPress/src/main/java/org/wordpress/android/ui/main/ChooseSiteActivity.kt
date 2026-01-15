@@ -290,9 +290,10 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     }
 
     private fun showRemoveSelfHostedSiteDialog(site: SiteModel) {
+        val siteName = SiteUtils.getSiteNameOrHomeURL(site)
         MaterialAlertDialogBuilder(this)
             .setTitle(resources.getText(R.string.remove_account))
-            .setMessage(resources.getText(R.string.sure_to_remove_account))
+            .setMessage(getString(R.string.confirm_remove_site, siteName))
             .setPositiveButton(
                 resources.getText(R.string.yes)
             ) { _: DialogInterface?, _: Int ->

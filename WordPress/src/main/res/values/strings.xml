@@ -67,7 +67,7 @@
     <string name="search">Search</string>
     <string name="suggestion">Suggestion:</string>
     <string name="select_all">Select all</string>
-    <string name="sure_to_remove_account">Remove this site from the app?</string>
+    <string name="confirm_remove_site">Remove \"%s\" from the app?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="error">Error</string>
