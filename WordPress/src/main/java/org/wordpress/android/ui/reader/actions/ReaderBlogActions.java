@@ -55,7 +55,8 @@ public class ReaderBlogActions {
     private static void logVolleyError(String action, VolleyError error) {
         int status = VolleyUtils.statusCodeFromVolleyError(error);
         AppLog.e(T.READER, action + " failed with error: " + status);
-        AppLog.e(T.READER, error.getMessage());
+        String errorMessage = error.getMessage();
+        AppLog.e(T.READER, errorMessage != null ? errorMessage : "No error message available");
         AppLog.e(T.READER, error);
     }
 
