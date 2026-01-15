@@ -483,6 +483,7 @@ public class ReaderBlogActions {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                logVolleyError("check url reachable", volleyError);
                 int statusCode;
                 // check specifically for auth failure class rather than relying on status code
                 // since a redirect to an unauthorized url may return a 301 rather than a 401
@@ -491,7 +492,6 @@ public class ReaderBlogActions {
                 } else {
                     statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
                 }
-                logVolleyError("check url reachable", volleyError);
                 // Volley treats a 301 redirect as a failure here, we should treat it as
                 // success since it means the blog url is reachable
                 if (statusCode == 301) {
