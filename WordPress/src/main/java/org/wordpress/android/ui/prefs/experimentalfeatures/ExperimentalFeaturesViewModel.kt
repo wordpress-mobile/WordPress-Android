@@ -71,7 +71,7 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
                 if (enabled) {
                     _applicationPasswordDialogState.value = ApplicationPasswordDialogState.Info
                 } else {
-                    val affectedSites = applicationPasswordLoginHelper.getApplicationPasswordSitesCount()
+                    val affectedSites = applicationPasswordLoginHelper.getResettableApplicationPasswordSitesCount()
                     if (affectedSites > 0) {
                         _applicationPasswordDialogState.value =
                             ApplicationPasswordDialogState.Disable(affectedSites)
