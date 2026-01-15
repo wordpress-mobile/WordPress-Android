@@ -101,12 +101,13 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.w(T.READER, "blog " + actionName + " failed with error");
+                int status = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                AppLog.w(T.READER, "blog " + actionName + " failed with error: " + status);
+                AppLog.e(T.READER, volleyError.getMessage());
                 AppLog.e(T.READER, volleyError);
                 // check if we get a 403 when unfollowing - this will happen when we attempt
                 // to unfollow a blog that no longer exists - the workaround is to unfollow
                 // by url - note that the v1.2 endpoint will return a 404 in this situation
-                int status = VolleyUtils.statusCodeFromVolleyError(volleyError);
                 if (status == 403 && !isAskingToFollow) {
                     internalUnfollowBlogByUrl(blogId, actionListener);
                 } else {
