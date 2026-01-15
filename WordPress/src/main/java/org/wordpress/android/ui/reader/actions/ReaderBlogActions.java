@@ -52,6 +52,13 @@ public class ReaderBlogActions {
         return (json != null ? json.toString() : "");
     }
 
+    private static void logVolleyError(String action, VolleyError error) {
+        int status = VolleyUtils.statusCodeFromVolleyError(error);
+        AppLog.e(T.READER, action + " failed with error: " + status);
+        AppLog.e(T.READER, error.getMessage());
+        AppLog.e(T.READER, error);
+    }
+
     public static boolean followBlogById(final long blogId,
                                          final long feedId,
                                          final boolean isAskingToFollow,
@@ -101,13 +108,11 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                int status = VolleyUtils.statusCodeFromVolleyError(volleyError);
-                AppLog.w(T.READER, "blog " + actionName + " failed with error: " + status);
-                AppLog.e(T.READER, volleyError.getMessage());
-                AppLog.e(T.READER, volleyError);
+                logVolleyError("blog " + actionName, volleyError);
                 // check if we get a 403 when unfollowing - this will happen when we attempt
                 // to unfollow a blog that no longer exists - the workaround is to unfollow
                 // by url - note that the v1.2 endpoint will return a 404 in this situation
+                int status = VolleyUtils.statusCodeFromVolleyError(volleyError);
                 if (status == 403 && !isAskingToFollow) {
                     internalUnfollowBlogByUrl(blogId, actionListener);
                 } else {
@@ -139,10 +144,7 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                int status = VolleyUtils.statusCodeFromVolleyError(error);
-                AppLog.w(T.READER, "unfollow blog by url failed with error: " + status);
-                AppLog.e(T.READER, error.getMessage());
-                AppLog.e(T.READER, error);
+                logVolleyError("unfollow blog by url", error);
                 ReaderActions.callActionListener(actionListener, false);
             }
         };
@@ -295,10 +297,7 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                int status = VolleyUtils.statusCodeFromVolleyError(volleyError);
-                AppLog.w(T.READER, "feed " + actionName + " failed with error: " + status);
-                AppLog.e(T.READER, volleyError.getMessage());
-                AppLog.e(T.READER, volleyError);
+                logVolleyError("feed " + actionName, volleyError);
                 localRevertFollowFeedId(feedId, isAskingToFollow);
                 ReaderActions.callActionListener(actionListener, false);
             }
@@ -395,9 +394,7 @@ public class ReaderBlogActions {
                     AppLog.w(T.READER, "failed to get blog info by id, retrying with url");
                     updateBlogInfo(0, blogUrl, infoListener);
                 } else {
-                    AppLog.w(T.READER, "update blog info failed with error: " + statusCode);
-                    AppLog.e(T.READER, volleyError.getMessage());
-                    AppLog.e(T.READER, volleyError);
+                    logVolleyError("update blog info", volleyError);
                     if (infoListener != null) {
                         infoListener.onResult(null);
                     }
@@ -435,10 +432,7 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                int status = VolleyUtils.statusCodeFromVolleyError(volleyError);
-                AppLog.w(T.READER, "update feed info failed with error: " + status);
-                AppLog.e(T.READER, volleyError.getMessage());
-                AppLog.e(T.READER, volleyError);
+                logVolleyError("update feed info", volleyError);
                 if (infoListener != null) {
                     infoListener.onResult(null);
                 }
@@ -497,9 +491,7 @@ public class ReaderBlogActions {
                 } else {
                     statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
                 }
-                AppLog.w(T.READER, "check url reachable failed with error: " + statusCode);
-                AppLog.e(T.READER, volleyError.getMessage());
-                AppLog.e(T.READER, volleyError);
+                logVolleyError("check url reachable", volleyError);
                 // Volley treats a 301 redirect as a failure here, we should treat it as
                 // success since it means the blog url is reachable
                 if (statusCode == 301) {
@@ -565,10 +557,7 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                int status = VolleyUtils.statusCodeFromVolleyError(volleyError);
-                AppLog.w(T.READER, "block blog failed with error: " + status);
-                AppLog.e(T.READER, volleyError.getMessage());
-                AppLog.e(T.READER, volleyError);
+                logVolleyError("block blog", volleyError);
                 undoBlockBlogLocal(blockResult);
                 if (blockResult.wasFollowing) {
                     ReaderBlogTable.setIsFollowedBlogId(blockResult.blogId, true);
@@ -612,10 +601,7 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                int status = VolleyUtils.statusCodeFromVolleyError(volleyError);
-                AppLog.w(T.READER, "unblock blog failed with error: " + status);
-                AppLog.e(T.READER, volleyError.getMessage());
-                AppLog.e(T.READER, volleyError);
+                logVolleyError("unblock blog", volleyError);
             }
         };
 
