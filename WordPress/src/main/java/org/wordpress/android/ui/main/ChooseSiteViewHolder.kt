@@ -88,8 +88,6 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         binding.remove.isVisible = showRemove
         if (showRemove) {
             binding.remove.setOnClickListener { onRemoveClicked(site) }
-            val color = binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
-            ImageViewCompat.setImageTintList(binding.remove, ColorStateList.valueOf(color))
         }
     }
 

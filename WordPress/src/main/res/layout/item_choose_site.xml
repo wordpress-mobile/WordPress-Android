@@ -49,7 +49,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/remove_account"
             android:padding="16dp"
-            android:src="@drawable/ic_close_white_24dp"
+            android:src="@drawable/ic_remove_24dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
