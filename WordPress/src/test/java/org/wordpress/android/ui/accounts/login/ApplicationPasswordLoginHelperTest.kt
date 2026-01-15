@@ -237,71 +237,28 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `removeAllApplicationPasswordCredentials clears all password fields for single site`() = runTest {
-        val site = SiteModel().apply {
-            id = 1
-            url = TEST_URL
-            apiRestUsernamePlain = TEST_USER
-            apiRestPasswordPlain = TEST_PASSWORD
-            apiRestUsernameEncrypted = "encrypted_user"
-            apiRestPasswordEncrypted = "encrypted_password"
-            apiRestUsernameIV = "user_iv"
-            apiRestPasswordIV = "password_iv"
-        }
-        whenever(siteStore.sites).thenReturn(listOf(site))
+    fun `removeAllApplicationPasswordCredentials clears all password fields for site with regular credentials`() =
+        runTest {
+            val site = SiteModel().apply {
+                id = 1
+                url = TEST_URL
+                username = "regular_user"
+                password = "regular_password"
+                apiRestUsernamePlain = TEST_USER
+                apiRestPasswordPlain = TEST_PASSWORD
+                apiRestUsernameEncrypted = "encrypted_user"
+                apiRestPasswordEncrypted = "encrypted_password"
+                apiRestUsernameIV = "user_iv"
+                apiRestPasswordIV = "password_iv"
+            }
+            whenever(siteStore.sites).thenReturn(listOf(site))
 
-        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+            applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
 
-        verify(siteStore).sites
-        verify(dispatcherWrapper).removeApplicationPassword(eq(site))
+            verify(siteStore).sites
+            verify(dispatcherWrapper).removeApplicationPassword(eq(site))
 
-        // Verify all password fields are cleared
-        assertEquals("", site.apiRestUsernamePlain)
-        assertEquals("", site.apiRestPasswordPlain)
-        assertEquals("", site.apiRestUsernameEncrypted)
-        assertEquals("", site.apiRestPasswordEncrypted)
-        assertEquals("", site.apiRestUsernameIV)
-        assertEquals("", site.apiRestPasswordIV)
-    }
-
-    @Test
-    fun `removeAllApplicationPasswordCredentials clears password fields for multiple sites`() = runTest {
-        val site1 = SiteModel().apply {
-            id = 1
-            url = "http://site1.com"
-            apiRestUsernamePlain = "user1"
-            apiRestPasswordPlain = "password1"
-            apiRestUsernameEncrypted = "encrypted_user1"
-            apiRestPasswordEncrypted = "encrypted_password1"
-            apiRestUsernameIV = "user_iv1"
-            apiRestPasswordIV = "password_iv1"
-        }
-        val site2 = SiteModel().apply {
-            id = 2
-            url = "http://site2.com"
-            apiRestUsernamePlain = "user2"
-            apiRestPasswordPlain = "password2"
-            apiRestUsernameEncrypted = "encrypted_user2"
-            apiRestPasswordEncrypted = "encrypted_password2"
-            apiRestUsernameIV = "user_iv2"
-            apiRestPasswordIV = "password_iv2"
-        }
-        val site3 = SiteModel().apply {
-            id = 3
-            url = "http://site3.com"
-            // This site has no credentials set
-        }
-        whenever(siteStore.sites).thenReturn(listOf(site1, site2, site3))
-
-        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
-
-        verify(siteStore).sites
-        verify(dispatcherWrapper).removeApplicationPassword(eq(site1))
-        verify(dispatcherWrapper).removeApplicationPassword(eq(site2))
-        verify(dispatcherWrapper).removeApplicationPassword(eq(site3))
-
-        // Verify all password fields are cleared for all sites
-        listOf(site1, site2, site3).forEach { site ->
+            // Verify all password fields are cleared
             assertEquals("", site.apiRestUsernamePlain)
             assertEquals("", site.apiRestPasswordPlain)
             assertEquals("", site.apiRestUsernameEncrypted)
@@ -309,6 +266,61 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             assertEquals("", site.apiRestUsernameIV)
             assertEquals("", site.apiRestPasswordIV)
         }
+
+    @Test
+    fun `removeAllApplicationPasswordCredentials only resets sites with regular credentials`() = runTest {
+        val siteWithRegularCredentials = SiteModel().apply {
+            id = 1
+            url = "http://site1.com"
+            username = "regular_user1"
+            password = "regular_password1"
+            apiRestUsernamePlain = "user1"
+            apiRestPasswordPlain = "password1"
+            apiRestUsernameEncrypted = "encrypted_user1"
+            apiRestPasswordEncrypted = "encrypted_password1"
+            apiRestUsernameIV = "user_iv1"
+            apiRestPasswordIV = "password_iv1"
+        }
+        val siteWithoutRegularCredentials = SiteModel().apply {
+            id = 2
+            url = "http://site2.com"
+            username = ""
+            password = ""
+            apiRestUsernamePlain = "user2"
+            apiRestPasswordPlain = "password2"
+            apiRestUsernameEncrypted = "encrypted_user2"
+            apiRestPasswordEncrypted = "encrypted_password2"
+            apiRestUsernameIV = "user_iv2"
+            apiRestPasswordIV = "password_iv2"
+        }
+        val siteWithNoAppPassword = SiteModel().apply {
+            id = 3
+            url = "http://site3.com"
+            username = "regular_user3"
+            password = "regular_password3"
+            // This site has no Application Password credentials set
+        }
+        whenever(siteStore.sites).thenReturn(
+            listOf(siteWithRegularCredentials, siteWithoutRegularCredentials, siteWithNoAppPassword)
+        )
+
+        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+
+        verify(siteStore).sites
+        // Only the site with regular credentials AND app password should be reset
+        verify(dispatcherWrapper).removeApplicationPassword(eq(siteWithRegularCredentials))
+        // Site without regular credentials should NOT be reset
+        verify(dispatcherWrapper, times(0)).removeApplicationPassword(eq(siteWithoutRegularCredentials))
+        // Site with no app password encrypted should NOT be reset
+        verify(dispatcherWrapper, times(0)).removeApplicationPassword(eq(siteWithNoAppPassword))
+
+        // Verify password fields are cleared only for site with regular credentials
+        assertEquals("", siteWithRegularCredentials.apiRestUsernamePlain)
+        assertEquals("", siteWithRegularCredentials.apiRestUsernameEncrypted)
+
+        // Verify password fields are preserved for site without regular credentials
+        assertEquals("user2", siteWithoutRegularCredentials.apiRestUsernamePlain)
+        assertEquals("encrypted_user2", siteWithoutRegularCredentials.apiRestUsernameEncrypted)
     }
 
     @Test
@@ -319,8 +331,11 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             name = "Test Site"
             description = "Test Description"
             siteId = 12345L
+            username = "regular_user"
+            password = "regular_password"
             apiRestUsernamePlain = TEST_USER
             apiRestPasswordPlain = TEST_PASSWORD
+            apiRestUsernameEncrypted = "encrypted_user"
         }
         whenever(siteStore.sites).thenReturn(listOf(site))
 
@@ -335,8 +350,105 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         assertEquals("Test Description", site.description)
         assertEquals(12345L, site.siteId)
 
-        // Verify password fields are cleared
+        // Verify Application Password fields are cleared
         assertEquals("", site.apiRestUsernamePlain)
         assertEquals("", site.apiRestPasswordPlain)
+
+        // Verify regular credentials are preserved
+        assertEquals("regular_user", site.username)
+        assertEquals("regular_password", site.password)
     }
- }
+
+    @Test
+    fun `removeAllApplicationPasswordCredentials does not reset site with only username`() = runTest {
+        val site = SiteModel().apply {
+            id = 1
+            url = TEST_URL
+            username = "regular_user"
+            password = "" // No password
+            apiRestUsernameEncrypted = "encrypted_user"
+        }
+        whenever(siteStore.sites).thenReturn(listOf(site))
+
+        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+
+        verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
+        assertEquals("encrypted_user", site.apiRestUsernameEncrypted)
+    }
+
+    @Test
+    fun `removeAllApplicationPasswordCredentials does not reset site with only password`() = runTest {
+        val site = SiteModel().apply {
+            id = 1
+            url = TEST_URL
+            username = "" // No username
+            password = "regular_password"
+            apiRestUsernameEncrypted = "encrypted_user"
+        }
+        whenever(siteStore.sites).thenReturn(listOf(site))
+
+        applicationPasswordLoginHelper.removeAllApplicationPasswordCredentials()
+
+        verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
+        assertEquals("encrypted_user", site.apiRestUsernameEncrypted)
+    }
+
+    @Test
+    fun `getResettableApplicationPasswordSitesCount returns count of sites with regular credentials`() {
+        val siteWithRegularCredentials = SiteModel().apply {
+            id = 1
+            username = "user"
+            password = "password"
+            apiRestUsernameEncrypted = "encrypted"
+        }
+        val siteWithoutRegularCredentials = SiteModel().apply {
+            id = 2
+            username = ""
+            password = ""
+            apiRestUsernameEncrypted = "encrypted"
+        }
+        val siteWithNoAppPassword = SiteModel().apply {
+            id = 3
+            username = "user"
+            password = "password"
+            apiRestUsernameEncrypted = ""
+        }
+        whenever(siteStore.sites).thenReturn(
+            listOf(siteWithRegularCredentials, siteWithoutRegularCredentials, siteWithNoAppPassword)
+        )
+
+        val count = applicationPasswordLoginHelper.getResettableApplicationPasswordSitesCount()
+
+        assertEquals(1, count)
+    }
+
+    @Test
+    fun `getResettableApplicationPasswordSitesCount returns zero when no sites have regular credentials`() {
+        val site = SiteModel().apply {
+            id = 1
+            username = ""
+            password = ""
+            apiRestUsernameEncrypted = "encrypted"
+        }
+        whenever(siteStore.sites).thenReturn(listOf(site))
+
+        val count = applicationPasswordLoginHelper.getResettableApplicationPasswordSitesCount()
+
+        assertEquals(0, count)
+    }
+
+    @Test
+    fun `getResettableApplicationPasswordSitesCount returns zero when no sites have app password`() {
+        val site = SiteModel().apply {
+            id = 1
+            username = "user"
+            password = "password"
+            apiRestUsernameEncrypted = ""
+        }
+        whenever(siteStore.sites).thenReturn(listOf(site))
+
+        val count = applicationPasswordLoginHelper.getResettableApplicationPasswordSitesCount()
+
+        assertEquals(0, count)
+    }
+}
