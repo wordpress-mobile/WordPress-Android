@@ -52,6 +52,14 @@ public class ReaderBlogActions {
         return (json != null ? json.toString() : "");
     }
 
+    private static void logVolleyError(String action, VolleyError error) {
+        int status = VolleyUtils.statusCodeFromVolleyError(error);
+        AppLog.e(T.READER, action + " failed with error: " + status);
+        String errorMessage = error.getMessage();
+        AppLog.e(T.READER, errorMessage != null ? errorMessage : "No error message available");
+        AppLog.e(T.READER, error);
+    }
+
     public static boolean followBlogById(final long blogId,
                                          final long feedId,
                                          final boolean isAskingToFollow,
@@ -101,8 +109,7 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.w(T.READER, "blog " + actionName + " failed with error");
-                AppLog.e(T.READER, volleyError);
+                logVolleyError("blog " + actionName, volleyError);
                 // check if we get a 403 when unfollowing - this will happen when we attempt
                 // to unfollow a blog that no longer exists - the workaround is to unfollow
                 // by url - note that the v1.2 endpoint will return a 404 in this situation
@@ -138,7 +145,7 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                AppLog.e(T.READER, error);
+                logVolleyError("unfollow blog by url", error);
                 ReaderActions.callActionListener(actionListener, false);
             }
         };
@@ -291,8 +298,7 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.w(T.READER, "feed " + actionName + " failed with error");
-                AppLog.e(T.READER, volleyError);
+                logVolleyError("feed " + actionName, volleyError);
                 localRevertFollowFeedId(feedId, isAskingToFollow);
                 ReaderActions.callActionListener(actionListener, false);
             }
@@ -389,7 +395,7 @@ public class ReaderBlogActions {
                     AppLog.w(T.READER, "failed to get blog info by id, retrying with url");
                     updateBlogInfo(0, blogUrl, infoListener);
                 } else {
-                    AppLog.e(T.READER, volleyError);
+                    logVolleyError("update blog info", volleyError);
                     if (infoListener != null) {
                         infoListener.onResult(null);
                     }
@@ -427,7 +433,7 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
+                logVolleyError("update feed info", volleyError);
                 if (infoListener != null) {
                     infoListener.onResult(null);
                 }
@@ -478,7 +484,7 @@ public class ReaderBlogActions {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
+                logVolleyError("check url reachable", volleyError);
                 int statusCode;
                 // check specifically for auth failure class rather than relying on status code
                 // since a redirect to an unauthorized url may return a 301 rather than a 401
@@ -552,7 +558,7 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
+                logVolleyError("block blog", volleyError);
                 undoBlockBlogLocal(blockResult);
                 if (blockResult.wasFollowing) {
                     ReaderBlogTable.setIsFollowedBlogId(blockResult.blogId, true);
@@ -596,7 +602,7 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
+                logVolleyError("unblock blog", volleyError);
             }
         };
 
