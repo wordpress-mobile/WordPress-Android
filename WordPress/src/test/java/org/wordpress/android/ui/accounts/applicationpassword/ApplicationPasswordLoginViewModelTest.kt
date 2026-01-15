@@ -194,7 +194,8 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 showPostSignupInterstitial = false,
                 siteUrl = urlLogin.siteUrl,
                 oldSitesIDs = null,
-                isError = false
+                isError = false,
+                newSiteLocalId = testSite.id
             )
             whenever(siteStore.hasSite()).thenReturn(true)
             whenever(siteStore.sites).thenReturn(listOf(testSite))
@@ -231,7 +232,8 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 showPostSignupInterstitial = false,
                 siteUrl = urlLogin.siteUrl,
                 oldSitesIDs = null,
-                isError = false
+                isError = false,
+                newSiteLocalId = testSite.id
             )
             whenever(siteStore.hasSite()).thenReturn(false)
             whenever(siteStore.sites).thenReturn(listOf(testSite))
@@ -268,7 +270,8 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 showPostSignupInterstitial = false,
                 siteUrl = urlLogin.siteUrl,
                 oldSitesIDs = null,
-                isError = false
+                isError = false,
+                newSiteLocalId = testSite.id
             )
             whenever(siteStore.hasSite()).thenReturn(true)
             whenever(siteStore.sites).thenReturn(listOf(testSite))
@@ -305,7 +308,8 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 showPostSignupInterstitial = false,
                 siteUrl = urlLogin.siteUrl,
                 oldSitesIDs = null,
-                isError = false
+                isError = false,
+                newSiteLocalId = testSite.id
             )
             whenever(siteStore.sites).thenReturn(listOf(testSite))
             whenever(appPrefsWrapper.shouldShowPostSignupInterstitial).thenReturn(false)

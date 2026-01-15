@@ -169,7 +169,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                                 && appPrefsWrapper.shouldShowPostSignupInterstitial,
                         siteUrl = currentUrlLogin?.siteUrl,
                         oldSitesIDs = oldSitesIDs,
-                        isError = false
+                        isError = false,
+                        newSiteLocalId = site.id
                     )
                 )
             }
@@ -181,6 +182,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         val showPostSignupInterstitial: Boolean,
         val siteUrl: String?,
         val oldSitesIDs: ArrayList<Int>?,
-        val isError: Boolean
+        val isError: Boolean,
+        val newSiteLocalId: Int? = null
     )
 }

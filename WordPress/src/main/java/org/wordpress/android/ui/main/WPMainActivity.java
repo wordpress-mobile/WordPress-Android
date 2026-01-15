@@ -452,7 +452,15 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             onSetPromptReminderClick(getIntent().getIntExtra(ARG_OPEN_BLOGGING_REMINDERS, 0));
         }
 
-        if (!mSelectedSiteRepository.hasSelectedSite()) {
+        // Check if a specific site should be selected (e.g., after adding a self-hosted site)
+        int selectedSiteId = getIntent().getIntExtra(ARG_SELECTED_SITE, SelectedSiteRepository.UNAVAILABLE);
+        if (selectedSiteId != SelectedSiteRepository.UNAVAILABLE) {
+            getIntent().removeExtra(ARG_SELECTED_SITE);
+            SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteId);
+            if (site != null) {
+                setSelectedSite(site);
+            }
+        } else if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
         }
 
@@ -1319,6 +1327,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
                     startWithNewAccount();
+                    setSite(data);
                 } else if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                     // can't do anything if user isn't signed in (either to wp.com or self-hosted)
                     finish();
@@ -1647,7 +1656,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         // "Reload" selected site from the db
-        // It would be better if the OnSiteChanged provided the list of changed sites.
         if (getSelectedSite() == null && mSiteStore.hasSite()) {
             setSelectedSite(mSiteStore.getSites().get(0));
         }
