@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.newstats.todaysstat
 
-import android.graphics.DashPathEffect
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -37,15 +36,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.common.fill
 import com.patrykandpatrick.vico.compose.common.shader.verticalGradient
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
-import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -289,45 +287,27 @@ private fun StatsChart(chartData: ChartData) {
         )
     )
 
-    // Create fill for dashed line (yesterday's data)
-    val secondaryFill = fill(secondaryColor)
-    val dashedLine = remember(secondaryFill) {
-        DashedLine(LineCartesianLayer.LineFill.single(secondaryFill))
-    }
-
-    // Custom range provider that fits data to chart height (no forced zero baseline)
-    val rangeProvider = remember {
-        object : CartesianLayerRangeProvider {
-            override fun getMinY(minY: Double, maxY: Double, extraStore: ExtraStore): Double {
-                // Use actual minimum with small padding below
-                val range = maxY - minY
-                return if (range > 0) minY - (range * 0.1) else 0.0
-            }
-
-            override fun getMaxY(minY: Double, maxY: Double, extraStore: ExtraStore): Double {
-                // Use actual maximum with small padding above
-                val range = maxY - minY
-                return if (range > 0) maxY + (range * 0.1) else 1.0
-            }
-        }
-    }
-
     CartesianChartHost(
         chart = rememberCartesianChart(
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(
-                    // Today's line - solid with gradient area fill
+                    // Today's line - solid with gradient area fill, curved
                     LineCartesianLayer.Line(
                         fill = LineCartesianLayer.LineFill.single(fill(primaryColor)),
-                        areaFill = LineCartesianLayer.AreaFill.single(fill(areaGradient))
+                        areaFill = LineCartesianLayer.AreaFill.single(fill(areaGradient)),
+                        pointConnector = LineCartesianLayer.PointConnector.cubic()
                     ),
-                    // Yesterday's line - dashed, no area fill
-                    dashedLine
-                ),
-                rangeProvider = rangeProvider
+                    // Yesterday's line - dashed, no area fill, curved
+                    LineCartesianLayer.Line(
+                        fill = LineCartesianLayer.LineFill.single(fill(secondaryColor)),
+                        stroke = LineCartesianLayer.LineStroke.Dashed(),
+                        pointConnector = LineCartesianLayer.PointConnector.cubic()
+                    )
+                )
             )
         ),
         modelProducer = modelProducer,
+        scrollState = rememberVicoScrollState(scrollEnabled = false),
         modifier = Modifier
             .fillMaxWidth()
             .height(ChartHeight)
@@ -514,17 +494,4 @@ private fun TodaysStatsCardLoadedDarkPreview() {
     }
 }
 
-/**
- * Custom Line implementation that draws a dashed line.
- * Used for showing yesterday's stats comparison in the chart.
- */
-private class DashedLine(
-    fill: LineCartesianLayer.LineFill
-) : LineCartesianLayer.Line(fill) {
-    init {
-        linePaint.apply {
-            strokeWidth = 4f
-            pathEffect = DashPathEffect(floatArrayOf(10f, 10f), 0f)
-        }
-    }
-}
+
