@@ -174,6 +174,8 @@ import org.wordpress.android.ui.posts.editor.EditorIntentProcessor
 import org.wordpress.android.ui.posts.editor.EditorIntentProcessor.IntentProcessResult
 import org.wordpress.android.ui.posts.editor.EditorMediaPickerHandler
 import org.wordpress.android.ui.posts.editor.ShareContentHandler
+import org.wordpress.android.ui.posts.editor.EditorModeHandler
+import org.wordpress.android.ui.posts.editor.EditorNavigationManager
 import org.wordpress.android.ui.posts.editor.PostLoadingStateManager
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction
@@ -234,10 +236,8 @@ import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource
 import org.wordpress.android.util.config.ContactSupportFeatureConfig
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
-import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.util.helpers.MediaGallery
 import org.wordpress.android.util.image.BlavatarShape
@@ -276,7 +276,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     HistoryItemClickInterface, PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger,
     SiteSettingsListener, MediaUploadCoordinator.UploadEventListener,
     PostLoadingStateManager.StateChangeListener, EditorMediaPickerHandler.MediaPickerListener,
-    EditorActivityResultHandler.ActivityResultListener, ShareContentHandler.ShareContentListener {
+    EditorActivityResultHandler.ActivityResultListener, ShareContentHandler.ShareContentListener,
+    EditorModeHandler.EditorModeListener, EditorNavigationManager.NavigationListener {
     // External Access to the Image Loader
     var aztecImageLoader: AztecImageLoader? = null
 
@@ -325,7 +326,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     private var menuHasRedo: Boolean = false
     private var showPrepublishingBottomSheetHandler: Handler? = null
     private var showPrepublishingBottomSheetRunnable: Runnable? = null
-    private var htmlModeMenuStateOn: Boolean = false
     private var updatingPostArea: FrameLayout? = null
 
     @Inject lateinit var dispatcher: Dispatcher
@@ -425,6 +425,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var editorMediaPickerHandler: EditorMediaPickerHandler
     @Inject lateinit var editorActivityResultHandler: EditorActivityResultHandler
     @Inject lateinit var shareContentHandler: ShareContentHandler
+    @Inject lateinit var editorModeHandler: EditorModeHandler
+    @Inject lateinit var editorNavigationManager: EditorNavigationManager
     private lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
     private lateinit var prepublishingViewModel: PrepublishingViewModel
@@ -549,6 +551,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         editorMediaPickerHandler.start(this)
         editorActivityResultHandler.start(this)
         shareContentHandler.start(this)
+        editorModeHandler.start(this)
+        editorNavigationManager.start(this)
         startObserving()
         editorFragment?.let {
             hasSetPostContent = true
@@ -1005,56 +1009,14 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
      * Updates ViewPager position based on navigation destination.
      */
     private fun updateViewPagerPosition(destination: EditPostDestination) {
-        val targetPage = when (destination) {
-            EditPostDestination.Editor -> VIEW_PAGER_PAGE_CONTENT
-            EditPostDestination.Settings -> VIEW_PAGER_PAGE_SETTINGS
-            EditPostDestination.PublishSettings -> VIEW_PAGER_PAGE_PUBLISH_SETTINGS
-            EditPostDestination.History -> VIEW_PAGER_PAGE_HISTORY
-        }
-
-        viewPager?.let { pager ->
-            if (pager.currentItem != targetPage) {
-                AppLog.d(AppLog.T.POSTS, "EditPostActivity: Moving ViewPager from ${pager.currentItem} to $targetPage")
-                pager.currentItem = targetPage
-            }
-        }
+        editorNavigationManager.updateViewPagerPosition(destination)
     }
 
     /**
      * Updates UI elements based on current navigation destination.
      */
     private fun updateUIForDestination(destination: EditPostDestination) {
-        when (destination) {
-            EditPostDestination.Editor -> {
-                title = SiteUtils.getSiteNameOrHomeURL(siteModel)
-                appBarLayout?.setLiftOnScrollTargetViewIdAndRequestLayout(View.NO_ID)
-                toolbar?.setBackgroundResource(R.drawable.tab_layout_background)
-            }
-
-            EditPostDestination.Settings -> {
-                setTitle(if (editPostRepository.isPage) R.string.page_settings else R.string.post_settings)
-                editorPhotoPicker?.hidePhotoPicker()
-                appBarLayout?.liftOnScrollTargetViewId = R.id.settings_fragment_root
-                toolbar?.background = null
-            }
-
-            EditPostDestination.PublishSettings -> {
-                setTitle(R.string.publish_date)
-                editorPhotoPicker?.hidePhotoPicker()
-                appBarLayout?.setLiftOnScrollTargetViewIdAndRequestLayout(View.NO_ID)
-                toolbar?.background = null
-            }
-
-            EditPostDestination.History -> {
-                setTitle(R.string.history_title)
-                editorPhotoPicker?.hidePhotoPicker()
-                appBarLayout?.liftOnScrollTargetViewId = R.id.empty_recycler_view
-                toolbar?.background = null
-            }
-        }
-
-        // Refresh options menu as visibility may change based on destination
-        invalidateOptionsMenu()
+        editorNavigationManager.updateUIForDestination(destination)
     }
 
     private fun handleSuccessfulWpComCookieAuthState() {
@@ -1336,7 +1298,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             EditorConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE,
             editorPhotoPicker?.isPhotoPickerShowing() ?: false
         )
-        outState.putBoolean(EditorConstants.STATE_KEY_HTML_MODE_ON, htmlModeMenuStateOn)
+        outState.putBoolean(EditorConstants.STATE_KEY_HTML_MODE_ON, editorModeHandler.isHtmlModeOn())
         outState.putBoolean(EditorConstants.STATE_KEY_UNDO, menuHasUndo)
         outState.putBoolean(EditorConstants.STATE_KEY_REDO, menuHasRedo)
         outState.putSerializable(WordPress.SITE, siteModel)
@@ -1358,7 +1320,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        htmlModeMenuStateOn = savedInstanceState.getBoolean(EditorConstants.STATE_KEY_HTML_MODE_ON)
+        editorModeHandler.setHtmlModeOn(savedInstanceState.getBoolean(EditorConstants.STATE_KEY_HTML_MODE_ON))
         menuHasUndo = savedInstanceState.getBoolean(EditorConstants.STATE_KEY_UNDO)
         menuHasRedo = savedInstanceState.getBoolean(EditorConstants.STATE_KEY_REDO)
         if (savedInstanceState.getBoolean(EditorConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE, false)) {
@@ -1480,7 +1442,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 hasPost = editPostRepository.hasPost(),
                 menuHasUndo = menuHasUndo,
                 menuHasRedo = menuHasRedo,
-                htmlModeMenuStateOn = htmlModeMenuStateOn,
+                htmlModeMenuStateOn = editorModeHandler.isHtmlModeOn(),
                 isNewPost = isNewPost,
                 isPage = isPage,
                 isUsingWpComRestApi = siteModel.isUsingWpComRestApi,
@@ -1772,30 +1734,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun toggleHtmlModeOnMenu() {
-        htmlModeMenuStateOn = !htmlModeMenuStateOn
-        trackPostSessionEditorModeSwitch()
-        invalidateOptionsMenu()
-        showEditorModeSwitchedNotice()
-    }
-
-    private fun showEditorModeSwitchedNotice() {
-        val message: String = getString(
-            if (htmlModeMenuStateOn)
-                R.string.menu_html_mode_switched_notice
-            else R.string.menu_visual_mode_switched_notice
-        )
-        editorFragment?.showNotice(message)
-    }
-
-    private fun trackPostSessionEditorModeSwitch() {
-        val isGutenberg: Boolean = editorFragment is GutenbergEditorFragment
-        postEditorAnalyticsSession?.switchEditor(
-            when {
-                htmlModeMenuStateOn -> PostEditorAnalyticsSession.Editor.HTML
-                isGutenberg -> PostEditorAnalyticsSession.Editor.GUTENBERG
-                else -> PostEditorAnalyticsSession.Editor.CLASSIC
-            }
-        )
+        editorModeHandler.toggleHtmlMode()
     }
 
     private fun performPrimaryAction() {
@@ -1818,38 +1757,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    private fun showGutenbergInformativeDialog() {
-        // We are no longer showing the dialog, but we are leaving all the surrounding logic because
-        // this is going in shortly before release, and we're going to remove all this logic in the
-        // very near future.
-        AppPrefs.setGutenbergInfoPopupDisplayed(siteModel.url, true)
-    }
-
-    private fun showGutenbergRolloutV2InformativeDialog() {
-        // We are no longer showing the dialog, but we are leaving all the surrounding logic because
-        // this is going in shortly before release, and we're going to remove all this logic in the
-        // very near future.
-        AppPrefs.setGutenbergInfoPopupDisplayed(siteModel.url, true)
-    }
-
     private fun setGutenbergEnabledIfNeeded() {
-        if (AppPrefs.isGutenbergInfoPopupDisplayed(siteModel.url)) {
-            return
-        }
-        val showPopup = AppPrefs.shouldShowGutenbergInfoPopupForTheNewPosts(siteModel.url)
-        val showRolloutPopupPhase2 = AppPrefs.shouldShowGutenbergInfoPopupPhase2ForNewPosts(siteModel.url)
-        if (TextUtils.isEmpty(siteModel.mobileEditor) && !isNewPost) {
-            SiteUtils.enableBlockEditor(dispatcher, siteModel)
-            AnalyticsUtils.trackWithSiteDetails(
-                Stat.EDITOR_GUTENBERG_ENABLED, siteModel,
-                BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.asPropertyMap()
-            )
-        }
-        if (showPopup) {
-            showGutenbergInformativeDialog()
-        } else if (showRolloutPopupPhase2) {
-            showGutenbergRolloutV2InformativeDialog()
-        }
+        editorModeHandler.setGutenbergEnabledIfNeeded()
     }
 
     private fun savePostOnline(isFirstTimePublish: Boolean): ActivityFinishState {
@@ -1947,6 +1856,18 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     override fun setHasSetPostContent(value: Boolean) {
         hasSetPostContent = value
     }
+
+    // EditorModeHandler.EditorModeListener implementation
+    override fun getPostEditorAnalyticsSession(): PostEditorAnalyticsSession? = postEditorAnalyticsSession
+
+    override fun isNewPost(): Boolean = isNewPost
+
+    // EditorNavigationManager.NavigationListener implementation
+    override fun provideViewPager(): WPViewPager? = viewPager
+
+    override fun getAppBarLayout(): AppBarLayout? = appBarLayout
+
+    override fun getToolbar(): Toolbar? = toolbar
 
     private fun showErrorAndFinish(errorMessageId: Int) {
         ToastUtils.showToast(this, errorMessageId, ToastUtils.Duration.LONG)
