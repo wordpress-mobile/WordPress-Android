@@ -13,7 +13,6 @@ import org.wordpress.android.ui.posts.EditorConstants
 import org.wordpress.android.ui.posts.EditorUnitFunctions
 import org.wordpress.android.util.AutolinkUtils
 import org.wordpress.android.util.ReblogUtils
-import org.wordpress.android.util.ShortcutUtils
 import javax.inject.Inject
 
 /**
@@ -27,7 +26,6 @@ import javax.inject.Inject
 class EditorIntentProcessor @Inject constructor(
     private val siteStore: SiteStore,
     private val reblogUtils: ReblogUtils,
-    private val shortcutUtils: ShortcutUtils
 ) {
     /**
      * Represents the result of processing an editor intent.
@@ -114,12 +112,12 @@ class EditorIntentProcessor @Inject constructor(
         val isPage = extras.getBoolean(EditorConstants.EXTRA_IS_PAGE)
 
         // Check if we should create a new post vs load an existing one
-        if (!hasLocalPostId || isActionSendOrNewMedia || isQuickPress) {
+        return if (!hasLocalPostId || isActionSendOrNewMedia || isQuickPress) {
             // Creating a new post
-            return processNewPostIntent(intent, extras, siteModel, isPage)
+            processNewPostIntent(intent, extras, siteModel, isPage)
         } else {
             // Loading an existing post
-            return processExistingPostIntent(extras, isRestarting)
+            processExistingPostIntent(extras, isRestarting)
         }
     }
 
@@ -177,13 +175,6 @@ class EditorIntentProcessor @Inject constructor(
         }
 
         return sharedUris
-    }
-
-    /**
-     * Reports that a shortcut was used to create a new post.
-     */
-    fun reportNewPostShortcutUsed() {
-        shortcutUtils.reportShortcutUsed(org.wordpress.android.ui.Shortcut.CREATE_NEW_POST)
     }
 
     @Suppress("ReturnCount")
