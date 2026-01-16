@@ -16,6 +16,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
@@ -30,6 +31,8 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     @Mock
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
+    @Mock
+    lateinit var experimentalFeatures: ExperimentalFeatures
 
     private val site = SiteModel()
 
@@ -40,7 +43,8 @@ class ListItemActionHandlerTest: BaseUnitTest() {
         listItemActionHandler = ListItemActionHandler(
             accountStore,
             jetpackFeatureRemovalPhaseHelper,
-            blazeFeatureUtils
+            blazeFeatureUtils,
+            experimentalFeatures
         )
     }
 
@@ -164,6 +168,27 @@ class ListItemActionHandlerTest: BaseUnitTest() {
         assertEquals(navigationAction, SiteNavigationAction.StartWPComLoginForJetpackStats)
     }
 
+    @Test
+    fun `stats item click emits OpenNewStats when NEW_STATS feature is enabled and site is WPCom`() {
+        site.setIsWPCom(true)
+        whenever(experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NEW_STATS)).thenReturn(true)
+
+        val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
+
+        assertEquals(SiteNavigationAction.OpenNewStats, navigationAction)
+    }
+
+    @Test
+    fun `stats item click emits OpenNewStats when NEW_STATS feature is enabled and site is Jetpack`() {
+        site.setIsJetpackConnected(true)
+        site.setIsWPCom(true)
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NEW_STATS)).thenReturn(true)
+
+        val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
+
+        assertEquals(SiteNavigationAction.OpenNewStats, navigationAction)
+    }
 
     @Test
     fun `given campaigns enabled, when menu clicked, then navigated to campaign listing page`() {
