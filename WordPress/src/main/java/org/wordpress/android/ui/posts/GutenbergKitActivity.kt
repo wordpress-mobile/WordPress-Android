@@ -2955,6 +2955,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         Handler(Looper.getMainLooper()).post { invalidateOptionsMenu() }
     }
 
+    override fun getPersistedTitle(): String = editPostRepository.title
+
+    override fun getPersistedContent(): String = editPostRepository.content
+
     // FluxC events
     @Suppress("unused", "CyclomaticComplexMethod")
     @Subscribe(threadMode = ThreadMode.MAIN)

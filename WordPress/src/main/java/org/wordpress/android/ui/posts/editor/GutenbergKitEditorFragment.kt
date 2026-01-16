@@ -180,6 +180,16 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             modalDialogStateListener?.let(gutenbergView::setModalDialogStateListener)
             networkRequestListener?.let(gutenbergView::setNetworkRequestListener)
 
+            // Set up content provider for WebView refresh recovery
+            gutenbergView.setLatestContentProvider(object : GutenbergView.LatestContentProvider {
+                override fun getLatestContent(): GutenbergView.LatestContent {
+                    return GutenbergView.LatestContent(
+                        mEditorFragmentListener.persistedTitle,
+                        mEditorFragmentListener.persistedContent
+                    )
+                }
+            })
+
             // Set up autocomplete listener for user mentions and cross-post suggestions
             gutenbergView.setAutocompleterTriggeredListener(object : GutenbergView.AutocompleterTriggeredListener {
                 override fun onAutocompleterTriggered(type: String) {
