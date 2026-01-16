@@ -13,7 +13,6 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadService.UploadMediaRetryEvent
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
 
 /**
@@ -192,9 +191,4 @@ class MediaUploadCoordinator @Inject constructor(
             }
         }
     }
-
-    /**
-     * Creates a MediaFile from a MediaModel for editor callbacks.
-     */
-    fun createMediaFile(media: MediaModel): MediaFile = FluxCUtils.mediaFileFromMediaModel(media)
 }
