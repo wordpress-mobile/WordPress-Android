@@ -54,6 +54,7 @@ import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.newstats.NewStatsActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.SiteSettingsFragment
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
@@ -132,6 +133,8 @@ class MenuActivity : BaseAppCompatActivity() {
                 action.site,
                 StatsLaunchedFrom.ROW
             )
+
+            is SiteNavigationAction.OpenNewStats -> NewStatsActivity.start(this)
 
             is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
                 this,
