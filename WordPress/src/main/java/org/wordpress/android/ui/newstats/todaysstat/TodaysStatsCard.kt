@@ -40,9 +40,13 @@ import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.common.fill
+import com.patrykandpatrick.vico.compose.common.shader.verticalGradient
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import com.patrykandpatrick.vico.core.common.data.ExtraStore
+import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import java.text.SimpleDateFormat
@@ -277,26 +281,50 @@ private fun StatsChart(chartData: ChartData) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
+    // Create gradient shader for area fill (primary color fading to transparent)
+    val areaGradient = ShaderProvider.verticalGradient(
+        colors = arrayOf(
+            primaryColor.copy(alpha = 0.8f),
+            primaryColor.copy(alpha = 0f)
+        )
+    )
+
     // Create fill for dashed line (yesterday's data)
     val secondaryFill = fill(secondaryColor)
     val dashedLine = remember(secondaryFill) {
         DashedLine(LineCartesianLayer.LineFill.single(secondaryFill))
     }
 
+    // Custom range provider that fits data to chart height (no forced zero baseline)
+    val rangeProvider = remember {
+        object : CartesianLayerRangeProvider {
+            override fun getMinY(minY: Double, maxY: Double, extraStore: ExtraStore): Double {
+                // Use actual minimum with small padding below
+                val range = maxY - minY
+                return if (range > 0) minY - (range * 0.1) else 0.0
+            }
+
+            override fun getMaxY(minY: Double, maxY: Double, extraStore: ExtraStore): Double {
+                // Use actual maximum with small padding above
+                val range = maxY - minY
+                return if (range > 0) maxY + (range * 0.1) else 1.0
+            }
+        }
+    }
+
     CartesianChartHost(
         chart = rememberCartesianChart(
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(
-                    // Today's line - solid with area fill
+                    // Today's line - solid with gradient area fill
                     LineCartesianLayer.Line(
                         fill = LineCartesianLayer.LineFill.single(fill(primaryColor)),
-                        areaFill = LineCartesianLayer.AreaFill.single(
-                            fill(primaryColor.copy(alpha = 0.2f))
-                        )
+                        areaFill = LineCartesianLayer.AreaFill.single(fill(areaGradient))
                     ),
                     // Yesterday's line - dashed, no area fill
                     dashedLine
-                )
+                ),
+                rangeProvider = rangeProvider
             )
         ),
         modelProducer = modelProducer,
