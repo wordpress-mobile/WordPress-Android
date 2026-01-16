@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
@@ -81,11 +82,9 @@ import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase.Companion.getDatabase
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
-import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
-import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.EditorTheme
 import org.wordpress.android.fluxc.model.EditorThemeSupport
@@ -177,6 +176,7 @@ import org.wordpress.android.ui.posts.editor.ShareContentHandler
 import org.wordpress.android.ui.posts.editor.EditorModeHandler
 import org.wordpress.android.ui.posts.editor.EditorNavigationManager
 import org.wordpress.android.ui.posts.editor.PostLoadingStateManager
+import org.wordpress.android.ui.posts.editor.PostPublishingCoordinator
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction
 import org.wordpress.android.ui.posts.editor.StorePostViewModel
@@ -277,7 +277,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     SiteSettingsListener, MediaUploadCoordinator.UploadEventListener,
     PostLoadingStateManager.StateChangeListener, EditorMediaPickerHandler.MediaPickerListener,
     EditorActivityResultHandler.ActivityResultListener, ShareContentHandler.ShareContentListener,
-    EditorModeHandler.EditorModeListener, EditorNavigationManager.NavigationListener {
+    EditorModeHandler.EditorModeListener, EditorNavigationManager.NavigationListener,
+    PostPublishingCoordinator.PublishingListener {
     // External Access to the Image Loader
     var aztecImageLoader: AztecImageLoader? = null
 
@@ -427,6 +428,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var shareContentHandler: ShareContentHandler
     @Inject lateinit var editorModeHandler: EditorModeHandler
     @Inject lateinit var editorNavigationManager: EditorNavigationManager
+    @Inject lateinit var postPublishingCoordinator: PostPublishingCoordinator
     private lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
     private lateinit var prepublishingViewModel: PrepublishingViewModel
@@ -553,6 +555,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         shareContentHandler.start(this)
         editorModeHandler.start(this)
         editorNavigationManager.start(this)
+        postPublishingCoordinator.start(this)
         startObserving()
         editorFragment?.let {
             hasSetPostContent = true
@@ -1738,23 +1741,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun performPrimaryAction() {
-        when (primaryAction) {
-            PrimaryEditorAction.PUBLISH_NOW -> {
-                analyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED)
-                showPrepublishingNudgeBottomSheet()
-                return
-            }
-
-            PrimaryEditorAction.UPDATE,
-            PrimaryEditorAction.CONTINUE,
-            PrimaryEditorAction.SCHEDULE,
-            PrimaryEditorAction.SUBMIT_FOR_REVIEW -> {
-                showPrepublishingNudgeBottomSheet()
-                return
-            }
-
-            PrimaryEditorAction.SAVE -> uploadPost(false)
-        }
+        postPublishingCoordinator.performPrimaryAction()
     }
 
     private fun setGutenbergEnabledIfNeeded() {
@@ -2127,7 +2114,16 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    private fun showPrepublishingNudgeBottomSheet() {
+    // PostPublishingCoordinator.PublishingListener implementation
+    override fun getContext(): Context = this
+
+    override fun provideStorePostViewModel(): StorePostViewModel = storePostViewModel
+
+    override fun providePrimaryAction(): PrimaryEditorAction = primaryAction
+
+    override fun isPage(): Boolean = editPostRepository.isPage
+
+    override fun showPrepublishingNudgeBottomSheet() {
         editPostNavigationViewModel.navigateTo(EditPostDestination.Editor)
         ActivityUtils.hideKeyboard(this)
         val delayMs = EditorConstants.PREPUBLISHING_NUDGE_BOTTOM_SHEET_DELAY
@@ -2136,106 +2132,19 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
 
-    private fun uploadPost(publishPost: Boolean) {
+    override fun updateAndSavePostAsyncOnEditorExit(onComplete: (UpdatePostResult) -> Unit) {
         updateAndSavePostAsyncOnEditorExit(object : OnPostUpdatedFromUIListener {
             override fun onPostUpdatedFromUI(updatePostResult: UpdatePostResult) {
-                if (shouldPerformPostUpdateAndPublish()) {
-                    performPostUpdateAndPublish(publishPost)
-                }
+                onComplete(updatePostResult)
             }
         })
     }
-    @Suppress("ReturnCount")
-    private fun shouldPerformPostUpdateAndPublish() : Boolean {
-        val account: AccountModel = accountStore.account
-        // prompt user to verify e-mail before publishing
-        if (!account.emailVerified) {
-            storePostViewModel.hideSavingProgressDialog()
-            val message: String =
-                if (TextUtils.isEmpty(account.email)) getString(R.string.editor_confirm_email_prompt_message)
-                else String.format(
-                    getString(R.string.editor_confirm_email_prompt_message_with_email),
-                    account.email
-                )
-            val builder: AlertDialog.Builder = MaterialAlertDialogBuilder(this)
-            builder.setTitle(R.string.editor_confirm_email_prompt_title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok
-                ) { _, _ ->
-                    ToastUtils.showToast(
-                        this@EditPostActivity,
-                        getString(R.string.toast_saving_post_as_draft)
-                    )
-                    savePostAndOptionallyFinish(doFinish = true, forceSave = false)
-                }
-                .setNegativeButton(
-                    R.string.editor_confirm_email_prompt_negative
-                ) { _, _ ->
-                    dispatcher
-                        .dispatch(AccountActionBuilder.newSendVerificationEmailAction())
-                }
-            builder.create().show()
-            return false
-        }
 
-        editPostRepository.getPost()?.let {
-            if (!postUtilsWrapper.isPublishable(it)) {
-                storePostViewModel.hideSavingProgressDialog()
-                // TODO we don't want to show "publish" message when the user clicked on eg. save
-                editPostRepository.updateStatusFromPostSnapshotWhenEditorOpened()
-                runOnUiThread {
-                    val message: String = getString(
-                        if (isPage) R.string.error_publish_empty_page else R.string.error_publish_empty_post
-                    )
-                    ToastUtils.showToast(
-                        this@EditPostActivity,
-                        message,
-                        ToastUtils.Duration.SHORT
-                    )
-                }
-                return false
-            }
-        }
-        return true
+    private fun uploadPost(publishPost: Boolean) {
+        postPublishingCoordinator.uploadPost(publishPost)
     }
 
-    private fun performPostUpdateAndPublish(publishPost: Boolean) {
-        storePostViewModel.showSavingProgressDialog()
-        val isFirstTimePublish: Boolean = isFirstTimePublish(publishPost)
-        editPostRepository.updateAsync( { postModel: PostModel ->
-            if (publishPost) {
-                // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
-                // otherwise we'd have an incorrect value
-                // also re-set the published date in case it was SCHEDULED and they want to publish NOW
-                if ((postModel.status == PostStatus.SCHEDULED.toString())) {
-                    postModel.setDateCreated(dateTimeUtils.currentTimeInIso8601())
-                }
-                if (uploadUtilsWrapper.userCanPublish(site)) {
-                    postModel.setStatus(PostStatus.PUBLISHED.toString())
-                } else {
-                    postModel.setStatus(PostStatus.PENDING.toString())
-                }
-                postEditorAnalyticsSession?.setOutcome(Outcome.PUBLISH)
-            } else {
-                postEditorAnalyticsSession?.setOutcome(Outcome.SAVE)
-            }
-            AppLog.d(
-                AppLog.T.POSTS,
-                "User explicitly confirmed changes. Post Title: " + postModel.title
-            )
-            // the user explicitly confirmed an intention to upload the post
-            postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode())
-            true
-        } )
-        { _: PostImmutableModel?, result: UpdatePostResult ->
-            if (result === Updated) {
-                val activityFinishState: ActivityFinishState = savePostOnline(isFirstTimePublish)
-                storePostViewModel.finish(activityFinishState)
-            }
-        }
-    }
-
-    private fun savePostAndOptionallyFinish(doFinish: Boolean, forceSave: Boolean) {
+    override fun savePostAndOptionallyFinish(doFinish: Boolean, forceSave: Boolean) {
         if (editorFragment?.isAdded != true) {
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized")
             return
