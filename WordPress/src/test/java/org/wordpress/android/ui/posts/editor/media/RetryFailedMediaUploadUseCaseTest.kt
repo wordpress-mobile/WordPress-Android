@@ -128,7 +128,7 @@ class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
         }
 
         fun createGetMediaModelUseCase() = mock<GetMediaModelUseCase> {
-            onBlocking { loadMediaByLocalId(any()) } doAnswer { invocation ->
+            on { loadMediaByLocalId(any()) } doAnswer { invocation ->
                 // Creates dummy media models from provided model ids
                 (invocation.getArgument(0) as Iterable<Int>)
                     .map { createMediaModel(it) }

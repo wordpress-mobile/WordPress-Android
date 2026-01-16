@@ -116,7 +116,7 @@ class UploadStarterTest : BaseUnitTest() {
 
     private val pageStore = mock<PageStore> {
         sites.forEach {
-            onBlocking { getPagesWithLocalChanges(eq(it)) } doReturn sitesAndDraftPages.getValue(it)
+            on { getPagesWithLocalChanges(eq(it)) } doReturn sitesAndDraftPages.getValue(it)
         }
     }
 

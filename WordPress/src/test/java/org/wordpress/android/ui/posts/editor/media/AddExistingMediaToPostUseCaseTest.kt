@@ -100,7 +100,7 @@ class AddExistingMediaToPostUseCaseTest : BaseUnitTest() {
         }
 
         private fun createGetMediaModelUseCase(): GetMediaModelUseCase = mock {
-            onBlocking { loadMediaByRemoteId(anyOrNull(), anyOrNull()) } doAnswer { invocation ->
+            on { loadMediaByRemoteId(anyOrNull(), anyOrNull()) } doAnswer { invocation ->
                 // Creates dummy media models from provided model ids
                 (invocation.getArgument(1) as Iterable<Long>)
                     .map { createMediaModel(it) }

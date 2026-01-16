@@ -300,7 +300,7 @@ class EditorMediaTest : BaseUnitTest() {
 
         fun createAddLocalMediaToPostUseCase(resultForAddNewMediaToEditorAsync: Boolean = true) =
             mock<AddLocalMediaToPostUseCase> {
-                onBlocking {
+                on {
                     addNewMediaToEditorAsync(
                         anyOrNull(),
                         anyOrNull(),
@@ -314,7 +314,7 @@ class EditorMediaTest : BaseUnitTest() {
 
         fun createGetMediaModelUseCase(remoteMediaId: Long = MEDIA_MODEL_REMOTE_ID) =
             mock<GetMediaModelUseCase> {
-                onBlocking { loadMediaByLocalId(anyOrNull()) } doAnswer { invocation ->
+                on { loadMediaByLocalId(anyOrNull()) } doAnswer { invocation ->
                     // Creates dummy media models from provided model ids
                     (invocation.getArgument(0) as Iterable<Int>)
                         .map {
