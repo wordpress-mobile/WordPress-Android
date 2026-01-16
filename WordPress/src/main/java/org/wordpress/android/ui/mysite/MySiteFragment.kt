@@ -53,6 +53,7 @@ import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.newstats.NewStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.uploads.UploadService
@@ -587,6 +588,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             action.site,
             StatsLaunchedFrom.QUICK_ACTIONS
         )
+
+        is SiteNavigationAction.OpenNewStats -> NewStatsActivity.start(requireContext())
 
         is SiteNavigationAction.ConnectJetpackForStats ->
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)

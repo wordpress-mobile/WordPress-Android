@@ -51,8 +51,8 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     }
 
     private fun shouldShowFeature(feature: Feature): Boolean {
-        // Only show Post Types feature in debug builds
-        return if (feature == Feature.EXPERIMENTAL_POST_TYPES) {
+        // Only show Post Types and New Stats features in debug builds
+        return if (feature == Feature.EXPERIMENTAL_POST_TYPES || feature == Feature.NEW_STATS) {
             BuildConfig.DEBUG
         } else if (gutenbergKitFeature.isEnabled()) {
             feature != Feature.EXPERIMENTAL_BLOCK_EDITOR

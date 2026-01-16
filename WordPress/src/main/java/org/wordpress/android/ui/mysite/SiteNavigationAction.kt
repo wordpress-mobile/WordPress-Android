@@ -42,6 +42,7 @@ sealed class SiteNavigationAction {
     data class OpenUnifiedComments(val site: SiteModel) : SiteNavigationAction()
     object StartWPComLoginForJetpackStats : SiteNavigationAction()
     data class OpenStats(val site: SiteModel) : SiteNavigationAction()
+    object OpenNewStats : SiteNavigationAction()
     data class ConnectJetpackForStats(val site: SiteModel) : SiteNavigationAction()
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
     data class OpenPaidDomainSearch(val site: SiteModel) : SiteNavigationAction()

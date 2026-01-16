@@ -49,6 +49,11 @@ class ExperimentalFeatures @Inject constructor(
             "experimental_post_types",
             R.string.experimental_post_types,
             R.string.experimental_post_types_description
+        ),
+        NEW_STATS(
+            "new_stats",
+            R.string.experimental_new_stats,
+            R.string.experimental_new_stats_description
         );
     }
 }
