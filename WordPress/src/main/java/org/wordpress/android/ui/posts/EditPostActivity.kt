@@ -102,7 +102,6 @@ import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload
 import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched
@@ -169,6 +168,9 @@ import org.wordpress.android.ui.posts.editor.EditorTracker
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker
 import org.wordpress.android.ui.posts.editor.PostLoadingState
 import org.wordpress.android.ui.posts.editor.PostLoadingState.Companion.fromInt
+import org.wordpress.android.ui.posts.editor.EditorIntentProcessor
+import org.wordpress.android.ui.posts.editor.EditorIntentProcessor.IntentProcessResult
+import org.wordpress.android.ui.posts.editor.PostLoadingStateManager
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction
 import org.wordpress.android.ui.posts.editor.StorePostViewModel
@@ -180,6 +182,7 @@ import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource
 import org.wordpress.android.ui.posts.editor.media.EditorMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
+import org.wordpress.android.ui.posts.editor.media.MediaUploadCoordinator
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase
@@ -197,7 +200,6 @@ import org.wordpress.android.ui.suggestion.SuggestionActivity
 import org.wordpress.android.ui.suggestion.SuggestionType
 import org.wordpress.android.ui.uploads.PostEvents.PostMediaCanceled
 import org.wordpress.android.ui.uploads.PostEvents.PostOpenedInEditor
-import org.wordpress.android.ui.uploads.PostEvents.PostPreviewingInEditor
 import org.wordpress.android.ui.uploads.ProgressEvent
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadService.UploadMediaRetryEvent
@@ -214,7 +216,6 @@ import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
-import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ReblogUtils
@@ -269,7 +270,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     ActivityCompat.OnRequestPermissionsResultCallback, EditorMediaActions,
     EditorPhotoPickerListener, EditorMediaListener, EditPostSettingsFragment.EditorDataProvider,
     HistoryItemClickInterface, PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger,
-    SiteSettingsListener {
+    SiteSettingsListener, MediaUploadCoordinator.UploadEventListener,
+    PostLoadingStateManager.StateChangeListener {
     // External Access to the Image Loader
     var aztecImageLoader: AztecImageLoader? = null
 
@@ -412,6 +414,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
     @Inject lateinit var editorBloggingPromptsViewModel: EditorBloggingPromptsViewModel
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
+    @Inject lateinit var mediaUploadCoordinator: MediaUploadCoordinator
+    @Inject lateinit var postLoadingStateManager: PostLoadingStateManager
+    @Inject lateinit var editorIntentProcessor: EditorIntentProcessor
     private lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
     private lateinit var prepublishingViewModel: PrepublishingViewModel
@@ -442,32 +447,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             PostOpenedInEditor(editPostRepository.localSiteId, editPostRepository.id)
         )
         shortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST)
-    }
-
-    private fun newPostFromShareAction() {
-        if (EditorUnitFunctions.isMediaTypeIntent(intent, null)) {
-            newPostSetup()
-            setPostMediaFromShareAction()
-        } else {
-            val title = intent.getStringExtra(Intent.EXTRA_SUBJECT)
-            val text = intent.getStringExtra(Intent.EXTRA_TEXT)
-            val content = EditorUnitFunctions.migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text?:""))
-            newPostSetup(title, content)
-        }
-    }
-
-    private fun newReblogPostSetup() {
-        val title = intent.getStringExtra(EditorConstants.EXTRA_REBLOG_POST_TITLE)
-        val quote = intent.getStringExtra(EditorConstants.EXTRA_REBLOG_POST_QUOTE)
-        val citation = intent.getStringExtra(EditorConstants.EXTRA_REBLOG_POST_CITATION)
-        val image = intent.getStringExtra(EditorConstants.EXTRA_REBLOG_POST_IMAGE)
-        val content = reblogUtils.reblogContent(image, quote ?: "", title, citation)
-        newPostSetup(title, content)
-    }
-
-    private fun newPageFromLayoutPickerSetup(title: String?, layoutSlug: String?) {
-        val content = siteStore.getBlockLayoutContent(siteModel, layoutSlug ?: "")
-        newPostSetup(title, content)
     }
 
     private fun createPostEditorAnalyticsSessionTracker(
@@ -557,6 +536,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             return
         }
         editorMedia.start(siteModel, this)
+        mediaUploadCoordinator.start(this, editorMediaUploadListener)
+        postLoadingStateManager.setListener(this)
         startObserving()
         editorFragment?.let {
             hasSetPostContent = true
@@ -660,70 +641,42 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
     }
     private fun getSiteModelForExtraQuickPressBlogIdIfRequested(extras: Bundle?): SiteModel? {
-        if (extras == null || extras.containsKey(EditorConstants.EXTRA_POST_LOCAL_ID)) {
-            return null
-        }
-
-        val isActionSendOrNewMedia = EditorUnitFunctions.isActionSendOrNewMedia(intent.action)
-        val hasQuickPressFlag = extras.containsKey(EditorConstants.EXTRA_IS_QUICKPRESS)
-        val hasQuickPressBlogId = extras.containsKey(EditorConstants.EXTRA_QUICKPRESS_BLOG_ID)
-
-        // QuickPress might want to use a different blog than the current blog
-        return if ((isActionSendOrNewMedia || hasQuickPressFlag) && hasQuickPressBlogId) {
-            val localSiteId = intent.getIntExtra(EditorConstants.EXTRA_QUICKPRESS_BLOG_ID, -1)
-            siteStore.getSiteByLocalId(localSiteId)
-        } else {
-            null
-        }
+        return editorIntentProcessor.getSiteForQuickPress(intent, extras)
     }
 
-    @Suppress("CyclomaticComplexMethod")
     private fun handleIntentExtras(extras: Bundle?, isRestarting: Boolean) {
         extras ?: return
-        val action = intent.action
 
-        if (!extras.containsKey(EditorConstants.EXTRA_POST_LOCAL_ID) ||
-            EditorUnitFunctions.isActionSendOrNewMedia(intent.action) ||
-            extras.containsKey(EditorConstants.EXTRA_IS_QUICKPRESS)
-        ) {
-            isPage = extras.getBoolean(EditorConstants.EXTRA_IS_PAGE)
-            if (isPage && !TextUtils.isEmpty(extras.getString(EditorConstants.EXTRA_PAGE_TITLE))) {
-                newPageFromLayoutPickerSetup(
-                    extras.getString(EditorConstants.EXTRA_PAGE_TITLE),
-                    extras.getString(EditorConstants.EXTRA_PAGE_TEMPLATE)
-                )
-            } else if ((Intent.ACTION_SEND == action)) {
-                newPostFromShareAction()
-            } else if ((EditorConstants.ACTION_REBLOG == action)) {
-                newReblogPostSetup()
-            } else {
-                newPostSetup()
+        // Extract isPage flag from extras (needed for UI state)
+        isPage = extras.getBoolean(EditorConstants.EXTRA_IS_PAGE)
+
+        // Process intent using the processor
+        when (val result = editorIntentProcessor.processIntent(intent, extras, siteModel, isRestarting)) {
+            is IntentProcessResult.NewPost -> {
+                isPage = result.isPage
+                newPostSetup(result.title, result.content)
             }
-        } else {
-            editPostRepository.loadPostByLocalPostId(extras.getInt(EditorConstants.EXTRA_POST_LOCAL_ID))
-            // Load post from extra's
-            if (editPostRepository.hasPost()) {
-                if (extras.getBoolean(EditorConstants.EXTRA_LOAD_AUTO_SAVE_REVISION)) {
-                    editPostRepository.update { postModel: PostModel ->
-                        val updateTitle = !TextUtils.isEmpty(postModel.autoSaveTitle)
-                        if (updateTitle) {
-                            postModel.setTitle(postModel.autoSaveTitle)
-                        }
-                        val updateContent = !TextUtils.isEmpty(postModel.autoSaveContent)
-                        if (updateContent) {
-                            postModel.setContent(postModel.autoSaveContent)
-                        }
-                        val updateExcerpt = !TextUtils.isEmpty(postModel.autoSaveExcerpt)
-                        if (updateExcerpt) {
-                            postModel.setExcerpt(postModel.autoSaveExcerpt)
-                        }
-                        updateTitle || updateContent || updateExcerpt
-                    }
-                    editPostRepository.savePostSnapshot()
-                }
-                initializePostObject()
-            } else if (isRestarting) {
+            is IntentProcessResult.ShareActionText -> {
+                newPostSetup(result.title, result.content)
+            }
+            is IntentProcessResult.ShareActionMedia -> {
                 newPostSetup()
+                // Queue media for adding to editor (handled after editor is initialized)
+                editorMedia.addNewMediaItemsToEditorAsync(result.mediaUris, false)
+                // Remove from intent so it doesn't re-add on Activity recreation
+                intent.removeExtra(Intent.EXTRA_STREAM)
+            }
+            is IntentProcessResult.Reblog -> {
+                newPostSetup(result.title, result.content)
+            }
+            is IntentProcessResult.PageFromLayout -> {
+                newPostSetup(result.title, result.content)
+            }
+            is IntentProcessResult.ExistingPost -> {
+                handleExistingPostIntent(result, isRestarting)
+            }
+            is IntentProcessResult.InvalidIntent -> {
+                // Do nothing, post initialization will fail later
             }
         }
 
@@ -737,6 +690,33 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         if (isRestarting && extras.containsKey(EditorConstants.STATE_KEY_EDITOR_SESSION_DATA)) {
             postEditorAnalyticsSession = PostEditorAnalyticsSession
                 .fromBundle(extras, EditorConstants.STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
+        }
+    }
+
+    private fun handleExistingPostIntent(result: IntentProcessResult.ExistingPost, isRestarting: Boolean) {
+        editPostRepository.loadPostByLocalPostId(result.localPostId)
+        if (editPostRepository.hasPost()) {
+            if (result.loadAutoSaveRevision) {
+                editPostRepository.update { postModel: PostModel ->
+                    val updateTitle = !TextUtils.isEmpty(postModel.autoSaveTitle)
+                    if (updateTitle) {
+                        postModel.setTitle(postModel.autoSaveTitle)
+                    }
+                    val updateContent = !TextUtils.isEmpty(postModel.autoSaveContent)
+                    if (updateContent) {
+                        postModel.setContent(postModel.autoSaveContent)
+                    }
+                    val updateExcerpt = !TextUtils.isEmpty(postModel.autoSaveExcerpt)
+                    if (updateExcerpt) {
+                        postModel.setExcerpt(postModel.autoSaveExcerpt)
+                    }
+                    updateTitle || updateContent || updateExcerpt
+                }
+                editPostRepository.savePostSnapshot()
+            }
+            initializePostObject()
+        } else if (isRestarting) {
+            newPostSetup()
         }
     }
 
@@ -785,6 +765,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 editorFragment = frag
                 if (frag is EditorMediaUploadListener) {
                     editorMediaUploadListener = frag
+                    mediaUploadCoordinator.setEditorMediaUploadListener(frag)
                 }
             }
         }
@@ -1773,62 +1754,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         fillContentEditorFields()
     }
 
-    private fun setPreviewingInEditorSticky(enable: Boolean, post: PostImmutableModel?) {
-        if (enable) {
-            if (post != null) {
-                EventBus.getDefault().postSticky(
-                    PostPreviewingInEditor(post.localSiteId, post.id)
-                )
-            }
-        } else {
-            val stickyEvent: PostPreviewingInEditor? = EventBus.getDefault().getStickyEvent(
-                PostPreviewingInEditor::class.java
-            )
-            if (stickyEvent != null) {
-                EventBus.getDefault().removeStickyEvent(stickyEvent)
-            }
-        }
-    }
-
-    private fun managePostLoadingStateTransitions(
-        postLoadingState: PostLoadingState,
-        post: PostImmutableModel?
-    ) {
-        when (postLoadingState) {
-            PostLoadingState.NONE -> setPreviewingInEditorSticky(false, post)
-            PostLoadingState.UPLOADING_FOR_PREVIEW,
-            PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW,
-            PostLoadingState.PREVIEWING,
-            PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR -> setPreviewingInEditorSticky(
-                true,
-                post
-            )
-
-            PostLoadingState.LOADING_REVISION -> {}
-        }
-    }
-
-    private fun updatePostLoadingAndDialogState(postLoadingState: PostLoadingState, post: PostImmutableModel? = null) {
-        // We need only transitions, so...
-        if (this.postLoadingState === postLoadingState) return
-        AppLog.d(
-            AppLog.T.POSTS,
-            "Editor post loading state machine: transition from ${this.postLoadingState} to $postLoadingState"
-        )
-
-        // update the state
-        this.postLoadingState = postLoadingState
-
-        // take care of exit actions on state transition
-        managePostLoadingStateTransitions(postLoadingState, post)
-
-        // update the progress dialog state
-        progressDialog = progressDialogHelper.updateProgressDialogState(
-            this,
-            progressDialog,
-            this.postLoadingState.progressDialogUiState,
-            (uiHelpers)
-        )
+    private fun updatePostLoadingAndDialogState(newState: PostLoadingState, post: PostImmutableModel? = null) {
+        postLoadingStateManager.transitionTo(this, newState, post)
+        // Keep local state in sync for any remaining direct references
+        postLoadingState = postLoadingStateManager.state
     }
 
     private fun toggleHtmlModeOnMenu() {
@@ -1919,23 +1848,42 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         return storePostViewModel.savePostOnline(isFirstTimePublish, this, (editPostRepository), siteModel)
     }
 
-    private fun onUploadSuccess(media: MediaModel?) {
-        if (media != null) {
-            // TODO Should this statement check media.getLocalPostId() == mEditPostRepository.getId()?
-            if (!media.markedLocallyAsFeatured && editorMediaUploadListener != null) {
-                editorMediaUploadListener?.onMediaUploadSucceeded(
-                    media.id.toString(),
-                    FluxCUtils.mediaFileFromMediaModel(media)
-                )
-            } else if (media.markedLocallyAsFeatured && media.localPostId == editPostRepository.id) {
-                setFeaturedImageId(media.mediaId, imagePicked = false, isGutenbergEditor = false)
-            }
+    // MediaUploadCoordinator.UploadEventListener implementation
+    override fun onFeaturedImageUploaded(mediaId: Long) {
+        setFeaturedImageId(mediaId, imagePicked = false, isGutenbergEditor = false)
+    }
+
+    override fun getPostId(): Int = editPostRepository.id
+
+    override fun showUploadError(message: String) {
+        editorFragment?.view?.let { view ->
+            uploadUtilsWrapper.showSnackbarError(view, message)
         }
     }
 
-    private fun onUploadProgress(media: MediaModel?, progress: Float) {
-        val localMediaId = media?.id.toString()
-        editorMediaUploadListener?.onMediaUploadProgress(localMediaId, progress)
+    // PostLoadingStateManager.StateChangeListener implementation
+    override fun onProgressDialogChanged(newDialog: ProgressDialog?) {
+        progressDialog = newDialog
+    }
+
+    override fun onLaunchPreview(previewType: RemotePreviewType) {
+        ActivityLauncher.previewPostOrPageForResult(
+            this@EditPostActivity,
+            siteModel,
+            editPostRepository.getPost(),
+            previewType
+        )
+    }
+
+    override fun onPreviewUploadSuccess() {
+        updateOnSuccessfulUpload()
+    }
+
+    override fun onPreviewUploadError() {
+        uploadUtilsWrapper.showSnackbarError(
+            findViewById(R.id.editor_activity),
+            getString(R.string.remote_preview_operation_error)
+        )
     }
 
     private fun showErrorAndFinish(errorMessageId: Int) {
@@ -2452,6 +2400,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     }
                     if (editorFragment is EditorMediaUploadListener) {
                         editorMediaUploadListener = editorFragment as EditorMediaUploadListener?
+                        mediaUploadCoordinator.setEditorMediaUploadListener(editorMediaUploadListener)
 
                         // Set up custom headers for the visual editor's internal WebView
                         editorFragment?.setCustomHttpHeader("User-Agent", userAgent.webViewUserAgent)
@@ -3654,67 +3603,26 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     // FluxC events
-    @Suppress("unused", "CyclomaticComplexMethod")
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMediaUploaded(event: OnMediaUploaded) {
-        if (isFinishing) {
-            return
-        }
-
-        if (event.isError && !NetworkUtils.isNetworkAvailable(this)) {
-            editorMediaUploadListener?.let { listener ->
-                event.media?.let { media ->
-                    editorMedia.onMediaUploadPaused(listener, media, event.error)
-                }
-            }
-            return
-        }
-
-        event.media?.let {
-            if (event.isError) {
-                handleOnMediaUploadedError(event)
-            } else if (event.completed) {
-                handleOnMediaUploadedCompleted(event)
-            } else {
-                onUploadProgress(event.media, event.progress)
-            }
-        } ?: run {
-            // event for unknown media, ignoring
-            AppLog.w(AppLog.T.MEDIA, "Media event carries null media object, not recognized")
-        }
-    }
-    private fun handleOnMediaUploadedError(event: OnMediaUploaded) {
-        val view: View? = editorFragment?.view
-        if (view != null) {
-            uploadUtilsWrapper.showSnackbarError(
-                view,
-                String.format(
-                    getString(R.string.error_media_upload_failed_for_reason),
-                    UploadUtils.getErrorMessageFromMedia(this, event.media as MediaModel)
+        // Show error message if upload failed (need Activity context for string formatting)
+        if (event.isError && event.media != null) {
+            editorFragment?.view?.let { view ->
+                uploadUtilsWrapper.showSnackbarError(
+                    view,
+                    String.format(
+                        getString(R.string.error_media_upload_failed_for_reason),
+                        UploadUtils.getErrorMessageFromMedia(this, event.media as MediaModel)
+                    )
                 )
-            )
-        }
-        editorMediaUploadListener?.let { listener ->
-            event.media?.let { media ->
-                editorMedia.onMediaUploadError(listener, media, event.error)
             }
         }
-    }
-
-    private fun handleOnMediaUploadedCompleted(event: OnMediaUploaded){
-        // if the remote url on completed is null, we consider this upload wasn't successful
-        val media = event.media ?: return
-
-        editorMediaUploadListener?.let { listener ->
-            if (TextUtils.isEmpty(media.url)) {
-                val error = MediaError(MediaErrorType.GENERIC_ERROR)
-                if (!NetworkUtils.isNetworkAvailable(this)) {
-                    editorMedia.onMediaUploadPaused(listener, media, error)
-                } else {
-                    editorMedia.onMediaUploadError(listener, media, error)
-                }
-            } else {
-                onUploadSuccess(media)
+        // Delegate event processing to coordinator
+        if (!mediaUploadCoordinator.processMediaUploadedEvent(event)) {
+            // Event was not processed (unknown media)
+            if (event.media == null) {
+                AppLog.w(AppLog.T.MEDIA, "Media event carries null media object, not recognized")
             }
         }
     }
@@ -3767,17 +3675,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private val isRemotePreviewingFromEditor: Boolean
-        get() {
-            return (postLoadingState === PostLoadingState.UPLOADING_FOR_PREVIEW
-                    ) || (postLoadingState === PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW
-                    ) || (postLoadingState === PostLoadingState.PREVIEWING
-                    ) || (postLoadingState === PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR)
-        }
+        get() = postLoadingStateManager.isRemotePreviewingFromEditor
+
     private val isUploadingPostForPreview: Boolean
-        get() {
-            return (postLoadingState === PostLoadingState.UPLOADING_FOR_PREVIEW
-                    || postLoadingState === PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW)
-        }
+        get() = postLoadingStateManager.isUploadingPostForPreview
 
     private fun updateOnSuccessfulUpload() {
         isNewPost = false
@@ -3785,31 +3686,17 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private val isRemoteAutoSaveError: Boolean
-        get() {
-            return postLoadingState === PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR
-        }
+        get() = postLoadingStateManager.isRemoteAutoSaveError
 
-    private fun handleRemotePreviewUploadResult(isError: Boolean, param: RemotePreviewType) {
-        // We are in the process of remote previewing a post from the editor
-        if (!isError && isUploadingPostForPreview) {
-            // We were uploading post for preview and we got no error:
-            // update post status and preview it in the internal browser
-            updateOnSuccessfulUpload()
-            ActivityLauncher.previewPostOrPageForResult(
-                this@EditPostActivity,
-                siteModel,
-                editPostRepository.getPost(),
-                param
-            )
-            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, editPostRepository.getPost())
-        } else if (isError || isRemoteAutoSaveError) {
-            // We got an error from the uploading or from the remote auto save of a post: show snackbar error
-            updatePostLoadingAndDialogState(PostLoadingState.NONE)
-            uploadUtilsWrapper.showSnackbarError(
-                findViewById(R.id.editor_activity),
-                getString(R.string.remote_preview_operation_error)
-            )
-        }
+    private fun handleRemotePreviewUploadResult(isError: Boolean, previewType: RemotePreviewType) {
+        postLoadingStateManager.handleRemotePreviewUploadResult(
+            this,
+            isError,
+            previewType,
+            editPostRepository.getPost()
+        )
+        // Keep local state in sync
+        postLoadingState = postLoadingStateManager.state
     }
 
     @Suppress("unused")
@@ -3845,29 +3732,13 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ProgressEvent) {
-        if (!isFinishing) {
-            // use upload progress rather than optimizer progress since the former includes upload+optimization
-            val progress: Float = UploadService.getUploadProgressForMedia(event.media)
-            onUploadProgress(event.media, progress)
-        }
+        mediaUploadCoordinator.processProgressEvent(event)
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: UploadMediaRetryEvent) {
-        if ((!isFinishing
-                    && (event.mediaModelList != null
-                    ) && (editorMediaUploadListener != null))
-        ) {
-            for (media: MediaModel in event.mediaModelList) {
-                val localMediaId = media.id.toString()
-                val mediaType: EditorFragmentAbstract.MediaType =
-                    if (media.isVideo)
-                        EditorFragmentAbstract.MediaType.VIDEO
-                    else EditorFragmentAbstract.MediaType.IMAGE
-                editorMediaUploadListener?.onMediaUploadRetry(localMediaId, mediaType)
-            }
-        }
+        mediaUploadCoordinator.processUploadRetryEvent(event)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
