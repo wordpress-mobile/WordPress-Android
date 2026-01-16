@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.todaysstat
 
+import android.graphics.DashPathEffect
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -238,15 +239,16 @@ private fun TitleSection() {
 @Composable
 private fun StatsChart(chartData: ChartData) {
     val modelProducer = remember { CartesianChartModelProducer() }
+    val hasPreviousPeriod = chartData.previousPeriod.isNotEmpty()
 
     LaunchedEffect(chartData) {
         if (chartData.currentPeriod.isNotEmpty()) {
             modelProducer.runTransaction {
                 lineSeries {
+                    // Today's data (solid line)
                     series(chartData.currentPeriod.map { it.views.toInt() })
-                }
-                if (chartData.previousPeriod.isNotEmpty()) {
-                    lineSeries {
+                    // Yesterday's data (dashed line) - only if available
+                    if (hasPreviousPeriod) {
                         series(chartData.previousPeriod.map { it.views.toInt() })
                     }
                 }
@@ -275,19 +277,25 @@ private fun StatsChart(chartData: ChartData) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
+    // Create fill for dashed line (yesterday's data)
+    val secondaryFill = fill(secondaryColor)
+    val dashedLine = remember(secondaryFill) {
+        DashedLine(LineCartesianLayer.LineFill.single(secondaryFill))
+    }
+
     CartesianChartHost(
         chart = rememberCartesianChart(
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(
+                    // Today's line - solid with area fill
                     LineCartesianLayer.Line(
                         fill = LineCartesianLayer.LineFill.single(fill(primaryColor)),
                         areaFill = LineCartesianLayer.AreaFill.single(
                             fill(primaryColor.copy(alpha = 0.2f))
                         )
                     ),
-                    LineCartesianLayer.Line(
-                        fill = LineCartesianLayer.LineFill.single(fill(secondaryColor))
-                    )
+                    // Yesterday's line - dashed, no area fill
+                    dashedLine
                 )
             )
         ),
@@ -475,5 +483,20 @@ private fun TodaysStatsCardLoadedDarkPreview() {
                 onCardClick = {}
             )
         )
+    }
+}
+
+/**
+ * Custom Line implementation that draws a dashed line.
+ * Used for showing yesterday's stats comparison in the chart.
+ */
+private class DashedLine(
+    fill: LineCartesianLayer.LineFill
+) : LineCartesianLayer.Line(fill) {
+    init {
+        linePaint.apply {
+            strokeWidth = 4f
+            pathEffect = DashPathEffect(floatArrayOf(10f, 10f), 0f)
+        }
     }
 }
