@@ -89,30 +89,73 @@ private fun LoadingContent() {
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        CardHeader()
-        Spacer(modifier = Modifier.height(12.dp))
-        // Placeholder for chart
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(ChartHeight)
-                .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        // Placeholder for metrics
+        // Top section: Title + Chart placeholder
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            repeat(4) {
+            // Left: Title and date placeholder
+            Column(modifier = Modifier.weight(0.4f)) {
                 Box(
                     modifier = Modifier
-                        .width(60.dp)
-                        .height(40.dp)
+                        .width(80.dp)
+                        .height(24.dp)
                         .clip(RoundedCornerShape(4.dp))
                         .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                 )
+                Spacer(modifier = Modifier.height(4.dp))
+                Box(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(16.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                )
+            }
+            // Right: Chart placeholder
+            Box(
+                modifier = Modifier
+                    .weight(0.6f)
+                    .height(ChartHeight)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        // Bottom section: Metrics placeholder
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Bottom
+        ) {
+            // Views placeholder (larger)
+            Column {
+                Box(
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(12.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Box(
+                    modifier = Modifier
+                        .width(80.dp)
+                        .height(36.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                )
+            }
+            Spacer(modifier = Modifier.width(24.dp))
+            // Other metrics placeholder
+            repeat(3) {
+                Box(
+                    modifier = Modifier
+                        .width(50.dp)
+                        .height(24.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                )
+                Spacer(modifier = Modifier.width(16.dp))
             }
         }
     }
@@ -126,10 +169,21 @@ private fun LoadedContent(state: TodaysStatsCardUiState.Loaded) {
             .clickable(onClick = state.onCardClick)
             .padding(CardPadding)
     ) {
-        CardHeader()
+        // Top section: Title/Date on left, Chart on right
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Top
+        ) {
+            // Left: Title and date
+            TitleSection()
+            Spacer(modifier = Modifier.width(16.dp))
+            // Right: Chart
+            Box(modifier = Modifier.weight(1f)) {
+                StatsChart(chartData = state.chartData)
+            }
+        }
         Spacer(modifier = Modifier.height(12.dp))
-        StatsChart(chartData = state.chartData)
-        Spacer(modifier = Modifier.height(16.dp))
+        // Bottom section: Metrics
         MetricsRow(
             views = state.views,
             visitors = state.visitors,
@@ -147,7 +201,7 @@ private fun ErrorContent(state: TodaysStatsCardUiState.Error) {
             .padding(CardPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CardHeader()
+        TitleSection()
         Spacer(modifier = Modifier.height(24.dp))
         Text(
             text = state.message,
@@ -162,20 +216,17 @@ private fun ErrorContent(state: TodaysStatsCardUiState.Error) {
 }
 
 @Composable
-private fun CardHeader() {
+private fun TitleSection() {
     val dateFormat = remember { SimpleDateFormat("EEEE, MMM d", Locale.getDefault()) }
     val formattedDate = remember { dateFormat.format(Date()) }
 
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    Column {
         Text(
-            text = stringResource(R.string.stats_insights_today),
+            text = stringResource(R.string.stats_insights_today_stats),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
+        Spacer(modifier = Modifier.height(2.dp))
         Text(
             text = formattedDate,
             style = MaterialTheme.typography.bodySmall,
@@ -256,75 +307,76 @@ private fun MetricsRow(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        verticalAlignment = Alignment.Bottom
     ) {
-        MetricItem(
-            icon = Icons.Default.Visibility,
+        // Views - prominent on the left
+        PrimaryMetricItem(
             value = formatStatValue(views),
-            label = stringResource(R.string.stats_views),
-            isPrimary = true
+            label = stringResource(R.string.stats_views)
         )
-        MetricItem(
-            icon = Icons.Default.Person,
-            value = formatStatValue(visitors),
-            label = stringResource(R.string.stats_visitors)
+        Spacer(modifier = Modifier.weight(1f))
+        // Secondary metrics on the right
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SecondaryMetricItem(
+                icon = Icons.Default.Person,
+                value = formatStatValue(visitors)
+            )
+            SecondaryMetricItem(
+                icon = Icons.Default.FavoriteBorder,
+                value = formatStatValue(likes)
+            )
+            SecondaryMetricItem(
+                icon = Icons.Default.ChatBubbleOutline,
+                value = formatStatValue(comments)
+            )
+        }
+    }
+}
+
+@Composable
+private fun PrimaryMetricItem(
+    value: String,
+    label: String
+) {
+    Column {
+        Text(
+            text = label.uppercase(),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        MetricItem(
-            icon = Icons.Default.FavoriteBorder,
-            value = formatStatValue(likes),
-            label = stringResource(R.string.stats_likes)
-        )
-        MetricItem(
-            icon = Icons.Default.ChatBubbleOutline,
-            value = formatStatValue(comments),
-            label = stringResource(R.string.stats_comments)
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = value,
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }
 
 @Composable
-private fun MetricItem(
+private fun SecondaryMetricItem(
     icon: ImageVector,
-    value: String,
-    label: String,
-    isPrimary: Boolean = false
+    value: String
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MetricSpacing)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(MetricSpacing)
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = label,
-                modifier = Modifier.size(MetricIconSize),
-                tint = if (isPrimary) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                }
-            )
-            Text(
-                text = value,
-                style = if (isPrimary) {
-                    MaterialTheme.typography.titleLarge
-                } else {
-                    MaterialTheme.typography.titleMedium
-                },
-                fontWeight = FontWeight.Bold,
-                color = if (isPrimary) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.onSurface
-                }
-            )
-        }
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(MetricIconSize),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            text = value,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }
