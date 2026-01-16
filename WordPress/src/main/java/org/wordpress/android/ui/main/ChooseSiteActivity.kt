@@ -268,7 +268,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         binding.recyclerView.adapter = adapter.apply {
             onReload = { viewModel.loadSites(this@ChooseSiteActivity.mode, searchKeyword) }
             onSiteClicked = { selectSite(it) }
-            onSiteLongClicked = { onSiteLongClick(it) }
+            onSiteRemoveClicked = { onSiteRemoveClick(it) }
         }
         binding.recyclerView.scrollBarStyle = View.SCROLLBARS_OUTSIDE_OVERLAY
         binding.recyclerView.setEmptyView(binding.actionableEmptyView)
@@ -284,17 +284,16 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         finish()
     }
 
-    private fun onSiteLongClick(siteRecord: SiteRecord) {
+    private fun onSiteRemoveClick(siteRecord: SiteRecord) {
         val site: SiteModel = siteStore.getSiteByLocalId(siteRecord.localId) ?: return
-        if (site.isUsingWpComRestApi.not()) {
-            showRemoveSelfHostedSiteDialog(site)
-        }
+        showRemoveSelfHostedSiteDialog(site)
     }
 
     private fun showRemoveSelfHostedSiteDialog(site: SiteModel) {
+        val siteName = SiteUtils.getSiteNameOrHomeURL(site)
         MaterialAlertDialogBuilder(this)
             .setTitle(resources.getText(R.string.remove_account))
-            .setMessage(resources.getText(R.string.sure_to_remove_account))
+            .setMessage(getString(R.string.confirm_remove_site, siteName))
             .setPositiveButton(
                 resources.getText(R.string.yes)
             ) { _: DialogInterface?, _: Int ->
