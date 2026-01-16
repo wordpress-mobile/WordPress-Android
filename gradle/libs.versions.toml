@@ -108,6 +108,7 @@ automattic-ucrop = '2.2.11'
 zendesk = '5.5.2'
 turbine = '1.2.1'
 commonmark = '0.27.1'
+vico = '2.1.3'
 
 [libraries]
 airbnb-lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "airbnb-lottie" }
@@ -267,6 +268,7 @@ automattic-ucrop = { group = "com.automattic", name = "ucrop", version.ref = "au
 zendesk-support = { group = "com.zendesk", name = "support", version.ref = "zendesk" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 commonmark = { group = "org.commonmark", name = "commonmark", version.ref = "commonmark" }
+vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

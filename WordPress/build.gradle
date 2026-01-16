@@ -573,6 +573,9 @@ dependencies {
     // Cascade - Compose nested menu
     implementation(libs.cascade.compose)
 
+    // Vico - Charts for Compose
+    implementation(libs.vico.compose.m3)
+
     implementation(libs.automattic.encryptedlogging)
     implementation(libs.automattic.tracks.crashlogging)
 }
