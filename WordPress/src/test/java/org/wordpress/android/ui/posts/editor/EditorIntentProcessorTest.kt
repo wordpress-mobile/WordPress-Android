@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.posts.EditorConstants
 import org.wordpress.android.util.ReblogUtils
-import org.wordpress.android.util.ShortcutUtils
 
 @RunWith(MockitoJUnitRunner::class)
 class EditorIntentProcessorTest {
@@ -28,16 +27,13 @@ class EditorIntentProcessorTest {
     private lateinit var reblogUtils: ReblogUtils
 
     @Mock
-    private lateinit var shortcutUtils: ShortcutUtils
-
-    @Mock
     private lateinit var siteModel: SiteModel
 
     private lateinit var processor: EditorIntentProcessor
 
     @Before
     fun setUp() {
-        processor = EditorIntentProcessor(siteStore, reblogUtils, shortcutUtils)
+        processor = EditorIntentProcessor(siteStore, reblogUtils)
     }
 
     // region processIntent - NewPost tests

@@ -1,6 +1,7 @@
 @file:Suppress("DEPRECATION")
 package org.wordpress.android.ui.posts
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -168,8 +169,11 @@ import org.wordpress.android.ui.posts.editor.EditorTracker
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker
 import org.wordpress.android.ui.posts.editor.PostLoadingState
 import org.wordpress.android.ui.posts.editor.PostLoadingState.Companion.fromInt
+import org.wordpress.android.ui.posts.editor.EditorActivityResultHandler
 import org.wordpress.android.ui.posts.editor.EditorIntentProcessor
 import org.wordpress.android.ui.posts.editor.EditorIntentProcessor.IntentProcessResult
+import org.wordpress.android.ui.posts.editor.EditorMediaPickerHandler
+import org.wordpress.android.ui.posts.editor.ShareContentHandler
 import org.wordpress.android.ui.posts.editor.PostLoadingStateManager
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction
@@ -271,7 +275,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     EditorPhotoPickerListener, EditorMediaListener, EditPostSettingsFragment.EditorDataProvider,
     HistoryItemClickInterface, PrivateAtCookieProgressDialogOnDismissListener, ExceptionLogger,
     SiteSettingsListener, MediaUploadCoordinator.UploadEventListener,
-    PostLoadingStateManager.StateChangeListener {
+    PostLoadingStateManager.StateChangeListener, EditorMediaPickerHandler.MediaPickerListener,
+    EditorActivityResultHandler.ActivityResultListener, ShareContentHandler.ShareContentListener {
     // External Access to the Image Loader
     var aztecImageLoader: AztecImageLoader? = null
 
@@ -417,6 +422,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var mediaUploadCoordinator: MediaUploadCoordinator
     @Inject lateinit var postLoadingStateManager: PostLoadingStateManager
     @Inject lateinit var editorIntentProcessor: EditorIntentProcessor
+    @Inject lateinit var editorMediaPickerHandler: EditorMediaPickerHandler
+    @Inject lateinit var editorActivityResultHandler: EditorActivityResultHandler
+    @Inject lateinit var shareContentHandler: ShareContentHandler
     private lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
     private lateinit var prepublishingViewModel: PrepublishingViewModel
@@ -538,6 +546,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         editorMedia.start(siteModel, this)
         mediaUploadCoordinator.start(this, editorMediaUploadListener)
         postLoadingStateManager.setListener(this)
+        editorMediaPickerHandler.start(this)
+        editorActivityResultHandler.start(this)
+        shareContentHandler.start(this)
         startObserving()
         editorFragment?.let {
             hasSetPostContent = true
@@ -1884,6 +1895,57 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             findViewById(R.id.editor_activity),
             getString(R.string.remote_preview_operation_error)
         )
+    }
+
+    // EditorMediaPickerHandler.MediaPickerListener implementation
+    override fun getActivity(): Activity = this
+
+    override fun getSiteModel(): SiteModel = siteModel
+
+    override fun getEditorPhotoPicker(): EditorPhotoPicker? = editorPhotoPicker
+
+    override fun showNoUploadPermissionSnackbar() {
+        editorPhotoPicker?.showNoUploadPermissionSnackbar()
+    }
+
+    // EditorActivityResultHandler.ActivityResultListener implementation
+    override fun getEditorFragment(): EditorFragmentAbstract? = editorFragment
+
+    override fun navigateToEditor() {
+        editPostNavigationViewModel.navigateTo(EditPostDestination.Editor)
+    }
+
+    override fun getRevisionFromBundle(): Any? {
+        return if (dB?.hasParcel(KEY_REVISION) == true) {
+            revision = dB?.getParcel(KEY_REVISION, parcelableCreator())
+            revision
+        } else {
+            null
+        }
+    }
+
+    override fun clearSuggestionCallback() {
+        onGetSuggestionResult = null
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun getSuggestionCallback(): java.util.function.Consumer<String?>? {
+        return onGetSuggestionResult as? java.util.function.Consumer<String?>?
+    }
+
+    override fun triggerLoadRevision() {
+        loadRevision()
+    }
+
+    override fun handleLastTakenPicture() {
+        addLastTakenPicture()
+    }
+
+    // ShareContentHandler.ShareContentListener implementation
+    override fun isShowGutenbergEditor(): Boolean = showGutenbergEditor
+
+    override fun setHasSetPostContent(value: Boolean) {
+        hasSetPostContent = value
     }
 
     private fun showErrorAndFinish(errorMessageId: Int) {
