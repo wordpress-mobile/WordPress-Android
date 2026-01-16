@@ -4,6 +4,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.HOURS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
@@ -106,6 +107,7 @@ class StatsDateFormatter
      */
     fun printGranularDate(date: Date, granularity: StatsGranularity): String {
         return when (granularity) {
+            HOURS -> SimpleDateFormat("ha", localeManagerWrapper.getLocale()).format(date).lowercase()
             DAYS -> outputFormat.format(date)
             WEEKS -> {
                 val endCalendar = Calendar.getInstance()
@@ -136,6 +138,7 @@ class StatsDateFormatter
      */
     private fun printTrafficGranularDate(date: Date, granularity: StatsGranularity): String {
         return when (granularity) {
+            HOURS -> SimpleDateFormat("ha", localeManagerWrapper.getLocale()).format(date).lowercase()
             DAYS -> outputFormatTrafficDays.format(date)
             WEEKS -> {
                 val endCalendar = Calendar.getInstance()
@@ -243,6 +246,17 @@ class StatsDateFormatter
         date: String
     ): Date {
         return when (granularity) {
+            HOURS -> {
+                // Hourly data format: "yyyy-MM-dd HH:mm:ss" or "yyyy-MM-dd HH:mm"
+                val hourlyFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT)
+                val hourlyFormatAlt = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ROOT)
+                try {
+                    hourlyFormat.parse(date) ?: hourlyFormatAlt.parse(date)
+                        ?: throw RuntimeException("Unexpected date format")
+                } catch (e: ParseException) {
+                    hourlyFormatAlt.parse(date) ?: throw RuntimeException("Unexpected date format")
+                }
+            }
             DAYS -> inputFormat.parse(date) ?: throw RuntimeException("Unexpected date format")
             WEEKS -> {
                 // first four digits are the year

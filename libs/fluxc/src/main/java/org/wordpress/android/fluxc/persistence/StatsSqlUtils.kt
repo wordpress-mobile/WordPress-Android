@@ -140,6 +140,7 @@ class StatsSqlUtils @Inject constructor() {
 
     enum class StatsType {
         INSIGHTS,
+        HOUR,
         DAY,
         WEEK,
         MONTH,

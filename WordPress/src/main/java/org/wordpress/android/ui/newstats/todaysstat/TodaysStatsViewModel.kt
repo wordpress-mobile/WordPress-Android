@@ -18,8 +18,8 @@ import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 
-private const val CHART_DATA_POINTS = 7
-private const val PREVIOUS_PERIOD_OFFSET_DAYS = 7
+private const val HOURLY_DATA_POINTS = 24
+private const val PREVIOUS_PERIOD_OFFSET_DAYS = 1
 
 @HiltViewModel
 class TodaysStatsViewModel @Inject constructor(
@@ -92,8 +92,8 @@ class TodaysStatsViewModel @Inject constructor(
     }
 
     private suspend fun fetchChartData(site: SiteModel, forced: Boolean): ChartData {
-        val currentPeriodData = fetchPeriodData(site, forced, offsetDays = 0)
-        val previousPeriodData = fetchPeriodData(site, forced, offsetDays = PREVIOUS_PERIOD_OFFSET_DAYS)
+        val currentPeriodData = fetchHourlyData(site, forced, offsetDays = 0)
+        val previousPeriodData = fetchHourlyData(site, forced, offsetDays = PREVIOUS_PERIOD_OFFSET_DAYS)
 
         return ChartData(
             currentPeriod = currentPeriodData,
@@ -101,7 +101,7 @@ class TodaysStatsViewModel @Inject constructor(
         )
     }
 
-    private suspend fun fetchPeriodData(
+    private suspend fun fetchHourlyData(
         site: SiteModel,
         forced: Boolean,
         offsetDays: Int
@@ -113,8 +113,8 @@ class TodaysStatsViewModel @Inject constructor(
 
         val response = visitsAndViewsStore.fetchVisits(
             site = site,
-            granularity = StatsGranularity.DAYS,
-            limitMode = LimitMode.Top(CHART_DATA_POINTS),
+            granularity = StatsGranularity.HOURS,
+            limitMode = LimitMode.Top(HOURLY_DATA_POINTS),
             date = calendar.time,
             forced = forced
         )
@@ -124,23 +124,31 @@ class TodaysStatsViewModel @Inject constructor(
             return emptyList()
         }
 
-        val dateFormat = SimpleDateFormat("EEE", Locale.getDefault())
-
         return model.dates.map { periodData ->
             ViewsDataPoint(
-                label = formatPeriodLabel(periodData.period, dateFormat),
+                label = formatHourlyLabel(periodData.period),
                 views = periodData.views
             )
         }
     }
 
-    private fun formatPeriodLabel(period: String, dateFormat: SimpleDateFormat): String {
+    private fun formatHourlyLabel(period: String): String {
         return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            // API returns period in format "2024-01-16 14:00:00" for hourly data
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("ha", Locale.getDefault())
             val date = inputFormat.parse(period)
-            date?.let { dateFormat.format(it) } ?: period
+            date?.let { outputFormat.format(it).lowercase() } ?: period
         } catch (e: Exception) {
-            period
+            // Fallback: try parsing just the hour if full format fails
+            try {
+                val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                val outputFormat = SimpleDateFormat("ha", Locale.getDefault())
+                val date = inputFormat.parse(period)
+                date?.let { outputFormat.format(it).lowercase() } ?: period
+            } catch (e2: Exception) {
+                period
+            }
         }
     }
 
