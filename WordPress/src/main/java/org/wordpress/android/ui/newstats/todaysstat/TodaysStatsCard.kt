@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.todaysstat
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,8 +20,6 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -49,8 +48,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-private val CardCornerRadius = 16.dp
+private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
+private val CardMargin = 16.dp
 private val ChartHeight = 80.dp
 private val MetricIconSize = 16.dp
 private val MetricSpacing = 4.dp
@@ -60,15 +60,19 @@ fun TodaysStatsCard(
     uiState: TodaysStatsCardUiState,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    val borderColor = MaterialTheme.colorScheme.outlineVariant
+
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(CardCornerRadius)),
-        shape = RoundedCornerShape(CardCornerRadius),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            .padding(horizontal = CardMargin, vertical = 8.dp)
+            .clip(RoundedCornerShape(CardCornerRadius))
+            .border(
+                width = 1.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(CardCornerRadius)
+            )
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         when (uiState) {
             is TodaysStatsCardUiState.Loading -> LoadingContent()
@@ -337,10 +341,7 @@ private fun formatStatValue(value: Int): String {
 @Composable
 private fun TodaysStatsCardLoadingPreview() {
     AppThemeM3 {
-        TodaysStatsCard(
-            uiState = TodaysStatsCardUiState.Loading,
-            modifier = Modifier.padding(16.dp)
-        )
+        TodaysStatsCard(uiState = TodaysStatsCardUiState.Loading)
     }
 }
 
@@ -356,27 +357,24 @@ private fun TodaysStatsCardLoadedPreview() {
                 comments = 12,
                 chartData = ChartData(
                     currentPeriod = listOf(
-                        ViewsDataPoint("Mon", 100),
-                        ViewsDataPoint("Tue", 150),
-                        ViewsDataPoint("Wed", 120),
-                        ViewsDataPoint("Thu", 200),
-                        ViewsDataPoint("Fri", 180),
-                        ViewsDataPoint("Sat", 250),
-                        ViewsDataPoint("Sun", 220)
+                        ViewsDataPoint("12am", 100),
+                        ViewsDataPoint("4am", 50),
+                        ViewsDataPoint("8am", 150),
+                        ViewsDataPoint("12pm", 200),
+                        ViewsDataPoint("4pm", 180),
+                        ViewsDataPoint("8pm", 250)
                     ),
                     previousPeriod = listOf(
-                        ViewsDataPoint("Mon", 80),
-                        ViewsDataPoint("Tue", 120),
-                        ViewsDataPoint("Wed", 100),
-                        ViewsDataPoint("Thu", 160),
-                        ViewsDataPoint("Fri", 140),
-                        ViewsDataPoint("Sat", 200),
-                        ViewsDataPoint("Sun", 180)
+                        ViewsDataPoint("12am", 80),
+                        ViewsDataPoint("4am", 40),
+                        ViewsDataPoint("8am", 120),
+                        ViewsDataPoint("12pm", 160),
+                        ViewsDataPoint("4pm", 140),
+                        ViewsDataPoint("8pm", 200)
                     )
                 ),
                 onCardClick = {}
-            ),
-            modifier = Modifier.padding(16.dp)
+            )
         )
     }
 }
@@ -389,8 +387,41 @@ private fun TodaysStatsCardErrorPreview() {
             uiState = TodaysStatsCardUiState.Error(
                 message = "Failed to load stats",
                 onRetry = {}
-            ),
-            modifier = Modifier.padding(16.dp)
+            )
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun TodaysStatsCardLoadedDarkPreview() {
+    AppThemeM3 {
+        TodaysStatsCard(
+            uiState = TodaysStatsCardUiState.Loaded(
+                views = 1234,
+                visitors = 567,
+                likes = 89,
+                comments = 12,
+                chartData = ChartData(
+                    currentPeriod = listOf(
+                        ViewsDataPoint("12am", 100),
+                        ViewsDataPoint("4am", 50),
+                        ViewsDataPoint("8am", 150),
+                        ViewsDataPoint("12pm", 200),
+                        ViewsDataPoint("4pm", 180),
+                        ViewsDataPoint("8pm", 250)
+                    ),
+                    previousPeriod = listOf(
+                        ViewsDataPoint("12am", 80),
+                        ViewsDataPoint("4am", 40),
+                        ViewsDataPoint("8am", 120),
+                        ViewsDataPoint("12pm", 160),
+                        ViewsDataPoint("4pm", 140),
+                        ViewsDataPoint("8pm", 200)
+                    )
+                ),
+                onCardClick = {}
+            )
         )
     }
 }

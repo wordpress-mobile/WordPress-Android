@@ -139,7 +139,6 @@ private fun TrafficTabContent(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
     ) {
         TodaysStatsCard(uiState = uiState)
     }
