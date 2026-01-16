@@ -26,7 +26,7 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
 
     var onPinUpdated = { _: SiteRecord -> }
     var onClicked = { _: SiteRecord -> }
-    var onLongClicked = { _: SiteRecord -> }
+    var onRemoveClicked = { _: SiteRecord -> }
 
     init {
         (itemView.context.applicationContext as WordPress).component().inject(this)
@@ -42,16 +42,12 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         binding.pin.isVisible = mode is ActionMode.Pin
 
         handlePinButton(site)
+        handleRemoveButton(mode, site)
 
         if (mode is ActionMode.Pin) {
             binding.layoutContainer.setOnClickListener(null)
-            binding.layoutContainer.setOnLongClickListener(null)
         } else {
             binding.layoutContainer.setOnClickListener { onClicked(site) }
-            binding.layoutContainer.setOnLongClickListener {
-                onLongClicked(site)
-                true
-            }
         }
 
         handleHighlight(site, selectedId)
@@ -85,6 +81,14 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         val color = if (isPinned) binding.root.context.getColor(R.color.inline_action_filled)
         else binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
         ImageViewCompat.setImageTintList(binding.pin, ColorStateList.valueOf(color))
+    }
+
+    private fun handleRemoveButton(mode: ActionMode, site: SiteRecord) {
+        val showRemove = shouldShowRemoveButton(mode, site.isSelfHostedSite)
+        binding.remove.isVisible = showRemove
+        if (showRemove) {
+            binding.remove.setOnClickListener { onRemoveClicked(site) }
+        }
     }
 
     private fun handleAvatar(site: SiteRecord) {
@@ -167,5 +171,13 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
     companion object {
         private const val TRACK_PROPERTY_BLOG_ID = "blog_id"
         private const val TRACK_PROPERTY_PINNED = "pinned"
+
+        /**
+         * Determines whether the remove button should be shown for a site.
+         * The remove button is shown only for self-hosted sites and only when not in Pin edit mode.
+         */
+        fun shouldShowRemoveButton(mode: ActionMode, isSelfHostedSite: Boolean): Boolean {
+            return mode !is ActionMode.Pin && isSelfHostedSite
+        }
     }
 }
