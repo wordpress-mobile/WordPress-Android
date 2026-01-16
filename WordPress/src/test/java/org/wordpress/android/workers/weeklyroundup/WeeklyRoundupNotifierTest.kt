@@ -59,7 +59,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
     private val notificationsTracker: SystemNotificationsTracker = mock()
     private val siteUtils: SiteUtilsWrapper = mock()
     private val weeklyRoundupRepository: WeeklyRoundupRepository = mock {
-        onBlocking { fetchWeeklyRoundupData(any()) }.then(buildMockData())
+        on { fetchWeeklyRoundupData(any()) }.then(buildMockData())
     }
     private val appPrefs: AppPrefsWrapper = mock {
         on { shouldShowWeeklyRoundupNotification(any()) }.thenReturn(true)
