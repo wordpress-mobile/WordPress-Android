@@ -994,6 +994,8 @@
     <string name="network_requests_disable">Disable</string>
     <string name="experimental_post_types">Post Types</string>
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
+    <string name="experimental_new_stats">New Stats</string>
+    <string name="experimental_new_stats_description">Show stats in a more modern and advanced UI</string>
     <string name="post_types_screen_title">Post Types</string>
 
     <!-- Debug settings -->
