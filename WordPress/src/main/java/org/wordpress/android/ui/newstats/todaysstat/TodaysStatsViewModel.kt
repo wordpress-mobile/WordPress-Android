@@ -34,6 +34,7 @@ class TodaysStatsViewModel @Inject constructor(
         loadData()
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun loadData(forced: Boolean = false) {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
@@ -132,6 +133,7 @@ class TodaysStatsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun formatHourlyLabel(period: String): String {
         return try {
             // API returns period in format "2024-01-16 14:00:00" for hourly data

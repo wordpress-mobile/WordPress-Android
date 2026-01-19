@@ -18,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,6 +55,8 @@ private val CardMargin = 16.dp
 private val ChartHeight = 80.dp
 private val MetricIconSize = 16.dp
 private val MetricSpacing = 4.dp
+private const val THOUSAND = 1_000
+private const val MILLION = 1_000_000
 
 @Composable
 fun TodaysStatsCard(
@@ -399,8 +399,8 @@ private fun SecondaryMetricItem(
 
 private fun formatStatValue(value: Int): String {
     return when {
-        value >= 1_000_000 -> String.format(Locale.getDefault(), "%.1fM", value / 1_000_000.0)
-        value >= 1_000 -> String.format(Locale.getDefault(), "%.1fK", value / 1_000.0)
+        value >= MILLION -> String.format(Locale.getDefault(), "%.1fM", value / MILLION.toDouble())
+        value >= THOUSAND -> String.format(Locale.getDefault(), "%.1fK", value / THOUSAND.toDouble())
         else -> value.toString()
     }
 }
