@@ -490,14 +490,13 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                 }
                 when {
                     uiModel.retryAction != null -> {
-                        actionableEmptyView.button.setText(R.string.retry)
-                        actionableEmptyView.button.visibility = View.VISIBLE
-                        actionableEmptyView.button.setOnClickListener { uiModel.retryAction.invoke() }
+                        actionableEmptyView.button.setupAction(R.string.retry, uiModel.retryAction)
                     }
                     uiModel.uploadAction != null -> {
-                        actionableEmptyView.button.setText(R.string.photo_picker_choose_file)
-                        actionableEmptyView.button.visibility = View.VISIBLE
-                        actionableEmptyView.button.setOnClickListener { uiModel.uploadAction.invoke() }
+                        actionableEmptyView.button.setupAction(
+                            R.string.photo_picker_choose_file,
+                            uiModel.uploadAction
+                        )
                     }
                     else -> {
                         actionableEmptyView.button.visibility = View.GONE
@@ -507,6 +506,12 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             PhotoListUiModel.Hidden -> Unit // Do nothing
             PhotoListUiModel.Loading -> Unit // Do nothing
         }
+    }
+
+    private fun android.widget.Button.setupAction(textResId: Int, action: () -> Unit) {
+        setText(textResId)
+        visibility = View.VISIBLE
+        setOnClickListener { action() }
     }
 
     private fun <T, U : View> U.applyOrHide(item: T?, action: U.(T) -> Unit) {
