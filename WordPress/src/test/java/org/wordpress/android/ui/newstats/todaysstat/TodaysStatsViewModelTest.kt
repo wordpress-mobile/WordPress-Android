@@ -12,16 +12,13 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.VisitsModel
-import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
-import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -31,10 +28,13 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Mock
+    private lateinit var accountStore: AccountStore
+
+    @Mock
     private lateinit var todayInsightsStore: TodayInsightsStore
 
     @Mock
-    private lateinit var visitsAndViewsStore: VisitsAndViewsStore
+    private lateinit var todaysStatsRepository: TodaysStatsRepository
 
     @Mock
     private lateinit var resourceProvider: ResourceProvider
@@ -50,6 +50,7 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
+        whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
         whenever(resourceProvider.getString(R.string.stats_todays_stats_no_site_selected))
             .thenReturn(NO_SITE_SELECTED_ERROR)
         whenever(resourceProvider.getString(R.string.stats_todays_stats_failed_to_load))
@@ -61,8 +62,9 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     private fun initViewModel() {
         viewModel = TodaysStatsViewModel(
             selectedSiteRepository,
+            accountStore,
             todayInsightsStore,
-            visitsAndViewsStore,
+            todaysStatsRepository,
             resourceProvider
         )
     }
@@ -90,12 +92,11 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
             comments = TEST_COMMENTS,
             posts = 0
         )
-        val visitsAndViewsModel = createVisitsAndViewsModel()
 
         whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
             .thenReturn(OnStatsFetched(visitsModel))
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
-            .thenReturn(OnStatsFetched(visitsAndViewsModel))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -116,8 +117,8 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
 
         whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
             .thenReturn(OnStatsFetched(error))
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
-            .thenReturn(OnStatsFetched(createVisitsAndViewsModel()))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -131,8 +132,8 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     fun `when today insights returns null model, then error state is emitted`() = test {
         whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
             .thenReturn(OnStatsFetched(model = null))
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
-            .thenReturn(OnStatsFetched(createVisitsAndViewsModel()))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -142,14 +143,13 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when visits and views fetch fails, then chart data is empty but state is loaded`() = test {
+    fun `when hourly views fetch fails, then chart data is empty but state is loaded`() = test {
         val visitsModel = createVisitsModel()
-        val error = StatsError(StatsErrorType.GENERIC_ERROR, "Network error")
 
         whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
             .thenReturn(OnStatsFetched(visitsModel))
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
-            .thenReturn(OnStatsFetched(error))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(HourlyViewsResult.Error("Network error"))
 
         initViewModel()
         advanceUntilIdle()
@@ -165,12 +165,11 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when loadData is called with forced true, then stores are called with forced true`() = test {
         val visitsModel = createVisitsModel()
-        val visitsAndViewsModel = createVisitsAndViewsModel()
 
         whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
             .thenReturn(OnStatsFetched(visitsModel))
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
-            .thenReturn(OnStatsFetched(visitsAndViewsModel))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -184,12 +183,11 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when onRetry is called, then loadData is called with forced true`() = test {
         val visitsModel = createVisitsModel()
-        val visitsAndViewsModel = createVisitsAndViewsModel()
 
         whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
             .thenReturn(OnStatsFetched(visitsModel))
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
-            .thenReturn(OnStatsFetched(visitsAndViewsModel))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -203,12 +201,11 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when data loads, then chart data contains current and previous period data`() = test {
         val visitsModel = createVisitsModel()
-        val visitsAndViewsModel = createVisitsAndViewsModel()
 
         whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
             .thenReturn(OnStatsFetched(visitsModel))
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
-            .thenReturn(OnStatsFetched(visitsAndViewsModel))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -222,27 +219,21 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when fetch visits is called, then hourly granularity is used for both periods`() = test {
+    fun `when fetch hourly views is called, then repository is called for both periods`() = test {
         val visitsModel = createVisitsModel()
-        val visitsAndViewsModel = createVisitsAndViewsModel()
 
         whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
             .thenReturn(OnStatsFetched(visitsModel))
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
-            .thenReturn(OnStatsFetched(visitsAndViewsModel))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
 
         initViewModel()
         advanceUntilIdle()
 
-        // fetchVisits is called twice: once for current period, once for previous period
-        verify(visitsAndViewsStore, times(2)).fetchVisits(
-            site = eq(testSite),
-            granularity = eq(StatsGranularity.HOURS),
-            limitMode = any<LimitMode.Top>(),
-            date = any(),
-            forced = any(),
-            applySiteTimezone = any()
-        )
+        // fetchHourlyViews is called twice: once for current period (offsetDays=0),
+        // once for previous period (offsetDays=1)
+        verify(todaysStatsRepository).fetchHourlyViews(eq(TEST_SITE_ID), eq(0))
+        verify(todaysStatsRepository).fetchHourlyViews(eq(TEST_SITE_ID), eq(1))
     }
 
     @Test
@@ -274,12 +265,11 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when loadData is called again, then state transitions through loading`() = test {
         val visitsModel = createVisitsModel()
-        val visitsAndViewsModel = createVisitsAndViewsModel()
 
         whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
             .thenReturn(OnStatsFetched(visitsModel))
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
-            .thenReturn(OnStatsFetched(visitsAndViewsModel))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -307,8 +297,8 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
         whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
             .thenReturn(OnStatsFetched(createVisitsModel()))
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
-            .thenReturn(OnStatsFetched(createVisitsAndViewsModel()))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
 
         errorState.onRetry()
         advanceUntilIdle()
@@ -319,12 +309,11 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when refresh is called, then isRefreshing becomes true then false`() = test {
         val visitsModel = createVisitsModel()
-        val visitsAndViewsModel = createVisitsAndViewsModel()
 
         whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
             .thenReturn(OnStatsFetched(visitsModel))
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
-            .thenReturn(OnStatsFetched(visitsAndViewsModel))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -342,12 +331,11 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when refresh is called, then data is fetched with forced true`() = test {
         val visitsModel = createVisitsModel()
-        val visitsAndViewsModel = createVisitsAndViewsModel()
 
         whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
             .thenReturn(OnStatsFetched(visitsModel))
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
-            .thenReturn(OnStatsFetched(visitsAndViewsModel))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -364,12 +352,11 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when refresh is called, then state remains loaded without showing loading state`() = test {
         val visitsModel = createVisitsModel()
-        val visitsAndViewsModel = createVisitsAndViewsModel()
 
         whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
             .thenReturn(OnStatsFetched(visitsModel))
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
-            .thenReturn(OnStatsFetched(visitsAndViewsModel))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -394,32 +381,22 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         posts = 0
     )
 
-    private fun createVisitsAndViewsModel() = VisitsAndViewsModel(
-        period = "hour",
-        dates = listOf(
-            VisitsAndViewsModel.PeriodData(
+    private fun createHourlyViewsResult() = HourlyViewsResult.Success(
+        listOf(
+            HourlyViewsDataPoint(
                 period = "2024-01-16 14:00:00",
-                views = 100L,
-                visitors = 50L,
-                likes = 10L,
-                reblogs = 0L,
-                comments = 5L,
-                posts = 0L
+                views = 100L
             ),
-            VisitsAndViewsModel.PeriodData(
+            HourlyViewsDataPoint(
                 period = "2024-01-16 15:00:00",
-                views = 150L,
-                visitors = 75L,
-                likes = 15L,
-                reblogs = 0L,
-                comments = 8L,
-                posts = 0L
+                views = 150L
             )
         )
     )
 
     companion object {
         private const val TEST_SITE_ID = 123L
+        private const val TEST_ACCESS_TOKEN = "test_access_token"
         private const val TEST_VIEWS = 500
         private const val TEST_VISITORS = 100
         private const val TEST_LIKES = 50
