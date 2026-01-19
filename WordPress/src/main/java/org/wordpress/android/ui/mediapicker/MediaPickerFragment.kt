@@ -501,6 +501,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                     }
                 }
                 actionableEmptyView.button.applyOrHide(uiModel.retryAction) { action ->
+                    this.setText(R.string.retry)
                     this.setOnClickListener {
                         action()
                     }
