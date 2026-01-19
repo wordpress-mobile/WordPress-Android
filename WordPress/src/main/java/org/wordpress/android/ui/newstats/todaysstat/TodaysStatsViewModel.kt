@@ -33,11 +33,21 @@ class TodaysStatsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<TodaysStatsCardUiState>(TodaysStatsCardUiState.Loading)
     val uiState: StateFlow<TodaysStatsCardUiState> = _uiState.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
     init {
         loadData()
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    fun refresh() {
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            loadDataInternal(forced = true)
+            _isRefreshing.value = false
+        }
+    }
+
     fun loadData(forced: Boolean = false) {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
@@ -51,31 +61,45 @@ class TodaysStatsViewModel @Inject constructor(
         _uiState.value = TodaysStatsCardUiState.Loading
 
         viewModelScope.launch {
-            try {
-                val todayStats = fetchTodayStats(site, forced)
-                val chartData = fetchChartData(site, forced)
+            loadDataInternal(forced)
+        }
+    }
 
-                if (todayStats != null) {
-                    _uiState.value = TodaysStatsCardUiState.Loaded(
-                        views = todayStats.views,
-                        visitors = todayStats.visitors,
-                        likes = todayStats.likes,
-                        comments = todayStats.comments,
-                        chartData = chartData,
-                        onCardClick = { onCardClicked() }
-                    )
-                } else {
-                    _uiState.value = TodaysStatsCardUiState.Error(
-                        message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
-                        onRetry = { loadData(forced = true) }
-                    )
-                }
-            } catch (e: Exception) {
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun loadDataInternal(forced: Boolean) {
+        val site = selectedSiteRepository.getSelectedSite()
+        if (site == null) {
+            _uiState.value = TodaysStatsCardUiState.Error(
+                message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected),
+                onRetry = { loadData(forced = true) }
+            )
+            return
+        }
+
+        try {
+            val todayStats = fetchTodayStats(site, forced)
+            val chartData = fetchChartData(site, forced)
+
+            if (todayStats != null) {
+                _uiState.value = TodaysStatsCardUiState.Loaded(
+                    views = todayStats.views,
+                    visitors = todayStats.visitors,
+                    likes = todayStats.likes,
+                    comments = todayStats.comments,
+                    chartData = chartData,
+                    onCardClick = { onCardClicked() }
+                )
+            } else {
                 _uiState.value = TodaysStatsCardUiState.Error(
-                    message = e.message ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error),
+                    message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
                     onRetry = { loadData(forced = true) }
                 )
             }
+        } catch (e: Exception) {
+            _uiState.value = TodaysStatsCardUiState.Error(
+                message = e.message ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error),
+                onRetry = { loadData(forced = true) }
+            )
         }
     }
 

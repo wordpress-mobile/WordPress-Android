@@ -17,11 +17,15 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -128,18 +132,36 @@ private fun StatsTabContent(tab: StatsTab) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TrafficTabContent(
     viewModel: TodaysStatsViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
+    val pullToRefreshState = rememberPullToRefreshState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+    PullToRefreshBox(
+        modifier = Modifier.fillMaxSize(),
+        isRefreshing = isRefreshing,
+        state = pullToRefreshState,
+        onRefresh = { viewModel.refresh() },
+        indicator = {
+            PullToRefreshDefaults.Indicator(
+                state = pullToRefreshState,
+                isRefreshing = isRefreshing,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+        }
     ) {
-        TodaysStatsCard(uiState = uiState)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            TodaysStatsCard(uiState = uiState)
+        }
     }
 }
 

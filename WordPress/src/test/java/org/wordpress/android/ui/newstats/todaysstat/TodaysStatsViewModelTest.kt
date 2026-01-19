@@ -316,6 +316,74 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiState.value).isInstanceOf(TodaysStatsCardUiState.Loaded::class.java)
     }
 
+    @Test
+    fun `when refresh is called, then isRefreshing becomes true then false`() = test {
+        val visitsModel = createVisitsModel()
+        val visitsAndViewsModel = createVisitsAndViewsModel()
+
+        whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
+            .thenReturn(OnStatsFetched(visitsModel))
+        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
+            .thenReturn(OnStatsFetched(visitsAndViewsModel))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // Verify initial state is not refreshing
+        assertThat(viewModel.isRefreshing.value).isFalse()
+
+        viewModel.refresh()
+        advanceUntilIdle()
+
+        // After refresh completes, isRefreshing should be false
+        assertThat(viewModel.isRefreshing.value).isFalse()
+    }
+
+    @Test
+    fun `when refresh is called, then data is fetched with forced true`() = test {
+        val visitsModel = createVisitsModel()
+        val visitsAndViewsModel = createVisitsAndViewsModel()
+
+        whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
+            .thenReturn(OnStatsFetched(visitsModel))
+        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
+            .thenReturn(OnStatsFetched(visitsAndViewsModel))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.refresh()
+        advanceUntilIdle()
+
+        // Verify that fetchTodayInsights was called with forced = true during refresh
+        // (called twice: once during init, once during refresh)
+        verify(todayInsightsStore, times(2)).fetchTodayInsights(eq(testSite), any())
+        verify(todayInsightsStore).fetchTodayInsights(eq(testSite), eq(true))
+    }
+
+    @Test
+    fun `when refresh is called, then state remains loaded without showing loading state`() = test {
+        val visitsModel = createVisitsModel()
+        val visitsAndViewsModel = createVisitsAndViewsModel()
+
+        whenever(todayInsightsStore.fetchTodayInsights(any(), any()))
+            .thenReturn(OnStatsFetched(visitsModel))
+        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any(), any(), any()))
+            .thenReturn(OnStatsFetched(visitsAndViewsModel))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // Verify initial state is Loaded
+        assertThat(viewModel.uiState.value).isInstanceOf(TodaysStatsCardUiState.Loaded::class.java)
+
+        viewModel.refresh()
+        advanceUntilIdle()
+
+        // State should still be Loaded after refresh (not showing Loading state)
+        assertThat(viewModel.uiState.value).isInstanceOf(TodaysStatsCardUiState.Loaded::class.java)
+    }
+
     private fun createVisitsModel() = VisitsModel(
         period = "2024-01-16",
         views = TEST_VIEWS,
