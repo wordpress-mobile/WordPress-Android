@@ -193,7 +193,7 @@ class MediaPickerViewModel @Inject constructor(
                 bottomImage = domainModel.emptyState.bottomImage,
                 bottomImageDescription = domainModel.emptyState.bottomImageDescription,
                 isSearching = isSearching == true,
-                retryAction = this::retry
+                retryAction = if (isSearching == true) null else this::retry
             )
         } else if (domainModel?.isLoading == true) {
             PhotoListUiModel.Loading
@@ -209,7 +209,7 @@ class MediaPickerViewModel @Inject constructor(
             PhotoListUiModel.Empty(
                 UiStringRes(stringId),
                 isSearching = isSearching == true,
-                retryAction = this::retry
+                retryAction = if (isSearching == true) null else this::retry
             )
         }
     }
