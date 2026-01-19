@@ -32,6 +32,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.ENABLED
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
@@ -57,6 +58,7 @@ import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandlerFactory
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel.EmptyState
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.loader.MediaLoaderFactory
 import org.wordpress.android.ui.photopicker.PermissionsHandler
@@ -770,6 +772,109 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `error state has retryAction but no uploadAction`() = test {
+        val wpLibrarySetup = buildMediaPickerSetup(
+            canMultiselect = false,
+            allowedTypes = setOf(IMAGE),
+            requiresPhotosVideosPermission = true,
+            primaryDataSource = WP_LIBRARY
+        )
+        val errorEmptyState = EmptyState(
+            title = UiStringRes(R.string.media_empty_list),
+            isError = true
+        )
+        setupViewModel(
+            listOf(),
+            wpLibrarySetup,
+            numberOfStates = 2,
+            emptyState = errorEmptyState
+        )
+
+        viewModel.refreshData(false)
+
+        val emptyState = uiStates.last().photoListUiModel as Empty
+        assertThat(emptyState.retryAction != null).isTrue()
+        assertThat(emptyState.uploadAction == null).isTrue()
+    }
+
+    @Test
+    fun `empty state has no upload action when STOCK_LIBRARY is empty`() = test {
+        val stockLibrarySetup = buildMediaPickerSetup(
+            canMultiselect = false,
+            allowedTypes = setOf(IMAGE),
+            requiresPhotosVideosPermission = true,
+            primaryDataSource = STOCK_LIBRARY
+        )
+        setupViewModel(null, stockLibrarySetup, numberOfStates = 1)
+
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = false,
+            isMusicAudioAlwaysDenied = false,
+            didJustRequestPermissions = false,
+        )
+
+        assertThat(uiStates).hasSize(3)
+        val emptyState = uiStates.last().photoListUiModel as Empty
+        assertThat(emptyState.uploadAction == null).isTrue()
+    }
+
+    @Test
+    fun `empty state has no upload action when GIF_LIBRARY is empty`() = test {
+        val gifLibrarySetup = buildMediaPickerSetup(
+            canMultiselect = false,
+            allowedTypes = setOf(IMAGE),
+            requiresPhotosVideosPermission = true,
+            primaryDataSource = GIF_LIBRARY
+        )
+        setupViewModel(null, gifLibrarySetup, numberOfStates = 1)
+
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = false,
+            isMusicAudioAlwaysDenied = false,
+            didJustRequestPermissions = false,
+        )
+
+        assertThat(uiStates).hasSize(3)
+        val emptyState = uiStates.last().photoListUiModel as Empty
+        assertThat(emptyState.uploadAction == null).isTrue()
+    }
+
+    @Test
+    fun `upload action triggers video picker when allowed types is VIDEO`() = test {
+        val wpLibrarySetup = buildMediaPickerSetup(
+            canMultiselect = false,
+            allowedTypes = setOf(VIDEO),
+            requiresPhotosVideosPermission = true,
+            primaryDataSource = WP_LIBRARY
+        )
+        setupViewModel(null, wpLibrarySetup, numberOfStates = 1)
+
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = false,
+            isMusicAudioAlwaysDenied = false,
+            didJustRequestPermissions = false,
+        )
+
+        val emptyState = uiStates.last().photoListUiModel as Empty
+        assertThat(emptyState.uploadAction != null).isTrue()
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+        viewModel.onNavigate.observeForever {
+            it.peekContent().let { clickEvent ->
+                if (clickEvent is IconClickEvent) {
+                    iconClickEvents.add(clickEvent)
+                }
+            }
+        }
+
+        emptyState.uploadAction!!.invoke()
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.VIDEO)
+    }
+
+    @Test
     fun `hidden state is emitted when when need to ask permission in picker`() = test {
         setupViewModel(
             listOf(firstItem),
@@ -954,7 +1059,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         hasPartialMediaAccess: Boolean = false,
         filter: String? = null,
         numberOfStates: Int = 2,
-        hasMore: Boolean = false
+        hasMore: Boolean = false,
+        emptyState: EmptyState? = null
     ) {
         whenever(permissionsHandler.hasPhotosVideosPermission()).thenReturn(hasPhotosVideosPermission)
         whenever(permissionsHandler.hasOnlyPartialAccessPhotosVideosPermission()).thenReturn(hasPartialMediaAccess)
@@ -962,12 +1068,13 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         doAnswer {
             actions = it.getArgument(0)
             return@doAnswer flow {
-                if (null != domainModel) {
+                if (null != domainModel || emptyState != null) {
                     emit(
                         DomainModel(
-                            domainModel,
+                            domainModel ?: listOf(),
                             filter = filter,
-                            hasMore = hasMore
+                            hasMore = hasMore,
+                            emptyState = emptyState
                         )
                     )
                 }
