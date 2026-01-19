@@ -699,6 +699,77 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `empty state has upload action when WP_LIBRARY is empty`() = test {
+        val wpLibrarySetup = buildMediaPickerSetup(
+            canMultiselect = false,
+            allowedTypes = setOf(IMAGE),
+            requiresPhotosVideosPermission = true,
+            primaryDataSource = WP_LIBRARY
+        )
+        setupViewModel(null, wpLibrarySetup, numberOfStates = 1)
+
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = false,
+            isMusicAudioAlwaysDenied = false,
+            didJustRequestPermissions = false,
+        )
+
+        assertThat(uiStates).hasSize(3)
+        val emptyState = uiStates.last().photoListUiModel as Empty
+        assertThat(emptyState.uploadAction != null).isTrue()
+    }
+
+    @Test
+    fun `empty state has no upload action when DEVICE source is empty`() = test {
+        setupViewModel(null, singleSelectMediaPickerSetup, numberOfStates = 1)
+
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = false,
+            isMusicAudioAlwaysDenied = false,
+            didJustRequestPermissions = false,
+        )
+
+        assertThat(uiStates).hasSize(3)
+        val emptyState = uiStates.last().photoListUiModel as Empty
+        assertThat(emptyState.uploadAction == null).isTrue()
+    }
+
+    @Test
+    fun `upload action triggers system picker when invoked`() = test {
+        val wpLibrarySetup = buildMediaPickerSetup(
+            canMultiselect = false,
+            allowedTypes = setOf(IMAGE),
+            requiresPhotosVideosPermission = true,
+            primaryDataSource = WP_LIBRARY
+        )
+        setupViewModel(null, wpLibrarySetup, numberOfStates = 1)
+
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = false,
+            isMusicAudioAlwaysDenied = false,
+            didJustRequestPermissions = false,
+        )
+
+        val emptyState = uiStates.last().photoListUiModel as Empty
+        assertThat(emptyState.uploadAction != null).isTrue()
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+        viewModel.onNavigate.observeForever {
+            it.peekContent().let { clickEvent ->
+                if (clickEvent is IconClickEvent) {
+                    iconClickEvents.add(clickEvent)
+                }
+            }
+        }
+
+        emptyState.uploadAction!!.invoke()
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.PHOTO)
+    }
+
+    @Test
     fun `hidden state is emitted when when need to ask permission in picker`() = test {
         setupViewModel(
             listOf(firstItem),
@@ -980,9 +1051,10 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         cameraSetup: CameraSetup = HIDDEN,
         editingEnabled: Boolean = true,
         requiresPhotosVideosPermission: Boolean = false,
-        requiresMusicAudioPermission: Boolean = false
+        requiresMusicAudioPermission: Boolean = false,
+        primaryDataSource: MediaPickerSetup.DataSource = DEVICE
     ) = MediaPickerSetup(
-        primaryDataSource = DEVICE,
+        primaryDataSource = primaryDataSource,
         availableDataSources = setOf(),
         canMultiselect = canMultiselect,
         requiresPhotosVideosPermissions = requiresPhotosVideosPermission,
