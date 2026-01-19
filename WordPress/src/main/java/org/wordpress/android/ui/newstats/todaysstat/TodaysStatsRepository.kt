@@ -64,16 +64,13 @@ class TodaysStatsRepository @Inject constructor(
         }
 
         val calendar = Calendar.getInstance()
-        if (offsetDays > 0) {
-            calendar.add(Calendar.DAY_OF_YEAR, -offsetDays)
-        }
+        calendar.add(Calendar.DAY_OF_YEAR, 1 - offsetDays)
         val dateString = dateFormat.format(calendar.time)
 
         val params = StatsVisitsParams(
             unit = HOURLY_UNIT,
             quantity = HOURLY_QUANTITY,
             date = dateString,
-            locale = Locale.getDefault().language
         )
 
         val result = wpComApiClient.request { requestBuilder ->
