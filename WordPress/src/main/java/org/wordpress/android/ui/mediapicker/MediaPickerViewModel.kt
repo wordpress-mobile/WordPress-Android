@@ -184,7 +184,7 @@ class MediaPickerViewModel @Inject constructor(
             PhotoListUiModel.Empty(
                 title = domainModel.emptyState.title,
                 htmlSubtitle = domainModel.emptyState.htmlSubtitle,
-                isSearching = true,
+                isSearching = isSearching == true,
                 retryAction = if (domainModel.emptyState.isError) {
                     this::retry
                 } else {
