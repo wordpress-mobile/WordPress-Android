@@ -7,12 +7,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -25,7 +27,8 @@ private const val PREVIOUS_PERIOD_OFFSET_DAYS = 1
 class TodaysStatsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val todayInsightsStore: TodayInsightsStore,
-    private val visitsAndViewsStore: VisitsAndViewsStore
+    private val visitsAndViewsStore: VisitsAndViewsStore,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<TodaysStatsCardUiState>(TodaysStatsCardUiState.Loading)
     val uiState: StateFlow<TodaysStatsCardUiState> = _uiState.asStateFlow()
@@ -39,7 +42,7 @@ class TodaysStatsViewModel @Inject constructor(
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
             _uiState.value = TodaysStatsCardUiState.Error(
-                message = "No site selected",
+                message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected),
                 onRetry = { loadData(forced = true) }
             )
             return
@@ -63,13 +66,13 @@ class TodaysStatsViewModel @Inject constructor(
                     )
                 } else {
                     _uiState.value = TodaysStatsCardUiState.Error(
-                        message = "Failed to load stats",
+                        message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
                         onRetry = { loadData(forced = true) }
                     )
                 }
             } catch (e: Exception) {
                 _uiState.value = TodaysStatsCardUiState.Error(
-                    message = e.message ?: "Unknown error",
+                    message = e.message ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error),
                     onRetry = { loadData(forced = true) }
                 )
             }

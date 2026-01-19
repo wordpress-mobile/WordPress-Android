@@ -19,9 +19,11 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class TodaysStatsViewModelTest : BaseUnitTest() {
@@ -34,6 +36,9 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var visitsAndViewsStore: VisitsAndViewsStore
 
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
+
     private lateinit var viewModel: TodaysStatsViewModel
 
     private val testSite = SiteModel().apply {
@@ -45,13 +50,20 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
+        whenever(resourceProvider.getString(R.string.stats_todays_stats_no_site_selected))
+            .thenReturn(NO_SITE_SELECTED_ERROR)
+        whenever(resourceProvider.getString(R.string.stats_todays_stats_failed_to_load))
+            .thenReturn(FAILED_TO_LOAD_ERROR)
+        whenever(resourceProvider.getString(R.string.stats_todays_stats_unknown_error))
+            .thenReturn(UNKNOWN_ERROR)
     }
 
     private fun initViewModel() {
         viewModel = TodaysStatsViewModel(
             selectedSiteRepository,
             todayInsightsStore,
-            visitsAndViewsStore
+            visitsAndViewsStore,
+            resourceProvider
         )
     }
 
@@ -64,7 +76,7 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
 
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(TodaysStatsCardUiState.Error::class.java)
-        assertThat((state as TodaysStatsCardUiState.Error).message).isEqualTo("No site selected")
+        assertThat((state as TodaysStatsCardUiState.Error).message).isEqualTo(NO_SITE_SELECTED_ERROR)
     }
 
     @Test
@@ -112,7 +124,7 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
 
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(TodaysStatsCardUiState.Error::class.java)
-        assertThat((state as TodaysStatsCardUiState.Error).message).isEqualTo("Failed to load stats")
+        assertThat((state as TodaysStatsCardUiState.Error).message).isEqualTo(FAILED_TO_LOAD_ERROR)
     }
 
     @Test
@@ -256,7 +268,7 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
 
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(TodaysStatsCardUiState.Error::class.java)
-        assertThat((state as TodaysStatsCardUiState.Error).message).isEqualTo("Unknown error")
+        assertThat((state as TodaysStatsCardUiState.Error).message).isEqualTo(UNKNOWN_ERROR)
     }
 
     @Test
@@ -344,5 +356,8 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         private const val TEST_VISITORS = 100
         private const val TEST_LIKES = 50
         private const val TEST_COMMENTS = 25
+        private const val NO_SITE_SELECTED_ERROR = "No site selected"
+        private const val FAILED_TO_LOAD_ERROR = "Failed to load stats"
+        private const val UNKNOWN_ERROR = "Unknown error"
     }
 }
