@@ -1,5 +1,11 @@
 package org.wordpress.android.ui.newstats.todaysstat
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,10 +30,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -87,6 +96,29 @@ fun TodaysStatsCard(
 
 @Composable
 private fun LoadingContent() {
+    val shimmerColors = listOf(
+        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+    )
+
+    val transition = rememberInfiniteTransition(label = "shimmer")
+    val translateAnimation by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1000f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1200, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "shimmer_translate"
+    )
+
+    val shimmerBrush = Brush.linearGradient(
+        colors = shimmerColors,
+        start = Offset(translateAnimation - 500f, 0f),
+        end = Offset(translateAnimation, 0f)
+    )
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -104,7 +136,7 @@ private fun LoadingContent() {
                         .width(80.dp)
                         .height(24.dp)
                         .clip(RoundedCornerShape(4.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                        .background(shimmerBrush)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Box(
@@ -112,7 +144,7 @@ private fun LoadingContent() {
                         .width(100.dp)
                         .height(16.dp)
                         .clip(RoundedCornerShape(4.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                        .background(shimmerBrush)
                 )
             }
             // Right: Chart placeholder
@@ -121,7 +153,7 @@ private fun LoadingContent() {
                     .weight(0.6f)
                     .height(ChartHeight)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                    .background(shimmerBrush)
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -137,7 +169,7 @@ private fun LoadingContent() {
                         .width(60.dp)
                         .height(12.dp)
                         .clip(RoundedCornerShape(4.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                        .background(shimmerBrush)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Box(
@@ -145,7 +177,7 @@ private fun LoadingContent() {
                         .width(80.dp)
                         .height(36.dp)
                         .clip(RoundedCornerShape(4.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                        .background(shimmerBrush)
                 )
             }
             Spacer(modifier = Modifier.width(24.dp))
@@ -156,7 +188,7 @@ private fun LoadingContent() {
                         .width(50.dp)
                         .height(24.dp)
                         .clip(RoundedCornerShape(4.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                        .background(shimmerBrush)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
             }
@@ -201,19 +233,47 @@ private fun ErrorContent(state: TodaysStatsCardUiState.Error) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(CardPadding),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(CardPadding)
     ) {
-        TitleSection()
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = state.message,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.error
-        )
+        // Top section: Title/Date on left, Empty chart placeholder on right
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Top
+        ) {
+            // Left: Title and date
+            TitleSection()
+            Spacer(modifier = Modifier.width(16.dp))
+            // Right: Empty chart placeholder
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(ChartHeight)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.stats_no_data_yet),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = state.onRetry) {
-            Text(text = stringResource(R.string.retry))
+        // Error message and retry button centered
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = state.message,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = state.onRetry) {
+                Text(text = stringResource(R.string.retry))
+            }
         }
     }
 }
