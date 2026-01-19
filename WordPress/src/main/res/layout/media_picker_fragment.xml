@@ -45,7 +45,6 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:visibility="gone"
-                app:aevImage="@drawable/img_illustration_media_105dp"
                 app:aevButton="@string/retry"
                 app:aevTitle="@string/media_empty_list"
                 app:layout_constraintStart_toStartOf="parent"
