@@ -182,17 +182,13 @@ class MediaPickerViewModel @Inject constructor(
             populateDomainItems(data, selectedIds, domainModel)
         } else if (domainModel?.emptyState != null) {
             PhotoListUiModel.Empty(
-                domainModel.emptyState.title,
-                domainModel.emptyState.htmlSubtitle,
-                domainModel.emptyState.image,
-                domainModel.emptyState.bottomImage,
-                domainModel.emptyState.bottomImageDescription,
-                isSearching == true,
-                retryAction = if (domainModel.emptyState.isError) {
-                    this::retry
-                } else {
-                    null
-                }
+                title = domainModel.emptyState.title,
+                htmlSubtitle = domainModel.emptyState.htmlSubtitle,
+                image = domainModel.emptyState.image,
+                bottomImage = domainModel.emptyState.bottomImage,
+                bottomImageDescription = domainModel.emptyState.bottomImageDescription,
+                isSearching = isSearching == true,
+                retryAction = this::retry
             )
         } else if (domainModel?.isLoading == true) {
             PhotoListUiModel.Loading
@@ -207,7 +203,6 @@ class MediaPickerViewModel @Inject constructor(
             }
             PhotoListUiModel.Empty(
                 UiStringRes(stringId),
-                image = R.drawable.img_illustration_media_105dp,
                 isSearching = isSearching == true
             )
         }
