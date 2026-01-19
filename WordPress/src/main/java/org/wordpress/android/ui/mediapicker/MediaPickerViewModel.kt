@@ -181,10 +181,14 @@ class MediaPickerViewModel @Inject constructor(
         isSearching: Boolean?
     ): PhotoListUiModel {
         val data = domainModel?.domainItems
+        // Hide empty view when search is expanded but no search term submitted yet
+        val isSearchExpandedWithoutFilter = isSearching == true && domainModel?.filter.isNullOrEmpty()
         return if (null != softAskRequest && softAskRequest.show) {
             PhotoListUiModel.Hidden
         } else if (data != null && data.isNotEmpty()) {
             populateDomainItems(data, selectedIds, domainModel)
+        } else if (isSearchExpandedWithoutFilter) {
+            PhotoListUiModel.Hidden
         } else if (domainModel?.emptyState != null) {
             PhotoListUiModel.Empty(
                 title = domainModel.emptyState.title,
