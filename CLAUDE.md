@@ -126,6 +126,7 @@ WordPress/src/main/java/org/wordpress/android/
 - Fastlane used for release automation and testing
 - Secrets managed via `secrets.properties` file (not in repo)
 - Pre-commit hooks may modify files during commit
+- **IMPORTANT**: Never commit or push changes without explicitly asking permission each time
 
 ## Release Notes Compilation Process
 
