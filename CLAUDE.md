@@ -126,7 +126,12 @@ WordPress/src/main/java/org/wordpress/android/
 - Fastlane used for release automation and testing
 - Secrets managed via `secrets.properties` file (not in repo)
 - Pre-commit hooks may modify files during commit
-- **IMPORTANT**: Never commit or push changes without explicitly asking permission each time
+
+### Git Operations Checklist
+Before performing ANY git commit or push:
+- [ ] Have you explicitly asked the user for permission for THIS specific operation?
+- [ ] Did the user respond affirmatively to THIS specific request (not a previous one)?
+- [ ] Are you committing only the changes the user approved?
 
 ## Release Notes Compilation Process
 
