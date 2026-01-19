@@ -1549,6 +1549,9 @@
 
     <string name="stats_loading_error">Data not loaded</string>
     <string name="stats_loading_block_error">There was a problem loading your data, refresh your page to try again.</string>
+    <string name="stats_todays_stats_no_site_selected">No site selected</string>
+    <string name="stats_todays_stats_failed_to_load">Failed to load stats</string>
+    <string name="stats_todays_stats_unknown_error">Unknown error</string>
 
     <!-- stats referrer popup menu actions   -->
     <string name="stats_referrer_popup_menu_open_website">Open Website</string>

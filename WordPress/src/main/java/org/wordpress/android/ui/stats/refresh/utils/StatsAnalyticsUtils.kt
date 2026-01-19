@@ -15,6 +15,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 private const val TAP_SOURCE_PROPERTY = "tap_source"
 private const val GRANULARITY_PROPERTY = "granularity"
 private const val PERIOD_PROPERTY = "period"
+private const val HOURS_PROPERTY = "hours"
 private const val DAYS_PROPERTY = "days"
 private const val WEEKS_PROPERTY = "weeks"
 private const val MONTHS_PROPERTY = "months"
@@ -60,6 +61,7 @@ fun AnalyticsTrackerWrapper.trackWithGranularity(stat: Stat, granularity: StatsG
     track(stat, mapOf(PERIOD_PROPERTY to getPropertyByGranularity(granularity)))
 
 private fun getPropertyByGranularity(granularity: StatsGranularity) = when (granularity) {
+    StatsGranularity.HOURS -> HOURS_PROPERTY
     StatsGranularity.DAYS -> DAYS_PROPERTY
     StatsGranularity.WEEKS -> WEEKS_PROPERTY
     StatsGranularity.MONTHS -> MONTHS_PROPERTY
