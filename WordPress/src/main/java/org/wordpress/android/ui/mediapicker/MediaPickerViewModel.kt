@@ -109,7 +109,12 @@ class MediaPickerViewModel @Inject constructor(
         _showPartialMediaAccessPrompt,
     ) { domainModel, selectedIds, softAskRequest, searchExpanded, progressDialogUiModel, showPartialAccessPrompt ->
         MediaPickerUiState(
-            buildUiModel(domainModel, selectedIds, softAskRequest, searchExpanded),
+            buildUiModel(
+                domainModel = domainModel,
+                selectedIds = selectedIds,
+                softAskRequest = softAskRequest,
+                isSearching = searchExpanded
+            ),
             buildSoftAskView(softAskRequest),
             FabUiModel(mediaPickerSetup.cameraSetup != HIDDEN && selectedIds.isNullOrEmpty(), this::clickOnCamera),
             buildActionModeUiModel(selectedIds, domainModel?.domainItems),
