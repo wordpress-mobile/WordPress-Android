@@ -488,21 +488,19 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                     )
                     actionableEmptyView.subtitle.movementMethod = WPLinkMovementMethod.getInstance()
                 }
-                actionableEmptyView.image.applyOrHide(uiModel.image) { image ->
-                    this.setImageResource(image)
-                }
-                actionableEmptyView.bottomImage.applyOrHide(uiModel.bottomImage) { bottomImage ->
-                    this.setImageResource(bottomImage)
-                    if (uiModel.bottomImageDescription != null) {
-                        this.contentDescription = uiHelpers.getTextOfUiString(
-                            requireContext(),
-                            uiModel.bottomImageDescription
-                        ).toString()
+                when {
+                    uiModel.retryAction != null -> {
+                        actionableEmptyView.button.setText(R.string.retry)
+                        actionableEmptyView.button.visibility = View.VISIBLE
+                        actionableEmptyView.button.setOnClickListener { uiModel.retryAction.invoke() }
                     }
-                }
-                actionableEmptyView.button.applyOrHide(uiModel.retryAction) { action ->
-                    this.setOnClickListener {
-                        action()
+                    uiModel.uploadAction != null -> {
+                        actionableEmptyView.button.setText(R.string.photo_picker_choose_file)
+                        actionableEmptyView.button.visibility = View.VISIBLE
+                        actionableEmptyView.button.setOnClickListener { uiModel.uploadAction.invoke() }
+                    }
+                    else -> {
+                        actionableEmptyView.button.visibility = View.GONE
                     }
                 }
             }

@@ -182,12 +182,9 @@ class MediaPickerViewModel @Inject constructor(
             populateDomainItems(data, selectedIds, domainModel)
         } else if (domainModel?.emptyState != null) {
             PhotoListUiModel.Empty(
-                domainModel.emptyState.title,
-                domainModel.emptyState.htmlSubtitle,
-                domainModel.emptyState.image,
-                domainModel.emptyState.bottomImage,
-                domainModel.emptyState.bottomImageDescription,
-                isSearching == true,
+                title = domainModel.emptyState.title,
+                htmlSubtitle = domainModel.emptyState.htmlSubtitle,
+                isSearching = true,
                 retryAction = if (domainModel.emptyState.isError) {
                     this::retry
                 } else {
@@ -205,10 +202,15 @@ class MediaPickerViewModel @Inject constructor(
                 DOCUMENT -> R.string.media_empty_documents_list
                 else -> R.string.media_empty_list
             }
+            val uploadAction = if (mediaPickerSetup.primaryDataSource == WP_LIBRARY) {
+                { onMenuItemClicked(BrowseAction.SYSTEM_PICKER) }
+            } else {
+                null
+            }
             PhotoListUiModel.Empty(
                 UiStringRes(stringId),
-                image = R.drawable.img_illustration_media_105dp,
-                isSearching = isSearching == true
+                isSearching = isSearching == true,
+                uploadAction = uploadAction
             )
         }
     }
@@ -728,11 +730,9 @@ class MediaPickerViewModel @Inject constructor(
         data class Empty(
             val title: UiString,
             val htmlSubtitle: UiString? = null,
-            val image: Int? = null,
-            val bottomImage: Int? = null,
-            val bottomImageDescription: UiString? = null,
             val isSearching: Boolean = false,
-            val retryAction: (() -> Unit)? = null
+            val retryAction: (() -> Unit)? = null,
+            val uploadAction: (() -> Unit)? = null
         ) : PhotoListUiModel()
 
         object Hidden : PhotoListUiModel()
