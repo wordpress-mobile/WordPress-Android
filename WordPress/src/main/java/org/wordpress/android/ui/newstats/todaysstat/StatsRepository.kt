@@ -22,10 +22,13 @@ private const val DAILY_QUANTITY = 1u
 
 // Daily aggregates response field indexes
 // Response fields order: period, views, visitors, likes, reblogs, comments, posts
+@Suppress("unused") private const val INDEX_PERIOD = 0
 private const val INDEX_VIEWS = 1
 private const val INDEX_VISITORS = 2
 private const val INDEX_LIKES = 3
+@Suppress("unused") private const val INDEX_REBLOGS = 4
 private const val INDEX_COMMENTS = 5
+@Suppress("unused") private const val INDEX_POSTS = 6
 
 /**
  * Repository for fetching stats data using the wordpress-rs API.
@@ -124,6 +127,10 @@ class StatsRepository @Inject constructor(
         }
 
         val calendar = Calendar.getInstance()
+        // The API's endDate is exclusive for hourly queries, so we need to add 1 day to get
+        // the target day's hours. Formula: 1 (for exclusive end) - offsetDays (0=today, 1=yesterday)
+        // Examples: offsetDays=0 → tomorrow's date → fetches today's hours
+        //           offsetDays=1 → today's date → fetches yesterday's hours
         calendar.add(Calendar.DAY_OF_YEAR, 1 - offsetDays)
         val dateString = dateFormat.format(calendar.time)
 
