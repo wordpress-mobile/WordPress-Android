@@ -113,10 +113,10 @@ class TodaysStatsViewModel @Inject constructor(
         return when (result) {
             is TodayAggregatesResult.Success -> {
                 TodayStatsData(
-                    views = result.aggregates.views.toInt(),
-                    visitors = result.aggregates.visitors.toInt(),
-                    likes = result.aggregates.likes.toInt(),
-                    comments = result.aggregates.comments.toInt()
+                    views = result.aggregates.views,
+                    visitors = result.aggregates.visitors,
+                    likes = result.aggregates.likes,
+                    comments = result.aggregates.comments
                 )
             }
             is TodayAggregatesResult.Error -> null
@@ -185,9 +185,9 @@ class TodaysStatsViewModel @Inject constructor(
     }
 
     private data class TodayStatsData(
-        val views: Int,
-        val visitors: Int,
-        val likes: Int,
-        val comments: Int
+        val views: Long,
+        val visitors: Long,
+        val likes: Long,
+        val comments: Long
     )
 }

@@ -75,10 +75,10 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when data loads successfully, then loaded state is emitted with correct values`() = test {
         val aggregates = TodayAggregates(
-            views = TEST_VIEWS.toLong(),
-            visitors = TEST_VISITORS.toLong(),
-            likes = TEST_LIKES.toLong(),
-            comments = TEST_COMMENTS.toLong()
+            views = TEST_VIEWS,
+            visitors = TEST_VISITORS,
+            likes = TEST_LIKES,
+            comments = TEST_COMMENTS
         )
 
         whenever(statsRepository.fetchTodayAggregates(any()))
@@ -478,18 +478,18 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as TodaysStatsCardUiState.Loaded
-        assertThat(state.views).isEqualTo(0)
-        assertThat(state.visitors).isEqualTo(0)
-        assertThat(state.likes).isEqualTo(0)
-        assertThat(state.comments).isEqualTo(0)
+        assertThat(state.views).isEqualTo(0L)
+        assertThat(state.visitors).isEqualTo(0L)
+        assertThat(state.likes).isEqualTo(0L)
+        assertThat(state.comments).isEqualTo(0L)
         assertThat(state.chartData.currentPeriod).isEmpty()
     }
 
     private fun createTodayAggregates() = TodayAggregates(
-        views = TEST_VIEWS.toLong(),
-        visitors = TEST_VISITORS.toLong(),
-        likes = TEST_LIKES.toLong(),
-        comments = TEST_COMMENTS.toLong()
+        views = TEST_VIEWS,
+        visitors = TEST_VISITORS,
+        likes = TEST_LIKES,
+        comments = TEST_COMMENTS
     )
 
     private fun createHourlyViewsResult() = HourlyViewsResult.Success(
@@ -508,10 +508,10 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
-        private const val TEST_VIEWS = 500
-        private const val TEST_VISITORS = 100
-        private const val TEST_LIKES = 50
-        private const val TEST_COMMENTS = 25
+        private const val TEST_VIEWS = 500L
+        private const val TEST_VISITORS = 100L
+        private const val TEST_LIKES = 50L
+        private const val TEST_COMMENTS = 25L
         private const val NO_SITE_SELECTED_ERROR = "No site selected"
         private const val FAILED_TO_LOAD_ERROR = "Failed to load stats"
         private const val UNKNOWN_ERROR = "Unknown error"

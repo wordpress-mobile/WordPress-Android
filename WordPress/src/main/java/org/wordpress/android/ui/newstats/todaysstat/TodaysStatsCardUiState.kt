@@ -7,10 +7,10 @@ sealed class TodaysStatsCardUiState {
     data object Loading : TodaysStatsCardUiState()
 
     data class Loaded(
-        val views: Int,
-        val visitors: Int,
-        val likes: Int,
-        val comments: Int,
+        val views: Long,
+        val visitors: Long,
+        val likes: Long,
+        val comments: Long,
         val chartData: ChartData,
         val onCardClick: () -> Unit
     ) : TodaysStatsCardUiState()
