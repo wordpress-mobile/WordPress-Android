@@ -22,7 +22,7 @@ private const val PREVIOUS_PERIOD_OFFSET_DAYS = 1
 class TodaysStatsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
-    private val todaysStatsRepository: TodaysStatsRepository,
+    private val statsRepository: StatsRepository,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<TodaysStatsCardUiState>(TodaysStatsCardUiState.Loading)
@@ -62,7 +62,7 @@ class TodaysStatsViewModel @Inject constructor(
             return
         }
 
-        todaysStatsRepository.init(accessToken)
+        statsRepository.init(accessToken)
         _uiState.value = TodaysStatsCardUiState.Loading
 
         viewModelScope.launch {
@@ -109,7 +109,7 @@ class TodaysStatsViewModel @Inject constructor(
     }
 
     private suspend fun fetchTodayStats(site: SiteModel): TodayStatsData? {
-        val result = todaysStatsRepository.fetchTodayAggregates(site.siteId)
+        val result = statsRepository.fetchTodayAggregates(site.siteId)
         return when (result) {
             is TodayAggregatesResult.Success -> {
                 TodayStatsData(
@@ -137,7 +137,7 @@ class TodaysStatsViewModel @Inject constructor(
         site: SiteModel,
         offsetDays: Int
     ): List<ViewsDataPoint> {
-        val result = todaysStatsRepository.fetchHourlyViews(
+        val result = statsRepository.fetchHourlyViews(
             siteId = site.siteId,
             offsetDays = offsetDays
         )

@@ -31,7 +31,7 @@ private const val INDEX_COMMENTS = 5
  * Repository for fetching stats data using the wordpress-rs API.
  * Handles hourly visits/views data for the Today's Stats card chart.
  */
-class TodaysStatsRepository @Inject constructor(
+class StatsRepository @Inject constructor(
     private val wpComApiClientProvider: WpComApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
