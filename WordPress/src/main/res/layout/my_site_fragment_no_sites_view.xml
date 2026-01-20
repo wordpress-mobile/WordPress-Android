@@ -12,7 +12,6 @@
         android:layout_marginTop="@dimen/toolbar_height"
         android:visibility="gone"
         app:aevButton="@string/my_site_add_new_site"
-        app:aevImage="@drawable/img_illustration_site_wordpress_camera_pencils_226dp"
         app:aevSubtitle="@string/my_site_create_new_site"
         app:aevTitle="@string/my_site_create_new_site_title"
         app:layout_constraintBottom_toTopOf="@+id/avatar_account_settings"
