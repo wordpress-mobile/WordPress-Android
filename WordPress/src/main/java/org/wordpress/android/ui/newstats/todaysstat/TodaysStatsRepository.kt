@@ -20,6 +20,13 @@ import javax.inject.Named
 private const val HOURLY_QUANTITY = 24u
 private const val DAILY_QUANTITY = 1u
 
+// Daily aggregates response field indexes
+// Response fields order: period, views, visitors, likes, reblogs, comments, posts
+private const val INDEX_VIEWS = 1
+private const val INDEX_VISITORS = 2
+private const val INDEX_LIKES = 3
+private const val INDEX_COMMENTS = 5
+
 /**
  * Repository for fetching stats data using the wordpress-rs API.
  * Handles hourly visits/views data for the Today's Stats card chart.
@@ -154,7 +161,7 @@ class TodaysStatsRepository @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "ReturnCount")
     private fun parseHourlyDataRow(row: Any?): HourlyViewsDataPoint? {
         return try {
             val rowList = row as? List<*> ?: return null
@@ -183,11 +190,10 @@ class TodaysStatsRepository @Inject constructor(
     private fun parseDailyAggregates(row: Any?): TodayAggregates? {
         return try {
             val rowList = row as? List<*> ?: return null
-            // Response fields order: period, views, visitors, likes, reblogs, comments, posts
-            val viewsValue = rowList.getOrNull(1)
-            val visitorsValue = rowList.getOrNull(2)
-            val likesValue = rowList.getOrNull(3)
-            val commentsValue = rowList.getOrNull(5)
+            val viewsValue = rowList.getOrNull(INDEX_VIEWS)
+            val visitorsValue = rowList.getOrNull(INDEX_VISITORS)
+            val likesValue = rowList.getOrNull(INDEX_LIKES)
+            val commentsValue = rowList.getOrNull(INDEX_COMMENTS)
 
             TodayAggregates(
                 views = extractLongValue(viewsValue),
