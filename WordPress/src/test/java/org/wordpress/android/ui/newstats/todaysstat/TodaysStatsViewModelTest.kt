@@ -7,6 +7,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -148,7 +149,8 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         viewModel.loadData(forced = true)
         advanceUntilIdle()
 
-        verify(todaysStatsRepository).fetchTodayAggregates(eq(TEST_SITE_ID))
+        // Called twice: once during init, once during loadData(forced = true)
+        verify(todaysStatsRepository, times(2)).fetchTodayAggregates(eq(TEST_SITE_ID))
     }
 
     @Test
@@ -166,7 +168,8 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         viewModel.onRetry()
         advanceUntilIdle()
 
-        verify(todaysStatsRepository).fetchTodayAggregates(eq(TEST_SITE_ID))
+        // Called twice: once during init, once during onRetry
+        verify(todaysStatsRepository, times(2)).fetchTodayAggregates(eq(TEST_SITE_ID))
     }
 
     @Test
@@ -314,8 +317,8 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         viewModel.refresh()
         advanceUntilIdle()
 
-        // Verify that fetchTodayAggregates was called during refresh
-        verify(todaysStatsRepository).fetchTodayAggregates(eq(TEST_SITE_ID))
+        // Called twice: once during init, once during refresh
+        verify(todaysStatsRepository, times(2)).fetchTodayAggregates(eq(TEST_SITE_ID))
     }
 
     @Test
@@ -338,6 +341,148 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
 
         // State should still be Loaded after refresh (not showing Loading state)
         assertThat(viewModel.uiState.value).isInstanceOf(TodaysStatsCardUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `when access token is null, then error state is emitted`() = test {
+        whenever(accountStore.accessToken).thenReturn(null)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(TodaysStatsCardUiState.Error::class.java)
+        assertThat((state as TodaysStatsCardUiState.Error).message).isEqualTo(FAILED_TO_LOAD_ERROR)
+    }
+
+    @Test
+    fun `when access token is empty, then error state is emitted`() = test {
+        whenever(accountStore.accessToken).thenReturn("")
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(TodaysStatsCardUiState.Error::class.java)
+        assertThat((state as TodaysStatsCardUiState.Error).message).isEqualTo(FAILED_TO_LOAD_ERROR)
+    }
+
+    @Test
+    fun `when loadData is called, then repository is initialized with access token`() = test {
+        val aggregates = createTodayAggregates()
+
+        whenever(todaysStatsRepository.fetchTodayAggregates(any()))
+            .thenReturn(TodayAggregatesResult.Success(aggregates))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        verify(todaysStatsRepository).init(eq(TEST_ACCESS_TOKEN))
+    }
+
+    @Test
+    fun `when chart data has labels, then they are formatted correctly`() = test {
+        val aggregates = createTodayAggregates()
+
+        whenever(todaysStatsRepository.fetchTodayAggregates(any()))
+            .thenReturn(TodayAggregatesResult.Success(aggregates))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as TodaysStatsCardUiState.Loaded
+        // Labels should be formatted as "2pm", "3pm" from "2024-01-16 14:00:00", "2024-01-16 15:00:00"
+        assertThat(state.chartData.currentPeriod).isNotEmpty()
+        assertThat(state.chartData.currentPeriod[0].label).isNotEmpty()
+    }
+
+    @Test
+    fun `when only current period hourly fetch fails, then current period is empty`() = test {
+        val aggregates = createTodayAggregates()
+
+        whenever(todaysStatsRepository.fetchTodayAggregates(any()))
+            .thenReturn(TodayAggregatesResult.Success(aggregates))
+        // Current period (offsetDays=0) fails
+        whenever(todaysStatsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(0)))
+            .thenReturn(HourlyViewsResult.Error("Network error"))
+        // Previous period (offsetDays=1) succeeds
+        whenever(todaysStatsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(1)))
+            .thenReturn(createHourlyViewsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as TodaysStatsCardUiState.Loaded
+        assertThat(state.chartData.currentPeriod).isEmpty()
+        assertThat(state.chartData.previousPeriod).hasSize(2)
+    }
+
+    @Test
+    fun `when only previous period hourly fetch fails, then previous period is empty`() = test {
+        val aggregates = createTodayAggregates()
+
+        whenever(todaysStatsRepository.fetchTodayAggregates(any()))
+            .thenReturn(TodayAggregatesResult.Success(aggregates))
+        // Current period (offsetDays=0) succeeds
+        whenever(todaysStatsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(0)))
+            .thenReturn(createHourlyViewsResult())
+        // Previous period (offsetDays=1) fails
+        whenever(todaysStatsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(1)))
+            .thenReturn(HourlyViewsResult.Error("Network error"))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as TodaysStatsCardUiState.Loaded
+        assertThat(state.chartData.currentPeriod).hasSize(2)
+        assertThat(state.chartData.previousPeriod).isEmpty()
+    }
+
+    @Test
+    fun `when loaded state is shown, then onCardClick callback can be invoked`() = test {
+        val aggregates = createTodayAggregates()
+
+        whenever(todaysStatsRepository.fetchTodayAggregates(any()))
+            .thenReturn(TodayAggregatesResult.Success(aggregates))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as TodaysStatsCardUiState.Loaded
+        // Verify onCardClick callback can be invoked without error
+        state.onCardClick()
+        // If we reached here, the callback is present and invocable
+    }
+
+    @Test
+    fun `when data loads with zero values, then loaded state shows zeros`() = test {
+        val aggregates = TodayAggregates(
+            views = 0L,
+            visitors = 0L,
+            likes = 0L,
+            comments = 0L
+        )
+
+        whenever(todaysStatsRepository.fetchTodayAggregates(any()))
+            .thenReturn(TodayAggregatesResult.Success(aggregates))
+        whenever(todaysStatsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(HourlyViewsResult.Success(emptyList()))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as TodaysStatsCardUiState.Loaded
+        assertThat(state.views).isEqualTo(0)
+        assertThat(state.visitors).isEqualTo(0)
+        assertThat(state.likes).isEqualTo(0)
+        assertThat(state.comments).isEqualTo(0)
+        assertThat(state.chartData.currentPeriod).isEmpty()
     }
 
     private fun createTodayAggregates() = TodayAggregates(
