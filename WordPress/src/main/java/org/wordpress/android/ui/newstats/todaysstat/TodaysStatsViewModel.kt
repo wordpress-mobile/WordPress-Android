@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.SimpleDateFormat
@@ -23,7 +22,6 @@ private const val PREVIOUS_PERIOD_OFFSET_DAYS = 1
 class TodaysStatsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
-    private val todayInsightsStore: TodayInsightsStore,
     private val todaysStatsRepository: TodaysStatsRepository,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
@@ -84,7 +82,7 @@ class TodaysStatsViewModel @Inject constructor(
         }
 
         try {
-            val todayStats = fetchTodayStats(site, forced)
+            val todayStats = fetchTodayStats(site)
             val chartData = fetchChartData(site)
 
             if (todayStats != null) {
@@ -110,19 +108,18 @@ class TodaysStatsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchTodayStats(site: SiteModel, forced: Boolean): TodayStatsData? {
-        val response = todayInsightsStore.fetchTodayInsights(site, forced)
-        return if (response.isError) {
-            null
-        } else {
-            response.model?.let { model ->
+    private suspend fun fetchTodayStats(site: SiteModel): TodayStatsData? {
+        val result = todaysStatsRepository.fetchTodayAggregates(site.siteId)
+        return when (result) {
+            is TodayAggregatesResult.Success -> {
                 TodayStatsData(
-                    views = model.views,
-                    visitors = model.visitors,
-                    likes = model.likes,
-                    comments = model.comments
+                    views = result.aggregates.views.toInt(),
+                    visitors = result.aggregates.visitors.toInt(),
+                    likes = result.aggregates.likes.toInt(),
+                    comments = result.aggregates.comments.toInt()
                 )
             }
+            is TodayAggregatesResult.Error -> null
         }
     }
 
