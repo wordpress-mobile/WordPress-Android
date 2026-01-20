@@ -70,7 +70,7 @@ class TodaysStatsViewModel @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "UnusedParameter")
     private suspend fun loadDataInternal(forced: Boolean) {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
