@@ -496,7 +496,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             noSitesView.actionableEmptyView.setVisible(false)
         }
 
-        if(noSitesView.avatarAccountSettings.isVisible){
+        // TODO remove this
+        noSitesView.actionableEmptyView.setVisible(true)
+        recyclerView.setVisible(false)
+
+        if (noSitesView.avatarAccountSettings.isVisible){
             noSitesView.avatarAccountSettings.setVisible(false)
         }
     }
