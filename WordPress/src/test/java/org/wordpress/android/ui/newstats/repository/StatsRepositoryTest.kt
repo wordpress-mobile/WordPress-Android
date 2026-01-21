@@ -355,6 +355,120 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
     // endregion
 
+    // region fetchWeeklyStatsWithDailyData tests
+    @Test
+    fun `fetchWeeklyStatsWithDailyData returns error when not initialized`() = runTest {
+        // Given - repository not initialized
+
+        // When
+        val result = repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID)
+
+        // Then
+        assertThat(result).isInstanceOf(WeeklyStatsWithDailyDataResult.Error::class.java)
+        assertThat((result as WeeklyStatsWithDailyDataResult.Error).message)
+            .isEqualTo("Repository not initialized")
+        verify(appLogWrapper).e(AppLog.T.STATS, "Cannot fetch stats: repository not initialized")
+    }
+
+    @Test
+    fun `fetchWeeklyStatsWithDailyData returns success with aggregates and daily data`() = runTest {
+        // Given
+        repository.init(TEST_ACCESS_TOKEN)
+
+        val mockResponse = createMockWeeklyStatsResponse(
+            views = TEST_WEEKLY_VIEWS,
+            visitors = TEST_WEEKLY_VISITORS,
+            likes = TEST_WEEKLY_LIKES,
+            comments = TEST_WEEKLY_COMMENTS,
+            posts = TEST_WEEKLY_POSTS
+        )
+        setupApiClientToReturnSuccess(mockResponse)
+
+        // When
+        val result = repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID)
+
+        // Then
+        assertThat(result).isInstanceOf(WeeklyStatsWithDailyDataResult.Success::class.java)
+        val success = result as WeeklyStatsWithDailyDataResult.Success
+        assertThat(success.aggregates.views).isEqualTo(TEST_WEEKLY_VIEWS)
+        assertThat(success.aggregates.visitors).isEqualTo(TEST_WEEKLY_VISITORS)
+        assertThat(success.aggregates.likes).isEqualTo(TEST_WEEKLY_LIKES)
+        assertThat(success.aggregates.comments).isEqualTo(TEST_WEEKLY_COMMENTS)
+        assertThat(success.aggregates.posts).isEqualTo(TEST_WEEKLY_POSTS)
+        assertThat(success.dailyDataPoints).hasSize(7)
+    }
+
+    @Test
+    fun `fetchWeeklyStatsWithDailyData returns error when API returns WpError`() = runTest {
+        // Given
+        repository.init(TEST_ACCESS_TOKEN)
+
+        setupApiClientToReturnWpError(API_ERROR_MESSAGE)
+
+        // When
+        val result = repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID)
+
+        // Then
+        assertThat(result).isInstanceOf(WeeklyStatsWithDailyDataResult.Error::class.java)
+        assertThat((result as WeeklyStatsWithDailyDataResult.Error).message).isEqualTo(API_ERROR_MESSAGE)
+    }
+
+    @Test
+    fun `fetchWeeklyStatsWithDailyData returns error when API returns UnknownError`() = runTest {
+        // Given
+        repository.init(TEST_ACCESS_TOKEN)
+
+        setupApiClientToReturnUnknownError()
+
+        // When
+        val result = repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID)
+
+        // Then
+        assertThat(result).isInstanceOf(WeeklyStatsWithDailyDataResult.Error::class.java)
+        assertThat((result as WeeklyStatsWithDailyDataResult.Error).message).isEqualTo("Unknown error")
+    }
+
+    @Test
+    fun `fetchWeeklyStatsWithDailyData with weeksAgo parameter works correctly`() = runTest {
+        // Given
+        repository.init(TEST_ACCESS_TOKEN)
+
+        val mockResponse = createMockWeeklyStatsResponse(
+            views = TEST_WEEKLY_VIEWS,
+            visitors = TEST_WEEKLY_VISITORS,
+            likes = TEST_WEEKLY_LIKES,
+            comments = TEST_WEEKLY_COMMENTS,
+            posts = TEST_WEEKLY_POSTS
+        )
+        setupApiClientToReturnSuccess(mockResponse)
+
+        // When - fetch previous week's data
+        val result = repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID, weeksAgo = 1)
+
+        // Then
+        assertThat(result).isInstanceOf(WeeklyStatsWithDailyDataResult.Success::class.java)
+    }
+
+    @Test
+    fun `fetchWeeklyStatsWithDailyData returns success with empty data when API returns empty`() = runTest {
+        // Given
+        repository.init(TEST_ACCESS_TOKEN)
+
+        val mockResponse = createMockEmptyResponse()
+        setupApiClientToReturnSuccess(mockResponse)
+
+        // When
+        val result = repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID)
+
+        // Then
+        assertThat(result).isInstanceOf(WeeklyStatsWithDailyDataResult.Success::class.java)
+        val success = result as WeeklyStatsWithDailyDataResult.Success
+        assertThat(success.aggregates.views).isEqualTo(0L)
+        assertThat(success.aggregates.visitors).isEqualTo(0L)
+        assertThat(success.dailyDataPoints).isEmpty()
+    }
+    // endregion
+
     // region fetchHourlyViews tests
     @Test
     fun `fetchHourlyViews returns error when not initialized`() = runTest {
