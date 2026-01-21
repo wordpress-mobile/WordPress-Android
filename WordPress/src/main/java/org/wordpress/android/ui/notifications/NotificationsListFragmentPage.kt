@@ -126,8 +126,9 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
         notesAdapter = NotesAdapter(requireActivity(), inlineActionEvents = viewModel.inlineActionEvents).apply {
             onNoteClicked = { noteId -> handleNoteClick(noteId) }
-            onNotesLoaded = {
-                itemCount -> updateEmptyLayouts(itemCount)
+            // TODO: Remove the "0" below and replace with "itemCount" to restore notifications list
+            onNotesLoaded = { _ ->
+                updateEmptyLayouts(0)
                 swipeToRefreshHelper?.isRefreshing = false
             }
             viewModel.inlineActionEvents.flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
