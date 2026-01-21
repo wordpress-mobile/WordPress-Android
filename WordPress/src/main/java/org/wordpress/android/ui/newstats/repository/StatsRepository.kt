@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.todaysstat
+package org.wordpress.android.ui.newstats.repository
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext

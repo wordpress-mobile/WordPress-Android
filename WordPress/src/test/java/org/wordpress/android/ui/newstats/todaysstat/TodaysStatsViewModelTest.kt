@@ -15,6 +15,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.repository.HourlyViewsDataPoint
+import org.wordpress.android.ui.newstats.repository.HourlyViewsResult
+import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.repository.TodayAggregates
+import org.wordpress.android.ui.newstats.repository.TodayAggregatesResult
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
