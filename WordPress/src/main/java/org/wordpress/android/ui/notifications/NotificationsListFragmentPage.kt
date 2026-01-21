@@ -67,7 +67,6 @@ import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -395,7 +394,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         } else {
             showEmptyView(titleResId)
         }
-        actionableEmptyView.image.visibility = View.GONE
     }
 
     private fun NotificationsListFragmentPageBinding.showNewNotificationsBar() {
