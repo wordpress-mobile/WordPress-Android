@@ -123,7 +123,8 @@ class GutenbergKitWarmupHelper @Inject constructor(
             remotePostId = null,
             isPage = false,
             title = "",
-            content = ""
+            content = "",
+            status = "draft"
         )
 
         val appConfig = GutenbergKitSettingsBuilder.AppConfig(
