@@ -42,8 +42,8 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.todaysstat.TodaysStatsCard
 import org.wordpress.android.ui.newstats.todaysstat.TodaysStatsViewModel
-import org.wordpress.android.ui.newstats.weeklyviews.WeeklyViewsCard
-import org.wordpress.android.ui.newstats.weeklyviews.WeeklyViewsViewModel
+import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
+import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
 
 @AndroidEntryPoint
 class NewStatsActivity : BaseAppCompatActivity() {
@@ -138,13 +138,13 @@ private fun StatsTabContent(tab: StatsTab) {
 @Composable
 private fun TrafficTabContent(
     todaysStatsViewModel: TodaysStatsViewModel = viewModel(),
-    weeklyViewsViewModel: WeeklyViewsViewModel = viewModel()
+    viewsStatsViewModel: ViewsStatsViewModel = viewModel()
 ) {
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
-    val weeklyViewsUiState by weeklyViewsViewModel.uiState.collectAsState()
+    val viewsStatsUiState by viewsStatsViewModel.uiState.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
-    val isWeeklyViewsRefreshing by weeklyViewsViewModel.isRefreshing.collectAsState()
-    val isRefreshing = isTodaysStatsRefreshing || isWeeklyViewsRefreshing
+    val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
+    val isRefreshing = isTodaysStatsRefreshing || isViewsStatsRefreshing
     val pullToRefreshState = rememberPullToRefreshState()
 
     PullToRefreshBox(
@@ -153,7 +153,7 @@ private fun TrafficTabContent(
         state = pullToRefreshState,
         onRefresh = {
             todaysStatsViewModel.refresh()
-            weeklyViewsViewModel.refresh()
+            viewsStatsViewModel.refresh()
         },
         indicator = {
             PullToRefreshDefaults.Indicator(
@@ -170,7 +170,7 @@ private fun TrafficTabContent(
                 .verticalScroll(rememberScrollState())
         ) {
             TodaysStatsCard(uiState = todaysStatsUiState)
-            WeeklyViewsCard(uiState = weeklyViewsUiState)
+            ViewsStatsCard(uiState = viewsStatsUiState)
         }
     }
 }

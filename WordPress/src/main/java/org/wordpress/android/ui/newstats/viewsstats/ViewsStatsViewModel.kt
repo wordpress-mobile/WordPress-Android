@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.weeklyviews
+package org.wordpress.android.ui.newstats.viewsstats
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,20 +26,33 @@ private const val PREVIOUS_WEEK = 1
 private const val DAYS_IN_WEEK = 7
 
 @HiltViewModel
-class WeeklyViewsViewModel @Inject constructor(
+class ViewsStatsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val statsRepository: StatsRepository,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<WeeklyViewsCardUiState>(WeeklyViewsCardUiState.Loading)
-    val uiState: StateFlow<WeeklyViewsCardUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<ViewsStatsCardUiState>(ViewsStatsCardUiState.Loading)
+    val uiState: StateFlow<ViewsStatsCardUiState> = _uiState.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
+    private var currentChartType: ChartType = ChartType.LINE
+
     init {
         loadData()
+    }
+
+    fun onChartTypeChanged(chartType: ChartType) {
+        currentChartType = chartType
+        val currentState = _uiState.value
+        if (currentState is ViewsStatsCardUiState.Loaded) {
+            _uiState.value = currentState.copy(
+                chartType = chartType,
+                onChartTypeChanged = ::onChartTypeChanged
+            )
+        }
     }
 
     fun refresh() {
@@ -53,7 +66,7 @@ class WeeklyViewsViewModel @Inject constructor(
     fun loadData(forced: Boolean = false) {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
-            _uiState.value = WeeklyViewsCardUiState.Error(
+            _uiState.value = ViewsStatsCardUiState.Error(
                 message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected),
                 onRetry = { loadData(forced = true) }
             )
@@ -62,7 +75,7 @@ class WeeklyViewsViewModel @Inject constructor(
 
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
-            _uiState.value = WeeklyViewsCardUiState.Error(
+            _uiState.value = ViewsStatsCardUiState.Error(
                 message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
                 onRetry = { loadData(forced = true) }
             )
@@ -70,7 +83,7 @@ class WeeklyViewsViewModel @Inject constructor(
         }
 
         statsRepository.init(accessToken)
-        _uiState.value = WeeklyViewsCardUiState.Loading
+        _uiState.value = ViewsStatsCardUiState.Loading
 
         viewModelScope.launch {
             loadDataInternal(forced)
@@ -81,7 +94,7 @@ class WeeklyViewsViewModel @Inject constructor(
     private suspend fun loadDataInternal(forced: Boolean) {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
-            _uiState.value = WeeklyViewsCardUiState.Error(
+            _uiState.value = ViewsStatsCardUiState.Error(
                 message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected),
                 onRetry = { loadData(forced = true) }
             )
@@ -106,7 +119,7 @@ class WeeklyViewsViewModel @Inject constructor(
                     0L
                 }
 
-                _uiState.value = WeeklyViewsCardUiState.Loaded(
+                _uiState.value = ViewsStatsCardUiState.Loaded(
                     currentWeekViews = currentWeekStats.views,
                     previousWeekViews = previousWeekStats.views,
                     viewsDifference = viewsDifference,
@@ -119,21 +132,23 @@ class WeeklyViewsViewModel @Inject constructor(
                         previousWeekStats.startDate,
                         previousWeekStats.endDate
                     ),
-                    chartData = WeeklyChartData(
+                    chartData = ViewsStatsChartData(
                         currentWeek = currentWeekDailyViews,
                         previousWeek = previousWeekDailyViews
                     ),
                     weeklyAverage = weeklyAverage,
-                    bottomStats = buildBottomStats(currentWeekStats, previousWeekStats)
+                    bottomStats = buildBottomStats(currentWeekStats, previousWeekStats),
+                    chartType = currentChartType,
+                    onChartTypeChanged = ::onChartTypeChanged
                 )
             } else {
-                _uiState.value = WeeklyViewsCardUiState.Error(
+                _uiState.value = ViewsStatsCardUiState.Error(
                     message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
                     onRetry = { loadData(forced = true) }
                 )
             }
         } catch (e: Exception) {
-            _uiState.value = WeeklyViewsCardUiState.Error(
+            _uiState.value = ViewsStatsCardUiState.Error(
                 message = e.message ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error),
                 onRetry = { loadData(forced = true) }
             )

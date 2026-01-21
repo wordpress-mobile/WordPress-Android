@@ -1387,6 +1387,9 @@
     <string name="stats_visitors">Visitors</string>
     <string name="stats_likes">Likes</string>
     <string name="stats_comments" translatable="false">@string/comments</string>
+    <string name="stats_chart_type_lines">Lines</string>
+    <string name="stats_chart_type_bars">Bars</string>
+    <string name="more_options">More options</string>
 
     <!-- stats: labels for the views -->
     <string name="stats_view_countries">Countries</string>

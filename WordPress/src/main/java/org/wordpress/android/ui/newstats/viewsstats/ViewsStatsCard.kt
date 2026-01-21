@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.weeklyviews
+package org.wordpress.android.ui.newstats.viewsstats
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -24,39 +24,52 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ShowChart
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.common.fill
 import com.patrykandpatrick.vico.compose.common.shader.verticalGradient
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import com.patrykandpatrick.vico.core.common.component.LineComponent
 import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
+import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import java.util.Locale
@@ -74,8 +87,8 @@ private const val CHANGE_BADGE_POSITIVE_COLOR = 0xFF4CAF50
 private const val CHANGE_BADGE_NEGATIVE_COLOR = 0xFFE91E63
 
 @Composable
-fun WeeklyViewsCard(
-    uiState: WeeklyViewsCardUiState,
+fun ViewsStatsCard(
+    uiState: ViewsStatsCardUiState,
     modifier: Modifier = Modifier
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
@@ -93,9 +106,9 @@ fun WeeklyViewsCard(
             .background(MaterialTheme.colorScheme.surface)
     ) {
         when (uiState) {
-            is WeeklyViewsCardUiState.Loading -> LoadingContent()
-            is WeeklyViewsCardUiState.Loaded -> LoadedContent(uiState)
-            is WeeklyViewsCardUiState.Error -> ErrorContent(uiState)
+            is ViewsStatsCardUiState.Loading -> LoadingContent()
+            is ViewsStatsCardUiState.Loaded -> LoadedContent(uiState)
+            is ViewsStatsCardUiState.Error -> ErrorContent(uiState)
         }
     }
 }
@@ -205,19 +218,23 @@ private fun LoadingContent() {
 }
 
 @Composable
-private fun LoadedContent(state: WeeklyViewsCardUiState.Loaded) {
+private fun LoadedContent(state: ViewsStatsCardUiState.Loaded) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
         // Header Section
-        HeaderSection(state)
+        HeaderSection(
+            state = state,
+            onChartTypeChanged = state.onChartTypeChanged
+        )
         Spacer(modifier = Modifier.height(16.dp))
         // Chart Section
-        WeeklyStatsChart(
+        ViewsStatsChart(
             chartData = state.chartData,
-            weeklyAverage = state.weeklyAverage
+            weeklyAverage = state.weeklyAverage,
+            chartType = state.chartType
         )
         Spacer(modifier = Modifier.height(16.dp))
         // Bottom Stats Row
@@ -226,13 +243,42 @@ private fun LoadedContent(state: WeeklyViewsCardUiState.Loaded) {
 }
 
 @Composable
-private fun HeaderSection(state: WeeklyViewsCardUiState.Loaded) {
+private fun HeaderSection(
+    state: ViewsStatsCardUiState.Loaded,
+    onChartTypeChanged: (ChartType) -> Unit
+) {
+    var showMenu by remember { mutableStateOf(false) }
+
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = stringResource(R.string.stats_views),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.stats_views),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Box {
+                IconButton(onClick = { showMenu = true }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = stringResource(R.string.more_options),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                ChartTypeMenu(
+                    expanded = showMenu,
+                    currentChartType = state.chartType,
+                    onDismiss = { showMenu = false },
+                    onChartTypeSelected = { chartType ->
+                        onChartTypeChanged(chartType)
+                        showMenu = false
+                    }
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(8.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -276,6 +322,50 @@ private fun HeaderSection(state: WeeklyViewsCardUiState.Loaded) {
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ChartTypeMenu(
+    expanded: Boolean,
+    currentChartType: ChartType,
+    onDismiss: () -> Unit,
+    onChartTypeSelected: (ChartType) -> Unit
+) {
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismiss
+    ) {
+        DropdownMenuItem(
+            text = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ShowChart,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = stringResource(R.string.stats_chart_type_lines))
+                }
+            },
+            onClick = { onChartTypeSelected(ChartType.LINE) },
+            enabled = currentChartType != ChartType.LINE
+        )
+        DropdownMenuItem(
+            text = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.BarChart,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = stringResource(R.string.stats_chart_type_bars))
+                }
+            },
+            onClick = { onChartTypeSelected(ChartType.BAR) },
+            enabled = currentChartType != ChartType.BAR
+        )
     }
 }
 
@@ -339,17 +429,40 @@ private fun DateRangeWithDot(dateRange: String, dotColor: Color, isFilled: Boole
 
 @Suppress("UnusedParameter")
 @Composable
-private fun WeeklyStatsChart(chartData: WeeklyChartData, weeklyAverage: Long) {
-    val modelProducer = remember { CartesianChartModelProducer() }
+private fun ViewsStatsChart(
+    chartData: ViewsStatsChartData,
+    weeklyAverage: Long,
+    chartType: ChartType
+) {
+    // Key the model producer on chartType so it gets recreated when chart type changes
+    val lineModelProducer = remember(chartType) { CartesianChartModelProducer() }
+    val barModelProducer = remember(chartType) { CartesianChartModelProducer() }
     val hasPreviousWeek = chartData.previousWeek.isNotEmpty()
 
-    LaunchedEffect(chartData) {
+    LaunchedEffect(chartData, chartType) {
         if (chartData.currentWeek.isNotEmpty()) {
-            modelProducer.runTransaction {
-                lineSeries {
-                    series(chartData.currentWeek.map { it.views.toInt() })
-                    if (hasPreviousWeek) {
-                        series(chartData.previousWeek.map { it.views.toInt() })
+            when (chartType) {
+                ChartType.LINE -> lineModelProducer.runTransaction {
+                    lineSeries {
+                        series(chartData.currentWeek.map { it.views.toInt() })
+                        if (hasPreviousWeek) {
+                            series(chartData.previousWeek.map { it.views.toInt() })
+                        }
+                    }
+                }
+                ChartType.BAR -> barModelProducer.runTransaction {
+                    // Two separate column series for overlapping layers
+                    columnSeries {
+                        // Previous period (grey, drawn first/behind)
+                        series(
+                            if (hasPreviousWeek) {
+                                chartData.previousWeek.map { it.views.toInt() }
+                            } else {
+                                chartData.currentWeek.map { 0 }
+                            }
+                        )
+                        // Current period (primary, drawn second/on top)
+                        series(chartData.currentWeek.map { it.views.toInt() })
                     }
                 }
             }
@@ -377,36 +490,68 @@ private fun WeeklyStatsChart(chartData: WeeklyChartData, weeklyAverage: Long) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
-    val areaGradient = ShaderProvider.verticalGradient(
-        colors = arrayOf(
-            primaryColor.copy(alpha = 0.4f),
-            primaryColor.copy(alpha = 0f)
-        )
-    )
-
-    CartesianChartHost(
-        chart = rememberCartesianChart(
-            rememberLineCartesianLayer(
-                lineProvider = LineCartesianLayer.LineProvider.series(
-                    LineCartesianLayer.Line(
-                        fill = LineCartesianLayer.LineFill.single(fill(primaryColor)),
-                        areaFill = LineCartesianLayer.AreaFill.single(fill(areaGradient)),
-                        pointConnector = LineCartesianLayer.PointConnector.cubic()
-                    ),
-                    LineCartesianLayer.Line(
-                        fill = LineCartesianLayer.LineFill.single(fill(secondaryColor)),
-                        stroke = LineCartesianLayer.LineStroke.Dashed(),
-                        pointConnector = LineCartesianLayer.PointConnector.cubic()
-                    )
+    when (chartType) {
+        ChartType.LINE -> {
+            val areaGradient = ShaderProvider.verticalGradient(
+                colors = arrayOf(
+                    primaryColor.copy(alpha = 0.4f),
+                    primaryColor.copy(alpha = 0f)
                 )
             )
-        ),
-        modelProducer = modelProducer,
-        scrollState = rememberVicoScrollState(scrollEnabled = false),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(ChartHeight)
-    )
+
+            CartesianChartHost(
+                chart = rememberCartesianChart(
+                    rememberLineCartesianLayer(
+                        lineProvider = LineCartesianLayer.LineProvider.series(
+                            LineCartesianLayer.Line(
+                                fill = LineCartesianLayer.LineFill.single(fill(primaryColor)),
+                                areaFill = LineCartesianLayer.AreaFill.single(fill(areaGradient)),
+                                pointConnector = LineCartesianLayer.PointConnector.cubic()
+                            ),
+                            LineCartesianLayer.Line(
+                                fill = LineCartesianLayer.LineFill.single(fill(secondaryColor)),
+                                stroke = LineCartesianLayer.LineStroke.Dashed(),
+                                pointConnector = LineCartesianLayer.PointConnector.cubic()
+                            )
+                        )
+                    )
+                ),
+                modelProducer = lineModelProducer,
+                scrollState = rememberVicoScrollState(scrollEnabled = false),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(ChartHeight)
+            )
+        }
+        ChartType.BAR -> {
+            CartesianChartHost(
+                chart = rememberCartesianChart(
+                    rememberColumnCartesianLayer(
+                        columnProvider = ColumnCartesianLayer.ColumnProvider.series(
+                            // Previous period (grey, drawn first/behind)
+                            LineComponent(
+                                fill = fill(secondaryColor),
+                                thicknessDp = 12f,
+                                shape = CorneredShape.rounded(allPercent = 40)
+                            ),
+                            // Current period (primary color, drawn second/on top)
+                            LineComponent(
+                                fill = fill(primaryColor),
+                                thicknessDp = 12f,
+                                shape = CorneredShape.rounded(allPercent = 40)
+                            )
+                        ),
+                        mergeMode = { ColumnCartesianLayer.MergeMode.Grouped(0f) }
+                    )
+                ),
+                modelProducer = barModelProducer,
+                scrollState = rememberVicoScrollState(scrollEnabled = false),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(ChartHeight)
+            )
+        }
+    }
 }
 
 @Composable
@@ -499,7 +644,7 @@ private fun ChangeBadge(change: StatChange) {
 }
 
 @Composable
-private fun ErrorContent(state: WeeklyViewsCardUiState.Error) {
+private fun ErrorContent(state: ViewsStatsCardUiState.Error) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -571,25 +716,25 @@ private fun formatDifference(difference: Long): String {
 
 @Preview(showBackground = true)
 @Composable
-private fun WeeklyViewsCardLoadingPreview() {
+private fun ViewsStatsCardLoadingPreview() {
     AppThemeM3 {
-        WeeklyViewsCard(uiState = WeeklyViewsCardUiState.Loading)
+        ViewsStatsCard(uiState = ViewsStatsCardUiState.Loading)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun WeeklyViewsCardLoadedPreview() {
+private fun ViewsStatsCardLoadedPreview() {
     AppThemeM3 {
-        WeeklyViewsCard(
-            uiState = WeeklyViewsCardUiState.Loaded(
+        ViewsStatsCard(
+            uiState = ViewsStatsCardUiState.Loaded(
                 currentWeekViews = 7467,
                 previousWeekViews = 8289,
                 viewsDifference = -822,
                 viewsPercentageChange = -9.9,
                 currentWeekDateRange = "14-20 Jan",
                 previousWeekDateRange = "7-13 Jan",
-                chartData = WeeklyChartData(
+                chartData = ViewsStatsChartData(
                     currentWeek = listOf(
                         DailyDataPoint("Jan 14", 800),
                         DailyDataPoint("Jan 15", 1200),
@@ -624,11 +769,11 @@ private fun WeeklyViewsCardLoadedPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun WeeklyViewsCardErrorPreview() {
+private fun ViewsStatsCardErrorPreview() {
     AppThemeM3 {
-        WeeklyViewsCard(
-            uiState = WeeklyViewsCardUiState.Error(
-                message = "Failed to load weekly stats",
+        ViewsStatsCard(
+            uiState = ViewsStatsCardUiState.Error(
+                message = "Failed to load stats",
                 onRetry = {}
             )
         )
@@ -637,17 +782,17 @@ private fun WeeklyViewsCardErrorPreview() {
 
 @Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun WeeklyViewsCardLoadedDarkPreview() {
+private fun ViewsStatsCardLoadedDarkPreview() {
     AppThemeM3 {
-        WeeklyViewsCard(
-            uiState = WeeklyViewsCardUiState.Loaded(
+        ViewsStatsCard(
+            uiState = ViewsStatsCardUiState.Loaded(
                 currentWeekViews = 7467,
                 previousWeekViews = 8289,
                 viewsDifference = -822,
                 viewsPercentageChange = -9.9,
                 currentWeekDateRange = "14-20 Jan",
                 previousWeekDateRange = "7-13 Jan",
-                chartData = WeeklyChartData(
+                chartData = ViewsStatsChartData(
                     currentWeek = listOf(
                         DailyDataPoint("Jan 14", 800),
                         DailyDataPoint("Jan 15", 1200),

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.weeklyviews
+package org.wordpress.android.ui.newstats.viewsstats
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -27,7 +27,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner.Silent::class)
-class WeeklyViewsViewModelTest : BaseUnitTest() {
+class ViewsStatsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
@@ -40,7 +40,7 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var resourceProvider: ResourceProvider
 
-    private lateinit var viewModel: WeeklyViewsViewModel
+    private lateinit var viewModel: ViewsStatsViewModel
 
     private val testSite = SiteModel().apply {
         id = 1
@@ -71,7 +71,7 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
     }
 
     private fun initViewModel() {
-        viewModel = WeeklyViewsViewModel(
+        viewModel = ViewsStatsViewModel(
             selectedSiteRepository,
             accountStore,
             statsRepository,
@@ -87,8 +87,8 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(WeeklyViewsCardUiState.Error::class.java)
-        assertThat((state as WeeklyViewsCardUiState.Error).message).isEqualTo(NO_SITE_SELECTED_ERROR)
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Error::class.java)
+        assertThat((state as ViewsStatsCardUiState.Error).message).isEqualTo(NO_SITE_SELECTED_ERROR)
     }
 
     @Test
@@ -119,8 +119,8 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(WeeklyViewsCardUiState.Loaded::class.java)
-        with(state as WeeklyViewsCardUiState.Loaded) {
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Loaded::class.java)
+        with(state as ViewsStatsCardUiState.Loaded) {
             assertThat(currentWeekViews).isEqualTo(TEST_CURRENT_WEEK_VIEWS)
             assertThat(previousWeekViews).isEqualTo(TEST_PREVIOUS_WEEK_VIEWS)
         }
@@ -137,8 +137,8 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(WeeklyViewsCardUiState.Error::class.java)
-        assertThat((state as WeeklyViewsCardUiState.Error).message).isEqualTo(FAILED_TO_LOAD_ERROR)
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Error::class.java)
+        assertThat((state as ViewsStatsCardUiState.Error).message).isEqualTo(FAILED_TO_LOAD_ERROR)
     }
 
     @Test
@@ -157,8 +157,8 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(WeeklyViewsCardUiState.Loaded::class.java)
-        with(state as WeeklyViewsCardUiState.Loaded) {
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Loaded::class.java)
+        with(state as ViewsStatsCardUiState.Loaded) {
             assertThat(chartData.currentWeek).isEmpty()
             assertThat(chartData.previousWeek).isEmpty()
         }
@@ -225,7 +225,7 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as WeeklyViewsCardUiState.Loaded
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
         assertThat(state.viewsDifference).isEqualTo(-1000L)
     }
 
@@ -244,7 +244,7 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as WeeklyViewsCardUiState.Loaded
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
         assertThat(state.viewsPercentageChange).isEqualTo(-10.0)
     }
 
@@ -263,7 +263,7 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as WeeklyViewsCardUiState.Loaded
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
         assertThat(state.viewsPercentageChange).isEqualTo(100.0)
     }
 
@@ -298,8 +298,8 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(WeeklyViewsCardUiState.Error::class.java)
-        assertThat((state as WeeklyViewsCardUiState.Error).message).isEqualTo(FAILED_TO_LOAD_ERROR)
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Error::class.java)
+        assertThat((state as ViewsStatsCardUiState.Error).message).isEqualTo(FAILED_TO_LOAD_ERROR)
     }
 
     @Test
@@ -317,7 +317,7 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as WeeklyViewsCardUiState.Loaded
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
         assertThat(state.bottomStats).hasSize(5)
         assertThat(state.bottomStats.map { it.label }).containsExactly(
             "Views", "Visitors", "Likes", "Comments", "Posts"
@@ -339,7 +339,7 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as WeeklyViewsCardUiState.Loaded
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
         val viewsStat = state.bottomStats.first { it.label == "Views" }
         assertThat(viewsStat.change).isInstanceOf(StatChange.Positive::class.java)
         assertThat((viewsStat.change as StatChange.Positive).percentage).isEqualTo(25.0)
@@ -360,7 +360,7 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as WeeklyViewsCardUiState.Loaded
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
         val viewsStat = state.bottomStats.first { it.label == "Views" }
         assertThat(viewsStat.change).isInstanceOf(StatChange.Negative::class.java)
         assertThat((viewsStat.change as StatChange.Negative).percentage).isEqualTo(20.0)
@@ -381,7 +381,7 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as WeeklyViewsCardUiState.Loaded
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
         val viewsStat = state.bottomStats.first { it.label == "Views" }
         assertThat(viewsStat.change).isInstanceOf(StatChange.NoChange::class.java)
     }
@@ -401,7 +401,7 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as WeeklyViewsCardUiState.Loaded
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
         // 7000 views / 2 data points = 3500 average
         assertThat(state.weeklyAverage).isEqualTo(3500L)
     }
@@ -415,8 +415,8 @@ class WeeklyViewsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(WeeklyViewsCardUiState.Error::class.java)
-        assertThat((state as WeeklyViewsCardUiState.Error).message).isEqualTo("Test exception")
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Error::class.java)
+        assertThat((state as ViewsStatsCardUiState.Error).message).isEqualTo("Test exception")
     }
 
     private fun createWeeklyAggregates(
