@@ -376,10 +376,10 @@ private fun StatsChart(chartData: ChartData) {
 
 @Composable
 private fun MetricsRow(
-    views: Int,
-    visitors: Int,
-    likes: Int,
-    comments: Int
+    views: Long,
+    visitors: Long,
+    likes: Long,
+    comments: Long
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -457,7 +457,7 @@ private fun SecondaryMetricItem(
     }
 }
 
-private fun formatStatValue(value: Int): String {
+private fun formatStatValue(value: Long): String {
     return when {
         value >= MILLION -> String.format(Locale.getDefault(), "%.1fM", value / MILLION.toDouble())
         value >= THOUSAND -> String.format(Locale.getDefault(), "%.1fK", value / THOUSAND.toDouble())

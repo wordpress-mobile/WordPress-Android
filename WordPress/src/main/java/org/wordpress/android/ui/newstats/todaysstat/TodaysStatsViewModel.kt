@@ -9,25 +9,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LimitMode
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
-import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 
-private const val HOURLY_DATA_POINTS = 24
 private const val PREVIOUS_PERIOD_OFFSET_DAYS = 1
 
 @HiltViewModel
 class TodaysStatsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val todayInsightsStore: TodayInsightsStore,
-    private val visitsAndViewsStore: VisitsAndViewsStore,
+    private val accountStore: AccountStore,
+    private val statsRepository: StatsRepository,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<TodaysStatsCardUiState>(TodaysStatsCardUiState.Loading)
@@ -58,6 +53,16 @@ class TodaysStatsViewModel @Inject constructor(
             return
         }
 
+        val accessToken = accountStore.accessToken
+        if (accessToken.isNullOrEmpty()) {
+            _uiState.value = TodaysStatsCardUiState.Error(
+                message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
+                onRetry = { loadData(forced = true) }
+            )
+            return
+        }
+
+        statsRepository.init(accessToken)
         _uiState.value = TodaysStatsCardUiState.Loading
 
         viewModelScope.launch {
@@ -65,7 +70,7 @@ class TodaysStatsViewModel @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "UnusedParameter")
     private suspend fun loadDataInternal(forced: Boolean) {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
@@ -77,8 +82,8 @@ class TodaysStatsViewModel @Inject constructor(
         }
 
         try {
-            val todayStats = fetchTodayStats(site, forced)
-            val chartData = fetchChartData(site, forced)
+            val todayStats = fetchTodayStats(site)
+            val chartData = fetchChartData(site)
 
             if (todayStats != null) {
                 _uiState.value = TodaysStatsCardUiState.Loaded(
@@ -103,25 +108,24 @@ class TodaysStatsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchTodayStats(site: SiteModel, forced: Boolean): TodayStatsData? {
-        val response = todayInsightsStore.fetchTodayInsights(site, forced)
-        return if (response.isError) {
-            null
-        } else {
-            response.model?.let { model ->
+    private suspend fun fetchTodayStats(site: SiteModel): TodayStatsData? {
+        val result = statsRepository.fetchTodayAggregates(site.siteId)
+        return when (result) {
+            is TodayAggregatesResult.Success -> {
                 TodayStatsData(
-                    views = model.views,
-                    visitors = model.visitors,
-                    likes = model.likes,
-                    comments = model.comments
+                    views = result.aggregates.views,
+                    visitors = result.aggregates.visitors,
+                    likes = result.aggregates.likes,
+                    comments = result.aggregates.comments
                 )
             }
+            is TodayAggregatesResult.Error -> null
         }
     }
 
-    private suspend fun fetchChartData(site: SiteModel, forced: Boolean): ChartData {
-        val currentPeriodData = fetchHourlyData(site, forced, offsetDays = 0)
-        val previousPeriodData = fetchHourlyData(site, forced, offsetDays = PREVIOUS_PERIOD_OFFSET_DAYS)
+    private suspend fun fetchChartData(site: SiteModel): ChartData {
+        val currentPeriodData = fetchHourlyData(site, offsetDays = 0)
+        val previousPeriodData = fetchHourlyData(site, offsetDays = PREVIOUS_PERIOD_OFFSET_DAYS)
 
         return ChartData(
             currentPeriod = currentPeriodData,
@@ -131,32 +135,23 @@ class TodaysStatsViewModel @Inject constructor(
 
     private suspend fun fetchHourlyData(
         site: SiteModel,
-        forced: Boolean,
         offsetDays: Int
     ): List<ViewsDataPoint> {
-        val calendar = Calendar.getInstance()
-        if (offsetDays > 0) {
-            calendar.add(Calendar.DAY_OF_YEAR, -offsetDays)
-        }
-
-        val response = visitsAndViewsStore.fetchVisits(
-            site = site,
-            granularity = StatsGranularity.HOURS,
-            limitMode = LimitMode.Top(HOURLY_DATA_POINTS),
-            date = calendar.time,
-            forced = forced
+        val result = statsRepository.fetchHourlyViews(
+            siteId = site.siteId,
+            offsetDays = offsetDays
         )
 
-        val model = response.model
-        if (response.isError || model == null) {
-            return emptyList()
-        }
-
-        return model.dates.map { periodData ->
-            ViewsDataPoint(
-                label = formatHourlyLabel(periodData.period),
-                views = periodData.views
-            )
+        return when (result) {
+            is HourlyViewsResult.Success -> {
+                result.dataPoints.map { dataPoint ->
+                    ViewsDataPoint(
+                        label = formatHourlyLabel(dataPoint.period),
+                        views = dataPoint.views
+                    )
+                }
+            }
+            is HourlyViewsResult.Error -> emptyList()
         }
     }
 
@@ -190,9 +185,9 @@ class TodaysStatsViewModel @Inject constructor(
     }
 
     private data class TodayStatsData(
-        val views: Int,
-        val visitors: Int,
-        val likes: Int,
-        val comments: Int
+        val views: Long,
+        val visitors: Long,
+        val likes: Long,
+        val comments: Long
     )
 }
