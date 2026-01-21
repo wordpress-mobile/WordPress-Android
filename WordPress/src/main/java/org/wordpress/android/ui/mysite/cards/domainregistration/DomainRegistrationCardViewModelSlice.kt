@@ -21,7 +21,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
-import org.wordpress.android.ui.plans.isDomainCreditAvailable
+import org.wordpress.android.util.isDomainCreditAvailable
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
 import org.wordpress.android.util.SiteUtilsWrapper

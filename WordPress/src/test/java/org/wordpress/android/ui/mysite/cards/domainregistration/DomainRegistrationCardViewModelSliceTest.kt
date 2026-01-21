@@ -25,7 +25,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
-import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
+import org.wordpress.android.util.PlansConstants.PREMIUM_PLAN_ID
 import org.wordpress.android.util.SiteUtilsWrapper
 
 @ExperimentalCoroutinesApi

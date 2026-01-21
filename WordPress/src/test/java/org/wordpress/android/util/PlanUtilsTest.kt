@@ -5,8 +5,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Test
 import org.wordpress.android.fluxc.model.PlanModel
-import org.wordpress.android.ui.plans.getCurrentPlan
-import org.wordpress.android.ui.plans.isDomainCreditAvailable
+import org.wordpress.android.util.getCurrentPlan
+import org.wordpress.android.util.isDomainCreditAvailable
 
 class PlanUtilsTest {
     @Test

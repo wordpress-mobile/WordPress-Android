@@ -100,7 +100,7 @@ import java.util.TimeZone;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.plans.PlanUtilsKt.isDomainCreditAvailable;
+import static org.wordpress.android.util.PlanUtilsKt.isDomainCreditAvailable;
 import static org.wordpress.android.util.DomainRegistrationUtilsKt.requestEmailValidation;
 
 public class PluginDetailActivity extends BaseAppCompatActivity implements OnDomainRegistrationRequestedListener,
