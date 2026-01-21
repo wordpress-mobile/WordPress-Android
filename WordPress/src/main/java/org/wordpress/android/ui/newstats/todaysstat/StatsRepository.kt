@@ -6,14 +6,14 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.ui.newstats.extension.statsCommentsData
+import org.wordpress.android.ui.newstats.extension.statsLikesData
+import org.wordpress.android.ui.newstats.extension.statsVisitorsData
+import org.wordpress.android.ui.newstats.extension.statsVisitsData
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
-import uniffi.wp_api.getStatsCommentsData
-import uniffi.wp_api.getStatsLikesData
-import uniffi.wp_api.getStatsVisitorsData
-import uniffi.wp_api.getStatsVisitsData
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -82,10 +82,10 @@ class StatsRepository @Inject constructor(
         when (result) {
             is WpRequestResult.Success -> {
                 val response = result.response.data
-                val views = getStatsVisitsData(response).firstOrNull()?.visits?.toLong() ?: 0L
-                val visitors = getStatsVisitorsData(response).firstOrNull()?.visitors?.toLong() ?: 0L
-                val likes = getStatsLikesData(response).firstOrNull()?.likes?.toLong() ?: 0L
-                val comments = getStatsCommentsData(response).firstOrNull()?.comments?.toLong() ?: 0L
+                val views = response.statsVisitsData().firstOrNull()?.visits?.toLong() ?: 0L
+                val visitors = response.statsVisitorsData().firstOrNull()?.visitors?.toLong() ?: 0L
+                val likes = response.statsLikesData().firstOrNull()?.likes?.toLong() ?: 0L
+                val comments = response.statsCommentsData().firstOrNull()?.comments?.toLong() ?: 0L
 
                 val aggregates = TodayAggregates(
                     views = views,
@@ -148,7 +148,7 @@ class StatsRepository @Inject constructor(
         when (result) {
             is WpRequestResult.Success -> {
                 val response = result.response.data
-                val dataPoints = getStatsVisitsData(response).map { dataPoint ->
+                val dataPoints = response.statsVisitsData().map { dataPoint ->
                     HourlyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits.toLong())
                 }
                 HourlyViewsResult.Success(dataPoints)
