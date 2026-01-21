@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.newstats.repository
 
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsUnit
+import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD

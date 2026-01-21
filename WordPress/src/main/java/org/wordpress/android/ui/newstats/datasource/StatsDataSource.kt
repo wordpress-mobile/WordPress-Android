@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.repository
+package org.wordpress.android.ui.newstats.datasource
 
 /**
  * Data source interface for fetching stats data.

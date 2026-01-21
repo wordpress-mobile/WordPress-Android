@@ -4,8 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import org.wordpress.android.ui.newstats.repository.StatsDataSource
-import org.wordpress.android.ui.newstats.repository.StatsDataSourceImpl
+import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsDataSourceImpl
 
 @InstallIn(SingletonComponent::class)
 @Module

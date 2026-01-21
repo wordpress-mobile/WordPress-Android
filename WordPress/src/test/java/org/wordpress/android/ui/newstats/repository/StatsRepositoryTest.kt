@@ -1,6 +1,15 @@
 package org.wordpress.android.ui.newstats.repository
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.wordpress.android.ui.newstats.datasource.CommentsDataPoint
+import org.wordpress.android.ui.newstats.datasource.LikesDataPoint
+import org.wordpress.android.ui.newstats.datasource.PostsDataPoint
+import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsUnit
+import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
+import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
+import org.wordpress.android.ui.newstats.datasource.VisitorsDataPoint
+import org.wordpress.android.ui.newstats.datasource.VisitsDataPoint
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test

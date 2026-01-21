@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.repository
+package org.wordpress.android.ui.newstats.datasource
 
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.newstats.extension.statsCommentsData
