@@ -395,7 +395,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         } else {
             showEmptyView(titleResId)
         }
-        actionableEmptyView.image.visibility = if (DisplayUtils.isLandscape(context)) View.GONE else View.VISIBLE
+        actionableEmptyView.image.visibility = View.GONE
     }
 
     private fun NotificationsListFragmentPageBinding.showNewNotificationsBar() {
