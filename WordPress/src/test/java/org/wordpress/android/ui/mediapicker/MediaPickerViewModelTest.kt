@@ -789,6 +789,79 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertThat(actions.tryReceive().getOrNull()).isEqualTo(LoadAction.Start(null))
     }
 
+    @Test
+    fun `empty state has retry action when not searching`() = test {
+        setupViewModel(null, singleSelectMediaPickerSetup, numberOfStates = 1)
+
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = false,
+            isMusicAudioAlwaysDenied = false,
+            didJustRequestPermissions = false,
+        )
+
+        assertThat(uiStates).hasSize(3)
+        val emptyState = uiStates.last().photoListUiModel as Empty
+        assertThat(emptyState.retryAction != null).isTrue()
+    }
+
+    @Test
+    fun `empty state has no retry action when searching with no results`() = test {
+        val emptyState = DomainModel.EmptyState(
+            title = UiStringText("No results"),
+            isError = false
+        )
+        setupViewModelWithEmptyState(emptyState)
+
+        viewModel.onSearchExpanded()
+        viewModel.onSearch("test query")
+        advanceUntilIdle()
+
+        val lastState = uiStates.last().photoListUiModel
+        if (lastState is Empty) {
+            assertThat(lastState.retryAction == null).isTrue()
+        }
+    }
+
+    @Test
+    fun `hidden state when search expanded but no filter submitted`() = test {
+        setupViewModelWithEmptyState(
+            DomainModel.EmptyState(
+                title = UiStringText("Empty"),
+                isError = false
+            )
+        )
+
+        viewModel.onSearchExpanded()
+        advanceUntilIdle()
+
+        val lastState = uiStates.last().photoListUiModel
+        assertThat(lastState is Hidden).isTrue()
+    }
+
+    @Test
+    fun `retry action triggers refresh when invoked`() = test {
+        setupViewModel(null, singleSelectMediaPickerSetup, numberOfStates = 1)
+
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = false,
+            isMusicAudioAlwaysDenied = false,
+            didJustRequestPermissions = false,
+        )
+
+        val emptyState = uiStates.last().photoListUiModel as Empty
+        assertThat(emptyState.retryAction != null).isTrue()
+
+        // Drain any existing actions from the channel
+        while (actions.tryReceive().getOrNull() != null) { /* drain channel */ }
+
+        // Invoke the retry action
+        emptyState.retryAction?.invoke()
+        advanceUntilIdle()
+
+        // Verify LoadAction.Retry was sent
+        assertThat(actions.tryReceive().getOrNull()).isEqualTo(LoadAction.Retry)
+    }
+
     private fun selectItem(position: Int) {
         when (val item = itemOnPosition(position)) {
             is PhotoItem -> item.toggleAction.toggle()
@@ -917,6 +990,39 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             }
         }
         assertThat(uiStates).hasSize(numberOfStates)
+    }
+
+    private suspend fun setupViewModelWithEmptyState(
+        emptyState: DomainModel.EmptyState,
+        mediaPickerSetup: MediaPickerSetup = singleSelectMediaPickerSetup
+    ) {
+        whenever(permissionsHandler.hasPhotosVideosPermission()).thenReturn(true)
+        whenever(mediaLoaderFactory.build(mediaPickerSetup, site)).thenReturn(mediaLoader)
+        doAnswer {
+            actions = it.getArgument(0)
+            return@doAnswer flow {
+                emit(
+                    DomainModel(
+                        domainItems = listOf(),
+                        emptyState = emptyState
+                    )
+                )
+            }
+        }.whenever(mediaLoader).loadMedia(any())
+
+        whenever(mediaInsertHandlerFactory.build(mediaPickerSetup, site)).thenReturn(mediaInsertHandler)
+
+        viewModel.start(listOf(), mediaPickerSetup, null, site)
+        viewModel.uiState.observeForever {
+            if (it != null) {
+                uiStates.add(it)
+            }
+        }
+        viewModel.onNavigate.observeForever {
+            if (it != null) {
+                navigateEvents.add(it)
+            }
+        }
     }
 
     private fun Data.assertSelection(

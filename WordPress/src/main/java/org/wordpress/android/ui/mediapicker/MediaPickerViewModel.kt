@@ -109,7 +109,12 @@ class MediaPickerViewModel @Inject constructor(
         _showPartialMediaAccessPrompt,
     ) { domainModel, selectedIds, softAskRequest, searchExpanded, progressDialogUiModel, showPartialAccessPrompt ->
         MediaPickerUiState(
-            buildUiModel(domainModel, selectedIds, softAskRequest, searchExpanded),
+            buildUiModel(
+                domainModel = domainModel,
+                selectedIds = selectedIds,
+                softAskRequest = softAskRequest,
+                isSearching = searchExpanded
+            ),
             buildSoftAskView(softAskRequest),
             FabUiModel(mediaPickerSetup.cameraSetup != HIDDEN && selectedIds.isNullOrEmpty(), this::clickOnCamera),
             buildActionModeUiModel(selectedIds, domainModel?.domainItems),
@@ -176,23 +181,23 @@ class MediaPickerViewModel @Inject constructor(
         isSearching: Boolean?
     ): PhotoListUiModel {
         val data = domainModel?.domainItems
+        // Hide empty view when search is expanded but no search term submitted yet
+        val isSearchExpandedWithoutFilter = isSearching == true && domainModel?.filter.isNullOrEmpty()
         return if (null != softAskRequest && softAskRequest.show) {
             PhotoListUiModel.Hidden
         } else if (data != null && data.isNotEmpty()) {
             populateDomainItems(data, selectedIds, domainModel)
+        } else if (isSearchExpandedWithoutFilter) {
+            PhotoListUiModel.Hidden
         } else if (domainModel?.emptyState != null) {
             PhotoListUiModel.Empty(
-                domainModel.emptyState.title,
-                domainModel.emptyState.htmlSubtitle,
-                domainModel.emptyState.image,
-                domainModel.emptyState.bottomImage,
-                domainModel.emptyState.bottomImageDescription,
-                isSearching == true,
-                retryAction = if (domainModel.emptyState.isError) {
-                    this::retry
-                } else {
-                    null
-                }
+                title = domainModel.emptyState.title,
+                htmlSubtitle = domainModel.emptyState.htmlSubtitle,
+                image = domainModel.emptyState.image,
+                bottomImage = domainModel.emptyState.bottomImage,
+                bottomImageDescription = domainModel.emptyState.bottomImageDescription,
+                isSearching = isSearching == true,
+                retryAction = if (isSearching == true) null else this::retry
             )
         } else if (domainModel?.isLoading == true) {
             PhotoListUiModel.Loading
@@ -207,8 +212,8 @@ class MediaPickerViewModel @Inject constructor(
             }
             PhotoListUiModel.Empty(
                 UiStringRes(stringId),
-                image = R.drawable.img_illustration_media_105dp,
-                isSearching = isSearching == true
+                isSearching = isSearching == true,
+                retryAction = if (isSearching == true) null else this::retry
             )
         }
     }

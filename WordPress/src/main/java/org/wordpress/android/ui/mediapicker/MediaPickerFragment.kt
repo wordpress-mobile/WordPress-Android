@@ -69,6 +69,7 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.WPMediaUtils
@@ -476,6 +477,9 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             is PhotoListUiModel.Empty -> {
                 setupAdapter(listOf())
                 actionableEmptyView.updateLayoutForSearch(uiModel.isSearching, 0)
+                if (uiModel.isSearching) {
+                    ActivityUtils.hideKeyboardForced(actionableEmptyView)
+                }
                 actionableEmptyView.title.text = uiHelpers.getTextOfUiString(requireContext(), uiModel.title)
 
                 actionableEmptyView.subtitle.applyOrHide(uiModel.htmlSubtitle) { htmlSubtitle ->
@@ -501,6 +505,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                     }
                 }
                 actionableEmptyView.button.applyOrHide(uiModel.retryAction) { action ->
+                    this.setText(R.string.retry)
                     this.setOnClickListener {
                         action()
                     }
