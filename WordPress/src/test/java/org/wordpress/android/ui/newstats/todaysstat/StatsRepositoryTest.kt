@@ -8,6 +8,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -184,6 +185,174 @@ class StatsRepositoryTest : BaseUnitTest() {
         assertThat(success.aggregates.visitors).isEqualTo(TEST_VISITORS)
         assertThat(success.aggregates.likes).isEqualTo(TEST_LIKES)
         assertThat(success.aggregates.comments).isEqualTo(TEST_COMMENTS)
+    }
+    // endregion
+
+    // region fetchWeeklyStats tests
+    @Test
+    fun `fetchWeeklyStats returns error when not initialized`() = runTest {
+        // Given - repository not initialized
+
+        // When
+        val result = repository.fetchWeeklyStats(TEST_SITE_ID)
+
+        // Then
+        assertThat(result).isInstanceOf(WeeklyStatsResult.Error::class.java)
+        assertThat((result as WeeklyStatsResult.Error).message).isEqualTo("Repository not initialized")
+        verify(appLogWrapper).e(AppLog.T.STATS, "Cannot fetch stats: repository not initialized")
+    }
+
+    @Test
+    fun `fetchWeeklyStats returns success when API returns valid data`() = runTest {
+        // Given
+        repository.init(TEST_ACCESS_TOKEN)
+
+        val mockResponse = createMockWeeklyStatsResponse(
+            views = TEST_WEEKLY_VIEWS,
+            visitors = TEST_WEEKLY_VISITORS,
+            likes = TEST_WEEKLY_LIKES,
+            comments = TEST_WEEKLY_COMMENTS,
+            posts = TEST_WEEKLY_POSTS
+        )
+        setupApiClientToReturnSuccess(mockResponse)
+
+        // When
+        val result = repository.fetchWeeklyStats(TEST_SITE_ID)
+
+        // Then
+        assertThat(result).isInstanceOf(WeeklyStatsResult.Success::class.java)
+        val success = result as WeeklyStatsResult.Success
+        assertThat(success.aggregates.views).isEqualTo(TEST_WEEKLY_VIEWS)
+        assertThat(success.aggregates.visitors).isEqualTo(TEST_WEEKLY_VISITORS)
+        assertThat(success.aggregates.likes).isEqualTo(TEST_WEEKLY_LIKES)
+        assertThat(success.aggregates.comments).isEqualTo(TEST_WEEKLY_COMMENTS)
+        assertThat(success.aggregates.posts).isEqualTo(TEST_WEEKLY_POSTS)
+    }
+
+    @Test
+    fun `fetchWeeklyStats returns error when API returns WpError`() = runTest {
+        // Given
+        repository.init(TEST_ACCESS_TOKEN)
+
+        setupApiClientToReturnWpError(API_ERROR_MESSAGE)
+
+        // When
+        val result = repository.fetchWeeklyStats(TEST_SITE_ID)
+
+        // Then
+        assertThat(result).isInstanceOf(WeeklyStatsResult.Error::class.java)
+        assertThat((result as WeeklyStatsResult.Error).message).isEqualTo(API_ERROR_MESSAGE)
+    }
+
+    @Test
+    fun `fetchWeeklyStats with weeksAgo parameter works correctly`() = runTest {
+        // Given
+        repository.init(TEST_ACCESS_TOKEN)
+
+        val mockResponse = createMockWeeklyStatsResponse(
+            views = TEST_WEEKLY_VIEWS,
+            visitors = TEST_WEEKLY_VISITORS,
+            likes = TEST_WEEKLY_LIKES,
+            comments = TEST_WEEKLY_COMMENTS,
+            posts = TEST_WEEKLY_POSTS
+        )
+        setupApiClientToReturnSuccess(mockResponse)
+
+        // When - fetch previous week's data
+        val result = repository.fetchWeeklyStats(TEST_SITE_ID, weeksAgo = 1)
+
+        // Then
+        assertThat(result).isInstanceOf(WeeklyStatsResult.Success::class.java)
+    }
+    // endregion
+
+    // region fetchDailyViewsForWeek tests
+    @Test
+    fun `fetchDailyViewsForWeek returns error when not initialized`() = runTest {
+        // Given - repository not initialized
+
+        // When
+        val result = repository.fetchDailyViewsForWeek(TEST_SITE_ID)
+
+        // Then
+        assertThat(result).isInstanceOf(DailyViewsResult.Error::class.java)
+        assertThat((result as DailyViewsResult.Error).message).isEqualTo("Repository not initialized")
+        verify(appLogWrapper).e(AppLog.T.STATS, "Cannot fetch stats: repository not initialized")
+    }
+
+    @Test
+    fun `fetchDailyViewsForWeek returns success when API returns valid data`() = runTest {
+        // Given
+        repository.init(TEST_ACCESS_TOKEN)
+
+        val mockResponse = createMockDailyViewsForWeekResponse(
+            listOf(
+                DailyDataPoint(TEST_DAILY_PERIOD_1, TEST_DAILY_VIEWS_1),
+                DailyDataPoint(TEST_DAILY_PERIOD_2, TEST_DAILY_VIEWS_2)
+            )
+        )
+        setupApiClientToReturnSuccess(mockResponse)
+
+        // When
+        val result = repository.fetchDailyViewsForWeek(TEST_SITE_ID)
+
+        // Then
+        assertThat(result).isInstanceOf(DailyViewsResult.Success::class.java)
+        val success = result as DailyViewsResult.Success
+        assertThat(success.dataPoints).hasSize(2)
+        assertThat(success.dataPoints[0].period).isEqualTo(TEST_DAILY_PERIOD_1)
+        assertThat(success.dataPoints[0].views).isEqualTo(TEST_DAILY_VIEWS_1)
+        assertThat(success.dataPoints[1].period).isEqualTo(TEST_DAILY_PERIOD_2)
+        assertThat(success.dataPoints[1].views).isEqualTo(TEST_DAILY_VIEWS_2)
+    }
+
+    @Test
+    fun `fetchDailyViewsForWeek returns success with empty list when API returns empty data`() = runTest {
+        // Given
+        repository.init(TEST_ACCESS_TOKEN)
+
+        val mockResponse = createMockEmptyResponse()
+        setupApiClientToReturnSuccess(mockResponse)
+
+        // When
+        val result = repository.fetchDailyViewsForWeek(TEST_SITE_ID)
+
+        // Then
+        assertThat(result).isInstanceOf(DailyViewsResult.Success::class.java)
+        assertThat((result as DailyViewsResult.Success).dataPoints).isEmpty()
+    }
+
+    @Test
+    fun `fetchDailyViewsForWeek returns error when API returns WpError`() = runTest {
+        // Given
+        repository.init(TEST_ACCESS_TOKEN)
+
+        setupApiClientToReturnWpError(API_ERROR_MESSAGE)
+
+        // When
+        val result = repository.fetchDailyViewsForWeek(TEST_SITE_ID)
+
+        // Then
+        assertThat(result).isInstanceOf(DailyViewsResult.Error::class.java)
+        assertThat((result as DailyViewsResult.Error).message).isEqualTo(API_ERROR_MESSAGE)
+    }
+
+    @Test
+    fun `fetchDailyViewsForWeek with weeksAgo parameter works correctly`() = runTest {
+        // Given
+        repository.init(TEST_ACCESS_TOKEN)
+
+        val mockResponse = createMockDailyViewsForWeekResponse(
+            listOf(DailyDataPoint(TEST_DAILY_PERIOD_1, TEST_DAILY_VIEWS_1))
+        )
+        setupApiClientToReturnSuccess(mockResponse)
+
+        // When - fetch previous week's data
+        val result = repository.fetchDailyViewsForWeek(TEST_SITE_ID, weeksAgo = 1)
+
+        // Then
+        assertThat(result).isInstanceOf(DailyViewsResult.Success::class.java)
+        assertThat((result as DailyViewsResult.Success).dataPoints).hasSize(1)
     }
     // endregion
 
@@ -427,6 +596,51 @@ class StatsRepositoryTest : BaseUnitTest() {
         return MockStatsResponse(emptyList())
     }
 
+    private fun createMockWeeklyStatsResponse(
+        views: Long,
+        visitors: Long,
+        likes: Long,
+        comments: Long,
+        posts: Long
+    ): MockStatsResponse {
+        // Create 7 daily data points that sum to the totals
+        val dailyViews = views / 7
+        val dailyVisitors = visitors / 7
+        val dailyLikes = likes / 7
+        val dailyComments = comments / 7
+        val dailyPosts = posts / 7
+
+        val rows = (0 until 7).map { day ->
+            listOf(
+                StatsVisitsDataValue.String("2024-01-${16 + day}"),
+                StatsVisitsDataValue.Number(dailyViews.toULong()),
+                StatsVisitsDataValue.Number(dailyVisitors.toULong()),
+                StatsVisitsDataValue.Number(dailyLikes.toULong()),
+                StatsVisitsDataValue.Number(0.toULong()), // reblogs
+                StatsVisitsDataValue.Number(dailyComments.toULong()),
+                StatsVisitsDataValue.Number(dailyPosts.toULong())
+            )
+        }
+        return MockStatsResponse(rows)
+    }
+
+    private fun createMockDailyViewsForWeekResponse(dataPoints: List<DailyDataPoint>): MockStatsResponse {
+        val rows = dataPoints.map { dataPoint ->
+            listOf(
+                StatsVisitsDataValue.String(dataPoint.period),
+                StatsVisitsDataValue.Number(dataPoint.views.toULong()),
+                StatsVisitsDataValue.Number(0.toULong()), // visitors
+                StatsVisitsDataValue.Number(0.toULong()), // likes
+                StatsVisitsDataValue.Number(0.toULong()), // reblogs
+                StatsVisitsDataValue.Number(0.toULong()), // comments
+                StatsVisitsDataValue.Number(0.toULong())  // posts
+            )
+        }
+        return MockStatsResponse(rows)
+    }
+
+    private data class DailyDataPoint(val period: String, val views: Long)
+
     private data class HourlyDataPoint(val period: String, val views: Long)
 
     private data class MockStatsResponse(
@@ -458,5 +672,16 @@ class StatsRepositoryTest : BaseUnitTest() {
         private const val TEST_HOURLY_VIEWS_1 = 100L
         private const val TEST_HOURLY_VIEWS_2 = 150L
         private const val API_ERROR_MESSAGE = "API Error"
+
+        // Weekly stats test constants
+        private const val TEST_WEEKLY_VIEWS = 7000L
+        private const val TEST_WEEKLY_VISITORS = 700L
+        private const val TEST_WEEKLY_LIKES = 350L
+        private const val TEST_WEEKLY_COMMENTS = 175L
+        private const val TEST_WEEKLY_POSTS = 7L
+        private const val TEST_DAILY_PERIOD_1 = "2024-01-16"
+        private const val TEST_DAILY_PERIOD_2 = "2024-01-17"
+        private const val TEST_DAILY_VIEWS_1 = 1000L
+        private const val TEST_DAILY_VIEWS_2 = 1500L
     }
 }

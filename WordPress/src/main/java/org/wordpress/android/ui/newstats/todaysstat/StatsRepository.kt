@@ -8,6 +8,7 @@ import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.ui.newstats.extension.statsCommentsData
 import org.wordpress.android.ui.newstats.extension.statsLikesData
+import org.wordpress.android.ui.newstats.extension.statsPostsData
 import org.wordpress.android.ui.newstats.extension.statsVisitorsData
 import org.wordpress.android.ui.newstats.extension.statsVisitsData
 import rs.wordpress.api.kotlin.WpComApiClient
@@ -22,6 +23,7 @@ import javax.inject.Named
 
 private const val HOURLY_QUANTITY = 24u
 private const val DAILY_QUANTITY = 1u
+private const val WEEKLY_QUANTITY = 7u
 
 /**
  * Repository for fetching stats data using the wordpress-rs API.
@@ -165,6 +167,146 @@ class StatsRepository @Inject constructor(
             }
         }
     }
+
+    /**
+     * Fetches aggregated weekly stats (views, visitors, likes, comments, posts).
+     *
+     * @param siteId The WordPress.com site ID
+     * @param weeksAgo Number of weeks to go back (0 = current week ending today, 1 = previous week)
+     * @return Weekly aggregated stats or error
+     */
+    suspend fun fetchWeeklyStats(siteId: Long, weeksAgo: Int = 0): WeeklyStatsResult =
+        withContext(ioDispatcher) {
+            if (accessToken == null) {
+                appLogWrapper.e(AppLog.T.STATS, "Cannot fetch stats: repository not initialized")
+                return@withContext WeeklyStatsResult.Error("Repository not initialized")
+            }
+
+            val (startDate, endDate) = calculateWeekDateRange(weeksAgo)
+            val endDateString = dateFormat.format(endDate.time)
+
+            val params = StatsVisitsParams(
+                unit = StatsVisitsUnit.DAY,
+                quantity = WEEKLY_QUANTITY,
+                endDate = endDateString,
+            )
+
+            val result = wpComApiClient.request { requestBuilder ->
+                requestBuilder.statsVisits().getStatsVisits(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+            }
+
+            when (result) {
+                is WpRequestResult.Success -> {
+                    val response = result.response.data
+                    val visitsData = response.statsVisitsData()
+                    val visitorsData = response.statsVisitorsData()
+                    val likesData = response.statsLikesData()
+                    val commentsData = response.statsCommentsData()
+                    val postsData = response.statsPostsData()
+
+                    val totalViews = visitsData.sumOf { it.visits.toLong() }
+                    val totalVisitors = visitorsData.sumOf { it.visitors.toLong() }
+                    val totalLikes = likesData.sumOf { it.likes.toLong() }
+                    val totalComments = commentsData.sumOf { it.comments.toLong() }
+                    val totalPosts = postsData.sumOf { it.posts.toLong() }
+
+                    val startDateFormatted = dateFormat.format(startDate.time)
+
+                    val aggregates = WeeklyAggregates(
+                        views = totalViews,
+                        visitors = totalVisitors,
+                        likes = totalLikes,
+                        comments = totalComments,
+                        posts = totalPosts,
+                        startDate = startDateFormatted,
+                        endDate = endDateString
+                    )
+                    WeeklyStatsResult.Success(aggregates)
+                }
+
+                is WpRequestResult.WpError -> {
+                    appLogWrapper.e(AppLog.T.STATS, "API Error fetching weekly stats: ${result.errorMessage}")
+                    WeeklyStatsResult.Error(result.errorMessage)
+                }
+
+                else -> {
+                    appLogWrapper.e(AppLog.T.STATS, "Unknown error fetching weekly stats")
+                    WeeklyStatsResult.Error("Unknown error")
+                }
+            }
+        }
+
+    /**
+     * Fetches daily views data for a specific week.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param weeksAgo Number of weeks to go back (0 = current week ending today, 1 = previous week)
+     * @return List of daily views data points or error
+     */
+    suspend fun fetchDailyViewsForWeek(siteId: Long, weeksAgo: Int = 0): DailyViewsResult =
+        withContext(ioDispatcher) {
+            if (accessToken == null) {
+                appLogWrapper.e(AppLog.T.STATS, "Cannot fetch stats: repository not initialized")
+                return@withContext DailyViewsResult.Error("Repository not initialized")
+            }
+
+            val (_, endDate) = calculateWeekDateRange(weeksAgo)
+            val endDateString = dateFormat.format(endDate.time)
+
+            val params = StatsVisitsParams(
+                unit = StatsVisitsUnit.DAY,
+                quantity = WEEKLY_QUANTITY,
+                endDate = endDateString,
+            )
+
+            val result = wpComApiClient.request { requestBuilder ->
+                requestBuilder.statsVisits().getStatsVisits(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+            }
+
+            when (result) {
+                is WpRequestResult.Success -> {
+                    val response = result.response.data
+                    val dataPoints = response.statsVisitsData().map { dataPoint ->
+                        DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits.toLong())
+                    }
+                    DailyViewsResult.Success(dataPoints)
+                }
+
+                is WpRequestResult.WpError -> {
+                    appLogWrapper.e(AppLog.T.STATS, "API Error fetching daily views: ${result.errorMessage}")
+                    DailyViewsResult.Error(result.errorMessage)
+                }
+
+                else -> {
+                    appLogWrapper.e(AppLog.T.STATS, "Unknown error fetching daily views")
+                    DailyViewsResult.Error("Unknown error")
+                }
+            }
+        }
+
+    /**
+     * Calculates the start and end dates for a given week.
+     *
+     * @param weeksAgo Number of weeks to go back (0 = current week, 1 = previous week)
+     * @return Pair of (startDate, endDate) Calendars representing the 7-day period
+     */
+    private fun calculateWeekDateRange(weeksAgo: Int): Pair<Calendar, Calendar> {
+        val endDate = Calendar.getInstance().apply {
+            add(Calendar.WEEK_OF_YEAR, -weeksAgo)
+        }
+
+        val startDate = (endDate.clone() as Calendar).apply {
+            add(Calendar.DAY_OF_YEAR, -6)
+        }
+
+        return startDate to endDate
+    }
 }
 
 /**
@@ -199,4 +341,41 @@ data class TodayAggregates(
     val visitors: Long,
     val likes: Long,
     val comments: Long
+)
+
+/**
+ * Result wrapper for weekly aggregated stats fetch operation.
+ */
+sealed class WeeklyStatsResult {
+    data class Success(val aggregates: WeeklyAggregates) : WeeklyStatsResult()
+    data class Error(val message: String) : WeeklyStatsResult()
+}
+
+/**
+ * Weekly aggregated stats data.
+ */
+data class WeeklyAggregates(
+    val views: Long,
+    val visitors: Long,
+    val likes: Long,
+    val comments: Long,
+    val posts: Long,
+    val startDate: String,
+    val endDate: String
+)
+
+/**
+ * Result wrapper for daily views fetch operation.
+ */
+sealed class DailyViewsResult {
+    data class Success(val dataPoints: List<DailyViewsDataPoint>) : DailyViewsResult()
+    data class Error(val message: String) : DailyViewsResult()
+}
+
+/**
+ * Raw daily data point from the stats API.
+ */
+data class DailyViewsDataPoint(
+    val period: String,
+    val views: Long
 )

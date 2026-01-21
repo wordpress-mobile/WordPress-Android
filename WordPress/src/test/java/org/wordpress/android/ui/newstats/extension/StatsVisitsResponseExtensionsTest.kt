@@ -171,6 +171,146 @@ class StatsVisitsResponseExtensionsTest {
         assertThat(comments[0].comments).isEqualTo(10uL)
     }
 
+    @Test
+    fun `statsPostsData returns posts data points with correct values`() {
+        // Given
+        val response = createResponse(
+            fields = listOf("period", "posts"),
+            data = listOf(
+                listOf(
+                    StatsVisitsDataValue.String("2024-01-16"),
+                    StatsVisitsDataValue.Number(5u)
+                )
+            )
+        )
+
+        // When
+        val result = response.statsPostsData()
+
+        // Then
+        assertThat(result).hasSize(1)
+        assertThat(result[0].period).isEqualTo("2024-01-16")
+        assertThat(result[0].posts).isEqualTo(5uL)
+    }
+
+    @Test
+    fun `statsPostsData returns empty list when posts field is missing`() {
+        // Given
+        val response = createResponse(
+            fields = listOf("period", "views"),
+            data = listOf(
+                listOf(
+                    StatsVisitsDataValue.String("2024-01-16"),
+                    StatsVisitsDataValue.Number(100u)
+                )
+            )
+        )
+
+        // When
+        val result = response.statsPostsData()
+
+        // Then
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `statsPostsData returns empty list when period field is missing`() {
+        // Given
+        val response = createResponse(
+            fields = listOf("posts"),
+            data = listOf(
+                listOf(
+                    StatsVisitsDataValue.Number(5u)
+                )
+            )
+        )
+
+        // When
+        val result = response.statsPostsData()
+
+        // Then
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `statsPostsData returns empty list when data is empty`() {
+        // Given
+        val response = createResponse(
+            fields = listOf("period", "posts"),
+            data = emptyList()
+        )
+
+        // When
+        val result = response.statsPostsData()
+
+        // Then
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `statsPostsData correctly handles multiple data points`() {
+        // Given
+        val response = createResponse(
+            fields = listOf("period", "posts"),
+            data = listOf(
+                listOf(
+                    StatsVisitsDataValue.String("2024-01-16"),
+                    StatsVisitsDataValue.Number(5u)
+                ),
+                listOf(
+                    StatsVisitsDataValue.String("2024-01-17"),
+                    StatsVisitsDataValue.Number(3u)
+                ),
+                listOf(
+                    StatsVisitsDataValue.String("2024-01-18"),
+                    StatsVisitsDataValue.Number(7u)
+                )
+            )
+        )
+
+        // When
+        val result = response.statsPostsData()
+
+        // Then
+        assertThat(result).hasSize(3)
+        assertThat(result[0].period).isEqualTo("2024-01-16")
+        assertThat(result[0].posts).isEqualTo(5uL)
+        assertThat(result[1].period).isEqualTo("2024-01-17")
+        assertThat(result[1].posts).isEqualTo(3uL)
+        assertThat(result[2].period).isEqualTo("2024-01-18")
+        assertThat(result[2].posts).isEqualTo(7uL)
+    }
+
+    @Test
+    fun `statsPostsData skips rows with invalid data types`() {
+        // Given
+        val response = createResponse(
+            fields = listOf("period", "posts"),
+            data = listOf(
+                listOf(
+                    StatsVisitsDataValue.String("2024-01-16"),
+                    StatsVisitsDataValue.Number(5u)
+                ),
+                listOf(
+                    StatsVisitsDataValue.String("2024-01-17"),
+                    StatsVisitsDataValue.String("not a number") // Invalid: posts should be Number
+                ),
+                listOf(
+                    StatsVisitsDataValue.String("2024-01-18"),
+                    StatsVisitsDataValue.Number(7u)
+                )
+            )
+        )
+
+        // When
+        val result = response.statsPostsData()
+
+        // Then
+        assertThat(result).hasSize(2)
+        assertThat(result[0].period).isEqualTo("2024-01-16")
+        assertThat(result[1].period).isEqualTo("2024-01-18")
+    }
+
     private fun createResponse(
         fields: List<String>,
         data: List<List<StatsVisitsDataValue>>
