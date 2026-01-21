@@ -58,6 +58,8 @@ import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
+import com.patrykandpatrick.vico.core.cartesian.axis.Axis
 import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
@@ -432,7 +434,6 @@ private fun DateRangeWithDot(dateRange: String, dotColor: Color, isFilled: Boole
     }
 }
 
-@Suppress("UnusedParameter")
 @Composable
 private fun ViewsStatsChart(
     chartData: ViewsStatsChartData,
@@ -496,6 +497,15 @@ private fun ViewsStatsChart(
         if (index in dateLabels.indices) dateLabels[index] else ""
     }
 
+    // Horizontal line for period average
+    val averageLine = HorizontalLine(
+        y = { weeklyAverage.toDouble() },
+        line = LineComponent(
+            fill = fill(MaterialTheme.colorScheme.outline),
+            thicknessDp = 1f
+        )
+    )
+
     when (chartType) {
         ChartType.LINE -> {
             val areaGradient = ShaderProvider.verticalGradient(
@@ -521,8 +531,9 @@ private fun ViewsStatsChart(
                             )
                         )
                     ),
-                    startAxis = VerticalAxis.rememberStart(),
-                    bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter)
+                    startAxis = VerticalAxis.rememberStart(line = null),
+                    bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter),
+                    decorations = listOf(averageLine)
                 ),
                 modelProducer = modelProducer,
                 scrollState = rememberVicoScrollState(scrollEnabled = false),
@@ -551,8 +562,9 @@ private fun ViewsStatsChart(
                         ),
                         mergeMode = { ColumnCartesianLayer.MergeMode.Grouped(4f) }
                     ),
-                    startAxis = VerticalAxis.rememberStart(),
-                    bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter)
+                    startAxis = VerticalAxis.rememberStart(line = null),
+                    bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter),
+                    decorations = listOf(averageLine)
                 ),
                 modelProducer = modelProducer,
                 scrollState = rememberVicoScrollState(scrollEnabled = false),
