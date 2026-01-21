@@ -160,6 +160,31 @@ class StatsRepositoryTest : BaseUnitTest() {
         assertThat(success.aggregates.likes).isEqualTo(0L)
         assertThat(success.aggregates.comments).isEqualTo(0L)
     }
+
+    @Test
+    fun `fetchTodayAggregates correctly parses data regardless of field order`() = runTest {
+        // Given
+        repository.init(TEST_ACCESS_TOKEN)
+
+        val mockResponse = createMockDailyAggregatesResponseWithDifferentFieldOrder(
+            views = TEST_VIEWS,
+            visitors = TEST_VISITORS,
+            likes = TEST_LIKES,
+            comments = TEST_COMMENTS
+        )
+        setupApiClientToReturnSuccess(mockResponse)
+
+        // When
+        val result = repository.fetchTodayAggregates(TEST_SITE_ID)
+
+        // Then
+        assertThat(result).isInstanceOf(TodayAggregatesResult.Success::class.java)
+        val success = result as TodayAggregatesResult.Success
+        assertThat(success.aggregates.views).isEqualTo(TEST_VIEWS)
+        assertThat(success.aggregates.visitors).isEqualTo(TEST_VISITORS)
+        assertThat(success.aggregates.likes).isEqualTo(TEST_LIKES)
+        assertThat(success.aggregates.comments).isEqualTo(TEST_COMMENTS)
+    }
     // endregion
 
     // region fetchHourlyViews tests
@@ -358,6 +383,28 @@ class StatsRepositoryTest : BaseUnitTest() {
         return MockStatsResponse(listOf(row))
     }
 
+    private fun createMockDailyAggregatesResponseWithDifferentFieldOrder(
+        views: Long,
+        visitors: Long,
+        likes: Long,
+        comments: Long
+    ): MockStatsResponse {
+        // Fields in different order: comments, likes, period, visitors, views, posts, reblogs
+        val row = listOf(
+            StatsVisitsDataValue.Number(comments.toULong()),
+            StatsVisitsDataValue.Number(likes.toULong()),
+            StatsVisitsDataValue.String("2024-01-16"),
+            StatsVisitsDataValue.Number(visitors.toULong()),
+            StatsVisitsDataValue.Number(views.toULong()),
+            StatsVisitsDataValue.Number(0.toULong()), // posts
+            StatsVisitsDataValue.Number(0.toULong())  // reblogs
+        )
+        return MockStatsResponse(
+            data = listOf(row),
+            fields = listOf("comments", "likes", "period", "visitors", "views", "posts", "reblogs")
+        )
+    }
+
     private fun createMockHourlyViewsResponse(dataPoints: List<HourlyDataPoint>): MockStatsResponse {
         val rows = dataPoints.map { dataPoint ->
             listOf(
@@ -382,12 +429,17 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     private data class HourlyDataPoint(val period: String, val views: Long)
 
-    private data class MockStatsResponse(val data: List<List<StatsVisitsDataValue>>) {
+    private data class MockStatsResponse(
+        val data: List<List<StatsVisitsDataValue>>,
+        val fields: List<String> = listOf(
+            "period", "views", "visitors", "likes", "reblogs", "comments", "posts"
+        )
+    ) {
         fun toStatsVisitsResponse(): uniffi.wp_api.StatsVisitsResponse {
             return uniffi.wp_api.StatsVisitsResponse(
                 date = "2024-01-16",
                 unit = "day",
-                fields = listOf("period", "views", "visitors", "likes", "reblogs", "comments", "posts"),
+                fields = fields,
                 data = data
             )
         }
