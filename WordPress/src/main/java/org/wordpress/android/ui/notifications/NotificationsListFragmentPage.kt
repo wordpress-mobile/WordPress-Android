@@ -67,7 +67,6 @@ import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -126,8 +125,8 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
         notesAdapter = NotesAdapter(requireActivity(), inlineActionEvents = viewModel.inlineActionEvents).apply {
             onNoteClicked = { noteId -> handleNoteClick(noteId) }
-            onNotesLoaded = {
-                itemCount -> updateEmptyLayouts(itemCount)
+            onNotesLoaded = { _ ->
+                updateEmptyLayouts(itemCount)
                 swipeToRefreshHelper?.isRefreshing = false
             }
             viewModel.inlineActionEvents.flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
@@ -394,7 +393,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         } else {
             showEmptyView(titleResId)
         }
-        actionableEmptyView.image.visibility = if (DisplayUtils.isLandscape(context)) View.GONE else View.VISIBLE
     }
 
     private fun NotificationsListFragmentPageBinding.showNewNotificationsBar() {
