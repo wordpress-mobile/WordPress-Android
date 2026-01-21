@@ -3,6 +3,8 @@ package org.wordpress.android.ui.newstats.todaysstat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -82,8 +84,12 @@ class TodaysStatsViewModel @Inject constructor(
         }
 
         try {
-            val todayStats = fetchTodayStats(site)
-            val chartData = fetchChartData(site)
+            // Fetch all data in parallel for better performance
+            val (todayStats, chartData) = coroutineScope {
+                val todayStatsDeferred = async { fetchTodayStats(site) }
+                val chartDataDeferred = async { fetchChartData(site) }
+                todayStatsDeferred.await() to chartDataDeferred.await()
+            }
 
             if (todayStats != null) {
                 _uiState.value = TodaysStatsCardUiState.Loaded(
@@ -123,13 +129,16 @@ class TodaysStatsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchChartData(site: SiteModel): ChartData {
-        val currentPeriodData = fetchHourlyData(site, offsetDays = 0)
-        val previousPeriodData = fetchHourlyData(site, offsetDays = PREVIOUS_PERIOD_OFFSET_DAYS)
+    private suspend fun fetchChartData(site: SiteModel): ChartData = coroutineScope {
+        // Fetch both periods in parallel
+        val currentPeriodDeferred = async { fetchHourlyData(site, offsetDays = 0) }
+        val previousPeriodDeferred = async {
+            fetchHourlyData(site, offsetDays = PREVIOUS_PERIOD_OFFSET_DAYS)
+        }
 
-        return ChartData(
-            currentPeriod = currentPeriodData,
-            previousPeriod = previousPeriodData
+        ChartData(
+            currentPeriod = currentPeriodDeferred.await(),
+            previousPeriod = previousPeriodDeferred.await()
         )
     }
 

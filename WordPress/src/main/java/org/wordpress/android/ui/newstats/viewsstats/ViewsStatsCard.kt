@@ -442,10 +442,12 @@ private fun ViewsStatsChart(
 ) {
     // Key the model producer on chartType so it gets recreated when chart type changes
     val modelProducer = remember(chartType) { CartesianChartModelProducer() }
-    val hasPreviousWeek = chartData.previousWeek.isNotEmpty()
 
-    LaunchedEffect(chartData, chartType) {
+    // Use both lists as keys to ensure LaunchedEffect re-runs when either changes
+    LaunchedEffect(chartData.currentWeek, chartData.previousWeek, chartType) {
         if (chartData.currentWeek.isNotEmpty()) {
+            // Check hasPreviousWeek inside the effect to avoid capturing stale values
+            val hasPreviousWeek = chartData.previousWeek.isNotEmpty()
             when (chartType) {
                 ChartType.LINE -> modelProducer.runTransaction {
                     lineSeries {
@@ -468,6 +470,8 @@ private fun ViewsStatsChart(
             }
         }
     }
+
+    val hasPreviousWeek = chartData.previousWeek.isNotEmpty()
 
     if (chartData.currentWeek.isEmpty()) {
         Box(

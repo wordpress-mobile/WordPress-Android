@@ -301,10 +301,12 @@ private fun TitleSection() {
 @Composable
 private fun StatsChart(chartData: ChartData) {
     val modelProducer = remember { CartesianChartModelProducer() }
-    val hasPreviousPeriod = chartData.previousPeriod.isNotEmpty()
 
-    LaunchedEffect(chartData) {
+    // Use both lists as keys to ensure LaunchedEffect re-runs when either changes
+    LaunchedEffect(chartData.currentPeriod, chartData.previousPeriod) {
         if (chartData.currentPeriod.isNotEmpty()) {
+            // Check hasPreviousPeriod inside the effect to avoid capturing stale values
+            val hasPreviousPeriod = chartData.previousPeriod.isNotEmpty()
             modelProducer.runTransaction {
                 lineSeries {
                     // Today's data (solid line)
@@ -317,6 +319,8 @@ private fun StatsChart(chartData: ChartData) {
             }
         }
     }
+
+    val hasPreviousPeriod = chartData.previousPeriod.isNotEmpty()
 
     if (chartData.currentPeriod.isEmpty()) {
         Box(

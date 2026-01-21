@@ -3,6 +3,8 @@ package org.wordpress.android.ui.newstats.viewsstats
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,10 +13,9 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.todaysstat.DailyViewsResult
 import org.wordpress.android.ui.newstats.todaysstat.StatsRepository
 import org.wordpress.android.ui.newstats.todaysstat.WeeklyAggregates
-import org.wordpress.android.ui.newstats.todaysstat.WeeklyStatsResult
+import org.wordpress.android.ui.newstats.todaysstat.WeeklyStatsWithDailyDataResult
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -102,10 +103,26 @@ class ViewsStatsViewModel @Inject constructor(
         }
 
         try {
-            val currentWeekStats = fetchWeeklyStats(site, CURRENT_WEEK)
-            val previousWeekStats = fetchWeeklyStats(site, PREVIOUS_WEEK)
-            val currentWeekDailyViews = fetchDailyViews(site, CURRENT_WEEK)
-            val previousWeekDailyViews = fetchDailyViews(site, PREVIOUS_WEEK)
+            // Fetch both weeks in parallel - each call returns both aggregates AND daily data
+            val (currentWeekResult, previousWeekResult) = coroutineScope {
+                val currentWeekDeferred = async {
+                    statsRepository.fetchWeeklyStatsWithDailyData(site.siteId, CURRENT_WEEK)
+                }
+                val previousWeekDeferred = async {
+                    statsRepository.fetchWeeklyStatsWithDailyData(site.siteId, PREVIOUS_WEEK)
+                }
+                currentWeekDeferred.await() to previousWeekDeferred.await()
+            }
+
+            // Extract data from combined results
+            val currentWeekStats = (currentWeekResult as? WeeklyStatsWithDailyDataResult.Success)?.aggregates
+            val previousWeekStats = (previousWeekResult as? WeeklyStatsWithDailyDataResult.Success)?.aggregates
+            val currentWeekDailyViews = (currentWeekResult as? WeeklyStatsWithDailyDataResult.Success)
+                ?.dailyDataPoints?.map { DailyDataPoint(formatDayLabel(it.period), it.views) }
+                ?: emptyList()
+            val previousWeekDailyViews = (previousWeekResult as? WeeklyStatsWithDailyDataResult.Success)
+                ?.dailyDataPoints?.map { DailyDataPoint(formatDayLabel(it.period), it.views) }
+                ?: emptyList()
 
             if (currentWeekStats != null && previousWeekStats != null) {
                 val viewsDifference = currentWeekStats.views - previousWeekStats.views
@@ -155,26 +172,6 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchWeeklyStats(site: SiteModel, weeksAgo: Int): WeeklyAggregates? {
-        val result = statsRepository.fetchWeeklyStats(site.siteId, weeksAgo)
-        return when (result) {
-            is WeeklyStatsResult.Success -> result.aggregates
-            is WeeklyStatsResult.Error -> null
-        }
-    }
-
-    private suspend fun fetchDailyViews(site: SiteModel, weeksAgo: Int): List<DailyDataPoint> {
-        val result = statsRepository.fetchDailyViewsForWeek(site.siteId, weeksAgo)
-        return when (result) {
-            is DailyViewsResult.Success -> result.dataPoints.map { dataPoint ->
-                DailyDataPoint(
-                    label = formatDayLabel(dataPoint.period),
-                    views = dataPoint.views
-                )
-            }
-            is DailyViewsResult.Error -> emptyList()
-        }
-    }
 
     private fun buildBottomStats(
         currentWeek: WeeklyAggregates,

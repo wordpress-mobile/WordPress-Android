@@ -291,6 +291,89 @@ class StatsRepository @Inject constructor(
         }
 
     /**
+     * Fetches both aggregated weekly stats AND daily data points in a single API call.
+     * This is more efficient than calling fetchWeeklyStats and fetchDailyViewsForWeek separately.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param weeksAgo Number of weeks to go back (0 = current week ending today, 1 = previous week)
+     * @return Combined weekly stats with daily data points or error
+     */
+    suspend fun fetchWeeklyStatsWithDailyData(
+        siteId: Long,
+        weeksAgo: Int = 0
+    ): WeeklyStatsWithDailyDataResult = withContext(ioDispatcher) {
+        if (accessToken == null) {
+            appLogWrapper.e(AppLog.T.STATS, "Cannot fetch stats: repository not initialized")
+            return@withContext WeeklyStatsWithDailyDataResult.Error("Repository not initialized")
+        }
+
+        val (startDate, endDate) = calculateWeekDateRange(weeksAgo)
+        val endDateString = dateFormat.format(endDate.time)
+
+        val params = StatsVisitsParams(
+            unit = StatsVisitsUnit.DAY,
+            quantity = WEEKLY_QUANTITY,
+            endDate = endDateString,
+        )
+
+        val result = wpComApiClient.request { requestBuilder ->
+            requestBuilder.statsVisits().getStatsVisits(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+
+        when (result) {
+            is WpRequestResult.Success -> {
+                val response = result.response.data
+                val visitsData = response.statsVisitsData()
+                val visitorsData = response.statsVisitorsData()
+                val likesData = response.statsLikesData()
+                val commentsData = response.statsCommentsData()
+                val postsData = response.statsPostsData()
+
+                // Build aggregates
+                val totalViews = visitsData.sumOf { it.visits.toLong() }
+                val totalVisitors = visitorsData.sumOf { it.visitors.toLong() }
+                val totalLikes = likesData.sumOf { it.likes.toLong() }
+                val totalComments = commentsData.sumOf { it.comments.toLong() }
+                val totalPosts = postsData.sumOf { it.posts.toLong() }
+                val startDateFormatted = dateFormat.format(startDate.time)
+
+                val aggregates = WeeklyAggregates(
+                    views = totalViews,
+                    visitors = totalVisitors,
+                    likes = totalLikes,
+                    comments = totalComments,
+                    posts = totalPosts,
+                    startDate = startDateFormatted,
+                    endDate = endDateString
+                )
+
+                // Build daily data points
+                val dailyDataPoints = visitsData.map { dataPoint ->
+                    DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits.toLong())
+                }
+
+                WeeklyStatsWithDailyDataResult.Success(aggregates, dailyDataPoints)
+            }
+
+            is WpRequestResult.WpError -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "API Error fetching weekly stats with daily data: ${result.errorMessage}"
+                )
+                WeeklyStatsWithDailyDataResult.Error(result.errorMessage)
+            }
+
+            else -> {
+                appLogWrapper.e(AppLog.T.STATS, "Unknown error fetching weekly stats with daily data")
+                WeeklyStatsWithDailyDataResult.Error("Unknown error")
+            }
+        }
+    }
+
+    /**
      * Calculates the start and end dates for a given week.
      *
      * @param weeksAgo Number of weeks to go back (0 = current week, 1 = previous week)
@@ -379,3 +462,15 @@ data class DailyViewsDataPoint(
     val period: String,
     val views: Long
 )
+
+/**
+ * Result wrapper for combined weekly stats fetch operation.
+ * Contains both aggregated stats and daily data points from a single API call.
+ */
+sealed class WeeklyStatsWithDailyDataResult {
+    data class Success(
+        val aggregates: WeeklyAggregates,
+        val dailyDataPoints: List<DailyViewsDataPoint>
+    ) : WeeklyStatsWithDailyDataResult()
+    data class Error(val message: String) : WeeklyStatsWithDailyDataResult()
+}
