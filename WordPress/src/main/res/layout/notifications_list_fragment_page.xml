@@ -33,7 +33,6 @@
         android:layout_width="match_parent"
         android:visibility="gone"
         app:aevButton="@string/posts_empty_list_button"
-        app:aevImage="@drawable/img_illustration_notifications_152dp"
         app:aevSubtitle="@string/notifications_empty_action_unread"
         app:aevTitle="@string/notifications_empty_unread"
         tools:visibility="visible">
