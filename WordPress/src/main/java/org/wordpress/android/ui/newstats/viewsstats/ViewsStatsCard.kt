@@ -314,7 +314,7 @@ private fun HeaderSection(
                     percentageChange = state.viewsPercentageChange
                 )
             }
-            // Right: Date ranges with colored dots
+            // Right: Date ranges with colored dots and average
             Column(horizontalAlignment = Alignment.End) {
                 DateRangeWithDot(
                     dateRange = state.currentWeekDateRange,
@@ -325,8 +325,10 @@ private fun HeaderSection(
                 DateRangeWithDot(
                     dateRange = state.previousWeekDateRange,
                     dotColor = MaterialTheme.colorScheme.outline,
-                    isFilled = false
+                    isFilled = true
                 )
+                Spacer(modifier = Modifier.height(4.dp))
+                AverageRow(average = state.weeklyAverage)
             }
         }
     }
@@ -430,6 +432,24 @@ private fun DateRangeWithDot(dateRange: String, dotColor: Color, isFilled: Boole
                             .border(1.5.dp, dotColor, CircleShape)
                     }
                 )
+        )
+    }
+}
+
+@Composable
+private fun AverageRow(average: Long) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = "avg ${formatStatValue(average)}",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.width(6.dp))
+        Box(
+            modifier = Modifier
+                .width(8.dp)
+                .height(1.dp)
+                .background(MaterialTheme.colorScheme.outline)
         )
     }
 }
