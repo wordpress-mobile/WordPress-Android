@@ -409,7 +409,8 @@ class GutenbergKitSettingsBuilderTest {
             remotePostId = 456L,
             isPage = false,
             title = "Test Post",
-            content = "Test Content"
+            content = "Test Content",
+            status = "publish"
         )
 
         val settings = GutenbergKitSettingsBuilder.buildSettings(
@@ -461,7 +462,8 @@ class GutenbergKitSettingsBuilderTest {
             remotePostId = 100L,
             isPage = true,
             title = "Test Page",
-            content = "Page Content"
+            content = "Page Content",
+            status = "draft"
         )
 
         val settings = GutenbergKitSettingsBuilder.buildSettings(
@@ -579,7 +581,8 @@ class GutenbergKitSettingsBuilderTest {
             remotePostId = null,
             isPage = false,
             title = null,
-            content = null
+            content = null,
+            status = null
         )
 
         val settings = GutenbergKitSettingsBuilder.buildSettings(
@@ -594,7 +597,28 @@ class GutenbergKitSettingsBuilderTest {
         assertThat(settings["postId"]).isNull()
         assertThat(settings["postTitle"]).isNull()
         assertThat(settings["postContent"]).isNull()
+        assertThat(settings["status"]).isNull()
         assertThat(settings["postType"]).isEqualTo("post") // Still defaults to post
+    }
+
+    @Test
+    fun `post status is included in settings`() {
+        val testCases = listOf("draft", "publish", "pending", "private", "future", "trash")
+
+        testCases.forEach { status ->
+            val postConfig = createPostConfig(status = status)
+
+            val settings = GutenbergKitSettingsBuilder.buildSettings(
+                siteConfig = createSiteConfig(),
+                postConfig = postConfig,
+                appConfig = createAppConfig(),
+                featureConfig = createFeatureConfig()
+            )
+
+            assertThat(settings["status"])
+                .withFailMessage("Expected status=$status in settings")
+                .isEqualTo(status)
+        }
     }
 
     // ===== Helper Methods =====
@@ -651,11 +675,13 @@ class GutenbergKitSettingsBuilderTest {
         remotePostId: Long? = 1L,
         isPage: Boolean = false,
         title: String? = "Test",
-        content: String? = "Content"
+        content: String? = "Content",
+        status: String? = "draft"
     ) = GutenbergKitSettingsBuilder.PostConfig(
         remotePostId = remotePostId,
         isPage = isPage,
         title = title,
-        content = content
+        content = content,
+        status = status
     )
 }
