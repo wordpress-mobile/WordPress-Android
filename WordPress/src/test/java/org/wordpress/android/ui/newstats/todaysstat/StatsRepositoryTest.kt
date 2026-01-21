@@ -122,7 +122,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `fetchTodayAggregates returns error when API returns empty data`() = runTest {
+    fun `fetchTodayAggregates returns success with zero values when API returns empty data`() = runTest {
         // Given
         repository.init(TEST_ACCESS_TOKEN)
 
@@ -133,8 +133,12 @@ class StatsRepositoryTest : BaseUnitTest() {
         val result = repository.fetchTodayAggregates(TEST_SITE_ID)
 
         // Then
-        assertThat(result).isInstanceOf(TodayAggregatesResult.Error::class.java)
-        assertThat((result as TodayAggregatesResult.Error).message).isEqualTo("No data available")
+        assertThat(result).isInstanceOf(TodayAggregatesResult.Success::class.java)
+        val success = result as TodayAggregatesResult.Success
+        assertThat(success.aggregates.views).isEqualTo(0L)
+        assertThat(success.aggregates.visitors).isEqualTo(0L)
+        assertThat(success.aggregates.likes).isEqualTo(0L)
+        assertThat(success.aggregates.comments).isEqualTo(0L)
     }
 
     @Test

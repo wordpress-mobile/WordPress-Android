@@ -8,9 +8,12 @@ import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.StatsVisitsDataValue
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
+import uniffi.wp_api.getStatsCommentsData
+import uniffi.wp_api.getStatsLikesData
+import uniffi.wp_api.getStatsVisitorsData
+import uniffi.wp_api.getStatsVisitsData
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -19,16 +22,6 @@ import javax.inject.Named
 
 private const val HOURLY_QUANTITY = 24u
 private const val DAILY_QUANTITY = 1u
-
-// Daily aggregates response field indexes
-// Response fields order: period, views, visitors, likes, reblogs, comments, posts
-@Suppress("unused") private const val INDEX_PERIOD = 0
-private const val INDEX_VIEWS = 1
-private const val INDEX_VISITORS = 2
-private const val INDEX_LIKES = 3
-@Suppress("unused") private const val INDEX_REBLOGS = 4
-private const val INDEX_COMMENTS = 5
-@Suppress("unused") private const val INDEX_POSTS = 6
 
 /**
  * Repository for fetching stats data using the wordpress-rs API.
@@ -89,13 +82,18 @@ class StatsRepository @Inject constructor(
         when (result) {
             is WpRequestResult.Success -> {
                 val response = result.response.data
-                val row = response.data.firstOrNull()
-                val aggregates = row?.let { parseDailyAggregates(it) }
-                if (aggregates != null) {
-                    TodayAggregatesResult.Success(aggregates)
-                } else {
-                    TodayAggregatesResult.Error("No data available")
-                }
+                val views = getStatsVisitsData(response).firstOrNull()?.visits?.toLong() ?: 0L
+                val visitors = getStatsVisitorsData(response).firstOrNull()?.visitors?.toLong() ?: 0L
+                val likes = getStatsLikesData(response).firstOrNull()?.likes?.toLong() ?: 0L
+                val comments = getStatsCommentsData(response).firstOrNull()?.comments?.toLong() ?: 0L
+
+                val aggregates = TodayAggregates(
+                    views = views,
+                    visitors = visitors,
+                    likes = likes,
+                    comments = comments
+                )
+                TodayAggregatesResult.Success(aggregates)
             }
 
             is WpRequestResult.WpError -> {
@@ -150,8 +148,8 @@ class StatsRepository @Inject constructor(
         when (result) {
             is WpRequestResult.Success -> {
                 val response = result.response.data
-                val dataPoints = response.data.mapNotNull { row ->
-                    parseHourlyDataRow(row)
+                val dataPoints = getStatsVisitsData(response).map { dataPoint ->
+                    HourlyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits.toLong())
                 }
                 HourlyViewsResult.Success(dataPoints)
             }
@@ -165,59 +163,6 @@ class StatsRepository @Inject constructor(
                 appLogWrapper.e(AppLog.T.STATS, "Unknown error fetching hourly views")
                 HourlyViewsResult.Error("Unknown error")
             }
-        }
-    }
-
-    @Suppress("TooGenericExceptionCaught", "ReturnCount")
-    private fun parseHourlyDataRow(row: Any?): HourlyViewsDataPoint? {
-        return try {
-            val rowList = row as? List<*> ?: return null
-            val periodValue = rowList.getOrNull(0)
-            val viewsValue = rowList.getOrNull(1)
-
-            // Extract values from wrapper types
-            val period = when (periodValue) {
-                is StatsVisitsDataValue.String -> periodValue.v1
-                else -> return null
-            }
-
-            val views = when (viewsValue) {
-                is StatsVisitsDataValue.Number -> viewsValue.v1.toLong()
-                else -> 0L
-            }
-
-            HourlyViewsDataPoint(period = period, views = views)
-        } catch (e: Exception) {
-            appLogWrapper.w(AppLog.T.STATS, "Failed to parse stats row: ${e.message}")
-            null
-        }
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    private fun parseDailyAggregates(row: Any?): TodayAggregates? {
-        return try {
-            val rowList = row as? List<*> ?: return null
-            val viewsValue = rowList.getOrNull(INDEX_VIEWS)
-            val visitorsValue = rowList.getOrNull(INDEX_VISITORS)
-            val likesValue = rowList.getOrNull(INDEX_LIKES)
-            val commentsValue = rowList.getOrNull(INDEX_COMMENTS)
-
-            TodayAggregates(
-                views = extractLongValue(viewsValue),
-                visitors = extractLongValue(visitorsValue),
-                likes = extractLongValue(likesValue),
-                comments = extractLongValue(commentsValue)
-            )
-        } catch (e: Exception) {
-            appLogWrapper.w(AppLog.T.STATS, "Failed to parse daily aggregates: ${e.message}")
-            null
-        }
-    }
-
-    private fun extractLongValue(value: Any?): Long {
-        return when (value) {
-            is StatsVisitsDataValue.Number -> value.v1.toLong()
-            else -> 0L
         }
     }
 }
