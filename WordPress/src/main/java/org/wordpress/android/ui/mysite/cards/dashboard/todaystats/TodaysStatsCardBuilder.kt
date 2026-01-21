@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.dashboard.todaysstats
+package org.wordpress.android.ui.mysite.cards.dashboard.todaystats
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel

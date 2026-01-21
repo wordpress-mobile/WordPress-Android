@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.dashboard.todaysstats
+package org.wordpress.android.ui.mysite.cards.dashboard.todaystats
 
 import android.content.Context
 import android.graphics.Typeface
