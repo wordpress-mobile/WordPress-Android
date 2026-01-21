@@ -49,10 +49,15 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Creates a new date formatter instance for thread-safe date formatting.
-     * SimpleDateFormat is NOT thread-safe, so we create a new instance for each use.
+     * Thread-local date formatter for thread-safe date formatting.
+     * SimpleDateFormat is NOT thread-safe, so we use ThreadLocal to provide each thread
+     * with its own instance, avoiding the overhead of creating new instances on every call.
      */
-    private fun createDateFormat() = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
+    private val dateFormat = ThreadLocal.withInitial {
+        SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
+    }
+
+    private fun getDateFormat(): SimpleDateFormat = dateFormat.get()!!
 
     fun init(accessToken: String) {
         this.accessToken = accessToken
@@ -71,7 +76,7 @@ class StatsRepository @Inject constructor(
         }
 
         val calendar = Calendar.getInstance()
-        val dateString = createDateFormat().format(calendar.time)
+        val dateString = getDateFormat().format(calendar.time)
 
         val params = StatsVisitsParams(
             unit = StatsVisitsUnit.DAY,
@@ -137,7 +142,7 @@ class StatsRepository @Inject constructor(
         // Examples: offsetDays=0 → tomorrow's date → fetches today's hours
         //           offsetDays=1 → today's date → fetches yesterday's hours
         calendar.add(Calendar.DAY_OF_YEAR, 1 - offsetDays)
-        val dateString = createDateFormat().format(calendar.time)
+        val dateString = getDateFormat().format(calendar.time)
 
         val params = StatsVisitsParams(
             unit = StatsVisitsUnit.HOUR,
@@ -188,7 +193,7 @@ class StatsRepository @Inject constructor(
             }
 
             val (startDate, endDate) = calculateWeekDateRange(weeksAgo)
-            val endDateString = createDateFormat().format(endDate.time)
+            val endDateString = getDateFormat().format(endDate.time)
 
             val params = StatsVisitsParams(
                 unit = StatsVisitsUnit.DAY,
@@ -218,7 +223,7 @@ class StatsRepository @Inject constructor(
                     val totalComments = commentsData.sumOf { it.comments.toLong() }
                     val totalPosts = postsData.sumOf { it.posts.toLong() }
 
-                    val startDateFormatted = createDateFormat().format(startDate.time)
+                    val startDateFormatted = getDateFormat().format(startDate.time)
 
                     val aggregates = WeeklyAggregates(
                         views = totalViews,
@@ -259,7 +264,7 @@ class StatsRepository @Inject constructor(
             }
 
             val (_, endDate) = calculateWeekDateRange(weeksAgo)
-            val endDateString = createDateFormat().format(endDate.time)
+            val endDateString = getDateFormat().format(endDate.time)
 
             val params = StatsVisitsParams(
                 unit = StatsVisitsUnit.DAY,
@@ -313,7 +318,7 @@ class StatsRepository @Inject constructor(
         }
 
         val (startDate, endDate) = calculateWeekDateRange(weeksAgo)
-        val endDateString = createDateFormat().format(endDate.time)
+        val endDateString = getDateFormat().format(endDate.time)
 
         val params = StatsVisitsParams(
             unit = StatsVisitsUnit.DAY,
@@ -343,7 +348,7 @@ class StatsRepository @Inject constructor(
                 val totalLikes = likesData.sumOf { it.likes.toLong() }
                 val totalComments = commentsData.sumOf { it.comments.toLong() }
                 val totalPosts = postsData.sumOf { it.posts.toLong() }
-                val startDateFormatted = createDateFormat().format(startDate.time)
+                val startDateFormatted = getDateFormat().format(startDate.time)
 
                 val aggregates = WeeklyAggregates(
                     views = totalViews,

@@ -78,6 +78,7 @@ import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
 import kotlin.math.abs
 
@@ -87,14 +88,14 @@ private val CardMargin = 16.dp
 private val ChartHeight = 120.dp
 private val StatItemWidth = 100.dp
 private val BadgeCornerRadius = 4.dp
-private const val THOUSAND = 1_000
-private const val MILLION = 1_000_000
 private val ChangeBadgePositiveColor = Color(0xFF4CAF50)
 private val ChangeBadgeNegativeColor = Color(0xFFE91E63)
 
 @Composable
 fun ViewsStatsCard(
     uiState: ViewsStatsCardUiState,
+    onChartTypeChanged: (ChartType) -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
@@ -113,8 +114,8 @@ fun ViewsStatsCard(
     ) {
         when (uiState) {
             is ViewsStatsCardUiState.Loading -> LoadingContent()
-            is ViewsStatsCardUiState.Loaded -> LoadedContent(uiState)
-            is ViewsStatsCardUiState.Error -> ErrorContent(uiState)
+            is ViewsStatsCardUiState.Loaded -> LoadedContent(uiState, onChartTypeChanged)
+            is ViewsStatsCardUiState.Error -> ErrorContent(uiState, onRetry)
         }
     }
 }
@@ -224,7 +225,10 @@ private fun LoadingContent() {
 }
 
 @Composable
-private fun LoadedContent(state: ViewsStatsCardUiState.Loaded) {
+private fun LoadedContent(
+    state: ViewsStatsCardUiState.Loaded,
+    onChartTypeChanged: (ChartType) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -233,7 +237,7 @@ private fun LoadedContent(state: ViewsStatsCardUiState.Loaded) {
         // Header Section
         HeaderSection(
             state = state,
-            onChartTypeChanged = state.onChartTypeChanged
+            onChartTypeChanged = onChartTypeChanged
         )
         Spacer(modifier = Modifier.height(16.dp))
         // Chart Section
@@ -687,7 +691,10 @@ private fun ChangeBadge(change: StatChange) {
 }
 
 @Composable
-private fun ErrorContent(state: ViewsStatsCardUiState.Error) {
+private fun ErrorContent(
+    state: ViewsStatsCardUiState.Error,
+    onRetry: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -724,36 +731,15 @@ private fun ErrorContent(state: ViewsStatsCardUiState.Error) {
                 color = MaterialTheme.colorScheme.error
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = state.onRetry) {
+            Button(onClick = onRetry) {
                 Text(text = stringResource(R.string.retry))
             }
         }
     }
 }
 
-private fun formatStatValue(value: Long): String {
-    return when {
-        value >= MILLION -> String.format(Locale.getDefault(), "%.1fM", value / MILLION.toDouble())
-        value >= THOUSAND -> String.format(Locale.getDefault(), "%.1fK", value / THOUSAND.toDouble())
-        else -> value.toString()
-    }
-}
-
 private fun formatDifference(difference: Long): String {
-    val absValue = abs(difference)
-    val formattedValue = when {
-        absValue >= MILLION -> String.format(
-            Locale.getDefault(),
-            "%.1fM",
-            absValue / MILLION.toDouble()
-        )
-        absValue >= THOUSAND -> String.format(
-            Locale.getDefault(),
-            "%.1fK",
-            absValue / THOUSAND.toDouble()
-        )
-        else -> absValue.toString()
-    }
+    val formattedValue = formatStatValue(abs(difference))
     return if (difference < 0) "-$formattedValue" else "+$formattedValue"
 }
 
@@ -761,7 +747,11 @@ private fun formatDifference(difference: Long): String {
 @Composable
 private fun ViewsStatsCardLoadingPreview() {
     AppThemeM3 {
-        ViewsStatsCard(uiState = ViewsStatsCardUiState.Loading)
+        ViewsStatsCard(
+            uiState = ViewsStatsCardUiState.Loading,
+            onChartTypeChanged = {},
+            onRetry = {}
+        )
     }
 }
 
@@ -805,7 +795,9 @@ private fun ViewsStatsCardLoadedPreview() {
                     StatItem("Comments", 0, StatChange.NoChange),
                     StatItem("Posts", 5, StatChange.Positive(25.0))
                 )
-            )
+            ),
+            onChartTypeChanged = {},
+            onRetry = {}
         )
     }
 }
@@ -816,9 +808,10 @@ private fun ViewsStatsCardErrorPreview() {
     AppThemeM3 {
         ViewsStatsCard(
             uiState = ViewsStatsCardUiState.Error(
-                message = "Failed to load stats",
-                onRetry = {}
-            )
+                message = stringResource(R.string.stats_todays_stats_failed_to_load)
+            ),
+            onChartTypeChanged = {},
+            onRetry = {}
         )
     }
 }
@@ -863,7 +856,9 @@ private fun ViewsStatsCardLoadedDarkPreview() {
                     StatItem("Comments", 0, StatChange.NoChange),
                     StatItem("Posts", 5, StatChange.Positive(25.0))
                 )
-            )
+            ),
+            onChartTypeChanged = {},
+            onRetry = {}
         )
     }
 }

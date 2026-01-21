@@ -50,10 +50,7 @@ class ViewsStatsViewModel @Inject constructor(
         currentChartType = chartType
         val currentState = _uiState.value
         if (currentState is ViewsStatsCardUiState.Loaded) {
-            _uiState.value = currentState.copy(
-                chartType = chartType,
-                onChartTypeChanged = ::onChartTypeChanged
-            )
+            _uiState.value = currentState.copy(chartType = chartType)
         }
     }
 
@@ -70,8 +67,7 @@ class ViewsStatsViewModel @Inject constructor(
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
             _uiState.value = ViewsStatsCardUiState.Error(
-                message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected),
-                onRetry = ::loadData
+                message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected)
             )
             return
         }
@@ -79,8 +75,7 @@ class ViewsStatsViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
             _uiState.value = ViewsStatsCardUiState.Error(
-                message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
-                onRetry = ::loadData
+                message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
             )
             return
         }
@@ -107,14 +102,12 @@ class ViewsStatsViewModel @Inject constructor(
                 )
             } else {
                 _uiState.value = ViewsStatsCardUiState.Error(
-                    message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
-                    onRetry = ::loadData
+                    message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
                 )
             }
         } catch (e: Exception) {
             _uiState.value = ViewsStatsCardUiState.Error(
-                message = e.message ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error),
-                onRetry = ::loadData
+                message = e.message ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error)
             )
         }
     }
@@ -158,8 +151,7 @@ class ViewsStatsViewModel @Inject constructor(
             chartData = ViewsStatsChartData(currentWeek = currentWeekDailyViews, previousWeek = previousWeekDailyViews),
             weeklyAverage = weeklyAverage,
             bottomStats = buildBottomStats(currentWeekStats, previousWeekStats),
-            chartType = currentChartType,
-            onChartTypeChanged = ::onChartTypeChanged
+            chartType = currentChartType
         )
     }
 

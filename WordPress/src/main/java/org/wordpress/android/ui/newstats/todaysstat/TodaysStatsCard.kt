@@ -54,6 +54,7 @@ import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -64,8 +65,6 @@ private val CardMargin = 16.dp
 private val ChartHeight = 80.dp
 private val MetricIconSize = 16.dp
 private val MetricSpacing = 4.dp
-private const val THOUSAND = 1_000
-private const val MILLION = 1_000_000
 
 @Composable
 fun TodaysStatsCard(
@@ -458,14 +457,6 @@ private fun SecondaryMetricItem(
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurface
         )
-    }
-}
-
-private fun formatStatValue(value: Long): String {
-    return when {
-        value >= MILLION -> String.format(Locale.getDefault(), "%.1fM", value / MILLION.toDouble())
-        value >= THOUSAND -> String.format(Locale.getDefault(), "%.1fK", value / THOUSAND.toDouble())
-        else -> value.toString()
     }
 }
 

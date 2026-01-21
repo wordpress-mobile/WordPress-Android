@@ -16,14 +16,10 @@ sealed class ViewsStatsCardUiState {
         val chartData: ViewsStatsChartData,
         val weeklyAverage: Long,
         val bottomStats: List<StatItem>,
-        val chartType: ChartType = ChartType.LINE,
-        val onChartTypeChanged: (ChartType) -> Unit = {}
+        val chartType: ChartType = ChartType.LINE
     ) : ViewsStatsCardUiState()
 
-    data class Error(
-        val message: String,
-        val onRetry: () -> Unit
-    ) : ViewsStatsCardUiState()
+    data class Error(val message: String) : ViewsStatsCardUiState()
 }
 
 /**

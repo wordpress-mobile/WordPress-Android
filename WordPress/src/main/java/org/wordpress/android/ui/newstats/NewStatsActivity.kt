@@ -170,7 +170,11 @@ private fun TrafficTabContent(
                 .verticalScroll(rememberScrollState())
         ) {
             TodaysStatsCard(uiState = todaysStatsUiState)
-            ViewsStatsCard(uiState = viewsStatsUiState)
+            ViewsStatsCard(
+                uiState = viewsStatsUiState,
+                onChartTypeChanged = viewsStatsViewModel::onChartTypeChanged,
+                onRetry = viewsStatsViewModel::onRetry
+            )
         }
     }
 }
