@@ -56,6 +56,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
@@ -63,6 +67,7 @@ import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.common.fill
 import com.patrykandpatrick.vico.compose.common.shader.verticalGradient
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
@@ -435,14 +440,13 @@ private fun ViewsStatsChart(
     chartType: ChartType
 ) {
     // Key the model producer on chartType so it gets recreated when chart type changes
-    val lineModelProducer = remember(chartType) { CartesianChartModelProducer() }
-    val barModelProducer = remember(chartType) { CartesianChartModelProducer() }
+    val modelProducer = remember(chartType) { CartesianChartModelProducer() }
     val hasPreviousWeek = chartData.previousWeek.isNotEmpty()
 
     LaunchedEffect(chartData, chartType) {
         if (chartData.currentWeek.isNotEmpty()) {
             when (chartType) {
-                ChartType.LINE -> lineModelProducer.runTransaction {
+                ChartType.LINE -> modelProducer.runTransaction {
                     lineSeries {
                         series(chartData.currentWeek.map { it.views.toInt() })
                         if (hasPreviousWeek) {
@@ -450,19 +454,14 @@ private fun ViewsStatsChart(
                         }
                     }
                 }
-                ChartType.BAR -> barModelProducer.runTransaction {
-                    // Two separate column series for overlapping layers
+                ChartType.BAR -> modelProducer.runTransaction {
                     columnSeries {
-                        // Previous period (grey, drawn first/behind)
-                        series(
-                            if (hasPreviousWeek) {
-                                chartData.previousWeek.map { it.views.toInt() }
-                            } else {
-                                chartData.currentWeek.map { 0 }
-                            }
-                        )
-                        // Current period (primary, drawn second/on top)
+                        // Current period first (primary color)
                         series(chartData.currentWeek.map { it.views.toInt() })
+                        // Previous period second (grey)
+                        if (hasPreviousWeek) {
+                            series(chartData.previousWeek.map { it.views.toInt() })
+                        }
                     }
                 }
             }
@@ -490,6 +489,13 @@ private fun ViewsStatsChart(
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
+    // X-axis formatter to show date labels from current week data
+    val dateLabels = chartData.currentWeek.map { it.label }
+    val bottomAxisValueFormatter = CartesianValueFormatter { context, value, _ ->
+        val index = value.toInt()
+        if (index in dateLabels.indices) dateLabels[index] else ""
+    }
+
     when (chartType) {
         ChartType.LINE -> {
             val areaGradient = ShaderProvider.verticalGradient(
@@ -514,9 +520,11 @@ private fun ViewsStatsChart(
                                 pointConnector = LineCartesianLayer.PointConnector.cubic()
                             )
                         )
-                    )
+                    ),
+                    startAxis = VerticalAxis.rememberStart(),
+                    bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter)
                 ),
-                modelProducer = lineModelProducer,
+                modelProducer = modelProducer,
                 scrollState = rememberVicoScrollState(scrollEnabled = false),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -528,23 +536,25 @@ private fun ViewsStatsChart(
                 chart = rememberCartesianChart(
                     rememberColumnCartesianLayer(
                         columnProvider = ColumnCartesianLayer.ColumnProvider.series(
-                            // Previous period (grey, drawn first/behind)
-                            LineComponent(
-                                fill = fill(secondaryColor),
-                                thicknessDp = 12f,
-                                shape = CorneredShape.rounded(allPercent = 40)
-                            ),
-                            // Current period (primary color, drawn second/on top)
+                            // Current period (primary color)
                             LineComponent(
                                 fill = fill(primaryColor),
-                                thicknessDp = 12f,
+                                thicknessDp = 8f,
+                                shape = CorneredShape.rounded(allPercent = 40)
+                            ),
+                            // Previous period (grey)
+                            LineComponent(
+                                fill = fill(secondaryColor),
+                                thicknessDp = 8f,
                                 shape = CorneredShape.rounded(allPercent = 40)
                             )
                         ),
-                        mergeMode = { ColumnCartesianLayer.MergeMode.Grouped(0f) }
-                    )
+                        mergeMode = { ColumnCartesianLayer.MergeMode.Grouped(4f) }
+                    ),
+                    startAxis = VerticalAxis.rememberStart(),
+                    bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter)
                 ),
-                modelProducer = barModelProducer,
+                modelProducer = modelProducer,
                 scrollState = rememberVicoScrollState(scrollEnabled = false),
                 modifier = Modifier
                     .fillMaxWidth()
