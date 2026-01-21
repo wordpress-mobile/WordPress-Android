@@ -54,7 +54,8 @@ object GutenbergKitSettingsBuilder {
         val remotePostId: Long?,
         val isPage: Boolean,
         val title: String?,
-        val content: String?
+        val content: String?,
+        val status: String?
     ) {
         companion object {
             fun fromPostModel(postModel: PostImmutableModel?): PostConfig {
@@ -62,7 +63,8 @@ object GutenbergKitSettingsBuilder {
                     remotePostId = postModel?.remotePostId,
                     isPage = postModel?.isPage ?: false,
                     title = postModel?.title,
-                    content = postModel?.content
+                    content = postModel?.content,
+                    status = postModel?.status
                 )
             }
         }
@@ -127,6 +129,7 @@ object GutenbergKitSettingsBuilder {
         return mutableMapOf(
             "postId" to postConfig.remotePostId?.toInt(),
             "postType" to if (postConfig.isPage) "page" else "post",
+            "status" to postConfig.status,
             "postTitle" to postConfig.title,
             "postContent" to postConfig.content,
             "siteURL" to siteConfig.url,

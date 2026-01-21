@@ -29,6 +29,7 @@ object EditorConfigurationBuilder {
             setContent(settings.getSetting<String>("postContent") ?: "")
             setPostId(postId)
             setPostType(settings.getSetting<String>("postType"))
+            setStatus(settings.getSetting<String>("status"))
 
             // Site settings
             setSiteURL(siteURL)
