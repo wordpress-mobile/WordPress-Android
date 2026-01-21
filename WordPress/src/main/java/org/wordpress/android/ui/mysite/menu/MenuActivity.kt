@@ -114,7 +114,6 @@ class MenuActivity : BaseAppCompatActivity() {
             is SiteNavigationAction.OpenActivityLog -> ActivityLauncher.viewActivityLogList(this, action.site)
             is SiteNavigationAction.OpenBackup -> ActivityLauncher.viewBackupList(this, action.site)
             is SiteNavigationAction.OpenScan -> ActivityLauncher.viewScan(this, action.site)
-            is SiteNavigationAction.OpenPlan -> ActivityLauncher.viewBlogPlans(this, action.site)
             is SiteNavigationAction.OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(this, action.site)
             is SiteNavigationAction.OpenPages -> ActivityLauncher.viewCurrentBlogPages(this, action.site)
             is SiteNavigationAction.OpenPostTypes -> ActivityLauncher.viewPostTypes(this, action.site)
@@ -361,7 +360,7 @@ fun MySiteListItemPreviewWithSecondaryText() {
             secondaryIcon = null,
             secondaryText = UiString.UiStringText("Basic"),
             onClick = ListItemInteraction.create { onClick() },
-            listItemAction = ListItemAction.PLAN
+            listItemAction = ListItemAction.POSTS
         )
     )
 }
@@ -377,7 +376,7 @@ fun MySiteListItemPreviewWithSecondaryImage() {
             secondaryIcon = R.drawable.ic_pages_white_24dp,
             secondaryText = null,
             onClick = ListItemInteraction.create { onClick() },
-            listItemAction = ListItemAction.PLAN
+            listItemAction = ListItemAction.POSTS
         )
     )
 }

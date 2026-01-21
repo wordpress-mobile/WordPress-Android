@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite.items.listitem
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -18,8 +17,6 @@ import org.wordpress.android.ui.mysite.items.ADMIN_ITEM
 import org.wordpress.android.ui.mysite.items.BACKUP_ITEM
 import org.wordpress.android.ui.mysite.items.PAGES_ITEM
 import org.wordpress.android.ui.mysite.items.PEOPLE_ITEM
-import org.wordpress.android.ui.mysite.items.PLAN_ITEM
-import org.wordpress.android.ui.mysite.items.PLAN_NAME
 import org.wordpress.android.ui.mysite.items.PLUGINS_ITEM
 import org.wordpress.android.ui.mysite.items.SCAN_ITEM
 import org.wordpress.android.ui.mysite.items.SHARING_ITEM
@@ -184,92 +181,6 @@ class SiteListItemBuilderTest {
         val item = siteListItemBuilder.buildScanItemIfAvailable(SITE_ITEM_ACTION, isScanAvailable)
 
         assertThat(item).isNull()
-    }
-
-    @Ignore("Ignored after a decision was made to hide the Plans screen.")
-    @Test
-    fun `plan item built when plan not empty, site can manage options, is not WP for teams and is WPcom`() {
-        setupPlanItem(
-            planShortName = PLAN_NAME,
-            canManageOptions = true,
-            isWpForTeams = false,
-            isWPCom = true,
-            isAutomatedTransfer = false
-        )
-
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(item).isEqualTo(PLAN_ITEM)
-    }
-
-    @Ignore("Ignored after a decision was made to hide the Plans screen.")
-    @Test
-    fun `plan item built when plan not empty, site can manage options, is not WP for teams and is AT`() {
-        setupPlanItem(
-            planShortName = PLAN_NAME,
-            canManageOptions = true,
-            isWpForTeams = false,
-            isWPCom = false,
-            isAutomatedTransfer = true
-        )
-
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(item).isEqualTo(PLAN_ITEM)
-    }
-
-    @Ignore("Ignored after a decision was made to hide the Plans screen.")
-    @Test
-    fun `plan item not built when plan name is empty`() {
-        setupPlanItem(planShortName = "")
-
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(item).isNull()
-    }
-
-    @Ignore("Ignored after a decision was made to hide the Plans screen.")
-    @Test
-    fun `plan item not built when site cannot manage options`() {
-        setupPlanItem(canManageOptions = false)
-
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(item).isNull()
-    }
-
-    @Ignore("Ignored after a decision was made to hide the Plans screen.")
-    @Test
-    fun `plan item not built when site is WP for teams`() {
-        setupPlanItem(isWpForTeams = true)
-
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(item).isNull()
-    }
-
-    @Ignore("Ignored after a decision was made to hide the Plans screen.")
-    @Test
-    fun `plan item not built when site is neither WP com nor AT`() {
-        setupPlanItem(isWPCom = false, isAutomatedTransfer = false)
-
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(item).isNull()
-    }
-
-    private fun setupPlanItem(
-        planShortName: String = PLAN_NAME,
-        canManageOptions: Boolean = true,
-        isWpForTeams: Boolean = false,
-        isWPCom: Boolean = true,
-        isAutomatedTransfer: Boolean = true
-    ) {
-        whenever(siteModel.planShortName).thenReturn(planShortName)
-        whenever(siteModel.hasCapabilityManageOptions).thenReturn(canManageOptions)
-        whenever(siteModel.isWpForTeamsSite).thenReturn(isWpForTeams)
-        whenever(siteModel.isWPCom).thenReturn(isWPCom)
-        whenever(siteModel.isAutomatedTransfer).thenReturn(isAutomatedTransfer)
     }
 
     @Test

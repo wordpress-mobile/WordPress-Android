@@ -29,7 +29,7 @@
         app:layout_constraintEnd_toStartOf="@+id/my_site_item_secondary_icon"
         app:layout_constraintStart_toEndOf="@+id/my_site_item_primary_icon"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/plan" />
+        tools:text="@string/posts" />
     <ImageView
         android:id="@+id/my_site_item_secondary_icon"
         style="@style/MySiteListRowSecondaryIcon"
@@ -58,6 +58,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/plan" />
+        tools:text="@string/posts" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
