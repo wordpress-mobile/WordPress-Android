@@ -151,10 +151,10 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        viewModel.loadData(forced = true)
+        viewModel.loadData()
         advanceUntilIdle()
 
-        // Called twice: once during init, once during loadData(forced = true)
+        // Called twice: once during init, once during loadData()
         verify(statsRepository, times(2)).fetchTodayAggregates(eq(TEST_SITE_ID))
     }
 
@@ -257,7 +257,7 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiState.value).isInstanceOf(TodaysStatsCardUiState.Loaded::class.java)
 
         // Call loadData again and verify the final state is still Loaded
-        viewModel.loadData(forced = true)
+        viewModel.loadData()
         advanceUntilIdle()
 
         assertThat(viewModel.uiState.value).isInstanceOf(TodaysStatsCardUiState.Loaded::class.java)

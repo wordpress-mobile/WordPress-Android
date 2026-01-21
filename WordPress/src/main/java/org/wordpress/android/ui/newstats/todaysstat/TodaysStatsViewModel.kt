@@ -17,7 +17,8 @@ import org.wordpress.android.ui.newstats.repository.HourlyViewsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TodayAggregatesResult
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 
@@ -41,19 +42,20 @@ class TodaysStatsViewModel @Inject constructor(
     }
 
     fun refresh() {
+        val site = selectedSiteRepository.getSelectedSite() ?: return
         viewModelScope.launch {
             _isRefreshing.value = true
-            loadDataInternal(forced = true)
+            loadDataInternal(site)
             _isRefreshing.value = false
         }
     }
 
-    fun loadData(forced: Boolean = false) {
+    fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
             _uiState.value = TodaysStatsCardUiState.Error(
                 message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected),
-                onRetry = { loadData(forced = true) }
+                onRetry = ::loadData
             )
             return
         }
@@ -62,7 +64,7 @@ class TodaysStatsViewModel @Inject constructor(
         if (accessToken.isNullOrEmpty()) {
             _uiState.value = TodaysStatsCardUiState.Error(
                 message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
-                onRetry = { loadData(forced = true) }
+                onRetry = ::loadData
             )
             return
         }
@@ -71,21 +73,12 @@ class TodaysStatsViewModel @Inject constructor(
         _uiState.value = TodaysStatsCardUiState.Loading
 
         viewModelScope.launch {
-            loadDataInternal(forced)
+            loadDataInternal(site)
         }
     }
 
-    @Suppress("TooGenericExceptionCaught", "UnusedParameter")
-    private suspend fun loadDataInternal(forced: Boolean) {
-        val site = selectedSiteRepository.getSelectedSite()
-        if (site == null) {
-            _uiState.value = TodaysStatsCardUiState.Error(
-                message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected),
-                onRetry = { loadData(forced = true) }
-            )
-            return
-        }
-
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun loadDataInternal(site: SiteModel) {
         try {
             // Fetch all data in parallel for better performance
             val (todayStats, chartData) = coroutineScope {
@@ -106,13 +99,13 @@ class TodaysStatsViewModel @Inject constructor(
             } else {
                 _uiState.value = TodaysStatsCardUiState.Error(
                     message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
-                    onRetry = { loadData(forced = true) }
+                    onRetry = ::loadData
                 )
             }
         } catch (e: Exception) {
             _uiState.value = TodaysStatsCardUiState.Error(
                 message = e.message ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error),
-                onRetry = { loadData(forced = true) }
+                onRetry = ::loadData
             )
         }
     }
@@ -171,17 +164,17 @@ class TodaysStatsViewModel @Inject constructor(
     private fun formatHourlyLabel(period: String): String {
         return try {
             // API returns period in format "2024-01-16 14:00:00" for hourly data
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("ha", Locale.getDefault())
-            val date = inputFormat.parse(period)
-            date?.let { outputFormat.format(it).lowercase() } ?: period
+            val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val outputFormat = DateTimeFormatter.ofPattern("ha", Locale.getDefault())
+            val dateTime = LocalDateTime.parse(period, inputFormat)
+            dateTime.format(outputFormat).lowercase()
         } catch (e: Exception) {
             // Fallback: try parsing just the hour if full format fails
             try {
-                val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-                val outputFormat = SimpleDateFormat("ha", Locale.getDefault())
-                val date = inputFormat.parse(period)
-                date?.let { outputFormat.format(it).lowercase() } ?: period
+                val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.getDefault())
+                val outputFormat = DateTimeFormatter.ofPattern("ha", Locale.getDefault())
+                val dateTime = LocalDateTime.parse(period, inputFormat)
+                dateTime.format(outputFormat).lowercase()
             } catch (e2: Exception) {
                 period
             }
@@ -193,7 +186,7 @@ class TodaysStatsViewModel @Inject constructor(
     }
 
     fun onRetry() {
-        loadData(forced = true)
+        loadData()
     }
 
     private data class TodayStatsData(

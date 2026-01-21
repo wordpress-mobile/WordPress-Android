@@ -10,20 +10,21 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.WeeklyAggregates
 import org.wordpress.android.ui.newstats.repository.WeeklyStatsWithDailyDataResult
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
 
 private const val CURRENT_WEEK = 0
 private const val PREVIOUS_WEEK = 1
-private const val DAYS_IN_WEEK = 7
 
 @HiltViewModel
 class ViewsStatsViewModel @Inject constructor(
@@ -56,19 +57,20 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     fun refresh() {
+        val site = selectedSiteRepository.getSelectedSite() ?: return
         viewModelScope.launch {
             _isRefreshing.value = true
-            loadDataInternal(forced = true)
+            loadDataInternal(site)
             _isRefreshing.value = false
         }
     }
 
-    fun loadData(forced: Boolean = false) {
+    fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
             _uiState.value = ViewsStatsCardUiState.Error(
                 message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected),
-                onRetry = { loadData(forced = true) }
+                onRetry = ::loadData
             )
             return
         }
@@ -77,7 +79,7 @@ class ViewsStatsViewModel @Inject constructor(
         if (accessToken.isNullOrEmpty()) {
             _uiState.value = ViewsStatsCardUiState.Error(
                 message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
-                onRetry = { loadData(forced = true) }
+                onRetry = ::loadData
             )
             return
         }
@@ -86,21 +88,12 @@ class ViewsStatsViewModel @Inject constructor(
         _uiState.value = ViewsStatsCardUiState.Loading
 
         viewModelScope.launch {
-            loadDataInternal(forced)
+            loadDataInternal(site)
         }
     }
 
-    @Suppress("TooGenericExceptionCaught", "UnusedParameter")
-    private suspend fun loadDataInternal(forced: Boolean) {
-        val site = selectedSiteRepository.getSelectedSite()
-        if (site == null) {
-            _uiState.value = ViewsStatsCardUiState.Error(
-                message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected),
-                onRetry = { loadData(forced = true) }
-            )
-            return
-        }
-
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun loadDataInternal(site: SiteModel) {
         try {
             // Fetch both weeks in parallel - each call returns both aggregates AND daily data
             val (currentWeekResult, previousWeekResult) = coroutineScope {
@@ -160,17 +153,16 @@ class ViewsStatsViewModel @Inject constructor(
             } else {
                 _uiState.value = ViewsStatsCardUiState.Error(
                     message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
-                    onRetry = { loadData(forced = true) }
+                    onRetry = ::loadData
                 )
             }
         } catch (e: Exception) {
             _uiState.value = ViewsStatsCardUiState.Error(
                 message = e.message ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error),
-                onRetry = { loadData(forced = true) }
+                onRetry = ::loadData
             )
         }
     }
-
 
     private fun buildBottomStats(
         currentWeek: WeeklyAggregates,
@@ -224,10 +216,9 @@ class ViewsStatsViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun formatDayLabel(period: String): String {
         return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("MMM d", Locale.getDefault())
-            val date = inputFormat.parse(period)
-            date?.let { outputFormat.format(it) } ?: period
+            val date = LocalDate.parse(period, DateTimeFormatter.ISO_LOCAL_DATE)
+            val outputFormat = DateTimeFormatter.ofPattern("MMM d", Locale.getDefault())
+            date.format(outputFormat)
         } catch (e: Exception) {
             period
         }
@@ -236,26 +227,15 @@ class ViewsStatsViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun formatDateRange(startDate: String, endDate: String): String {
         return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val dayFormat = SimpleDateFormat("d", Locale.getDefault())
-            val dayMonthFormat = SimpleDateFormat("d MMM", Locale.getDefault())
+            val start = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE)
+            val end = LocalDate.parse(endDate, DateTimeFormatter.ISO_LOCAL_DATE)
+            val dayFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
+            val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
 
-            val start = inputFormat.parse(startDate)
-            val end = inputFormat.parse(endDate)
-
-            if (start != null && end != null) {
-                val startCalendar = java.util.Calendar.getInstance().apply { time = start }
-                val endCalendar = java.util.Calendar.getInstance().apply { time = end }
-
-                if (startCalendar.get(java.util.Calendar.MONTH) ==
-                    endCalendar.get(java.util.Calendar.MONTH)
-                ) {
-                    "${dayFormat.format(start)}-${dayMonthFormat.format(end)}"
-                } else {
-                    "${dayMonthFormat.format(start)} - ${dayMonthFormat.format(end)}"
-                }
+            if (start.month == end.month) {
+                "${start.format(dayFormat)}-${end.format(dayMonthFormat)}"
             } else {
-                "$startDate - $endDate"
+                "${start.format(dayMonthFormat)} - ${end.format(dayMonthFormat)}"
             }
         } catch (e: Exception) {
             "$startDate - $endDate"
@@ -263,6 +243,6 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     fun onRetry() {
-        loadData(forced = true)
+        loadData()
     }
 }

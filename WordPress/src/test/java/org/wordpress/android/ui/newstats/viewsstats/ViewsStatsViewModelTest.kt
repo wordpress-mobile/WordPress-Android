@@ -170,7 +170,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        viewModel.loadData(forced = true)
+        viewModel.loadData()
         advanceUntilIdle()
 
         // Called twice for each week (current and previous): 2 during init, 2 during loadData

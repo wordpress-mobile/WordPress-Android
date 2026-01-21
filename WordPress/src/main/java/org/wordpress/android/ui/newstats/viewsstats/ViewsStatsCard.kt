@@ -90,8 +90,8 @@ private val StatItemWidth = 100.dp
 private val BadgeCornerRadius = 4.dp
 private const val THOUSAND = 1_000
 private const val MILLION = 1_000_000
-private const val CHANGE_BADGE_POSITIVE_COLOR = 0xFF4CAF50
-private const val CHANGE_BADGE_NEGATIVE_COLOR = 0xFFE91E63
+private val ChangeBadgePositiveColor = Color(0xFF4CAF50)
+private val ChangeBadgeNegativeColor = Color(0xFFE91E63)
 
 @Composable
 fun ViewsStatsCard(
@@ -384,7 +384,7 @@ private fun DifferenceRow(difference: Long, percentageChange: Double) {
     val arrowText = if (isNegative) "↘" else if (difference > 0) "↗" else "↔"
     val color = when {
         difference < 0 -> MaterialTheme.colorScheme.error
-        difference > 0 -> Color(CHANGE_BADGE_POSITIVE_COLOR)
+        difference > 0 -> ChangeBadgePositiveColor
         else -> MaterialTheme.colorScheme.onSurfaceVariant
     }
 
@@ -440,7 +440,7 @@ private fun DateRangeWithDot(dateRange: String, dotColor: Color, isFilled: Boole
 private fun AverageRow(average: Long) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
-            text = "avg ${formatStatValue(average)}",
+            text = stringResource(R.string.stats_weekly_average, formatStatValue(average)),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -490,8 +490,6 @@ private fun ViewsStatsChart(
             }
         }
     }
-
-    val hasPreviousWeek = chartData.previousWeek.isNotEmpty()
 
     if (chartData.currentWeek.isEmpty()) {
         Box(
@@ -659,13 +657,13 @@ private fun ChangeBadge(change: StatChange) {
     val (text, backgroundColor, textColor) = when (change) {
         is StatChange.Positive -> Triple(
             "↗ ${String.format(Locale.getDefault(), "%.1f%%", change.percentage)}",
-            Color(CHANGE_BADGE_POSITIVE_COLOR).copy(alpha = 0.15f),
-            Color(CHANGE_BADGE_POSITIVE_COLOR)
+            ChangeBadgePositiveColor.copy(alpha = 0.15f),
+            ChangeBadgePositiveColor
         )
         is StatChange.Negative -> Triple(
             "↘ ${String.format(Locale.getDefault(), "%.1f%%", change.percentage)}",
-            Color(CHANGE_BADGE_NEGATIVE_COLOR).copy(alpha = 0.15f),
-            Color(CHANGE_BADGE_NEGATIVE_COLOR)
+            ChangeBadgeNegativeColor.copy(alpha = 0.15f),
+            ChangeBadgeNegativeColor
         )
         is StatChange.NoChange -> Triple(
             "↔ 0%",
