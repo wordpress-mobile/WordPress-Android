@@ -25,6 +25,7 @@ import kotlin.math.abs
 
 private const val CURRENT_WEEK = 0
 private const val PREVIOUS_WEEK = 1
+private const val PERCENTAGE_BASE = 100.0
 
 @HiltViewModel
 class ViewsStatsViewModel @Inject constructor(
@@ -95,60 +96,14 @@ class ViewsStatsViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun loadDataInternal(site: SiteModel) {
         try {
-            // Fetch both weeks in parallel - each call returns both aggregates AND daily data
-            val (currentWeekResult, previousWeekResult) = coroutineScope {
-                val currentWeekDeferred = async {
-                    statsRepository.fetchWeeklyStatsWithDailyData(site.siteId, CURRENT_WEEK)
-                }
-                val previousWeekDeferred = async {
-                    statsRepository.fetchWeeklyStatsWithDailyData(site.siteId, PREVIOUS_WEEK)
-                }
-                currentWeekDeferred.await() to previousWeekDeferred.await()
-            }
-
-            // Extract data from combined results
+            val (currentWeekResult, previousWeekResult) = fetchWeeklyData(site.siteId)
             val currentWeekStats = (currentWeekResult as? WeeklyStatsWithDailyDataResult.Success)?.aggregates
             val previousWeekStats = (previousWeekResult as? WeeklyStatsWithDailyDataResult.Success)?.aggregates
-            val currentWeekDailyViews = (currentWeekResult as? WeeklyStatsWithDailyDataResult.Success)
-                ?.dailyDataPoints?.map { DailyDataPoint(formatDayLabel(it.period), it.views) }
-                ?: emptyList()
-            val previousWeekDailyViews = (previousWeekResult as? WeeklyStatsWithDailyDataResult.Success)
-                ?.dailyDataPoints?.map { DailyDataPoint(formatDayLabel(it.period), it.views) }
-                ?: emptyList()
 
             if (currentWeekStats != null && previousWeekStats != null) {
-                val viewsDifference = currentWeekStats.views - previousWeekStats.views
-                val viewsPercentageChange = calculatePercentageChange(
-                    currentWeekStats.views,
-                    previousWeekStats.views
-                )
-                val weeklyAverage = if (currentWeekDailyViews.isNotEmpty()) {
-                    currentWeekStats.views / currentWeekDailyViews.size
-                } else {
-                    0L
-                }
-
-                _uiState.value = ViewsStatsCardUiState.Loaded(
-                    currentWeekViews = currentWeekStats.views,
-                    previousWeekViews = previousWeekStats.views,
-                    viewsDifference = viewsDifference,
-                    viewsPercentageChange = viewsPercentageChange,
-                    currentWeekDateRange = formatDateRange(
-                        currentWeekStats.startDate,
-                        currentWeekStats.endDate
-                    ),
-                    previousWeekDateRange = formatDateRange(
-                        previousWeekStats.startDate,
-                        previousWeekStats.endDate
-                    ),
-                    chartData = ViewsStatsChartData(
-                        currentWeek = currentWeekDailyViews,
-                        previousWeek = previousWeekDailyViews
-                    ),
-                    weeklyAverage = weeklyAverage,
-                    bottomStats = buildBottomStats(currentWeekStats, previousWeekStats),
-                    chartType = currentChartType,
-                    onChartTypeChanged = ::onChartTypeChanged
+                _uiState.value = buildLoadedState(
+                    currentWeekResult as WeeklyStatsWithDailyDataResult.Success,
+                    previousWeekResult as WeeklyStatsWithDailyDataResult.Success
                 )
             } else {
                 _uiState.value = ViewsStatsCardUiState.Error(
@@ -162,6 +117,50 @@ class ViewsStatsViewModel @Inject constructor(
                 onRetry = ::loadData
             )
         }
+    }
+
+    private suspend fun fetchWeeklyData(
+        siteId: Long
+    ): Pair<WeeklyStatsWithDailyDataResult, WeeklyStatsWithDailyDataResult> = coroutineScope {
+        val currentWeekDeferred = async {
+            statsRepository.fetchWeeklyStatsWithDailyData(siteId, CURRENT_WEEK)
+        }
+        val previousWeekDeferred = async {
+            statsRepository.fetchWeeklyStatsWithDailyData(siteId, PREVIOUS_WEEK)
+        }
+        currentWeekDeferred.await() to previousWeekDeferred.await()
+    }
+
+    private fun buildLoadedState(
+        currentWeekResult: WeeklyStatsWithDailyDataResult.Success,
+        previousWeekResult: WeeklyStatsWithDailyDataResult.Success
+    ): ViewsStatsCardUiState.Loaded {
+        val currentWeekStats = currentWeekResult.aggregates
+        val previousWeekStats = previousWeekResult.aggregates
+        val currentWeekDailyViews = currentWeekResult.dailyDataPoints
+            .map { DailyDataPoint(formatDayLabel(it.period), it.views) }
+        val previousWeekDailyViews = previousWeekResult.dailyDataPoints
+            .map { DailyDataPoint(formatDayLabel(it.period), it.views) }
+
+        val weeklyAverage = if (currentWeekDailyViews.isNotEmpty()) {
+            currentWeekStats.views / currentWeekDailyViews.size
+        } else {
+            0L
+        }
+
+        return ViewsStatsCardUiState.Loaded(
+            currentWeekViews = currentWeekStats.views,
+            previousWeekViews = previousWeekStats.views,
+            viewsDifference = currentWeekStats.views - previousWeekStats.views,
+            viewsPercentageChange = calculatePercentageChange(currentWeekStats.views, previousWeekStats.views),
+            currentWeekDateRange = formatDateRange(currentWeekStats.startDate, currentWeekStats.endDate),
+            previousWeekDateRange = formatDateRange(previousWeekStats.startDate, previousWeekStats.endDate),
+            chartData = ViewsStatsChartData(currentWeek = currentWeekDailyViews, previousWeek = previousWeekDailyViews),
+            weeklyAverage = weeklyAverage,
+            bottomStats = buildBottomStats(currentWeekStats, previousWeekStats),
+            chartType = currentChartType,
+            onChartTypeChanged = ::onChartTypeChanged
+        )
     }
 
     private fun buildBottomStats(
@@ -209,8 +208,8 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     private fun calculatePercentageChange(current: Long, previous: Long): Double {
-        if (previous == 0L) return if (current > 0) 100.0 else 0.0
-        return ((current - previous).toDouble() / previous) * 100
+        if (previous == 0L) return if (current > 0) PERCENTAGE_BASE else 0.0
+        return ((current - previous).toDouble() / previous) * PERCENTAGE_BASE
     }
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")

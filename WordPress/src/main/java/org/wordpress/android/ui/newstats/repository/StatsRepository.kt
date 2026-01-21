@@ -24,6 +24,7 @@ import javax.inject.Named
 private const val HOURLY_QUANTITY = 24u
 private const val DAILY_QUANTITY = 1u
 private const val WEEKLY_QUANTITY = 7u
+private const val DAYS_BEFORE_END_DATE = -6
 
 /**
  * Repository for fetching stats data using the wordpress-rs API.
@@ -389,7 +390,7 @@ class StatsRepository @Inject constructor(
         }
 
         val startDate = (endDate.clone() as Calendar).apply {
-            add(Calendar.DAY_OF_YEAR, -6)
+            add(Calendar.DAY_OF_YEAR, DAYS_BEFORE_END_DATE)
         }
 
         return startDate to endDate
