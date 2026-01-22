@@ -539,7 +539,6 @@ class ReaderDiscoverViewModel @Inject constructor(
             abstract val buttonResId: Int
             open val subTitleRes: Int? = null
             abstract val action: () -> Unit
-            open val illustrationResId: Int? = null
 
             data class RequestFailedUiState(override val action: () -> Unit) : EmptyUiState() {
                 override val titleResId = R.string.connection_error
