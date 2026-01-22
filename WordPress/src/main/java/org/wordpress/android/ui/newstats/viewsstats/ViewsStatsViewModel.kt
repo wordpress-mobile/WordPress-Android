@@ -39,7 +39,7 @@ class ViewsStatsViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var currentChartType: ChartType = ChartType.LINE
-    private var currentPeriod: StatsPeriod = StatsPeriod.LAST_7_DAYS
+    private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
 
     init {
         loadData()
@@ -241,8 +241,9 @@ class ViewsStatsViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun formatDateRangeForPeriod(startDate: String, endDate: String, period: StatsPeriod): String {
         return when (period) {
-            StatsPeriod.TODAY -> formatSingleDayRange(endDate)
-            StatsPeriod.LAST_6_MONTHS, StatsPeriod.LAST_12_MONTHS -> formatMonthRange(startDate, endDate)
+            is StatsPeriod.Today -> formatSingleDayRange(endDate)
+            is StatsPeriod.Last6Months, is StatsPeriod.Last12Months -> formatMonthRange(startDate, endDate)
+            is StatsPeriod.Custom -> formatDayRange(startDate, endDate)
             else -> formatDayRange(startDate, endDate)
         }
     }

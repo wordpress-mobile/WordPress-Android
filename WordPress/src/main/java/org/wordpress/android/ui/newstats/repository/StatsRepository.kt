@@ -13,6 +13,9 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.util.AppLog
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
@@ -384,14 +387,14 @@ class StatsRepository @Inject constructor(
         val previousDisplayDate: Calendar = previousEnd
     )
 
-    @Suppress("MagicNumber")
+    @Suppress("MagicNumber", "CyclomaticComplexMethod")
     private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
         // Special handling for TODAY (hourly data)
         // The API's endDate is exclusive for hourly queries, so:
         // - To get today's hours: use tomorrow as end date
         // - To get yesterday's hours: use today as end date
         // But for display in the legend, we show today and yesterday
-        if (period == StatsPeriod.TODAY) {
+        if (period is StatsPeriod.Today) {
             val today = Calendar.getInstance()
             val tomorrow = (today.clone() as Calendar).apply {
                 add(Calendar.DAY_OF_YEAR, 1)
@@ -411,34 +414,39 @@ class StatsRepository @Inject constructor(
             )
         }
 
+        // Special handling for Custom period
+        if (period is StatsPeriod.Custom) {
+            return calculateCustomPeriodDates(period.startDate, period.endDate)
+        }
+
         val currentEnd = Calendar.getInstance()
         val quantity: Int
         val unit: StatsUnit
         val calendarField: Int
 
         when (period) {
-            StatsPeriod.LAST_7_DAYS -> {
+            is StatsPeriod.Last7Days -> {
                 quantity = 7
                 unit = StatsUnit.DAY
                 calendarField = Calendar.DAY_OF_YEAR
             }
-            StatsPeriod.LAST_30_DAYS -> {
+            is StatsPeriod.Last30Days -> {
                 quantity = DAYS_IN_30_DAYS
                 unit = StatsUnit.DAY
                 calendarField = Calendar.DAY_OF_YEAR
             }
-            StatsPeriod.LAST_6_MONTHS -> {
+            is StatsPeriod.Last6Months -> {
                 quantity = 6
                 unit = StatsUnit.MONTH
                 calendarField = Calendar.MONTH
             }
-            StatsPeriod.LAST_12_MONTHS -> {
+            is StatsPeriod.Last12Months -> {
                 quantity = 12
                 unit = StatsUnit.MONTH
                 calendarField = Calendar.MONTH
             }
-            StatsPeriod.CUSTOM, StatsPeriod.TODAY -> {
-                // Custom defaults to 7 days, TODAY handled above
+            else -> {
+                // Fallback to 7 days
                 quantity = 7
                 unit = StatsUnit.DAY
                 calendarField = Calendar.DAY_OF_YEAR
@@ -458,6 +466,54 @@ class StatsRepository @Inject constructor(
         }
 
         return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, quantity, unit)
+    }
+
+    @Suppress("MagicNumber")
+    private fun calculateCustomPeriodDates(startDate: LocalDate, endDate: LocalDate): PeriodDateRange {
+        val daysBetween = ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1
+
+        // Convert LocalDate to Calendar
+        val currentStart = localDateToCalendar(startDate)
+        val currentEnd = localDateToCalendar(endDate)
+
+        // Calculate previous period with same duration
+        val previousEnd = (currentStart.clone() as Calendar).apply {
+            add(Calendar.DAY_OF_YEAR, -1)
+        }
+        val previousStart = (previousEnd.clone() as Calendar).apply {
+            add(Calendar.DAY_OF_YEAR, -(daysBetween - 1))
+        }
+
+        // Determine unit based on range
+        val unit = when {
+            daysBetween <= DAYS_IN_30_DAYS -> StatsUnit.DAY
+            else -> StatsUnit.MONTH
+        }
+
+        val quantity = if (unit == StatsUnit.MONTH) {
+            // Calculate months between dates
+            val monthsBetween = ChronoUnit.MONTHS.between(startDate, endDate).toInt() + 1
+            monthsBetween.coerceAtLeast(1)
+        } else {
+            daysBetween
+        }
+
+        return PeriodDateRange(
+            currentStart = currentStart,
+            currentEnd = currentEnd,
+            previousStart = previousStart,
+            previousEnd = previousEnd,
+            quantity = quantity,
+            unit = unit
+        )
+    }
+
+    private fun localDateToCalendar(localDate: LocalDate): Calendar {
+        return Calendar.getInstance().apply {
+            time = java.util.Date.from(
+                localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()
+            )
+        }
     }
 
     /**

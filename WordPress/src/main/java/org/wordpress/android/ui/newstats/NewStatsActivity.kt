@@ -88,7 +88,18 @@ private fun NewStatsScreen(
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
     var showPeriodMenu by remember { mutableStateOf(false) }
-    var selectedPeriod by remember { mutableStateOf(StatsPeriod.LAST_7_DAYS) }
+    var showDateRangePicker by remember { mutableStateOf(false) }
+    var selectedPeriod: StatsPeriod by remember { mutableStateOf(StatsPeriod.Last7Days) }
+
+    if (showDateRangePicker) {
+        StatsDateRangePickerDialog(
+            onDismiss = { showDateRangePicker = false },
+            onDateRangeSelected = { startDate, endDate ->
+                selectedPeriod = StatsPeriod.Custom(startDate, endDate)
+                showDateRangePicker = false
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -118,9 +129,13 @@ private fun NewStatsScreen(
                             expanded = showPeriodMenu,
                             selectedPeriod = selectedPeriod,
                             onDismiss = { showPeriodMenu = false },
-                            onPeriodSelected = { period ->
+                            onPresetSelected = { period ->
                                 selectedPeriod = period
                                 showPeriodMenu = false
+                            },
+                            onCustomSelected = {
+                                showPeriodMenu = false
+                                showDateRangePicker = true
                             }
                         )
                     }
@@ -229,17 +244,19 @@ private fun StatsPeriodMenu(
     expanded: Boolean,
     selectedPeriod: StatsPeriod,
     onDismiss: () -> Unit,
-    onPeriodSelected: (StatsPeriod) -> Unit
+    onPresetSelected: (StatsPeriod) -> Unit,
+    onCustomSelected: () -> Unit
 ) {
     DropdownMenu(
         expanded = expanded,
         onDismissRequest = onDismiss
     ) {
-        StatsPeriod.entries.forEach { period ->
+        // Show preset periods
+        StatsPeriod.presets().forEach { period ->
             val isSelected = selectedPeriod == period
             DropdownMenuItem(
                 text = { Text(text = stringResource(id = period.labelResId)) },
-                onClick = { onPeriodSelected(period) },
+                onClick = { onPresetSelected(period) },
                 trailingIcon = if (isSelected) {
                     { Icon(Icons.Default.Check, contentDescription = null) }
                 } else {
@@ -247,6 +264,17 @@ private fun StatsPeriodMenu(
                 }
             )
         }
+        // Show Custom option
+        val isCustomSelected = selectedPeriod is StatsPeriod.Custom
+        DropdownMenuItem(
+            text = { Text(text = stringResource(id = R.string.stats_period_custom)) },
+            onClick = { onCustomSelected() },
+            trailingIcon = if (isCustomSelected) {
+                { Icon(Icons.Default.Check, contentDescription = null) }
+            } else {
+                null
+            }
+        )
     }
 }
 
