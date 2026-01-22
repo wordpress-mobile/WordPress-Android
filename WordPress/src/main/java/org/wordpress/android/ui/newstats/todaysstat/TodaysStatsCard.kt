@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.todaystats
+package org.wordpress.android.ui.newstats.todaysstat
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode

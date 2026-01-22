@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.todaystats
+package org.wordpress.android.ui.newstats.todaysstat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
