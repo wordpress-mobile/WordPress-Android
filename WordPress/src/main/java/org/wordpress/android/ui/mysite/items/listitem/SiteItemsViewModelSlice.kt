@@ -44,7 +44,7 @@ class SiteItemsViewModelSlice @Inject constructor(
     suspend fun buildSiteItems(
         site: SiteModel
     ) {
-        // TODO: Remove scanAvailable = true before merging - this is for testing only
+        // TODO Remove scanAvailable = true before merging - this is for testing only
         @Suppress("ForbiddenComment")
         _uiModel.postValue(
             siteItemsBuilder.build(
@@ -59,7 +59,7 @@ class SiteItemsViewModelSlice @Inject constructor(
         rebuildSiteItemsForJetpackCapabilities(site)
     }
 
-    // TODO: Remove scanAvailable = true before merging - this is for testing only
+    // TODO Remove scanAvailable = true before merging - this is for testing only
     @Suppress("ForbiddenComment")
     private suspend fun rebuildSiteItemsForJetpackCapabilities(site: SiteModel) {
         jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect { purchasedProducts ->
