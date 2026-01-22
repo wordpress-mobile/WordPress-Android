@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.newstats.repository
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
@@ -292,19 +294,26 @@ class StatsRepository @Inject constructor(
         val currentEndString = getDateFormat().format(currentEnd.time)
         val previousEndString = getDateFormat().format(previousEnd.time)
 
-        val currentResult = statsDataSource.fetchStatsVisits(
-            siteId = siteId,
-            unit = unit,
-            quantity = quantity,
-            endDate = currentEndString
-        )
-
-        val previousResult = statsDataSource.fetchStatsVisits(
-            siteId = siteId,
-            unit = unit,
-            quantity = quantity,
-            endDate = previousEndString
-        )
+        // Fetch both periods in parallel for better performance
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async {
+                statsDataSource.fetchStatsVisits(
+                    siteId = siteId,
+                    unit = unit,
+                    quantity = quantity,
+                    endDate = currentEndString
+                )
+            }
+            val previousDeferred = async {
+                statsDataSource.fetchStatsVisits(
+                    siteId = siteId,
+                    unit = unit,
+                    quantity = quantity,
+                    endDate = previousEndString
+                )
+            }
+            currentDeferred.await() to previousDeferred.await()
+        }
 
         if (currentResult is StatsVisitsDataResult.Success &&
             previousResult is StatsVisitsDataResult.Success
