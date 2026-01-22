@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestC
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.HOURS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
@@ -239,6 +240,7 @@ open class TimeStatsSqlUtils<RESPONSE_TYPE>(
 
     private fun StatsGranularity.toStatsType(): StatsType {
         return when (this) {
+            HOURS -> StatsType.HOUR
             DAYS -> StatsType.DAY
             WEEKS -> StatsType.WEEK
             MONTHS -> StatsType.MONTH

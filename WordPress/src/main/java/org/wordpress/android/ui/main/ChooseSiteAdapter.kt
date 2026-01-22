@@ -14,7 +14,7 @@ class ChooseSiteAdapter : RecyclerView.Adapter<ChooseSiteViewHolder>() {
 
     var onReload = {}
     var onSiteClicked: (SiteRecord) -> Unit = {}
-    var onSiteLongClicked: (SiteRecord) -> Unit = {}
+    var onSiteRemoveClicked: (SiteRecord) -> Unit = {}
     var selectedSiteId: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChooseSiteViewHolder =
@@ -26,7 +26,7 @@ class ChooseSiteAdapter : RecyclerView.Adapter<ChooseSiteViewHolder>() {
         holder.bind(mode, sites.getOrNull(position - 1), sites[position], selectedSiteId)
         holder.onPinUpdated = { onReload() }
         holder.onClicked = { onSiteClicked(it) }
-        holder.onLongClicked = { onSiteLongClicked(it) }
+        holder.onRemoveClicked = { onSiteRemoveClicked(it) }
     }
 
     @SuppressLint("NotifyDataSetChanged")

@@ -67,7 +67,7 @@
     <string name="search">Search</string>
     <string name="suggestion">Suggestion:</string>
     <string name="select_all">Select all</string>
-    <string name="sure_to_remove_account">Remove this site from the app?</string>
+    <string name="confirm_remove_site">Remove \"%s\" from the app?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="error">Error</string>
@@ -994,6 +994,8 @@
     <string name="network_requests_disable">Disable</string>
     <string name="experimental_post_types">Post Types</string>
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
+    <string name="experimental_new_stats">New Stats</string>
+    <string name="experimental_new_stats_description">Show stats in a more modern and advanced UI</string>
     <string name="post_types_screen_title">Post Types</string>
 
     <!-- Debug settings -->
@@ -1385,6 +1387,11 @@
     <string name="stats_visitors">Visitors</string>
     <string name="stats_likes">Likes</string>
     <string name="stats_comments" translatable="false">@string/comments</string>
+    <string name="stats_chart_type_lines">Lines</string>
+    <string name="stats_chart_type_bars">Bars</string>
+    <!-- Average XX -->
+    <string name="stats_weekly_average">avg %1$s</string>
+    <string name="more_options">More options</string>
 
     <!-- stats: labels for the views -->
     <string name="stats_view_countries">Countries</string>
@@ -1547,6 +1554,9 @@
 
     <string name="stats_loading_error">Data not loaded</string>
     <string name="stats_loading_block_error">There was a problem loading your data, refresh your page to try again.</string>
+    <string name="stats_todays_stats_no_site_selected">No site selected</string>
+    <string name="stats_todays_stats_failed_to_load">Failed to load stats</string>
+    <string name="stats_todays_stats_unknown_error">Unknown error</string>
 
     <!-- stats referrer popup menu actions   -->
     <string name="stats_referrer_popup_menu_open_website">Open Website</string>
@@ -1578,15 +1588,15 @@
     <string name="new_notifications">%d new notifications</string>
     <string name="more_notifications">and %d more.</string>
     <string name="notifications_empty_list">No notifications</string>
-    <string name="notifications_empty_all">No notifications…yet.</string>
+    <string name="notifications_empty_all">No notifications…yet!</string>
     <string name="notifications_empty_unread">You\'re all up to date!</string>
     <string name="notifications_empty_comments">No comments yet</string>
     <string name="notifications_empty_subscribers">No subscribers yet</string>
     <string name="notifications_empty_likes">No likes yet</string>
-    <string name="notifications_empty_action_all">Get active! Comment on posts from blogs you follow.</string>
-    <string name="notifications_empty_action_unread">Reignite the conversation: write a new post</string>
-    <string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow</string>
-    <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read</string>
+    <string name="notifications_empty_action_all">Get active! Comment on posts in the Reader.</string>
+    <string name="notifications_empty_action_unread">Reignite the conversation! Write a new post.</string>
+    <string name="notifications_empty_action_comments">Join a conversation! Comment on posts in the Reader.</string>
+    <string name="notifications_empty_action_followers_likes">Get noticed! Comment on posts you\'ve read.</string>
     <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your device from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
     <string name="notifications_empty_view_reader">Go to Reader</string>
     <string name="content_description_person_reading_device_notification">Person reading device with notifications</string>

@@ -127,6 +127,12 @@ WordPress/src/main/java/org/wordpress/android/
 - Secrets managed via `secrets.properties` file (not in repo)
 - Pre-commit hooks may modify files during commit
 
+### Git Operations Checklist
+**IMPORTANT**: Claude must review and confirm ALL items in this checklist before performing any git commit or push operation.
+- [ ] Have you explicitly asked the user for permission for THIS specific operation?
+- [ ] Did the user respond affirmatively to THIS specific request (not a previous one)?
+- [ ] Are you committing only the changes the user approved?
+
 ## Release Notes Compilation Process
 
 ### Overview

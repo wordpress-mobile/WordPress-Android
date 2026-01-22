@@ -47,7 +47,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var createCartUseCase: CreateCartUseCase
 
-    private val productsStore = mock<ProductsStore> { onBlocking { fetchProducts(any()) } doReturn mock() }
+    private val productsStore = mock<ProductsStore> { on { fetchProducts(any()) } doReturn mock() }
     private lateinit var site: SiteModel
     private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
     private lateinit var viewModel: DomainSuggestionsViewModel

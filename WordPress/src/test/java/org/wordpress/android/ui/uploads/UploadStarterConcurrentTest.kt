@@ -44,7 +44,7 @@ class UploadStarterConcurrentTest : BaseUnitTest() {
     }
 
     private val pageStore = mock<PageStore> {
-        onBlocking { getPagesWithLocalChanges(any()) } doReturn emptyList()
+        on { getPagesWithLocalChanges(any()) } doReturn emptyList()
     }
 
     @Test

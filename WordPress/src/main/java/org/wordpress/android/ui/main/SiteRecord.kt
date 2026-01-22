@@ -15,6 +15,7 @@ class SiteRecord(siteModel: SiteModel) {
     val homeURL: String
     val blavatarUrl: String
     val blavatarType: ImageType
+    val isSelfHostedSite: Boolean
     var isRecentPick = false
 
     init {
@@ -26,6 +27,7 @@ class SiteRecord(siteModel: SiteModel) {
         blavatarType = SiteUtils.getSiteImageType(
             siteModel.isWpForTeamsSite, BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES
         )
+        isSelfHostedSite = !siteModel.isUsingWpComRestApi
     }
 
     val blogNameOrHomeURL: String

@@ -60,7 +60,7 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
         )
     )
     private val bloggingPromptsStore: BloggingPromptsStore = mock {
-        onBlocking { getPromptById(any(), any()) } doAnswer { mock ->
+        on { getPromptById(any(), any()) } doAnswer { mock ->
             flowOf(bloggingPrompt.first { it.model?.id == mock.arguments[1] })
         }
     }

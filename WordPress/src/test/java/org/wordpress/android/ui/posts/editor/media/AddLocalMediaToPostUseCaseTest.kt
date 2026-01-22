@@ -290,7 +290,7 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
 
         fun createCopyMediaToAppStorageUseCase(copyMediaResult: CopyMediaResult = createCopyMediaResult()) =
             mock<CopyMediaToAppStorageUseCase> {
-                onBlocking { copyFilesToAppStorageIfNecessary(any()) }.thenReturn(
+                on { copyFilesToAppStorageIfNecessary(any()) }.thenReturn(
                     copyMediaResult
                 )
             }
@@ -305,7 +305,7 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
 
         fun createOptimizeMediaUseCase(optimizeMediaResult: OptimizeMediaResult = createOptimizeMediaResult()) =
             mock<OptimizeMediaUseCase> {
-                onBlocking {
+                on {
                     optimizeMediaIfSupportedAsync(
                         any(),
                         eq(FRESHLY_TAKEN),
@@ -324,12 +324,12 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
 
         fun createGetMediaModelUseCase(createMediaModelResult: CreateMediaModelsResult = createMediaModelResult()) =
             mock<GetMediaModelUseCase> {
-                onBlocking { loadMediaByLocalId(any()) }.thenAnswer { invocation ->
+                on { loadMediaByLocalId(any()) }.thenAnswer { invocation ->
                     val result = mutableListOf<MediaModel>()
                     (invocation.getArgument(0) as List<Int>).forEach { result.add(mock()) }
                     result
                 }
-                onBlocking {
+                on {
                     createMediaModelFromUri(eq(LOCAL_SITE_ID), any<List<Uri>>())
                 }.thenReturn(createMediaModelResult)
             }

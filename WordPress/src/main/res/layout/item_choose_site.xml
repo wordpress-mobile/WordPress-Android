@@ -42,6 +42,27 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
 
+        <ImageView
+            android:id="@+id/remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/remove_account"
+            android:padding="16dp"
+            android:src="@drawable/ic_remove_24dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/buttons_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="pin,remove" />
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/avatar_container"
             android:layout_width="wrap_content"
@@ -75,10 +96,9 @@
             android:maxLines="1"
             android:textSize="15sp"
             app:layout_constraintBottom_toTopOf="@+id/text_domain"
-            app:layout_constraintEnd_toStartOf="@+id/pin"
+            app:layout_constraintEnd_toStartOf="@+id/buttons_barrier"
             app:layout_constraintStart_toEndOf="@+id/avatar_container"
             app:layout_constraintTop_toTopOf="@+id/avatar_container"
-            app:layout_goneMarginEnd="@dimen/margin_extra_large"
             tools:text="Around the World with Pam" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -92,11 +112,10 @@
             android:maxLines="1"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/avatar_container"
-            app:layout_constraintEnd_toStartOf="@+id/pin"
+            app:layout_constraintEnd_toStartOf="@+id/buttons_barrier"
             app:layout_constraintStart_toEndOf="@+id/avatar_container"
             app:layout_constraintTop_toBottomOf="@+id/text_title"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_goneMarginEnd="@dimen/margin_extra_large"
             tools:text="pamelanguyen.com" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
