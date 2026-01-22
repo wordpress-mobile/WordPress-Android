@@ -44,7 +44,6 @@ sealed class QRCodeAuthUiState {
         override val type = ERROR
         abstract val title: UiString
         abstract val subtitle: UiString
-        abstract val image: Int
         open val primaryActionButton: ErrorPrimaryActionButton? = null
         open val secondaryActionButton: ErrorSecondaryActionButton? = null
 
@@ -55,9 +54,6 @@ sealed class QRCodeAuthUiState {
             override val type = AUTHENTICATION_FAILED
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_auth_failed_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_auth_failed_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_empty_results_216dp
         }
 
         data class Expired(
@@ -67,9 +63,6 @@ sealed class QRCodeAuthUiState {
             override val type = EXPIRED_TOKEN
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_expired_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_expired_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_empty_results_216dp
         }
 
         data class InvalidData(
@@ -79,9 +72,6 @@ sealed class QRCodeAuthUiState {
             override val type = INVALID_DATA
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_invalid_data_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_invalid_data_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_empty_results_216dp
         }
 
         data class NoInternet(
@@ -91,9 +81,6 @@ sealed class QRCodeAuthUiState {
             override val type = NO_INTERNET
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_no_connection_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_no_connection_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_cloud_off_152dp
         }
 
         data class ScanTimeout(
@@ -103,9 +90,6 @@ sealed class QRCodeAuthUiState {
             override val type = QRCodeAuthUiStateType.TIMEOUT
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_timeout_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_timeout_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_empty_results_216dp
         }
     }
 
