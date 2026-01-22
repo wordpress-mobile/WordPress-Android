@@ -14,7 +14,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
-import org.wordpress.android.ui.newstats.repository.WeeklyAggregates
+import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -118,10 +118,10 @@ class ViewsStatsViewModel @Inject constructor(
     private fun buildLoadedState(result: PeriodStatsResult.Success): ViewsStatsCardUiState.Loaded {
         val currentStats = result.currentAggregates
         val previousStats = result.previousAggregates
-        val currentDataPoints = result.currentDailyData
-            .map { DailyDataPoint(formatDataPointLabel(it.period), it.views) }
-        val previousDataPoints = result.previousDailyData
-            .map { DailyDataPoint(formatDataPointLabel(it.period), it.views) }
+        val currentDataPoints = result.currentPeriodData
+            .map { ChartDataPoint(formatDataPointLabel(it.period), it.views) }
+        val previousDataPoints = result.previousPeriodData
+            .map { ChartDataPoint(formatDataPointLabel(it.period), it.views) }
 
         val average = if (currentDataPoints.isNotEmpty()) {
             currentStats.views / currentDataPoints.size
@@ -130,56 +130,56 @@ class ViewsStatsViewModel @Inject constructor(
         }
 
         return ViewsStatsCardUiState.Loaded(
-            currentWeekViews = currentStats.views,
-            previousWeekViews = previousStats.views,
+            currentPeriodViews = currentStats.views,
+            previousPeriodViews = previousStats.views,
             viewsDifference = currentStats.views - previousStats.views,
             viewsPercentageChange = calculatePercentageChange(currentStats.views, previousStats.views),
-            currentWeekDateRange = formatDateRangeForPeriod(
+            currentPeriodDateRange = formatDateRangeForPeriod(
                 currentStats.startDate,
                 currentStats.endDate,
                 currentPeriod
             ),
-            previousWeekDateRange = formatDateRangeForPeriod(
+            previousPeriodDateRange = formatDateRangeForPeriod(
                 previousStats.startDate,
                 previousStats.endDate,
                 currentPeriod
             ),
-            chartData = ViewsStatsChartData(currentWeek = currentDataPoints, previousWeek = previousDataPoints),
-            weeklyAverage = average,
+            chartData = ViewsStatsChartData(currentPeriod = currentDataPoints, previousPeriod = previousDataPoints),
+            periodAverage = average,
             bottomStats = buildBottomStats(currentStats, previousStats),
             chartType = currentChartType
         )
     }
 
     private fun buildBottomStats(
-        currentWeek: WeeklyAggregates,
-        previousWeek: WeeklyAggregates
+        currentPeriod: PeriodAggregates,
+        previousPeriod: PeriodAggregates
     ): List<StatItem> {
         return listOf(
             StatItem(
                 label = resourceProvider.getString(R.string.stats_views),
-                value = currentWeek.views,
-                change = calculateStatChange(currentWeek.views, previousWeek.views)
+                value = currentPeriod.views,
+                change = calculateStatChange(currentPeriod.views, previousPeriod.views)
             ),
             StatItem(
                 label = resourceProvider.getString(R.string.stats_visitors),
-                value = currentWeek.visitors,
-                change = calculateStatChange(currentWeek.visitors, previousWeek.visitors)
+                value = currentPeriod.visitors,
+                change = calculateStatChange(currentPeriod.visitors, previousPeriod.visitors)
             ),
             StatItem(
                 label = resourceProvider.getString(R.string.stats_likes),
-                value = currentWeek.likes,
-                change = calculateStatChange(currentWeek.likes, previousWeek.likes)
+                value = currentPeriod.likes,
+                change = calculateStatChange(currentPeriod.likes, previousPeriod.likes)
             ),
             StatItem(
                 label = resourceProvider.getString(R.string.stats_comments),
-                value = currentWeek.comments,
-                change = calculateStatChange(currentWeek.comments, previousWeek.comments)
+                value = currentPeriod.comments,
+                change = calculateStatChange(currentPeriod.comments, previousPeriod.comments)
             ),
             StatItem(
                 label = resourceProvider.getString(R.string.posts),
-                value = currentWeek.posts,
-                change = calculateStatChange(currentWeek.posts, previousWeek.posts)
+                value = currentPeriod.posts,
+                change = calculateStatChange(currentPeriod.posts, previousPeriod.posts)
             )
         )
     }

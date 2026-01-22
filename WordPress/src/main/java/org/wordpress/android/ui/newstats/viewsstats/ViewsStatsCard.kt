@@ -243,7 +243,7 @@ private fun LoadedContent(
         // Chart Section
         ViewsStatsChart(
             chartData = state.chartData,
-            weeklyAverage = state.weeklyAverage,
+            periodAverage = state.periodAverage,
             chartType = state.chartType
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -295,18 +295,18 @@ private fun HeaderSection(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
-            // Left: Current and previous week totals with difference
+            // Left: Current and previous period totals with difference
             Column {
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(
-                        text = formatStatValue(state.currentWeekViews),
+                        text = formatStatValue(state.currentPeriodViews),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = formatStatValue(state.previousWeekViews),
+                        text = formatStatValue(state.previousPeriodViews),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -320,18 +320,18 @@ private fun HeaderSection(
             // Right: Date ranges with colored dots and average
             Column(horizontalAlignment = Alignment.End) {
                 DateRangeWithDot(
-                    dateRange = state.currentWeekDateRange,
+                    dateRange = state.currentPeriodDateRange,
                     dotColor = MaterialTheme.colorScheme.primary,
                     isFilled = true
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 DateRangeWithDot(
-                    dateRange = state.previousWeekDateRange,
+                    dateRange = state.previousPeriodDateRange,
                     dotColor = MaterialTheme.colorScheme.outline,
                     isFilled = true
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                AverageRow(average = state.weeklyAverage)
+                AverageRow(average = state.periodAverage)
             }
         }
     }
@@ -460,33 +460,33 @@ private fun AverageRow(average: Long) {
 @Composable
 private fun ViewsStatsChart(
     chartData: ViewsStatsChartData,
-    weeklyAverage: Long,
+    periodAverage: Long,
     chartType: ChartType
 ) {
     // Key the model producer on chartType so it gets recreated when chart type changes
     val modelProducer = remember(chartType) { CartesianChartModelProducer() }
 
     // Use both lists as keys to ensure LaunchedEffect re-runs when either changes
-    LaunchedEffect(chartData.currentWeek, chartData.previousWeek, chartType) {
-        if (chartData.currentWeek.isNotEmpty()) {
-            // Check hasPreviousWeek inside the effect to avoid capturing stale values
-            val hasPreviousWeek = chartData.previousWeek.isNotEmpty()
+    LaunchedEffect(chartData.currentPeriod, chartData.previousPeriod, chartType) {
+        if (chartData.currentPeriod.isNotEmpty()) {
+            // Check hasPreviousPeriod inside the effect to avoid capturing stale values
+            val hasPreviousPeriod = chartData.previousPeriod.isNotEmpty()
             when (chartType) {
                 ChartType.LINE -> modelProducer.runTransaction {
                     lineSeries {
-                        series(chartData.currentWeek.map { it.views.toInt() })
-                        if (hasPreviousWeek) {
-                            series(chartData.previousWeek.map { it.views.toInt() })
+                        series(chartData.currentPeriod.map { it.views.toInt() })
+                        if (hasPreviousPeriod) {
+                            series(chartData.previousPeriod.map { it.views.toInt() })
                         }
                     }
                 }
                 ChartType.BAR -> modelProducer.runTransaction {
                     columnSeries {
                         // Current period first (primary color)
-                        series(chartData.currentWeek.map { it.views.toInt() })
+                        series(chartData.currentPeriod.map { it.views.toInt() })
                         // Previous period second (grey)
-                        if (hasPreviousWeek) {
-                            series(chartData.previousWeek.map { it.views.toInt() })
+                        if (hasPreviousPeriod) {
+                            series(chartData.previousPeriod.map { it.views.toInt() })
                         }
                     }
                 }
@@ -494,7 +494,7 @@ private fun ViewsStatsChart(
         }
     }
 
-    if (chartData.currentWeek.isEmpty()) {
+    if (chartData.currentPeriod.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -515,8 +515,8 @@ private fun ViewsStatsChart(
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
-    // X-axis formatter to show date labels from current week data
-    val dateLabels = chartData.currentWeek.map { it.label }
+    // X-axis formatter to show date labels from current period data
+    val dateLabels = chartData.currentPeriod.map { it.label }
     val bottomAxisValueFormatter = CartesianValueFormatter { context, value, _ ->
         val index = value.toInt()
         if (index in dateLabels.indices) dateLabels[index] else ""
@@ -524,7 +524,7 @@ private fun ViewsStatsChart(
 
     // Horizontal line for period average
     val averageLine = HorizontalLine(
-        y = { weeklyAverage.toDouble() },
+        y = { periodAverage.toDouble() },
         line = LineComponent(
             fill = fill(MaterialTheme.colorScheme.outline),
             thicknessDp = 1f
@@ -761,33 +761,33 @@ private fun ViewsStatsCardLoadedPreview() {
     AppThemeM3 {
         ViewsStatsCard(
             uiState = ViewsStatsCardUiState.Loaded(
-                currentWeekViews = 7467,
-                previousWeekViews = 8289,
+                currentPeriodViews = 7467,
+                previousPeriodViews = 8289,
                 viewsDifference = -822,
                 viewsPercentageChange = -9.9,
-                currentWeekDateRange = "14-20 Jan",
-                previousWeekDateRange = "7-13 Jan",
+                currentPeriodDateRange = "14-20 Jan",
+                previousPeriodDateRange = "7-13 Jan",
                 chartData = ViewsStatsChartData(
-                    currentWeek = listOf(
-                        DailyDataPoint("Jan 14", 800),
-                        DailyDataPoint("Jan 15", 1200),
-                        DailyDataPoint("Jan 16", 950),
-                        DailyDataPoint("Jan 17", 1100),
-                        DailyDataPoint("Jan 18", 1300),
-                        DailyDataPoint("Jan 19", 1017),
-                        DailyDataPoint("Jan 20", 1100)
+                    currentPeriod = listOf(
+                        ChartDataPoint("Jan 14", 800),
+                        ChartDataPoint("Jan 15", 1200),
+                        ChartDataPoint("Jan 16", 950),
+                        ChartDataPoint("Jan 17", 1100),
+                        ChartDataPoint("Jan 18", 1300),
+                        ChartDataPoint("Jan 19", 1017),
+                        ChartDataPoint("Jan 20", 1100)
                     ),
-                    previousWeek = listOf(
-                        DailyDataPoint("Jan 7", 1000),
-                        DailyDataPoint("Jan 8", 1400),
-                        DailyDataPoint("Jan 9", 1150),
-                        DailyDataPoint("Jan 10", 1200),
-                        DailyDataPoint("Jan 11", 1350),
-                        DailyDataPoint("Jan 12", 1089),
-                        DailyDataPoint("Jan 13", 1100)
+                    previousPeriod = listOf(
+                        ChartDataPoint("Jan 7", 1000),
+                        ChartDataPoint("Jan 8", 1400),
+                        ChartDataPoint("Jan 9", 1150),
+                        ChartDataPoint("Jan 10", 1200),
+                        ChartDataPoint("Jan 11", 1350),
+                        ChartDataPoint("Jan 12", 1089),
+                        ChartDataPoint("Jan 13", 1100)
                     )
                 ),
-                weeklyAverage = 1066,
+                periodAverage = 1066,
                 bottomStats = listOf(
                     StatItem("Views", 7467, StatChange.Negative(9.9)),
                     StatItem("Visitors", 2000, StatChange.Negative(5.6)),
@@ -822,33 +822,33 @@ private fun ViewsStatsCardLoadedDarkPreview() {
     AppThemeM3 {
         ViewsStatsCard(
             uiState = ViewsStatsCardUiState.Loaded(
-                currentWeekViews = 7467,
-                previousWeekViews = 8289,
+                currentPeriodViews = 7467,
+                previousPeriodViews = 8289,
                 viewsDifference = -822,
                 viewsPercentageChange = -9.9,
-                currentWeekDateRange = "14-20 Jan",
-                previousWeekDateRange = "7-13 Jan",
+                currentPeriodDateRange = "14-20 Jan",
+                previousPeriodDateRange = "7-13 Jan",
                 chartData = ViewsStatsChartData(
-                    currentWeek = listOf(
-                        DailyDataPoint("Jan 14", 800),
-                        DailyDataPoint("Jan 15", 1200),
-                        DailyDataPoint("Jan 16", 950),
-                        DailyDataPoint("Jan 17", 1100),
-                        DailyDataPoint("Jan 18", 1300),
-                        DailyDataPoint("Jan 19", 1017),
-                        DailyDataPoint("Jan 20", 1100)
+                    currentPeriod = listOf(
+                        ChartDataPoint("Jan 14", 800),
+                        ChartDataPoint("Jan 15", 1200),
+                        ChartDataPoint("Jan 16", 950),
+                        ChartDataPoint("Jan 17", 1100),
+                        ChartDataPoint("Jan 18", 1300),
+                        ChartDataPoint("Jan 19", 1017),
+                        ChartDataPoint("Jan 20", 1100)
                     ),
-                    previousWeek = listOf(
-                        DailyDataPoint("Jan 7", 1000),
-                        DailyDataPoint("Jan 8", 1400),
-                        DailyDataPoint("Jan 9", 1150),
-                        DailyDataPoint("Jan 10", 1200),
-                        DailyDataPoint("Jan 11", 1350),
-                        DailyDataPoint("Jan 12", 1089),
-                        DailyDataPoint("Jan 13", 1100)
+                    previousPeriod = listOf(
+                        ChartDataPoint("Jan 7", 1000),
+                        ChartDataPoint("Jan 8", 1400),
+                        ChartDataPoint("Jan 9", 1150),
+                        ChartDataPoint("Jan 10", 1200),
+                        ChartDataPoint("Jan 11", 1350),
+                        ChartDataPoint("Jan 12", 1089),
+                        ChartDataPoint("Jan 13", 1100)
                     )
                 ),
-                weeklyAverage = 1066,
+                periodAverage = 1066,
                 bottomStats = listOf(
                     StatItem("Views", 7467, StatChange.Negative(9.9)),
                     StatItem("Visitors", 2000, StatChange.Negative(5.6)),

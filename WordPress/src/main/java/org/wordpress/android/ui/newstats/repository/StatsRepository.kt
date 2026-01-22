@@ -162,7 +162,7 @@ class StatsRepository @Inject constructor(
 
                     val startDateFormatted = getDateFormat().format(startDate.time)
 
-                    val aggregates = WeeklyAggregates(
+                    val aggregates = PeriodAggregates(
                         views = totalViews,
                         visitors = totalVisitors,
                         likes = totalLikes,
@@ -203,7 +203,7 @@ class StatsRepository @Inject constructor(
             when (result) {
                 is StatsVisitsDataResult.Success -> {
                     val dataPoints = result.data.visits.map { dataPoint ->
-                        DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
+                        ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
                     }
                     DailyViewsResult.Success(dataPoints)
                 }
@@ -249,7 +249,7 @@ class StatsRepository @Inject constructor(
                 val totalPosts = data.posts.sumOf { it.posts }
                 val startDateFormatted = getDateFormat().format(startDate.time)
 
-                val aggregates = WeeklyAggregates(
+                val aggregates = PeriodAggregates(
                     views = totalViews,
                     visitors = totalVisitors,
                     likes = totalLikes,
@@ -261,7 +261,7 @@ class StatsRepository @Inject constructor(
 
                 // Build daily data points
                 val dailyDataPoints = data.visits.map { dataPoint ->
-                    DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
+                    ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
                 }
 
                 WeeklyStatsWithDailyDataResult.Success(aggregates, dailyDataPoints)
@@ -332,18 +332,18 @@ class StatsRepository @Inject constructor(
                 getDateFormat().format(previousStart.time),
                 previousDisplayDateString
             )
-            val currentDailyData = currentResult.data.visits.map { dataPoint ->
-                DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
+            val currentPeriodData = currentResult.data.visits.map { dataPoint ->
+                ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
             }
-            val previousDailyData = previousResult.data.visits.map { dataPoint ->
-                DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
+            val previousPeriodData = previousResult.data.visits.map { dataPoint ->
+                ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
             }
 
             PeriodStatsResult.Success(
                 currentAggregates = currentAggregates,
                 previousAggregates = previousAggregates,
-                currentDailyData = currentDailyData,
-                previousDailyData = previousDailyData
+                currentPeriodData = currentPeriodData,
+                previousPeriodData = previousPeriodData
             )
         } else {
             val errorMessage = when {
@@ -360,8 +360,8 @@ class StatsRepository @Inject constructor(
         data: StatsVisitsData,
         startDate: String,
         endDate: String
-    ): WeeklyAggregates {
-        return WeeklyAggregates(
+    ): PeriodAggregates {
+        return PeriodAggregates(
             views = data.visits.sumOf { it.visits },
             visitors = data.visitors.sumOf { it.visitors },
             likes = data.likes.sumOf { it.likes },
@@ -517,14 +517,14 @@ data class TodayAggregates(
  * Result wrapper for weekly aggregated stats fetch operation.
  */
 sealed class WeeklyStatsResult {
-    data class Success(val aggregates: WeeklyAggregates) : WeeklyStatsResult()
+    data class Success(val aggregates: PeriodAggregates) : WeeklyStatsResult()
     data class Error(val message: String) : WeeklyStatsResult()
 }
 
 /**
- * Weekly aggregated stats data.
+ * Aggregated stats data for a period.
  */
-data class WeeklyAggregates(
+data class PeriodAggregates(
     val views: Long,
     val visitors: Long,
     val likes: Long,
@@ -538,14 +538,14 @@ data class WeeklyAggregates(
  * Result wrapper for daily views fetch operation.
  */
 sealed class DailyViewsResult {
-    data class Success(val dataPoints: List<DailyViewsDataPoint>) : DailyViewsResult()
+    data class Success(val dataPoints: List<ViewsDataPoint>) : DailyViewsResult()
     data class Error(val message: String) : DailyViewsResult()
 }
 
 /**
- * Raw daily data point from the stats API.
+ * A data point from the stats API representing views for a time unit (hour, day, or month).
  */
-data class DailyViewsDataPoint(
+data class ViewsDataPoint(
     val period: String,
     val views: Long
 )
@@ -556,22 +556,22 @@ data class DailyViewsDataPoint(
  */
 sealed class WeeklyStatsWithDailyDataResult {
     data class Success(
-        val aggregates: WeeklyAggregates,
-        val dailyDataPoints: List<DailyViewsDataPoint>
+        val aggregates: PeriodAggregates,
+        val dailyDataPoints: List<ViewsDataPoint>
     ) : WeeklyStatsWithDailyDataResult()
     data class Error(val message: String) : WeeklyStatsWithDailyDataResult()
 }
 
 /**
  * Result wrapper for period stats fetch operation.
- * Contains aggregated stats and daily data for both current and previous periods.
+ * Contains aggregated stats and data points for both current and previous periods.
  */
 sealed class PeriodStatsResult {
     data class Success(
-        val currentAggregates: WeeklyAggregates,
-        val previousAggregates: WeeklyAggregates,
-        val currentDailyData: List<DailyViewsDataPoint>,
-        val previousDailyData: List<DailyViewsDataPoint>
+        val currentAggregates: PeriodAggregates,
+        val previousAggregates: PeriodAggregates,
+        val currentPeriodData: List<ViewsDataPoint>,
+        val previousPeriodData: List<ViewsDataPoint>
     ) : PeriodStatsResult()
     data class Error(val message: String) : PeriodStatsResult()
 }
