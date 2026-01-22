@@ -1558,6 +1558,15 @@
     <string name="stats_todays_stats_failed_to_load">Failed to load stats</string>
     <string name="stats_todays_stats_unknown_error">Unknown error</string>
 
+    <!-- stats period selector -->
+    <string name="stats_period_today">Today</string>
+    <string name="stats_period_last_7_days">Last 7 days</string>
+    <string name="stats_period_last_30_days">Last 30 days</string>
+    <string name="stats_period_last_6_months">Last 6 months</string>
+    <string name="stats_period_last_12_months">Last 12 months</string>
+    <string name="stats_period_custom">Custom</string>
+    <string name="stats_period_selector_content_description">Select stats period</string>
+
     <!-- stats referrer popup menu actions   -->
     <string name="stats_referrer_popup_menu_open_website">Open Website</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Mark as Spam</string>
