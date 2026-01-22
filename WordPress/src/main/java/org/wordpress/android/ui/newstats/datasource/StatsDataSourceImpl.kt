@@ -27,7 +27,7 @@ class StatsDataSourceImpl @Inject constructor(
     @Volatile
     private var accessToken: String? = null
 
-    private val wpComApiClient: WpComApiClient by lazy {
+    private val wpComApiClient: WpComApiClient by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
         check(accessToken != null) { "DataSource not initialized" }
         wpComApiClientProvider.getWpComApiClient(accessToken!!)
     }
@@ -42,10 +42,6 @@ class StatsDataSourceImpl @Inject constructor(
         quantity: Int,
         endDate: String
     ): StatsVisitsDataResult {
-        if (accessToken == null) {
-            return StatsVisitsDataResult.Error("DataSource not initialized")
-        }
-
         val params = StatsVisitsParams(
             unit = unit.toApiUnit(),
             quantity = quantity.toUInt(),
