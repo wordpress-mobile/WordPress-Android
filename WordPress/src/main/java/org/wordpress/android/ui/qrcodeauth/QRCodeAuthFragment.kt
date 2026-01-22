@@ -42,14 +42,10 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Scanning
 import org.wordpress.android.ui.qrcodeauth.compose.state.ContentState
 import org.wordpress.android.ui.qrcodeauth.compose.state.ErrorState
 import org.wordpress.android.ui.qrcodeauth.compose.state.LoadingState
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.observeEvent
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class QRCodeAuthFragment : Fragment() {
-    @Inject
-    lateinit var uiHelpers: UiHelpers
     private val qrCodeAuthViewModel: QRCodeAuthViewModel by viewModels()
     private val dialogViewModel: BasicDialogViewModel by activityViewModels()
 
