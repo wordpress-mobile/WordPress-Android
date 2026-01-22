@@ -68,7 +68,6 @@ class SiteItemsBuilderTest {
         setupHeaders(
             addActivityLogItem = true,
             addSiteMonitoringItem = true,
-            addPlanItem = false,
             addPagesItem = true,
             addAdminItem = true,
             addSubscribersItem = true,
@@ -149,7 +148,6 @@ class SiteItemsBuilderTest {
     private fun setupHeaders(
         addActivityLogItem: Boolean = false,
         addSiteMonitoringItem: Boolean = false,
-        addPlanItem: Boolean = false,
         addPagesItem: Boolean = false,
         addAdminItem: Boolean = false,
         addSubscribersItem: Boolean = false,
@@ -162,14 +160,6 @@ class SiteItemsBuilderTest {
         addBackupItem: Boolean = false,
         addScanItem: Boolean = false
     ) {
-        if (addPlanItem) {
-            whenever(
-                siteListItemBuilder.buildPlanItemIfAvailable(
-                    siteModel,
-                    SITE_ITEM_ACTION
-                )
-            ).thenReturn(PLAN_ITEM)
-        }
         if (addActivityLogItem) {
             whenever(siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
                 ACTIVITY_ITEM

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.items.listitem
 
-import android.text.TextUtils
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -16,7 +15,6 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.BLAZE
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.DOMAINS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PAGES
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PEOPLE
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLAN
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLUGINS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SCAN
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SELF_HOSTED_USERS
@@ -29,7 +27,6 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -82,27 +79,6 @@ class SiteListItemBuilder @Inject constructor(
                 UiStringRes(R.string.scan),
                 onClick = ListItemInteraction.create(SCAN, onClick),
                 listItemAction = SCAN
-            )
-        } else null
-    }
-
-    @Suppress("ComplexCondition")
-    fun buildPlanItemIfAvailable(
-        site: SiteModel,
-        onClick: (ListItemAction) -> Unit
-    ): ListItem? {
-        val planShortName = site.planShortName
-        return if (!TextUtils.isEmpty(planShortName) &&
-            site.hasCapabilityManageOptions &&
-            !site.isWpForTeamsSite &&
-            (site.isWPCom || site.isAutomatedTransfer)
-        ) {
-            ListItem(
-                R.drawable.ic_plans_white_24dp,
-                UiStringRes(R.string.plan),
-                secondaryText = UiStringText(planShortName),
-                onClick = ListItemInteraction.create(PLAN, onClick),
-                listItemAction = PLAN
             )
         } else null
     }

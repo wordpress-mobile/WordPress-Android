@@ -63,13 +63,6 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     }
 
     @Test
-    fun `plan item click emits OpenPlan navigation event`() {
-        val navigationAction = invokeItemClickAction(action =ListItemAction.PLAN)
-
-        assertEquals(navigationAction,SiteNavigationAction.OpenPlan(site))
-    }
-
-    @Test
     fun `posts item click emits OpenPosts navigation event`() {
         val navigationAction = invokeItemClickAction(action =ListItemAction.POSTS)
 

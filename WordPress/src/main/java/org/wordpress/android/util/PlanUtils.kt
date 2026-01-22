@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.plans
+package org.wordpress.android.util
 
 import org.wordpress.android.fluxc.model.PlanModel
 

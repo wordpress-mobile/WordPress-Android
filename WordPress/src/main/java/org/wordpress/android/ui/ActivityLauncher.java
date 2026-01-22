@@ -83,7 +83,6 @@ import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.pages.PageParentActivity;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
-import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
@@ -648,13 +647,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, StatsConnectJetpackActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
-    }
-
-    public static void viewBlogPlans(Context context, SiteModel site) {
-        Intent intent = new Intent(context, PlansActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        context.startActivity(intent);
-        AnalyticsUtils.trackWithSiteDetails(Stat.OPENED_PLANS, site);
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {

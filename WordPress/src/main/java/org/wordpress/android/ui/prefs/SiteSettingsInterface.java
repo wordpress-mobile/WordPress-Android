@@ -27,7 +27,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.models.SiteSettingsModel;
-import org.wordpress.android.ui.plans.PlansConstants;
+import org.wordpress.android.util.PlansConstants;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FormatUtils;
