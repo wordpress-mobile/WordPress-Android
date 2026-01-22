@@ -15,6 +15,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.repository.HourlyViewsDataPoint
+import org.wordpress.android.ui.newstats.repository.HourlyViewsResult
+import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.repository.TodayAggregates
+import org.wordpress.android.ui.newstats.repository.TodayAggregatesResult
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
@@ -146,10 +151,10 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        viewModel.loadData(forced = true)
+        viewModel.loadData()
         advanceUntilIdle()
 
-        // Called twice: once during init, once during loadData(forced = true)
+        // Called twice: once during init, once during loadData()
         verify(statsRepository, times(2)).fetchTodayAggregates(eq(TEST_SITE_ID))
     }
 
@@ -252,7 +257,7 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiState.value).isInstanceOf(TodaysStatsCardUiState.Loaded::class.java)
 
         // Call loadData again and verify the final state is still Loaded
-        viewModel.loadData(forced = true)
+        viewModel.loadData()
         advanceUntilIdle()
 
         assertThat(viewModel.uiState.value).isInstanceOf(TodaysStatsCardUiState.Loaded::class.java)

@@ -42,6 +42,8 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.todaysstat.TodaysStatsCard
 import org.wordpress.android.ui.newstats.todaysstat.TodaysStatsViewModel
+import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
+import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
 
 @AndroidEntryPoint
 class NewStatsActivity : BaseAppCompatActivity() {
@@ -135,17 +137,24 @@ private fun StatsTabContent(tab: StatsTab) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TrafficTabContent(
-    viewModel: TodaysStatsViewModel = viewModel()
+    todaysStatsViewModel: TodaysStatsViewModel = viewModel(),
+    viewsStatsViewModel: ViewsStatsViewModel = viewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val isRefreshing by viewModel.isRefreshing.collectAsState()
+    val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
+    val viewsStatsUiState by viewsStatsViewModel.uiState.collectAsState()
+    val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
+    val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
+    val isRefreshing = isTodaysStatsRefreshing || isViewsStatsRefreshing
     val pullToRefreshState = rememberPullToRefreshState()
 
     PullToRefreshBox(
         modifier = Modifier.fillMaxSize(),
         isRefreshing = isRefreshing,
         state = pullToRefreshState,
-        onRefresh = { viewModel.refresh() },
+        onRefresh = {
+            todaysStatsViewModel.refresh()
+            viewsStatsViewModel.refresh()
+        },
         indicator = {
             PullToRefreshDefaults.Indicator(
                 state = pullToRefreshState,
@@ -160,7 +169,12 @@ private fun TrafficTabContent(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            TodaysStatsCard(uiState = uiState)
+            TodaysStatsCard(uiState = todaysStatsUiState)
+            ViewsStatsCard(
+                uiState = viewsStatsUiState,
+                onChartTypeChanged = viewsStatsViewModel::onChartTypeChanged,
+                onRetry = viewsStatsViewModel::onRetry
+            )
         }
     }
 }
