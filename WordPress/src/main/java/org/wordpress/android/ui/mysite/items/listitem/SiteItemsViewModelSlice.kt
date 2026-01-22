@@ -44,29 +44,33 @@ class SiteItemsViewModelSlice @Inject constructor(
     suspend fun buildSiteItems(
         site: SiteModel
     ) {
+        // TODO: Remove scanAvailable = true before merging - this is for testing only
+        @Suppress("ForbiddenComment")
         _uiModel.postValue(
             siteItemsBuilder.build(
                 getParams(
                     shouldEnableFocusPoints = false,
                     site = site,
                     backupAvailable = false,
-                    scanAvailable = false
+                    scanAvailable = true
                 )
             )
         )
         rebuildSiteItemsForJetpackCapabilities(site)
     }
 
+    // TODO: Remove scanAvailable = true before merging - this is for testing only
+    @Suppress("ForbiddenComment")
     private suspend fun rebuildSiteItemsForJetpackCapabilities(site: SiteModel) {
         jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect { purchasedProducts ->
             // if the site has scan or backup enabled, then only rebuild the site items
-            if(purchasedProducts.scan || purchasedProducts.backup) {
+            if(purchasedProducts.scan || purchasedProducts.backup || true) {
                 val items = siteItemsBuilder.build(
                     getParams(
                         shouldEnableFocusPoints = false,
                         site = site,
                         backupAvailable = purchasedProducts.backup,
-                        scanAvailable = purchasedProducts.scan && !site.isWPCom && !site.isWPComAtomic
+                        scanAvailable = true
                     )
                 )
                 _uiModel.postValue(items)
