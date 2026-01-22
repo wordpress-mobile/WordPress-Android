@@ -55,6 +55,9 @@ jobs:
                - Verify README updates for new features
                - Check API documentation accuracy
 
+            6. **Scope limitation**
+               - Do NOT comment on code formatting (e.g., line length, indentation, spacing, brace style, naming style consistency, or other purely stylistic/formatting concerns). Assume a separate formatter/linter will handle those.
+
             Provide detailed feedback using inline comments for specific issues.
             Use top-level comments for general observations or praise.
 
