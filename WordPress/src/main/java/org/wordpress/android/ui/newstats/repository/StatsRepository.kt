@@ -1,29 +1,22 @@
 package org.wordpress.android.ui.newstats.repository
 
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsUnit
+import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.ui.newstats.extension.statsCommentsData
-import org.wordpress.android.ui.newstats.extension.statsLikesData
-import org.wordpress.android.ui.newstats.extension.statsPostsData
-import org.wordpress.android.ui.newstats.extension.statsVisitorsData
-import org.wordpress.android.ui.newstats.extension.statsVisitsData
-import rs.wordpress.api.kotlin.WpComApiClient
-import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.StatsVisitsParams
-import uniffi.wp_api.StatsVisitsUnit
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val HOURLY_QUANTITY = 24u
-private const val DAILY_QUANTITY = 1u
-private const val WEEKLY_QUANTITY = 7u
+private const val HOURLY_QUANTITY = 24
+private const val DAILY_QUANTITY = 1
+private const val WEEKLY_QUANTITY = 7
 private const val DAYS_BEFORE_END_DATE = -6
 
 /**
@@ -31,23 +24,10 @@ private const val DAYS_BEFORE_END_DATE = -6
  * Handles hourly visits/views data for the Today's Stats card chart.
  */
 class StatsRepository @Inject constructor(
-    private val wpComApiClientProvider: WpComApiClientProvider,
+    private val statsDataSource: StatsDataSource,
     private val appLogWrapper: AppLogWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
-    /**
-     * Access token for API authentication.
-     * Marked as @Volatile to ensure visibility across threads since this repository is accessed
-     * from multiple coroutine contexts (main thread initialization, IO dispatcher for API calls).
-     */
-    @Volatile
-    private var accessToken: String? = null
-
-    private val wpComApiClient: WpComApiClient by lazy {
-        check(accessToken != null) { "Repository not initialized" }
-        wpComApiClientProvider.getWpComApiClient(accessToken!!)
-    }
-
     /**
      * Thread-local date formatter for thread-safe date formatting.
      * SimpleDateFormat is NOT thread-safe, so we use ThreadLocal to provide each thread
@@ -60,7 +40,7 @@ class StatsRepository @Inject constructor(
     private fun getDateFormat(): SimpleDateFormat = dateFormat.get()!!
 
     fun init(accessToken: String) {
-        this.accessToken = accessToken
+        statsDataSource.init(accessToken)
     }
 
     /**
@@ -70,34 +50,23 @@ class StatsRepository @Inject constructor(
      * @return Today's aggregated stats or error
      */
     suspend fun fetchTodayAggregates(siteId: Long): TodayAggregatesResult = withContext(ioDispatcher) {
-        if (accessToken == null) {
-            appLogWrapper.e(AppLog.T.STATS, "Cannot fetch stats: repository not initialized")
-            return@withContext TodayAggregatesResult.Error("Repository not initialized")
-        }
-
         val calendar = Calendar.getInstance()
         val dateString = getDateFormat().format(calendar.time)
 
-        val params = StatsVisitsParams(
-            unit = StatsVisitsUnit.DAY,
+        val result = statsDataSource.fetchStatsVisits(
+            siteId = siteId,
+            unit = StatsUnit.DAY,
             quantity = DAILY_QUANTITY,
-            endDate = dateString,
+            endDate = dateString
         )
 
-        val result = wpComApiClient.request { requestBuilder ->
-            requestBuilder.statsVisits().getStatsVisits(
-                wpComSiteId = siteId.toULong(),
-                params = params
-            )
-        }
-
         when (result) {
-            is WpRequestResult.Success -> {
-                val response = result.response.data
-                val views = response.statsVisitsData().firstOrNull()?.visits?.toLong() ?: 0L
-                val visitors = response.statsVisitorsData().firstOrNull()?.visitors?.toLong() ?: 0L
-                val likes = response.statsLikesData().firstOrNull()?.likes?.toLong() ?: 0L
-                val comments = response.statsCommentsData().firstOrNull()?.comments?.toLong() ?: 0L
+            is StatsVisitsDataResult.Success -> {
+                val data = result.data
+                val views = data.visits.firstOrNull()?.visits ?: 0L
+                val visitors = data.visitors.firstOrNull()?.visitors ?: 0L
+                val likes = data.likes.firstOrNull()?.likes ?: 0L
+                val comments = data.comments.firstOrNull()?.comments ?: 0L
 
                 val aggregates = TodayAggregates(
                     views = views,
@@ -108,14 +77,9 @@ class StatsRepository @Inject constructor(
                 TodayAggregatesResult.Success(aggregates)
             }
 
-            is WpRequestResult.WpError -> {
-                appLogWrapper.e(AppLog.T.STATS, "API Error fetching today aggregates: ${result.errorMessage}")
-                TodayAggregatesResult.Error(result.errorMessage)
-            }
-
-            else -> {
-                appLogWrapper.e(AppLog.T.STATS, "Unknown error fetching today aggregates")
-                TodayAggregatesResult.Error("Unknown error")
+            is StatsVisitsDataResult.Error -> {
+                appLogWrapper.e(AppLog.T.STATS, "API Error fetching today aggregates: ${result.message}")
+                TodayAggregatesResult.Error(result.message)
             }
         }
     }
@@ -131,11 +95,6 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         offsetDays: Int = 0
     ): HourlyViewsResult = withContext(ioDispatcher) {
-        if (accessToken == null) {
-            appLogWrapper.e(AppLog.T.STATS, "Cannot fetch stats: repository not initialized")
-            return@withContext HourlyViewsResult.Error("Repository not initialized")
-        }
-
         val calendar = Calendar.getInstance()
         // The API's endDate is exclusive for hourly queries, so we need to add 1 day to get
         // the target day's hours. Formula: 1 (for exclusive end) - offsetDays (0=today, 1=yesterday)
@@ -144,36 +103,24 @@ class StatsRepository @Inject constructor(
         calendar.add(Calendar.DAY_OF_YEAR, 1 - offsetDays)
         val dateString = getDateFormat().format(calendar.time)
 
-        val params = StatsVisitsParams(
-            unit = StatsVisitsUnit.HOUR,
+        val result = statsDataSource.fetchStatsVisits(
+            siteId = siteId,
+            unit = StatsUnit.HOUR,
             quantity = HOURLY_QUANTITY,
-            endDate = dateString,
+            endDate = dateString
         )
 
-        val result = wpComApiClient.request { requestBuilder ->
-            requestBuilder.statsVisits().getStatsVisits(
-                wpComSiteId = siteId.toULong(),
-                params = params
-            )
-        }
-
         when (result) {
-            is WpRequestResult.Success -> {
-                val response = result.response.data
-                val dataPoints = response.statsVisitsData().map { dataPoint ->
-                    HourlyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits.toLong())
+            is StatsVisitsDataResult.Success -> {
+                val dataPoints = result.data.visits.map { dataPoint ->
+                    HourlyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
                 }
                 HourlyViewsResult.Success(dataPoints)
             }
 
-            is WpRequestResult.WpError -> {
-                appLogWrapper.e(AppLog.T.STATS, "API Error fetching hourly views: ${result.errorMessage}")
-                HourlyViewsResult.Error(result.errorMessage)
-            }
-
-            else -> {
-                appLogWrapper.e(AppLog.T.STATS, "Unknown error fetching hourly views")
-                HourlyViewsResult.Error("Unknown error")
+            is StatsVisitsDataResult.Error -> {
+                appLogWrapper.e(AppLog.T.STATS, "API Error fetching hourly views: ${result.message}")
+                HourlyViewsResult.Error(result.message)
             }
         }
     }
@@ -187,41 +134,24 @@ class StatsRepository @Inject constructor(
      */
     suspend fun fetchWeeklyStats(siteId: Long, weeksAgo: Int = 0): WeeklyStatsResult =
         withContext(ioDispatcher) {
-            if (accessToken == null) {
-                appLogWrapper.e(AppLog.T.STATS, "Cannot fetch stats: repository not initialized")
-                return@withContext WeeklyStatsResult.Error("Repository not initialized")
-            }
-
             val (startDate, endDate) = calculateWeekDateRange(weeksAgo)
             val endDateString = getDateFormat().format(endDate.time)
 
-            val params = StatsVisitsParams(
-                unit = StatsVisitsUnit.DAY,
+            val result = statsDataSource.fetchStatsVisits(
+                siteId = siteId,
+                unit = StatsUnit.DAY,
                 quantity = WEEKLY_QUANTITY,
-                endDate = endDateString,
+                endDate = endDateString
             )
 
-            val result = wpComApiClient.request { requestBuilder ->
-                requestBuilder.statsVisits().getStatsVisits(
-                    wpComSiteId = siteId.toULong(),
-                    params = params
-                )
-            }
-
             when (result) {
-                is WpRequestResult.Success -> {
-                    val response = result.response.data
-                    val visitsData = response.statsVisitsData()
-                    val visitorsData = response.statsVisitorsData()
-                    val likesData = response.statsLikesData()
-                    val commentsData = response.statsCommentsData()
-                    val postsData = response.statsPostsData()
-
-                    val totalViews = visitsData.sumOf { it.visits.toLong() }
-                    val totalVisitors = visitorsData.sumOf { it.visitors.toLong() }
-                    val totalLikes = likesData.sumOf { it.likes.toLong() }
-                    val totalComments = commentsData.sumOf { it.comments.toLong() }
-                    val totalPosts = postsData.sumOf { it.posts.toLong() }
+                is StatsVisitsDataResult.Success -> {
+                    val data = result.data
+                    val totalViews = data.visits.sumOf { it.visits }
+                    val totalVisitors = data.visitors.sumOf { it.visitors }
+                    val totalLikes = data.likes.sumOf { it.likes }
+                    val totalComments = data.comments.sumOf { it.comments }
+                    val totalPosts = data.posts.sumOf { it.posts }
 
                     val startDateFormatted = getDateFormat().format(startDate.time)
 
@@ -237,14 +167,9 @@ class StatsRepository @Inject constructor(
                     WeeklyStatsResult.Success(aggregates)
                 }
 
-                is WpRequestResult.WpError -> {
-                    appLogWrapper.e(AppLog.T.STATS, "API Error fetching weekly stats: ${result.errorMessage}")
-                    WeeklyStatsResult.Error(result.errorMessage)
-                }
-
-                else -> {
-                    appLogWrapper.e(AppLog.T.STATS, "Unknown error fetching weekly stats")
-                    WeeklyStatsResult.Error("Unknown error")
+                is StatsVisitsDataResult.Error -> {
+                    appLogWrapper.e(AppLog.T.STATS, "API Error fetching weekly stats: ${result.message}")
+                    WeeklyStatsResult.Error(result.message)
                 }
             }
         }
@@ -258,44 +183,27 @@ class StatsRepository @Inject constructor(
      */
     suspend fun fetchDailyViewsForWeek(siteId: Long, weeksAgo: Int = 0): DailyViewsResult =
         withContext(ioDispatcher) {
-            if (accessToken == null) {
-                appLogWrapper.e(AppLog.T.STATS, "Cannot fetch stats: repository not initialized")
-                return@withContext DailyViewsResult.Error("Repository not initialized")
-            }
-
             val (_, endDate) = calculateWeekDateRange(weeksAgo)
             val endDateString = getDateFormat().format(endDate.time)
 
-            val params = StatsVisitsParams(
-                unit = StatsVisitsUnit.DAY,
+            val result = statsDataSource.fetchStatsVisits(
+                siteId = siteId,
+                unit = StatsUnit.DAY,
                 quantity = WEEKLY_QUANTITY,
-                endDate = endDateString,
+                endDate = endDateString
             )
 
-            val result = wpComApiClient.request { requestBuilder ->
-                requestBuilder.statsVisits().getStatsVisits(
-                    wpComSiteId = siteId.toULong(),
-                    params = params
-                )
-            }
-
             when (result) {
-                is WpRequestResult.Success -> {
-                    val response = result.response.data
-                    val dataPoints = response.statsVisitsData().map { dataPoint ->
-                        DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits.toLong())
+                is StatsVisitsDataResult.Success -> {
+                    val dataPoints = result.data.visits.map { dataPoint ->
+                        DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
                     }
                     DailyViewsResult.Success(dataPoints)
                 }
 
-                is WpRequestResult.WpError -> {
-                    appLogWrapper.e(AppLog.T.STATS, "API Error fetching daily views: ${result.errorMessage}")
-                    DailyViewsResult.Error(result.errorMessage)
-                }
-
-                else -> {
-                    appLogWrapper.e(AppLog.T.STATS, "Unknown error fetching daily views")
-                    DailyViewsResult.Error("Unknown error")
+                is StatsVisitsDataResult.Error -> {
+                    appLogWrapper.e(AppLog.T.STATS, "API Error fetching daily views: ${result.message}")
+                    DailyViewsResult.Error(result.message)
                 }
             }
         }
@@ -312,42 +220,26 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         weeksAgo: Int = 0
     ): WeeklyStatsWithDailyDataResult = withContext(ioDispatcher) {
-        if (accessToken == null) {
-            appLogWrapper.e(AppLog.T.STATS, "Cannot fetch stats: repository not initialized")
-            return@withContext WeeklyStatsWithDailyDataResult.Error("Repository not initialized")
-        }
-
         val (startDate, endDate) = calculateWeekDateRange(weeksAgo)
         val endDateString = getDateFormat().format(endDate.time)
 
-        val params = StatsVisitsParams(
-            unit = StatsVisitsUnit.DAY,
+        val result = statsDataSource.fetchStatsVisits(
+            siteId = siteId,
+            unit = StatsUnit.DAY,
             quantity = WEEKLY_QUANTITY,
-            endDate = endDateString,
+            endDate = endDateString
         )
 
-        val result = wpComApiClient.request { requestBuilder ->
-            requestBuilder.statsVisits().getStatsVisits(
-                wpComSiteId = siteId.toULong(),
-                params = params
-            )
-        }
-
         when (result) {
-            is WpRequestResult.Success -> {
-                val response = result.response.data
-                val visitsData = response.statsVisitsData()
-                val visitorsData = response.statsVisitorsData()
-                val likesData = response.statsLikesData()
-                val commentsData = response.statsCommentsData()
-                val postsData = response.statsPostsData()
+            is StatsVisitsDataResult.Success -> {
+                val data = result.data
 
                 // Build aggregates
-                val totalViews = visitsData.sumOf { it.visits.toLong() }
-                val totalVisitors = visitorsData.sumOf { it.visitors.toLong() }
-                val totalLikes = likesData.sumOf { it.likes.toLong() }
-                val totalComments = commentsData.sumOf { it.comments.toLong() }
-                val totalPosts = postsData.sumOf { it.posts.toLong() }
+                val totalViews = data.visits.sumOf { it.visits }
+                val totalVisitors = data.visitors.sumOf { it.visitors }
+                val totalLikes = data.likes.sumOf { it.likes }
+                val totalComments = data.comments.sumOf { it.comments }
+                val totalPosts = data.posts.sumOf { it.posts }
                 val startDateFormatted = getDateFormat().format(startDate.time)
 
                 val aggregates = WeeklyAggregates(
@@ -361,24 +253,19 @@ class StatsRepository @Inject constructor(
                 )
 
                 // Build daily data points
-                val dailyDataPoints = visitsData.map { dataPoint ->
-                    DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits.toLong())
+                val dailyDataPoints = data.visits.map { dataPoint ->
+                    DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
                 }
 
                 WeeklyStatsWithDailyDataResult.Success(aggregates, dailyDataPoints)
             }
 
-            is WpRequestResult.WpError -> {
+            is StatsVisitsDataResult.Error -> {
                 appLogWrapper.e(
                     AppLog.T.STATS,
-                    "API Error fetching weekly stats with daily data: ${result.errorMessage}"
+                    "API Error fetching weekly stats with daily data: ${result.message}"
                 )
-                WeeklyStatsWithDailyDataResult.Error(result.errorMessage)
-            }
-
-            else -> {
-                appLogWrapper.e(AppLog.T.STATS, "Unknown error fetching weekly stats with daily data")
-                WeeklyStatsWithDailyDataResult.Error("Unknown error")
+                WeeklyStatsWithDailyDataResult.Error(result.message)
             }
         }
     }
