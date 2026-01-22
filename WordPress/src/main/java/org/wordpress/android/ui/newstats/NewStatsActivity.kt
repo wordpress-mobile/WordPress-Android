@@ -31,6 +31,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -150,16 +151,16 @@ private fun NewStatsScreen(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) { page ->
-                StatsTabContent(tab = tabs[page])
+                StatsTabContent(tab = tabs[page], selectedPeriod = selectedPeriod)
             }
         }
     }
 }
 
 @Composable
-private fun StatsTabContent(tab: StatsTab) {
+private fun StatsTabContent(tab: StatsTab, selectedPeriod: StatsPeriod) {
     when (tab) {
-        StatsTab.TRAFFIC -> TrafficTabContent()
+        StatsTab.TRAFFIC -> TrafficTabContent(selectedPeriod = selectedPeriod)
         else -> PlaceholderTabContent(tab)
     }
 }
@@ -167,9 +168,13 @@ private fun StatsTabContent(tab: StatsTab) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TrafficTabContent(
+    selectedPeriod: StatsPeriod,
     todaysStatsViewModel: TodaysStatsViewModel = viewModel(),
     viewsStatsViewModel: ViewsStatsViewModel = viewModel()
 ) {
+    LaunchedEffect(selectedPeriod) {
+        viewsStatsViewModel.onPeriodChanged(selectedPeriod)
+    }
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
     val viewsStatsUiState by viewsStatsViewModel.uiState.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()

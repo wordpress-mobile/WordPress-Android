@@ -3,10 +3,12 @@ package org.wordpress.android.ui.newstats.repository
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
+import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.util.AppLog
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -18,6 +20,9 @@ private const val HOURLY_QUANTITY = 24
 private const val DAILY_QUANTITY = 1
 private const val WEEKLY_QUANTITY = 7
 private const val DAYS_BEFORE_END_DATE = -6
+private const val DAYS_IN_30_DAYS = 30
+private const val DAYS_IN_6_MONTHS = 180
+private const val DAYS_IN_12_MONTHS = 365
 
 /**
  * Repository for fetching stats data using the wordpress-rs API.
@@ -271,6 +276,162 @@ class StatsRepository @Inject constructor(
     }
 
     /**
+     * Fetches stats data for a specific period with comparison to the previous period.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param period The stats period to fetch
+     * @return Combined stats for current and previous periods or error
+     */
+    suspend fun fetchStatsForPeriod(
+        siteId: Long,
+        period: StatsPeriod
+    ): PeriodStatsResult = withContext(ioDispatcher) {
+        val periodRange = calculatePeriodDates(period)
+        val (currentStart, currentEnd, previousStart, previousEnd, quantity, unit) = periodRange
+
+        val currentEndString = getDateFormat().format(currentEnd.time)
+        val previousEndString = getDateFormat().format(previousEnd.time)
+
+        val currentResult = statsDataSource.fetchStatsVisits(
+            siteId = siteId,
+            unit = unit,
+            quantity = quantity,
+            endDate = currentEndString
+        )
+
+        val previousResult = statsDataSource.fetchStatsVisits(
+            siteId = siteId,
+            unit = unit,
+            quantity = quantity,
+            endDate = previousEndString
+        )
+
+        if (currentResult is StatsVisitsDataResult.Success &&
+            previousResult is StatsVisitsDataResult.Success
+        ) {
+            val currentAggregates = buildPeriodAggregates(
+                currentResult.data,
+                getDateFormat().format(currentStart.time),
+                currentEndString
+            )
+            val previousAggregates = buildPeriodAggregates(
+                previousResult.data,
+                getDateFormat().format(previousStart.time),
+                previousEndString
+            )
+            val currentDailyData = currentResult.data.visits.map { dataPoint ->
+                DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
+            }
+            val previousDailyData = previousResult.data.visits.map { dataPoint ->
+                DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
+            }
+
+            PeriodStatsResult.Success(
+                currentAggregates = currentAggregates,
+                previousAggregates = previousAggregates,
+                currentDailyData = currentDailyData,
+                previousDailyData = previousDailyData
+            )
+        } else {
+            val errorMessage = when {
+                currentResult is StatsVisitsDataResult.Error -> currentResult.message
+                previousResult is StatsVisitsDataResult.Error -> previousResult.message
+                else -> "Unknown error"
+            }
+            appLogWrapper.e(AppLog.T.STATS, "API Error fetching period stats: $errorMessage")
+            PeriodStatsResult.Error(errorMessage)
+        }
+    }
+
+    private fun buildPeriodAggregates(
+        data: StatsVisitsData,
+        startDate: String,
+        endDate: String
+    ): WeeklyAggregates {
+        return WeeklyAggregates(
+            views = data.visits.sumOf { it.visits },
+            visitors = data.visitors.sumOf { it.visitors },
+            likes = data.likes.sumOf { it.likes },
+            comments = data.comments.sumOf { it.comments },
+            posts = data.posts.sumOf { it.posts },
+            startDate = startDate,
+            endDate = endDate
+        )
+    }
+
+    private data class PeriodDateRange(
+        val currentStart: Calendar,
+        val currentEnd: Calendar,
+        val previousStart: Calendar,
+        val previousEnd: Calendar,
+        val quantity: Int,
+        val unit: StatsUnit
+    )
+
+    @Suppress("MagicNumber")
+    private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
+        val currentEnd = Calendar.getInstance()
+        val quantity: Int
+        val unitsBack: Int
+        val unit: StatsUnit
+        val calendarField: Int
+
+        when (period) {
+            StatsPeriod.TODAY -> {
+                quantity = HOURLY_QUANTITY
+                unitsBack = 1
+                unit = StatsUnit.HOUR
+                calendarField = Calendar.DAY_OF_YEAR
+            }
+            StatsPeriod.LAST_7_DAYS -> {
+                quantity = 7
+                unitsBack = 7
+                unit = StatsUnit.DAY
+                calendarField = Calendar.DAY_OF_YEAR
+            }
+            StatsPeriod.LAST_30_DAYS -> {
+                quantity = DAYS_IN_30_DAYS
+                unitsBack = DAYS_IN_30_DAYS
+                unit = StatsUnit.DAY
+                calendarField = Calendar.DAY_OF_YEAR
+            }
+            StatsPeriod.LAST_6_MONTHS -> {
+                quantity = 6
+                unitsBack = 6
+                unit = StatsUnit.MONTH
+                calendarField = Calendar.MONTH
+            }
+            StatsPeriod.LAST_12_MONTHS -> {
+                quantity = 12
+                unitsBack = 12
+                unit = StatsUnit.MONTH
+                calendarField = Calendar.MONTH
+            }
+            StatsPeriod.CUSTOM -> {
+                // For custom, default to 7 days for now
+                quantity = 7
+                unitsBack = 7
+                unit = StatsUnit.DAY
+                calendarField = Calendar.DAY_OF_YEAR
+            }
+        }
+
+        val currentStart = (currentEnd.clone() as Calendar).apply {
+            add(calendarField, -(quantity - 1))
+        }
+
+        val previousEnd = (currentStart.clone() as Calendar).apply {
+            add(calendarField, -1)
+        }
+
+        val previousStart = (previousEnd.clone() as Calendar).apply {
+            add(calendarField, -(quantity - 1))
+        }
+
+        return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, quantity, unit)
+    }
+
+    /**
      * Calculates the start and end dates for a given week.
      *
      * @param weeksAgo Number of weeks to go back (0 = current week, 1 = previous week)
@@ -370,4 +531,18 @@ sealed class WeeklyStatsWithDailyDataResult {
         val dailyDataPoints: List<DailyViewsDataPoint>
     ) : WeeklyStatsWithDailyDataResult()
     data class Error(val message: String) : WeeklyStatsWithDailyDataResult()
+}
+
+/**
+ * Result wrapper for period stats fetch operation.
+ * Contains aggregated stats and daily data for both current and previous periods.
+ */
+sealed class PeriodStatsResult {
+    data class Success(
+        val currentAggregates: WeeklyAggregates,
+        val previousAggregates: WeeklyAggregates,
+        val currentDailyData: List<DailyViewsDataPoint>,
+        val previousDailyData: List<DailyViewsDataPoint>
+    ) : PeriodStatsResult()
+    data class Error(val message: String) : PeriodStatsResult()
 }

@@ -3,8 +3,6 @@ package org.wordpress.android.ui.newstats.viewsstats
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,18 +11,18 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.WeeklyAggregates
-import org.wordpress.android.ui.newstats.repository.WeeklyStatsWithDailyDataResult
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
 
-private const val CURRENT_WEEK = 0
-private const val PREVIOUS_WEEK = 1
 private const val PERCENTAGE_BASE = 100.0
 
 @HiltViewModel
@@ -41,8 +39,15 @@ class ViewsStatsViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var currentChartType: ChartType = ChartType.LINE
+    private var currentPeriod: StatsPeriod = StatsPeriod.LAST_7_DAYS
 
     init {
+        loadData()
+    }
+
+    fun onPeriodChanged(period: StatsPeriod) {
+        if (period == currentPeriod) return
+        currentPeriod = period
         loadData()
     }
 
@@ -91,19 +96,17 @@ class ViewsStatsViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun loadDataInternal(site: SiteModel) {
         try {
-            val (currentWeekResult, previousWeekResult) = fetchWeeklyData(site.siteId)
-            val currentWeekStats = (currentWeekResult as? WeeklyStatsWithDailyDataResult.Success)?.aggregates
-            val previousWeekStats = (previousWeekResult as? WeeklyStatsWithDailyDataResult.Success)?.aggregates
+            val result = statsRepository.fetchStatsForPeriod(site.siteId, currentPeriod)
 
-            if (currentWeekStats != null && previousWeekStats != null) {
-                _uiState.value = buildLoadedState(
-                    currentWeekResult as WeeklyStatsWithDailyDataResult.Success,
-                    previousWeekResult as WeeklyStatsWithDailyDataResult.Success
-                )
-            } else {
-                _uiState.value = ViewsStatsCardUiState.Error(
-                    message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
-                )
+            when (result) {
+                is PeriodStatsResult.Success -> {
+                    _uiState.value = buildLoadedState(result)
+                }
+                is PeriodStatsResult.Error -> {
+                    _uiState.value = ViewsStatsCardUiState.Error(
+                        message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
+                    )
+                }
             }
         } catch (e: Exception) {
             _uiState.value = ViewsStatsCardUiState.Error(
@@ -112,45 +115,38 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchWeeklyData(
-        siteId: Long
-    ): Pair<WeeklyStatsWithDailyDataResult, WeeklyStatsWithDailyDataResult> = coroutineScope {
-        val currentWeekDeferred = async {
-            statsRepository.fetchWeeklyStatsWithDailyData(siteId, CURRENT_WEEK)
-        }
-        val previousWeekDeferred = async {
-            statsRepository.fetchWeeklyStatsWithDailyData(siteId, PREVIOUS_WEEK)
-        }
-        currentWeekDeferred.await() to previousWeekDeferred.await()
-    }
+    private fun buildLoadedState(result: PeriodStatsResult.Success): ViewsStatsCardUiState.Loaded {
+        val currentStats = result.currentAggregates
+        val previousStats = result.previousAggregates
+        val currentDataPoints = result.currentDailyData
+            .map { DailyDataPoint(formatDataPointLabel(it.period), it.views) }
+        val previousDataPoints = result.previousDailyData
+            .map { DailyDataPoint(formatDataPointLabel(it.period), it.views) }
 
-    private fun buildLoadedState(
-        currentWeekResult: WeeklyStatsWithDailyDataResult.Success,
-        previousWeekResult: WeeklyStatsWithDailyDataResult.Success
-    ): ViewsStatsCardUiState.Loaded {
-        val currentWeekStats = currentWeekResult.aggregates
-        val previousWeekStats = previousWeekResult.aggregates
-        val currentWeekDailyViews = currentWeekResult.dailyDataPoints
-            .map { DailyDataPoint(formatDayLabel(it.period), it.views) }
-        val previousWeekDailyViews = previousWeekResult.dailyDataPoints
-            .map { DailyDataPoint(formatDayLabel(it.period), it.views) }
-
-        val weeklyAverage = if (currentWeekDailyViews.isNotEmpty()) {
-            currentWeekStats.views / currentWeekDailyViews.size
+        val average = if (currentDataPoints.isNotEmpty()) {
+            currentStats.views / currentDataPoints.size
         } else {
             0L
         }
 
         return ViewsStatsCardUiState.Loaded(
-            currentWeekViews = currentWeekStats.views,
-            previousWeekViews = previousWeekStats.views,
-            viewsDifference = currentWeekStats.views - previousWeekStats.views,
-            viewsPercentageChange = calculatePercentageChange(currentWeekStats.views, previousWeekStats.views),
-            currentWeekDateRange = formatDateRange(currentWeekStats.startDate, currentWeekStats.endDate),
-            previousWeekDateRange = formatDateRange(previousWeekStats.startDate, previousWeekStats.endDate),
-            chartData = ViewsStatsChartData(currentWeek = currentWeekDailyViews, previousWeek = previousWeekDailyViews),
-            weeklyAverage = weeklyAverage,
-            bottomStats = buildBottomStats(currentWeekStats, previousWeekStats),
+            currentWeekViews = currentStats.views,
+            previousWeekViews = previousStats.views,
+            viewsDifference = currentStats.views - previousStats.views,
+            viewsPercentageChange = calculatePercentageChange(currentStats.views, previousStats.views),
+            currentWeekDateRange = formatDateRangeForPeriod(
+                currentStats.startDate,
+                currentStats.endDate,
+                currentPeriod
+            ),
+            previousWeekDateRange = formatDateRangeForPeriod(
+                previousStats.startDate,
+                previousStats.endDate,
+                currentPeriod
+            ),
+            chartData = ViewsStatsChartData(currentWeek = currentDataPoints, previousWeek = previousDataPoints),
+            weeklyAverage = average,
+            bottomStats = buildBottomStats(currentStats, previousStats),
             chartType = currentChartType
         )
     }
@@ -204,19 +200,83 @@ class ViewsStatsViewModel @Inject constructor(
         return ((current - previous).toDouble() / previous) * PERCENTAGE_BASE
     }
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
-    private fun formatDayLabel(period: String): String {
-        return try {
+    @Suppress("TooGenericExceptionCaught", "SwallowedException", "MagicNumber")
+    private fun formatDataPointLabel(period: String): String {
+        // Try hourly format first (yyyy-MM-dd HH:mm:ss)
+        try {
+            val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val outputFormat = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
+            val dateTime = LocalDateTime.parse(period, inputFormat)
+            return dateTime.format(outputFormat)
+        } catch (_: Exception) {
+            // Not hourly format, continue
+        }
+
+        // Try daily format (yyyy-MM-dd)
+        try {
             val date = LocalDate.parse(period, DateTimeFormatter.ISO_LOCAL_DATE)
             val outputFormat = DateTimeFormatter.ofPattern("MMM d", Locale.getDefault())
-            date.format(outputFormat)
-        } catch (e: Exception) {
-            period
+            return date.format(outputFormat)
+        } catch (_: Exception) {
+            // Not daily format, continue
+        }
+
+        // Try monthly format (yyyy-MM)
+        try {
+            val parts = period.split("-")
+            if (parts.size == 2) {
+                val year = parts[0].toInt()
+                val month = parts[1].toInt()
+                val date = LocalDate.of(year, month, 1)
+                val outputFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
+                return date.format(outputFormat)
+            }
+        } catch (_: Exception) {
+            // Not monthly format
+        }
+
+        return period
+    }
+
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    private fun formatDateRangeForPeriod(startDate: String, endDate: String, period: StatsPeriod): String {
+        return when (period) {
+            StatsPeriod.TODAY -> formatSingleDayRange(endDate)
+            StatsPeriod.LAST_6_MONTHS, StatsPeriod.LAST_12_MONTHS -> formatMonthRange(startDate, endDate)
+            else -> formatDayRange(startDate, endDate)
         }
     }
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
-    private fun formatDateRange(startDate: String, endDate: String): String {
+    private fun formatSingleDayRange(date: String): String {
+        return try {
+            val parsedDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
+            val outputFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
+            parsedDate.format(outputFormat)
+        } catch (e: Exception) {
+            date
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    private fun formatMonthRange(startDate: String, endDate: String): String {
+        return try {
+            val start = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE)
+            val end = LocalDate.parse(endDate, DateTimeFormatter.ISO_LOCAL_DATE)
+            val monthFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
+
+            if (start.month == end.month && start.year == end.year) {
+                start.format(monthFormat)
+            } else {
+                "${start.format(monthFormat)} - ${end.format(monthFormat)}"
+            }
+        } catch (e: Exception) {
+            "$startDate - $endDate"
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    private fun formatDayRange(startDate: String, endDate: String): String {
         return try {
             val start = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE)
             val end = LocalDate.parse(endDate, DateTimeFormatter.ISO_LOCAL_DATE)
