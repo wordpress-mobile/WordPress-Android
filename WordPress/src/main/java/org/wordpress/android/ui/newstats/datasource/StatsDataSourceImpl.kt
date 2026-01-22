@@ -61,50 +61,35 @@ class StatsDataSourceImpl @Inject constructor(
 
         return when (result) {
             is WpRequestResult.Success -> {
-                val response = result.response.data
-                val statsData = StatsVisitsData(
-                    visits = response.statsVisitsData().map { dataPoint ->
-                        VisitsDataPoint(
-                            period = dataPoint.period,
-                            visits = dataPoint.visits.toLong()
-                        )
-                    },
-                    visitors = response.statsVisitorsData().map { dataPoint ->
-                        VisitorsDataPoint(
-                            period = dataPoint.period,
-                            visitors = dataPoint.visitors.toLong()
-                        )
-                    },
-                    likes = response.statsLikesData().map { dataPoint ->
-                        LikesDataPoint(
-                            period = dataPoint.period,
-                            likes = dataPoint.likes.toLong()
-                        )
-                    },
-                    comments = response.statsCommentsData().map { dataPoint ->
-                        CommentsDataPoint(
-                            period = dataPoint.period,
-                            comments = dataPoint.comments.toLong()
-                        )
-                    },
-                    posts = response.statsPostsData().map { dataPoint ->
-                        PostsDataPoint(
-                            period = dataPoint.period,
-                            posts = dataPoint.posts.toLong()
-                        )
-                    }
-                )
-                StatsVisitsDataResult.Success(statsData)
+                StatsVisitsDataResult.Success(mapToStatsVisitsData(result.response.data))
             }
-
             is WpRequestResult.WpError -> {
                 StatsVisitsDataResult.Error(result.errorMessage)
             }
-
             else -> {
                 StatsVisitsDataResult.Error("Unknown error")
             }
         }
+    }
+
+    private fun mapToStatsVisitsData(response: uniffi.wp_api.StatsVisitsResponse): StatsVisitsData {
+        return StatsVisitsData(
+            visits = response.statsVisitsData().map { dataPoint ->
+                VisitsDataPoint(period = dataPoint.period, visits = dataPoint.visits.toLong())
+            },
+            visitors = response.statsVisitorsData().map { dataPoint ->
+                VisitorsDataPoint(period = dataPoint.period, visitors = dataPoint.visitors.toLong())
+            },
+            likes = response.statsLikesData().map { dataPoint ->
+                LikesDataPoint(period = dataPoint.period, likes = dataPoint.likes.toLong())
+            },
+            comments = response.statsCommentsData().map { dataPoint ->
+                CommentsDataPoint(period = dataPoint.period, comments = dataPoint.comments.toLong())
+            },
+            posts = response.statsPostsData().map { dataPoint ->
+                PostsDataPoint(period = dataPoint.period, posts = dataPoint.posts.toLong())
+            }
+        )
     }
 
     private fun StatsUnit.toApiUnit(): StatsVisitsUnit = when (this) {
