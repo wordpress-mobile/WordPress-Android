@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.dashboard.todaystats
+package org.wordpress.android.ui.mysite.cards.dashboard.todaysstats
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

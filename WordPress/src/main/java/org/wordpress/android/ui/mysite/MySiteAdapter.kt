@@ -42,7 +42,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorWithinCardView
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardViewHolder
-import org.wordpress.android.ui.mysite.cards.dashboard.todaystats.TodaysStatsCardViewHolder
+import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardViewHolder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
 import org.wordpress.android.ui.mysite.cards.dynamiccard.DynamicDashboardCardViewHolder
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardViewHolder
