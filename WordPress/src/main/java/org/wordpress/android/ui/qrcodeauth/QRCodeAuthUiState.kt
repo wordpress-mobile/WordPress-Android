@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.qrcodeauth
 
-import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.AuthenticatingPrimaryActionButton
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.AuthenticatingSecondaryActionButton
@@ -97,9 +96,6 @@ sealed class QRCodeAuthUiState {
         override val type = CONTENT
         open val title: UiString? = null
         open val subtitle: UiString? = null
-
-        @DrawableRes
-        open val image: Int? = null
         open val isProgressShowing: Boolean = false
         open val alpha: Float = BASE_ALPHA
         open val primaryActionButton: ActionButton? = null
@@ -126,9 +122,6 @@ sealed class QRCodeAuthUiState {
                 )
             }
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_validated_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_qrcode_auth_validated_152dp
         }
 
         data class Authenticating(
@@ -150,9 +143,6 @@ sealed class QRCodeAuthUiState {
                 )
             }
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_validated_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_qrcode_auth_validated_152dp
             override val alpha: Float = BLURRED_ALPHA
             override val isProgressShowing: Boolean = true
         }
@@ -164,9 +154,6 @@ sealed class QRCodeAuthUiState {
             override val type = DONE
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_done_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_done_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_qrcode_auth_login_success_218dp
         }
     }
 
