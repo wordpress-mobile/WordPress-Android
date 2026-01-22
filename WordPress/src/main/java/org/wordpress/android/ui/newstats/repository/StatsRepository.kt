@@ -309,15 +309,19 @@ class StatsRepository @Inject constructor(
         if (currentResult is StatsVisitsDataResult.Success &&
             previousResult is StatsVisitsDataResult.Success
         ) {
+            // Use display dates for the legend (may differ from API dates for hourly queries)
+            val currentDisplayDateString = getDateFormat().format(periodRange.currentDisplayDate.time)
+            val previousDisplayDateString = getDateFormat().format(periodRange.previousDisplayDate.time)
+
             val currentAggregates = buildPeriodAggregates(
                 currentResult.data,
                 getDateFormat().format(currentStart.time),
-                currentEndString
+                currentDisplayDateString
             )
             val previousAggregates = buildPeriodAggregates(
                 previousResult.data,
                 getDateFormat().format(previousStart.time),
-                previousEndString
+                previousDisplayDateString
             )
             val currentDailyData = currentResult.data.visits.map { dataPoint ->
                 DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
@@ -365,52 +369,68 @@ class StatsRepository @Inject constructor(
         val previousStart: Calendar,
         val previousEnd: Calendar,
         val quantity: Int,
-        val unit: StatsUnit
+        val unit: StatsUnit,
+        // Display dates for the legend (may differ from API dates for hourly queries)
+        val currentDisplayDate: Calendar = currentEnd,
+        val previousDisplayDate: Calendar = previousEnd
     )
 
     @Suppress("MagicNumber")
     private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
+        // Special handling for TODAY (hourly data)
+        // The API's endDate is exclusive for hourly queries, so:
+        // - To get today's hours: use tomorrow as end date
+        // - To get yesterday's hours: use today as end date
+        // But for display in the legend, we show today and yesterday
+        if (period == StatsPeriod.TODAY) {
+            val today = Calendar.getInstance()
+            val tomorrow = (today.clone() as Calendar).apply {
+                add(Calendar.DAY_OF_YEAR, 1)
+            }
+            val yesterday = (today.clone() as Calendar).apply {
+                add(Calendar.DAY_OF_YEAR, -1)
+            }
+            return PeriodDateRange(
+                currentStart = today,
+                currentEnd = tomorrow,
+                previousStart = yesterday,
+                previousEnd = today,
+                quantity = HOURLY_QUANTITY,
+                unit = StatsUnit.HOUR,
+                currentDisplayDate = today,
+                previousDisplayDate = yesterday
+            )
+        }
+
         val currentEnd = Calendar.getInstance()
         val quantity: Int
-        val unitsBack: Int
         val unit: StatsUnit
         val calendarField: Int
 
         when (period) {
-            StatsPeriod.TODAY -> {
-                quantity = HOURLY_QUANTITY
-                unitsBack = 1
-                unit = StatsUnit.HOUR
-                calendarField = Calendar.DAY_OF_YEAR
-            }
             StatsPeriod.LAST_7_DAYS -> {
                 quantity = 7
-                unitsBack = 7
                 unit = StatsUnit.DAY
                 calendarField = Calendar.DAY_OF_YEAR
             }
             StatsPeriod.LAST_30_DAYS -> {
                 quantity = DAYS_IN_30_DAYS
-                unitsBack = DAYS_IN_30_DAYS
                 unit = StatsUnit.DAY
                 calendarField = Calendar.DAY_OF_YEAR
             }
             StatsPeriod.LAST_6_MONTHS -> {
                 quantity = 6
-                unitsBack = 6
                 unit = StatsUnit.MONTH
                 calendarField = Calendar.MONTH
             }
             StatsPeriod.LAST_12_MONTHS -> {
                 quantity = 12
-                unitsBack = 12
                 unit = StatsUnit.MONTH
                 calendarField = Calendar.MONTH
             }
-            StatsPeriod.CUSTOM -> {
-                // For custom, default to 7 days for now
+            StatsPeriod.CUSTOM, StatsPeriod.TODAY -> {
+                // Custom defaults to 7 days, TODAY handled above
                 quantity = 7
-                unitsBack = 7
                 unit = StatsUnit.DAY
                 calendarField = Calendar.DAY_OF_YEAR
             }
