@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.repository
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.datasource.CommentsDataPoint
 import org.wordpress.android.ui.newstats.datasource.LikesDataPoint
 import org.wordpress.android.ui.newstats.datasource.PostsDataPoint
@@ -15,11 +16,14 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import java.time.LocalDate
 
 @ExperimentalCoroutinesApi
 class StatsRepositoryTest : BaseUnitTest() {
@@ -340,6 +344,178 @@ class StatsRepositoryTest : BaseUnitTest() {
                 endDate = any()
             )
         }
+    // endregion
+
+    // region fetchStatsForPeriod
+    @Test
+    fun `given successful response, when fetchStatsForPeriod with Last7Days, then success result is returned`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val result = repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+            assertThat(result).isInstanceOf(PeriodStatsResult.Success::class.java)
+            val success = result as PeriodStatsResult.Success
+            assertThat(success.currentAggregates.views).isEqualTo(TEST_VIEWS_1 + TEST_VIEWS_2)
+            assertThat(success.previousAggregates.views).isEqualTo(TEST_VIEWS_1 + TEST_VIEWS_2)
+            assertThat(success.currentPeriodData).hasSize(2)
+            assertThat(success.previousPeriodData).hasSize(2)
+        }
+
+    @Test
+    fun `given successful response, when fetchStatsForPeriod with Last7Days, then data source called with DAY unit`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+            // Called twice: once for current period, once for previous period
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.DAY),
+                quantity = eq(7),
+                endDate = any()
+            )
+        }
+
+    @Test
+    fun `given successful response, when fetchStatsForPeriod with Last30Days, then data source called with DAY unit`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last30Days)
+
+            // Called twice: once for current period, once for previous period
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.DAY),
+                quantity = eq(30),
+                endDate = any()
+            )
+        }
+
+    @Test
+    fun `given successful response, when fetchStatsForPeriod with Last6Months, then data source called with MONTH`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last6Months)
+
+            // Called twice: once for current period, once for previous period
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(6),
+                endDate = any()
+            )
+        }
+
+    @Test
+    fun `given successful response, when fetchStatsForPeriod with Last12Months, then data source called with MONTH`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last12Months)
+
+            // Called twice: once for current period, once for previous period
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(12),
+                endDate = any()
+            )
+        }
+
+    @Test
+    fun `given successful response, when fetchStatsForPeriod with Today, then data source called with HOUR unit`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+                .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
+
+            repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Today)
+
+            // Called twice: once for current period (today), once for previous period (yesterday)
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.HOUR),
+                quantity = eq(24),
+                endDate = any()
+            )
+        }
+
+    @Test
+    fun `given error response, when fetchStatsForPeriod is called, then error result is returned`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            .thenReturn(StatsVisitsDataResult.Error(ERROR_MESSAGE))
+
+        val result = repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(PeriodStatsResult.Error::class.java)
+        assertThat((result as PeriodStatsResult.Error).message).isEqualTo(ERROR_MESSAGE)
+    }
+
+    @Test
+    fun `given custom period, when fetchStatsForPeriod is called, then data source called with correct quantity`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 1, 1),
+                endDate = LocalDate.of(2024, 1, 10)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // 10 days custom period should use DAY unit with quantity 10
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.DAY),
+                quantity = eq(10),
+                endDate = any()
+            )
+        }
+
+    @Test
+    fun `given long custom period, when fetchStatsForPeriod is called, then data source called with MONTH unit`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 1, 1),
+                endDate = LocalDate.of(2024, 6, 30)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // Long custom period (>30 days) should use MONTH unit
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = argThat { this > 0 },
+                endDate = any()
+            )
+        }
+
+    @Test
+    fun `given parallel fetch, when fetchStatsForPeriod is called, then both periods are fetched`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        // Verify data source is called twice (current and previous period)
+        verify(statsDataSource, times(2)).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = any(),
+            quantity = any(),
+            endDate = any()
+        )
+    }
     // endregion
 
     // region Helper functions

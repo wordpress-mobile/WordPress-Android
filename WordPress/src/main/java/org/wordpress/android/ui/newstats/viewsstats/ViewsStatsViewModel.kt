@@ -200,7 +200,7 @@ class ViewsStatsViewModel @Inject constructor(
         return ((current - previous).toDouble() / previous) * PERCENTAGE_BASE
     }
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException", "MagicNumber")
+    @Suppress("TooGenericExceptionCaught", "SwallowedException", "MagicNumber", "ReturnCount")
     private fun formatDataPointLabel(period: String): String {
         // Try hourly format first (yyyy-MM-dd HH:mm:ss)
         try {

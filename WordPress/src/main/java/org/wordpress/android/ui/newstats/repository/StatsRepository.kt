@@ -26,8 +26,6 @@ private const val DAILY_QUANTITY = 1
 private const val WEEKLY_QUANTITY = 7
 private const val DAYS_BEFORE_END_DATE = -6
 private const val DAYS_IN_30_DAYS = 30
-private const val DAYS_IN_6_MONTHS = 180
-private const val DAYS_IN_12_MONTHS = 365
 
 /**
  * Repository for fetching stats data using the wordpress-rs API.
@@ -287,31 +285,31 @@ class StatsRepository @Inject constructor(
      * @param period The stats period to fetch
      * @return Combined stats for current and previous periods or error
      */
+    @Suppress("LongMethod")
     suspend fun fetchStatsForPeriod(
         siteId: Long,
         period: StatsPeriod
     ): PeriodStatsResult = withContext(ioDispatcher) {
         val periodRange = calculatePeriodDates(period)
-        val (currentStart, currentEnd, previousStart, previousEnd, quantity, unit) = periodRange
 
-        val currentEndString = getDateFormat().format(currentEnd.time)
-        val previousEndString = getDateFormat().format(previousEnd.time)
+        val currentEndString = getDateFormat().format(periodRange.currentEnd.time)
+        val previousEndString = getDateFormat().format(periodRange.previousEnd.time)
 
         // Fetch both periods in parallel for better performance
         val (currentResult, previousResult) = coroutineScope {
             val currentDeferred = async {
                 statsDataSource.fetchStatsVisits(
                     siteId = siteId,
-                    unit = unit,
-                    quantity = quantity,
+                    unit = periodRange.unit,
+                    quantity = periodRange.quantity,
                     endDate = currentEndString
                 )
             }
             val previousDeferred = async {
                 statsDataSource.fetchStatsVisits(
                     siteId = siteId,
-                    unit = unit,
-                    quantity = quantity,
+                    unit = periodRange.unit,
+                    quantity = periodRange.quantity,
                     endDate = previousEndString
                 )
             }
@@ -327,12 +325,12 @@ class StatsRepository @Inject constructor(
 
             val currentAggregates = buildPeriodAggregates(
                 currentResult.data,
-                getDateFormat().format(currentStart.time),
+                getDateFormat().format(periodRange.currentStart.time),
                 currentDisplayDateString
             )
             val previousAggregates = buildPeriodAggregates(
                 previousResult.data,
-                getDateFormat().format(previousStart.time),
+                getDateFormat().format(periodRange.previousStart.time),
                 previousDisplayDateString
             )
             val currentPeriodData = currentResult.data.visits.map { dataPoint ->
@@ -387,7 +385,7 @@ class StatsRepository @Inject constructor(
         val previousDisplayDate: Calendar = previousEnd
     )
 
-    @Suppress("MagicNumber", "CyclomaticComplexMethod")
+    @Suppress("MagicNumber", "CyclomaticComplexMethod", "LongMethod", "ReturnCount")
     private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
         // Special handling for TODAY (hourly data)
         // The API's endDate is exclusive for hourly queries, so:
