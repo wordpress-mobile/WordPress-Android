@@ -200,7 +200,7 @@ class ViewsStatsViewModel @Inject constructor(
         return ((current - previous).toDouble() / previous) * PERCENTAGE_BASE
     }
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException", "MagicNumber", "ReturnCount")
+    @Suppress("ReturnCount")
     private fun formatDataPointLabel(period: String): String {
         // Try hourly format first (yyyy-MM-dd HH:mm:ss)
         try {
@@ -238,7 +238,6 @@ class ViewsStatsViewModel @Inject constructor(
         return period
     }
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun formatDateRangeForPeriod(startDate: String, endDate: String, period: StatsPeriod): String {
         return when (period) {
             is StatsPeriod.Today -> formatSingleDayRange(endDate)
@@ -248,18 +247,16 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun formatSingleDayRange(date: String): String {
         return try {
             val parsedDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
             val outputFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
             parsedDate.format(outputFormat)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             date
         }
     }
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun formatMonthRange(startDate: String, endDate: String): String {
         return try {
             val start = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE)
@@ -271,12 +268,11 @@ class ViewsStatsViewModel @Inject constructor(
             } else {
                 "${start.format(monthFormat)} - ${end.format(monthFormat)}"
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             "$startDate - $endDate"
         }
     }
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun formatDayRange(startDate: String, endDate: String): String {
         return try {
             val start = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE)
@@ -289,7 +285,7 @@ class ViewsStatsViewModel @Inject constructor(
             } else {
                 "${start.format(dayMonthFormat)} - ${end.format(dayMonthFormat)}"
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             "$startDate - $endDate"
         }
     }

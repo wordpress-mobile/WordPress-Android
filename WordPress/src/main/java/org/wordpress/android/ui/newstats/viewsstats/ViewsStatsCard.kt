@@ -91,6 +91,19 @@ private val BadgeCornerRadius = 4.dp
 private val ChangeBadgePositiveColor = Color(0xFF4CAF50)
 private val ChangeBadgeNegativeColor = Color(0xFFE91E63)
 
+// Preview sample data constants
+private const val SAMPLE_CURRENT_VIEWS = 7467L
+private const val SAMPLE_PREVIOUS_VIEWS = 8289L
+private const val SAMPLE_VIEWS_DIFFERENCE = -822L
+private const val SAMPLE_VIEWS_PERCENTAGE = -9.9
+private const val SAMPLE_VISITORS = 2000L
+private const val SAMPLE_VISITORS_PERCENTAGE = 5.6
+private const val SAMPLE_POSTS = 5L
+private const val SAMPLE_POSTS_PERCENTAGE = 25.0
+private const val SAMPLE_PERIOD_AVERAGE = 1066L
+private val SAMPLE_CURRENT_PERIOD_DATA = listOf(800L, 1200L, 950L, 1100L, 1300L, 1017L, 1100L)
+private val SAMPLE_PREVIOUS_PERIOD_DATA = listOf(1000L, 1400L, 1150L, 1200L, 1350L, 1089L, 1100L)
+
 @Composable
 fun ViewsStatsCard(
     uiState: ViewsStatsCardUiState,
@@ -755,42 +768,35 @@ private fun ViewsStatsCardLoadingPreview() {
     }
 }
 
-private fun sampleLoadedState() = ViewsStatsCardUiState.Loaded(
-    currentPeriodViews = 7467,
-    previousPeriodViews = 8289,
-    viewsDifference = -822,
-    viewsPercentageChange = -9.9,
-    currentPeriodDateRange = "14-20 Jan",
-    previousPeriodDateRange = "7-13 Jan",
-    chartData = ViewsStatsChartData(
-        currentPeriod = listOf(
-            ChartDataPoint("Jan 14", 800),
-            ChartDataPoint("Jan 15", 1200),
-            ChartDataPoint("Jan 16", 950),
-            ChartDataPoint("Jan 17", 1100),
-            ChartDataPoint("Jan 18", 1300),
-            ChartDataPoint("Jan 19", 1017),
-            ChartDataPoint("Jan 20", 1100)
+private fun sampleLoadedState(): ViewsStatsCardUiState.Loaded {
+    val currentPeriodLabels = listOf("Jan 14", "Jan 15", "Jan 16", "Jan 17", "Jan 18", "Jan 19", "Jan 20")
+    val previousPeriodLabels = listOf("Jan 7", "Jan 8", "Jan 9", "Jan 10", "Jan 11", "Jan 12", "Jan 13")
+
+    return ViewsStatsCardUiState.Loaded(
+        currentPeriodViews = SAMPLE_CURRENT_VIEWS,
+        previousPeriodViews = SAMPLE_PREVIOUS_VIEWS,
+        viewsDifference = SAMPLE_VIEWS_DIFFERENCE,
+        viewsPercentageChange = SAMPLE_VIEWS_PERCENTAGE,
+        currentPeriodDateRange = "14-20 Jan",
+        previousPeriodDateRange = "7-13 Jan",
+        chartData = ViewsStatsChartData(
+            currentPeriod = currentPeriodLabels.zip(SAMPLE_CURRENT_PERIOD_DATA) { label, views ->
+                ChartDataPoint(label, views)
+            },
+            previousPeriod = previousPeriodLabels.zip(SAMPLE_PREVIOUS_PERIOD_DATA) { label, views ->
+                ChartDataPoint(label, views)
+            }
         ),
-        previousPeriod = listOf(
-            ChartDataPoint("Jan 7", 1000),
-            ChartDataPoint("Jan 8", 1400),
-            ChartDataPoint("Jan 9", 1150),
-            ChartDataPoint("Jan 10", 1200),
-            ChartDataPoint("Jan 11", 1350),
-            ChartDataPoint("Jan 12", 1089),
-            ChartDataPoint("Jan 13", 1100)
+        periodAverage = SAMPLE_PERIOD_AVERAGE,
+        bottomStats = listOf(
+            StatItem("Views", SAMPLE_CURRENT_VIEWS, StatChange.Negative(SAMPLE_VIEWS_PERCENTAGE)),
+            StatItem("Visitors", SAMPLE_VISITORS, StatChange.Negative(SAMPLE_VISITORS_PERCENTAGE)),
+            StatItem("Likes", 0, StatChange.NoChange),
+            StatItem("Comments", 0, StatChange.NoChange),
+            StatItem("Posts", SAMPLE_POSTS, StatChange.Positive(SAMPLE_POSTS_PERCENTAGE))
         )
-    ),
-    periodAverage = 1066,
-    bottomStats = listOf(
-        StatItem("Views", 7467, StatChange.Negative(9.9)),
-        StatItem("Visitors", 2000, StatChange.Negative(5.6)),
-        StatItem("Likes", 0, StatChange.NoChange),
-        StatItem("Comments", 0, StatChange.NoChange),
-        StatItem("Posts", 5, StatChange.Positive(25.0))
     )
-)
+}
 
 @Preview(showBackground = true)
 @Composable
