@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.viewsstats
 
+import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -75,7 +76,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             accountStore,
             statsRepository,
-            resourceProvider
+            resourceProvider,
+            SavedStateHandle()
         )
     }
 
