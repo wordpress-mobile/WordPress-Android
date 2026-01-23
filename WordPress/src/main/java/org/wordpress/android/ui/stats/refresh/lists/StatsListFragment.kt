@@ -306,23 +306,9 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment), PullT
         viewModel.listSelected.observe(viewLifecycleOwner) { viewModel.onListSelected() }
     }
 
-    // TODO Remove this forced empty view before merging - this is for testing only
     private fun StatsListFragmentBinding.showUiModel(
         it: UiModel?
     ) {
-        // TODO Remove this block before merging - forces empty view for testing
-        run {
-            recyclerView.isInvisible = true
-            errorView.statsErrorView.isGone = true
-            emptyView.statsEmptyView.isVisible = true
-            emptyView.statsEmptyView.title.setText(R.string.stats_empty_insights_title)
-            @SuppressLint("SetTextI18n")
-            emptyView.statsEmptyView.subtitle.text = ""
-            emptyView.statsEmptyView.image.setImageDrawable(null)
-            emptyView.statsEmptyView.button.setVisible(false)
-            return
-        }
-
         when (it) {
             is Success -> {
                 updateInsights(it.data)
@@ -342,6 +328,11 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment), PullT
                 } else {
                     @SuppressLint("SetTextI18n")
                     emptyView.statsEmptyView.subtitle.text = ""
+                }
+                if (it.image != null) {
+                    emptyView.statsEmptyView.image.setImageResource(it.image)
+                } else {
+                    emptyView.statsEmptyView.image.setImageDrawable(null)
                 }
                 emptyView.statsEmptyView.button.setVisible(it.showButton)
             }
