@@ -755,50 +755,48 @@ private fun ViewsStatsCardLoadingPreview() {
     }
 }
 
+private fun sampleLoadedState() = ViewsStatsCardUiState.Loaded(
+    currentPeriodViews = 7467,
+    previousPeriodViews = 8289,
+    viewsDifference = -822,
+    viewsPercentageChange = -9.9,
+    currentPeriodDateRange = "14-20 Jan",
+    previousPeriodDateRange = "7-13 Jan",
+    chartData = ViewsStatsChartData(
+        currentPeriod = listOf(
+            ChartDataPoint("Jan 14", 800),
+            ChartDataPoint("Jan 15", 1200),
+            ChartDataPoint("Jan 16", 950),
+            ChartDataPoint("Jan 17", 1100),
+            ChartDataPoint("Jan 18", 1300),
+            ChartDataPoint("Jan 19", 1017),
+            ChartDataPoint("Jan 20", 1100)
+        ),
+        previousPeriod = listOf(
+            ChartDataPoint("Jan 7", 1000),
+            ChartDataPoint("Jan 8", 1400),
+            ChartDataPoint("Jan 9", 1150),
+            ChartDataPoint("Jan 10", 1200),
+            ChartDataPoint("Jan 11", 1350),
+            ChartDataPoint("Jan 12", 1089),
+            ChartDataPoint("Jan 13", 1100)
+        )
+    ),
+    periodAverage = 1066,
+    bottomStats = listOf(
+        StatItem("Views", 7467, StatChange.Negative(9.9)),
+        StatItem("Visitors", 2000, StatChange.Negative(5.6)),
+        StatItem("Likes", 0, StatChange.NoChange),
+        StatItem("Comments", 0, StatChange.NoChange),
+        StatItem("Posts", 5, StatChange.Positive(25.0))
+    )
+)
+
 @Preview(showBackground = true)
 @Composable
 private fun ViewsStatsCardLoadedPreview() {
     AppThemeM3 {
-        ViewsStatsCard(
-            uiState = ViewsStatsCardUiState.Loaded(
-                currentPeriodViews = 7467,
-                previousPeriodViews = 8289,
-                viewsDifference = -822,
-                viewsPercentageChange = -9.9,
-                currentPeriodDateRange = "14-20 Jan",
-                previousPeriodDateRange = "7-13 Jan",
-                chartData = ViewsStatsChartData(
-                    currentPeriod = listOf(
-                        ChartDataPoint("Jan 14", 800),
-                        ChartDataPoint("Jan 15", 1200),
-                        ChartDataPoint("Jan 16", 950),
-                        ChartDataPoint("Jan 17", 1100),
-                        ChartDataPoint("Jan 18", 1300),
-                        ChartDataPoint("Jan 19", 1017),
-                        ChartDataPoint("Jan 20", 1100)
-                    ),
-                    previousPeriod = listOf(
-                        ChartDataPoint("Jan 7", 1000),
-                        ChartDataPoint("Jan 8", 1400),
-                        ChartDataPoint("Jan 9", 1150),
-                        ChartDataPoint("Jan 10", 1200),
-                        ChartDataPoint("Jan 11", 1350),
-                        ChartDataPoint("Jan 12", 1089),
-                        ChartDataPoint("Jan 13", 1100)
-                    )
-                ),
-                periodAverage = 1066,
-                bottomStats = listOf(
-                    StatItem("Views", 7467, StatChange.Negative(9.9)),
-                    StatItem("Visitors", 2000, StatChange.Negative(5.6)),
-                    StatItem("Likes", 0, StatChange.NoChange),
-                    StatItem("Comments", 0, StatChange.NoChange),
-                    StatItem("Posts", 5, StatChange.Positive(25.0))
-                )
-            ),
-            onChartTypeChanged = {},
-            onRetry = {}
-        )
+        ViewsStatsCard(uiState = sampleLoadedState(), onChartTypeChanged = {}, onRetry = {})
     }
 }
 
@@ -820,45 +818,6 @@ private fun ViewsStatsCardErrorPreview() {
 @Composable
 private fun ViewsStatsCardLoadedDarkPreview() {
     AppThemeM3 {
-        ViewsStatsCard(
-            uiState = ViewsStatsCardUiState.Loaded(
-                currentPeriodViews = 7467,
-                previousPeriodViews = 8289,
-                viewsDifference = -822,
-                viewsPercentageChange = -9.9,
-                currentPeriodDateRange = "14-20 Jan",
-                previousPeriodDateRange = "7-13 Jan",
-                chartData = ViewsStatsChartData(
-                    currentPeriod = listOf(
-                        ChartDataPoint("Jan 14", 800),
-                        ChartDataPoint("Jan 15", 1200),
-                        ChartDataPoint("Jan 16", 950),
-                        ChartDataPoint("Jan 17", 1100),
-                        ChartDataPoint("Jan 18", 1300),
-                        ChartDataPoint("Jan 19", 1017),
-                        ChartDataPoint("Jan 20", 1100)
-                    ),
-                    previousPeriod = listOf(
-                        ChartDataPoint("Jan 7", 1000),
-                        ChartDataPoint("Jan 8", 1400),
-                        ChartDataPoint("Jan 9", 1150),
-                        ChartDataPoint("Jan 10", 1200),
-                        ChartDataPoint("Jan 11", 1350),
-                        ChartDataPoint("Jan 12", 1089),
-                        ChartDataPoint("Jan 13", 1100)
-                    )
-                ),
-                periodAverage = 1066,
-                bottomStats = listOf(
-                    StatItem("Views", 7467, StatChange.Negative(9.9)),
-                    StatItem("Visitors", 2000, StatChange.Negative(5.6)),
-                    StatItem("Likes", 0, StatChange.NoChange),
-                    StatItem("Comments", 0, StatChange.NoChange),
-                    StatItem("Posts", 5, StatChange.Positive(25.0))
-                )
-            ),
-            onChartTypeChanged = {},
-            onRetry = {}
-        )
+        ViewsStatsCard(uiState = sampleLoadedState(), onChartTypeChanged = {}, onRetry = {})
     }
 }
