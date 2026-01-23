@@ -19,11 +19,13 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
 
 private const val PERCENTAGE_BASE = 100.0
+private const val DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY = 30
 
 @HiltViewModel
 class ViewsStatsViewModel @Inject constructor(
@@ -119,9 +121,9 @@ class ViewsStatsViewModel @Inject constructor(
         val currentStats = result.currentAggregates
         val previousStats = result.previousAggregates
         val currentDataPoints = result.currentPeriodData
-            .map { ChartDataPoint(formatDataPointLabel(it.period), it.views) }
+            .map { ChartDataPoint(formatDataPointLabel(it.period, currentPeriod), it.views) }
         val previousDataPoints = result.previousPeriodData
-            .map { ChartDataPoint(formatDataPointLabel(it.period), it.views) }
+            .map { ChartDataPoint(formatDataPointLabel(it.period, currentPeriod), it.views) }
 
         val average = if (currentDataPoints.isNotEmpty()) {
             currentStats.views / currentDataPoints.size
@@ -201,7 +203,11 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     @Suppress("ReturnCount")
-    private fun formatDataPointLabel(period: String): String {
+    private fun formatDataPointLabel(period: String, statsPeriod: StatsPeriod): String {
+        val isMonthlyPeriod = statsPeriod is StatsPeriod.Last6Months ||
+            statsPeriod is StatsPeriod.Last12Months ||
+            (statsPeriod is StatsPeriod.Custom && isCustomPeriodMonthly(statsPeriod))
+
         // Try hourly format first (yyyy-MM-dd HH:mm:ss)
         try {
             val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
@@ -215,7 +221,9 @@ class ViewsStatsViewModel @Inject constructor(
         // Try daily format (yyyy-MM-dd)
         try {
             val date = LocalDate.parse(period, DateTimeFormatter.ISO_LOCAL_DATE)
-            val outputFormat = DateTimeFormatter.ofPattern("MMM d", Locale.getDefault())
+            // For monthly periods, show only month; otherwise show month and day
+            val pattern = if (isMonthlyPeriod) "MMM" else "MMM d"
+            val outputFormat = DateTimeFormatter.ofPattern(pattern, Locale.getDefault())
             return date.format(outputFormat)
         } catch (_: Exception) {
             // Not daily format, continue
@@ -238,11 +246,19 @@ class ViewsStatsViewModel @Inject constructor(
         return period
     }
 
+    private fun isCustomPeriodMonthly(custom: StatsPeriod.Custom): Boolean {
+        val daysBetween = ChronoUnit.DAYS.between(custom.startDate, custom.endDate) + 1
+        return daysBetween > DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY
+    }
+
     private fun formatDateRangeForPeriod(startDate: String, endDate: String, period: StatsPeriod): String {
         return when (period) {
             is StatsPeriod.Today -> formatSingleDayRange(endDate)
             is StatsPeriod.Last6Months, is StatsPeriod.Last12Months -> formatMonthRange(startDate, endDate)
-            is StatsPeriod.Custom -> formatDayRange(startDate, endDate)
+            is StatsPeriod.Custom -> {
+                if (isCustomPeriodMonthly(period)) formatMonthRange(startDate, endDate)
+                else formatDayRange(startDate, endDate)
+            }
             else -> formatDayRange(startDate, endDate)
         }
     }
