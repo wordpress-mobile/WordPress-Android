@@ -4,7 +4,6 @@ enum class ListItemAction (val trackingLabel: String) {
     ACTIVITY_LOG("activity_log"),
     BACKUP("backup"),
     SCAN("scan"),
-    PLAN("plan"),
     POSTS("posts"),
     PAGES("pages"),
     POST_TYPES("post_types"),

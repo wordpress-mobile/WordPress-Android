@@ -15,14 +15,6 @@ val CONTENT_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_cont
 val TRAFFIC_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_traffic))
 val MANAGE_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_manage))
 val EMPTY_HEADER = CategoryEmptyHeaderItem(UiStringText(""))
-const val PLAN_NAME = "plan_name"
-val PLAN_ITEM = ListItem(
-    R.drawable.ic_plans_white_24dp,
-    UiStringRes(R.string.plan),
-    secondaryText = UiStringText(PLAN_NAME),
-    onClick = ListItemInteraction.create(ListItemAction.PLAN, SITE_ITEM_ACTION),
-    listItemAction = ListItemAction.PLAN
-)
 
 val STATS_ITEM = ListItem(
     R.drawable.ic_stats_alt_white_24dp,

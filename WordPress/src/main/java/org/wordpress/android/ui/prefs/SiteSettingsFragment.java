@@ -80,7 +80,7 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
-import org.wordpress.android.ui.plans.PlansConstants;
+import org.wordpress.android.util.PlansConstants;
 import org.wordpress.android.ui.posts.GutenbergKitFeatureChecker;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;

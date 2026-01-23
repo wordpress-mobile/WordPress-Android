@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.plans;
+package org.wordpress.android.util;
 
 
 public class PlansConstants {

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.qrcodeauth
 
-import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.AuthenticatingPrimaryActionButton
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.AuthenticatingSecondaryActionButton
@@ -44,7 +43,6 @@ sealed class QRCodeAuthUiState {
         override val type = ERROR
         abstract val title: UiString
         abstract val subtitle: UiString
-        abstract val image: Int
         open val primaryActionButton: ErrorPrimaryActionButton? = null
         open val secondaryActionButton: ErrorSecondaryActionButton? = null
 
@@ -55,9 +53,6 @@ sealed class QRCodeAuthUiState {
             override val type = AUTHENTICATION_FAILED
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_auth_failed_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_auth_failed_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_empty_results_216dp
         }
 
         data class Expired(
@@ -67,9 +62,6 @@ sealed class QRCodeAuthUiState {
             override val type = EXPIRED_TOKEN
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_expired_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_expired_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_empty_results_216dp
         }
 
         data class InvalidData(
@@ -79,9 +71,6 @@ sealed class QRCodeAuthUiState {
             override val type = INVALID_DATA
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_invalid_data_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_invalid_data_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_empty_results_216dp
         }
 
         data class NoInternet(
@@ -91,9 +80,6 @@ sealed class QRCodeAuthUiState {
             override val type = NO_INTERNET
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_no_connection_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_no_connection_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_cloud_off_152dp
         }
 
         data class ScanTimeout(
@@ -103,9 +89,6 @@ sealed class QRCodeAuthUiState {
             override val type = QRCodeAuthUiStateType.TIMEOUT
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_timeout_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_timeout_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_empty_results_216dp
         }
     }
 
@@ -113,9 +96,6 @@ sealed class QRCodeAuthUiState {
         override val type = CONTENT
         open val title: UiString? = null
         open val subtitle: UiString? = null
-
-        @DrawableRes
-        open val image: Int? = null
         open val isProgressShowing: Boolean = false
         open val alpha: Float = BASE_ALPHA
         open val primaryActionButton: ActionButton? = null
@@ -142,9 +122,6 @@ sealed class QRCodeAuthUiState {
                 )
             }
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_validated_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_qrcode_auth_validated_152dp
         }
 
         data class Authenticating(
@@ -166,9 +143,6 @@ sealed class QRCodeAuthUiState {
                 )
             }
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_validated_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_qrcode_auth_validated_152dp
             override val alpha: Float = BLURRED_ALPHA
             override val isProgressShowing: Boolean = true
         }
@@ -180,9 +154,6 @@ sealed class QRCodeAuthUiState {
             override val type = DONE
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_done_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_done_subtitle)
-
-            @DrawableRes
-            override val image = R.drawable.img_illustration_qrcode_auth_login_success_218dp
         }
     }
 

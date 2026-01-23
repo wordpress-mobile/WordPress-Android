@@ -30,7 +30,7 @@ import org.wordpress.android.ui.domains.management.getDomainDetailsUrl
 import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
-import org.wordpress.android.ui.plans.isDomainCreditAvailable
+import org.wordpress.android.util.isDomainCreditAvailable
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes

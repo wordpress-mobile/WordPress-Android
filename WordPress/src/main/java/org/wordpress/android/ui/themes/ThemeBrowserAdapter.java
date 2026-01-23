@@ -26,7 +26,7 @@ import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.ThemeModel;
-import org.wordpress.android.ui.plans.PlansConstants;
+import org.wordpress.android.util.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
