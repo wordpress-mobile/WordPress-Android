@@ -321,42 +321,57 @@ class StatsRepository @Inject constructor(
         if (currentResult is StatsVisitsDataResult.Success &&
             previousResult is StatsVisitsDataResult.Success
         ) {
-            // Use display dates for the legend (may differ from API dates for hourly queries)
-            val currentDisplayDateString = getDateFormat().format(periodRange.currentDisplayDate.time)
-            val previousDisplayDateString = getDateFormat().format(periodRange.previousDisplayDate.time)
-
-            val currentAggregates = buildPeriodAggregates(
-                currentResult.data,
-                getDateFormat().format(periodRange.currentStart.time),
-                currentDisplayDateString
-            )
-            val previousAggregates = buildPeriodAggregates(
-                previousResult.data,
-                getDateFormat().format(periodRange.previousStart.time),
-                previousDisplayDateString
-            )
-            val currentPeriodData = currentResult.data.visits.map { dataPoint ->
-                ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
-            }
-            val previousPeriodData = previousResult.data.visits.map { dataPoint ->
-                ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
-            }
-
-            PeriodStatsResult.Success(
-                currentAggregates = currentAggregates,
-                previousAggregates = previousAggregates,
-                currentPeriodData = currentPeriodData,
-                previousPeriodData = previousPeriodData
-            )
+            buildPeriodStatsSuccess(currentResult.data, previousResult.data, periodRange)
         } else {
-            val errorMessage = when {
-                currentResult is StatsVisitsDataResult.Error -> currentResult.message
-                previousResult is StatsVisitsDataResult.Error -> previousResult.message
-                else -> "Unknown error"
-            }
-            appLogWrapper.e(AppLog.T.STATS, "API Error fetching period stats: $errorMessage")
-            PeriodStatsResult.Error(errorMessage)
+            buildPeriodStatsError(currentResult, previousResult)
         }
+    }
+
+    private fun buildPeriodStatsSuccess(
+        currentData: StatsVisitsData,
+        previousData: StatsVisitsData,
+        periodRange: PeriodDateRange
+    ): PeriodStatsResult.Success {
+        val dateFormat = getDateFormat()
+        val currentDisplayDateString = dateFormat.format(periodRange.currentDisplayDate.time)
+        val previousDisplayDateString = dateFormat.format(periodRange.previousDisplayDate.time)
+
+        val currentAggregates = buildPeriodAggregates(
+            currentData,
+            dateFormat.format(periodRange.currentStart.time),
+            currentDisplayDateString
+        )
+        val previousAggregates = buildPeriodAggregates(
+            previousData,
+            dateFormat.format(periodRange.previousStart.time),
+            previousDisplayDateString
+        )
+        val currentPeriodData = currentData.visits.map { dataPoint ->
+            ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
+        }
+        val previousPeriodData = previousData.visits.map { dataPoint ->
+            ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
+        }
+
+        return PeriodStatsResult.Success(
+            currentAggregates = currentAggregates,
+            previousAggregates = previousAggregates,
+            currentPeriodData = currentPeriodData,
+            previousPeriodData = previousPeriodData
+        )
+    }
+
+    private fun buildPeriodStatsError(
+        currentResult: StatsVisitsDataResult,
+        previousResult: StatsVisitsDataResult
+    ): PeriodStatsResult.Error {
+        val errorMessage = when {
+            currentResult is StatsVisitsDataResult.Error -> currentResult.message
+            previousResult is StatsVisitsDataResult.Error -> previousResult.message
+            else -> "Unknown error"
+        }
+        appLogWrapper.e(AppLog.T.STATS, "API Error fetching period stats: $errorMessage")
+        return PeriodStatsResult.Error(errorMessage)
     }
 
     private fun buildPeriodAggregates(
@@ -387,85 +402,53 @@ class StatsRepository @Inject constructor(
         val previousDisplayDate: Calendar = previousEnd
     )
 
+    private data class PeriodConfig(val quantity: Int, val unit: StatsUnit, val calendarField: Int)
+
     @Suppress("ReturnCount")
     private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
-        // Special handling for TODAY (hourly data)
-        // The API's endDate is exclusive for hourly queries, so:
-        // - To get today's hours: use tomorrow as end date
-        // - To get yesterday's hours: use today as end date
-        // But for display in the legend, we show today and yesterday
-        if (period is StatsPeriod.Today) {
-            val today = Calendar.getInstance()
-            val tomorrow = (today.clone() as Calendar).apply {
-                add(Calendar.DAY_OF_YEAR, 1)
-            }
-            val yesterday = (today.clone() as Calendar).apply {
-                add(Calendar.DAY_OF_YEAR, -1)
-            }
-            return PeriodDateRange(
-                currentStart = today,
-                currentEnd = tomorrow,
-                previousStart = yesterday,
-                previousEnd = today,
-                quantity = HOURLY_QUANTITY,
-                unit = StatsUnit.HOUR,
-                currentDisplayDate = today,
-                previousDisplayDate = yesterday
-            )
-        }
+        if (period is StatsPeriod.Today) return calculateTodayPeriodDates()
+        if (period is StatsPeriod.Custom) return calculateCustomPeriodDates(period.startDate, period.endDate)
 
-        // Special handling for Custom period
-        if (period is StatsPeriod.Custom) {
-            return calculateCustomPeriodDates(period.startDate, period.endDate)
-        }
-
+        val config = getPeriodConfig(period)
         val currentEnd = Calendar.getInstance()
-        val quantity: Int
-        val unit: StatsUnit
-        val calendarField: Int
-
-        when (period) {
-            is StatsPeriod.Last7Days -> {
-                quantity = DAYS_IN_7_DAYS
-                unit = StatsUnit.DAY
-                calendarField = Calendar.DAY_OF_YEAR
-            }
-            is StatsPeriod.Last30Days -> {
-                quantity = DAYS_IN_30_DAYS
-                unit = StatsUnit.DAY
-                calendarField = Calendar.DAY_OF_YEAR
-            }
-            is StatsPeriod.Last6Months -> {
-                quantity = MONTHS_IN_6_MONTHS
-                unit = StatsUnit.MONTH
-                calendarField = Calendar.MONTH
-            }
-            is StatsPeriod.Last12Months -> {
-                quantity = MONTHS_IN_12_MONTHS
-                unit = StatsUnit.MONTH
-                calendarField = Calendar.MONTH
-            }
-            else -> {
-                // Fallback to 7 days
-                quantity = DAYS_IN_7_DAYS
-                unit = StatsUnit.DAY
-                calendarField = Calendar.DAY_OF_YEAR
-            }
-        }
-
         val currentStart = (currentEnd.clone() as Calendar).apply {
-            add(calendarField, -(quantity - 1))
+            add(config.calendarField, -(config.quantity - 1))
         }
-
         val previousEnd = (currentStart.clone() as Calendar).apply {
-            add(calendarField, -1)
+            add(config.calendarField, -1)
         }
-
         val previousStart = (previousEnd.clone() as Calendar).apply {
-            add(calendarField, -(quantity - 1))
+            add(config.calendarField, -(config.quantity - 1))
         }
+        return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, config.quantity, config.unit)
+    }
 
-        return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, quantity, unit)
+    private fun getPeriodConfig(period: StatsPeriod): PeriodConfig = when (period) {
+        is StatsPeriod.Last7Days -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, Calendar.DAY_OF_YEAR)
+        is StatsPeriod.Last30Days -> PeriodConfig(DAYS_IN_30_DAYS, StatsUnit.DAY, Calendar.DAY_OF_YEAR)
+        is StatsPeriod.Last6Months -> PeriodConfig(MONTHS_IN_6_MONTHS, StatsUnit.MONTH, Calendar.MONTH)
+        is StatsPeriod.Last12Months -> PeriodConfig(MONTHS_IN_12_MONTHS, StatsUnit.MONTH, Calendar.MONTH)
+        else -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, Calendar.DAY_OF_YEAR) // Fallback to 7 days
+    }
+
+    /**
+     * Calculates period dates for TODAY (hourly data).
+     * The API's endDate is exclusive for hourly queries, so we use tomorrow as end date for today's hours.
+     */
+    private fun calculateTodayPeriodDates(): PeriodDateRange {
+        val today = Calendar.getInstance()
+        val tomorrow = (today.clone() as Calendar).apply { add(Calendar.DAY_OF_YEAR, 1) }
+        val yesterday = (today.clone() as Calendar).apply { add(Calendar.DAY_OF_YEAR, -1) }
+        return PeriodDateRange(
+            currentStart = today,
+            currentEnd = tomorrow,
+            previousStart = yesterday,
+            previousEnd = today,
+            quantity = HOURLY_QUANTITY,
+            unit = StatsUnit.HOUR,
+            currentDisplayDate = today,
+            previousDisplayDate = yesterday
+        )
     }
 
     private fun calculateCustomPeriodDates(startDate: LocalDate, endDate: LocalDate): PeriodDateRange {
