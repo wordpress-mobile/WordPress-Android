@@ -26,6 +26,9 @@ private const val DAILY_QUANTITY = 1
 private const val WEEKLY_QUANTITY = 7
 private const val DAYS_BEFORE_END_DATE = -6
 private const val DAYS_IN_30_DAYS = 30
+private const val DAYS_IN_7_DAYS = 7
+private const val MONTHS_IN_6_MONTHS = 6
+private const val MONTHS_IN_12_MONTHS = 12
 
 /**
  * Repository for fetching stats data using the wordpress-rs API.
@@ -285,7 +288,6 @@ class StatsRepository @Inject constructor(
      * @param period The stats period to fetch
      * @return Combined stats for current and previous periods or error
      */
-    @Suppress("LongMethod")
     suspend fun fetchStatsForPeriod(
         siteId: Long,
         period: StatsPeriod
@@ -385,7 +387,7 @@ class StatsRepository @Inject constructor(
         val previousDisplayDate: Calendar = previousEnd
     )
 
-    @Suppress("MagicNumber", "CyclomaticComplexMethod", "LongMethod", "ReturnCount")
+    @Suppress("ReturnCount")
     private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
         // Special handling for TODAY (hourly data)
         // The API's endDate is exclusive for hourly queries, so:
@@ -424,7 +426,7 @@ class StatsRepository @Inject constructor(
 
         when (period) {
             is StatsPeriod.Last7Days -> {
-                quantity = 7
+                quantity = DAYS_IN_7_DAYS
                 unit = StatsUnit.DAY
                 calendarField = Calendar.DAY_OF_YEAR
             }
@@ -434,18 +436,18 @@ class StatsRepository @Inject constructor(
                 calendarField = Calendar.DAY_OF_YEAR
             }
             is StatsPeriod.Last6Months -> {
-                quantity = 6
+                quantity = MONTHS_IN_6_MONTHS
                 unit = StatsUnit.MONTH
                 calendarField = Calendar.MONTH
             }
             is StatsPeriod.Last12Months -> {
-                quantity = 12
+                quantity = MONTHS_IN_12_MONTHS
                 unit = StatsUnit.MONTH
                 calendarField = Calendar.MONTH
             }
             else -> {
                 // Fallback to 7 days
-                quantity = 7
+                quantity = DAYS_IN_7_DAYS
                 unit = StatsUnit.DAY
                 calendarField = Calendar.DAY_OF_YEAR
             }
@@ -466,7 +468,6 @@ class StatsRepository @Inject constructor(
         return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, quantity, unit)
     }
 
-    @Suppress("MagicNumber")
     private fun calculateCustomPeriodDates(startDate: LocalDate, endDate: LocalDate): PeriodDateRange {
         val daysBetween = ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1
 
