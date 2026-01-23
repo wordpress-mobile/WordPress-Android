@@ -1,2 +1,0 @@
-- The app icon has a single-color option to match your device’s other themed icons. #aesthetic
-- Large, high-resolution images are more likely to load (but might take a few seconds).
