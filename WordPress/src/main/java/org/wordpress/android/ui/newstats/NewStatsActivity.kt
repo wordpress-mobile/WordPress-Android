@@ -31,7 +31,6 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -84,18 +83,20 @@ private enum class StatsTab(val titleResId: Int) {
 private fun NewStatsScreen(
     onBackPressed: () -> Unit
 ) {
+    val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
+    val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
+
     val tabs = StatsTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
     var showPeriodMenu by remember { mutableStateOf(false) }
     var showDateRangePicker by remember { mutableStateOf(false) }
-    var selectedPeriod: StatsPeriod by remember { mutableStateOf(StatsPeriod.Last7Days) }
 
     if (showDateRangePicker) {
         StatsDateRangePickerDialog(
             onDismiss = { showDateRangePicker = false },
             onDateRangeSelected = { startDate, endDate ->
-                selectedPeriod = StatsPeriod.Custom(startDate, endDate)
+                viewsStatsViewModel.onPeriodChanged(StatsPeriod.Custom(startDate, endDate))
                 showDateRangePicker = false
             }
         )
@@ -130,7 +131,7 @@ private fun NewStatsScreen(
                             selectedPeriod = selectedPeriod,
                             onDismiss = { showPeriodMenu = false },
                             onPresetSelected = { period ->
-                                selectedPeriod = period
+                                viewsStatsViewModel.onPeriodChanged(period)
                                 showPeriodMenu = false
                             },
                             onCustomSelected = {
@@ -166,16 +167,16 @@ private fun NewStatsScreen(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) { page ->
-                StatsTabContent(tab = tabs[page], selectedPeriod = selectedPeriod)
+                StatsTabContent(tab = tabs[page], viewsStatsViewModel = viewsStatsViewModel)
             }
         }
     }
 }
 
 @Composable
-private fun StatsTabContent(tab: StatsTab, selectedPeriod: StatsPeriod) {
+private fun StatsTabContent(tab: StatsTab, viewsStatsViewModel: ViewsStatsViewModel) {
     when (tab) {
-        StatsTab.TRAFFIC -> TrafficTabContent(selectedPeriod = selectedPeriod)
+        StatsTab.TRAFFIC -> TrafficTabContent(viewsStatsViewModel = viewsStatsViewModel)
         else -> PlaceholderTabContent(tab)
     }
 }
@@ -183,13 +184,9 @@ private fun StatsTabContent(tab: StatsTab, selectedPeriod: StatsPeriod) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TrafficTabContent(
-    selectedPeriod: StatsPeriod,
-    todaysStatsViewModel: TodaysStatsViewModel = viewModel(),
-    viewsStatsViewModel: ViewsStatsViewModel = viewModel()
+    viewsStatsViewModel: ViewsStatsViewModel,
+    todaysStatsViewModel: TodaysStatsViewModel = viewModel()
 ) {
-    LaunchedEffect(selectedPeriod) {
-        viewsStatsViewModel.onPeriodChanged(selectedPeriod)
-    }
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
     val viewsStatsUiState by viewsStatsViewModel.uiState.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()

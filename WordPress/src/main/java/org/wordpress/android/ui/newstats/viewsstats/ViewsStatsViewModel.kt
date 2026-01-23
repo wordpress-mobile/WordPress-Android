@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.viewsstats
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,12 +33,24 @@ private val HOURLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""
 private val DAILY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")
 private val MONTHLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}""")
 
+private const val KEY_PERIOD_TYPE = "period_type"
+private const val KEY_CUSTOM_START_DATE = "custom_start_date"
+private const val KEY_CUSTOM_END_DATE = "custom_end_date"
+
+private const val PERIOD_TODAY = "today"
+private const val PERIOD_LAST_7_DAYS = "last_7_days"
+private const val PERIOD_LAST_30_DAYS = "last_30_days"
+private const val PERIOD_LAST_6_MONTHS = "last_6_months"
+private const val PERIOD_LAST_12_MONTHS = "last_12_months"
+private const val PERIOD_CUSTOM = "custom"
+
 @HiltViewModel
 class ViewsStatsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val statsRepository: StatsRepository,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ViewsStatsCardUiState>(ViewsStatsCardUiState.Loading)
     val uiState: StateFlow<ViewsStatsCardUiState> = _uiState.asStateFlow()
@@ -45,8 +58,11 @@ class ViewsStatsViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
+    private val _selectedPeriod = MutableStateFlow(restorePeriod())
+    val selectedPeriod: StateFlow<StatsPeriod> = _selectedPeriod.asStateFlow()
+
     private var currentChartType: ChartType = ChartType.LINE
-    private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
+    private var currentPeriod: StatsPeriod = _selectedPeriod.value
 
     init {
         loadData()
@@ -55,7 +71,47 @@ class ViewsStatsViewModel @Inject constructor(
     fun onPeriodChanged(period: StatsPeriod) {
         if (period == currentPeriod) return
         currentPeriod = period
+        _selectedPeriod.value = period
+        savePeriod(period)
         loadData()
+    }
+
+    private fun savePeriod(period: StatsPeriod) {
+        when (period) {
+            is StatsPeriod.Today -> savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_TODAY
+            is StatsPeriod.Last7Days -> savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_LAST_7_DAYS
+            is StatsPeriod.Last30Days -> savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_LAST_30_DAYS
+            is StatsPeriod.Last6Months -> savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_LAST_6_MONTHS
+            is StatsPeriod.Last12Months -> savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_LAST_12_MONTHS
+            is StatsPeriod.Custom -> {
+                savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_CUSTOM
+                savedStateHandle[KEY_CUSTOM_START_DATE] = period.startDate.toEpochDay()
+                savedStateHandle[KEY_CUSTOM_END_DATE] = period.endDate.toEpochDay()
+            }
+        }
+    }
+
+    private fun restorePeriod(): StatsPeriod {
+        return when (savedStateHandle.get<String>(KEY_PERIOD_TYPE)) {
+            PERIOD_TODAY -> StatsPeriod.Today
+            PERIOD_LAST_7_DAYS -> StatsPeriod.Last7Days
+            PERIOD_LAST_30_DAYS -> StatsPeriod.Last30Days
+            PERIOD_LAST_6_MONTHS -> StatsPeriod.Last6Months
+            PERIOD_LAST_12_MONTHS -> StatsPeriod.Last12Months
+            PERIOD_CUSTOM -> {
+                val startEpochDay = savedStateHandle.get<Long>(KEY_CUSTOM_START_DATE)
+                val endEpochDay = savedStateHandle.get<Long>(KEY_CUSTOM_END_DATE)
+                if (startEpochDay != null && endEpochDay != null) {
+                    StatsPeriod.Custom(
+                        LocalDate.ofEpochDay(startEpochDay),
+                        LocalDate.ofEpochDay(endEpochDay)
+                    )
+                } else {
+                    StatsPeriod.Last7Days
+                }
+            }
+            else -> StatsPeriod.Last7Days
+        }
     }
 
     fun onChartTypeChanged(chartType: ChartType) {
