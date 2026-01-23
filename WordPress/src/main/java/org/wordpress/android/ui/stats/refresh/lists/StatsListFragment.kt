@@ -329,11 +329,6 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment), PullT
                     @SuppressLint("SetTextI18n")
                     emptyView.statsEmptyView.subtitle.text = ""
                 }
-                if (it.image != null) {
-                    emptyView.statsEmptyView.image.setImageResource(it.image)
-                } else {
-                    emptyView.statsEmptyView.image.setImageDrawable(null)
-                }
                 emptyView.statsEmptyView.button.setVisible(it.showButton)
             }
         }
