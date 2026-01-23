@@ -72,7 +72,12 @@ fun StatsDateRangePickerDialog(
                         val endDate = Instant.ofEpochMilli(endMillis)
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate()
-                        onDateRangeSelected(startDate, endDate)
+                        // Ensure start date is before or equal to end date, swap if needed
+                        if (startDate.isAfter(endDate)) {
+                            onDateRangeSelected(endDate, startDate)
+                        } else {
+                            onDateRangeSelected(startDate, endDate)
+                        }
                     }
                     onDismiss()
                 }
