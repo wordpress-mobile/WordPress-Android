@@ -15,6 +15,7 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.PeriodAggregates
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -26,6 +27,10 @@ import kotlin.math.abs
 
 private const val PERCENTAGE_BASE = 100.0
 private const val DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY = 30
+
+private val HOURLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""")
+private val DAILY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")
+private val MONTHLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}""")
 
 @HiltViewModel
 class ViewsStatsViewModel @Inject constructor(
@@ -128,6 +133,12 @@ class ViewsStatsViewModel @Inject constructor(
         val average = if (currentDataPoints.isNotEmpty()) {
             currentStats.views / currentDataPoints.size
         } else {
+            if (currentStats.views > 0) {
+                AppLog.w(
+                    AppLog.T.STATS,
+                    "Data inconsistency: no data points but views=${currentStats.views}"
+                )
+            }
             0L
         }
 
@@ -202,48 +213,35 @@ class ViewsStatsViewModel @Inject constructor(
         return ((current - previous).toDouble() / previous) * PERCENTAGE_BASE
     }
 
-    @Suppress("ReturnCount")
     private fun formatDataPointLabel(period: String, statsPeriod: StatsPeriod): String {
         val isMonthlyPeriod = statsPeriod is StatsPeriod.Last6Months ||
             statsPeriod is StatsPeriod.Last12Months ||
             (statsPeriod is StatsPeriod.Custom && isCustomPeriodMonthly(statsPeriod))
 
-        // Try hourly format first (yyyy-MM-dd HH:mm:ss)
-        try {
-            val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val outputFormat = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
-            val dateTime = LocalDateTime.parse(period, inputFormat)
-            return dateTime.format(outputFormat)
-        } catch (_: Exception) {
-            // Not hourly format, continue
+        return when {
+            period.matches(HOURLY_FORMAT_REGEX) -> formatHourlyLabel(period)
+            period.matches(DAILY_FORMAT_REGEX) -> formatDailyLabel(period, isMonthlyPeriod)
+            period.matches(MONTHLY_FORMAT_REGEX) -> formatMonthlyLabel(period)
+            else -> period
         }
+    }
 
-        // Try daily format (yyyy-MM-dd)
-        try {
-            val date = LocalDate.parse(period, DateTimeFormatter.ISO_LOCAL_DATE)
-            // For monthly periods, show only month; otherwise show month and day
-            val pattern = if (isMonthlyPeriod) "MMM" else "MMM d"
-            val outputFormat = DateTimeFormatter.ofPattern(pattern, Locale.getDefault())
-            return date.format(outputFormat)
-        } catch (_: Exception) {
-            // Not daily format, continue
-        }
+    private fun formatHourlyLabel(period: String): String {
+        val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val outputFormat = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
+        return LocalDateTime.parse(period, inputFormat).format(outputFormat)
+    }
 
-        // Try monthly format (yyyy-MM)
-        try {
-            val parts = period.split("-")
-            if (parts.size == 2) {
-                val year = parts[0].toInt()
-                val month = parts[1].toInt()
-                val date = LocalDate.of(year, month, 1)
-                val outputFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
-                return date.format(outputFormat)
-            }
-        } catch (_: Exception) {
-            // Not monthly format
-        }
+    private fun formatDailyLabel(period: String, showMonthOnly: Boolean): String {
+        val date = LocalDate.parse(period, DateTimeFormatter.ISO_LOCAL_DATE)
+        val pattern = if (showMonthOnly) "MMM" else "MMM d"
+        return date.format(DateTimeFormatter.ofPattern(pattern, Locale.getDefault()))
+    }
 
-        return period
+    private fun formatMonthlyLabel(period: String): String {
+        val parts = period.split("-")
+        val date = LocalDate.of(parts[0].toInt(), parts[1].toInt(), 1)
+        return date.format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault()))
     }
 
     private fun isCustomPeriodMonthly(custom: StatsPeriod.Custom): Boolean {
@@ -263,46 +261,43 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
+    private fun parseDate(dateString: String): LocalDate? {
+        return if (dateString.matches(DAILY_FORMAT_REGEX)) {
+            LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE)
+        } else {
+            null
+        }
+    }
+
     private fun formatSingleDayRange(date: String): String {
-        return try {
-            val parsedDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
-            val outputFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
-            parsedDate.format(outputFormat)
-        } catch (_: Exception) {
-            date
-        }
+        val parsedDate = parseDate(date) ?: return date
+        return parsedDate.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
     }
 
+    @Suppress("ReturnCount")
     private fun formatMonthRange(startDate: String, endDate: String): String {
-        return try {
-            val start = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE)
-            val end = LocalDate.parse(endDate, DateTimeFormatter.ISO_LOCAL_DATE)
-            val monthFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
+        val start = parseDate(startDate) ?: return "$startDate - $endDate"
+        val end = parseDate(endDate) ?: return "$startDate - $endDate"
+        val monthFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
 
-            if (start.month == end.month && start.year == end.year) {
-                start.format(monthFormat)
-            } else {
-                "${start.format(monthFormat)} - ${end.format(monthFormat)}"
-            }
-        } catch (_: Exception) {
-            "$startDate - $endDate"
+        return if (start.month == end.month && start.year == end.year) {
+            start.format(monthFormat)
+        } else {
+            "${start.format(monthFormat)} - ${end.format(monthFormat)}"
         }
     }
 
+    @Suppress("ReturnCount")
     private fun formatDayRange(startDate: String, endDate: String): String {
-        return try {
-            val start = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE)
-            val end = LocalDate.parse(endDate, DateTimeFormatter.ISO_LOCAL_DATE)
-            val dayFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
-            val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
+        val start = parseDate(startDate) ?: return "$startDate - $endDate"
+        val end = parseDate(endDate) ?: return "$startDate - $endDate"
+        val dayFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
+        val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
 
-            if (start.month == end.month) {
-                "${start.format(dayFormat)}-${end.format(dayMonthFormat)}"
-            } else {
-                "${start.format(dayMonthFormat)} - ${end.format(dayMonthFormat)}"
-            }
-        } catch (_: Exception) {
-            "$startDate - $endDate"
+        return if (start.month == end.month) {
+            "${start.format(dayFormat)}-${end.format(dayMonthFormat)}"
+        } else {
+            "${start.format(dayMonthFormat)} - ${end.format(dayMonthFormat)}"
         }
     }
 
