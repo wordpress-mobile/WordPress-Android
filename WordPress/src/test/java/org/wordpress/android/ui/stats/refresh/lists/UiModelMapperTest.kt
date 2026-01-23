@@ -9,7 +9,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.ManagementType
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
@@ -26,8 +25,9 @@ class UiModelMapperTest : BaseUnitTest() {
         mapper = UiModelMapper(networkUtilsWrapper)
     }
 
+    // TODO restore this test when removing the forced empty view in UiModelMapper.mapInsights
     @Test
-    fun `mapInsights returns success ui model when all the inputs are successful`() {
+    fun `mapInsights returns empty ui model`() {
         var error: Int? = null
         val uiModel = mapper.mapInsights(
             listOf(
@@ -38,14 +38,10 @@ class UiModelMapperTest : BaseUnitTest() {
             error = it
         }
 
-        val model = uiModel as UiModel.Success
-        assertThat(model.data).hasSize(2)
-        assertThat((model.data[0] as Success).statsType).isEqualTo(TOTAL_FOLLOWERS)
-        assertThat(model.data[0].type).isEqualTo(StatsBlock.Type.SUCCESS)
-        assertThat(model.data[0].data).isEmpty()
-        assertThat((model.data[1] as Success).statsType).isEqualTo(ManagementType.CONTROL)
-        assertThat(model.data[1].type).isEqualTo(StatsBlock.Type.SUCCESS)
-        assertThat(model.data[1].data).isEmpty()
+        val model = uiModel as UiModel.Empty
+        assertThat(model.title).isEqualTo(R.string.stats_empty_insights_title)
+        assertThat(model.subtitle).isEqualTo(R.string.stats_insights_management_title)
+        assertThat(model.showButton).isTrue()
         assertThat(error).isNull()
     }
 
@@ -64,7 +60,6 @@ class UiModelMapperTest : BaseUnitTest() {
         val model = uiModel as UiModel.Empty
         assertThat(model.title).isEqualTo(R.string.stats_empty_insights_title)
         assertThat(model.subtitle).isEqualTo(R.string.stats_insights_management_title)
-        assertThat(model.image).isEqualTo(R.drawable.img_illustration_insights_94dp)
         assertThat(model.showButton).isTrue()
         assertThat(error).isNull()
     }
