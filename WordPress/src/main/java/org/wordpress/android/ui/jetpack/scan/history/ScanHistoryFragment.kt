@@ -96,8 +96,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
 
     private fun FullscreenErrorWithRetryBinding.updateErrorLayout(uiState: ErrorUiState) {
         uiHelpers.setTextOrHide(errorTitle, uiState.title)
-        uiHelpers.updateVisibility(errorImage, true)
-        errorImage.setImageResource(uiState.img)
+        uiHelpers.updateVisibility(errorImage, false)
         errorRetry.setOnClickListener { uiState.retry.invoke() }
     }
 

@@ -30,7 +30,6 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.EmptyViewRecyclerView
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.image.ImageManager
@@ -94,28 +93,27 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     private fun ScanFragmentBinding.setupObservers() {
         viewModel.uiState.observe(
-            viewLifecycleOwner,
-            { uiState ->
-                uiHelpers.updateVisibility(progressBar, uiState.loadingVisible)
-                uiHelpers.updateVisibility(recyclerView, uiState.contentVisible)
-                uiHelpers.updateVisibility(actionableEmptyView, uiState.errorVisible)
+            viewLifecycleOwner
+        ) { uiState ->
+            uiHelpers.updateVisibility(progressBar, uiState.loadingVisible)
+            uiHelpers.updateVisibility(recyclerView, uiState.contentVisible)
+            uiHelpers.updateVisibility(actionableEmptyView, uiState.errorVisible)
 
-                when (uiState) {
-                    is ContentUiState -> updateContentLayout(uiState)
+            when (uiState) {
+                is ContentUiState -> updateContentLayout(uiState)
 
-                    is FullScreenLoadingUiState -> { // Do Nothing
-                    }
-
-                    is ErrorUiState.NoConnection,
-                    is ErrorUiState.GenericRequestFailed,
-                    is ErrorUiState.ScanRequestFailed,
-                    is ErrorUiState.MultisiteNotSupported,
-                    is ErrorUiState.VaultPressActiveOnSite -> updateErrorLayout(uiState as ErrorUiState)
+                is FullScreenLoadingUiState -> { // Do Nothing
                 }
-            }
-        )
 
-        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar() })
+                is ErrorUiState.NoConnection,
+                is ErrorUiState.GenericRequestFailed,
+                is ErrorUiState.ScanRequestFailed,
+                is ErrorUiState.MultisiteNotSupported,
+                is ErrorUiState.VaultPressActiveOnSite -> updateErrorLayout(uiState)
+            }
+        }
+
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { it.showSnackbar() }
 
         viewModel.navigationEvents.observeEvent(
             viewLifecycleOwner
@@ -147,10 +145,6 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     private fun ScanFragmentBinding.updateErrorLayout(state: ErrorUiState) {
         uiHelpers.setTextOrHide(actionableEmptyView.title, state.title)
         uiHelpers.setTextOrHide(actionableEmptyView.subtitle, state.subtitle)
-        actionableEmptyView.image.setImageResource(state.image)
-        state.imageColorResId?.let {
-            ColorUtils.setImageResourceWithTint(actionableEmptyView.image, state.image, it)
-        } ?: actionableEmptyView.image.setImageResource(state.image)
         state.buttonText?.let { uiHelpers.setTextOrHide(actionableEmptyView.button, state.buttonText) }
         state.action?.let { action -> actionableEmptyView.button.setOnClickListener { action.invoke() } }
     }
