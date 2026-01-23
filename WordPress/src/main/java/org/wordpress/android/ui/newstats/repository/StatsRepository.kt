@@ -12,12 +12,9 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.util.AppLog
-import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -39,16 +36,7 @@ class StatsRepository @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
-    /**
-     * Thread-local date formatter for thread-safe date formatting.
-     * SimpleDateFormat is NOT thread-safe, so we use ThreadLocal to provide each thread
-     * with its own instance, avoiding the overhead of creating new instances on every call.
-     */
-    private val dateFormat = ThreadLocal.withInitial {
-        SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
-    }
-
-    private fun getDateFormat(): SimpleDateFormat = dateFormat.get()!!
+    private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
     fun init(accessToken: String) {
         statsDataSource.init(accessToken)
@@ -61,8 +49,7 @@ class StatsRepository @Inject constructor(
      * @return Today's aggregated stats or error
      */
     suspend fun fetchTodayAggregates(siteId: Long): TodayAggregatesResult = withContext(ioDispatcher) {
-        val calendar = Calendar.getInstance()
-        val dateString = getDateFormat().format(calendar.time)
+        val dateString = LocalDate.now().format(dateFormatter)
 
         val result = statsDataSource.fetchStatsVisits(
             siteId = siteId,
@@ -106,13 +93,11 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         offsetDays: Int = 0
     ): HourlyViewsResult = withContext(ioDispatcher) {
-        val calendar = Calendar.getInstance()
         // The API's endDate is exclusive for hourly queries, so we need to add 1 day to get
         // the target day's hours. Formula: 1 (for exclusive end) - offsetDays (0=today, 1=yesterday)
         // Examples: offsetDays=0 → tomorrow's date → fetches today's hours
         //           offsetDays=1 → today's date → fetches yesterday's hours
-        calendar.add(Calendar.DAY_OF_YEAR, 1 - offsetDays)
-        val dateString = getDateFormat().format(calendar.time)
+        val dateString = LocalDate.now().plusDays((1 - offsetDays).toLong()).format(dateFormatter)
 
         val result = statsDataSource.fetchStatsVisits(
             siteId = siteId,
@@ -146,7 +131,7 @@ class StatsRepository @Inject constructor(
     suspend fun fetchWeeklyStats(siteId: Long, weeksAgo: Int = 0): WeeklyStatsResult =
         withContext(ioDispatcher) {
             val (startDate, endDate) = calculateWeekDateRange(weeksAgo)
-            val endDateString = getDateFormat().format(endDate.time)
+            val endDateString = endDate.format(dateFormatter)
 
             val result = statsDataSource.fetchStatsVisits(
                 siteId = siteId,
@@ -164,7 +149,7 @@ class StatsRepository @Inject constructor(
                     val totalComments = data.comments.sumOf { it.comments }
                     val totalPosts = data.posts.sumOf { it.posts }
 
-                    val startDateFormatted = getDateFormat().format(startDate.time)
+                    val startDateFormatted = startDate.format(dateFormatter)
 
                     val aggregates = PeriodAggregates(
                         views = totalViews,
@@ -195,7 +180,7 @@ class StatsRepository @Inject constructor(
     suspend fun fetchDailyViewsForWeek(siteId: Long, weeksAgo: Int = 0): DailyViewsResult =
         withContext(ioDispatcher) {
             val (_, endDate) = calculateWeekDateRange(weeksAgo)
-            val endDateString = getDateFormat().format(endDate.time)
+            val endDateString = endDate.format(dateFormatter)
 
             val result = statsDataSource.fetchStatsVisits(
                 siteId = siteId,
@@ -232,7 +217,7 @@ class StatsRepository @Inject constructor(
         weeksAgo: Int = 0
     ): WeeklyStatsWithDailyDataResult = withContext(ioDispatcher) {
         val (startDate, endDate) = calculateWeekDateRange(weeksAgo)
-        val endDateString = getDateFormat().format(endDate.time)
+        val endDateString = endDate.format(dateFormatter)
 
         val result = statsDataSource.fetchStatsVisits(
             siteId = siteId,
@@ -251,7 +236,7 @@ class StatsRepository @Inject constructor(
                 val totalLikes = data.likes.sumOf { it.likes }
                 val totalComments = data.comments.sumOf { it.comments }
                 val totalPosts = data.posts.sumOf { it.posts }
-                val startDateFormatted = getDateFormat().format(startDate.time)
+                val startDateFormatted = startDate.format(dateFormatter)
 
                 val aggregates = PeriodAggregates(
                     views = totalViews,
@@ -294,8 +279,8 @@ class StatsRepository @Inject constructor(
     ): PeriodStatsResult = withContext(ioDispatcher) {
         val periodRange = calculatePeriodDates(period)
 
-        val currentEndString = getDateFormat().format(periodRange.currentEnd.time)
-        val previousEndString = getDateFormat().format(periodRange.previousEnd.time)
+        val currentEndString = periodRange.currentEnd.format(dateFormatter)
+        val previousEndString = periodRange.previousEnd.format(dateFormatter)
 
         // Fetch both periods in parallel for better performance
         val (currentResult, previousResult) = coroutineScope {
@@ -332,18 +317,17 @@ class StatsRepository @Inject constructor(
         previousData: StatsVisitsData,
         periodRange: PeriodDateRange
     ): PeriodStatsResult.Success {
-        val dateFormat = getDateFormat()
-        val currentDisplayDateString = dateFormat.format(periodRange.currentDisplayDate.time)
-        val previousDisplayDateString = dateFormat.format(periodRange.previousDisplayDate.time)
+        val currentDisplayDateString = periodRange.currentDisplayDate.format(dateFormatter)
+        val previousDisplayDateString = periodRange.previousDisplayDate.format(dateFormatter)
 
         val currentAggregates = buildPeriodAggregates(
             currentData,
-            dateFormat.format(periodRange.currentStart.time),
+            periodRange.currentStart.format(dateFormatter),
             currentDisplayDateString
         )
         val previousAggregates = buildPeriodAggregates(
             previousData,
-            dateFormat.format(periodRange.previousStart.time),
+            periodRange.previousStart.format(dateFormatter),
             previousDisplayDateString
         )
         val currentPeriodData = currentData.visits.map { dataPoint ->
@@ -391,18 +375,20 @@ class StatsRepository @Inject constructor(
     }
 
     private data class PeriodDateRange(
-        val currentStart: Calendar,
-        val currentEnd: Calendar,
-        val previousStart: Calendar,
-        val previousEnd: Calendar,
+        val currentStart: LocalDate,
+        val currentEnd: LocalDate,
+        val previousStart: LocalDate,
+        val previousEnd: LocalDate,
         val quantity: Int,
         val unit: StatsUnit,
         // Display dates for the legend (may differ from API dates for hourly queries)
-        val currentDisplayDate: Calendar = currentEnd,
-        val previousDisplayDate: Calendar = previousEnd
+        val currentDisplayDate: LocalDate = currentEnd,
+        val previousDisplayDate: LocalDate = previousEnd
     )
 
-    private data class PeriodConfig(val quantity: Int, val unit: StatsUnit, val calendarField: Int)
+    private enum class DateUnit { DAY, MONTH }
+
+    private data class PeriodConfig(val quantity: Int, val unit: StatsUnit, val dateUnit: DateUnit)
 
     @Suppress("ReturnCount")
     private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
@@ -410,25 +396,27 @@ class StatsRepository @Inject constructor(
         if (period is StatsPeriod.Custom) return calculateCustomPeriodDates(period.startDate, period.endDate)
 
         val config = getPeriodConfig(period)
-        val currentEnd = Calendar.getInstance()
-        val currentStart = (currentEnd.clone() as Calendar).apply {
-            add(config.calendarField, -(config.quantity - 1))
-        }
-        val previousEnd = (currentStart.clone() as Calendar).apply {
-            add(config.calendarField, -1)
-        }
-        val previousStart = (previousEnd.clone() as Calendar).apply {
-            add(config.calendarField, -(config.quantity - 1))
-        }
+        val currentEnd = LocalDate.now()
+        val currentStart = subtractFromDate(currentEnd, config.quantity - 1, config.dateUnit)
+        val previousEnd = subtractFromDate(currentStart, 1, config.dateUnit)
+        val previousStart = subtractFromDate(previousEnd, config.quantity - 1, config.dateUnit)
+
         return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, config.quantity, config.unit)
     }
 
+    private fun subtractFromDate(date: LocalDate, amount: Int, unit: DateUnit): LocalDate {
+        return when (unit) {
+            DateUnit.DAY -> date.minusDays(amount.toLong())
+            DateUnit.MONTH -> date.minusMonths(amount.toLong())
+        }
+    }
+
     private fun getPeriodConfig(period: StatsPeriod): PeriodConfig = when (period) {
-        is StatsPeriod.Last7Days -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, Calendar.DAY_OF_YEAR)
-        is StatsPeriod.Last30Days -> PeriodConfig(DAYS_IN_30_DAYS, StatsUnit.DAY, Calendar.DAY_OF_YEAR)
-        is StatsPeriod.Last6Months -> PeriodConfig(MONTHS_IN_6_MONTHS, StatsUnit.MONTH, Calendar.MONTH)
-        is StatsPeriod.Last12Months -> PeriodConfig(MONTHS_IN_12_MONTHS, StatsUnit.MONTH, Calendar.MONTH)
-        else -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, Calendar.DAY_OF_YEAR) // Fallback to 7 days
+        is StatsPeriod.Last7Days -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY)
+        is StatsPeriod.Last30Days -> PeriodConfig(DAYS_IN_30_DAYS, StatsUnit.DAY, DateUnit.DAY)
+        is StatsPeriod.Last6Months -> PeriodConfig(MONTHS_IN_6_MONTHS, StatsUnit.MONTH, DateUnit.MONTH)
+        is StatsPeriod.Last12Months -> PeriodConfig(MONTHS_IN_12_MONTHS, StatsUnit.MONTH, DateUnit.MONTH)
+        else -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY) // Fallback to 7 days
     }
 
     /**
@@ -436,9 +424,9 @@ class StatsRepository @Inject constructor(
      * The API's endDate is exclusive for hourly queries, so we use tomorrow as end date for today's hours.
      */
     private fun calculateTodayPeriodDates(): PeriodDateRange {
-        val today = Calendar.getInstance()
-        val tomorrow = (today.clone() as Calendar).apply { add(Calendar.DAY_OF_YEAR, 1) }
-        val yesterday = (today.clone() as Calendar).apply { add(Calendar.DAY_OF_YEAR, -1) }
+        val today = LocalDate.now()
+        val tomorrow = today.plusDays(1)
+        val yesterday = today.minusDays(1)
         return PeriodDateRange(
             currentStart = today,
             currentEnd = tomorrow,
@@ -454,17 +442,8 @@ class StatsRepository @Inject constructor(
     private fun calculateCustomPeriodDates(startDate: LocalDate, endDate: LocalDate): PeriodDateRange {
         val daysBetween = ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1
 
-        // Convert LocalDate to Calendar
-        val currentStart = localDateToCalendar(startDate)
-        val currentEnd = localDateToCalendar(endDate)
-
-        // Calculate previous period with same duration
-        val previousEnd = (currentStart.clone() as Calendar).apply {
-            add(Calendar.DAY_OF_YEAR, -1)
-        }
-        val previousStart = (previousEnd.clone() as Calendar).apply {
-            add(Calendar.DAY_OF_YEAR, -(daysBetween - 1))
-        }
+        val previousEnd = startDate.minusDays(1)
+        val previousStart = previousEnd.minusDays(daysBetween.toLong() - 1)
 
         // Determine unit based on range
         val unit = when {
@@ -473,7 +452,6 @@ class StatsRepository @Inject constructor(
         }
 
         val quantity = if (unit == StatsUnit.MONTH) {
-            // Calculate months between dates
             val monthsBetween = ChronoUnit.MONTHS.between(startDate, endDate).toInt() + 1
             monthsBetween.coerceAtLeast(1)
         } else {
@@ -481,8 +459,8 @@ class StatsRepository @Inject constructor(
         }
 
         return PeriodDateRange(
-            currentStart = currentStart,
-            currentEnd = currentEnd,
+            currentStart = startDate,
+            currentEnd = endDate,
             previousStart = previousStart,
             previousEnd = previousEnd,
             quantity = quantity,
@@ -490,29 +468,15 @@ class StatsRepository @Inject constructor(
         )
     }
 
-    private fun localDateToCalendar(localDate: LocalDate): Calendar {
-        return Calendar.getInstance().apply {
-            time = java.util.Date.from(
-                localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()
-            )
-        }
-    }
-
     /**
      * Calculates the start and end dates for a given week.
      *
      * @param weeksAgo Number of weeks to go back (0 = current week, 1 = previous week)
-     * @return Pair of (startDate, endDate) Calendars representing the 7-day period
+     * @return Pair of (startDate, endDate) LocalDates representing the 7-day period
      */
-    private fun calculateWeekDateRange(weeksAgo: Int): Pair<Calendar, Calendar> {
-        val endDate = Calendar.getInstance().apply {
-            add(Calendar.WEEK_OF_YEAR, -weeksAgo)
-        }
-
-        val startDate = (endDate.clone() as Calendar).apply {
-            add(Calendar.DAY_OF_YEAR, DAYS_BEFORE_END_DATE)
-        }
-
+    private fun calculateWeekDateRange(weeksAgo: Int): Pair<LocalDate, LocalDate> {
+        val endDate = LocalDate.now().minusWeeks(weeksAgo.toLong())
+        val startDate = endDate.plusDays(DAYS_BEFORE_END_DATE.toLong())
         return startDate to endDate
     }
 }
