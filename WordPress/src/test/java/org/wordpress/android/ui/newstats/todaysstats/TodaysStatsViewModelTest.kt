@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.todaysstat
+package org.wordpress.android.ui.newstats.todaysstats
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat

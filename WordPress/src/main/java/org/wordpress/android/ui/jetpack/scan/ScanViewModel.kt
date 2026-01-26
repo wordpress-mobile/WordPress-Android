@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.jetpack.scan
 
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -366,53 +364,35 @@ class ScanViewModel @Inject constructor(
         data class ContentUiState(val items: List<JetpackListItemState>) : UiState(contentVisible = true)
 
         sealed class ErrorUiState : UiState(errorVisible = true) {
-            abstract val image: Int
-            open val imageColorResId: Int? = null
             abstract val title: UiString
             abstract val subtitle: UiString
             open val buttonText: UiString? = null
             open val action: (() -> Unit)? = null
 
             data class NoConnection(override val action: () -> Unit) : ErrorUiState() {
-                @DrawableRes
-                override val image = R.drawable.img_illustration_cloud_off_152dp
                 override val title = UiStringRes(R.string.scan_no_network_title)
                 override val subtitle = UiStringRes(R.string.scan_no_network_subtitle)
                 override val buttonText = UiStringRes(R.string.retry)
             }
 
             data class GenericRequestFailed(override val action: () -> Unit) : ErrorUiState() {
-                @DrawableRes
-                override val image = R.drawable.img_illustration_cloud_off_152dp
                 override val title = UiStringRes(R.string.scan_request_failed_title)
                 override val subtitle = UiStringRes(R.string.scan_request_failed_subtitle)
                 override val buttonText = UiStringRes(R.string.contact_support)
             }
 
             data class ScanRequestFailed(override val action: () -> Unit) : ErrorUiState() {
-                @DrawableRes
-                override val image = R.drawable.img_illustration_empty_results_216dp
                 override val title = UiStringRes(R.string.scan_start_request_failed_title)
                 override val subtitle = UiStringRes(R.string.scan_start_request_failed_subtitle)
                 override val buttonText = UiStringRes(R.string.contact_support)
             }
 
             object MultisiteNotSupported : ErrorUiState() {
-                @DrawableRes
-                override val image = R.drawable.ic_baseline_security_white_24dp
-
-                @ColorRes
-                override val imageColorResId = R.color.gray
                 override val title = UiStringRes(R.string.scan_multisite_not_supported_title)
                 override val subtitle = UiStringRes(R.string.scan_multisite_not_supported_subtitle)
             }
 
             data class VaultPressActiveOnSite(override val action: () -> Unit) : ErrorUiState() {
-                @DrawableRes
-                override val image = R.drawable.ic_shield_warning_white
-
-                @ColorRes
-                override val imageColorResId = R.color.error_60
                 override val title = UiStringRes(R.string.scan_vault_press_active_on_site_title)
                 override val subtitle = UiStringRes(R.string.scan_vault_press_active_on_site_subtitle)
                 override val buttonText = UiStringRes(R.string.scan_vault_press_active_on_site_button_text)

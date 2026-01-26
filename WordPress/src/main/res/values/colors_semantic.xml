@@ -6,7 +6,6 @@
 
     <color name="error">@color/red_50</color>
     <color name="error_50">@color/red_50</color>
-    <color name="error_60">@color/red_60</color>
 
     <color name="neutral">@color/gray_50</color>
     <color name="neutral_0">@color/gray_0</color>

@@ -40,8 +40,8 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.newstats.todaysstat.TodaysStatsCard
-import org.wordpress.android.ui.newstats.todaysstat.TodaysStatsViewModel
+import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsCard
+import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsViewModel
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
 

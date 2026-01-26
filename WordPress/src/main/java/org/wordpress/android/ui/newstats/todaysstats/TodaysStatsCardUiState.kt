@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.todaysstat
+package org.wordpress.android.ui.newstats.todaysstats
 
 /**
  * UI State for the Today's Stats card in the new stats screen.
