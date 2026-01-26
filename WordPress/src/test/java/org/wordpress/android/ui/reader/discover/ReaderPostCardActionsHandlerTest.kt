@@ -846,6 +846,30 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Assert
         assertThat(observedValues.refreshPosts.size).isEqualTo(2)
     }
+
+    @Test
+    fun `Scroll to site emitted when user clicks on undo action in snackbar`() = test {
+        // Arrange
+        val expectedBlogId = 123L
+        val blockedBlogResult =
+            org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult().apply {
+                blogId = expectedBlogId
+            }
+        whenever(blockBlogUseCase.blockBlog(any(), any()))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult)))
+        val observedValues = startObserving()
+        actionHandler.onAction(
+            mock(),
+            BLOCK_SITE,
+            false,
+            SOURCE
+        )
+        // Act
+        observedValues.snackbarMsgs[0].buttonAction.invoke()
+        // Assert
+        assertThat(observedValues.scrollToSiteId.size).isEqualTo(1)
+        assertThat(observedValues.scrollToSiteId[0]).isEqualTo(expectedBlogId)
+    }
     /** BLOCK SITE ACTION end **/
 
     /** BLOCK USER ACTION begin **/
@@ -1299,7 +1323,12 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         actionHandler.refreshPosts.observeForever {
             refreshPosts.add(it.peekContent())
         }
-        return Observers(navigation, snackbarMsgs, preloadPost, followStatusUpdated, refreshPosts)
+
+        val scrollToSiteId = mutableListOf<Long>()
+        actionHandler.scrollToSiteId.observeForever {
+            scrollToSiteId.add(it.peekContent())
+        }
+        return Observers(navigation, snackbarMsgs, preloadPost, followStatusUpdated, refreshPosts, scrollToSiteId)
     }
 
     /** REPORT ACTIONS start **/
@@ -1346,6 +1375,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         val snackbarMsgs: List<SnackbarMessageHolder>,
         val preloadPost: List<PreLoadPostContent>,
         val followStatusUpdated: List<FollowStatusChanged>,
-        val refreshPosts: List<Unit>
+        val refreshPosts: List<Unit>,
+        val scrollToSiteId: List<Long>
     )
 }
