@@ -492,18 +492,6 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                     )
                     actionableEmptyView.subtitle.movementMethod = WPLinkMovementMethod.getInstance()
                 }
-                actionableEmptyView.image.applyOrHide(uiModel.image) { image ->
-                    this.setImageResource(image)
-                }
-                actionableEmptyView.bottomImage.applyOrHide(uiModel.bottomImage) { bottomImage ->
-                    this.setImageResource(bottomImage)
-                    if (uiModel.bottomImageDescription != null) {
-                        this.contentDescription = uiHelpers.getTextOfUiString(
-                            requireContext(),
-                            uiModel.bottomImageDescription
-                        ).toString()
-                    }
-                }
                 actionableEmptyView.button.applyOrHide(uiModel.retryAction) { action ->
                     this.setText(R.string.retry)
                     this.setOnClickListener {
