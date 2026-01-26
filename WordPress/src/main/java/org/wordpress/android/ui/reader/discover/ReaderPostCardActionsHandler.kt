@@ -125,7 +125,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val _refreshPosts = MediatorLiveData<Event<Unit>>()
     val refreshPosts: LiveData<Event<Unit>> = _refreshPosts
 
-    // Emits a blog ID to scroll to after undo block action
+    // Emits a blog ID to scroll to after undo block action. This provides visual feedback
+    // to the user that the undo was successful by scrolling to show the restored posts.
+    // The event is consumed by ReaderPostListFragment after posts are refreshed.
     private val _scrollToSiteId = MediatorLiveData<Event<Long>>()
     val scrollToSiteId: LiveData<Event<Long>> = _scrollToSiteId
 
