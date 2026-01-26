@@ -107,7 +107,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): TopPostsDataResult {
         val params = StatsTopPostsParams(
-            period = StatsTopPostsPeriod.WEEK,
+            period = StatsTopPostsPeriod.DAY,
             date = date,
             max = max.coerceAtLeast(1).toUInt()
         )
@@ -147,7 +147,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): ReferrersDataResult {
         val params = StatsReferrersParams(
-            period = StatsReferrersPeriod.WEEK,
+            period = StatsReferrersPeriod.DAY,
             date = date,
             max = max.coerceAtLeast(1).toUInt()
         )
