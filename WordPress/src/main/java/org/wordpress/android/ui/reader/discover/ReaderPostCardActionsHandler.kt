@@ -125,6 +125,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val _refreshPosts = MediatorLiveData<Event<Unit>>()
     val refreshPosts: LiveData<Event<Unit>> = _refreshPosts
 
+    // Emits a blog ID to scroll to after undo block action
+    private val _scrollToSiteId = MediatorLiveData<Event<Long>>()
+    val scrollToSiteId: LiveData<Event<Long>> = _scrollToSiteId
+
     init {
         dispatcher.register(siteNotificationsUseCase)
     }
@@ -437,8 +441,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                 UiStringRes(R.string.undo),
                                 {
                                     coroutineScope.launch {
+                                        val blogId = it.blockedBlogData.blogId
                                         undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData, source)
                                         _refreshPosts.postValue(Event(Unit))
+                                        _scrollToSiteId.postValue(Event(blogId))
                                         _snackbarEvents.postValue(
                                             Event(
                                                 SnackbarMessageHolder(

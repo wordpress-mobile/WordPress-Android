@@ -236,6 +236,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private var postSearchAdapterPos = 0
     private var siteSearchAdapterPos = 0
     private var searchTabsPos = NO_POSITION
+    private var pendingScrollToBlogId: Long? = null
 
     private var isFilterableScreen = false
     private var isFiltered = false
@@ -536,6 +537,14 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             viewLifecycleOwner
         ) { readerData: FollowStatusChanged ->
             setFollowStatusForBlog(readerData)
+        }
+
+        postListViewModel.scrollToSiteId.observe(
+            viewLifecycleOwner
+        ) { event: Event<Long> ->
+            event.applyIfNotHandled {
+                pendingScrollToBlogId = this
+            }
         }
     }
 
@@ -1993,6 +2002,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     AppLog.d(AppLog.T.READER, "reader post list > restoring position")
                     recyclerView.scrollRecycleViewToPosition(restorePosition)
                 }
+                pendingScrollToBlogId?.let { blogId ->
+                    scrollToFirstPostFromBlog(blogId)
+                    pendingScrollToBlogId = null
+                }
                 if (isSearching && !isSearchTabsShowing()) {
                     showSearchTabs()
                 } else if (isSearching) {
@@ -2213,6 +2226,17 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         hideNewPostsBar()
         if (hasPostAdapter()) {
             getPostAdapter().refresh()
+        }
+    }
+
+    /*
+     * scroll to the first post from the specified blog
+     */
+    private fun scrollToFirstPostFromBlog(blogId: Long) {
+        if (!hasPostAdapter()) return
+        val position = getPostAdapter().getPositionOfFirstPostFromBlog(blogId)
+        if (position > -1) {
+            recyclerView.scrollRecycleViewToPosition(position)
         }
     }
 
