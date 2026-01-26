@@ -91,6 +91,19 @@ private val BadgeCornerRadius = 4.dp
 private val ChangeBadgePositiveColor = Color(0xFF4CAF50)
 private val ChangeBadgeNegativeColor = Color(0xFFE91E63)
 
+// Preview sample data constants
+private const val SAMPLE_CURRENT_VIEWS = 7467L
+private const val SAMPLE_PREVIOUS_VIEWS = 8289L
+private const val SAMPLE_VIEWS_DIFFERENCE = -822L
+private const val SAMPLE_VIEWS_PERCENTAGE = -9.9
+private const val SAMPLE_VISITORS = 2000L
+private const val SAMPLE_VISITORS_PERCENTAGE = 5.6
+private const val SAMPLE_POSTS = 5L
+private const val SAMPLE_POSTS_PERCENTAGE = 25.0
+private const val SAMPLE_PERIOD_AVERAGE = 1066L
+private val SAMPLE_CURRENT_PERIOD_DATA = listOf(800L, 1200L, 950L, 1100L, 1300L, 1017L, 1100L)
+private val SAMPLE_PREVIOUS_PERIOD_DATA = listOf(1000L, 1400L, 1150L, 1200L, 1350L, 1089L, 1100L)
+
 @Composable
 fun ViewsStatsCard(
     uiState: ViewsStatsCardUiState,
@@ -243,7 +256,7 @@ private fun LoadedContent(
         // Chart Section
         ViewsStatsChart(
             chartData = state.chartData,
-            weeklyAverage = state.weeklyAverage,
+            periodAverage = state.periodAverage,
             chartType = state.chartType
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -295,18 +308,18 @@ private fun HeaderSection(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
-            // Left: Current and previous week totals with difference
+            // Left: Current and previous period totals with difference
             Column {
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(
-                        text = formatStatValue(state.currentWeekViews),
+                        text = formatStatValue(state.currentPeriodViews),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = formatStatValue(state.previousWeekViews),
+                        text = formatStatValue(state.previousPeriodViews),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -320,18 +333,18 @@ private fun HeaderSection(
             // Right: Date ranges with colored dots and average
             Column(horizontalAlignment = Alignment.End) {
                 DateRangeWithDot(
-                    dateRange = state.currentWeekDateRange,
+                    dateRange = state.currentPeriodDateRange,
                     dotColor = MaterialTheme.colorScheme.primary,
                     isFilled = true
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 DateRangeWithDot(
-                    dateRange = state.previousWeekDateRange,
+                    dateRange = state.previousPeriodDateRange,
                     dotColor = MaterialTheme.colorScheme.outline,
                     isFilled = true
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                AverageRow(average = state.weeklyAverage)
+                AverageRow(average = state.periodAverage)
             }
         }
     }
@@ -460,33 +473,33 @@ private fun AverageRow(average: Long) {
 @Composable
 private fun ViewsStatsChart(
     chartData: ViewsStatsChartData,
-    weeklyAverage: Long,
+    periodAverage: Long,
     chartType: ChartType
 ) {
     // Key the model producer on chartType so it gets recreated when chart type changes
     val modelProducer = remember(chartType) { CartesianChartModelProducer() }
 
     // Use both lists as keys to ensure LaunchedEffect re-runs when either changes
-    LaunchedEffect(chartData.currentWeek, chartData.previousWeek, chartType) {
-        if (chartData.currentWeek.isNotEmpty()) {
-            // Check hasPreviousWeek inside the effect to avoid capturing stale values
-            val hasPreviousWeek = chartData.previousWeek.isNotEmpty()
+    LaunchedEffect(chartData.currentPeriod, chartData.previousPeriod, chartType) {
+        if (chartData.currentPeriod.isNotEmpty()) {
+            // Check hasPreviousPeriod inside the effect to avoid capturing stale values
+            val hasPreviousPeriod = chartData.previousPeriod.isNotEmpty()
             when (chartType) {
                 ChartType.LINE -> modelProducer.runTransaction {
                     lineSeries {
-                        series(chartData.currentWeek.map { it.views.toInt() })
-                        if (hasPreviousWeek) {
-                            series(chartData.previousWeek.map { it.views.toInt() })
+                        series(chartData.currentPeriod.map { it.views.toInt() })
+                        if (hasPreviousPeriod) {
+                            series(chartData.previousPeriod.map { it.views.toInt() })
                         }
                     }
                 }
                 ChartType.BAR -> modelProducer.runTransaction {
                     columnSeries {
                         // Current period first (primary color)
-                        series(chartData.currentWeek.map { it.views.toInt() })
+                        series(chartData.currentPeriod.map { it.views.toInt() })
                         // Previous period second (grey)
-                        if (hasPreviousWeek) {
-                            series(chartData.previousWeek.map { it.views.toInt() })
+                        if (hasPreviousPeriod) {
+                            series(chartData.previousPeriod.map { it.views.toInt() })
                         }
                     }
                 }
@@ -494,7 +507,7 @@ private fun ViewsStatsChart(
         }
     }
 
-    if (chartData.currentWeek.isEmpty()) {
+    if (chartData.currentPeriod.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -515,8 +528,8 @@ private fun ViewsStatsChart(
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
-    // X-axis formatter to show date labels from current week data
-    val dateLabels = chartData.currentWeek.map { it.label }
+    // X-axis formatter to show date labels from current period data
+    val dateLabels = chartData.currentPeriod.map { it.label }
     val bottomAxisValueFormatter = CartesianValueFormatter { context, value, _ ->
         val index = value.toInt()
         if (index in dateLabels.indices) dateLabels[index] else ""
@@ -524,7 +537,7 @@ private fun ViewsStatsChart(
 
     // Horizontal line for period average
     val averageLine = HorizontalLine(
-        y = { weeklyAverage.toDouble() },
+        y = { periodAverage.toDouble() },
         line = LineComponent(
             fill = fill(MaterialTheme.colorScheme.outline),
             thicknessDp = 1f
@@ -755,50 +768,41 @@ private fun ViewsStatsCardLoadingPreview() {
     }
 }
 
+private fun sampleLoadedState(): ViewsStatsCardUiState.Loaded {
+    val currentPeriodLabels = listOf("Jan 14", "Jan 15", "Jan 16", "Jan 17", "Jan 18", "Jan 19", "Jan 20")
+    val previousPeriodLabels = listOf("Jan 7", "Jan 8", "Jan 9", "Jan 10", "Jan 11", "Jan 12", "Jan 13")
+
+    return ViewsStatsCardUiState.Loaded(
+        currentPeriodViews = SAMPLE_CURRENT_VIEWS,
+        previousPeriodViews = SAMPLE_PREVIOUS_VIEWS,
+        viewsDifference = SAMPLE_VIEWS_DIFFERENCE,
+        viewsPercentageChange = SAMPLE_VIEWS_PERCENTAGE,
+        currentPeriodDateRange = "14-20 Jan",
+        previousPeriodDateRange = "7-13 Jan",
+        chartData = ViewsStatsChartData(
+            currentPeriod = currentPeriodLabels.zip(SAMPLE_CURRENT_PERIOD_DATA) { label, views ->
+                ChartDataPoint(label, views)
+            },
+            previousPeriod = previousPeriodLabels.zip(SAMPLE_PREVIOUS_PERIOD_DATA) { label, views ->
+                ChartDataPoint(label, views)
+            }
+        ),
+        periodAverage = SAMPLE_PERIOD_AVERAGE,
+        bottomStats = listOf(
+            StatItem("Views", SAMPLE_CURRENT_VIEWS, StatChange.Negative(SAMPLE_VIEWS_PERCENTAGE)),
+            StatItem("Visitors", SAMPLE_VISITORS, StatChange.Negative(SAMPLE_VISITORS_PERCENTAGE)),
+            StatItem("Likes", 0, StatChange.NoChange),
+            StatItem("Comments", 0, StatChange.NoChange),
+            StatItem("Posts", SAMPLE_POSTS, StatChange.Positive(SAMPLE_POSTS_PERCENTAGE))
+        )
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun ViewsStatsCardLoadedPreview() {
     AppThemeM3 {
-        ViewsStatsCard(
-            uiState = ViewsStatsCardUiState.Loaded(
-                currentWeekViews = 7467,
-                previousWeekViews = 8289,
-                viewsDifference = -822,
-                viewsPercentageChange = -9.9,
-                currentWeekDateRange = "14-20 Jan",
-                previousWeekDateRange = "7-13 Jan",
-                chartData = ViewsStatsChartData(
-                    currentWeek = listOf(
-                        DailyDataPoint("Jan 14", 800),
-                        DailyDataPoint("Jan 15", 1200),
-                        DailyDataPoint("Jan 16", 950),
-                        DailyDataPoint("Jan 17", 1100),
-                        DailyDataPoint("Jan 18", 1300),
-                        DailyDataPoint("Jan 19", 1017),
-                        DailyDataPoint("Jan 20", 1100)
-                    ),
-                    previousWeek = listOf(
-                        DailyDataPoint("Jan 7", 1000),
-                        DailyDataPoint("Jan 8", 1400),
-                        DailyDataPoint("Jan 9", 1150),
-                        DailyDataPoint("Jan 10", 1200),
-                        DailyDataPoint("Jan 11", 1350),
-                        DailyDataPoint("Jan 12", 1089),
-                        DailyDataPoint("Jan 13", 1100)
-                    )
-                ),
-                weeklyAverage = 1066,
-                bottomStats = listOf(
-                    StatItem("Views", 7467, StatChange.Negative(9.9)),
-                    StatItem("Visitors", 2000, StatChange.Negative(5.6)),
-                    StatItem("Likes", 0, StatChange.NoChange),
-                    StatItem("Comments", 0, StatChange.NoChange),
-                    StatItem("Posts", 5, StatChange.Positive(25.0))
-                )
-            ),
-            onChartTypeChanged = {},
-            onRetry = {}
-        )
+        ViewsStatsCard(uiState = sampleLoadedState(), onChartTypeChanged = {}, onRetry = {})
     }
 }
 
@@ -820,45 +824,6 @@ private fun ViewsStatsCardErrorPreview() {
 @Composable
 private fun ViewsStatsCardLoadedDarkPreview() {
     AppThemeM3 {
-        ViewsStatsCard(
-            uiState = ViewsStatsCardUiState.Loaded(
-                currentWeekViews = 7467,
-                previousWeekViews = 8289,
-                viewsDifference = -822,
-                viewsPercentageChange = -9.9,
-                currentWeekDateRange = "14-20 Jan",
-                previousWeekDateRange = "7-13 Jan",
-                chartData = ViewsStatsChartData(
-                    currentWeek = listOf(
-                        DailyDataPoint("Jan 14", 800),
-                        DailyDataPoint("Jan 15", 1200),
-                        DailyDataPoint("Jan 16", 950),
-                        DailyDataPoint("Jan 17", 1100),
-                        DailyDataPoint("Jan 18", 1300),
-                        DailyDataPoint("Jan 19", 1017),
-                        DailyDataPoint("Jan 20", 1100)
-                    ),
-                    previousWeek = listOf(
-                        DailyDataPoint("Jan 7", 1000),
-                        DailyDataPoint("Jan 8", 1400),
-                        DailyDataPoint("Jan 9", 1150),
-                        DailyDataPoint("Jan 10", 1200),
-                        DailyDataPoint("Jan 11", 1350),
-                        DailyDataPoint("Jan 12", 1089),
-                        DailyDataPoint("Jan 13", 1100)
-                    )
-                ),
-                weeklyAverage = 1066,
-                bottomStats = listOf(
-                    StatItem("Views", 7467, StatChange.Negative(9.9)),
-                    StatItem("Visitors", 2000, StatChange.Negative(5.6)),
-                    StatItem("Likes", 0, StatChange.NoChange),
-                    StatItem("Comments", 0, StatChange.NoChange),
-                    StatItem("Posts", 5, StatChange.Positive(25.0))
-                )
-            ),
-            onChartTypeChanged = {},
-            onRetry = {}
-        )
+        ViewsStatsCard(uiState = sampleLoadedState(), onChartTypeChanged = {}, onRetry = {})
     }
 }

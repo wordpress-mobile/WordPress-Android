@@ -32,7 +32,9 @@ interface StatsDataSource {
  */
 enum class StatsUnit {
     HOUR,
-    DAY
+    DAY,
+    WEEK,
+    MONTH
 }
 
 /**
