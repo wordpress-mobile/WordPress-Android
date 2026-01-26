@@ -14,6 +14,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,7 +33,10 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -76,9 +83,24 @@ private enum class StatsTab(val titleResId: Int) {
 private fun NewStatsScreen(
     onBackPressed: () -> Unit
 ) {
+    val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
+    val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
+
     val tabs = StatsTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
+    var showPeriodMenu by remember { mutableStateOf(false) }
+    var showDateRangePicker by remember { mutableStateOf(false) }
+
+    if (showDateRangePicker) {
+        StatsDateRangePickerDialog(
+            onDismiss = { showDateRangePicker = false },
+            onDateRangeSelected = { startDate, endDate ->
+                viewsStatsViewModel.onPeriodChanged(StatsPeriod.Custom(startDate, endDate))
+                showDateRangePicker = false
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -91,6 +113,31 @@ private fun NewStatsScreen(
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                },
+                actions = {
+                    Box {
+                        IconButton(onClick = { showPeriodMenu = true }) {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = stringResource(
+                                    R.string.stats_period_selector_content_description
+                                )
+                            )
+                        }
+                        StatsPeriodMenu(
+                            expanded = showPeriodMenu,
+                            selectedPeriod = selectedPeriod,
+                            onDismiss = { showPeriodMenu = false },
+                            onPresetSelected = { period ->
+                                viewsStatsViewModel.onPeriodChanged(period)
+                                showPeriodMenu = false
+                            },
+                            onCustomSelected = {
+                                showPeriodMenu = false
+                                showDateRangePicker = true
+                            }
                         )
                     }
                 }
@@ -120,16 +167,16 @@ private fun NewStatsScreen(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) { page ->
-                StatsTabContent(tab = tabs[page])
+                StatsTabContent(tab = tabs[page], viewsStatsViewModel = viewsStatsViewModel)
             }
         }
     }
 }
 
 @Composable
-private fun StatsTabContent(tab: StatsTab) {
+private fun StatsTabContent(tab: StatsTab, viewsStatsViewModel: ViewsStatsViewModel) {
     when (tab) {
-        StatsTab.TRAFFIC -> TrafficTabContent()
+        StatsTab.TRAFFIC -> TrafficTabContent(viewsStatsViewModel = viewsStatsViewModel)
         else -> PlaceholderTabContent(tab)
     }
 }
@@ -137,8 +184,8 @@ private fun StatsTabContent(tab: StatsTab) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TrafficTabContent(
-    todaysStatsViewModel: TodaysStatsViewModel = viewModel(),
-    viewsStatsViewModel: ViewsStatsViewModel = viewModel()
+    viewsStatsViewModel: ViewsStatsViewModel,
+    todaysStatsViewModel: TodaysStatsViewModel = viewModel()
 ) {
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
     val viewsStatsUiState by viewsStatsViewModel.uiState.collectAsState()
@@ -186,6 +233,45 @@ private fun PlaceholderTabContent(tab: StatsTab) {
         contentAlignment = Alignment.Center
     ) {
         Text(text = "${stringResource(id = tab.titleResId)} - Coming Soon")
+    }
+}
+
+@Composable
+private fun StatsPeriodMenu(
+    expanded: Boolean,
+    selectedPeriod: StatsPeriod,
+    onDismiss: () -> Unit,
+    onPresetSelected: (StatsPeriod) -> Unit,
+    onCustomSelected: () -> Unit
+) {
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismiss
+    ) {
+        // Show preset periods
+        StatsPeriod.presets().forEach { period ->
+            val isSelected = selectedPeriod == period
+            DropdownMenuItem(
+                text = { Text(text = stringResource(id = period.labelResId)) },
+                onClick = { onPresetSelected(period) },
+                trailingIcon = if (isSelected) {
+                    { Icon(Icons.Default.Check, contentDescription = null) }
+                } else {
+                    null
+                }
+            )
+        }
+        // Show Custom option
+        val isCustomSelected = selectedPeriod is StatsPeriod.Custom
+        DropdownMenuItem(
+            text = { Text(text = stringResource(id = R.string.stats_period_custom)) },
+            onClick = { onCustomSelected() },
+            trailingIcon = if (isCustomSelected) {
+                { Icon(Icons.Default.Check, contentDescription = null) }
+            } else {
+                null
+            }
+        )
     }
 }
 
