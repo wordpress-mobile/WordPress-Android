@@ -434,7 +434,6 @@ class MediaPickerFragment : Fragment(), MenuProvider {
 
             override fun onQueryTextChange(query: String): Boolean {
                 if (!isExpanding) {
-                    binding?.actionableEmptyView?.visibility = View.GONE
                     viewModel.onSearch(query)
                 }
                 isExpanding = false
