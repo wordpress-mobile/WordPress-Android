@@ -8,8 +8,14 @@ import org.wordpress.android.ui.newstats.extension.statsVisitorsData
 import org.wordpress.android.ui.newstats.extension.statsVisitsData
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.StatsReferrersParams
+import uniffi.wp_api.StatsReferrersPeriod
+import uniffi.wp_api.StatsTopPostsParams
+import uniffi.wp_api.StatsTopPostsPeriod
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
+import uniffi.wp_api.getStatsReferrersAllGroups
+import uniffi.wp_api.getStatsTopPostsAllPostViews
 import javax.inject.Inject
 
 /**
@@ -93,5 +99,84 @@ class StatsDataSourceImpl @Inject constructor(
         StatsUnit.DAY -> StatsVisitsUnit.DAY
         StatsUnit.WEEK -> StatsVisitsUnit.WEEK
         StatsUnit.MONTH -> StatsVisitsUnit.MONTH
+    }
+
+    override suspend fun fetchTopPostsAndPages(
+        siteId: Long,
+        date: String,
+        max: Int
+    ): TopPostsDataResult {
+        val params = StatsTopPostsParams(
+            period = StatsTopPostsPeriod.WEEK,
+            date = date,
+            max = max.coerceAtLeast(1).toUInt()
+        )
+
+        val result = wpComApiClient.request { requestBuilder ->
+            requestBuilder.statsTopPosts().getStatsTopPosts(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val posts = getStatsTopPostsAllPostViews(result.response.data)
+                TopPostsDataResult.Success(
+                    posts.map { post ->
+                        TopPostDataItem(
+                            id = post.id.toLong(),
+                            title = post.title,
+                            views = post.views.toLong()
+                        )
+                    }
+                )
+            }
+            is WpRequestResult.WpError -> {
+                TopPostsDataResult.Error(result.errorMessage)
+            }
+            else -> {
+                TopPostsDataResult.Error("Unknown error")
+            }
+        }
+    }
+
+    override suspend fun fetchReferrers(
+        siteId: Long,
+        date: String,
+        max: Int
+    ): ReferrersDataResult {
+        val params = StatsReferrersParams(
+            period = StatsReferrersPeriod.WEEK,
+            date = date,
+            max = max.coerceAtLeast(1).toUInt()
+        )
+
+        val result = wpComApiClient.request { requestBuilder ->
+            requestBuilder.statsReferrers().getStatsReferrers(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val groups = getStatsReferrersAllGroups(result.response.data)
+                ReferrersDataResult.Success(
+                    groups.map { group ->
+                        ReferrerDataItem(
+                            name = group.name,
+                            views = group.total.toLong()
+                        )
+                    }
+                )
+            }
+            is WpRequestResult.WpError -> {
+                ReferrersDataResult.Error(result.errorMessage)
+            }
+            else -> {
+                ReferrersDataResult.Error("Unknown error")
+            }
+        }
     }
 }

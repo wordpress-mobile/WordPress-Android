@@ -47,6 +47,8 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedCard
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsCard
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsViewModel
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
@@ -185,13 +187,16 @@ private fun StatsTabContent(tab: StatsTab, viewsStatsViewModel: ViewsStatsViewMo
 @Composable
 private fun TrafficTabContent(
     viewsStatsViewModel: ViewsStatsViewModel,
-    todaysStatsViewModel: TodaysStatsViewModel = viewModel()
+    todaysStatsViewModel: TodaysStatsViewModel = viewModel(),
+    mostViewedViewModel: MostViewedViewModel = viewModel()
 ) {
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
     val viewsStatsUiState by viewsStatsViewModel.uiState.collectAsState()
+    val mostViewedUiState by mostViewedViewModel.uiState.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
-    val isRefreshing = isTodaysStatsRefreshing || isViewsStatsRefreshing
+    val isMostViewedRefreshing by mostViewedViewModel.isRefreshing.collectAsState()
+    val isRefreshing = isTodaysStatsRefreshing || isViewsStatsRefreshing || isMostViewedRefreshing
     val pullToRefreshState = rememberPullToRefreshState()
 
     PullToRefreshBox(
@@ -201,6 +206,7 @@ private fun TrafficTabContent(
         onRefresh = {
             todaysStatsViewModel.refresh()
             viewsStatsViewModel.refresh()
+            mostViewedViewModel.refresh()
         },
         indicator = {
             PullToRefreshDefaults.Indicator(
@@ -221,6 +227,11 @@ private fun TrafficTabContent(
                 uiState = viewsStatsUiState,
                 onChartTypeChanged = viewsStatsViewModel::onChartTypeChanged,
                 onRetry = viewsStatsViewModel::onRetry
+            )
+            MostViewedCard(
+                uiState = mostViewedUiState,
+                onDataSourceChanged = mostViewedViewModel::onDataSourceChanged,
+                onRetry = mostViewedViewModel::onRetry
             )
         }
     }

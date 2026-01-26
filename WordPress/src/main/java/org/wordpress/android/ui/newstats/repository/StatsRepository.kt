@@ -3,10 +3,13 @@ package org.wordpress.android.ui.newstats.repository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
+import org.wordpress.android.ui.newstats.datasource.TopPostsDataResult
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
@@ -479,6 +482,63 @@ class StatsRepository @Inject constructor(
         val startDate = endDate.plusDays(DAYS_BEFORE_END_DATE.toLong())
         return startDate to endDate
     }
+
+    /**
+     * Fetches most viewed items based on the selected data source.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dataSource The data source type (posts and pages or referrers)
+     * @return Most viewed items or error
+     */
+    suspend fun fetchMostViewed(
+        siteId: Long,
+        dataSource: MostViewedDataSource
+    ): MostViewedResult = withContext(ioDispatcher) {
+        val dateString = LocalDate.now().format(dateFormatter)
+
+        when (dataSource) {
+            MostViewedDataSource.POSTS_AND_PAGES -> {
+                when (val result = statsDataSource.fetchTopPostsAndPages(siteId, dateString)) {
+                    is TopPostsDataResult.Success -> {
+                        MostViewedResult.Success(
+                            result.items.mapIndexed { index, item ->
+                                MostViewedItemData(
+                                    id = item.id,
+                                    title = item.title,
+                                    views = item.views,
+                                    isFirst = index == 0
+                                )
+                            }
+                        )
+                    }
+                    is TopPostsDataResult.Error -> {
+                        appLogWrapper.e(AppLog.T.STATS, "Error fetching top posts: ${result.message}")
+                        MostViewedResult.Error(result.message)
+                    }
+                }
+            }
+            MostViewedDataSource.REFERRERS -> {
+                when (val result = statsDataSource.fetchReferrers(siteId, dateString)) {
+                    is ReferrersDataResult.Success -> {
+                        MostViewedResult.Success(
+                            result.items.mapIndexed { index, item ->
+                                MostViewedItemData(
+                                    id = item.name.hashCode().toLong(),
+                                    title = item.name,
+                                    views = item.views,
+                                    isFirst = index == 0
+                                )
+                            }
+                        )
+                    }
+                    is ReferrersDataResult.Error -> {
+                        appLogWrapper.e(AppLog.T.STATS, "Error fetching referrers: ${result.message}")
+                        MostViewedResult.Error(result.message)
+                    }
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -577,3 +637,21 @@ sealed class PeriodStatsResult {
     ) : PeriodStatsResult()
     data class Error(val message: String) : PeriodStatsResult()
 }
+
+/**
+ * Result wrapper for most viewed fetch operation.
+ */
+sealed class MostViewedResult {
+    data class Success(val items: List<MostViewedItemData>) : MostViewedResult()
+    data class Error(val message: String) : MostViewedResult()
+}
+
+/**
+ * Data for a single most viewed item from the repository layer.
+ */
+data class MostViewedItemData(
+    val id: Long,
+    val title: String,
+    val views: Long,
+    val isFirst: Boolean
+)

@@ -25,6 +25,34 @@ interface StatsDataSource {
         quantity: Int,
         endDate: String
     ): StatsVisitsDataResult
+
+    /**
+     * Fetches top posts and pages for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param date The date for the stats (format: yyyy-MM-dd)
+     * @param max Maximum number of items to return
+     * @return Result containing the top posts data or an error
+     */
+    suspend fun fetchTopPostsAndPages(
+        siteId: Long,
+        date: String,
+        max: Int = 10
+    ): TopPostsDataResult
+
+    /**
+     * Fetches referrer stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param date The date for the stats (format: yyyy-MM-dd)
+     * @param max Maximum number of items to return
+     * @return Result containing the referrers data or an error
+     */
+    suspend fun fetchReferrers(
+        siteId: Long,
+        date: String,
+        max: Int = 10
+    ): ReferrersDataResult
 }
 
 /**
@@ -95,4 +123,37 @@ data class CommentsDataPoint(
 data class PostsDataPoint(
     val period: String,
     val posts: Long
+)
+
+/**
+ * Result wrapper for top posts fetch operation.
+ */
+sealed class TopPostsDataResult {
+    data class Success(val items: List<TopPostDataItem>) : TopPostsDataResult()
+    data class Error(val message: String) : TopPostsDataResult()
+}
+
+/**
+ * A single top post item from the API.
+ */
+data class TopPostDataItem(
+    val id: Long,
+    val title: String,
+    val views: Long
+)
+
+/**
+ * Result wrapper for referrers fetch operation.
+ */
+sealed class ReferrersDataResult {
+    data class Success(val items: List<ReferrerDataItem>) : ReferrersDataResult()
+    data class Error(val message: String) : ReferrersDataResult()
+}
+
+/**
+ * A single referrer item from the API.
+ */
+data class ReferrerDataItem(
+    val name: String,
+    val views: Long
 )
