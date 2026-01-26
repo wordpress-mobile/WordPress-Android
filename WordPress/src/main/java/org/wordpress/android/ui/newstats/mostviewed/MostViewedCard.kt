@@ -12,8 +12,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -203,6 +205,8 @@ private fun LoadedContent(
     state: MostViewedCardUiState.Loaded,
     onDataSourceChanged: (MostViewedDataSource) -> Unit
 ) {
+    val maxViews = state.items.maxOfOrNull { it.views } ?: 1L
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -215,8 +219,12 @@ private fun LoadedContent(
             onDataSourceChanged = onDataSourceChanged
         )
         Spacer(modifier = Modifier.height(8.dp))
-        state.items.forEach { item ->
-            MostViewedItemRow(item)
+        state.items.forEachIndexed { index, item ->
+            val percentage = if (maxViews > 0) item.views.toFloat() / maxViews.toFloat() else 0f
+            MostViewedItemRow(item = item, percentage = percentage)
+            if (index < state.items.lastIndex) {
+                Spacer(modifier = Modifier.height(4.dp))
+            }
         }
         if (state.items.isEmpty()) {
             EmptyStateContent()
@@ -310,50 +318,61 @@ private fun ColumnHeadersRow(
 }
 
 @Composable
-private fun MostViewedItemRow(item: MostViewedItem) {
-    val backgroundColor = if (item.isHighlighted) {
-        MaterialTheme.colorScheme.primary.copy(alpha = HighlightedItemBackgroundAlpha)
-    } else {
-        Color.Transparent
-    }
+private fun MostViewedItemRow(item: MostViewedItem, percentage: Float) {
+    val barColor = MaterialTheme.colorScheme.primary.copy(alpha = HighlightedItemBackgroundAlpha)
 
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(backgroundColor, RoundedCornerShape(8.dp))
-            .padding(vertical = 12.dp, horizontal = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .height(IntrinsicSize.Min)
+            .clip(RoundedCornerShape(8.dp))
     ) {
-        Text(
-            text = item.title,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f)
+        // Background bar representing the percentage
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(fraction = percentage)
+                .fillMaxHeight()
+                .background(barColor)
         )
 
-        Spacer(modifier = Modifier.width(16.dp))
+        // Content
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp, horizontal = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = item.title,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Column(horizontalAlignment = Alignment.End) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = formatStatValue(item.views),
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        imageVector = Icons.Default.ChevronRight,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(horizontalAlignment = Alignment.End) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = formatStatValue(item.views),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Icon(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    ChangeIndicator(change = item.change)
                 }
-                ChangeIndicator(change = item.change)
             }
         }
     }
