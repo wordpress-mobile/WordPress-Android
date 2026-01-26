@@ -407,7 +407,7 @@ class StatsViewModel
         }
     }
 
-    private fun buildShowStatsEnabledViewUiModel() = StatsModuleUiModel(disabledStatsViewVisible = false)
+    private fun buildShowStatsEnabledViewUiModel() = StatsModuleUiModel(disabledStatsViewVisible = true) // TODO false
 
     private fun buildShowStatsDisabledViewUiModel() =
         StatsModuleUiModel(disabledStatsViewVisible = true, disabledStatsProgressVisible = false)
@@ -425,7 +425,7 @@ class StatsViewModel
     )
 
     data class StatsModuleUiModel(
-        val disabledStatsViewVisible: Boolean = false,
+        val disabledStatsViewVisible: Boolean = true, // TODO revert to false
         val disabledStatsProgressVisible: Boolean = false
     )
 }
