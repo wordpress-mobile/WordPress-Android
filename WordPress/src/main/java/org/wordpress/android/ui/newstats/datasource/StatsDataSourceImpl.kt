@@ -103,14 +103,23 @@ class StatsDataSourceImpl @Inject constructor(
 
     override suspend fun fetchTopPostsAndPages(
         siteId: Long,
-        date: String,
+        dateRange: StatsDateRange,
         max: Int
     ): TopPostsDataResult {
-        val params = StatsTopPostsParams(
-            period = StatsTopPostsPeriod.DAY,
-            date = date,
-            max = max.coerceAtLeast(1).toUInt()
-        )
+        val params = when (dateRange) {
+            is StatsDateRange.Preset -> StatsTopPostsParams(
+                period = StatsTopPostsPeriod.DAY,
+                date = dateRange.date,
+                num = dateRange.num.toUInt(),
+                max = max.coerceAtLeast(1).toUInt()
+            )
+            is StatsDateRange.Custom -> StatsTopPostsParams(
+                period = StatsTopPostsPeriod.DAY,
+                date = dateRange.date,
+                startDate = dateRange.startDate,
+                max = max.coerceAtLeast(1).toUInt()
+            )
+        }
 
         val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsTopPosts().getStatsTopPosts(
@@ -143,14 +152,23 @@ class StatsDataSourceImpl @Inject constructor(
 
     override suspend fun fetchReferrers(
         siteId: Long,
-        date: String,
+        dateRange: StatsDateRange,
         max: Int
     ): ReferrersDataResult {
-        val params = StatsReferrersParams(
-            period = StatsReferrersPeriod.DAY,
-            date = date,
-            max = max.coerceAtLeast(1).toUInt()
-        )
+        val params = when (dateRange) {
+            is StatsDateRange.Preset -> StatsReferrersParams(
+                period = StatsReferrersPeriod.DAY,
+                date = dateRange.date,
+                num = dateRange.num.toUInt(),
+                max = max.coerceAtLeast(1).toUInt()
+            )
+            is StatsDateRange.Custom -> StatsReferrersParams(
+                period = StatsReferrersPeriod.DAY,
+                date = dateRange.date,
+                startDate = dateRange.startDate,
+                max = max.coerceAtLeast(1).toUInt()
+            )
+        }
 
         val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsReferrers().getStatsReferrers(

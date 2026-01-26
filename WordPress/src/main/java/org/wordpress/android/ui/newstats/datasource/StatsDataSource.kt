@@ -30,13 +30,13 @@ interface StatsDataSource {
      * Fetches top posts and pages for a specific site.
      *
      * @param siteId The WordPress.com site ID
-     * @param date The date for the stats (format: yyyy-MM-dd)
+     * @param dateRange The date range parameters for the query
      * @param max Maximum number of items to return
      * @return Result containing the top posts data or an error
      */
     suspend fun fetchTopPostsAndPages(
         siteId: Long,
-        date: String,
+        dateRange: StatsDateRange,
         max: Int = 10
     ): TopPostsDataResult
 
@@ -44,15 +44,30 @@ interface StatsDataSource {
      * Fetches referrer stats for a specific site.
      *
      * @param siteId The WordPress.com site ID
-     * @param date The date for the stats (format: yyyy-MM-dd)
+     * @param dateRange The date range parameters for the query
      * @param max Maximum number of items to return
      * @return Result containing the referrers data or an error
      */
     suspend fun fetchReferrers(
         siteId: Long,
-        date: String,
+        dateRange: StatsDateRange,
         max: Int = 10
     ): ReferrersDataResult
+}
+
+/**
+ * Date range parameters for stats queries.
+ */
+sealed class StatsDateRange {
+    /**
+     * Preset period using num (number of days) and date (end date, typically today).
+     */
+    data class Preset(val num: Int, val date: String) : StatsDateRange()
+
+    /**
+     * Custom period using startDate and date (end date).
+     */
+    data class Custom(val startDate: String, val date: String) : StatsDateRange()
 }
 
 /**

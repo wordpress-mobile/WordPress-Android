@@ -31,6 +31,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -193,11 +194,17 @@ private fun TrafficTabContent(
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
     val viewsStatsUiState by viewsStatsViewModel.uiState.collectAsState()
     val mostViewedUiState by mostViewedViewModel.uiState.collectAsState()
+    val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
     val isMostViewedRefreshing by mostViewedViewModel.isRefreshing.collectAsState()
     val isRefreshing = isTodaysStatsRefreshing || isViewsStatsRefreshing || isMostViewedRefreshing
     val pullToRefreshState = rememberPullToRefreshState()
+
+    // Propagate period changes to the MostViewedViewModel
+    LaunchedEffect(selectedPeriod) {
+        mostViewedViewModel.onPeriodChanged(selectedPeriod)
+    }
 
     PullToRefreshBox(
         modifier = Modifier.fillMaxSize(),

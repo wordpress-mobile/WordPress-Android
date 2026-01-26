@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -29,14 +30,17 @@ class MostViewedViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var currentDataSource: MostViewedDataSource = MostViewedDataSource.POSTS_AND_PAGES
-
-    init {
-        loadData()
-    }
+    private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
 
     fun onDataSourceChanged(dataSource: MostViewedDataSource) {
         if (dataSource == currentDataSource) return
         currentDataSource = dataSource
+        loadData()
+    }
+
+    fun onPeriodChanged(period: StatsPeriod) {
+        if (period == currentPeriod) return
+        currentPeriod = period
         loadData()
     }
 
@@ -81,7 +85,7 @@ class MostViewedViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun loadDataInternal(siteId: Long) {
         try {
-            val result = statsRepository.fetchMostViewed(siteId, currentDataSource)
+            val result = statsRepository.fetchMostViewed(siteId, currentPeriod, currentDataSource)
 
             when (result) {
                 is MostViewedResult.Success -> {

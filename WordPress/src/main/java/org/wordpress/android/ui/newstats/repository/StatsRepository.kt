@@ -5,6 +5,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
@@ -484,21 +485,23 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Fetches most viewed items based on the selected data source.
+     * Fetches most viewed items based on the selected data source and period.
      *
      * @param siteId The WordPress.com site ID
+     * @param period The stats period to fetch
      * @param dataSource The data source type (posts and pages or referrers)
      * @return Most viewed items or error
      */
     suspend fun fetchMostViewed(
         siteId: Long,
+        period: StatsPeriod,
         dataSource: MostViewedDataSource
     ): MostViewedResult = withContext(ioDispatcher) {
-        val dateString = LocalDate.now().format(dateFormatter)
+        val dateRange = mapStatsPeriodToDateRange(period)
 
         when (dataSource) {
             MostViewedDataSource.POSTS_AND_PAGES -> {
-                when (val result = statsDataSource.fetchTopPostsAndPages(siteId, dateString)) {
+                when (val result = statsDataSource.fetchTopPostsAndPages(siteId, dateRange)) {
                     is TopPostsDataResult.Success -> {
                         MostViewedResult.Success(
                             result.items.mapIndexed { index, item ->
@@ -518,7 +521,7 @@ class StatsRepository @Inject constructor(
                 }
             }
             MostViewedDataSource.REFERRERS -> {
-                when (val result = statsDataSource.fetchReferrers(siteId, dateString)) {
+                when (val result = statsDataSource.fetchReferrers(siteId, dateRange)) {
                     is ReferrersDataResult.Success -> {
                         MostViewedResult.Success(
                             result.items.mapIndexed { index, item ->
@@ -537,6 +540,26 @@ class StatsRepository @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Maps a StatsPeriod to the appropriate StatsDateRange for the API.
+     */
+    private fun mapStatsPeriodToDateRange(period: StatsPeriod): StatsDateRange {
+        val today = LocalDate.now()
+        val todayString = today.format(dateFormatter)
+
+        return when (period) {
+            is StatsPeriod.Today -> StatsDateRange.Preset(num = 1, date = todayString)
+            is StatsPeriod.Last7Days -> StatsDateRange.Preset(num = 7, date = todayString)
+            is StatsPeriod.Last30Days -> StatsDateRange.Preset(num = 30, date = todayString)
+            is StatsPeriod.Last6Months -> StatsDateRange.Preset(num = 182, date = todayString)
+            is StatsPeriod.Last12Months -> StatsDateRange.Preset(num = 365, date = todayString)
+            is StatsPeriod.Custom -> StatsDateRange.Custom(
+                startDate = period.startDate.format(dateFormatter),
+                date = period.endDate.format(dateFormatter)
+            )
         }
     }
 }
