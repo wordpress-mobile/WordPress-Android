@@ -1,16 +1,20 @@
 package org.wordpress.android.ui.newstats.repository
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
+import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.util.AppLog
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -18,6 +22,10 @@ private const val HOURLY_QUANTITY = 24
 private const val DAILY_QUANTITY = 1
 private const val WEEKLY_QUANTITY = 7
 private const val DAYS_BEFORE_END_DATE = -6
+private const val DAYS_IN_30_DAYS = 30
+private const val DAYS_IN_7_DAYS = 7
+private const val MONTHS_IN_6_MONTHS = 6
+private const val MONTHS_IN_12_MONTHS = 12
 
 /**
  * Repository for fetching stats data using the wordpress-rs API.
@@ -28,16 +36,7 @@ class StatsRepository @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
-    /**
-     * Thread-local date formatter for thread-safe date formatting.
-     * SimpleDateFormat is NOT thread-safe, so we use ThreadLocal to provide each thread
-     * with its own instance, avoiding the overhead of creating new instances on every call.
-     */
-    private val dateFormat = ThreadLocal.withInitial {
-        SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
-    }
-
-    private fun getDateFormat(): SimpleDateFormat = dateFormat.get()!!
+    private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
     fun init(accessToken: String) {
         statsDataSource.init(accessToken)
@@ -50,8 +49,7 @@ class StatsRepository @Inject constructor(
      * @return Today's aggregated stats or error
      */
     suspend fun fetchTodayAggregates(siteId: Long): TodayAggregatesResult = withContext(ioDispatcher) {
-        val calendar = Calendar.getInstance()
-        val dateString = getDateFormat().format(calendar.time)
+        val dateString = LocalDate.now().format(dateFormatter)
 
         val result = statsDataSource.fetchStatsVisits(
             siteId = siteId,
@@ -95,13 +93,11 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         offsetDays: Int = 0
     ): HourlyViewsResult = withContext(ioDispatcher) {
-        val calendar = Calendar.getInstance()
         // The API's endDate is exclusive for hourly queries, so we need to add 1 day to get
         // the target day's hours. Formula: 1 (for exclusive end) - offsetDays (0=today, 1=yesterday)
         // Examples: offsetDays=0 → tomorrow's date → fetches today's hours
         //           offsetDays=1 → today's date → fetches yesterday's hours
-        calendar.add(Calendar.DAY_OF_YEAR, 1 - offsetDays)
-        val dateString = getDateFormat().format(calendar.time)
+        val dateString = LocalDate.now().plusDays((1 - offsetDays).toLong()).format(dateFormatter)
 
         val result = statsDataSource.fetchStatsVisits(
             siteId = siteId,
@@ -135,7 +131,7 @@ class StatsRepository @Inject constructor(
     suspend fun fetchWeeklyStats(siteId: Long, weeksAgo: Int = 0): WeeklyStatsResult =
         withContext(ioDispatcher) {
             val (startDate, endDate) = calculateWeekDateRange(weeksAgo)
-            val endDateString = getDateFormat().format(endDate.time)
+            val endDateString = endDate.format(dateFormatter)
 
             val result = statsDataSource.fetchStatsVisits(
                 siteId = siteId,
@@ -153,9 +149,9 @@ class StatsRepository @Inject constructor(
                     val totalComments = data.comments.sumOf { it.comments }
                     val totalPosts = data.posts.sumOf { it.posts }
 
-                    val startDateFormatted = getDateFormat().format(startDate.time)
+                    val startDateFormatted = startDate.format(dateFormatter)
 
-                    val aggregates = WeeklyAggregates(
+                    val aggregates = PeriodAggregates(
                         views = totalViews,
                         visitors = totalVisitors,
                         likes = totalLikes,
@@ -184,7 +180,7 @@ class StatsRepository @Inject constructor(
     suspend fun fetchDailyViewsForWeek(siteId: Long, weeksAgo: Int = 0): DailyViewsResult =
         withContext(ioDispatcher) {
             val (_, endDate) = calculateWeekDateRange(weeksAgo)
-            val endDateString = getDateFormat().format(endDate.time)
+            val endDateString = endDate.format(dateFormatter)
 
             val result = statsDataSource.fetchStatsVisits(
                 siteId = siteId,
@@ -196,7 +192,7 @@ class StatsRepository @Inject constructor(
             when (result) {
                 is StatsVisitsDataResult.Success -> {
                     val dataPoints = result.data.visits.map { dataPoint ->
-                        DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
+                        ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
                     }
                     DailyViewsResult.Success(dataPoints)
                 }
@@ -221,7 +217,7 @@ class StatsRepository @Inject constructor(
         weeksAgo: Int = 0
     ): WeeklyStatsWithDailyDataResult = withContext(ioDispatcher) {
         val (startDate, endDate) = calculateWeekDateRange(weeksAgo)
-        val endDateString = getDateFormat().format(endDate.time)
+        val endDateString = endDate.format(dateFormatter)
 
         val result = statsDataSource.fetchStatsVisits(
             siteId = siteId,
@@ -240,9 +236,9 @@ class StatsRepository @Inject constructor(
                 val totalLikes = data.likes.sumOf { it.likes }
                 val totalComments = data.comments.sumOf { it.comments }
                 val totalPosts = data.posts.sumOf { it.posts }
-                val startDateFormatted = getDateFormat().format(startDate.time)
+                val startDateFormatted = startDate.format(dateFormatter)
 
-                val aggregates = WeeklyAggregates(
+                val aggregates = PeriodAggregates(
                     views = totalViews,
                     visitors = totalVisitors,
                     likes = totalLikes,
@@ -254,7 +250,7 @@ class StatsRepository @Inject constructor(
 
                 // Build daily data points
                 val dailyDataPoints = data.visits.map { dataPoint ->
-                    DailyViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
+                    ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
                 }
 
                 WeeklyStatsWithDailyDataResult.Success(aggregates, dailyDataPoints)
@@ -271,20 +267,216 @@ class StatsRepository @Inject constructor(
     }
 
     /**
+     * Fetches stats data for a specific period with comparison to the previous period.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param period The stats period to fetch
+     * @return Combined stats for current and previous periods or error
+     */
+    suspend fun fetchStatsForPeriod(
+        siteId: Long,
+        period: StatsPeriod
+    ): PeriodStatsResult = withContext(ioDispatcher) {
+        val periodRange = calculatePeriodDates(period)
+
+        val currentEndString = periodRange.currentEnd.format(dateFormatter)
+        val previousEndString = periodRange.previousEnd.format(dateFormatter)
+
+        // Fetch both periods in parallel for better performance
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async {
+                statsDataSource.fetchStatsVisits(
+                    siteId = siteId,
+                    unit = periodRange.unit,
+                    quantity = periodRange.quantity,
+                    endDate = currentEndString
+                )
+            }
+            val previousDeferred = async {
+                statsDataSource.fetchStatsVisits(
+                    siteId = siteId,
+                    unit = periodRange.unit,
+                    quantity = periodRange.quantity,
+                    endDate = previousEndString
+                )
+            }
+            currentDeferred.await() to previousDeferred.await()
+        }
+
+        if (currentResult is StatsVisitsDataResult.Success &&
+            previousResult is StatsVisitsDataResult.Success
+        ) {
+            buildPeriodStatsSuccess(currentResult.data, previousResult.data, periodRange)
+        } else {
+            buildPeriodStatsError(currentResult, previousResult)
+        }
+    }
+
+    private fun buildPeriodStatsSuccess(
+        currentData: StatsVisitsData,
+        previousData: StatsVisitsData,
+        periodRange: PeriodDateRange
+    ): PeriodStatsResult.Success {
+        val currentDisplayDateString = periodRange.currentDisplayDate.format(dateFormatter)
+        val previousDisplayDateString = periodRange.previousDisplayDate.format(dateFormatter)
+
+        val currentAggregates = buildPeriodAggregates(
+            currentData,
+            periodRange.currentStart.format(dateFormatter),
+            currentDisplayDateString
+        )
+        val previousAggregates = buildPeriodAggregates(
+            previousData,
+            periodRange.previousStart.format(dateFormatter),
+            previousDisplayDateString
+        )
+        val currentPeriodData = currentData.visits.map { dataPoint ->
+            ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
+        }
+        val previousPeriodData = previousData.visits.map { dataPoint ->
+            ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
+        }
+
+        return PeriodStatsResult.Success(
+            currentAggregates = currentAggregates,
+            previousAggregates = previousAggregates,
+            currentPeriodData = currentPeriodData,
+            previousPeriodData = previousPeriodData
+        )
+    }
+
+    private fun buildPeriodStatsError(
+        currentResult: StatsVisitsDataResult,
+        previousResult: StatsVisitsDataResult
+    ): PeriodStatsResult.Error {
+        val errorMessage = when {
+            currentResult is StatsVisitsDataResult.Error -> currentResult.message
+            previousResult is StatsVisitsDataResult.Error -> previousResult.message
+            else -> "Unknown error"
+        }
+        appLogWrapper.e(AppLog.T.STATS, "API Error fetching period stats: $errorMessage")
+        return PeriodStatsResult.Error(errorMessage)
+    }
+
+    private fun buildPeriodAggregates(
+        data: StatsVisitsData,
+        startDate: String,
+        endDate: String
+    ): PeriodAggregates {
+        return PeriodAggregates(
+            views = data.visits.sumOf { it.visits },
+            visitors = data.visitors.sumOf { it.visitors },
+            likes = data.likes.sumOf { it.likes },
+            comments = data.comments.sumOf { it.comments },
+            posts = data.posts.sumOf { it.posts },
+            startDate = startDate,
+            endDate = endDate
+        )
+    }
+
+    private data class PeriodDateRange(
+        val currentStart: LocalDate,
+        val currentEnd: LocalDate,
+        val previousStart: LocalDate,
+        val previousEnd: LocalDate,
+        val quantity: Int,
+        val unit: StatsUnit,
+        // Display dates for the legend (may differ from API dates for hourly queries)
+        val currentDisplayDate: LocalDate = currentEnd,
+        val previousDisplayDate: LocalDate = previousEnd
+    )
+
+    private enum class DateUnit { DAY, MONTH }
+
+    private data class PeriodConfig(val quantity: Int, val unit: StatsUnit, val dateUnit: DateUnit)
+
+    @Suppress("ReturnCount")
+    private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
+        if (period is StatsPeriod.Today) return calculateTodayPeriodDates()
+        if (period is StatsPeriod.Custom) return calculateCustomPeriodDates(period.startDate, period.endDate)
+
+        val config = getPeriodConfig(period)
+        val currentEnd = LocalDate.now()
+        val currentStart = subtractFromDate(currentEnd, config.quantity - 1, config.dateUnit)
+        val previousEnd = subtractFromDate(currentStart, 1, config.dateUnit)
+        val previousStart = subtractFromDate(previousEnd, config.quantity - 1, config.dateUnit)
+
+        return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, config.quantity, config.unit)
+    }
+
+    private fun subtractFromDate(date: LocalDate, amount: Int, unit: DateUnit): LocalDate {
+        return when (unit) {
+            DateUnit.DAY -> date.minusDays(amount.toLong())
+            DateUnit.MONTH -> date.minusMonths(amount.toLong())
+        }
+    }
+
+    private fun getPeriodConfig(period: StatsPeriod): PeriodConfig = when (period) {
+        is StatsPeriod.Last7Days -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY)
+        is StatsPeriod.Last30Days -> PeriodConfig(DAYS_IN_30_DAYS, StatsUnit.DAY, DateUnit.DAY)
+        is StatsPeriod.Last6Months -> PeriodConfig(MONTHS_IN_6_MONTHS, StatsUnit.MONTH, DateUnit.MONTH)
+        is StatsPeriod.Last12Months -> PeriodConfig(MONTHS_IN_12_MONTHS, StatsUnit.MONTH, DateUnit.MONTH)
+        else -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY) // Fallback to 7 days
+    }
+
+    /**
+     * Calculates period dates for TODAY (hourly data).
+     * The API's endDate is exclusive for hourly queries, so we use tomorrow as end date for today's hours.
+     */
+    private fun calculateTodayPeriodDates(): PeriodDateRange {
+        val today = LocalDate.now()
+        val tomorrow = today.plusDays(1)
+        val yesterday = today.minusDays(1)
+        return PeriodDateRange(
+            currentStart = today,
+            currentEnd = tomorrow,
+            previousStart = yesterday,
+            previousEnd = today,
+            quantity = HOURLY_QUANTITY,
+            unit = StatsUnit.HOUR,
+            currentDisplayDate = today,
+            previousDisplayDate = yesterday
+        )
+    }
+
+    private fun calculateCustomPeriodDates(startDate: LocalDate, endDate: LocalDate): PeriodDateRange {
+        val daysBetween = ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1
+
+        val previousEnd = startDate.minusDays(1)
+        val previousStart = previousEnd.minusDays(daysBetween.toLong() - 1)
+
+        // Determine unit based on range
+        val unit = when {
+            daysBetween <= DAYS_IN_30_DAYS -> StatsUnit.DAY
+            else -> StatsUnit.MONTH
+        }
+
+        val quantity = if (unit == StatsUnit.MONTH) {
+            val monthsBetween = ChronoUnit.MONTHS.between(startDate, endDate).toInt() + 1
+            monthsBetween.coerceAtLeast(1)
+        } else {
+            daysBetween
+        }
+
+        return PeriodDateRange(
+            currentStart = startDate,
+            currentEnd = endDate,
+            previousStart = previousStart,
+            previousEnd = previousEnd,
+            quantity = quantity,
+            unit = unit
+        )
+    }
+
+    /**
      * Calculates the start and end dates for a given week.
      *
      * @param weeksAgo Number of weeks to go back (0 = current week, 1 = previous week)
-     * @return Pair of (startDate, endDate) Calendars representing the 7-day period
+     * @return Pair of (startDate, endDate) LocalDates representing the 7-day period
      */
-    private fun calculateWeekDateRange(weeksAgo: Int): Pair<Calendar, Calendar> {
-        val endDate = Calendar.getInstance().apply {
-            add(Calendar.WEEK_OF_YEAR, -weeksAgo)
-        }
-
-        val startDate = (endDate.clone() as Calendar).apply {
-            add(Calendar.DAY_OF_YEAR, DAYS_BEFORE_END_DATE)
-        }
-
+    private fun calculateWeekDateRange(weeksAgo: Int): Pair<LocalDate, LocalDate> {
+        val endDate = LocalDate.now().minusWeeks(weeksAgo.toLong())
+        val startDate = endDate.plusDays(DAYS_BEFORE_END_DATE.toLong())
         return startDate to endDate
     }
 }
@@ -327,14 +519,14 @@ data class TodayAggregates(
  * Result wrapper for weekly aggregated stats fetch operation.
  */
 sealed class WeeklyStatsResult {
-    data class Success(val aggregates: WeeklyAggregates) : WeeklyStatsResult()
+    data class Success(val aggregates: PeriodAggregates) : WeeklyStatsResult()
     data class Error(val message: String) : WeeklyStatsResult()
 }
 
 /**
- * Weekly aggregated stats data.
+ * Aggregated stats data for a period.
  */
-data class WeeklyAggregates(
+data class PeriodAggregates(
     val views: Long,
     val visitors: Long,
     val likes: Long,
@@ -348,14 +540,14 @@ data class WeeklyAggregates(
  * Result wrapper for daily views fetch operation.
  */
 sealed class DailyViewsResult {
-    data class Success(val dataPoints: List<DailyViewsDataPoint>) : DailyViewsResult()
+    data class Success(val dataPoints: List<ViewsDataPoint>) : DailyViewsResult()
     data class Error(val message: String) : DailyViewsResult()
 }
 
 /**
- * Raw daily data point from the stats API.
+ * A data point from the stats API representing views for a time unit (hour, day, or month).
  */
-data class DailyViewsDataPoint(
+data class ViewsDataPoint(
     val period: String,
     val views: Long
 )
@@ -366,8 +558,22 @@ data class DailyViewsDataPoint(
  */
 sealed class WeeklyStatsWithDailyDataResult {
     data class Success(
-        val aggregates: WeeklyAggregates,
-        val dailyDataPoints: List<DailyViewsDataPoint>
+        val aggregates: PeriodAggregates,
+        val dailyDataPoints: List<ViewsDataPoint>
     ) : WeeklyStatsWithDailyDataResult()
     data class Error(val message: String) : WeeklyStatsWithDailyDataResult()
+}
+
+/**
+ * Result wrapper for period stats fetch operation.
+ * Contains aggregated stats and data points for both current and previous periods.
+ */
+sealed class PeriodStatsResult {
+    data class Success(
+        val currentAggregates: PeriodAggregates,
+        val previousAggregates: PeriodAggregates,
+        val currentPeriodData: List<ViewsDataPoint>,
+        val previousPeriodData: List<ViewsDataPoint>
+    ) : PeriodStatsResult()
+    data class Error(val message: String) : PeriodStatsResult()
 }

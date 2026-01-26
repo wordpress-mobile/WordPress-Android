@@ -1490,9 +1490,9 @@
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_path">Path</string>
     <string name="stats_most_popular_percent_views">%1$s of views</string>
-    <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
+    <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back when your site had more visitors!</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
-    <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
+    <string name="stats_insights_management_title">Manage your insights to see only the most relevant stats</string>
 
     <string name="stats_insights_management_general">General</string>
     <string name="stats_insights_management_posts_and_pages">Posts and Pages</string>
@@ -1557,6 +1557,16 @@
     <string name="stats_todays_stats_no_site_selected">No site selected</string>
     <string name="stats_todays_stats_failed_to_load">Failed to load stats</string>
     <string name="stats_todays_stats_unknown_error">Unknown error</string>
+
+    <!-- stats period selector -->
+    <string name="stats_period_today">Today</string>
+    <string name="stats_period_last_7_days">Last 7 days</string>
+    <string name="stats_period_last_30_days">Last 30 days</string>
+    <string name="stats_period_last_6_months">Last 6 months</string>
+    <string name="stats_period_last_12_months">Last 12 months</string>
+    <string name="stats_period_custom">Custom</string>
+    <string name="stats_period_selector_content_description">Select stats period</string>
+    <string name="stats_select_date_range">Select date range</string>
 
     <!-- stats referrer popup menu actions   -->
     <string name="stats_referrer_popup_menu_open_website">Open Website</string>

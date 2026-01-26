@@ -91,5 +91,7 @@ class StatsDataSourceImpl @Inject constructor(
     private fun StatsUnit.toApiUnit(): StatsVisitsUnit = when (this) {
         StatsUnit.HOUR -> StatsVisitsUnit.HOUR
         StatsUnit.DAY -> StatsVisitsUnit.DAY
+        StatsUnit.WEEK -> StatsVisitsUnit.WEEK
+        StatsUnit.MONTH -> StatsVisitsUnit.MONTH
     }
 }

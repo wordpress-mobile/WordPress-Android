@@ -7,14 +7,14 @@ sealed class ViewsStatsCardUiState {
     data object Loading : ViewsStatsCardUiState()
 
     data class Loaded(
-        val currentWeekViews: Long,
-        val previousWeekViews: Long,
+        val currentPeriodViews: Long,
+        val previousPeriodViews: Long,
         val viewsDifference: Long,
         val viewsPercentageChange: Double,
-        val currentWeekDateRange: String,
-        val previousWeekDateRange: String,
+        val currentPeriodDateRange: String,
+        val previousPeriodDateRange: String,
         val chartData: ViewsStatsChartData,
-        val weeklyAverage: Long,
+        val periodAverage: Long,
         val bottomStats: List<StatItem>,
         val chartType: ChartType = ChartType.LINE
     ) : ViewsStatsCardUiState()
@@ -31,19 +31,19 @@ enum class ChartType {
 }
 
 /**
- * Chart data containing current and previous period daily views.
+ * Chart data containing current and previous period views.
  */
 data class ViewsStatsChartData(
-    val currentWeek: List<DailyDataPoint>,
-    val previousWeek: List<DailyDataPoint>
+    val currentPeriod: List<ChartDataPoint>,
+    val previousPeriod: List<ChartDataPoint>
 )
 
 /**
- * A single daily data point for the chart.
- * @param label The formatted label for this day (e.g., "Jan 15")
- * @param views The number of views for this day
+ * A single data point for the chart.
+ * @param label The formatted label for this time unit (e.g., "14:00", "Jan 15", "Jan")
+ * @param views The number of views for this time unit
  */
-data class DailyDataPoint(
+data class ChartDataPoint(
     val label: String,
     val views: Long
 )

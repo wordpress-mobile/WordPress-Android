@@ -188,7 +188,6 @@ abstract class StatsListViewModel(
         data class Empty(
             val title: Int,
             val subtitle: Int? = null,
-            val image: Int? = null,
             val showButton: Boolean = false
         ) : UiModel()
     }

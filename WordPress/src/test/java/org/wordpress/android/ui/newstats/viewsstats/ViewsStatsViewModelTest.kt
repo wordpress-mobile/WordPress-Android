@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.viewsstats
 
+import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -7,7 +8,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -17,11 +17,13 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.repository.DailyViewsDataPoint
+import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
 import org.wordpress.android.ui.newstats.repository.StatsRepository
-import org.wordpress.android.ui.newstats.repository.WeeklyAggregates
-import org.wordpress.android.ui.newstats.repository.WeeklyStatsWithDailyDataResult
+import org.wordpress.android.ui.newstats.repository.PeriodAggregates
+import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.time.LocalDate
 
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
@@ -74,7 +76,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             accountStore,
             statsRepository,
-            resourceProvider
+            resourceProvider,
+            SavedStateHandle()
         )
     }
 
@@ -92,25 +95,13 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads successfully, then loaded state is emitted with correct values`() = test {
-        val currentWeekResult = createWeeklyStatsWithDailyDataResult(
-            views = TEST_CURRENT_WEEK_VIEWS,
-            visitors = TEST_CURRENT_WEEK_VISITORS,
-            likes = TEST_CURRENT_WEEK_LIKES,
-            comments = TEST_CURRENT_WEEK_COMMENTS,
-            posts = TEST_CURRENT_WEEK_POSTS
-        )
-        val previousWeekResult = createWeeklyStatsWithDailyDataResult(
-            views = TEST_PREVIOUS_WEEK_VIEWS,
-            visitors = TEST_PREVIOUS_WEEK_VISITORS,
-            likes = TEST_PREVIOUS_WEEK_LIKES,
-            comments = TEST_PREVIOUS_WEEK_COMMENTS,
-            posts = TEST_PREVIOUS_WEEK_POSTS
+        val result = createPeriodStatsResult(
+            currentViews = TEST_CURRENT_PERIOD_VIEWS,
+            previousViews = TEST_PREVIOUS_PERIOD_VIEWS
         )
 
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0)))
-            .thenReturn(currentWeekResult)
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1)))
-            .thenReturn(previousWeekResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -118,15 +109,15 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(ViewsStatsCardUiState.Loaded::class.java)
         with(state as ViewsStatsCardUiState.Loaded) {
-            assertThat(currentWeekViews).isEqualTo(TEST_CURRENT_WEEK_VIEWS)
-            assertThat(previousWeekViews).isEqualTo(TEST_PREVIOUS_WEEK_VIEWS)
+            assertThat(currentPeriodViews).isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
+            assertThat(previousPeriodViews).isEqualTo(TEST_PREVIOUS_PERIOD_VIEWS)
         }
     }
 
     @Test
-    fun `when weekly stats fetch fails, then error state is emitted`() = test {
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(any(), any()))
-            .thenReturn(WeeklyStatsWithDailyDataResult.Error("Network error"))
+    fun `when period stats fetch fails, then error state is emitted`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(PeriodStatsResult.Error("Network error"))
 
         initViewModel()
         advanceUntilIdle()
@@ -137,14 +128,11 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when daily views data is empty, then chart data is empty but state is loaded`() = test {
-        val currentWeekResult = createWeeklyStatsWithDailyDataResult(dailyDataPoints = emptyList())
-        val previousWeekResult = createWeeklyStatsWithDailyDataResult(dailyDataPoints = emptyList())
+    fun `when period data is empty, then chart data is empty but state is loaded`() = test {
+        val result = createPeriodStatsResult(currentPeriodData = emptyList(), previousPeriodData = emptyList())
 
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0)))
-            .thenReturn(currentWeekResult)
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1)))
-            .thenReturn(previousWeekResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -152,20 +140,17 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(ViewsStatsCardUiState.Loaded::class.java)
         with(state as ViewsStatsCardUiState.Loaded) {
-            assertThat(chartData.currentWeek).isEmpty()
-            assertThat(chartData.previousWeek).isEmpty()
+            assertThat(chartData.currentPeriod).isEmpty()
+            assertThat(chartData.previousPeriod).isEmpty()
         }
     }
 
     @Test
-    fun `when loadData is called with forced true, then repository is called`() = test {
-        val currentWeekResult = createWeeklyStatsWithDailyDataResult()
-        val previousWeekResult = createWeeklyStatsWithDailyDataResult()
+    fun `when loadData is called, then repository is called`() = test {
+        val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0)))
-            .thenReturn(currentWeekResult)
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1)))
-            .thenReturn(previousWeekResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -173,20 +158,16 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         viewModel.loadData()
         advanceUntilIdle()
 
-        // Called twice for each week (current and previous): 2 during init, 2 during loadData
-        verify(statsRepository, times(2)).fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0))
-        verify(statsRepository, times(2)).fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1))
+        // Called twice: once during init, once during loadData
+        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
     }
 
     @Test
-    fun `when onRetry is called, then loadData is called with forced true`() = test {
-        val currentWeekResult = createWeeklyStatsWithDailyDataResult()
-        val previousWeekResult = createWeeklyStatsWithDailyDataResult()
+    fun `when onRetry is called, then loadData is called`() = test {
+        val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0)))
-            .thenReturn(currentWeekResult)
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1)))
-            .thenReturn(previousWeekResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -194,20 +175,16 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         viewModel.onRetry()
         advanceUntilIdle()
 
-        // Called twice for each week: once during init, once during onRetry
-        verify(statsRepository, times(2)).fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0))
-        verify(statsRepository, times(2)).fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1))
+        // Called twice: once during init, once during onRetry
+        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
     }
 
     @Test
     fun `when data loads, then views difference is calculated correctly`() = test {
-        val currentWeekResult = createWeeklyStatsWithDailyDataResult(views = 7000L)
-        val previousWeekResult = createWeeklyStatsWithDailyDataResult(views = 8000L)
+        val result = createPeriodStatsResult(currentViews = 7000L, previousViews = 8000L)
 
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0)))
-            .thenReturn(currentWeekResult)
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1)))
-            .thenReturn(previousWeekResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -218,13 +195,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads, then percentage change is calculated correctly`() = test {
-        val currentWeekResult = createWeeklyStatsWithDailyDataResult(views = 9000L)
-        val previousWeekResult = createWeeklyStatsWithDailyDataResult(views = 10000L)
+        val result = createPeriodStatsResult(currentViews = 9000L, previousViews = 10000L)
 
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0)))
-            .thenReturn(currentWeekResult)
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1)))
-            .thenReturn(previousWeekResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -234,14 +208,11 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when previous week has zero views, then percentage change is 100 percent`() = test {
-        val currentWeekResult = createWeeklyStatsWithDailyDataResult(views = 1000L)
-        val previousWeekResult = createWeeklyStatsWithDailyDataResult(views = 0L)
+    fun `when previous period has zero views, then percentage change is 100 percent`() = test {
+        val result = createPeriodStatsResult(currentViews = 1000L, previousViews = 0L)
 
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0)))
-            .thenReturn(currentWeekResult)
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1)))
-            .thenReturn(previousWeekResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -252,13 +223,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when refresh is called, then isRefreshing becomes true then false`() = test {
-        val currentWeekResult = createWeeklyStatsWithDailyDataResult()
-        val previousWeekResult = createWeeklyStatsWithDailyDataResult()
+        val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0)))
-            .thenReturn(currentWeekResult)
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1)))
-            .thenReturn(previousWeekResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -285,13 +253,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when bottom stats are built, then they contain all stat types`() = test {
-        val currentWeekResult = createWeeklyStatsWithDailyDataResult()
-        val previousWeekResult = createWeeklyStatsWithDailyDataResult()
+        val result = createPeriodStatsResult()
 
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0)))
-            .thenReturn(currentWeekResult)
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1)))
-            .thenReturn(previousWeekResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -305,13 +270,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when stat increases, then positive change is calculated`() = test {
-        val currentWeekResult = createWeeklyStatsWithDailyDataResult(views = 1000L)
-        val previousWeekResult = createWeeklyStatsWithDailyDataResult(views = 800L)
+        val result = createPeriodStatsResult(currentViews = 1000L, previousViews = 800L)
 
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0)))
-            .thenReturn(currentWeekResult)
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1)))
-            .thenReturn(previousWeekResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -324,13 +286,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when stat decreases, then negative change is calculated`() = test {
-        val currentWeekResult = createWeeklyStatsWithDailyDataResult(views = 800L)
-        val previousWeekResult = createWeeklyStatsWithDailyDataResult(views = 1000L)
+        val result = createPeriodStatsResult(currentViews = 800L, previousViews = 1000L)
 
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0)))
-            .thenReturn(currentWeekResult)
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1)))
-            .thenReturn(previousWeekResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -343,13 +302,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when stat is unchanged, then no change is calculated`() = test {
-        val currentWeekResult = createWeeklyStatsWithDailyDataResult(views = 1000L)
-        val previousWeekResult = createWeeklyStatsWithDailyDataResult(views = 1000L)
+        val result = createPeriodStatsResult(currentViews = 1000L, previousViews = 1000L)
 
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0)))
-            .thenReturn(currentWeekResult)
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1)))
-            .thenReturn(previousWeekResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
@@ -360,26 +316,23 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when weekly average is calculated, then it is based on daily views count`() = test {
-        val currentWeekResult = createWeeklyStatsWithDailyDataResult(views = 7000L)
-        val previousWeekResult = createWeeklyStatsWithDailyDataResult()
+    fun `when period average is calculated, then it is based on data points count`() = test {
+        val result = createPeriodStatsResult(currentViews = 7000L)
 
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(0)))
-            .thenReturn(currentWeekResult)
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(eq(TEST_SITE_ID), eq(1)))
-            .thenReturn(previousWeekResult)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
         // 7000 views / 2 data points = 3500 average
-        assertThat(state.weeklyAverage).isEqualTo(3500L)
+        assertThat(state.periodAverage).isEqualTo(3500L)
     }
 
     @Test
     fun `when exception is thrown during fetch, then error state is emitted`() = test {
-        whenever(statsRepository.fetchWeeklyStatsWithDailyData(any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenThrow(RuntimeException("Test exception"))
 
         initViewModel()
@@ -390,32 +343,124 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         assertThat((state as ViewsStatsCardUiState.Error).message).isEqualTo("Test exception")
     }
 
-    private fun createWeeklyStatsWithDailyDataResult(
-        views: Long = TEST_CURRENT_WEEK_VIEWS,
-        visitors: Long = TEST_CURRENT_WEEK_VISITORS,
-        likes: Long = TEST_CURRENT_WEEK_LIKES,
-        comments: Long = TEST_CURRENT_WEEK_COMMENTS,
-        posts: Long = TEST_CURRENT_WEEK_POSTS,
-        dailyDataPoints: List<DailyViewsDataPoint> = createDefaultDailyDataPoints()
-    ): WeeklyStatsWithDailyDataResult.Success {
-        val aggregates = WeeklyAggregates(
-            views = views,
-            visitors = visitors,
-            likes = likes,
-            comments = comments,
-            posts = posts,
+    @Test
+    fun `when onPeriodChanged is called with same period, then data is not reloaded`() = test {
+        val result = createPeriodStatsResult()
+
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // Default period is Last7Days, calling with same period should not reload
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        advanceUntilIdle()
+
+        // Should only be called once during init
+        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any())
+    }
+
+    @Test
+    fun `when onPeriodChanged is called with different period, then data is reloaded`() = test {
+        val result = createPeriodStatsResult()
+
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last30Days)
+        advanceUntilIdle()
+
+        // Called twice: once during init, once during period change
+        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
+    }
+
+    @Test
+    fun `when onPeriodChanged is called with custom period, then data is loaded`() = test {
+        val result = createPeriodStatsResult()
+
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val customPeriod = StatsPeriod.Custom(
+            startDate = LocalDate.of(2024, 1, 1),
+            endDate = LocalDate.of(2024, 1, 15)
+        )
+        viewModel.onPeriodChanged(customPeriod)
+        advanceUntilIdle()
+
+        // Called twice: once during init, once during custom period change
+        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
+    }
+
+    @Test
+    fun `when onChartTypeChanged is called, then chart type is updated`() = test {
+        val result = createPeriodStatsResult()
+
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        assertThat(state.chartType).isEqualTo(ChartType.BAR)
+    }
+
+    private fun createPeriodStatsResult(
+        currentViews: Long = TEST_CURRENT_PERIOD_VIEWS,
+        currentVisitors: Long = TEST_CURRENT_PERIOD_VISITORS,
+        currentLikes: Long = TEST_CURRENT_PERIOD_LIKES,
+        currentComments: Long = TEST_CURRENT_PERIOD_COMMENTS,
+        currentPosts: Long = TEST_CURRENT_PERIOD_POSTS,
+        previousViews: Long = TEST_PREVIOUS_PERIOD_VIEWS,
+        previousVisitors: Long = TEST_PREVIOUS_PERIOD_VISITORS,
+        previousLikes: Long = TEST_PREVIOUS_PERIOD_LIKES,
+        previousComments: Long = TEST_PREVIOUS_PERIOD_COMMENTS,
+        previousPosts: Long = TEST_PREVIOUS_PERIOD_POSTS,
+        currentPeriodData: List<ViewsDataPoint> = createDefaultDataPoints(),
+        previousPeriodData: List<ViewsDataPoint> = createDefaultDataPoints()
+    ): PeriodStatsResult.Success {
+        val currentAggregates = PeriodAggregates(
+            views = currentViews,
+            visitors = currentVisitors,
+            likes = currentLikes,
+            comments = currentComments,
+            posts = currentPosts,
             startDate = "2024-01-14",
             endDate = "2024-01-20"
         )
-        return WeeklyStatsWithDailyDataResult.Success(aggregates, dailyDataPoints)
+        val previousAggregates = PeriodAggregates(
+            views = previousViews,
+            visitors = previousVisitors,
+            likes = previousLikes,
+            comments = previousComments,
+            posts = previousPosts,
+            startDate = "2024-01-07",
+            endDate = "2024-01-13"
+        )
+        return PeriodStatsResult.Success(
+            currentAggregates = currentAggregates,
+            previousAggregates = previousAggregates,
+            currentPeriodData = currentPeriodData,
+            previousPeriodData = previousPeriodData
+        )
     }
 
-    private fun createDefaultDailyDataPoints() = listOf(
-        DailyViewsDataPoint(
+    private fun createDefaultDataPoints() = listOf(
+        ViewsDataPoint(
             period = "2024-01-14",
             views = 1000L
         ),
-        DailyViewsDataPoint(
+        ViewsDataPoint(
             period = "2024-01-15",
             views = 1500L
         )
@@ -424,16 +469,16 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
-        private const val TEST_CURRENT_WEEK_VIEWS = 7000L
-        private const val TEST_CURRENT_WEEK_VISITORS = 700L
-        private const val TEST_CURRENT_WEEK_LIKES = 50L
-        private const val TEST_CURRENT_WEEK_COMMENTS = 25L
-        private const val TEST_CURRENT_WEEK_POSTS = 5L
-        private const val TEST_PREVIOUS_WEEK_VIEWS = 8000L
-        private const val TEST_PREVIOUS_WEEK_VISITORS = 800L
-        private const val TEST_PREVIOUS_WEEK_LIKES = 60L
-        private const val TEST_PREVIOUS_WEEK_COMMENTS = 30L
-        private const val TEST_PREVIOUS_WEEK_POSTS = 4L
+        private const val TEST_CURRENT_PERIOD_VIEWS = 7000L
+        private const val TEST_CURRENT_PERIOD_VISITORS = 700L
+        private const val TEST_CURRENT_PERIOD_LIKES = 50L
+        private const val TEST_CURRENT_PERIOD_COMMENTS = 25L
+        private const val TEST_CURRENT_PERIOD_POSTS = 5L
+        private const val TEST_PREVIOUS_PERIOD_VIEWS = 8000L
+        private const val TEST_PREVIOUS_PERIOD_VISITORS = 800L
+        private const val TEST_PREVIOUS_PERIOD_LIKES = 60L
+        private const val TEST_PREVIOUS_PERIOD_COMMENTS = 30L
+        private const val TEST_PREVIOUS_PERIOD_POSTS = 4L
         private const val NO_SITE_SELECTED_ERROR = "No site selected"
         private const val FAILED_TO_LOAD_ERROR = "Failed to load stats"
         private const val UNKNOWN_ERROR = "Unknown error"
