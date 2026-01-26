@@ -17,12 +17,6 @@ import javax.inject.Inject
 class UiModelMapper
 @Inject constructor(private val networkUtilsWrapper: NetworkUtilsWrapper) {
     fun mapInsights(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
-        // TODO remove this before merging
-        return UiModel.Empty(
-            title = R.string.stats_empty_insights_title,
-            subtitle = R.string.stats_insights_management_title,
-            showButton = true
-        )
         val insightUseCaseModels = useCaseModels.filter { it.type is InsightType }
         if (insightUseCaseModels.isNotEmpty()) {
             val allFailing = allFailing(insightUseCaseModels)
