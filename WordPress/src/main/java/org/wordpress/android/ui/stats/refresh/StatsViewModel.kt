@@ -425,7 +425,7 @@ class StatsViewModel
     )
 
     data class StatsModuleUiModel(
-        val disabledStatsViewVisible: Boolean = true, // TODO revert to false
+        val disabledStatsViewVisible: Boolean = false,
         val disabledStatsProgressVisible: Boolean = false
     )
 }
