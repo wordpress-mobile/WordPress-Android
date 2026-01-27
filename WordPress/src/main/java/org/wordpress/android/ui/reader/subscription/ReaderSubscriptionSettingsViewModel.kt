@@ -23,7 +23,6 @@ class ReaderSubscriptionSettingsViewModel @Inject constructor(
     private val subscriptionUseCase: ReaderBlogSubscriptionUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow<ReaderSubscriptionSettingsUiState?>(null)
     val uiState: StateFlow<ReaderSubscriptionSettingsUiState?> = _uiState
 

@@ -25,7 +25,6 @@ private const val BLOG_URL = "https://test.wordpress.com"
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
-
     @Mock
     lateinit var subscriptionUseCase: ReaderBlogSubscriptionUseCase
 

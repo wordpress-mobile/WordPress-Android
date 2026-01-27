@@ -25,7 +25,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ReaderSubscriptionSettingsBottomSheetFragment : BottomSheetDialogFragment() {
-
     @Inject
     lateinit var contextProvider: ContextProvider
 

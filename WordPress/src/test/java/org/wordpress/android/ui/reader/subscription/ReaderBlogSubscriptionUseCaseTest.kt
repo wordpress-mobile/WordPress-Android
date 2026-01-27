@@ -29,7 +29,6 @@ private const val ERROR_MESSAGE = "Error"
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderBlogSubscriptionUseCaseTest : BaseUnitTest() {
-
     @Mock
     lateinit var dispatcher: Dispatcher
 
