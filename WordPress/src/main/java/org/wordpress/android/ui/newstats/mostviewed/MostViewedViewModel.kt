@@ -32,6 +32,10 @@ class MostViewedViewModel @Inject constructor(
     private var currentDataSource: MostViewedDataSource = MostViewedDataSource.POSTS_AND_PAGES
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
 
+    init {
+        loadData()
+    }
+
     fun onDataSourceChanged(dataSource: MostViewedDataSource) {
         if (dataSource == currentDataSource) return
         currentDataSource = dataSource
@@ -46,6 +50,10 @@ class MostViewedViewModel @Inject constructor(
 
     fun refresh() {
         val site = selectedSiteRepository.getSelectedSite() ?: return
+        val accessToken = accountStore.accessToken
+        if (accessToken.isNullOrEmpty()) return
+
+        statsRepository.init(accessToken)
         viewModelScope.launch {
             _isRefreshing.value = true
             loadDataInternal(site.siteId)
