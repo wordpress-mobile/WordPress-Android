@@ -193,9 +193,6 @@ class MediaPickerViewModel @Inject constructor(
             PhotoListUiModel.Empty(
                 title = domainModel.emptyState.title,
                 htmlSubtitle = domainModel.emptyState.htmlSubtitle,
-                image = domainModel.emptyState.image,
-                bottomImage = domainModel.emptyState.bottomImage,
-                bottomImageDescription = domainModel.emptyState.bottomImageDescription,
                 isSearching = isSearching == true,
                 retryAction = if (isSearching == true) null else this::retry
             )
@@ -733,9 +730,6 @@ class MediaPickerViewModel @Inject constructor(
         data class Empty(
             val title: UiString,
             val htmlSubtitle: UiString? = null,
-            val image: Int? = null,
-            val bottomImage: Int? = null,
-            val bottomImageDescription: UiString? = null,
             val isSearching: Boolean = false,
             val retryAction: (() -> Unit)? = null
         ) : PhotoListUiModel()
