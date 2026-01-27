@@ -407,7 +407,7 @@ class StatsViewModel
         }
     }
 
-    private fun buildShowStatsEnabledViewUiModel() = StatsModuleUiModel(disabledStatsViewVisible = true) // TODO false
+    private fun buildShowStatsEnabledViewUiModel() = StatsModuleUiModel(disabledStatsViewVisible = false)
 
     private fun buildShowStatsDisabledViewUiModel() =
         StatsModuleUiModel(disabledStatsViewVisible = true, disabledStatsProgressVisible = false)
