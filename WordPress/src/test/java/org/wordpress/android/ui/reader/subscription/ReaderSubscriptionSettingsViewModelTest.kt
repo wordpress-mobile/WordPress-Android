@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.SubscriptionModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.subscription.ReaderBlogSubscriptionUseCase.UpdateResult
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 
 private const val BLOG_ID = 123L
@@ -29,6 +30,9 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var subscriptionUseCase: ReaderBlogSubscriptionUseCase
 
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     private lateinit var viewModel: ReaderSubscriptionSettingsViewModel
 
     private var snackbarEvents: MutableList<Event<SnackbarMessageHolder>> = mutableListOf()
@@ -37,6 +41,7 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
     fun setup() {
         viewModel = ReaderSubscriptionSettingsViewModel(
             subscriptionUseCase,
+            analyticsTrackerWrapper,
             testDispatcher()
         )
 
