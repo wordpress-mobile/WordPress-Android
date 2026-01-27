@@ -68,16 +68,16 @@ class ReaderSubscriptionSettingsBottomSheetFragment : BottomSheetDialogFragment(
 
     private fun setupClickListeners() {
         with(binding) {
-            switchNotifyPosts.setOnClickListener {
-                viewModel.onNotifyPostsToggled((it as SwitchCompat).isChecked)
+            switchNotifyPosts.setOnCheckedChangeListener { _, isChecked ->
+                viewModel.onNotifyPostsToggled(isChecked)
             }
 
-            switchEmailPosts.setOnClickListener {
-                viewModel.onEmailPostsToggled((it as SwitchCompat).isChecked)
+            switchEmailPosts.setOnCheckedChangeListener { _, isChecked ->
+                viewModel.onEmailPostsToggled(isChecked)
             }
 
-            switchEmailComments.setOnClickListener {
-                viewModel.onEmailCommentsToggled((it as SwitchCompat).isChecked)
+            switchEmailComments.setOnCheckedChangeListener { _, isChecked ->
+                viewModel.onEmailCommentsToggled(isChecked)
             }
         }
     }
@@ -125,7 +125,7 @@ class ReaderSubscriptionSettingsBottomSheetFragment : BottomSheetDialogFragment(
 
     private fun SwitchCompat.setCheckedSilently(checked: Boolean) {
         if (isChecked != checked) {
-            setOnClickListener(null)
+            setOnCheckedChangeListener(null)
             isChecked = checked
             setupClickListeners()
         }

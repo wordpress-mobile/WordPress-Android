@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.reader.subscription
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -24,7 +23,7 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    private val updateResultFlow = MutableSharedFlow<UpdateResult>(extraBufferCapacity = 1)
+    private val updateResultChannel = Channel<UpdateResult>(Channel.BUFFERED)
 
     init {
         dispatcher.register(this)
@@ -45,7 +44,7 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
         val action = if (enable) SubscriptionAction.NEW else SubscriptionAction.DELETE
         val payload = AddOrDeleteSubscriptionPayload(blogId.toString(), action)
         dispatcher.dispatch(AccountActionBuilder.newUpdateSubscriptionNotificationPostAction(payload))
-        return updateResultFlow.first()
+        return updateResultChannel.receive()
     }
 
     suspend fun updateEmailPosts(blogId: Long, enable: Boolean): UpdateResult {
@@ -55,7 +54,7 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
         val action = if (enable) SubscriptionAction.NEW else SubscriptionAction.DELETE
         val payload = AddOrDeleteSubscriptionPayload(blogId.toString(), action)
         dispatcher.dispatch(AccountActionBuilder.newUpdateSubscriptionEmailPostAction(payload))
-        return updateResultFlow.first()
+        return updateResultChannel.receive()
     }
 
     suspend fun updateEmailComments(blogId: Long, enable: Boolean): UpdateResult {
@@ -65,7 +64,7 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
         val action = if (enable) SubscriptionAction.NEW else SubscriptionAction.DELETE
         val payload = AddOrDeleteSubscriptionPayload(blogId.toString(), action)
         dispatcher.dispatch(AccountActionBuilder.newUpdateSubscriptionEmailCommentAction(payload))
-        return updateResultFlow.first()
+        return updateResultChannel.receive()
     }
 
     fun refreshSubscriptions() {
@@ -80,7 +79,7 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
         } else {
             UpdateResult.Success
         }
-        updateResultFlow.tryEmit(result)
+        updateResultChannel.trySend(result)
 
         // Refresh subscriptions after successful update
         if (!event.isError) {
