@@ -50,11 +50,12 @@ class ReaderSubscriptionSettingsViewModel @Inject constructor(
 
     fun onNotifyPostsToggled(enabled: Boolean) {
         val currentState = _uiState.value ?: return
+        val previousValue = currentState.notifyPostsEnabled
         _uiState.value = currentState.copy(notifyPostsEnabled = enabled, isLoading = true)
 
         viewModelScope.launch {
             val result = subscriptionUseCase.updateNotifyPosts(currentState.blogId, enabled)
-            handleUpdateResult(result, enabled) { state, value ->
+            handleUpdateResult(result, enabled, previousValue) { state, value ->
                 state.copy(notifyPostsEnabled = value)
             }
         }
@@ -62,11 +63,12 @@ class ReaderSubscriptionSettingsViewModel @Inject constructor(
 
     fun onEmailPostsToggled(enabled: Boolean) {
         val currentState = _uiState.value ?: return
+        val previousValue = currentState.emailPostsEnabled
         _uiState.value = currentState.copy(emailPostsEnabled = enabled, isLoading = true)
 
         viewModelScope.launch {
             val result = subscriptionUseCase.updateEmailPosts(currentState.blogId, enabled)
-            handleUpdateResult(result, enabled) { state, value ->
+            handleUpdateResult(result, enabled, previousValue) { state, value ->
                 state.copy(emailPostsEnabled = value)
             }
         }
@@ -74,11 +76,12 @@ class ReaderSubscriptionSettingsViewModel @Inject constructor(
 
     fun onEmailCommentsToggled(enabled: Boolean) {
         val currentState = _uiState.value ?: return
+        val previousValue = currentState.emailCommentsEnabled
         _uiState.value = currentState.copy(emailCommentsEnabled = enabled, isLoading = true)
 
         viewModelScope.launch {
             val result = subscriptionUseCase.updateEmailComments(currentState.blogId, enabled)
-            handleUpdateResult(result, enabled) { state, value ->
+            handleUpdateResult(result, enabled, previousValue) { state, value ->
                 state.copy(emailCommentsEnabled = value)
             }
         }
@@ -87,6 +90,7 @@ class ReaderSubscriptionSettingsViewModel @Inject constructor(
     private fun <T> handleUpdateResult(
         result: UpdateResult,
         newValue: T,
+        previousValue: T,
         updateState: (ReaderSubscriptionSettingsUiState, T) -> ReaderSubscriptionSettingsUiState
     ) {
         val currentState = _uiState.value ?: return
@@ -95,9 +99,16 @@ class ReaderSubscriptionSettingsViewModel @Inject constructor(
             is UpdateResult.Success -> {
                 _uiState.value = updateState(currentState, newValue).copy(isLoading = false)
             }
+            is UpdateResult.NoNetwork -> {
+                // Revert to previous value on no network
+                _uiState.value = updateState(currentState, previousValue).copy(isLoading = false)
+                _snackbarEvents.postValue(
+                    Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
+                )
+            }
             is UpdateResult.Failure -> {
-                // Revert to previous state on failure
-                _uiState.value = currentState.copy(isLoading = false)
+                // Revert to previous value on failure
+                _uiState.value = updateState(currentState, previousValue).copy(isLoading = false)
                 _snackbarEvents.postValue(
                     Event(SnackbarMessageHolder(UiStringRes(R.string.reader_subscription_settings_update_error)))
                 )

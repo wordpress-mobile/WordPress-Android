@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload
 import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload.SubscriptionFrequency
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.Continuation
@@ -23,6 +24,7 @@ import kotlin.coroutines.suspendCoroutine
 class ReaderBlogSubscriptionUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     private val accountStore: AccountStore,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private var updateContinuation: Continuation<UpdateResult>? = null
@@ -39,18 +41,28 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
         accountStore.subscriptions.find { it.blogId == blogId.toString() }
     }
 
-    suspend fun updateNotifyPosts(blogId: Long, enable: Boolean): UpdateResult = suspendCoroutine { continuation ->
-        updateContinuation = continuation
-        val action = if (enable) SubscriptionAction.NEW else SubscriptionAction.DELETE
-        val payload = AddOrDeleteSubscriptionPayload(blogId.toString(), action)
-        dispatcher.dispatch(AccountActionBuilder.newUpdateSubscriptionNotificationPostAction(payload))
+    suspend fun updateNotifyPosts(blogId: Long, enable: Boolean): UpdateResult {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            return UpdateResult.NoNetwork
+        }
+        return suspendCoroutine { continuation ->
+            updateContinuation = continuation
+            val action = if (enable) SubscriptionAction.NEW else SubscriptionAction.DELETE
+            val payload = AddOrDeleteSubscriptionPayload(blogId.toString(), action)
+            dispatcher.dispatch(AccountActionBuilder.newUpdateSubscriptionNotificationPostAction(payload))
+        }
     }
 
-    suspend fun updateEmailPosts(blogId: Long, enable: Boolean): UpdateResult = suspendCoroutine { continuation ->
-        updateContinuation = continuation
-        val action = if (enable) SubscriptionAction.NEW else SubscriptionAction.DELETE
-        val payload = AddOrDeleteSubscriptionPayload(blogId.toString(), action)
-        dispatcher.dispatch(AccountActionBuilder.newUpdateSubscriptionEmailPostAction(payload))
+    suspend fun updateEmailPosts(blogId: Long, enable: Boolean): UpdateResult {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            return UpdateResult.NoNetwork
+        }
+        return suspendCoroutine { continuation ->
+            updateContinuation = continuation
+            val action = if (enable) SubscriptionAction.NEW else SubscriptionAction.DELETE
+            val payload = AddOrDeleteSubscriptionPayload(blogId.toString(), action)
+            dispatcher.dispatch(AccountActionBuilder.newUpdateSubscriptionEmailPostAction(payload))
+        }
     }
 
     suspend fun updateEmailPostsFrequency(blogId: Long, frequency: SubscriptionFrequency): UpdateResult =
@@ -60,11 +72,16 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
             dispatcher.dispatch(AccountActionBuilder.newUpdateSubscriptionEmailPostFrequencyAction(payload))
         }
 
-    suspend fun updateEmailComments(blogId: Long, enable: Boolean): UpdateResult = suspendCoroutine { continuation ->
-        updateContinuation = continuation
-        val action = if (enable) SubscriptionAction.NEW else SubscriptionAction.DELETE
-        val payload = AddOrDeleteSubscriptionPayload(blogId.toString(), action)
-        dispatcher.dispatch(AccountActionBuilder.newUpdateSubscriptionEmailCommentAction(payload))
+    suspend fun updateEmailComments(blogId: Long, enable: Boolean): UpdateResult {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            return UpdateResult.NoNetwork
+        }
+        return suspendCoroutine { continuation ->
+            updateContinuation = continuation
+            val action = if (enable) SubscriptionAction.NEW else SubscriptionAction.DELETE
+            val payload = AddOrDeleteSubscriptionPayload(blogId.toString(), action)
+            dispatcher.dispatch(AccountActionBuilder.newUpdateSubscriptionEmailCommentAction(payload))
+        }
     }
 
     fun refreshSubscriptions() {
@@ -90,6 +107,7 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
 
     sealed class UpdateResult {
         object Success : UpdateResult()
+        object NoNetwork : UpdateResult()
         data class Failure(val errorMessage: String?) : UpdateResult()
     }
 }
