@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.subscription
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -158,6 +159,16 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
         val message = snackbarEvents.first().peekContent().message
         assertThat(message).isEqualTo(UiStringRes(R.string.no_network_message))
     }
+
+    @Test
+    fun `onNotifyPostsToggled is ignored while loading`() = test {
+        initializeViewModelWithLoadingState()
+
+        viewModel.onNotifyPostsToggled(true)
+
+        val state = viewModel.uiState.value
+        assertThat(state?.notifyPostsEnabled).isFalse()
+    }
     // endregion
 
     // region onEmailPostsToggled
@@ -219,6 +230,16 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
         assertThat(snackbarEvents).hasSize(1)
         val message = snackbarEvents.first().peekContent().message
         assertThat(message).isEqualTo(UiStringRes(R.string.no_network_message))
+    }
+
+    @Test
+    fun `onEmailPostsToggled is ignored while loading`() = test {
+        initializeViewModelWithLoadingState()
+
+        viewModel.onEmailPostsToggled(true)
+
+        val state = viewModel.uiState.value
+        assertThat(state?.emailPostsEnabled).isFalse()
     }
     // endregion
 
@@ -282,6 +303,16 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
         val message = snackbarEvents.first().peekContent().message
         assertThat(message).isEqualTo(UiStringRes(R.string.no_network_message))
     }
+
+    @Test
+    fun `onEmailCommentsToggled is ignored while loading`() = test {
+        initializeViewModelWithLoadingState()
+
+        viewModel.onEmailCommentsToggled(true)
+
+        val state = viewModel.uiState.value
+        assertThat(state?.emailCommentsEnabled).isFalse()
+    }
     // endregion
 
     // region cleanup
@@ -311,5 +342,16 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
         viewModel.start(BLOG_ID, BLOG_NAME, BLOG_URL)
         // Wait for start to complete
         viewModel.uiState.first { it != null }
+    }
+
+    private suspend fun initializeViewModelWithLoadingState() {
+        initializeViewModel()
+        // Manually set the loading state to simulate an in-progress request
+        val currentState = viewModel.uiState.value!!
+        val field = viewModel.javaClass.getDeclaredField("_uiState")
+        field.isAccessible = true
+        @Suppress("UNCHECKED_CAST")
+        val mutableStateFlow = field.get(viewModel) as MutableStateFlow<ReaderSubscriptionSettingsUiState?>
+        mutableStateFlow.value = currentState.copy(isLoading = true)
     }
 }

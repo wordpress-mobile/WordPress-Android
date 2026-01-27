@@ -49,6 +49,7 @@ class ReaderSubscriptionSettingsViewModel @Inject constructor(
 
     fun onNotifyPostsToggled(enabled: Boolean) {
         val currentState = _uiState.value ?: return
+        if (currentState.isLoading) return
         val previousValue = currentState.notifyPostsEnabled
         _uiState.value = currentState.copy(notifyPostsEnabled = enabled, isLoading = true)
 
@@ -62,6 +63,7 @@ class ReaderSubscriptionSettingsViewModel @Inject constructor(
 
     fun onEmailPostsToggled(enabled: Boolean) {
         val currentState = _uiState.value ?: return
+        if (currentState.isLoading) return
         val previousValue = currentState.emailPostsEnabled
         _uiState.value = currentState.copy(emailPostsEnabled = enabled, isLoading = true)
 
@@ -75,6 +77,7 @@ class ReaderSubscriptionSettingsViewModel @Inject constructor(
 
     fun onEmailCommentsToggled(enabled: Boolean) {
         val currentState = _uiState.value ?: return
+        if (currentState.isLoading) return
         val previousValue = currentState.emailCommentsEnabled
         _uiState.value = currentState.copy(emailCommentsEnabled = enabled, isLoading = true)
 
