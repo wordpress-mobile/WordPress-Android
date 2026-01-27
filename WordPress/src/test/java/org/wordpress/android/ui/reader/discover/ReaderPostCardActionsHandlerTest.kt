@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.reader.discover
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -178,7 +180,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog())
             .thenReturn(true)
 
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             dummyReaderPostModel(),
@@ -199,7 +201,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog())
             .thenReturn(false)
 
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             dummyReaderPostModel(),
@@ -218,7 +220,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         whenever(bookmarkUseCase.toggleBookmark(any(), any(), any()))
             .thenReturn(flowOf(Success(true)))
 
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             dummyReaderPostModel(),
@@ -237,7 +239,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         whenever(bookmarkUseCase.toggleBookmark(any(), any(), any()))
             .thenReturn(flowOf(Success(true)))
 
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         val isBookmarkList = true
         // Act
         actionHandler.onAction(
@@ -257,7 +259,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         whenever(bookmarkUseCase.toggleBookmark(any(), any(), any()))
             .thenReturn(flowOf(Success(false)))
 
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         val isBookmarkList = true
         // Act
         actionHandler.onAction(
@@ -277,7 +279,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         whenever(bookmarkUseCase.toggleBookmark(any(), any(), any()))
             .thenReturn(flowOf(Success(true)))
 
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             dummyReaderPostModel(),
@@ -298,7 +300,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), any()))
             .thenReturn(flowOf(mock<FollowStatusChanged>()))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
 
         // Act
         actionHandler.onAction(
@@ -337,7 +339,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
             .thenReturn(
                 flowOf(FollowStatusChanged(-1, -1, following = true, showEnableNotification = true))
             )
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             dummyReaderPostModel(),
@@ -383,7 +385,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), any()))
             .thenReturn(flowOf(FollowStatusChanged(-1, -1, following = true, showEnableNotification = true)))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
 
         actionHandler.onAction(
             dummyReaderPostModel(),
@@ -405,7 +407,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), any()))
             .thenReturn(flowOf(NoNetwork))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
 
         // Act
         actionHandler.onAction(
@@ -424,7 +426,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), any()))
             .thenReturn(flowOf(RequestFailed))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
 
         // Act
         actionHandler.onAction(
@@ -485,7 +487,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
             .thenReturn(null)
         whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
             .thenReturn(FetchSiteState.Failed.RequestFailed)
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
 
         // Act
         actionHandler.onAction(
@@ -545,7 +547,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(siteNotificationsUseCase.toggleNotification(any(), any()))
             .thenReturn(SiteNotificationState.Failed.NoNetwork)
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
 
         // Act
         actionHandler.onAction(
@@ -564,7 +566,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(siteNotificationsUseCase.toggleNotification(any(), any()))
             .thenReturn(SiteNotificationState.Failed.RequestFailed)
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
 
         // Act
         actionHandler.onAction(
@@ -583,7 +585,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(siteNotificationsUseCase.toggleNotification(any(), any()))
             .thenReturn(SiteNotificationState.Failed.AlreadyRunning)
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
 
         // Act
         actionHandler.onAction(
@@ -646,7 +648,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
                 .thenReturn(null)
             whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
                 .thenReturn(FetchSiteState.Failed.RequestFailed)
-            val observedValues = startObserving()
+            val observedValues = startObserving(backgroundScope)
 
             // Act
             actionHandler.onAction(
@@ -688,7 +690,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     @Test
     fun `Share button opens share dialog`() = test {
         // Arrange
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -706,7 +708,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     @Test
     fun `Visit Site button opens browser`() = test {
         // Arrange
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -726,7 +728,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
             .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -744,7 +746,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
             .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -762,7 +764,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
             .thenReturn(flowOf(Failed.NoNetwork))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -780,7 +782,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
             .thenReturn(flowOf(Failed.RequestFailed))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -798,7 +800,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
             .thenReturn(flowOf(Failed.RequestFailed))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -816,7 +818,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
             .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
             BLOCK_SITE,
@@ -834,7 +836,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
             .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
             BLOCK_SITE,
@@ -846,6 +848,30 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Assert
         assertThat(observedValues.refreshPosts.size).isEqualTo(2)
     }
+
+    @Test
+    fun `Scroll to site emitted when user clicks on undo action in snackbar`() = test {
+        // Arrange
+        val expectedBlogId = 123L
+        val blockedBlogResult =
+            org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult().apply {
+                blogId = expectedBlogId
+            }
+        whenever(blockBlogUseCase.blockBlog(any(), any()))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult)))
+        val observedValues = startObserving(backgroundScope)
+        actionHandler.onAction(
+            mock(),
+            BLOCK_SITE,
+            false,
+            SOURCE
+        )
+        // Act
+        observedValues.snackbarMsgs[0].buttonAction.invoke()
+        // Assert
+        assertThat(observedValues.scrollToSiteId.size).isEqualTo(1)
+        assertThat(observedValues.scrollToSiteId[0]).isEqualTo(expectedBlogId)
+    }
     /** BLOCK SITE ACTION end **/
 
     /** BLOCK USER ACTION begin **/
@@ -854,7 +880,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(blockUserUseCase.blockUser(any(), any()))
             .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -872,7 +898,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(blockUserUseCase.blockUser(any(), any()))
             .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -890,7 +916,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(blockUserUseCase.blockUser(any(), any()))
             .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
             BLOCK_USER,
@@ -908,7 +934,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(blockUserUseCase.blockUser(any(), any()))
             .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
             BLOCK_USER,
@@ -980,7 +1006,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), any(), any()))
             .thenReturn(flowOf(PostLikedInLocalDb))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -997,7 +1023,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), any(), any()))
             .thenReturn(flowOf(PostLikeState.Failed.RequestFailed))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -1014,7 +1040,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), any(), any()))
             .thenReturn(flowOf(PostLikeState.Failed.NoNetwork))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -1031,7 +1057,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), any(), any()))
             .thenReturn(flowOf(PostLikeState.Failed.RequestFailed))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -1048,7 +1074,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), any(), any()))
             .thenReturn(flowOf(PostLikeState.Success))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -1069,7 +1095,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), any(), any()))
             .thenReturn(flowOf(PostLikeState.Unchanged))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -1090,7 +1116,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Arrange
         whenever(likeUseCase.perform(anyOrNull(), any(), any()))
             .thenReturn(flowOf(PostLikeState.AlreadyRunning))
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -1134,7 +1160,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
             .thenReturn(NoSite)
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull()))
             .thenCallRealMethod()
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -1153,7 +1179,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
             .thenReturn(MultipleSites(mock(), mock()))
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull()))
             .thenCallRealMethod()
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -1172,7 +1198,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
             .thenReturn(SingleSite(mock(), mock()))
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull()))
             .thenCallRealMethod()
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -1191,7 +1217,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
             .thenReturn(Unknown)
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull()))
             .thenCallRealMethod()
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -1208,7 +1234,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     @Test
     fun `Comments screen shown when the user clicks on comments button`() = test {
         // Arrange
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -1226,7 +1252,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     @Test
     fun `Reading preferences screen shown when the user clicks on reading preferences button`() = test {
         // Arrange
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
             mock(),
@@ -1241,7 +1267,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     @Test
     fun `Clicking on a post opens post detail`() = test {
         // Arrange
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
 
         // Act
         actionHandler.handleOnItemClicked(mock(), any())
@@ -1253,7 +1279,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     @Test
     fun `Clicking on a video overlay opens video viewer`() = test {
         // Arrange
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
 
         // Act
         actionHandler.handleVideoOverlayClicked("mock")
@@ -1265,7 +1291,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     @Test
     fun `Clicking on a header opens blog preview`() = test {
         // Arrange
-        val observedValues = startObserving()
+        val observedValues = startObserving(backgroundScope)
 
         // Act
         actionHandler.handleHeaderClicked(0L, 0L, false)
@@ -1274,7 +1300,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         assertThat(observedValues.navigation[0]).isInstanceOf(ShowBlogPreview::class.java)
     }
 
-    private fun startObserving(): Observers {
+    private fun startObserving(scope: CoroutineScope): Observers {
         val navigation = mutableListOf<ReaderNavigationEvents>()
         actionHandler.navigationEvents.observeForever {
             navigation.add(it.peekContent())
@@ -1299,7 +1325,12 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         actionHandler.refreshPosts.observeForever {
             refreshPosts.add(it.peekContent())
         }
-        return Observers(navigation, snackbarMsgs, preloadPost, followStatusUpdated, refreshPosts)
+
+        val scrollToSiteId = mutableListOf<Long>()
+        scope.launch {
+            actionHandler.scrollToSiteId.collect { scrollToSiteId.add(it) }
+        }
+        return Observers(navigation, snackbarMsgs, preloadPost, followStatusUpdated, refreshPosts, scrollToSiteId)
     }
 
     /** REPORT ACTIONS start **/
@@ -1346,6 +1377,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         val snackbarMsgs: List<SnackbarMessageHolder>,
         val preloadPost: List<PreLoadPostContent>,
         val followStatusUpdated: List<FollowStatusChanged>,
-        val refreshPosts: List<Unit>
+        val refreshPosts: List<Unit>,
+        val scrollToSiteId: List<Long>
     )
 }
