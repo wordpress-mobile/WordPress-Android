@@ -29,9 +29,6 @@ class ReaderSubscriptionSettingsViewModel @Inject constructor(
     private val _snackbarEvents = MutableLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
-    private val _dismiss = MutableLiveData<Event<Unit>>()
-    val dismiss: LiveData<Event<Unit>> = _dismiss
-
     fun start(blogId: Long, blogName: String, blogUrl: String) {
         viewModelScope.launch(bgDispatcher) {
             val subscription = subscriptionUseCase.getSubscriptionForBlog(blogId)

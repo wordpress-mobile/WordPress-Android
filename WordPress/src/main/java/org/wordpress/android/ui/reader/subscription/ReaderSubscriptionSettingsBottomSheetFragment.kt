@@ -100,10 +100,6 @@ class ReaderSubscriptionSettingsBottomSheetFragment : BottomSheetDialogFragment(
                 Snackbar.LENGTH_LONG
             ).show()
         }
-
-        viewModel.dismiss.observeEvent(viewLifecycleOwner) {
-            dismiss()
-        }
     }
 
     private fun updateUi(state: ReaderSubscriptionSettingsUiState) {
