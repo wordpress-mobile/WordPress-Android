@@ -89,11 +89,11 @@ class ReaderSubscriptionSettingsViewModel @Inject constructor(
         }
     }
 
-    private fun <T> handleUpdateResult(
+    private fun handleUpdateResult(
         result: UpdateResult,
-        newValue: T,
-        previousValue: T,
-        updateState: (ReaderSubscriptionSettingsUiState, T) -> ReaderSubscriptionSettingsUiState
+        newValue: Boolean,
+        previousValue: Boolean,
+        updateState: (ReaderSubscriptionSettingsUiState, Boolean) -> ReaderSubscriptionSettingsUiState
     ) {
         val currentState = _uiState.value ?: return
 
