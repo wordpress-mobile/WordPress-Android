@@ -129,6 +129,8 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoFailedListener
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoLoadedListener
+import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnSubscriptionSettingsClickListener
+import org.wordpress.android.ui.reader.subscription.ReaderSubscriptionSettingsBottomSheetFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
@@ -303,6 +305,18 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
         }
     }
+
+    /*
+     * called when user clicks on subscription settings button in the blog header
+     */
+    private val subscriptionSettingsClickListener =
+        OnSubscriptionSettingsClickListener { blogId, blogName, blogUrl ->
+            ReaderSubscriptionSettingsBottomSheetFragment.newInstance(
+                blogId = blogId,
+                blogName = blogName,
+                blogUrl = blogUrl
+            ).show(childFragmentManager, ReaderSubscriptionSettingsBottomSheetFragment.TAG)
+        }
 
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
@@ -832,6 +846,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         bottomNavController = null
         readerPostAdapter?.setOnBlogInfoLoadedListener(null)
         readerPostAdapter?.setOnBlogInfoFailedListener(null)
+        readerPostAdapter?.setOnSubscriptionSettingsClickListener(null)
     }
 
     override fun onStart() {
@@ -2034,6 +2049,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             if (activity is OnBlogInfoFailedListener) {
                 readerPostAdapter!!.setOnBlogInfoFailedListener(activity as OnBlogInfoFailedListener?)
             }
+            readerPostAdapter!!.setOnSubscriptionSettingsClickListener(subscriptionSettingsClickListener)
             if (getPostListType().isTagType) {
                 readerPostAdapter!!.setCurrentTag(currentTag)
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
