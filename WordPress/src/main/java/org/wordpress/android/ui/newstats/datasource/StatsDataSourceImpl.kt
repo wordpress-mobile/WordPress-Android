@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.datasource
 
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.ui.newstats.extension.statsCommentsData
 import org.wordpress.android.ui.newstats.extension.statsLikesData
 import org.wordpress.android.ui.newstats.extension.statsPostsData
@@ -23,7 +24,8 @@ import javax.inject.Inject
  * using the wordpress-rs library.
  */
 class StatsDataSourceImpl @Inject constructor(
-    private val wpComApiClientProvider: WpComApiClientProvider
+    private val wpComApiClientProvider: WpComApiClientProvider,
+    private val localeManagerWrapper: LocaleManagerWrapper
 ) : StatsDataSource {
     /**
      * Access token for API authentication.
@@ -51,7 +53,8 @@ class StatsDataSourceImpl @Inject constructor(
         val params = StatsVisitsParams(
             unit = unit.toApiUnit(),
             quantity = quantity.toUInt(),
-            endDate = endDate
+            endDate = endDate,
+            locale = localeManagerWrapper.getLocale().toString()
         )
 
         val result = wpComApiClient.request { requestBuilder ->
@@ -111,13 +114,15 @@ class StatsDataSourceImpl @Inject constructor(
                 period = StatsTopPostsPeriod.DAY,
                 date = dateRange.date,
                 num = dateRange.num.toUInt(),
-                max = max.coerceAtLeast(1).toUInt()
+                max = max.coerceAtLeast(1).toUInt(),
+                locale = localeManagerWrapper.getLocale().toString()
             )
             is StatsDateRange.Custom -> StatsTopPostsParams(
                 period = StatsTopPostsPeriod.DAY,
                 date = dateRange.date,
                 startDate = dateRange.startDate,
-                max = max.coerceAtLeast(1).toUInt()
+                max = max.coerceAtLeast(1).toUInt(),
+                locale = localeManagerWrapper.getLocale().toString()
             )
         }
 
@@ -160,13 +165,15 @@ class StatsDataSourceImpl @Inject constructor(
                 period = StatsReferrersPeriod.DAY,
                 date = dateRange.date,
                 num = dateRange.num.toUInt(),
-                max = max.coerceAtLeast(1).toUInt()
+                max = max.coerceAtLeast(1).toUInt(),
+                locale = localeManagerWrapper.getLocale().toString()
             )
             is StatsDateRange.Custom -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
                 date = dateRange.date,
                 startDate = dateRange.startDate,
-                max = max.coerceAtLeast(1).toUInt()
+                max = max.coerceAtLeast(1).toUInt(),
+                locale = localeManagerWrapper.getLocale().toString()
             )
         }
 
