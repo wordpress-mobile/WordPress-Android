@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleCoroutineScope;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -108,7 +109,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
     private ReaderSiteHeaderView.OnBlogInfoFailedListener mBlogInfoFailedListener;
-    private ReaderSiteHeaderView.OnSubscriptionSettingsClickListener mSubscriptionSettingsClickListener;
+    @Nullable private ReaderSiteHeaderView.OnSubscriptionSettingsClickListener mSubscriptionSettingsClickListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
