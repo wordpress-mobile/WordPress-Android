@@ -5,6 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -124,6 +127,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
     // The discover tab observes reactive ReaderDiscoverDataProvider.
     private val _refreshPosts = MediatorLiveData<Event<Unit>>()
     val refreshPosts: LiveData<Event<Unit>> = _refreshPosts
+
+    // Emits a blog ID to scroll to after undo block action. This provides visual feedback
+    // to the user that the undo was successful by scrolling to show the restored posts.
+    // The event is consumed by ReaderPostListFragment after posts are refreshed.
+    private val _scrollToSiteId = MutableSharedFlow<Long>()
+    val scrollToSiteId: SharedFlow<Long> = _scrollToSiteId.asSharedFlow()
 
     init {
         dispatcher.register(siteNotificationsUseCase)
@@ -437,8 +446,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                 UiStringRes(R.string.undo),
                                 {
                                     coroutineScope.launch {
+                                        val blogId = it.blockedBlogData.blogId
                                         undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData, source)
                                         _refreshPosts.postValue(Event(Unit))
+                                        _scrollToSiteId.emit(blogId)
                                         _snackbarEvents.postValue(
                                             Event(
                                                 SnackbarMessageHolder(
