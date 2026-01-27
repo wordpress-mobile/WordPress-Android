@@ -75,7 +75,7 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSubscriptionUpdated(event: OnSubscriptionUpdated) {
         val result = if (event.isError) {
-            UpdateResult.Failure(event.error?.message)
+            UpdateResult.Failure
         } else {
             UpdateResult.Success
         }
@@ -90,6 +90,6 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
     sealed class UpdateResult {
         object Success : UpdateResult()
         object NoNetwork : UpdateResult()
-        data class Failure(val errorMessage: String?) : UpdateResult()
+        object Failure : UpdateResult()
     }
 }

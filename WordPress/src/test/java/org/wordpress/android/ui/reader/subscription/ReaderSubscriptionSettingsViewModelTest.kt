@@ -116,7 +116,7 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
     fun `onNotifyPostsToggled reverts state on failure`() = test {
         initializeViewModel(notifyPostsEnabled = false)
         whenever(subscriptionUseCase.updateNotifyPosts(BLOG_ID, true))
-            .thenReturn(UpdateResult.Failure("Error"))
+            .thenReturn(UpdateResult.Failure)
 
         viewModel.onNotifyPostsToggled(true)
 
@@ -128,7 +128,7 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
     fun `onNotifyPostsToggled shows error snackbar on failure`() = test {
         initializeViewModel()
         whenever(subscriptionUseCase.updateNotifyPosts(BLOG_ID, true))
-            .thenReturn(UpdateResult.Failure("Error"))
+            .thenReturn(UpdateResult.Failure)
 
         viewModel.onNotifyPostsToggled(true)
 
@@ -188,7 +188,7 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
     fun `onEmailPostsToggled reverts state on failure`() = test {
         initializeViewModel(emailPostsEnabled = false)
         whenever(subscriptionUseCase.updateEmailPosts(BLOG_ID, true))
-            .thenReturn(UpdateResult.Failure("Error"))
+            .thenReturn(UpdateResult.Failure)
 
         viewModel.onEmailPostsToggled(true)
 
@@ -200,7 +200,7 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
     fun `onEmailPostsToggled shows error snackbar on failure`() = test {
         initializeViewModel()
         whenever(subscriptionUseCase.updateEmailPosts(BLOG_ID, true))
-            .thenReturn(UpdateResult.Failure("Error"))
+            .thenReturn(UpdateResult.Failure)
 
         viewModel.onEmailPostsToggled(true)
 
@@ -260,7 +260,7 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
     fun `onEmailCommentsToggled reverts state on failure`() = test {
         initializeViewModel(emailCommentsEnabled = false)
         whenever(subscriptionUseCase.updateEmailComments(BLOG_ID, true))
-            .thenReturn(UpdateResult.Failure("Error"))
+            .thenReturn(UpdateResult.Failure)
 
         viewModel.onEmailCommentsToggled(true)
 
@@ -272,7 +272,7 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
     fun `onEmailCommentsToggled shows error snackbar on failure`() = test {
         initializeViewModel()
         whenever(subscriptionUseCase.updateEmailComments(BLOG_ID, true))
-            .thenReturn(UpdateResult.Failure("Error"))
+            .thenReturn(UpdateResult.Failure)
 
         viewModel.onEmailCommentsToggled(true)
 

@@ -115,8 +115,7 @@ class ReaderBlogSubscriptionUseCaseTest : BaseUnitTest() {
 
         val result = useCase.updateNotifyPosts(BLOG_ID, true)
 
-        assertThat(result).isInstanceOf(UpdateResult.Failure::class.java)
-        assertThat((result as UpdateResult.Failure).errorMessage).isEqualTo(ERROR_MESSAGE)
+        assertThat(result).isEqualTo(UpdateResult.Failure)
     }
 
     @Test
