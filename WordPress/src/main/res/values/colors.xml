@@ -94,6 +94,7 @@
     <color name="reader_footer_progress_background">@color/white</color>
     <color name="reader_button_primary_background">@color/black</color>
     <color name="reader_button_primary_text">@color/white</color>
+    <color name="reader_subscription_loading_scrim">@color/white_translucent_50</color>
 
     <!-- Reader Interest Chips -->
     <color name="reader_interest_filter_chip_text">@color/material_on_surface_emphasis_high_type</color>

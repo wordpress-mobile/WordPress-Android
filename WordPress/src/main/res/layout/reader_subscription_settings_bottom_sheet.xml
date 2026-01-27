@@ -109,16 +109,30 @@
             android:textAppearance="?attr/textAppearanceSubtitle1"
             app:layout_constraintTop_toBottomOf="@+id/divider_3" />
 
-        <!-- Loading indicator -->
+        <!-- Loading scrim with progress indicator -->
+        <View
+            android:id="@+id/loading_scrim"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/reader_subscription_loading_scrim"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subscription_settings_blog_name"
+            tools:visibility="visible" />
+
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/loading_scrim"
+            app:layout_constraintEnd_toEndOf="@+id/loading_scrim"
+            app:layout_constraintStart_toStartOf="@+id/loading_scrim"
+            app:layout_constraintTop_toTopOf="@+id/loading_scrim"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

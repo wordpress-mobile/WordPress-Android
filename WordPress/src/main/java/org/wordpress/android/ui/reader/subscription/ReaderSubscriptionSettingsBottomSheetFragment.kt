@@ -115,11 +115,10 @@ class ReaderSubscriptionSettingsBottomSheetFragment : BottomSheetDialogFragment(
             switchEmailPosts.setCheckedSilently(state.emailPostsEnabled)
             switchEmailComments.setCheckedSilently(state.emailCommentsEnabled)
 
-            // Update loading state
-            progressBar.visibility = if (state.isLoading) View.VISIBLE else View.GONE
-            switchNotifyPosts.isEnabled = !state.isLoading
-            switchEmailPosts.isEnabled = !state.isLoading
-            switchEmailComments.isEnabled = !state.isLoading
+            // Update loading state - scrim blocks interaction while loading
+            val loadingVisibility = if (state.isLoading) View.VISIBLE else View.GONE
+            loadingScrim.visibility = loadingVisibility
+            progressBar.visibility = loadingVisibility
         }
     }
 
