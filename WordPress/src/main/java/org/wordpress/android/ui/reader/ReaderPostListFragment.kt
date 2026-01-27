@@ -28,9 +28,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 import com.google.android.material.R as MaterialR
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -539,11 +542,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             setFollowStatusForBlog(readerData)
         }
 
-        postListViewModel.scrollToSiteId.observe(
-            viewLifecycleOwner
-        ) { event: Event<Long> ->
-            event.applyIfNotHandled {
-                pendingScrollToBlogId = this
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                postListViewModel.scrollToSiteId.collect { blogId ->
+                    pendingScrollToBlogId = blogId
+                }
             }
         }
     }

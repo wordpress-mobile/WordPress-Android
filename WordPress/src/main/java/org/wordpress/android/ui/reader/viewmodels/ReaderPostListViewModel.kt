@@ -71,8 +71,7 @@ class ReaderPostListViewModel @Inject constructor(
     private val _updateFollowStatus = MediatorLiveData<FollowStatusChanged>()
     val updateFollowStatus: LiveData<FollowStatusChanged> = _updateFollowStatus
 
-    private val _scrollToSiteId = MediatorLiveData<Event<Long>>()
-    val scrollToSiteId: LiveData<Event<Long>> = _scrollToSiteId
+    val scrollToSiteId = readerPostCardActionsHandler.scrollToSiteId
 
     fun start(readerViewModel: ReaderViewModel?) {
         this.readerViewModel = readerViewModel
@@ -109,10 +108,6 @@ class ReaderPostListViewModel @Inject constructor(
 
         _updateFollowStatus.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
             _updateFollowStatus.value = data
-        }
-
-        _scrollToSiteId.addSource(readerPostCardActionsHandler.scrollToSiteId) { event ->
-            _scrollToSiteId.value = event
         }
     }
 
