@@ -248,6 +248,8 @@ private fun TrafficTabContent(
                         dataSource = detailData.dataSource,
                         items = detailData.items,
                         totalViews = detailData.totalViews,
+                        totalViewsChange = detailData.totalViewsChange,
+                        totalViewsChangePercent = detailData.totalViewsChangePercent,
                         dateRange = detailData.dateRange
                     )
                 },

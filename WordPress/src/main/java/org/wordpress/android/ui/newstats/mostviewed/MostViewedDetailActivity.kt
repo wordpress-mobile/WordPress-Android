@@ -24,6 +24,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,10 +50,13 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
+import kotlin.math.abs
 
 private const val EXTRA_DATA_SOURCE = "extra_data_source"
 private const val EXTRA_ITEMS = "extra_items"
 private const val EXTRA_TOTAL_VIEWS = "extra_total_views"
+private const val EXTRA_TOTAL_VIEWS_CHANGE = "extra_total_views_change"
+private const val EXTRA_TOTAL_VIEWS_CHANGE_PERCENT = "extra_total_views_change_percent"
 private const val EXTRA_DATE_RANGE = "extra_date_range"
 
 @AndroidEntryPoint
@@ -65,6 +70,8 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
         val items = intent.extras?.getSerializableCompat<ArrayList<MostViewedDetailItem>>(EXTRA_ITEMS)
             ?: arrayListOf()
         val totalViews = intent.getLongExtra(EXTRA_TOTAL_VIEWS, 0L)
+        val totalViewsChange = intent.getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L)
+        val totalViewsChangePercent = intent.getDoubleExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0)
         val dateRange = intent.getStringExtra(EXTRA_DATE_RANGE) ?: ""
 
         setContent {
@@ -73,6 +80,8 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
                     dataSource = dataSource,
                     items = items,
                     totalViews = totalViews,
+                    totalViewsChange = totalViewsChange,
+                    totalViewsChangePercent = totalViewsChangePercent,
                     dateRange = dateRange,
                     onBackPressed = onBackPressedDispatcher::onBackPressed
                 )
@@ -86,12 +95,16 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
             dataSource: MostViewedDataSource,
             items: List<MostViewedDetailItem>,
             totalViews: Long,
+            totalViewsChange: Long,
+            totalViewsChangePercent: Double,
             dateRange: String
         ) {
             val intent = Intent(context, MostViewedDetailActivity::class.java).apply {
                 putExtra(EXTRA_DATA_SOURCE, dataSource)
                 putExtra(EXTRA_ITEMS, ArrayList(items))
                 putExtra(EXTRA_TOTAL_VIEWS, totalViews)
+                putExtra(EXTRA_TOTAL_VIEWS_CHANGE, totalViewsChange)
+                putExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, totalViewsChangePercent)
                 putExtra(EXTRA_DATE_RANGE, dateRange)
             }
             context.startActivity(intent)
@@ -105,6 +118,8 @@ private fun MostViewedDetailScreen(
     dataSource: MostViewedDataSource,
     items: List<MostViewedDetailItem>,
     totalViews: Long,
+    totalViewsChange: Long,
+    totalViewsChangePercent: Double,
     dateRange: String,
     onBackPressed: () -> Unit
 ) {
@@ -135,6 +150,8 @@ private fun MostViewedDetailScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 SummaryCard(
                     totalViews = totalViews,
+                    totalViewsChange = totalViewsChange,
+                    totalViewsChangePercent = totalViewsChangePercent,
                     dateRange = dateRange
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -166,6 +183,8 @@ private fun MostViewedDetailScreen(
 @Composable
 private fun SummaryCard(
     totalViews: Long,
+    totalViewsChange: Long,
+    totalViewsChangePercent: Double,
     dateRange: String
 ) {
     Box(
@@ -192,12 +211,47 @@ private fun SummaryCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            Text(
-                text = formatStatValue(totalViews),
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold
-            )
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = formatStatValue(totalViews),
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                TotalViewsChangeIndicator(
+                    change = totalViewsChange,
+                    changePercent = totalViewsChangePercent
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun TotalViewsChangeIndicator(
+    change: Long,
+    changePercent: Double
+) {
+    if (change == 0L) return
+
+    val isPositive = change > 0
+    val sign = if (isPositive) "+" else "-"
+    val color = if (isPositive) Color(0xFF4CAF50) else Color(0xFFE91E63)
+    val arrowIcon = if (isPositive) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            imageVector = arrowIcon,
+            contentDescription = null,
+            modifier = Modifier.size(16.dp),
+            tint = color
+        )
+        Text(
+            text = "$sign${formatStatValue(abs(change))} (${
+                String.format(Locale.getDefault(), "%.1f%%", abs(changePercent))
+            })",
+            style = MaterialTheme.typography.labelSmall,
+            color = color
+        )
     }
 }
 
@@ -335,6 +389,8 @@ private fun MostViewedDetailScreenPreview() {
                     MostViewedChange.Positive(31, 75.6))
             ),
             totalViews = 5400,
+            totalViewsChange = 69,
+            totalViewsChangePercent = 1.3,
             dateRange = "21-27 Jan",
             onBackPressed = {}
         )

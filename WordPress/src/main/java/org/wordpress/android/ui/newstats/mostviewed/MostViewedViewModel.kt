@@ -11,8 +11,10 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.repository.MostViewedItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import kotlin.math.abs
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -33,6 +35,9 @@ class MostViewedViewModel @Inject constructor(
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
 
     private var allItems: List<MostViewedDetailItem> = emptyList()
+    private var cachedTotalViews: Long = 0L
+    private var cachedTotalViewsChange: Long = 0L
+    private var cachedTotalViewsChangePercent: Double = 0.0
 
     init {
         loadData()
@@ -71,7 +76,9 @@ class MostViewedViewModel @Inject constructor(
         return MostViewedDetailData(
             dataSource = currentDataSource,
             items = allItems,
-            totalViews = allItems.sumOf { it.views },
+            totalViews = cachedTotalViews,
+            totalViewsChange = cachedTotalViewsChange,
+            totalViewsChangePercent = cachedTotalViewsChangePercent,
             dateRange = currentPeriod.toDateRangeString(resourceProvider)
         )
     }
@@ -108,12 +115,16 @@ class MostViewedViewModel @Inject constructor(
 
             when (result) {
                 is MostViewedResult.Success -> {
+                    cachedTotalViews = result.totalViews
+                    cachedTotalViewsChange = result.totalViewsChange
+                    cachedTotalViewsChangePercent = result.totalViewsChangePercent
+
                     allItems = result.items.map { item ->
                         MostViewedDetailItem(
                             id = item.id,
                             title = item.title,
                             views = item.views,
-                            change = MostViewedChange.NotAvailable
+                            change = item.toMostViewedChange()
                         )
                     }
                     _uiState.value = MostViewedCardUiState.Loaded(
@@ -152,8 +163,18 @@ data class MostViewedDetailData(
     val dataSource: MostViewedDataSource,
     val items: List<MostViewedDetailItem>,
     val totalViews: Long,
+    val totalViewsChange: Long,
+    val totalViewsChangePercent: Double,
     val dateRange: String
 )
+
+private fun MostViewedItemData.toMostViewedChange(): MostViewedChange {
+    return when {
+        viewsChange > 0 -> MostViewedChange.Positive(viewsChange, abs(viewsChangePercent))
+        viewsChange < 0 -> MostViewedChange.Negative(abs(viewsChange), abs(viewsChangePercent))
+        else -> MostViewedChange.NoChange
+    }
+}
 
 private fun StatsPeriod.toDateRangeString(resourceProvider: ResourceProvider): String {
     return when (this) {

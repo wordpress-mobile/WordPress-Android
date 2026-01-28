@@ -486,59 +486,166 @@ class StatsRepository @Inject constructor(
 
     /**
      * Fetches most viewed items based on the selected data source and period.
+     * Also fetches the previous period data to calculate change comparisons.
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
      * @param dataSource The data source type (posts and pages or referrers)
-     * @return Most viewed items or error
+     * @return Most viewed items with comparison data or error
      */
+    @Suppress("ReturnCount")
     suspend fun fetchMostViewed(
         siteId: Long,
         period: StatsPeriod,
         dataSource: MostViewedDataSource
     ): MostViewedResult = withContext(ioDispatcher) {
-        val dateRange = mapStatsPeriodToDateRange(period)
+        val (currentDateRange, previousDateRange) = calculateMostViewedDateRanges(period)
 
         when (dataSource) {
             MostViewedDataSource.POSTS_AND_PAGES -> {
-                when (val result = statsDataSource.fetchTopPostsAndPages(siteId, dateRange)) {
-                    is TopPostsDataResult.Success -> {
-                        MostViewedResult.Success(
-                            result.items.mapIndexed { index, item ->
-                                MostViewedItemData(
-                                    id = item.id,
-                                    title = item.title,
-                                    views = item.views,
-                                    isFirst = index == 0
-                                )
-                            }
-                        )
-                    }
-                    is TopPostsDataResult.Error -> {
-                        appLogWrapper.e(AppLog.T.STATS, "Error fetching top posts: ${result.message}")
-                        MostViewedResult.Error(result.message)
-                    }
-                }
+                fetchTopPostsWithComparison(siteId, currentDateRange, previousDateRange)
             }
             MostViewedDataSource.REFERRERS -> {
-                when (val result = statsDataSource.fetchReferrers(siteId, dateRange)) {
-                    is ReferrersDataResult.Success -> {
-                        MostViewedResult.Success(
-                            result.items.mapIndexed { index, item ->
-                                MostViewedItemData(
-                                    id = item.name.hashCode().toLong(),
-                                    title = item.name,
-                                    views = item.views,
-                                    isFirst = index == 0
-                                )
-                            }
-                        )
-                    }
-                    is ReferrersDataResult.Error -> {
-                        appLogWrapper.e(AppLog.T.STATS, "Error fetching referrers: ${result.message}")
-                        MostViewedResult.Error(result.message)
-                    }
-                }
+                fetchReferrersWithComparison(siteId, currentDateRange, previousDateRange)
+            }
+        }
+    }
+
+    private suspend fun fetchTopPostsWithComparison(
+        siteId: Long,
+        currentDateRange: StatsDateRange,
+        previousDateRange: StatsDateRange
+    ): MostViewedResult = coroutineScope {
+        val currentDeferred = async { statsDataSource.fetchTopPostsAndPages(siteId, currentDateRange) }
+        val previousDeferred = async { statsDataSource.fetchTopPostsAndPages(siteId, previousDateRange) }
+
+        val currentResult = currentDeferred.await()
+        val previousResult = previousDeferred.await()
+
+        if (currentResult is TopPostsDataResult.Success) {
+            val previousItemsMap = if (previousResult is TopPostsDataResult.Success) {
+                previousResult.items.associateBy { it.id }
+            } else {
+                emptyMap()
+            }
+
+            val totalViews = currentResult.items.sumOf { it.views }
+            val previousTotalViews = previousItemsMap.values.sumOf { it.views }
+            val totalChange = totalViews - previousTotalViews
+            val totalChangePercent = if (previousTotalViews > 0) {
+                (totalChange.toDouble() / previousTotalViews.toDouble()) * 100.0
+            } else if (totalViews > 0) 100.0 else 0.0
+
+            MostViewedResult.Success(
+                items = currentResult.items.mapIndexed { index, item ->
+                    val previousViews = previousItemsMap[item.id]?.views ?: 0L
+                    MostViewedItemData(
+                        id = item.id,
+                        title = item.title,
+                        views = item.views,
+                        previousViews = previousViews,
+                        isFirst = index == 0
+                    )
+                },
+                totalViews = totalViews,
+                totalViewsChange = totalChange,
+                totalViewsChangePercent = totalChangePercent
+            )
+        } else {
+            val error = currentResult as TopPostsDataResult.Error
+            appLogWrapper.e(AppLog.T.STATS, "Error fetching top posts: ${error.message}")
+            MostViewedResult.Error(error.message)
+        }
+    }
+
+    private suspend fun fetchReferrersWithComparison(
+        siteId: Long,
+        currentDateRange: StatsDateRange,
+        previousDateRange: StatsDateRange
+    ): MostViewedResult = coroutineScope {
+        val currentDeferred = async { statsDataSource.fetchReferrers(siteId, currentDateRange) }
+        val previousDeferred = async { statsDataSource.fetchReferrers(siteId, previousDateRange) }
+
+        val currentResult = currentDeferred.await()
+        val previousResult = previousDeferred.await()
+
+        if (currentResult is ReferrersDataResult.Success) {
+            val previousItemsMap = if (previousResult is ReferrersDataResult.Success) {
+                previousResult.items.associateBy { it.name }
+            } else {
+                emptyMap()
+            }
+
+            val totalViews = currentResult.items.sumOf { it.views }
+            val previousTotalViews = previousItemsMap.values.sumOf { it.views }
+            val totalChange = totalViews - previousTotalViews
+            val totalChangePercent = if (previousTotalViews > 0) {
+                (totalChange.toDouble() / previousTotalViews.toDouble()) * 100.0
+            } else if (totalViews > 0) 100.0 else 0.0
+
+            MostViewedResult.Success(
+                items = currentResult.items.mapIndexed { index, item ->
+                    val previousViews = previousItemsMap[item.name]?.views ?: 0L
+                    MostViewedItemData(
+                        id = item.name.hashCode().toLong(),
+                        title = item.name,
+                        views = item.views,
+                        previousViews = previousViews,
+                        isFirst = index == 0
+                    )
+                },
+                totalViews = totalViews,
+                totalViewsChange = totalChange,
+                totalViewsChangePercent = totalChangePercent
+            )
+        } else {
+            val error = currentResult as ReferrersDataResult.Error
+            appLogWrapper.e(AppLog.T.STATS, "Error fetching referrers: ${error.message}")
+            MostViewedResult.Error(error.message)
+        }
+    }
+
+    private fun calculateMostViewedDateRanges(period: StatsPeriod): Pair<StatsDateRange, StatsDateRange> {
+        val today = LocalDate.now()
+        val todayString = today.format(dateFormatter)
+
+        return when (period) {
+            is StatsPeriod.Today -> {
+                val yesterdayString = today.minusDays(1).format(dateFormatter)
+                StatsDateRange.Preset(num = 1, date = todayString) to
+                    StatsDateRange.Preset(num = 1, date = yesterdayString)
+            }
+            is StatsPeriod.Last7Days -> {
+                val previousEndString = today.minusDays(7).format(dateFormatter)
+                StatsDateRange.Preset(num = 7, date = todayString) to
+                    StatsDateRange.Preset(num = 7, date = previousEndString)
+            }
+            is StatsPeriod.Last30Days -> {
+                val previousEndString = today.minusDays(30).format(dateFormatter)
+                StatsDateRange.Preset(num = 30, date = todayString) to
+                    StatsDateRange.Preset(num = 30, date = previousEndString)
+            }
+            is StatsPeriod.Last6Months -> {
+                val previousEndString = today.minusDays(182).format(dateFormatter)
+                StatsDateRange.Preset(num = 182, date = todayString) to
+                    StatsDateRange.Preset(num = 182, date = previousEndString)
+            }
+            is StatsPeriod.Last12Months -> {
+                val previousEndString = today.minusDays(365).format(dateFormatter)
+                StatsDateRange.Preset(num = 365, date = todayString) to
+                    StatsDateRange.Preset(num = 365, date = previousEndString)
+            }
+            is StatsPeriod.Custom -> {
+                val daysBetween = ChronoUnit.DAYS.between(period.startDate, period.endDate).toInt() + 1
+                val previousEnd = period.startDate.minusDays(1)
+                val previousStart = previousEnd.minusDays(daysBetween.toLong() - 1)
+                StatsDateRange.Custom(
+                    startDate = period.startDate.format(dateFormatter),
+                    date = period.endDate.format(dateFormatter)
+                ) to StatsDateRange.Custom(
+                    startDate = previousStart.format(dateFormatter),
+                    date = previousEnd.format(dateFormatter)
+                )
             }
         }
     }
@@ -665,7 +772,12 @@ sealed class PeriodStatsResult {
  * Result wrapper for most viewed fetch operation.
  */
 sealed class MostViewedResult {
-    data class Success(val items: List<MostViewedItemData>) : MostViewedResult()
+    data class Success(
+        val items: List<MostViewedItemData>,
+        val totalViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
+    ) : MostViewedResult()
     data class Error(val message: String) : MostViewedResult()
 }
 
@@ -676,5 +788,15 @@ data class MostViewedItemData(
     val id: Long,
     val title: String,
     val views: Long,
+    val previousViews: Long,
     val isFirst: Boolean
-)
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double get() = if (previousViews > 0) {
+        (viewsChange.toDouble() / previousViews.toDouble()) * 100.0
+    } else if (views > 0) {
+        100.0
+    } else {
+        0.0
+    }
+}
