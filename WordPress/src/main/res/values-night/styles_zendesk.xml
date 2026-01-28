@@ -10,4 +10,13 @@
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@android:color/black</item>
     </style>
+
+    <!-- Zendesk Styles Override -->
+
+    <style name="ZendeskRequestListButton" parent="@style/Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
 </resources>
