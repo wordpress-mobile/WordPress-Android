@@ -4,19 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SwitchCompat
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.databinding.ReaderSubscriptionSettingsBottomSheetBinding
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.observeEvent
@@ -33,22 +31,33 @@ class ReaderSubscriptionSettingsBottomSheetFragment : BottomSheetDialogFragment(
 
     private val viewModel: ReaderSubscriptionSettingsViewModel by viewModels()
 
-    private var _binding: ReaderSubscriptionSettingsBottomSheetBinding? = null
-    private val binding get() = _binding!!
+    private var composeView: ComposeView? = null
 
     override fun getTheme(): Int = R.style.WordPress_BottomSheetDialogTheme_NonTranslucent
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = ReaderSubscriptionSettingsBottomSheetBinding.inflate(inflater, container, false)
-        return binding.root
+        return ComposeView(requireContext()).also { composeView = it }.apply {
+            setContent {
+                AppThemeM3 {
+                    val uiState by viewModel.uiState.collectAsState()
+                    uiState?.let { state ->
+                        ReaderSubscriptionSettingsScreen(
+                            uiState = state,
+                            onNotifyPostsToggled = viewModel::onNotifyPostsToggled,
+                            onEmailPostsToggled = viewModel::onEmailPostsToggled,
+                            onEmailCommentsToggled = viewModel::onEmailCommentsToggled
+                        )
+                    }
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setupBottomSheetBehavior()
-        setupClickListeners()
-        observeViewModel()
+        observeSnackbarEvents()
 
         val blogId = requireArguments().getLong(ARG_BLOG_ID)
         val blogName = requireArguments().getString(ARG_BLOG_NAME, "")
@@ -66,69 +75,23 @@ class ReaderSubscriptionSettingsBottomSheetFragment : BottomSheetDialogFragment(
         }
     }
 
-    private fun setupClickListeners() {
-        with(binding) {
-            switchNotifyPosts.setOnCheckedChangeListener { _, isChecked ->
-                viewModel.onNotifyPostsToggled(isChecked)
-            }
-
-            switchEmailPosts.setOnCheckedChangeListener { _, isChecked ->
-                viewModel.onEmailPostsToggled(isChecked)
-            }
-
-            switchEmailComments.setOnCheckedChangeListener { _, isChecked ->
-                viewModel.onEmailCommentsToggled(isChecked)
-            }
-        }
-    }
-
-    private fun observeViewModel() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    state?.let { updateUi(it) }
-                }
-            }
-        }
-
+    private fun observeSnackbarEvents() {
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { messageHolder ->
             if (!isAdded) return@observeEvent
 
-            WPSnackbar.make(
-                binding.coordinator,
-                uiHelpers.getTextOfUiString(contextProvider.getContext(), messageHolder.message),
-                Snackbar.LENGTH_LONG
-            ).show()
-        }
-    }
-
-    private fun updateUi(state: ReaderSubscriptionSettingsUiState) {
-        with(binding) {
-            subscriptionSettingsBlogName.text = state.blogUrl.ifEmpty { state.blogName }
-
-            // Update switches without triggering click listeners
-            switchNotifyPosts.setCheckedSilently(state.notifyPostsEnabled)
-            switchEmailPosts.setCheckedSilently(state.emailPostsEnabled)
-            switchEmailComments.setCheckedSilently(state.emailCommentsEnabled)
-
-            // Update loading state - scrim blocks interaction while loading
-            val loadingVisibility = if (state.isLoading) View.VISIBLE else View.GONE
-            loadingScrim.visibility = loadingVisibility
-            progressBar.visibility = loadingVisibility
-        }
-    }
-
-    private fun SwitchCompat.setCheckedSilently(checked: Boolean) {
-        if (isChecked != checked) {
-            setOnCheckedChangeListener(null)
-            isChecked = checked
-            setupClickListeners()
+            composeView?.let { view ->
+                WPSnackbar.make(
+                    view,
+                    uiHelpers.getTextOfUiString(contextProvider.getContext(), messageHolder.message),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        composeView = null
     }
 
     companion object {
