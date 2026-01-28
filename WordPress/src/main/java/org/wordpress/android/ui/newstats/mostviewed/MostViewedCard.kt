@@ -1,11 +1,5 @@
 package org.wordpress.android.ui.newstats.mostviewed
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -42,8 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -52,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.StatsColors
+import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
 
@@ -59,6 +52,7 @@ private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
 private const val HIGHLIGHTED_ITEM_BACKGROUND_ALPHA = 0.08f
+private const val LOADING_SHIMMER_ITEM_COUNT = 5
 
 @Composable
 fun MostViewedCard(
@@ -92,41 +86,16 @@ fun MostViewedCard(
 
 @Composable
 private fun LoadingContent() {
-    val shimmerColors = listOf(
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-    )
-
-    val transition = rememberInfiniteTransition(label = "shimmer")
-    val translateAnimation = transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1200, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "shimmer_translate"
-    )
-
-    val shimmerBrush = Brush.linearGradient(
-        colors = shimmerColors,
-        start = Offset(translateAnimation.value - 500f, 0f),
-        end = Offset(translateAnimation.value, 0f)
-    )
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
         // Header shimmer
-        Box(
+        ShimmerBox(
             modifier = Modifier
                 .width(100.dp)
                 .height(24.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(shimmerBrush)
         )
         Spacer(modifier = Modifier.height(16.dp))
         // Column headers shimmer
@@ -134,24 +103,20 @@ private fun LoadingContent() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Box(
+            ShimmerBox(
                 modifier = Modifier
                     .width(120.dp)
                     .height(20.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(shimmerBrush)
             )
-            Box(
+            ShimmerBox(
                 modifier = Modifier
                     .width(50.dp)
                     .height(20.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(shimmerBrush)
             )
         }
         Spacer(modifier = Modifier.height(12.dp))
         // Items shimmer
-        repeat(5) {
+        repeat(LOADING_SHIMMER_ITEM_COUNT) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -159,42 +124,34 @@ private fun LoadingContent() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
+                ShimmerBox(
                     modifier = Modifier
                         .weight(1f)
                         .height(20.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column(horizontalAlignment = Alignment.End) {
-                    Box(
+                    ShimmerBox(
                         modifier = Modifier
                             .width(40.dp)
                             .height(16.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(shimmerBrush)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
-                    Box(
+                    ShimmerBox(
                         modifier = Modifier
                             .width(50.dp)
                             .height(12.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(shimmerBrush)
                     )
                 }
             }
         }
         Spacer(modifier = Modifier.height(12.dp))
         // Show All shimmer
-        Box(
+        ShimmerBox(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .width(80.dp)
                 .height(16.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(shimmerBrush)
         )
     }
 }
