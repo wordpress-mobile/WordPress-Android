@@ -137,13 +137,13 @@ class StatsDataSourceImpl @Inject constructor(
             is WpRequestResult.Success -> {
                 val posts = getStatsTopPostsAllPostViews(result.response.data)
                 TopPostsDataResult.Success(
-                    posts.map { post ->
+                    posts?.map { post ->
                         TopPostDataItem(
                             id = post.id.toLong(),
                             title = post.title,
                             views = post.views.toLong()
                         )
-                    }
+                    } ?: emptyList()
                 )
             }
             is WpRequestResult.WpError -> {
@@ -188,12 +188,12 @@ class StatsDataSourceImpl @Inject constructor(
             is WpRequestResult.Success -> {
                 val groups = getStatsReferrersAllGroups(result.response.data)
                 ReferrersDataResult.Success(
-                    groups.map { group ->
+                    groups?.map { group ->
                         ReferrerDataItem(
                             name = group.name,
                             views = group.total.toLong()
                         )
-                    }
+                    } ?: emptyList()
                 )
             }
             is WpRequestResult.WpError -> {
