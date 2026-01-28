@@ -521,11 +521,23 @@ class StatsRepository @Inject constructor(
         currentDateRange: StatsDateRange,
         previousDateRange: StatsDateRange
     ): MostViewedResult = coroutineScope {
+        appLogWrapper.d(
+            AppLog.T.STATS,
+            "StatsRepository: fetchTopPostsWithComparison - siteId=$siteId, " +
+                "currentDateRange=$currentDateRange, previousDateRange=$previousDateRange"
+        )
+
         val currentDeferred = async { statsDataSource.fetchTopPostsAndPages(siteId, currentDateRange) }
         val previousDeferred = async { statsDataSource.fetchTopPostsAndPages(siteId, previousDateRange) }
 
         val currentResult = currentDeferred.await()
         val previousResult = previousDeferred.await()
+
+        appLogWrapper.d(
+            AppLog.T.STATS,
+            "StatsRepository: fetchTopPostsWithComparison results - " +
+                "currentResult=${currentResult::class.simpleName}, previousResult=${previousResult::class.simpleName}"
+        )
 
         if (currentResult is TopPostsDataResult.Success) {
             val previousItemsMap = if (previousResult is TopPostsDataResult.Success) {

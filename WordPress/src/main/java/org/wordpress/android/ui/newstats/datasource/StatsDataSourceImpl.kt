@@ -12,6 +12,8 @@ import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
 import uniffi.wp_api.getStatsReferrersAllGroups
 import uniffi.wp_api.getStatsTopPostsAllPostViews
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
 
 /**
@@ -121,6 +123,11 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
 
+        AppLog.d(
+            T.STATS,
+            "StatsDataSourceImpl: fetchTopPostsAndPages - siteId=$siteId, dateRange=$dateRange, max=$max"
+        )
+
         val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsTopPosts().getStatsTopPosts(
                 wpComSiteId = siteId.toULong(),
@@ -128,9 +135,12 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
 
+        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchTopPostsAndPages result type: ${result::class.simpleName}")
+
         return when (result) {
             is WpRequestResult.Success -> {
                 val posts = getStatsTopPostsAllPostViews(result.response.data)
+                AppLog.d(T.STATS, "StatsDataSourceImpl: fetchTopPostsAndPages success - ${posts?.size ?: 0} posts")
                 TopPostsDataResult.Success(
                     posts?.map { post ->
                         TopPostDataItem(
@@ -142,9 +152,17 @@ class StatsDataSourceImpl @Inject constructor(
                 )
             }
             is WpRequestResult.WpError -> {
+                AppLog.e(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchTopPostsAndPages WpError - message=${result.errorMessage}"
+                )
                 TopPostsDataResult.Error(result.errorMessage)
             }
             else -> {
+                AppLog.e(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchTopPostsAndPages unexpected result type - ${result::class.simpleName}"
+                )
                 TopPostsDataResult.Error("Unknown error")
             }
         }
