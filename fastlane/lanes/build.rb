@@ -202,14 +202,14 @@ platform :android do
   #####################################################################################
   # build_and_upload_wordpress_prototype_build
   # -----------------------------------------------------------------------------------
-  # Build a WordPress Prototype Build and make it available for download
+  # Build a WordPress Prototype Build and upload it to Firebase App Distribution
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane build_and_upload_wordpress_prototype_build
   #####################################################################################
-  desc 'Build a WordPress Prototype Build and make it available for download'
+  desc 'Build a WordPress Prototype Build and upload it to Firebase App Distribution'
   lane :build_and_upload_wordpress_prototype_build do
-    UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
+    UI.user_error!("'FIREBASE_APP_DISTRIBUTION_ACCOUNT_KEY' must be defined as an environment variable.") unless ENV['FIREBASE_APP_DISTRIBUTION_ACCOUNT_KEY']
 
     version_name = generate_prototype_build_number
     gradle(
@@ -219,21 +219,21 @@ platform :android do
       properties: { prototypeBuildVersionName: version_name }
     )
 
-    upload_prototype_build(product: 'WordPress', version_name: version_name)
+    upload_prototype_build(app: :wordpress, version_name: version_name)
     upload_gutenberg_sourcemaps(app: 'Wordpress', release_version: version_name)
   end
 
   #####################################################################################
   # build_and_upload_jetpack_prototype_build
   # -----------------------------------------------------------------------------------
-  # Build a Jetpack Prototype Build and make it available for download
+  # Build a Jetpack Prototype Build and upload it to Firebase App Distribution
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane build_and_upload_jetpack_prototype_build
   #####################################################################################
-  desc 'Build a Jetpack Prototype Build and make it available for download'
+  desc 'Build a Jetpack Prototype Build and upload it to Firebase App Distribution'
   lane :build_and_upload_jetpack_prototype_build do
-    UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
+    UI.user_error!("'FIREBASE_APP_DISTRIBUTION_ACCOUNT_KEY' must be defined as an environment variable.") unless ENV['FIREBASE_APP_DISTRIBUTION_ACCOUNT_KEY']
 
     version_name = generate_prototype_build_number
     gradle(
@@ -243,7 +243,7 @@ platform :android do
       properties: { prototypeBuildVersionName: version_name }
     )
 
-    upload_prototype_build(product: 'Jetpack', version_name: version_name)
+    upload_prototype_build(app: :jetpack, version_name: version_name)
     upload_gutenberg_sourcemaps(app: 'Jetpack', release_version: version_name)
   end
 
@@ -310,44 +310,87 @@ platform :android do
     "#{build_dir}#{name}"
   end
 
-  # Uploads the apk built by the `gradle` (i.e. `SharedValues::GRADLE_APK_OUTPUT_PATH`) to S3 then comment on the PR to provide the download link
+  # Uploads the APK built by `gradle` to Firebase App Distribution and comments on the PR
   #
-  # @param [String] product the display name of the app to upload to S3. 'WordPress' or 'Jetpack'
+  # @param [Symbol] app the app identifier (:wordpress or :jetpack)
+  # @param [String] version_name the version name for the build
   #
-  def upload_prototype_build(product:, version_name:)
-    filename = "#{product.downcase}-prototype-build-#{version_name}.apk"
+  def upload_prototype_build(app:, version_name:)
+    app_specific_values = APP_SPECIFIC_VALUES[app]
+    app_display_name = app_specific_values[:display_name]
+    firebase_settings = app_specific_values[:firebase]
 
-    upload_path = upload_to_s3(
-      bucket: 'a8c-apps-public-artifacts',
-      key: filename,
-      file: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-      if_exists: :skip
+    release_notes = <<~NOTES
+      App: #{app_display_name} Android
+      Branch: `#{ENV.fetch('BUILDKITE_BRANCH', 'N/A')}`
+      Commit: #{ENV.fetch('BUILDKITE_COMMIT', 'N/A')[0, 7]}
+      Build Type: #{PROTOTYPE_BUILD_TYPE}
+      Version: #{version_name}
+    NOTES
+
+    firebase_app_distribution(
+      app: firebase_settings[:app_id],
+      service_credentials_json_data: ENV.fetch('FIREBASE_APP_DISTRIBUTION_ACCOUNT_KEY', nil),
+      release_notes: release_notes,
+      groups: firebase_settings[:testers_group]
     )
 
-    return if ENV['BUILDKITE_PULL_REQUEST'].nil?
+    return unless is_ci
 
-    install_url = "#{PROTOTYPE_BUILD_DOMAIN}/#{upload_path}"
-    comment_body = prototype_build_details_comment(
-      app_display_name: product,
-      app_icon: ":#{product.downcase}:", # Use Buildkite emoji based on product name
-      download_url: install_url,
-      metadata: { Flavor: PROTOTYPE_BUILD_FLAVOR, 'Build Type': PROTOTYPE_BUILD_TYPE, Version: version_name },
-      footnote: '<em>Note: Google Login is not supported on these builds.</em>',
-      fold: true
+    comment_on_pr_with_prototype_build_install_link(
+      project: GITHUB_REPO,
+      app_display_name: "#{app_display_name} Android",
+      app_icon: ":#{app}:",
+      metadata: {
+        Flavor: PROTOTYPE_BUILD_FLAVOR,
+        'Build Type': PROTOTYPE_BUILD_TYPE,
+        Version: version_name
+      }
     )
+
+    annotate_ci_build_with_prototype_build_install_link(app_display_name: app_display_name)
+  end
+
+  # Adds an install link for prototype build via PR comment
+  #
+  # @param [String] project the GitHub repository (e.g., 'wordpress-mobile/WordPress-Android')
+  # @param [String] app_display_name the display name of the app (e.g., 'WordPress Android')
+  # @param [String] app_icon the Buildkite emoji for the app (e.g., ':wordpress:')
+  # @param [Hash] metadata additional metadata to display in the comment
+  #
+  def comment_on_pr_with_prototype_build_install_link(project:, app_display_name:, app_icon: nil, metadata: {})
+    pr_number = ENV.fetch('BUILDKITE_PULL_REQUEST', nil)
+    return unless pr_number && pr_number != 'false'
 
     comment_on_pr(
-      project: GITHUB_REPO,
-      pr_number: Integer(ENV.fetch('BUILDKITE_PULL_REQUEST', nil)),
-      reuse_identifier: "#{product.downcase}-prototype-build-link",
-      body: comment_body
+      project: project,
+      pr_number: Integer(pr_number),
+      reuse_identifier: "#{app_display_name.downcase.gsub(' ', '-')}-prototype-build-link",
+      body: prototype_build_details_comment(
+        app_display_name: app_display_name,
+        app_icon: app_icon,
+        metadata: metadata,
+        footnote: '<em>Note: Google Login is not supported on these builds.</em>'
+      )
     )
+  end
 
+  # If running in Buildkite, annotates the current build with prototype build info
+  #
+  # @param [String] app_display_name the display name of the app
+  #
+  def annotate_ci_build_with_prototype_build_install_link(app_display_name:)
     return unless ENV['BUILDKITE']
 
-    message = "#{product} Prototype Build: [#{filename}](#{install_url})"
-    buildkite_annotate(style: 'info', context: "prototype-build-#{product}", message: message)
-    buildkite_metadata(set: { versionName: version_name, 'build:flavor': PROTOTYPE_BUILD_FLAVOR, 'build:type': PROTOTYPE_BUILD_TYPE })
+    install_link = 'Firebase App Distribution'
+    install_url = lane_context[SharedValues::FIREBASE_APP_DISTRO_RELEASE]&.dig(:testingUri)
+    install_link = "[#{install_link}](#{install_url})" unless install_url.nil?
+
+    buildkite_annotate(
+      style: 'success',
+      context: "prototype-build-#{app_display_name.downcase.gsub(' ', '-')}",
+      message: "#{app_display_name} Prototype Build uploaded to #{install_link}"
+    )
   end
 
   # This function is Buildkite-specific

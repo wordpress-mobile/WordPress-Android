@@ -11,7 +11,11 @@ APP_SPECIFIC_VALUES = {
     package_name: 'org.wordpress.android',
     bundle_name_prefix: 'wpandroid',
     screenshots_test_class: 'org.wordpress.android.ui.screenshots.WPScreenshotTest',
-    screenshot_config_file: 'wordpress-config.json'
+    screenshot_config_file: 'wordpress-config.json',
+    firebase: {
+      app_id: '1:124902176124:android:4f9776805ebf421d1620f9',
+      testers_group: 'wordpress-android---prototype-builds'
+    }
   },
   jetpack: {
     display_name: 'Jetpack',
@@ -21,7 +25,11 @@ APP_SPECIFIC_VALUES = {
     package_name: 'com.jetpack.android',
     bundle_name_prefix: 'jpandroid',
     screenshots_test_class: 'org.wordpress.android.ui.screenshots.JPScreenshotTest',
-    screenshot_config_file: 'jetpack-config.json'
+    screenshot_config_file: 'jetpack-config.json',
+    firebase: {
+      app_id: '1:124902176124:android:97a4443a7dbfb7cc1620f9',
+      testers_group: 'jetpack-android---prototype-builds'
+    }
   }
 }.freeze
 
@@ -29,7 +37,6 @@ UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(Dir.home, '.configure', 'wordpress-and
 
 PROTOTYPE_BUILD_FLAVOR = 'Jalapeno'
 PROTOTYPE_BUILD_TYPE = 'Debug'
-PROTOTYPE_BUILD_DOMAIN = 'https://cdn.a8c-ci.services'
 
 PROJECT_ROOT_FOLDER = File.dirname(File.expand_path(__dir__))
 FASTLANE_FOLDER = File.join(PROJECT_ROOT_FOLDER, 'fastlane')
