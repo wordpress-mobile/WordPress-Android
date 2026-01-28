@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="WordPress.ZenDesk" parent="WordPress.NoActionBar">
+    <style name="WordPress.ZenDesk" parent="WordPress.NoActionBar.NoEdgeToEdge">
         <item name="toolbarStyle">@style/WordPress.ZenDesk.Toolbar</item>
         <item name="android:statusBarColor">@color/primary_dark</item>
         <item name="titleTextColor">?attr/colorOnSurface</item>
