@@ -109,27 +109,27 @@
 
     <!-- Zendesk Dark Mode Overrides (base values provided by Zendesk SDK) -->
     <color name="zendesk_background_color"
-        tools:ignore="MissingDefaultResource">@color/background_dark</color>
+        tools:ignore="MissingDefaultResource,UnusedResources">@color/background_dark</color>
     <color name="zs_request_list_default_item_background"
-        tools:ignore="MissingDefaultResource">@color/background_dark</color>
+        tools:ignore="MissingDefaultResource,UnusedResources">@color/background_dark</color>
     <color name="zs_request_list_empty_background"
-        tools:ignore="MissingDefaultResource">@color/background_dark_elevated</color>
+        tools:ignore="MissingDefaultResource,UnusedResources">@color/background_dark_elevated</color>
     <color name="zs_request_agent_background_color"
-        tools:ignore="MissingDefaultResource">@color/background_dark_elevated</color>
+        tools:ignore="MissingDefaultResource,UnusedResources">@color/background_dark_elevated</color>
     <color name="zs_request_user_background_color"
-        tools:ignore="MissingDefaultResource">@color/colorPrimary</color>
+        tools:ignore="MissingDefaultResource,UnusedResources">@color/colorPrimary</color>
     <color name="zs_request_list_text_color"
-        tools:ignore="MissingDefaultResource">@color/white</color>
+        tools:ignore="MissingDefaultResource,UnusedResources">@color/white</color>
     <color name="zs_request_list_dark_text_color"
-        tools:ignore="MissingDefaultResource">@color/white_translucent_80</color>
+        tools:ignore="MissingDefaultResource,UnusedResources">@color/white_translucent_80</color>
     <color name="zs_request_list_light_text_color"
-        tools:ignore="MissingDefaultResource">@color/white_translucent_50</color>
+        tools:ignore="MissingDefaultResource,UnusedResources">@color/white_translucent_50</color>
     <color name="zs_request_cell_label_color"
-        tools:ignore="MissingDefaultResource">@color/white_translucent_50</color>
+        tools:ignore="MissingDefaultResource,UnusedResources">@color/white_translucent_50</color>
     <color name="zs_request_input_hint_color"
-        tools:ignore="MissingDefaultResource">@color/white_translucent_50</color>
+        tools:ignore="MissingDefaultResource,UnusedResources">@color/white_translucent_50</color>
     <color name="zs_request_attachment_indicator_color_inactive"
-        tools:ignore="MissingDefaultResource">@color/white_translucent_50</color>
+        tools:ignore="MissingDefaultResource,UnusedResources">@color/white_translucent_50</color>
     <color name="zs_request_message_composer_send_btn_color_inactive"
-        tools:ignore="MissingDefaultResource">@color/white_translucent_10</color>
+        tools:ignore="MissingDefaultResource,UnusedResources">@color/white_translucent_10</color>
 </resources>
