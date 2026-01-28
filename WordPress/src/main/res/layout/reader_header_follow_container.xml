@@ -43,4 +43,19 @@
 
     </FrameLayout>
 
+    <ImageButton
+        android:id="@+id/subscription_settings_button"
+        android:layout_width="@dimen/min_touch_target_sz"
+        android:layout_height="@dimen/min_touch_target_sz"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/reader_subscription_settings_title"
+        android:src="@drawable/ic_cog_white_24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/follow_button_container"
+        app:layout_constraintStart_toEndOf="@+id/follow_button_container"
+        app:layout_constraintTop_toTopOf="@+id/follow_button_container"
+        app:tint="?attr/colorOnSurface"
+        tools:visibility="visible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

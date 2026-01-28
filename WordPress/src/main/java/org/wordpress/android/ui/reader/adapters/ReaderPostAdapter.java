@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleCoroutineScope;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -108,6 +109,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
     private ReaderSiteHeaderView.OnBlogInfoFailedListener mBlogInfoFailedListener;
+    @Nullable private ReaderSiteHeaderView.OnSubscriptionSettingsClickListener mSubscriptionSettingsClickListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
@@ -302,6 +304,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             SiteHeaderViewHolder siteHolder = (SiteHeaderViewHolder) holder;
             siteHolder.mSiteHeaderView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
             siteHolder.mSiteHeaderView.setOnBlogInfoFailedListener(mBlogInfoFailedListener);
+            siteHolder.mSiteHeaderView.setOnSubscriptionSettingsClickListener(mSubscriptionSettingsClickListener);
             if (isDiscover()) {
                 siteHolder.mSiteHeaderView.loadBlogInfo(
                         ReaderConstants.DISCOVER_SITE_ID,
@@ -642,6 +645,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnBlogInfoFailedListener(ReaderSiteHeaderView.OnBlogInfoFailedListener listener) {
         mBlogInfoFailedListener = listener;
+    }
+
+    public void setOnSubscriptionSettingsClickListener(
+            ReaderSiteHeaderView.OnSubscriptionSettingsClickListener listener) {
+        mSubscriptionSettingsClickListener = listener;
     }
 
     private ReaderTypes.ReaderPostListType getPostListType() {

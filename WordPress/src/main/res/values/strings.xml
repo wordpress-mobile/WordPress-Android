@@ -1785,6 +1785,13 @@
     <string name="reader_follow_comments_message">You\'re following this conversation. You will receive notifications by email when new comments are published.</string>
     <string name="reader_follow_comments_enable_push_notifications">Enable in-app notifications</string>
     <string name="reader_follow_comments_unfollow_conversation">Unfollow conversation</string>
+    <!-- Reader subscription settings bottom sheet -->
+    <string name="reader_subscription_settings_title">Subscription settings</string>
+    <string name="reader_subscription_settings_description">Manage subscription options</string>
+    <string name="reader_subscription_settings_notify_posts">Notify me of new posts</string>
+    <string name="reader_subscription_settings_email_posts">Email me new posts</string>
+    <string name="reader_subscription_settings_email_comments">Email me new comments</string>
+    <string name="reader_subscription_settings_update_error">Failed to update subscription settings</string>
     <string name="reader_marked_post_as_seen">Marked post as seen</string>
     <string name="reader_marked_post_as_unseen">Marked post as unseen</string>
     <string name="reader_error_changing_seen_status_of_unsupported_post">Can\'t toggle seen status of this post</string>
