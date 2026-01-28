@@ -158,14 +158,12 @@ class StatsDataSourceImpl @Inject constructor(
                 )
                 TopPostsDataResult.Error(result.errorMessage)
             }
-            is WpRequestResult.ResponseParsingError -> {
+            is WpRequestResult.ResponseParsingError<*> -> {
                 AppLog.e(
                     T.STATS,
-                    "StatsDataSourceImpl: fetchTopPostsAndPages ResponseParsingError - " +
-                        "reason=${result.reason}, responseCode=${result.responseCode}, " +
-                        "responseBody=${result.responseBody}"
+                    "StatsDataSourceImpl: fetchTopPostsAndPages ResponseParsingError - $result"
                 )
-                TopPostsDataResult.Error("Response parsing error: ${result.reason}")
+                TopPostsDataResult.Error("Response parsing error: $result")
             }
             else -> {
                 AppLog.e(
