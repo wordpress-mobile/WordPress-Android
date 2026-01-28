@@ -23,7 +23,7 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    private val updateResultChannel = Channel<UpdateResult>(Channel.BUFFERED)
+    private val updateResultChannel = Channel<UpdateResult>(Channel.CONFLATED)
 
     init {
         dispatcher.register(this)
