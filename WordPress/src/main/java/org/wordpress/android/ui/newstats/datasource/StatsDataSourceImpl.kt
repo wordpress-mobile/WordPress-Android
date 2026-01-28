@@ -2,11 +2,6 @@ package org.wordpress.android.ui.newstats.datasource
 
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.util.LocaleManagerWrapper
-import org.wordpress.android.ui.newstats.extension.statsCommentsData
-import org.wordpress.android.ui.newstats.extension.statsLikesData
-import org.wordpress.android.ui.newstats.extension.statsPostsData
-import org.wordpress.android.ui.newstats.extension.statsVisitorsData
-import org.wordpress.android.ui.newstats.extension.statsVisitsData
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.StatsReferrersParams
@@ -79,19 +74,19 @@ class StatsDataSourceImpl @Inject constructor(
 
     private fun mapToStatsVisitsData(response: uniffi.wp_api.StatsVisitsResponse): StatsVisitsData {
         return StatsVisitsData(
-            visits = response.statsVisitsData().map { dataPoint ->
+            visits = response.visitsData().map { dataPoint ->
                 VisitsDataPoint(period = dataPoint.period, visits = dataPoint.visits.toLong())
             },
-            visitors = response.statsVisitorsData().map { dataPoint ->
+            visitors = response.visitorsData().map { dataPoint ->
                 VisitorsDataPoint(period = dataPoint.period, visitors = dataPoint.visitors.toLong())
             },
-            likes = response.statsLikesData().map { dataPoint ->
+            likes = response.likesData().map { dataPoint ->
                 LikesDataPoint(period = dataPoint.period, likes = dataPoint.likes.toLong())
             },
-            comments = response.statsCommentsData().map { dataPoint ->
+            comments = response.commentsData().map { dataPoint ->
                 CommentsDataPoint(period = dataPoint.period, comments = dataPoint.comments.toLong())
             },
-            posts = response.statsPostsData().map { dataPoint ->
+            posts = response.postsData().map { dataPoint ->
                 PostsDataPoint(period = dataPoint.period, posts = dataPoint.posts.toLong())
             }
         )
