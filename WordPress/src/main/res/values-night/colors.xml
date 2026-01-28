@@ -108,16 +108,16 @@
     <color name="gravatar_sync_info_banner">#2C2C2E</color>
 
     <!-- Zendesk Dark Mode Overrides -->
-    <color name="zendesk_background_color" tools:override="true">@color/background_dark</color>
-    <color name="zs_request_list_default_item_background" tools:override="true">@color/background_dark</color>
-    <color name="zs_request_list_empty_background" tools:override="true">@color/background_dark_elevated</color>
-    <color name="zs_request_agent_background_color" tools:override="true">@color/background_dark_elevated</color>
-    <color name="zs_request_user_background_color" tools:override="true">@color/colorPrimary</color>
-    <color name="zs_request_list_text_color" tools:override="true">@color/white</color>
-    <color name="zs_request_list_dark_text_color" tools:override="true">@color/white_translucent_80</color>
-    <color name="zs_request_list_light_text_color" tools:override="true">@color/white_translucent_50</color>
-    <color name="zs_request_cell_label_color" tools:override="true">@color/white_translucent_50</color>
-    <color name="zs_request_input_hint_color" tools:override="true">@color/white_translucent_50</color>
-    <color name="zs_request_attachment_indicator_color_inactive" tools:override="true">@color/white_translucent_50</color>
-    <color name="zs_request_message_composer_send_btn_color_inactive" tools:override="true">@color/white_translucent_10</color>
+    <color name="zendesk_background_color">@color/background_dark</color>
+    <color name="zs_request_list_default_item_background">@color/background_dark</color>
+    <color name="zs_request_list_empty_background">@color/background_dark_elevated</color>
+    <color name="zs_request_agent_background_color">@color/background_dark_elevated</color>
+    <color name="zs_request_user_background_color">@color/colorPrimary</color>
+    <color name="zs_request_list_text_color">@color/white</color>
+    <color name="zs_request_list_dark_text_color">@color/white_translucent_80</color>
+    <color name="zs_request_list_light_text_color">@color/white_translucent_50</color>
+    <color name="zs_request_cell_label_color">@color/white_translucent_50</color>
+    <color name="zs_request_input_hint_color">@color/white_translucent_50</color>
+    <color name="zs_request_attachment_indicator_color_inactive">@color/white_translucent_50</color>
+    <color name="zs_request_message_composer_send_btn_color_inactive">@color/white_translucent_10</color>
 </resources>
