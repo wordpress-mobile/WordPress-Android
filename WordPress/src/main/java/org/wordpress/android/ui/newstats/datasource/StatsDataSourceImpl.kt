@@ -158,10 +158,19 @@ class StatsDataSourceImpl @Inject constructor(
                 )
                 TopPostsDataResult.Error(result.errorMessage)
             }
+            is WpRequestResult.ResponseParsingError -> {
+                AppLog.e(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchTopPostsAndPages ResponseParsingError - " +
+                        "reason=${result.reason}, responseCode=${result.responseCode}, " +
+                        "responseBody=${result.responseBody}"
+                )
+                TopPostsDataResult.Error("Response parsing error: ${result.reason}")
+            }
             else -> {
                 AppLog.e(
                     T.STATS,
-                    "StatsDataSourceImpl: fetchTopPostsAndPages unexpected result type - ${result::class.simpleName}"
+                    "StatsDataSourceImpl: fetchTopPostsAndPages unexpected result - $result"
                 )
                 TopPostsDataResult.Error("Unknown error")
             }
