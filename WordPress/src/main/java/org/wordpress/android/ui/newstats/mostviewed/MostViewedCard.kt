@@ -44,7 +44,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -52,6 +51,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
 
@@ -59,8 +59,6 @@ private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
 private const val HIGHLIGHTED_ITEM_BACKGROUND_ALPHA = 0.08f
-private val ChangeBadgePositiveColor = Color(0xFF4CAF50)
-private val ChangeBadgeNegativeColor = Color(0xFFE91E63)
 
 @Composable
 fun MostViewedCard(
@@ -387,13 +385,13 @@ private fun ChangeIndicator(change: MostViewedChange) {
             "+${formatStatValue(change.value)} (${
                 String.format(Locale.getDefault(), "%.1f%%", change.percentage)
             })",
-            ChangeBadgePositiveColor
+            StatsColors.ChangeBadgePositive
         )
         is MostViewedChange.Negative -> Pair(
             "-${formatStatValue(change.value)} (${
                 String.format(Locale.getDefault(), "%.1f%%", change.percentage)
             })",
-            ChangeBadgeNegativeColor
+            StatsColors.ChangeBadgeNegative
         )
         is MostViewedChange.NoChange -> Pair(
             "+0 (0%)",

@@ -37,7 +37,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -47,6 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
@@ -236,7 +236,7 @@ private fun TotalViewsChangeIndicator(
 
     val isPositive = change > 0
     val sign = if (isPositive) "+" else "-"
-    val color = if (isPositive) Color(0xFF4CAF50) else Color(0xFFE91E63)
+    val color = if (isPositive) StatsColors.ChangeBadgePositive else StatsColors.ChangeBadgeNegative
     val arrowIcon = if (isPositive) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown
 
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -349,13 +349,13 @@ private fun ChangeIndicator(change: MostViewedChange) {
             "+${formatStatValue(change.value)} (${
                 String.format(Locale.getDefault(), "%.1f%%", change.percentage)
             })",
-            Color(0xFF4CAF50)
+            StatsColors.ChangeBadgePositive
         )
         is MostViewedChange.Negative -> Pair(
             "-${formatStatValue(change.value)} (${
                 String.format(Locale.getDefault(), "%.1f%%", change.percentage)
             })",
-            Color(0xFFE91E63)
+            StatsColors.ChangeBadgeNegative
         )
         is MostViewedChange.NoChange -> Pair(
             "+0 (0%)",
