@@ -1,0 +1,342 @@
+package org.wordpress.android.ui.newstats.mostviewed
+
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.ui.newstats.util.formatStatValue
+import java.util.Locale
+
+private const val EXTRA_DATA_SOURCE = "extra_data_source"
+private const val EXTRA_ITEMS = "extra_items"
+private const val EXTRA_TOTAL_VIEWS = "extra_total_views"
+private const val EXTRA_DATE_RANGE = "extra_date_range"
+
+@AndroidEntryPoint
+class MostViewedDetailActivity : BaseAppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val dataSource = intent.extras?.getSerializableCompat<MostViewedDataSource>(EXTRA_DATA_SOURCE)
+            ?: MostViewedDataSource.POSTS_AND_PAGES
+        @Suppress("UNCHECKED_CAST")
+        val items = intent.extras?.getSerializableCompat<ArrayList<MostViewedDetailItem>>(EXTRA_ITEMS)
+            ?: arrayListOf()
+        val totalViews = intent.getLongExtra(EXTRA_TOTAL_VIEWS, 0L)
+        val dateRange = intent.getStringExtra(EXTRA_DATE_RANGE) ?: ""
+
+        setContent {
+            AppThemeM3 {
+                MostViewedDetailScreen(
+                    dataSource = dataSource,
+                    items = items,
+                    totalViews = totalViews,
+                    dateRange = dateRange,
+                    onBackPressed = onBackPressedDispatcher::onBackPressed
+                )
+            }
+        }
+    }
+
+    companion object {
+        fun start(
+            context: Context,
+            dataSource: MostViewedDataSource,
+            items: List<MostViewedDetailItem>,
+            totalViews: Long,
+            dateRange: String
+        ) {
+            val intent = Intent(context, MostViewedDetailActivity::class.java).apply {
+                putExtra(EXTRA_DATA_SOURCE, dataSource)
+                putExtra(EXTRA_ITEMS, ArrayList(items))
+                putExtra(EXTRA_TOTAL_VIEWS, totalViews)
+                putExtra(EXTRA_DATE_RANGE, dateRange)
+            }
+            context.startActivity(intent)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MostViewedDetailScreen(
+    dataSource: MostViewedDataSource,
+    items: List<MostViewedDetailItem>,
+    totalViews: Long,
+    dateRange: String,
+    onBackPressed: () -> Unit
+) {
+    val title = stringResource(dataSource.labelResId)
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = title) },
+                navigationIcon = {
+                    IconButton(onClick = onBackPressed) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                }
+            )
+        }
+    ) { contentPadding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+                .padding(horizontal = 16.dp)
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
+                SummaryCard(
+                    totalViews = totalViews,
+                    dateRange = dateRange
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            item {
+                ColumnHeaders(itemCount = items.size)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            itemsIndexed(items) { index, item ->
+                DetailItemRow(
+                    position = index + 1,
+                    item = item,
+                    maxViews = items.firstOrNull()?.views ?: 1L
+                )
+                if (index < items.lastIndex) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun SummaryCard(
+    totalViews: Long,
+    dateRange: String
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = stringResource(R.string.stats_views),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = dateRange,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Text(
+                text = formatStatValue(totalViews),
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
+
+@Composable
+private fun ColumnHeaders(itemCount: Int) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = stringResource(R.string.stats_most_viewed_top_n, itemCount),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = stringResource(R.string.stats_views),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun DetailItemRow(
+    position: Int,
+    item: MostViewedDetailItem,
+    maxViews: Long
+) {
+    val percentage = if (maxViews > 0) item.views.toFloat() / maxViews.toFloat() else 0f
+    val barColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .clip(RoundedCornerShape(8.dp))
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(fraction = percentage)
+                .fillMaxHeight()
+                .background(barColor)
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp, horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = position.toString(),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.width(32.dp)
+            )
+
+            Text(
+                text = item.title,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Column(horizontalAlignment = Alignment.End) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = formatStatValue(item.views),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        imageVector = Icons.Default.ChevronRight,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                ChangeIndicator(change = item.change)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ChangeIndicator(change: MostViewedChange) {
+    val (text, color) = when (change) {
+        is MostViewedChange.Positive -> Pair(
+            "+${formatStatValue(change.value)} (${
+                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
+            })",
+            Color(0xFF4CAF50)
+        )
+        is MostViewedChange.Negative -> Pair(
+            "-${formatStatValue(change.value)} (${
+                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
+            })",
+            Color(0xFFE91E63)
+        )
+        is MostViewedChange.NoChange -> Pair(
+            "+0 (0%)",
+            MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        is MostViewedChange.NotAvailable -> return
+    }
+
+    Text(
+        text = text,
+        style = MaterialTheme.typography.labelSmall,
+        color = color
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MostViewedDetailScreenPreview() {
+    AppThemeM3 {
+        MostViewedDetailScreen(
+            dataSource = MostViewedDataSource.POSTS_AND_PAGES,
+            items = listOf(
+                MostViewedDetailItem(1, "Welcome to Automattic", 998,
+                    MostViewedChange.Positive(41, 4.3)),
+                MostViewedDetailItem(2, "Travel Guidelines", 111,
+                    MostViewedChange.Positive(22, 24.7)),
+                MostViewedDetailItem(3, "LibreChat", 93,
+                    MostViewedChange.Positive(21, 29.2)),
+                MostViewedDetailItem(4, "Getting Started with Claude Code: A Comprehensive Tutorial", 91,
+                    MostViewedChange.Positive(47, 106.8)),
+                MostViewedDetailItem(5, "AI Tools & Resource Hub", 72,
+                    MostViewedChange.Positive(31, 75.6))
+            ),
+            totalViews = 5400,
+            dateRange = "21-27 Jan",
+            onBackPressed = {}
+        )
+    }
+}

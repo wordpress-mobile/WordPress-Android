@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.mostviewed
 
 import org.wordpress.android.R
+import java.io.Serializable
 
 /**
  * Represents the available data source types for the Most Viewed card.
@@ -45,9 +46,20 @@ data class MostViewedItem(
 /**
  * Represents the change in views compared to the previous period.
  */
-sealed class MostViewedChange {
+sealed class MostViewedChange : Serializable {
     data class Positive(val value: Long, val percentage: Double) : MostViewedChange()
     data class Negative(val value: Long, val percentage: Double) : MostViewedChange()
     data object NoChange : MostViewedChange()
     data object NotAvailable : MostViewedChange()
 }
+
+/**
+ * Data class for passing items to the detail screen via Intent.
+ * Implements Serializable for Intent extras.
+ */
+data class MostViewedDetailItem(
+    val id: Long,
+    val title: String,
+    val views: Long,
+    val change: MostViewedChange
+) : Serializable

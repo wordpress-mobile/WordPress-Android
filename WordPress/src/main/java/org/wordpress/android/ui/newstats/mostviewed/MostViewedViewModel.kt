@@ -32,6 +32,8 @@ class MostViewedViewModel @Inject constructor(
     private var currentDataSource: MostViewedDataSource = MostViewedDataSource.POSTS_AND_PAGES
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
 
+    private var allItems: List<MostViewedDetailItem> = emptyList()
+
     init {
         loadData()
     }
@@ -63,6 +65,15 @@ class MostViewedViewModel @Inject constructor(
 
     fun onRetry() {
         loadData()
+    }
+
+    fun getDetailData(): MostViewedDetailData {
+        return MostViewedDetailData(
+            dataSource = currentDataSource,
+            items = allItems,
+            totalViews = allItems.sumOf { it.views },
+            dateRange = currentPeriod.toDateRangeString(resourceProvider)
+        )
     }
 
     private fun loadData() {
@@ -97,15 +108,23 @@ class MostViewedViewModel @Inject constructor(
 
             when (result) {
                 is MostViewedResult.Success -> {
+                    allItems = result.items.map { item ->
+                        MostViewedDetailItem(
+                            id = item.id,
+                            title = item.title,
+                            views = item.views,
+                            change = MostViewedChange.NotAvailable
+                        )
+                    }
                     _uiState.value = MostViewedCardUiState.Loaded(
                         selectedDataSource = currentDataSource,
-                        items = result.items.map { item ->
+                        items = allItems.take(CARD_MAX_ITEMS).mapIndexed { index, item ->
                             MostViewedItem(
                                 id = item.id,
                                 title = item.title,
                                 views = item.views,
-                                change = MostViewedChange.NotAvailable,
-                                isHighlighted = item.isFirst
+                                change = item.change,
+                                isHighlighted = index == 0
                             )
                         }
                     )
@@ -122,5 +141,29 @@ class MostViewedViewModel @Inject constructor(
                     ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error)
             )
         }
+    }
+
+    companion object {
+        private const val CARD_MAX_ITEMS = 10
+    }
+}
+
+data class MostViewedDetailData(
+    val dataSource: MostViewedDataSource,
+    val items: List<MostViewedDetailItem>,
+    val totalViews: Long,
+    val dateRange: String
+)
+
+private fun StatsPeriod.toDateRangeString(resourceProvider: ResourceProvider): String {
+    return when (this) {
+        is StatsPeriod.Today -> resourceProvider.getString(R.string.stats_period_today)
+        is StatsPeriod.Last7Days -> resourceProvider.getString(R.string.stats_period_last_7_days)
+        is StatsPeriod.Last30Days -> resourceProvider.getString(R.string.stats_period_last_30_days)
+        is StatsPeriod.Last6Months -> resourceProvider.getString(R.string.stats_period_last_6_months)
+        is StatsPeriod.Last12Months -> resourceProvider.getString(R.string.stats_period_last_12_months)
+        is StatsPeriod.Custom -> "${startDate.dayOfMonth}-${endDate.dayOfMonth} ${
+            endDate.month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
+        }"
     }
 }

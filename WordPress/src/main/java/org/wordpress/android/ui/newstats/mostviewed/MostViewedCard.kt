@@ -66,6 +66,7 @@ private val ChangeBadgeNegativeColor = Color(0xFFE91E63)
 fun MostViewedCard(
     uiState: MostViewedCardUiState,
     onDataSourceChanged: (MostViewedDataSource) -> Unit,
+    onShowAllClick: () -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -85,7 +86,7 @@ fun MostViewedCard(
     ) {
         when (uiState) {
             is MostViewedCardUiState.Loading -> LoadingContent()
-            is MostViewedCardUiState.Loaded -> LoadedContent(uiState, onDataSourceChanged)
+            is MostViewedCardUiState.Loaded -> LoadedContent(uiState, onDataSourceChanged, onShowAllClick)
             is MostViewedCardUiState.Error -> ErrorContent(uiState, onRetry)
         }
     }
@@ -203,7 +204,8 @@ private fun LoadingContent() {
 @Composable
 private fun LoadedContent(
     state: MostViewedCardUiState.Loaded,
-    onDataSourceChanged: (MostViewedDataSource) -> Unit
+    onDataSourceChanged: (MostViewedDataSource) -> Unit,
+    onShowAllClick: () -> Unit
 ) {
     val maxViews = state.items.maxOfOrNull { it.views } ?: 1L
 
@@ -230,7 +232,7 @@ private fun LoadedContent(
             EmptyStateContent()
         }
         Spacer(modifier = Modifier.height(12.dp))
-        ShowAllFooter()
+        ShowAllFooter(onClick = onShowAllClick)
     }
 }
 
@@ -424,11 +426,11 @@ private fun EmptyStateContent() {
 }
 
 @Composable
-private fun ShowAllFooter() {
+private fun ShowAllFooter(onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { /* Future: navigate to full list */ }
+            .clickable(onClick = onClick)
             .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
@@ -488,6 +490,7 @@ private fun MostViewedCardLoadingPreview() {
         MostViewedCard(
             uiState = MostViewedCardUiState.Loading,
             onDataSourceChanged = {},
+            onShowAllClick = {},
             onRetry = {}
         )
     }
@@ -539,6 +542,7 @@ private fun MostViewedCardLoadedPreview() {
                 )
             ),
             onDataSourceChanged = {},
+            onShowAllClick = {},
             onRetry = {}
         )
     }
@@ -553,6 +557,7 @@ private fun MostViewedCardErrorPreview() {
                 message = "Failed to load data"
             ),
             onDataSourceChanged = {},
+            onShowAllClick = {},
             onRetry = {}
         )
     }
@@ -583,6 +588,7 @@ private fun MostViewedCardLoadedDarkPreview() {
                 )
             ),
             onDataSourceChanged = {},
+            onShowAllClick = {},
             onRetry = {}
         )
     }

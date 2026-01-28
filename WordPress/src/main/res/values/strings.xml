@@ -1573,6 +1573,7 @@
     <string name="stats_most_viewed_posts_and_pages">Posts &amp; Pages</string>
     <string name="stats_most_viewed_referrers">Referrers</string>
     <string name="stats_show_all">Show All</string>
+    <string name="stats_most_viewed_top_n">Top %d</string>
 
     <!-- stats referrer popup menu actions   -->
     <string name="stats_referrer_popup_menu_open_website">Open Website</string>
