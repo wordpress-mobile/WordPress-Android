@@ -114,10 +114,10 @@
     <color name="zs_request_agent_background_color">@color/background_dark_elevated</color>
     <color name="zs_request_user_background_color">@color/colorPrimary</color>
     <color name="zs_request_list_text_color">@color/white</color>
-    <color name="zs_request_list_dark_text_color">#DEFFFFFF</color>
-    <color name="zs_request_list_light_text_color">#8AFFFFFF</color>
-    <color name="zs_request_cell_label_color">#8AFFFFFF</color>
-    <color name="zs_request_input_hint_color">#60FFFFFF</color>
-    <color name="zs_request_attachment_indicator_color_inactive">#89FFFFFF</color>
-    <color name="zs_request_message_composer_send_btn_color_inactive">#1EFFFFFF</color>
+    <color name="zs_request_list_dark_text_color">@color/white_translucent_80</color>
+    <color name="zs_request_list_light_text_color">@color/white_translucent_50</color>
+    <color name="zs_request_cell_label_color">@color/white_translucent_50</color>
+    <color name="zs_request_input_hint_color">@color/white_translucent_50</color>
+    <color name="zs_request_attachment_indicator_color_inactive">@color/white_translucent_50</color>
+    <color name="zs_request_message_composer_send_btn_color_inactive">@color/white_translucent_10</color>
 </resources>
