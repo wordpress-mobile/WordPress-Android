@@ -47,6 +47,7 @@
                 android:visibility="gone"
                 app:aevButton="@string/retry"
                 app:aevTitle="@string/media_empty_list"
+                app:layout_constraintVertical_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

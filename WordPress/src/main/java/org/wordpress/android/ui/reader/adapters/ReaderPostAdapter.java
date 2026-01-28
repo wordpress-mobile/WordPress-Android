@@ -755,6 +755,24 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return (mPosts == null || mPosts.size() == 0);
     }
 
+    /**
+     * Returns the adapter position of the first post from the specified blog, or -1 if not found.
+     */
+    public int getPositionOfFirstPostFromBlog(long blogId) {
+        if (mPosts == null) return -1;
+        for (int i = 0; i < mPosts.size(); i++) {
+            if (mPosts.get(i).blogId == blogId) {
+                int adapterPosition = i + getItemPositionOffset();
+                // Account for gap marker if it appears before this position
+                if (mGapMarkerPosition > -1 && adapterPosition >= mGapMarkerPosition) {
+                    adapterPosition++;
+                }
+                return adapterPosition;
+            }
+        }
+        return -1;
+    }
+
     private boolean isBookmarksList() {
         return (getPostListType() == ReaderPostListType.TAG_FOLLOWED
                 && (mCurrentTag != null && mCurrentTag.isBookmarked()));

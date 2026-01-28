@@ -28,9 +28,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 import com.google.android.material.R as MaterialR
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -236,6 +239,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private var postSearchAdapterPos = 0
     private var siteSearchAdapterPos = 0
     private var searchTabsPos = NO_POSITION
+    private var pendingScrollToBlogId: Long? = null
 
     private var isFilterableScreen = false
     private var isFiltered = false
@@ -536,6 +540,14 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             viewLifecycleOwner
         ) { readerData: FollowStatusChanged ->
             setFollowStatusForBlog(readerData)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                postListViewModel.scrollToSiteId.collect { blogId ->
+                    pendingScrollToBlogId = blogId
+                }
+            }
         }
     }
 
@@ -1993,6 +2005,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     AppLog.d(AppLog.T.READER, "reader post list > restoring position")
                     recyclerView.scrollRecycleViewToPosition(restorePosition)
                 }
+                pendingScrollToBlogId?.let { blogId ->
+                    scrollToFirstPostFromBlog(blogId)
+                    pendingScrollToBlogId = null
+                }
                 if (isSearching && !isSearchTabsShowing()) {
                     showSearchTabs()
                 } else if (isSearching) {
@@ -2213,6 +2229,17 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         hideNewPostsBar()
         if (hasPostAdapter()) {
             getPostAdapter().refresh()
+        }
+    }
+
+    /*
+     * scroll to the first post from the specified blog
+     */
+    private fun scrollToFirstPostFromBlog(blogId: Long) {
+        if (!hasPostAdapter()) return
+        val position = getPostAdapter().getPositionOfFirstPostFromBlog(blogId)
+        if (position > -1) {
+            recyclerView.scrollRecycleViewToPosition(position)
         }
     }
 
