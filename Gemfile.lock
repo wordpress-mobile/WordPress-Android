@@ -169,6 +169,9 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.4.1)
       xcpretty-travis-formatter (>= 0.0.3, < 2.0.0)
+    fastlane-plugin-firebase_app_distribution (0.10.1)
+      google-apis-firebaseappdistribution_v1 (~> 0.3.0)
+      google-apis-firebaseappdistribution_v1alpha (~> 0.2.0)
     fastlane-plugin-sentry (1.29.0)
       os (~> 1.1, >= 1.1.4)
     fastlane-plugin-wpmreleasetoolkit (13.8.1)
@@ -204,6 +207,10 @@ GEM
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
       rexml
+    google-apis-firebaseappdistribution_v1 (0.3.0)
+      google-apis-core (>= 0.11.0, < 2.a)
+    google-apis-firebaseappdistribution_v1alpha (0.2.0)
+      google-apis-core (>= 0.11.0, < 2.a)
     google-apis-iamcredentials_v1 (0.17.0)
       google-apis-core (>= 0.11.0, < 2.a)
     google-apis-playcustomapp_v1 (0.13.0)
@@ -358,6 +365,7 @@ PLATFORMS
 DEPENDENCIES
   danger-dangermattic (~> 1.2)
   fastlane (~> 2)
+  fastlane-plugin-firebase_app_distribution (~> 0.10)
   fastlane-plugin-sentry
   fastlane-plugin-wpmreleasetoolkit (~> 13.8)
   nokogiri
