@@ -51,6 +51,10 @@ sealed class MostViewedChange : Serializable {
     data class Negative(val value: Long, val percentage: Double) : MostViewedChange()
     data object NoChange : MostViewedChange()
     data object NotAvailable : MostViewedChange()
+
+    companion object {
+        private const val serialVersionUID: Long = 1L
+    }
 }
 
 /**
@@ -62,4 +66,8 @@ data class MostViewedDetailItem(
     val title: String,
     val views: Long,
     val change: MostViewedChange
-) : Serializable
+) : Serializable {
+    companion object {
+        private const val serialVersionUID: Long = 1L
+    }
+}

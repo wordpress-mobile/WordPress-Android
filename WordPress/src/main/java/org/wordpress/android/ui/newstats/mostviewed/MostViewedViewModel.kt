@@ -18,6 +18,8 @@ import kotlin.math.abs
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
+private const val MONTH_ABBREVIATION_LENGTH = 3
+
 @HiltViewModel
 class MostViewedViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -184,7 +186,7 @@ private fun StatsPeriod.toDateRangeString(resourceProvider: ResourceProvider): S
         is StatsPeriod.Last6Months -> resourceProvider.getString(R.string.stats_period_last_6_months)
         is StatsPeriod.Last12Months -> resourceProvider.getString(R.string.stats_period_last_12_months)
         is StatsPeriod.Custom -> "${startDate.dayOfMonth}-${endDate.dayOfMonth} ${
-            endDate.month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
+            endDate.month.name.take(MONTH_ABBREVIATION_LENGTH).lowercase().replaceFirstChar { it.uppercase() }
         }"
     }
 }

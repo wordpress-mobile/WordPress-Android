@@ -58,7 +58,7 @@ import java.util.Locale
 private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
-private val HighlightedItemBackgroundAlpha = 0.08f
+private const val HIGHLIGHTED_ITEM_BACKGROUND_ALPHA = 0.08f
 private val ChangeBadgePositiveColor = Color(0xFF4CAF50)
 private val ChangeBadgeNegativeColor = Color(0xFFE91E63)
 
@@ -321,7 +321,7 @@ private fun ColumnHeadersRow(
 
 @Composable
 private fun MostViewedItemRow(item: MostViewedItem, percentage: Float) {
-    val barColor = MaterialTheme.colorScheme.primary.copy(alpha = HighlightedItemBackgroundAlpha)
+    val barColor = MaterialTheme.colorScheme.primary.copy(alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA)
 
     Box(
         modifier = Modifier

@@ -90,6 +90,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
     }
 
     companion object {
+        @Suppress("LongParameterList")
         fun start(
             context: Context,
             dataSource: MostViewedDataSource,

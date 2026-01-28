@@ -26,10 +26,15 @@ private const val HOURLY_QUANTITY = 24
 private const val DAILY_QUANTITY = 1
 private const val WEEKLY_QUANTITY = 7
 private const val DAYS_BEFORE_END_DATE = -6
-private const val DAYS_IN_30_DAYS = 30
 private const val DAYS_IN_7_DAYS = 7
+private const val DAYS_IN_30_DAYS = 30
+private const val DAYS_IN_6_MONTHS = 182
+private const val DAYS_IN_12_MONTHS = 365
 private const val MONTHS_IN_6_MONTHS = 6
 private const val MONTHS_IN_12_MONTHS = 12
+private const val PERCENTAGE_MULTIPLIER = 100.0
+private const val PERCENTAGE_NO_CHANGE = 0.0
+private const val NUM_DAYS_TODAY = 1
 
 /**
  * Repository for fetching stats data using the wordpress-rs API.
@@ -533,8 +538,8 @@ class StatsRepository @Inject constructor(
             val previousTotalViews = previousItemsMap.values.sumOf { it.views }
             val totalChange = totalViews - previousTotalViews
             val totalChangePercent = if (previousTotalViews > 0) {
-                (totalChange.toDouble() / previousTotalViews.toDouble()) * 100.0
-            } else if (totalViews > 0) 100.0 else 0.0
+                (totalChange.toDouble() / previousTotalViews.toDouble()) * PERCENTAGE_MULTIPLIER
+            } else if (totalViews > 0) PERCENTAGE_MULTIPLIER else PERCENTAGE_NO_CHANGE
 
             MostViewedResult.Success(
                 items = currentResult.items.mapIndexed { index, item ->
@@ -580,8 +585,8 @@ class StatsRepository @Inject constructor(
             val previousTotalViews = previousItemsMap.values.sumOf { it.views }
             val totalChange = totalViews - previousTotalViews
             val totalChangePercent = if (previousTotalViews > 0) {
-                (totalChange.toDouble() / previousTotalViews.toDouble()) * 100.0
-            } else if (totalViews > 0) 100.0 else 0.0
+                (totalChange.toDouble() / previousTotalViews.toDouble()) * PERCENTAGE_MULTIPLIER
+            } else if (totalViews > 0) PERCENTAGE_MULTIPLIER else PERCENTAGE_NO_CHANGE
 
             MostViewedResult.Success(
                 items = currentResult.items.mapIndexed { index, item ->
@@ -611,29 +616,29 @@ class StatsRepository @Inject constructor(
 
         return when (period) {
             is StatsPeriod.Today -> {
-                val yesterdayString = today.minusDays(1).format(dateFormatter)
-                StatsDateRange.Preset(num = 1, date = todayString) to
-                    StatsDateRange.Preset(num = 1, date = yesterdayString)
+                val yesterdayString = today.minusDays(NUM_DAYS_TODAY.toLong()).format(dateFormatter)
+                StatsDateRange.Preset(num = NUM_DAYS_TODAY, date = todayString) to
+                    StatsDateRange.Preset(num = NUM_DAYS_TODAY, date = yesterdayString)
             }
             is StatsPeriod.Last7Days -> {
-                val previousEndString = today.minusDays(7).format(dateFormatter)
-                StatsDateRange.Preset(num = 7, date = todayString) to
-                    StatsDateRange.Preset(num = 7, date = previousEndString)
+                val previousEndString = today.minusDays(DAYS_IN_7_DAYS.toLong()).format(dateFormatter)
+                StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = todayString) to
+                    StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = previousEndString)
             }
             is StatsPeriod.Last30Days -> {
-                val previousEndString = today.minusDays(30).format(dateFormatter)
-                StatsDateRange.Preset(num = 30, date = todayString) to
-                    StatsDateRange.Preset(num = 30, date = previousEndString)
+                val previousEndString = today.minusDays(DAYS_IN_30_DAYS.toLong()).format(dateFormatter)
+                StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString) to
+                    StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = previousEndString)
             }
             is StatsPeriod.Last6Months -> {
-                val previousEndString = today.minusDays(182).format(dateFormatter)
-                StatsDateRange.Preset(num = 182, date = todayString) to
-                    StatsDateRange.Preset(num = 182, date = previousEndString)
+                val previousEndString = today.minusDays(DAYS_IN_6_MONTHS.toLong()).format(dateFormatter)
+                StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = todayString) to
+                    StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = previousEndString)
             }
             is StatsPeriod.Last12Months -> {
-                val previousEndString = today.minusDays(365).format(dateFormatter)
-                StatsDateRange.Preset(num = 365, date = todayString) to
-                    StatsDateRange.Preset(num = 365, date = previousEndString)
+                val previousEndString = today.minusDays(DAYS_IN_12_MONTHS.toLong()).format(dateFormatter)
+                StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString) to
+                    StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = previousEndString)
             }
             is StatsPeriod.Custom -> {
                 val daysBetween = ChronoUnit.DAYS.between(period.startDate, period.endDate).toInt() + 1
@@ -647,26 +652,6 @@ class StatsRepository @Inject constructor(
                     date = previousEnd.format(dateFormatter)
                 )
             }
-        }
-    }
-
-    /**
-     * Maps a StatsPeriod to the appropriate StatsDateRange for the API.
-     */
-    private fun mapStatsPeriodToDateRange(period: StatsPeriod): StatsDateRange {
-        val today = LocalDate.now()
-        val todayString = today.format(dateFormatter)
-
-        return when (period) {
-            is StatsPeriod.Today -> StatsDateRange.Preset(num = 1, date = todayString)
-            is StatsPeriod.Last7Days -> StatsDateRange.Preset(num = 7, date = todayString)
-            is StatsPeriod.Last30Days -> StatsDateRange.Preset(num = 30, date = todayString)
-            is StatsPeriod.Last6Months -> StatsDateRange.Preset(num = 182, date = todayString)
-            is StatsPeriod.Last12Months -> StatsDateRange.Preset(num = 365, date = todayString)
-            is StatsPeriod.Custom -> StatsDateRange.Custom(
-                startDate = period.startDate.format(dateFormatter),
-                date = period.endDate.format(dateFormatter)
-            )
         }
     }
 }
@@ -793,10 +778,10 @@ data class MostViewedItemData(
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double get() = if (previousViews > 0) {
-        (viewsChange.toDouble() / previousViews.toDouble()) * 100.0
+        (viewsChange.toDouble() / previousViews.toDouble()) * PERCENTAGE_MULTIPLIER
     } else if (views > 0) {
-        100.0
+        PERCENTAGE_MULTIPLIER
     } else {
-        0.0
+        PERCENTAGE_NO_CHANGE
     }
 }
