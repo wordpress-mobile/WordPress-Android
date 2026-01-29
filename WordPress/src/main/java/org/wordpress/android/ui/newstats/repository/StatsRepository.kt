@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.repository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsDateRange
@@ -666,6 +667,60 @@ class StatsRepository @Inject constructor(
             }
         }
     }
+
+    /**
+     * Fetches country views stats for a specific site and period.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param period The stats period to fetch
+     * @return Country views data or error
+     */
+    suspend fun fetchCountryViews(
+        siteId: Long,
+        period: StatsPeriod
+    ): CountryViewsResult = withContext(ioDispatcher) {
+        val dateRange = calculateCountryViewsDateRange(period)
+
+        val result = statsDataSource.fetchCountryViews(siteId, dateRange)
+
+        when (result) {
+            is CountryViewsDataResult.Success -> {
+                CountryViewsResult.Success(
+                    countries = result.data.countries.map { country ->
+                        CountryViewItemData(
+                            countryCode = country.countryCode,
+                            countryName = country.countryName,
+                            views = country.views,
+                            flagIconUrl = country.flagIconUrl
+                        )
+                    },
+                    totalViews = result.data.totalViews,
+                    otherViews = result.data.otherViews
+                )
+            }
+            is CountryViewsDataResult.Error -> {
+                appLogWrapper.e(AppLog.T.STATS, "Error fetching country views: ${result.message}")
+                CountryViewsResult.Error(result.message)
+            }
+        }
+    }
+
+    private fun calculateCountryViewsDateRange(period: StatsPeriod): StatsDateRange {
+        val today = LocalDate.now()
+        val todayString = today.format(dateFormatter)
+
+        return when (period) {
+            is StatsPeriod.Today -> StatsDateRange.Preset(num = NUM_DAYS_TODAY, date = todayString)
+            is StatsPeriod.Last7Days -> StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = todayString)
+            is StatsPeriod.Last30Days -> StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString)
+            is StatsPeriod.Last6Months -> StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = todayString)
+            is StatsPeriod.Last12Months -> StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString)
+            is StatsPeriod.Custom -> StatsDateRange.Custom(
+                startDate = period.startDate.format(dateFormatter),
+                date = period.endDate.format(dateFormatter)
+            )
+        }
+    }
 }
 
 /**
@@ -797,3 +852,25 @@ data class MostViewedItemData(
         PERCENTAGE_NO_CHANGE
     }
 }
+
+/**
+ * Result wrapper for country views fetch operation.
+ */
+sealed class CountryViewsResult {
+    data class Success(
+        val countries: List<CountryViewItemData>,
+        val totalViews: Long,
+        val otherViews: Long
+    ) : CountryViewsResult()
+    data class Error(val message: String) : CountryViewsResult()
+}
+
+/**
+ * Data for a single country view item from the repository layer.
+ */
+data class CountryViewItemData(
+    val countryCode: String,
+    val countryName: String,
+    val views: Long,
+    val flagIconUrl: String?
+)
