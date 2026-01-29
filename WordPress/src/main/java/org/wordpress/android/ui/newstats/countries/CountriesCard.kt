@@ -17,8 +17,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,7 +31,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -41,7 +42,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -224,11 +224,13 @@ private fun LoadedContent(state: CountriesCardUiState.Loaded, onShowAllClick: ()
             Spacer(modifier = Modifier.height(8.dp))
 
             // Country list (capped at 10 items)
+            val maxViews = state.countries.maxOfOrNull { it.views } ?: 1L
             state.countries.forEachIndexed { index, country ->
-                CountryRow(
-                    country = country,
-                    showDivider = index < state.countries.size - 1
-                )
+                val percentage = if (maxViews > 0) country.views.toFloat() / maxViews.toFloat() else 0f
+                CountryRow(country = country, percentage = percentage)
+                if (index < state.countries.lastIndex) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
             }
 
             // Show All footer
@@ -260,8 +262,7 @@ private fun CountryMap(
     mapData: String,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val colorLow = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f).toHexString()
+    val colorLow = MaterialTheme.colorScheme.primary.blendWithWhite(0.2f).toHexString()
     val colorHigh = MaterialTheme.colorScheme.primary.toHexString()
     val backgroundColor = MaterialTheme.colorScheme.surface.toHexString()
     val emptyColor = MaterialTheme.colorScheme.surfaceVariant.toHexString()
@@ -370,13 +371,29 @@ private fun MapLegend(
 @Composable
 private fun CountryRow(
     country: CountryItem,
-    showDivider: Boolean
+    percentage: Float
 ) {
-    Column {
+    val barColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .clip(RoundedCornerShape(8.dp))
+    ) {
+        // Background bar representing the percentage
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(fraction = percentage)
+                .fillMaxHeight()
+                .background(barColor)
+        )
+
+        // Content
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp),
+                .padding(vertical = 12.dp, horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Flag icon
@@ -413,15 +430,8 @@ private fun CountryRow(
             Text(
                 text = formatStatValue(country.views),
                 style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurface
-            )
-        }
-
-        if (showDivider) {
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.outlineVariant,
-                thickness = 1.dp
             )
         }
     }
@@ -486,6 +496,20 @@ private fun ErrorContent(
 private fun androidx.compose.ui.graphics.Color.toHexString(): String {
     val argb = this.toArgb()
     return String.format("%06X", argb and 0xFFFFFF)
+}
+
+/**
+ * Blends this color with white based on the given ratio.
+ * Ratio of 0.0 returns white, ratio of 1.0 returns the original color.
+ */
+private fun androidx.compose.ui.graphics.Color.blendWithWhite(ratio: Float): androidx.compose.ui.graphics.Color {
+    val white = androidx.compose.ui.graphics.Color.White
+    return androidx.compose.ui.graphics.Color(
+        red = white.red + (this.red - white.red) * ratio,
+        green = white.green + (this.green - white.green) * ratio,
+        blue = white.blue + (this.blue - white.blue) * ratio,
+        alpha = 1f
+    )
 }
 
 // Previews

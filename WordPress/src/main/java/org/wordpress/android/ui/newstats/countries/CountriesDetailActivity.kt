@@ -13,9 +13,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,7 +30,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,10 +41,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -172,13 +171,39 @@ private fun CountriesDetailScreen(
             }
 
 
+            item {
+                // Header
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(R.string.stats_countries_location_header),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = stringResource(R.string.stats_countries_views_header),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            val maxViewsValue = countries.firstOrNull()?.views ?: 1L
             itemsIndexed(countries) { index, country ->
+                val percentage = if (maxViewsValue > 0) {
+                    country.views.toFloat() / maxViewsValue.toFloat()
+                } else 0f
                 DetailCountryRow(
                     position = index + 1,
                     country = country,
-                    maxViews = countries.firstOrNull()?.views ?: 1L,
-                    showDivider = index < countries.lastIndex
+                    percentage = percentage
                 )
+                if (index < countries.lastIndex) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
             }
 
             item {
@@ -194,7 +219,7 @@ private fun CountryMap(
     mapData: String,
     modifier: Modifier = Modifier
 ) {
-    val colorLow = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f).toHexString()
+    val colorLow = MaterialTheme.colorScheme.primary.blendWithWhite(0.2f).toHexString()
     val colorHigh = MaterialTheme.colorScheme.primary.toHexString()
     val backgroundColor = MaterialTheme.colorScheme.surface.toHexString()
     val emptyColor = MaterialTheme.colorScheme.surfaceVariant.toHexString()
@@ -304,86 +329,75 @@ private fun MapLegend(
 private fun DetailCountryRow(
     position: Int,
     country: CountriesDetailItem,
-    maxViews: Long,
-    showDivider: Boolean
+    percentage: Float
 ) {
-    val percentage = if (maxViews > 0) country.views.toFloat() / maxViews.toFloat() else 0f
     val barColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
 
-    Column {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .clip(RoundedCornerShape(8.dp))
+    ) {
+        // Background bar representing the percentage
         Box(
             modifier = Modifier
+                .fillMaxWidth(fraction = percentage)
+                .fillMaxHeight()
+                .background(barColor)
+        )
+
+        Row(
+            modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp)
-                .clip(RoundedCornerShape(8.dp))
+                .padding(vertical = 12.dp, horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Background bar representing the percentage
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(fraction = percentage)
-                    .height(56.dp)
-                    .background(barColor)
+            // Position number
+            Text(
+                text = position.toString(),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.width(32.dp)
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp, horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Position number
-                Text(
-                    text = position.toString(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.width(32.dp)
+            // Flag icon
+            if (country.flagIconUrl != null) {
+                AsyncImage(
+                    model = country.flagIconUrl,
+                    contentDescription = country.countryName,
+                    modifier = Modifier.size(24.dp)
                 )
-
-                // Flag icon
-                if (country.flagIconUrl != null) {
-                    AsyncImage(
-                        model = country.flagIconUrl,
-                        contentDescription = country.countryName,
-                        modifier = Modifier.size(24.dp)
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .background(
-                                MaterialTheme.colorScheme.surfaceVariant,
-                                RoundedCornerShape(4.dp)
-                            )
-                    )
-                }
-                Spacer(modifier = Modifier.width(12.dp))
-
-                // Country name
-                Text(
-                    text = country.countryName,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-
-                // Views count
-                Text(
-                    text = formatStatValue(country.views),
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .background(
+                            MaterialTheme.colorScheme.surfaceVariant,
+                            RoundedCornerShape(4.dp)
+                        )
                 )
             }
-        }
+            Spacer(modifier = Modifier.width(12.dp))
 
-        if (showDivider) {
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.outlineVariant,
-                thickness = 1.dp
+            // Country name
+            Text(
+                text = country.countryName,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+
+            // Views count
+            Text(
+                text = formatStatValue(country.views),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -392,6 +406,20 @@ private fun DetailCountryRow(
 private fun androidx.compose.ui.graphics.Color.toHexString(): String {
     val argb = this.toArgb()
     return String.format("%06X", argb and 0xFFFFFF)
+}
+
+/**
+ * Blends this color with white based on the given ratio.
+ * Ratio of 0.0 returns white, ratio of 1.0 returns the original color.
+ */
+private fun androidx.compose.ui.graphics.Color.blendWithWhite(ratio: Float): androidx.compose.ui.graphics.Color {
+    val white = androidx.compose.ui.graphics.Color.White
+    return androidx.compose.ui.graphics.Color(
+        red = white.red + (this.red - white.red) * ratio,
+        green = white.green + (this.green - white.green) * ratio,
+        blue = white.blue + (this.blue - white.blue) * ratio,
+        alpha = 1f
+    )
 }
 
 @Preview(showBackground = true)
