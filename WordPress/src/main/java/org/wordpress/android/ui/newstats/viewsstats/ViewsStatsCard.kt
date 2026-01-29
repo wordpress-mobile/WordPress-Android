@@ -583,7 +583,7 @@ private fun ViewsStatsChart(
         ChartType.LINE -> {
             val areaGradient = ShaderProvider.verticalGradient(
                 colors = arrayOf(
-                    primaryColor.copy(alpha = 0.4f),
+                    primaryColor.copy(alpha = 0.8f),
                     primaryColor.copy(alpha = 0f)
                 )
             )
