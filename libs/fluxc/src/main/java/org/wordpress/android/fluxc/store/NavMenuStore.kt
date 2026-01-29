@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.model.navmenu.NavMenuLocationModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.rest.wpapi.navmenu.NavMenuWPAPIRestClient
+import org.wordpress.android.fluxc.network.rest.wpapi.navmenu.NavMenuRsRestClient
 import org.wordpress.android.fluxc.persistence.NavMenuSqlUtils
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
@@ -25,7 +25,7 @@ import javax.inject.Singleton
 class NavMenuStore @Inject constructor(
     dispatcher: Dispatcher,
     @Named(FLUXC_SCOPE) private val scope: CoroutineScope,
-    private val navMenuRestClient: NavMenuWPAPIRestClient
+    private val navMenuRestClient: NavMenuRsRestClient
 ) : Store(dispatcher) {
 
     // ========== Payload Classes ==========
@@ -147,10 +147,10 @@ class NavMenuStore @Inject constructor(
         scope.launch {
             val result = navMenuRestClient.fetchMenus(payload.site)
             val responsePayload = when (result) {
-                is NavMenuWPAPIRestClient.NavMenusResult.Success -> {
+                is NavMenuRsRestClient.NavMenusResult.Success -> {
                     FetchMenusResponsePayload(payload.site, result.menus)
                 }
-                is NavMenuWPAPIRestClient.NavMenusResult.Error -> {
+                is NavMenuRsRestClient.NavMenusResult.Error -> {
                     FetchMenusResponsePayload(
                         NavMenuError(NavMenuErrorType.GENERIC_ERROR, result.message),
                         payload.site
@@ -185,10 +185,10 @@ class NavMenuStore @Inject constructor(
                 navMenuRestClient.createMenu(payload.site, payload.menu)
             }
             val responsePayload = when (result) {
-                is NavMenuWPAPIRestClient.NavMenuResult.Success -> {
+                is NavMenuRsRestClient.NavMenuResult.Success -> {
                     RemoteMenuPayload(payload.site, result.menu)
                 }
-                is NavMenuWPAPIRestClient.NavMenuResult.Error -> {
+                is NavMenuRsRestClient.NavMenuResult.Error -> {
                     RemoteMenuPayload(payload.site, payload.menu).apply {
                         error = NavMenuError(NavMenuErrorType.GENERIC_ERROR, result.message)
                     }
@@ -212,10 +212,10 @@ class NavMenuStore @Inject constructor(
         scope.launch {
             val result = navMenuRestClient.deleteMenu(payload.site, payload.menu.remoteMenuId)
             val responsePayload = when (result) {
-                is NavMenuWPAPIRestClient.NavMenuDeleteResult.Success -> {
+                is NavMenuRsRestClient.NavMenuDeleteResult.Success -> {
                     RemoteMenuPayload(payload.site, payload.menu)
                 }
-                is NavMenuWPAPIRestClient.NavMenuDeleteResult.Error -> {
+                is NavMenuRsRestClient.NavMenuDeleteResult.Error -> {
                     RemoteMenuPayload(payload.site, payload.menu).apply {
                         error = NavMenuError(NavMenuErrorType.GENERIC_ERROR, result.message)
                     }
@@ -241,10 +241,10 @@ class NavMenuStore @Inject constructor(
         scope.launch {
             val result = navMenuRestClient.fetchMenuItems(payload.site, payload.menuId)
             val responsePayload = when (result) {
-                is NavMenuWPAPIRestClient.NavMenuItemsResult.Success -> {
+                is NavMenuRsRestClient.NavMenuItemsResult.Success -> {
                     FetchMenuItemsResponsePayload(payload.site, payload.menuId, result.items)
                 }
-                is NavMenuWPAPIRestClient.NavMenuItemsResult.Error -> {
+                is NavMenuRsRestClient.NavMenuItemsResult.Error -> {
                     FetchMenuItemsResponsePayload(
                         NavMenuError(NavMenuErrorType.GENERIC_ERROR, result.message),
                         payload.site,
@@ -278,10 +278,10 @@ class NavMenuStore @Inject constructor(
                 navMenuRestClient.createMenuItem(payload.site, payload.item)
             }
             val responsePayload = when (result) {
-                is NavMenuWPAPIRestClient.NavMenuItemResult.Success -> {
+                is NavMenuRsRestClient.NavMenuItemResult.Success -> {
                     RemoteMenuItemPayload(payload.site, result.item)
                 }
-                is NavMenuWPAPIRestClient.NavMenuItemResult.Error -> {
+                is NavMenuRsRestClient.NavMenuItemResult.Error -> {
                     RemoteMenuItemPayload(payload.site, payload.item).apply {
                         error = NavMenuError(NavMenuErrorType.GENERIC_ERROR, result.message)
                     }
@@ -305,10 +305,10 @@ class NavMenuStore @Inject constructor(
         scope.launch {
             val result = navMenuRestClient.deleteMenuItem(payload.site, payload.item.remoteItemId)
             val responsePayload = when (result) {
-                is NavMenuWPAPIRestClient.NavMenuItemDeleteResult.Success -> {
+                is NavMenuRsRestClient.NavMenuItemDeleteResult.Success -> {
                     RemoteMenuItemPayload(payload.site, payload.item)
                 }
-                is NavMenuWPAPIRestClient.NavMenuItemDeleteResult.Error -> {
+                is NavMenuRsRestClient.NavMenuItemDeleteResult.Error -> {
                     RemoteMenuItemPayload(payload.site, payload.item).apply {
                         error = NavMenuError(NavMenuErrorType.GENERIC_ERROR, result.message)
                     }
@@ -334,10 +334,10 @@ class NavMenuStore @Inject constructor(
         scope.launch {
             val result = navMenuRestClient.fetchMenuLocations(payload.site)
             val responsePayload = when (result) {
-                is NavMenuWPAPIRestClient.NavMenuLocationsResult.Success -> {
+                is NavMenuRsRestClient.NavMenuLocationsResult.Success -> {
                     FetchMenuLocationsResponsePayload(payload.site, result.locations)
                 }
-                is NavMenuWPAPIRestClient.NavMenuLocationsResult.Error -> {
+                is NavMenuRsRestClient.NavMenuLocationsResult.Error -> {
                     FetchMenuLocationsResponsePayload(
                         NavMenuError(NavMenuErrorType.GENERIC_ERROR, result.message),
                         payload.site

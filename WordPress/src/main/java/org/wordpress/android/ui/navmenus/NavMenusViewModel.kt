@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuModel
-import org.wordpress.android.fluxc.network.rest.wpapi.navmenu.NavMenuWPAPIRestClient
+import org.wordpress.android.fluxc.network.rest.wpapi.navmenu.NavMenuRsRestClient
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -22,7 +22,7 @@ import javax.inject.Named
 @HiltViewModel
 class NavMenusViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val navMenuRestClient: NavMenuWPAPIRestClient,
+    private val navMenuRestClient: NavMenuRsRestClient,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -78,7 +78,7 @@ class NavMenusViewModel @Inject constructor(
 
                     withContext(mainDispatcher) {
                         when (menusResult) {
-                            is NavMenuWPAPIRestClient.NavMenusResult.Success -> {
+                            is NavMenuRsRestClient.NavMenusResult.Success -> {
                                 currentMenus = menusResult.menus
 
                                 // For each menu, count items (we'll fetch items lazily)
@@ -87,10 +87,10 @@ class NavMenusViewModel @Inject constructor(
                                 }
 
                                 val locations = when (locationsResult) {
-                                    is NavMenuWPAPIRestClient.NavMenuLocationsResult.Success -> {
+                                    is NavMenuRsRestClient.NavMenuLocationsResult.Success -> {
                                         locationsResult.locations.map { it.toUiModel() }
                                     }
-                                    is NavMenuWPAPIRestClient.NavMenuLocationsResult.Error -> emptyList()
+                                    is NavMenuRsRestClient.NavMenuLocationsResult.Error -> emptyList()
                                 }
 
                                 _menuListState.value = MenuListUiState(
@@ -99,7 +99,7 @@ class NavMenusViewModel @Inject constructor(
                                     locations = locations
                                 )
                             }
-                            is NavMenuWPAPIRestClient.NavMenusResult.Error -> {
+                            is NavMenuRsRestClient.NavMenusResult.Error -> {
                                 val errorMessage = menusResult.message.takeIf { it.isNotBlank() }
                                     ?: "Failed to load menus"
                                 _menuListState.value = MenuListUiState(
@@ -176,7 +176,7 @@ class NavMenusViewModel @Inject constructor(
 
                 withContext(mainDispatcher) {
                     when (result) {
-                        is NavMenuWPAPIRestClient.NavMenuItemsResult.Success -> {
+                        is NavMenuRsRestClient.NavMenuItemsResult.Success -> {
                             currentMenuItems = result.items
                             val sortedItems = sortItemsHierarchically(result.items)
                             _menuItemListState.value = _menuItemListState.value.copy(
@@ -184,7 +184,7 @@ class NavMenusViewModel @Inject constructor(
                                 items = sortedItems
                             )
                         }
-                        is NavMenuWPAPIRestClient.NavMenuItemsResult.Error -> {
+                        is NavMenuRsRestClient.NavMenuItemsResult.Error -> {
                             _menuItemListState.value = _menuItemListState.value.copy(
                                 isLoading = false,
                                 error = result.message
@@ -360,12 +360,12 @@ class NavMenusViewModel @Inject constructor(
                 withContext(mainDispatcher) {
                     _menuDetailState.value = state.copy(isSaving = false)
                     when (result) {
-                        is NavMenuWPAPIRestClient.NavMenuResult.Success -> {
+                        is NavMenuRsRestClient.NavMenuResult.Success -> {
                             _uiEvent.value = NavMenusUiEvent.MenuSaved
                             navigateBack()
                             loadMenus()
                         }
-                        is NavMenuWPAPIRestClient.NavMenuResult.Error -> {
+                        is NavMenuRsRestClient.NavMenuResult.Error -> {
                             _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
                         }
                     }
@@ -389,12 +389,12 @@ class NavMenusViewModel @Inject constructor(
                 withContext(mainDispatcher) {
                     _menuDetailState.value = state.copy(isDeleting = false)
                     when (result) {
-                        is NavMenuWPAPIRestClient.NavMenuDeleteResult.Success -> {
+                        is NavMenuRsRestClient.NavMenuDeleteResult.Success -> {
                             _uiEvent.value = NavMenusUiEvent.MenuDeleted
                             navigateBack()
                             loadMenus()
                         }
-                        is NavMenuWPAPIRestClient.NavMenuDeleteResult.Error -> {
+                        is NavMenuRsRestClient.NavMenuDeleteResult.Error -> {
                             _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
                         }
                     }
@@ -530,12 +530,12 @@ class NavMenusViewModel @Inject constructor(
                 withContext(mainDispatcher) {
                     _menuItemDetailState.value = state.copy(isSaving = false)
                     when (result) {
-                        is NavMenuWPAPIRestClient.NavMenuItemResult.Success -> {
+                        is NavMenuRsRestClient.NavMenuItemResult.Success -> {
                             _uiEvent.value = NavMenusUiEvent.MenuItemSaved
                             navigateBack()
                             loadMenuItems(state.menuId)
                         }
-                        is NavMenuWPAPIRestClient.NavMenuItemResult.Error -> {
+                        is NavMenuRsRestClient.NavMenuItemResult.Error -> {
                             _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
                         }
                     }
@@ -559,12 +559,12 @@ class NavMenusViewModel @Inject constructor(
                 withContext(mainDispatcher) {
                     _menuItemDetailState.value = state.copy(isDeleting = false)
                     when (result) {
-                        is NavMenuWPAPIRestClient.NavMenuItemDeleteResult.Success -> {
+                        is NavMenuRsRestClient.NavMenuItemDeleteResult.Success -> {
                             _uiEvent.value = NavMenusUiEvent.MenuItemDeleted
                             navigateBack()
                             loadMenuItems(state.menuId)
                         }
-                        is NavMenuWPAPIRestClient.NavMenuItemDeleteResult.Error -> {
+                        is NavMenuRsRestClient.NavMenuItemDeleteResult.Error -> {
                             _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
                         }
                     }
