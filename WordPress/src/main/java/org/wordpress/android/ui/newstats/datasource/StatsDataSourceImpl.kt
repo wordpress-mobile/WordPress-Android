@@ -99,33 +99,30 @@ class StatsDataSourceImpl @Inject constructor(
         StatsUnit.MONTH -> StatsVisitsUnit.MONTH
     }
 
+    private fun buildTopPostsParams(dateRange: StatsDateRange, max: Int) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsTopPostsParams(
+            period = StatsTopPostsPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = max.coerceAtLeast(1).toUInt(),
+            locale = localeManagerWrapper.getLocale().toString()
+        )
+        is StatsDateRange.Custom -> StatsTopPostsParams(
+            period = StatsTopPostsPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = max.coerceAtLeast(1).toUInt(),
+            locale = localeManagerWrapper.getLocale().toString()
+        )
+    }
+
     override suspend fun fetchTopPostsAndPages(
         siteId: Long,
         dateRange: StatsDateRange,
         max: Int
     ): TopPostsDataResult {
-        val params = when (dateRange) {
-            is StatsDateRange.Preset -> StatsTopPostsParams(
-                period = StatsTopPostsPeriod.DAY,
-                date = dateRange.date,
-                num = dateRange.num.toUInt(),
-                max = max.coerceAtLeast(1).toUInt(),
-                locale = localeManagerWrapper.getLocale().toString()
-            )
-            is StatsDateRange.Custom -> StatsTopPostsParams(
-                period = StatsTopPostsPeriod.DAY,
-                date = dateRange.date,
-                startDate = dateRange.startDate,
-                max = max.coerceAtLeast(1).toUInt(),
-                locale = localeManagerWrapper.getLocale().toString()
-            )
-        }
-
-        AppLog.d(
-            T.STATS,
-            "StatsDataSourceImpl: fetchTopPostsAndPages - siteId=$siteId, dateRange=$dateRange, max=$max"
-        )
-
+        val params = buildTopPostsParams(dateRange, max)
+        AppLog.d(T.STATS, "fetchTopPostsAndPages - siteId=$siteId, dateRange=$dateRange, max=$max")
         val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsTopPosts().getStatsTopPosts(
                 wpComSiteId = siteId.toULong(),
