@@ -15,6 +15,8 @@ import org.wordpress.android.ui.newstats.repository.CountryViewsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import javax.inject.Inject
 
+private const val CARD_MAX_ITEMS = 10
+
 @HiltViewModel
 class CountriesViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -29,6 +31,11 @@ class CountriesViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
+
+    private var allCountries: List<CountryItem> = emptyList()
+    private var cachedMapData: String = ""
+    private var cachedMinViews: Long = 0L
+    private var cachedMaxViews: Long = 0L
 
     init {
         loadData()
@@ -74,6 +81,15 @@ class CountriesViewModel @Inject constructor(
         }
     }
 
+    fun getDetailData(): CountriesDetailData {
+        return CountriesDetailData(
+            countries = allCountries,
+            mapData = cachedMapData,
+            minViews = cachedMinViews,
+            maxViews = cachedMaxViews
+        )
+    }
+
     private fun initializeRepository() {
         accountStore.accessToken?.let { token ->
             statsRepository.init(token)
@@ -86,11 +102,16 @@ class CountriesViewModel @Inject constructor(
         when (val result = statsRepository.fetchCountryViews(siteId, currentPeriod)) {
             is CountryViewsResult.Success -> {
                 if (result.countries.isEmpty()) {
+                    allCountries = emptyList()
+                    cachedMapData = ""
+                    cachedMinViews = 0L
+                    cachedMaxViews = 0L
                     _uiState.value = CountriesCardUiState.Loaded(
                         countries = emptyList(),
                         mapData = "",
                         minViews = 0,
-                        maxViews = 0
+                        maxViews = 0,
+                        hasMoreItems = false
                     )
                 } else {
                     val countries = result.countries.map { country ->
@@ -107,11 +128,18 @@ class CountriesViewModel @Inject constructor(
                     val minViews = countries.minOfOrNull { it.views } ?: 0L
                     val maxViews = countries.maxOfOrNull { it.views } ?: 0L
 
+                    // Store all data for detail screen
+                    allCountries = countries
+                    cachedMapData = mapData
+                    cachedMinViews = if (minViews == maxViews) 0L else minViews
+                    cachedMaxViews = maxViews
+
                     _uiState.value = CountriesCardUiState.Loaded(
-                        countries = countries,
+                        countries = countries.take(CARD_MAX_ITEMS),
                         mapData = mapData,
-                        minViews = if (minViews == maxViews) 0L else minViews,
-                        maxViews = maxViews
+                        minViews = cachedMinViews,
+                        maxViews = cachedMaxViews,
+                        hasMoreItems = countries.size > CARD_MAX_ITEMS
                     )
                 }
             }
@@ -131,3 +159,10 @@ class CountriesViewModel @Inject constructor(
         }
     }
 }
+
+data class CountriesDetailData(
+    val countries: List<CountryItem>,
+    val mapData: String,
+    val minViews: Long,
+    val maxViews: Long
+)

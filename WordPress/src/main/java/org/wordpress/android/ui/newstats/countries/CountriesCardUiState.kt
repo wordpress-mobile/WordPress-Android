@@ -10,7 +10,8 @@ sealed class CountriesCardUiState {
         val countries: List<CountryItem>,
         val mapData: String,
         val minViews: Long,
-        val maxViews: Long
+        val maxViews: Long,
+        val hasMoreItems: Boolean
     ) : CountriesCardUiState()
 
     data class Error(val message: String) : CountriesCardUiState()

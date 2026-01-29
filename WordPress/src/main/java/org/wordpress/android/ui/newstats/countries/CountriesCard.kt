@@ -13,6 +13,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,11 +25,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,6 +61,7 @@ private const val MAP_ASPECT_RATIO = 8f / 5f
 @Composable
 fun CountriesCard(
     uiState: CountriesCardUiState,
+    onShowAllClick: () -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -74,7 +77,7 @@ fun CountriesCard(
     ) {
         when (uiState) {
             is CountriesCardUiState.Loading -> LoadingContent()
-            is CountriesCardUiState.Loaded -> LoadedContent(uiState)
+            is CountriesCardUiState.Loaded -> LoadedContent(uiState, onShowAllClick)
             is CountriesCardUiState.Error -> ErrorContent(uiState, onRetry)
         }
     }
@@ -172,7 +175,7 @@ private fun LoadingContent() {
 }
 
 @Composable
-private fun LoadedContent(state: CountriesCardUiState.Loaded) {
+private fun LoadedContent(state: CountriesCardUiState.Loaded, onShowAllClick: () -> Unit) {
     Column(modifier = Modifier.padding(CardPadding)) {
         // Title
         Text(
@@ -220,17 +223,17 @@ private fun LoadedContent(state: CountriesCardUiState.Loaded) {
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Country list
-            LazyColumn(
-                modifier = Modifier.height((state.countries.size * 56).coerceAtMost(280).dp)
-            ) {
-                itemsIndexed(state.countries) { index, country ->
-                    CountryRow(
-                        country = country,
-                        showDivider = index < state.countries.size - 1
-                    )
-                }
+            // Country list (capped at 10 items)
+            state.countries.forEachIndexed { index, country ->
+                CountryRow(
+                    country = country,
+                    showDivider = index < state.countries.size - 1
+                )
             }
+
+            // Show All footer
+            Spacer(modifier = Modifier.height(12.dp))
+            ShowAllFooter(onClick = onShowAllClick)
         }
     }
 }
@@ -425,6 +428,31 @@ private fun CountryRow(
 }
 
 @Composable
+private fun ShowAllFooter(onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = stringResource(R.string.stats_show_all),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Icon(
+            imageVector = Icons.Default.ChevronRight,
+            contentDescription = null,
+            modifier = Modifier.size(16.dp),
+            tint = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Composable
 private fun ErrorContent(
     state: CountriesCardUiState.Error,
     onRetry: () -> Unit
@@ -467,6 +495,7 @@ private fun CountriesCardLoadingPreview() {
     AppThemeM3 {
         CountriesCard(
             uiState = CountriesCardUiState.Loading,
+            onShowAllClick = {},
             onRetry = {}
         )
     }
@@ -486,8 +515,10 @@ private fun CountriesCardLoadedPreview() {
                 ),
                 mapData = "['US',3464],['ES',556],['GB',522],['CA',485]",
                 minViews = 485,
-                maxViews = 3464
+                maxViews = 3464,
+                hasMoreItems = true
             ),
+            onShowAllClick = {},
             onRetry = {}
         )
     }
@@ -499,6 +530,7 @@ private fun CountriesCardErrorPreview() {
     AppThemeM3 {
         CountriesCard(
             uiState = CountriesCardUiState.Error("Failed to load country data"),
+            onShowAllClick = {},
             onRetry = {}
         )
     }

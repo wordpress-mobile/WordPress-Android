@@ -50,6 +50,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.countries.CountriesCard
+import org.wordpress.android.ui.newstats.countries.CountriesDetailActivity
 import org.wordpress.android.ui.newstats.countries.CountriesViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCard
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
@@ -265,6 +266,16 @@ private fun TrafficTabContent(
             )
             CountriesCard(
                 uiState = countriesUiState,
+                onShowAllClick = {
+                    val detailData = countriesViewModel.getDetailData()
+                    CountriesDetailActivity.start(
+                        context = context,
+                        countries = detailData.countries,
+                        mapData = detailData.mapData,
+                        minViews = detailData.minViews,
+                        maxViews = detailData.maxViews
+                    )
+                },
                 onRetry = countriesViewModel::onRetry
             )
         }
