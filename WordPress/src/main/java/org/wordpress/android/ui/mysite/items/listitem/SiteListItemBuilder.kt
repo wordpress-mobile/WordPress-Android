@@ -286,8 +286,9 @@ class SiteListItemBuilder @Inject constructor(
     }
 
     fun buildMenusItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+        val hasRestApiAccess = site.isUsingWpComRestApi || site.isUsingSelfHostedRestApi
         return if (navMenusFeatureConfig.isEnabled() &&
-            site.isUsingSelfHostedRestApi &&
+            hasRestApiAccess &&
             site.hasCapabilityEditThemeOptions
         ) {
             ListItem(

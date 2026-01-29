@@ -69,43 +69,52 @@ class NavMenusViewModel @Inject constructor(
                 return@launch
             }
 
-            withContext(ioDispatcher) {
-                // Fetch menus
-                val menusResult = navMenuRestClient.fetchMenus(site)
-                // Fetch locations
-                val locationsResult = navMenuRestClient.fetchMenuLocations(site)
+            try {
+                withContext(ioDispatcher) {
+                    // Fetch menus
+                    val menusResult = navMenuRestClient.fetchMenus(site)
+                    // Fetch locations
+                    val locationsResult = navMenuRestClient.fetchMenuLocations(site)
 
-                withContext(mainDispatcher) {
-                    when (menusResult) {
-                        is NavMenuWPAPIRestClient.NavMenusResult.Success -> {
-                            currentMenus = menusResult.menus
+                    withContext(mainDispatcher) {
+                        when (menusResult) {
+                            is NavMenuWPAPIRestClient.NavMenusResult.Success -> {
+                                currentMenus = menusResult.menus
 
-                            // For each menu, count items (we'll fetch items lazily)
-                            val menuUiModels = menusResult.menus.map { menu ->
-                                menu.toUiModel(0) // Item count will be loaded when entering menu
-                            }
-
-                            val locations = when (locationsResult) {
-                                is NavMenuWPAPIRestClient.NavMenuLocationsResult.Success -> {
-                                    locationsResult.locations.map { it.toUiModel() }
+                                // For each menu, count items (we'll fetch items lazily)
+                                val menuUiModels = menusResult.menus.map { menu ->
+                                    menu.toUiModel(0) // Item count will be loaded when entering menu
                                 }
-                                is NavMenuWPAPIRestClient.NavMenuLocationsResult.Error -> emptyList()
-                            }
 
-                            _menuListState.value = MenuListUiState(
-                                isLoading = false,
-                                menus = menuUiModels,
-                                locations = locations
-                            )
-                        }
-                        is NavMenuWPAPIRestClient.NavMenusResult.Error -> {
-                            _menuListState.value = MenuListUiState(
-                                isLoading = false,
-                                error = menusResult.message
-                            )
+                                val locations = when (locationsResult) {
+                                    is NavMenuWPAPIRestClient.NavMenuLocationsResult.Success -> {
+                                        locationsResult.locations.map { it.toUiModel() }
+                                    }
+                                    is NavMenuWPAPIRestClient.NavMenuLocationsResult.Error -> emptyList()
+                                }
+
+                                _menuListState.value = MenuListUiState(
+                                    isLoading = false,
+                                    menus = menuUiModels,
+                                    locations = locations
+                                )
+                            }
+                            is NavMenuWPAPIRestClient.NavMenusResult.Error -> {
+                                val errorMessage = menusResult.message.takeIf { it.isNotBlank() }
+                                    ?: "Failed to load menus"
+                                _menuListState.value = MenuListUiState(
+                                    isLoading = false,
+                                    error = errorMessage
+                                )
+                            }
                         }
                     }
                 }
+            } catch (e: Exception) {
+                _menuListState.value = MenuListUiState(
+                    isLoading = false,
+                    error = e.message ?: "An unexpected error occurred"
+                )
             }
         }
     }
