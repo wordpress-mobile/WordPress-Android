@@ -80,6 +80,8 @@ sealed class SiteNavigationAction {
     data class OpenSiteMonitoring(val site: SiteModel) : SiteNavigationAction()
 
     object OpenApplicationPasswordsList : SiteNavigationAction()
+
+    data class OpenMenus(val site: SiteModel) : SiteNavigationAction()
     data class OpenApplicationPasswordAuthentication(val url: String) : SiteNavigationAction()
     // alternativeUrl used to open the web view authentication if necessary
     data class OpenApplicationPasswordAutoAuthentication(

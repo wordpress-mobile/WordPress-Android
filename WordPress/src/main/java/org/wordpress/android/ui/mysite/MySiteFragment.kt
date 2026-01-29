@@ -573,6 +573,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenSelfHostedUsers -> {
             ActivityLauncher.viewSelfHostedUsers(activity, action.site)
         }
+        is SiteNavigationAction.OpenMenus -> {
+            ActivityLauncher.viewNavigationMenus(activity, action.site)
+        }
         is SiteNavigationAction.OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
         is SiteNavigationAction.OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(activity, action.site)
         is SiteNavigationAction.OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)

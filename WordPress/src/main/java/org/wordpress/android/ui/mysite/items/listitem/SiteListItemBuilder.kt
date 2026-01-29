@@ -30,6 +30,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.NavMenusFeatureConfig
 import org.wordpress.android.util.config.SelfHostedUsersFeatureConfig
 import org.wordpress.android.util.config.SiteMonitoringFeatureConfig
 import java.util.GregorianCalendar
@@ -45,6 +46,7 @@ class SiteListItemBuilder @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig,
     private val selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig,
+    private val navMenusFeatureConfig: NavMenusFeatureConfig,
     private val experimentalFeatures: ExperimentalFeatures
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
@@ -277,6 +279,22 @@ class SiteListItemBuilder @Inject constructor(
                 UiStringRes(R.string.application_password_info_title),
                 onClick = ListItemInteraction.create(ListItemAction.APPLICATION_PASSWORDS, onClick),
                 listItemAction = ListItemAction.APPLICATION_PASSWORDS
+            )
+        } else {
+            null
+        }
+    }
+
+    fun buildMenusItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+        return if (navMenusFeatureConfig.isEnabled() &&
+            site.isUsingSelfHostedRestApi &&
+            site.hasCapabilityEditThemeOptions
+        ) {
+            ListItem(
+                R.drawable.ic_gridicons_menus,
+                UiStringRes(R.string.menus),
+                onClick = ListItemInteraction.create(ListItemAction.MENUS, onClick),
+                listItemAction = ListItemAction.MENUS
             )
         } else {
             null

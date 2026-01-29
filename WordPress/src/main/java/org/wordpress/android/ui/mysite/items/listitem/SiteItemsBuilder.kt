@@ -116,10 +116,16 @@ class SiteItemsBuilder @Inject constructor(
     }
 
     private fun getLookAndFeelSiteItems(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
-        return if (!jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures())
+        val themeItems = if (!jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures())
             listOfNotNull(
-                    siteListItemBuilder.buildThemesItemIfAvailable(params.site, params.onClick),
+                siteListItemBuilder.buildThemesItemIfAvailable(params.site, params.onClick),
             ) else emptyList()
+
+        val menuItems = listOfNotNull(
+            siteListItemBuilder.buildMenusItemIfAvailable(params.site, params.onClick),
+        )
+
+        return themeItems + menuItems
     }
 
     private fun buildNonJetpackDependantConfigurationItemsIfNeeded(params: SiteItemsBuilderParams):

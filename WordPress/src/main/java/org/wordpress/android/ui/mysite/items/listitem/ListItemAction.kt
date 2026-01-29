@@ -24,4 +24,5 @@ enum class ListItemAction (val trackingLabel: String) {
     MORE("more"),
     SITE_MONITORING("site_monitoring"),
     APPLICATION_PASSWORDS("application_passwords"),
+    MENUS("menus"),
 }

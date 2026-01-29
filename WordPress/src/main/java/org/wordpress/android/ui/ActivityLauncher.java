@@ -107,6 +107,7 @@ import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailActivity;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
+import org.wordpress.android.ui.navmenus.NavMenusActivity;
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -759,6 +760,12 @@ public class ActivityLauncher {
         // TODO tracks
         Intent intent = new Intent(context, SelfHostedUsersActivity.class);
         intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+    }
+
+    public static void viewNavigationMenus(Context context, SiteModel site) {
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MENUS, site);
+        Intent intent = NavMenusActivity.createIntent(context);
         context.startActivity(intent);
     }
 
