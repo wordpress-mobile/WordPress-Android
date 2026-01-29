@@ -10,8 +10,6 @@ import uniffi.wp_api.StatsTopPostsParams
 import uniffi.wp_api.StatsTopPostsPeriod
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
-import uniffi.wp_api.getStatsReferrersAllGroups
-import uniffi.wp_api.getStatsTopPostsAllPostViews
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
@@ -139,16 +137,16 @@ class StatsDataSourceImpl @Inject constructor(
 
         return when (result) {
             is WpRequestResult.Success -> {
-                val posts = getStatsTopPostsAllPostViews(result.response.data)
-                AppLog.d(T.STATS, "StatsDataSourceImpl: fetchTopPostsAndPages success - ${posts?.size ?: 0} posts")
+                val posts = result.response.data.summary?.postviews.orEmpty()
+                AppLog.d(T.STATS, "StatsDataSourceImpl: fetchTopPostsAndPages success - ${posts.size} posts")
                 TopPostsDataResult.Success(
-                    posts?.map { post ->
+                    posts.map { post ->
                         TopPostDataItem(
                             id = post.id.toLong(),
-                            title = post.title,
-                            views = post.views.toLong()
+                            title = post.title.orEmpty(),
+                            views = post.views?.toLong() ?: 0L
                         )
-                    } ?: emptyList()
+                    }
                 )
             }
             is WpRequestResult.WpError -> {
@@ -206,14 +204,14 @@ class StatsDataSourceImpl @Inject constructor(
 
         return when (result) {
             is WpRequestResult.Success -> {
-                val groups = getStatsReferrersAllGroups(result.response.data)
+                val groups = result.response.data.summary?.groups.orEmpty()
                 ReferrersDataResult.Success(
-                    groups?.map { group ->
+                    groups.map { group ->
                         ReferrerDataItem(
-                            name = group.name,
-                            views = group.total.toLong()
+                            name = group.name.orEmpty(),
+                            views = group.total?.toLong() ?: 0L
                         )
-                    } ?: emptyList()
+                    }
                 )
             }
             is WpRequestResult.WpError -> {
