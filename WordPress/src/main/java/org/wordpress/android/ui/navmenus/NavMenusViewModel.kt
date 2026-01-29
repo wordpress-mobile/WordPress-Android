@@ -10,11 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuModel
 import org.wordpress.android.fluxc.network.rest.wpapi.navmenu.NavMenuWPAPIRestClient
-import org.wordpress.android.fluxc.store.NavMenuStore
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -24,12 +22,10 @@ import javax.inject.Named
 @HiltViewModel
 class NavMenusViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val navMenuStore: NavMenuStore,
     private val navMenuRestClient: NavMenuWPAPIRestClient,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-
     private var navController: NavHostController? = null
 
     // Menu list state

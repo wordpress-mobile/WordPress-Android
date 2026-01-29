@@ -78,7 +78,6 @@ import org.wordpress.android.util.ToastUtils
 
 @AndroidEntryPoint
 class NavMenusActivity : BaseAppCompatActivity() {
-
     private val viewModel by viewModels<NavMenusViewModel>()
 
     private lateinit var composeView: ComposeView
