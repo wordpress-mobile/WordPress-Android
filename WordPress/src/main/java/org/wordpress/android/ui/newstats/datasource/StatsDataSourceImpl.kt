@@ -8,6 +8,8 @@ import uniffi.wp_api.StatsReferrersParams
 import uniffi.wp_api.StatsReferrersPeriod
 import uniffi.wp_api.StatsTopPostsParams
 import uniffi.wp_api.StatsTopPostsPeriod
+import uniffi.wp_api.StatsCountryViewsParams
+import uniffi.wp_api.StatsCountryViewsPeriod
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
 import org.wordpress.android.util.AppLog
@@ -216,6 +218,71 @@ class StatsDataSourceImpl @Inject constructor(
             }
             else -> {
                 ReferrersDataResult.Error("Unknown error")
+            }
+        }
+        return ReferrersDataResult.Error("Referrers API not available")
+    }
+
+    override suspend fun fetchCountryViews(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): CountryViewsDataResult {
+        val params = when (dateRange) {
+            is StatsDateRange.Preset -> StatsCountryViewsParams(
+                period = StatsCountryViewsPeriod.DAY,
+                date = dateRange.date,
+                num = dateRange.num.toUInt(),
+                max = max.coerceAtLeast(1).toUInt(),
+                locale = localeManagerWrapper.getLocale().toString(),
+                summarize = true
+            )
+            is StatsDateRange.Custom -> StatsCountryViewsParams(
+                period = StatsCountryViewsPeriod.DAY,
+                date = dateRange.date,
+                startDate = dateRange.startDate,
+                max = max.coerceAtLeast(1).toUInt(),
+                locale = localeManagerWrapper.getLocale().toString(),
+                summarize = true
+            )
+        }
+
+        val result = wpComApiClient.request { requestBuilder ->
+            requestBuilder.statsCountryViews().getStatsCountryViews(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val summary = result.response.data.summary
+                val countryInfo = result.response.data.countryInfo.orEmpty()
+
+                val countries = summary?.views.orEmpty().map { countryView ->
+                    val code = countryView.countryCode.orEmpty()
+                    val info = countryInfo[code]
+                    CountryViewItem(
+                        countryCode = code,
+                        countryName = countryView.location ?: info?.countryFull.orEmpty(),
+                        views = countryView.views?.toLong() ?: 0L,
+                        flagIconUrl = info?.flagIcon
+                    )
+                }
+
+                CountryViewsDataResult.Success(
+                    CountryViewsData(
+                        countries = countries,
+                        totalViews = summary?.totalViews?.toLong() ?: 0L,
+                        otherViews = summary?.otherViews?.toLong() ?: 0L
+                    )
+                )
+            }
+            is WpRequestResult.WpError -> {
+                CountryViewsDataResult.Error(result.errorMessage)
+            }
+            else -> {
+                CountryViewsDataResult.Error("Unknown error")
             }
         }
     }
