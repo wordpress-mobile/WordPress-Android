@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpapi.navmenu
+package org.wordpress.android.ui.navmenus.data
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
@@ -8,25 +8,24 @@ import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.MenuLocationWithViewContext
 import uniffi.wp_api.NavMenuCreateParams
 import uniffi.wp_api.NavMenuItemCreateParams
 import uniffi.wp_api.NavMenuItemListParams
 import uniffi.wp_api.NavMenuItemStatus
 import uniffi.wp_api.NavMenuItemUpdateParams
+import uniffi.wp_api.NavMenuItemWithEditContext
 import uniffi.wp_api.NavMenuListParams
 import uniffi.wp_api.NavMenuUpdateParams
 import uniffi.wp_api.NavMenuWithEditContext
-import uniffi.wp_api.NavMenuItemWithEditContext
-import uniffi.wp_api.MenuLocationWithViewContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
  * REST client for WordPress navigation menus using wordpress-rs library.
- * This replaces the FluxC-based NavMenuWPAPIRestClient with the modern wordpress-rs implementation.
  */
 @Singleton
-class NavMenuRsRestClient @Inject constructor(
+class NavMenuRestClient @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper
 ) {
