@@ -30,7 +30,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.SiteUtilsWrapper
-import org.wordpress.android.util.config.NavMenusFeatureConfig
 import org.wordpress.android.util.config.SelfHostedUsersFeatureConfig
 import org.wordpress.android.util.config.SiteMonitoringFeatureConfig
 import java.util.GregorianCalendar
@@ -46,7 +45,6 @@ class SiteListItemBuilder @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig,
     private val selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig,
-    private val navMenusFeatureConfig: NavMenusFeatureConfig,
     private val experimentalFeatures: ExperimentalFeatures
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
@@ -287,10 +285,7 @@ class SiteListItemBuilder @Inject constructor(
 
     fun buildMenusItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val hasRestApiAccess = site.isUsingWpComRestApi || site.isUsingSelfHostedRestApi
-        return if (navMenusFeatureConfig.isEnabled() &&
-            hasRestApiAccess &&
-            site.hasCapabilityEditThemeOptions
-        ) {
+        return if (hasRestApiAccess && site.hasCapabilityEditThemeOptions) {
             ListItem(
                 R.drawable.ic_gridicons_menus,
                 UiStringRes(R.string.menus),
