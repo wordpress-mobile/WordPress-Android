@@ -1,0 +1,120 @@
+package org.wordpress.android.ui.navmenus.screens
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import org.wordpress.android.R
+import org.wordpress.android.ui.navmenus.MenuListUiState
+import org.wordpress.android.ui.navmenus.MenuUiModel
+
+@Composable
+fun MenuListScreen(
+    state: MenuListUiState,
+    onEditMenuClick: (Long) -> Unit,
+    onMenuItemsClick: (Long) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier.fillMaxSize()) {
+        when {
+            state.isLoading -> {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
+            state.error != null -> {
+                Text(
+                    text = state.error ?: "",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+            state.menus.isEmpty() -> {
+                Text(
+                    text = stringResource(R.string.no_menus),
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+            else -> {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(16.dp)
+                ) {
+                    items(state.menus) { menu ->
+                        MenuListItem(
+                            menu = menu,
+                            onEditClick = { onEditMenuClick(menu.id) },
+                            onItemsClick = { onMenuItemsClick(menu.id) }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MenuListItem(
+    menu: MenuUiModel,
+    onEditClick: () -> Unit,
+    onItemsClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onEditClick() }
+                .padding(16.dp)
+        ) {
+            Text(
+                text = menu.name,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            if (menu.locations.isNotEmpty()) {
+                Text(
+                    text = stringResource(R.string.menu_locations_label, menu.locations.joinToString(", ")),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Button(
+                    onClick = onItemsClick,
+                    colors = ButtonDefaults.textButtonColors()
+                ) {
+                    Text(stringResource(R.string.edit_items))
+                }
+            }
+        }
+    }
+}

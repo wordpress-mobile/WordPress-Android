@@ -434,39 +434,41 @@ class NavMenusViewModel @Inject constructor(
     private fun reorderMenuItem(itemId: Long, direction: Int) {
         val currentItems = _menuItemListState.value.items.toMutableList()
         val index = currentItems.indexOfFirst { it.id == itemId }
-        if (index < 0) return
-
         val newIndex = index + direction
-        if (newIndex < 0 || newIndex >= currentItems.size) return
+        val canReorder = index >= 0 &&
+            newIndex >= 0 &&
+            newIndex < currentItems.size &&
+            currentItems[index].indentLevel == currentItems[newIndex].indentLevel
 
-        // Only swap items at the same indent level
-        val currentItem = currentItems[index]
-        val targetItem = currentItems[newIndex]
-        if (currentItem.indentLevel != targetItem.indentLevel) return
+        if (canReorder) {
+            val currentItem = currentItems[index]
+            val targetItem = currentItems[newIndex]
 
-        // Swap the items
-        currentItems[index] = targetItem
-        currentItems[newIndex] = currentItem
+            // Swap the items
+            currentItems[index] = targetItem
+            currentItems[newIndex] = currentItem
 
-        _menuItemListState.value = _menuItemListState.value.copy(items = currentItems)
+            _menuItemListState.value = _menuItemListState.value.copy(items = currentItems)
 
-        // Update menu orders on the server
-        viewModelScope.launch {
-            val site = selectedSiteRepository.getSelectedSite() ?: return@launch
-            withContext(ioDispatcher) {
-                // Update both items with new order
-                val itemToMove = currentMenuItems.find { it.remoteItemId == itemId } ?: return@withContext
-                val swapWithItem = currentMenuItems.find { it.remoteItemId == targetItem.id }
-                    ?: return@withContext
+            // Update menu orders on the server
+            viewModelScope.launch {
+                val site = selectedSiteRepository.getSelectedSite() ?: return@launch
+                withContext(ioDispatcher) {
+                    // Update both items with new order
+                    val itemToMove = currentMenuItems.find { it.remoteItemId == itemId }
+                    val swapWithItem = currentMenuItems.find { it.remoteItemId == targetItem.id }
 
-                val newOrderForMovedItem = swapWithItem.menuOrder
-                val newOrderForSwapped = itemToMove.menuOrder
+                    if (itemToMove != null && swapWithItem != null) {
+                        val newOrderForMovedItem = swapWithItem.menuOrder
+                        val newOrderForSwapped = itemToMove.menuOrder
 
-                itemToMove.menuOrder = newOrderForMovedItem
-                swapWithItem.menuOrder = newOrderForSwapped
+                        itemToMove.menuOrder = newOrderForMovedItem
+                        swapWithItem.menuOrder = newOrderForSwapped
 
-                navMenuRestClient.updateMenuItem(site, itemToMove)
-                navMenuRestClient.updateMenuItem(site, swapWithItem)
+                        navMenuRestClient.updateMenuItem(site, itemToMove)
+                        navMenuRestClient.updateMenuItem(site, swapWithItem)
+                    }
+                }
             }
         }
     }

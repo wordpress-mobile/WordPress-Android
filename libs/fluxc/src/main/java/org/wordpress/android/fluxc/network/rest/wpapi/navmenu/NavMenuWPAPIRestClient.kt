@@ -12,9 +12,7 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
-import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
-import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
-import java.util.Base64
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -305,6 +303,7 @@ class NavMenuWPAPIRestClient @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun parseJsonArray(jsonArray: String): List<String> {
         return try {
             if (jsonArray.isEmpty() || jsonArray == "[]") {
@@ -316,6 +315,7 @@ class NavMenuWPAPIRestClient @Inject constructor(
                     .filter { it.isNotEmpty() }
             }
         } catch (e: Exception) {
+            AppLog.e(AppLog.T.API, "Failed to parse JSON array: $jsonArray", e)
             emptyList()
         }
     }
