@@ -284,8 +284,9 @@ class SiteListItemBuilder @Inject constructor(
     }
 
     fun buildMenusItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        val hasRestApiAccess = site.isUsingWpComRestApi || site.isUsingSelfHostedRestApi
-        return if (hasRestApiAccess && site.hasCapabilityEditThemeOptions) {
+        // Only available for self-hosted sites with Application Passwords configured.
+        // WordPress.com menu editing would require using the WPCom REST API instead.
+        return if (site.isUsingSelfHostedRestApi && site.hasCapabilityEditThemeOptions) {
             ListItem(
                 R.drawable.ic_gridicons_menus,
                 UiStringRes(R.string.menus),
