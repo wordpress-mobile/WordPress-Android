@@ -275,7 +275,7 @@ class NavMenuRestClient @Inject constructor(
             status = NavMenuItemStatus.PUBLISH,
             menus = item.menuId,
             parent = item.parentId.takeIf { it > 0 },
-            menuOrder = item.menuOrder.toLong(),
+            menuOrder = item.menuOrder.coerceAtLeast(1).toLong(),
             `object` = item.objectType.takeIf { it.isNotEmpty() },
             objectId = item.objectId.takeIf { it > 0 }
         )
@@ -288,7 +288,7 @@ class NavMenuRestClient @Inject constructor(
             status = NavMenuItemStatus.PUBLISH,
             menus = item.menuId,
             parent = item.parentId.takeIf { it > 0 },
-            menuOrder = item.menuOrder.toLong(),
+            menuOrder = item.menuOrder.coerceAtLeast(1).toLong(),
             `object` = item.objectType.takeIf { it.isNotEmpty() },
             objectId = item.objectId.takeIf { it > 0 }
         )

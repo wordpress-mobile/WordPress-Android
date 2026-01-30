@@ -214,7 +214,8 @@ class NavMenusActivity : BaseAppCompatActivity() {
                 }
             }
             NavMenuScreen.MenuItemList.name -> {
-                viewModel.menuItemListState.collectAsState().value.menuName
+                val menuName = viewModel.menuItemListState.collectAsState().value.menuName
+                stringResource(R.string.menu_items_title, menuName)
             }
             NavMenuScreen.MenuItemDetail.name -> {
                 val state = viewModel.menuItemDetailState.collectAsState().value

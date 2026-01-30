@@ -4530,7 +4530,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="delete_menu_confirmation_message">Are you sure you want to delete \"%1$s\"?</string>
     <string name="add_menu_item">Add Menu Item</string>
     <string name="edit_menu_item">Edit Menu Item</string>
-    <string name="no_menu_items">No menu items</string>
+    <string name="no_menu_items">This menu has no items - yet!</string>
+    <string name="menu_items_title">%s Items</string>
     <string name="move_up">Move up</string>
     <string name="move_down">Move down</string>
     <string name="menu_item_title_label">Title</string>

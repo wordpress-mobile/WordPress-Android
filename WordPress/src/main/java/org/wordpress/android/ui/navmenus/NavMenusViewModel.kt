@@ -239,7 +239,7 @@ class NavMenusViewModel @Inject constructor(
             url = "",
             type = NavMenuItemModel.TYPE_CUSTOM,
             availableParents = availableParents,
-            menuOrder = currentMenuItems.maxOfOrNull { it.menuOrder }?.plus(1) ?: 0,
+            menuOrder = currentMenuItems.maxOfOrNull { it.menuOrder }?.plus(1) ?: 1,
             isNew = true
         )
         navController?.navigate(NavMenuScreen.MenuItemDetail.name)
