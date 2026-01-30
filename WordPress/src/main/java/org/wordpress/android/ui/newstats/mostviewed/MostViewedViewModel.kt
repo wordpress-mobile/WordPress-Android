@@ -129,9 +129,13 @@ class MostViewedViewModel @Inject constructor(
                             change = item.toMostViewedChange()
                         )
                     }
+                    val cardItems = allItems.take(CARD_MAX_ITEMS)
+                    // For bar percentage, use first item's views (list is sorted by views descending)
+                    val maxViewsForBar = cardItems.firstOrNull()?.views ?: 1L
+
                     _uiState.value = MostViewedCardUiState.Loaded(
                         selectedDataSource = currentDataSource,
-                        items = allItems.take(CARD_MAX_ITEMS).mapIndexed { index, item ->
+                        items = cardItems.mapIndexed { index, item ->
                             MostViewedItem(
                                 id = item.id,
                                 title = item.title,
@@ -139,7 +143,8 @@ class MostViewedViewModel @Inject constructor(
                                 change = item.change,
                                 isHighlighted = index == 0
                             )
-                        }
+                        },
+                        maxViewsForBar = maxViewsForBar
                     )
                 }
                 is MostViewedResult.Error -> {

@@ -13,6 +13,7 @@ sealed class CountriesCardUiState {
         val mapData: String,
         val minViews: Long,
         val maxViews: Long,
+        val maxViewsForBar: Long,
         val hasMoreItems: Boolean
     ) : CountriesCardUiState()
 

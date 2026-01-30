@@ -162,8 +162,6 @@ private fun LoadedContent(
     onDataSourceChanged: (MostViewedDataSource) -> Unit,
     onShowAllClick: () -> Unit
 ) {
-    val maxViews = state.items.maxOfOrNull { it.views } ?: 1L
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,7 +175,9 @@ private fun LoadedContent(
         )
         Spacer(modifier = Modifier.height(8.dp))
         state.items.forEachIndexed { index, item ->
-            val percentage = if (maxViews > 0) item.views.toFloat() / maxViews.toFloat() else 0f
+            val percentage = if (state.maxViewsForBar > 0) {
+                item.views.toFloat() / state.maxViewsForBar.toFloat()
+            } else 0f
             MostViewedItemRow(item = item, percentage = percentage)
             if (index < state.items.lastIndex) {
                 Spacer(modifier = Modifier.height(4.dp))
@@ -494,7 +494,8 @@ private fun MostViewedCardLoadedPreview() {
                         change = MostViewedChange.Positive(23, 191.7),
                         isHighlighted = false
                     )
-                )
+                ),
+                maxViewsForBar = 417
             ),
             onDataSourceChanged = {},
             onShowAllClick = {},
@@ -540,7 +541,8 @@ private fun MostViewedCardLoadedDarkPreview() {
                         change = MostViewedChange.NoChange,
                         isHighlighted = false
                     )
-                )
+                ),
+                maxViewsForBar = 417
             ),
             onDataSourceChanged = {},
             onShowAllClick = {},

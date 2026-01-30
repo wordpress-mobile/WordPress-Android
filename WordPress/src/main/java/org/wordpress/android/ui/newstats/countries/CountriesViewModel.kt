@@ -127,6 +127,7 @@ class CountriesViewModel @Inject constructor(
                         mapData = "",
                         minViews = 0,
                         maxViews = 0,
+                        maxViewsForBar = 0,
                         hasMoreItems = false
                     )
                 } else {
@@ -151,11 +152,16 @@ class CountriesViewModel @Inject constructor(
                     cachedMinViews = if (minViews == maxViews) 0L else minViews
                     cachedMaxViews = maxViews
 
+                    // For bar percentage, use first item's views (list is sorted by views descending)
+                    val cardCountries = countries.take(CARD_MAX_ITEMS)
+                    val maxViewsForBar = cardCountries.firstOrNull()?.views ?: 1L
+
                     _uiState.value = CountriesCardUiState.Loaded(
-                        countries = countries.take(CARD_MAX_ITEMS),
+                        countries = cardCountries,
                         mapData = mapData,
                         minViews = cachedMinViews,
                         maxViews = cachedMaxViews,
+                        maxViewsForBar = maxViewsForBar,
                         hasMoreItems = countries.size > CARD_MAX_ITEMS
                     )
                 }

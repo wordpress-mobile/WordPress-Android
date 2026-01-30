@@ -219,9 +219,10 @@ private fun LoadedContent(state: CountriesCardUiState.Loaded, onShowAllClick: ()
             Spacer(modifier = Modifier.height(8.dp))
 
             // Country list (capped at 10 items)
-            val maxViews = state.countries.maxOfOrNull { it.views } ?: 1L
             state.countries.forEachIndexed { index, country ->
-                val percentage = if (maxViews > 0) country.views.toFloat() / maxViews.toFloat() else 0f
+                val percentage = if (state.maxViewsForBar > 0) {
+                    country.views.toFloat() / state.maxViewsForBar.toFloat()
+                } else 0f
                 CountryRow(country = country, percentage = percentage)
                 if (index < state.countries.lastIndex) {
                     Spacer(modifier = Modifier.height(4.dp))
@@ -418,6 +419,7 @@ private fun CountriesCardLoadedPreview() {
                 mapData = "['US',3464],['ES',556],['GB',522],['CA',485]",
                 minViews = 485,
                 maxViews = 3464,
+                maxViewsForBar = 3464,
                 hasMoreItems = true
             ),
             onShowAllClick = {},

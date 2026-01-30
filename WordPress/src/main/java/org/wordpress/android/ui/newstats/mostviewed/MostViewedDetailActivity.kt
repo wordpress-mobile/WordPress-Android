@@ -71,12 +71,15 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
         val totalViewsChange = intent.getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L)
         val totalViewsChangePercent = intent.getDoubleExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0)
         val dateRange = intent.getStringExtra(EXTRA_DATE_RANGE) ?: ""
+        // Calculate maxViewsForBar once (list is sorted by views descending)
+        val maxViewsForBar = items.firstOrNull()?.views ?: 1L
 
         setContent {
             AppThemeM3 {
                 MostViewedDetailScreen(
                     dataSource = dataSource,
                     items = items,
+                    maxViewsForBar = maxViewsForBar,
                     totalViews = totalViews,
                     totalViewsChange = totalViewsChange,
                     totalViewsChangePercent = totalViewsChangePercent,
@@ -116,6 +119,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
 private fun MostViewedDetailScreen(
     dataSource: MostViewedDataSource,
     items: List<MostViewedDetailItem>,
+    maxViewsForBar: Long,
     totalViews: Long,
     totalViewsChange: Long,
     totalViewsChangePercent: Double,
@@ -165,7 +169,7 @@ private fun MostViewedDetailScreen(
                 DetailItemRow(
                     position = index + 1,
                     item = item,
-                    maxViews = items.firstOrNull()?.views ?: 1L
+                    maxViewsForBar = maxViewsForBar
                 )
                 if (index < items.lastIndex) {
                     Spacer(modifier = Modifier.height(4.dp))
@@ -202,9 +206,9 @@ private fun ColumnHeaders(itemCount: Int) {
 private fun DetailItemRow(
     position: Int,
     item: MostViewedDetailItem,
-    maxViews: Long
+    maxViewsForBar: Long
 ) {
-    val percentage = if (maxViews > 0) item.views.toFloat() / maxViews.toFloat() else 0f
+    val percentage = if (maxViewsForBar > 0) item.views.toFloat() / maxViewsForBar.toFloat() else 0f
     val barColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
 
     Box(
@@ -312,6 +316,7 @@ private fun MostViewedDetailScreenPreview() {
                 MostViewedDetailItem(5, "AI Tools & Resource Hub", 72,
                     MostViewedChange.Positive(31, 75.6))
             ),
+            maxViewsForBar = 998,
             totalViews = 5400,
             totalViewsChange = 69,
             totalViewsChangePercent = 1.3,

@@ -79,6 +79,8 @@ class CountriesDetailActivity : BaseAppCompatActivity() {
         val totalViewsChange = intent.getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L)
         val totalViewsChangePercent = intent.getDoubleExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0)
         val dateRange = intent.getStringExtra(EXTRA_DATE_RANGE) ?: ""
+        // Calculate maxViewsForBar once (list is sorted by views descending)
+        val maxViewsForBar = countries.firstOrNull()?.views ?: 1L
 
         setContent {
             AppThemeM3 {
@@ -87,6 +89,7 @@ class CountriesDetailActivity : BaseAppCompatActivity() {
                     mapData = mapData,
                     minViews = minViews,
                     maxViews = maxViews,
+                    maxViewsForBar = maxViewsForBar,
                     totalViews = totalViews,
                     totalViewsChange = totalViewsChange,
                     totalViewsChangePercent = totalViewsChangePercent,
@@ -153,6 +156,7 @@ private fun CountriesDetailScreen(
     mapData: String,
     minViews: Long,
     maxViews: Long,
+    maxViewsForBar: Long,
     totalViews: Long,
     totalViewsChange: Long,
     totalViewsChangePercent: Double,
@@ -226,10 +230,9 @@ private fun CountriesDetailScreen(
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            val maxViewsValue = countries.firstOrNull()?.views ?: 1L
             itemsIndexed(countries) { index, country ->
-                val percentage = if (maxViewsValue > 0) {
-                    country.views.toFloat() / maxViewsValue.toFloat()
+                val percentage = if (maxViewsForBar > 0) {
+                    country.views.toFloat() / maxViewsForBar.toFloat()
                 } else 0f
                 DetailCountryRow(
                     position = index + 1,
@@ -360,6 +363,7 @@ private fun CountriesDetailScreenPreview() {
             mapData = "['US',3464],['ES',556],['GB',522],['CA',485]",
             minViews = 156,
             maxViews = 3464,
+            maxViewsForBar = 3464,
             totalViews = 6726,
             totalViewsChange = 225,
             totalViewsChangePercent = 3.5,
