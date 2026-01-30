@@ -240,30 +240,31 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
+    private fun buildCountryViewsParams(dateRange: StatsDateRange, max: Int) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsCountryViewsParams(
+            period = StatsCountryViewsPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = max.coerceAtLeast(1).toUInt(),
+            locale = localeManagerWrapper.getLocale().toString(),
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsCountryViewsParams(
+            period = StatsCountryViewsPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = max.coerceAtLeast(1).toUInt(),
+            locale = localeManagerWrapper.getLocale().toString(),
+            summarize = true
+        )
+    }
+
     override suspend fun fetchCountryViews(
         siteId: Long,
         dateRange: StatsDateRange,
         max: Int
     ): CountryViewsDataResult {
-        val params = when (dateRange) {
-            is StatsDateRange.Preset -> StatsCountryViewsParams(
-                period = StatsCountryViewsPeriod.DAY,
-                date = dateRange.date,
-                num = dateRange.num.toUInt(),
-                max = max.coerceAtLeast(1).toUInt(),
-                locale = localeManagerWrapper.getLocale().toString(),
-                summarize = true
-            )
-            is StatsDateRange.Custom -> StatsCountryViewsParams(
-                period = StatsCountryViewsPeriod.DAY,
-                date = dateRange.date,
-                startDate = dateRange.startDate,
-                max = max.coerceAtLeast(1).toUInt(),
-                locale = localeManagerWrapper.getLocale().toString(),
-                summarize = true
-            )
-        }
-
+        val params = buildCountryViewsParams(dateRange, max)
         val result = wpComApiClient.request { requestBuilder ->
             requestBuilder.statsCountryViews().getStatsCountryViews(
                 wpComSiteId = siteId.toULong(),

@@ -201,7 +201,7 @@ private fun EmptyContent() {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = stringResource(R.string.stats_no_data_for_period),
+            text = stringResource(R.string.stats_no_data_yet),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
