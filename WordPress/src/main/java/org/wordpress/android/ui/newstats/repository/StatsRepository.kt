@@ -505,7 +505,7 @@ class StatsRepository @Inject constructor(
         period: StatsPeriod,
         dataSource: MostViewedDataSource
     ): MostViewedResult = withContext(ioDispatcher) {
-        val (currentDateRange, previousDateRange) = calculateMostViewedDateRanges(period)
+        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
 
         when (dataSource) {
             MostViewedDataSource.POSTS_AND_PAGES -> {
@@ -623,7 +623,11 @@ class StatsRepository @Inject constructor(
         }
     }
 
-    private fun calculateMostViewedDateRanges(period: StatsPeriod): Pair<StatsDateRange, StatsDateRange> {
+    /**
+     * Calculates current and previous date ranges for comparison stats.
+     * Used by multiple stats types (MostViewed, Countries, etc.)
+     */
+    private fun calculateComparisonDateRanges(period: StatsPeriod): Pair<StatsDateRange, StatsDateRange> {
         val today = LocalDate.now()
         val todayString = today.format(dateFormatter)
 
@@ -679,7 +683,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         period: StatsPeriod
     ): CountryViewsResult = withContext(ioDispatcher) {
-        val (currentDateRange, previousDateRange) = calculateCountryViewsDateRanges(period)
+        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
 
         // Fetch both periods in parallel
         val (currentResult, previousResult) = coroutineScope {
@@ -728,51 +732,6 @@ class StatsRepository @Inject constructor(
             is CountryViewsDataResult.Error -> {
                 appLogWrapper.e(AppLog.T.STATS, "Error fetching country views: ${currentResult.message}")
                 CountryViewsResult.Error(currentResult.message)
-            }
-        }
-    }
-
-    private fun calculateCountryViewsDateRanges(period: StatsPeriod): Pair<StatsDateRange, StatsDateRange> {
-        val today = LocalDate.now()
-        val todayString = today.format(dateFormatter)
-
-        return when (period) {
-            is StatsPeriod.Today -> {
-                val yesterdayString = today.minusDays(NUM_DAYS_TODAY.toLong()).format(dateFormatter)
-                StatsDateRange.Preset(num = NUM_DAYS_TODAY, date = todayString) to
-                    StatsDateRange.Preset(num = NUM_DAYS_TODAY, date = yesterdayString)
-            }
-            is StatsPeriod.Last7Days -> {
-                val previousEndString = today.minusDays(DAYS_IN_7_DAYS.toLong()).format(dateFormatter)
-                StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = todayString) to
-                    StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = previousEndString)
-            }
-            is StatsPeriod.Last30Days -> {
-                val previousEndString = today.minusDays(DAYS_IN_30_DAYS.toLong()).format(dateFormatter)
-                StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString) to
-                    StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = previousEndString)
-            }
-            is StatsPeriod.Last6Months -> {
-                val previousEndString = today.minusDays(DAYS_IN_6_MONTHS.toLong()).format(dateFormatter)
-                StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = todayString) to
-                    StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = previousEndString)
-            }
-            is StatsPeriod.Last12Months -> {
-                val previousEndString = today.minusDays(DAYS_IN_12_MONTHS.toLong()).format(dateFormatter)
-                StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString) to
-                    StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = previousEndString)
-            }
-            is StatsPeriod.Custom -> {
-                val daysBetween = ChronoUnit.DAYS.between(period.startDate, period.endDate).toInt() + 1
-                val previousEnd = period.startDate.minusDays(1)
-                val previousStart = previousEnd.minusDays(daysBetween.toLong() - 1)
-                StatsDateRange.Custom(
-                    startDate = period.startDate.format(dateFormatter),
-                    date = period.endDate.format(dateFormatter)
-                ) to StatsDateRange.Custom(
-                    startDate = previousStart.format(dateFormatter),
-                    date = previousEnd.format(dateFormatter)
-                )
             }
         }
     }

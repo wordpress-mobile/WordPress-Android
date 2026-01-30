@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -15,12 +14,12 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.CountryViewItemData
 import org.wordpress.android.ui.newstats.repository.CountryViewsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.util.toDateRangeString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import kotlin.math.abs
 
 private const val CARD_MAX_ITEMS = 10
-private const val MONTH_ABBREVIATION_LENGTH = 3
 
 @HiltViewModel
 class CountriesViewModel @Inject constructor(
@@ -201,16 +200,3 @@ data class CountriesDetailData(
     val totalViewsChangePercent: Double,
     val dateRange: String
 )
-
-private fun StatsPeriod.toDateRangeString(resourceProvider: ResourceProvider): String {
-    return when (this) {
-        is StatsPeriod.Today -> resourceProvider.getString(R.string.stats_period_today)
-        is StatsPeriod.Last7Days -> resourceProvider.getString(R.string.stats_period_last_7_days)
-        is StatsPeriod.Last30Days -> resourceProvider.getString(R.string.stats_period_last_30_days)
-        is StatsPeriod.Last6Months -> resourceProvider.getString(R.string.stats_period_last_6_months)
-        is StatsPeriod.Last12Months -> resourceProvider.getString(R.string.stats_period_last_12_months)
-        is StatsPeriod.Custom -> "${startDate.dayOfMonth}-${endDate.dayOfMonth} ${
-            endDate.month.name.take(MONTH_ABBREVIATION_LENGTH).lowercase().replaceFirstChar { it.uppercase() }
-        }"
-    }
-}
