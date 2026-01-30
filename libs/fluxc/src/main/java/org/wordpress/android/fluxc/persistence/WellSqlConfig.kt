@@ -2093,7 +2093,7 @@ open class WellSqlConfig : DefaultWellConfig {
                 211 -> migrate(version) {
                     // Create NavMenuModel table
                     db.execSQL(
-                        "CREATE TABLE NavMenuModel (" +
+                        "CREATE TABLE IF NOT EXISTS NavMenuModel (" +
                             "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             "LOCAL_SITE_ID INTEGER," +
                             "REMOTE_MENU_ID INTEGER," +
@@ -2105,7 +2105,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                     // Create NavMenuItemModel table
                     db.execSQL(
-                        "CREATE TABLE NavMenuItemModel (" +
+                        "CREATE TABLE IF NOT EXISTS NavMenuItemModel (" +
                             "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             "LOCAL_SITE_ID INTEGER," +
                             "REMOTE_ITEM_ID INTEGER," +
@@ -2124,7 +2124,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                     // Create NavMenuLocationModel table
                     db.execSQL(
-                        "CREATE TABLE NavMenuLocationModel (" +
+                        "CREATE TABLE IF NOT EXISTS NavMenuLocationModel (" +
                             "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             "LOCAL_SITE_ID INTEGER," +
                             "NAME TEXT," +
