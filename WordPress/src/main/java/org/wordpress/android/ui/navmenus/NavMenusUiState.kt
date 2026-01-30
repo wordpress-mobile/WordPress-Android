@@ -20,6 +20,7 @@ data class MenuListUiState(
 data class MenuUiModel(
     val id: Long,
     val name: String,
+    val description: String,
     val itemCount: Int,
     val locations: List<String>
 )
@@ -144,6 +145,7 @@ fun NavMenuModel.toUiModel(itemCount: Int): MenuUiModel {
     return MenuUiModel(
         id = remoteMenuId,
         name = name,
+        description = description,
         itemCount = itemCount,
         locations = locationsList
     )
