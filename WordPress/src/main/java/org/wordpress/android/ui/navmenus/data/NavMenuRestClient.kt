@@ -277,7 +277,8 @@ class NavMenuRestClient @Inject constructor(
             parent = item.parentId.takeIf { it > 0 },
             menuOrder = item.menuOrder.coerceAtLeast(1).toLong(),
             `object` = item.objectType.takeIf { it.isNotEmpty() },
-            objectId = item.objectId.takeIf { it > 0 }
+            objectId = item.objectId.takeIf { it > 0 },
+            description = item.description.takeIf { it.isNotEmpty() }
         )
     }
 
@@ -290,7 +291,8 @@ class NavMenuRestClient @Inject constructor(
             parent = item.parentId.takeIf { it > 0 },
             menuOrder = item.menuOrder.coerceAtLeast(1).toLong(),
             `object` = item.objectType.takeIf { it.isNotEmpty() },
-            objectId = item.objectId.takeIf { it > 0 }
+            objectId = item.objectId.takeIf { it > 0 },
+            description = item.description.takeIf { it.isNotEmpty() }
         )
     }
 
