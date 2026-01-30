@@ -44,9 +44,9 @@ import kotlin.math.abs
 fun StatsSummaryCard(
     totalViews: Long,
     dateRange: String,
+    modifier: Modifier = Modifier,
     totalViewsChange: Long? = null,
-    totalViewsChangePercent: Double? = null,
-    modifier: Modifier = Modifier
+    totalViewsChangePercent: Double? = null
 ) {
     Box(
         modifier = modifier
