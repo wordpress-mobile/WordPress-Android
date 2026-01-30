@@ -669,56 +669,110 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Fetches country views stats for a specific site and period.
+     * Fetches country views stats for a specific site and period with comparison data.
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
-     * @return Country views data or error
+     * @return Country views data with comparison or error
      */
     suspend fun fetchCountryViews(
         siteId: Long,
         period: StatsPeriod
     ): CountryViewsResult = withContext(ioDispatcher) {
-        val dateRange = calculateCountryViewsDateRange(period)
+        val (currentDateRange, previousDateRange) = calculateCountryViewsDateRanges(period)
 
-        val result = statsDataSource.fetchCountryViews(siteId, dateRange)
+        // Fetch both periods in parallel
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async { statsDataSource.fetchCountryViews(siteId, currentDateRange) }
+            val previousDeferred = async { statsDataSource.fetchCountryViews(siteId, previousDateRange) }
+            currentDeferred.await() to previousDeferred.await()
+        }
 
-        when (result) {
+        when (currentResult) {
             is CountryViewsDataResult.Success -> {
+                val previousCountriesMap = if (previousResult is CountryViewsDataResult.Success) {
+                    previousResult.data.countries.associateBy { it.countryCode }
+                } else {
+                    emptyMap()
+                }
+
+                val totalViews = currentResult.data.totalViews
+                val previousTotalViews = if (previousResult is CountryViewsDataResult.Success) {
+                    previousResult.data.totalViews
+                } else {
+                    0L
+                }
+                val totalChange = totalViews - previousTotalViews
+                val totalChangePercent = if (previousTotalViews > 0) {
+                    (totalChange.toDouble() / previousTotalViews.toDouble()) * PERCENTAGE_MULTIPLIER
+                } else if (totalViews > 0) PERCENTAGE_MULTIPLIER else PERCENTAGE_NO_CHANGE
+
                 CountryViewsResult.Success(
-                    countries = result.data.countries.map { country ->
+                    countries = currentResult.data.countries.map { country ->
+                        val previousViews = previousCountriesMap[country.countryCode]?.views ?: 0L
                         CountryViewItemData(
                             countryCode = country.countryCode,
                             countryName = country.countryName,
                             views = country.views,
-                            flagIconUrl = country.flagIconUrl
+                            flagIconUrl = country.flagIconUrl,
+                            previousViews = previousViews
                         )
                     },
-                    totalViews = result.data.totalViews,
-                    otherViews = result.data.otherViews
+                    totalViews = totalViews,
+                    otherViews = currentResult.data.otherViews,
+                    totalViewsChange = totalChange,
+                    totalViewsChangePercent = totalChangePercent
                 )
             }
             is CountryViewsDataResult.Error -> {
-                appLogWrapper.e(AppLog.T.STATS, "Error fetching country views: ${result.message}")
-                CountryViewsResult.Error(result.message)
+                appLogWrapper.e(AppLog.T.STATS, "Error fetching country views: ${currentResult.message}")
+                CountryViewsResult.Error(currentResult.message)
             }
         }
     }
 
-    private fun calculateCountryViewsDateRange(period: StatsPeriod): StatsDateRange {
+    private fun calculateCountryViewsDateRanges(period: StatsPeriod): Pair<StatsDateRange, StatsDateRange> {
         val today = LocalDate.now()
         val todayString = today.format(dateFormatter)
 
         return when (period) {
-            is StatsPeriod.Today -> StatsDateRange.Preset(num = NUM_DAYS_TODAY, date = todayString)
-            is StatsPeriod.Last7Days -> StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = todayString)
-            is StatsPeriod.Last30Days -> StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString)
-            is StatsPeriod.Last6Months -> StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = todayString)
-            is StatsPeriod.Last12Months -> StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString)
-            is StatsPeriod.Custom -> StatsDateRange.Custom(
-                startDate = period.startDate.format(dateFormatter),
-                date = period.endDate.format(dateFormatter)
-            )
+            is StatsPeriod.Today -> {
+                val yesterdayString = today.minusDays(NUM_DAYS_TODAY.toLong()).format(dateFormatter)
+                StatsDateRange.Preset(num = NUM_DAYS_TODAY, date = todayString) to
+                    StatsDateRange.Preset(num = NUM_DAYS_TODAY, date = yesterdayString)
+            }
+            is StatsPeriod.Last7Days -> {
+                val previousEndString = today.minusDays(DAYS_IN_7_DAYS.toLong()).format(dateFormatter)
+                StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = todayString) to
+                    StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = previousEndString)
+            }
+            is StatsPeriod.Last30Days -> {
+                val previousEndString = today.minusDays(DAYS_IN_30_DAYS.toLong()).format(dateFormatter)
+                StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString) to
+                    StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = previousEndString)
+            }
+            is StatsPeriod.Last6Months -> {
+                val previousEndString = today.minusDays(DAYS_IN_6_MONTHS.toLong()).format(dateFormatter)
+                StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = todayString) to
+                    StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = previousEndString)
+            }
+            is StatsPeriod.Last12Months -> {
+                val previousEndString = today.minusDays(DAYS_IN_12_MONTHS.toLong()).format(dateFormatter)
+                StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString) to
+                    StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = previousEndString)
+            }
+            is StatsPeriod.Custom -> {
+                val daysBetween = ChronoUnit.DAYS.between(period.startDate, period.endDate).toInt() + 1
+                val previousEnd = period.startDate.minusDays(1)
+                val previousStart = previousEnd.minusDays(daysBetween.toLong() - 1)
+                StatsDateRange.Custom(
+                    startDate = period.startDate.format(dateFormatter),
+                    date = period.endDate.format(dateFormatter)
+                ) to StatsDateRange.Custom(
+                    startDate = previousStart.format(dateFormatter),
+                    date = previousEnd.format(dateFormatter)
+                )
+            }
         }
     }
 }
@@ -860,7 +914,9 @@ sealed class CountryViewsResult {
     data class Success(
         val countries: List<CountryViewItemData>,
         val totalViews: Long,
-        val otherViews: Long
+        val otherViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
     ) : CountryViewsResult()
     data class Error(val message: String) : CountryViewsResult()
 }
@@ -872,5 +928,15 @@ data class CountryViewItemData(
     val countryCode: String,
     val countryName: String,
     val views: Long,
-    val flagIconUrl: String?
-)
+    val flagIconUrl: String?,
+    val previousViews: Long
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double get() = if (previousViews > 0) {
+        (viewsChange.toDouble() / previousViews.toDouble()) * PERCENTAGE_MULTIPLIER
+    } else if (views > 0) {
+        PERCENTAGE_MULTIPLIER
+    } else {
+        PERCENTAGE_NO_CHANGE
+    }
+}

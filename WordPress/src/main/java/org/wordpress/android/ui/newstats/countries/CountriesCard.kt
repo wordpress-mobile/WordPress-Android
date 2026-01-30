@@ -51,6 +51,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
 
@@ -429,15 +430,43 @@ private fun CountryRow(
             )
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Views count
-            Text(
-                text = formatStatValue(country.views),
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            // Views count and change
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = formatStatValue(country.views),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                ChangeIndicator(change = country.change)
+            }
         }
     }
+}
+
+@Composable
+private fun ChangeIndicator(change: CountryViewChange) {
+    val (text, color) = when (change) {
+        is CountryViewChange.Positive -> Pair(
+            "+${formatStatValue(change.value)} (${
+                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
+            })",
+            StatsColors.ChangeBadgePositive
+        )
+        is CountryViewChange.Negative -> Pair(
+            "-${formatStatValue(change.value)} (${
+                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
+            })",
+            StatsColors.ChangeBadgeNegative
+        )
+        is CountryViewChange.NoChange -> return
+    }
+
+    Text(
+        text = text,
+        style = MaterialTheme.typography.labelSmall,
+        color = color
+    )
 }
 
 @Composable
@@ -535,10 +564,10 @@ private fun CountriesCardLoadedPreview() {
         CountriesCard(
             uiState = CountriesCardUiState.Loaded(
                 countries = listOf(
-                    CountryItem("US", "United States", 3464, null),
-                    CountryItem("ES", "Spain", 556, null),
-                    CountryItem("GB", "United Kingdom", 522, null),
-                    CountryItem("CA", "Canada", 485, null)
+                    CountryItem("US", "United States", 3464, null, CountryViewChange.Positive(124, 3.7)),
+                    CountryItem("ES", "Spain", 556, null, CountryViewChange.Positive(45, 8.8)),
+                    CountryItem("GB", "United Kingdom", 522, null, CountryViewChange.Negative(12, 2.2)),
+                    CountryItem("CA", "Canada", 485, null, CountryViewChange.NoChange)
                 ),
                 mapData = "['US',3464],['ES',556],['GB',522],['CA',485]",
                 minViews = 485,

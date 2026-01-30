@@ -24,8 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,10 +45,10 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.StatsColors
-import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.util.formatStatValue
+import org.wordpress.android.util.extensions.getSerializableCompat
 import java.util.Locale
-import kotlin.math.abs
 
 private const val EXTRA_DATA_SOURCE = "extra_data_source"
 private const val EXTRA_ITEMS = "extra_items"
@@ -149,11 +147,11 @@ private fun MostViewedDetailScreen(
         ) {
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-                SummaryCard(
+                StatsSummaryCard(
                     totalViews = totalViews,
+                    dateRange = dateRange,
                     totalViewsChange = totalViewsChange,
-                    totalViewsChangePercent = totalViewsChangePercent,
-                    dateRange = dateRange
+                    totalViewsChangePercent = totalViewsChangePercent
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -178,81 +176,6 @@ private fun MostViewedDetailScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
-    }
-}
-
-@Composable
-private fun SummaryCard(
-    totalViews: Long,
-    totalViewsChange: Long,
-    totalViewsChangePercent: Double,
-    dateRange: String
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-            .padding(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = stringResource(R.string.stats_views),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = dateRange,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    text = formatStatValue(totalViews),
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                TotalViewsChangeIndicator(
-                    change = totalViewsChange,
-                    changePercent = totalViewsChangePercent
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun TotalViewsChangeIndicator(
-    change: Long,
-    changePercent: Double
-) {
-    if (change == 0L) return
-
-    val isPositive = change > 0
-    val sign = if (isPositive) "+" else "-"
-    val color = if (isPositive) StatsColors.ChangeBadgePositive else StatsColors.ChangeBadgeNegative
-    val arrowIcon = if (isPositive) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown
-
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(
-            imageVector = arrowIcon,
-            contentDescription = null,
-            modifier = Modifier.size(16.dp),
-            tint = color
-        )
-        Text(
-            text = "$sign${formatStatValue(abs(change))} (${
-                String.format(Locale.getDefault(), "%.1f%%", abs(changePercent))
-            })",
-            style = MaterialTheme.typography.labelSmall,
-            color = color
-        )
     }
 }
 

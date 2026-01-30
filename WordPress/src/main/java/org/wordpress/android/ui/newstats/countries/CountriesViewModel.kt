@@ -7,21 +7,27 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.repository.CountryViewItemData
 import org.wordpress.android.ui.newstats.repository.CountryViewsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
+import kotlin.math.abs
 
 private const val CARD_MAX_ITEMS = 10
+private const val MONTH_ABBREVIATION_LENGTH = 3
 
 @HiltViewModel
 class CountriesViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
-    private val statsRepository: StatsRepository
+    private val statsRepository: StatsRepository,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<CountriesCardUiState>(CountriesCardUiState.Loading)
     val uiState: StateFlow<CountriesCardUiState> = _uiState.asStateFlow()
@@ -35,6 +41,9 @@ class CountriesViewModel @Inject constructor(
     private var cachedMapData: String = ""
     private var cachedMinViews: Long = 0L
     private var cachedMaxViews: Long = 0L
+    private var cachedTotalViews: Long = 0L
+    private var cachedTotalViewsChange: Long = 0L
+    private var cachedTotalViewsChangePercent: Double = 0.0
 
     init {
         loadData()
@@ -85,7 +94,11 @@ class CountriesViewModel @Inject constructor(
             countries = allCountries,
             mapData = cachedMapData,
             minViews = cachedMinViews,
-            maxViews = cachedMaxViews
+            maxViews = cachedMaxViews,
+            totalViews = cachedTotalViews,
+            totalViewsChange = cachedTotalViewsChange,
+            totalViewsChangePercent = cachedTotalViewsChangePercent,
+            dateRange = currentPeriod.toDateRangeString(resourceProvider)
         )
     }
 
@@ -100,6 +113,10 @@ class CountriesViewModel @Inject constructor(
 
         when (val result = statsRepository.fetchCountryViews(siteId, currentPeriod)) {
             is CountryViewsResult.Success -> {
+                cachedTotalViews = result.totalViews
+                cachedTotalViewsChange = result.totalViewsChange
+                cachedTotalViewsChangePercent = result.totalViewsChangePercent
+
                 if (result.countries.isEmpty()) {
                     allCountries = emptyList()
                     cachedMapData = ""
@@ -118,7 +135,8 @@ class CountriesViewModel @Inject constructor(
                             countryCode = country.countryCode,
                             countryName = country.countryName,
                             views = country.views,
-                            flagIconUrl = country.flagIconUrl
+                            flagIconUrl = country.flagIconUrl,
+                            change = country.toCountryViewChange()
                         )
                     }
 
@@ -148,6 +166,14 @@ class CountriesViewModel @Inject constructor(
         }
     }
 
+    private fun CountryViewItemData.toCountryViewChange(): CountryViewChange {
+        return when {
+            viewsChange > 0 -> CountryViewChange.Positive(viewsChange, abs(viewsChangePercent))
+            viewsChange < 0 -> CountryViewChange.Negative(abs(viewsChange), abs(viewsChangePercent))
+            else -> CountryViewChange.NoChange
+        }
+    }
+
     /**
      * Builds the map data string for Google GeoChart.
      * Format: ['countryCode',views],['countryCode',views],...
@@ -163,5 +189,22 @@ data class CountriesDetailData(
     val countries: List<CountryItem>,
     val mapData: String,
     val minViews: Long,
-    val maxViews: Long
+    val maxViews: Long,
+    val totalViews: Long,
+    val totalViewsChange: Long,
+    val totalViewsChangePercent: Double,
+    val dateRange: String
 )
+
+private fun StatsPeriod.toDateRangeString(resourceProvider: ResourceProvider): String {
+    return when (this) {
+        is StatsPeriod.Today -> resourceProvider.getString(R.string.stats_period_today)
+        is StatsPeriod.Last7Days -> resourceProvider.getString(R.string.stats_period_last_7_days)
+        is StatsPeriod.Last30Days -> resourceProvider.getString(R.string.stats_period_last_30_days)
+        is StatsPeriod.Last6Months -> resourceProvider.getString(R.string.stats_period_last_6_months)
+        is StatsPeriod.Last12Months -> resourceProvider.getString(R.string.stats_period_last_12_months)
+        is StatsPeriod.Custom -> "${startDate.dayOfMonth}-${endDate.dayOfMonth} ${
+            endDate.month.name.take(MONTH_ABBREVIATION_LENGTH).lowercase().replaceFirstChar { it.uppercase() }
+        }"
+    }
+}

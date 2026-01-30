@@ -273,7 +273,11 @@ private fun TrafficTabContent(
                         countries = detailData.countries,
                         mapData = detailData.mapData,
                         minViews = detailData.minViews,
-                        maxViews = detailData.maxViews
+                        maxViews = detailData.maxViews,
+                        totalViews = detailData.totalViews,
+                        totalViewsChange = detailData.totalViewsChange,
+                        totalViewsChangePercent = detailData.totalViewsChangePercent,
+                        dateRange = detailData.dateRange
                     )
                 },
                 onRetry = countriesViewModel::onRetry
