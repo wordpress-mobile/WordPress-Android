@@ -61,15 +61,24 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
 
+        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchStatsVisits result type: ${result::class.simpleName}")
+
         return when (result) {
             is WpRequestResult.Success -> {
+                AppLog.d(T.STATS, "StatsDataSourceImpl: fetchStatsVisits success")
                 StatsVisitsDataResult.Success(mapToStatsVisitsData(result.response.data))
             }
             is WpRequestResult.WpError -> {
+                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchStatsVisits WpError - ${result.errorMessage}")
                 StatsVisitsDataResult.Error(result.errorMessage)
             }
+            is WpRequestResult.ResponseParsingError<*> -> {
+                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchStatsVisits ResponseParsingError - $result")
+                StatsVisitsDataResult.Error("Response parsing error: $result")
+            }
             else -> {
-                StatsVisitsDataResult.Error("Unknown error")
+                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchStatsVisits unexpected result - $result")
+                StatsVisitsDataResult.Error("Unknown error: ${result::class.simpleName}")
             }
         }
     }
@@ -201,9 +210,12 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
 
+        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchReferrers result type: ${result::class.simpleName}")
+
         return when (result) {
             is WpRequestResult.Success -> {
                 val groups = result.response.data.summary?.groups.orEmpty()
+                AppLog.d(T.STATS, "StatsDataSourceImpl: fetchReferrers success - ${groups.size} groups")
                 ReferrersDataResult.Success(
                     groups.map { group ->
                         ReferrerDataItem(
@@ -214,10 +226,16 @@ class StatsDataSourceImpl @Inject constructor(
                 )
             }
             is WpRequestResult.WpError -> {
+                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchReferrers WpError - ${result.errorMessage}")
                 ReferrersDataResult.Error(result.errorMessage)
             }
+            is WpRequestResult.ResponseParsingError<*> -> {
+                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchReferrers ResponseParsingError - $result")
+                ReferrersDataResult.Error("Response parsing error: $result")
+            }
             else -> {
-                ReferrersDataResult.Error("Unknown error")
+                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchReferrers unexpected result - $result")
+                ReferrersDataResult.Error("Unknown error: ${result::class.simpleName}")
             }
         }
     }
@@ -253,6 +271,8 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
 
+        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchCountryViews result type: ${result::class.simpleName}")
+
         return when (result) {
             is WpRequestResult.Success -> {
                 val summary = result.response.data.summary
@@ -269,6 +289,7 @@ class StatsDataSourceImpl @Inject constructor(
                     )
                 }
 
+                AppLog.d(T.STATS, "StatsDataSourceImpl: fetchCountryViews success - ${countries.size} countries")
                 CountryViewsDataResult.Success(
                     CountryViewsData(
                         countries = countries,
@@ -278,10 +299,16 @@ class StatsDataSourceImpl @Inject constructor(
                 )
             }
             is WpRequestResult.WpError -> {
+                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchCountryViews WpError - ${result.errorMessage}")
                 CountryViewsDataResult.Error(result.errorMessage)
             }
+            is WpRequestResult.ResponseParsingError<*> -> {
+                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchCountryViews ResponseParsingError - $result")
+                CountryViewsDataResult.Error("Response parsing error: $result")
+            }
             else -> {
-                CountryViewsDataResult.Error("Unknown error")
+                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchCountryViews unexpected result - $result")
+                CountryViewsDataResult.Error("Unknown error: ${result::class.simpleName}")
             }
         }
     }
