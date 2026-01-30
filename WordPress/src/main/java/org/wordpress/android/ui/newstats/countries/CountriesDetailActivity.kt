@@ -50,8 +50,9 @@ import org.wordpress.android.ui.newstats.components.StatsGeoChartWebView
 import org.wordpress.android.ui.newstats.components.StatsMapLegend
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.util.formatStatValue
-import org.wordpress.android.util.extensions.getSerializableCompat
-import java.io.Serializable
+import org.wordpress.android.util.extensions.getParcelableArrayListCompat
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
 private const val EXTRA_COUNTRIES = "extra_countries"
 private const val EXTRA_MAP_DATA = "extra_map_data"
@@ -68,9 +69,8 @@ class CountriesDetailActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        @Suppress("UNCHECKED_CAST")
         val countries = intent.extras
-            ?.getSerializableCompat<ArrayList<CountriesDetailItem>>(EXTRA_COUNTRIES)
+            ?.getParcelableArrayListCompat<CountriesDetailItem>(EXTRA_COUNTRIES)
             ?: arrayListOf()
         val mapData = intent.getStringExtra(EXTRA_MAP_DATA) ?: ""
         val minViews = intent.getLongExtra(EXTRA_MIN_VIEWS, 0L)
@@ -137,17 +137,14 @@ class CountriesDetailActivity : BaseAppCompatActivity() {
     }
 }
 
+@Parcelize
 data class CountriesDetailItem(
     val countryCode: String,
     val countryName: String,
     val views: Long,
     val flagIconUrl: String?,
     val change: CountryViewChange = CountryViewChange.NoChange
-) : Serializable {
-    companion object {
-        private const val serialVersionUID: Long = 2L
-    }
-}
+) : Parcelable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

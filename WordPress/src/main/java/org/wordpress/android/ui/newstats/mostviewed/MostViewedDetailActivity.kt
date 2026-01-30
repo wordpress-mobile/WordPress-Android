@@ -47,6 +47,7 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.util.formatStatValue
+import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import java.util.Locale
 
@@ -64,8 +65,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
 
         val dataSource = intent.extras?.getSerializableCompat<MostViewedDataSource>(EXTRA_DATA_SOURCE)
             ?: MostViewedDataSource.POSTS_AND_PAGES
-        @Suppress("UNCHECKED_CAST")
-        val items = intent.extras?.getSerializableCompat<ArrayList<MostViewedDetailItem>>(EXTRA_ITEMS)
+        val items = intent.extras?.getParcelableArrayListCompat<MostViewedDetailItem>(EXTRA_ITEMS)
             ?: arrayListOf()
         val totalViews = intent.getLongExtra(EXTRA_TOTAL_VIEWS, 0L)
         val totalViewsChange = intent.getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L)

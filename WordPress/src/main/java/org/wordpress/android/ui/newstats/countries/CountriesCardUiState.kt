@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.countries
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
 /**
  * UI State for the Countries stats card.
@@ -40,12 +41,11 @@ data class CountryItem(
 /**
  * Represents the change in views for a country compared to the previous period.
  */
-sealed class CountryViewChange : Serializable {
+sealed class CountryViewChange : Parcelable {
+    @Parcelize
     data class Positive(val value: Long, val percentage: Double) : CountryViewChange()
+    @Parcelize
     data class Negative(val value: Long, val percentage: Double) : CountryViewChange()
+    @Parcelize
     data object NoChange : CountryViewChange()
-
-    companion object {
-        private const val serialVersionUID: Long = 1L
-    }
 }
