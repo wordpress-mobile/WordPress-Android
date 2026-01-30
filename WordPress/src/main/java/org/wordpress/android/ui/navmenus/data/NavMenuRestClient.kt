@@ -342,7 +342,7 @@ class NavMenuRestClient @Inject constructor(
             this.remoteMenuId = this@toNavMenuModel.id
             this.name = this@toNavMenuModel.name
             this.slug = this@toNavMenuModel.slug
-            this.description = this@toNavMenuModel.description ?: ""
+            this.description = this@toNavMenuModel.description
             this.locations = this@toNavMenuModel.locations.joinToString(
                 separator = ",",
                 prefix = "[",
@@ -358,20 +358,20 @@ class NavMenuRestClient @Inject constructor(
             this.remoteItemId = this@toNavMenuItemModel.id
             this.menuId = menuId
             this.title = this@toNavMenuItemModel.title.raw ?: ""
-            this.url = this@toNavMenuItemModel.url ?: ""
+            this.url = this@toNavMenuItemModel.url
             this.type = mapTypeLabelToType(this@toNavMenuItemModel.typeLabel)
-            this.objectType = this@toNavMenuItemModel.`object` ?: ""
-            this.objectId = this@toNavMenuItemModel.objectId ?: 0
-            this.parentId = this@toNavMenuItemModel.parent ?: 0
+            this.objectType = this@toNavMenuItemModel.`object`
+            this.objectId = this@toNavMenuItemModel.objectId
+            this.parentId = this@toNavMenuItemModel.parent
             this.menuOrder = this@toNavMenuItemModel.menuOrder.toInt()
-            this.target = this@toNavMenuItemModel.target ?: ""
+            this.target = this@toNavMenuItemModel.target
             this.classes = this@toNavMenuItemModel.classes.joinToString(
                 separator = ",",
                 prefix = "[",
                 postfix = "]"
             ) { "\"$it\"" }
-            this.description = this@toNavMenuItemModel.description ?: ""
-            this.attrTitle = this@toNavMenuItemModel.attrTitle ?: ""
+            this.description = this@toNavMenuItemModel.description
+            this.attrTitle = this@toNavMenuItemModel.attrTitle
         }
     }
 
@@ -382,7 +382,7 @@ class NavMenuRestClient @Inject constructor(
         return NavMenuLocationModel().apply {
             this.localSiteId = localSiteId
             this.name = slug
-            this.description = this@toNavMenuLocationModel.description ?: ""
+            this.description = this@toNavMenuLocationModel.description
             this.menuId = this@toNavMenuLocationModel.menu
         }
     }
