@@ -248,14 +248,13 @@ class NavMenuRestClient @Inject constructor(
 
         return when (response) {
             is WpRequestResult.Success -> {
-                val locationsData = response.response.data
                 appLogWrapper.d(AppLog.T.API, "Fetched menu locations")
-                // The response is a Map<String, MenuLocationWithViewContext>
-                @Suppress("UNCHECKED_CAST")
-                val locationsMap = locationsData as? Map<String, MenuLocationWithViewContext>
-                val locations = locationsMap?.map { entry ->
-                    entry.value.toNavMenuLocationModel(site.id, entry.key)
-                } ?: emptyList()
+                // The uniffi binding returns a HashMap type that needs to be cast to Map
+                @Suppress("UNCHECKED_CAST", "CAST_NEVER_SUCCEEDS")
+                val locationsMap = response.response.data as Map<String, MenuLocationWithViewContext>
+                val locations = locationsMap.map { (slug, location) ->
+                    location.toNavMenuLocationModel(site.id, slug)
+                }
                 NavMenuLocationsResult.Success(locations)
             }
             else -> {
@@ -307,7 +306,7 @@ class NavMenuRestClient @Inject constructor(
                     .map { it.trim().trim('"') }
                     .filter { it.isNotEmpty() }
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             appLogWrapper.e(AppLog.T.API, "Failed to parse locations array: $jsonArray")
             emptyList()
         }
