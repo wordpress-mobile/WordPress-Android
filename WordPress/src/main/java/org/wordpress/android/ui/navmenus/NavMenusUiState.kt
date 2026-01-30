@@ -69,6 +69,7 @@ data class MenuItemUiModel(
     val url: String,
     val type: String,
     val typeLabel: String,
+    val description: String,
     val parentId: Long,
     val menuOrder: Int,
     val indentLevel: Int
@@ -188,6 +189,7 @@ fun NavMenuItemModel.toUiModel(indentLevel: Int): MenuItemUiModel {
         url = url,
         type = type,
         typeLabel = typeLabel,
+        description = description,
         parentId = parentId,
         menuOrder = menuOrder,
         indentLevel = indentLevel

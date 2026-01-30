@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
 import org.wordpress.android.ui.navmenus.MenuItemDetailUiState
 import org.wordpress.android.ui.navmenus.ParentItemOption
 
@@ -124,7 +125,7 @@ private fun ItemFieldsCard(
                 singleLine = true
             )
 
-            if (state.type == "custom") {
+            if (state.type == NavMenuItemModel.TYPE_CUSTOM) {
                 OutlinedTextField(
                     value = state.url,
                     onValueChange = onUrlChange,

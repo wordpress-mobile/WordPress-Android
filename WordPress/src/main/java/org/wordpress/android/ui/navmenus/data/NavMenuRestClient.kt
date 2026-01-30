@@ -321,6 +321,17 @@ class NavMenuRestClient @Inject constructor(
         }
     }
 
+    private fun mapTypeLabelToType(typeLabel: String?): String {
+        return when (typeLabel?.lowercase()) {
+            "custom link" -> NavMenuItemModel.TYPE_CUSTOM
+            "page" -> NavMenuItemModel.TYPE_POST_TYPE
+            "post" -> NavMenuItemModel.TYPE_POST_TYPE
+            "category" -> NavMenuItemModel.TYPE_TAXONOMY
+            "tag" -> NavMenuItemModel.TYPE_TAXONOMY
+            else -> NavMenuItemModel.TYPE_CUSTOM
+        }
+    }
+
     // ========== Extension Functions ==========
 
     private fun NavMenuWithEditContext.toNavMenuModel(localSiteId: Int): NavMenuModel {
@@ -346,7 +357,7 @@ class NavMenuRestClient @Inject constructor(
             this.menuId = menuId
             this.title = this@toNavMenuItemModel.title.raw ?: ""
             this.url = this@toNavMenuItemModel.url ?: ""
-            this.type = this@toNavMenuItemModel.typeLabel ?: ""
+            this.type = mapTypeLabelToType(this@toNavMenuItemModel.typeLabel)
             this.objectType = this@toNavMenuItemModel.`object` ?: ""
             this.objectId = this@toNavMenuItemModel.objectId ?: 0
             this.parentId = this@toNavMenuItemModel.parent ?: 0

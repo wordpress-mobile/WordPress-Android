@@ -501,6 +501,11 @@ class NavMenusViewModel @Inject constructor(
                 return@launch
             }
 
+            if (state.url.isNotBlank() && !isValidUrl(state.url)) {
+                _uiEvent.value = NavMenusUiEvent.ShowError("Please enter a valid URL")
+                return@launch
+            }
+
             _menuItemDetailState.value = state.copy(isSaving = true)
 
             val item = NavMenuItemModel().apply {
@@ -579,5 +584,14 @@ class NavMenusViewModel @Inject constructor(
 
     fun consumeUiEvent() {
         _uiEvent.value = null
+    }
+
+    private fun isValidUrl(url: String): Boolean {
+        return try {
+            val pattern = android.util.Patterns.WEB_URL
+            pattern.matcher(url).matches()
+        } catch (e: Exception) {
+            false
+        }
     }
 }
