@@ -16,8 +16,10 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.navmenus.data.NavMenuRestClient
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class NavMenusViewModel @Inject constructor(
@@ -110,10 +112,12 @@ class NavMenusViewModel @Inject constructor(
                         }
                     }
                 }
-            } catch (e: Exception) {
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: IOException) {
                 _menuListState.value = MenuListUiState(
                     isLoading = false,
-                    error = e.message ?: "An unexpected error occurred"
+                    error = e.message ?: "Network error occurred"
                 )
             }
         }
