@@ -220,7 +220,6 @@ class StatsDataSourceImpl @Inject constructor(
                 ReferrersDataResult.Error("Unknown error")
             }
         }
-        return ReferrersDataResult.Error("Referrers API not available")
     }
 
     override suspend fun fetchCountryViews(

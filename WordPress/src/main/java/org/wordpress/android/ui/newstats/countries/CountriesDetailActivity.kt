@@ -35,27 +35,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import androidx.compose.ui.graphics.Color as ComposeColor
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.newstats.StatsColors
+import org.wordpress.android.ui.newstats.components.StatsChangeIndicator
 import org.wordpress.android.ui.newstats.components.StatsGeoChartWebView
+import org.wordpress.android.ui.newstats.components.StatsMapLegend
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.util.extensions.getSerializableCompat
 import java.io.Serializable
-import java.util.Locale
 
 private const val EXTRA_COUNTRIES = "extra_countries"
 private const val EXTRA_MAP_DATA = "extra_map_data"
@@ -205,7 +201,7 @@ private fun CountriesDetailScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Legend
-                MapLegend(minViews = minViews, maxViews = maxViews)
+                StatsMapLegend(minViews = minViews, maxViews = maxViews)
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
@@ -261,46 +257,6 @@ private fun CountryMap(
         mapData = mapData,
         modifier = modifier
     )
-}
-
-@Composable
-private fun MapLegend(
-    minViews: Long,
-    maxViews: Long
-) {
-    val context = LocalContext.current
-    // Use the same colors as the map (stats color resources)
-    val colorLow = ComposeColor(ContextCompat.getColor(context, R.color.stats_map_activity_low))
-    val colorHigh = ComposeColor(ContextCompat.getColor(context, R.color.stats_map_activity_high))
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = formatStatValue(minViews),
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .height(8.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(colorLow, colorHigh)
-                    )
-                )
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = formatStatValue(maxViews),
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
 }
 
 @Composable
@@ -378,35 +334,10 @@ private fun DetailCountryRow(
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                ChangeIndicator(change = country.change)
+                StatsChangeIndicator(change = country.change)
             }
         }
     }
-}
-
-@Composable
-private fun ChangeIndicator(change: CountryViewChange) {
-    val (text, color) = when (change) {
-        is CountryViewChange.Positive -> Pair(
-            "+${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
-            StatsColors.ChangeBadgePositive
-        )
-        is CountryViewChange.Negative -> Pair(
-            "-${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
-            StatsColors.ChangeBadgeNegative
-        )
-        is CountryViewChange.NoChange -> return
-    }
-
-    Text(
-        text = text,
-        style = MaterialTheme.typography.labelSmall,
-        color = color
-    )
 }
 
 @Preview(showBackground = true)
