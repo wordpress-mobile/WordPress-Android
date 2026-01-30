@@ -1,10 +1,5 @@
 package org.wordpress.android.ui.newstats.countries
 
-import android.annotation.SuppressLint
-import android.graphics.Color
-import android.util.Base64
-import android.webkit.WebSettings
-import android.webkit.WebView
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -35,27 +30,27 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
+import org.wordpress.android.ui.newstats.components.StatsGeoChartWebView
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import androidx.compose.ui.graphics.Color as ComposeColor
 import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
 
-private const val RGB_MASK = 0xFFFFFF
 private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
@@ -259,79 +254,15 @@ private fun EmptyContent() {
     }
 }
 
-@SuppressLint("SetJavaScriptEnabled")
 @Composable
 private fun CountryMap(
     mapData: String,
     modifier: Modifier = Modifier
 ) {
-    val colorLow = MaterialTheme.colorScheme.primary.blendWithWhite(0.2f).toHexString()
-    val colorHigh = MaterialTheme.colorScheme.primary.toHexString()
-    val backgroundColor = MaterialTheme.colorScheme.surface.toHexString()
-    val emptyColor = MaterialTheme.colorScheme.surfaceVariant.toHexString()
-    val viewsLabel = stringResource(R.string.stats_countries_views_header)
-
-    val htmlPage = remember(mapData, colorLow, colorHigh, backgroundColor, emptyColor, viewsLabel) {
-        buildMapHtml(mapData, viewsLabel, colorLow, colorHigh, emptyColor, backgroundColor)
-    }
-
-    AndroidView(
-        modifier = modifier.clip(RoundedCornerShape(8.dp)),
-        factory = { ctx ->
-            WebView(ctx).apply {
-                setBackgroundColor(Color.TRANSPARENT)
-                settings.javaScriptEnabled = true
-                settings.cacheMode = WebSettings.LOAD_NO_CACHE
-            }
-        },
-        update = { webView ->
-            val base64Html = Base64.encodeToString(htmlPage.toByteArray(), Base64.DEFAULT)
-            webView.loadData(base64Html, "text/html; charset=UTF-8", "base64")
-        }
+    StatsGeoChartWebView(
+        mapData = mapData,
+        modifier = modifier
     )
-}
-
-@Suppress("LongParameterList")
-private fun buildMapHtml(
-    mapData: String,
-    viewsLabel: String,
-    colorLow: String,
-    colorHigh: String,
-    emptyColor: String,
-    backgroundColor: String
-): String {
-    return """
-        <html>
-        <head>
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script type="text/javascript">
-            google.charts.load('current', {'packages':['geochart']});
-            google.charts.setOnLoadCallback(drawRegionsMap);
-            function drawRegionsMap() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Country', '$viewsLabel'],$mapData
-                ]);
-                var options = {
-                    keepAspectRatio: true,
-                    region: 'world',
-                    colorAxis: { colors: ['#$colorLow', '#$colorHigh'] },
-                    datalessRegionColor: '#$emptyColor',
-                    backgroundColor: '#$backgroundColor',
-                    legend: 'none',
-                    enableRegionInteractivity: false
-                };
-                var chart = new google.visualization.GeoChart(
-                    document.getElementById('regions_div')
-                );
-                chart.draw(data, options);
-            }
-        </script>
-        </head>
-        <body style="margin: 0px;">
-        <div id="regions_div" style="width: 100%; height: 100%;"></div>
-        </body>
-        </html>
-    """.trimIndent()
 }
 
 @Composable
@@ -339,8 +270,10 @@ private fun MapLegend(
     minViews: Long,
     maxViews: Long
 ) {
-    val colorLow = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-    val colorHigh = MaterialTheme.colorScheme.primary
+    val context = LocalContext.current
+    // Use the same colors as the map (stats color resources)
+    val colorLow = ComposeColor(ContextCompat.getColor(context, R.color.stats_map_activity_low))
+    val colorHigh = ComposeColor(ContextCompat.getColor(context, R.color.stats_map_activity_high))
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -523,25 +456,6 @@ private fun ErrorContent(
         }
         Spacer(modifier = Modifier.height(24.dp))
     }
-}
-
-private fun androidx.compose.ui.graphics.Color.toHexString(): String {
-    val argb = this.toArgb()
-    return String.format(Locale.US, "%06X", argb and RGB_MASK)
-}
-
-/**
- * Blends this color with white based on the given ratio.
- * Ratio of 0.0 returns white, ratio of 1.0 returns the original color.
- */
-private fun androidx.compose.ui.graphics.Color.blendWithWhite(ratio: Float): androidx.compose.ui.graphics.Color {
-    val white = androidx.compose.ui.graphics.Color.White
-    return androidx.compose.ui.graphics.Color(
-        red = white.red + (this.red - white.red) * ratio,
-        green = white.green + (this.green - white.green) * ratio,
-        blue = white.blue + (this.blue - white.blue) * ratio,
-        alpha = 1f
-    )
 }
 
 // Previews
