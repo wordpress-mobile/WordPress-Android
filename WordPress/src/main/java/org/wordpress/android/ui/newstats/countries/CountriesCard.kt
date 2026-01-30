@@ -1,11 +1,5 @@
 package org.wordpress.android.ui.newstats.countries
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,8 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -46,12 +38,14 @@ import org.wordpress.android.ui.newstats.components.StatsGeoChartWebView
 import org.wordpress.android.ui.newstats.components.StatsMapLegend
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
 
 private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
 private const val MAP_ASPECT_RATIO = 8f / 5f
+private const val LOADING_ITEM_COUNT = 4
 
 @Composable
 fun CountriesCard(
@@ -80,89 +74,54 @@ fun CountriesCard(
 
 @Composable
 private fun LoadingContent() {
-    val shimmerColors = listOf(
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-    )
-
-    val transition = rememberInfiniteTransition(label = "shimmer")
-    val translateAnimation = transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1200, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "shimmer_translate"
-    )
-
-    val shimmerBrush = Brush.linearGradient(
-        colors = shimmerColors,
-        start = Offset(translateAnimation.value - 500f, 0f),
-        end = Offset(translateAnimation.value, 0f)
-    )
-
     Column(modifier = Modifier.padding(CardPadding)) {
         // Title placeholder
-        Box(
+        ShimmerBox(
             modifier = Modifier
                 .width(100.dp)
                 .height(20.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(shimmerBrush)
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         // Map placeholder
-        Box(
+        ShimmerBox(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(MAP_ASPECT_RATIO)
                 .clip(RoundedCornerShape(8.dp))
-                .background(shimmerBrush)
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         // Legend placeholder
-        Box(
+        ShimmerBox(
             modifier = Modifier
                 .width(150.dp)
                 .height(16.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(shimmerBrush)
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         // List items placeholders
-        repeat(4) {
+        repeat(LOADING_ITEM_COUNT) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
+                ShimmerBox(
+                    modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
-                Box(
+                ShimmerBox(
                     modifier = Modifier
                         .weight(1f)
                         .height(16.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
-                Box(
+                ShimmerBox(
                     modifier = Modifier
                         .width(50.dp)
                         .height(16.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
                 )
             }
         }
