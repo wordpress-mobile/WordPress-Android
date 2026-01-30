@@ -33,9 +33,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import org.wordpress.android.ui.newstats.components.StatsChangeIndicator
-import org.wordpress.android.ui.newstats.components.StatsGeoChartWebView
-import org.wordpress.android.ui.newstats.components.StatsMapLegend
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.util.ShimmerBox

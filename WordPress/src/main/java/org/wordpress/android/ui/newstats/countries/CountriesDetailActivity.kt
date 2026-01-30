@@ -45,9 +45,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.newstats.components.StatsChangeIndicator
-import org.wordpress.android.ui.newstats.components.StatsGeoChartWebView
-import org.wordpress.android.ui.newstats.components.StatsMapLegend
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat

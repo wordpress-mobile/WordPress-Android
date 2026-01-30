@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.components
+package org.wordpress.android.ui.newstats.countries
 
 import android.annotation.SuppressLint
 import android.graphics.Color

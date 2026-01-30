@@ -1,10 +1,9 @@
-package org.wordpress.android.ui.newstats.components
+package org.wordpress.android.ui.newstats.countries
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import org.wordpress.android.ui.newstats.StatsColors
-import org.wordpress.android.ui.newstats.countries.CountryViewChange
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
 
