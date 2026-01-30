@@ -23,7 +23,6 @@ class CountriesViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val statsRepository: StatsRepository
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow<CountriesCardUiState>(CountriesCardUiState.Loading)
     val uiState: StateFlow<CountriesCardUiState> = _uiState.asStateFlow()
 

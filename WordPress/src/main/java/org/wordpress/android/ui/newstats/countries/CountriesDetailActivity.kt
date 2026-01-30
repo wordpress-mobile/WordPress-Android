@@ -12,7 +12,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -57,8 +56,10 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.util.extensions.getSerializableCompat
 import java.io.Serializable
+import java.util.Locale
 
 private const val EXTRA_COUNTRIES = "extra_countries"
+private const val RGB_MASK = 0xFFFFFF
 private const val EXTRA_MAP_DATA = "extra_map_data"
 private const val EXTRA_MIN_VIEWS = "extra_min_views"
 private const val EXTRA_MAX_VIEWS = "extra_max_views"
@@ -122,7 +123,11 @@ data class CountriesDetailItem(
     val countryName: String,
     val views: Long,
     val flagIconUrl: String?
-) : Serializable
+) : Serializable {
+    companion object {
+        private const val serialVersionUID: Long = 1L
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -245,6 +250,7 @@ private fun CountryMap(
     )
 }
 
+@Suppress("LongParameterList")
 private fun buildMapHtml(
     mapData: String,
     viewsLabel: String,
@@ -405,7 +411,7 @@ private fun DetailCountryRow(
 
 private fun androidx.compose.ui.graphics.Color.toHexString(): String {
     val argb = this.toArgb()
-    return String.format("%06X", argb and 0xFFFFFF)
+    return String.format(Locale.US, "%06X", argb and RGB_MASK)
 }
 
 /**

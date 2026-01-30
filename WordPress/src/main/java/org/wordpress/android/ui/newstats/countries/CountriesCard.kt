@@ -52,7 +52,9 @@ import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.util.formatStatValue
+import java.util.Locale
 
+private const val RGB_MASK = 0xFFFFFF
 private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
@@ -288,6 +290,7 @@ private fun CountryMap(
     )
 }
 
+@Suppress("LongParameterList")
 private fun buildMapHtml(
     mapData: String,
     viewsLabel: String,
@@ -495,7 +498,7 @@ private fun ErrorContent(
 
 private fun androidx.compose.ui.graphics.Color.toHexString(): String {
     val argb = this.toArgb()
-    return String.format("%06X", argb and 0xFFFFFF)
+    return String.format(Locale.US, "%06X", argb and RGB_MASK)
 }
 
 /**
