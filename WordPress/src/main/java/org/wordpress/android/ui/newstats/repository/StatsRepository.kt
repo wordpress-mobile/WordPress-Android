@@ -696,9 +696,10 @@ class StatsRepository @Inject constructor(
                     emptyMap()
                 }
 
-                val totalViews = currentResult.data.totalViews
+                // Calculate totalViews from countries list (API summary.totalViews may be null/0)
+                val totalViews = currentResult.data.countries.sumOf { it.views }
                 val previousTotalViews = if (previousResult is CountryViewsDataResult.Success) {
-                    previousResult.data.totalViews
+                    previousResult.data.countries.sumOf { it.views }
                 } else {
                     0L
                 }
