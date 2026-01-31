@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.model.navmenu.NavMenuLocationModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.ui.navmenus.parseJsonLocationArray
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MenuLocationWithViewContext
@@ -65,7 +66,7 @@ class NavMenuRestClient @Inject constructor(
                     name = menu.name,
                     description = menu.description.takeIf { it.isNotEmpty() },
                     slug = null, // Let WordPress generate the slug
-                    locations = parseLocationsArray(menu.locations).takeIf { it.isNotEmpty() },
+                    locations = menu.locations.parseJsonLocationArray().takeIf { it.isNotEmpty() },
                     autoAdd = menu.autoAdd
                 )
             )
@@ -93,7 +94,7 @@ class NavMenuRestClient @Inject constructor(
                 params = NavMenuUpdateParams(
                     name = menu.name,
                     description = menu.description.takeIf { it.isNotEmpty() },
-                    locations = parseLocationsArray(menu.locations).takeIf { it.isNotEmpty() },
+                    locations = menu.locations.parseJsonLocationArray().takeIf { it.isNotEmpty() },
                     autoAdd = menu.autoAdd
                 )
             )
@@ -318,23 +319,6 @@ class NavMenuRestClient @Inject constructor(
             objectId = item.objectId.takeIf { it > 0 },
             description = item.description.takeIf { it.isNotEmpty() }
         )
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    private fun parseLocationsArray(jsonArray: String): List<String> {
-        return try {
-            if (jsonArray.isEmpty() || jsonArray == "[]") {
-                emptyList()
-            } else {
-                jsonArray.trim('[', ']')
-                    .split(",")
-                    .map { it.trim().trim('"') }
-                    .filter { it.isNotEmpty() }
-            }
-        } catch (_: Exception) {
-            appLogWrapper.e(AppLog.T.API, "Failed to parse locations array: $jsonArray")
-            emptyList()
-        }
     }
 
     private fun parseErrorMessage(response: WpRequestResult<*>): String {

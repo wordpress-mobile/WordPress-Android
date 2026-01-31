@@ -30,6 +30,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.annotation.StringRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterNotNull
@@ -139,7 +140,14 @@ class NavMenusActivity : BaseAppCompatActivity() {
                             onAutoAddChange = { viewModel.updateMenuAutoAdd(it) },
                             onLocationToggle = { viewModel.toggleMenuLocation(it) },
                             onSaveClick = { viewModel.saveMenu() },
-                            onDeleteClick = { showDeleteMenuConfirmation(state?.name ?: "") },
+                            onDeleteClick = {
+                                showDeleteConfirmation(
+                                    titleRes = R.string.delete_menu_confirmation_title,
+                                    messageRes = R.string.delete_menu_confirmation_message,
+                                    itemName = state?.name ?: "",
+                                    onConfirm = { viewModel.deleteMenu() }
+                                )
+                            },
                             modifier = Modifier.padding(contentPadding)
                         )
                     }
@@ -197,7 +205,14 @@ class NavMenusActivity : BaseAppCompatActivity() {
                     menuItemDetailState?.isNew == false
                 ) {
                     IconButton(
-                        onClick = { showDeleteMenuItemConfirmation(menuItemDetailState?.title ?: "") }
+                        onClick = {
+                            showDeleteConfirmation(
+                                titleRes = R.string.delete_menu_item_confirmation_title,
+                                messageRes = R.string.delete_menu_item_confirmation_message,
+                                itemName = menuItemDetailState?.title ?: "",
+                                onConfirm = { viewModel.deleteMenuItem() }
+                            )
+                        }
                     ) {
                         Icon(
                             Icons.Default.Delete,
@@ -254,24 +269,16 @@ class NavMenusActivity : BaseAppCompatActivity() {
         }
     }
 
-    private fun showDeleteMenuConfirmation(menuName: String) {
+    private fun showDeleteConfirmation(
+        @StringRes titleRes: Int,
+        @StringRes messageRes: Int,
+        itemName: String,
+        onConfirm: () -> Unit
+    ) {
         MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.delete_menu_confirmation_title)
-            .setMessage(getString(R.string.delete_menu_confirmation_message, menuName))
-            .setPositiveButton(R.string.delete) { _, _ ->
-                viewModel.deleteMenu()
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
-    }
-
-    private fun showDeleteMenuItemConfirmation(itemTitle: String) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.delete_menu_item_confirmation_title)
-            .setMessage(getString(R.string.delete_menu_item_confirmation_message, itemTitle))
-            .setPositiveButton(R.string.delete) { _, _ ->
-                viewModel.deleteMenuItem()
-            }
+            .setTitle(titleRes)
+            .setMessage(getString(messageRes, itemName))
+            .setPositiveButton(R.string.delete) { _, _ -> onConfirm() }
             .setNegativeButton(R.string.cancel, null)
             .show()
     }

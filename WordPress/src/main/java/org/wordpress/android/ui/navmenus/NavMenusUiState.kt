@@ -129,24 +129,25 @@ enum class NavMenuScreen {
 }
 
 /**
- * Helper function to convert NavMenuModel to MenuUiModel
+ * Parses a JSON array string like "[\"value1\",\"value2\"]" into a list of strings.
  */
-fun NavMenuModel.toUiModel(itemCount: Int): MenuUiModel {
-    val locationsList = if (locations.isNotEmpty() && locations != "[]") {
-        locations.trim('[', ']')
-            .split(",")
-            .map { it.trim().trim('"') }
-            .filter { it.isNotEmpty() }
+fun String.parseJsonLocationArray(): List<String> =
+    if (isNotEmpty() && this != "[]") {
+        trim('[', ']').split(",").map { it.trim().trim('"') }.filter { it.isNotEmpty() }
     } else {
         emptyList()
     }
 
+/**
+ * Helper function to convert NavMenuModel to MenuUiModel
+ */
+fun NavMenuModel.toUiModel(itemCount: Int): MenuUiModel {
     return MenuUiModel(
         id = remoteMenuId,
         name = name,
         description = description,
         itemCount = itemCount,
-        locations = locationsList
+        locations = locations.parseJsonLocationArray()
     )
 }
 

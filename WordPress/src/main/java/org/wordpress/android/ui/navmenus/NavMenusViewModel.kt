@@ -147,21 +147,12 @@ class NavMenusViewModel @Inject constructor(
     fun navigateToEditMenu(menuId: Long) {
         val menu = currentMenus.find { it.remoteMenuId == menuId } ?: return
 
-        val selectedLocations = if (menu.locations.isNotEmpty() && menu.locations != "[]") {
-            menu.locations.trim('[', ']')
-                .split(",")
-                .map { it.trim().trim('"') }
-                .filter { it.isNotEmpty() }
-        } else {
-            emptyList()
-        }
-
         _menuDetailState.value = MenuDetailUiState(
             menuId = menu.remoteMenuId,
             name = menu.name,
             description = menu.description,
             autoAdd = menu.autoAdd,
-            selectedLocations = selectedLocations,
+            selectedLocations = menu.locations.parseJsonLocationArray(),
             availableLocations = _menuListState.value.locations,
             isNew = false
         )
