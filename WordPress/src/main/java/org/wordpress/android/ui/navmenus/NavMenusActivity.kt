@@ -84,9 +84,6 @@ class NavMenusActivity : BaseAppCompatActivity() {
             is NavMenusUiEvent.ShowError -> {
                 ToastUtils.showToast(this, event.message, ToastUtils.Duration.LONG)
             }
-            is NavMenusUiEvent.ShowMessage -> {
-                ToastUtils.showToast(this, event.message)
-            }
             is NavMenusUiEvent.MenuSaved -> {
                 ToastUtils.showToast(this, R.string.menu_saved)
             }
@@ -98,9 +95,6 @@ class NavMenusActivity : BaseAppCompatActivity() {
             }
             is NavMenusUiEvent.MenuItemDeleted -> {
                 ToastUtils.showToast(this, R.string.menu_item_deleted)
-            }
-            NavMenusUiEvent.NavigateBack -> {
-                // Handled by ViewModel
             }
         }
     }

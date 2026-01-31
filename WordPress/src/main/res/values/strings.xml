@@ -4546,9 +4546,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="menu_item_parent_label">Parent</string>
     <string name="menu_item_no_parent">None (top level)</string>
     <string name="menu_item_target_label">Link target</string>
-    <string name="menu_item_css_classes_label">CSS classes</string>
     <string name="menu_item_description_label">Description</string>
-    <string name="menu_item_attr_title_label">Title attribute</string>
     <string name="menu_item_saved">Menu item saved</string>
     <string name="menu_item_deleted">Menu item deleted</string>
     <string name="delete_menu_item_confirmation_title">Delete menu item</string>

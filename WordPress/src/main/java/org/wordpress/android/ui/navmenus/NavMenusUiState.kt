@@ -112,8 +112,6 @@ data class ParentItemOption(
  */
 sealed class NavMenusUiEvent {
     data class ShowError(val message: String) : NavMenusUiEvent()
-    data class ShowMessage(val message: String) : NavMenusUiEvent()
-    data object NavigateBack : NavMenusUiEvent()
     data object MenuSaved : NavMenusUiEvent()
     data object MenuDeleted : NavMenusUiEvent()
     data object MenuItemSaved : NavMenusUiEvent()
