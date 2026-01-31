@@ -6,7 +6,8 @@ import org.wordpress.android.fluxc.model.navmenu.NavMenuLocationModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.ui.navmenus.parseJsonLocationArray
+import org.wordpress.android.ui.navmenus.parseJsonStringArray
+import org.wordpress.android.ui.navmenus.toJsonStringArray
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MenuLocationWithViewContext
@@ -66,7 +67,7 @@ class NavMenuRestClient @Inject constructor(
                     name = menu.name,
                     description = menu.description.takeIf { it.isNotEmpty() },
                     slug = null, // Let WordPress generate the slug
-                    locations = menu.locations.parseJsonLocationArray().takeIf { it.isNotEmpty() },
+                    locations = menu.locations.parseJsonStringArray().takeIf { it.isNotEmpty() },
                     autoAdd = menu.autoAdd
                 )
             )
@@ -94,7 +95,7 @@ class NavMenuRestClient @Inject constructor(
                 params = NavMenuUpdateParams(
                     name = menu.name,
                     description = menu.description.takeIf { it.isNotEmpty() },
-                    locations = menu.locations.parseJsonLocationArray().takeIf { it.isNotEmpty() },
+                    locations = menu.locations.parseJsonStringArray().takeIf { it.isNotEmpty() },
                     autoAdd = menu.autoAdd
                 )
             )
@@ -351,16 +352,15 @@ class NavMenuRestClient @Inject constructor(
             this.name = this@toNavMenuModel.name
             this.slug = this@toNavMenuModel.slug
             this.description = this@toNavMenuModel.description
-            this.locations = this@toNavMenuModel.locations.joinToString(
-                separator = ",",
-                prefix = "[",
-                postfix = "]"
-            ) { "\"$it\"" }
+            this.locations = this@toNavMenuModel.locations.toJsonStringArray()
             this.autoAdd = this@toNavMenuModel.autoAdd
         }
     }
 
-    private fun NavMenuItemWithEditContext.toNavMenuItemModel(localSiteId: Int, menuId: Long): NavMenuItemModel {
+    private fun NavMenuItemWithEditContext.toNavMenuItemModel(
+        localSiteId: Int,
+        menuId: Long = this.menus ?: 0L
+    ): NavMenuItemModel {
         return NavMenuItemModel().apply {
             this.localSiteId = localSiteId
             this.remoteItemId = this@toNavMenuItemModel.id
@@ -373,18 +373,10 @@ class NavMenuRestClient @Inject constructor(
             this.parentId = this@toNavMenuItemModel.parent
             this.menuOrder = this@toNavMenuItemModel.menuOrder.toInt()
             this.target = this@toNavMenuItemModel.target
-            this.classes = this@toNavMenuItemModel.classes.joinToString(
-                separator = ",",
-                prefix = "[",
-                postfix = "]"
-            ) { "\"$it\"" }
+            this.classes = this@toNavMenuItemModel.classes.toJsonStringArray()
             this.description = this@toNavMenuItemModel.description
             this.attrTitle = this@toNavMenuItemModel.attrTitle
         }
-    }
-
-    private fun NavMenuItemWithEditContext.toNavMenuItemModel(localSiteId: Int): NavMenuItemModel {
-        return toNavMenuItemModel(localSiteId, this.menus ?: 0L)
     }
 
     private fun MenuLocationWithViewContext.toNavMenuLocationModel(

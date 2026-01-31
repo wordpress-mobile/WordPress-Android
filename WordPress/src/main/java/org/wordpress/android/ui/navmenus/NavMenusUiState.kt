@@ -131,12 +131,18 @@ enum class NavMenuScreen {
 /**
  * Parses a JSON array string like "[\"value1\",\"value2\"]" into a list of strings.
  */
-fun String.parseJsonLocationArray(): List<String> =
+fun String.parseJsonStringArray(): List<String> =
     if (isNotEmpty() && this != "[]") {
         trim('[', ']').split(",").map { it.trim().trim('"') }.filter { it.isNotEmpty() }
     } else {
         emptyList()
     }
+
+/**
+ * Converts a list of strings to a JSON array string like "[\"value1\",\"value2\"]".
+ */
+fun List<String>.toJsonStringArray(): String =
+    joinToString(separator = ",", prefix = "[", postfix = "]") { "\"$it\"" }
 
 /**
  * Helper function to convert NavMenuModel to MenuUiModel
@@ -147,7 +153,7 @@ fun NavMenuModel.toUiModel(itemCount: Int): MenuUiModel {
         name = name,
         description = description,
         itemCount = itemCount,
-        locations = locations.parseJsonLocationArray()
+        locations = locations.parseJsonStringArray()
     )
 }
 

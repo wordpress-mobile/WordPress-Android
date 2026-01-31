@@ -152,7 +152,7 @@ class NavMenusViewModel @Inject constructor(
             name = menu.name,
             description = menu.description,
             autoAdd = menu.autoAdd,
-            selectedLocations = menu.locations.parseJsonLocationArray(),
+            selectedLocations = menu.locations.parseJsonStringArray(),
             availableLocations = _menuListState.value.locations,
             isNew = false
         )
@@ -345,11 +345,7 @@ class NavMenusViewModel @Inject constructor(
                 remoteMenuId = state.menuId
                 name = state.name
                 description = state.description
-                locations = state.selectedLocations.joinToString(
-                    separator = ",",
-                    prefix = "[",
-                    postfix = "]"
-                ) { "\"$it\"" }
+                locations = state.selectedLocations.toJsonStringArray()
                 autoAdd = state.autoAdd
             }
 
