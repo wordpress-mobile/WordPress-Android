@@ -49,7 +49,6 @@ fun MenuItemDetailScreen(
     onUrlChange: (String) -> Unit,
     onParentChange: (Long) -> Unit,
     onTargetChange: (String) -> Unit,
-    onCssClassesChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onAttrTitleChange: (String) -> Unit,
     onSaveClick: () -> Unit,
@@ -71,7 +70,6 @@ fun MenuItemDetailScreen(
             onUrlChange = onUrlChange,
             onParentChange = onParentChange,
             onTargetChange = onTargetChange,
-            onCssClassesChange = onCssClassesChange,
             onDescriptionChange = onDescriptionChange,
             onAttrTitleChange = onAttrTitleChange
         )
@@ -100,7 +98,6 @@ private fun ItemFieldsCard(
     onUrlChange: (String) -> Unit,
     onParentChange: (Long) -> Unit,
     onTargetChange: (String) -> Unit,
-    onCssClassesChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onAttrTitleChange: (String) -> Unit
 ) {
@@ -123,6 +120,14 @@ private fun ItemFieldsCard(
                 label = { Text(stringResource(R.string.menu_item_title_label)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
+            )
+
+            OutlinedTextField(
+                value = state.description,
+                onValueChange = onDescriptionChange,
+                label = { Text(stringResource(R.string.menu_item_description_label)) },
+                modifier = Modifier.fillMaxWidth(),
+                minLines = 2
             )
 
             if (state.type == NavMenuItemModel.TYPE_CUSTOM) {
@@ -150,22 +155,6 @@ private fun ItemFieldsCard(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 placeholder = { Text("_blank") }
-            )
-
-            OutlinedTextField(
-                value = state.cssClasses,
-                onValueChange = onCssClassesChange,
-                label = { Text(stringResource(R.string.menu_item_css_classes_label)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = state.description,
-                onValueChange = onDescriptionChange,
-                label = { Text(stringResource(R.string.menu_item_description_label)) },
-                modifier = Modifier.fillMaxWidth(),
-                minLines = 2
             )
 
             OutlinedTextField(

@@ -166,7 +166,6 @@ class NavMenusActivity : BaseAppCompatActivity() {
                             onUrlChange = { viewModel.updateMenuItemUrl(it) },
                             onParentChange = { viewModel.updateMenuItemParent(it) },
                             onTargetChange = { viewModel.updateMenuItemTarget(it) },
-                            onCssClassesChange = { viewModel.updateMenuItemCssClasses(it) },
                             onDescriptionChange = { viewModel.updateMenuItemDescription(it) },
                             onAttrTitleChange = { viewModel.updateMenuItemAttrTitle(it) },
                             onSaveClick = { viewModel.saveMenuItem() },
