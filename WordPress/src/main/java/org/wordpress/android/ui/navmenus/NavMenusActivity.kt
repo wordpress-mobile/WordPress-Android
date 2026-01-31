@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -168,7 +169,6 @@ class NavMenusActivity : BaseAppCompatActivity() {
                             onTargetChange = { viewModel.updateMenuItemTarget(it) },
                             onDescriptionChange = { viewModel.updateMenuItemDescription(it) },
                             onSaveClick = { viewModel.saveMenuItem() },
-                            onDeleteClick = { showDeleteMenuItemConfirmation(state?.title ?: "") },
                             modifier = Modifier.padding(contentPadding)
                         )
                     }
@@ -180,6 +180,8 @@ class NavMenusActivity : BaseAppCompatActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun NavMenusTopBar(currentRoute: String?) {
+        val menuItemDetailState by viewModel.menuItemDetailState.collectAsState()
+
         TopAppBar(
             title = { Text(getScreenTitle(currentRoute)) },
             navigationIcon = {
@@ -194,6 +196,20 @@ class NavMenusActivity : BaseAppCompatActivity() {
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back)
                     )
+                }
+            },
+            actions = {
+                if (currentRoute == NavMenuScreen.MenuItemDetail.name &&
+                    menuItemDetailState?.isNew == false
+                ) {
+                    IconButton(
+                        onClick = { showDeleteMenuItemConfirmation(menuItemDetailState?.title ?: "") }
+                    ) {
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = stringResource(R.string.delete)
+                        )
+                    }
                 }
             }
         )
