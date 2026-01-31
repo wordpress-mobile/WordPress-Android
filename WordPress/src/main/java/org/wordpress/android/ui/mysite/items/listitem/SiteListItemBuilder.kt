@@ -284,9 +284,10 @@ class SiteListItemBuilder @Inject constructor(
     }
 
     fun buildMenusItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        // Only available for self-hosted sites with Application Passwords configured.
-        // WordPress.com menu editing would require using the WPCom REST API instead.
-        return if (site.isUsingSelfHostedRestApi) { // TODO && site.hasCapabilityEditThemeOptions) {
+        // Only available for sites with Application Passwords configured.
+        return if (site.isUsingSelfHostedRestApi ||
+            (site.isUsingWpComRestApi && site.apiRestPasswordPlain.isNullOrBlank().not())
+        ) { // TODO && site.hasCapabilityEditThemeOptions) {
             ListItem(
                 R.drawable.ic_gridicons_menus,
                 UiStringRes(R.string.menus),
