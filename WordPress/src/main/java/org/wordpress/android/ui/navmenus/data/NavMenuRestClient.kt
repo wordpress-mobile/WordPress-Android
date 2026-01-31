@@ -178,7 +178,7 @@ class NavMenuRestClient @Inject constructor(
         return when (response) {
             is WpRequestResult.Success -> {
                 appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} total menu items")
-                val items = response.response.data.map { it.toNavMenuItemModel(site.id, 0L) }
+                val items = response.response.data.map { it.toNavMenuItemModel(site.id) }
                 NavMenuItemsResult.Success(items)
             }
             else -> {
@@ -397,6 +397,10 @@ class NavMenuRestClient @Inject constructor(
             this.description = this@toNavMenuItemModel.description
             this.attrTitle = this@toNavMenuItemModel.attrTitle
         }
+    }
+
+    private fun NavMenuItemWithEditContext.toNavMenuItemModel(localSiteId: Int): NavMenuItemModel {
+        return toNavMenuItemModel(localSiteId, this.menus ?: 0L)
     }
 
     private fun MenuLocationWithViewContext.toNavMenuLocationModel(
