@@ -112,6 +112,11 @@
             android:label="@string/stats"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.newstats.mostviewed.MostViewedDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
         <!-- Account activities -->
         <activity
             android:name=".ui.main.MeActivity"

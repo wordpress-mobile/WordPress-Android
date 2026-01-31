@@ -5,12 +5,17 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.datasource.CommentsDataPoint
 import org.wordpress.android.ui.newstats.datasource.LikesDataPoint
 import org.wordpress.android.ui.newstats.datasource.PostsDataPoint
+import org.wordpress.android.ui.newstats.datasource.ReferrerDataItem
+import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
+import org.wordpress.android.ui.newstats.datasource.TopPostDataItem
+import org.wordpress.android.ui.newstats.datasource.TopPostsDataResult
 import org.wordpress.android.ui.newstats.datasource.VisitorsDataPoint
 import org.wordpress.android.ui.newstats.datasource.VisitsDataPoint
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -518,6 +523,173 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
     // endregion
 
+    // region fetchMostViewed
+    @Test
+    fun `given successful response, when fetchMostViewed with POSTS_AND_PAGES, then success result is returned`() =
+        test {
+            whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+                .thenReturn(TopPostsDataResult.Success(createTopPostsData()))
+
+            val result = repository.fetchMostViewed(
+                TEST_SITE_ID,
+                StatsPeriod.Last7Days,
+                MostViewedDataSource.POSTS_AND_PAGES
+            )
+
+            assertThat(result).isInstanceOf(MostViewedResult.Success::class.java)
+            val success = result as MostViewedResult.Success
+            assertThat(success.items).hasSize(2)
+            assertThat(success.items[0].title).isEqualTo(TEST_POST_TITLE_1)
+            assertThat(success.items[0].views).isEqualTo(TEST_POST_VIEWS_1)
+            assertThat(success.items[1].title).isEqualTo(TEST_POST_TITLE_2)
+            assertThat(success.items[1].views).isEqualTo(TEST_POST_VIEWS_2)
+        }
+
+    @Test
+    fun `given successful response, when fetchMostViewed with REFERRERS, then success result is returned`() = test {
+        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
+            .thenReturn(ReferrersDataResult.Success(createReferrersData()))
+
+        val result = repository.fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last7Days,
+            MostViewedDataSource.REFERRERS
+        )
+
+        assertThat(result).isInstanceOf(MostViewedResult.Success::class.java)
+        val success = result as MostViewedResult.Success
+        assertThat(success.items).hasSize(2)
+        assertThat(success.items[0].title).isEqualTo(TEST_REFERRER_NAME_1)
+        assertThat(success.items[0].views).isEqualTo(TEST_REFERRER_VIEWS_1)
+        assertThat(success.items[1].title).isEqualTo(TEST_REFERRER_NAME_2)
+        assertThat(success.items[1].views).isEqualTo(TEST_REFERRER_VIEWS_2)
+    }
+
+    @Test
+    fun `given successful response, when fetchMostViewed, then totalViews is calculated correctly`() = test {
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+            .thenReturn(TopPostsDataResult.Success(createTopPostsData()))
+
+        val result = repository.fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last7Days,
+            MostViewedDataSource.POSTS_AND_PAGES
+        )
+
+        assertThat(result).isInstanceOf(MostViewedResult.Success::class.java)
+        val success = result as MostViewedResult.Success
+        assertThat(success.totalViews).isEqualTo(TEST_POST_VIEWS_1 + TEST_POST_VIEWS_2)
+    }
+
+    @Test
+    fun `given current and previous data, when fetchMostViewed, then change is calculated correctly`() = test {
+        val currentData = listOf(
+            TopPostDataItem(id = 1, title = "Post 1", views = 150),
+            TopPostDataItem(id = 2, title = "Post 2", views = 100)
+        )
+        val previousData = listOf(
+            TopPostDataItem(id = 1, title = "Post 1", views = 100),
+            TopPostDataItem(id = 2, title = "Post 2", views = 100)
+        )
+
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+            .thenReturn(TopPostsDataResult.Success(currentData))
+            .thenReturn(TopPostsDataResult.Success(previousData))
+
+        val result = repository.fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last7Days,
+            MostViewedDataSource.POSTS_AND_PAGES
+        )
+
+        assertThat(result).isInstanceOf(MostViewedResult.Success::class.java)
+        val success = result as MostViewedResult.Success
+        // Current total: 250, Previous total: 200, Change: 50
+        assertThat(success.totalViews).isEqualTo(250)
+        assertThat(success.totalViewsChange).isEqualTo(50)
+        assertThat(success.totalViewsChangePercent).isEqualTo(25.0)
+    }
+
+    @Test
+    fun `given error response, when fetchMostViewed with POSTS_AND_PAGES, then error result is returned`() = test {
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+            .thenReturn(TopPostsDataResult.Error(ERROR_MESSAGE))
+
+        val result = repository.fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last7Days,
+            MostViewedDataSource.POSTS_AND_PAGES
+        )
+
+        assertThat(result).isInstanceOf(MostViewedResult.Error::class.java)
+        assertThat((result as MostViewedResult.Error).message).isEqualTo(ERROR_MESSAGE)
+    }
+
+    @Test
+    fun `given error response, when fetchMostViewed with REFERRERS, then error result is returned`() = test {
+        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
+            .thenReturn(ReferrersDataResult.Error(ERROR_MESSAGE))
+
+        val result = repository.fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last7Days,
+            MostViewedDataSource.REFERRERS
+        )
+
+        assertThat(result).isInstanceOf(MostViewedResult.Error::class.java)
+        assertThat((result as MostViewedResult.Error).message).isEqualTo(ERROR_MESSAGE)
+    }
+
+    @Test
+    fun `given item in both periods, when fetchMostViewed, then viewsChange is calculated for item`() = test {
+        val currentData = listOf(
+            TopPostDataItem(id = 1, title = "Post 1", views = 150)
+        )
+        val previousData = listOf(
+            TopPostDataItem(id = 1, title = "Post 1", views = 100)
+        )
+
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+            .thenReturn(TopPostsDataResult.Success(currentData))
+            .thenReturn(TopPostsDataResult.Success(previousData))
+
+        val result = repository.fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last7Days,
+            MostViewedDataSource.POSTS_AND_PAGES
+        )
+
+        assertThat(result).isInstanceOf(MostViewedResult.Success::class.java)
+        val success = result as MostViewedResult.Success
+        assertThat(success.items[0].viewsChange).isEqualTo(50)
+        assertThat(success.items[0].viewsChangePercent).isEqualTo(50.0)
+    }
+
+    @Test
+    fun `given new item not in previous period, when fetchMostViewed, then previousViews is zero`() = test {
+        val currentData = listOf(
+            TopPostDataItem(id = 1, title = "New Post", views = 100)
+        )
+        val previousData = emptyList<TopPostDataItem>()
+
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+            .thenReturn(TopPostsDataResult.Success(currentData))
+            .thenReturn(TopPostsDataResult.Success(previousData))
+
+        val result = repository.fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last7Days,
+            MostViewedDataSource.POSTS_AND_PAGES
+        )
+
+        assertThat(result).isInstanceOf(MostViewedResult.Success::class.java)
+        val success = result as MostViewedResult.Success
+        assertThat(success.items[0].previousViews).isEqualTo(0)
+        assertThat(success.items[0].viewsChange).isEqualTo(100)
+        assertThat(success.items[0].viewsChangePercent).isEqualTo(100.0)
+    }
+    // endregion
+
     // region Helper functions
     private fun createStatsVisitsData() = StatsVisitsData(
         visits = listOf(VisitsDataPoint(TEST_PERIOD_1, TEST_VIEWS)),
@@ -571,6 +743,16 @@ class StatsRepositoryTest : BaseUnitTest() {
             PostsDataPoint(TEST_PERIOD_2, TEST_POSTS_2)
         )
     )
+
+    private fun createTopPostsData() = listOf(
+        TopPostDataItem(id = 1, title = TEST_POST_TITLE_1, views = TEST_POST_VIEWS_1),
+        TopPostDataItem(id = 2, title = TEST_POST_TITLE_2, views = TEST_POST_VIEWS_2)
+    )
+
+    private fun createReferrersData() = listOf(
+        ReferrerDataItem(name = TEST_REFERRER_NAME_1, views = TEST_REFERRER_VIEWS_1),
+        ReferrerDataItem(name = TEST_REFERRER_NAME_2, views = TEST_REFERRER_VIEWS_2)
+    )
     // endregion
 
     companion object {
@@ -597,5 +779,15 @@ class StatsRepositoryTest : BaseUnitTest() {
         private const val TEST_COMMENTS_2 = 8L
         private const val TEST_POSTS_1 = 2L
         private const val TEST_POSTS_2 = 3L
+
+        private const val TEST_POST_TITLE_1 = "Test Post 1"
+        private const val TEST_POST_TITLE_2 = "Test Post 2"
+        private const val TEST_POST_VIEWS_1 = 500L
+        private const val TEST_POST_VIEWS_2 = 300L
+
+        private const val TEST_REFERRER_NAME_1 = "google.com"
+        private const val TEST_REFERRER_NAME_2 = "twitter.com"
+        private const val TEST_REFERRER_VIEWS_1 = 200L
+        private const val TEST_REFERRER_VIEWS_2 = 150L
     }
 }

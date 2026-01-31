@@ -55,24 +55,32 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
-import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
-import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
-import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
+import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
+import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.fill
 import com.patrykandpatrick.vico.compose.common.shader.verticalGradient
+import com.patrykandpatrick.vico.core.cartesian.CartesianDrawingContext
+import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
 import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.core.common.Insets
 import com.patrykandpatrick.vico.core.common.component.LineComponent
 import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
@@ -530,10 +538,37 @@ private fun ViewsStatsChart(
 
     // X-axis formatter to show date labels from current period data
     val dateLabels = chartData.currentPeriod.map { it.label }
-    val bottomAxisValueFormatter = CartesianValueFormatter { context, value, _ ->
+    val bottomAxisValueFormatter = CartesianValueFormatter { _, value, _ ->
         val index = value.toInt()
         if (index in dateLabels.indices) dateLabels[index] else ""
     }
+
+    // Marker value formatter to show date and views on touch
+    val markerValueFormatter = remember(chartData) {
+        ChartMarkerValueFormatter(
+            currentPeriodData = chartData.currentPeriod,
+            previousPeriodData = chartData.previousPeriod
+        )
+    }
+
+    // Marker that shows on touch
+    val marker = rememberDefaultCartesianMarker(
+        label = rememberTextComponent(
+            color = MaterialTheme.colorScheme.onSurface,
+            textSize = 12.sp,
+            lineCount = 3,
+            padding = Insets(horizontalDp = 12f, verticalDp = 8f),
+            background = rememberShapeComponent(
+                fill = fill(MaterialTheme.colorScheme.surfaceContainer),
+                shape = CorneredShape.rounded(allPercent = 25)
+            )
+        ),
+        guideline = LineComponent(
+            fill = fill(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
+            thicknessDp = 1f
+        ),
+        valueFormatter = markerValueFormatter
+    )
 
     // Horizontal line for period average
     val averageLine = HorizontalLine(
@@ -548,7 +583,7 @@ private fun ViewsStatsChart(
         ChartType.LINE -> {
             val areaGradient = ShaderProvider.verticalGradient(
                 colors = arrayOf(
-                    primaryColor.copy(alpha = 0.4f),
+                    primaryColor.copy(alpha = 0.8f),
                     primaryColor.copy(alpha = 0f)
                 )
             )
@@ -571,6 +606,7 @@ private fun ViewsStatsChart(
                     ),
                     startAxis = VerticalAxis.rememberStart(line = null),
                     bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter),
+                    marker = marker,
                     decorations = listOf(averageLine)
                 ),
                 modelProducer = modelProducer,
@@ -602,6 +638,7 @@ private fun ViewsStatsChart(
                     ),
                     startAxis = VerticalAxis.rememberStart(line = null),
                     bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter),
+                    marker = marker,
                     decorations = listOf(averageLine)
                 ),
                 modelProducer = modelProducer,
@@ -825,5 +862,44 @@ private fun ViewsStatsCardErrorPreview() {
 private fun ViewsStatsCardLoadedDarkPreview() {
     AppThemeM3 {
         ViewsStatsCard(uiState = sampleLoadedState(), onChartTypeChanged = {}, onRetry = {})
+    }
+}
+
+/**
+ * Custom marker value formatter that displays the date label and views count
+ * for both current and previous period data points at the touched x-coordinate.
+ */
+private class ChartMarkerValueFormatter(
+    private val currentPeriodData: List<ChartDataPoint>,
+    private val previousPeriodData: List<ChartDataPoint>
+) : DefaultCartesianMarker.ValueFormatter {
+    override fun format(
+        context: CartesianDrawingContext,
+        targets: List<CartesianMarker.Target>
+    ): CharSequence {
+        val target = targets.firstOrNull() ?: return ""
+        val x = target.x.toInt()
+        return formatBothPeriods(x)
+    }
+
+    private fun formatBothPeriods(x: Int): String {
+        val hasCurrent = x in currentPeriodData.indices
+        val hasPrevious = x in previousPeriodData.indices
+
+        if (!hasCurrent && !hasPrevious) return ""
+
+        return buildString {
+            // Show current period with date and value
+            if (hasCurrent) {
+                val current = currentPeriodData[x]
+                append("● ${current.label}: ${formatStatValue(current.views)}")
+            }
+            // Show previous period with date and value
+            if (hasPrevious) {
+                if (hasCurrent) append("\n")
+                val previous = previousPeriodData[x]
+                append("○ ${previous.label}: ${formatStatValue(previous.views)}")
+            }
+        }
     }
 }
