@@ -50,7 +50,6 @@ fun MenuItemDetailScreen(
     onParentChange: (Long) -> Unit,
     onTargetChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
-    onAttrTitleChange: (String) -> Unit,
     onSaveClick: () -> Unit,
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -70,8 +69,7 @@ fun MenuItemDetailScreen(
             onUrlChange = onUrlChange,
             onParentChange = onParentChange,
             onTargetChange = onTargetChange,
-            onDescriptionChange = onDescriptionChange,
-            onAttrTitleChange = onAttrTitleChange
+            onDescriptionChange = onDescriptionChange
         )
 
         SaveButton(
@@ -98,8 +96,7 @@ private fun ItemFieldsCard(
     onUrlChange: (String) -> Unit,
     onParentChange: (Long) -> Unit,
     onTargetChange: (String) -> Unit,
-    onDescriptionChange: (String) -> Unit,
-    onAttrTitleChange: (String) -> Unit
+    onDescriptionChange: (String) -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -155,14 +152,6 @@ private fun ItemFieldsCard(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 placeholder = { Text("_blank") }
-            )
-
-            OutlinedTextField(
-                value = state.attrTitle,
-                onValueChange = onAttrTitleChange,
-                label = { Text(stringResource(R.string.menu_item_attr_title_label)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
             )
         }
     }

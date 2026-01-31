@@ -167,7 +167,6 @@ class NavMenusActivity : BaseAppCompatActivity() {
                             onParentChange = { viewModel.updateMenuItemParent(it) },
                             onTargetChange = { viewModel.updateMenuItemTarget(it) },
                             onDescriptionChange = { viewModel.updateMenuItemDescription(it) },
-                            onAttrTitleChange = { viewModel.updateMenuItemAttrTitle(it) },
                             onSaveClick = { viewModel.saveMenuItem() },
                             onDeleteClick = { showDeleteMenuItemConfirmation(state?.title ?: "") },
                             modifier = Modifier.padding(contentPadding)
