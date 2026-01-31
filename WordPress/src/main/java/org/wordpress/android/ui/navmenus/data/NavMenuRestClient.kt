@@ -164,6 +164,31 @@ class NavMenuRestClient @Inject constructor(
         }
     }
 
+    suspend fun fetchAllMenuItems(site: SiteModel): NavMenuItemsResult {
+        val client = wpApiClientProvider.getWpApiClient(site)
+
+        val response = client.request { requestBuilder ->
+            requestBuilder.navMenuItems().listWithEditContext(
+                NavMenuItemListParams(
+                    perPage = 100u
+                )
+            )
+        }
+
+        return when (response) {
+            is WpRequestResult.Success -> {
+                appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} total menu items")
+                val items = response.response.data.map { it.toNavMenuItemModel(site.id, 0L) }
+                NavMenuItemsResult.Success(items)
+            }
+            else -> {
+                val errorMessage = parseErrorMessage(response)
+                appLogWrapper.e(AppLog.T.API, "Failed to fetch all menu items: $errorMessage")
+                NavMenuItemsResult.Error(errorMessage)
+            }
+        }
+    }
+
     suspend fun createMenuItem(site: SiteModel, item: NavMenuItemModel): NavMenuItemResult {
         val client = wpApiClientProvider.getWpApiClient(site)
 

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.fluxc.model.navmenu.NavMenuModel
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.navmenus.data.NavMenuRestClient
@@ -73,19 +74,26 @@ class NavMenusViewModel @Inject constructor(
 
             try {
                 withContext(ioDispatcher) {
-                    // Fetch menus
+                    // Fetch menus, locations, and all menu items in parallel
                     val menusResult = navMenuRestClient.fetchMenus(site)
-                    // Fetch locations
                     val locationsResult = navMenuRestClient.fetchMenuLocations(site)
+                    val allItemsResult = navMenuRestClient.fetchAllMenuItems(site)
+
+                    // Count items per menu
+                    val itemCountByMenuId: Map<Long, Int> = when (allItemsResult) {
+                        is NavMenuRestClient.NavMenuItemsResult.Success -> {
+                            allItemsResult.items.groupingBy { it.menuId }.eachCount()
+                        }
+                        else -> emptyMap()
+                    }
 
                     withContext(mainDispatcher) {
                         when (menusResult) {
                             is NavMenuRestClient.NavMenusResult.Success -> {
                                 currentMenus = menusResult.menus
 
-                                // For each menu, count items (we'll fetch items lazily)
                                 val menuUiModels = menusResult.menus.map { menu ->
-                                    menu.toUiModel(0) // Item count will be loaded when entering menu
+                                    menu.toUiModel(itemCountByMenuId[menu.remoteMenuId] ?: 0)
                                 }
 
                                 val locations = when (locationsResult) {
@@ -591,6 +599,7 @@ class NavMenusViewModel @Inject constructor(
             val pattern = android.util.Patterns.WEB_URL
             pattern.matcher(url).matches()
         } catch (e: Exception) {
+            AppLog.e(AppLog.T.API, "Error validating URL: $url", e)
             false
         }
     }
