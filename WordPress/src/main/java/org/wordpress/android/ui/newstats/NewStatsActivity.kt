@@ -31,6 +31,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +40,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,6 +49,9 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedCard
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsCard
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsViewModel
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
@@ -185,14 +190,24 @@ private fun StatsTabContent(tab: StatsTab, viewsStatsViewModel: ViewsStatsViewMo
 @Composable
 private fun TrafficTabContent(
     viewsStatsViewModel: ViewsStatsViewModel,
-    todaysStatsViewModel: TodaysStatsViewModel = viewModel()
+    todaysStatsViewModel: TodaysStatsViewModel = viewModel(),
+    mostViewedViewModel: MostViewedViewModel = viewModel()
 ) {
+    val context = LocalContext.current
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
     val viewsStatsUiState by viewsStatsViewModel.uiState.collectAsState()
+    val mostViewedUiState by mostViewedViewModel.uiState.collectAsState()
+    val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
-    val isRefreshing = isTodaysStatsRefreshing || isViewsStatsRefreshing
+    val isMostViewedRefreshing by mostViewedViewModel.isRefreshing.collectAsState()
+    val isRefreshing = isTodaysStatsRefreshing || isViewsStatsRefreshing || isMostViewedRefreshing
     val pullToRefreshState = rememberPullToRefreshState()
+
+    // Propagate period changes to the MostViewedViewModel
+    LaunchedEffect(selectedPeriod) {
+        mostViewedViewModel.onPeriodChanged(selectedPeriod)
+    }
 
     PullToRefreshBox(
         modifier = Modifier.fillMaxSize(),
@@ -201,6 +216,7 @@ private fun TrafficTabContent(
         onRefresh = {
             todaysStatsViewModel.refresh()
             viewsStatsViewModel.refresh()
+            mostViewedViewModel.refresh()
         },
         indicator = {
             PullToRefreshDefaults.Indicator(
@@ -221,6 +237,23 @@ private fun TrafficTabContent(
                 uiState = viewsStatsUiState,
                 onChartTypeChanged = viewsStatsViewModel::onChartTypeChanged,
                 onRetry = viewsStatsViewModel::onRetry
+            )
+            MostViewedCard(
+                uiState = mostViewedUiState,
+                onDataSourceChanged = mostViewedViewModel::onDataSourceChanged,
+                onShowAllClick = {
+                    val detailData = mostViewedViewModel.getDetailData()
+                    MostViewedDetailActivity.start(
+                        context = context,
+                        dataSource = detailData.dataSource,
+                        items = detailData.items,
+                        totalViews = detailData.totalViews,
+                        totalViewsChange = detailData.totalViewsChange,
+                        totalViewsChangePercent = detailData.totalViewsChangePercent,
+                        dateRange = detailData.dateRange
+                    )
+                },
+                onRetry = mostViewedViewModel::onRetry
             )
         }
     }
