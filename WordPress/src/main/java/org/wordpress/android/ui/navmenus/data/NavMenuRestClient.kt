@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.navmenus.data
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuLocationModel
@@ -9,6 +12,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.navmenus.parseJsonStringArray
 import org.wordpress.android.ui.navmenus.toJsonStringArray
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MenuLocationWithViewContext
 import uniffi.wp_api.NavMenuCreateParams
@@ -28,8 +32,10 @@ import javax.inject.Singleton
  */
 @Singleton
 class NavMenuRestClient @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val wpApiClientProvider: WpApiClientProvider,
-    private val appLogWrapper: AppLogWrapper
+    private val appLogWrapper: AppLogWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) {
     // ========== Menu Operations ==========
 
@@ -327,7 +333,11 @@ class NavMenuRestClient @Inject constructor(
             is WpRequestResult.Success -> "Unexpected error"
             else -> {
                 appLogWrapper.e(AppLog.T.API, "API error: $response")
-                "Request failed"
+                if (!networkUtilsWrapper.isNetworkAvailable()) {
+                    context.getString(R.string.no_network_message)
+                } else {
+                    context.getString(R.string.request_failed_message)
+                }
             }
         }
     }
