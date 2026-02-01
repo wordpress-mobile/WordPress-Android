@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.navmenus.screens
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,15 +60,27 @@ fun MenuItemListScreen(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(state.items) { item ->
-                        MenuItemListItem(
-                            item = item,
-                            showReorderButtons = state.items.size > 1,
-                            onEditClick = { onEditItemClick(item.id) },
-                            onMoveUp = { onMoveItemUp(item.id) },
-                            onMoveDown = { onMoveItemDown(item.id) }
-                        )
-                        HorizontalDivider()
+                    items(
+                        items = state.items,
+                        key = { it.id }
+                    ) { item ->
+                        Column(
+                            modifier = Modifier.animateItem(
+                                placementSpec = spring(
+                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                    stiffness = Spring.StiffnessMedium
+                                )
+                            )
+                        ) {
+                            MenuItemListItem(
+                                item = item,
+                                showReorderButtons = state.items.size > 1,
+                                onEditClick = { onEditItemClick(item.id) },
+                                onMoveUp = { onMoveItemUp(item.id) },
+                                onMoveDown = { onMoveItemDown(item.id) }
+                            )
+                            HorizontalDivider()
+                        }
                     }
                 }
             }
