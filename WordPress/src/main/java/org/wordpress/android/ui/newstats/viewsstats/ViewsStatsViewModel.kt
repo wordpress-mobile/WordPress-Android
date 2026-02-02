@@ -60,14 +60,33 @@ class ViewsStatsViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
-    private val _selectedPeriod = MutableStateFlow(restorePeriod())
+    private val _selectedPeriod = MutableStateFlow(restorePeriodFromSavedState())
     val selectedPeriod: StateFlow<StatsPeriod> = _selectedPeriod.asStateFlow()
 
     private var currentChartType: ChartType = ChartType.LINE
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
 
     init {
-        loadData()
+        initializeWithPersistedPeriod()
+    }
+
+    /**
+     * Initializes the ViewModel by restoring the period from persisted preferences asynchronously,
+     * then loading data. This avoids blocking the main thread with disk I/O.
+     */
+    private fun initializeWithPersistedPeriod() {
+        viewModelScope.launch {
+            // Try to restore from persisted preferences if SavedStateHandle didn't have a value
+            val savedPeriodType = savedStateHandle.get<String>(KEY_PERIOD_TYPE)
+            if (savedPeriodType == null) {
+                val restoredPeriod = restorePeriodFromPreferences()
+                if (restoredPeriod != null) {
+                    currentPeriod = restoredPeriod
+                    _selectedPeriod.value = restoredPeriod
+                }
+            }
+            loadData()
+        }
     }
 
     fun onPeriodChanged(period: StatsPeriod) {
@@ -118,35 +137,41 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
-    private fun restorePeriod(): StatsPeriod {
-        // First try to restore from SavedStateHandle (for configuration changes)
-        val savedPeriodType = savedStateHandle.get<String>(KEY_PERIOD_TYPE)
-        if (savedPeriodType != null) {
-            return when (savedPeriodType) {
-                PERIOD_TODAY -> StatsPeriod.Today
-                PERIOD_LAST_7_DAYS -> StatsPeriod.Last7Days
-                PERIOD_LAST_30_DAYS -> StatsPeriod.Last30Days
-                PERIOD_LAST_6_MONTHS -> StatsPeriod.Last6Months
-                PERIOD_LAST_12_MONTHS -> StatsPeriod.Last12Months
-                PERIOD_CUSTOM -> {
-                    val startEpochDay = savedStateHandle.get<Long>(KEY_CUSTOM_START_DATE)
-                    val endEpochDay = savedStateHandle.get<Long>(KEY_CUSTOM_END_DATE)
-                    if (startEpochDay != null && endEpochDay != null) {
-                        StatsPeriod.Custom(
-                            LocalDate.ofEpochDay(startEpochDay),
-                            LocalDate.ofEpochDay(endEpochDay)
-                        )
-                    } else {
-                        StatsPeriod.Last7Days
-                    }
+    /**
+     * Restores period from SavedStateHandle only (fast, no disk I/O).
+     * Used for property initialization.
+     */
+    private fun restorePeriodFromSavedState(): StatsPeriod {
+        val savedPeriodType = savedStateHandle.get<String>(KEY_PERIOD_TYPE) ?: return StatsPeriod.Last7Days
+        return when (savedPeriodType) {
+            PERIOD_TODAY -> StatsPeriod.Today
+            PERIOD_LAST_7_DAYS -> StatsPeriod.Last7Days
+            PERIOD_LAST_30_DAYS -> StatsPeriod.Last30Days
+            PERIOD_LAST_6_MONTHS -> StatsPeriod.Last6Months
+            PERIOD_LAST_12_MONTHS -> StatsPeriod.Last12Months
+            PERIOD_CUSTOM -> {
+                val startEpochDay = savedStateHandle.get<Long>(KEY_CUSTOM_START_DATE)
+                val endEpochDay = savedStateHandle.get<Long>(KEY_CUSTOM_END_DATE)
+                if (startEpochDay != null && endEpochDay != null) {
+                    StatsPeriod.Custom(
+                        LocalDate.ofEpochDay(startEpochDay),
+                        LocalDate.ofEpochDay(endEpochDay)
+                    )
+                } else {
+                    StatsPeriod.Last7Days
                 }
-                else -> StatsPeriod.Last7Days
             }
+            else -> StatsPeriod.Last7Days
         }
+    }
 
-        // Fall back to persisted preferences (for app restarts)
-        val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return StatsPeriod.Last7Days
-        val config = cardsConfigurationRepository.getConfigurationSync(siteId)
+    /**
+     * Restores period from persisted preferences asynchronously.
+     * Used for app restarts when SavedStateHandle doesn't have the value.
+     */
+    private suspend fun restorePeriodFromPreferences(): StatsPeriod? {
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return null
+        val config = cardsConfigurationRepository.getConfiguration(siteId)
         return when (config.selectedPeriodType) {
             PERIOD_TODAY -> StatsPeriod.Today
             PERIOD_LAST_7_DAYS -> StatsPeriod.Last7Days
@@ -162,10 +187,10 @@ class ViewsStatsViewModel @Inject constructor(
                         LocalDate.ofEpochDay(endEpochDay)
                     )
                 } else {
-                    StatsPeriod.Last7Days
+                    null
                 }
             }
-            else -> StatsPeriod.Last7Days
+            else -> null
         }
     }
 
