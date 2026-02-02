@@ -23,7 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -46,7 +46,7 @@ fun MenuListScreen(
             }
             state.error != null -> {
                 Text(
-                    text = state.error ?: "",
+                    text = state.error,
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -82,7 +82,6 @@ private fun MenuListItem(
     onEditClick: () -> Unit,
     onItemsClick: () -> Unit
 ) {
-    val context = LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -126,7 +125,7 @@ private fun MenuListItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = context.resources.getQuantityString(
+                    text = pluralStringResource(
                         R.plurals.menu_item_count,
                         menu.itemCount,
                         menu.itemCount
