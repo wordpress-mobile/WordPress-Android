@@ -103,20 +103,8 @@ class StatsCardsConfigurationRepository @Inject constructor(
      */
     suspend fun addMostViewedCard(siteId: Long, dataSourceName: String): Unit = withContext(ioDispatcher) {
         val current = getConfiguration(siteId)
-        // Add MOST_VIEWED to visibleCards (after the last MOST_VIEWED or at default position)
-        val newVisibleCards = current.visibleCards.toMutableList()
-        val lastMostViewedIndex = newVisibleCards.indexOfLast { it == StatsCardType.MOST_VIEWED }
-        if (lastMostViewedIndex >= 0) {
-            newVisibleCards.add(lastMostViewedIndex + 1, StatsCardType.MOST_VIEWED)
-        } else {
-            // Add at default position (after VIEWS_STATS)
-            val viewsIndex = newVisibleCards.indexOfFirst { it == StatsCardType.VIEWS_STATS }
-            if (viewsIndex >= 0) {
-                newVisibleCards.add(viewsIndex + 1, StatsCardType.MOST_VIEWED)
-            } else {
-                newVisibleCards.add(StatsCardType.MOST_VIEWED)
-            }
-        }
+        // Add MOST_VIEWED to the end of visibleCards
+        val newVisibleCards = current.visibleCards + StatsCardType.MOST_VIEWED
         // Add the data source
         val newDataSources = current.mostViewedDataSources + dataSourceName
         saveConfiguration(siteId, current.copy(
