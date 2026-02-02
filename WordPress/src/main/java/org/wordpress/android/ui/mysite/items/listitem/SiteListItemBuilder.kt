@@ -284,8 +284,10 @@ class SiteListItemBuilder @Inject constructor(
     }
 
     fun buildMenusItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        // Only available for sites with Application Passwords configured.
-        return if (site.hasApplicationPassword()) { // TODO && site.hasCapabilityEditThemeOptions) {
+        // Only available for sites with Application Passwords configured and the user has the
+        // ability to edit theme options
+        // https://wordpress.org/documentation/article/roles-and-capabilities/#edit_theme_options
+        return if (site.hasApplicationPassword() && site.hasCapabilityEditThemeOptions) {
             ListItem(
                 R.drawable.ic_gridicons_menus,
                 UiStringRes(R.string.menus),
