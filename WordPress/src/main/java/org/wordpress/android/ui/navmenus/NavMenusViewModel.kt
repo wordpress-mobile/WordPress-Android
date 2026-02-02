@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.fluxc.model.navmenu.NavMenuModel
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.navmenus.data.NavMenuRestClient
@@ -73,53 +73,8 @@ class NavMenusViewModel @Inject constructor(
             }
 
             try {
-                withContext(ioDispatcher) {
-                    // Fetch menus, locations, and all menu items in parallel
-                    val menusResult = navMenuRestClient.fetchMenus(site)
-                    val locationsResult = navMenuRestClient.fetchMenuLocations(site)
-                    val allItemsResult = navMenuRestClient.fetchAllMenuItems(site)
-
-                    // Count items per menu
-                    val itemCountByMenuId: Map<Long, Int> = when (allItemsResult) {
-                        is NavMenuRestClient.NavMenuItemsResult.Success -> {
-                            allItemsResult.items.groupingBy { it.menuId }.eachCount()
-                        }
-                        else -> emptyMap()
-                    }
-
-                    withContext(mainDispatcher) {
-                        when (menusResult) {
-                            is NavMenuRestClient.NavMenusResult.Success -> {
-                                currentMenus = menusResult.menus
-
-                                val menuUiModels = menusResult.menus.map { menu ->
-                                    menu.toUiModel(itemCountByMenuId[menu.remoteMenuId] ?: 0)
-                                }
-
-                                val locations = when (locationsResult) {
-                                    is NavMenuRestClient.NavMenuLocationsResult.Success -> {
-                                        locationsResult.locations.map { it.toUiModel() }
-                                    }
-                                    is NavMenuRestClient.NavMenuLocationsResult.Error -> emptyList()
-                                }
-
-                                _menuListState.value = MenuListUiState(
-                                    isLoading = false,
-                                    menus = menuUiModels,
-                                    locations = locations
-                                )
-                            }
-                            is NavMenuRestClient.NavMenusResult.Error -> {
-                                val errorMessage = menusResult.message.takeIf { it.isNotBlank() }
-                                    ?: "Failed to load menus"
-                                _menuListState.value = MenuListUiState(
-                                    isLoading = false,
-                                    error = errorMessage
-                                )
-                            }
-                        }
-                    }
-                }
+                val newState = withContext(ioDispatcher) { fetchMenuData(site) }
+                _menuListState.value = newState
             } catch (e: CancellationException) {
                 throw e
             } catch (e: IOException) {
@@ -129,6 +84,57 @@ class NavMenusViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private suspend fun fetchMenuData(site: SiteModel): MenuListUiState {
+        val menusResult = navMenuRestClient.fetchMenus(site)
+        val locationsResult = navMenuRestClient.fetchMenuLocations(site)
+        val allItemsResult = navMenuRestClient.fetchAllMenuItems(site)
+
+        val itemCountByMenuId = buildItemCountMap(allItemsResult)
+
+        return when (menusResult) {
+            is NavMenuRestClient.NavMenusResult.Success -> {
+                currentMenus = menusResult.menus
+                buildSuccessState(menusResult.menus, locationsResult, itemCountByMenuId)
+            }
+            is NavMenuRestClient.NavMenusResult.Error -> {
+                val errorMessage = menusResult.message.takeIf { it.isNotBlank() } ?: "Failed to load menus"
+                MenuListUiState(isLoading = false, error = errorMessage)
+            }
+        }
+    }
+
+    private fun buildItemCountMap(
+        result: NavMenuRestClient.NavMenuItemsResult
+    ): Map<Long, Int> = when (result) {
+        is NavMenuRestClient.NavMenuItemsResult.Success -> {
+            result.items.groupingBy { it.menuId }.eachCount()
+        }
+        is NavMenuRestClient.NavMenuItemsResult.Error -> emptyMap()
+    }
+
+    private fun buildSuccessState(
+        menus: List<NavMenuModel>,
+        locationsResult: NavMenuRestClient.NavMenuLocationsResult,
+        itemCountByMenuId: Map<Long, Int>
+    ): MenuListUiState {
+        val menuUiModels = menus.map { menu ->
+            menu.toUiModel(itemCountByMenuId[menu.remoteMenuId] ?: 0)
+        }
+
+        val locations = when (locationsResult) {
+            is NavMenuRestClient.NavMenuLocationsResult.Success -> {
+                locationsResult.locations.map { it.toUiModel() }
+            }
+            is NavMenuRestClient.NavMenuLocationsResult.Error -> emptyList()
+        }
+
+        return MenuListUiState(
+            isLoading = false,
+            menus = menuUiModels,
+            locations = locations
+        )
     }
 
     fun navigateToCreateMenu() {
@@ -574,12 +580,6 @@ class NavMenusViewModel @Inject constructor(
     }
 
     private fun isValidUrl(url: String): Boolean {
-        return try {
-            val pattern = android.util.Patterns.WEB_URL
-            pattern.matcher(url).matches()
-        } catch (e: Exception) {
-            AppLog.e(AppLog.T.API, "Error validating URL: $url", e)
-            false
-        }
+        return android.util.Patterns.WEB_URL.matcher(url).matches()
     }
 }
