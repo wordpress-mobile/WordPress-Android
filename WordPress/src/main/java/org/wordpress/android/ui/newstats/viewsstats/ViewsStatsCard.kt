@@ -29,23 +29,16 @@ import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -87,6 +80,7 @@ import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
 import kotlin.math.abs
@@ -283,8 +277,6 @@ private fun HeaderSection(
     onChartTypeChanged: (ChartType) -> Unit,
     onRemoveCard: () -> Unit
 ) {
-    var showMenu by remember { mutableStateOf(false) }
-
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -296,28 +288,15 @@ private fun HeaderSection(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            Box {
-                IconButton(onClick = { showMenu = true }) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = stringResource(R.string.more_options),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+            StatsCardMenu(
+                onRemoveClick = onRemoveCard,
+                additionalContent = {
+                    ChartTypeMenuItems(
+                        currentChartType = state.chartType,
+                        onChartTypeSelected = onChartTypeChanged
                     )
                 }
-                ChartTypeMenu(
-                    expanded = showMenu,
-                    currentChartType = state.chartType,
-                    onDismiss = { showMenu = false },
-                    onChartTypeSelected = { chartType ->
-                        onChartTypeChanged(chartType)
-                        showMenu = false
-                    },
-                    onRemoveCard = {
-                        showMenu = false
-                        onRemoveCard()
-                    }
-                )
-            }
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
         Row(
@@ -367,63 +346,36 @@ private fun HeaderSection(
     }
 }
 
+/**
+ * Menu items for chart type selection. Used as additionalContent in StatsCardMenu.
+ */
 @Composable
-private fun ChartTypeMenu(
-    expanded: Boolean,
+private fun ChartTypeMenuItems(
     currentChartType: ChartType,
-    onDismiss: () -> Unit,
-    onChartTypeSelected: (ChartType) -> Unit,
-    onRemoveCard: () -> Unit
+    onChartTypeSelected: (ChartType) -> Unit
 ) {
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = onDismiss
-    ) {
-        DropdownMenuItem(
-            text = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ShowChart,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = stringResource(R.string.stats_chart_type_lines))
-                }
-            },
-            onClick = { onChartTypeSelected(ChartType.LINE) },
-            enabled = currentChartType != ChartType.LINE
-        )
-        DropdownMenuItem(
-            text = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.BarChart,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = stringResource(R.string.stats_chart_type_bars))
-                }
-            },
-            onClick = { onChartTypeSelected(ChartType.BAR) },
-            enabled = currentChartType != ChartType.BAR
-        )
-        DropdownMenuItem(
-            text = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = stringResource(R.string.stats_card_remove))
-                }
-            },
-            onClick = onRemoveCard
-        )
-    }
+    DropdownMenuItem(
+        text = { Text(text = stringResource(R.string.stats_chart_type_lines)) },
+        onClick = { onChartTypeSelected(ChartType.LINE) },
+        enabled = currentChartType != ChartType.LINE,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ShowChart,
+                contentDescription = null
+            )
+        }
+    )
+    DropdownMenuItem(
+        text = { Text(text = stringResource(R.string.stats_chart_type_bars)) },
+        onClick = { onChartTypeSelected(ChartType.BAR) },
+        enabled = currentChartType != ChartType.BAR,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.BarChart,
+                contentDescription = null
+            )
+        }
+    )
 }
 
 @Composable
@@ -785,38 +737,7 @@ private fun ErrorContent(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            Box {
-                var showMenu by remember { mutableStateOf(false) }
-                IconButton(onClick = { showMenu = true }) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = stringResource(R.string.more_options),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
-                ) {
-                    DropdownMenuItem(
-                        text = {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(text = stringResource(R.string.stats_card_remove))
-                            }
-                        },
-                        onClick = {
-                            showMenu = false
-                            onRemoveCard()
-                        }
-                    )
-                }
-            }
+            StatsCardMenu(onRemoveClick = onRemoveCard)
         }
         Spacer(modifier = Modifier.height(16.dp))
         Box(
