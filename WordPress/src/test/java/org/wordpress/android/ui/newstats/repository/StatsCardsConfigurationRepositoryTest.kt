@@ -139,6 +139,22 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
         assertThat(flowValue?.second?.visibleCards).containsExactly(StatsCardType.TODAYS_STATS)
     }
 
+    @Test
+    fun `when config contains invalid card type, then default configuration is returned and json is reset`() = test {
+        // JSON with old "MOST_VIEWED" card type that no longer exists
+        val jsonWithInvalidCardType = """
+            {
+                "visibleCards": ["TODAYS_STATS", "MOST_VIEWED", "COUNTRIES"]
+            }
+        """.trimIndent()
+        whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(jsonWithInvalidCardType)
+
+        val config = repository.getConfiguration(TEST_SITE_ID)
+
+        assertThat(config.visibleCards).isEqualTo(StatsCardType.defaultCards())
+        verify(appPrefsWrapper).setStatsCardsConfigurationJson(eq(TEST_SITE_ID), any())
+    }
+
     companion object {
         private const val TEST_SITE_ID = 123L
     }

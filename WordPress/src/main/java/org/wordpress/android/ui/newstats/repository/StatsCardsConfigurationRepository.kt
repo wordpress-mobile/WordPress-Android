@@ -69,13 +69,34 @@ class StatsCardsConfigurationRepository @Inject constructor(
             return StatsCardsConfiguration()
         }
         return try {
-            gson.fromJson(json, StatsCardsConfiguration::class.java)
+            val config = gson.fromJson(json, StatsCardsConfiguration::class.java)
+            if (isValidConfiguration(config)) {
+                config
+            } else {
+                AppLog.w(AppLog.T.STATS, "Stats cards configuration contains invalid card types, resetting to default")
+                resetToDefault(siteId)
+            }
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, "Failed to parse stats cards configuration, resetting to default", e)
-            // Wipe corrupted data and save default configuration
-            val defaultConfig = StatsCardsConfiguration()
-            appPrefsWrapper.setStatsCardsConfigurationJson(siteId, gson.toJson(defaultConfig))
-            defaultConfig
+            resetToDefault(siteId)
         }
+    }
+
+    /**
+     * Validates that the configuration contains only valid card types.
+     * Returns false if any card type is null (which happens when EnumWithFallbackValueTypeAdapterFactory
+     * encounters an unknown enum value like the old "MOST_VIEWED").
+     */
+    private fun isValidConfiguration(config: StatsCardsConfiguration): Boolean {
+        // Check if visibleCards contains any null values (invalid enum values are deserialized as null)
+        @Suppress("USELESS_CAST")
+        val hasInvalidCards = config.visibleCards.any { (it as StatsCardType?) == null }
+        return !hasInvalidCards
+    }
+
+    private fun resetToDefault(siteId: Long): StatsCardsConfiguration {
+        val defaultConfig = StatsCardsConfiguration()
+        appPrefsWrapper.setStatsCardsConfigurationJson(siteId, gson.toJson(defaultConfig))
+        return defaultConfig
     }
 }
