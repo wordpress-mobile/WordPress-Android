@@ -460,7 +460,6 @@ private fun MostViewedCardLoadedPreview() {
     AppThemeM3 {
         MostViewedCard(
             uiState = MostViewedCardUiState.Loaded(
-                selectedDataSource = MostViewedDataSource.POSTS_AND_PAGES,
                 items = listOf(
                     MostViewedItem(
                         id = 1,
@@ -532,7 +531,6 @@ private fun MostViewedCardLoadedDarkPreview() {
     AppThemeM3 {
         MostViewedCard(
             uiState = MostViewedCardUiState.Loaded(
-                selectedDataSource = MostViewedDataSource.POSTS_AND_PAGES,
                 items = listOf(
                     MostViewedItem(
                         id = 1,

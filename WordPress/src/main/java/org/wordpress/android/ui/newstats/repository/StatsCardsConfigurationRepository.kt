@@ -10,6 +10,7 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsCardsConfiguration
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EnumWithFallbackValueTypeAdapterFactory
 import javax.inject.Inject
 import javax.inject.Named
@@ -34,12 +35,6 @@ class StatsCardsConfigurationRepository @Inject constructor(
 
     suspend fun getConfiguration(siteId: Long): StatsCardsConfiguration = withContext(ioDispatcher) {
         configurationCache[siteId] ?: loadConfiguration(siteId).also {
-            configurationCache[siteId] = it
-        }
-    }
-
-    fun getConfigurationSync(siteId: Long): StatsCardsConfiguration {
-        return configurationCache[siteId] ?: loadConfiguration(siteId).also {
             configurationCache[siteId] = it
         }
     }
@@ -137,6 +132,7 @@ class StatsCardsConfigurationRepository @Inject constructor(
         return try {
             gson.fromJson(json, StatsCardsConfiguration::class.java)
         } catch (e: Exception) {
+            AppLog.e(AppLog.T.STATS, "Failed to parse stats cards configuration, resetting to default", e)
             // Wipe corrupted data and save default configuration
             val defaultConfig = StatsCardsConfiguration()
             appPrefsWrapper.setStatsCardsConfigurationJson(siteId, gson.toJson(defaultConfig))

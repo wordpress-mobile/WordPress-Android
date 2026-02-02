@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -295,7 +296,7 @@ private fun TrafficTabContent(
             // Dynamic card rendering based on configuration
             // Count Most Viewed cards up to each position
             var mostViewedIndex = 0
-            visibleCards.forEachIndexed { _, cardType ->
+            visibleCards.forEach { cardType ->
                 when (cardType) {
                     StatsCardType.TODAYS_STATS -> TodaysStatsCard(
                         uiState = todaysStatsUiState,
@@ -395,7 +396,7 @@ private fun AddCardButton(
             contentDescription = null,
             modifier = Modifier.size(18.dp)
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Text(stringResource(R.string.stats_add_card_title))
     }
 }
