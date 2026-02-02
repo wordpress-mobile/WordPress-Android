@@ -317,6 +317,11 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         mFollowButton.setIsFollowed(isAskingToFollow);
 
+        // Disable subscription settings button while unsubscribing
+        if (!isAskingToFollow && mSubscriptionSettingsButton != null) {
+            mSubscriptionSettingsButton.setEnabled(false);
+        }
+
         OnFollowListener followListener =
                 mFollowListenerRef != null ? mFollowListenerRef.get() : null;
         if (followListener != null) {
@@ -347,6 +352,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
                         : R.string.reader_toast_err_unable_to_unfollow_blog;
                 ToastUtils.showToast(getContext(), errResId);
                 mFollowButton.setIsFollowed(!isAskingToFollow);
+                // Re-enable subscription settings button if unsubscribe failed
+                if (!isAskingToFollow && mSubscriptionSettingsButton != null) {
+                    mSubscriptionSettingsButton.setEnabled(true);
+                }
             }
         };
 
@@ -386,6 +395,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         // Only show settings for followed WordPress.com blogs (not external feeds)
         boolean showSettings = blogInfo.isFollowing && !mIsFeed && mAccountStore.hasAccessToken();
         mSubscriptionSettingsButton.setVisibility(showSettings ? View.VISIBLE : View.GONE);
+        mSubscriptionSettingsButton.setEnabled(showSettings);
 
         if (showSettings) {
             mSubscriptionSettingsButton.setOnClickListener(v -> {
