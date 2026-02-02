@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.activitylog.list.filter
 
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher

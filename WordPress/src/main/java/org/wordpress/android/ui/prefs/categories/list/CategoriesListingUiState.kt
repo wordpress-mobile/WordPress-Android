@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs.categories.list
 
-import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.utils.UiString
