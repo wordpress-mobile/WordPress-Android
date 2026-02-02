@@ -236,7 +236,7 @@ private fun ColumnHeadersRow(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(selectedDataSource.columnHeaderResId),
+                    text = stringResource(selectedDataSource.labelResId),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

@@ -8,9 +8,9 @@ import org.wordpress.android.R
  * Represents the available data source types for the Most Viewed card.
  * Extensible for future additional data sources.
  */
-enum class MostViewedDataSource(val labelResId: Int, val columnHeaderResId: Int) {
-    POSTS_AND_PAGES(R.string.stats_most_viewed_posts_and_pages, R.string.stats_most_viewed_column_title),
-    REFERRERS(R.string.stats_most_viewed_referrers, R.string.stats_most_viewed_column_referrer)
+enum class MostViewedDataSource(val labelResId: Int) {
+    POSTS_AND_PAGES(R.string.stats_most_viewed_posts_and_pages),
+    REFERRERS(R.string.stats_most_viewed_referrers)
 }
 
 /**
