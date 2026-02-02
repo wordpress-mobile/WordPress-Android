@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.StatsColors
+import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
@@ -60,6 +61,7 @@ fun MostViewedCard(
     onDataSourceChanged: (MostViewedDataSource) -> Unit,
     onShowAllClick: () -> Unit,
     onRetry: () -> Unit,
+    onRemoveCard: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
@@ -78,8 +80,13 @@ fun MostViewedCard(
     ) {
         when (uiState) {
             is MostViewedCardUiState.Loading -> LoadingContent()
-            is MostViewedCardUiState.Loaded -> LoadedContent(uiState, onDataSourceChanged, onShowAllClick)
-            is MostViewedCardUiState.Error -> ErrorContent(uiState, onRetry)
+            is MostViewedCardUiState.Loaded -> LoadedContent(
+                uiState,
+                onDataSourceChanged,
+                onShowAllClick,
+                onRemoveCard
+            )
+            is MostViewedCardUiState.Error -> ErrorContent(uiState, onRetry, onRemoveCard)
         }
     }
 }
@@ -160,14 +167,15 @@ private fun LoadingContent() {
 private fun LoadedContent(
     state: MostViewedCardUiState.Loaded,
     onDataSourceChanged: (MostViewedDataSource) -> Unit,
-    onShowAllClick: () -> Unit
+    onShowAllClick: () -> Unit,
+    onRemoveCard: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        HeaderSection()
+        HeaderSection(onRemoveCard = onRemoveCard)
         Spacer(modifier = Modifier.height(12.dp))
         ColumnHeadersRow(
             selectedDataSource = state.selectedDataSource,
@@ -192,7 +200,7 @@ private fun LoadedContent(
 }
 
 @Composable
-private fun HeaderSection() {
+private fun HeaderSection(onRemoveCard: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -203,13 +211,7 @@ private fun HeaderSection() {
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-        IconButton(onClick = { /* Future menu actions */ }) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(R.string.more_options),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
+        StatsCardMenu(onRemoveClick = onRemoveCard)
     }
 }
 
@@ -408,18 +410,15 @@ private fun ShowAllFooter(onClick: () -> Unit) {
 @Composable
 private fun ErrorContent(
     state: MostViewedCardUiState.Error,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    onRemoveCard: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        Text(
-            text = stringResource(R.string.stats_most_viewed_title),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
+        HeaderSection(onRemoveCard = onRemoveCard)
         Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -446,7 +445,8 @@ private fun MostViewedCardLoadingPreview() {
             uiState = MostViewedCardUiState.Loading,
             onDataSourceChanged = {},
             onShowAllClick = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -499,7 +499,8 @@ private fun MostViewedCardLoadedPreview() {
             ),
             onDataSourceChanged = {},
             onShowAllClick = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -514,7 +515,8 @@ private fun MostViewedCardErrorPreview() {
             ),
             onDataSourceChanged = {},
             onShowAllClick = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -546,7 +548,8 @@ private fun MostViewedCardLoadedDarkPreview() {
             ),
             onDataSourceChanged = {},
             onShowAllClick = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }

@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
@@ -117,6 +118,7 @@ fun ViewsStatsCard(
     uiState: ViewsStatsCardUiState,
     onChartTypeChanged: (ChartType) -> Unit,
     onRetry: () -> Unit,
+    onRemoveCard: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
@@ -135,8 +137,8 @@ fun ViewsStatsCard(
     ) {
         when (uiState) {
             is ViewsStatsCardUiState.Loading -> LoadingContent()
-            is ViewsStatsCardUiState.Loaded -> LoadedContent(uiState, onChartTypeChanged)
-            is ViewsStatsCardUiState.Error -> ErrorContent(uiState, onRetry)
+            is ViewsStatsCardUiState.Loaded -> LoadedContent(uiState, onChartTypeChanged, onRemoveCard)
+            is ViewsStatsCardUiState.Error -> ErrorContent(uiState, onRetry, onRemoveCard)
         }
     }
 }
@@ -248,7 +250,8 @@ private fun LoadingContent() {
 @Composable
 private fun LoadedContent(
     state: ViewsStatsCardUiState.Loaded,
-    onChartTypeChanged: (ChartType) -> Unit
+    onChartTypeChanged: (ChartType) -> Unit,
+    onRemoveCard: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -258,7 +261,8 @@ private fun LoadedContent(
         // Header Section
         HeaderSection(
             state = state,
-            onChartTypeChanged = onChartTypeChanged
+            onChartTypeChanged = onChartTypeChanged,
+            onRemoveCard = onRemoveCard
         )
         Spacer(modifier = Modifier.height(16.dp))
         // Chart Section
@@ -276,7 +280,8 @@ private fun LoadedContent(
 @Composable
 private fun HeaderSection(
     state: ViewsStatsCardUiState.Loaded,
-    onChartTypeChanged: (ChartType) -> Unit
+    onChartTypeChanged: (ChartType) -> Unit,
+    onRemoveCard: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
@@ -306,6 +311,10 @@ private fun HeaderSection(
                     onChartTypeSelected = { chartType ->
                         onChartTypeChanged(chartType)
                         showMenu = false
+                    },
+                    onRemoveCard = {
+                        showMenu = false
+                        onRemoveCard()
                     }
                 )
             }
@@ -363,7 +372,8 @@ private fun ChartTypeMenu(
     expanded: Boolean,
     currentChartType: ChartType,
     onDismiss: () -> Unit,
-    onChartTypeSelected: (ChartType) -> Unit
+    onChartTypeSelected: (ChartType) -> Unit,
+    onRemoveCard: () -> Unit
 ) {
     DropdownMenu(
         expanded = expanded,
@@ -398,6 +408,20 @@ private fun ChartTypeMenu(
             },
             onClick = { onChartTypeSelected(ChartType.BAR) },
             enabled = currentChartType != ChartType.BAR
+        )
+        DropdownMenuItem(
+            text = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = stringResource(R.string.stats_card_remove))
+                }
+            },
+            onClick = onRemoveCard
         )
     }
 }
@@ -743,18 +767,57 @@ private fun ChangeBadge(change: StatChange) {
 @Composable
 private fun ErrorContent(
     state: ViewsStatsCardUiState.Error,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    onRemoveCard: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        Text(
-            text = stringResource(R.string.stats_views),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.stats_views),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Box {
+                var showMenu by remember { mutableStateOf(false) }
+                IconButton(onClick = { showMenu = true }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = stringResource(R.string.more_options),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                DropdownMenu(
+                    expanded = showMenu,
+                    onDismissRequest = { showMenu = false }
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(text = stringResource(R.string.stats_card_remove))
+                            }
+                        },
+                        onClick = {
+                            showMenu = false
+                            onRemoveCard()
+                        }
+                    )
+                }
+            }
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Box(
             modifier = Modifier
@@ -800,7 +863,8 @@ private fun ViewsStatsCardLoadingPreview() {
         ViewsStatsCard(
             uiState = ViewsStatsCardUiState.Loading,
             onChartTypeChanged = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -839,7 +903,12 @@ private fun sampleLoadedState(): ViewsStatsCardUiState.Loaded {
 @Composable
 private fun ViewsStatsCardLoadedPreview() {
     AppThemeM3 {
-        ViewsStatsCard(uiState = sampleLoadedState(), onChartTypeChanged = {}, onRetry = {})
+        ViewsStatsCard(
+            uiState = sampleLoadedState(),
+            onChartTypeChanged = {},
+            onRetry = {},
+            onRemoveCard = {}
+        )
     }
 }
 
@@ -852,7 +921,8 @@ private fun ViewsStatsCardErrorPreview() {
                 message = stringResource(R.string.stats_todays_stats_failed_to_load)
             ),
             onChartTypeChanged = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -861,7 +931,12 @@ private fun ViewsStatsCardErrorPreview() {
 @Composable
 private fun ViewsStatsCardLoadedDarkPreview() {
     AppThemeM3 {
-        ViewsStatsCard(uiState = sampleLoadedState(), onChartTypeChanged = {}, onRetry = {})
+        ViewsStatsCard(
+            uiState = sampleLoadedState(),
+            onChartTypeChanged = {},
+            onRetry = {},
+            onRemoveCard = {}
+        )
     }
 }
 
