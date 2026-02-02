@@ -21,7 +21,6 @@ class NewStatsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardConfigurationRepository: StatsCardsConfigurationRepository
 ) : ViewModel() {
-
     private val _visibleCards = MutableStateFlow<List<StatsCardType>>(StatsCardType.defaultCards())
     val visibleCards: StateFlow<List<StatsCardType>> = _visibleCards.asStateFlow()
 

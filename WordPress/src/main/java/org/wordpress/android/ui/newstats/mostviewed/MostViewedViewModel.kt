@@ -183,69 +183,68 @@ class MostViewedViewModel @Inject constructor(
     private suspend fun loadDataForSourceInternal(siteId: Long, dataSource: MostViewedDataSource) {
         try {
             val result = statsRepository.fetchMostViewed(siteId, currentPeriod, dataSource)
-
             when (result) {
-                is MostViewedResult.Success -> {
-                    val allItems = result.items.map { item ->
-                        MostViewedDetailItem(
-                            id = item.id,
-                            title = item.title,
-                            views = item.views,
-                            change = item.toMostViewedChange()
-                        )
-                    }
-                    val cardItems = allItems.take(CARD_MAX_ITEMS)
-                    val maxViewsForBar = cardItems.firstOrNull()?.views ?: 1L
-
-                    val loadedState = MostViewedCardUiState.Loaded(
-                        items = cardItems.mapIndexed { index, item ->
-                            MostViewedItem(
-                                id = item.id,
-                                title = item.title,
-                                views = item.views,
-                                change = item.change,
-                                isHighlighted = index == 0
-                            )
-                        },
-                        maxViewsForBar = maxViewsForBar
-                    )
-
-                    when (dataSource) {
-                        MostViewedDataSource.POSTS_AND_PAGES -> {
-                            postsAllItems = allItems
-                            postsCachedTotalViews = result.totalViews
-                            postsCachedTotalViewsChange = result.totalViewsChange
-                            postsCachedTotalViewsChangePercent = result.totalViewsChangePercent
-                            _postsUiState.value = loadedState
-                        }
-                        MostViewedDataSource.REFERRERS -> {
-                            referrersAllItems = allItems
-                            referrersCachedTotalViews = result.totalViews
-                            referrersCachedTotalViewsChange = result.totalViewsChange
-                            referrersCachedTotalViewsChangePercent = result.totalViewsChangePercent
-                            _referrersUiState.value = loadedState
-                        }
-                    }
-                }
-                is MostViewedResult.Error -> {
-                    val errorState = MostViewedCardUiState.Error(
-                        message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
-                    )
-                    when (dataSource) {
-                        MostViewedDataSource.POSTS_AND_PAGES -> _postsUiState.value = errorState
-                        MostViewedDataSource.REFERRERS -> _referrersUiState.value = errorState
-                    }
-                }
+                is MostViewedResult.Success -> handleSuccessResult(result, dataSource)
+                is MostViewedResult.Error -> setErrorState(
+                    dataSource,
+                    resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
+                )
             }
         } catch (e: Exception) {
-            val errorState = MostViewedCardUiState.Error(
-                message = e.message
-                    ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error)
+            setErrorState(
+                dataSource,
+                e.message ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error)
             )
-            when (dataSource) {
-                MostViewedDataSource.POSTS_AND_PAGES -> _postsUiState.value = errorState
-                MostViewedDataSource.REFERRERS -> _referrersUiState.value = errorState
+        }
+    }
+
+    private fun handleSuccessResult(result: MostViewedResult.Success, dataSource: MostViewedDataSource) {
+        val allItems = result.items.map { it.toDetailItem() }
+        val cardItems = allItems.take(CARD_MAX_ITEMS)
+        val loadedState = MostViewedCardUiState.Loaded(
+            items = cardItems.mapIndexed { index, item ->
+                MostViewedItem(
+                    id = item.id,
+                    title = item.title,
+                    views = item.views,
+                    change = item.change,
+                    isHighlighted = index == 0
+                )
+            },
+            maxViewsForBar = cardItems.firstOrNull()?.views ?: 1L
+        )
+        updateCacheAndState(dataSource, allItems, result, loadedState)
+    }
+
+    private fun updateCacheAndState(
+        dataSource: MostViewedDataSource,
+        allItems: List<MostViewedDetailItem>,
+        result: MostViewedResult.Success,
+        loadedState: MostViewedCardUiState.Loaded
+    ) {
+        when (dataSource) {
+            MostViewedDataSource.POSTS_AND_PAGES -> {
+                postsAllItems = allItems
+                postsCachedTotalViews = result.totalViews
+                postsCachedTotalViewsChange = result.totalViewsChange
+                postsCachedTotalViewsChangePercent = result.totalViewsChangePercent
+                _postsUiState.value = loadedState
             }
+            MostViewedDataSource.REFERRERS -> {
+                referrersAllItems = allItems
+                referrersCachedTotalViews = result.totalViews
+                referrersCachedTotalViewsChange = result.totalViewsChange
+                referrersCachedTotalViewsChangePercent = result.totalViewsChangePercent
+                _referrersUiState.value = loadedState
+            }
+        }
+    }
+
+    private fun setErrorState(dataSource: MostViewedDataSource, message: String) {
+        val errorState = MostViewedCardUiState.Error(message = message)
+        when (dataSource) {
+            MostViewedDataSource.POSTS_AND_PAGES -> _postsUiState.value = errorState
+            MostViewedDataSource.REFERRERS -> _referrersUiState.value = errorState
         }
     }
 
@@ -263,10 +262,11 @@ data class MostViewedDetailData(
     val dateRange: String
 )
 
-private fun MostViewedItemData.toMostViewedChange(): MostViewedChange {
-    return when {
+private fun MostViewedItemData.toDetailItem(): MostViewedDetailItem {
+    val change = when {
         viewsChange > 0 -> MostViewedChange.Positive(viewsChange, abs(viewsChangePercent))
         viewsChange < 0 -> MostViewedChange.Negative(abs(viewsChange), abs(viewsChangePercent))
         else -> MostViewedChange.NoChange
     }
+    return MostViewedDetailItem(id = id, title = title, views = views, change = change)
 }

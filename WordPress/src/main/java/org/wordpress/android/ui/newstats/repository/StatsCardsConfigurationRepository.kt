@@ -124,6 +124,7 @@ class StatsCardsConfigurationRepository @Inject constructor(
         saveConfiguration(siteId, current.copy(mostViewedDataSources = newDataSources))
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun loadConfiguration(siteId: Long): StatsCardsConfiguration {
         val json = appPrefsWrapper.getStatsCardsConfigurationJson(siteId)
         if (json == null) {

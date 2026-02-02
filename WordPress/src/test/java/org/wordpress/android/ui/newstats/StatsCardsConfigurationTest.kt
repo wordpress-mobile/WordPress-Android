@@ -5,7 +5,6 @@ import org.junit.Test
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 
 class StatsCardsConfigurationTest {
-
     @Test
     fun `when default configuration, then all default cards are visible`() {
         val config = StatsCardsConfiguration()
