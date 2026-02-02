@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.repository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsDateRange
@@ -504,7 +505,7 @@ class StatsRepository @Inject constructor(
         period: StatsPeriod,
         dataSource: MostViewedDataSource
     ): MostViewedResult = withContext(ioDispatcher) {
-        val (currentDateRange, previousDateRange) = calculateMostViewedDateRanges(period)
+        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
 
         when (dataSource) {
             MostViewedDataSource.POSTS_AND_PAGES -> {
@@ -622,7 +623,11 @@ class StatsRepository @Inject constructor(
         }
     }
 
-    private fun calculateMostViewedDateRanges(period: StatsPeriod): Pair<StatsDateRange, StatsDateRange> {
+    /**
+     * Calculates current and previous date ranges for comparison stats.
+     * Used by multiple stats types (MostViewed, Countries, etc.)
+     */
+    private fun calculateComparisonDateRanges(period: StatsPeriod): Pair<StatsDateRange, StatsDateRange> {
         val today = LocalDate.now()
         val todayString = today.format(dateFormatter)
 
@@ -663,6 +668,70 @@ class StatsRepository @Inject constructor(
                     startDate = previousStart.format(dateFormatter),
                     date = previousEnd.format(dateFormatter)
                 )
+            }
+        }
+    }
+
+    /**
+     * Fetches country views stats for a specific site and period with comparison data.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param period The stats period to fetch
+     * @return Country views data with comparison or error
+     */
+    suspend fun fetchCountryViews(
+        siteId: Long,
+        period: StatsPeriod
+    ): CountryViewsResult = withContext(ioDispatcher) {
+        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
+
+        // Fetch both periods in parallel
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async { statsDataSource.fetchCountryViews(siteId, currentDateRange) }
+            val previousDeferred = async { statsDataSource.fetchCountryViews(siteId, previousDateRange) }
+            currentDeferred.await() to previousDeferred.await()
+        }
+
+        when (currentResult) {
+            is CountryViewsDataResult.Success -> {
+                val previousCountriesMap = if (previousResult is CountryViewsDataResult.Success) {
+                    previousResult.data.countries.associateBy { it.countryCode }
+                } else {
+                    emptyMap()
+                }
+
+                // Calculate totalViews from countries list (API summary.totalViews may be null/0)
+                val totalViews = currentResult.data.countries.sumOf { it.views }
+                val previousTotalViews = if (previousResult is CountryViewsDataResult.Success) {
+                    previousResult.data.countries.sumOf { it.views }
+                } else {
+                    0L
+                }
+                val totalChange = totalViews - previousTotalViews
+                val totalChangePercent = if (previousTotalViews > 0) {
+                    (totalChange.toDouble() / previousTotalViews.toDouble()) * PERCENTAGE_MULTIPLIER
+                } else if (totalViews > 0) PERCENTAGE_MULTIPLIER else PERCENTAGE_NO_CHANGE
+
+                CountryViewsResult.Success(
+                    countries = currentResult.data.countries.map { country ->
+                        val previousViews = previousCountriesMap[country.countryCode]?.views ?: 0L
+                        CountryViewItemData(
+                            countryCode = country.countryCode,
+                            countryName = country.countryName,
+                            views = country.views,
+                            flagIconUrl = country.flagIconUrl,
+                            previousViews = previousViews
+                        )
+                    },
+                    totalViews = totalViews,
+                    otherViews = currentResult.data.otherViews,
+                    totalViewsChange = totalChange,
+                    totalViewsChangePercent = totalChangePercent
+                )
+            }
+            is CountryViewsDataResult.Error -> {
+                appLogWrapper.e(AppLog.T.STATS, "Error fetching country views: ${currentResult.message}")
+                CountryViewsResult.Error(currentResult.message)
             }
         }
     }
@@ -787,6 +856,40 @@ data class MostViewedItemData(
     val views: Long,
     val previousViews: Long,
     val isFirst: Boolean
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double get() = if (previousViews > 0) {
+        (viewsChange.toDouble() / previousViews.toDouble()) * PERCENTAGE_MULTIPLIER
+    } else if (views > 0) {
+        PERCENTAGE_MULTIPLIER
+    } else {
+        PERCENTAGE_NO_CHANGE
+    }
+}
+
+/**
+ * Result wrapper for country views fetch operation.
+ */
+sealed class CountryViewsResult {
+    data class Success(
+        val countries: List<CountryViewItemData>,
+        val totalViews: Long,
+        val otherViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
+    ) : CountryViewsResult()
+    data class Error(val message: String) : CountryViewsResult()
+}
+
+/**
+ * Data for a single country view item from the repository layer.
+ */
+data class CountryViewItemData(
+    val countryCode: String,
+    val countryName: String,
+    val views: Long,
+    val flagIconUrl: String?,
+    val previousViews: Long
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double get() = if (previousViews > 0) {

@@ -14,11 +14,10 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.MostViewedItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.util.toDateRangeString
 import kotlin.math.abs
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
-
-private const val MONTH_ABBREVIATION_LENGTH = 3
 
 @HiltViewModel
 class MostViewedViewModel @Inject constructor(
@@ -129,9 +128,13 @@ class MostViewedViewModel @Inject constructor(
                             change = item.toMostViewedChange()
                         )
                     }
+                    val cardItems = allItems.take(CARD_MAX_ITEMS)
+                    // For bar percentage, use first item's views (list is sorted by views descending)
+                    val maxViewsForBar = cardItems.firstOrNull()?.views ?: 1L
+
                     _uiState.value = MostViewedCardUiState.Loaded(
                         selectedDataSource = currentDataSource,
-                        items = allItems.take(CARD_MAX_ITEMS).mapIndexed { index, item ->
+                        items = cardItems.mapIndexed { index, item ->
                             MostViewedItem(
                                 id = item.id,
                                 title = item.title,
@@ -139,7 +142,8 @@ class MostViewedViewModel @Inject constructor(
                                 change = item.change,
                                 isHighlighted = index == 0
                             )
-                        }
+                        },
+                        maxViewsForBar = maxViewsForBar
                     )
                 }
                 is MostViewedResult.Error -> {
@@ -175,18 +179,5 @@ private fun MostViewedItemData.toMostViewedChange(): MostViewedChange {
         viewsChange > 0 -> MostViewedChange.Positive(viewsChange, abs(viewsChangePercent))
         viewsChange < 0 -> MostViewedChange.Negative(abs(viewsChange), abs(viewsChangePercent))
         else -> MostViewedChange.NoChange
-    }
-}
-
-private fun StatsPeriod.toDateRangeString(resourceProvider: ResourceProvider): String {
-    return when (this) {
-        is StatsPeriod.Today -> resourceProvider.getString(R.string.stats_period_today)
-        is StatsPeriod.Last7Days -> resourceProvider.getString(R.string.stats_period_last_7_days)
-        is StatsPeriod.Last30Days -> resourceProvider.getString(R.string.stats_period_last_30_days)
-        is StatsPeriod.Last6Months -> resourceProvider.getString(R.string.stats_period_last_6_months)
-        is StatsPeriod.Last12Months -> resourceProvider.getString(R.string.stats_period_last_12_months)
-        is StatsPeriod.Custom -> "${startDate.dayOfMonth}-${endDate.dayOfMonth} ${
-            endDate.month.name.take(MONTH_ABBREVIATION_LENGTH).lowercase().replaceFirstChar { it.uppercase() }
-        }"
     }
 }

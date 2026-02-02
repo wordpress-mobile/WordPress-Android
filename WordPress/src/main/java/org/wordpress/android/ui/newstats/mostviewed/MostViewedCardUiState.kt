@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.newstats.mostviewed
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
-import java.io.Serializable
 
 /**
  * Represents the available data source types for the Most Viewed card.
@@ -20,7 +21,8 @@ sealed class MostViewedCardUiState {
 
     data class Loaded(
         val selectedDataSource: MostViewedDataSource,
-        val items: List<MostViewedItem>
+        val items: List<MostViewedItem>,
+        val maxViewsForBar: Long
     ) : MostViewedCardUiState()
 
     data class Error(val message: String) : MostViewedCardUiState()
@@ -46,28 +48,25 @@ data class MostViewedItem(
 /**
  * Represents the change in views compared to the previous period.
  */
-sealed class MostViewedChange : Serializable {
+sealed class MostViewedChange : Parcelable {
+    @Parcelize
     data class Positive(val value: Long, val percentage: Double) : MostViewedChange()
+    @Parcelize
     data class Negative(val value: Long, val percentage: Double) : MostViewedChange()
+    @Parcelize
     data object NoChange : MostViewedChange()
+    @Parcelize
     data object NotAvailable : MostViewedChange()
-
-    companion object {
-        private const val serialVersionUID: Long = 1L
-    }
 }
 
 /**
  * Data class for passing items to the detail screen via Intent.
- * Implements Serializable for Intent extras.
+ * Implements Parcelable for efficient Intent extras.
  */
+@Parcelize
 data class MostViewedDetailItem(
     val id: Long,
     val title: String,
     val views: Long,
     val change: MostViewedChange
-) : Serializable {
-    companion object {
-        private const val serialVersionUID: Long = 1L
-    }
-}
+) : Parcelable

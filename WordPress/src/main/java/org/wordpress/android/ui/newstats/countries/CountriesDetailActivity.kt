@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.mostviewed
+package org.wordpress.android.ui.newstats.countries
 
 import android.content.Context
 import android.content.Intent
@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +24,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,45 +40,52 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
-import org.wordpress.android.util.extensions.getSerializableCompat
-import java.util.Locale
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-private const val EXTRA_DATA_SOURCE = "extra_data_source"
-private const val EXTRA_ITEMS = "extra_items"
+private const val EXTRA_COUNTRIES = "extra_countries"
+private const val EXTRA_MAP_DATA = "extra_map_data"
+private const val EXTRA_MIN_VIEWS = "extra_min_views"
+private const val EXTRA_MAX_VIEWS = "extra_max_views"
 private const val EXTRA_TOTAL_VIEWS = "extra_total_views"
 private const val EXTRA_TOTAL_VIEWS_CHANGE = "extra_total_views_change"
 private const val EXTRA_TOTAL_VIEWS_CHANGE_PERCENT = "extra_total_views_change_percent"
 private const val EXTRA_DATE_RANGE = "extra_date_range"
+private const val MAP_ASPECT_RATIO = 8f / 5f
 
 @AndroidEntryPoint
-class MostViewedDetailActivity : BaseAppCompatActivity() {
+class CountriesDetailActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val dataSource = intent.extras?.getSerializableCompat<MostViewedDataSource>(EXTRA_DATA_SOURCE)
-            ?: MostViewedDataSource.POSTS_AND_PAGES
-        val items = intent.extras?.getParcelableArrayListCompat<MostViewedDetailItem>(EXTRA_ITEMS)
+        val countries = intent.extras
+            ?.getParcelableArrayListCompat<CountriesDetailItem>(EXTRA_COUNTRIES)
             ?: arrayListOf()
+        val mapData = intent.getStringExtra(EXTRA_MAP_DATA) ?: ""
+        val minViews = intent.getLongExtra(EXTRA_MIN_VIEWS, 0L)
+        val maxViews = intent.getLongExtra(EXTRA_MAX_VIEWS, 0L)
         val totalViews = intent.getLongExtra(EXTRA_TOTAL_VIEWS, 0L)
         val totalViewsChange = intent.getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L)
         val totalViewsChangePercent = intent.getDoubleExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0)
         val dateRange = intent.getStringExtra(EXTRA_DATE_RANGE) ?: ""
         // Calculate maxViewsForBar once (list is sorted by views descending)
-        val maxViewsForBar = items.firstOrNull()?.views ?: 1L
+        val maxViewsForBar = countries.firstOrNull()?.views ?: 1L
 
         setContent {
             AppThemeM3 {
-                MostViewedDetailScreen(
-                    dataSource = dataSource,
-                    items = items,
+                CountriesDetailScreen(
+                    countries = countries,
+                    mapData = mapData,
+                    minViews = minViews,
+                    maxViews = maxViews,
                     maxViewsForBar = maxViewsForBar,
                     totalViews = totalViews,
                     totalViewsChange = totalViewsChange,
@@ -94,16 +101,29 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
         @Suppress("LongParameterList")
         fun start(
             context: Context,
-            dataSource: MostViewedDataSource,
-            items: List<MostViewedDetailItem>,
+            countries: List<CountryItem>,
+            mapData: String,
+            minViews: Long,
+            maxViews: Long,
             totalViews: Long,
             totalViewsChange: Long,
             totalViewsChangePercent: Double,
             dateRange: String
         ) {
-            val intent = Intent(context, MostViewedDetailActivity::class.java).apply {
-                putExtra(EXTRA_DATA_SOURCE, dataSource)
-                putExtra(EXTRA_ITEMS, ArrayList(items))
+            val detailItems = countries.map { country ->
+                CountriesDetailItem(
+                    countryCode = country.countryCode,
+                    countryName = country.countryName,
+                    views = country.views,
+                    flagIconUrl = country.flagIconUrl,
+                    change = country.change
+                )
+            }
+            val intent = Intent(context, CountriesDetailActivity::class.java).apply {
+                putExtra(EXTRA_COUNTRIES, ArrayList(detailItems))
+                putExtra(EXTRA_MAP_DATA, mapData)
+                putExtra(EXTRA_MIN_VIEWS, minViews)
+                putExtra(EXTRA_MAX_VIEWS, maxViews)
                 putExtra(EXTRA_TOTAL_VIEWS, totalViews)
                 putExtra(EXTRA_TOTAL_VIEWS_CHANGE, totalViewsChange)
                 putExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, totalViewsChangePercent)
@@ -114,11 +134,22 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
     }
 }
 
+@Parcelize
+data class CountriesDetailItem(
+    val countryCode: String,
+    val countryName: String,
+    val views: Long,
+    val flagIconUrl: String?,
+    val change: CountryViewChange = CountryViewChange.NoChange
+) : Parcelable
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MostViewedDetailScreen(
-    dataSource: MostViewedDataSource,
-    items: List<MostViewedDetailItem>,
+private fun CountriesDetailScreen(
+    countries: List<CountriesDetailItem>,
+    mapData: String,
+    minViews: Long,
+    maxViews: Long,
     maxViewsForBar: Long,
     totalViews: Long,
     totalViewsChange: Long,
@@ -126,12 +157,10 @@ private fun MostViewedDetailScreen(
     dateRange: String,
     onBackPressed: () -> Unit
 ) {
-    val title = stringResource(dataSource.labelResId)
-
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = title) },
+                title = { Text(text = stringResource(R.string.stats_countries_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(
@@ -151,6 +180,7 @@ private fun MostViewedDetailScreen(
         ) {
             item {
                 Spacer(modifier = Modifier.height(8.dp))
+                // Summary card
                 StatsSummaryCard(
                     totalViews = totalViews,
                     dateRange = dateRange,
@@ -158,20 +188,52 @@ private fun MostViewedDetailScreen(
                     totalViewsChangePercent = totalViewsChangePercent
                 )
                 Spacer(modifier = Modifier.height(16.dp))
+
+                // Map
+                CountryMap(
+                    mapData = mapData,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(MAP_ASPECT_RATIO)
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Legend
+                StatsMapLegend(minViews = minViews, maxViews = maxViews)
+                Spacer(modifier = Modifier.height(16.dp))
             }
 
+
             item {
-                ColumnHeaders(itemCount = items.size)
+                // Header
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(R.string.stats_countries_location_header),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = stringResource(R.string.stats_countries_views_header),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            itemsIndexed(items) { index, item ->
-                DetailItemRow(
+            itemsIndexed(countries) { index, country ->
+                val percentage = if (maxViewsForBar > 0) {
+                    country.views.toFloat() / maxViewsForBar.toFloat()
+                } else 0f
+                DetailCountryRow(
                     position = index + 1,
-                    item = item,
-                    maxViewsForBar = maxViewsForBar
+                    country = country,
+                    percentage = percentage
                 )
-                if (index < items.lastIndex) {
+                if (index < countries.lastIndex) {
                     Spacer(modifier = Modifier.height(4.dp))
                 }
             }
@@ -184,31 +246,22 @@ private fun MostViewedDetailScreen(
 }
 
 @Composable
-private fun ColumnHeaders(itemCount: Int) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = stringResource(R.string.stats_most_viewed_top_n, itemCount),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            text = stringResource(R.string.stats_views),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
+private fun CountryMap(
+    mapData: String,
+    modifier: Modifier = Modifier
+) {
+    StatsGeoChartWebView(
+        mapData = mapData,
+        modifier = modifier
+    )
 }
 
 @Composable
-private fun DetailItemRow(
+private fun DetailCountryRow(
     position: Int,
-    item: MostViewedDetailItem,
-    maxViewsForBar: Long
+    country: CountriesDetailItem,
+    percentage: Float
 ) {
-    val percentage = if (maxViewsForBar > 0) item.views.toFloat() / maxViewsForBar.toFloat() else 0f
     val barColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
 
     Box(
@@ -217,6 +270,7 @@ private fun DetailItemRow(
             .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(8.dp))
     ) {
+        // Background bar representing the percentage
         Box(
             modifier = Modifier
                 .fillMaxWidth(fraction = percentage)
@@ -230,6 +284,7 @@ private fun DetailItemRow(
                 .padding(vertical = 12.dp, horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Position number
             Text(
                 text = position.toString(),
                 style = MaterialTheme.typography.bodyMedium,
@@ -238,89 +293,75 @@ private fun DetailItemRow(
                 modifier = Modifier.width(32.dp)
             )
 
+            // Flag icon
+            if (country.flagIconUrl != null) {
+                AsyncImage(
+                    model = country.flagIconUrl,
+                    contentDescription = country.countryName,
+                    modifier = Modifier.size(24.dp)
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .background(
+                            MaterialTheme.colorScheme.surfaceVariant,
+                            RoundedCornerShape(4.dp)
+                        )
+                )
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+
+            // Country name
             Text(
-                text = item.title,
+                text = country.countryName,
                 style = MaterialTheme.typography.bodyMedium,
-                maxLines = 2,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f)
             )
+            Spacer(modifier = Modifier.width(12.dp))
 
-            Spacer(modifier = Modifier.width(8.dp))
-
+            // Views count and change
             Column(horizontalAlignment = Alignment.End) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = formatStatValue(item.views),
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        imageVector = Icons.Default.ChevronRight,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                ChangeIndicator(change = item.change)
+                Text(
+                    text = formatStatValue(country.views),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                StatsChangeIndicator(change = country.change)
             }
         }
     }
 }
 
-@Composable
-private fun ChangeIndicator(change: MostViewedChange) {
-    val (text, color) = when (change) {
-        is MostViewedChange.Positive -> Pair(
-            "+${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
-            StatsColors.ChangeBadgePositive
-        )
-        is MostViewedChange.Negative -> Pair(
-            "-${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
-            StatsColors.ChangeBadgeNegative
-        )
-        is MostViewedChange.NoChange -> Pair(
-            "+0 (0%)",
-            MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        is MostViewedChange.NotAvailable -> return
-    }
-
-    Text(
-        text = text,
-        style = MaterialTheme.typography.labelSmall,
-        color = color
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
-private fun MostViewedDetailScreenPreview() {
+private fun CountriesDetailScreenPreview() {
     AppThemeM3 {
-        MostViewedDetailScreen(
-            dataSource = MostViewedDataSource.POSTS_AND_PAGES,
-            items = listOf(
-                MostViewedDetailItem(1, "Welcome to Automattic", 998,
-                    MostViewedChange.Positive(41, 4.3)),
-                MostViewedDetailItem(2, "Travel Guidelines", 111,
-                    MostViewedChange.Positive(22, 24.7)),
-                MostViewedDetailItem(3, "LibreChat", 93,
-                    MostViewedChange.Positive(21, 29.2)),
-                MostViewedDetailItem(4, "Getting Started with Claude Code: A Comprehensive Tutorial", 91,
-                    MostViewedChange.Positive(47, 106.8)),
-                MostViewedDetailItem(5, "AI Tools & Resource Hub", 72,
-                    MostViewedChange.Positive(31, 75.6))
+        CountriesDetailScreen(
+            countries = listOf(
+                CountriesDetailItem("US", "United States", 3464, null, CountryViewChange.Positive(124, 3.7)),
+                CountriesDetailItem("ES", "Spain", 556, null, CountryViewChange.Positive(45, 8.8)),
+                CountriesDetailItem("GB", "United Kingdom", 522, null, CountryViewChange.Negative(12, 2.2)),
+                CountriesDetailItem("CA", "Canada", 485, null, CountryViewChange.Positive(33, 7.3)),
+                CountriesDetailItem("DE", "Germany", 412, null, CountryViewChange.NoChange),
+                CountriesDetailItem("FR", "France", 387, null, CountryViewChange.Negative(8, 2.0)),
+                CountriesDetailItem("AU", "Australia", 298, null, CountryViewChange.Positive(21, 7.6)),
+                CountriesDetailItem("BR", "Brazil", 245, null, CountryViewChange.Positive(15, 6.5)),
+                CountriesDetailItem("IN", "India", 201, null, CountryViewChange.Negative(5, 2.4)),
+                CountriesDetailItem("MX", "Mexico", 156, null, CountryViewChange.Positive(12, 8.3))
             ),
-            maxViewsForBar = 998,
-            totalViews = 5400,
-            totalViewsChange = 69,
-            totalViewsChangePercent = 1.3,
-            dateRange = "21-27 Jan",
+            mapData = "['US',3464],['ES',556],['GB',522],['CA',485]",
+            minViews = 156,
+            maxViews = 3464,
+            maxViewsForBar = 3464,
+            totalViews = 6726,
+            totalViewsChange = 225,
+            totalViewsChangePercent = 3.5,
+            dateRange = "Last 7 days",
             onBackPressed = {}
         )
     }

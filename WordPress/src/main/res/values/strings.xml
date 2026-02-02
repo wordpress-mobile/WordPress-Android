@@ -1575,6 +1575,11 @@
     <string name="stats_show_all">Show All</string>
     <string name="stats_most_viewed_top_n">Top %d</string>
 
+    <!-- Countries Stats Card -->
+    <string name="stats_countries_title">Countries</string>
+    <string name="stats_countries_location_header">Locations</string>
+    <string name="stats_countries_views_header">Views</string>
+
     <!-- stats referrer popup menu actions   -->
     <string name="stats_referrer_popup_menu_open_website">Open Website</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Mark as Spam</string>
