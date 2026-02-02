@@ -336,7 +336,13 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 return;
             }
             setFollowButtonLoading(false);
-            if (!succeeded) {
+            if (succeeded) {
+                // Update cached blog info and subscription settings button visibility
+                if (mBlogInfo != null) {
+                    mBlogInfo.isFollowing = isAskingToFollow;
+                    updateSubscriptionSettingsButtonVisibility(mBlogInfo);
+                }
+            } else {
                 int errResId = isAskingToFollow ? R.string.reader_toast_err_unable_to_follow_blog
                         : R.string.reader_toast_err_unable_to_unfollow_blog;
                 ToastUtils.showToast(getContext(), errResId);
