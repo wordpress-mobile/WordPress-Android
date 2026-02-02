@@ -268,6 +268,22 @@ private fun TrafficTabContent(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
+            if (visibleCards.isEmpty()) {
+                // Empty state message
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.stats_no_cards_message),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
             // Dynamic card rendering based on configuration
             visibleCards.forEach { cardType ->
                 when (cardType) {

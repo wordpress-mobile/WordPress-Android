@@ -1584,6 +1584,7 @@
     <string name="stats_card_remove">Remove Card</string>
     <string name="stats_add_card_title">Add Card</string>
     <string name="stats_all_cards_visible">All cards are currently visible</string>
+    <string name="stats_no_cards_message">No cards to display. Tap the button below to add cards.</string>
 
     <!-- stats referrer popup menu actions   -->
     <string name="stats_referrer_popup_menu_open_website">Open Website</string>
