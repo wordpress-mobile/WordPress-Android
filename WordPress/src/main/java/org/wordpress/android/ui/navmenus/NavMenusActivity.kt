@@ -140,14 +140,6 @@ class NavMenusActivity : BaseAppCompatActivity() {
                             onAutoAddChange = { viewModel.updateMenuAutoAdd(it) },
                             onLocationToggle = { viewModel.toggleMenuLocation(it) },
                             onSaveClick = { viewModel.saveMenu() },
-                            onDeleteClick = {
-                                showDeleteConfirmation(
-                                    titleRes = R.string.delete_menu_confirmation_title,
-                                    messageRes = R.string.delete_menu_confirmation_message,
-                                    itemName = state?.name ?: "",
-                                    onConfirm = { viewModel.deleteMenu() }
-                                )
-                            },
                             modifier = Modifier.padding(contentPadding)
                         )
                     }
@@ -182,6 +174,7 @@ class NavMenusActivity : BaseAppCompatActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun NavMenusTopBar(currentRoute: String?) {
+        val menuDetailState by viewModel.menuDetailState.collectAsState()
         val menuItemDetailState by viewModel.menuItemDetailState.collectAsState()
 
         TopAppBar(
@@ -201,6 +194,25 @@ class NavMenusActivity : BaseAppCompatActivity() {
                 }
             },
             actions = {
+                if (currentRoute == NavMenuScreen.MenuDetail.name &&
+                    menuDetailState?.isNew == false
+                ) {
+                    IconButton(
+                        onClick = {
+                            showDeleteConfirmation(
+                                titleRes = R.string.delete_menu_confirmation_title,
+                                messageRes = R.string.delete_menu_confirmation_message,
+                                itemName = menuDetailState?.name ?: "",
+                                onConfirm = { viewModel.deleteMenu() }
+                            )
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = stringResource(R.string.delete)
+                        )
+                    }
+                }
                 if (currentRoute == NavMenuScreen.MenuItemDetail.name &&
                     menuItemDetailState?.isNew == false
                 ) {
