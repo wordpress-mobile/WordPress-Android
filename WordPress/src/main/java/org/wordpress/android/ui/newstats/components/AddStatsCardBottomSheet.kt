@@ -24,23 +24,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.StatsCardType
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 
 /**
  * Bottom sheet for adding stats cards.
- * Shows a list of available (hidden) cards that can be added.
+ * Shows a list of available (hidden) cards that can be added, including Most Viewed data sources.
  *
  * @param sheetState The state of the bottom sheet
- * @param availableCards List of card types that can be added (currently hidden)
+ * @param availableCards List of card types that can be added (currently hidden, excluding MOST_VIEWED)
+ * @param availableMostViewedDataSources List of Most Viewed data sources that can be added
  * @param onDismiss Callback invoked when the sheet is dismissed
  * @param onCardSelected Callback invoked when a card is selected to be added
+ * @param onMostViewedDataSourceSelected Callback invoked when a Most Viewed data source is selected
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddStatsCardBottomSheet(
     sheetState: SheetState,
     availableCards: List<StatsCardType>,
+    availableMostViewedDataSources: List<MostViewedDataSource>,
     onDismiss: () -> Unit,
-    onCardSelected: (StatsCardType) -> Unit
+    onCardSelected: (StatsCardType) -> Unit,
+    onMostViewedDataSourceSelected: (MostViewedDataSource) -> Unit
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -59,7 +64,10 @@ fun AddStatsCardBottomSheet(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            if (availableCards.isEmpty()) {
+            val hasAvailableItems = availableCards.isNotEmpty() ||
+                availableMostViewedDataSources.isNotEmpty()
+
+            if (!hasAvailableItems) {
                 Text(
                     text = stringResource(R.string.stats_all_cards_visible),
                     style = MaterialTheme.typography.bodyMedium,
@@ -67,11 +75,23 @@ fun AddStatsCardBottomSheet(
                     modifier = Modifier.padding(vertical = 24.dp)
                 )
             } else {
+                // Regular cards (excluding MOST_VIEWED which is handled separately)
                 availableCards.forEach { cardType ->
                     AddCardItem(
-                        cardType = cardType,
+                        label = stringResource(cardType.displayNameResId),
                         onClick = {
                             onCardSelected(cardType)
+                            onDismiss()
+                        }
+                    )
+                }
+
+                // Most Viewed data sources
+                availableMostViewedDataSources.forEach { dataSource ->
+                    AddCardItem(
+                        label = stringResource(dataSource.labelResId),
+                        onClick = {
+                            onMostViewedDataSourceSelected(dataSource)
                             onDismiss()
                         }
                     )
@@ -83,7 +103,7 @@ fun AddStatsCardBottomSheet(
 
 @Composable
 private fun AddCardItem(
-    cardType: StatsCardType,
+    label: String,
     onClick: () -> Unit
 ) {
     Row(
@@ -101,7 +121,7 @@ private fun AddCardItem(
         )
         Spacer(modifier = Modifier.width(16.dp))
         Text(
-            text = stringResource(cardType.displayNameResId),
+            text = label,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface
         )

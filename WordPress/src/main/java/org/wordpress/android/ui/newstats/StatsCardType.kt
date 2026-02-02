@@ -19,7 +19,14 @@ enum class StatsCardType(
     companion object {
         /**
          * Returns the default list of visible cards in their default order.
+         * Note: MOST_VIEWED appears twice by default (one for each data source).
          */
-        fun defaultCards(): List<StatsCardType> = entries.sortedBy { it.defaultOrder }
+        fun defaultCards(): List<StatsCardType> = listOf(
+            TODAYS_STATS,
+            VIEWS_STATS,
+            MOST_VIEWED,
+            MOST_VIEWED,
+            COUNTRIES
+        )
     }
 }

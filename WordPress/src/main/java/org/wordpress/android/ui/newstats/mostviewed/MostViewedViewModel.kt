@@ -26,27 +26,30 @@ class MostViewedViewModel @Inject constructor(
     private val statsRepository: StatsRepository,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<MostViewedCardUiState>(MostViewedCardUiState.Loading)
-    val uiState: StateFlow<MostViewedCardUiState> = _uiState.asStateFlow()
+    // Separate state flows for each data source
+    private val _postsUiState = MutableStateFlow<MostViewedCardUiState>(MostViewedCardUiState.Loading)
+    val postsUiState: StateFlow<MostViewedCardUiState> = _postsUiState.asStateFlow()
+
+    private val _referrersUiState = MutableStateFlow<MostViewedCardUiState>(MostViewedCardUiState.Loading)
+    val referrersUiState: StateFlow<MostViewedCardUiState> = _referrersUiState.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
-    private var currentDataSource: MostViewedDataSource = MostViewedDataSource.POSTS_AND_PAGES
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
 
-    private var allItems: List<MostViewedDetailItem> = emptyList()
-    private var cachedTotalViews: Long = 0L
-    private var cachedTotalViewsChange: Long = 0L
-    private var cachedTotalViewsChangePercent: Double = 0.0
+    // Cache for detail data - separate for each data source
+    private var postsAllItems: List<MostViewedDetailItem> = emptyList()
+    private var postsCachedTotalViews: Long = 0L
+    private var postsCachedTotalViewsChange: Long = 0L
+    private var postsCachedTotalViewsChangePercent: Double = 0.0
+
+    private var referrersAllItems: List<MostViewedDetailItem> = emptyList()
+    private var referrersCachedTotalViews: Long = 0L
+    private var referrersCachedTotalViewsChange: Long = 0L
+    private var referrersCachedTotalViewsChangePercent: Double = 0.0
 
     init {
-        loadData()
-    }
-
-    fun onDataSourceChanged(dataSource: MostViewedDataSource) {
-        if (dataSource == currentDataSource) return
-        currentDataSource = dataSource
         loadData()
     }
 
@@ -69,17 +72,32 @@ class MostViewedViewModel @Inject constructor(
         }
     }
 
-    fun onRetry() {
-        loadData()
+    fun onRetryPosts() {
+        loadDataForSource(MostViewedDataSource.POSTS_AND_PAGES)
     }
 
-    fun getDetailData(): MostViewedDetailData {
+    fun onRetryReferrers() {
+        loadDataForSource(MostViewedDataSource.REFERRERS)
+    }
+
+    fun getPostsDetailData(): MostViewedDetailData {
         return MostViewedDetailData(
-            dataSource = currentDataSource,
-            items = allItems,
-            totalViews = cachedTotalViews,
-            totalViewsChange = cachedTotalViewsChange,
-            totalViewsChangePercent = cachedTotalViewsChangePercent,
+            dataSource = MostViewedDataSource.POSTS_AND_PAGES,
+            items = postsAllItems,
+            totalViews = postsCachedTotalViews,
+            totalViewsChange = postsCachedTotalViewsChange,
+            totalViewsChangePercent = postsCachedTotalViewsChangePercent,
+            dateRange = currentPeriod.toDateRangeString(resourceProvider)
+        )
+    }
+
+    fun getReferrersDetailData(): MostViewedDetailData {
+        return MostViewedDetailData(
+            dataSource = MostViewedDataSource.REFERRERS,
+            items = referrersAllItems,
+            totalViews = referrersCachedTotalViews,
+            totalViewsChange = referrersCachedTotalViewsChange,
+            totalViewsChangePercent = referrersCachedTotalViewsChangePercent,
             dateRange = currentPeriod.toDateRangeString(resourceProvider)
         )
     }
@@ -87,40 +105,88 @@ class MostViewedViewModel @Inject constructor(
     private fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
-            _uiState.value = MostViewedCardUiState.Error(
+            val errorState = MostViewedCardUiState.Error(
                 message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected)
             )
+            _postsUiState.value = errorState
+            _referrersUiState.value = errorState
             return
         }
 
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
-            _uiState.value = MostViewedCardUiState.Error(
+            val errorState = MostViewedCardUiState.Error(
                 message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
             )
+            _postsUiState.value = errorState
+            _referrersUiState.value = errorState
             return
         }
 
         statsRepository.init(accessToken)
-        _uiState.value = MostViewedCardUiState.Loading
+        _postsUiState.value = MostViewedCardUiState.Loading
+        _referrersUiState.value = MostViewedCardUiState.Loading
 
         viewModelScope.launch {
             loadDataInternal(site.siteId)
         }
     }
 
+    private fun loadDataForSource(dataSource: MostViewedDataSource) {
+        val site = selectedSiteRepository.getSelectedSite()
+        if (site == null) {
+            val errorState = MostViewedCardUiState.Error(
+                message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected)
+            )
+            when (dataSource) {
+                MostViewedDataSource.POSTS_AND_PAGES -> _postsUiState.value = errorState
+                MostViewedDataSource.REFERRERS -> _referrersUiState.value = errorState
+            }
+            return
+        }
+
+        val accessToken = accountStore.accessToken
+        if (accessToken.isNullOrEmpty()) {
+            val errorState = MostViewedCardUiState.Error(
+                message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
+            )
+            when (dataSource) {
+                MostViewedDataSource.POSTS_AND_PAGES -> _postsUiState.value = errorState
+                MostViewedDataSource.REFERRERS -> _referrersUiState.value = errorState
+            }
+            return
+        }
+
+        statsRepository.init(accessToken)
+        when (dataSource) {
+            MostViewedDataSource.POSTS_AND_PAGES -> _postsUiState.value = MostViewedCardUiState.Loading
+            MostViewedDataSource.REFERRERS -> _referrersUiState.value = MostViewedCardUiState.Loading
+        }
+
+        viewModelScope.launch {
+            loadDataForSourceInternal(site.siteId, dataSource)
+        }
+    }
+
     @Suppress("TooGenericExceptionCaught")
     private suspend fun loadDataInternal(siteId: Long) {
+        // Load both data sources in parallel
+        viewModelScope.launch {
+            loadDataForSourceInternal(siteId, MostViewedDataSource.POSTS_AND_PAGES)
+        }
+        viewModelScope.launch {
+            loadDataForSourceInternal(siteId, MostViewedDataSource.REFERRERS)
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun loadDataForSourceInternal(siteId: Long, dataSource: MostViewedDataSource) {
         try {
-            val result = statsRepository.fetchMostViewed(siteId, currentPeriod, currentDataSource)
+            val result = statsRepository.fetchMostViewed(siteId, currentPeriod, dataSource)
 
             when (result) {
                 is MostViewedResult.Success -> {
-                    cachedTotalViews = result.totalViews
-                    cachedTotalViewsChange = result.totalViewsChange
-                    cachedTotalViewsChangePercent = result.totalViewsChangePercent
-
-                    allItems = result.items.map { item ->
+                    val allItems = result.items.map { item ->
                         MostViewedDetailItem(
                             id = item.id,
                             title = item.title,
@@ -129,11 +195,10 @@ class MostViewedViewModel @Inject constructor(
                         )
                     }
                     val cardItems = allItems.take(CARD_MAX_ITEMS)
-                    // For bar percentage, use first item's views (list is sorted by views descending)
                     val maxViewsForBar = cardItems.firstOrNull()?.views ?: 1L
 
-                    _uiState.value = MostViewedCardUiState.Loaded(
-                        selectedDataSource = currentDataSource,
+                    val loadedState = MostViewedCardUiState.Loaded(
+                        selectedDataSource = dataSource,
                         items = cardItems.mapIndexed { index, item ->
                             MostViewedItem(
                                 id = item.id,
@@ -145,18 +210,43 @@ class MostViewedViewModel @Inject constructor(
                         },
                         maxViewsForBar = maxViewsForBar
                     )
+
+                    when (dataSource) {
+                        MostViewedDataSource.POSTS_AND_PAGES -> {
+                            postsAllItems = allItems
+                            postsCachedTotalViews = result.totalViews
+                            postsCachedTotalViewsChange = result.totalViewsChange
+                            postsCachedTotalViewsChangePercent = result.totalViewsChangePercent
+                            _postsUiState.value = loadedState
+                        }
+                        MostViewedDataSource.REFERRERS -> {
+                            referrersAllItems = allItems
+                            referrersCachedTotalViews = result.totalViews
+                            referrersCachedTotalViewsChange = result.totalViewsChange
+                            referrersCachedTotalViewsChangePercent = result.totalViewsChangePercent
+                            _referrersUiState.value = loadedState
+                        }
+                    }
                 }
                 is MostViewedResult.Error -> {
-                    _uiState.value = MostViewedCardUiState.Error(
+                    val errorState = MostViewedCardUiState.Error(
                         message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
                     )
+                    when (dataSource) {
+                        MostViewedDataSource.POSTS_AND_PAGES -> _postsUiState.value = errorState
+                        MostViewedDataSource.REFERRERS -> _referrersUiState.value = errorState
+                    }
                 }
             }
         } catch (e: Exception) {
-            _uiState.value = MostViewedCardUiState.Error(
+            val errorState = MostViewedCardUiState.Error(
                 message = e.message
                     ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error)
             )
+            when (dataSource) {
+                MostViewedDataSource.POSTS_AND_PAGES -> _postsUiState.value = errorState
+                MostViewedDataSource.REFERRERS -> _referrersUiState.value = errorState
+            }
         }
     }
 

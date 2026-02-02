@@ -20,12 +20,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,6 +56,7 @@ private const val LOADING_SHIMMER_ITEM_COUNT = 5
 @Composable
 fun MostViewedCard(
     uiState: MostViewedCardUiState,
+    dataSource: MostViewedDataSource,
     onDataSourceChanged: (MostViewedDataSource) -> Unit,
     onShowAllClick: () -> Unit,
     onRetry: () -> Unit,
@@ -82,11 +81,12 @@ fun MostViewedCard(
             is MostViewedCardUiState.Loading -> LoadingContent()
             is MostViewedCardUiState.Loaded -> LoadedContent(
                 uiState,
+                dataSource,
                 onDataSourceChanged,
                 onShowAllClick,
                 onRemoveCard
             )
-            is MostViewedCardUiState.Error -> ErrorContent(uiState, onRetry, onRemoveCard)
+            is MostViewedCardUiState.Error -> ErrorContent(uiState, dataSource, onRetry, onRemoveCard)
         }
     }
 }
@@ -166,6 +166,7 @@ private fun LoadingContent() {
 @Composable
 private fun LoadedContent(
     state: MostViewedCardUiState.Loaded,
+    dataSource: MostViewedDataSource,
     onDataSourceChanged: (MostViewedDataSource) -> Unit,
     onShowAllClick: () -> Unit,
     onRemoveCard: () -> Unit
@@ -175,10 +176,10 @@ private fun LoadedContent(
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        HeaderSection(onRemoveCard = onRemoveCard)
+        HeaderSection(dataSource = dataSource, onRemoveCard = onRemoveCard)
         Spacer(modifier = Modifier.height(12.dp))
         ColumnHeadersRow(
-            selectedDataSource = state.selectedDataSource,
+            selectedDataSource = dataSource,
             onDataSourceChanged = onDataSourceChanged
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -200,14 +201,14 @@ private fun LoadedContent(
 }
 
 @Composable
-private fun HeaderSection(onRemoveCard: () -> Unit) {
+private fun HeaderSection(dataSource: MostViewedDataSource, onRemoveCard: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(R.string.stats_most_viewed_title),
+            text = stringResource(dataSource.labelResId),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
@@ -235,7 +236,7 @@ private fun ColumnHeadersRow(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(selectedDataSource.labelResId),
+                    text = stringResource(selectedDataSource.columnHeaderResId),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -410,6 +411,7 @@ private fun ShowAllFooter(onClick: () -> Unit) {
 @Composable
 private fun ErrorContent(
     state: MostViewedCardUiState.Error,
+    dataSource: MostViewedDataSource,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit
 ) {
@@ -418,7 +420,7 @@ private fun ErrorContent(
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        HeaderSection(onRemoveCard = onRemoveCard)
+        HeaderSection(dataSource = dataSource, onRemoveCard = onRemoveCard)
         Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -443,6 +445,7 @@ private fun MostViewedCardLoadingPreview() {
     AppThemeM3 {
         MostViewedCard(
             uiState = MostViewedCardUiState.Loading,
+            dataSource = MostViewedDataSource.POSTS_AND_PAGES,
             onDataSourceChanged = {},
             onShowAllClick = {},
             onRetry = {},
@@ -497,6 +500,7 @@ private fun MostViewedCardLoadedPreview() {
                 ),
                 maxViewsForBar = 417
             ),
+            dataSource = MostViewedDataSource.POSTS_AND_PAGES,
             onDataSourceChanged = {},
             onShowAllClick = {},
             onRetry = {},
@@ -513,6 +517,7 @@ private fun MostViewedCardErrorPreview() {
             uiState = MostViewedCardUiState.Error(
                 message = "Failed to load data"
             ),
+            dataSource = MostViewedDataSource.POSTS_AND_PAGES,
             onDataSourceChanged = {},
             onShowAllClick = {},
             onRetry = {},
@@ -546,6 +551,7 @@ private fun MostViewedCardLoadedDarkPreview() {
                 ),
                 maxViewsForBar = 417
             ),
+            dataSource = MostViewedDataSource.POSTS_AND_PAGES,
             onDataSourceChanged = {},
             onShowAllClick = {},
             onRetry = {},
