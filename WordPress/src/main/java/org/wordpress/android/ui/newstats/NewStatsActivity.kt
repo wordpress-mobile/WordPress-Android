@@ -51,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -274,19 +275,16 @@ private fun TrafficTabContent(
             if (visibleCards.isEmpty()) {
                 // Empty state message
                 val emptyStateMessage = stringResource(R.string.stats_no_cards_message)
-                Box(
+                Text(
+                    text = emptyStateMessage,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(32.dp)
                         .semantics { contentDescription = emptyStateMessage },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = emptyStateMessage,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                    textAlign = TextAlign.Center
+                )
             }
 
             // Dynamic card rendering based on configuration
