@@ -49,6 +49,9 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.countries.CountriesCard
+import org.wordpress.android.ui.newstats.countries.CountriesDetailActivity
+import org.wordpress.android.ui.newstats.countries.CountriesViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCard
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
@@ -191,22 +194,27 @@ private fun StatsTabContent(tab: StatsTab, viewsStatsViewModel: ViewsStatsViewMo
 private fun TrafficTabContent(
     viewsStatsViewModel: ViewsStatsViewModel,
     todaysStatsViewModel: TodaysStatsViewModel = viewModel(),
-    mostViewedViewModel: MostViewedViewModel = viewModel()
+    mostViewedViewModel: MostViewedViewModel = viewModel(),
+    countriesViewModel: CountriesViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
     val viewsStatsUiState by viewsStatsViewModel.uiState.collectAsState()
     val mostViewedUiState by mostViewedViewModel.uiState.collectAsState()
+    val countriesUiState by countriesViewModel.uiState.collectAsState()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
     val isMostViewedRefreshing by mostViewedViewModel.isRefreshing.collectAsState()
-    val isRefreshing = isTodaysStatsRefreshing || isViewsStatsRefreshing || isMostViewedRefreshing
+    val isCountriesRefreshing by countriesViewModel.isRefreshing.collectAsState()
+    val isRefreshing = isTodaysStatsRefreshing || isViewsStatsRefreshing ||
+        isMostViewedRefreshing || isCountriesRefreshing
     val pullToRefreshState = rememberPullToRefreshState()
 
-    // Propagate period changes to the MostViewedViewModel
+    // Propagate period changes to the MostViewedViewModel and CountriesViewModel
     LaunchedEffect(selectedPeriod) {
         mostViewedViewModel.onPeriodChanged(selectedPeriod)
+        countriesViewModel.onPeriodChanged(selectedPeriod)
     }
 
     PullToRefreshBox(
@@ -217,6 +225,7 @@ private fun TrafficTabContent(
             todaysStatsViewModel.refresh()
             viewsStatsViewModel.refresh()
             mostViewedViewModel.refresh()
+            countriesViewModel.refresh()
         },
         indicator = {
             PullToRefreshDefaults.Indicator(
@@ -254,6 +263,24 @@ private fun TrafficTabContent(
                     )
                 },
                 onRetry = mostViewedViewModel::onRetry
+            )
+            CountriesCard(
+                uiState = countriesUiState,
+                onShowAllClick = {
+                    val detailData = countriesViewModel.getDetailData()
+                    CountriesDetailActivity.start(
+                        context = context,
+                        countries = detailData.countries,
+                        mapData = detailData.mapData,
+                        minViews = detailData.minViews,
+                        maxViews = detailData.maxViews,
+                        totalViews = detailData.totalViews,
+                        totalViewsChange = detailData.totalViewsChange,
+                        totalViewsChangePercent = detailData.totalViewsChangePercent,
+                        dateRange = detailData.dateRange
+                    )
+                },
+                onRetry = countriesViewModel::onRetry
             )
         }
     }

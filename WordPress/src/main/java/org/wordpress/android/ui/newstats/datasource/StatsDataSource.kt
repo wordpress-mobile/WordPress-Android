@@ -53,6 +53,20 @@ interface StatsDataSource {
         dateRange: StatsDateRange,
         max: Int = 10
     ): ReferrersDataResult
+
+    /**
+     * Fetches country views stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of countries to return
+     * @return Result containing the country views data or an error
+     */
+    suspend fun fetchCountryViews(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): CountryViewsDataResult
 }
 
 /**
@@ -171,4 +185,31 @@ sealed class ReferrersDataResult {
 data class ReferrerDataItem(
     val name: String,
     val views: Long
+)
+
+/**
+ * Result wrapper for country views fetch operation.
+ */
+sealed class CountryViewsDataResult {
+    data class Success(val data: CountryViewsData) : CountryViewsDataResult()
+    data class Error(val message: String) : CountryViewsDataResult()
+}
+
+/**
+ * Country views data from the API.
+ */
+data class CountryViewsData(
+    val countries: List<CountryViewItem>,
+    val totalViews: Long,
+    val otherViews: Long
+)
+
+/**
+ * A single country view item from the API.
+ */
+data class CountryViewItem(
+    val countryCode: String,
+    val countryName: String,
+    val views: Long,
+    val flagIconUrl: String?
 )
