@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.navmenus.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,14 +26,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
+import org.wordpress.android.ui.navmenus.LinkableItemOption
+import org.wordpress.android.ui.navmenus.LinkableItemsState
 import org.wordpress.android.ui.navmenus.MenuItemDetailUiState
+import org.wordpress.android.ui.navmenus.MenuItemTypeOption
 import org.wordpress.android.ui.navmenus.ParentItemOption
 
 @Composable
@@ -43,6 +47,8 @@ fun MenuItemDetailScreen(
     onParentChange: (Long) -> Unit,
     onTargetChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
+    onTypeChange: (MenuItemTypeOption) -> Unit,
+    onLinkableItemChange: (LinkableItemOption) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -61,7 +67,9 @@ fun MenuItemDetailScreen(
             onUrlChange = onUrlChange,
             onParentChange = onParentChange,
             onTargetChange = onTargetChange,
-            onDescriptionChange = onDescriptionChange
+            onDescriptionChange = onDescriptionChange,
+            onTypeChange = onTypeChange,
+            onLinkableItemChange = onLinkableItemChange
         )
 
         SaveButton(
@@ -80,7 +88,9 @@ private fun ItemFieldsCard(
     onUrlChange: (String) -> Unit,
     onParentChange: (Long) -> Unit,
     onTargetChange: (String) -> Unit,
-    onDescriptionChange: (String) -> Unit
+    onDescriptionChange: (String) -> Unit,
+    onTypeChange: (MenuItemTypeOption) -> Unit,
+    onLinkableItemChange: (LinkableItemOption) -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -95,6 +105,14 @@ private fun ItemFieldsCard(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // Show type dropdown only for new items
+            if (state.isNew) {
+                TypeDropdown(
+                    selectedType = state.selectedTypeOption,
+                    onTypeSelected = onTypeChange
+                )
+            }
+
             OutlinedTextField(
                 value = state.title,
                 onValueChange = onTitleChange,
@@ -111,13 +129,19 @@ private fun ItemFieldsCard(
                 minLines = 2
             )
 
-            if (state.type == NavMenuItemModel.TYPE_CUSTOM) {
+            if (state.selectedTypeOption == MenuItemTypeOption.CUSTOM_LINK) {
                 OutlinedTextField(
                     value = state.url,
                     onValueChange = onUrlChange,
                     label = { Text(stringResource(R.string.menu_item_url_label)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
+                )
+            } else if (state.isNew) {
+                LinkableItemDropdown(
+                    linkableItemsState = state.linkableItemsState,
+                    selectedItem = state.selectedLinkableItem,
+                    onItemSelected = onLinkableItemChange
                 )
             }
 
@@ -137,6 +161,141 @@ private fun ItemFieldsCard(
                 singleLine = true,
                 placeholder = { Text("_blank") }
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TypeDropdown(
+    selectedType: MenuItemTypeOption,
+    onTypeSelected: (MenuItemTypeOption) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = stringResource(R.string.menu_item_type_label),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = it }
+        ) {
+            OutlinedTextField(
+                value = stringResource(selectedType.labelResId),
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                textStyle = MaterialTheme.typography.bodyMedium
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                MenuItemTypeOption.entries.forEach { typeOption ->
+                    DropdownMenuItem(
+                        text = { Text(stringResource(typeOption.labelResId)) },
+                        onClick = {
+                            onTypeSelected(typeOption)
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LinkableItemDropdown(
+    linkableItemsState: LinkableItemsState,
+    selectedItem: LinkableItemOption?,
+    onItemSelected: (LinkableItemOption) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = stringResource(R.string.menu_item_link_to_label),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { if (!linkableItemsState.isLoading) expanded = it }
+        ) {
+            OutlinedTextField(
+                value = when {
+                    linkableItemsState.isLoading -> stringResource(R.string.menu_item_loading_items)
+                    selectedItem != null -> selectedItem.title
+                    else -> stringResource(R.string.menu_item_select_item)
+                },
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = {
+                    if (linkableItemsState.isLoading) {
+                        CircularProgressIndicator(modifier = Modifier.size(20.dp))
+                    } else {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                textStyle = MaterialTheme.typography.bodyMedium,
+                enabled = !linkableItemsState.isLoading
+            )
+
+            if (!linkableItemsState.isLoading) {
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    if (linkableItemsState.items.isEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = stringResource(R.string.menu_item_no_items_found),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    } else {
+                        linkableItemsState.items.forEach { item ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = "  ".repeat(item.indentLevel) + item.title,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                },
+                                onClick = {
+                                    onItemSelected(item)
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.navmenus
 
+import androidx.annotation.StringRes
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuLocationModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuModel
@@ -93,6 +95,9 @@ data class MenuItemDetailUiState(
     val description: String = "",
     val attrTitle: String = "",
     val availableParents: List<ParentItemOption> = emptyList(),
+    val selectedTypeOption: MenuItemTypeOption = MenuItemTypeOption.CUSTOM_LINK,
+    val linkableItemsState: LinkableItemsState = LinkableItemsState(),
+    val selectedLinkableItem: LinkableItemOption? = null,
     val isSaving: Boolean = false,
     val isDeleting: Boolean = false,
     val isNew: Boolean = true
@@ -105,6 +110,66 @@ data class ParentItemOption(
     val id: Long,
     val title: String,
     val indentLevel: Int
+)
+
+/**
+ * Menu item type options for creating new menu items
+ */
+enum class MenuItemTypeOption(
+    val type: String,
+    val objectType: String,
+    @StringRes val labelResId: Int
+) {
+    CUSTOM_LINK(
+        NavMenuItemModel.TYPE_CUSTOM,
+        "",
+        R.string.menu_item_type_custom
+    ),
+    PAGE(
+        NavMenuItemModel.TYPE_POST_TYPE,
+        NavMenuItemModel.OBJECT_TYPE_PAGE,
+        R.string.menu_item_type_page
+    ),
+    POST(
+        NavMenuItemModel.TYPE_POST_TYPE,
+        NavMenuItemModel.OBJECT_TYPE_POST,
+        R.string.menu_item_type_post
+    ),
+    CATEGORY(
+        NavMenuItemModel.TYPE_TAXONOMY,
+        NavMenuItemModel.OBJECT_TYPE_CATEGORY,
+        R.string.menu_item_type_category
+    ),
+    TAG(
+        NavMenuItemModel.TYPE_TAXONOMY,
+        NavMenuItemModel.OBJECT_TYPE_TAG,
+        R.string.menu_item_type_tag
+    );
+
+    companion object {
+        fun fromTypeAndObjectType(type: String, objectType: String): MenuItemTypeOption {
+            return entries.find { it.type == type && it.objectType == objectType }
+                ?: CUSTOM_LINK
+        }
+    }
+}
+
+/**
+ * Represents a linkable item (page, post, category, or tag) that can be selected for a menu item
+ */
+data class LinkableItemOption(
+    val id: Long,
+    val title: String,
+    val indentLevel: Int = 0
+)
+
+/**
+ * State for loading and displaying linkable items
+ */
+data class LinkableItemsState(
+    val isLoading: Boolean = false,
+    val items: List<LinkableItemOption> = emptyList(),
+    val error: String? = null
 )
 
 /**

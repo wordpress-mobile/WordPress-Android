@@ -13,6 +13,10 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuModel
+import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PageStore
+import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.navmenus.data.NavMenuRestClient
 import org.wordpress.android.modules.UI_THREAD
@@ -26,6 +30,9 @@ import kotlin.coroutines.cancellation.CancellationException
 class NavMenusViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val navMenuRestClient: NavMenuRestClient,
+    private val pageStore: PageStore,
+    private val postStore: PostStore,
+    private val taxonomyStore: TaxonomyStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -244,6 +251,9 @@ class NavMenusViewModel @Inject constructor(
             url = "",
             type = NavMenuItemModel.TYPE_CUSTOM,
             availableParents = availableParents,
+            selectedTypeOption = MenuItemTypeOption.CUSTOM_LINK,
+            linkableItemsState = LinkableItemsState(),
+            selectedLinkableItem = null,
             menuOrder = currentMenuItems.maxOfOrNull { it.menuOrder }?.plus(1) ?: 1,
             isNew = true
         )
@@ -429,6 +439,114 @@ class NavMenusViewModel @Inject constructor(
         _menuItemDetailState.value = _menuItemDetailState.value?.copy(description = description)
     }
 
+    fun updateMenuItemType(typeOption: MenuItemTypeOption) {
+        val currentState = _menuItemDetailState.value ?: return
+        _menuItemDetailState.value = currentState.copy(
+            selectedTypeOption = typeOption,
+            type = typeOption.type,
+            objectType = typeOption.objectType,
+            url = if (typeOption == MenuItemTypeOption.CUSTOM_LINK) currentState.url else "",
+            objectId = 0L,
+            selectedLinkableItem = null,
+            linkableItemsState = LinkableItemsState()
+        )
+
+        if (typeOption != MenuItemTypeOption.CUSTOM_LINK) {
+            loadLinkableItems(typeOption)
+        }
+    }
+
+    fun updateSelectedLinkableItem(item: LinkableItemOption) {
+        val currentState = _menuItemDetailState.value ?: return
+        _menuItemDetailState.value = currentState.copy(
+            selectedLinkableItem = item,
+            objectId = item.id,
+            title = if (currentState.title.isBlank()) item.title else currentState.title
+        )
+    }
+
+    private fun loadLinkableItems(typeOption: MenuItemTypeOption) {
+        viewModelScope.launch {
+            val site = selectedSiteRepository.getSelectedSite() ?: return@launch
+            _menuItemDetailState.value = _menuItemDetailState.value?.copy(
+                linkableItemsState = LinkableItemsState(isLoading = true)
+            )
+
+            withContext(ioDispatcher) {
+                val items = when (typeOption) {
+                    MenuItemTypeOption.PAGE -> loadPages(site)
+                    MenuItemTypeOption.POST -> loadPosts(site)
+                    MenuItemTypeOption.CATEGORY -> loadCategories(site)
+                    MenuItemTypeOption.TAG -> loadTags(site)
+                    MenuItemTypeOption.CUSTOM_LINK -> emptyList()
+                }
+
+                withContext(mainDispatcher) {
+                    _menuItemDetailState.value = _menuItemDetailState.value?.copy(
+                        linkableItemsState = LinkableItemsState(
+                            isLoading = false,
+                            items = items
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    private suspend fun loadPages(site: SiteModel): List<LinkableItemOption> {
+        pageStore.requestPagesFromServer(site, false)
+        val pages = pageStore.getPagesFromDb(site)
+        return buildHierarchicalList(
+            pages.filter { it.status == org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED }
+                .map { Triple(it.remoteId, it.title, it.parent?.remoteId ?: 0L) }
+        )
+    }
+
+    private fun loadPosts(site: SiteModel): List<LinkableItemOption> {
+        val posts = postStore.getPostsForSite(site)
+        return posts
+            .filter { PostStatus.fromPost(it) == PostStatus.PUBLISHED }
+            .map { LinkableItemOption(id = it.remotePostId, title = it.title) }
+    }
+
+    private fun loadCategories(site: SiteModel): List<LinkableItemOption> {
+        val categories = taxonomyStore.getCategoriesForSite(site)
+        return buildHierarchicalList(
+            categories.map { Triple(it.remoteTermId, it.name, it.parentRemoteId) }
+        )
+    }
+
+    private fun loadTags(site: SiteModel): List<LinkableItemOption> {
+        val tags = taxonomyStore.getTagsForSite(site)
+        return tags.map { LinkableItemOption(id = it.remoteTermId, title = it.name) }
+    }
+
+    private fun buildHierarchicalList(
+        items: List<Triple<Long, String, Long>>
+    ): List<LinkableItemOption> {
+        val result = mutableListOf<LinkableItemOption>()
+        val itemsById = items.associateBy { it.first }
+        val visited = mutableSetOf<Long>()
+
+        fun addItemWithChildren(itemId: Long, indentLevel: Int) {
+            if (itemId in visited) return
+            val item = itemsById[itemId] ?: return
+            visited.add(itemId)
+            result.add(LinkableItemOption(id = item.first, title = item.second, indentLevel = indentLevel))
+
+            items.filter { it.third == itemId }
+                .sortedBy { it.second }
+                .forEach { child -> addItemWithChildren(child.first, indentLevel + 1) }
+        }
+
+        // Start with root items (parent = 0)
+        items.filter { it.third == 0L || itemsById[it.third] == null }
+            .sortedBy { it.second }
+            .forEach { addItemWithChildren(it.first, 0) }
+
+        return result
+    }
+
     fun moveMenuItemUp(itemId: Long) {
         reorderMenuItem(itemId, -1)
     }
@@ -489,8 +607,13 @@ class NavMenusViewModel @Inject constructor(
                 return@launch
             }
 
-            if (state.type == NavMenuItemModel.TYPE_CUSTOM && state.url.isBlank()) {
+            if (state.selectedTypeOption == MenuItemTypeOption.CUSTOM_LINK && state.url.isBlank()) {
                 _uiEvent.value = NavMenusUiEvent.ShowError("URL is required for custom links")
+                return@launch
+            }
+
+            if (state.selectedTypeOption != MenuItemTypeOption.CUSTOM_LINK && state.objectId <= 0) {
+                _uiEvent.value = NavMenusUiEvent.ShowError("Please select an item to link to")
                 return@launch
             }
 

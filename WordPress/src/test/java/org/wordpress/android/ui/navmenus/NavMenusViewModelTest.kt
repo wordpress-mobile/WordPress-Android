@@ -9,6 +9,11 @@ import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
+import org.wordpress.android.fluxc.store.PageStore
+import org.wordpress.android.fluxc.store.PageStore.OnPageChanged
+import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.navmenus.data.NavMenuRestClient
 
@@ -19,6 +24,15 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var navMenuRestClient: NavMenuRestClient
+
+    @Mock
+    lateinit var pageStore: PageStore
+
+    @Mock
+    lateinit var postStore: PostStore
+
+    @Mock
+    lateinit var taxonomyStore: TaxonomyStore
 
     private lateinit var viewModel: NavMenusViewModel
 
@@ -32,6 +46,9 @@ class NavMenusViewModelTest : BaseUnitTest() {
         viewModel = NavMenusViewModel(
             selectedSiteRepository = selectedSiteRepository,
             navMenuRestClient = navMenuRestClient,
+            pageStore = pageStore,
+            postStore = postStore,
+            taxonomyStore = taxonomyStore,
             mainDispatcher = testDispatcher(),
             ioDispatcher = testDispatcher()
         )
@@ -132,5 +149,96 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
         val event = viewModel.uiEvent.first()
         assertThat(event).isNull()
+    }
+
+    @Test
+    fun `when navigateToCreateMenuItem called, then state is initialized with custom link type`() = test {
+        viewModel.navigateToCreateMenuItem()
+
+        val state = viewModel.menuItemDetailState.first()
+        assertThat(state).isNotNull
+        assertThat(state?.selectedTypeOption).isEqualTo(MenuItemTypeOption.CUSTOM_LINK)
+        assertThat(state?.type).isEqualTo(NavMenuItemModel.TYPE_CUSTOM)
+        assertThat(state?.isNew).isTrue()
+    }
+
+    @Test
+    fun `when updateMenuItemType called with PAGE, then type and objectType are updated`() = test {
+        viewModel.navigateToCreateMenuItem()
+
+        viewModel.updateMenuItemType(MenuItemTypeOption.PAGE)
+
+        val state = viewModel.menuItemDetailState.first()
+        assertThat(state?.selectedTypeOption).isEqualTo(MenuItemTypeOption.PAGE)
+        assertThat(state?.type).isEqualTo(NavMenuItemModel.TYPE_POST_TYPE)
+        assertThat(state?.objectType).isEqualTo(NavMenuItemModel.OBJECT_TYPE_PAGE)
+        assertThat(state?.url).isEmpty()
+    }
+
+    @Test
+    fun `when updateMenuItemType called, then previous selection is cleared`() = test {
+        viewModel.navigateToCreateMenuItem()
+        viewModel.updateSelectedLinkableItem(LinkableItemOption(id = 123L, title = "Test Page"))
+
+        viewModel.updateMenuItemType(MenuItemTypeOption.POST)
+
+        val state = viewModel.menuItemDetailState.first()
+        assertThat(state?.selectedLinkableItem).isNull()
+        assertThat(state?.objectId).isEqualTo(0L)
+    }
+
+    @Test
+    fun `when updateSelectedLinkableItem called, then objectId is set`() = test {
+        viewModel.navigateToCreateMenuItem()
+        val testItem = LinkableItemOption(id = 456L, title = "Test Item")
+
+        viewModel.updateSelectedLinkableItem(testItem)
+
+        val state = viewModel.menuItemDetailState.first()
+        assertThat(state?.selectedLinkableItem).isEqualTo(testItem)
+        assertThat(state?.objectId).isEqualTo(456L)
+    }
+
+    @Test
+    fun `when updateSelectedLinkableItem called with empty title, then title is auto-filled`() = test {
+        viewModel.navigateToCreateMenuItem()
+        val testItem = LinkableItemOption(id = 789L, title = "Auto Title")
+
+        viewModel.updateSelectedLinkableItem(testItem)
+
+        val state = viewModel.menuItemDetailState.first()
+        assertThat(state?.title).isEqualTo("Auto Title")
+    }
+
+    @Test
+    fun `when saveMenuItem called with non-custom type and no objectId, then error is shown`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
+        whenever(pageStore.requestPagesFromServer(testSite, false))
+            .thenReturn(OnPageChanged.Success)
+        whenever(pageStore.getPagesFromDb(testSite)).thenReturn(emptyList())
+        viewModel.navigateToCreateMenuItem()
+        viewModel.updateMenuItemType(MenuItemTypeOption.PAGE)
+        viewModel.updateMenuItemTitle("Test Item")
+
+        viewModel.saveMenuItem()
+
+        val event = viewModel.uiEvent.first()
+        assertThat(event).isInstanceOf(NavMenusUiEvent.ShowError::class.java)
+        assertThat((event as NavMenusUiEvent.ShowError).message)
+            .isEqualTo("Please select an item to link to")
+    }
+
+    @Test
+    fun `when saveMenuItem called with custom type and empty URL, then error is shown`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
+        viewModel.navigateToCreateMenuItem()
+        viewModel.updateMenuItemTitle("Test Item")
+
+        viewModel.saveMenuItem()
+
+        val event = viewModel.uiEvent.first()
+        assertThat(event).isInstanceOf(NavMenusUiEvent.ShowError::class.java)
+        assertThat((event as NavMenusUiEvent.ShowError).message)
+            .isEqualTo("URL is required for custom links")
     }
 }
