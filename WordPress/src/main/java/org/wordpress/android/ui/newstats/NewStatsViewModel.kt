@@ -37,9 +37,10 @@ class NewStatsViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     private fun loadConfiguration() {
+        val currentSiteId = siteId // Capture siteId to avoid race conditions during site switching
         viewModelScope.launch {
             try {
-                val config = cardConfigurationRepository.getConfiguration(siteId)
+                val config = cardConfigurationRepository.getConfiguration(currentSiteId)
                 updateFromConfiguration(config)
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.STATS, "Failed to load card configuration", e)
@@ -64,14 +65,16 @@ class NewStatsViewModel @Inject constructor(
     }
 
     fun removeCard(cardType: StatsCardType) {
+        val currentSiteId = siteId // Capture siteId to avoid race conditions during site switching
         viewModelScope.launch {
-            cardConfigurationRepository.removeCard(siteId, cardType)
+            cardConfigurationRepository.removeCard(currentSiteId, cardType)
         }
     }
 
     fun addCard(cardType: StatsCardType) {
+        val currentSiteId = siteId // Capture siteId to avoid race conditions during site switching
         viewModelScope.launch {
-            cardConfigurationRepository.addCard(siteId, cardType)
+            cardConfigurationRepository.addCard(currentSiteId, cardType)
         }
     }
 }
