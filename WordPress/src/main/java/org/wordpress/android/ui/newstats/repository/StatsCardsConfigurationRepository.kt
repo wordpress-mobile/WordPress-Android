@@ -142,12 +142,17 @@ class StatsCardsConfigurationRepository @Inject constructor(
     }
 
     private fun loadConfiguration(siteId: Long): StatsCardsConfiguration {
-        return appPrefsWrapper.getStatsCardsConfigurationJson(siteId)?.let {
-            try {
-                gson.fromJson(it, StatsCardsConfiguration::class.java)
-            } catch (e: Exception) {
-                StatsCardsConfiguration()
-            }
-        } ?: StatsCardsConfiguration()
+        val json = appPrefsWrapper.getStatsCardsConfigurationJson(siteId)
+        if (json == null) {
+            return StatsCardsConfiguration()
+        }
+        return try {
+            gson.fromJson(json, StatsCardsConfiguration::class.java)
+        } catch (e: Exception) {
+            // Wipe corrupted data and save default configuration
+            val defaultConfig = StatsCardsConfiguration()
+            appPrefsWrapper.setStatsCardsConfigurationJson(siteId, gson.toJson(defaultConfig))
+            defaultConfig
+        }
     }
 }
