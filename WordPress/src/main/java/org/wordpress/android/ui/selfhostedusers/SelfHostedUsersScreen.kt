@@ -89,7 +89,6 @@ fun SelfHostedUsersScreen(
 
                 is SelfHostedUserState.EmptyUserList -> {
                     MessageView(
-                        imageRes = R.drawable.ic_people_white_24dp,
                         messageRes = R.string.no_users,
                     )
                 }

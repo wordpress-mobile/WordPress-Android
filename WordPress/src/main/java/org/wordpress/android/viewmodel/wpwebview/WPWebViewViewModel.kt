@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.wpwebview
 
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -245,22 +244,17 @@ class WPWebViewViewModel
         )
 
         sealed class WebPreviewFullscreenUiState : WebPreviewUiState(actionableEmptyView = true) {
-            abstract val imageRes: Int
             abstract val titleText: UiStringRes?
             abstract val subtitleText: UiStringRes?
             abstract val buttonVisibility: Boolean
 
             data class WebPreviewFullscreenErrorUiState(
-                @DrawableRes
-                override val imageRes: Int = R.drawable.img_illustration_cloud_off_152dp,
                 override val titleText: UiStringRes = UiStringRes(R.string.error_browser_no_network),
                 override val subtitleText: UiStringRes = UiStringRes(R.string.error_network_connection),
                 override val buttonVisibility: Boolean = true
             ) : WebPreviewFullscreenUiState()
 
             object WebPreviewFullscreenNotAvailableUiState : WebPreviewFullscreenUiState() {
-                @DrawableRes
-                override val imageRes: Int = R.drawable.img_illustration_empty_results_216dp
                 override val titleText: UiStringRes = UiStringRes(R.string.preview_unavailable_self_hosted_sites)
                 override val subtitleText: UiStringRes? = null
                 override val buttonVisibility: Boolean = false

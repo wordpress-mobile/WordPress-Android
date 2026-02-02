@@ -172,8 +172,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             open val retryAction: Action? = null
 
             data class ConnectionError(override val retryAction: Action) : Error() {
-                @DrawableRes
-                override val image = R.drawable.img_illustration_cloud_off_152dp
+                override val image = null
                 override val title: UiString = UiStringRes(R.string.activity_log_activity_type_error_title)
                 override val subtitle: UiString = UiStringRes(R.string.activity_log_activity_type_error_subtitle)
                 override val buttonText: UiString = UiStringRes(R.string.retry)

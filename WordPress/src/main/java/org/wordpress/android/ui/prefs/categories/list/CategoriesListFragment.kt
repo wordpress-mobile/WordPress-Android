@@ -105,7 +105,6 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
     private fun SiteSettingsCategoriesListFragmentBinding.updateErrorContent(error: UiState.Error) {
         uiHelpers.setTextOrHide(actionableEmptyView.title, error.title)
         uiHelpers.setTextOrHide(actionableEmptyView.subtitle, error.subtitle)
-        uiHelpers.setImageOrHide(actionableEmptyView.image, error.image)
         uiHelpers.setTextOrHide(actionableEmptyView.button, error.buttonText)
         error.action?.let { action ->
             actionableEmptyView.button.setOnClickListener {
