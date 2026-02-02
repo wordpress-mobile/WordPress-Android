@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.MostViewedItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
@@ -82,7 +83,7 @@ class MostViewedViewModel @Inject constructor(
 
     fun getPostsDetailData(): MostViewedDetailData {
         return MostViewedDetailData(
-            dataSource = MostViewedDataSource.POSTS_AND_PAGES,
+            cardType = StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
             items = postsAllItems,
             totalViews = postsCachedTotalViews,
             totalViewsChange = postsCachedTotalViewsChange,
@@ -93,7 +94,7 @@ class MostViewedViewModel @Inject constructor(
 
     fun getReferrersDetailData(): MostViewedDetailData {
         return MostViewedDetailData(
-            dataSource = MostViewedDataSource.REFERRERS,
+            cardType = StatsCardType.MOST_VIEWED_REFERRERS,
             items = referrersAllItems,
             totalViews = referrersCachedTotalViews,
             totalViewsChange = referrersCachedTotalViewsChange,
@@ -254,7 +255,7 @@ class MostViewedViewModel @Inject constructor(
 }
 
 data class MostViewedDetailData(
-    val dataSource: MostViewedDataSource,
+    val cardType: StatsCardType,
     val items: List<MostViewedDetailItem>,
     val totalViews: Long,
     val totalViewsChange: Long,

@@ -15,7 +15,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsCardsConfiguration
-import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 @ExperimentalCoroutinesApi
@@ -47,8 +46,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
     fun `when valid json is saved, then configuration is parsed correctly`() = test {
         val json = """
             {
-                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS"],
-                "mostViewedDataSources": ["POSTS_AND_PAGES"]
+                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(json)
@@ -56,7 +54,6 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
         val config = repository.getConfiguration(TEST_SITE_ID)
 
         assertThat(config.visibleCards).containsExactly(StatsCardType.TODAYS_STATS, StatsCardType.VIEWS_STATS)
-        assertThat(config.mostViewedDataSources).containsExactly("POSTS_AND_PAGES")
     }
 
     @Test
@@ -85,8 +82,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
     fun `when removeCard is called, then card is removed from visible cards`() = test {
         val initialJson = """
             {
-                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "COUNTRIES"],
-                "mostViewedDataSources": []
+                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "COUNTRIES"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
@@ -101,8 +97,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
     fun `when addCard is called, then card is added to visible cards`() = test {
         val initialJson = """
             {
-                "visibleCards": ["TODAYS_STATS"],
-                "mostViewedDataSources": []
+                "visibleCards": ["TODAYS_STATS"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
@@ -114,61 +109,10 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when removeMostViewedCard is called, then most viewed card and data source are removed`() = test {
-        val initialJson = """
-            {
-                "visibleCards": ["TODAYS_STATS", "MOST_VIEWED", "MOST_VIEWED"],
-                "mostViewedDataSources": ["POSTS_AND_PAGES", "REFERRERS"]
-            }
-        """.trimIndent()
-        whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
-
-        repository.removeMostViewedCard(TEST_SITE_ID, 0)
-
-        val savedConfig = repository.getConfiguration(TEST_SITE_ID)
-        assertThat(savedConfig.visibleCards.count { it == StatsCardType.MOST_VIEWED }).isEqualTo(1)
-        assertThat(savedConfig.mostViewedDataSources).containsExactly("REFERRERS")
-    }
-
-    @Test
-    fun `when addMostViewedCard is called, then most viewed card and data source are added`() = test {
-        val initialJson = """
-            {
-                "visibleCards": ["TODAYS_STATS", "MOST_VIEWED"],
-                "mostViewedDataSources": ["POSTS_AND_PAGES"]
-            }
-        """.trimIndent()
-        whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
-
-        repository.addMostViewedCard(TEST_SITE_ID, MostViewedDataSource.REFERRERS.name)
-
-        val savedConfig = repository.getConfiguration(TEST_SITE_ID)
-        assertThat(savedConfig.visibleCards.count { it == StatsCardType.MOST_VIEWED }).isEqualTo(2)
-        assertThat(savedConfig.mostViewedDataSources).containsExactly("POSTS_AND_PAGES", "REFERRERS")
-    }
-
-    @Test
-    fun `when updateMostViewedDataSource is called, then data source is updated`() = test {
-        val initialJson = """
-            {
-                "visibleCards": ["MOST_VIEWED", "MOST_VIEWED"],
-                "mostViewedDataSources": ["POSTS_AND_PAGES", "REFERRERS"]
-            }
-        """.trimIndent()
-        whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
-
-        repository.updateMostViewedDataSource(TEST_SITE_ID, 0, MostViewedDataSource.REFERRERS.name)
-
-        val savedConfig = repository.getConfiguration(TEST_SITE_ID)
-        assertThat(savedConfig.mostViewedDataSources).containsExactly("REFERRERS", "REFERRERS")
-    }
-
-    @Test
     fun `when configuration is cached, then subsequent calls use cache`() = test {
         val json = """
             {
-                "visibleCards": ["TODAYS_STATS"],
-                "mostViewedDataSources": []
+                "visibleCards": ["TODAYS_STATS"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(json)

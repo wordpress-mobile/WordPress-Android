@@ -62,7 +62,6 @@ import org.wordpress.android.ui.newstats.countries.CountriesCard
 import org.wordpress.android.ui.newstats.countries.CountriesDetailActivity
 import org.wordpress.android.ui.newstats.countries.CountriesViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCard
-import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsCard
@@ -226,8 +225,6 @@ private fun TrafficTabContent(
     // Card configuration state
     val visibleCards by newStatsViewModel.visibleCards.collectAsState()
     val hiddenCards by newStatsViewModel.hiddenCards.collectAsState()
-    val mostViewedDataSources by newStatsViewModel.mostViewedDataSources.collectAsState()
-    val hiddenMostViewedDataSources by newStatsViewModel.hiddenMostViewedDataSources.collectAsState()
     var showAddCardSheet by remember { mutableStateOf(false) }
     val addCardSheetState = rememberModalBottomSheetState()
 
@@ -241,13 +238,9 @@ private fun TrafficTabContent(
         AddStatsCardBottomSheet(
             sheetState = addCardSheetState,
             availableCards = hiddenCards,
-            availableMostViewedDataSources = hiddenMostViewedDataSources,
             onDismiss = { showAddCardSheet = false },
             onCardSelected = { cardType ->
                 newStatsViewModel.addCard(cardType)
-            },
-            onMostViewedDataSourceSelected = { dataSource ->
-                newStatsViewModel.addMostViewedCard(dataSource)
             }
         )
     }
@@ -293,8 +286,6 @@ private fun TrafficTabContent(
             }
 
             // Dynamic card rendering based on configuration
-            // Count Most Viewed cards up to each position
-            var mostViewedIndex = 0
             visibleCards.forEach { cardType ->
                 when (cardType) {
                     StatsCardType.TODAYS_STATS -> TodaysStatsCard(
@@ -307,49 +298,42 @@ private fun TrafficTabContent(
                         onRetry = viewsStatsViewModel::onRetry,
                         onRemoveCard = { newStatsViewModel.removeCard(cardType) }
                     )
-                    StatsCardType.MOST_VIEWED -> {
-                        val index = mostViewedIndex
-                        mostViewedIndex++
-                        val dataSource = mostViewedDataSources.getOrNull(index)
-                            ?: MostViewedDataSource.POSTS_AND_PAGES
-                        val uiState = when (dataSource) {
-                            MostViewedDataSource.POSTS_AND_PAGES -> postsUiState
-                            MostViewedDataSource.REFERRERS -> referrersUiState
-                        }
-                        MostViewedCard(
-                            uiState = uiState,
-                            dataSource = dataSource,
-                            onDataSourceChanged = { newDataSource ->
-                                newStatsViewModel.updateMostViewedDataSource(index, newDataSource)
-                            },
-                            onShowAllClick = {
-                                val detailData = when (dataSource) {
-                                    MostViewedDataSource.POSTS_AND_PAGES ->
-                                        mostViewedViewModel.getPostsDetailData()
-                                    MostViewedDataSource.REFERRERS ->
-                                        mostViewedViewModel.getReferrersDetailData()
-                                }
-                                MostViewedDetailActivity.start(
-                                    context = context,
-                                    dataSource = detailData.dataSource,
-                                    items = detailData.items,
-                                    totalViews = detailData.totalViews,
-                                    totalViewsChange = detailData.totalViewsChange,
-                                    totalViewsChangePercent = detailData.totalViewsChangePercent,
-                                    dateRange = detailData.dateRange
-                                )
-                            },
-                            onRetry = {
-                                when (dataSource) {
-                                    MostViewedDataSource.POSTS_AND_PAGES ->
-                                        mostViewedViewModel.onRetryPosts()
-                                    MostViewedDataSource.REFERRERS ->
-                                        mostViewedViewModel.onRetryReferrers()
-                                }
-                            },
-                            onRemoveCard = { newStatsViewModel.removeMostViewedCard(index) }
-                        )
-                    }
+                    StatsCardType.MOST_VIEWED_POSTS_AND_PAGES -> MostViewedCard(
+                        uiState = postsUiState,
+                        cardType = cardType,
+                        onShowAllClick = {
+                            val detailData = mostViewedViewModel.getPostsDetailData()
+                            MostViewedDetailActivity.start(
+                                context = context,
+                                cardType = detailData.cardType,
+                                items = detailData.items,
+                                totalViews = detailData.totalViews,
+                                totalViewsChange = detailData.totalViewsChange,
+                                totalViewsChangePercent = detailData.totalViewsChangePercent,
+                                dateRange = detailData.dateRange
+                            )
+                        },
+                        onRetry = mostViewedViewModel::onRetryPosts,
+                        onRemoveCard = { newStatsViewModel.removeCard(cardType) }
+                    )
+                    StatsCardType.MOST_VIEWED_REFERRERS -> MostViewedCard(
+                        uiState = referrersUiState,
+                        cardType = cardType,
+                        onShowAllClick = {
+                            val detailData = mostViewedViewModel.getReferrersDetailData()
+                            MostViewedDetailActivity.start(
+                                context = context,
+                                cardType = detailData.cardType,
+                                items = detailData.items,
+                                totalViews = detailData.totalViews,
+                                totalViewsChange = detailData.totalViewsChange,
+                                totalViewsChangePercent = detailData.totalViewsChangePercent,
+                                dateRange = detailData.dateRange
+                            )
+                        },
+                        onRetry = mostViewedViewModel::onRetryReferrers,
+                        onRemoveCard = { newStatsViewModel.removeCard(cardType) }
+                    )
                     StatsCardType.COUNTRIES -> CountriesCard(
                         uiState = countriesUiState,
                         onShowAllClick = {

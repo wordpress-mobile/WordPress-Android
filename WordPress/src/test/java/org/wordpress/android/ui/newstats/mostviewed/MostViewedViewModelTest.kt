@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.MostViewedItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
@@ -364,7 +365,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
 
         val detailData = viewModel.getPostsDetailData()
 
-        assertThat(detailData.dataSource).isEqualTo(MostViewedDataSource.POSTS_AND_PAGES)
+        assertThat(detailData.cardType).isEqualTo(StatsCardType.MOST_VIEWED_POSTS_AND_PAGES)
         assertThat(detailData.items).hasSize(2)
         assertThat(detailData.totalViews).isEqualTo(TEST_TOTAL_VIEWS)
         assertThat(detailData.totalViewsChange).isEqualTo(TEST_TOTAL_VIEWS_CHANGE)
@@ -383,7 +384,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
 
         val detailData = viewModel.getReferrersDetailData()
 
-        assertThat(detailData.dataSource).isEqualTo(MostViewedDataSource.REFERRERS)
+        assertThat(detailData.cardType).isEqualTo(StatsCardType.MOST_VIEWED_REFERRERS)
         assertThat(detailData.items).hasSize(2)
     }
 

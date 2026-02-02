@@ -62,68 +62,6 @@ class StatsCardsConfigurationRepository @Inject constructor(
         saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
     }
 
-    /**
-     * Removes a Most Viewed card at the given index.
-     */
-    suspend fun removeMostViewedCard(siteId: Long, index: Int): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        // Remove one MOST_VIEWED from visibleCards
-        val newVisibleCards = current.visibleCards.toMutableList()
-        val mostViewedIndex = newVisibleCards.indexOfFirst { it == StatsCardType.MOST_VIEWED }
-        if (mostViewedIndex >= 0) {
-            // Find the nth MOST_VIEWED occurrence
-            var count = 0
-            val indexToRemove = newVisibleCards.indexOfFirst {
-                if (it == StatsCardType.MOST_VIEWED) {
-                    if (count == index) true else { count++; false }
-                } else false
-            }
-            if (indexToRemove >= 0) {
-                newVisibleCards.removeAt(indexToRemove)
-            }
-        }
-        // Remove the corresponding data source
-        val newDataSources = current.mostViewedDataSources.toMutableList()
-        if (index in newDataSources.indices) {
-            newDataSources.removeAt(index)
-        }
-        saveConfiguration(siteId, current.copy(
-            visibleCards = newVisibleCards,
-            mostViewedDataSources = newDataSources
-        ))
-    }
-
-    /**
-     * Adds a Most Viewed card with the given data source.
-     */
-    suspend fun addMostViewedCard(siteId: Long, dataSourceName: String): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        // Add MOST_VIEWED to the end of visibleCards
-        val newVisibleCards = current.visibleCards + StatsCardType.MOST_VIEWED
-        // Add the data source
-        val newDataSources = current.mostViewedDataSources + dataSourceName
-        saveConfiguration(siteId, current.copy(
-            visibleCards = newVisibleCards,
-            mostViewedDataSources = newDataSources
-        ))
-    }
-
-    /**
-     * Updates the data source for a Most Viewed card at the given index.
-     */
-    suspend fun updateMostViewedDataSource(
-        siteId: Long,
-        index: Int,
-        dataSourceName: String
-    ): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        val newDataSources = current.mostViewedDataSources.toMutableList()
-        if (index in newDataSources.indices) {
-            newDataSources[index] = dataSourceName
-        }
-        saveConfiguration(siteId, current.copy(mostViewedDataSources = newDataSources))
-    }
-
     @Suppress("TooGenericExceptionCaught")
     private fun loadConfiguration(siteId: Long): StatsCardsConfiguration {
         val json = appPrefsWrapper.getStatsCardsConfigurationJson(siteId)

@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 import javax.inject.Inject
 
@@ -26,17 +25,6 @@ class NewStatsViewModel @Inject constructor(
 
     private val _hiddenCards = MutableStateFlow<List<StatsCardType>>(emptyList())
     val hiddenCards: StateFlow<List<StatsCardType>> = _hiddenCards.asStateFlow()
-
-    // Data sources for visible Most Viewed cards (in order)
-    private val _mostViewedDataSources = MutableStateFlow<List<MostViewedDataSource>>(
-        listOf(MostViewedDataSource.POSTS_AND_PAGES, MostViewedDataSource.REFERRERS)
-    )
-    val mostViewedDataSources: StateFlow<List<MostViewedDataSource>> = _mostViewedDataSources.asStateFlow()
-
-    // Hidden Most Viewed data sources (available to add)
-    private val _hiddenMostViewedDataSources = MutableStateFlow<List<MostViewedDataSource>>(emptyList())
-    val hiddenMostViewedDataSources: StateFlow<List<MostViewedDataSource>> =
-        _hiddenMostViewedDataSources.asStateFlow()
 
     private val siteId: Long
         get() = selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
@@ -66,10 +54,6 @@ class NewStatsViewModel @Inject constructor(
     private fun updateFromConfiguration(config: StatsCardsConfiguration) {
         _visibleCards.value = config.visibleCards
         _hiddenCards.value = config.hiddenCards()
-        _mostViewedDataSources.value = config.mostViewedDataSources.mapNotNull { name ->
-            runCatching { MostViewedDataSource.valueOf(name) }.getOrNull()
-        }
-        _hiddenMostViewedDataSources.value = config.hiddenMostViewedDataSources()
     }
 
     fun removeCard(cardType: StatsCardType) {
@@ -81,44 +65,6 @@ class NewStatsViewModel @Inject constructor(
     fun addCard(cardType: StatsCardType) {
         viewModelScope.launch {
             cardConfigurationRepository.addCard(siteId, cardType)
-        }
-    }
-
-    /**
-     * Removes a Most Viewed card at the given index.
-     */
-    fun removeMostViewedCard(index: Int) {
-        viewModelScope.launch {
-            cardConfigurationRepository.removeMostViewedCard(siteId, index)
-        }
-    }
-
-    /**
-     * Adds a Most Viewed card with the given data source.
-     */
-    fun addMostViewedCard(dataSource: MostViewedDataSource) {
-        viewModelScope.launch {
-            cardConfigurationRepository.addMostViewedCard(siteId, dataSource.name)
-        }
-    }
-
-    /**
-     * Updates the data source for a Most Viewed card at the given index.
-     */
-    fun updateMostViewedDataSource(index: Int, dataSource: MostViewedDataSource) {
-        // Update locally immediately for responsiveness
-        val currentSources = _mostViewedDataSources.value.toMutableList()
-        if (index in currentSources.indices) {
-            currentSources[index] = dataSource
-            _mostViewedDataSources.value = currentSources
-            // Update hidden data sources
-            _hiddenMostViewedDataSources.value = MostViewedDataSource.entries.filter {
-                it !in currentSources
-            }
-        }
-        // Persist
-        viewModelScope.launch {
-            cardConfigurationRepository.updateMostViewedDataSource(siteId, index, dataSource.name)
         }
     }
 }

@@ -8,13 +8,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 
 @ExperimentalCoroutinesApi
@@ -95,64 +93,6 @@ class NewStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when removeMostViewedCard is called, then repository removeMostViewedCard is invoked`() = test {
-        initViewModel()
-        advanceUntilIdle()
-
-        viewModel.removeMostViewedCard(0)
-        advanceUntilIdle()
-
-        verify(cardConfigurationRepository).removeMostViewedCard(TEST_SITE_ID, 0)
-    }
-
-    @Test
-    fun `when addMostViewedCard is called, then repository addMostViewedCard is invoked`() = test {
-        initViewModel()
-        advanceUntilIdle()
-
-        viewModel.addMostViewedCard(MostViewedDataSource.REFERRERS)
-        advanceUntilIdle()
-
-        verify(cardConfigurationRepository).addMostViewedCard(TEST_SITE_ID, MostViewedDataSource.REFERRERS.name)
-    }
-
-    @Test
-    fun `when updateMostViewedDataSource is called, then state is updated immediately`() = test {
-        val config = StatsCardsConfiguration(
-            visibleCards = listOf(StatsCardType.MOST_VIEWED, StatsCardType.MOST_VIEWED),
-            mostViewedDataSources = listOf(
-                MostViewedDataSource.POSTS_AND_PAGES.name,
-                MostViewedDataSource.REFERRERS.name
-            )
-        )
-        initViewModel(config)
-        advanceUntilIdle()
-
-        viewModel.updateMostViewedDataSource(0, MostViewedDataSource.REFERRERS)
-
-        assertThat(viewModel.mostViewedDataSources.value[0]).isEqualTo(MostViewedDataSource.REFERRERS)
-    }
-
-    @Test
-    fun `when updateMostViewedDataSource is called, then repository is updated`() = test {
-        val config = StatsCardsConfiguration(
-            visibleCards = listOf(StatsCardType.MOST_VIEWED),
-            mostViewedDataSources = listOf(MostViewedDataSource.POSTS_AND_PAGES.name)
-        )
-        initViewModel(config)
-        advanceUntilIdle()
-
-        viewModel.updateMostViewedDataSource(0, MostViewedDataSource.REFERRERS)
-        advanceUntilIdle()
-
-        verify(cardConfigurationRepository).updateMostViewedDataSource(
-            eq(TEST_SITE_ID),
-            eq(0),
-            eq(MostViewedDataSource.REFERRERS.name)
-        )
-    }
-
-    @Test
     fun `when configuration changes via flow, then state is updated`() = test {
         initViewModel()
         advanceUntilIdle()
@@ -182,17 +122,24 @@ class NewStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when hiddenCards is calculated, then it excludes visible cards except MOST_VIEWED`() = test {
+    fun `when hiddenCards is calculated, then it excludes visible cards`() = test {
         val config = StatsCardsConfiguration(
-            visibleCards = listOf(StatsCardType.TODAYS_STATS, StatsCardType.MOST_VIEWED)
+            visibleCards = listOf(StatsCardType.TODAYS_STATS, StatsCardType.MOST_VIEWED_POSTS_AND_PAGES)
         )
         initViewModel(config)
         advanceUntilIdle()
 
         val hiddenCards = viewModel.hiddenCards.value
 
-        assertThat(hiddenCards).contains(StatsCardType.VIEWS_STATS, StatsCardType.COUNTRIES)
-        assertThat(hiddenCards).doesNotContain(StatsCardType.TODAYS_STATS, StatsCardType.MOST_VIEWED)
+        assertThat(hiddenCards).contains(
+            StatsCardType.VIEWS_STATS,
+            StatsCardType.MOST_VIEWED_REFERRERS,
+            StatsCardType.COUNTRIES
+        )
+        assertThat(hiddenCards).doesNotContain(
+            StatsCardType.TODAYS_STATS,
+            StatsCardType.MOST_VIEWED_POSTS_AND_PAGES
+        )
     }
 
     @Test
@@ -204,38 +151,6 @@ class NewStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(cardConfigurationRepository).getConfiguration(0L)
-    }
-
-    @Test
-    fun `when mostViewedDataSources has valid values, then they are parsed correctly`() = test {
-        val config = StatsCardsConfiguration(
-            visibleCards = listOf(StatsCardType.MOST_VIEWED, StatsCardType.MOST_VIEWED),
-            mostViewedDataSources = listOf(
-                MostViewedDataSource.POSTS_AND_PAGES.name,
-                MostViewedDataSource.REFERRERS.name
-            )
-        )
-        initViewModel(config)
-        advanceUntilIdle()
-
-        assertThat(viewModel.mostViewedDataSources.value).containsExactly(
-            MostViewedDataSource.POSTS_AND_PAGES,
-            MostViewedDataSource.REFERRERS
-        )
-    }
-
-    @Test
-    fun `when hiddenMostViewedDataSources is calculated, then it excludes visible data sources`() = test {
-        val config = StatsCardsConfiguration(
-            visibleCards = listOf(StatsCardType.MOST_VIEWED),
-            mostViewedDataSources = listOf(MostViewedDataSource.POSTS_AND_PAGES.name)
-        )
-        initViewModel(config)
-        advanceUntilIdle()
-
-        val hiddenDataSources = viewModel.hiddenMostViewedDataSources.value
-
-        assertThat(hiddenDataSources).containsExactly(MostViewedDataSource.REFERRERS)
     }
 
     companion object {
