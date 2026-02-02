@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 /**
@@ -34,10 +35,16 @@ class NewStatsViewModel @Inject constructor(
         observeConfigurationChanges()
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun loadConfiguration() {
         viewModelScope.launch {
-            val config = cardConfigurationRepository.getConfiguration(siteId)
-            updateFromConfiguration(config)
+            try {
+                val config = cardConfigurationRepository.getConfiguration(siteId)
+                updateFromConfiguration(config)
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.STATS, "Failed to load card configuration", e)
+                updateFromConfiguration(StatsCardsConfiguration())
+            }
         }
     }
 
