@@ -282,9 +282,7 @@ class NavMenuRestClient @Inject constructor(
         return when (response) {
             is WpRequestResult.Success -> {
                 appLogWrapper.d(AppLog.T.API, "Fetched menu locations")
-                // The uniffi binding returns a HashMap type that needs to be cast to Map
-                @Suppress("UNCHECKED_CAST", "CAST_NEVER_SUCCEEDS")
-                val locationsMap = response.response.data as Map<String, MenuLocationWithViewContext>
+                val locationsMap = response.response.data.locations
                 val locations = locationsMap.map { (slug, location) ->
                     location.toNavMenuLocationModel(site.id, slug)
                 }
