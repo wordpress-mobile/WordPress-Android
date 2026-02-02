@@ -22,8 +22,6 @@ fun OfflineConversationsView() {
     ) {
         EmptyContentM3(
             title = stringResource(R.string.no_network_title),
-            image = R.drawable.img_illustration_cloud_off_152dp,
-            imageContentDescription = stringResource(R.string.no_network_title)
         )
     }
 }
