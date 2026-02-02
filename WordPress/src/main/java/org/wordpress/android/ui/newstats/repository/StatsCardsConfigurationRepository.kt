@@ -25,18 +25,13 @@ class StatsCardsConfigurationRepository @Inject constructor(
         .registerTypeAdapterFactory(EnumWithFallbackValueTypeAdapterFactory())
         .create()
 
-    // Cache per site to avoid repeated disk reads
-    private val configurationCache = mutableMapOf<Long, StatsCardsConfiguration>()
-
     // StateFlow to notify observers of configuration changes
     private val _configurationFlow = MutableStateFlow<Pair<Long, StatsCardsConfiguration>?>(null)
     val configurationFlow: StateFlow<Pair<Long, StatsCardsConfiguration>?> =
         _configurationFlow.asStateFlow()
 
     suspend fun getConfiguration(siteId: Long): StatsCardsConfiguration = withContext(ioDispatcher) {
-        configurationCache[siteId] ?: loadConfiguration(siteId).also {
-            configurationCache[siteId] = it
-        }
+        loadConfiguration(siteId)
     }
 
     suspend fun saveConfiguration(
@@ -44,7 +39,6 @@ class StatsCardsConfigurationRepository @Inject constructor(
         configuration: StatsCardsConfiguration
     ): Unit = withContext(ioDispatcher) {
         appPrefsWrapper.setStatsCardsConfigurationJson(siteId, gson.toJson(configuration))
-        configurationCache[siteId] = configuration
         _configurationFlow.value = siteId to configuration
     }
 
@@ -84,14 +78,17 @@ class StatsCardsConfigurationRepository @Inject constructor(
 
     /**
      * Validates that the configuration contains only valid card types.
-     * Returns false if any card type is null (which happens when EnumWithFallbackValueTypeAdapterFactory
+     * Returns false if any card type is null (which happens when Gson's default enum deserializer
      * encounters an unknown enum value like the old "MOST_VIEWED").
+     *
+     * Note: Since StatsCardType doesn't have a @FallbackValue annotation, unknown enum values
+     * are deserialized as null by Gson and can sneak into the List<StatsCardType> at runtime,
+     * bypassing Kotlin's null-safety. We use filterIsInstance to safely count valid entries.
      */
     private fun isValidConfiguration(config: StatsCardsConfiguration): Boolean {
-        // Check if visibleCards contains any null values (invalid enum values are deserialized as null)
-        @Suppress("USELESS_CAST")
-        val hasInvalidCards = config.visibleCards.any { (it as StatsCardType?) == null }
-        return !hasInvalidCards
+        // filterIsInstance safely handles nulls that may have snuck into the list from Gson
+        val validCards = config.visibleCards.filterIsInstance<StatsCardType>()
+        return validCards.size == config.visibleCards.size
     }
 
     private fun resetToDefault(siteId: Long): StatsCardsConfiguration {

@@ -9,6 +9,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -89,8 +90,11 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
 
         repository.removeCard(TEST_SITE_ID, StatsCardType.VIEWS_STATS)
 
-        val savedConfig = repository.getConfiguration(TEST_SITE_ID)
-        assertThat(savedConfig.visibleCards).containsExactly(StatsCardType.TODAYS_STATS, StatsCardType.COUNTRIES)
+        val jsonCaptor = argumentCaptor<String>()
+        verify(appPrefsWrapper).setStatsCardsConfigurationJson(eq(TEST_SITE_ID), jsonCaptor.capture())
+        assertThat(jsonCaptor.firstValue).contains("TODAYS_STATS")
+        assertThat(jsonCaptor.firstValue).contains("COUNTRIES")
+        assertThat(jsonCaptor.firstValue).doesNotContain("VIEWS_STATS")
     }
 
     @Test
@@ -104,26 +108,10 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
 
         repository.addCard(TEST_SITE_ID, StatsCardType.COUNTRIES)
 
-        val savedConfig = repository.getConfiguration(TEST_SITE_ID)
-        assertThat(savedConfig.visibleCards).contains(StatsCardType.COUNTRIES)
-    }
-
-    @Test
-    fun `when configuration is cached, then subsequent calls use cache`() = test {
-        val json = """
-            {
-                "visibleCards": ["TODAYS_STATS"]
-            }
-        """.trimIndent()
-        whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(json)
-
-        // First call
-        repository.getConfiguration(TEST_SITE_ID)
-        // Second call should use cache
-        repository.getConfiguration(TEST_SITE_ID)
-
-        // getStatsCardsConfigurationJson should only be called once due to caching
-        verify(appPrefsWrapper).getStatsCardsConfigurationJson(TEST_SITE_ID)
+        val jsonCaptor = argumentCaptor<String>()
+        verify(appPrefsWrapper).setStatsCardsConfigurationJson(eq(TEST_SITE_ID), jsonCaptor.capture())
+        assertThat(jsonCaptor.firstValue).contains("TODAYS_STATS")
+        assertThat(jsonCaptor.firstValue).contains("COUNTRIES")
     }
 
     @Test
