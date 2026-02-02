@@ -13,6 +13,6 @@
         android:importantForAccessibility="no"
         android:padding="@dimen/reader_like_faces_padding"
         tools:ignore="RtlSymmetry"
-        tools:src="@drawable/img_illustration_add_media_150dp" />
+        tools:src="@drawable/ic_user_placeholder_primary_24" />
 
 </FrameLayout>
