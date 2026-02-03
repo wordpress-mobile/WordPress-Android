@@ -45,7 +45,6 @@ fun MenuItemDetailScreen(
     onTitleChange: (String) -> Unit,
     onUrlChange: (String) -> Unit,
     onParentChange: (Long) -> Unit,
-    onTargetChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onTypeChange: (MenuItemTypeOption) -> Unit,
     onLinkableItemChange: (LinkableItemOption) -> Unit,
@@ -66,7 +65,6 @@ fun MenuItemDetailScreen(
             onTitleChange = onTitleChange,
             onUrlChange = onUrlChange,
             onParentChange = onParentChange,
-            onTargetChange = onTargetChange,
             onDescriptionChange = onDescriptionChange,
             onTypeChange = onTypeChange,
             onLinkableItemChange = onLinkableItemChange
@@ -87,7 +85,6 @@ private fun ItemFieldsCard(
     onTitleChange: (String) -> Unit,
     onUrlChange: (String) -> Unit,
     onParentChange: (Long) -> Unit,
-    onTargetChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onTypeChange: (MenuItemTypeOption) -> Unit,
     onLinkableItemChange: (LinkableItemOption) -> Unit
@@ -152,15 +149,6 @@ private fun ItemFieldsCard(
                     onParentSelected = onParentChange
                 )
             }
-
-            OutlinedTextField(
-                value = state.target,
-                onValueChange = onTargetChange,
-                label = { Text(stringResource(R.string.menu_item_target_label)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                placeholder = { Text("_blank") }
-            )
         }
     }
 }

@@ -445,10 +445,6 @@ class NavMenusViewModel @Inject constructor(
         _menuItemDetailState.value = _menuItemDetailState.value?.copy(parentId = parentId)
     }
 
-    fun updateMenuItemTarget(target: String) {
-        _menuItemDetailState.value = _menuItemDetailState.value?.copy(target = target)
-    }
-
     fun updateMenuItemDescription(description: String) {
         _menuItemDetailState.value = _menuItemDetailState.value?.copy(description = description)
     }
