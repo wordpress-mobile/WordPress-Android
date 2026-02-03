@@ -269,16 +269,32 @@ private fun TrafficTabContent(
         )
     }
 
-    // Show no connection state when network is unavailable
-    if (!isNetworkAvailable) {
+    // Track whether to show the no-connection screen
+    // Once user retries or network becomes available, show cards instead
+    var showNoConnectionScreen by remember { mutableStateOf(!isNetworkAvailable) }
+
+    // React to network availability changes
+    LaunchedEffect(isNetworkAvailable) {
+        if (isNetworkAvailable && showNoConnectionScreen) {
+            // Network became available while on no-connection screen - auto-load
+            showNoConnectionScreen = false
+            todaysStatsViewModel.loadData()
+            viewsStatsViewModel.loadData()
+            mostViewedViewModel.loadData()
+            countriesViewModel.loadData()
+        } else if (!isNetworkAvailable && !showNoConnectionScreen) {
+            // Network became unavailable while viewing cards - show no-connection screen
+            showNoConnectionScreen = true
+        }
+    }
+
+    // Show no connection screen only when network is unavailable
+    if (showNoConnectionScreen) {
         NoConnectionContent(
             onRetry = {
                 newStatsViewModel.checkNetworkStatus()
-                // Always load data on retry - ViewModels will handle errors if still offline
-                todaysStatsViewModel.loadData()
-                viewsStatsViewModel.loadData()
-                mostViewedViewModel.loadData()
-                countriesViewModel.loadData()
+                // Only show cards if network is now available
+                // The LaunchedEffect will handle loading data when isNetworkAvailable becomes true
             }
         )
         return
