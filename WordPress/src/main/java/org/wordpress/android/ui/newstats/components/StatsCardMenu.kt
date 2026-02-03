@@ -26,20 +26,6 @@ import androidx.compose.ui.res.stringResource
 import org.wordpress.android.R
 
 /**
- * Represents the position of a card in the stats card list.
- * Used to determine which move options should be shown.
- */
-data class CardPosition(
-    val index: Int,
-    val totalCards: Int
-) {
-    val isFirst: Boolean get() = index == 0
-    val isLast: Boolean get() = index == totalCards - 1
-    val canMoveUp: Boolean get() = !isFirst
-    val canMoveDown: Boolean get() = !isLast
-}
-
-/**
  * Standard three-dots menu for stats cards.
  * Includes card-specific options (via additionalContent), a "Move Card" sub-menu, and a "Remove" option.
  *
@@ -201,3 +187,18 @@ fun StatsCardMenu(
         }
     }
 }
+
+/**
+ * Represents the position of a card in the stats card list.
+ * Used to determine which move options should be shown.
+ */
+data class CardPosition(
+    val index: Int,
+    val totalCards: Int
+) {
+    val isFirst: Boolean get() = index == 0
+    val isLast: Boolean get() = index == totalCards - 1
+    val canMoveUp: Boolean get() = !isFirst
+    val canMoveDown: Boolean get() = !isLast
+}
+
