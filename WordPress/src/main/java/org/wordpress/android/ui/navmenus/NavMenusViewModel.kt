@@ -23,7 +23,6 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.cancellation.CancellationException
@@ -96,16 +95,17 @@ class NavMenusViewModel @Inject constructor(
                 return@launch
             }
 
+            @Suppress("TooGenericExceptionCaught")
             try {
                 val newState = withContext(ioDispatcher) { fetchMenuData(site) }
                 _menuListState.value = newState
             } catch (e: CancellationException) {
                 throw e
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 _menuListState.value = MenuListUiState(
                     isLoading = false,
                     isRefreshing = false,
-                    error = e.message ?: "Network error occurred"
+                    error = e.message ?: resourceProvider.getString(R.string.error_generic)
                 )
             }
         }
