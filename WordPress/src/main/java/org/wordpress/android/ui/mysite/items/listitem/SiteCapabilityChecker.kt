@@ -34,6 +34,7 @@ class SiteCapabilityChecker @Inject constructor(
         return hasCapability
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private suspend fun fetchEditThemeOptionsCapability(site: SiteModel): Boolean {
         return try {
             val client = wpApiClientProvider.getWpApiClient(site)
@@ -48,7 +49,7 @@ class SiteCapabilityChecker @Inject constructor(
                 }
                 else -> false
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
