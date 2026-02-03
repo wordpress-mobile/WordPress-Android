@@ -2,15 +2,16 @@ package org.wordpress.android.ui.newstats.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material.icons.filled.VerticalAlignBottom
 import androidx.compose.material.icons.filled.VerticalAlignTop
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,7 +41,7 @@ data class CardPosition(
 
 /**
  * Standard three-dots menu for stats cards.
- * Includes card-specific options (via additionalContent), move options, and a "Remove" option.
+ * Includes card-specific options (via additionalContent), a "Move Card" sub-menu, and a "Remove" option.
  *
  * @param onRemoveClick Callback invoked when user clicks "Remove"
  * @param modifier Modifier for the menu
@@ -64,6 +65,7 @@ fun StatsCardMenu(
     additionalContent: @Composable (() -> Unit)? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
+    var moveSubMenuExpanded by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
         IconButton(onClick = { expanded = true }) {
@@ -81,78 +83,105 @@ fun StatsCardMenu(
             // Card-specific options (e.g., chart type for ViewsStatsCard)
             additionalContent?.invoke()
 
-            // Move options (shown only when cardPosition is provided and there are multiple cards)
-            if (cardPosition != null && cardPosition.totalCards > 1) {
-                // Move Up (hidden for first card)
-                if (cardPosition.canMoveUp && onMoveUp != null) {
+            // Move Card sub-menu (shown only when cardPosition is provided and there are multiple cards)
+            val showMoveOption = cardPosition != null && cardPosition.totalCards > 1
+            if (showMoveOption) {
+                Box {
                     DropdownMenuItem(
-                        text = { Text(stringResource(R.string.stats_card_move_up)) },
-                        onClick = {
-                            expanded = false
-                            onMoveUp()
-                        },
+                        text = { Text(stringResource(R.string.stats_card_move)) },
+                        onClick = { moveSubMenuExpanded = true },
                         leadingIcon = {
                             Icon(
-                                imageVector = Icons.Default.KeyboardArrowUp,
+                                imageVector = Icons.Default.SwapVert,
+                                contentDescription = null
+                            )
+                        },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.ChevronRight,
                                 contentDescription = null
                             )
                         }
                     )
-                }
 
-                // Move to Top (hidden for first card)
-                if (cardPosition.canMoveUp && onMoveToTop != null) {
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.stats_card_move_to_top)) },
-                        onClick = {
-                            expanded = false
-                            onMoveToTop()
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.VerticalAlignTop,
-                                contentDescription = null
+                    // Move sub-menu
+                    DropdownMenu(
+                        expanded = moveSubMenuExpanded,
+                        onDismissRequest = { moveSubMenuExpanded = false }
+                    ) {
+                        // Move Up (hidden for first card)
+                        if (cardPosition?.canMoveUp == true && onMoveUp != null) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.stats_card_move_up)) },
+                                onClick = {
+                                    moveSubMenuExpanded = false
+                                    expanded = false
+                                    onMoveUp()
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.KeyboardArrowUp,
+                                        contentDescription = null
+                                    )
+                                }
                             )
                         }
-                    )
-                }
 
-                // Move Down (hidden for last card)
-                if (cardPosition.canMoveDown && onMoveDown != null) {
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.stats_card_move_down)) },
-                        onClick = {
-                            expanded = false
-                            onMoveDown()
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.KeyboardArrowDown,
-                                contentDescription = null
+                        // Move to Top (hidden for first card)
+                        if (cardPosition?.canMoveUp == true && onMoveToTop != null) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.stats_card_move_to_top)) },
+                                onClick = {
+                                    moveSubMenuExpanded = false
+                                    expanded = false
+                                    onMoveToTop()
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.VerticalAlignTop,
+                                        contentDescription = null
+                                    )
+                                }
                             )
                         }
-                    )
-                }
 
-                // Move to Bottom (hidden for last card)
-                if (cardPosition.canMoveDown && onMoveToBottom != null) {
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.stats_card_move_to_bottom)) },
-                        onClick = {
-                            expanded = false
-                            onMoveToBottom()
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.VerticalAlignBottom,
-                                contentDescription = null
+                        // Move Down (hidden for last card)
+                        if (cardPosition?.canMoveDown == true && onMoveDown != null) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.stats_card_move_down)) },
+                                onClick = {
+                                    moveSubMenuExpanded = false
+                                    expanded = false
+                                    onMoveDown()
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.KeyboardArrowDown,
+                                        contentDescription = null
+                                    )
+                                }
                             )
                         }
-                    )
-                }
 
-                // Divider before Remove option
-                HorizontalDivider()
+                        // Move to Bottom (hidden for last card)
+                        if (cardPosition?.canMoveDown == true && onMoveToBottom != null) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.stats_card_move_to_bottom)) },
+                                onClick = {
+                                    moveSubMenuExpanded = false
+                                    expanded = false
+                                    onMoveToBottom()
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.VerticalAlignBottom,
+                                        contentDescription = null
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
             }
 
             // Common "Remove" option
