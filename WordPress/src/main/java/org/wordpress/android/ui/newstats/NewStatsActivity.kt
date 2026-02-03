@@ -274,13 +274,11 @@ private fun TrafficTabContent(
         NoConnectionContent(
             onRetry = {
                 newStatsViewModel.checkNetworkStatus()
-                if (newStatsViewModel.isNetworkAvailable.value) {
-                    // Use loadData() to show loading state on cards
-                    todaysStatsViewModel.loadData()
-                    viewsStatsViewModel.loadData()
-                    mostViewedViewModel.loadData()
-                    countriesViewModel.loadData()
-                }
+                // Always load data on retry - ViewModels will handle errors if still offline
+                todaysStatsViewModel.loadData()
+                viewsStatsViewModel.loadData()
+                mostViewedViewModel.loadData()
+                countriesViewModel.loadData()
             }
         )
         return
