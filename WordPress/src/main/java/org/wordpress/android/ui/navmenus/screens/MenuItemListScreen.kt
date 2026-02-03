@@ -47,7 +47,7 @@ fun MenuItemListScreen(
             }
             state.error != null -> {
                 Text(
-                    text = state.error ?: "",
+                    text = state.error,
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.align(Alignment.Center)
                 )
