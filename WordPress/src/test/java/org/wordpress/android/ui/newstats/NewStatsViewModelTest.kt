@@ -14,6 +14,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner.Silent::class)
@@ -23,6 +24,9 @@ class NewStatsViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var cardConfigurationRepository: StatsCardsConfigurationRepository
+
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private lateinit var viewModel: NewStatsViewModel
 
@@ -38,11 +42,16 @@ class NewStatsViewModelTest : BaseUnitTest() {
     fun setUp() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
         whenever(cardConfigurationRepository.configurationFlow).thenReturn(configurationFlow)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
 
     private suspend fun initViewModel(config: StatsCardsConfiguration = StatsCardsConfiguration()) {
         whenever(cardConfigurationRepository.getConfiguration(TEST_SITE_ID)).thenReturn(config)
-        viewModel = NewStatsViewModel(selectedSiteRepository, cardConfigurationRepository)
+        viewModel = NewStatsViewModel(
+            selectedSiteRepository,
+            cardConfigurationRepository,
+            networkUtilsWrapper
+        )
     }
 
     @Test
@@ -147,11 +156,97 @@ class NewStatsViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
         whenever(cardConfigurationRepository.getConfiguration(0L)).thenReturn(StatsCardsConfiguration())
 
-        viewModel = NewStatsViewModel(selectedSiteRepository, cardConfigurationRepository)
+        viewModel = NewStatsViewModel(
+            selectedSiteRepository,
+            cardConfigurationRepository,
+            networkUtilsWrapper
+        )
         advanceUntilIdle()
 
         verify(cardConfigurationRepository).getConfiguration(0L)
     }
+
+    // region Move card tests
+    @Test
+    fun `when moveCardUp is called, then repository moveCardUp is invoked`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.moveCardUp(StatsCardType.VIEWS_STATS)
+        advanceUntilIdle()
+
+        verify(cardConfigurationRepository).moveCardUp(TEST_SITE_ID, StatsCardType.VIEWS_STATS)
+    }
+
+    @Test
+    fun `when moveCardToTop is called, then repository moveCardToTop is invoked`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.moveCardToTop(StatsCardType.COUNTRIES)
+        advanceUntilIdle()
+
+        verify(cardConfigurationRepository).moveCardToTop(TEST_SITE_ID, StatsCardType.COUNTRIES)
+    }
+
+    @Test
+    fun `when moveCardDown is called, then repository moveCardDown is invoked`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.moveCardDown(StatsCardType.TODAYS_STATS)
+        advanceUntilIdle()
+
+        verify(cardConfigurationRepository).moveCardDown(TEST_SITE_ID, StatsCardType.TODAYS_STATS)
+    }
+
+    @Test
+    fun `when moveCardToBottom is called, then repository moveCardToBottom is invoked`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.moveCardToBottom(StatsCardType.TODAYS_STATS)
+        advanceUntilIdle()
+
+        verify(cardConfigurationRepository).moveCardToBottom(TEST_SITE_ID, StatsCardType.TODAYS_STATS)
+    }
+    // endregion
+
+    // region Network availability tests
+    @Test
+    fun `when initialized with network available, then isNetworkAvailable is true`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.isNetworkAvailable.value).isTrue()
+    }
+
+    @Test
+    fun `when initialized without network, then isNetworkAvailable is false`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.isNetworkAvailable.value).isFalse()
+    }
+
+    @Test
+    fun `when checkNetworkStatus is called, then network status is updated`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.isNetworkAvailable.value).isFalse()
+
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        viewModel.checkNetworkStatus()
+
+        assertThat(viewModel.isNetworkAvailable.value).isTrue()
+    }
+    // endregion
 
     companion object {
         private const val TEST_SITE_ID = 123L

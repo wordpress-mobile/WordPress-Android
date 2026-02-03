@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
@@ -51,7 +52,12 @@ fun CountriesCard(
     onShowAllClick: () -> Unit,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardPosition: CardPosition? = null,
+    onMoveUp: (() -> Unit)? = null,
+    onMoveToTop: (() -> Unit)? = null,
+    onMoveDown: (() -> Unit)? = null,
+    onMoveToBottom: (() -> Unit)? = null
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
 
@@ -65,8 +71,14 @@ fun CountriesCard(
     ) {
         when (uiState) {
             is CountriesCardUiState.Loading -> LoadingContent()
-            is CountriesCardUiState.Loaded -> LoadedContent(uiState, onShowAllClick, onRemoveCard)
-            is CountriesCardUiState.Error -> ErrorContent(uiState, onRetry, onRemoveCard)
+            is CountriesCardUiState.Loaded -> LoadedContent(
+                uiState, onShowAllClick, onRemoveCard,
+                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+            )
+            is CountriesCardUiState.Error -> ErrorContent(
+                uiState, onRetry, onRemoveCard,
+                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+            )
         }
     }
 }
@@ -131,7 +143,12 @@ private fun LoadingContent() {
 private fun LoadedContent(
     state: CountriesCardUiState.Loaded,
     onShowAllClick: () -> Unit,
-    onRemoveCard: () -> Unit
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
 ) {
     Column(modifier = Modifier.padding(CardPadding)) {
         // Header with menu
@@ -146,7 +163,14 @@ private fun LoadedContent(
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            StatsCardMenu(onRemoveClick = onRemoveCard)
+            StatsCardMenu(
+                onRemoveClick = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -333,7 +357,12 @@ private fun ShowAllFooter(onClick: () -> Unit) {
 private fun ErrorContent(
     state: CountriesCardUiState.Error,
     onRetry: () -> Unit,
-    onRemoveCard: () -> Unit
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
 ) {
     Column(modifier = Modifier.padding(CardPadding)) {
         // Header with menu
@@ -348,7 +377,14 @@ private fun ErrorContent(
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            StatsCardMenu(onRemoveClick = onRemoveCard)
+            StatsCardMenu(
+                onRemoveClick = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
+            )
         }
         Spacer(modifier = Modifier.height(24.dp))
         Column(
