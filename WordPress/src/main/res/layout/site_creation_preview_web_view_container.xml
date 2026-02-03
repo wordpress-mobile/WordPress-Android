@@ -57,7 +57,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
-            app:aevImage="@drawable/img_illustration_cloud_off_152dp"
             app:aevTitle="@string/error_browser_no_network"
             tools:visibility="visible" />
 

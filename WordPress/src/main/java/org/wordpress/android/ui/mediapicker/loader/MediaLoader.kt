@@ -130,9 +130,8 @@ data class MediaLoader(
                 hasMore = partialResult.data.isNotEmpty(),
                 domainItems = partialResult.data,
                 emptyState = EmptyState(
-                    partialResult.title,
-                    partialResult.htmlSubtitle,
-                    partialResult.image,
+                    title = partialResult.title,
+                    htmlSubtitle = partialResult.htmlSubtitle,
                     isError = true
                 )
             )

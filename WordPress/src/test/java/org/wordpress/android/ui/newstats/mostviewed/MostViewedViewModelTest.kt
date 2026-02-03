@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.MostViewedItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
@@ -70,29 +71,32 @@ class MostViewedViewModelTest : BaseUnitTest() {
 
     // region Error states
     @Test
-    fun `when no site selected, then error state is emitted`() = test {
+    fun `when no site selected, then error state is emitted for both data sources`() = test {
         stubNoSiteSelectedError()
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(MostViewedCardUiState.Error::class.java)
-        assertThat((state as MostViewedCardUiState.Error).message).isEqualTo(NO_SITE_SELECTED_ERROR)
+        val postsState = viewModel.postsUiState.value
+        val referrersState = viewModel.referrersUiState.value
+        assertThat(postsState).isInstanceOf(MostViewedCardUiState.Error::class.java)
+        assertThat(referrersState).isInstanceOf(MostViewedCardUiState.Error::class.java)
+        assertThat((postsState as MostViewedCardUiState.Error).message).isEqualTo(NO_SITE_SELECTED_ERROR)
     }
 
     @Test
-    fun `when access token is null, then error state is emitted`() = test {
+    fun `when access token is null, then error state is emitted for both data sources`() = test {
         stubFailedToLoadError()
         whenever(accountStore.accessToken).thenReturn(null)
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(MostViewedCardUiState.Error::class.java)
-        assertThat((state as MostViewedCardUiState.Error).message).isEqualTo(FAILED_TO_LOAD_ERROR)
+        val postsState = viewModel.postsUiState.value
+        val referrersState = viewModel.referrersUiState.value
+        assertThat(postsState).isInstanceOf(MostViewedCardUiState.Error::class.java)
+        assertThat(referrersState).isInstanceOf(MostViewedCardUiState.Error::class.java)
     }
 
     @Test
@@ -103,50 +107,70 @@ class MostViewedViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(MostViewedCardUiState.Error::class.java)
-        assertThat((state as MostViewedCardUiState.Error).message).isEqualTo(FAILED_TO_LOAD_ERROR)
+        val postsState = viewModel.postsUiState.value
+        assertThat(postsState).isInstanceOf(MostViewedCardUiState.Error::class.java)
+        assertThat((postsState as MostViewedCardUiState.Error).message).isEqualTo(FAILED_TO_LOAD_ERROR)
     }
 
     @Test
-    fun `when fetch fails, then error state is emitted`() = test {
+    fun `when posts fetch fails, then posts error state is emitted`() = test {
         stubFailedToLoadError()
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.POSTS_AND_PAGES)))
+            .thenReturn(MostViewedResult.Error("Network error"))
+        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.REFERRERS)))
+            .thenReturn(createSuccessResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val postsState = viewModel.postsUiState.value
+        assertThat(postsState).isInstanceOf(MostViewedCardUiState.Error::class.java)
+    }
+
+    @Test
+    fun `when referrers fetch fails, then referrers error state is emitted`() = test {
+        stubFailedToLoadError()
+        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.POSTS_AND_PAGES)))
+            .thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.REFERRERS)))
             .thenReturn(MostViewedResult.Error("Network error"))
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(MostViewedCardUiState.Error::class.java)
-        assertThat((state as MostViewedCardUiState.Error).message).isEqualTo(FAILED_TO_LOAD_ERROR)
+        val referrersState = viewModel.referrersUiState.value
+        assertThat(referrersState).isInstanceOf(MostViewedCardUiState.Error::class.java)
     }
 
     @Test
     fun `when exception is thrown, then error state with exception message is emitted`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.POSTS_AND_PAGES)))
             .thenThrow(RuntimeException("Test exception"))
+        whenever(statsRepository.fetchMostViewed(any(), any(), eq(MostViewedDataSource.REFERRERS)))
+            .thenReturn(createSuccessResult())
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(MostViewedCardUiState.Error::class.java)
-        assertThat((state as MostViewedCardUiState.Error).message).isEqualTo("Test exception")
+        val postsState = viewModel.postsUiState.value
+        assertThat(postsState).isInstanceOf(MostViewedCardUiState.Error::class.java)
+        assertThat((postsState as MostViewedCardUiState.Error).message).isEqualTo("Test exception")
     }
     // endregion
 
     // region Success states
     @Test
-    fun `when data loads successfully, then loaded state is emitted`() = test {
+    fun `when data loads successfully, then loaded state is emitted for both data sources`() = test {
         whenever(statsRepository.fetchMostViewed(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(MostViewedCardUiState.Loaded::class.java)
+        val postsState = viewModel.postsUiState.value
+        val referrersState = viewModel.referrersUiState.value
+        assertThat(postsState).isInstanceOf(MostViewedCardUiState.Loaded::class.java)
+        assertThat(referrersState).isInstanceOf(MostViewedCardUiState.Loaded::class.java)
     }
 
     @Test
@@ -157,7 +181,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as MostViewedCardUiState.Loaded
+        val state = viewModel.postsUiState.value as MostViewedCardUiState.Loaded
         assertThat(state.items).hasSize(2)
         assertThat(state.items[0].title).isEqualTo(TEST_POST_TITLE_1)
         assertThat(state.items[0].views).isEqualTo(TEST_POST_VIEWS_1)
@@ -173,7 +197,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as MostViewedCardUiState.Loaded
+        val state = viewModel.postsUiState.value as MostViewedCardUiState.Loaded
         assertThat(state.items[0].isHighlighted).isTrue()
         assertThat(state.items[1].isHighlighted).isFalse()
     }
@@ -202,62 +226,26 @@ class MostViewedViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as MostViewedCardUiState.Loaded
+        val state = viewModel.postsUiState.value as MostViewedCardUiState.Loaded
         assertThat(state.items).hasSize(10)
     }
 
     @Test
-    fun `when data loads, then selected data source is correct`() = test {
+    fun `when init, then both data sources are fetched in parallel`() = test {
         whenever(statsRepository.fetchMostViewed(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as MostViewedCardUiState.Loaded
-        assertThat(state.selectedDataSource).isEqualTo(MostViewedDataSource.POSTS_AND_PAGES)
-    }
-    // endregion
-
-    // region Data source changes
-    @Test
-    fun `when data source changes, then data is reloaded`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
-            .thenReturn(createSuccessResult())
-
-        initViewModel()
-        advanceUntilIdle()
-
-        viewModel.onDataSourceChanged(MostViewedDataSource.REFERRERS)
-        advanceUntilIdle()
-
-        verify(statsRepository, times(2)).fetchMostViewed(any(), any(), any())
-        verify(statsRepository).fetchMostViewed(
-            eq(TEST_SITE_ID),
-            any(),
-            eq(MostViewedDataSource.REFERRERS)
-        )
-    }
-
-    @Test
-    fun `when same data source is selected, then data is not reloaded`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
-            .thenReturn(createSuccessResult())
-
-        initViewModel()
-        advanceUntilIdle()
-
-        viewModel.onDataSourceChanged(MostViewedDataSource.POSTS_AND_PAGES)
-        advanceUntilIdle()
-
-        // Should only be called once during init
-        verify(statsRepository, times(1)).fetchMostViewed(any(), any(), any())
+        verify(statsRepository).fetchMostViewed(eq(TEST_SITE_ID), any(), eq(MostViewedDataSource.POSTS_AND_PAGES))
+        verify(statsRepository).fetchMostViewed(eq(TEST_SITE_ID), any(), eq(MostViewedDataSource.REFERRERS))
     }
     // endregion
 
     // region Period changes
     @Test
-    fun `when period changes, then data is reloaded`() = test {
+    fun `when period changes, then both data sources are reloaded`() = test {
         whenever(statsRepository.fetchMostViewed(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
@@ -267,8 +255,12 @@ class MostViewedViewModelTest : BaseUnitTest() {
         viewModel.onPeriodChanged(StatsPeriod.Last30Days)
         advanceUntilIdle()
 
-        verify(statsRepository, times(2)).fetchMostViewed(any(), any(), any())
-        verify(statsRepository).fetchMostViewed(eq(TEST_SITE_ID), eq(StatsPeriod.Last30Days), any())
+        // Called 4 times: twice during init (posts + referrers), twice during period change
+        verify(statsRepository, times(2)).fetchMostViewed(
+            eq(TEST_SITE_ID),
+            eq(StatsPeriod.Last30Days),
+            any()
+        )
     }
 
     @Test
@@ -282,8 +274,8 @@ class MostViewedViewModelTest : BaseUnitTest() {
         viewModel.onPeriodChanged(StatsPeriod.Last7Days)
         advanceUntilIdle()
 
-        // Should only be called once during init
-        verify(statsRepository, times(1)).fetchMostViewed(any(), any(), any())
+        // Should only be called twice during init (once per data source)
+        verify(statsRepository, times(2)).fetchMostViewed(any(), any(), any())
     }
     // endregion
 
@@ -305,7 +297,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when refresh is called, then data is fetched`() = test {
+    fun `when refresh is called, then both data sources are fetched`() = test {
         whenever(statsRepository.fetchMostViewed(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
@@ -315,31 +307,54 @@ class MostViewedViewModelTest : BaseUnitTest() {
         viewModel.refresh()
         advanceUntilIdle()
 
-        // Called twice: once during init, once during refresh
-        verify(statsRepository, times(2)).fetchMostViewed(eq(TEST_SITE_ID), any(), any())
+        // Called 4 times: twice during init, twice during refresh
+        verify(statsRepository, times(4)).fetchMostViewed(eq(TEST_SITE_ID), any(), any())
     }
     // endregion
 
     // region Retry
     @Test
-    fun `when onRetry is called, then data is reloaded`() = test {
+    fun `when onRetryPosts is called, then posts data is reloaded`() = test {
         whenever(statsRepository.fetchMostViewed(any(), any(), any()))
             .thenReturn(createSuccessResult())
 
         initViewModel()
         advanceUntilIdle()
 
-        viewModel.onRetry()
+        viewModel.onRetryPosts()
         advanceUntilIdle()
 
-        // Called twice: once during init, once during retry
-        verify(statsRepository, times(2)).fetchMostViewed(any(), any(), any())
+        // Called 3 times for posts: once during init, once during retry
+        // Plus 1 time for referrers during init
+        verify(statsRepository, times(2)).fetchMostViewed(
+            any(),
+            any(),
+            eq(MostViewedDataSource.POSTS_AND_PAGES)
+        )
+    }
+
+    @Test
+    fun `when onRetryReferrers is called, then referrers data is reloaded`() = test {
+        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+            .thenReturn(createSuccessResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onRetryReferrers()
+        advanceUntilIdle()
+
+        verify(statsRepository, times(2)).fetchMostViewed(
+            any(),
+            any(),
+            eq(MostViewedDataSource.REFERRERS)
+        )
     }
     // endregion
 
     // region getDetailData
     @Test
-    fun `when getDetailData is called, then returns cached data`() = test {
+    fun `when getPostsDetailData is called, then returns cached posts data`() = test {
         whenever(statsRepository.fetchMostViewed(any(), any(), any()))
             .thenReturn(createSuccessResult())
         whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
@@ -348,9 +363,9 @@ class MostViewedViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val detailData = viewModel.getDetailData()
+        val detailData = viewModel.getPostsDetailData()
 
-        assertThat(detailData.dataSource).isEqualTo(MostViewedDataSource.POSTS_AND_PAGES)
+        assertThat(detailData.cardType).isEqualTo(StatsCardType.MOST_VIEWED_POSTS_AND_PAGES)
         assertThat(detailData.items).hasSize(2)
         assertThat(detailData.totalViews).isEqualTo(TEST_TOTAL_VIEWS)
         assertThat(detailData.totalViewsChange).isEqualTo(TEST_TOTAL_VIEWS_CHANGE)
@@ -358,7 +373,23 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when getDetailData is called, then all items are returned not just card items`() = test {
+    fun `when getReferrersDetailData is called, then returns cached referrers data`() = test {
+        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+            .thenReturn(createSuccessResult())
+        whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
+            .thenReturn("Last 7 days")
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val detailData = viewModel.getReferrersDetailData()
+
+        assertThat(detailData.cardType).isEqualTo(StatsCardType.MOST_VIEWED_REFERRERS)
+        assertThat(detailData.items).hasSize(2)
+    }
+
+    @Test
+    fun `when getPostsDetailData is called, then all items are returned not just card items`() = test {
         val manyItems = (1..15).mapIndexed { idx, index ->
             MostViewedItemData(
                 id = index.toLong(),
@@ -383,7 +414,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val detailData = viewModel.getDetailData()
+        val detailData = viewModel.getPostsDetailData()
         // Card shows max 10, but detail data should have all 15
         assertThat(detailData.items).hasSize(15)
     }
@@ -414,7 +445,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as MostViewedCardUiState.Loaded
+        val state = viewModel.postsUiState.value as MostViewedCardUiState.Loaded
         assertThat(state.items[0].change).isInstanceOf(MostViewedChange.Positive::class.java)
         val change = state.items[0].change as MostViewedChange.Positive
         assertThat(change.value).isEqualTo(50)
@@ -445,7 +476,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as MostViewedCardUiState.Loaded
+        val state = viewModel.postsUiState.value as MostViewedCardUiState.Loaded
         assertThat(state.items[0].change).isInstanceOf(MostViewedChange.Negative::class.java)
         val change = state.items[0].change as MostViewedChange.Negative
         assertThat(change.value).isEqualTo(50)
@@ -476,7 +507,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as MostViewedCardUiState.Loaded
+        val state = viewModel.postsUiState.value as MostViewedCardUiState.Loaded
         assertThat(state.items[0].change).isEqualTo(MostViewedChange.NoChange)
     }
     // endregion

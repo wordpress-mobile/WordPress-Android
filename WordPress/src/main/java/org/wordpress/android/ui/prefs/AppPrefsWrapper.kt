@@ -99,6 +99,12 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getReaderReadingPreferencesJson()
         set(json) = AppPrefs.setReaderReadingPreferencesJson(json)
 
+    fun getStatsCardsConfigurationJson(siteId: Long): String? =
+        AppPrefs.getStatsCardsConfigurationJson(siteId)
+
+    fun setStatsCardsConfigurationJson(siteId: Long, json: String?) =
+        AppPrefs.setStatsCardsConfigurationJson(siteId, json)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)

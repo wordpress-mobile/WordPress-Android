@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.selfhostedusers
 
 import android.content.res.Configuration
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -120,7 +118,6 @@ fun OfflineView(
     onRetryClick: (() -> Unit)? = null,
 ) {
     MessageView(
-        imageRes = R.drawable.img_illustration_cloud_off_152dp,
         messageRes = R.string.no_network_message,
         buttonRes = R.string.retry,
         onButtonClick = onRetryClick
@@ -132,7 +129,6 @@ fun OfflineView(
  */
 @Composable
 fun MessageView(
-    @DrawableRes imageRes: Int,
     @StringRes messageRes: Int,
     @StringRes buttonRes: Int? = null,
     onButtonClick: (() -> Unit)? = null,
@@ -142,11 +138,6 @@ fun MessageView(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(imageRes),
-            tint = colorResource(R.color.neutral_30),
-            contentDescription = null,
-        )
         Text(
             text = stringResource(messageRes),
             style = MaterialTheme.typography.titleLarge,

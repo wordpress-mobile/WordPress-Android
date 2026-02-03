@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.activitylog.list.filter
 
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -164,23 +163,18 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         }
 
         sealed class Error : UiState() {
-            override val errorVisibility = true
-            abstract val image: Int?
             abstract val title: UiString
             abstract val subtitle: UiString
             open val buttonText: UiString? = null
             open val retryAction: Action? = null
 
             data class ConnectionError(override val retryAction: Action) : Error() {
-                @DrawableRes
-                override val image = R.drawable.img_illustration_cloud_off_152dp
                 override val title: UiString = UiStringRes(R.string.activity_log_activity_type_error_title)
                 override val subtitle: UiString = UiStringRes(R.string.activity_log_activity_type_error_subtitle)
                 override val buttonText: UiString = UiStringRes(R.string.retry)
             }
 
             object NoActivitiesError : Error() {
-                override val image = null
                 override val title = UiStringRes(R.string.activity_log_activity_type_empty_title)
                 override val subtitle = UiStringRes(R.string.activity_log_activity_type_empty_subtitle)
             }

@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
+import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.util.AppLog
@@ -50,7 +51,8 @@ class ViewsStatsViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val statsRepository: StatsRepository,
     private val resourceProvider: ResourceProvider,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val cardsConfigurationRepository: StatsCardsConfigurationRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ViewsStatsCardUiState>(ViewsStatsCardUiState.Loading)
     val uiState: StateFlow<ViewsStatsCardUiState> = _uiState.asStateFlow()
@@ -58,14 +60,33 @@ class ViewsStatsViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
-    private val _selectedPeriod = MutableStateFlow(restorePeriod())
+    private val _selectedPeriod = MutableStateFlow(restorePeriodFromSavedState())
     val selectedPeriod: StateFlow<StatsPeriod> = _selectedPeriod.asStateFlow()
 
     private var currentChartType: ChartType = ChartType.LINE
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
 
     init {
-        loadData()
+        initializeWithPersistedPeriod()
+    }
+
+    /**
+     * Initializes the ViewModel by restoring the period from persisted preferences asynchronously,
+     * then loading data. This avoids blocking the main thread with disk I/O.
+     */
+    private fun initializeWithPersistedPeriod() {
+        viewModelScope.launch {
+            // Try to restore from persisted preferences if SavedStateHandle didn't have a value
+            val savedPeriodType = savedStateHandle.get<String>(KEY_PERIOD_TYPE)
+            if (savedPeriodType == null) {
+                val restoredPeriod = restorePeriodFromPreferences()
+                if (restoredPeriod != null) {
+                    currentPeriod = restoredPeriod
+                    _selectedPeriod.value = restoredPeriod
+                }
+            }
+            loadData()
+        }
     }
 
     fun onPeriodChanged(period: StatsPeriod) {
@@ -77,6 +98,7 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     private fun savePeriod(period: StatsPeriod) {
+        // Save to SavedStateHandle for immediate restoration
         when (period) {
             is StatsPeriod.Today -> savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_TODAY
             is StatsPeriod.Last7Days -> savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_LAST_7_DAYS
@@ -89,10 +111,39 @@ class ViewsStatsViewModel @Inject constructor(
                 savedStateHandle[KEY_CUSTOM_END_DATE] = period.endDate.toEpochDay()
             }
         }
+
+        // Persist to preferences for cross-session restoration
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return
+        viewModelScope.launch {
+            val config = cardsConfigurationRepository.getConfiguration(siteId)
+            val periodType = when (period) {
+                is StatsPeriod.Today -> PERIOD_TODAY
+                is StatsPeriod.Last7Days -> PERIOD_LAST_7_DAYS
+                is StatsPeriod.Last30Days -> PERIOD_LAST_30_DAYS
+                is StatsPeriod.Last6Months -> PERIOD_LAST_6_MONTHS
+                is StatsPeriod.Last12Months -> PERIOD_LAST_12_MONTHS
+                is StatsPeriod.Custom -> PERIOD_CUSTOM
+            }
+            val customStart = (period as? StatsPeriod.Custom)?.startDate?.toEpochDay()
+            val customEnd = (period as? StatsPeriod.Custom)?.endDate?.toEpochDay()
+            cardsConfigurationRepository.saveConfiguration(
+                siteId,
+                config.copy(
+                    selectedPeriodType = periodType,
+                    customPeriodStartDate = customStart,
+                    customPeriodEndDate = customEnd
+                )
+            )
+        }
     }
 
-    private fun restorePeriod(): StatsPeriod {
-        return when (savedStateHandle.get<String>(KEY_PERIOD_TYPE)) {
+    /**
+     * Restores period from SavedStateHandle only (fast, no disk I/O).
+     * Used for property initialization.
+     */
+    private fun restorePeriodFromSavedState(): StatsPeriod {
+        val savedPeriodType = savedStateHandle.get<String>(KEY_PERIOD_TYPE) ?: return StatsPeriod.Last7Days
+        return when (savedPeriodType) {
             PERIOD_TODAY -> StatsPeriod.Today
             PERIOD_LAST_7_DAYS -> StatsPeriod.Last7Days
             PERIOD_LAST_30_DAYS -> StatsPeriod.Last30Days
@@ -111,6 +162,35 @@ class ViewsStatsViewModel @Inject constructor(
                 }
             }
             else -> StatsPeriod.Last7Days
+        }
+    }
+
+    /**
+     * Restores period from persisted preferences asynchronously.
+     * Used for app restarts when SavedStateHandle doesn't have the value.
+     */
+    private suspend fun restorePeriodFromPreferences(): StatsPeriod? {
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return null
+        val config = cardsConfigurationRepository.getConfiguration(siteId)
+        return when (config.selectedPeriodType) {
+            PERIOD_TODAY -> StatsPeriod.Today
+            PERIOD_LAST_7_DAYS -> StatsPeriod.Last7Days
+            PERIOD_LAST_30_DAYS -> StatsPeriod.Last30Days
+            PERIOD_LAST_6_MONTHS -> StatsPeriod.Last6Months
+            PERIOD_LAST_12_MONTHS -> StatsPeriod.Last12Months
+            PERIOD_CUSTOM -> {
+                val startEpochDay = config.customPeriodStartDate
+                val endEpochDay = config.customPeriodEndDate
+                if (startEpochDay != null && endEpochDay != null) {
+                    StatsPeriod.Custom(
+                        LocalDate.ofEpochDay(startEpochDay),
+                        LocalDate.ofEpochDay(endEpochDay)
+                    )
+                } else {
+                    null
+                }
+            }
+            else -> null
         }
     }
 

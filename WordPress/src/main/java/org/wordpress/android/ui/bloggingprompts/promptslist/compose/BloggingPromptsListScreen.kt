@@ -133,7 +133,6 @@ private fun NetworkErrorContent() {
     EmptyContentM3(
         title = stringResource(R.string.no_connection_error_title),
         subtitle = stringResource(R.string.no_connection_error_description),
-        image = R.drawable.img_illustration_cloud_off_152dp,
         modifier = emptyContentModifier,
     )
 }

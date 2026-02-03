@@ -475,8 +475,6 @@ private fun ErrorDataView(errorMessage: String?) {
         EmptyContentM3(
             title = stringResource(R.string.subscribers_error_title),
             subtitle = errorMessage ?: stringResource(R.string.error_generic_network),
-            image = R.drawable.img_illustration_cloud_off_152dp,
-            imageContentDescription = stringResource(R.string.subscribers_error_title),
         )
     }
 }
@@ -490,8 +488,6 @@ private fun OfflineDataView() {
     ) {
         EmptyContentM3(
             title = stringResource(R.string.no_network_title),
-            image = R.drawable.img_illustration_cloud_off_152dp,
-            imageContentDescription = stringResource(R.string.no_network_title)
         )
     }
 }
