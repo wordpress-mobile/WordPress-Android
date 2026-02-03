@@ -80,6 +80,7 @@ import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
@@ -113,7 +114,12 @@ fun ViewsStatsCard(
     onChartTypeChanged: (ChartType) -> Unit,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardPosition: CardPosition? = null,
+    onMoveUp: (() -> Unit)? = null,
+    onMoveToTop: (() -> Unit)? = null,
+    onMoveDown: (() -> Unit)? = null,
+    onMoveToBottom: (() -> Unit)? = null
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
 
@@ -131,8 +137,14 @@ fun ViewsStatsCard(
     ) {
         when (uiState) {
             is ViewsStatsCardUiState.Loading -> LoadingContent()
-            is ViewsStatsCardUiState.Loaded -> LoadedContent(uiState, onChartTypeChanged, onRemoveCard)
-            is ViewsStatsCardUiState.Error -> ErrorContent(uiState, onRetry, onRemoveCard)
+            is ViewsStatsCardUiState.Loaded -> LoadedContent(
+                uiState, onChartTypeChanged, onRemoveCard,
+                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+            )
+            is ViewsStatsCardUiState.Error -> ErrorContent(
+                uiState, onRetry, onRemoveCard,
+                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+            )
         }
     }
 }
@@ -245,7 +257,12 @@ private fun LoadingContent() {
 private fun LoadedContent(
     state: ViewsStatsCardUiState.Loaded,
     onChartTypeChanged: (ChartType) -> Unit,
-    onRemoveCard: () -> Unit
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
 ) {
     Column(
         modifier = Modifier
@@ -256,7 +273,12 @@ private fun LoadedContent(
         HeaderSection(
             state = state,
             onChartTypeChanged = onChartTypeChanged,
-            onRemoveCard = onRemoveCard
+            onRemoveCard = onRemoveCard,
+            cardPosition = cardPosition,
+            onMoveUp = onMoveUp,
+            onMoveToTop = onMoveToTop,
+            onMoveDown = onMoveDown,
+            onMoveToBottom = onMoveToBottom
         )
         Spacer(modifier = Modifier.height(16.dp))
         // Chart Section
@@ -275,7 +297,12 @@ private fun LoadedContent(
 private fun HeaderSection(
     state: ViewsStatsCardUiState.Loaded,
     onChartTypeChanged: (ChartType) -> Unit,
-    onRemoveCard: () -> Unit
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -290,6 +317,11 @@ private fun HeaderSection(
             )
             StatsCardMenu(
                 onRemoveClick = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom,
                 additionalContent = {
                     ChartTypeMenuItems(
                         currentChartType = state.chartType,
@@ -720,7 +752,12 @@ private fun ChangeBadge(change: StatChange) {
 private fun ErrorContent(
     state: ViewsStatsCardUiState.Error,
     onRetry: () -> Unit,
-    onRemoveCard: () -> Unit
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
 ) {
     Column(
         modifier = Modifier
@@ -737,7 +774,14 @@ private fun ErrorContent(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            StatsCardMenu(onRemoveClick = onRemoveCard)
+            StatsCardMenu(
+                onRemoveClick = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
+            )
         }
         Spacer(modifier = Modifier.height(16.dp))
         Box(

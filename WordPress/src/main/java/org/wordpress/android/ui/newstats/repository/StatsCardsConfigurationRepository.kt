@@ -56,6 +56,50 @@ class StatsCardsConfigurationRepository @Inject constructor(
         saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
     }
 
+    suspend fun moveCardUp(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
+        val current = getConfiguration(siteId)
+        val newVisibleCards = current.visibleCards.toMutableList()
+        val index = newVisibleCards.indexOf(cardType)
+        if (index > 0) {
+            newVisibleCards.removeAt(index)
+            newVisibleCards.add(index - 1, cardType)
+            saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
+        }
+    }
+
+    suspend fun moveCardToTop(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
+        val current = getConfiguration(siteId)
+        val newVisibleCards = current.visibleCards.toMutableList()
+        val index = newVisibleCards.indexOf(cardType)
+        if (index > 0) {
+            newVisibleCards.removeAt(index)
+            newVisibleCards.add(0, cardType)
+            saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
+        }
+    }
+
+    suspend fun moveCardDown(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
+        val current = getConfiguration(siteId)
+        val newVisibleCards = current.visibleCards.toMutableList()
+        val index = newVisibleCards.indexOf(cardType)
+        if (index >= 0 && index < newVisibleCards.size - 1) {
+            newVisibleCards.removeAt(index)
+            newVisibleCards.add(index + 1, cardType)
+            saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
+        }
+    }
+
+    suspend fun moveCardToBottom(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
+        val current = getConfiguration(siteId)
+        val newVisibleCards = current.visibleCards.toMutableList()
+        val index = newVisibleCards.indexOf(cardType)
+        if (index >= 0 && index < newVisibleCards.size - 1) {
+            newVisibleCards.removeAt(index)
+            newVisibleCards.add(cardType)
+            saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
+        }
+    }
+
     @Suppress("TooGenericExceptionCaught")
     private fun loadConfiguration(siteId: Long): StatsCardsConfiguration {
         val json = appPrefsWrapper.getStatsCardsConfigurationJson(siteId)

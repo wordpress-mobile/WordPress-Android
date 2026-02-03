@@ -71,4 +71,32 @@ class NewStatsViewModel @Inject constructor(
             cardConfigurationRepository.addCard(currentSiteId, cardType)
         }
     }
+
+    fun moveCardUp(cardType: StatsCardType) {
+        val currentSiteId = siteId // Capture siteId to avoid race conditions during site switching
+        viewModelScope.launch {
+            cardConfigurationRepository.moveCardUp(currentSiteId, cardType)
+        }
+    }
+
+    fun moveCardToTop(cardType: StatsCardType) {
+        val currentSiteId = siteId // Capture siteId to avoid race conditions during site switching
+        viewModelScope.launch {
+            cardConfigurationRepository.moveCardToTop(currentSiteId, cardType)
+        }
+    }
+
+    fun moveCardDown(cardType: StatsCardType) {
+        val currentSiteId = siteId // Capture siteId to avoid race conditions during site switching
+        viewModelScope.launch {
+            cardConfigurationRepository.moveCardDown(currentSiteId, cardType)
+        }
+    }
+
+    fun moveCardToBottom(cardType: StatsCardType) {
+        val currentSiteId = siteId // Capture siteId to avoid race conditions during site switching
+        viewModelScope.launch {
+            cardConfigurationRepository.moveCardToBottom(currentSiteId, cardType)
+        }
+    }
 }

@@ -35,6 +35,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsColors
+import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
@@ -53,7 +54,12 @@ fun MostViewedCard(
     onShowAllClick: () -> Unit,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardPosition: CardPosition? = null,
+    onMoveUp: (() -> Unit)? = null,
+    onMoveToTop: (() -> Unit)? = null,
+    onMoveDown: (() -> Unit)? = null,
+    onMoveToBottom: (() -> Unit)? = null
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
 
@@ -72,12 +78,13 @@ fun MostViewedCard(
         when (uiState) {
             is MostViewedCardUiState.Loading -> LoadingContent()
             is MostViewedCardUiState.Loaded -> LoadedContent(
-                uiState,
-                cardType,
-                onShowAllClick,
-                onRemoveCard
+                uiState, cardType, onShowAllClick, onRemoveCard,
+                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
             )
-            is MostViewedCardUiState.Error -> ErrorContent(uiState, cardType, onRetry, onRemoveCard)
+            is MostViewedCardUiState.Error -> ErrorContent(
+                uiState, cardType, onRetry, onRemoveCard,
+                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+            )
         }
     }
 }
@@ -159,14 +166,27 @@ private fun LoadedContent(
     state: MostViewedCardUiState.Loaded,
     cardType: StatsCardType,
     onShowAllClick: () -> Unit,
-    onRemoveCard: () -> Unit
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        HeaderSection(cardType = cardType, onRemoveCard = onRemoveCard)
+        HeaderSection(
+            cardType = cardType,
+            onRemoveCard = onRemoveCard,
+            cardPosition = cardPosition,
+            onMoveUp = onMoveUp,
+            onMoveToTop = onMoveToTop,
+            onMoveDown = onMoveDown,
+            onMoveToBottom = onMoveToBottom
+        )
         Spacer(modifier = Modifier.height(12.dp))
         ColumnHeadersRow(cardType = cardType)
         Spacer(modifier = Modifier.height(8.dp))
@@ -188,7 +208,15 @@ private fun LoadedContent(
 }
 
 @Composable
-private fun HeaderSection(cardType: StatsCardType, onRemoveCard: () -> Unit) {
+private fun HeaderSection(
+    cardType: StatsCardType,
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -199,7 +227,14 @@ private fun HeaderSection(cardType: StatsCardType, onRemoveCard: () -> Unit) {
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-        StatsCardMenu(onRemoveClick = onRemoveCard)
+        StatsCardMenu(
+            onRemoveClick = onRemoveCard,
+            cardPosition = cardPosition,
+            onMoveUp = onMoveUp,
+            onMoveToTop = onMoveToTop,
+            onMoveDown = onMoveDown,
+            onMoveToBottom = onMoveToBottom
+        )
     }
 }
 
@@ -360,14 +395,27 @@ private fun ErrorContent(
     state: MostViewedCardUiState.Error,
     cardType: StatsCardType,
     onRetry: () -> Unit,
-    onRemoveCard: () -> Unit
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        HeaderSection(cardType = cardType, onRemoveCard = onRemoveCard)
+        HeaderSection(
+            cardType = cardType,
+            onRemoveCard = onRemoveCard,
+            cardPosition = cardPosition,
+            onMoveUp = onMoveUp,
+            onMoveToTop = onMoveToTop,
+            onMoveDown = onMoveDown,
+            onMoveToBottom = onMoveToBottom
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),

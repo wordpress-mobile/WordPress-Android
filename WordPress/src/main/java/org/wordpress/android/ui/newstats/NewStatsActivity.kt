@@ -61,6 +61,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.components.AddStatsCardBottomSheet
+import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.countries.CountriesCard
 import org.wordpress.android.ui.newstats.countries.CountriesDetailActivity
 import org.wordpress.android.ui.newstats.countries.CountriesViewModel
@@ -288,17 +289,28 @@ private fun TrafficTabContent(
             }
 
             // Dynamic card rendering based on configuration
-            visibleCards.forEach { cardType ->
+            visibleCards.forEachIndexed { index, cardType ->
+                val cardPosition = CardPosition(index = index, totalCards = visibleCards.size)
                 when (cardType) {
                     StatsCardType.TODAYS_STATS -> TodaysStatsCard(
                         uiState = todaysStatsUiState,
-                        onRemoveCard = { newStatsViewModel.removeCard(cardType) }
+                        onRemoveCard = { newStatsViewModel.removeCard(cardType) },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
+                        onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
+                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
                     )
                     StatsCardType.VIEWS_STATS -> ViewsStatsCard(
                         uiState = viewsStatsUiState,
                         onChartTypeChanged = viewsStatsViewModel::onChartTypeChanged,
                         onRetry = viewsStatsViewModel::onRetry,
-                        onRemoveCard = { newStatsViewModel.removeCard(cardType) }
+                        onRemoveCard = { newStatsViewModel.removeCard(cardType) },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
+                        onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
+                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
                     )
                     StatsCardType.MOST_VIEWED_POSTS_AND_PAGES -> MostViewedCard(
                         uiState = postsUiState,
@@ -316,7 +328,12 @@ private fun TrafficTabContent(
                             )
                         },
                         onRetry = mostViewedViewModel::onRetryPosts,
-                        onRemoveCard = { newStatsViewModel.removeCard(cardType) }
+                        onRemoveCard = { newStatsViewModel.removeCard(cardType) },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
+                        onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
+                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
                     )
                     StatsCardType.MOST_VIEWED_REFERRERS -> MostViewedCard(
                         uiState = referrersUiState,
@@ -334,7 +351,12 @@ private fun TrafficTabContent(
                             )
                         },
                         onRetry = mostViewedViewModel::onRetryReferrers,
-                        onRemoveCard = { newStatsViewModel.removeCard(cardType) }
+                        onRemoveCard = { newStatsViewModel.removeCard(cardType) },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
+                        onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
+                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
                     )
                     StatsCardType.COUNTRIES -> CountriesCard(
                         uiState = countriesUiState,
@@ -353,7 +375,12 @@ private fun TrafficTabContent(
                             )
                         },
                         onRetry = countriesViewModel::onRetry,
-                        onRemoveCard = { newStatsViewModel.removeCard(cardType) }
+                        onRemoveCard = { newStatsViewModel.removeCard(cardType) },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
+                        onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
+                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
                     )
                 }
             }
