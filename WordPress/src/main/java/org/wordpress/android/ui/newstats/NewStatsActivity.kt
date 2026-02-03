@@ -292,9 +292,14 @@ private fun TrafficTabContent(
     if (showNoConnectionScreen) {
         NoConnectionContent(
             onRetry = {
-                newStatsViewModel.checkNetworkStatus()
-                // Only show cards if network is now available
-                // The LaunchedEffect will handle loading data when isNetworkAvailable becomes true
+                val isAvailable = newStatsViewModel.checkNetworkStatus()
+                if (isAvailable) {
+                    showNoConnectionScreen = false
+                    todaysStatsViewModel.loadData()
+                    viewsStatsViewModel.loadData()
+                    mostViewedViewModel.loadData()
+                    countriesViewModel.loadData()
+                }
             }
         )
         return

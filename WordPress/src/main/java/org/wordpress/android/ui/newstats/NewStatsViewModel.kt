@@ -40,8 +40,10 @@ class NewStatsViewModel @Inject constructor(
         observeConfigurationChanges()
     }
 
-    fun checkNetworkStatus() {
-        _isNetworkAvailable.value = networkUtilsWrapper.isNetworkAvailable()
+    fun checkNetworkStatus(): Boolean {
+        val isAvailable = networkUtilsWrapper.isNetworkAvailable()
+        _isNetworkAvailable.value = isAvailable
+        return isAvailable
     }
 
     private fun loadConfiguration() {
