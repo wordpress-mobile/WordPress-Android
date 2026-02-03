@@ -10,7 +10,8 @@ import javax.inject.Singleton
 
 /**
  * Checks user capabilities for a site using the WordPress REST API via wordpress-rs.
- * Results are cached per site to avoid redundant network requests.
+ * Results are cached per site to avoid redundant network requests. For now we only
+ * handle the edit_theme_options capability but this can be expanded later.
  */
 @Singleton
 class SiteCapabilityChecker @Inject constructor(
