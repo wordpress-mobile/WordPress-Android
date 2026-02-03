@@ -2,6 +2,8 @@ package org.wordpress.android.ui.mysite.items.listitem
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -12,7 +14,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class SiteCapabilityChecker @Inject constructor(
-    private val wpApiClientProvider: WpApiClientProvider
+    private val wpApiClientProvider: WpApiClientProvider,
+    private val appLogWrapper: AppLogWrapper
 ) {
     private val capabilityCache = mutableMapOf<Long, CapabilityCache>()
 
@@ -34,7 +37,7 @@ class SiteCapabilityChecker @Inject constructor(
         return hasCapability
     }
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchEditThemeOptionsCapability(site: SiteModel): Boolean {
         return try {
             val client = wpApiClientProvider.getWpApiClient(site)
@@ -49,7 +52,8 @@ class SiteCapabilityChecker @Inject constructor(
                 }
                 else -> false
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            appLogWrapper.e(AppLog.T.API, "Failed to fetch edit_theme_options capability: ${e.message}")
             false
         }
     }
