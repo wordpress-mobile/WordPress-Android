@@ -60,13 +60,6 @@ class SiteCapabilityChecker @Inject constructor(
         capabilityCache.remove(siteId)
     }
 
-    /**
-     * Clears all cached capabilities.
-     */
-    fun clearCache() {
-        capabilityCache.clear()
-    }
-
     private data class CapabilityCache(
         val hasEditThemeOptions: Boolean
     )
