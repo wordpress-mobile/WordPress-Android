@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.navmenus
 
 import androidx.annotation.StringRes
+import org.json.JSONArray
+import org.json.JSONException
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuLocationModel
@@ -197,12 +199,17 @@ enum class NavMenuScreen {
 /**
  * Parses a JSON array string like "[\"value1\",\"value2\"]" into a list of strings.
  */
-fun String.parseJsonStringArray(): List<String> =
-    if (isNotEmpty() && this != "[]") {
-        trim('[', ']').split(",").map { it.trim().trim('"') }.filter { it.isNotEmpty() }
-    } else {
+fun String.parseJsonStringArray(): List<String> {
+    if (isEmpty() || this == "[]") {
+        return emptyList()
+    }
+    return try {
+        val jsonArray = JSONArray(this)
+        (0 until jsonArray.length()).map { jsonArray.getString(it) }
+    } catch (_: JSONException) {
         emptyList()
     }
+}
 
 /**
  * Converts a list of strings to a JSON array string like "[\"value1\",\"value2\"]".
