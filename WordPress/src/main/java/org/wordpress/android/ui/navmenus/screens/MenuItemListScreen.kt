@@ -24,6 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -105,9 +107,17 @@ private fun MenuItemListItem(
     onMoveDown: () -> Unit
 ) {
     val showReorderButtons = canMoveUp || canMoveDown
+    val title = item.title.ifEmpty { stringResource(R.string.untitled) }
+    val itemDescription = stringResource(
+        R.string.menu_item_accessibility_description,
+        item.indentLevel + 1,
+        title,
+        item.typeLabel
+    )
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .semantics { contentDescription = itemDescription }
             .clickable { onEditClick() }
             .padding(
                 start = (16 + item.indentLevel * 24).dp,
@@ -119,7 +129,7 @@ private fun MenuItemListItem(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = item.title.ifEmpty { stringResource(R.string.untitled) },
+                text = title,
                 style = MaterialTheme.typography.bodyLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

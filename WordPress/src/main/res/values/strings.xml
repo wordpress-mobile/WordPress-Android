@@ -4581,6 +4581,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="menu_item_url_required">URL is required for custom links</string>
     <string name="menu_item_invalid_url">Please enter a valid URL</string>
     <string name="menu_item_reorder_failed">Failed to reorder menu item</string>
+    <string name="menu_item_accessibility_description">Level %1$d, %2$s, %3$s</string>
 
     <!-- AI Bot Support - Conversations List Screen -->
     <string name="ai_bot_conversations_title">Conversations</string>
