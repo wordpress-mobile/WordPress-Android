@@ -10,7 +10,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.items.ACTIVITY_ITEM
@@ -65,7 +64,7 @@ class SiteListItemBuilderTest {
     lateinit var selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig
 
     @Mock
-    lateinit var wpApiClientProvider: WpApiClientProvider
+    lateinit var siteCapabilityChecker: SiteCapabilityChecker
 
     private lateinit var siteListItemBuilder: SiteListItemBuilder
 
@@ -81,7 +80,7 @@ class SiteListItemBuilderTest {
             siteMonitoringFeatureConfig,
             selfHostedUsersFeatureConfig,
             experimentalFeatures,
-            wpApiClientProvider
+            siteCapabilityChecker
         )
     }
 

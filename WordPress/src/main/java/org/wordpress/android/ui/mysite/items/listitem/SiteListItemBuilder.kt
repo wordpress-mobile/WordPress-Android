@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.items.listitem
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -33,7 +32,6 @@ import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.SelfHostedUsersFeatureConfig
 import org.wordpress.android.util.config.SiteMonitoringFeatureConfig
-import rs.wordpress.api.kotlin.WpRequestResult
 import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
@@ -48,7 +46,7 @@ class SiteListItemBuilder @Inject constructor(
     private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig,
     private val selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig,
     private val experimentalFeatures: ExperimentalFeatures,
-    private val wpApiClientProvider: WpApiClientProvider
+    private val siteCapabilityChecker: SiteCapabilityChecker
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
@@ -294,7 +292,7 @@ class SiteListItemBuilder @Inject constructor(
             return null
         }
 
-        val hasEditThemeOptions = checkEditThemeOptionsCapability(site)
+        val hasEditThemeOptions = siteCapabilityChecker.hasEditThemeOptionsCapability(site)
         return if (hasEditThemeOptions) {
             ListItem(
                 R.drawable.ic_gridicons_menus,
@@ -304,25 +302,6 @@ class SiteListItemBuilder @Inject constructor(
             )
         } else {
             null
-        }
-    }
-
-    private suspend fun checkEditThemeOptionsCapability(site: SiteModel): Boolean {
-        return try {
-            val client = wpApiClientProvider.getWpApiClient(site)
-            val response = client.request { requestBuilder ->
-                requestBuilder.users().retrieveMeWithEditContext()
-            }
-            when (response) {
-                is WpRequestResult.Success -> {
-                    response.response.data.capabilities.entries.any { (key, value) ->
-                        key.toString().contains("edit_theme_options", ignoreCase = true) && value
-                    }
-                }
-                else -> false
-            }
-        } catch (e: Exception) {
-            false
         }
     }
 
