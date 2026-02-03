@@ -658,6 +658,6 @@ class NavMenusViewModel @Inject constructor(
         if (dangerousSchemes.any { normalizedUrl.startsWith(it) }) {
             return false
         }
-        return android.util.Patterns.WEB_URL.matcher(url).matches()
+        return android.webkit.URLUtil.isValidUrl(url)
     }
 }
