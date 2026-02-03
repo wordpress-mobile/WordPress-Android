@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 212
+        return 211
     }
 
     override fun getDbName(): String {
@@ -2088,49 +2088,6 @@ open class WellSqlConfig : DefaultWellConfig {
 
                 210 -> {
                     db.execSQL("ALTER TABLE TermModel ADD IS_HIERARCHICAL BOOLEAN")
-                }
-
-                211 -> migrate(version) {
-                    // Create NavMenuModel table
-                    db.execSQL(
-                        "CREATE TABLE IF NOT EXISTS NavMenuModel (" +
-                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                            "LOCAL_SITE_ID INTEGER," +
-                            "REMOTE_MENU_ID INTEGER," +
-                            "NAME TEXT," +
-                            "SLUG TEXT," +
-                            "DESCRIPTION TEXT," +
-                            "LOCATIONS TEXT," +
-                            "AUTO_ADD INTEGER)"
-                    )
-                    // Create NavMenuItemModel table
-                    db.execSQL(
-                        "CREATE TABLE IF NOT EXISTS NavMenuItemModel (" +
-                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                            "LOCAL_SITE_ID INTEGER," +
-                            "REMOTE_ITEM_ID INTEGER," +
-                            "MENU_ID INTEGER," +
-                            "TITLE TEXT," +
-                            "URL TEXT," +
-                            "TYPE TEXT," +
-                            "OBJECT_TYPE TEXT," +
-                            "OBJECT_ID INTEGER," +
-                            "PARENT_ID INTEGER," +
-                            "MENU_ORDER INTEGER," +
-                            "TARGET TEXT," +
-                            "CLASSES TEXT," +
-                            "DESCRIPTION TEXT," +
-                            "ATTR_TITLE TEXT)"
-                    )
-                    // Create NavMenuLocationModel table
-                    db.execSQL(
-                        "CREATE TABLE IF NOT EXISTS NavMenuLocationModel (" +
-                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                            "LOCAL_SITE_ID INTEGER," +
-                            "NAME TEXT," +
-                            "DESCRIPTION TEXT," +
-                            "MENU_ID INTEGER)"
-                    )
                 }
             }
         }
