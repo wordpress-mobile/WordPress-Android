@@ -64,6 +64,12 @@ fun MenuItemListScreen(
                         items = state.items,
                         key = { it.id }
                     ) { item ->
+                        val index = state.items.indexOf(item)
+                        val canMoveUp = index > 0 &&
+                            state.items[index - 1].indentLevel == item.indentLevel
+                        val canMoveDown = index < state.items.size - 1 &&
+                            state.items[index + 1].indentLevel == item.indentLevel
+
                         Column(
                             modifier = Modifier.animateItem(
                                 placementSpec = spring(
@@ -74,7 +80,8 @@ fun MenuItemListScreen(
                         ) {
                             MenuItemListItem(
                                 item = item,
-                                showReorderButtons = state.items.size > 1,
+                                canMoveUp = canMoveUp,
+                                canMoveDown = canMoveDown,
                                 onEditClick = { onEditItemClick(item.id) },
                                 onMoveUp = { onMoveItemUp(item.id) },
                                 onMoveDown = { onMoveItemDown(item.id) }
@@ -91,11 +98,13 @@ fun MenuItemListScreen(
 @Composable
 private fun MenuItemListItem(
     item: MenuItemUiModel,
-    showReorderButtons: Boolean,
+    canMoveUp: Boolean,
+    canMoveDown: Boolean,
     onEditClick: () -> Unit,
     onMoveUp: () -> Unit,
     onMoveDown: () -> Unit
 ) {
+    val showReorderButtons = canMoveUp || canMoveDown
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -131,11 +140,15 @@ private fun MenuItemListItem(
             }
         }
         if (showReorderButtons) {
-            IconButton(onClick = onMoveUp) {
-                Icon(Icons.Default.KeyboardArrowUp, contentDescription = stringResource(R.string.move_up))
+            if (canMoveUp) {
+                IconButton(onClick = onMoveUp) {
+                    Icon(Icons.Default.KeyboardArrowUp, contentDescription = stringResource(R.string.move_up))
+                }
             }
-            IconButton(onClick = onMoveDown) {
-                Icon(Icons.Default.KeyboardArrowDown, contentDescription = stringResource(R.string.move_down))
+            if (canMoveDown) {
+                IconButton(onClick = onMoveDown) {
+                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = stringResource(R.string.move_down))
+                }
             }
         }
     }
