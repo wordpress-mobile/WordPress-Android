@@ -75,4 +75,18 @@ class CardPositionTest {
         assertThat(position.canMoveUp).isTrue()
         assertThat(position.canMoveDown).isTrue()
     }
+
+    @Test
+    fun `when only 2 cards exist, then showMoveToTopBottom is false`() {
+        val position = CardPosition(index = 0, totalCards = 2)
+
+        assertThat(position.showMoveToTopBottom).isFalse()
+    }
+
+    @Test
+    fun `when 3 or more cards exist, then showMoveToTopBottom is true`() {
+        val position = CardPosition(index = 0, totalCards = 3)
+
+        assertThat(position.showMoveToTopBottom).isTrue()
+    }
 }

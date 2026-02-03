@@ -113,8 +113,10 @@ fun StatsCardMenu(
                             )
                         }
 
-                        // Move to Top (hidden for first card)
-                        if (cardPosition?.canMoveUp == true && onMoveToTop != null) {
+                        // Move to Top (hidden for first card or when only 2 cards)
+                        if (cardPosition?.canMoveUp == true &&
+                            cardPosition.showMoveToTopBottom &&
+                            onMoveToTop != null) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.stats_card_move_to_top)) },
                                 onClick = {
@@ -149,8 +151,10 @@ fun StatsCardMenu(
                             )
                         }
 
-                        // Move to Bottom (hidden for last card)
-                        if (cardPosition?.canMoveDown == true && onMoveToBottom != null) {
+                        // Move to Bottom (hidden for last card or when only 2 cards)
+                        if (cardPosition?.canMoveDown == true &&
+                            cardPosition.showMoveToTopBottom &&
+                            onMoveToBottom != null) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.stats_card_move_to_bottom)) },
                                 onClick = {
@@ -200,5 +204,8 @@ data class CardPosition(
     val isLast: Boolean get() = index == totalCards - 1
     val canMoveUp: Boolean get() = !isFirst
     val canMoveDown: Boolean get() = !isLast
+    // Show "Move to Top/Bottom" only when there are more than 2 cards
+    // (with 2 cards, "Move Up" and "Move to Top" are equivalent)
+    val showMoveToTopBottom: Boolean get() = totalCards > 2
 }
 
