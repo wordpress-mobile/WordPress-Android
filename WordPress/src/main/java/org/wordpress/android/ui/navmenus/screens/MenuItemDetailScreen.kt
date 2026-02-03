@@ -29,6 +29,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -267,17 +269,27 @@ private fun LinkableItemDropdown(
                         }
                     } else {
                         linkableItemsState.items.forEach { item ->
+                            val itemDescription = stringResource(
+                                R.string.menu_item_accessibility_description,
+                                item.indentLevel + 1,
+                                item.title,
+                                ""
+                            ).trim()
                             DropdownMenuItem(
                                 text = {
                                     Text(
-                                        text = "  ".repeat(item.indentLevel) + item.title,
+                                        text = item.title,
                                         maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier.padding(start = (item.indentLevel * 16).dp)
                                     )
                                 },
                                 onClick = {
                                     onItemSelected(item)
                                     expanded = false
+                                },
+                                modifier = Modifier.semantics {
+                                    contentDescription = itemDescription
                                 }
                             )
                         }
@@ -335,17 +347,27 @@ private fun ParentDropdown(
                     }
                 )
                 availableParents.forEach { parent ->
+                    val parentDescription = stringResource(
+                        R.string.menu_item_accessibility_description,
+                        parent.indentLevel + 1,
+                        parent.title,
+                        ""
+                    ).trim()
                     DropdownMenuItem(
                         text = {
                             Text(
-                                text = "  ".repeat(parent.indentLevel) + parent.title,
+                                text = parent.title,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.padding(start = (parent.indentLevel * 16).dp)
                             )
                         },
                         onClick = {
                             onParentSelected(parent.id)
                             expanded = false
+                        },
+                        modifier = Modifier.semantics {
+                            contentDescription = parentDescription
                         }
                     )
                 }
