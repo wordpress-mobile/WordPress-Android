@@ -29,6 +29,7 @@ import javax.inject.Named
 import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
+@Suppress("LargeClass")
 class NavMenusViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val navMenuRestClient: NavMenuRestClient,
@@ -622,22 +623,18 @@ class NavMenusViewModel @Inject constructor(
         swapWithItem.menuOrder = originalOrderForMoved
 
         val result1 = navMenuRestClient.updateMenuItem(site, itemToMove)
-        if (result1 is NavMenuRestClient.NavMenuItemResult.Error) {
-            // Restore original orders
-            itemToMove.menuOrder = originalOrderForMoved
-            swapWithItem.menuOrder = originalOrderForSwapped
-            return false
+        val result2 = if (result1 is NavMenuRestClient.NavMenuItemResult.Success) {
+            navMenuRestClient.updateMenuItem(site, swapWithItem)
+        } else {
+            result1
         }
 
-        val result2 = navMenuRestClient.updateMenuItem(site, swapWithItem)
-        if (result2 is NavMenuRestClient.NavMenuItemResult.Error) {
-            // Restore original orders
+        val success = result2 is NavMenuRestClient.NavMenuItemResult.Success
+        if (!success) {
             itemToMove.menuOrder = originalOrderForMoved
             swapWithItem.menuOrder = originalOrderForSwapped
-            return false
         }
-
-        return true
+        return success
     }
 
     fun saveMenuItem() {
