@@ -67,10 +67,39 @@ fun MenuItemListScreen(
                         key = { it.id }
                     ) { item ->
                         val index = state.items.indexOf(item)
-                        val canMoveUp = index > 0 &&
-                            state.items[index - 1].indentLevel == item.indentLevel
-                        val canMoveDown = index < state.items.size - 1 &&
-                            state.items[index + 1].indentLevel == item.indentLevel
+                        val indentLevel = item.indentLevel
+
+                        // Find previous sibling: look backwards for an item at the same indent
+                        // level, stopping if we hit an item with a lower indent level (different
+                        // parent context)
+                        val canMoveUp = run {
+                            for (i in (index - 1) downTo 0) {
+                                val otherItem = state.items[i]
+                                if (otherItem.indentLevel < indentLevel) {
+                                    return@run false
+                                }
+                                if (otherItem.indentLevel == indentLevel) {
+                                    return@run true
+                                }
+                            }
+                            false
+                        }
+
+                        // Find next sibling: look forwards for an item at the same indent level,
+                        // stopping if we hit an item with a lower indent level (different parent
+                        // context)
+                        val canMoveDown = run {
+                            for (i in (index + 1) until state.items.size) {
+                                val otherItem = state.items[i]
+                                if (otherItem.indentLevel < indentLevel) {
+                                    return@run false
+                                }
+                                if (otherItem.indentLevel == indentLevel) {
+                                    return@run true
+                                }
+                            }
+                            false
+                        }
 
                         Column(
                             modifier = Modifier.animateItem(

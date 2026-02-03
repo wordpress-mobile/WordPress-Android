@@ -475,51 +475,110 @@ class NavMenusViewModel @Inject constructor(
     }
 
     fun moveMenuItemUp(itemId: Long) {
-        reorderMenuItem(itemId, -1)
+        reorderMenuItem(itemId, ReorderDirection.UP)
     }
 
     fun moveMenuItemDown(itemId: Long) {
-        reorderMenuItem(itemId, 1)
+        reorderMenuItem(itemId, ReorderDirection.DOWN)
     }
 
-    private fun reorderMenuItem(itemId: Long, direction: Int) {
-        val currentItems = _menuItemListState.value.items.toMutableList()
+    private fun reorderMenuItem(itemId: Long, direction: ReorderDirection) {
+        val currentItems = _menuItemListState.value.items
         val index = currentItems.indexOfFirst { it.id == itemId }
-        val newIndex = index + direction
-        val canReorder = index >= 0 &&
-            newIndex >= 0 &&
-            newIndex < currentItems.size &&
-            currentItems[index].indentLevel == currentItems[newIndex].indentLevel
+        if (index < 0) return
 
-        if (canReorder) {
-            val currentItem = currentItems[index]
-            val targetItem = currentItems[newIndex]
+        val item = currentItems[index]
+        val indentLevel = item.indentLevel
 
-            // Save original state for rollback
-            val originalItems = _menuItemListState.value.items
+        // Find the sibling to swap with
+        val siblingIndex = when (direction) {
+            ReorderDirection.UP -> findPreviousSiblingIndex(currentItems, index, indentLevel)
+            ReorderDirection.DOWN -> findNextSiblingIndex(currentItems, index, indentLevel)
+        }
+        if (siblingIndex < 0) return
 
-            // Optimistically update the UI
-            currentItems[index] = targetItem
-            currentItems[newIndex] = currentItem
-            _menuItemListState.value = _menuItemListState.value.copy(items = currentItems)
+        val sibling = currentItems[siblingIndex]
 
-            // Update menu orders on the server
-            viewModelScope.launch {
-                val site = selectedSiteRepository.getSelectedSite() ?: return@launch
-                val success = withContext(ioDispatcher) {
-                    updateMenuItemOrder(site, itemId, targetItem.id)
-                }
+        // Get the end indices for both subtrees (item + descendants, sibling + descendants)
+        val itemSubtreeEnd = findSubtreeEnd(currentItems, index)
+        val siblingSubtreeEnd = findSubtreeEnd(currentItems, siblingIndex)
 
-                if (!success) {
-                    // Rollback UI state on failure
-                    _menuItemListState.value = _menuItemListState.value.copy(items = originalItems)
-                    _uiEvent.value = NavMenusUiEvent.ShowError(
-                        resourceProvider.getString(R.string.menu_item_reorder_failed)
-                    )
-                }
+        // Extract subtrees
+        val itemSubtree = currentItems.subList(index, itemSubtreeEnd + 1)
+        val siblingSubtree = currentItems.subList(siblingIndex, siblingSubtreeEnd + 1)
+
+        // Create new list with swapped subtrees
+        val newItems = when (direction) {
+            ReorderDirection.UP -> {
+                // Moving up: sibling is before item
+                currentItems.subList(0, siblingIndex) +
+                    itemSubtree +
+                    siblingSubtree +
+                    currentItems.subList(itemSubtreeEnd + 1, currentItems.size)
+            }
+            ReorderDirection.DOWN -> {
+                // Moving down: sibling is after item
+                currentItems.subList(0, index) +
+                    siblingSubtree +
+                    itemSubtree +
+                    currentItems.subList(siblingSubtreeEnd + 1, currentItems.size)
+            }
+        }
+
+        // Save original state for rollback
+        val originalItems = currentItems
+
+        // Optimistically update the UI
+        _menuItemListState.value = _menuItemListState.value.copy(items = newItems)
+
+        // Update menu orders on the server
+        viewModelScope.launch {
+            val site = selectedSiteRepository.getSelectedSite() ?: return@launch
+            val success = withContext(ioDispatcher) {
+                updateMenuItemOrder(site, itemId, sibling.id)
+            }
+
+            if (!success) {
+                // Rollback UI state on failure
+                _menuItemListState.value = _menuItemListState.value.copy(items = originalItems)
+                _uiEvent.value = NavMenusUiEvent.ShowError(
+                    resourceProvider.getString(R.string.menu_item_reorder_failed)
+                )
             }
         }
     }
+
+    private fun findPreviousSiblingIndex(
+        items: List<MenuItemUiModel>,
+        fromIndex: Int,
+        indentLevel: Int
+    ): Int = (fromIndex - 1 downTo 0)
+        .asSequence()
+        .takeWhile { items[it].indentLevel >= indentLevel }
+        .firstOrNull { items[it].indentLevel == indentLevel }
+        ?: -1
+
+    private fun findNextSiblingIndex(
+        items: List<MenuItemUiModel>,
+        fromIndex: Int,
+        indentLevel: Int
+    ): Int = ((fromIndex + 1) until items.size)
+        .asSequence()
+        .takeWhile { items[it].indentLevel >= indentLevel }
+        .firstOrNull { items[it].indentLevel == indentLevel }
+        ?: -1
+
+    private fun findSubtreeEnd(items: List<MenuItemUiModel>, startIndex: Int): Int {
+        val startIndent = items[startIndex].indentLevel
+        var endIndex = startIndex
+        for (i in (startIndex + 1) until items.size) {
+            if (items[i].indentLevel <= startIndent) break
+            endIndex = i
+        }
+        return endIndex
+    }
+
+    private enum class ReorderDirection { UP, DOWN }
 
     private suspend fun updateMenuItemOrder(site: SiteModel, itemId: Long, targetItemId: Long): Boolean {
         val itemToMove = currentMenuItems.find { it.remoteItemId == itemId }
