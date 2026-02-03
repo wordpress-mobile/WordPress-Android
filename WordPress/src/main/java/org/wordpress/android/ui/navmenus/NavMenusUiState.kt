@@ -147,14 +147,7 @@ enum class MenuItemTypeOption(
         NavMenuItemModel.TYPE_TAXONOMY,
         NavMenuItemModel.OBJECT_TYPE_TAG,
         R.string.menu_item_type_tag
-    );
-
-    companion object {
-        fun fromTypeAndObjectType(type: String, objectType: String): MenuItemTypeOption {
-            return entries.find { it.type == type && it.objectType == objectType }
-                ?: CUSTOM_LINK
-        }
-    }
+    )
 }
 
 /**
