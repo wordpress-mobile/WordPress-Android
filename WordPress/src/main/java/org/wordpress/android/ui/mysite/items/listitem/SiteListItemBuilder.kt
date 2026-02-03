@@ -284,10 +284,16 @@ class SiteListItemBuilder @Inject constructor(
         }
     }
 
+    /**
+     * Navigation menus require Application Passwords and the user has the ability to edit theme options.
+     * The latter is checked via wordpress-rs.
+     * https://wordpress.org/documentation/article/roles-and-capabilities/#edit_theme_options
+     *
+     */
     suspend fun buildMenusItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        // Only available for sites with Application Passwords configured and the user has the
-        // ability to edit theme options (checked via wordpress-rs)
-        // https://wordpress.org/documentation/article/roles-and-capabilities/#edit_theme_options
+        if (!experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NAV_MENUS)) {
+            return null
+        }
         if (!site.hasApplicationPassword()) {
             return null
         }
