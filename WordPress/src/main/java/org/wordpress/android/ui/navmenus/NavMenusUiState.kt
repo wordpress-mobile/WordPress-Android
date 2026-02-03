@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.navmenu.NavMenuModel
  */
 data class MenuListUiState(
     val isLoading: Boolean = false,
+    val isRefreshing: Boolean = false,
     val menus: List<MenuUiModel> = emptyList(),
     val locations: List<LocationUiModel> = emptyList(),
     val error: String? = null

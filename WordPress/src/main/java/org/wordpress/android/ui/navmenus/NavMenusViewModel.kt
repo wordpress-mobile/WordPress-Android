@@ -67,13 +67,26 @@ class NavMenusViewModel @Inject constructor(
     }
 
     fun loadMenus() {
+        loadMenusInternal(isRefresh = false)
+    }
+
+    fun refreshMenus() {
+        loadMenusInternal(isRefresh = true)
+    }
+
+    private fun loadMenusInternal(isRefresh: Boolean) {
         viewModelScope.launch {
-            _menuListState.value = _menuListState.value.copy(isLoading = true, error = null)
+            _menuListState.value = _menuListState.value.copy(
+                isLoading = !isRefresh,
+                isRefreshing = isRefresh,
+                error = null
+            )
 
             val site = selectedSiteRepository.getSelectedSite()
             if (site == null) {
                 _menuListState.value = _menuListState.value.copy(
                     isLoading = false,
+                    isRefreshing = false,
                     error = "No site selected"
                 )
                 return@launch
@@ -87,6 +100,7 @@ class NavMenusViewModel @Inject constructor(
             } catch (e: IOException) {
                 _menuListState.value = MenuListUiState(
                     isLoading = false,
+                    isRefreshing = false,
                     error = e.message ?: "Network error occurred"
                 )
             }

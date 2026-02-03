@@ -18,8 +18,12 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,30 +36,52 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.navmenus.MenuListUiState
 import org.wordpress.android.ui.navmenus.MenuUiModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuListScreen(
     state: MenuListUiState,
     onEditMenuClick: (Long) -> Unit,
     onMenuItemsClick: (Long) -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
+    val pullToRefreshState = rememberPullToRefreshState()
+
+    PullToRefreshBox(
+        state = pullToRefreshState,
+        isRefreshing = state.isRefreshing,
+        onRefresh = onRefresh,
+        modifier = modifier.fillMaxSize(),
+        indicator = {
+            PullToRefreshDefaults.Indicator(
+                state = pullToRefreshState,
+                isRefreshing = state.isRefreshing,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+        }
+    ) {
         when {
             state.isLoading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                Box(modifier = Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
             }
             state.error != null -> {
-                Text(
-                    text = state.error,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        text = state.error,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
             }
             state.menus.isEmpty() -> {
-                Text(
-                    text = stringResource(R.string.no_menus),
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        text = stringResource(R.string.no_menus),
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
             }
             else -> {
                 LazyColumn(

@@ -128,6 +128,7 @@ class NavMenusActivity : BaseAppCompatActivity() {
                             state = state,
                             onEditMenuClick = { viewModel.navigateToEditMenu(it) },
                             onMenuItemsClick = { viewModel.navigateToMenuItems(it) },
+                            onRefresh = { viewModel.refreshMenus() },
                             modifier = Modifier.padding(contentPadding)
                         )
                     }
