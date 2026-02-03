@@ -288,7 +288,6 @@ class SiteListItemBuilder @Inject constructor(
      * Navigation menus require Application Passwords and the user has the ability to edit theme options.
      * The latter is checked via wordpress-rs.
      * https://wordpress.org/documentation/article/roles-and-capabilities/#edit_theme_options
-     *
      */
     suspend fun buildMenusItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         if (!experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NAV_MENUS)) {
