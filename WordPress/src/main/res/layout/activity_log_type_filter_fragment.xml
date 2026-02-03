@@ -45,7 +45,6 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         app:aevButton="@string/retry"
-        app:aevImage="@drawable/img_illustration_cloud_off_152dp"
         app:aevTitle="@string/error"
         tools:visibility="visible" />
 

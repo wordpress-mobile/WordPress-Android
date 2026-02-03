@@ -23,7 +23,6 @@ interface MediaSource {
         data class Failure(
             val title: UiString,
             val htmlSubtitle: UiString? = null,
-            val image: Int? = null,
             override val data: List<MediaItem> = listOf()
         ) : MediaLoadingResult(data)
     }

@@ -111,7 +111,6 @@ class GifMediaDataSourceTest : BaseUnitTest() {
 
         (result as MediaLoadingResult.Failure).apply {
             Assertions.assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.no_network_message)
-            Assertions.assertThat(this.image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
         }
     }
 
@@ -131,7 +130,6 @@ class GifMediaDataSourceTest : BaseUnitTest() {
         (result as MediaLoadingResult.Failure).apply {
             Assertions.assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.media_loading_failed)
             Assertions.assertThat(this.htmlSubtitle).isEqualTo(UiStringText(errorMessage))
-            Assertions.assertThat(this.image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
         }
     }
 

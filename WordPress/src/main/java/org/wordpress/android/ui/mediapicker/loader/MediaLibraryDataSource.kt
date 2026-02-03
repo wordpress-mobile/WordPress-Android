@@ -60,7 +60,6 @@ class MediaLibraryDataSource(
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return Failure(
                 UiStringRes(R.string.no_network_message),
-                image = R.drawable.img_illustration_cloud_off_152dp,
                 data = if (loadMore) get(mediaTypes, filter) else listOf()
             )
         }
@@ -90,7 +89,6 @@ class MediaLibraryDataSource(
                 Failure(
                     UiStringRes(R.string.media_loading_failed),
                     htmlSubtitle = UiStringText(error),
-                    image = R.drawable.img_illustration_cloud_off_152dp,
                     data = if (loadMore) get(mediaTypes, filter) else listOf()
                 )
             } else {
