@@ -333,11 +333,13 @@ class NavMenusViewModel @Inject constructor(
 
     // Menu detail update methods
     fun updateMenuName(name: String) {
-        _menuDetailState.value = _menuDetailState.value?.copy(name = name)
+        val sanitized = sanitizeInput(name, MAX_MENU_NAME_LENGTH)
+        _menuDetailState.value = _menuDetailState.value?.copy(name = sanitized)
     }
 
     fun updateMenuDescription(description: String) {
-        _menuDetailState.value = _menuDetailState.value?.copy(description = description)
+        val sanitized = sanitizeInput(description, MAX_MENU_DESCRIPTION_LENGTH)
+        _menuDetailState.value = _menuDetailState.value?.copy(description = sanitized)
     }
 
     fun updateMenuAutoAdd(autoAdd: Boolean) {
@@ -433,11 +435,12 @@ class NavMenusViewModel @Inject constructor(
 
     // Menu item detail update methods
     fun updateMenuItemTitle(title: String) {
-        _menuItemDetailState.value = _menuItemDetailState.value?.copy(title = title)
+        val sanitized = sanitizeInput(title, MAX_MENU_ITEM_TITLE_LENGTH)
+        _menuItemDetailState.value = _menuItemDetailState.value?.copy(title = sanitized)
     }
 
     fun updateMenuItemUrl(url: String) {
-        _menuItemDetailState.value = _menuItemDetailState.value?.copy(url = url)
+        _menuItemDetailState.value = _menuItemDetailState.value?.copy(url = url.trim())
     }
 
     fun updateMenuItemParent(parentId: Long) {
@@ -445,7 +448,8 @@ class NavMenusViewModel @Inject constructor(
     }
 
     fun updateMenuItemDescription(description: String) {
-        _menuItemDetailState.value = _menuItemDetailState.value?.copy(description = description)
+        val sanitized = sanitizeInput(description, MAX_MENU_ITEM_DESCRIPTION_LENGTH)
+        _menuItemDetailState.value = _menuItemDetailState.value?.copy(description = sanitized)
     }
 
     fun updateMenuItemType(typeOption: MenuItemTypeOption) {
@@ -659,5 +663,16 @@ class NavMenusViewModel @Inject constructor(
             return false
         }
         return android.webkit.URLUtil.isValidUrl(url)
+    }
+
+    private fun sanitizeInput(input: String, maxLength: Int): String {
+        return input.trim().take(maxLength)
+    }
+
+    companion object {
+        private const val MAX_MENU_NAME_LENGTH = 200
+        private const val MAX_MENU_DESCRIPTION_LENGTH = 500
+        private const val MAX_MENU_ITEM_TITLE_LENGTH = 200
+        private const val MAX_MENU_ITEM_DESCRIPTION_LENGTH = 500
     }
 }
