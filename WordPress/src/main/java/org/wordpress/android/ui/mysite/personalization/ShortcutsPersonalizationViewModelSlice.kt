@@ -42,20 +42,22 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
     val uiState: StateFlow<ShortcutsState> = _uiState
 
     fun start(site: SiteModel) {
-        convertToShortCutsState(
-            items = siteItemsBuilder.build(
-                MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
-                    site = site,
-                    backupAvailable = false,
-                    scanAvailable = false,
-                    enableFocusPoints = false,
-                    onClick = { },
-                    isBlazeEligible = isSiteBlazeEligible(site)
-                )
-            ),
-            site.siteId
-        )
-        updateSiteItemsForJetpackCapabilities(site)
+        scope.launch(bgDispatcher) {
+            convertToShortCutsState(
+                items = siteItemsBuilder.build(
+                    MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
+                        site = site,
+                        backupAvailable = false,
+                        scanAvailable = false,
+                        enableFocusPoints = false,
+                        onClick = { },
+                        isBlazeEligible = isSiteBlazeEligible(site)
+                    )
+                ),
+                site.siteId
+            )
+            updateSiteItemsForJetpackCapabilities(site)
+        }
     }
 
     private fun convertToShortCutsState(items: List<MySiteCardAndItem>, siteId: Long) {

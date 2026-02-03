@@ -24,7 +24,7 @@ class SiteItemsBuilder @Inject constructor(
     private val experimentalFeatures: ExperimentalFeatures
 ) {
     @Suppress("LongMethod")
-    fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
+    suspend fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
         val contentSiteItems = getContentSiteItems(params)
         val trafficSiteItems = getTrafficSiteItems(params)
         val manageSiteItems = getManageSiteItems(params)
@@ -91,7 +91,7 @@ class SiteItemsBuilder @Inject constructor(
         )
     }
 
-    private fun getManageSiteItems(
+    private suspend fun getManageSiteItems(
         params: SiteItemsBuilderParams
     ): List<MySiteCardAndItem> {
         val manageSiteItems = buildManageSiteItems(params)
@@ -115,7 +115,7 @@ class SiteItemsBuilder @Inject constructor(
                 listOfNotNull(admin)
     }
 
-    private fun getLookAndFeelSiteItems(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
+    private suspend fun getLookAndFeelSiteItems(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
         val themeItems = if (!jetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures())
             listOfNotNull(
                 siteListItemBuilder.buildThemesItemIfAvailable(params.site, params.onClick),
