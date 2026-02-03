@@ -4573,6 +4573,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="menu_item_no_items_found">No items found</string>
     <string name="menu_item_loading_items">Loading…</string>
     <string name="menu_item_select_required">Please select an item to link to</string>
+    <string name="menu_error_no_site_selected">No site selected</string>
+    <string name="menu_name_required">Menu name is required</string>
+    <string name="menu_item_title_required">Title is required</string>
+    <string name="menu_item_url_required">URL is required for custom links</string>
+    <string name="menu_item_invalid_url">Please enter a valid URL</string>
 
     <!-- AI Bot Support - Conversations List Screen -->
     <string name="ai_bot_conversations_title">Conversations</string>

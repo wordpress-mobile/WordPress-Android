@@ -20,7 +20,9 @@ import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.navmenus.data.NavMenuRestClient
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
@@ -33,6 +35,7 @@ class NavMenusViewModel @Inject constructor(
     private val pageStore: PageStore,
     private val postStore: PostStore,
     private val taxonomyStore: TaxonomyStore,
+    private val resourceProvider: ResourceProvider,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -87,7 +90,7 @@ class NavMenusViewModel @Inject constructor(
                 _menuListState.value = _menuListState.value.copy(
                     isLoading = false,
                     isRefreshing = false,
-                    error = "No site selected"
+                    error = resourceProvider.getString(R.string.menu_error_no_site_selected)
                 )
                 return@launch
             }
@@ -364,7 +367,9 @@ class NavMenusViewModel @Inject constructor(
             val site = selectedSiteRepository.getSelectedSite() ?: return@launch
 
             if (state.name.isBlank()) {
-                _uiEvent.value = NavMenusUiEvent.ShowError("Menu name is required")
+                _uiEvent.value = NavMenusUiEvent.ShowError(
+                    resourceProvider.getString(R.string.menu_name_required)
+                )
                 return@launch
             }
 
@@ -647,12 +652,14 @@ class NavMenusViewModel @Inject constructor(
 
     private fun validateMenuItemState(state: MenuItemDetailUiState): String? {
         return when {
-            state.title.isBlank() -> "Title is required"
+            state.title.isBlank() ->
+                resourceProvider.getString(R.string.menu_item_title_required)
             state.selectedTypeOption == MenuItemTypeOption.CUSTOM_LINK && state.url.isBlank() ->
-                "URL is required for custom links"
+                resourceProvider.getString(R.string.menu_item_url_required)
             state.selectedTypeOption != MenuItemTypeOption.CUSTOM_LINK && state.objectId <= 0 ->
-                "Please select an item to link to"
-            state.url.isNotBlank() && !isValidUrl(state.url) -> "Please enter a valid URL"
+                resourceProvider.getString(R.string.menu_item_select_required)
+            state.url.isNotBlank() && !isValidUrl(state.url) ->
+                resourceProvider.getString(R.string.menu_item_invalid_url)
             else -> null
         }
     }

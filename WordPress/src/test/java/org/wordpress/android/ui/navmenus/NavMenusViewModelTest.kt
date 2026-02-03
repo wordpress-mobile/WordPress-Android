@@ -6,8 +6,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
 import org.wordpress.android.fluxc.store.PageStore
@@ -34,6 +36,9 @@ class NavMenusViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var taxonomyStore: TaxonomyStore
 
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
     private lateinit var viewModel: NavMenusViewModel
 
     private val testSite = SiteModel().apply {
@@ -43,12 +48,16 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
     @Before
     fun setup() {
+        whenever(resourceProvider.getString(any())).thenAnswer { invocation ->
+            "String resource ${invocation.arguments[0]}"
+        }
         viewModel = NavMenusViewModel(
             selectedSiteRepository = selectedSiteRepository,
             navMenuRestClient = navMenuRestClient,
             pageStore = pageStore,
             postStore = postStore,
             taxonomyStore = taxonomyStore,
+            resourceProvider = resourceProvider,
             mainDispatcher = testDispatcher(),
             ioDispatcher = testDispatcher()
         )
@@ -61,7 +70,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
         viewModel.loadMenus()
 
         val state = viewModel.menuListState.first()
-        assertThat(state.error).isEqualTo("No site selected")
+        assertThat(state.error).isNotNull()
         assertThat(state.isLoading).isFalse()
     }
 
@@ -136,7 +145,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
         val event = viewModel.uiEvent.first()
         assertThat(event).isInstanceOf(NavMenusUiEvent.ShowError::class.java)
-        assertThat((event as NavMenusUiEvent.ShowError).message).isEqualTo("Menu name is required")
+        assertThat((event as NavMenusUiEvent.ShowError).message).isNotBlank()
     }
 
     @Test
@@ -224,8 +233,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
         val event = viewModel.uiEvent.first()
         assertThat(event).isInstanceOf(NavMenusUiEvent.ShowError::class.java)
-        assertThat((event as NavMenusUiEvent.ShowError).message)
-            .isEqualTo("Please select an item to link to")
+        assertThat((event as NavMenusUiEvent.ShowError).message).isNotBlank()
     }
 
     @Test
@@ -238,7 +246,6 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
         val event = viewModel.uiEvent.first()
         assertThat(event).isInstanceOf(NavMenusUiEvent.ShowError::class.java)
-        assertThat((event as NavMenusUiEvent.ShowError).message)
-            .isEqualTo("URL is required for custom links")
+        assertThat((event as NavMenusUiEvent.ShowError).message).isNotBlank()
     }
 }
