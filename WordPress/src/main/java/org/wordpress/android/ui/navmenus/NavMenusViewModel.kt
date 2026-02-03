@@ -583,33 +583,61 @@ class NavMenusViewModel @Inject constructor(
             val currentItem = currentItems[index]
             val targetItem = currentItems[newIndex]
 
-            // Swap the items
+            // Save original state for rollback
+            val originalItems = _menuItemListState.value.items
+
+            // Optimistically update the UI
             currentItems[index] = targetItem
             currentItems[newIndex] = currentItem
-
             _menuItemListState.value = _menuItemListState.value.copy(items = currentItems)
 
             // Update menu orders on the server
             viewModelScope.launch {
                 val site = selectedSiteRepository.getSelectedSite() ?: return@launch
-                withContext(ioDispatcher) {
-                    // Update both items with new order
-                    val itemToMove = currentMenuItems.find { it.remoteItemId == itemId }
-                    val swapWithItem = currentMenuItems.find { it.remoteItemId == targetItem.id }
+                val success = withContext(ioDispatcher) {
+                    updateMenuItemOrder(site, itemId, targetItem.id)
+                }
 
-                    if (itemToMove != null && swapWithItem != null) {
-                        val newOrderForMovedItem = swapWithItem.menuOrder
-                        val newOrderForSwapped = itemToMove.menuOrder
-
-                        itemToMove.menuOrder = newOrderForMovedItem
-                        swapWithItem.menuOrder = newOrderForSwapped
-
-                        navMenuRestClient.updateMenuItem(site, itemToMove)
-                        navMenuRestClient.updateMenuItem(site, swapWithItem)
-                    }
+                if (!success) {
+                    // Rollback UI state on failure
+                    _menuItemListState.value = _menuItemListState.value.copy(items = originalItems)
+                    _uiEvent.value = NavMenusUiEvent.ShowError(
+                        resourceProvider.getString(R.string.menu_item_reorder_failed)
+                    )
                 }
             }
         }
+    }
+
+    private suspend fun updateMenuItemOrder(site: SiteModel, itemId: Long, targetItemId: Long): Boolean {
+        val itemToMove = currentMenuItems.find { it.remoteItemId == itemId }
+        val swapWithItem = currentMenuItems.find { it.remoteItemId == targetItemId }
+
+        if (itemToMove == null || swapWithItem == null) return false
+
+        val originalOrderForMoved = itemToMove.menuOrder
+        val originalOrderForSwapped = swapWithItem.menuOrder
+
+        itemToMove.menuOrder = originalOrderForSwapped
+        swapWithItem.menuOrder = originalOrderForMoved
+
+        val result1 = navMenuRestClient.updateMenuItem(site, itemToMove)
+        if (result1 is NavMenuRestClient.NavMenuItemResult.Error) {
+            // Restore original orders
+            itemToMove.menuOrder = originalOrderForMoved
+            swapWithItem.menuOrder = originalOrderForSwapped
+            return false
+        }
+
+        val result2 = navMenuRestClient.updateMenuItem(site, swapWithItem)
+        if (result2 is NavMenuRestClient.NavMenuItemResult.Error) {
+            // Restore original orders
+            itemToMove.menuOrder = originalOrderForMoved
+            swapWithItem.menuOrder = originalOrderForSwapped
+            return false
+        }
+
+        return true
     }
 
     fun saveMenuItem() {
