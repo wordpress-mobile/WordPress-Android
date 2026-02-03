@@ -54,6 +54,7 @@ import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.text.SimpleDateFormat
@@ -71,7 +72,12 @@ private val MetricSpacing = 4.dp
 fun TodaysStatsCard(
     uiState: TodaysStatsCardUiState,
     onRemoveCard: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardPosition: CardPosition? = null,
+    onMoveUp: (() -> Unit)? = null,
+    onMoveToTop: (() -> Unit)? = null,
+    onMoveDown: (() -> Unit)? = null,
+    onMoveToBottom: (() -> Unit)? = null
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
 
@@ -89,8 +95,12 @@ fun TodaysStatsCard(
     ) {
         when (uiState) {
             is TodaysStatsCardUiState.Loading -> LoadingContent()
-            is TodaysStatsCardUiState.Loaded -> LoadedContent(uiState, onRemoveCard)
-            is TodaysStatsCardUiState.Error -> ErrorContent(uiState, onRemoveCard)
+            is TodaysStatsCardUiState.Loaded -> LoadedContent(
+                uiState, onRemoveCard, cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+            )
+            is TodaysStatsCardUiState.Error -> ErrorContent(
+                uiState, onRemoveCard, cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+            )
         }
     }
 }
@@ -200,7 +210,12 @@ private fun LoadingContent() {
 @Composable
 private fun LoadedContent(
     state: TodaysStatsCardUiState.Loaded,
-    onRemoveCard: () -> Unit
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
 ) {
     Column(
         modifier = Modifier
@@ -215,7 +230,14 @@ private fun LoadedContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TitleSection()
-            StatsCardMenu(onRemoveClick = onRemoveCard)
+            StatsCardMenu(
+                onRemoveClick = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
         // Chart
@@ -234,7 +256,12 @@ private fun LoadedContent(
 @Composable
 private fun ErrorContent(
     state: TodaysStatsCardUiState.Error,
-    onRemoveCard: () -> Unit
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
 ) {
     Column(
         modifier = Modifier
@@ -248,7 +275,14 @@ private fun ErrorContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TitleSection()
-            StatsCardMenu(onRemoveClick = onRemoveCard)
+            StatsCardMenu(
+                onRemoveClick = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
         // Empty chart placeholder

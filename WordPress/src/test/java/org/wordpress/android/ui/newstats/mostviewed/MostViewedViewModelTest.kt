@@ -352,6 +352,56 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
     // endregion
 
+    // region loadData
+    @Test
+    fun `when loadData is called, then data is fetched and states are updated`() = test {
+        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+            .thenReturn(createSuccessResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // Data was fetched during init
+        verify(statsRepository, times(2)).fetchMostViewed(any(), any(), any())
+
+        // Call loadData again
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        // Data should be fetched again (4 times total: 2 init + 2 loadData)
+        verify(statsRepository, times(4)).fetchMostViewed(any(), any(), any())
+
+        // States should be Loaded
+        assertThat(viewModel.postsUiState.value).isInstanceOf(MostViewedCardUiState.Loaded::class.java)
+        assertThat(viewModel.referrersUiState.value).isInstanceOf(MostViewedCardUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `when loadData is called after error, then states recover to Loaded`() = test {
+        stubFailedToLoadError()
+        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+            .thenReturn(MostViewedResult.Error("Network error"))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // States should be Error after init with failed network
+        assertThat(viewModel.postsUiState.value).isInstanceOf(MostViewedCardUiState.Error::class.java)
+        assertThat(viewModel.referrersUiState.value).isInstanceOf(MostViewedCardUiState.Error::class.java)
+
+        // Now configure success and call loadData
+        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+            .thenReturn(createSuccessResult())
+
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        // After loadData, should be Loaded
+        assertThat(viewModel.postsUiState.value).isInstanceOf(MostViewedCardUiState.Loaded::class.java)
+        assertThat(viewModel.referrersUiState.value).isInstanceOf(MostViewedCardUiState.Loaded::class.java)
+    }
+    // endregion
+
     // region getDetailData
     @Test
     fun `when getPostsDetailData is called, then returns cached posts data`() = test {

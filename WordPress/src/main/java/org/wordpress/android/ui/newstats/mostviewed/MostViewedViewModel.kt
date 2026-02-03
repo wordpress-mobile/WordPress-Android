@@ -103,7 +103,7 @@ class MostViewedViewModel @Inject constructor(
         )
     }
 
-    private fun loadData() {
+    fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
             val errorState = MostViewedCardUiState.Error(
