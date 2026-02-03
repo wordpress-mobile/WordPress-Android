@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
+import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
 /**
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class NewStatsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val cardConfigurationRepository: StatsCardsConfigurationRepository
+    private val cardConfigurationRepository: StatsCardsConfigurationRepository,
+    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) : ViewModel() {
     private val _visibleCards = MutableStateFlow<List<StatsCardType>>(StatsCardType.defaultCards())
     val visibleCards: StateFlow<List<StatsCardType>> = _visibleCards.asStateFlow()
@@ -26,12 +28,20 @@ class NewStatsViewModel @Inject constructor(
     private val _hiddenCards = MutableStateFlow<List<StatsCardType>>(emptyList())
     val hiddenCards: StateFlow<List<StatsCardType>> = _hiddenCards.asStateFlow()
 
+    private val _isNetworkAvailable = MutableStateFlow(true)
+    val isNetworkAvailable: StateFlow<Boolean> = _isNetworkAvailable.asStateFlow()
+
     private val siteId: Long
         get() = selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
 
     init {
+        checkNetworkStatus()
         loadConfiguration()
         observeConfigurationChanges()
+    }
+
+    fun checkNetworkStatus() {
+        _isNetworkAvailable.value = networkUtilsWrapper.isNetworkAvailable()
     }
 
     private fun loadConfiguration() {
