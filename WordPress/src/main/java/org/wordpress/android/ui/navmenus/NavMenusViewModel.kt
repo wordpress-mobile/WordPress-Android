@@ -616,48 +616,14 @@ class NavMenusViewModel @Inject constructor(
             val state = _menuItemDetailState.value ?: return@launch
             val site = selectedSiteRepository.getSelectedSite() ?: return@launch
 
-            if (state.title.isBlank()) {
-                _uiEvent.value = NavMenusUiEvent.ShowError("Title is required")
-                return@launch
-            }
-
-            if (state.selectedTypeOption == MenuItemTypeOption.CUSTOM_LINK && state.url.isBlank()) {
-                _uiEvent.value = NavMenusUiEvent.ShowError("URL is required for custom links")
-                return@launch
-            }
-
-            if (state.selectedTypeOption != MenuItemTypeOption.CUSTOM_LINK && state.objectId <= 0) {
-                _uiEvent.value = NavMenusUiEvent.ShowError("Please select an item to link to")
-                return@launch
-            }
-
-            if (state.url.isNotBlank() && !isValidUrl(state.url)) {
-                _uiEvent.value = NavMenusUiEvent.ShowError("Please enter a valid URL")
+            validateMenuItemState(state)?.let { errorMessage ->
+                _uiEvent.value = NavMenusUiEvent.ShowError(errorMessage)
                 return@launch
             }
 
             _menuItemDetailState.value = state.copy(isSaving = true)
 
-            val item = NavMenuItemModel().apply {
-                localSiteId = site.id
-                remoteItemId = state.itemId
-                menuId = state.menuId
-                title = state.title
-                url = state.url
-                type = state.type
-                objectType = state.objectType
-                objectId = state.objectId
-                parentId = state.parentId
-                menuOrder = state.menuOrder
-                target = state.target
-                classes = if (state.cssClasses.isNotEmpty()) {
-                    "[\"${state.cssClasses.replace(",", "\",\"")}\"]"
-                } else {
-                    "[]"
-                }
-                description = state.description
-                attrTitle = state.attrTitle
-            }
+            val item = createMenuItemModel(site, state)
 
             withContext(ioDispatcher) {
                 val result = if (state.isNew) {
@@ -680,6 +646,41 @@ class NavMenusViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun validateMenuItemState(state: MenuItemDetailUiState): String? {
+        return when {
+            state.title.isBlank() -> "Title is required"
+            state.selectedTypeOption == MenuItemTypeOption.CUSTOM_LINK && state.url.isBlank() ->
+                "URL is required for custom links"
+            state.selectedTypeOption != MenuItemTypeOption.CUSTOM_LINK && state.objectId <= 0 ->
+                "Please select an item to link to"
+            state.url.isNotBlank() && !isValidUrl(state.url) -> "Please enter a valid URL"
+            else -> null
+        }
+    }
+
+    private fun createMenuItemModel(site: SiteModel, state: MenuItemDetailUiState): NavMenuItemModel {
+        return NavMenuItemModel().apply {
+            localSiteId = site.id
+            remoteItemId = state.itemId
+            menuId = state.menuId
+            title = state.title
+            url = state.url
+            type = state.type
+            objectType = state.objectType
+            objectId = state.objectId
+            parentId = state.parentId
+            menuOrder = state.menuOrder
+            target = state.target
+            classes = if (state.cssClasses.isNotEmpty()) {
+                "[\"${state.cssClasses.replace(",", "\",\"")}\"]"
+            } else {
+                "[]"
+            }
+            description = state.description
+            attrTitle = state.attrTitle
         }
     }
 
