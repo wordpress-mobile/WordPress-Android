@@ -746,6 +746,11 @@ class NavMenusViewModel @Inject constructor(
     }
 
     private fun isValidUrl(url: String): Boolean {
+        val normalizedUrl = url.trim().lowercase()
+        val dangerousSchemes = listOf("javascript:", "data:", "vbscript:")
+        if (dangerousSchemes.any { normalizedUrl.startsWith(it) }) {
+            return false
+        }
         return android.util.Patterns.WEB_URL.matcher(url).matches()
     }
 }
