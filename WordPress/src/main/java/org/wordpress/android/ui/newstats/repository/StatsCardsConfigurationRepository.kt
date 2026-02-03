@@ -58,46 +58,46 @@ class StatsCardsConfigurationRepository @Inject constructor(
 
     suspend fun moveCardUp(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
         val current = getConfiguration(siteId)
-        val newVisibleCards = current.visibleCards.toMutableList()
-        val index = newVisibleCards.indexOf(cardType)
+        val index = current.visibleCards.indexOf(cardType)
         if (index > 0) {
-            newVisibleCards.removeAt(index)
-            newVisibleCards.add(index - 1, cardType)
-            saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
+            moveCardToIndex(siteId, current, cardType, index - 1)
         }
     }
 
     suspend fun moveCardToTop(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
         val current = getConfiguration(siteId)
-        val newVisibleCards = current.visibleCards.toMutableList()
-        val index = newVisibleCards.indexOf(cardType)
+        val index = current.visibleCards.indexOf(cardType)
         if (index > 0) {
-            newVisibleCards.removeAt(index)
-            newVisibleCards.add(0, cardType)
-            saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
+            moveCardToIndex(siteId, current, cardType, 0)
         }
     }
 
     suspend fun moveCardDown(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
         val current = getConfiguration(siteId)
-        val newVisibleCards = current.visibleCards.toMutableList()
-        val index = newVisibleCards.indexOf(cardType)
-        if (index >= 0 && index < newVisibleCards.size - 1) {
-            newVisibleCards.removeAt(index)
-            newVisibleCards.add(index + 1, cardType)
-            saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
+        val index = current.visibleCards.indexOf(cardType)
+        if (index >= 0 && index < current.visibleCards.size - 1) {
+            moveCardToIndex(siteId, current, cardType, index + 1)
         }
     }
 
     suspend fun moveCardToBottom(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
         val current = getConfiguration(siteId)
-        val newVisibleCards = current.visibleCards.toMutableList()
-        val index = newVisibleCards.indexOf(cardType)
-        if (index >= 0 && index < newVisibleCards.size - 1) {
-            newVisibleCards.removeAt(index)
-            newVisibleCards.add(cardType)
-            saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
+        val index = current.visibleCards.indexOf(cardType)
+        if (index >= 0 && index < current.visibleCards.size - 1) {
+            moveCardToIndex(siteId, current, cardType, current.visibleCards.size - 1)
         }
+    }
+
+    private suspend fun moveCardToIndex(
+        siteId: Long,
+        current: StatsCardsConfiguration,
+        cardType: StatsCardType,
+        newIndex: Int
+    ) {
+        val newVisibleCards = current.visibleCards.toMutableList()
+        newVisibleCards.remove(cardType)
+        newVisibleCards.add(newIndex, cardType)
+        saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
     }
 
     @Suppress("TooGenericExceptionCaught")
