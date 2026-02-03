@@ -1580,6 +1580,12 @@
     <string name="stats_countries_location_header">Locations</string>
     <string name="stats_countries_views_header">Views</string>
 
+    <!-- Stats Card Configuration -->
+    <string name="stats_card_remove">Remove Card</string>
+    <string name="stats_add_card_title">Add Card</string>
+    <string name="stats_all_cards_visible">All cards are currently visible</string>
+    <string name="stats_no_cards_message">No cards to display.</string>
+
     <!-- stats referrer popup menu actions   -->
     <string name="stats_referrer_popup_menu_open_website">Open Website</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Mark as Spam</string>

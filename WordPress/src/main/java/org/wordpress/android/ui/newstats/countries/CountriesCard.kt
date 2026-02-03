@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
 
@@ -49,6 +50,7 @@ fun CountriesCard(
     uiState: CountriesCardUiState,
     onShowAllClick: () -> Unit,
     onRetry: () -> Unit,
+    onRemoveCard: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
@@ -63,8 +65,8 @@ fun CountriesCard(
     ) {
         when (uiState) {
             is CountriesCardUiState.Loading -> LoadingContent()
-            is CountriesCardUiState.Loaded -> LoadedContent(uiState, onShowAllClick)
-            is CountriesCardUiState.Error -> ErrorContent(uiState, onRetry)
+            is CountriesCardUiState.Loaded -> LoadedContent(uiState, onShowAllClick, onRemoveCard)
+            is CountriesCardUiState.Error -> ErrorContent(uiState, onRetry, onRemoveCard)
         }
     }
 }
@@ -126,16 +128,27 @@ private fun LoadingContent() {
 }
 
 @Composable
-private fun LoadedContent(state: CountriesCardUiState.Loaded, onShowAllClick: () -> Unit) {
+private fun LoadedContent(
+    state: CountriesCardUiState.Loaded,
+    onShowAllClick: () -> Unit,
+    onRemoveCard: () -> Unit
+) {
     Column(modifier = Modifier.padding(CardPadding)) {
-        // Title
-        Text(
-            text = stringResource(R.string.stats_countries_title),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+        // Header with menu
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.stats_countries_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            StatsCardMenu(onRemoveClick = onRemoveCard)
+        }
+        Spacer(modifier = Modifier.height(8.dp))
 
         if (state.countries.isEmpty()) {
             EmptyContent()
@@ -319,15 +332,24 @@ private fun ShowAllFooter(onClick: () -> Unit) {
 @Composable
 private fun ErrorContent(
     state: CountriesCardUiState.Error,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    onRemoveCard: () -> Unit
 ) {
     Column(modifier = Modifier.padding(CardPadding)) {
-        Text(
-            text = stringResource(R.string.stats_countries_title),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
+        // Header with menu
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.stats_countries_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            StatsCardMenu(onRemoveClick = onRemoveCard)
+        }
         Spacer(modifier = Modifier.height(24.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -355,7 +377,8 @@ private fun CountriesCardLoadingPreview() {
         CountriesCard(
             uiState = CountriesCardUiState.Loading,
             onShowAllClick = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -379,7 +402,8 @@ private fun CountriesCardLoadedPreview() {
                 hasMoreItems = true
             ),
             onShowAllClick = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -391,7 +415,8 @@ private fun CountriesCardErrorPreview() {
         CountriesCard(
             uiState = CountriesCardUiState.Error("Failed to load country data"),
             onShowAllClick = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }

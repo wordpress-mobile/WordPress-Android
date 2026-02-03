@@ -29,22 +29,16 @@ import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -86,6 +80,7 @@ import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
 import kotlin.math.abs
@@ -117,6 +112,7 @@ fun ViewsStatsCard(
     uiState: ViewsStatsCardUiState,
     onChartTypeChanged: (ChartType) -> Unit,
     onRetry: () -> Unit,
+    onRemoveCard: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
@@ -135,8 +131,8 @@ fun ViewsStatsCard(
     ) {
         when (uiState) {
             is ViewsStatsCardUiState.Loading -> LoadingContent()
-            is ViewsStatsCardUiState.Loaded -> LoadedContent(uiState, onChartTypeChanged)
-            is ViewsStatsCardUiState.Error -> ErrorContent(uiState, onRetry)
+            is ViewsStatsCardUiState.Loaded -> LoadedContent(uiState, onChartTypeChanged, onRemoveCard)
+            is ViewsStatsCardUiState.Error -> ErrorContent(uiState, onRetry, onRemoveCard)
         }
     }
 }
@@ -248,7 +244,8 @@ private fun LoadingContent() {
 @Composable
 private fun LoadedContent(
     state: ViewsStatsCardUiState.Loaded,
-    onChartTypeChanged: (ChartType) -> Unit
+    onChartTypeChanged: (ChartType) -> Unit,
+    onRemoveCard: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -258,7 +255,8 @@ private fun LoadedContent(
         // Header Section
         HeaderSection(
             state = state,
-            onChartTypeChanged = onChartTypeChanged
+            onChartTypeChanged = onChartTypeChanged,
+            onRemoveCard = onRemoveCard
         )
         Spacer(modifier = Modifier.height(16.dp))
         // Chart Section
@@ -276,10 +274,9 @@ private fun LoadedContent(
 @Composable
 private fun HeaderSection(
     state: ViewsStatsCardUiState.Loaded,
-    onChartTypeChanged: (ChartType) -> Unit
+    onChartTypeChanged: (ChartType) -> Unit,
+    onRemoveCard: () -> Unit
 ) {
-    var showMenu by remember { mutableStateOf(false) }
-
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -291,24 +288,15 @@ private fun HeaderSection(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            Box {
-                IconButton(onClick = { showMenu = true }) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = stringResource(R.string.more_options),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+            StatsCardMenu(
+                onRemoveClick = onRemoveCard,
+                additionalContent = {
+                    ChartTypeMenuItems(
+                        currentChartType = state.chartType,
+                        onChartTypeSelected = onChartTypeChanged
                     )
                 }
-                ChartTypeMenu(
-                    expanded = showMenu,
-                    currentChartType = state.chartType,
-                    onDismiss = { showMenu = false },
-                    onChartTypeSelected = { chartType ->
-                        onChartTypeChanged(chartType)
-                        showMenu = false
-                    }
-                )
-            }
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
         Row(
@@ -358,48 +346,36 @@ private fun HeaderSection(
     }
 }
 
+/**
+ * Menu items for chart type selection. Used as additionalContent in StatsCardMenu.
+ */
 @Composable
-private fun ChartTypeMenu(
-    expanded: Boolean,
+private fun ChartTypeMenuItems(
     currentChartType: ChartType,
-    onDismiss: () -> Unit,
     onChartTypeSelected: (ChartType) -> Unit
 ) {
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = onDismiss
-    ) {
-        DropdownMenuItem(
-            text = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ShowChart,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = stringResource(R.string.stats_chart_type_lines))
-                }
-            },
-            onClick = { onChartTypeSelected(ChartType.LINE) },
-            enabled = currentChartType != ChartType.LINE
-        )
-        DropdownMenuItem(
-            text = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.BarChart,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = stringResource(R.string.stats_chart_type_bars))
-                }
-            },
-            onClick = { onChartTypeSelected(ChartType.BAR) },
-            enabled = currentChartType != ChartType.BAR
-        )
-    }
+    DropdownMenuItem(
+        text = { Text(text = stringResource(R.string.stats_chart_type_lines)) },
+        onClick = { onChartTypeSelected(ChartType.LINE) },
+        enabled = currentChartType != ChartType.LINE,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ShowChart,
+                contentDescription = null
+            )
+        }
+    )
+    DropdownMenuItem(
+        text = { Text(text = stringResource(R.string.stats_chart_type_bars)) },
+        onClick = { onChartTypeSelected(ChartType.BAR) },
+        enabled = currentChartType != ChartType.BAR,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.BarChart,
+                contentDescription = null
+            )
+        }
+    )
 }
 
 @Composable
@@ -743,18 +719,26 @@ private fun ChangeBadge(change: StatChange) {
 @Composable
 private fun ErrorContent(
     state: ViewsStatsCardUiState.Error,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    onRemoveCard: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        Text(
-            text = stringResource(R.string.stats_views),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.stats_views),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            StatsCardMenu(onRemoveClick = onRemoveCard)
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Box(
             modifier = Modifier
@@ -800,7 +784,8 @@ private fun ViewsStatsCardLoadingPreview() {
         ViewsStatsCard(
             uiState = ViewsStatsCardUiState.Loading,
             onChartTypeChanged = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -839,7 +824,12 @@ private fun sampleLoadedState(): ViewsStatsCardUiState.Loaded {
 @Composable
 private fun ViewsStatsCardLoadedPreview() {
     AppThemeM3 {
-        ViewsStatsCard(uiState = sampleLoadedState(), onChartTypeChanged = {}, onRetry = {})
+        ViewsStatsCard(
+            uiState = sampleLoadedState(),
+            onChartTypeChanged = {},
+            onRetry = {},
+            onRemoveCard = {}
+        )
     }
 }
 
@@ -852,7 +842,8 @@ private fun ViewsStatsCardErrorPreview() {
                 message = stringResource(R.string.stats_todays_stats_failed_to_load)
             ),
             onChartTypeChanged = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -861,7 +852,12 @@ private fun ViewsStatsCardErrorPreview() {
 @Composable
 private fun ViewsStatsCardLoadedDarkPreview() {
     AppThemeM3 {
-        ViewsStatsCard(uiState = sampleLoadedState(), onChartTypeChanged = {}, onRetry = {})
+        ViewsStatsCard(
+            uiState = sampleLoadedState(),
+            onChartTypeChanged = {},
+            onRetry = {},
+            onRemoveCard = {}
+        )
     }
 }
 

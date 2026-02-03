@@ -18,8 +18,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.StatsCardsConfiguration
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -40,6 +42,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    private lateinit var cardsConfigurationRepository: StatsCardsConfigurationRepository
 
     private lateinit var viewModel: ViewsStatsViewModel
 
@@ -71,13 +76,16 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             .thenReturn("Posts")
     }
 
-    private fun initViewModel() {
+    private suspend fun initViewModel() {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration())
         viewModel = ViewsStatsViewModel(
             selectedSiteRepository,
             accountStore,
             statsRepository,
             resourceProvider,
-            SavedStateHandle()
+            SavedStateHandle(),
+            cardsConfigurationRepository
         )
     }
 

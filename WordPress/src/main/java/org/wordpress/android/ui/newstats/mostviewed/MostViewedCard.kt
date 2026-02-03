@@ -17,22 +17,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,7 +33,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsColors
+import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
@@ -57,9 +49,10 @@ private const val LOADING_SHIMMER_ITEM_COUNT = 5
 @Composable
 fun MostViewedCard(
     uiState: MostViewedCardUiState,
-    onDataSourceChanged: (MostViewedDataSource) -> Unit,
+    cardType: StatsCardType,
     onShowAllClick: () -> Unit,
     onRetry: () -> Unit,
+    onRemoveCard: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
@@ -78,8 +71,13 @@ fun MostViewedCard(
     ) {
         when (uiState) {
             is MostViewedCardUiState.Loading -> LoadingContent()
-            is MostViewedCardUiState.Loaded -> LoadedContent(uiState, onDataSourceChanged, onShowAllClick)
-            is MostViewedCardUiState.Error -> ErrorContent(uiState, onRetry)
+            is MostViewedCardUiState.Loaded -> LoadedContent(
+                uiState,
+                cardType,
+                onShowAllClick,
+                onRemoveCard
+            )
+            is MostViewedCardUiState.Error -> ErrorContent(uiState, cardType, onRetry, onRemoveCard)
         }
     }
 }
@@ -159,20 +157,18 @@ private fun LoadingContent() {
 @Composable
 private fun LoadedContent(
     state: MostViewedCardUiState.Loaded,
-    onDataSourceChanged: (MostViewedDataSource) -> Unit,
-    onShowAllClick: () -> Unit
+    cardType: StatsCardType,
+    onShowAllClick: () -> Unit,
+    onRemoveCard: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        HeaderSection()
+        HeaderSection(cardType = cardType, onRemoveCard = onRemoveCard)
         Spacer(modifier = Modifier.height(12.dp))
-        ColumnHeadersRow(
-            selectedDataSource = state.selectedDataSource,
-            onDataSourceChanged = onDataSourceChanged
-        )
+        ColumnHeadersRow(cardType = cardType)
         Spacer(modifier = Modifier.height(8.dp))
         state.items.forEachIndexed { index, item ->
             val percentage = if (state.maxViewsForBar > 0) {
@@ -192,79 +188,33 @@ private fun LoadedContent(
 }
 
 @Composable
-private fun HeaderSection() {
+private fun HeaderSection(cardType: StatsCardType, onRemoveCard: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(R.string.stats_most_viewed_title),
+            text = stringResource(cardType.displayNameResId),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-        IconButton(onClick = { /* Future menu actions */ }) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(R.string.more_options),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
+        StatsCardMenu(onRemoveClick = onRemoveCard)
     }
 }
 
 @Composable
-private fun ColumnHeadersRow(
-    selectedDataSource: MostViewedDataSource,
-    onDataSourceChanged: (MostViewedDataSource) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-
+private fun ColumnHeadersRow(cardType: StatsCardType) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box {
-            Row(
-                modifier = Modifier
-                    .clickable { expanded = true }
-                    .padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(selectedDataSource.labelResId),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                MostViewedDataSource.entries.forEach { dataSource ->
-                    DropdownMenuItem(
-                        text = { Text(stringResource(dataSource.labelResId)) },
-                        onClick = {
-                            onDataSourceChanged(dataSource)
-                            expanded = false
-                        },
-                        trailingIcon = if (dataSource == selectedDataSource) {
-                            { Icon(Icons.Default.Check, contentDescription = null) }
-                        } else {
-                            null
-                        }
-                    )
-                }
-            }
-        }
+        Text(
+            text = stringResource(cardType.displayNameResId),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
 
         Text(
             text = stringResource(R.string.stats_views),
@@ -408,18 +358,16 @@ private fun ShowAllFooter(onClick: () -> Unit) {
 @Composable
 private fun ErrorContent(
     state: MostViewedCardUiState.Error,
-    onRetry: () -> Unit
+    cardType: StatsCardType,
+    onRetry: () -> Unit,
+    onRemoveCard: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        Text(
-            text = stringResource(R.string.stats_most_viewed_title),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
+        HeaderSection(cardType = cardType, onRemoveCard = onRemoveCard)
         Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -444,9 +392,10 @@ private fun MostViewedCardLoadingPreview() {
     AppThemeM3 {
         MostViewedCard(
             uiState = MostViewedCardUiState.Loading,
-            onDataSourceChanged = {},
+            cardType = StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
             onShowAllClick = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -457,7 +406,6 @@ private fun MostViewedCardLoadedPreview() {
     AppThemeM3 {
         MostViewedCard(
             uiState = MostViewedCardUiState.Loaded(
-                selectedDataSource = MostViewedDataSource.POSTS_AND_PAGES,
                 items = listOf(
                     MostViewedItem(
                         id = 1,
@@ -497,9 +445,10 @@ private fun MostViewedCardLoadedPreview() {
                 ),
                 maxViewsForBar = 417
             ),
-            onDataSourceChanged = {},
+            cardType = StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
             onShowAllClick = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -512,9 +461,10 @@ private fun MostViewedCardErrorPreview() {
             uiState = MostViewedCardUiState.Error(
                 message = "Failed to load data"
             ),
-            onDataSourceChanged = {},
+            cardType = StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
             onShowAllClick = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -525,7 +475,6 @@ private fun MostViewedCardLoadedDarkPreview() {
     AppThemeM3 {
         MostViewedCard(
             uiState = MostViewedCardUiState.Loaded(
-                selectedDataSource = MostViewedDataSource.POSTS_AND_PAGES,
                 items = listOf(
                     MostViewedItem(
                         id = 1,
@@ -544,9 +493,10 @@ private fun MostViewedCardLoadedDarkPreview() {
                 ),
                 maxViewsForBar = 417
             ),
-            onDataSourceChanged = {},
+            cardType = StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
             onShowAllClick = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }

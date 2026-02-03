@@ -54,6 +54,7 @@ import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -69,6 +70,7 @@ private val MetricSpacing = 4.dp
 @Composable
 fun TodaysStatsCard(
     uiState: TodaysStatsCardUiState,
+    onRemoveCard: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
@@ -87,8 +89,8 @@ fun TodaysStatsCard(
     ) {
         when (uiState) {
             is TodaysStatsCardUiState.Loading -> LoadingContent()
-            is TodaysStatsCardUiState.Loaded -> LoadedContent(uiState)
-            is TodaysStatsCardUiState.Error -> ErrorContent(uiState)
+            is TodaysStatsCardUiState.Loaded -> LoadedContent(uiState, onRemoveCard)
+            is TodaysStatsCardUiState.Error -> ErrorContent(uiState, onRemoveCard)
         }
     }
 }
@@ -196,26 +198,28 @@ private fun LoadingContent() {
 }
 
 @Composable
-private fun LoadedContent(state: TodaysStatsCardUiState.Loaded) {
+private fun LoadedContent(
+    state: TodaysStatsCardUiState.Loaded,
+    onRemoveCard: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = state.onCardClick)
             .padding(CardPadding)
     ) {
-        // Top section: Title/Date on left, Chart on right
+        // Header with menu
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.Top
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Left: Title and date
             TitleSection()
-            Spacer(modifier = Modifier.width(16.dp))
-            // Right: Chart
-            Box(modifier = Modifier.weight(1f)) {
-                StatsChart(chartData = state.chartData)
-            }
+            StatsCardMenu(onRemoveClick = onRemoveCard)
         }
+        Spacer(modifier = Modifier.height(8.dp))
+        // Chart
+        StatsChart(chartData = state.chartData)
         Spacer(modifier = Modifier.height(12.dp))
         // Bottom section: Metrics
         MetricsRow(
@@ -228,35 +232,39 @@ private fun LoadedContent(state: TodaysStatsCardUiState.Loaded) {
 }
 
 @Composable
-private fun ErrorContent(state: TodaysStatsCardUiState.Error) {
+private fun ErrorContent(
+    state: TodaysStatsCardUiState.Error,
+    onRemoveCard: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        // Top section: Title/Date on left, Empty chart placeholder on right
+        // Header with menu
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.Top
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Left: Title and date
             TitleSection()
-            Spacer(modifier = Modifier.width(16.dp))
-            // Right: Empty chart placeholder
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(ChartHeight)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.stats_no_data_yet),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            StatsCardMenu(onRemoveClick = onRemoveCard)
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        // Empty chart placeholder
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(ChartHeight)
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.stats_no_data_yet),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
         Spacer(modifier = Modifier.height(16.dp))
         // Error message and retry button centered
@@ -464,7 +472,7 @@ private fun SecondaryMetricItem(
 @Composable
 private fun TodaysStatsCardLoadingPreview() {
     AppThemeM3 {
-        TodaysStatsCard(uiState = TodaysStatsCardUiState.Loading)
+        TodaysStatsCard(uiState = TodaysStatsCardUiState.Loading, onRemoveCard = {})
     }
 }
 
@@ -497,7 +505,8 @@ private fun TodaysStatsCardLoadedPreview() {
                     )
                 ),
                 onCardClick = {}
-            )
+            ),
+            onRemoveCard = {}
         )
     }
 }
@@ -510,7 +519,8 @@ private fun TodaysStatsCardErrorPreview() {
             uiState = TodaysStatsCardUiState.Error(
                 message = "Failed to load stats",
                 onRetry = {}
-            )
+            ),
+            onRemoveCard = {}
         )
     }
 }
@@ -544,7 +554,8 @@ private fun TodaysStatsCardLoadedDarkPreview() {
                     )
                 ),
                 onCardClick = {}
-            )
+            ),
+            onRemoveCard = {}
         )
     }
 }

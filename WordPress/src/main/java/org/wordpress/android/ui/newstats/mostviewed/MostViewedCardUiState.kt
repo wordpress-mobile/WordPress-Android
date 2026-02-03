@@ -20,7 +20,6 @@ sealed class MostViewedCardUiState {
     data object Loading : MostViewedCardUiState()
 
     data class Loaded(
-        val selectedDataSource: MostViewedDataSource,
         val items: List<MostViewedItem>,
         val maxViewsForBar: Long
     ) : MostViewedCardUiState()

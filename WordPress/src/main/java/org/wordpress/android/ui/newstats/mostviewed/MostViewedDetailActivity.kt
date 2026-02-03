@@ -44,6 +44,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.util.formatStatValue
@@ -51,7 +52,7 @@ import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import java.util.Locale
 
-private const val EXTRA_DATA_SOURCE = "extra_data_source"
+private const val EXTRA_CARD_TYPE = "extra_card_type"
 private const val EXTRA_ITEMS = "extra_items"
 private const val EXTRA_TOTAL_VIEWS = "extra_total_views"
 private const val EXTRA_TOTAL_VIEWS_CHANGE = "extra_total_views_change"
@@ -63,8 +64,8 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val dataSource = intent.extras?.getSerializableCompat<MostViewedDataSource>(EXTRA_DATA_SOURCE)
-            ?: MostViewedDataSource.POSTS_AND_PAGES
+        val cardType = intent.extras?.getSerializableCompat<StatsCardType>(EXTRA_CARD_TYPE)
+            ?: StatsCardType.MOST_VIEWED_POSTS_AND_PAGES
         val items = intent.extras?.getParcelableArrayListCompat<MostViewedDetailItem>(EXTRA_ITEMS)
             ?: arrayListOf()
         val totalViews = intent.getLongExtra(EXTRA_TOTAL_VIEWS, 0L)
@@ -77,7 +78,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
         setContent {
             AppThemeM3 {
                 MostViewedDetailScreen(
-                    dataSource = dataSource,
+                    cardType = cardType,
                     items = items,
                     maxViewsForBar = maxViewsForBar,
                     totalViews = totalViews,
@@ -94,7 +95,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
         @Suppress("LongParameterList")
         fun start(
             context: Context,
-            dataSource: MostViewedDataSource,
+            cardType: StatsCardType,
             items: List<MostViewedDetailItem>,
             totalViews: Long,
             totalViewsChange: Long,
@@ -102,7 +103,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
             dateRange: String
         ) {
             val intent = Intent(context, MostViewedDetailActivity::class.java).apply {
-                putExtra(EXTRA_DATA_SOURCE, dataSource)
+                putExtra(EXTRA_CARD_TYPE, cardType)
                 putExtra(EXTRA_ITEMS, ArrayList(items))
                 putExtra(EXTRA_TOTAL_VIEWS, totalViews)
                 putExtra(EXTRA_TOTAL_VIEWS_CHANGE, totalViewsChange)
@@ -117,7 +118,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MostViewedDetailScreen(
-    dataSource: MostViewedDataSource,
+    cardType: StatsCardType,
     items: List<MostViewedDetailItem>,
     maxViewsForBar: Long,
     totalViews: Long,
@@ -126,7 +127,7 @@ private fun MostViewedDetailScreen(
     dateRange: String,
     onBackPressed: () -> Unit
 ) {
-    val title = stringResource(dataSource.labelResId)
+    val title = stringResource(cardType.displayNameResId)
 
     Scaffold(
         topBar = {
@@ -303,7 +304,7 @@ private fun ChangeIndicator(change: MostViewedChange) {
 private fun MostViewedDetailScreenPreview() {
     AppThemeM3 {
         MostViewedDetailScreen(
-            dataSource = MostViewedDataSource.POSTS_AND_PAGES,
+            cardType = StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
             items = listOf(
                 MostViewedDetailItem(1, "Welcome to Automattic", 998,
                     MostViewedChange.Positive(41, 4.3)),
