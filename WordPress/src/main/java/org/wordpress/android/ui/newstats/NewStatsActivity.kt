@@ -340,9 +340,16 @@ private fun TrafficTabContent(
                 )
             }
 
+            // Memoize card positions to avoid recalculation on every recomposition
+            val cardPositions = remember(visibleCards) {
+                visibleCards.mapIndexed { index, _ ->
+                    CardPosition(index = index, totalCards = visibleCards.size)
+                }
+            }
+
             // Dynamic card rendering based on configuration
             visibleCards.forEachIndexed { index, cardType ->
-                val cardPosition = CardPosition(index = index, totalCards = visibleCards.size)
+                val cardPosition = cardPositions[index]
                 when (cardType) {
                     StatsCardType.TODAYS_STATS -> TodaysStatsCard(
                         uiState = todaysStatsUiState,

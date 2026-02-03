@@ -79,13 +79,13 @@ fun StatsCardMenu(
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.SwapVert,
-                                contentDescription = null
+                                contentDescription = stringResource(R.string.stats_card_move)
                             )
                         },
                         trailingIcon = {
                             Icon(
                                 imageVector = Icons.Default.ChevronRight,
-                                contentDescription = null
+                                contentDescription = stringResource(R.string.stats_card_move_submenu)
                             )
                         }
                     )
@@ -107,7 +107,7 @@ fun StatsCardMenu(
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.KeyboardArrowUp,
-                                        contentDescription = null
+                                        contentDescription = stringResource(R.string.stats_card_move_up)
                                     )
                                 }
                             )
@@ -125,7 +125,7 @@ fun StatsCardMenu(
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.VerticalAlignTop,
-                                        contentDescription = null
+                                        contentDescription = stringResource(R.string.stats_card_move_to_top)
                                     )
                                 }
                             )
@@ -143,7 +143,7 @@ fun StatsCardMenu(
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.KeyboardArrowDown,
-                                        contentDescription = null
+                                        contentDescription = stringResource(R.string.stats_card_move_down)
                                     )
                                 }
                             )
@@ -161,7 +161,7 @@ fun StatsCardMenu(
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.VerticalAlignBottom,
-                                        contentDescription = null
+                                        contentDescription = stringResource(R.string.stats_card_move_to_bottom)
                                     )
                                 }
                             )
@@ -180,7 +180,7 @@ fun StatsCardMenu(
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.stats_card_remove)
                     )
                 }
             )

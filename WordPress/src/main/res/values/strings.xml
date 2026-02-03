@@ -1583,6 +1583,7 @@
     <!-- Stats Card Configuration -->
     <string name="stats_card_remove">Remove Card</string>
     <string name="stats_card_move">Move Card</string>
+    <string name="stats_card_move_submenu">Open move options</string>
     <string name="stats_card_move_up">Move Up</string>
     <string name="stats_card_move_to_top">Move to Top</string>
     <string name="stats_card_move_down">Move Down</string>
