@@ -47,7 +47,7 @@ class SiteCapabilityChecker @Inject constructor(
             when (response) {
                 is WpRequestResult.Success -> {
                     response.response.data.capabilities.entries.any { (key, value) ->
-                        key.toString().contains("edit_theme_options", ignoreCase = true) && value
+                        key.toString().equals("edit_theme_options", ignoreCase = true) && value
                     }
                 }
                 else -> false
