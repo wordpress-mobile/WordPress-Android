@@ -12,10 +12,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
-import org.wordpress.android.fluxc.store.PageStore
-import org.wordpress.android.fluxc.store.PageStore.OnPageChanged
-import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.navmenus.data.NavMenuRestClient
 
@@ -26,15 +22,6 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var navMenuRestClient: NavMenuRestClient
-
-    @Mock
-    lateinit var pageStore: PageStore
-
-    @Mock
-    lateinit var postStore: PostStore
-
-    @Mock
-    lateinit var taxonomyStore: TaxonomyStore
 
     @Mock
     lateinit var resourceProvider: ResourceProvider
@@ -54,9 +41,6 @@ class NavMenusViewModelTest : BaseUnitTest() {
         viewModel = NavMenusViewModel(
             selectedSiteRepository = selectedSiteRepository,
             navMenuRestClient = navMenuRestClient,
-            pageStore = pageStore,
-            postStore = postStore,
-            taxonomyStore = taxonomyStore,
             resourceProvider = resourceProvider,
             mainDispatcher = testDispatcher(),
             ioDispatcher = testDispatcher()
@@ -222,9 +206,6 @@ class NavMenusViewModelTest : BaseUnitTest() {
     @Test
     fun `when saveMenuItem called with non-custom type and no objectId, then error is shown`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
-        whenever(pageStore.requestPagesFromServer(testSite, false))
-            .thenReturn(OnPageChanged.Success)
-        whenever(pageStore.getPagesFromDb(testSite)).thenReturn(emptyList())
         viewModel.navigateToCreateMenuItem()
         viewModel.updateMenuItemType(MenuItemTypeOption.PAGE)
         viewModel.updateMenuItemTitle("Test Item")
