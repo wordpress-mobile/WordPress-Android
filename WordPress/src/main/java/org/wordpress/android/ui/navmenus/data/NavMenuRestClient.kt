@@ -4,9 +4,9 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
-import org.wordpress.android.fluxc.model.navmenu.NavMenuLocationModel
-import org.wordpress.android.fluxc.model.navmenu.NavMenuModel
+import org.wordpress.android.ui.navmenus.models.NavMenuItemModel
+import org.wordpress.android.ui.navmenus.models.NavMenuLocationModel
+import org.wordpress.android.ui.navmenus.models.NavMenuModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.navmenus.parseJsonStringArray

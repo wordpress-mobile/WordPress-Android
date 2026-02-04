@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.model.navmenu
+package org.wordpress.android.ui.navmenus.models
 
 /**
  * Represents an item within a WordPress navigation menu.

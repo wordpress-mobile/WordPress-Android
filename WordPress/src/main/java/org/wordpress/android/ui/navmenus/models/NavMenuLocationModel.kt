@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.model.navmenu
+package org.wordpress.android.ui.navmenus.models
 
 /**
  * Represents a theme menu location where menus can be assigned.

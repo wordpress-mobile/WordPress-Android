@@ -4,9 +4,9 @@ import androidx.annotation.StringRes
 import org.json.JSONArray
 import org.json.JSONException
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
-import org.wordpress.android.fluxc.model.navmenu.NavMenuLocationModel
-import org.wordpress.android.fluxc.model.navmenu.NavMenuModel
+import org.wordpress.android.ui.navmenus.models.NavMenuItemModel
+import org.wordpress.android.ui.navmenus.models.NavMenuLocationModel
+import org.wordpress.android.ui.navmenus.models.NavMenuModel
 
 /**
  * UI state for the menus list screen

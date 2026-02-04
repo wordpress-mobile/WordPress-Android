@@ -11,7 +11,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
+import org.wordpress.android.ui.navmenus.models.NavMenuItemModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.navmenus.data.NavMenuRestClient
 

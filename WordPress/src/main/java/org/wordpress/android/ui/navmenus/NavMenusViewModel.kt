@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.navmenu.NavMenuItemModel
-import org.wordpress.android.fluxc.model.navmenu.NavMenuModel
+import org.wordpress.android.ui.navmenus.models.NavMenuItemModel
+import org.wordpress.android.ui.navmenus.models.NavMenuModel
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.navmenus.data.NavMenuRestClient
 import org.wordpress.android.modules.UI_THREAD
