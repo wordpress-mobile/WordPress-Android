@@ -207,9 +207,9 @@ public class LoginGoogleFragment extends GoogleFragment {
             switch (event.error.type) {
                 // WordPress account exists with input email address, but not connected.
                 case USER_EXISTS:
-                    AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - wordpress acount exists but not connected");
+                    AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - wordpress account exists but not connected");
                     mAnalyticsListener.trackSocialAccountsNeedConnecting();
-                    mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
+                    showError(getString(R.string.login_error_email_not_connected_to_google));
                     break;
                 // WordPress account does not exist with input email address.
                 case UNKNOWN_USER:

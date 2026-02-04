@@ -26,7 +26,6 @@ public interface LoginListener {
     void gotUnregisteredSocialAccount(String email, String displayName, String idToken, String photoUrl,
                                       String service);
     void loginViaSiteAddress();
-    void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired);
     void loggedInViaSocialAccount(ArrayList<Integer> oldSiteIds, boolean doLoginUpdate);
     void loginViaWpcomUsernameInstead();
     void loginViaSiteCredentials(String inputSiteAddress);
@@ -37,17 +36,14 @@ public interface LoginListener {
     void onTermsOfServiceClicked();
 
     // Login Request Magic Link callbacks
-    void showMagicLinkSentScreen(String email, boolean allowPassword);
-    void usePasswordInstead(String email);
+    void showMagicLinkSentScreen(String email);
     void helpMagicLinkRequest(String email);
 
     // Login Magic Link Sent callbacks
     void openEmailClient(boolean isLogin);
     void helpMagicLinkSent(String email);
 
-    // Login email password callbacks
-    void forgotPassword(String url);
-    void useMagicLinkInstead(String email, boolean verifyEmail);
+    // Login 2FA callbacks
     void needs2fa(String email, String password);
     void needs2fa(String email, String password, String userId, String webauthnNonce,
                   String nonceAuthenticator, String nonceBackup, String noncePush,
@@ -56,7 +52,6 @@ public interface LoginListener {
                         String nonceSms, String nonceWebauthn, List<String> supportedAuthTypes);
     void needs2faSocialConnect(String email, String password, String idToken, String service);
     void loggedInViaPassword(ArrayList<Integer> oldSitesIds);
-    void helpEmailPasswordScreen(String email);
 
     // Login Site Address input callbacks
     void alreadyLoggedInWpcom(ArrayList<Integer> oldSitesIds);
@@ -69,6 +64,7 @@ public interface LoginListener {
     void handleSiteAddressError(ConnectSiteInfoPayload siteInfo);
 
     // Login username password callbacks
+    void forgotPassword(String url);
     void saveCredentialsInSmartLock(@Nullable String username, @Nullable String password,
                                     @NonNull String displayName, @Nullable Uri profilePicture);
     void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds);

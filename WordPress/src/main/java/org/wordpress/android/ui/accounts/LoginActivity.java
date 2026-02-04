@@ -44,7 +44,6 @@ import org.wordpress.android.login.GoogleFragment.GoogleListener;
 import org.wordpress.android.login.Login2FaFragment;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.login.LoginEmailFragment;
-import org.wordpress.android.login.LoginEmailPasswordFragment;
 import org.wordpress.android.login.LoginGoogleFragment;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.LoginMagicLinkRequestFragment;
@@ -610,36 +609,17 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     @Override
     public void gotWpcomEmail(String email, boolean verifyEmail, @Nullable AuthOptions authOptions) {
         initSmartLockIfNotFinished(false);
-        boolean isMagicLinkEnabled =
-                getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT;
 
-        if (authOptions != null) {
-            if (authOptions.isPasswordless()) {
-                showMagicLinkRequestScreen(email, verifyEmail, false, true);
-            } else {
-                showEmailPasswordScreen(email, verifyEmail, isMagicLinkEnabled);
-            }
-        } else {
-            if (isMagicLinkEnabled) {
-                showMagicLinkRequestScreen(email, verifyEmail, true, false);
-            } else {
-                showEmailPasswordScreen(email, verifyEmail, false);
-            }
-        }
+        boolean forceRequestAtStart = authOptions != null && authOptions.isPasswordless();
+        showMagicLinkRequestScreen(email, verifyEmail, forceRequestAtStart);
     }
 
-    private void showEmailPasswordScreen(String email, boolean verifyEmail, boolean allowMagicLink) {
-        LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment
-                .newInstance(email, null, null, null, false, allowMagicLink, verifyEmail);
-        slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
-    }
-
-    private void showMagicLinkRequestScreen(String email, boolean verifyEmail, boolean allowPassword,
+    private void showMagicLinkRequestScreen(String email, boolean verifyEmail,
                                             boolean forceRequestAtStart) {
         AuthEmailPayloadScheme scheme = mViewModel.getMagicLinkScheme();
         String jetpackConnectionSource = mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null;
         LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment
-                .newInstance(email, scheme, mIsJetpackConnect, jetpackConnectionSource, verifyEmail, allowPassword,
+                .newInstance(email, scheme, mIsJetpackConnect, jetpackConnectionSource, verifyEmail,
                         forceRequestAtStart);
         slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
     }
@@ -663,13 +643,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     @Override
-    public void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired) {
-        LoginEmailPasswordFragment loginEmailPasswordFragment =
-                LoginEmailPasswordFragment.newInstance(email, null, idToken, service, isPasswordRequired);
-        slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
-    }
-
-    @Override
     public void loggedInViaSocialAccount(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         mLoginAnalyticsListener.trackLoginSocialSuccess();
         loggedInAndFinish(oldSitesIds, doLoginUpdate);
@@ -681,9 +654,9 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     @Override
-    public void showMagicLinkSentScreen(String email, boolean allowPassword) {
+    public void showMagicLinkSentScreen(String email) {
         LoginMagicLinkSentFragment loginMagicLinkSentFragment =
-                LoginMagicLinkSentFragment.newInstance(email, allowPassword);
+                LoginMagicLinkSentFragment.newInstance(email);
         slideInFragment(loginMagicLinkSentFragment, true, LoginMagicLinkSentFragment.TAG);
     }
 
@@ -722,22 +695,9 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     @Override
-    public void usePasswordInstead(String email) {
-        mLoginAnalyticsListener.trackLoginMagicLinkExited();
-        LoginEmailPasswordFragment loginEmailPasswordFragment =
-                LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
-        slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
-    }
-
-    @Override
     public void forgotPassword(String url) {
         mLoginAnalyticsListener.trackLoginForgotPasswordClicked();
         ActivityLauncher.openUrlExternal(this, url + FORGOT_PASSWORD_URL_SUFFIX);
-    }
-
-    @Override
-    public void useMagicLinkInstead(String email, boolean verifyEmail) {
-        showMagicLinkRequestScreen(email, verifyEmail, false, true);
     }
 
     @Override
@@ -881,11 +841,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     @Override
     public void helpMagicLinkSent(String email) {
         viewHelp(Origin.LOGIN_MAGIC_LINK);
-    }
-
-    @Override
-    public void helpEmailPasswordScreen(String email) {
-        viewHelp(Origin.LOGIN_EMAIL_PASSWORD);
     }
 
     @Override

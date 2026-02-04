@@ -62,6 +62,7 @@
     <string name="login_or">or</string>
     <string name="login_error_button">Close</string>
     <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
+    <string name="login_error_email_not_connected_to_google">This email has a WordPress.com account but it\'s not connected to Google. Please log in using an email magic link instead.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>

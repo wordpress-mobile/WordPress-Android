@@ -52,7 +52,6 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     private static final String ARG_IS_JETPACK_CONNECT = "ARG_IS_JETPACK_CONNECT";
     private static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     private static final String ARG_VERIFY_MAGIC_LINK_EMAIL = "ARG_VERIFY_MAGIC_LINK_EMAIL";
-    private static final String ARG_ALLOW_PASSWORD = "ARG_ALLOW_PASSWORD";
     private static final String ARG_FORCE_REQUEST_AT_START = "ARG_FORCE_REQUEST_AT_START";
 
     private static final String ERROR_KEY = "error";
@@ -70,7 +69,6 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     private boolean mInProgress;
     private boolean mIsJetpackConnect;
     private boolean mVerifyMagicLinkEmail;
-    private boolean mAllowPassword;
     private boolean mForceRequestAtStart;
 
     @Inject protected Dispatcher mDispatcher;
@@ -79,13 +77,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
 
     public static LoginMagicLinkRequestFragment newInstance(String email, AuthEmailPayloadScheme scheme,
                                                             boolean isJetpackConnect, String jetpackConnectSource,
-                                                            boolean verifyEmail) {
-        return newInstance(email, scheme, isJetpackConnect, jetpackConnectSource, verifyEmail, true, false);
-    }
-
-    public static LoginMagicLinkRequestFragment newInstance(String email, AuthEmailPayloadScheme scheme,
-                                                            boolean isJetpackConnect, String jetpackConnectSource,
-                                                            boolean verifyEmail, boolean allowPassword,
+                                                            boolean verifyEmail,
                                                             boolean forceRequestAtStart) {
         LoginMagicLinkRequestFragment fragment = new LoginMagicLinkRequestFragment();
         Bundle args = new Bundle();
@@ -94,7 +86,6 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         args.putBoolean(ARG_IS_JETPACK_CONNECT, isJetpackConnect);
         args.putString(ARG_JETPACK_CONNECT_SOURCE, jetpackConnectSource);
         args.putBoolean(ARG_VERIFY_MAGIC_LINK_EMAIL, verifyEmail);
-        args.putBoolean(ARG_ALLOW_PASSWORD, allowPassword);
         args.putBoolean(ARG_FORCE_REQUEST_AT_START, forceRequestAtStart);
         fragment.setArguments(args);
         return fragment;
@@ -121,7 +112,6 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             mIsJetpackConnect = getArguments().getBoolean(ARG_IS_JETPACK_CONNECT);
             mJetpackConnectSource = getArguments().getString(ARG_JETPACK_CONNECT_SOURCE);
             mVerifyMagicLinkEmail = getArguments().getBoolean(ARG_VERIFY_MAGIC_LINK_EMAIL);
-            mAllowPassword = getArguments().getBoolean(ARG_ALLOW_PASSWORD);
             mForceRequestAtStart = getArguments().getBoolean(ARG_FORCE_REQUEST_AT_START);
         }
 
@@ -137,18 +127,6 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             public void onClick(View v) {
                 mAnalyticsListener.trackRequestMagicLinkClick();
                 dispatchMagicLinkRequest();
-            }
-        });
-
-        final Button passwordButton = view.findViewById(R.id.login_enter_password);
-        passwordButton.setVisibility(mAllowPassword ? View.VISIBLE : View.GONE);
-        passwordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAnalyticsListener.trackLoginWithPasswordClick();
-                if (mLoginListener != null) {
-                    mLoginListener.usePasswordInstead(mEmail);
-                }
             }
         });
 
@@ -365,7 +343,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
                     fragmentManager.popBackStack();
                 }
             }
-            mLoginListener.showMagicLinkSentScreen(mEmail, mAllowPassword);
+            mLoginListener.showMagicLinkSentScreen(mEmail);
         }
     }
 }

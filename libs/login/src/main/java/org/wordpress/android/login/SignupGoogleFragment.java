@@ -252,7 +252,8 @@ public class SignupGoogleFragment extends GoogleFragment {
                 // WordPress account exists with input email address, but not connected.
                 case USER_EXISTS:
                     AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - error - user already exists");
-                    loginViaSocialAccount();
+                    mAnalyticsListener.trackSignupSocialAccountsNeedConnecting();
+                    showError(getString(R.string.login_error_email_not_connected_to_google));
                     break;
                 // Too many attempts on sending SMS verification code. The user has to wait before they try again
                 case SMS_CODE_THROTTLED:
@@ -272,16 +273,9 @@ public class SignupGoogleFragment extends GoogleFragment {
                     event.nonceSms, event.nonceWebauthn, event.twoStepTypes);
             finishFlow();
         } else {
-            AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - google login success");
-           loginViaSocialAccount();
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - account exists but not connected");
+            mAnalyticsListener.trackSignupSocialAccountsNeedConnecting();
+            showError(getString(R.string.login_error_email_not_connected_to_google));
         }
-    }
-
-    private void loginViaSocialAccount() {
-        mAnalyticsListener.trackSignupSocialAccountsNeedConnecting();
-        mAnalyticsListener.trackSignupSocialToLogin();
-        mLoginListener.showSignupToLoginMessage();
-        mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
-        finishFlow();
     }
 }

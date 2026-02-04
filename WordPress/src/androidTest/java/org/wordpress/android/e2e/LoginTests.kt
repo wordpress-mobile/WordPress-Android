@@ -17,10 +17,10 @@ class LoginTests : BaseTest() {
     }
 
     @Test
-    fun e2eLoginWithEmailPassword() {
+    fun e2eLoginWithMagicLink() {
         LoginFlow().chooseContinueWithWpCom(super.mComposeTestRule)
             .enterEmailAddress(E2ECredentials.WP_COM_USER_EMAIL)
-            .enterPassword(E2ECredentials.WP_COM_USER_PASSWORD)
+            .openMagicLink()
             .confirmLogin()
 
         ComposeEspressoLink().unregister()
@@ -34,32 +34,6 @@ class LoginTests : BaseTest() {
             .confirmLogin()
 
         ComposeEspressoLink().unregister()
-    }
-
-    @Test
-    fun e2eLoginWithSiteAddress() {
-        LoginFlow().chooseEnterYourSiteAddress(super.mComposeTestRule)
-            .enterSiteAddress(E2ECredentials.WP_COM_USER_SITE_ADDRESS)
-            .enterEmailAddress(E2ECredentials.WP_COM_USER_EMAIL)
-            .enterPassword(E2ECredentials.WP_COM_USER_PASSWORD)
-            .confirmLogin()
-
-        ComposeEspressoLink().unregister()
-    }
-
-    @Test
-    fun e2eLoginWithMagicLink() {
-        try {
-            LoginFlow().chooseContinueWithWpCom(super.mComposeTestRule)
-                .enterEmailAddress(E2ECredentials.WP_COM_USER_EMAIL)
-                .chooseMagicLink()
-                .openMagicLink()
-                .confirmLogin()
-
-            ComposeEspressoLink().unregister()
-        } finally {
-            logoutIfNecessary()
-        }
     }
 
     @Test

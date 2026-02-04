@@ -99,7 +99,7 @@ public class BaseTest {
         logoutIfNecessary();
         new LoginFlow().chooseContinueWithWpCom(mComposeTestRule)
                        .enterEmailAddress(WP_COM_USER_EMAIL)
-                       .enterPassword(WP_COM_USER_PASSWORD)
+                       .openMagicLink()
                        .confirmLogin();
     }
 

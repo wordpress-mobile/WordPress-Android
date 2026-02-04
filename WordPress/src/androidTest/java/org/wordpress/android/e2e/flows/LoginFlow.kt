@@ -35,21 +35,6 @@ class LoginFlow {
         return this
     }
 
-    fun enterPassword(password: String?): LoginFlow {
-        // Password Screen – Fill it in and click "Continue"
-        // See LoginEmailPasswordFragment
-        WPSupportUtils.populateTextField(R.id.input, password)
-        WPSupportUtils.clickOn(R.id.bottom_button)
-        return this
-    }
-
-    fun chooseMagicLink(): LoginFlow {
-        // Password Screen – Choose "Get a login link by email"
-        // See LoginEmailPasswordFragment
-        WPSupportUtils.clickOn(LoginR.id.login_get_email_link)
-        return this
-    }
-
     fun openMagicLink(): LoginFlow {
         // Magic Link Sent Screen – Should see "Check email" button
         // See LoginMagicLinkSentFragment
