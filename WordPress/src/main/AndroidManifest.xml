@@ -193,11 +193,6 @@
         </activity>
 
         <activity
-            android:name=".ui.accounts.SignupEpilogueActivity"
-            android:label="@string/signup_epilogue_screen_title"
-            android:theme="@style/LoginTheme" />
-
-        <activity
             android:name=".ui.accounts.PostSignupInterstitialActivity"
             android:label="@string/post_signup_interstitial_title"
             android:theme="@style/LoginTheme"

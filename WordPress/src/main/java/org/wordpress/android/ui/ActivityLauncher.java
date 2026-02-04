@@ -39,7 +39,6 @@ import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
-import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordsListActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
@@ -190,18 +189,6 @@ public class ActivityLauncher {
         Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
         context.startActivity(intent);
-    }
-
-    public static void showMainActivityAndSignupEpilogue(Activity activity, String name, String email, String photoUrl,
-                                                         String username) {
-        Intent intent = new Intent(activity, WPMainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra(WPMainActivity.ARG_SHOW_SIGNUP_EPILOGUE, true);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME, name);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS, email);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL, photoUrl);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME, username);
-        activity.startActivity(intent);
     }
 
     /**
@@ -1540,28 +1527,6 @@ public class ActivityLauncher {
                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         JETPACK_LOGIN_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
-    }
-
-    public static void showSignupEpilogue(Activity activity, String name, String email, String photoUrl,
-                                          String username, boolean isEmail) {
-        Intent intent = new Intent(activity, SignupEpilogueActivity.class);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME, name);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS, email);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL, photoUrl);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME, username);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_IS_EMAIL, isEmail);
-        activity.startActivity(intent);
-    }
-
-    public static void showSignupEpilogueForResult(Activity activity, String name, String email, String photoUrl,
-                                                   String username, boolean isEmail) {
-        Intent intent = new Intent(activity, SignupEpilogueActivity.class);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME, name);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS, email);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL, photoUrl);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME, username);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_IS_EMAIL, isEmail);
-        activity.startActivityForResult(intent, RequestCodes.SHOW_SIGNUP_EPILOGUE_AND_RETURN);
     }
 
     public static void showPostSignupInterstitial(Context context) {

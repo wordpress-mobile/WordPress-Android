@@ -109,9 +109,6 @@ public class AppPrefs {
         // Used to flag whether the app should strip geolocation from images
         STRIP_IMAGE_LOCATION,
 
-        // Used to flag the account created stat needs to be bumped after account information is synced.
-        SHOULD_TRACK_MAGIC_LINK_SIGNUP,
-
         // Support email address and name that's independent of any account or site
         SUPPORT_EMAIL,
         SUPPORT_NAME,
@@ -985,18 +982,6 @@ public class AppPrefs {
 
     public static void setLastWpComThemeSync(long time) {
         setLong(UndeletablePrefKey.LAST_WP_COM_THEMES_SYNC, time);
-    }
-
-    public static void setShouldTrackMagicLinkSignup(Boolean shouldTrack) {
-        setBoolean(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP, shouldTrack);
-    }
-
-    public static boolean getShouldTrackMagicLinkSignup() {
-        return getBoolean(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP, false);
-    }
-
-    public static void removeShouldTrackMagicLinkSignup() {
-        remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
     }
 
     public static void setMainFabTooltipDisabled(Boolean disable) {

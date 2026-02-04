@@ -80,7 +80,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.accounts.LoginActivity;
-import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsReminderSchedulerListener;
@@ -177,7 +176,6 @@ import kotlin.jvm.functions.Function3;
 
 import static androidx.lifecycle.Lifecycle.State.STARTED;
 import static org.wordpress.android.WordPress.SITE;
-import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 
@@ -195,10 +193,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
     public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
-    public static final String ARG_IS_MAGIC_LINK_SIGNUP = "ARG_IS_MAGIC_LINK_SIGNUP";
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
-    public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
     public static final String ARG_SHOW_SITE_CREATION = "show_site_creation";
     public static final String ARG_SITE_CREATION_SOURCE = "ARG_SITE_CREATION_SOURCE";
     public static final String ARG_WP_COM_SIGN_UP = "sign_up";
@@ -231,7 +227,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     private TextView mConnectionBar;
     private JetpackConnectionSource mJetpackConnectSource;
     private boolean mIsMagicLinkLogin;
-    private boolean mIsMagicLinkSignup;
 
     private WPMainActivityViewModel mViewModel;
     private ModalLayoutPickerViewModel mMLPViewModel;
@@ -323,7 +318,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         });
 
         mIsMagicLinkLogin = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_LOGIN, false);
-        mIsMagicLinkSignup = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_SIGNUP, false);
         mJetpackConnectSource = (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
         String authTokenToSet = null;
 
@@ -424,12 +418,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.
             UpdateTokenPayload payload = new UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
-        } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
-            ActivityLauncher.showSignupEpilogue(this,
-                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
-                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
-                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
-                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SITE_CREATION, false) && savedInstanceState == null) {
             ActivityLauncher.newBlogForResult(this,
                     SiteCreationSource.fromString(getIntent().getStringExtra(ARG_SITE_CREATION_SOURCE)));
@@ -1450,25 +1438,12 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         if (mAccountStore.hasAccessToken()) {
             if (mIsMagicLinkLogin) {
-                if (mIsMagicLinkSignup) {
-                    // Sets a flag that we need to track a magic link sign up.
-                    // We'll handle it in onAccountChanged so we know we have
-                    // updated account info.
-                    AppPrefs.setShouldTrackMagicLinkSignup(true);
-                    mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-                    if (mJetpackConnectSource != null) {
-                        ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, getSelectedSite());
-                    } else {
-                        ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
-                    }
-                } else {
-                    mLoginAnalyticsListener.trackLoginMagicLinkSucceeded();
+                mLoginAnalyticsListener.trackLoginMagicLinkSucceeded();
 
-                    if (mJetpackConnectSource != null) {
-                        ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, getSelectedSite());
-                    } else {
-                        initSelectedSite();
-                    }
+                if (mJetpackConnectSource != null) {
+                    ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, getSelectedSite());
+                } else {
+                    initSelectedSite();
                 }
             }
         }
@@ -1480,26 +1455,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
             if (mBottomNav != null) mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
-            if (AppPrefs.getShouldTrackMagicLinkSignup()) {
-                trackMagicLinkSignupIfNeeded();
-            }
         }
     }
-
-    /**
-     * Bumps stats related to a magic link sign up provided the account has been updated with
-     * the username and email address needed to refresh analytics meta data.
-     */
-    private void trackMagicLinkSignupIfNeeded() {
-        AccountModel account = mAccountStore.getAccount();
-        if (!TextUtils.isEmpty(account.getUserName()) && !TextUtils.isEmpty(account.getEmail())) {
-            mLoginAnalyticsListener.trackCreatedAccount(account.getUserName(), account.getEmail(), EMAIL);
-            mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
-            mLoginAnalyticsListener.trackAnalyticsSignIn(true);
-            AppPrefs.removeShouldTrackMagicLinkSignup();
-        }
-    }
-
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
