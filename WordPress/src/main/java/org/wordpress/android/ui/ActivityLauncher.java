@@ -1607,8 +1607,7 @@ public class ActivityLauncher {
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent;
         intent = new Intent(activity, LoginActivity.class);
-        LoginMode mode = BuildConfig.IS_JETPACK_APP ? LoginMode.JETPACK_SELFHOSTED : LoginMode.SELFHOSTED_ONLY;
-        mode.putInto(intent);
+        LoginMode.SELFHOSTED_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 

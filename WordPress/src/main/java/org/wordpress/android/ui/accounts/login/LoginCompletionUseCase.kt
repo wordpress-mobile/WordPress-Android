@@ -17,7 +17,6 @@ class LoginCompletionUseCase @Inject constructor() {
     fun getLoginCompletionAction(loginMode: LoginMode): LoginCompletionAction {
         return when (loginMode) {
             LoginMode.SHARE_INTENT,
-            LoginMode.JETPACK_SELFHOSTED,
             LoginMode.SELFHOSTED_ONLY -> LoginCompletionAction.FINISH_WITH_NEW_SITE
 
             else -> LoginCompletionAction.NAVIGATE_TO_MAIN

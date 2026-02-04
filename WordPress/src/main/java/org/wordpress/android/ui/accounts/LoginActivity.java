@@ -176,7 +176,6 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
                     mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
                     showWPcomLoginScreen(this);
                     break;
-                case JETPACK_SELFHOSTED:
                 case SELFHOSTED_ONLY:
                     mUnifiedLoginTracker.setSource(Source.SELF_HOSTED);
                     showFragment(new LoginSiteApplicationPasswordFragment(), LoginSiteApplicationPasswordFragment.TAG);

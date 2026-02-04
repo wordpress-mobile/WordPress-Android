@@ -49,13 +49,6 @@ class LoginCompletionUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given JETPACK_SELFHOSTED mode, then action is FINISH_WITH_NEW_SITE`() {
-        val result = useCase.getLoginCompletionAction(LoginMode.JETPACK_SELFHOSTED)
-
-        assertThat(result).isEqualTo(LoginCompletionAction.FINISH_WITH_NEW_SITE)
-    }
-
-    @Test
     fun `given SHARE_INTENT mode, then action is FINISH_WITH_NEW_SITE`() {
         val result = useCase.getLoginCompletionAction(LoginMode.SHARE_INTENT)
 
@@ -118,13 +111,6 @@ class LoginCompletionUseCaseTest : BaseUnitTest() {
     @Test
     fun `given SELFHOSTED_ONLY mode, then destination is FINISH_ONLY`() {
         val result = useCase.getMainNavigationDestination(LoginMode.SELFHOSTED_ONLY)
-
-        assertThat(result).isEqualTo(MainNavigationDestination.FINISH_ONLY)
-    }
-
-    @Test
-    fun `given JETPACK_SELFHOSTED mode, then destination is FINISH_ONLY`() {
-        val result = useCase.getMainNavigationDestination(LoginMode.JETPACK_SELFHOSTED)
 
         assertThat(result).isEqualTo(MainNavigationDestination.FINISH_ONLY)
     }

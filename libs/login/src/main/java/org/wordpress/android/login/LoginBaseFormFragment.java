@@ -64,6 +64,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     @Inject protected AccountStore mAccountStore;
 
     @Inject protected LoginAnalyticsListener mAnalyticsListener;
+    @Inject protected AppLoginConfig mAppLoginConfig;
 
     protected abstract @LayoutRes int getContentLayout();
     protected abstract void setupLabel(@NonNull TextView label);
@@ -327,18 +328,10 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
             // The user's account settings have also been fetched and stored - now we can fetch the user's sites
             FetchSitesPayload payload =
-                    SiteUtils.getFetchSitesPayload(isJetpackAppLogin());
+                    SiteUtils.getFetchSitesPayload(mAppLoginConfig.isJetpackApp());
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(payload));
         }
     }
-
-    protected boolean isJetpackAppLogin() {
-        if (!(mLoginListener instanceof LoginListener)) return false;
-
-        LoginMode mode = ((LoginListener) mLoginListener).getLoginMode();
-        return mode == LoginMode.JETPACK_LOGIN_ONLY || mode == LoginMode.JETPACK_SELFHOSTED;
-    }
-
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
