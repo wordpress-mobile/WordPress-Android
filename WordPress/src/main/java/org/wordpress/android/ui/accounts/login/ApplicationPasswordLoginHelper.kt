@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.accounts.login
 
+import android.content.Context
 import androidx.core.net.toUri
+import org.wordpress.android.R
+import org.wordpress.android.util.DeviceUtils
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -195,9 +198,10 @@ class ApplicationPasswordLoginHelper @Inject constructor(
      * This class is created to wrap the Uri calls and let us unit test the login helper
      */
     class UriLoginWrapper @Inject constructor(
+        private val context: Context,
         private val apiRootUrlCache: ApiRootUrlCache,
         private val buildConfigWrapper: BuildConfigWrapper,
-        ) {
+    ) {
         fun parseUriLogin(url: String): UriLogin {
             val uri = url.toUri()
             val siteUrl = UrlUtils.normalizeUrl(uri.getQueryParameter("site_url"))
@@ -211,15 +215,15 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             return if (authorizationUrl.isNullOrEmpty()) {
                 authorizationUrl.orEmpty()
             } else {
-                val appName: String
-                val successUrl: String
-                if (buildConfigWrapper.isJetpackApp) {
-                    appName = ANDROID_JETPACK_CLIENT
-                    successUrl = JETPACK_SUCCESS_URL
+                val userDeviceName = DeviceUtils.getInstance().getDeviceName(context)
+                val (appName, successUrl) = if (buildConfigWrapper.isJetpackApp) {
+                    context.getString(R.string.application_password_app_name_jetpack, userDeviceName) to
+                        JETPACK_SUCCESS_URL
                 } else {
-                    appName = ANDROID_WORDPRESS_CLIENT
-                    successUrl = WORDPRESS_SUCCESS_URL
+                    context.getString(R.string.application_password_app_name_wordpress, userDeviceName) to
+                        WORDPRESS_SUCCESS_URL
                 }
+
                 authorizationUrl.toUri().buildUpon().apply {
                     appendQueryParameter("app_name", appName)
                     appendQueryParameter("success_url", successUrl)
@@ -229,8 +233,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     companion object {
-        const val ANDROID_JETPACK_CLIENT = "android-jetpack-client"
-        const val ANDROID_WORDPRESS_CLIENT = "android-wordpress-client"
         private const val JETPACK_SUCCESS_URL = "jetpack://app-pass-authorize"
         private const val WORDPRESS_SUCCESS_URL = "wordpress://app-pass-authorize"
     }
