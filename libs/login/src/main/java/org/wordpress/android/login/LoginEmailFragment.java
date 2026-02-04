@@ -588,11 +588,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                     }
                     break;
                 case EMAIL_LOGIN_NOT_ALLOWED:
-                    // As a security measure, this user needs to log in using an username and password
+                    // As a security measure, this user needs to log in using username and password via web
                     mAnalyticsListener.trackFailure("Login with username required");
                     ToastUtils.showToast(getContext(), R.string.error_user_username_instead_of_email, Duration.LONG);
                     if (mLoginListener != null) {
-                        mLoginListener.loginViaWpcomUsernameInstead();
+                        // Redirect to web-based login which supports username/password authentication
+                        mLoginListener.gotWpcomEmail(email, false, null);
                     }
                     break;
                 case GENERIC_ERROR:

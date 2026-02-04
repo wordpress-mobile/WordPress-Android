@@ -48,7 +48,6 @@ import org.wordpress.android.login.LoginGoogleFragment;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordFragment;
-import org.wordpress.android.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.login.SignupConfirmationFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
@@ -87,7 +86,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.SelfSignedSSLUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
@@ -122,8 +120,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     private static final String KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE = "KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE";
     private static final String KEY_UNIFIED_TRACKER_SOURCE = "KEY_UNIFIED_TRACKER_SOURCE";
     private static final String KEY_UNIFIED_TRACKER_FLOW = "KEY_UNIFIED_TRACKER_FLOW";
-
-    private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
 
     private static final String GOOGLE_ERROR_DIALOG_TAG = "google_error_dialog_tag";
 
@@ -509,12 +505,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         }
     }
 
-    private void jumpToUsernamePassword(String username, String password) {
-        LoginUsernamePasswordFragment loginUsernamePasswordFragment =
-                LoginUsernamePasswordFragment.newInstance("wordpress.com", "wordpress.com", username, password, true);
-        slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
-    }
-
     private boolean initSmartLockHelperConnection() {
         mSmartLockHelper = new SmartLockHelper(this);
         return mSmartLockHelper.initSmartLockForPasswords();
@@ -635,11 +625,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     @Override
-    public void loginViaWpcomUsernameInstead() {
-        jumpToUsernamePassword(null, null);
-    }
-
-    @Override
     public void showSignupMagicLink(String email) {
         boolean isEmailClientAvailable = WPActivityUtils.isEmailClientAvailable(this);
         AuthEmailPayloadScheme scheme = mViewModel.getMagicLinkScheme();
@@ -671,12 +656,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         } else {
             ToastUtils.showToast(this, R.string.login_email_client_not_found);
         }
-    }
-
-    @Override
-    public void forgotPassword(String url) {
-        mLoginAnalyticsListener.trackLoginForgotPasswordClicked();
-        ActivityLauncher.openUrlExternal(this, url + FORGOT_PASSWORD_URL_SUFFIX);
     }
 
     @Override
@@ -730,13 +709,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     @Override
-    public void gotXmlRpcEndpoint(String inputSiteAddress, String endpointAddress) {
-        LoginUsernamePasswordFragment loginUsernamePasswordFragment =
-                LoginUsernamePasswordFragment.newInstance(inputSiteAddress, endpointAddress, null, null, false);
-        slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
-    }
-
-    @Override
     public void handleSslCertificateError(MemorizingTrustManager memorizingTrustManager,
                                           final SelfSignedSSLCallback callback) {
         SelfSignedSSLUtils.showSSLWarningDialog(this, memorizingTrustManager, new SelfSignedSSLUtils.Callback() {
@@ -775,11 +747,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
             }
         }
-    }
-
-    @Override
-    public void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds) {
-        loggedInAndFinish(oldSitesIds, false);
     }
 
     @Override
@@ -828,38 +795,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         NotificationsUpdateServiceStarter.startService(getApplicationContext());
     }
 
-    @Override
-    public void helpUsernamePassword(String url, String username, boolean isWpcom) {
-        viewHelp(Origin.LOGIN_USERNAME_PASSWORD);
-    }
-
     // SmartLock
-
-    @Override
-    public void saveCredentialsInSmartLock(@Nullable final String username, @Nullable final String password,
-                                           @NonNull final String displayName, @Nullable final Uri profilePicture) {
-        LoginMode mode = getLoginMode();
-        if (mode == LoginMode.SELFHOSTED_ONLY || mode == LoginMode.JETPACK_SELFHOSTED) {
-            // bail if we are on the selfhosted flow since we haven't initialized SmartLock-for-Passwords for it.
-            // Otherwise, logging in to WPCOM via the site-picker flow (for example) results in a crash.
-            // See https://github.com/wordpress-mobile/WordPress-Android/issues/7182#issuecomment-362791364
-            // There might be more circumstances that lead to this crash though. Not all crash reports seem to
-            // originate from the site-picker.
-            return;
-        }
-
-        if (mSmartLockHelper == null) {
-            // log some data to help us debug https://github.com/wordpress-mobile/WordPress-Android/issues/7182
-            final String loginModeStr = "LoginMode: " + (getLoginMode() != null ? getLoginMode().name() : "null");
-            AppLog.w(AppLog.T.NUX, "Internal inconsistency error! mSmartLockHelper found null!" + loginModeStr);
-
-            // bail
-            return;
-        }
-
-        mSmartLockHelper.saveCredentialsInSmartLock(StringUtils.notNullStr(username), StringUtils.notNullStr(password),
-                displayName, profilePicture);
-    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -894,13 +830,9 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
 
     @Override
     public void onCredentialRetrieved(Credential credential) {
-        mLoginAnalyticsListener.trackLoginAutofillCredentialsFilled();
-
+        // Smart Lock credentials can no longer be used for WP.com login (now web-based)
         mSmartLockHelperState = SmartLockHelperState.FINISHED;
-
-        final String username = credential.getId();
-        final String password = credential.getPassword();
-        jumpToUsernamePassword(username, password);
+        startLogin();
     }
 
     @Override
@@ -1003,28 +935,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
             @NonNull String siteAddress,
             @Nullable String redirectUrl,
             boolean hasJetpack) {
-        // Not used in WordPress app
-    }
-
-    @Override
-    public void helpHandleDiscoveryError(
-            String siteAddress,
-            String endpointAddress,
-            String username,
-            String password,
-            String userAvatarUrl,
-            int errorMessage) {
-        // Not used in WordPress app
-    }
-
-    @Override
-    public void helpNoJetpackScreen(
-            String siteAddress,
-            String endpointAddress,
-            String username,
-            String password,
-            String userAvatarUrl,
-            Boolean checkJetpackAvailability) {
         // Not used in WordPress app
     }
 

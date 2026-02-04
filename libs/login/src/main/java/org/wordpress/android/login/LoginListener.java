@@ -1,7 +1,5 @@
 package org.wordpress.android.login;
 
-import android.net.Uri;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -27,7 +25,6 @@ public interface LoginListener {
                                       String service);
     void loginViaSiteAddress();
     void loggedInViaSocialAccount(ArrayList<Integer> oldSiteIds, boolean doLoginUpdate);
-    void loginViaWpcomUsernameInstead();
     void loginViaSiteCredentials(String inputSiteAddress);
     void helpEmailScreen(String email);
     void helpSocialEmailScreen(String email);
@@ -52,22 +49,10 @@ public interface LoginListener {
     void alreadyLoggedInWpcom(ArrayList<Integer> oldSitesIds);
     void gotWpcomSiteInfo(String siteAddress);
     void gotConnectedSiteInfo(@NonNull String siteAddress, @Nullable String redirectUrl, boolean hasJetpack);
-    void gotXmlRpcEndpoint(String inputSiteAddress, String endpointAddress);
     void handleSslCertificateError(MemorizingTrustManager memorizingTrustManager, SelfSignedSSLCallback callback);
     void helpSiteAddress(String url);
     void helpFindingSiteAddress(String username, SiteStore siteStore);
     void handleSiteAddressError(ConnectSiteInfoPayload siteInfo);
-
-    // Login username password callbacks
-    void forgotPassword(String url);
-    void saveCredentialsInSmartLock(@Nullable String username, @Nullable String password,
-                                    @NonNull String displayName, @Nullable Uri profilePicture);
-    void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds);
-    void helpUsernamePassword(String url, String username, boolean isWpcom);
-    void helpNoJetpackScreen(String siteAddress, String endpointAddress, String username,
-                             String password, String userAvatarUrl, Boolean checkJetpackAvailability);
-    void helpHandleDiscoveryError(String siteAddress, String endpointAddress, String username,
-                                  String password, String userAvatarUrl, int errorMessage);
 
     // Login 2FA screen callbacks
     void help2FaScreen(String email);
