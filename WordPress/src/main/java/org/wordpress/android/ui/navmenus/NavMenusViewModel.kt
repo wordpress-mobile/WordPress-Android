@@ -371,14 +371,14 @@ class NavMenusViewModel @Inject constructor(
 
             _menuDetailState.value = state.copy(isSaving = true)
 
-            val menu = NavMenuModel().apply {
-                localSiteId = site.id
-                remoteMenuId = state.menuId
-                name = state.name
-                description = state.description
-                locations = state.selectedLocations.toJsonStringArray()
+            val menu = NavMenuModel(
+                localSiteId = site.id,
+                remoteMenuId = state.menuId,
+                name = state.name,
+                description = state.description,
+                locations = state.selectedLocations.toJsonStringArray(),
                 autoAdd = state.autoAdd
-            }
+            )
 
             withContext(ioDispatcher) {
                 val result = if (state.isNew) {
@@ -586,25 +586,17 @@ class NavMenusViewModel @Inject constructor(
 
         if (itemToMove == null || swapWithItem == null) return false
 
-        val originalOrderForMoved = itemToMove.menuOrder
-        val originalOrderForSwapped = swapWithItem.menuOrder
+        val updatedItemToMove = itemToMove.copy(menuOrder = swapWithItem.menuOrder)
+        val updatedSwapWithItem = swapWithItem.copy(menuOrder = itemToMove.menuOrder)
 
-        itemToMove.menuOrder = originalOrderForSwapped
-        swapWithItem.menuOrder = originalOrderForMoved
-
-        val result1 = navMenuRestClient.updateMenuItem(site, itemToMove)
+        val result1 = navMenuRestClient.updateMenuItem(site, updatedItemToMove)
         val result2 = if (result1 is NavMenuRestClient.NavMenuItemResult.Success) {
-            navMenuRestClient.updateMenuItem(site, swapWithItem)
+            navMenuRestClient.updateMenuItem(site, updatedSwapWithItem)
         } else {
             result1
         }
 
-        val success = result2 is NavMenuRestClient.NavMenuItemResult.Success
-        if (!success) {
-            itemToMove.menuOrder = originalOrderForMoved
-            swapWithItem.menuOrder = originalOrderForSwapped
-        }
-        return success
+        return result2 is NavMenuRestClient.NavMenuItemResult.Success
     }
 
     fun saveMenuItem() {
@@ -660,26 +652,26 @@ class NavMenusViewModel @Inject constructor(
     }
 
     private fun createMenuItemModel(site: SiteModel, state: MenuItemDetailUiState): NavMenuItemModel {
-        return NavMenuItemModel().apply {
-            localSiteId = site.id
-            remoteItemId = state.itemId
-            menuId = state.menuId
-            title = state.title
-            url = state.url
-            type = state.type
-            objectType = state.objectType
-            objectId = state.objectId
-            parentId = state.parentId
-            menuOrder = state.menuOrder
-            target = state.target
+        return NavMenuItemModel(
+            localSiteId = site.id,
+            remoteItemId = state.itemId,
+            menuId = state.menuId,
+            title = state.title,
+            url = state.url,
+            type = state.type,
+            objectType = state.objectType,
+            objectId = state.objectId,
+            parentId = state.parentId,
+            menuOrder = state.menuOrder,
+            target = state.target,
             classes = if (state.cssClasses.isNotEmpty()) {
                 "[\"${state.cssClasses.replace(",", "\",\"")}\"]"
             } else {
                 "[]"
-            }
-            description = state.description
+            },
+            description = state.description,
             attrTitle = state.attrTitle
-        }
+        )
     }
 
     fun deleteMenuItem() {

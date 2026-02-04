@@ -4,31 +4,31 @@ package org.wordpress.android.fluxc.model.navmenu
  * Represents an item within a WordPress navigation menu.
  * Maps to the WP REST API /wp/v2/menu-items endpoint.
  */
-class NavMenuItemModel {
-    var localSiteId: Int = 0
-    var remoteItemId: Long = 0
-    var menuId: Long = 0
-    var title: String = ""
-    var url: String = ""
+data class NavMenuItemModel(
+    val localSiteId: Int = 0,
+    val remoteItemId: Long = 0,
+    val menuId: Long = 0,
+    val title: String = "",
+    val url: String = "",
     // Type of menu item: "custom", "post_type", "taxonomy", "post_type_archive"
-    var type: String = ""
+    val type: String = "",
     // Specific object type: "post", "page", "category", "tag", or custom taxonomy/post type
-    var objectType: String = ""
+    val objectType: String = "",
     // ID of the linked object (post, page, category, etc.)
-    var objectId: Long = 0
+    val objectId: Long = 0,
     // Parent menu item ID for hierarchical menus
-    var parentId: Long = 0
+    val parentId: Long = 0,
     // Order position within the menu
-    var menuOrder: Int = 0
+    val menuOrder: Int = 0,
     // Link target: "_blank", "_self", etc.
-    var target: String = ""
+    val target: String = "",
     // CSS classes (JSON array stored as string)
-    var classes: String = ""
+    val classes: String = "",
     // Item description
-    var description: String = ""
+    val description: String = "",
     // Attribute title (tooltip)
-    var attrTitle: String = ""
-
+    val attrTitle: String = ""
+) {
     companion object {
         const val TYPE_CUSTOM = "custom"
         const val TYPE_POST_TYPE = "post_type"

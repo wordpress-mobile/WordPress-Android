@@ -354,49 +354,49 @@ class NavMenuRestClient @Inject constructor(
     // ========== Extension Functions ==========
 
     private fun NavMenuWithEditContext.toNavMenuModel(localSiteId: Int): NavMenuModel {
-        return NavMenuModel().apply {
-            this.localSiteId = localSiteId
-            this.remoteMenuId = this@toNavMenuModel.id
-            this.name = this@toNavMenuModel.name
-            this.slug = this@toNavMenuModel.slug
-            this.description = this@toNavMenuModel.description
-            this.locations = this@toNavMenuModel.locations.toJsonStringArray()
-            this.autoAdd = this@toNavMenuModel.autoAdd
-        }
+        return NavMenuModel(
+            localSiteId = localSiteId,
+            remoteMenuId = id,
+            name = name,
+            slug = slug,
+            description = description,
+            locations = locations.toJsonStringArray(),
+            autoAdd = autoAdd
+        )
     }
 
     private fun NavMenuItemWithEditContext.toNavMenuItemModel(
         localSiteId: Int,
         menuId: Long = this.menus ?: 0L
     ): NavMenuItemModel {
-        return NavMenuItemModel().apply {
-            this.localSiteId = localSiteId
-            this.remoteItemId = this@toNavMenuItemModel.id
-            this.menuId = menuId
-            this.title = this@toNavMenuItemModel.title.raw ?: ""
-            this.url = this@toNavMenuItemModel.url
-            this.type = mapTypeLabelToType(this@toNavMenuItemModel.typeLabel)
-            this.objectType = this@toNavMenuItemModel.`object`
-            this.objectId = this@toNavMenuItemModel.objectId
-            this.parentId = this@toNavMenuItemModel.parent
-            this.menuOrder = this@toNavMenuItemModel.menuOrder.toInt()
-            this.target = this@toNavMenuItemModel.target
-            this.classes = this@toNavMenuItemModel.classes.toJsonStringArray()
-            this.description = this@toNavMenuItemModel.description
-            this.attrTitle = this@toNavMenuItemModel.attrTitle
-        }
+        return NavMenuItemModel(
+            localSiteId = localSiteId,
+            remoteItemId = id,
+            menuId = menuId,
+            title = title.raw ?: "",
+            url = url,
+            type = mapTypeLabelToType(typeLabel),
+            objectType = `object`,
+            objectId = objectId,
+            parentId = parent,
+            menuOrder = menuOrder.toInt(),
+            target = target,
+            classes = classes.toJsonStringArray(),
+            description = description,
+            attrTitle = attrTitle
+        )
     }
 
     private fun MenuLocationWithViewContext.toNavMenuLocationModel(
         localSiteId: Int,
         slug: String
     ): NavMenuLocationModel {
-        return NavMenuLocationModel().apply {
-            this.localSiteId = localSiteId
-            this.name = slug
-            this.description = this@toNavMenuLocationModel.description
-            this.menuId = this@toNavMenuLocationModel.menu
-        }
+        return NavMenuLocationModel(
+            localSiteId = localSiteId,
+            name = slug,
+            description = description,
+            menuId = menu
+        )
     }
 
     // ========== Result Types ==========
