@@ -21,6 +21,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.RequestExecutionErrorReason
 import javax.inject.Inject
 
 class ApplicationPasswordViewModelSlice @Inject constructor(
@@ -104,6 +105,24 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                             "A_P: UnknownError for ${site.url}: code=${response.statusCode}, msg=${response.response}"
                         )
                         buildReauthenticationBanner(site)
+                    }
+                    is WpRequestResult.RequestExecutionFailed -> {
+                        val isTimeout = response.reason is RequestExecutionErrorReason.HttpTimeoutError
+                        if (isTimeout) {
+                            appLogWrapper.d(AppLog.T.MAIN, "A_P: Request timed out for ${site.url}")
+                        } else {
+                            appLogWrapper.d(
+                                AppLog.T.MAIN,
+                                "A_P: RequestExecutionFailed for ${site.url}: " +
+                                    "reason=${response.reason}, statusCode=${response.statusCode}"
+                            )
+                        }
+                        // Don't show reauthentication banner for timeouts - it's likely a network issue
+                        if (!isTimeout) {
+                            buildReauthenticationBanner(site)
+                        } else {
+                            uiModelMutable.postValue(null)
+                        }
                     }
                     else -> {
                         // Credentials are invalid, show reauthentication banner

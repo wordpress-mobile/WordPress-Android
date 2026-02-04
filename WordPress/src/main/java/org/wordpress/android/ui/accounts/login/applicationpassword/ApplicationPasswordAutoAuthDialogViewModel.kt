@@ -25,6 +25,7 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DeviceUtils
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordCreateParams
+import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.WpUuid
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -92,8 +93,33 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                         _navigationEvent.emit(NavigationEvent.Success)
                     }
 
+                    is WpRequestResult.WpError -> {
+                        appLogWrapper.e(
+                            AppLog.T.API,
+                            "Error creating application password: WpError - ${response.errorMessage}"
+                        )
+                        fallbackToManualLogin(site.url)
+                    }
+
+                    is WpRequestResult.RequestExecutionFailed -> {
+                        val isTimeout = response.reason is RequestExecutionErrorReason.HttpTimeoutError
+                        if (isTimeout) {
+                            appLogWrapper.e(AppLog.T.API, "Error creating application password: Request timed out")
+                        } else {
+                            appLogWrapper.e(
+                                AppLog.T.API,
+                                "Error creating application password: RequestExecutionFailed - " +
+                                    "reason=${response.reason}, statusCode=${response.statusCode}"
+                            )
+                        }
+                        fallbackToManualLogin(site.url)
+                    }
+
                     else -> {
-                        appLogWrapper.e(AppLog.T.API, "Error creating application password")
+                        appLogWrapper.e(
+                            AppLog.T.API,
+                            "Error creating application password: ${response::class.simpleName} - $response"
+                        )
                         fallbackToManualLogin(site.url)
                     }
                 }
