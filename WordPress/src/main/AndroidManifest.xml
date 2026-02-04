@@ -1190,12 +1190,6 @@
             android:label="Installation Referrer Service" />
 
         <service
-            android:name=".login.LoginWpcomService"
-            android:exported="false"
-            android:label="Login to WPCOM Service"
-            android:foregroundServiceType="shortService" />
-
-        <service
             android:name=".ui.sitecreation.services.SiteCreationService"
             android:exported="false"
             android:label="Site Creation Service"
