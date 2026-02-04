@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
@@ -42,7 +41,6 @@ import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordFragment;
-import org.wordpress.android.login.SignupMagicLinkFragment;
 import org.wordpress.android.support.SupportWebViewActivity;
 import org.wordpress.android.support.ZendeskExtraTags;
 import org.wordpress.android.support.ZendeskHelper;
@@ -560,32 +558,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     @Override
-    public void showSignupMagicLink(String email) {
-        boolean isEmailClientAvailable = WPActivityUtils.isEmailClientAvailable(this);
-        AuthEmailPayloadScheme scheme = mViewModel.getMagicLinkScheme();
-        SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email, mIsJetpackConnect,
-                mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null, isEmailClientAvailable,
-                scheme);
-        slideInFragment(signupMagicLinkFragment, true, SignupMagicLinkFragment.TAG);
-    }
-
-    @Override
-    public void openEmailClient(boolean isLogin) {
-        mUnifiedLoginTracker.trackClick(Click.OPEN_EMAIL_CLIENT);
-        if (WPActivityUtils.isEmailClientAvailable(this)) {
-            if (isLogin) {
-                mLoginAnalyticsListener.trackLoginMagicLinkOpenEmailClientClicked();
-            } else {
-                mLoginAnalyticsListener.trackSignupMagicLinkOpenEmailClientClicked();
-            }
-
-            WPActivityUtils.openEmailClientChooser(this, getString(R.string.login_select_email_client));
-        } else {
-            ToastUtils.showToast(this, R.string.login_email_client_not_found);
-        }
-    }
-
-    @Override
     public void alreadyLoggedInWpcom(ArrayList<Integer> oldSitesIds) {
         ToastUtils.showToast(this, R.string.already_logged_in_wpcom, ToastUtils.Duration.LONG);
         loggedInAndFinish(oldSitesIds, false);
@@ -630,11 +602,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
             }
         }
-    }
-
-    @Override
-    public void helpSignupMagicLinkScreen(String email) {
-        viewHelp(Origin.SIGNUP_MAGIC_LINK);
     }
 
     @Override

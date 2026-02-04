@@ -20,9 +20,6 @@ public interface LoginListener {
     // Login navigation
     void loginViaSiteAddress();
 
-    // Login Magic Link Sent callbacks (used by SignupMagicLinkFragment)
-    void openEmailClient(boolean isLogin);
-
     // Login Site Address input callbacks
     void alreadyLoggedInWpcom(ArrayList<Integer> oldSitesIds);
     void gotConnectedSiteInfo(@NonNull String siteAddress, @Nullable String redirectUrl, boolean hasJetpack);
@@ -35,7 +32,5 @@ public interface LoginListener {
     void startPostLoginServices();
 
     // Signup
-    void helpSignupMagicLinkScreen(String email);
-    void showSignupMagicLink(String email);
     void showSignupToLoginMessage();
 }
