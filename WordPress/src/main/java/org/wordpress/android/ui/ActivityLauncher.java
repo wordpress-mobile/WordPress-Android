@@ -181,12 +181,19 @@ public class ActivityLauncher {
     public static final String CATEGORY_DETAIL_ID = "category_detail_key";
 
     public static void showMainActivity(Context context) {
-        showMainActivity(context, false);
+        showMainActivity(context, false, false);
     }
 
     public static void showMainActivity(Context context, boolean bypassMigration) {
+        showMainActivity(context, bypassMigration, false);
+    }
+
+    public static void showMainActivity(Context context, boolean bypassMigration, boolean selectPrimarySite) {
         Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
+        if (selectPrimarySite) {
+            intent.putExtra(WPMainActivity.ARG_SELECT_PRIMARY_SITE, true);
+        }
         context.startActivity(intent);
     }
 

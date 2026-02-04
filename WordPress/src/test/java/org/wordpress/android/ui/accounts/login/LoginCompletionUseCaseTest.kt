@@ -18,38 +18,6 @@ class LoginCompletionUseCaseTest : BaseUnitTest() {
         useCase = LoginCompletionUseCase()
     }
 
-    // region shouldWaitForSitesToLoad tests
-
-    @Test
-    fun `given doLoginUpdate true and no sites, then should wait for sites`() {
-        val result = useCase.shouldWaitForSitesToLoad(doLoginUpdate = true, hasSites = false)
-
-        assertThat(result).isTrue()
-    }
-
-    @Test
-    fun `given doLoginUpdate true and has sites, then should not wait`() {
-        val result = useCase.shouldWaitForSitesToLoad(doLoginUpdate = true, hasSites = true)
-
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `given doLoginUpdate false and no sites, then should not wait`() {
-        val result = useCase.shouldWaitForSitesToLoad(doLoginUpdate = false, hasSites = false)
-
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `given doLoginUpdate false and has sites, then should not wait`() {
-        val result = useCase.shouldWaitForSitesToLoad(doLoginUpdate = false, hasSites = true)
-
-        assertThat(result).isFalse()
-    }
-
-    // endregion
-
     // region getLoginCompletionAction tests
 
     @Test

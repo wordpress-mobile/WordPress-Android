@@ -214,6 +214,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public static final String ARG_DISMISS_NOTIFICATION = "dismiss_notification";
     public static final String ARG_OPEN_BLOGGING_REMINDERS = "show_blogging_reminders_flow";
     public static final String ARG_SELECTED_SITE = "SELECTED_SITE_ID";
+    public static final String ARG_SELECT_PRIMARY_SITE = "SELECT_PRIMARY_SITE";
     public static final String ARG_STAT_TO_TRACK = "stat_to_track";
     public static final String ARG_EDITOR_ORIGIN = "editor_origin";
     public static final String ARG_IS_CHANGING_CONFIGURATION = "IS_CHANGING_CONFIGURATION";
@@ -440,6 +441,12 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             onSetPromptReminderClick(getIntent().getIntExtra(ARG_OPEN_BLOGGING_REMINDERS, 0));
         }
 
+        // Check if we should select the primary site (e.g., after WP.com login)
+        if (getIntent().getBooleanExtra(ARG_SELECT_PRIMARY_SITE, false)) {
+            getIntent().removeExtra(ARG_SELECT_PRIMARY_SITE);
+            mSelectedSiteRepository.removeSite();
+            initSelectedSite();
+        }
         // Check if a specific site should be selected (e.g., after adding a self-hosted site)
         int selectedSiteId = getIntent().getIntExtra(ARG_SELECTED_SITE, SelectedSiteRepository.UNAVAILABLE);
         if (selectedSiteId != SelectedSiteRepository.UNAVAILABLE) {

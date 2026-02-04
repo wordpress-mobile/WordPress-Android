@@ -9,17 +9,6 @@ import javax.inject.Inject
  */
 class LoginCompletionUseCase @Inject constructor() {
     /**
-     * Determines if we should wait for sites to load after login.
-     *
-     * @param doLoginUpdate Whether the login requires fetching account/sites
-     * @param hasSites Whether the user already has sites loaded
-     * @return true if we should wait for sites to load before proceeding
-     */
-    fun shouldWaitForSitesToLoad(doLoginUpdate: Boolean, hasSites: Boolean): Boolean {
-        return doLoginUpdate && !hasSites
-    }
-
-    /**
      * Determines the navigation action to take based on the login mode.
      *
      * @param loginMode The current login mode

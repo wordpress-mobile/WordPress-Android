@@ -92,6 +92,19 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
     // Static field to preserve login mode across OAuth flow (when callback creates new activity)
     private static LoginMode sPendingLoginMode;
 
+    // Static field to track if we're in a share flow (for self-hosted login via ApplicationPasswordLoginActivity)
+    private static boolean sIsShareFlowPending;
+
+    /**
+     * Check if there's a pending share flow. Used by ApplicationPasswordLoginActivity
+     * to determine whether to navigate to main activity or just finish.
+     */
+    public static boolean consumeShareFlowPending() {
+        boolean result = sIsShareFlowPending;
+        sIsShareFlowPending = false;
+        return result;
+    }
+
     private LoginMode mLoginMode;
     private LoginViewModel mViewModel;
     @Inject protected WPcomLoginHelper mLoginHelper;
@@ -246,6 +259,17 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
         mDispatcher.unregister(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Check if self-hosted login completed while in share flow
+        // ApplicationPasswordLoginActivity finishes back here after successful login
+        if (getLoginMode() == LoginMode.SHARE_INTENT && mSiteStore.hasSite()) {
+            setResult(Activity.RESULT_OK);
+            finish();
+        }
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
@@ -289,7 +313,8 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
                 mLoginCompletionUseCase.getMainNavigationDestination(getLoginMode());
         switch (destination) {
             case MAIN_ACTIVITY:
-                ActivityLauncher.showMainActivity(this);
+                // Select the primary site after WP.com login
+                ActivityLauncher.showMainActivity(this, false, true);
                 break;
             case FINISH_ONLY:
             default:
@@ -353,7 +378,7 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
 
         // If doLoginUpdate is true, we need to fetch account and sites before navigating.
         // This happens after WordPress.com OAuth login where we only have the token.
-        if (mLoginCompletionUseCase.shouldWaitForSitesToLoad(doLoginUpdate, mSiteStore.hasSite())) {
+        if (doLoginUpdate) {
             AppLog.i(T.MAIN, "Fetching account and sites before proceeding");
             mIsWaitingForSitesToLoad = true;
             mOldSitesIdsForLoginUpdate = oldSitesIds;
@@ -367,7 +392,7 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
                 // Handle self-hosted site login - find the newly added site and return its ID
                 finishWithNewlyAddedSiteId(oldSitesIds);
                 break;
-            case FINISH_ONLY:
+                case FINISH_ONLY:
                 // WooCommerce handles its own navigation
                 break;
             case NAVIGATE_TO_MAIN:
@@ -436,6 +461,10 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
 
     @Override
     public void loginViaSiteAddress() {
+        // Track if we're in a share flow so ApplicationPasswordLoginActivity knows to just finish
+        if (getLoginMode() == LoginMode.SHARE_INTENT) {
+            sIsShareFlowPending = true;
+        }
         slideInFragment(new LoginSiteApplicationPasswordFragment(), true, LoginSiteApplicationPasswordFragment.TAG);
     }
 
