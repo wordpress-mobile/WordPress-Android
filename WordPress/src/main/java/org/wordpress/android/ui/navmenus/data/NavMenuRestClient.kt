@@ -25,9 +25,12 @@ import uniffi.wp_api.NavMenuItemWithEditContext
 import uniffi.wp_api.NavMenuListParams
 import uniffi.wp_api.NavMenuUpdateParams
 import uniffi.wp_api.NavMenuWithEditContext
+import uniffi.wp_api.PostEndpointType
+import uniffi.wp_api.PostListParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
 import uniffi.wp_api.WpApiParamOrder
+import uniffi.wp_api.WpApiParamPostsOrderBy
 import uniffi.wp_api.WpApiParamTermsOrderBy
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -302,6 +305,72 @@ class NavMenuRestClient @Inject constructor(
     }
 
     // ========== Linkable Items Operations ==========
+
+    /**
+     * Fetches posts for menu item linking. Limited to 20 items, sorted by date (newest first).
+     */
+    suspend fun fetchPosts(site: SiteModel): LinkableItemsResult {
+        val client = wpApiClientProvider.getWpApiClient(site)
+
+        val response = client.request { requestBuilder ->
+            requestBuilder.posts().listWithEditContext(
+                postEndpointType = PostEndpointType.Posts,
+                params = PostListParams(
+                    perPage = PAGE_SIZE,
+                    order = WpApiParamOrder.DESC,
+                    orderby = WpApiParamPostsOrderBy.DATE
+                )
+            )
+        }
+
+        return when (response) {
+            is WpRequestResult.Success -> {
+                appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} posts")
+                val items = response.response.data.map {
+                    LinkableItemOption(it.id, it.title?.raw ?: "")
+                }
+                LinkableItemsResult.Success(items)
+            }
+            else -> {
+                val errorMessage = parseErrorMessage(response)
+                appLogWrapper.e(AppLog.T.API, "Failed to fetch posts: $errorMessage")
+                LinkableItemsResult.Error(errorMessage)
+            }
+        }
+    }
+
+    /**
+     * Fetches pages for menu item linking. Limited to 20 items, sorted by date (newest first).
+     */
+    suspend fun fetchPages(site: SiteModel): LinkableItemsResult {
+        val client = wpApiClientProvider.getWpApiClient(site)
+
+        val response = client.request { requestBuilder ->
+            requestBuilder.posts().listWithEditContext(
+                postEndpointType = PostEndpointType.Pages,
+                params = PostListParams(
+                    perPage = PAGE_SIZE,
+                    order = WpApiParamOrder.DESC,
+                    orderby = WpApiParamPostsOrderBy.DATE
+                )
+            )
+        }
+
+        return when (response) {
+            is WpRequestResult.Success -> {
+                appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} pages")
+                val items = response.response.data.map {
+                    LinkableItemOption(it.id, it.title?.raw ?: "")
+                }
+                LinkableItemsResult.Success(items)
+            }
+            else -> {
+                val errorMessage = parseErrorMessage(response)
+                appLogWrapper.e(AppLog.T.API, "Failed to fetch pages: $errorMessage")
+                LinkableItemsResult.Error(errorMessage)
+            }
+        }
+    }
 
     /**
      * Fetches categories for menu item linking. Limited to 20 items, sorted alphabetically.

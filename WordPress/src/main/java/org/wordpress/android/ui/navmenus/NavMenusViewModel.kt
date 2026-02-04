@@ -476,13 +476,10 @@ class NavMenusViewModel @Inject constructor(
 
             val result = withContext(ioDispatcher) {
                 when (typeOption) {
+                    MenuItemTypeOption.POST -> navMenuRestClient.fetchPosts(site)
+                    MenuItemTypeOption.PAGE -> navMenuRestClient.fetchPages(site)
                     MenuItemTypeOption.CATEGORY -> navMenuRestClient.fetchCategories(site)
                     MenuItemTypeOption.TAG -> navMenuRestClient.fetchTags(site)
-                    // Posts and pages not yet supported in wordpress-rs
-                    MenuItemTypeOption.POST,
-                    MenuItemTypeOption.PAGE -> {
-                        NavMenuRestClient.LinkableItemsResult.Success(emptyList())
-                    }
                     MenuItemTypeOption.CUSTOM_LINK -> {
                         NavMenuRestClient.LinkableItemsResult.Success(emptyList())
                     }
