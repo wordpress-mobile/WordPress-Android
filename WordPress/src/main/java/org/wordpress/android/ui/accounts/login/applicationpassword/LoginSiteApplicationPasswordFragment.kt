@@ -23,7 +23,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.login.LoginBaseFormFragment
 import org.wordpress.android.login.LoginListener
-import org.wordpress.android.login.LoginSiteAddressHelpDialogFragment
 import org.wordpress.android.login.LoginSiteAddressValidator
 import org.wordpress.android.login.R
 import org.wordpress.android.login.widgets.WPLoginInputRow
@@ -93,11 +92,6 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         this.siteAddressInput = view.findViewById(R.id.login_site_address_row)
         siteAddressInput?.addTextChangedListener(this)
         siteAddressInput?.setOnEditorCommitListener(this)
-
-        view.findViewById<View>(R.id.login_site_address_help_button).setOnClickListener {
-            mAnalyticsListener.trackShowHelpClick()
-            showSiteAddressHelp()
-        }
 
         loginSiteAddressValidator.isValid.observe(viewLifecycleOwner) { enabled ->
             bottomButton.isEnabled = enabled
@@ -172,13 +166,6 @@ class LoginSiteApplicationPasswordFragment : LoginBaseFormFragment<LoginListener
         val message = getString(messageId)
         mAnalyticsListener.trackFailure(message)
         siteAddressInput?.setError(message)
-    }
-
-    private fun showSiteAddressHelp() {
-        LoginSiteAddressHelpDialogFragment().show(
-            parentFragmentManager,
-            LoginSiteAddressHelpDialogFragment.TAG
-        )
     }
 
     private fun discover() {

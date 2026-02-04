@@ -586,25 +586,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     @Override
-    public void helpFindingSiteAddress(String username, SiteStore siteStore) {
-        mUnifiedLoginTracker.trackClick(Click.HELP_FINDING_SITE_ADDRESS);
-        if (!mBuildConfigWrapper.isJetpackApp()) {
-            viewHelp(Origin.LOGIN_SITE_ADDRESS);
-        } else {
-            if (mContactSupportFeatureConfig.isEnabled()) {
-                Intent intent = SupportWebViewActivity.createIntent(
-                        this,
-                        Origin.LOGIN_SITE_ADDRESS,
-                        null,
-                        null);
-                startActivity(intent);
-            } else {
-                mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
-            }
-        }
-    }
-
-    @Override
     public void startPostLoginServices() {
         // Get reader tags so they're available as soon as the Reader is accessed - done for
         // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this

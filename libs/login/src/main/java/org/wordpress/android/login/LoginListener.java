@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
-import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ public interface LoginListener {
     void gotConnectedSiteInfo(@NonNull String siteAddress, @Nullable String redirectUrl, boolean hasJetpack);
     void handleSslCertificateError(MemorizingTrustManager memorizingTrustManager, SelfSignedSSLCallback callback);
     void helpSiteAddress(String url);
-    void helpFindingSiteAddress(String username, SiteStore siteStore);
     void handleSiteAddressError(ConnectSiteInfoPayload siteInfo);
 
     // General post-login callbacks

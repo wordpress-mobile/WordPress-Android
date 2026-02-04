@@ -22,13 +22,4 @@
         android:hint="@string/login_site_address"
         android:imeOptions="actionNext"
         android:inputType="textUri" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/login_site_address_help_button"
-        style="@style/Widget.LoginFlow.Button.Tertiary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingEnd="@dimen/margin_none"
-        android:paddingStart="@dimen/margin_none"
-        android:text="@string/login_find_your_site_adress" />
 </LinearLayout>
