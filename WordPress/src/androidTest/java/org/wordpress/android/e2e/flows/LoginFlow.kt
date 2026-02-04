@@ -16,15 +16,8 @@ import org.wordpress.android.login.R as LoginR
 class LoginFlow {
     fun chooseContinueWithWpCom(composeTestRule: ComposeTestRule?): LoginFlow {
         // Login Prologue – We want to Continue with WordPress.com, not a site address
+        // Note: WP.com login now uses web-based OAuth flow via Custom Tabs
         tapContinueWithWpCom(composeTestRule!!)
-        return this
-    }
-
-    fun enterEmailAddress(emailAddress: String?): LoginFlow {
-        // Email Address Screen – Fill it in and click "Continue"
-        // See LoginEmailFragment
-        WPSupportUtils.populateTextField(R.id.input, emailAddress)
-        WPSupportUtils.clickOn(LoginR.id.login_continue_button)
         return this
     }
 

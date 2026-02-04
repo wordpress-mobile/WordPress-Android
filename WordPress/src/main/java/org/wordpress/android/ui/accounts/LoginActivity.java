@@ -38,10 +38,8 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.login.AuthOptions;
 import org.wordpress.android.login.Login2FaFragment;
 import org.wordpress.android.login.LoginAnalyticsListener;
-import org.wordpress.android.login.LoginEmailFragment;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordFragment;
@@ -376,11 +374,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         return fragment == null ? null : (LoginPrologueRevampedFragment) fragment;
     }
 
-    private LoginEmailFragment getLoginEmailFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
-        return fragment == null ? null : (LoginEmailFragment) fragment;
-    }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -525,22 +518,11 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     private void startLogin() {
-        if (getLoginEmailFragment() != null) {
-            // email screen is already shown so, login has already started. Just bail.
-            return;
+        if (getLoginMode() == LoginMode.JETPACK_STATS) {
+            mIsJetpackConnect = true;
         }
-
-        if (getLoginPrologueRevampedFragment() == null) {
-            // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
-            showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), LoginEmailFragment.TAG);
-
-            if (getLoginMode() == LoginMode.JETPACK_STATS) {
-                mIsJetpackConnect = true;
-            }
-        } else {
-            // prologue fragment is shown so, slide in the email screen (and add to history)
-            slideInFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), true, LoginEmailFragment.TAG);
-        }
+        // Use web-based WP.com login
+        showWPcomLoginScreen(this);
     }
 
     // LoginPrologueListener implementation methods
@@ -571,25 +553,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 .build();
     }
 
-    @Override
-    public void onTermsOfServiceClicked() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
-        mUnifiedLoginTracker.trackClick(Click.TERMS_OF_SERVICE_CLICKED);
-        ActivityLauncher.openUrlExternal(this, WPUrlUtils.buildTermsOfServiceUrl(this));
-    }
-
     // LoginListener implementation methods
-
-    @Override
-    public void gotWpcomEmail(String email, boolean verifyEmail, @Nullable AuthOptions authOptions) {
-        initSmartLockIfNotFinished(false);
-        showWPcomLoginScreen(this);
-    }
-
-    @Override
-    public void gotUnregisteredEmail(String email) {
-        showSignupMagicLink(email);
-    }
 
     @Override
     public void loginViaSiteAddress() {
@@ -649,12 +613,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     @Override
-    public void gotWpcomSiteInfo(String siteAddress) {
-        LoginEmailFragment loginEmailFragment = LoginEmailFragment.newInstance(siteAddress);
-        slideInFragment(loginEmailFragment, true, LoginEmailFragment.TAG);
-    }
-
-    @Override
     public void handleSslCertificateError(MemorizingTrustManager memorizingTrustManager,
                                           final SelfSignedSSLCallback callback) {
         SelfSignedSSLUtils.showSSLWarningDialog(this, memorizingTrustManager, new SelfSignedSSLUtils.Callback() {
@@ -693,16 +651,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
             }
         }
-    }
-
-    @Override
-    public void helpEmailScreen(String email) {
-        viewHelp(Origin.LOGIN_EMAIL);
-    }
-
-    @Override
-    public void helpSignupEmailScreen(String email) {
-        viewHelp(Origin.SIGNUP_EMAIL);
     }
 
     @Override
@@ -803,20 +751,10 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     @Override
-    public void showHelpFindingConnectedEmail() {
-        // Not used in WordPress app
-    }
-
-    @Override
     public void gotConnectedSiteInfo(
             @NonNull String siteAddress,
             @Nullable String redirectUrl,
             boolean hasJetpack) {
-        // Not used in WordPress app
-    }
-
-    @Override
-    public void loginViaSiteCredentials(String inputSiteAddress) {
         // Not used in WordPress app
     }
 
