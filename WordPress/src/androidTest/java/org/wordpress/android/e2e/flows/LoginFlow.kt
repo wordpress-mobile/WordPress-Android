@@ -1,18 +1,11 @@
 package org.wordpress.android.e2e.flows
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.widget.EditText
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matchers
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.e2e.pages.HelpScreen
 import org.wordpress.android.e2e.pages.LandingPage.tapContinueWithWpCom
@@ -32,21 +25,6 @@ class LoginFlow {
         // See LoginEmailFragment
         WPSupportUtils.populateTextField(R.id.input, emailAddress)
         WPSupportUtils.clickOn(LoginR.id.login_continue_button)
-        return this
-    }
-
-    fun openMagicLink(): LoginFlow {
-        // Magic Link Sent Screen – Should see "Check email" button
-        // See LoginMagicLinkSentFragment
-        WPSupportUtils.waitForElementToBeDisplayed(LoginR.id.login_open_email_client)
-
-        // Follow the magic link to continue login
-        // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background
-        val appVariant = BuildConfig.FLAVOR
-        val intent =
-            Intent(Intent.ACTION_VIEW, Uri.parse("$appVariant://magic-login?token=valid_token"))
-                .setPackage(ApplicationProvider.getApplicationContext<Context>().packageName)
-        ActivityScenario.launch<Activity>(intent)
         return this
     }
 

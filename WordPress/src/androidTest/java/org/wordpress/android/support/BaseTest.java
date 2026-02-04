@@ -96,11 +96,11 @@ public class BaseTest {
     }
 
     protected void wpLogin() {
-        logoutIfNecessary();
-        new LoginFlow().chooseContinueWithWpCom(mComposeTestRule)
-                       .enterEmailAddress(WP_COM_USER_EMAIL)
-                       .openMagicLink()
-                       .confirmLogin();
+        // WP.com login now uses web-based OAuth flow which cannot be automated via Espresso.
+        // Tests requiring WP.com login need a different approach (e.g., pre-authenticated state).
+        throw new UnsupportedOperationException(
+                "WP.com login is now web-based and cannot be automated via Espresso"
+        );
     }
 
     private void wpLogout() {

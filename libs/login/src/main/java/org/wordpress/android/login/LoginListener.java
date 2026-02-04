@@ -35,13 +35,8 @@ public interface LoginListener {
     void showHelpFindingConnectedEmail();
     void onTermsOfServiceClicked();
 
-    // Login Request Magic Link callbacks
-    void showMagicLinkSentScreen(String email);
-    void helpMagicLinkRequest(String email);
-
-    // Login Magic Link Sent callbacks
+    // Login Magic Link Sent callbacks (used by SignupMagicLinkFragment)
     void openEmailClient(boolean isLogin);
-    void helpMagicLinkSent(String email);
 
     // Login 2FA callbacks
     void needs2fa(String email, String password);

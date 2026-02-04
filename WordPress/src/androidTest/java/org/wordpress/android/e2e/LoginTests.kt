@@ -17,26 +17,6 @@ class LoginTests : BaseTest() {
     }
 
     @Test
-    fun e2eLoginWithMagicLink() {
-        LoginFlow().chooseContinueWithWpCom(super.mComposeTestRule)
-            .enterEmailAddress(E2ECredentials.WP_COM_USER_EMAIL)
-            .openMagicLink()
-            .confirmLogin()
-
-        ComposeEspressoLink().unregister()
-    }
-
-    @Test
-    fun e2eLoginWithPasswordlessAccount() {
-        LoginFlow().chooseContinueWithWpCom(super.mComposeTestRule)
-            .enterEmailAddress(E2ECredentials.WP_COM_PASSWORDLESS_USER_EMAIL)
-            .openMagicLink()
-            .confirmLogin()
-
-        ComposeEspressoLink().unregister()
-    }
-
-    @Test
     fun e2eLoginWithSelfHostedAccount() {
         LoginFlow().chooseEnterYourSiteAddress(super.mComposeTestRule)
             .enterSiteAddress(E2ECredentials.SELF_HOSTED_USER_SITE_ADDRESS)

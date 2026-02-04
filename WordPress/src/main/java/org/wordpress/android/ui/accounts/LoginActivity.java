@@ -46,8 +46,6 @@ import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.login.LoginEmailFragment;
 import org.wordpress.android.login.LoginGoogleFragment;
 import org.wordpress.android.login.LoginListener;
-import org.wordpress.android.login.LoginMagicLinkRequestFragment;
-import org.wordpress.android.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
@@ -609,19 +607,7 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     @Override
     public void gotWpcomEmail(String email, boolean verifyEmail, @Nullable AuthOptions authOptions) {
         initSmartLockIfNotFinished(false);
-
-        boolean forceRequestAtStart = authOptions != null && authOptions.isPasswordless();
-        showMagicLinkRequestScreen(email, verifyEmail, forceRequestAtStart);
-    }
-
-    private void showMagicLinkRequestScreen(String email, boolean verifyEmail,
-                                            boolean forceRequestAtStart) {
-        AuthEmailPayloadScheme scheme = mViewModel.getMagicLinkScheme();
-        String jetpackConnectionSource = mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null;
-        LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment
-                .newInstance(email, scheme, mIsJetpackConnect, jetpackConnectionSource, verifyEmail,
-                        forceRequestAtStart);
-        slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
+        showWPcomLoginScreen(this);
     }
 
     @Override
@@ -651,13 +637,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     @Override
     public void loginViaWpcomUsernameInstead() {
         jumpToUsernamePassword(null, null);
-    }
-
-    @Override
-    public void showMagicLinkSentScreen(String email) {
-        LoginMagicLinkSentFragment loginMagicLinkSentFragment =
-                LoginMagicLinkSentFragment.newInstance(email);
-        slideInFragment(loginMagicLinkSentFragment, true, LoginMagicLinkSentFragment.TAG);
     }
 
     @Override
@@ -831,16 +810,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     @Override
     public void addGoogleLoginFragment(boolean isSignupFromLoginEnabled) {
         addGoogleFragment(LoginGoogleFragment.newInstance(isSignupFromLoginEnabled), LoginGoogleFragment.TAG);
-    }
-
-    @Override
-    public void helpMagicLinkRequest(String email) {
-        viewHelp(Origin.LOGIN_MAGIC_LINK);
-    }
-
-    @Override
-    public void helpMagicLinkSent(String email) {
-        viewHelp(Origin.LOGIN_MAGIC_LINK);
     }
 
     @Override
