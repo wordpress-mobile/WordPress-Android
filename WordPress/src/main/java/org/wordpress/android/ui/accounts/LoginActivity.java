@@ -89,6 +89,9 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
     private static final String KEY_UNIFIED_TRACKER_SOURCE = "KEY_UNIFIED_TRACKER_SOURCE";
     private static final String KEY_UNIFIED_TRACKER_FLOW = "KEY_UNIFIED_TRACKER_FLOW";
 
+    // Static field to preserve login mode across OAuth flow (when callback creates new activity)
+    private static LoginMode sPendingLoginMode;
+
     private LoginMode mLoginMode;
     private LoginViewModel mViewModel;
     @Inject protected WPcomLoginHelper mLoginHelper;
@@ -118,6 +121,13 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
 
         if (loginProcessed) {
             getIntent().setData(null);
+            // OAuth login successful - show loading UI and finish the login flow
+            setContentView(R.layout.login_loading);
+            this.loggedInAndFinish(new ArrayList<Integer>(), true);
+            return;
+        } else {
+            // Not an OAuth callback - clear any pending login mode from a previous flow
+            sPendingLoginMode = null;
         }
 
         // Start preloading the WordPress.com login page if needed – this avoids visual hitches
@@ -172,7 +182,7 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
                     break;
                 case SHARE_INTENT:
                     mUnifiedLoginTracker.setSource(Source.SHARE);
-                    showWPcomLoginScreen(this);
+                    showFragment(new LoginPrologueRevampedFragment(), LoginPrologueRevampedFragment.TAG);
                     break;
             }
         } else {
@@ -207,6 +217,20 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
         Flow flow = mUnifiedLoginTracker.getFlow();
         if (flow != null) {
             outState.putString(KEY_UNIFIED_TRACKER_FLOW, flow.getValue());
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+
+        // Handle OAuth callback when activity is reused (singleTop)
+        boolean loginProcessed = mLoginHelper.tryLoginWithDataString(intent.getDataString());
+        if (loginProcessed) {
+            intent.setData(null);
+            setContentView(R.layout.login_loading);
+            this.loggedInAndFinish(new ArrayList<Integer>(), true);
         }
     }
 
@@ -314,6 +338,12 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
         // compute and cache the Login mode
         mLoginMode = LoginMode.fromIntent(getIntent());
 
+        // If the mode is FULL (default) but we have a pending mode from an OAuth flow, use that instead
+        if (mLoginMode == LoginMode.FULL && sPendingLoginMode != null) {
+            mLoginMode = sPendingLoginMode;
+            sPendingLoginMode = null; // Clear after use
+        }
+
         return mLoginMode;
     }
 
@@ -376,6 +406,9 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
     public void showWPcomLoginScreen(@NonNull Context context) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_WEBVIEW);
         mUnifiedLoginTracker.setFlowAndStep(Flow.WORDPRESS_COM_WEB, Step.WPCOM_WEB_START);
+
+        // Save the current login mode so it survives the OAuth callback (which creates a new activity)
+        sPendingLoginMode = getLoginMode();
 
         CustomTabsIntent intent = getCustomTabsIntent();
 
