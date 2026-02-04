@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public interface LoginListener {
     interface SelfSignedSSLCallback {
@@ -24,13 +23,6 @@ public interface LoginListener {
     // Login Magic Link Sent callbacks (used by SignupMagicLinkFragment)
     void openEmailClient(boolean isLogin);
 
-    // Login 2FA callbacks
-    void needs2fa(String email, String password);
-    void needs2fa(String email, String password, String userId, String webauthnNonce,
-                  String nonceAuthenticator, String nonceBackup, String noncePush,
-                  List<String> supportedAuthTypes);
-    void loggedInViaPassword(ArrayList<Integer> oldSitesIds);
-
     // Login Site Address input callbacks
     void alreadyLoggedInWpcom(ArrayList<Integer> oldSitesIds);
     void gotConnectedSiteInfo(@NonNull String siteAddress, @Nullable String redirectUrl, boolean hasJetpack);
@@ -38,9 +30,6 @@ public interface LoginListener {
     void helpSiteAddress(String url);
     void helpFindingSiteAddress(String username, SiteStore siteStore);
     void handleSiteAddressError(ConnectSiteInfoPayload siteInfo);
-
-    // Login 2FA screen callbacks
-    void help2FaScreen(String email);
 
     // General post-login callbacks
     void startPostLoginServices();

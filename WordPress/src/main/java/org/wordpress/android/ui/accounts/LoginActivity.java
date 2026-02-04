@@ -38,7 +38,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.login.Login2FaFragment;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.LoginMode;
@@ -587,26 +586,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     @Override
-    public void needs2fa(String email, String password) {
-        Login2FaFragment login2FaFragment = Login2FaFragment.newInstance(email, password);
-        slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
-    }
-
-    @Override
-    public void needs2fa(String email, String password, String userId, String webauthnNonce, String nonceAuthenticator,
-                         String nonceBackup, String noncePush, List<String> supportedAuthTypes) {
-        mLoginAnalyticsListener.trackLogin2faNeeded();
-        Login2FaFragment login2FaFragment = Login2FaFragment.newInstance(email, password, userId, webauthnNonce,
-                nonceAuthenticator, nonceBackup, noncePush, supportedAuthTypes);
-        slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
-    }
-
-    @Override
-    public void loggedInViaPassword(ArrayList<Integer> oldSitesIds) {
-        loggedInAndFinish(oldSitesIds, false);
-    }
-
-    @Override
     public void alreadyLoggedInWpcom(ArrayList<Integer> oldSitesIds) {
         ToastUtils.showToast(this, R.string.already_logged_in_wpcom, ToastUtils.Duration.LONG);
         loggedInAndFinish(oldSitesIds, false);
@@ -656,11 +635,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     @Override
     public void helpSignupMagicLinkScreen(String email) {
         viewHelp(Origin.SIGNUP_MAGIC_LINK);
-    }
-
-    @Override
-    public void help2FaScreen(String email) {
-        viewHelp(Origin.LOGIN_2FA);
     }
 
     @Override
