@@ -309,45 +309,37 @@ class NavMenuRestClient @Inject constructor(
     /**
      * Fetches posts for menu item linking. Limited to 20 items, sorted by date (newest first).
      */
-    suspend fun fetchPosts(site: SiteModel): LinkableItemsResult {
-        val client = wpApiClientProvider.getWpApiClient(site)
-
-        val response = client.request { requestBuilder ->
-            requestBuilder.posts().listWithEditContext(
-                postEndpointType = PostEndpointType.Posts,
-                params = PostListParams(
-                    perPage = PAGE_SIZE,
-                    order = WpApiParamOrder.DESC,
-                    orderby = WpApiParamPostsOrderBy.DATE
-                )
-            )
-        }
-
-        return when (response) {
-            is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} posts")
-                val items = response.response.data.map {
-                    LinkableItemOption(it.id, it.title?.raw ?: "")
-                }
-                LinkableItemsResult.Success(items)
-            }
-            else -> {
-                val errorMessage = parseErrorMessage(response)
-                appLogWrapper.e(AppLog.T.API, "Failed to fetch posts: $errorMessage")
-                LinkableItemsResult.Error(errorMessage)
-            }
-        }
-    }
+    suspend fun fetchPosts(site: SiteModel): LinkableItemsResult =
+        fetchPostType(site, PostEndpointType.Posts, "posts")
 
     /**
      * Fetches pages for menu item linking. Limited to 20 items, sorted by date (newest first).
      */
-    suspend fun fetchPages(site: SiteModel): LinkableItemsResult {
+    suspend fun fetchPages(site: SiteModel): LinkableItemsResult =
+        fetchPostType(site, PostEndpointType.Pages, "pages")
+
+    /**
+     * Fetches categories for menu item linking. Limited to 20 items, sorted alphabetically.
+     */
+    suspend fun fetchCategories(site: SiteModel): LinkableItemsResult =
+        fetchTermType(site, TermEndpointType.Categories, "categories")
+
+    /**
+     * Fetches tags for menu item linking. Limited to 20 items, sorted alphabetically.
+     */
+    suspend fun fetchTags(site: SiteModel): LinkableItemsResult =
+        fetchTermType(site, TermEndpointType.Tags, "tags")
+
+    private suspend fun fetchPostType(
+        site: SiteModel,
+        endpointType: PostEndpointType,
+        typeName: String
+    ): LinkableItemsResult {
         val client = wpApiClientProvider.getWpApiClient(site)
 
         val response = client.request { requestBuilder ->
             requestBuilder.posts().listWithEditContext(
-                postEndpointType = PostEndpointType.Pages,
+                postEndpointType = endpointType,
                 params = PostListParams(
                     perPage = PAGE_SIZE,
                     order = WpApiParamOrder.DESC,
@@ -358,7 +350,7 @@ class NavMenuRestClient @Inject constructor(
 
         return when (response) {
             is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} pages")
+                appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} $typeName")
                 val items = response.response.data.map {
                     LinkableItemOption(it.id, it.title?.raw ?: "")
                 }
@@ -366,21 +358,22 @@ class NavMenuRestClient @Inject constructor(
             }
             else -> {
                 val errorMessage = parseErrorMessage(response)
-                appLogWrapper.e(AppLog.T.API, "Failed to fetch pages: $errorMessage")
+                appLogWrapper.e(AppLog.T.API, "Failed to fetch $typeName: $errorMessage")
                 LinkableItemsResult.Error(errorMessage)
             }
         }
     }
 
-    /**
-     * Fetches categories for menu item linking. Limited to 20 items, sorted alphabetically.
-     */
-    suspend fun fetchCategories(site: SiteModel): LinkableItemsResult {
+    private suspend fun fetchTermType(
+        site: SiteModel,
+        endpointType: TermEndpointType,
+        typeName: String
+    ): LinkableItemsResult {
         val client = wpApiClientProvider.getWpApiClient(site)
 
         val response = client.request { requestBuilder ->
             requestBuilder.terms().listWithEditContext(
-                termEndpointType = TermEndpointType.Categories,
+                termEndpointType = endpointType,
                 params = TermListParams(
                     perPage = PAGE_SIZE,
                     order = WpApiParamOrder.ASC,
@@ -391,44 +384,13 @@ class NavMenuRestClient @Inject constructor(
 
         return when (response) {
             is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} categories")
+                appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} $typeName")
                 val items = response.response.data.map { LinkableItemOption(it.id, it.name) }
                 LinkableItemsResult.Success(items)
             }
             else -> {
                 val errorMessage = parseErrorMessage(response)
-                appLogWrapper.e(AppLog.T.API, "Failed to fetch categories: $errorMessage")
-                LinkableItemsResult.Error(errorMessage)
-            }
-        }
-    }
-
-    /**
-     * Fetches tags for menu item linking. Limited to 20 items, sorted alphabetically.
-     */
-    suspend fun fetchTags(site: SiteModel): LinkableItemsResult {
-        val client = wpApiClientProvider.getWpApiClient(site)
-
-        val response = client.request { requestBuilder ->
-            requestBuilder.terms().listWithEditContext(
-                termEndpointType = TermEndpointType.Tags,
-                params = TermListParams(
-                    perPage = PAGE_SIZE,
-                    order = WpApiParamOrder.ASC,
-                    orderby = WpApiParamTermsOrderBy.NAME
-                )
-            )
-        }
-
-        return when (response) {
-            is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} tags")
-                val items = response.response.data.map { LinkableItemOption(it.id, it.name) }
-                LinkableItemsResult.Success(items)
-            }
-            else -> {
-                val errorMessage = parseErrorMessage(response)
-                appLogWrapper.e(AppLog.T.API, "Failed to fetch tags: $errorMessage")
+                appLogWrapper.e(AppLog.T.API, "Failed to fetch $typeName: $errorMessage")
                 LinkableItemsResult.Error(errorMessage)
             }
         }
