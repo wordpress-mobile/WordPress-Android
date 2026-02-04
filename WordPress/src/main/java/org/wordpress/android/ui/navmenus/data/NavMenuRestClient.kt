@@ -352,7 +352,10 @@ class NavMenuRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} $typeName")
                 val items = response.response.data.map {
-                    LinkableItemOption(it.id, it.title?.raw ?: "")
+                    val title = it.title?.raw?.takeIf { raw -> raw.isNotBlank() }
+                        ?: it.title?.rendered
+                        ?: ""
+                    LinkableItemOption(it.id, title)
                 }
                 LinkableItemsResult.Success(items)
             }
