@@ -2,7 +2,6 @@ package org.wordpress.android.login;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -298,14 +297,6 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         }
 
         endProgress();
-    }
-
-    protected void saveCredentialsInSmartLock(LoginListener loginListener, String username, String password) {
-        // mUsername and mPassword are null when the user log in with a magic link
-        if (loginListener != null) {
-            loginListener.saveCredentialsInSmartLock(username, password, mAccountStore.getAccount().getDisplayName(),
-                    Uri.parse(mAccountStore.getAccount().getAvatarUrl()));
-        }
     }
 
     // OnChanged events

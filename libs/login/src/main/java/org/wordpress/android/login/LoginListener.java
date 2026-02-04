@@ -21,14 +21,9 @@ public interface LoginListener {
     // Login Email input callbacks
     void gotWpcomEmail(String email, boolean verifyEmail, @Nullable AuthOptions authOptions);
     void gotUnregisteredEmail(String email);
-    void gotUnregisteredSocialAccount(String email, String displayName, String idToken, String photoUrl,
-                                      String service);
     void loginViaSiteAddress();
-    void loggedInViaSocialAccount(ArrayList<Integer> oldSiteIds, boolean doLoginUpdate);
     void loginViaSiteCredentials(String inputSiteAddress);
     void helpEmailScreen(String email);
-    void helpSocialEmailScreen(String email);
-    void addGoogleLoginFragment(boolean isSignupFromLoginEnabled);
     void showHelpFindingConnectedEmail();
     void onTermsOfServiceClicked();
 
@@ -40,9 +35,6 @@ public interface LoginListener {
     void needs2fa(String email, String password, String userId, String webauthnNonce,
                   String nonceAuthenticator, String nonceBackup, String noncePush,
                   List<String> supportedAuthTypes);
-    void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup,
-                        String nonceSms, String nonceWebauthn, List<String> supportedAuthTypes);
-    void needs2faSocialConnect(String email, String password, String idToken, String service);
     void loggedInViaPassword(ArrayList<Integer> oldSitesIds);
 
     // Login Site Address input callbacks
@@ -64,8 +56,6 @@ public interface LoginListener {
     // Signup
     void helpSignupEmailScreen(String email);
     void helpSignupMagicLinkScreen(String email);
-    void helpSignupConfirmationScreen(String email);
     void showSignupMagicLink(String email);
-    void showSignupSocial(String email, String displayName, String idToken, String photoUrl, String service);
     void showSignupToLoginMessage();
 }

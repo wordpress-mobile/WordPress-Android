@@ -43,7 +43,6 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.FetchAuthOptionsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthOptionsFetched;
 import org.wordpress.android.login.util.ContextExtensionsKt;
-import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
 import org.wordpress.android.util.ActivityUtils;
@@ -55,7 +54,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,11 +63,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener, ConnectionCallbacks, OnConnectionFailedListener {
-    private static final String KEY_GOOGLE_EMAIL = "KEY_GOOGLE_EMAIL";
     private static final String KEY_HAS_DISMISSED_EMAIL_HINTS = "KEY_HAS_DISMISSED_EMAIL_HINTS";
     private static final String KEY_IS_DISPLAYING_EMAIL_HINTS = "KEY_IS_DISPLAYING_EMAIL_HINTS";
-    private static final String KEY_IS_SOCIAL = "KEY_IS_SOCIAL";
-    private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
     private static final String KEY_EMAIL_ERROR_RES = "KEY_EMAIL_ERROR_RES";
     private static final String LOG_TAG = LoginEmailFragment.class.getSimpleName();
@@ -85,11 +80,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     public static final String TAG_SITE_CREDS_LAYOUT = "login_email_fragment_site_creds_layout_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
-    private ArrayList<Integer> mOldSitesIDs = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
-    private String mGoogleEmail;
     private String mRequestedEmail;
-    private boolean mIsSocialLogin;
     private Integer mCurrentEmailErrorRes = null;
     private boolean mIsSignupFromLoginEnabled;
     private boolean mOptionalSiteCredsLayout;
@@ -141,7 +133,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected @LayoutRes int getProgressBarText() {
-        return mIsSocialLogin ? R.string.logging_in : R.string.checking_email;
+        return R.string.checking_email;
     }
 
     @Override
@@ -197,10 +189,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                     (Button) rootView.findViewById(R.id.login_find_connected_email));
         } else {
             setupContinueButton((Button) rootView.findViewById(R.id.login_continue_button));
-            setupTosButtons(
-                    (Button) rootView.findViewById(R.id.continue_tos),
-                    (Button) rootView.findViewById(R.id.continue_with_google_tos));
-            setupSocialButtons((Button) rootView.findViewById(R.id.continue_with_google));
+            setupTosButton((Button) rootView.findViewById(R.id.continue_tos));
+            hideGoogleButton(rootView);
         }
     }
 
@@ -262,38 +252,29 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         super.onDestroyView();
     }
 
-    private void setupTosButtons(Button continueTosButton, Button continueWithGoogleTosButton) {
+    private void setupTosButton(Button continueTosButton) {
         if (mHideTos) {
-            // Hide the TOS buttons
             continueTosButton.setVisibility(View.GONE);
-            continueWithGoogleTosButton.setVisibility(View.GONE);
         } else {
-            // Show the TOS buttons
             continueTosButton.setVisibility(View.VISIBLE);
-            continueWithGoogleTosButton.setVisibility(View.VISIBLE);
-
-            OnClickListener onClickListener = new OnClickListener() {
+            continueTosButton.setOnClickListener(new OnClickListener() {
                 public void onClick(View view) {
                     mLoginListener.onTermsOfServiceClicked();
                 }
-            };
-
-            continueTosButton.setOnClickListener(onClickListener);
+            });
             continueTosButton.setText(formatTosText(R.string.continue_terms_of_service_text));
-
-            continueWithGoogleTosButton.setOnClickListener(onClickListener);
-            continueWithGoogleTosButton
-                    .setText(formatTosText(R.string.continue_with_google_terms_of_service_text));
         }
     }
 
-    private void setupSocialButtons(Button continueWithGoogleButton) {
-        continueWithGoogleButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onGoogleSigninClicked();
-            }
-        });
+    private void hideGoogleButton(ViewGroup rootView) {
+        View googleTosButton = rootView.findViewById(R.id.continue_with_google_tos);
+        if (googleTosButton != null) {
+            googleTosButton.setVisibility(View.GONE);
+        }
+        View googleButton = rootView.findViewById(R.id.continue_with_google);
+        if (googleButton != null) {
+            googleButton.setVisibility(View.GONE);
+        }
     }
 
     private void setupSiteCredsButton(Button continueWithSiteCreds) {
@@ -328,32 +309,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         next(getCleanedEmail());
     }
 
-    private void onGoogleSigninClicked() {
-        mAnalyticsListener.trackSocialButtonClick();
-        ActivityUtils.hideKeyboardForced(mEmailInput.getEditText());
-
-        if (NetworkUtils.checkConnection(getActivity())) {
-            if (isAdded()) {
-                mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
-                mIsSocialLogin = true;
-                mLoginListener.addGoogleLoginFragment(mIsSignupFromLoginEnabled);
-            } else {
-                AppLog.e(T.NUX, "Google login could not be started.  LoginEmailFragment was not attached.");
-                showErrorDialog(getString(R.string.login_error_generic_start));
-            }
-        }
-    }
-
     @Override
     protected void onHelp() {
         if (mLoginListener != null) {
-            if (mIsSocialLogin) {
-                // Send last email chosen from Google login if available.
-                mLoginListener.helpSocialEmailScreen(mGoogleEmail);
-            } else {
-                // Send exact string the user has inputted for email
-                mLoginListener.helpEmailScreen(EditTextUtils.getText(mEmailInput.getEditText()));
-            }
+            mLoginListener.helpEmailScreen(EditTextUtils.getText(mEmailInput.getEditText()));
         }
     }
 
@@ -403,10 +362,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
             mRequestedEmail = savedInstanceState.getString(KEY_REQUESTED_EMAIL);
-            mGoogleEmail = savedInstanceState.getString(KEY_GOOGLE_EMAIL);
-            mIsSocialLogin = savedInstanceState.getBoolean(KEY_IS_SOCIAL);
             mIsDisplayingEmailHints = savedInstanceState.getBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS);
             mHasDismissedEmailHints = savedInstanceState.getBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS);
             if (savedInstanceState.containsKey(KEY_EMAIL_ERROR_RES)) {
@@ -427,10 +383,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
         outState.putString(KEY_REQUESTED_EMAIL, mRequestedEmail);
-        outState.putString(KEY_GOOGLE_EMAIL, mGoogleEmail);
-        outState.putBoolean(KEY_IS_SOCIAL, mIsSocialLogin);
         outState.putBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS, mIsDisplayingEmailHints);
         outState.putBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS, mHasDismissedEmailHints);
         if (mCurrentEmailErrorRes != null) {
@@ -515,7 +468,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mEmailInput.setError(null);
-        mIsSocialLogin = false;
         clearEmailError();
         updateContinueButtonEnabledStatus();
     }
@@ -608,18 +560,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         }
     }
 
-    public void setGoogleEmail(String email) {
-        mGoogleEmail = email;
-    }
-
-    public void finishLogin() {
-        doFinishLogin();
-    }
-
     @Override
     protected void onLoginFinished() {
+        // This method is called from doFinishLogin() but is no longer used
+        // since Google login has been removed
         mAnalyticsListener.trackAnalyticsSignIn(true);
-        mLoginListener.loggedInViaSocialAccount(mOldSitesIDs, false);
     }
 
     @Override

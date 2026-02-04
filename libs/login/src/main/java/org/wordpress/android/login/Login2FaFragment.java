@@ -146,39 +146,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         return fragment;
     }
 
-    public static Login2FaFragment newInstanceSocial(String emailAddress, String userId,
-                                                     String nonceAuthenticator, String nonceBackup,
-                                                     String nonceSms, String nonceWebauthn,
-                                                     List<String> authTypes) {
-        Login2FaFragment fragment = new Login2FaFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_EMAIL_ADDRESS, emailAddress);
-        args.putString(ARG_2FA_USER_ID, userId);
-        args.putString(ARG_2FA_NONCE_AUTHENTICATOR, nonceAuthenticator);
-        args.putString(ARG_2FA_NONCE_BACKUP, nonceBackup);
-        args.putString(ARG_2FA_NONCE_SMS, nonceSms);
-        args.putString(ARG_WEBAUTHN_NONCE, nonceWebauthn);
-        args.putBoolean(ARG_2FA_IS_SOCIAL, true);
-        // Social account connected, connect call not needed.
-        args.putBoolean(ARG_2FA_IS_SOCIAL_CONNECT, false);
-        args.putStringArrayList(ARG_2FA_SUPPORTED_AUTH_TYPES, new ArrayList<>(authTypes));
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static Login2FaFragment newInstanceSocialConnect(String emailAddress, String password,
-                                                            String idToken, String service) {
-        Login2FaFragment fragment = new Login2FaFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_EMAIL_ADDRESS, emailAddress);
-        args.putString(ARG_PASSWORD, password);
-        args.putString(ARG_2FA_ID_TOKEN, idToken);
-        args.putBoolean(ARG_2FA_IS_SOCIAL_CONNECT, true);
-        args.putString(ARG_2FA_SOCIAL_SERVICE, service);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     protected @LayoutRes int getContentLayout() {
         return R.layout.login_2fa_screen;
@@ -574,11 +541,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         mLoginListener.startPostLoginServices();
 
-        if (mIsSocialLogin) {
-            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs, false);
-        } else {
-            mLoginListener.loggedInViaPassword(mOldSitesIDs);
-        }
+        mLoginListener.loggedInViaPassword(mOldSitesIDs);
     }
 
     private void setTextForSms() {

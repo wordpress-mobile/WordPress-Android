@@ -39,17 +39,12 @@ import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.login.AuthOptions;
-import org.wordpress.android.login.GoogleFragment;
-import org.wordpress.android.login.GoogleFragment.GoogleListener;
 import org.wordpress.android.login.Login2FaFragment;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.login.LoginEmailFragment;
-import org.wordpress.android.login.LoginGoogleFragment;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordFragment;
-import org.wordpress.android.login.SignupConfirmationFragment;
-import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
 import org.wordpress.android.support.SupportWebViewActivity;
 import org.wordpress.android.support.ZendeskExtraTags;
@@ -109,7 +104,7 @@ import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
 
 @AndroidEntryPoint
 public class LoginActivity extends BaseAppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        Callback, LoginListener, GoogleListener, LoginPrologueListener,
+        Callback, LoginListener, LoginPrologueListener,
         HasAndroidInjector, BasicDialogPositiveClickInterface {
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String MAGIC_LOGIN = "magic-login";
@@ -120,8 +115,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     private static final String KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE = "KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE";
     private static final String KEY_UNIFIED_TRACKER_SOURCE = "KEY_UNIFIED_TRACKER_SOURCE";
     private static final String KEY_UNIFIED_TRACKER_FLOW = "KEY_UNIFIED_TRACKER_FLOW";
-
-    private static final String GOOGLE_ERROR_DIALOG_TAG = "google_error_dialog_tag";
 
     private enum SmartLockHelperState {
         NOT_TRIGGERED,
@@ -378,13 +371,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         fragmentTransaction.commitAllowingStateLoss();
     }
 
-    private void addGoogleFragment(GoogleFragment googleFragment, String tag) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        googleFragment.setRetainInstance(true);
-        fragmentTransaction.add(googleFragment, tag);
-        fragmentTransaction.commit();
-    }
-
     private LoginPrologueRevampedFragment getLoginPrologueRevampedFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginPrologueRevampedFragment.TAG);
         return fragment == null ? null : (LoginPrologueRevampedFragment) fragment;
@@ -606,22 +592,8 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     @Override
-    public void gotUnregisteredSocialAccount(String email, String displayName, String idToken, String photoUrl,
-                                             String service) {
-        SignupConfirmationFragment signupConfirmationFragment =
-                SignupConfirmationFragment.newInstance(email, displayName, idToken, photoUrl, service);
-        slideInFragment(signupConfirmationFragment, true, SignupConfirmationFragment.TAG);
-    }
-
-    @Override
     public void loginViaSiteAddress() {
         slideInFragment(new LoginSiteApplicationPasswordFragment(), true, LoginSiteApplicationPasswordFragment.TAG);
-    }
-
-    @Override
-    public void loggedInViaSocialAccount(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
-        mLoginAnalyticsListener.trackLoginSocialSuccess();
-        loggedInAndFinish(oldSitesIds, doLoginUpdate);
     }
 
     @Override
@@ -632,14 +604,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null, isEmailClientAvailable,
                 scheme);
         slideInFragment(signupMagicLinkFragment, true, SignupMagicLinkFragment.TAG);
-    }
-
-    @Override
-    public void showSignupSocial(String email, String displayName, String idToken, String photoUrl, String service) {
-        if (GoogleFragment.SERVICE_TYPE_GOOGLE.equals(service)) {
-            addGoogleFragment(SignupGoogleFragment.newInstance(email, displayName, idToken, photoUrl),
-                    SignupGoogleFragment.TAG);
-        }
     }
 
     @Override
@@ -670,24 +634,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         mLoginAnalyticsListener.trackLogin2faNeeded();
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstance(email, password, userId, webauthnNonce,
                 nonceAuthenticator, nonceBackup, noncePush, supportedAuthTypes);
-        slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
-    }
-
-    @Override
-    public void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup,
-                               String nonceSms, String nonceWebauthn, List<String> authTypes) {
-        mLoginAnalyticsListener.trackLoginSocial2faNeeded();
-        Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocial(email, userId,
-                nonceAuthenticator, nonceBackup,
-                nonceSms, nonceWebauthn, authTypes);
-        slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
-    }
-
-    @Override
-    public void needs2faSocialConnect(String email, String password, String idToken, String service) {
-        mLoginAnalyticsListener.trackLoginSocial2faNeeded();
-        Login2FaFragment login2FaFragment =
-                Login2FaFragment.newInstanceSocialConnect(email, password, idToken, service);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
     }
 
@@ -762,21 +708,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     @Override
     public void helpSignupMagicLinkScreen(String email) {
         viewHelp(Origin.SIGNUP_MAGIC_LINK);
-    }
-
-    @Override
-    public void helpSignupConfirmationScreen(String email) {
-        viewHelp(Origin.SIGNUP_CONFIRMATION);
-    }
-
-    @Override
-    public void helpSocialEmailScreen(String email) {
-        viewHelp(Origin.LOGIN_SOCIAL);
-    }
-
-    @Override
-    public void addGoogleLoginFragment(boolean isSignupFromLoginEnabled) {
-        addGoogleFragment(LoginGoogleFragment.newInstance(isSignupFromLoginEnabled), LoginGoogleFragment.TAG);
     }
 
     @Override
@@ -858,63 +789,9 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         ).show();
     }
 
-    // GoogleListener
-
-    @Override
-    public void onGoogleEmailSelected(String email) {
-        LoginEmailFragment loginEmailFragment =
-                (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
-        if (loginEmailFragment != null) {
-            loginEmailFragment.setGoogleEmail(email);
-        }
-    }
-
-    @Override
-    public void onGoogleLoginFinished() {
-        LoginEmailFragment loginEmailFragment =
-                (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
-        if (loginEmailFragment != null) {
-            loginEmailFragment.finishLogin();
-        }
-    }
-
-    @Override
-    public void onGoogleSignupFinished(String name, String email, String photoUrl, String username) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_SUCCESS);
-        if (mIsJetpackConnect) {
-            ActivityLauncher.showSignupEpilogueForResult(this, name, email, photoUrl, username, false);
-        } else {
-            ActivityLauncher.showMainActivityAndSignupEpilogue(this, name, email, photoUrl, username);
-        }
-
-        setResult(Activity.RESULT_OK);
-        finish();
-    }
-
-    @Override
-    public void onGoogleSignupError(String msg) {
-        mUnifiedLoginTracker.trackFailure(msg);
-        // Only show the error dialog if the activity is still active
-        if (!getSupportFragmentManager().isStateSaved()) {
-            BasicFragmentDialog dialog = new BasicFragmentDialog();
-            dialog.initialize(GOOGLE_ERROR_DIALOG_TAG, getString(R.string.error),
-                    msg,
-                    getString(org.wordpress.android.login.R.string.login_error_button),
-                    null,
-                    null);
-            dialog.show(getSupportFragmentManager(), GOOGLE_ERROR_DIALOG_TAG);
-        } else {
-            AppLog.d(T.MAIN, "'Google sign up failed' dialog not shown, because the activity wasn't visible.");
-        }
-    }
-
     @Override
     public void onPositiveClicked(@NonNull String instanceTag) {
-        switch (instanceTag) {
-            case GOOGLE_ERROR_DIALOG_TAG:
-                // just dismiss the dialog
-                break;
-        }
+        // No dialog tags currently handled
     }
 
     @Override public AndroidInjector<Object> androidInjector() {
