@@ -14,6 +14,7 @@ import org.wordpress.android.ui.navmenus.toJsonStringArray
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
+import org.wordpress.android.ui.navmenus.LinkableItemOption
 import uniffi.wp_api.MenuLocationWithViewContext
 import uniffi.wp_api.NavMenuCreateParams
 import uniffi.wp_api.NavMenuItemCreateParams
@@ -24,6 +25,10 @@ import uniffi.wp_api.NavMenuItemWithEditContext
 import uniffi.wp_api.NavMenuListParams
 import uniffi.wp_api.NavMenuUpdateParams
 import uniffi.wp_api.NavMenuWithEditContext
+import uniffi.wp_api.TermEndpointType
+import uniffi.wp_api.TermListParams
+import uniffi.wp_api.WpApiParamOrder
+import uniffi.wp_api.WpApiParamTermsOrderBy
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -296,6 +301,70 @@ class NavMenuRestClient @Inject constructor(
         }
     }
 
+    // ========== Linkable Items Operations ==========
+
+    /**
+     * Fetches categories for menu item linking. Limited to 20 items, sorted alphabetically.
+     */
+    suspend fun fetchCategories(site: SiteModel): LinkableItemsResult {
+        val client = wpApiClientProvider.getWpApiClient(site)
+
+        val response = client.request { requestBuilder ->
+            requestBuilder.terms().listWithEditContext(
+                termEndpointType = TermEndpointType.Categories,
+                params = TermListParams(
+                    perPage = PAGE_SIZE,
+                    order = WpApiParamOrder.ASC,
+                    orderby = WpApiParamTermsOrderBy.NAME
+                )
+            )
+        }
+
+        return when (response) {
+            is WpRequestResult.Success -> {
+                appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} categories")
+                val items = response.response.data.map { LinkableItemOption(it.id, it.name) }
+                LinkableItemsResult.Success(items)
+            }
+            else -> {
+                val errorMessage = parseErrorMessage(response)
+                appLogWrapper.e(AppLog.T.API, "Failed to fetch categories: $errorMessage")
+                LinkableItemsResult.Error(errorMessage)
+            }
+        }
+    }
+
+    /**
+     * Fetches tags for menu item linking. Limited to 20 items, sorted alphabetically.
+     */
+    suspend fun fetchTags(site: SiteModel): LinkableItemsResult {
+        val client = wpApiClientProvider.getWpApiClient(site)
+
+        val response = client.request { requestBuilder ->
+            requestBuilder.terms().listWithEditContext(
+                termEndpointType = TermEndpointType.Tags,
+                params = TermListParams(
+                    perPage = PAGE_SIZE,
+                    order = WpApiParamOrder.ASC,
+                    orderby = WpApiParamTermsOrderBy.NAME
+                )
+            )
+        }
+
+        return when (response) {
+            is WpRequestResult.Success -> {
+                appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} tags")
+                val items = response.response.data.map { LinkableItemOption(it.id, it.name) }
+                LinkableItemsResult.Success(items)
+            }
+            else -> {
+                val errorMessage = parseErrorMessage(response)
+                appLogWrapper.e(AppLog.T.API, "Failed to fetch tags: $errorMessage")
+                LinkableItemsResult.Error(errorMessage)
+            }
+        }
+    }
+
     // ========== Helper Functions ==========
 
     private fun buildMenuItemCreateParams(item: NavMenuItemModel): NavMenuItemCreateParams {
@@ -434,5 +503,14 @@ class NavMenuRestClient @Inject constructor(
     sealed class NavMenuLocationsResult {
         data class Success(val locations: List<NavMenuLocationModel>) : NavMenuLocationsResult()
         data class Error(val message: String) : NavMenuLocationsResult()
+    }
+
+    sealed class LinkableItemsResult {
+        data class Success(val items: List<LinkableItemOption>) : LinkableItemsResult()
+        data class Error(val message: String) : LinkableItemsResult()
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 20u
     }
 }
