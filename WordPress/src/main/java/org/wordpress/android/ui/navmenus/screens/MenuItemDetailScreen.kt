@@ -140,6 +140,7 @@ private fun ItemFieldsCard(
                 LinkableItemDropdown(
                     linkableItemsState = state.linkableItemsState,
                     selectedItem = state.selectedLinkableItem,
+                    selectedType = state.selectedTypeOption,
                     onItemSelected = onLinkableItemChange
                 )
             }
@@ -210,9 +211,18 @@ private fun TypeDropdown(
 private fun LinkableItemDropdown(
     linkableItemsState: LinkableItemsState,
     selectedItem: LinkableItemOption?,
+    selectedType: MenuItemTypeOption,
     onItemSelected: (LinkableItemOption) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+
+    val placeholderText = when (selectedType) {
+        MenuItemTypeOption.POST -> stringResource(R.string.menu_item_select_post)
+        MenuItemTypeOption.PAGE -> stringResource(R.string.menu_item_select_page)
+        MenuItemTypeOption.CATEGORY -> stringResource(R.string.menu_item_select_category)
+        MenuItemTypeOption.TAG -> stringResource(R.string.menu_item_select_tag)
+        MenuItemTypeOption.CUSTOM_LINK -> stringResource(R.string.menu_item_select_item)
+    }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -231,7 +241,7 @@ private fun LinkableItemDropdown(
                 value = when {
                     linkableItemsState.isLoading -> stringResource(R.string.menu_item_loading_items)
                     selectedItem != null -> selectedItem.title
-                    else -> stringResource(R.string.menu_item_select_item)
+                    else -> placeholderText
                 },
                 onValueChange = {},
                 readOnly = true,
