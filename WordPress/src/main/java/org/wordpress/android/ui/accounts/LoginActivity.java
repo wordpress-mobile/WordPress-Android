@@ -129,6 +129,8 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
         //      JETPACK_LOGIN_ONLY = JPAndroid
         LoginMode loginMode = getLoginMode();
         if ((mLoginHelper.isLoggedIn()) && (loginMode == LoginMode.FULL || loginMode == LoginMode.JETPACK_LOGIN_ONLY)) {
+            // Show loading UI while we fetch account and sites in the background
+            setContentView(R.layout.login_loading);
             this.loggedInAndFinish(new ArrayList<Integer>(), true);
             return;
         }
