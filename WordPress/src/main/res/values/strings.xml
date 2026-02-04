@@ -4596,6 +4596,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_last_used_sort">Last used</string>
     <string name="application_password_app_name_jetpack">Jetpack Android App on %s</string>
     <string name="application_password_app_name_wordpress">WordPress Android App on %s</string>
+    <string name="application_password_reauthentication_banner">Your site credentials are invalid. Tap to reauthenticate.</string>
 
     <!-- DataView -->
     <string name="dataview_default_empty_message">There\'s nothing here</string>
