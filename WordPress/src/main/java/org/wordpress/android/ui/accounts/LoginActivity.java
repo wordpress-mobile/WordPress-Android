@@ -106,7 +106,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     public static final String TOKEN_PARAMETER = "token";
 
     private static final String KEY_SMARTLOCK_HELPER_STATE = "KEY_SMARTLOCK_HELPER_STATE";
-    private static final String KEY_SIGNUP_FROM_LOGIN_ENABLED = "KEY_SIGNUP_FROM_LOGIN_ENABLED";
     private static final String KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE = "KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE";
     private static final String KEY_UNIFIED_TRACKER_SOURCE = "KEY_UNIFIED_TRACKER_SOURCE";
     private static final String KEY_UNIFIED_TRACKER_FLOW = "KEY_UNIFIED_TRACKER_FLOW";
@@ -123,7 +122,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     private JetpackConnectionSource mJetpackConnectSource;
     private boolean mIsJetpackConnect;
 
-    private boolean mIsSignupFromLoginEnabled;
     private boolean mIsSmartLockTriggeredFromPrologue;
     private boolean mIsSiteLoginAvailableFromPrologue;
 
@@ -190,13 +188,11 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 case FULL:
                 case JETPACK_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
-                    mIsSignupFromLoginEnabled = mBuildConfigWrapper.isSignupEnabled();
                     loginFromPrologue();
                     break;
                 case WPCOM_LOGIN_ONLY:
                 case JETPACK_REST_CONNECT:
                     mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
-                    mIsSignupFromLoginEnabled = mBuildConfigWrapper.isSignupEnabled();
                     checkSmartLockPasswordAndStartLogin();
                     break;
                 case JETPACK_SELFHOSTED:
@@ -206,7 +202,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                     break;
                 case JETPACK_STATS:
                     mUnifiedLoginTracker.setSource(Source.JETPACK);
-                    mIsSignupFromLoginEnabled = mBuildConfigWrapper.isSignupEnabled();
                     checkSmartLockPasswordAndStartLogin();
                     break;
                 case WPCOM_LOGIN_DEEPLINK:
@@ -233,7 +228,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                 initSmartLockHelperConnection();
             }
 
-            mIsSignupFromLoginEnabled = savedInstanceState.getBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED);
             mIsSiteLoginAvailableFromPrologue = savedInstanceState.getBoolean(KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE);
             String source = savedInstanceState.getString(KEY_UNIFIED_TRACKER_SOURCE);
             if (source != null) {
@@ -270,7 +264,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
-        outState.putBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED, mIsSignupFromLoginEnabled);
         outState.putBoolean(KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE, mIsSiteLoginAvailableFromPrologue);
         outState.putString(KEY_UNIFIED_TRACKER_SOURCE, mUnifiedLoginTracker.getSource().getValue());
         Flow flow = mUnifiedLoginTracker.getFlow();
@@ -454,12 +447,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case RequestCodes.SHOW_SIGNUP_EPILOGUE_AND_RETURN:
-                // we showed the epilogue screen as informational and sites got loaded so, just
-                // return to login caller now
-                setResult(RESULT_OK);
-                finish();
-                break;
             case RequestCodes.SMART_LOCK_SAVE:
                 if (resultCode == RESULT_OK) {
                     mLoginAnalyticsListener.trackLoginAutofillCredentialsUpdated();
@@ -648,15 +635,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     @Override
     public void onConnectionSuspended(int i) {
         AppLog.d(AppLog.T.NUX, "Google API client connection suspended");
-    }
-
-    @Override
-    public void showSignupToLoginMessage() {
-        WPSnackbar.make(
-                findViewById(R.id.main_view),
-                R.string.signup_user_exists,
-                Snackbar.LENGTH_LONG
-        ).show();
     }
 
     @Override

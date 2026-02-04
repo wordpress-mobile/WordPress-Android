@@ -28,7 +28,4 @@ public interface LoginListener {
 
     // General post-login callbacks
     void startPostLoginServices();
-
-    // Signup
-    void showSignupToLoginMessage();
 }
