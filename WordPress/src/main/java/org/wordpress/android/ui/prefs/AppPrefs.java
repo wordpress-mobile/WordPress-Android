@@ -252,9 +252,6 @@ public class AppPrefs {
         // indicates whether the system notifications are enabled for the app
         SYSTEM_NOTIFICATIONS_ENABLED,
 
-        // Used to indicate whether or not the the post-signup interstitial must be shown
-        SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL,
-
         // used to indicate that we do not need to show the main FAB tooltip
         IS_MAIN_FAB_TOOLTIP_DISABLED,
 
@@ -1096,14 +1093,6 @@ public class AppPrefs {
 
     public static boolean getSystemNotificationsEnabled() {
         return getBoolean(UndeletablePrefKey.SYSTEM_NOTIFICATIONS_ENABLED, true);
-    }
-
-    public static void setShouldShowPostSignupInterstitial(boolean shouldShow) {
-        setBoolean(UndeletablePrefKey.SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL, shouldShow);
-    }
-
-    public static boolean shouldShowPostSignupInterstitial() {
-        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL, true);
     }
 
     private static List<String> getPostWithHWAccelerationOff() {

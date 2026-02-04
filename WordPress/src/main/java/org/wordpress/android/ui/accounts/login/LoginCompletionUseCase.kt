@@ -1,16 +1,13 @@
 package org.wordpress.android.ui.accounts.login
 
 import org.wordpress.android.login.LoginMode
-import org.wordpress.android.ui.prefs.AppPrefs
 import javax.inject.Inject
 
 /**
  * Use case for determining the appropriate action after login completion.
  * This extracts testable logic from LoginActivity.
  */
-class LoginCompletionUseCase @Inject constructor(
-    private val appPrefsWrapper: AppPrefsWrapper
-) {
+class LoginCompletionUseCase @Inject constructor() {
     /**
      * Determines if we should wait for sites to load after login.
      *
@@ -44,23 +41,13 @@ class LoginCompletionUseCase @Inject constructor(
      * Determines the navigation destination for the main activity flow.
      *
      * @param loginMode The current login mode
-     * @param hasSites Whether the user has any sites
      * @return The navigation destination
      */
-    fun getMainNavigationDestination(
-        loginMode: LoginMode,
-        hasSites: Boolean
-    ): MainNavigationDestination {
+    fun getMainNavigationDestination(loginMode: LoginMode): MainNavigationDestination {
         return when (loginMode) {
             LoginMode.FULL,
             LoginMode.JETPACK_LOGIN_ONLY,
-            LoginMode.WPCOM_LOGIN_ONLY -> {
-                if (!hasSites && appPrefsWrapper.shouldShowPostSignupInterstitial()) {
-                    MainNavigationDestination.POST_SIGNUP_INTERSTITIAL
-                } else {
-                    MainNavigationDestination.MAIN_ACTIVITY
-                }
-            }
+            LoginMode.WPCOM_LOGIN_ONLY -> MainNavigationDestination.MAIN_ACTIVITY
             else -> MainNavigationDestination.FINISH_ONLY
         }
     }
@@ -81,18 +68,9 @@ class LoginCompletionUseCase @Inject constructor(
      * Enum representing the specific navigation destination.
      */
     enum class MainNavigationDestination {
-        /** Show the post-signup interstitial screen */
-        POST_SIGNUP_INTERSTITIAL,
         /** Show the main activity */
         MAIN_ACTIVITY,
         /** Just finish the activity */
         FINISH_ONLY
     }
-}
-
-/**
- * Wrapper around AppPrefs to allow for testing.
- */
-class AppPrefsWrapper @Inject constructor() {
-    fun shouldShowPostSignupInterstitial(): Boolean = AppPrefs.shouldShowPostSignupInterstitial()
 }

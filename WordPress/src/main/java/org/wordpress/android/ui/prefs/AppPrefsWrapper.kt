@@ -56,10 +56,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getSystemNotificationsEnabled()
         set(value) = AppPrefs.setSystemNotificationsEnabled(value)
 
-    var shouldShowPostSignupInterstitial: Boolean
-        get() = AppPrefs.shouldShowPostSignupInterstitial()
-        set(shouldShow) = AppPrefs.setShouldShowPostSignupInterstitial(shouldShow)
-
     var readerTagsUpdatedTimestamp: Long
         get() = AppPrefs.getReaderTagsUpdatedTimestamp()
         set(timestamp) = AppPrefs.setReaderTagsUpdatedTimestamp(timestamp)

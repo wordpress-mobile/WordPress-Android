@@ -38,7 +38,6 @@ import org.wordpress.android.support.main.ui.SupportActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginActivity;
-import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordsListActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
@@ -1527,14 +1526,6 @@ public class ActivityLauncher {
                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         JETPACK_LOGIN_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
-    }
-
-    public static void showPostSignupInterstitial(Context context) {
-        final Intent parentIntent = new Intent(context, WPMainActivity.class);
-        parentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        parentIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        final Intent intent = new Intent(context, PostSignupInterstitialActivity.class);
-        TaskStackBuilder.create(context).addNextIntent(parentIntent).addNextIntent(intent).startActivities();
     }
 
     public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post) {

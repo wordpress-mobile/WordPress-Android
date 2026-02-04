@@ -319,16 +319,13 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     }
 
     /**
-     * Navigates to the main activity (or post-signup interstitial) and finishes the login flow.
+     * Navigates to the main activity and finishes the login flow.
      * This is the common exit point for successful logins.
      */
     private void navigateToMainActivityOrFinish() {
         MainNavigationDestination destination =
-                mLoginCompletionUseCase.getMainNavigationDestination(getLoginMode(), mSiteStore.hasSite());
+                mLoginCompletionUseCase.getMainNavigationDestination(getLoginMode());
         switch (destination) {
-            case POST_SIGNUP_INTERSTITIAL:
-                ActivityLauncher.showPostSignupInterstitial(this);
-                break;
             case MAIN_ACTIVITY:
                 ActivityLauncher.showMainActivity(this);
                 break;

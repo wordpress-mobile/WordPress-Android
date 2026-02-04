@@ -19,7 +19,6 @@ import org.wordpress.android.login.util.SiteUtils
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
@@ -32,7 +31,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteStore: SiteStore,
-    private val appPrefsWrapper: AppPrefsWrapper,
     private val appLogWrapper: AppLogWrapper,
 ) : ViewModel() {
     private val _onFinishedEvent = MutableSharedFlow<NavigationActionData>()
@@ -66,7 +64,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 _onFinishedEvent.emit(
                     NavigationActionData(
                         showSiteSelector = false,
-                        showPostSignupInterstitial = false,
                         siteUrl = "",
                         oldSitesIDs = oldSitesIDs,
                         isError = true
@@ -136,7 +133,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private suspend fun emitErrorFetching(siteUrl: String) =  _onFinishedEvent.emit(
         NavigationActionData(
             showSiteSelector = false,
-            showPostSignupInterstitial = false,
             siteUrl = siteUrl,
             oldSitesIDs = oldSitesIDs,
             isError = true
@@ -154,7 +150,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 _onFinishedEvent.emit(
                     NavigationActionData(
                         showSiteSelector = false,
-                        showPostSignupInterstitial = false,
                         siteUrl = currentUrlLogin?.siteUrl,
                         oldSitesIDs = oldSitesIDs,
                         isError = true
@@ -165,8 +160,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     NavigationActionData(
                         showSiteSelector = siteStore.hasSite() &&
                                 oldSitesIDs?.contains(site.id) != true, // null or false
-                        showPostSignupInterstitial = !siteStore.hasSite()
-                                && appPrefsWrapper.shouldShowPostSignupInterstitial,
                         siteUrl = currentUrlLogin?.siteUrl,
                         oldSitesIDs = oldSitesIDs,
                         isError = false,
@@ -179,7 +172,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
 
     data class NavigationActionData(
         val showSiteSelector: Boolean,
-        val showPostSignupInterstitial: Boolean,
         val siteUrl: String?,
         val oldSitesIDs: ArrayList<Int>?,
         val isError: Boolean,
