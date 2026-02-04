@@ -45,7 +45,8 @@ class SiteListItemBuilder @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig,
     private val selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig,
-    private val experimentalFeatures: ExperimentalFeatures
+    private val experimentalFeatures: ExperimentalFeatures,
+    private val siteCapabilityChecker: SiteCapabilityChecker
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
@@ -277,6 +278,27 @@ class SiteListItemBuilder @Inject constructor(
                 UiStringRes(R.string.application_password_info_title),
                 onClick = ListItemInteraction.create(ListItemAction.APPLICATION_PASSWORDS, onClick),
                 listItemAction = ListItemAction.APPLICATION_PASSWORDS
+            )
+        } else {
+            null
+        }
+    }
+
+    /**
+     * Navigation menus require Application Passwords and the user has the ability to edit theme options.
+     * The latter is checked via wordpress-rs.
+     * https://wordpress.org/documentation/article/roles-and-capabilities/#edit_theme_options
+     */
+    suspend fun buildMenusItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+        val isEnabled = experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NAV_MENUS) &&
+            site.hasApplicationPassword() &&
+            siteCapabilityChecker.hasEditThemeOptionsCapability(site)
+        return if (isEnabled) {
+            ListItem(
+                R.drawable.ic_gridicons_menus,
+                UiStringRes(R.string.menus),
+                onClick = ListItemInteraction.create(ListItemAction.MENUS, onClick),
+                listItemAction = ListItemAction.MENUS
             )
         } else {
             null

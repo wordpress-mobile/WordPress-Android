@@ -46,6 +46,7 @@ class ListItemActionHandler @Inject constructor(
             ListItemAction.MORE -> SiteNavigationAction.OpenMore(selectedSite)
             ListItemAction.SITE_MONITORING -> SiteNavigationAction.OpenSiteMonitoring(selectedSite)
             ListItemAction.APPLICATION_PASSWORDS -> SiteNavigationAction.OpenApplicationPasswordsList
+            ListItemAction.MENUS -> SiteNavigationAction.OpenMenus(selectedSite)
         }
     }
 

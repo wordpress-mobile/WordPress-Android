@@ -151,6 +151,10 @@ class MenuActivity : BaseAppCompatActivity() {
                 ActivityLauncher.viewApplicationPasswordList(this)
             }
 
+            is SiteNavigationAction.OpenMenus -> {
+                ActivityLauncher.viewNavigationMenus(this, action.site)
+            }
+
             else -> {}
         }
     }

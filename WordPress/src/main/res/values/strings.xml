@@ -996,6 +996,8 @@
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
     <string name="experimental_new_stats">New Stats</string>
     <string name="experimental_new_stats_description">Show stats in a more modern and advanced UI</string>
+    <string name="experimental_nav_menus">Navigation Menus</string>
+    <string name="experimental_nav_menus_description">Create and manage navigation menus (requires Application Password)</string>
     <string name="post_types_screen_title">Post Types</string>
 
     <!-- Debug settings -->
@@ -4536,6 +4538,56 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="add_term">Add term</string>
     <string name="error_saving_term">There was an error saving the term</string>
     <string name="error_deleting_term">There was an error deleting the term</string>
+
+    <!-- Navigation Menus -->
+    <string name="menus">Menus</string>
+    <string name="create_menu">Create Menu</string>
+    <string name="edit_menu">Edit Menu</string>
+    <string name="no_menus">No menus found</string>
+    <string name="menu_locations_label">Locations: %1$s</string>
+    <string name="edit_items">Edit Items</string>
+    <string name="menu_name_label">Name</string>
+    <string name="menu_description_label">Description</string>
+    <string name="menu_auto_add_pages">Automatically add new top-level pages</string>
+    <string name="menu_display_locations">Display locations</string>
+    <string name="menu_saved">Menu saved</string>
+    <string name="menu_deleted">Menu deleted</string>
+    <string name="delete_menu_confirmation_title">Delete menu</string>
+    <string name="delete_menu_confirmation_message">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="add_menu_item">Add Menu Item</string>
+    <string name="edit_menu_item">Edit Menu Item</string>
+    <string name="no_menu_items">This menu has no items - yet!</string>
+    <string name="menu_items_title">%s Items</string>
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
+    <string name="menu_item_title_label">Title</string>
+    <string name="menu_item_url_label">URL</string>
+    <string name="menu_item_parent_label">Parent</string>
+    <string name="menu_item_no_parent">None (top level)</string>
+    <string name="menu_item_target_label">Link target</string>
+    <string name="menu_item_description_label">Description</string>
+    <string name="menu_item_saved">Menu item saved</string>
+    <string name="menu_item_deleted">Menu item deleted</string>
+    <string name="delete_menu_item_confirmation_title">Delete menu item</string>
+    <string name="delete_menu_item_confirmation_message">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="menu_item_type_label">Type</string>
+    <string name="menu_item_type_custom">Custom Link</string>
+    <string name="menu_item_type_page">Page</string>
+    <string name="menu_item_type_post">Post</string>
+    <string name="menu_item_type_category">Category</string>
+    <string name="menu_item_type_tag">Tag</string>
+    <string name="menu_item_link_to_label">Link to</string>
+    <string name="menu_item_select_item">Select an item</string>
+    <string name="menu_item_no_items_found">No items found</string>
+    <string name="menu_item_loading_items">Loading…</string>
+    <string name="menu_item_select_required">Please select an item to link to</string>
+    <string name="menu_error_no_site_selected">No site selected</string>
+    <string name="menu_name_required">Menu name is required</string>
+    <string name="menu_item_title_required">Title is required</string>
+    <string name="menu_item_url_required">URL is required for custom links</string>
+    <string name="menu_item_invalid_url">Please enter a valid URL</string>
+    <string name="menu_item_reorder_failed">Failed to reorder menu item</string>
+    <string name="menu_item_accessibility_description">Level %1$d, %2$s, %3$s</string>
 
     <!-- AI Bot Support - Conversations List Screen -->
     <string name="ai_bot_conversations_title">Conversations</string>

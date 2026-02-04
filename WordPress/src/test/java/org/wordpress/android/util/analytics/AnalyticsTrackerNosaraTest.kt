@@ -133,6 +133,7 @@ class AnalyticsTrackerNosaraTest {
         Stat.OPENED_VIEW_SITE_FROM_HEADER to "site_menu_opened",
         Stat.OPENED_VIEW_ADMIN to "site_menu_opened",
         Stat.OPENED_MEDIA_LIBRARY to "site_menu_opened",
+        Stat.OPENED_MENUS to "menus_opened",
         Stat.OPENED_BLOG_SETTINGS to "site_menu_opened",
         Stat.OPENED_ACCOUNT_SETTINGS to "account_settings_opened",
         Stat.OPENED_APP_SETTINGS to "app_settings_opened",

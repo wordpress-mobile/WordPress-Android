@@ -360,6 +360,7 @@ public final class AnalyticsTracker {
         OPENED_MY_PROFILE("my_profile_opened"),
         OPENED_PEOPLE_MANAGEMENT("people_management_list_opened"),
         OPENED_PERSON("people_management_details_opened"),
+        OPENED_MENUS("menus_opened"),
         OPENED_PLUGIN_DIRECTORY("plugin_directory_opened"),
         OPENED_PLANS("site_menu_opened"),
         OPENED_PLANS_COMPARISON("plans_compare"),

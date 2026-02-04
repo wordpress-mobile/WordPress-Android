@@ -81,20 +81,22 @@ class MenuViewModel @Inject constructor(
     private fun buildSiteMenu() {
         val site = selectedSiteRepository.getSelectedSite() ?: return
 
-        val currentItems = siteItemsBuilder.build(
-            MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
-                enableFocusPoints = false,
-                site = site,
-                onClick = this::onClick,
-                isBlazeEligible = isSiteBlazeEligible()
-            )
-        ).filterIsInstance<MySiteCardAndItem.Item>().map {
-            it.toMenuItemState()
-        }.toList()
+        launch(bgDispatcher) {
+            val currentItems = siteItemsBuilder.build(
+                MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
+                    enableFocusPoints = false,
+                    site = site,
+                    onClick = this@MenuViewModel::onClick,
+                    isBlazeEligible = isSiteBlazeEligible()
+                )
+            ).filterIsInstance<MySiteCardAndItem.Item>().map {
+                it.toMenuItemState()
+            }.toList()
 
-        _uiState.value = MenuViewState(items = currentItems)
+            _uiState.value = MenuViewState(items = currentItems)
 
-        rebuildSiteItemsForJetpackCapabilities()
+            rebuildSiteItemsForJetpackCapabilities()
+        }
     }
 
     private fun rebuildSiteItemsForJetpackCapabilities() {

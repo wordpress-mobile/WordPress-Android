@@ -42,6 +42,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
+import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
 import org.wordpress.android.ui.utils.UiString
 
@@ -64,6 +65,7 @@ class MySiteViewModel @Inject constructor(
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
     private val applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice,
     private val gutenbergKitWarmupHelper: GutenbergKitWarmupHelper,
+    private val siteCapabilityChecker: SiteCapabilityChecker,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -161,8 +163,11 @@ class MySiteViewModel @Inject constructor(
 
     fun refresh(isPullToRefresh: Boolean = false) {
         if (isPullToRefresh) analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH)
-        selectedSiteRepository.getSelectedSite()?.let {
-            buildDashboardOrSiteItems(it)
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            if (isPullToRefresh) {
+                siteCapabilityChecker.clearCacheForSite(site.siteId)
+            }
+            buildDashboardOrSiteItems(site)
         } ?: run {
             accountDataViewModelSlice.onRefresh()
         }

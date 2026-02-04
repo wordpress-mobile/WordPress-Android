@@ -63,6 +63,9 @@ class SiteListItemBuilderTest {
     @Mock
     lateinit var selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig
 
+    @Mock
+    lateinit var siteCapabilityChecker: SiteCapabilityChecker
+
     private lateinit var siteListItemBuilder: SiteListItemBuilder
 
     @Before
@@ -76,7 +79,8 @@ class SiteListItemBuilderTest {
             jetpackFeatureRemovalPhaseHelper,
             siteMonitoringFeatureConfig,
             selfHostedUsersFeatureConfig,
-            experimentalFeatures
+            experimentalFeatures,
+            siteCapabilityChecker
         )
     }
 
