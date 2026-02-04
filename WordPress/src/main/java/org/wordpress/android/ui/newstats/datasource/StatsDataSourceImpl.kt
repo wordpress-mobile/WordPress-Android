@@ -116,14 +116,12 @@ class StatsDataSourceImpl @Inject constructor(
             date = dateRange.date,
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = localeManagerWrapper.getLocale().toString()
         )
         is StatsDateRange.Custom -> StatsTopPostsParams(
             period = StatsTopPostsPeriod.DAY,
             date = dateRange.date,
             startDate = dateRange.startDate,
             max = max.coerceAtLeast(1).toUInt(),
-            locale = localeManagerWrapper.getLocale().toString()
         )
     }
 
@@ -192,14 +190,12 @@ class StatsDataSourceImpl @Inject constructor(
                 date = dateRange.date,
                 num = dateRange.num.toUInt(),
                 max = max.coerceAtLeast(1).toUInt(),
-                locale = localeManagerWrapper.getLocale().toString()
             )
             is StatsDateRange.Custom -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
                 date = dateRange.date,
                 startDate = dateRange.startDate,
                 max = max.coerceAtLeast(1).toUInt(),
-                locale = localeManagerWrapper.getLocale().toString()
             )
         }
 
