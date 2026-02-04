@@ -95,13 +95,6 @@ class LoginCompletionUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given WOO_LOGIN_MODE, then action is FINISH_ONLY`() {
-        val result = useCase.getLoginCompletionAction(LoginMode.WOO_LOGIN_MODE)
-
-        assertThat(result).isEqualTo(LoginCompletionAction.FINISH_ONLY)
-    }
-
-    @Test
     fun `given JETPACK_STATS mode, then action is NAVIGATE_TO_MAIN`() {
         val result = useCase.getLoginCompletionAction(LoginMode.JETPACK_STATS)
 
@@ -171,13 +164,6 @@ class LoginCompletionUseCaseTest : BaseUnitTest() {
     @Test
     fun `given SHARE_INTENT mode, then destination is FINISH_ONLY`() {
         val result = useCase.getMainNavigationDestination(LoginMode.SHARE_INTENT)
-
-        assertThat(result).isEqualTo(MainNavigationDestination.FINISH_ONLY)
-    }
-
-    @Test
-    fun `given WOO_LOGIN_MODE, then destination is FINISH_ONLY`() {
-        val result = useCase.getMainNavigationDestination(LoginMode.WOO_LOGIN_MODE)
 
         assertThat(result).isEqualTo(MainNavigationDestination.FINISH_ONLY)
     }

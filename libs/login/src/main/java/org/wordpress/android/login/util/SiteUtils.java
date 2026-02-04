@@ -48,11 +48,10 @@ public class SiteUtils {
     }
 
     @NonNull
-    public static FetchSitesPayload getFetchSitesPayload(boolean isJetpackAppLogin,
-                                                         boolean isWooAppLogin) {
+    public static FetchSitesPayload getFetchSitesPayload(boolean isJetpackAppLogin) {
         ArrayList<SiteFilter> siteFilters = new ArrayList<>();
         return new FetchSitesPayload(
-                siteFilters, !isJetpackAppLogin && !isWooAppLogin
+                siteFilters, !isJetpackAppLogin
         );
     }
 }

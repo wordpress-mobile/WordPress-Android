@@ -327,7 +327,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
             // The user's account settings have also been fetched and stored - now we can fetch the user's sites
             FetchSitesPayload payload =
-                    SiteUtils.getFetchSitesPayload(isJetpackAppLogin(), isWooAppLogin());
+                    SiteUtils.getFetchSitesPayload(isJetpackAppLogin());
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(payload));
         }
     }
@@ -339,10 +339,6 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         return mode == LoginMode.JETPACK_LOGIN_ONLY || mode == LoginMode.JETPACK_SELFHOSTED;
     }
 
-    protected boolean isWooAppLogin() {
-        return (mLoginListener instanceof LoginListener)
-               && ((LoginListener) mLoginListener).getLoginMode() == LoginMode.WOO_LOGIN_MODE;
-    }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)

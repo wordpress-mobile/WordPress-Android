@@ -172,8 +172,6 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
                     mUnifiedLoginTracker.setSource(Source.SHARE);
                     showWPcomLoginScreen(this);
                     break;
-                case WOO_LOGIN_MODE:
-                    break;
             }
         } else {
             String source = savedInstanceState.getString(KEY_UNIFIED_TRACKER_SOURCE);

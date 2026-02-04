@@ -31,8 +31,6 @@ class LoginCompletionUseCase @Inject constructor() {
             LoginMode.JETPACK_SELFHOSTED,
             LoginMode.SELFHOSTED_ONLY -> LoginCompletionAction.FINISH_WITH_NEW_SITE
 
-            LoginMode.WOO_LOGIN_MODE -> LoginCompletionAction.FINISH_ONLY
-
             else -> LoginCompletionAction.NAVIGATE_TO_MAIN
         }
     }
