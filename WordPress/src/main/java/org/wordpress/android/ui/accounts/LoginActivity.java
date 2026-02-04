@@ -15,12 +15,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.auth.api.credentials.Credential;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.material.snackbar.Snackbar;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -41,17 +35,11 @@ import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordFragment;
-import org.wordpress.android.support.SupportWebViewActivity;
 import org.wordpress.android.support.ZendeskExtraTags;
-import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.JetpackConnectionSource;
-import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError;
-import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
-import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
@@ -66,7 +54,6 @@ import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragme
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
-import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
@@ -74,14 +61,9 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.WPUrlUtils;
-import org.wordpress.android.util.config.ContactSupportFeatureConfig;
-import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,32 +80,14 @@ import dagger.hilt.android.AndroidEntryPoint;
 import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
 
 @AndroidEntryPoint
-public class LoginActivity extends BaseAppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        Callback, LoginListener, LoginPrologueListener,
+public class LoginActivity extends BaseAppCompatActivity implements LoginListener, LoginPrologueListener,
         HasAndroidInjector, BasicDialogPositiveClickInterface {
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
 
-    private static final String KEY_SMARTLOCK_HELPER_STATE = "KEY_SMARTLOCK_HELPER_STATE";
-    private static final String KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE = "KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE";
     private static final String KEY_UNIFIED_TRACKER_SOURCE = "KEY_UNIFIED_TRACKER_SOURCE";
     private static final String KEY_UNIFIED_TRACKER_FLOW = "KEY_UNIFIED_TRACKER_FLOW";
-
-    private enum SmartLockHelperState {
-        NOT_TRIGGERED,
-        TRIGGER_FILL_IN_ON_CONNECT,
-        FINISH_ON_CONNECT,
-        FINISHED
-    }
-
-    private SmartLockHelper mSmartLockHelper;
-    private SmartLockHelperState mSmartLockHelperState = SmartLockHelperState.NOT_TRIGGERED;
-    private JetpackConnectionSource mJetpackConnectSource;
-    private boolean mIsJetpackConnect;
-
-    private boolean mIsSmartLockTriggeredFromPrologue;
-    private boolean mIsSiteLoginAvailableFromPrologue;
 
     private LoginMode mLoginMode;
     private LoginViewModel mViewModel;
@@ -131,7 +95,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
 
     @Inject DispatchingAndroidInjector<Object> mDispatchingAndroidInjector;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
-    @Inject ZendeskHelper mZendeskHelper;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SiteStore mSiteStore;
     @Inject protected AccountStore mAccountStore;
@@ -141,8 +104,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
     // Flag to track when we're waiting for account/sites to load after OAuth login
     private boolean mIsWaitingForSitesToLoad = false;
     private ArrayList<Integer> mOldSitesIdsForLoginUpdate;
-    @Inject BuildConfigWrapper mBuildConfigWrapper;
-    @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
 
     @Inject ExperimentalFeatures mExperimentalFeatures;
     @Inject LoginCompletionUseCase mLoginCompletionUseCase;
@@ -177,23 +138,18 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         setContentView(R.layout.login_activity);
 
         if (savedInstanceState == null) {
-            if (getIntent() != null) {
-                mJetpackConnectSource =
-                        (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
-            }
-
             mLoginAnalyticsListener.trackLoginAccessed();
 
             switch (loginMode) {
                 case FULL:
                 case JETPACK_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
-                    loginFromPrologue();
+                    showFragment(new LoginPrologueRevampedFragment(), LoginPrologueRevampedFragment.TAG);
                     break;
                 case WPCOM_LOGIN_ONLY:
                 case JETPACK_REST_CONNECT:
                     mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
-                    checkSmartLockPasswordAndStartLogin();
+                    showWPcomLoginScreen(this);
                     break;
                 case JETPACK_SELFHOSTED:
                 case SELFHOSTED_ONLY:
@@ -202,33 +158,24 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
                     break;
                 case JETPACK_STATS:
                     mUnifiedLoginTracker.setSource(Source.JETPACK);
-                    checkSmartLockPasswordAndStartLogin();
+                    showWPcomLoginScreen(this);
                     break;
                 case WPCOM_LOGIN_DEEPLINK:
                     mUnifiedLoginTracker.setSource(Source.DEEPLINK);
-                    checkSmartLockPasswordAndStartLogin();
+                    showWPcomLoginScreen(this);
                     break;
                 case WPCOM_REAUTHENTICATE:
                     mUnifiedLoginTracker.setSource(Source.REAUTHENTICATION);
-                    showWPcomLoginScreen(getBaseContext());
+                    showWPcomLoginScreen(this);
                     break;
                 case SHARE_INTENT:
                     mUnifiedLoginTracker.setSource(Source.SHARE);
-                    checkSmartLockPasswordAndStartLogin();
+                    showWPcomLoginScreen(this);
                     break;
                 case WOO_LOGIN_MODE:
                     break;
             }
         } else {
-            mSmartLockHelperState = SmartLockHelperState.valueOf(
-                    savedInstanceState.getString(KEY_SMARTLOCK_HELPER_STATE));
-
-            if (mSmartLockHelperState != SmartLockHelperState.NOT_TRIGGERED) {
-                // reconnect SmartLockHelper
-                initSmartLockHelperConnection();
-            }
-
-            mIsSiteLoginAvailableFromPrologue = savedInstanceState.getBoolean(KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE);
             String source = savedInstanceState.getString(KEY_UNIFIED_TRACKER_SOURCE);
             if (source != null) {
                 mUnifiedLoginTracker.setSource(source);
@@ -253,18 +200,9 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         });
     }
 
-    private void loginFromPrologue() {
-        showFragment(new LoginPrologueRevampedFragment(), LoginPrologueRevampedFragment.TAG);
-        mIsSmartLockTriggeredFromPrologue = true;
-        mIsSiteLoginAvailableFromPrologue = true;
-        initSmartLockIfNotFinished(true);
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
-        outState.putBoolean(KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE, mIsSiteLoginAvailableFromPrologue);
         outState.putString(KEY_UNIFIED_TRACKER_SOURCE, mUnifiedLoginTracker.getSource().getValue());
         Flow flow = mUnifiedLoginTracker.getFlow();
         if (flow != null) {
@@ -356,11 +294,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         fragmentTransaction.commitAllowingStateLoss();
     }
 
-    private LoginPrologueRevampedFragment getLoginPrologueRevampedFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginPrologueRevampedFragment.TAG);
-        return fragment == null ? null : (LoginPrologueRevampedFragment) fragment;
-    }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -438,74 +371,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
         finish();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        AppLog.d(T.MAIN, "LoginActivity: onActivity Result - requestCode" + requestCode);
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case RequestCodes.SMART_LOCK_SAVE:
-                if (resultCode == RESULT_OK) {
-                    mLoginAnalyticsListener.trackLoginAutofillCredentialsUpdated();
-                    AppLog.d(AppLog.T.NUX, "Credentials saved");
-                } else {
-                    AppLog.d(AppLog.T.NUX, "Credentials save cancelled");
-                }
-                break;
-            case RequestCodes.SMART_LOCK_READ:
-                if (resultCode == RESULT_OK) {
-                    AppLog.d(AppLog.T.NUX, "Credentials retrieved");
-                    Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
-                    onCredentialRetrieved(credential);
-                } else {
-                    AppLog.e(AppLog.T.NUX, "Credential read failed");
-                    onCredentialsUnavailable();
-                }
-                break;
-        }
-    }
-
-    private boolean initSmartLockHelperConnection() {
-        mSmartLockHelper = new SmartLockHelper(this);
-        return mSmartLockHelper.initSmartLockForPasswords();
-    }
-
-    private void checkSmartLockPasswordAndStartLogin() {
-        initSmartLockIfNotFinished(true);
-
-        if (mSmartLockHelperState == SmartLockHelperState.FINISHED) {
-            startLogin();
-        }
-    }
-
-    /**
-     * @param triggerFillInOnConnect set to true, if you want to show an account chooser dialog when the user has
-     *                               stored their credentials in the past. Set to false, if you just want to
-     *                               initialize SmartLock eg. when you want to use it just to save users credentials.
-     */
-    private void initSmartLockIfNotFinished(boolean triggerFillInOnConnect) {
-        if (mSmartLockHelperState == SmartLockHelperState.NOT_TRIGGERED) {
-            if (initSmartLockHelperConnection()) {
-                if (triggerFillInOnConnect) {
-                    mSmartLockHelperState = SmartLockHelperState.TRIGGER_FILL_IN_ON_CONNECT;
-                } else {
-                    mSmartLockHelperState = SmartLockHelperState.FINISH_ON_CONNECT;
-                }
-            } else {
-                // just shortcircuit the attempt to use SmartLockHelper
-                mSmartLockHelperState = SmartLockHelperState.FINISHED;
-            }
-        }
-    }
-
-    private void startLogin() {
-        if (getLoginMode() == LoginMode.JETPACK_STATS) {
-            mIsJetpackConnect = true;
-        }
-        // Use web-based WP.com login
-        showWPcomLoginScreen(this);
-    }
-
     // LoginPrologueListener implementation methods
 
     public void showWPcomLoginScreen(@NonNull Context context) {
@@ -578,60 +443,6 @@ public class LoginActivity extends BaseAppCompatActivity implements ConnectionCa
 
         // Start Notification service
         NotificationsUpdateServiceStarter.startService(getApplicationContext());
-    }
-
-    // SmartLock
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        AppLog.d(AppLog.T.NUX, "Connection result: " + connectionResult);
-        mSmartLockHelperState = SmartLockHelperState.FINISHED;
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        AppLog.d(AppLog.T.NUX, "Google API client connected");
-
-        switch (mSmartLockHelperState) {
-            case NOT_TRIGGERED:
-                // should not reach this state here!
-                throw new RuntimeException("Internal inconsistency error!");
-            case TRIGGER_FILL_IN_ON_CONNECT:
-                mSmartLockHelperState = SmartLockHelperState.FINISHED;
-
-                // force account chooser
-                mSmartLockHelper.disableAutoSignIn();
-
-                mSmartLockHelper.smartLockAutoFill(this);
-                break;
-            case FINISH_ON_CONNECT:
-                mSmartLockHelperState = SmartLockHelperState.FINISHED;
-                break;
-            case FINISHED:
-                // don't do anything special. We're reconnecting the GoogleApiClient on rotation.
-                break;
-        }
-    }
-
-    @Override
-    public void onCredentialRetrieved(Credential credential) {
-        // Smart Lock credentials can no longer be used for WP.com login (now web-based)
-        mSmartLockHelperState = SmartLockHelperState.FINISHED;
-        startLogin();
-    }
-
-    @Override
-    public void onCredentialsUnavailable() {
-        mSmartLockHelperState = SmartLockHelperState.FINISHED;
-        if (mIsSmartLockTriggeredFromPrologue) {
-            return;
-        }
-        startLogin();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        AppLog.d(AppLog.T.NUX, "Google API client connection suspended");
     }
 
     @Override
