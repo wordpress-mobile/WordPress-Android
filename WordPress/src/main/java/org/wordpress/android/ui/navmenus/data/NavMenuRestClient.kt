@@ -47,7 +47,7 @@ class NavMenuRestClient @Inject constructor(
 ) {
     // ========== Menu Operations ==========
 
-    suspend fun fetchMenus(site: SiteModel): NavMenusResult {
+    suspend fun fetchMenus(site: SiteModel): NavMenuListResult {
         val client = wpApiClientProvider.getWpApiClient(site)
 
         val response = client.request { requestBuilder ->
@@ -62,12 +62,12 @@ class NavMenuRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} nav menus")
                 val menus = response.response.data.map { it.toNavMenuModel(site.id) }
-                NavMenusResult.Success(menus)
+                NavMenuListResult.Success(menus)
             }
             else -> {
                 val errorMessage = parseErrorMessage(response)
                 appLogWrapper.e(AppLog.T.API, "Failed to fetch nav menus: $errorMessage")
-                NavMenusResult.Error(errorMessage)
+                NavMenuListResult.Error(errorMessage)
             }
         }
     }
@@ -154,7 +154,7 @@ class NavMenuRestClient @Inject constructor(
 
     // ========== Menu Item Operations ==========
 
-    suspend fun fetchMenuItems(site: SiteModel, menuId: Long): NavMenuItemsResult {
+    suspend fun fetchMenuItems(site: SiteModel, menuId: Long): NavMenuItemListResult {
         val client = wpApiClientProvider.getWpApiClient(site)
 
         val response = client.request { requestBuilder ->
@@ -170,17 +170,17 @@ class NavMenuRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} menu items")
                 val items = response.response.data.map { it.toNavMenuItemModel(site.id, menuId) }
-                NavMenuItemsResult.Success(items)
+                NavMenuItemListResult.Success(items)
             }
             else -> {
                 val errorMessage = parseErrorMessage(response)
                 appLogWrapper.e(AppLog.T.API, "Failed to fetch menu items: $errorMessage")
-                NavMenuItemsResult.Error(errorMessage)
+                NavMenuItemListResult.Error(errorMessage)
             }
         }
     }
 
-    suspend fun fetchAllMenuItems(site: SiteModel): NavMenuItemsResult {
+    suspend fun fetchAllMenuItems(site: SiteModel): NavMenuItemListResult {
         val client = wpApiClientProvider.getWpApiClient(site)
 
         val response = client.request { requestBuilder ->
@@ -195,12 +195,12 @@ class NavMenuRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} total menu items")
                 val items = response.response.data.map { it.toNavMenuItemModel(site.id) }
-                NavMenuItemsResult.Success(items)
+                NavMenuItemListResult.Success(items)
             }
             else -> {
                 val errorMessage = parseErrorMessage(response)
                 appLogWrapper.e(AppLog.T.API, "Failed to fetch all menu items: $errorMessage")
-                NavMenuItemsResult.Error(errorMessage)
+                NavMenuItemListResult.Error(errorMessage)
             }
         }
     }
@@ -539,9 +539,9 @@ class NavMenuRestClient @Inject constructor(
 
     // ========== Result Types ==========
 
-    sealed class NavMenusResult {
-        data class Success(val menus: List<NavMenuModel>) : NavMenusResult()
-        data class Error(val message: String) : NavMenusResult()
+    sealed class NavMenuListResult {
+        data class Success(val menus: List<NavMenuModel>) : NavMenuListResult()
+        data class Error(val message: String) : NavMenuListResult()
     }
 
     sealed class NavMenuResult {
@@ -554,9 +554,9 @@ class NavMenuRestClient @Inject constructor(
         data class Error(val message: String) : NavMenuDeleteResult()
     }
 
-    sealed class NavMenuItemsResult {
-        data class Success(val items: List<NavMenuItemModel>) : NavMenuItemsResult()
-        data class Error(val message: String) : NavMenuItemsResult()
+    sealed class NavMenuItemListResult {
+        data class Success(val items: List<NavMenuItemModel>) : NavMenuItemListResult()
+        data class Error(val message: String) : NavMenuItemListResult()
     }
 
     sealed class NavMenuItemResult {

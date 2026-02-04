@@ -112,11 +112,11 @@ class NavMenusViewModel @Inject constructor(
         val itemCountByMenuId = buildItemCountMap(allItemsResult)
 
         return when (menusResult) {
-            is NavMenuRestClient.NavMenusResult.Success -> {
+            is NavMenuRestClient.NavMenuListResult.Success -> {
                 currentMenus = menusResult.menus
                 buildSuccessState(menusResult.menus, locationsResult, itemCountByMenuId)
             }
-            is NavMenuRestClient.NavMenusResult.Error -> {
+            is NavMenuRestClient.NavMenuListResult.Error -> {
                 val errorMessage = menusResult.message.takeIf { it.isNotBlank() } ?: "Failed to load menus"
                 MenuListUiState(isLoading = false, error = errorMessage)
             }
@@ -124,12 +124,12 @@ class NavMenusViewModel @Inject constructor(
     }
 
     private fun buildItemCountMap(
-        result: NavMenuRestClient.NavMenuItemsResult
+        result: NavMenuRestClient.NavMenuItemListResult
     ): Map<Long, Int> = when (result) {
-        is NavMenuRestClient.NavMenuItemsResult.Success -> {
+        is NavMenuRestClient.NavMenuItemListResult.Success -> {
             result.items.groupingBy { it.menuId }.eachCount()
         }
-        is NavMenuRestClient.NavMenuItemsResult.Error -> emptyMap()
+        is NavMenuRestClient.NavMenuItemListResult.Error -> emptyMap()
     }
 
     private fun buildSuccessState(
@@ -203,7 +203,7 @@ class NavMenusViewModel @Inject constructor(
 
                 withContext(mainDispatcher) {
                     when (result) {
-                        is NavMenuRestClient.NavMenuItemsResult.Success -> {
+                        is NavMenuRestClient.NavMenuItemListResult.Success -> {
                             currentMenuItems = result.items
                             val sortedItems = sortItemsHierarchically(result.items)
                             _menuItemListState.value = _menuItemListState.value.copy(
@@ -211,7 +211,7 @@ class NavMenusViewModel @Inject constructor(
                                 items = sortedItems
                             )
                         }
-                        is NavMenuRestClient.NavMenuItemsResult.Error -> {
+                        is NavMenuRestClient.NavMenuItemListResult.Error -> {
                             _menuItemListState.value = _menuItemListState.value.copy(
                                 isLoading = false,
                                 error = result.message
