@@ -516,7 +516,7 @@ class NavMenusViewModel @Inject constructor(
         _menuItemDetailState.value = currentState.copy(
             selectedLinkableItem = item,
             objectId = item.id,
-            title = currentState.title.ifBlank { item.title }
+            title = item.title
         )
     }
 
