@@ -42,6 +42,7 @@ import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.subscribers.SubscribersActivity
 import org.wordpress.android.ui.accounts.LoginActivity
+import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordLoginActivity
 import org.wordpress.android.ui.taxonomies.TermsDataViewActivity
 
 /**
@@ -114,6 +115,7 @@ private val excludedActivities = listOf(
     SupportWebViewActivity::class.java.name,
 
     // these are excluded because they explicitly enable edge-to-edge
+    ApplicationPasswordLoginActivity::class.java.name,
     LoginActivity::class.java.name,
     MediaSettingsActivity::class.java.name,
     ReaderPostPagerActivity::class.java.name,
