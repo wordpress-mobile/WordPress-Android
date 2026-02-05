@@ -22,7 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -228,18 +227,21 @@ private fun LinkableItemDropdown(
     val listState = rememberLazyListState()
 
     // Detect when user scrolls to the last item
-    val shouldLoadMore = remember {
+    val lastVisibleItemIndex = remember {
         derivedStateOf {
-            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
-            lastVisibleItem != null &&
-                lastVisibleItem.index >= linkableItemsState.items.size - 1 &&
-                linkableItemsState.canLoadMore &&
-                !linkableItemsState.isLoadingMore
+            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
         }
     }
 
-    LaunchedEffect(shouldLoadMore.value) {
-        if (shouldLoadMore.value) {
+    LaunchedEffect(
+        lastVisibleItemIndex.value,
+        linkableItemsState.items.size,
+        linkableItemsState.canLoadMore
+    ) {
+        val shouldLoadMore = lastVisibleItemIndex.value >= linkableItemsState.items.size - 1 &&
+            linkableItemsState.canLoadMore &&
+            !linkableItemsState.isLoadingMore
+        if (shouldLoadMore) {
             onLoadMore()
         }
     }

@@ -17,6 +17,7 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.navmenus.data.NavMenuRestClient
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.R
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -122,7 +123,7 @@ class NavMenusViewModel @Inject constructor(
 
                 when (result) {
                     is NavMenuRestClient.NavMenuListResult.Success -> {
-                        val newMenus = result.menus.map { it.toUiModel(0) }
+                        val newMenus = result.menus.map { it.toUiModel() }
                         currentMenus = currentMenus + result.menus
                         _menuListState.value = currentState.copy(
                             isLoadingMore = false,
@@ -138,6 +139,7 @@ class NavMenusViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
+                AppLog.e(AppLog.T.API, "Failed to load more menus", e)
                 _menuListState.value = currentState.copy(isLoadingMore = false)
             }
         }
@@ -146,14 +148,11 @@ class NavMenusViewModel @Inject constructor(
     private suspend fun fetchMenuData(site: SiteModel, offset: Int): MenuListUiState {
         val menusResult = navMenuRestClient.fetchMenus(site, offset)
         val locationsResult = navMenuRestClient.fetchMenuLocations(site)
-        val allItemsResult = navMenuRestClient.fetchAllMenuItems(site)
-
-        val itemCountByMenuId = buildItemCountMap(allItemsResult)
 
         return when (menusResult) {
             is NavMenuRestClient.NavMenuListResult.Success -> {
                 currentMenus = menusResult.menus
-                buildSuccessState(menusResult.menus, locationsResult, itemCountByMenuId, menusResult.canLoadMore)
+                buildSuccessState(menusResult.menus, locationsResult, menusResult.canLoadMore)
             }
             is NavMenuRestClient.NavMenuListResult.Error -> {
                 val errorMessage = menusResult.message.takeIf { it.isNotBlank() } ?: "Failed to load menus"
@@ -162,24 +161,12 @@ class NavMenusViewModel @Inject constructor(
         }
     }
 
-    private fun buildItemCountMap(
-        result: NavMenuRestClient.NavMenuItemListResult
-    ): Map<Long, Int> = when (result) {
-        is NavMenuRestClient.NavMenuItemListResult.Success -> {
-            result.items.groupingBy { it.menuId }.eachCount()
-        }
-        is NavMenuRestClient.NavMenuItemListResult.Error -> emptyMap()
-    }
-
     private fun buildSuccessState(
         menus: List<NavMenuModel>,
         locationsResult: NavMenuRestClient.NavMenuLocationsResult,
-        itemCountByMenuId: Map<Long, Int>,
         canLoadMore: Boolean
     ): MenuListUiState {
-        val menuUiModels = menus.map { menu ->
-            menu.toUiModel(itemCountByMenuId[menu.remoteMenuId] ?: 0)
-        }
+        val menuUiModels = menus.map { menu -> menu.toUiModel() }
 
         val locations = when (locationsResult) {
             is NavMenuRestClient.NavMenuLocationsResult.Success -> {
@@ -299,6 +286,7 @@ class NavMenusViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
+                AppLog.e(AppLog.T.API, "Failed to load more menu items", e)
                 _menuItemListState.value = currentState.copy(isLoadingMore = false)
             }
         }
@@ -629,6 +617,7 @@ class NavMenusViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
+                AppLog.e(AppLog.T.API, "Failed to load more linkable items", e)
                 val updatedState = _menuItemDetailState.value ?: return@launch
                 _menuItemDetailState.value = updatedState.copy(
                     linkableItemsState = updatedState.linkableItemsState.copy(isLoadingMore = false)

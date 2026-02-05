@@ -184,31 +184,6 @@ class NavMenuRestClient @Inject constructor(
         }
     }
 
-    suspend fun fetchAllMenuItems(site: SiteModel): NavMenuItemListResult {
-        val client = wpApiClientProvider.getWpApiClient(site)
-
-        val response = client.request { requestBuilder ->
-            requestBuilder.navMenuItems().listWithEditContext(
-                NavMenuItemListParams(
-                    perPage = MAX_ITEMS_FOR_COUNT
-                )
-            )
-        }
-
-        return when (response) {
-            is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} total menu items")
-                val items = response.response.data.map { it.toNavMenuItemModel(site.id) }
-                NavMenuItemListResult.Success(items, canLoadMore = false)
-            }
-            else -> {
-                val errorMessage = parseErrorMessage(response)
-                appLogWrapper.e(AppLog.T.API, "Failed to fetch all menu items: $errorMessage")
-                NavMenuItemListResult.Error(errorMessage)
-            }
-        }
-    }
-
     suspend fun createMenuItem(site: SiteModel, item: NavMenuItemModel): NavMenuItemResult {
         val client = wpApiClientProvider.getWpApiClient(site)
 
@@ -587,7 +562,6 @@ class NavMenuRestClient @Inject constructor(
     }
 
     companion object {
-        private const val PAGE_SIZE = 20u
-        private const val MAX_ITEMS_FOR_COUNT = 100u
+        private const val PAGE_SIZE = 5u // TODO 20
     }
 }
