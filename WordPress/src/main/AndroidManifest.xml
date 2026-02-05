@@ -135,7 +135,7 @@
         <activity
             android:name=".ui.accounts.LoginActivity"
             android:launchMode="singleTop"
-            android:theme="@style/LoginTheme.TransparentSystemBars"
+            android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
 
@@ -151,7 +151,7 @@
 
         <activity
             android:name=".ui.accounts.applicationpassword.ApplicationPasswordLoginActivity"
-            android:theme="@style/LoginTheme.TransparentSystemBars"
+            android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
 
