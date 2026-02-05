@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
@@ -30,11 +31,9 @@ import org.wordpress.android.ui.newstats.components.StatsCardContainer
 import org.wordpress.android.ui.newstats.components.StatsCardEmptyContent
 import org.wordpress.android.ui.newstats.components.StatsCardErrorContent
 import org.wordpress.android.ui.newstats.components.StatsCardHeader
-import org.wordpress.android.ui.newstats.components.StatsItemName
 import org.wordpress.android.ui.newstats.components.StatsListHeader
-import org.wordpress.android.ui.newstats.components.StatsListRowContainer
+import org.wordpress.android.ui.newstats.components.StatsListItem
 import org.wordpress.android.ui.newstats.components.StatsViewChange
-import org.wordpress.android.ui.newstats.components.StatsViewsColumn
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 
 private val CardPadding = 16.dp
@@ -168,20 +167,13 @@ private fun AuthorRow(
     author: TopAuthorUiItem,
     percentage: Float
 ) {
-    StatsListRowContainer(percentage = percentage) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AuthorAvatar(avatarUrl = author.avatarUrl, name = author.name)
-            Spacer(modifier = Modifier.width(12.dp))
-            StatsItemName(name = author.name, modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.width(12.dp))
-            StatsViewsColumn(views = author.views, change = author.change)
-        }
-    }
+    StatsListItem(
+        percentage = percentage,
+        name = author.name,
+        views = author.views,
+        change = author.change,
+        icon = { AuthorAvatar(avatarUrl = author.avatarUrl, name = author.name) }
+    )
 }
 
 @Composable
@@ -189,20 +181,20 @@ fun AuthorAvatar(
     avatarUrl: String?,
     name: String,
     modifier: Modifier = Modifier,
-    size: Int = 40
+    size: Dp = 40.dp
 ) {
     if (avatarUrl != null) {
         AsyncImage(
             model = avatarUrl,
             contentDescription = name,
             modifier = modifier
-                .size(size.dp)
+                .size(size)
                 .clip(CircleShape)
         )
     } else {
         Box(
             modifier = modifier
-                .size(size.dp)
+                .size(size)
                 .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
             contentAlignment = Alignment.Center
         ) {
@@ -210,7 +202,7 @@ fun AuthorAvatar(
                 imageVector = Icons.Default.Person,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size((size * 0.6).dp)
+                modifier = Modifier.size(size * 0.6f)
             )
         }
     }

@@ -299,3 +299,74 @@ fun StatsPositionNumber(position: Int) {
         modifier = Modifier.width(32.dp)
     )
 }
+
+/**
+ * Common list item row for stats cards.
+ * Displays an icon, name, views count and change indicator with a percentage bar background.
+ *
+ * @param percentage Fill percentage for the background bar (0f to 1f)
+ * @param name The item name to display
+ * @param views The views count
+ * @param change The change compared to previous period
+ * @param icon Composable slot for the icon (flag, avatar, etc.)
+ */
+@Composable
+fun StatsListItem(
+    percentage: Float,
+    name: String,
+    views: Long,
+    change: StatsViewChange,
+    icon: @Composable () -> Unit
+) {
+    StatsListRowContainer(percentage = percentage) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp, horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            icon()
+            Spacer(modifier = Modifier.width(12.dp))
+            StatsItemName(name = name, modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(12.dp))
+            StatsViewsColumn(views = views, change = change)
+        }
+    }
+}
+
+/**
+ * Common list item row for detail screens with position number.
+ * Displays position, icon, name, views count and change indicator.
+ *
+ * @param position The position number (1, 2, 3, ...)
+ * @param percentage Fill percentage for the background bar (0f to 1f)
+ * @param name The item name to display
+ * @param views The views count
+ * @param change The change compared to previous period
+ * @param icon Composable slot for the icon (flag, avatar, etc.)
+ */
+@Composable
+fun StatsDetailListItem(
+    position: Int,
+    percentage: Float,
+    name: String,
+    views: Long,
+    change: StatsViewChange,
+    icon: @Composable () -> Unit
+) {
+    StatsListRowContainer(percentage = percentage) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp, horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            StatsPositionNumber(position = position)
+            icon()
+            Spacer(modifier = Modifier.width(12.dp))
+            StatsItemName(name = name, modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(12.dp))
+            StatsViewsColumn(views = views, change = change)
+        }
+    }
+}

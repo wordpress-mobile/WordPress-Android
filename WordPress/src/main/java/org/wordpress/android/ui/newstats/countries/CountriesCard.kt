@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
@@ -28,10 +29,8 @@ import org.wordpress.android.ui.newstats.components.StatsCardContainer
 import org.wordpress.android.ui.newstats.components.StatsCardEmptyContent
 import org.wordpress.android.ui.newstats.components.StatsCardErrorContent
 import org.wordpress.android.ui.newstats.components.StatsCardHeader
-import org.wordpress.android.ui.newstats.components.StatsItemName
 import org.wordpress.android.ui.newstats.components.StatsListHeader
-import org.wordpress.android.ui.newstats.components.StatsListRowContainer
-import org.wordpress.android.ui.newstats.components.StatsViewsColumn
+import org.wordpress.android.ui.newstats.components.StatsListItem
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 
 private val CardPadding = 16.dp
@@ -208,38 +207,32 @@ private fun CountryRow(
     country: CountryItem,
     percentage: Float
 ) {
-    StatsListRowContainer(percentage = percentage) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            CountryFlag(flagIconUrl = country.flagIconUrl, countryName = country.countryName)
-            Spacer(modifier = Modifier.width(12.dp))
-            StatsItemName(name = country.countryName, modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.width(12.dp))
-            StatsViewsColumn(views = country.views, change = country.change.toStatsViewChange())
-        }
-    }
+    StatsListItem(
+        percentage = percentage,
+        name = country.countryName,
+        views = country.views,
+        change = country.change.toStatsViewChange(),
+        icon = { CountryFlag(flagIconUrl = country.flagIconUrl, countryName = country.countryName) }
+    )
 }
 
 @Composable
 fun CountryFlag(
     flagIconUrl: String?,
     countryName: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    size: Dp = 24.dp
 ) {
     if (flagIconUrl != null) {
         AsyncImage(
             model = flagIconUrl,
             contentDescription = countryName,
-            modifier = modifier.size(24.dp)
+            modifier = modifier.size(size)
         )
     } else {
         Box(
             modifier = modifier
-                .size(24.dp)
+                .size(size)
                 .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(4.dp))
         )
     }

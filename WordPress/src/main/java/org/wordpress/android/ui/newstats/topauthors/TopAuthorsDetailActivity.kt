@@ -4,13 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -22,7 +19,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,13 +27,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.newstats.components.StatsItemName
+import org.wordpress.android.ui.newstats.components.StatsDetailListItem
 import org.wordpress.android.ui.newstats.components.StatsListHeader
-import org.wordpress.android.ui.newstats.components.StatsListRowContainer
-import org.wordpress.android.ui.newstats.components.StatsPositionNumber
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.components.StatsViewChange
-import org.wordpress.android.ui.newstats.components.StatsViewsColumn
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 
 private const val EXTRA_AUTHORS = "extra_authors"
@@ -173,21 +166,14 @@ private fun DetailAuthorRow(
     author: TopAuthorUiItem,
     percentage: Float
 ) {
-    StatsListRowContainer(percentage = percentage) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            StatsPositionNumber(position = position)
-            AuthorAvatar(avatarUrl = author.avatarUrl, name = author.name)
-            Spacer(modifier = Modifier.width(12.dp))
-            StatsItemName(name = author.name, modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.width(12.dp))
-            StatsViewsColumn(views = author.views, change = author.change)
-        }
-    }
+    StatsDetailListItem(
+        position = position,
+        percentage = percentage,
+        name = author.name,
+        views = author.views,
+        change = author.change,
+        icon = { AuthorAvatar(avatarUrl = author.avatarUrl, name = author.name) }
+    )
 }
 
 @Preview(showBackground = true)
