@@ -63,10 +63,6 @@ fun LoginSiteApplicationPasswordScreen(
     val cleanedAddress = siteAddress.trim().replace(Regex("[\r\n]"), "")
     val isValid = cleanedAddress.isNotEmpty() && Patterns.WEB_URL.matcher(cleanedAddress).matches()
 
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
-
     if (isLoading) {
         LoadingDialog()
     }
@@ -143,6 +139,10 @@ fun LoginSiteApplicationPasswordScreen(
                     ),
                     singleLine = true
                 )
+
+                LaunchedEffect(Unit) {
+                    focusRequester.requestFocus()
+                }
             }
 
             Surface(
