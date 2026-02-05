@@ -155,8 +155,7 @@ enum class MenuItemTypeOption(
  */
 data class LinkableItemOption(
     val id: Long,
-    val title: String,
-    val indentLevel: Int = 0
+    val title: String
 )
 
 /**
