@@ -21,7 +21,12 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +55,7 @@ fun MenuItemDetailScreen(
     onDescriptionChange: (String) -> Unit,
     onTypeChange: (MenuItemTypeOption) -> Unit,
     onLinkableItemChange: (LinkableItemOption) -> Unit,
+    onLoadMoreLinkableItems: () -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -69,7 +75,8 @@ fun MenuItemDetailScreen(
             onParentChange = onParentChange,
             onDescriptionChange = onDescriptionChange,
             onTypeChange = onTypeChange,
-            onLinkableItemChange = onLinkableItemChange
+            onLinkableItemChange = onLinkableItemChange,
+            onLoadMoreLinkableItems = onLoadMoreLinkableItems
         )
 
         SaveButton(
@@ -89,7 +96,8 @@ private fun ItemFieldsCard(
     onParentChange: (Long) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onTypeChange: (MenuItemTypeOption) -> Unit,
-    onLinkableItemChange: (LinkableItemOption) -> Unit
+    onLinkableItemChange: (LinkableItemOption) -> Unit,
+    onLoadMoreLinkableItems: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -141,7 +149,8 @@ private fun ItemFieldsCard(
                     linkableItemsState = state.linkableItemsState,
                     selectedItem = state.selectedLinkableItem,
                     selectedType = state.selectedTypeOption,
-                    onItemSelected = onLinkableItemChange
+                    onItemSelected = onLinkableItemChange,
+                    onLoadMore = onLoadMoreLinkableItems
                 )
             }
 
@@ -212,9 +221,28 @@ private fun LinkableItemDropdown(
     linkableItemsState: LinkableItemsState,
     selectedItem: LinkableItemOption?,
     selectedType: MenuItemTypeOption,
-    onItemSelected: (LinkableItemOption) -> Unit
+    onItemSelected: (LinkableItemOption) -> Unit,
+    onLoadMore: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val listState = rememberLazyListState()
+
+    // Detect when user scrolls to the last item
+    val shouldLoadMore = remember {
+        derivedStateOf {
+            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+            lastVisibleItem != null &&
+                lastVisibleItem.index >= linkableItemsState.items.size - 1 &&
+                linkableItemsState.canLoadMore &&
+                !linkableItemsState.isLoadingMore
+        }
+    }
+
+    LaunchedEffect(shouldLoadMore.value) {
+        if (shouldLoadMore.value) {
+            onLoadMore()
+        }
+    }
 
     val placeholderText = when (selectedType) {
         MenuItemTypeOption.POST -> stringResource(R.string.menu_item_select_post)
@@ -278,20 +306,36 @@ private fun LinkableItemDropdown(
                             )
                         }
                     } else {
-                        linkableItemsState.items.forEach { item ->
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = item.title,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                },
-                                onClick = {
-                                    onItemSelected(item)
-                                    expanded = false
+                        LazyColumn(state = listState) {
+                            items(linkableItemsState.items.size) { index ->
+                                val item = linkableItemsState.items[index]
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = item.title,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    },
+                                    onClick = {
+                                        onItemSelected(item)
+                                        expanded = false
+                                    }
+                                )
+                            }
+
+                            if (linkableItemsState.isLoadingMore) {
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                                    }
                                 }
-                            )
+                            }
                         }
                     }
                 }

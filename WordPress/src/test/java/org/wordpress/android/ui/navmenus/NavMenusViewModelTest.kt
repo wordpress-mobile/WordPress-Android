@@ -51,11 +51,14 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
     @Suppress("UNCHECKED_CAST")
     private fun setupDefaultLinkableItemsMocks() = test {
-        val emptySuccess = NavMenuRestClient.LinkableItemsResult.Success(emptyList())
-        lenient().`when`(navMenuRestClient.fetchPosts(any())).thenReturn(emptySuccess)
-        lenient().`when`(navMenuRestClient.fetchPages(any())).thenReturn(emptySuccess)
-        lenient().`when`(navMenuRestClient.fetchCategories(any())).thenReturn(emptySuccess)
-        lenient().`when`(navMenuRestClient.fetchTags(any())).thenReturn(emptySuccess)
+        val emptySuccess = NavMenuRestClient.LinkableItemsResult.Success(
+            items = emptyList(),
+            canLoadMore = false
+        )
+        lenient().`when`(navMenuRestClient.fetchPosts(any(), any())).thenReturn(emptySuccess)
+        lenient().`when`(navMenuRestClient.fetchPages(any(), any())).thenReturn(emptySuccess)
+        lenient().`when`(navMenuRestClient.fetchCategories(any(), any())).thenReturn(emptySuccess)
+        lenient().`when`(navMenuRestClient.fetchTags(any(), any())).thenReturn(emptySuccess)
     }
 
     @Test

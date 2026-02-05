@@ -14,6 +14,8 @@ import org.wordpress.android.ui.navmenus.models.NavMenuModel
 data class MenuListUiState(
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
+    val isLoadingMore: Boolean = false,
+    val canLoadMore: Boolean = false,
     val menus: List<MenuUiModel> = emptyList(),
     val locations: List<LocationUiModel> = emptyList(),
     val error: String? = null
@@ -59,6 +61,8 @@ data class MenuDetailUiState(
  */
 data class MenuItemListUiState(
     val isLoading: Boolean = false,
+    val isLoadingMore: Boolean = false,
+    val canLoadMore: Boolean = false,
     val menuId: Long = 0L,
     val menuName: String = "",
     val items: List<MenuItemUiModel> = emptyList(),
@@ -163,6 +167,8 @@ data class LinkableItemOption(
  */
 data class LinkableItemsState(
     val isLoading: Boolean = false,
+    val isLoadingMore: Boolean = false,
+    val canLoadMore: Boolean = false,
     val items: List<LinkableItemOption> = emptyList(),
     val error: String? = null
 )

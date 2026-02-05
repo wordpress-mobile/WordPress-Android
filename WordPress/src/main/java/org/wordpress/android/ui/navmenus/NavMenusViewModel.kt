@@ -90,7 +90,7 @@ class NavMenusViewModel @Inject constructor(
 
             @Suppress("TooGenericExceptionCaught")
             try {
-                val newState = withContext(ioDispatcher) { fetchMenuData(site) }
+                val newState = withContext(ioDispatcher) { fetchMenuData(site, offset = 0) }
                 _menuListState.value = newState
             } catch (e: CancellationException) {
                 throw e
@@ -104,8 +104,47 @@ class NavMenusViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchMenuData(site: SiteModel): MenuListUiState {
-        val menusResult = navMenuRestClient.fetchMenus(site)
+    fun loadMoreMenus() {
+        val currentState = _menuListState.value
+        if (currentState.isLoading || currentState.isLoadingMore || !currentState.canLoadMore) return
+
+        viewModelScope.launch {
+            _menuListState.value = currentState.copy(isLoadingMore = true)
+
+            val site = selectedSiteRepository.getSelectedSite() ?: return@launch
+            val offset = currentState.menus.size
+
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val result = withContext(ioDispatcher) {
+                    navMenuRestClient.fetchMenus(site, offset)
+                }
+
+                when (result) {
+                    is NavMenuRestClient.NavMenuListResult.Success -> {
+                        val newMenus = result.menus.map { it.toUiModel(0) }
+                        currentMenus = currentMenus + result.menus
+                        _menuListState.value = currentState.copy(
+                            isLoadingMore = false,
+                            canLoadMore = result.canLoadMore,
+                            menus = currentState.menus + newMenus
+                        )
+                    }
+                    is NavMenuRestClient.NavMenuListResult.Error -> {
+                        _menuListState.value = currentState.copy(isLoadingMore = false)
+                        _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
+                    }
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                _menuListState.value = currentState.copy(isLoadingMore = false)
+            }
+        }
+    }
+
+    private suspend fun fetchMenuData(site: SiteModel, offset: Int): MenuListUiState {
+        val menusResult = navMenuRestClient.fetchMenus(site, offset)
         val locationsResult = navMenuRestClient.fetchMenuLocations(site)
         val allItemsResult = navMenuRestClient.fetchAllMenuItems(site)
 
@@ -114,7 +153,7 @@ class NavMenusViewModel @Inject constructor(
         return when (menusResult) {
             is NavMenuRestClient.NavMenuListResult.Success -> {
                 currentMenus = menusResult.menus
-                buildSuccessState(menusResult.menus, locationsResult, itemCountByMenuId)
+                buildSuccessState(menusResult.menus, locationsResult, itemCountByMenuId, menusResult.canLoadMore)
             }
             is NavMenuRestClient.NavMenuListResult.Error -> {
                 val errorMessage = menusResult.message.takeIf { it.isNotBlank() } ?: "Failed to load menus"
@@ -135,7 +174,8 @@ class NavMenusViewModel @Inject constructor(
     private fun buildSuccessState(
         menus: List<NavMenuModel>,
         locationsResult: NavMenuRestClient.NavMenuLocationsResult,
-        itemCountByMenuId: Map<Long, Int>
+        itemCountByMenuId: Map<Long, Int>,
+        canLoadMore: Boolean
     ): MenuListUiState {
         val menuUiModels = menus.map { menu ->
             menu.toUiModel(itemCountByMenuId[menu.remoteMenuId] ?: 0)
@@ -150,6 +190,7 @@ class NavMenusViewModel @Inject constructor(
 
         return MenuListUiState(
             isLoading = false,
+            canLoadMore = canLoadMore,
             menus = menuUiModels,
             locations = locations
         )
@@ -199,7 +240,7 @@ class NavMenusViewModel @Inject constructor(
             val site = selectedSiteRepository.getSelectedSite() ?: return@launch
 
             withContext(ioDispatcher) {
-                val result = navMenuRestClient.fetchMenuItems(site, menuId)
+                val result = navMenuRestClient.fetchMenuItems(site, menuId, offset = 0)
 
                 withContext(mainDispatcher) {
                     when (result) {
@@ -208,6 +249,7 @@ class NavMenusViewModel @Inject constructor(
                             val sortedItems = sortItemsHierarchically(result.items)
                             _menuItemListState.value = _menuItemListState.value.copy(
                                 isLoading = false,
+                                canLoadMore = result.canLoadMore,
                                 items = sortedItems
                             )
                         }
@@ -219,6 +261,45 @@ class NavMenusViewModel @Inject constructor(
                         }
                     }
                 }
+            }
+        }
+    }
+
+    fun loadMoreMenuItems() {
+        val currentState = _menuItemListState.value
+        if (currentState.isLoading || currentState.isLoadingMore || !currentState.canLoadMore) return
+
+        viewModelScope.launch {
+            _menuItemListState.value = currentState.copy(isLoadingMore = true)
+
+            val site = selectedSiteRepository.getSelectedSite() ?: return@launch
+            val offset = currentMenuItems.size
+
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val result = withContext(ioDispatcher) {
+                    navMenuRestClient.fetchMenuItems(site, currentState.menuId, offset)
+                }
+
+                when (result) {
+                    is NavMenuRestClient.NavMenuItemListResult.Success -> {
+                        currentMenuItems = currentMenuItems + result.items
+                        val sortedItems = sortItemsHierarchically(currentMenuItems)
+                        _menuItemListState.value = currentState.copy(
+                            isLoadingMore = false,
+                            canLoadMore = result.canLoadMore,
+                            items = sortedItems
+                        )
+                    }
+                    is NavMenuRestClient.NavMenuItemListResult.Error -> {
+                        _menuItemListState.value = currentState.copy(isLoadingMore = false)
+                        _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
+                    }
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                _menuItemListState.value = currentState.copy(isLoadingMore = false)
             }
         }
     }
@@ -475,15 +556,7 @@ class NavMenusViewModel @Inject constructor(
             val site = selectedSiteRepository.getSelectedSite() ?: return@launch
 
             val result = withContext(ioDispatcher) {
-                when (typeOption) {
-                    MenuItemTypeOption.POST -> navMenuRestClient.fetchPosts(site)
-                    MenuItemTypeOption.PAGE -> navMenuRestClient.fetchPages(site)
-                    MenuItemTypeOption.CATEGORY -> navMenuRestClient.fetchCategories(site)
-                    MenuItemTypeOption.TAG -> navMenuRestClient.fetchTags(site)
-                    MenuItemTypeOption.CUSTOM_LINK -> {
-                        NavMenuRestClient.LinkableItemsResult.Success(emptyList())
-                    }
-                }
+                fetchLinkableItems(site, typeOption, offset = 0)
             }
 
             val currentState = _menuItemDetailState.value ?: return@launch
@@ -494,6 +567,7 @@ class NavMenusViewModel @Inject constructor(
                         currentState.copy(
                             linkableItemsState = LinkableItemsState(
                                 isLoading = false,
+                                canLoadMore = result.canLoadMore,
                                 items = result.items
                             )
                         )
@@ -507,6 +581,74 @@ class NavMenusViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+        }
+    }
+
+    fun loadMoreLinkableItems() {
+        val currentState = _menuItemDetailState.value ?: return
+        val linkableState = currentState.linkableItemsState
+        if (linkableState.isLoading || linkableState.isLoadingMore || !linkableState.canLoadMore) return
+
+        viewModelScope.launch {
+            _menuItemDetailState.value = currentState.copy(
+                linkableItemsState = linkableState.copy(isLoadingMore = true)
+            )
+
+            val site = selectedSiteRepository.getSelectedSite() ?: return@launch
+            val offset = linkableState.items.size
+
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val result = withContext(ioDispatcher) {
+                    fetchLinkableItems(site, currentState.selectedTypeOption, offset)
+                }
+
+                val updatedState = _menuItemDetailState.value ?: return@launch
+                // Only update if the type hasn't changed while loading
+                if (updatedState.selectedTypeOption == currentState.selectedTypeOption) {
+                    _menuItemDetailState.value = when (result) {
+                        is NavMenuRestClient.LinkableItemsResult.Success -> {
+                            updatedState.copy(
+                                linkableItemsState = updatedState.linkableItemsState.copy(
+                                    isLoadingMore = false,
+                                    canLoadMore = result.canLoadMore,
+                                    items = updatedState.linkableItemsState.items + result.items
+                                )
+                            )
+                        }
+                        is NavMenuRestClient.LinkableItemsResult.Error -> {
+                            updatedState.copy(
+                                linkableItemsState = updatedState.linkableItemsState.copy(
+                                    isLoadingMore = false
+                                )
+                            )
+                        }
+                    }
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                val updatedState = _menuItemDetailState.value ?: return@launch
+                _menuItemDetailState.value = updatedState.copy(
+                    linkableItemsState = updatedState.linkableItemsState.copy(isLoadingMore = false)
+                )
+            }
+        }
+    }
+
+    private suspend fun fetchLinkableItems(
+        site: SiteModel,
+        typeOption: MenuItemTypeOption,
+        offset: Int
+    ): NavMenuRestClient.LinkableItemsResult {
+        return when (typeOption) {
+            MenuItemTypeOption.POST -> navMenuRestClient.fetchPosts(site, offset)
+            MenuItemTypeOption.PAGE -> navMenuRestClient.fetchPages(site, offset)
+            MenuItemTypeOption.CATEGORY -> navMenuRestClient.fetchCategories(site, offset)
+            MenuItemTypeOption.TAG -> navMenuRestClient.fetchTags(site, offset)
+            MenuItemTypeOption.CUSTOM_LINK -> {
+                NavMenuRestClient.LinkableItemsResult.Success(emptyList(), canLoadMore = false)
             }
         }
     }
