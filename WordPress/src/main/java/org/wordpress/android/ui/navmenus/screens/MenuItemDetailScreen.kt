@@ -238,13 +238,7 @@ private fun LinkableItemSelector(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
 
-    val placeholderText = when (selectedType) {
-        MenuItemTypeOption.POST -> stringResource(R.string.menu_item_select_post)
-        MenuItemTypeOption.PAGE -> stringResource(R.string.menu_item_select_page)
-        MenuItemTypeOption.CATEGORY -> stringResource(R.string.menu_item_select_category)
-        MenuItemTypeOption.TAG -> stringResource(R.string.menu_item_select_tag)
-        MenuItemTypeOption.CUSTOM_LINK -> stringResource(R.string.menu_item_select_item)
-    }
+    val placeholderText = getTypeSelectionLabel(selectedType)
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -330,21 +324,13 @@ private fun LinkableItemBottomSheetContent(
         }
     }
 
-    val titleText = when (selectedType) {
-        MenuItemTypeOption.POST -> stringResource(R.string.menu_item_select_post)
-        MenuItemTypeOption.PAGE -> stringResource(R.string.menu_item_select_page)
-        MenuItemTypeOption.CATEGORY -> stringResource(R.string.menu_item_select_category)
-        MenuItemTypeOption.TAG -> stringResource(R.string.menu_item_select_tag)
-        MenuItemTypeOption.CUSTOM_LINK -> stringResource(R.string.menu_item_select_item)
-    }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .navigationBarsPadding()
     ) {
         Text(
-            text = titleText,
+            text = getTypeSelectionLabel(selectedType),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
@@ -481,6 +467,15 @@ private fun ParentDropdown(
             }
         }
     }
+}
+
+@Composable
+private fun getTypeSelectionLabel(type: MenuItemTypeOption): String = when (type) {
+    MenuItemTypeOption.POST -> stringResource(R.string.menu_item_select_post)
+    MenuItemTypeOption.PAGE -> stringResource(R.string.menu_item_select_page)
+    MenuItemTypeOption.CATEGORY -> stringResource(R.string.menu_item_select_category)
+    MenuItemTypeOption.TAG -> stringResource(R.string.menu_item_select_tag)
+    MenuItemTypeOption.CUSTOM_LINK -> stringResource(R.string.menu_item_select_item)
 }
 
 @Composable

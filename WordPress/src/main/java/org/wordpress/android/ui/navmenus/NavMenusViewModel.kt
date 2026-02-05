@@ -668,10 +668,7 @@ class NavMenusViewModel @Inject constructor(
         val indentLevel = item.indentLevel
 
         // Find the sibling to swap with
-        val siblingIndex = when (direction) {
-            ReorderDirection.UP -> findPreviousSiblingIndex(currentItems, index, indentLevel)
-            ReorderDirection.DOWN -> findNextSiblingIndex(currentItems, index, indentLevel)
-        }
+        val siblingIndex = findSiblingIndex(currentItems, index, indentLevel, direction)
         if (siblingIndex < 0) return
 
         val sibling = currentItems[siblingIndex]
@@ -725,25 +722,21 @@ class NavMenusViewModel @Inject constructor(
         }
     }
 
-    private fun findPreviousSiblingIndex(
+    private fun findSiblingIndex(
         items: List<MenuItemUiModel>,
         fromIndex: Int,
-        indentLevel: Int
-    ): Int = (fromIndex - 1 downTo 0)
-        .asSequence()
-        .takeWhile { items[it].indentLevel >= indentLevel }
-        .firstOrNull { items[it].indentLevel == indentLevel }
-        ?: -1
-
-    private fun findNextSiblingIndex(
-        items: List<MenuItemUiModel>,
-        fromIndex: Int,
-        indentLevel: Int
-    ): Int = ((fromIndex + 1) until items.size)
-        .asSequence()
-        .takeWhile { items[it].indentLevel >= indentLevel }
-        .firstOrNull { items[it].indentLevel == indentLevel }
-        ?: -1
+        indentLevel: Int,
+        direction: ReorderDirection
+    ): Int {
+        val range = when (direction) {
+            ReorderDirection.UP -> (fromIndex - 1 downTo 0)
+            ReorderDirection.DOWN -> ((fromIndex + 1) until items.size)
+        }
+        return range.asSequence()
+            .takeWhile { items[it].indentLevel >= indentLevel }
+            .firstOrNull { items[it].indentLevel == indentLevel }
+            ?: -1
+    }
 
     private fun findSubtreeEnd(items: List<MenuItemUiModel>, startIndex: Int): Int {
         val startIndent = items[startIndex].indentLevel

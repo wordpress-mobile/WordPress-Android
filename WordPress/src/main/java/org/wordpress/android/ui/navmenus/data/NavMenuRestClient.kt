@@ -417,40 +417,15 @@ class NavMenuRestClient @Inject constructor(
     private fun parseErrorMessage(response: WpRequestResult<*>): String {
         appLogWrapper.e(AppLog.T.API, "API error: $response")
 
-        // Check for network availability first
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return context.getString(R.string.no_network_message)
         }
 
         return when (response) {
-            is WpRequestResult.Success -> "Unexpected error"
-
-            is WpRequestResult.WpError<*> -> {
-                // Extract the specific error message from the API response
+            is WpRequestResult.WpError<*> ->
                 response.errorMessage.takeIf { it.isNotBlank() }
                     ?: context.getString(R.string.request_failed_message)
-            }
-
-            is WpRequestResult.InvalidHttpStatusCode<*> -> {
-                context.getString(R.string.request_failed_message)
-            }
-
-            is WpRequestResult.ResponseParsingError<*> -> {
-                context.getString(R.string.request_failed_message)
-            }
-
-            is WpRequestResult.SiteUrlParsingError<*> -> {
-                context.getString(R.string.request_failed_message)
-            }
-
-            is WpRequestResult.RequestExecutionFailed<*> -> {
-                context.getString(R.string.request_failed_message)
-            }
-
-            is WpRequestResult.MediaFileNotFound<*>,
-            is WpRequestResult.UnknownError<*> -> {
-                context.getString(R.string.request_failed_message)
-            }
+            else -> context.getString(R.string.request_failed_message)
         }
     }
 
