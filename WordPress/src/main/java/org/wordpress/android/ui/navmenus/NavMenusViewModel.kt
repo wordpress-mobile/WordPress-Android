@@ -143,7 +143,10 @@ class NavMenusViewModel @Inject constructor(
                             )
                         }
                         is NavMenuRestClient.NavMenuListResult.Error -> {
-                            _menuListState.value = _menuListState.value.copy(isLoadingMore = false)
+                            _menuListState.value = _menuListState.value.copy(
+                                isLoadingMore = false,
+                                canLoadMore = true
+                            )
                             _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
                         }
                     }
@@ -151,7 +154,10 @@ class NavMenusViewModel @Inject constructor(
                     throw e
                 } catch (e: Exception) {
                     AppLog.e(AppLog.T.API, "Failed to load more menus", e)
-                    _menuListState.value = _menuListState.value.copy(isLoadingMore = false)
+                    _menuListState.value = _menuListState.value.copy(
+                        isLoadingMore = false,
+                        canLoadMore = true
+                    )
                 }
             }
         }
@@ -295,7 +301,10 @@ class NavMenusViewModel @Inject constructor(
                             )
                         }
                         is NavMenuRestClient.NavMenuItemListResult.Error -> {
-                            _menuItemListState.value = _menuItemListState.value.copy(isLoadingMore = false)
+                            _menuItemListState.value = _menuItemListState.value.copy(
+                                isLoadingMore = false,
+                                canLoadMore = true
+                            )
                             _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
                         }
                     }
@@ -303,7 +312,10 @@ class NavMenusViewModel @Inject constructor(
                     throw e
                 } catch (e: Exception) {
                     AppLog.e(AppLog.T.API, "Failed to load more menu items", e)
-                    _menuItemListState.value = _menuItemListState.value.copy(isLoadingMore = false)
+                    _menuItemListState.value = _menuItemListState.value.copy(
+                        isLoadingMore = false,
+                        canLoadMore = true
+                    )
                 }
             }
         }
@@ -633,7 +645,8 @@ class NavMenusViewModel @Inject constructor(
                             is NavMenuRestClient.LinkableItemsResult.Error -> {
                                 updatedState.copy(
                                     linkableItemsState = updatedState.linkableItemsState.copy(
-                                        isLoadingMore = false
+                                        isLoadingMore = false,
+                                        canLoadMore = true
                                     )
                                 )
                             }
@@ -645,7 +658,10 @@ class NavMenusViewModel @Inject constructor(
                     AppLog.e(AppLog.T.API, "Failed to load more linkable items", e)
                     val updatedState = _menuItemDetailState.value ?: return@launch
                     _menuItemDetailState.value = updatedState.copy(
-                        linkableItemsState = updatedState.linkableItemsState.copy(isLoadingMore = false)
+                        linkableItemsState = updatedState.linkableItemsState.copy(
+                            isLoadingMore = false,
+                            canLoadMore = true
+                        )
                     )
                 }
             }
