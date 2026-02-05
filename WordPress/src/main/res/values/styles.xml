@@ -1049,67 +1049,6 @@
         <item name="android:textSize">@dimen/prologue_promo_title_size</item>
     </style>
 
-    <style name="Widget.LoginFlow.Prologue.Card" parent="Widget.MaterialComponents.CardView">
-        <item name="cardElevation">4dp</item>
-        <item name="android:alpha">0.9</item>
-    </style>
-
-    <style name="Widget.LoginFlow.Prologue.Card.ImageOnly" parent="Widget.LoginFlow.Prologue.Card">
-        <item name="android:alpha">1</item>
-        <item name="cardCornerRadius">0dp</item>
-    </style>
-
-    <style name="Widget.LoginFlow.Prologue.CircularButton" parent="Widget.MaterialComponents.Button.Icon">
-        <item name="android:insetLeft">0dp</item>
-        <item name="android:insetRight">0dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="cornerRadius">30dp</item>
-        <item name="iconGravity">textStart</item>
-        <item name="iconPadding">0dp</item>
-        <item name="android:padding">0dp</item>
-        <item name="android:stateListAnimator">@null</item>
-        <item name="android:elevation">5dp</item>
-        <item name="android:clickable">false</item>
-        <item name="android:selectable">false</item>
-        <item name="android:focusable">false</item>
-    </style>
-
-    <style name="Widget.LoginFlow.Prologue.CircularButton.Small" parent="Widget.LoginFlow.Prologue.CircularButton">
-        <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">40dp</item>
-        <item name="iconSize">20dp</item>
-    </style>
-
-    <style name="Widget.LoginFlow.Prologue.CircularButton.Medium" parent="Widget.LoginFlow.Prologue.CircularButton">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="iconSize">24dp</item>
-    </style>
-
-    <style name="Widget.LoginFlow.Prologue.CircularButton.Large" parent="Widget.LoginFlow.Prologue.CircularButton">
-        <item name="android:layout_width">56dp</item>
-        <item name="android:layout_height">56dp</item>
-        <item name="iconSize">28dp</item>
-    </style>
-
-    <style name="Widget.LoginFlow.Prologue.Chip" parent="Widget.MaterialComponents.Chip.Action">
-        <item name="android:includeFontPadding">false</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:textAppearance">
-            @style/Widget.LoginFlow.Prologue.Chip.TextAppearance
-        </item>
-        <item name="chipEndPadding">3dp</item>
-        <item name="chipStartPadding">3dp</item>
-        <item name="ensureMinTouchTargetSize">false</item>
-        <item name="android:layout_height">16dp</item>
-        <item name="android:layout_width">wrap_content</item>
-    </style>
-
-    <style name="Widget.LoginFlow.Prologue.Chip.TextAppearance" parent="TextAppearance.MaterialComponents.Chip">
-        <item name="android:textSize">9sp</item>
-    </style>
-
     <!-- Main actions styles -->
     <style name="MainBottomSheetRowLayout" parent="MySiteListRowLayout">
         <item name="android:minHeight">@dimen/main_bottom_sheet_list_row_min_height</item>

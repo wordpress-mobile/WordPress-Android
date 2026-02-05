@@ -114,16 +114,6 @@
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
     </style>
 
-    <style name="Widget.LoginFlow.Button.Tertiary" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-    </style>
-
-    <style name="Widget.LoginFlow.Button.Tertiary.Small"
-        parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
-        <item name="android:textColor">@color/login_on_surface_medium_selector</item>
-    </style>
-
     <style name="ThemeOverlay.LoginFlow.Button.Secondary" parent="">
         <item name="colorPrimary">?attr/colorSecondary</item>
         <item name="colorOnPrimary">?attr/colorOnSecondary</item>
@@ -150,10 +140,6 @@
     </style>
 
     <!-- TextViews -->
-    <style name="Widget.LoginFlow.TextView.Label" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-    </style>
-
     <style name="Widget.LoginFlow.TextView.Headline" parent="Widget.MaterialComponents.TextView"
         tools:keep="@style/Widget_LoginFlow_TextView_Headline">
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
@@ -168,12 +154,6 @@
         tools:keep="@style/Widget_LoginFlow_TextView_Footnote">
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="android:textColor">@color/login_on_surface_medium_selector</item>
-    </style>
-
-    <style name="Widget.LoginFlow.TextView.DividerText" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textAppearance">?attr/textAppearanceOverline</item>
-        <item name="android:textColor">@color/login_on_background_medium_selector</item>
-        <item name="android:background">?android:colorBackground</item>
     </style>
 
     <style name="Widget.LoginFlow.TextView.List.Subheader" parent="Widget.MaterialComponents.TextView"
@@ -191,16 +171,6 @@
         tools:keep="@style/Widget_LoginFlow_TextView_List_Line2">
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:textColor">@color/login_on_surface_medium_selector</item>
-    </style>
-
-    <!-- TextInputs -->
-    <style name="Widget.LoginFlow.TextInputLayout"
-        parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox" />
-
-    <!-- Cards -->
-    <style name="Widget.LoginFlow.CardView.BottomBar" parent="Widget.MaterialComponents.CardView">
-        <item name="cardCornerRadius">0dp</item>
-        <item name="cardElevation">0dp</item>
     </style>
 
     <!-- ===============================
@@ -306,10 +276,4 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
-    <!-- Login Prologue -->
-    <style name="Widget.LoginFlow.Prologue" parent="" />
-    <style name="Widget.LoginFlow.Button.Primary.Prologue"
-        parent="Widget.LoginFlow.Button.Primary" />
-    <style name="Widget.LoginFlow.Button.Secondary.Prologue"
-        parent="Widget.LoginFlow.Button.Secondary" />
 </resources>
