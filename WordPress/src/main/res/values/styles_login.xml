@@ -141,8 +141,6 @@
         <item name="android:windowAnimationStyle">
             @style/Animation.MaterialComponents.BottomSheetDialog
         </item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="bottomSheetStyle">@style/Widget.LoginFlow.BottomSheet.Modal</item>
     </style>
 

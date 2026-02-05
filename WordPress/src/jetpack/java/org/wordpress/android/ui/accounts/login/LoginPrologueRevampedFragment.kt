@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -113,11 +115,12 @@ private fun LoginScreenRevamped(
     onWpComLoginClicked: () -> Unit,
     onSiteAddressLoginClicked: () -> Unit,
 ) {
-    Box {
+    Box(modifier = Modifier.fillMaxSize()) {
         LoopingTextWithBackground()
         TopLinearGradient()
         WordpressJetpackLogo(
             modifier = Modifier
+                .statusBarsPadding()
                 .padding(top = dimensionResource(id = R.dimen.login_prologue_logo_top_padding))
                 .width(132.dp)
                 .align(Alignment.TopCenter)

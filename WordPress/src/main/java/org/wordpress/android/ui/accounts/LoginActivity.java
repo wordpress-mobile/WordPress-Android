@@ -6,9 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.core.view.WindowCompat;
 import androidx.annotation.Nullable;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
@@ -83,6 +87,8 @@ public class LoginActivity extends BaseAppCompatActivity implements
     private static final String KEY_UNIFIED_TRACKER_SOURCE = "KEY_UNIFIED_TRACKER_SOURCE";
     private static final String KEY_UNIFIED_TRACKER_FLOW = "KEY_UNIFIED_TRACKER_FLOW";
 
+    private int mFragmentContainerId;
+
      // Static field to preserve login flow across OAuth flow (when callback creates new activity)
      private static LoginFlow sPendingLoginFlow;
 
@@ -121,6 +127,9 @@ public class LoginActivity extends BaseAppCompatActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Enable edge-to-edge display
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
         // Attempt Login if this activity was created in response to a user confirming login, and if
         // successful clear the intent so we don't reuse the OAuth code if the activity is recreated
         boolean loginProcessed = mLoginHelper.tryLoginWithDataString(getIntent().getDataString());
@@ -151,7 +160,15 @@ public class LoginActivity extends BaseAppCompatActivity implements
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
 
-        setContentView(R.layout.login_activity);
+        FrameLayout fragmentContainer = new FrameLayout(this);
+        mFragmentContainerId = View.generateViewId();
+        fragmentContainer.setId(mFragmentContainerId);
+        fragmentContainer.setFitsSystemWindows(false);
+        fragmentContainer.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+        setContentView(fragmentContainer);
 
         if (savedInstanceState == null) {
             mLoginAnalyticsListener.trackLoginAccessed();
@@ -292,7 +309,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
 
     private void showFragment(@NonNull Fragment fragment, @NonNull String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
+        fragmentTransaction.replace(mFragmentContainerId, fragment, tag);
         fragmentTransaction.commit();
     }
 
@@ -300,7 +317,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
                 R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
-        fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
+        fragmentTransaction.replace(mFragmentContainerId, fragment, tag);
         if (shouldAddToBackStack) {
             fragmentTransaction.addToBackStack(null);
         }

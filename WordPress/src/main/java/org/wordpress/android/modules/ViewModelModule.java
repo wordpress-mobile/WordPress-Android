@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordLoginViewModel;
-import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordViewModel;
 import org.wordpress.android.ui.accounts.LoginViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingViewModel;
@@ -445,11 +444,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ApplicationPasswordLoginViewModel.class)
     abstract ViewModel applicationPasswordLoginViewModel(ApplicationPasswordLoginViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(LoginSiteApplicationPasswordViewModel.class)
-    abstract ViewModel loginSiteApplicationPasswordViewModel(LoginSiteApplicationPasswordViewModel viewModel);
 
     @Binds
     @IntoMap

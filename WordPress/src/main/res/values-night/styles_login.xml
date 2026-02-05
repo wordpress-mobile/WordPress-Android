@@ -51,11 +51,5 @@
         <item name="colorOnBackground">@color/white</item>
         <item name="colorOnSurface">@color/white</item>
         <item name="colorOnError">@color/black</item>
-
-        <!-- System bars (transparent) -->
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
     </style>
 </resources>
