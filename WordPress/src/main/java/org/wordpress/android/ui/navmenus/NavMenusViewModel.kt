@@ -928,16 +928,24 @@ class NavMenusViewModel @Inject constructor(
         _uiEvent.value = null
     }
 
+    /**
+     * Validates a URL against WordPress's allowed protocols.
+     * See: https://developer.wordpress.org/reference/functions/wp_allowed_protocols/
+     */
     private fun isValidLinkUrl(url: String): Boolean {
-        val trimmedUrl = url.trim().lowercase()
+        val trimmedUrl = url.trim()
         if (trimmedUrl.isEmpty()) return false
 
-        val allowedSchemes = listOf("http://", "https://", "mailto:", "//")
-        val startsWithAllowed = allowedSchemes.any {
-            trimmedUrl.startsWith(it)
-        }
+        // Anchor links are valid (e.g., #section or #contact)
+        if (trimmedUrl.startsWith("#")) return trimmedUrl.length > 1
 
-        return startsWithAllowed && android.webkit.URLUtil.isValidUrl(trimmedUrl)
+        // Protocol-relative URLs are valid
+        if (trimmedUrl.startsWith("//")) return trimmedUrl.length > 2
+
+        val lowercaseUrl = trimmedUrl.lowercase()
+        return ALLOWED_PROTOCOLS.any { protocol ->
+            lowercaseUrl.startsWith("$protocol:")
+        }
     }
 
     private fun sanitizeInput(input: String, maxLength: Int): String {
@@ -949,5 +957,15 @@ class NavMenusViewModel @Inject constructor(
         private const val MAX_MENU_DESCRIPTION_LENGTH = 500
         private const val MAX_MENU_ITEM_TITLE_LENGTH = 200
         private const val MAX_MENU_ITEM_DESCRIPTION_LENGTH = 500
+
+        /**
+         * WordPress allowed protocols from wp_allowed_protocols().
+         * See: https://developer.wordpress.org/reference/functions/wp_allowed_protocols/
+         */
+        private val ALLOWED_PROTOCOLS = listOf(
+            "http", "https", "ftp", "ftps", "mailto", "news", "irc", "irc6", "ircs",
+            "gopher", "nntp", "feed", "telnet", "mms", "rtsp", "sms", "svn", "tel",
+            "fax", "xmpp", "webcal", "urn"
+        )
     }
 }
