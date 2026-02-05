@@ -326,6 +326,7 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     override suspend fun fetchTopAuthors(
         siteId: Long,
         dateRange: StatsDateRange,
