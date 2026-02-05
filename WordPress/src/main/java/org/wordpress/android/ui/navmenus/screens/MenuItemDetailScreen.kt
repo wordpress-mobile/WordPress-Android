@@ -52,6 +52,7 @@ import kotlinx.coroutines.launch
 import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.navmenus.LinkableItemOption
 import org.wordpress.android.ui.navmenus.LinkableItemsState
 import org.wordpress.android.ui.navmenus.MenuItemDetailUiState
@@ -520,88 +521,96 @@ private val sampleLinkableItems = listOf(
 @Preview(name = "New Custom Link Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun MenuItemDetailScreenNewCustomLinkPreview() {
-    MenuItemDetailScreen(
-        state = MenuItemDetailUiState(
-            isNew = true,
-            selectedTypeOption = MenuItemTypeOption.CUSTOM_LINK,
-            availableParents = sampleParents
-        ),
-        onTitleChange = {},
-        onUrlChange = {},
-        onParentChange = {},
-        onDescriptionChange = {},
-        onTypeChange = {},
-        onLinkableItemChange = {},
-        onLoadMoreLinkableItems = {},
-        onSaveClick = {}
-    )
+    AppThemeM3 {
+        MenuItemDetailScreen(
+            state = MenuItemDetailUiState(
+                isNew = true,
+                selectedTypeOption = MenuItemTypeOption.CUSTOM_LINK,
+                availableParents = sampleParents
+            ),
+            onTitleChange = {},
+            onUrlChange = {},
+            onParentChange = {},
+            onDescriptionChange = {},
+            onTypeChange = {},
+            onLinkableItemChange = {},
+            onLoadMoreLinkableItems = {},
+            onSaveClick = {}
+        )
+    }
 }
 
 @Preview(name = "New Page Link Light", showBackground = true)
 @Preview(name = "New Page Link Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun MenuItemDetailScreenNewPagePreview() {
-    MenuItemDetailScreen(
-        state = MenuItemDetailUiState(
-            isNew = true,
-            selectedTypeOption = MenuItemTypeOption.PAGE,
-            linkableItemsState = LinkableItemsState(items = sampleLinkableItems),
-            availableParents = sampleParents
-        ),
-        onTitleChange = {},
-        onUrlChange = {},
-        onParentChange = {},
-        onDescriptionChange = {},
-        onTypeChange = {},
-        onLinkableItemChange = {},
-        onLoadMoreLinkableItems = {},
-        onSaveClick = {}
-    )
+    AppThemeM3 {
+        MenuItemDetailScreen(
+            state = MenuItemDetailUiState(
+                isNew = true,
+                selectedTypeOption = MenuItemTypeOption.PAGE,
+                linkableItemsState = LinkableItemsState(items = sampleLinkableItems),
+                availableParents = sampleParents
+            ),
+            onTitleChange = {},
+            onUrlChange = {},
+            onParentChange = {},
+            onDescriptionChange = {},
+            onTypeChange = {},
+            onLinkableItemChange = {},
+            onLoadMoreLinkableItems = {},
+            onSaveClick = {}
+        )
+    }
 }
 
 @Preview(name = "Edit Item Light", showBackground = true)
 @Preview(name = "Edit Item Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun MenuItemDetailScreenEditPreview() {
-    MenuItemDetailScreen(
-        state = MenuItemDetailUiState(
-            itemId = 1L,
-            title = "About Us",
-            description = "Learn more about our company",
-            url = "https://example.com/about",
-            isNew = false,
-            availableParents = sampleParents
-        ),
-        onTitleChange = {},
-        onUrlChange = {},
-        onParentChange = {},
-        onDescriptionChange = {},
-        onTypeChange = {},
-        onLinkableItemChange = {},
-        onLoadMoreLinkableItems = {},
-        onSaveClick = {}
-    )
+    AppThemeM3 {
+        MenuItemDetailScreen(
+            state = MenuItemDetailUiState(
+                itemId = 1L,
+                title = "About Us",
+                description = "Learn more about our company",
+                url = "https://example.com/about",
+                isNew = false,
+                availableParents = sampleParents
+            ),
+            onTitleChange = {},
+            onUrlChange = {},
+            onParentChange = {},
+            onDescriptionChange = {},
+            onTypeChange = {},
+            onLinkableItemChange = {},
+            onLoadMoreLinkableItems = {},
+            onSaveClick = {}
+        )
+    }
 }
 
 @Preview(name = "Saving Light", showBackground = true)
 @Preview(name = "Saving Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun MenuItemDetailScreenSavingPreview() {
-    MenuItemDetailScreen(
-        state = MenuItemDetailUiState(
-            title = "About Us",
-            url = "https://example.com/about",
-            isSaving = true
-        ),
-        onTitleChange = {},
-        onUrlChange = {},
-        onParentChange = {},
-        onDescriptionChange = {},
-        onTypeChange = {},
-        onLinkableItemChange = {},
-        onLoadMoreLinkableItems = {},
-        onSaveClick = {}
-    )
+    AppThemeM3 {
+        MenuItemDetailScreen(
+            state = MenuItemDetailUiState(
+                title = "About Us",
+                url = "https://example.com/about",
+                isSaving = true
+            ),
+            onTitleChange = {},
+            onUrlChange = {},
+            onParentChange = {},
+            onDescriptionChange = {},
+            onTypeChange = {},
+            onLinkableItemChange = {},
+            onLoadMoreLinkableItems = {},
+            onSaveClick = {}
+        )
+    }
 }
 
 // endregion
