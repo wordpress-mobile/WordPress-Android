@@ -14,6 +14,8 @@ import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import rs.wordpress.api.kotlin.fromLocale
+import uniffi.wp_api.WpComLanguage
 import javax.inject.Inject
 
 /**
@@ -242,7 +244,7 @@ class StatsDataSourceImpl @Inject constructor(
             date = dateRange.date,
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = localeManagerWrapper.getLocale().toString(),
+            locale = WpComLanguage.fromLocale(localeManagerWrapper.getLocale()),
             summarize = true
         )
         is StatsDateRange.Custom -> StatsCountryViewsParams(
@@ -250,7 +252,7 @@ class StatsDataSourceImpl @Inject constructor(
             date = dateRange.date,
             startDate = dateRange.startDate,
             max = max.coerceAtLeast(1).toUInt(),
-            locale = localeManagerWrapper.getLocale().toString(),
+            locale = WpComLanguage.fromLocale(localeManagerWrapper.getLocale()),
             summarize = true
         )
     }
