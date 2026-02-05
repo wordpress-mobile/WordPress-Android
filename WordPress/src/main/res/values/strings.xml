@@ -1582,6 +1582,10 @@
     <string name="stats_countries_location_header">Locations</string>
     <string name="stats_countries_views_header">Views</string>
 
+    <!-- Authors Stats Card -->
+    <string name="stats_authors_title">Authors</string>
+    <string name="stats_authors_author_header">Author</string>
+
     <!-- Stats Card Configuration -->
     <string name="stats_card_remove">Remove Card</string>
     <string name="stats_card_move">Move Card</string>

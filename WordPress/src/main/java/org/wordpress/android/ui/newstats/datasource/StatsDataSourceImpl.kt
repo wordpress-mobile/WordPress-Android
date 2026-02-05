@@ -4,6 +4,9 @@ import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.util.LocaleManagerWrapper
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import uniffi.wp_api.StatsReferrersParams
 import uniffi.wp_api.StatsReferrersPeriod
 import uniffi.wp_api.StatsTopPostsParams
@@ -13,6 +16,9 @@ import uniffi.wp_api.StatsCountryViewsPeriod
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
 import uniffi.wp_api.WpComLanguage
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Date
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import rs.wordpress.api.kotlin.fromLocale
@@ -24,7 +30,8 @@ import javax.inject.Inject
  */
 class StatsDataSourceImpl @Inject constructor(
     private val wpComApiClientProvider: WpComApiClientProvider,
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val authorsRestClient: AuthorsRestClient
 ) : StatsDataSource {
     /**
      * Access token for API authentication.
@@ -316,6 +323,68 @@ class StatsDataSourceImpl @Inject constructor(
                 AppLog.e(T.STATS, "StatsDataSourceImpl: fetchCountryViews unexpected result - $result")
                 CountryViewsDataResult.Error("Unknown error: ${result::class.simpleName}")
             }
+        }
+    }
+
+    override suspend fun fetchTopAuthors(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): TopAuthorsDataResult {
+        val date = when (dateRange) {
+            is StatsDateRange.Preset -> LocalDate.parse(dateRange.date)
+            is StatsDateRange.Custom -> LocalDate.parse(dateRange.date)
+        }
+        val javaDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant())
+
+        // Create a minimal SiteModel with just the siteId
+        val site = SiteModel().apply { this.siteId = siteId }
+
+        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchTopAuthors - siteId=$siteId, date=$date, max=$max")
+
+        return try {
+            val result = authorsRestClient.fetchAuthors(
+                site = site,
+                granularity = StatsGranularity.DAYS,
+                date = javaDate,
+                itemsToLoad = max,
+                forced = true
+            )
+
+            if (result.isError) {
+                val errorMessage = result.error?.message ?: "Unknown error"
+                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchTopAuthors error - $errorMessage")
+                TopAuthorsDataResult.Error(errorMessage)
+            } else {
+                val response = result.response
+                // Get the first (and typically only) group of authors
+                val authorsGroup = response?.groups?.values?.firstOrNull()
+                val authorsList = authorsGroup?.authors.orEmpty()
+
+                val authorItems = authorsList.map { author ->
+                    TopAuthorItem(
+                        name = author.name.orEmpty(),
+                        avatarUrl = author.avatarUrl,
+                        views = author.views?.toLong() ?: 0L
+                    )
+                }
+
+                val totalViews = authorItems.sumOf { it.views }
+
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchTopAuthors success - ${authorItems.size} authors"
+                )
+                TopAuthorsDataResult.Success(
+                    TopAuthorsData(
+                        authors = authorItems,
+                        totalViews = totalViews
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            AppLog.e(T.STATS, "StatsDataSourceImpl: fetchTopAuthors exception - ${e.message}")
+            TopAuthorsDataResult.Error(e.message ?: "Unknown error")
         }
     }
 }
