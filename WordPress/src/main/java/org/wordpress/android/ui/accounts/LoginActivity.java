@@ -90,7 +90,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
     private int mFragmentContainerId;
 
      // Static field to preserve login flow across OAuth flow (when callback creates new activity)
-     private static LoginFlow sPendingLoginFlow;
+     @Nullable private static LoginFlow sPendingLoginFlow;
 
     // Static field to track if we're in a share flow (for self-hosted login via ApplicationPasswordLoginActivity)
     private static boolean sIsShareFlowPending;
