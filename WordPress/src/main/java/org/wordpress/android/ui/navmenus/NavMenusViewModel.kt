@@ -330,6 +330,7 @@ class NavMenusViewModel @Inject constructor(
     private fun sortItemsHierarchically(items: List<NavMenuItemModel>): List<MenuItemUiModel> {
         val result = mutableListOf<MenuItemUiModel>()
         val itemsById = items.associateBy { it.remoteItemId }
+        val childrenByParentId = items.groupBy { it.parentId }
         val visited = mutableSetOf<Long>()
 
         fun addItemWithChildren(item: NavMenuItemModel, indentLevel: Int) {
@@ -337,15 +338,15 @@ class NavMenusViewModel @Inject constructor(
             visited.add(item.remoteItemId)
             result.add(item.toUiModel(indentLevel))
 
-            // Find and add children sorted by menu order
-            items.filter { it.parentId == item.remoteItemId }
-                .sortedBy { it.menuOrder }
-                .forEach { child ->
+            // Get pre-computed children sorted by menu order
+            childrenByParentId[item.remoteItemId]
+                ?.sortedBy { it.menuOrder }
+                ?.forEach { child ->
                     addItemWithChildren(child, indentLevel + 1)
                 }
         }
 
-        // Start with root items (parent = 0)
+        // Start with root items (parent = 0 or parent not in items)
         items.filter { it.parentId == 0L || itemsById[it.parentId] == null }
             .sortedBy { it.menuOrder }
             .forEach { rootItem ->
