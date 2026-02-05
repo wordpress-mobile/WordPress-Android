@@ -129,6 +129,10 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
+    <style name="DividerVertical" tools:ignore="UnusedResources">
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
     <!--Post Settings Styles-->
     <style name="PostSettingsTheme" parent="Base.Wordpress">
         <item name="colorPrimary">@color/colorPrimaryEditor</item>
