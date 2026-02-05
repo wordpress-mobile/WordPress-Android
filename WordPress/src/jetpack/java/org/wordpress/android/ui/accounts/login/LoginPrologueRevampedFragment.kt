@@ -28,6 +28,7 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.isActive
 import org.wordpress.android.R
+import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.accounts.login.components.LoopingTextWithBackground
 import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
@@ -41,7 +42,7 @@ val LocalPosition = compositionLocalOf { 0f }
 
 @AndroidEntryPoint
 class LoginPrologueRevampedFragment : Fragment() {
-    private lateinit var loginPrologueListener: LoginPrologueListener
+    private lateinit var loginActivity: LoginActivity
     private val viewModel by viewModels<LoginPrologueRevampedViewModel>()
 
     override fun onCreateView(
@@ -55,11 +56,11 @@ class LoginPrologueRevampedFragment : Fragment() {
                     LoginScreenRevamped(
                         onWpComLoginClicked = {
                             viewModel.onWpComLoginClicked()
-                            loginPrologueListener.showWPcomLoginScreen(this.context)
+                            loginActivity.showWPcomLoginScreen(this.context)
                         },
                         onSiteAddressLoginClicked = {
                             viewModel.onSiteAddressLoginClicked()
-                            loginPrologueListener.loginViaSiteAddress()
+                            loginActivity.loginViaSiteAddress()
                         },
                     )
                 }
@@ -69,8 +70,8 @@ class LoginPrologueRevampedFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        check(context is LoginPrologueListener) { "$context must implement LoginPrologueListener" }
-        loginPrologueListener = context
+        check(context is LoginActivity) { "$context must be LoginActivity" }
+        loginActivity = context
     }
 
     companion object {

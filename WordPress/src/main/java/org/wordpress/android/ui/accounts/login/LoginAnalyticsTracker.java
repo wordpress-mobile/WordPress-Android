@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;

@@ -1,4 +1,4 @@
-package org.wordpress.android.login
+package org.wordpress.android.ui.accounts.login
 
 interface LoginAnalyticsListener {
     fun trackAnalyticsSignIn(isWpcomLogin: Boolean)
@@ -8,7 +8,12 @@ interface LoginAnalyticsListener {
     fun trackLoginMagicLinkSucceeded()
     fun trackUrlFormViewed()
     fun trackConnectedSiteInfoRequested(url: String?)
-    fun trackConnectedSiteInfoFailed(url: String?, errorContext: String?, errorType: String?, errorDescription: String?)
+    fun trackConnectedSiteInfoFailed(
+        url: String?,
+        errorContext: String?,
+        errorType: String?,
+        errorDescription: String?
+    )
     fun trackConnectedSiteInfoSucceeded(properties: Map<String, *>)
     fun trackFailure(message: String?)
     fun trackSubmitClicked()

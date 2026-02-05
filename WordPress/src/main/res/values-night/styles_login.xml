@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Base.Theme.LoginFlow" parent="Base.Theme.LoginFlow.Shared">
+        <item name="colorPrimary">@color/blue_30</item>
+        <item name="colorPrimaryVariant">@color/blue_50</item>
+        <item name="colorSecondary">@color/blue_30</item>
+        <item name="colorSecondaryVariant">@color/blue_50</item>
+
+        <item name="android:colorBackground">@color/background_dark</item>
+        <item name="colorSurface">@color/background_dark</item>
+        <item name="colorError">@color/red_50</item>
+
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorOnBackground">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorOnError">@color/black</item>
+    </style>
+
+    <style name="Theme.LoginFlow" parent="Base.Theme.LoginFlow">
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+    </style>
+</resources>

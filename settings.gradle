@@ -104,7 +104,6 @@ include ':libs:annotations'
 include ':libs:mocks'
 
 include ':libs:fluxc', ':libs:fluxc-annotations', ':libs:fluxc-processor'
-include ':libs:login'
 include ':libs:posttypes'
 
 apply from: './config/gradle/included_builds.gradle'
@@ -141,7 +140,6 @@ buildCache {
 
 def checkForRemoteBuildCacheOptimizedExperience() {
     assertSecretsApplied()
-    assertDeveloperPropertiesMatch("${rootDir}/libs/login/developer.properties")
     assertDeveloperPropertiesMatch("${rootDir}/libs/fluxc/developer.properties")
     assertJava21Amazon()
 }

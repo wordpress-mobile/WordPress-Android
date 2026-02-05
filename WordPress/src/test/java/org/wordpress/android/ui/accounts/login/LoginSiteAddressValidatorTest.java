@@ -1,4 +1,4 @@
-package org.wordpress.android.login;
+package org.wordpress.android.ui.accounts.login;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;

@@ -31,9 +31,8 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.login.LoginAnalyticsListener;
-import org.wordpress.android.login.LoginListener;
-import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
+import org.wordpress.android.ui.accounts.LoginFlow;
 import org.wordpress.android.ui.accounts.login.applicationpassword.LoginSiteApplicationPasswordFragment;
 import org.wordpress.android.support.ZendeskExtraTags;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -41,12 +40,7 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
-import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
-import org.wordpress.android.ui.accounts.login.LoginCompletionUseCase;
-import org.wordpress.android.ui.accounts.login.LoginCompletionUseCase.LoginCompletionAction;
-import org.wordpress.android.ui.accounts.login.LoginCompletionUseCase.MainNavigationDestination;
-import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
@@ -80,7 +74,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
 
 @AndroidEntryPoint
-public class LoginActivity extends BaseAppCompatActivity implements LoginListener, LoginPrologueListener,
+public class LoginActivity extends BaseAppCompatActivity implements
         HasAndroidInjector, BasicDialogPositiveClickInterface {
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String MAGIC_LOGIN = "magic-login";
@@ -89,8 +83,8 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
     private static final String KEY_UNIFIED_TRACKER_SOURCE = "KEY_UNIFIED_TRACKER_SOURCE";
     private static final String KEY_UNIFIED_TRACKER_FLOW = "KEY_UNIFIED_TRACKER_FLOW";
 
-    // Static field to preserve login mode across OAuth flow (when callback creates new activity)
-    private static LoginMode sPendingLoginMode;
+     // Static field to preserve login flow across OAuth flow (when callback creates new activity)
+     private static LoginFlow sPendingLoginFlow;
 
     // Static field to track if we're in a share flow (for self-hosted login via ApplicationPasswordLoginActivity)
     private static boolean sIsShareFlowPending;
@@ -105,7 +99,7 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
         return result;
     }
 
-    private LoginMode mLoginMode;
+    private LoginFlow mLoginFlow;
     private LoginViewModel mViewModel;
     @Inject protected WPcomLoginHelper mLoginHelper;
 
@@ -122,7 +116,6 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
     private ArrayList<Integer> mOldSitesIdsForLoginUpdate;
 
     @Inject ExperimentalFeatures mExperimentalFeatures;
-    @Inject LoginCompletionUseCase mLoginCompletionUseCase;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -140,7 +133,7 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
             return;
         } else {
             // Not an OAuth callback - clear any pending login mode from a previous flow
-            sPendingLoginMode = null;
+            sPendingLoginFlow = null;
         }
 
         // Start preloading the WordPress.com login page if needed – this avoids visual hitches
@@ -148,10 +141,8 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
         mLoginHelper.bindCustomTabsService(this);
 
         // go no further if the user is already logged in and this is the login screen shown at startup
-        //      FULL = WPAndroid
-        //      JETPACK_LOGIN_ONLY = JPAndroid
-        LoginMode loginMode = getLoginMode();
-        if ((mLoginHelper.isLoggedIn()) && (loginMode == LoginMode.FULL || loginMode == LoginMode.JETPACK_LOGIN_ONLY)) {
+        LoginFlow loginFlow = getLoginFlow();
+        if ((mLoginHelper.isLoggedIn()) && (loginFlow == LoginFlow.PROLOGUE)) {
             // Show loading UI while we fetch account and sites in the background
             setContentView(R.layout.login_loading);
             this.loggedInAndFinish(new ArrayList<Integer>(), true);
@@ -165,36 +156,17 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
         if (savedInstanceState == null) {
             mLoginAnalyticsListener.trackLoginAccessed();
 
-            switch (loginMode) {
-                case FULL:
-                case JETPACK_LOGIN_ONLY:
-                    mUnifiedLoginTracker.setSource(Source.DEFAULT);
+            mUnifiedLoginTracker.setSource(loginFlow.getAnalyticsSource());
+
+            switch (loginFlow.getInitialScreen()) {
+                case PROLOGUE:
                     showFragment(new LoginPrologueRevampedFragment(), LoginPrologueRevampedFragment.TAG);
                     break;
-                case WPCOM_LOGIN_ONLY:
-                case JETPACK_REST_CONNECT:
-                    mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
+                case WPCOM_OAUTH:
                     showWPcomLoginScreen(this);
                     break;
-                case SELFHOSTED_ONLY:
-                    mUnifiedLoginTracker.setSource(Source.SELF_HOSTED);
+                case SELF_HOSTED:
                     showFragment(new LoginSiteApplicationPasswordFragment(), LoginSiteApplicationPasswordFragment.TAG);
-                    break;
-                case JETPACK_STATS:
-                    mUnifiedLoginTracker.setSource(Source.JETPACK);
-                    showWPcomLoginScreen(this);
-                    break;
-                case WPCOM_LOGIN_DEEPLINK:
-                    mUnifiedLoginTracker.setSource(Source.DEEPLINK);
-                    showWPcomLoginScreen(this);
-                    break;
-                case WPCOM_REAUTHENTICATE:
-                    mUnifiedLoginTracker.setSource(Source.REAUTHENTICATION);
-                    showWPcomLoginScreen(this);
-                    break;
-                case SHARE_INTENT:
-                    mUnifiedLoginTracker.setSource(Source.SHARE);
-                    showFragment(new LoginPrologueRevampedFragment(), LoginPrologueRevampedFragment.TAG);
                     break;
             }
         } else {
@@ -223,7 +195,7 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_UNIFIED_TRACKER_SOURCE, mUnifiedLoginTracker.getSource().getValue());
         Flow flow = mUnifiedLoginTracker.getFlow();
@@ -233,7 +205,7 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
 
@@ -263,7 +235,7 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
         super.onResume();
         // Check if self-hosted login completed while in share flow
         // ApplicationPasswordLoginActivity finishes back here after successful login
-        if (getLoginMode() == LoginMode.SHARE_INTENT && mSiteStore.hasSite()) {
+        if (getLoginFlow() == LoginFlow.SHARE_INTENT && mSiteStore.hasSite()) {
             setResult(Activity.RESULT_OK);
             finish();
         }
@@ -308,30 +280,23 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
      * This is the common exit point for successful logins.
      */
     private void navigateToMainActivityOrFinish() {
-        MainNavigationDestination destination =
-                mLoginCompletionUseCase.getMainNavigationDestination(getLoginMode());
-        switch (destination) {
-            case MAIN_ACTIVITY:
-                // Select the primary site after WP.com login
-                ActivityLauncher.showMainActivity(this, false, true);
-                break;
-            case FINISH_ONLY:
-            default:
-                // For other modes (JETPACK_STATS, JETPACK_REST_CONNECT, WPCOM_LOGIN_DEEPLINK,
-                // WPCOM_REAUTHENTICATE, etc.), just finish and let the caller handle navigation
-                break;
+        LoginFlow.CompletionBehavior behavior = getLoginFlow().getCompletionBehavior();
+        if (behavior == LoginFlow.CompletionBehavior.MAIN_ACTIVITY) {
+            // Select the primary site after WP.com login
+            ActivityLauncher.showMainActivity(this, false, true);
         }
+        // For FINISH and FINISH_WITH_SITE, just finish and let the caller handle navigation
         setResult(Activity.RESULT_OK);
         finish();
     }
 
-    private void showFragment(Fragment fragment, String tag) {
+    private void showFragment(@NonNull Fragment fragment, @NonNull String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
         fragmentTransaction.commit();
     }
 
-    private void slideInFragment(Fragment fragment, boolean shouldAddToBackStack, String tag) {
+    private void slideInFragment(@NonNull Fragment fragment, boolean shouldAddToBackStack, @NonNull String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
                 R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
@@ -342,33 +307,22 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
         fragmentTransaction.commitAllowingStateLoss();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            getOnBackPressedDispatcher().onBackPressed();
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public LoginMode getLoginMode() {
-        if (mLoginMode != null) {
+    public LoginFlow getLoginFlow() {
+        if (mLoginFlow != null) {
             // returned the cached value
-            return mLoginMode;
+            return mLoginFlow;
         }
 
-        // compute and cache the Login mode
-        mLoginMode = LoginMode.fromIntent(getIntent());
+        // compute and cache the Login flow
+        mLoginFlow = LoginFlow.fromIntent(getIntent());
 
-        // If the mode is FULL (default) but we have a pending mode from an OAuth flow, use that instead
-        if (mLoginMode == LoginMode.FULL && sPendingLoginMode != null) {
-            mLoginMode = sPendingLoginMode;
-            sPendingLoginMode = null; // Clear after use
+        // If the flow is PROLOGUE (default) but we have a pending flow from an OAuth callback, use that instead
+        if (mLoginFlow == LoginFlow.PROLOGUE && sPendingLoginFlow != null) {
+            mLoginFlow = sPendingLoginFlow;
+            sPendingLoginFlow = null; // Clear after use
         }
 
-        return mLoginMode;
+        return mLoginFlow;
     }
 
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
@@ -385,16 +339,14 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
             return; // Wait for onAccountChanged -> onSiteChanged before navigating
         }
 
-        LoginCompletionAction action = mLoginCompletionUseCase.getLoginCompletionAction(getLoginMode());
-        switch (action) {
-            case FINISH_WITH_NEW_SITE:
+        LoginFlow.CompletionBehavior behavior = getLoginFlow().getCompletionBehavior();
+        switch (behavior) {
+            case FINISH_WITH_SITE:
                 // Handle self-hosted site login - find the newly added site and return its ID
                 finishWithNewlyAddedSiteId(oldSitesIds);
                 break;
-                case FINISH_ONLY:
-                // WooCommerce handles its own navigation
-                break;
-            case NAVIGATE_TO_MAIN:
+            case MAIN_ACTIVITY:
+            case FINISH:
             default:
                 // For all other modes, use the common navigation logic
                 navigateToMainActivityOrFinish();
@@ -425,14 +377,12 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
         finish();
     }
 
-    // LoginPrologueListener implementation methods
-
     public void showWPcomLoginScreen(@NonNull Context context) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_WEBVIEW);
         mUnifiedLoginTracker.setFlowAndStep(Flow.WORDPRESS_COM_WEB, Step.WPCOM_WEB_START);
 
         // Save the current login mode so it survives the OAuth callback (which creates a new activity)
-        sPendingLoginMode = getLoginMode();
+        sPendingLoginFlow = getLoginFlow();
 
         CustomTabsIntent intent = getCustomTabsIntent();
 
@@ -456,46 +406,24 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
                 .build();
     }
 
-    // LoginListener implementation methods
-
-    @Override
     public void loginViaSiteAddress() {
         // Track if we're in a share flow so ApplicationPasswordLoginActivity knows to just finish
-        if (getLoginMode() == LoginMode.SHARE_INTENT) {
+        if (getLoginFlow() == LoginFlow.SHARE_INTENT) {
             sIsShareFlowPending = true;
         }
         slideInFragment(new LoginSiteApplicationPasswordFragment(), true, LoginSiteApplicationPasswordFragment.TAG);
     }
 
-    @Override
-    public void alreadyLoggedInWpcom(ArrayList<Integer> oldSitesIds) {
-        ToastUtils.showToast(this, R.string.already_logged_in_wpcom, ToastUtils.Duration.LONG);
-        loggedInAndFinish(oldSitesIds, false);
-    }
-
-    @Override
-    public void handleSslCertificateError(MemorizingTrustManager memorizingTrustManager,
-                                          final SelfSignedSSLCallback callback) {
-        SelfSignedSSLUtils.showSSLWarningDialog(this, memorizingTrustManager, new SelfSignedSSLUtils.Callback() {
-            @Override
-            public void certificateTrusted() {
-                callback.certificateTrusted();
-            }
-        });
-    }
-
     private void viewHelp(Origin origin) {
-        List<String> extraSupportTags = getLoginMode() == LoginMode.JETPACK_STATS ? Collections
+        List<String> extraSupportTags = getLoginFlow() == LoginFlow.JETPACK_STATS ? Collections
                 .singletonList(ZendeskExtraTags.connectingJetpack) : null;
         ActivityLauncher.viewHelp(this, origin, null, extraSupportTags, mExperimentalFeatures);
     }
 
-    @Override
     public void helpSiteAddress(String url) {
         viewHelp(Origin.LOGIN_SITE_ADDRESS);
     }
 
-    @Override
     public void startPostLoginServices() {
         // Get reader tags so they're available as soon as the Reader is accessed - done for
         // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
@@ -515,11 +443,10 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
         return mDispatchingAndroidInjector;
     }
 
-    @Override public void startOver() {
+    public void startOver() {
         // Not used in WordPress app
     }
 
-    @Override
     public void gotConnectedSiteInfo(
             @NonNull String siteAddress,
             @Nullable String redirectUrl,
@@ -527,7 +454,6 @@ public class LoginActivity extends BaseAppCompatActivity implements LoginListene
         // Not used in WordPress app
     }
 
-    @Override
     public void handleSiteAddressError(ConnectSiteInfoPayload siteInfo) {
         mViewModel.onHandleSiteAddressError(siteInfo);
     }

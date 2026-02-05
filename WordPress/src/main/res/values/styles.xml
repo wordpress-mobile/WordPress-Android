@@ -1368,7 +1368,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <style name="WordPress.BottomSheetDialogTheme.Title" parent="WordPress.BottomSheetDialogTheme.Text">

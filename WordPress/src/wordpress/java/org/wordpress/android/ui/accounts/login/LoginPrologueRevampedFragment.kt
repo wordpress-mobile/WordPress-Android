@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
+import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.accounts.login.compose.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.Tagline
@@ -38,7 +39,7 @@ import org.wordpress.android.ui.compose.TestTags
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 class LoginPrologueRevampedFragment : Fragment() {
-    private lateinit var loginPrologueListener: LoginPrologueListener
+    private lateinit var loginActivity: LoginActivity
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,9 +50,9 @@ class LoginPrologueRevampedFragment : Fragment() {
             AppThemeM3 {
                 LoginScreenRevamped(
                     onWpComLoginClicked = {
-                        loginPrologueListener.showWPcomLoginScreen(this.context)
+                        loginActivity.showWPcomLoginScreen(this.context)
                     },
-                    onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
+                    onSiteAddressLoginClicked = loginActivity::loginViaSiteAddress,
                 )
             }
         }
@@ -59,8 +60,8 @@ class LoginPrologueRevampedFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        check(context is LoginPrologueListener) { "$context must implement LoginPrologueListener" }
-        loginPrologueListener = context
+        check(context is LoginActivity) { "$context must be LoginActivity" }
+        loginActivity = context
     }
 
     override fun onResume() {

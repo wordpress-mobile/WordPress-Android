@@ -26,8 +26,18 @@ import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SiteUtils {
+    public static ArrayList<Integer> getCurrentSiteIds(SiteStore siteStore, boolean selfhostedOnly) {
+        ArrayList<Integer> siteIDs = new ArrayList<>();
+        List<SiteModel> sites = selfhostedOnly ? siteStore.getSitesAccessedViaXMLRPC() : siteStore.getSites();
+        for (SiteModel site : sites) {
+            siteIDs.add(site.getId());
+        }
+        return siteIDs;
+    }
+
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
     public static final String WP_VIDEOPRESS_V5_JETPACK_VERSION = "8.5";

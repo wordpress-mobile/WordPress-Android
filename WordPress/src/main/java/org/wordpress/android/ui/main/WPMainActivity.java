@@ -62,7 +62,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.inappupdate.InAppUpdateListener;
-import org.wordpress.android.login.LoginAnalyticsListener;
+import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.push.GCMMessageService;

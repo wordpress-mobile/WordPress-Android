@@ -371,7 +371,6 @@ dependencies {
             strictly libs.wordpress.utils.get().version
         }
     }
-    implementation project(":libs:login")
     implementation project(":libs:posttypes")
     implementation("$gradle.ext.aboutAutomatticBinaryPath:${libs.versions.automattic.about.get()}")
 

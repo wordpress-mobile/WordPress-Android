@@ -30,7 +30,7 @@ import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
-import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.ui.accounts.LoginFlow;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.push.NotificationType;
@@ -153,9 +153,9 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTIC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_REBLOGGED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
-import static org.wordpress.android.login.LoginMode.JETPACK_LOGIN_ONLY;
-import static org.wordpress.android.login.LoginMode.JETPACK_REST_CONNECT;
-import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
+import static org.wordpress.android.ui.accounts.LoginFlow.PROLOGUE;
+import static org.wordpress.android.ui.accounts.LoginFlow.JETPACK_REST_CONNECT;
+import static org.wordpress.android.ui.accounts.LoginFlow.WPCOM_LOGIN;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivityKt.ARG_BLAZE_FLOW_SOURCE;
@@ -1509,7 +1509,7 @@ public class ActivityLauncher {
 
     public static void showSignInForResultWpComOnly(Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
-        WPCOM_LOGIN_ONLY.putInto(intent);
+        WPCOM_LOGIN.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
@@ -1531,7 +1531,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(
                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        JETPACK_LOGIN_ONLY.putInto(intent);
+        PROLOGUE.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
@@ -1607,33 +1607,33 @@ public class ActivityLauncher {
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent;
         intent = new Intent(activity, LoginActivity.class);
-        LoginMode.SELFHOSTED_ONLY.putInto(intent);
+        LoginFlow.SELFHOSTED_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
     public static void loginForDeeplink(Activity activity) {
         Intent intent;
         intent = new Intent(activity, LoginActivity.class);
-        LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
+        LoginFlow.WPCOM_LOGIN_DEEPLINK.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
     public static void loginForShareIntent(Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
-        LoginMode.SHARE_INTENT.putInto(intent);
+        LoginFlow.SHARE_INTENT.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
     public static void loginWithoutMagicLink(Activity activity) {
         Intent intent;
         intent = new Intent(activity, LoginActivity.class);
-        LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
+        LoginFlow.WPCOM_LOGIN_DEEPLINK.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
     public static void loginForJetpackStats(Fragment fragment) {
         Intent intent = new Intent(fragment.getActivity(), LoginActivity.class);
-        LoginMode.JETPACK_STATS.putInto(intent);
+        LoginFlow.JETPACK_STATS.putInto(intent);
         fragment.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 

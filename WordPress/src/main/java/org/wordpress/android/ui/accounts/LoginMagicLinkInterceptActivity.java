@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import org.wordpress.android.login.LoginAnalyticsListener;
+import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.WPMainActivity;

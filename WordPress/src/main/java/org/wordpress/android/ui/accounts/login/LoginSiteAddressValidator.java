@@ -1,4 +1,4 @@
-package org.wordpress.android.login;
+package org.wordpress.android.ui.accounts.login;
 
 import android.util.Patterns;
 
@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import org.wordpress.android.R;
 import org.wordpress.android.util.helpers.Debouncer;
 
 import java.util.concurrent.TimeUnit;

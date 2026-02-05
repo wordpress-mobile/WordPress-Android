@@ -12,6 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.LOGIN_PROLOGUE_VIEWED
 import org.wordpress.android.databinding.LoginSignupScreenBinding
+import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow
@@ -21,7 +22,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
-    private lateinit var loginPrologueListener: LoginPrologueListener
+    private lateinit var loginActivity: LoginActivity
 
     @Inject
     lateinit var unifiedLoginTracker: UnifiedLoginTracker
@@ -30,13 +31,10 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
         const val TAG = "login_prologue_fragment_tag"
     }
 
-    @Suppress("TooGenericExceptionThrown")
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context !is LoginPrologueListener) {
-            throw RuntimeException("$context must implement LoginPrologueListener")
-        }
-        loginPrologueListener = context
+        check(context is LoginActivity) { "$context must be LoginActivity" }
+        loginActivity = context
     }
 
     @Suppress("DEPRECATION")
@@ -56,12 +54,12 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
 
             continueWithWpcomButton.setOnClickListener {
                 unifiedLoginTracker.trackClick(Click.CONTINUE_WITH_WORDPRESS_COM)
-                loginPrologueListener.showWPcomLoginScreen(view.context)
+                loginActivity.showWPcomLoginScreen(view.context)
             }
 
             enterYourSiteAddressButton.setOnClickListener {
                 unifiedLoginTracker.trackClick(Click.LOGIN_WITH_SITE_ADDRESS)
-                loginPrologueListener.loginViaSiteAddress()
+                loginActivity.loginViaSiteAddress()
             }
         }
 
