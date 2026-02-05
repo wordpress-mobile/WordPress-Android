@@ -17,7 +17,7 @@ set +e
   koverXmlReportWordpressWasabiDebug \
   :libs:processors:koverXmlReportJvm \
   :libs:image-editor:koverXmlReportDebug \
-  :libs:fluxc:koverXmlReportDebug \
+  :libs:fluxc:koverXmlReportDebug
 TESTS_EXIT_STATUS=$?
 set -e
 echo ""
