@@ -14,12 +14,10 @@ set +e
   :libs:processors:test \
   :libs:image-editor:testDebugUnitTest \
   :libs:fluxc:testDebugUnitTest \
-  :libs:login:testDebugUnitTest \
-  koverXmlReportWordpressDebug \
+  koverXmlReportWordpressWasabiDebug \
   :libs:processors:koverXmlReportJvm \
   :libs:image-editor:koverXmlReportDebug \
   :libs:fluxc:koverXmlReportDebug \
-  :libs:login:koverXmlReportDebug
 TESTS_EXIT_STATUS=$?
 set -e
 echo ""
@@ -49,7 +47,6 @@ declare -A TEST_RESULT_DIRS=(
   ["processors"]="libs/processors/build/test-results/test"
   ["image-editor"]="libs/image-editor/build/test-results/testDebugUnitTest"
   ["fluxc"]="libs/fluxc/build/test-results/testDebugUnitTest"
-  ["login"]="libs/login/build/test-results/testDebugUnitTest"
 )
 
 # Create temporary directory for collecting all test results
