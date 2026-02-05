@@ -133,7 +133,7 @@ private fun MenuBasicInfoCard(
 
 @Composable
 private fun LocationsCard(
-    availableLocations: List<org.wordpress.android.ui.navmenus.LocationUiModel>,
+    availableLocations: List<LocationUiModel>,
     selectedLocations: List<String>,
     onLocationToggle: (String) -> Unit
 ) {
