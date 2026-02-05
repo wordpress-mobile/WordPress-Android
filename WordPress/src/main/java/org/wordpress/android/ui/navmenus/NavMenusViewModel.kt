@@ -940,15 +940,12 @@ class NavMenusViewModel @Inject constructor(
         val trimmedUrl = url.trim()
         if (trimmedUrl.isEmpty()) return false
 
-        // Anchor links are valid (e.g., #section or #contact)
-        if (trimmedUrl.startsWith("#")) return trimmedUrl.length > 1
-
-        // Protocol-relative URLs are valid
-        if (trimmedUrl.startsWith("//")) return trimmedUrl.length > 2
-
-        val lowercaseUrl = trimmedUrl.lowercase()
-        return ALLOWED_PROTOCOLS.any { protocol ->
-            lowercaseUrl.startsWith("$protocol:")
+        return when {
+            // Anchor links are valid (e.g., #section or #contact)
+            trimmedUrl.startsWith("#") -> trimmedUrl.length > 1
+            // Protocol-relative URLs are valid
+            trimmedUrl.startsWith("//") -> trimmedUrl.length > 2
+            else -> ALLOWED_PROTOCOLS.any { trimmedUrl.lowercase().startsWith("$it:") }
         }
     }
 
