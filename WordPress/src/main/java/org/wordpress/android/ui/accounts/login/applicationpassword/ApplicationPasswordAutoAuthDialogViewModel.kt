@@ -47,7 +47,7 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "LongMethod")
     fun createApplicationPassword(site: SiteModel) {
         viewModelScope.launch {
             try {

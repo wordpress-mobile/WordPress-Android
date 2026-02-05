@@ -63,7 +63,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "LongMethod")
     private fun validateCredentialsAndBuildCard(site: SiteModel) {
         appLogWrapper.d(AppLog.T.MAIN, "A_P: Validating credentials for ${site.url}")
         appLogWrapper.d(AppLog.T.MAIN, "A_P:   isUsingSelfHostedRestApi: ${site.isUsingSelfHostedRestApi}")
