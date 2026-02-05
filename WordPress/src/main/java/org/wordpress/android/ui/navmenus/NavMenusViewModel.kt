@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.navmenus.models.NavMenuItemModel
@@ -59,6 +61,11 @@ class NavMenusViewModel @Inject constructor(
     private var currentMenus = listOf<NavMenuModel>()
     private var currentMenuItems = listOf<NavMenuItemModel>()
 
+    // Mutexes for pagination to prevent race conditions
+    private val menusPaginationMutex = Mutex()
+    private val menuItemsPaginationMutex = Mutex()
+    private val linkableItemsPaginationMutex = Mutex()
+
     fun setNavController(controller: NavHostController) {
         navController = controller
     }
@@ -106,41 +113,46 @@ class NavMenusViewModel @Inject constructor(
     }
 
     fun loadMoreMenus() {
-        val currentState = _menuListState.value
-        if (currentState.isLoading || currentState.isLoadingMore || !currentState.canLoadMore) return
-
         viewModelScope.launch {
-            _menuListState.value = currentState.copy(isLoadingMore = true)
+            menusPaginationMutex.withLock {
+                val currentState = _menuListState.value
+                if (currentState.isLoading || currentState.isLoadingMore || !currentState.canLoadMore) return@launch
 
-            val site = selectedSiteRepository.getSelectedSite() ?: return@launch
-            val offset = currentState.menus.size
+                _menuListState.value = currentState.copy(isLoadingMore = true)
 
-            @Suppress("TooGenericExceptionCaught")
-            try {
-                val result = withContext(ioDispatcher) {
-                    navMenuRestClient.fetchMenus(site, offset)
+                val site = selectedSiteRepository.getSelectedSite() ?: run {
+                    _menuListState.value = currentState.copy(isLoadingMore = false)
+                    return@launch
                 }
+                val offset = currentMenus.size
 
-                when (result) {
-                    is NavMenuRestClient.NavMenuListResult.Success -> {
-                        val newMenus = result.menus.map { it.toUiModel() }
-                        currentMenus = currentMenus + result.menus
-                        _menuListState.value = currentState.copy(
-                            isLoadingMore = false,
-                            canLoadMore = result.canLoadMore,
-                            menus = currentState.menus + newMenus
-                        )
+                @Suppress("TooGenericExceptionCaught")
+                try {
+                    val result = withContext(ioDispatcher) {
+                        navMenuRestClient.fetchMenus(site, offset)
                     }
-                    is NavMenuRestClient.NavMenuListResult.Error -> {
-                        _menuListState.value = currentState.copy(isLoadingMore = false)
-                        _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
+
+                    when (result) {
+                        is NavMenuRestClient.NavMenuListResult.Success -> {
+                            currentMenus = currentMenus + result.menus
+                            val allMenus = currentMenus.map { it.toUiModel() }
+                            _menuListState.value = _menuListState.value.copy(
+                                isLoadingMore = false,
+                                canLoadMore = result.canLoadMore,
+                                menus = allMenus
+                            )
+                        }
+                        is NavMenuRestClient.NavMenuListResult.Error -> {
+                            _menuListState.value = _menuListState.value.copy(isLoadingMore = false)
+                            _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
+                        }
                     }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    AppLog.e(AppLog.T.API, "Failed to load more menus", e)
+                    _menuListState.value = _menuListState.value.copy(isLoadingMore = false)
                 }
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                AppLog.e(AppLog.T.API, "Failed to load more menus", e)
-                _menuListState.value = currentState.copy(isLoadingMore = false)
             }
         }
     }
@@ -253,41 +265,46 @@ class NavMenusViewModel @Inject constructor(
     }
 
     fun loadMoreMenuItems() {
-        val currentState = _menuItemListState.value
-        if (currentState.isLoading || currentState.isLoadingMore || !currentState.canLoadMore) return
-
         viewModelScope.launch {
-            _menuItemListState.value = currentState.copy(isLoadingMore = true)
+            menuItemsPaginationMutex.withLock {
+                val currentState = _menuItemListState.value
+                if (currentState.isLoading || currentState.isLoadingMore || !currentState.canLoadMore) return@launch
 
-            val site = selectedSiteRepository.getSelectedSite() ?: return@launch
-            val offset = currentMenuItems.size
+                _menuItemListState.value = currentState.copy(isLoadingMore = true)
 
-            @Suppress("TooGenericExceptionCaught")
-            try {
-                val result = withContext(ioDispatcher) {
-                    navMenuRestClient.fetchMenuItems(site, currentState.menuId, offset)
+                val site = selectedSiteRepository.getSelectedSite() ?: run {
+                    _menuItemListState.value = currentState.copy(isLoadingMore = false)
+                    return@launch
                 }
+                val offset = currentMenuItems.size
 
-                when (result) {
-                    is NavMenuRestClient.NavMenuItemListResult.Success -> {
-                        currentMenuItems = currentMenuItems + result.items
-                        val sortedItems = sortItemsHierarchically(currentMenuItems)
-                        _menuItemListState.value = currentState.copy(
-                            isLoadingMore = false,
-                            canLoadMore = result.canLoadMore,
-                            items = sortedItems
-                        )
+                @Suppress("TooGenericExceptionCaught")
+                try {
+                    val result = withContext(ioDispatcher) {
+                        navMenuRestClient.fetchMenuItems(site, currentState.menuId, offset)
                     }
-                    is NavMenuRestClient.NavMenuItemListResult.Error -> {
-                        _menuItemListState.value = currentState.copy(isLoadingMore = false)
-                        _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
+
+                    when (result) {
+                        is NavMenuRestClient.NavMenuItemListResult.Success -> {
+                            currentMenuItems = currentMenuItems + result.items
+                            val sortedItems = sortItemsHierarchically(currentMenuItems)
+                            _menuItemListState.value = _menuItemListState.value.copy(
+                                isLoadingMore = false,
+                                canLoadMore = result.canLoadMore,
+                                items = sortedItems
+                            )
+                        }
+                        is NavMenuRestClient.NavMenuItemListResult.Error -> {
+                            _menuItemListState.value = _menuItemListState.value.copy(isLoadingMore = false)
+                            _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
+                        }
                     }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    AppLog.e(AppLog.T.API, "Failed to load more menu items", e)
+                    _menuItemListState.value = _menuItemListState.value.copy(isLoadingMore = false)
                 }
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                AppLog.e(AppLog.T.API, "Failed to load more menu items", e)
-                _menuItemListState.value = currentState.copy(isLoadingMore = false)
             }
         }
     }
@@ -574,54 +591,63 @@ class NavMenusViewModel @Inject constructor(
     }
 
     fun loadMoreLinkableItems() {
-        val currentState = _menuItemDetailState.value ?: return
-        val linkableState = currentState.linkableItemsState
-        if (linkableState.isLoading || linkableState.isLoadingMore || !linkableState.canLoadMore) return
-
         viewModelScope.launch {
-            _menuItemDetailState.value = currentState.copy(
-                linkableItemsState = linkableState.copy(isLoadingMore = true)
-            )
-
-            val site = selectedSiteRepository.getSelectedSite() ?: return@launch
-            val offset = linkableState.items.size
-
-            @Suppress("TooGenericExceptionCaught")
-            try {
-                val result = withContext(ioDispatcher) {
-                    fetchLinkableItems(site, currentState.selectedTypeOption, offset)
+            linkableItemsPaginationMutex.withLock {
+                val currentState = _menuItemDetailState.value ?: return@launch
+                val linkableState = currentState.linkableItemsState
+                if (linkableState.isLoading || linkableState.isLoadingMore || !linkableState.canLoadMore) {
+                    return@launch
                 }
 
-                val updatedState = _menuItemDetailState.value ?: return@launch
-                // Only update if the type hasn't changed while loading
-                if (updatedState.selectedTypeOption == currentState.selectedTypeOption) {
-                    _menuItemDetailState.value = when (result) {
-                        is NavMenuRestClient.LinkableItemsResult.Success -> {
-                            updatedState.copy(
-                                linkableItemsState = updatedState.linkableItemsState.copy(
-                                    isLoadingMore = false,
-                                    canLoadMore = result.canLoadMore,
-                                    items = updatedState.linkableItemsState.items + result.items
+                _menuItemDetailState.value = currentState.copy(
+                    linkableItemsState = linkableState.copy(isLoadingMore = true)
+                )
+
+                val site = selectedSiteRepository.getSelectedSite() ?: run {
+                    _menuItemDetailState.value = currentState.copy(
+                        linkableItemsState = linkableState.copy(isLoadingMore = false)
+                    )
+                    return@launch
+                }
+                val offset = linkableState.items.size
+
+                @Suppress("TooGenericExceptionCaught")
+                try {
+                    val result = withContext(ioDispatcher) {
+                        fetchLinkableItems(site, currentState.selectedTypeOption, offset)
+                    }
+
+                    val updatedState = _menuItemDetailState.value ?: return@launch
+                    // Only update if the type hasn't changed while loading
+                    if (updatedState.selectedTypeOption == currentState.selectedTypeOption) {
+                        _menuItemDetailState.value = when (result) {
+                            is NavMenuRestClient.LinkableItemsResult.Success -> {
+                                updatedState.copy(
+                                    linkableItemsState = updatedState.linkableItemsState.copy(
+                                        isLoadingMore = false,
+                                        canLoadMore = result.canLoadMore,
+                                        items = updatedState.linkableItemsState.items + result.items
+                                    )
                                 )
-                            )
-                        }
-                        is NavMenuRestClient.LinkableItemsResult.Error -> {
-                            updatedState.copy(
-                                linkableItemsState = updatedState.linkableItemsState.copy(
-                                    isLoadingMore = false
+                            }
+                            is NavMenuRestClient.LinkableItemsResult.Error -> {
+                                updatedState.copy(
+                                    linkableItemsState = updatedState.linkableItemsState.copy(
+                                        isLoadingMore = false
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    AppLog.e(AppLog.T.API, "Failed to load more linkable items", e)
+                    val updatedState = _menuItemDetailState.value ?: return@launch
+                    _menuItemDetailState.value = updatedState.copy(
+                        linkableItemsState = updatedState.linkableItemsState.copy(isLoadingMore = false)
+                    )
                 }
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                AppLog.e(AppLog.T.API, "Failed to load more linkable items", e)
-                val updatedState = _menuItemDetailState.value ?: return@launch
-                _menuItemDetailState.value = updatedState.copy(
-                    linkableItemsState = updatedState.linkableItemsState.copy(isLoadingMore = false)
-                )
             }
         }
     }
