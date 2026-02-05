@@ -36,6 +36,7 @@
     <issue id="MissingNullAnnotationOnMethodReturnType">
         <ignore path="**/generated/**" />
     </issue>
+    <issue id="Aligned16KB" severity="ignore" /> <!-- Will be addressed by removing Gutenberg Mobile -->
     <issue id="VectorRaster" severity="warning" /> <!--    fluxc-->
     <!-- SECURITY -->
     <issue id="TrustAllX509TrustManager">
