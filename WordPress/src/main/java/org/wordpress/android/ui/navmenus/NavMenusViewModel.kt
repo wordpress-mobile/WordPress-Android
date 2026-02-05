@@ -841,7 +841,7 @@ class NavMenusViewModel @Inject constructor(
                 resourceProvider.getString(R.string.menu_item_url_required)
             state.selectedTypeOption != MenuItemTypeOption.CUSTOM_LINK && state.objectId <= 0 ->
                 resourceProvider.getString(R.string.menu_item_select_required)
-            state.url.isNotBlank() && !isValidUrl(state.url) ->
+            state.url.isNotBlank() && !isValidLinkUrl(state.url) ->
                 resourceProvider.getString(R.string.menu_item_invalid_url)
             else -> null
         }
@@ -903,13 +903,16 @@ class NavMenusViewModel @Inject constructor(
         _uiEvent.value = null
     }
 
-    private fun isValidUrl(url: String): Boolean {
-        val normalizedUrl = url.trim().lowercase()
-        val dangerousSchemes = listOf("javascript:", "data:", "vbscript:")
-        if (dangerousSchemes.any { normalizedUrl.startsWith(it) }) {
-            return false
+    private fun isValidLinkUrl(url: String): Boolean {
+        val trimmedUrl = url.trim().lowercase()
+        if (trimmedUrl.isEmpty()) return false
+
+        val allowedSchemes = listOf("http://", "https://", "mailto:", "//")
+        val startsWithAllowed = allowedSchemes.any {
+            trimmedUrl.startsWith(it)
         }
-        return android.webkit.URLUtil.isValidUrl(url)
+
+        return startsWithAllowed && android.webkit.URLUtil.isValidUrl(trimmedUrl)
     }
 
     private fun sanitizeInput(input: String, maxLength: Int): String {
