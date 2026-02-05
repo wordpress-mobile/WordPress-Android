@@ -1,15 +1,10 @@
 package org.wordpress.android.ui.newstats.countries
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,32 +12,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.components.CardPosition
-import org.wordpress.android.ui.newstats.components.StatsCardMenu
+import org.wordpress.android.ui.newstats.components.ShowAllFooter
+import org.wordpress.android.ui.newstats.components.StatsCardContainer
+import org.wordpress.android.ui.newstats.components.StatsCardEmptyContent
+import org.wordpress.android.ui.newstats.components.StatsCardErrorContent
+import org.wordpress.android.ui.newstats.components.StatsCardHeader
+import org.wordpress.android.ui.newstats.components.StatsItemName
+import org.wordpress.android.ui.newstats.components.StatsListHeader
+import org.wordpress.android.ui.newstats.components.StatsListRowContainer
+import org.wordpress.android.ui.newstats.components.StatsViewsColumn
 import org.wordpress.android.ui.newstats.util.ShimmerBox
-import org.wordpress.android.ui.newstats.util.formatStatValue
 
-private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
-private val CardMargin = 16.dp
 private const val MAP_ASPECT_RATIO = 8f / 5f
 private const val LOADING_ITEM_COUNT = 4
 
@@ -59,25 +51,23 @@ fun CountriesCard(
     onMoveDown: (() -> Unit)? = null,
     onMoveToBottom: (() -> Unit)? = null
 ) {
-    val borderColor = MaterialTheme.colorScheme.outlineVariant
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = CardMargin, vertical = 8.dp)
-            .clip(RoundedCornerShape(CardCornerRadius))
-            .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(CardCornerRadius))
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
+    StatsCardContainer(modifier = modifier) {
         when (uiState) {
             is CountriesCardUiState.Loading -> LoadingContent()
             is CountriesCardUiState.Loaded -> LoadedContent(
                 uiState, onShowAllClick, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
             )
-            is CountriesCardUiState.Error -> ErrorContent(
-                uiState, onRetry, onRemoveCard,
-                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+            is CountriesCardUiState.Error -> StatsCardErrorContent(
+                titleResId = R.string.stats_countries_title,
+                errorMessage = uiState.message,
+                onRetry = onRetry,
+                onRemoveCard = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
             )
         }
     }
@@ -151,31 +141,19 @@ private fun LoadedContent(
     onMoveToBottom: (() -> Unit)?
 ) {
     Column(modifier = Modifier.padding(CardPadding)) {
-        // Header with menu
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.stats_countries_title),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            StatsCardMenu(
-                onRemoveClick = onRemoveCard,
-                cardPosition = cardPosition,
-                onMoveUp = onMoveUp,
-                onMoveToTop = onMoveToTop,
-                onMoveDown = onMoveDown,
-                onMoveToBottom = onMoveToBottom
-            )
-        }
+        StatsCardHeader(
+            titleResId = R.string.stats_countries_title,
+            onRemoveCard = onRemoveCard,
+            cardPosition = cardPosition,
+            onMoveUp = onMoveUp,
+            onMoveToTop = onMoveToTop,
+            onMoveDown = onMoveDown,
+            onMoveToBottom = onMoveToBottom
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
         if (state.countries.isEmpty()) {
-            EmptyContent()
+            StatsCardEmptyContent()
         } else {
             // Map
             CountryMap(
@@ -193,22 +171,7 @@ private fun LoadedContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Header
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(R.string.stats_countries_location_header),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = stringResource(R.string.stats_countries_views_header),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            StatsListHeader(leftHeaderResId = R.string.stats_countries_location_header)
             Spacer(modifier = Modifier.height(8.dp))
 
             // Country list (capped at 10 items)
@@ -230,22 +193,6 @@ private fun LoadedContent(
 }
 
 @Composable
-private fun EmptyContent() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = stringResource(R.string.stats_no_data_yet),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-@Composable
 private fun CountryMap(
     mapData: String,
     modifier: Modifier = Modifier
@@ -261,147 +208,40 @@ private fun CountryRow(
     country: CountryItem,
     percentage: Float
 ) {
-    val barColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)
-            .clip(RoundedCornerShape(8.dp))
-    ) {
-        // Background bar representing the percentage
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(fraction = percentage)
-                .fillMaxHeight()
-                .background(barColor)
-        )
-
-        // Content
+    StatsListRowContainer(percentage = percentage) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 12.dp, horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Flag icon
-            if (country.flagIconUrl != null) {
-                AsyncImage(
-                    model = country.flagIconUrl,
-                    contentDescription = country.countryName,
-                    modifier = Modifier.size(24.dp)
-                )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .background(
-                            MaterialTheme.colorScheme.surfaceVariant,
-                            RoundedCornerShape(4.dp)
-                        )
-                )
-            }
+            CountryFlag(flagIconUrl = country.flagIconUrl, countryName = country.countryName)
             Spacer(modifier = Modifier.width(12.dp))
-
-            // Country name
-            Text(
-                text = country.countryName,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
+            StatsItemName(name = country.countryName, modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(12.dp))
-
-            // Views count and change
-            Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    text = formatStatValue(country.views),
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                StatsChangeIndicator(change = country.change)
-            }
+            StatsViewsColumn(views = country.views, change = country.change.toStatsViewChange())
         }
     }
 }
 
 @Composable
-private fun ShowAllFooter(onClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = stringResource(R.string.stats_show_all),
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Icon(
-            imageVector = Icons.Default.ChevronRight,
-            contentDescription = null,
-            modifier = Modifier.size(16.dp),
-            tint = MaterialTheme.colorScheme.onSurface
-        )
-    }
-}
-
-@Composable
-private fun ErrorContent(
-    state: CountriesCardUiState.Error,
-    onRetry: () -> Unit,
-    onRemoveCard: () -> Unit,
-    cardPosition: CardPosition?,
-    onMoveUp: (() -> Unit)?,
-    onMoveToTop: (() -> Unit)?,
-    onMoveDown: (() -> Unit)?,
-    onMoveToBottom: (() -> Unit)?
+fun CountryFlag(
+    flagIconUrl: String?,
+    countryName: String,
+    modifier: Modifier = Modifier
 ) {
-    Column(modifier = Modifier.padding(CardPadding)) {
-        // Header with menu
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.stats_countries_title),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            StatsCardMenu(
-                onRemoveClick = onRemoveCard,
-                cardPosition = cardPosition,
-                onMoveUp = onMoveUp,
-                onMoveToTop = onMoveToTop,
-                onMoveDown = onMoveDown,
-                onMoveToBottom = onMoveToBottom
-            )
-        }
-        Spacer(modifier = Modifier.height(24.dp))
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = state.message,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(text = stringResource(R.string.retry))
-            }
-        }
-        Spacer(modifier = Modifier.height(24.dp))
+    if (flagIconUrl != null) {
+        AsyncImage(
+            model = flagIconUrl,
+            contentDescription = countryName,
+            modifier = modifier.size(24.dp)
+        )
+    } else {
+        Box(
+            modifier = modifier
+                .size(24.dp)
+                .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(4.dp))
+        )
     }
 }
 
