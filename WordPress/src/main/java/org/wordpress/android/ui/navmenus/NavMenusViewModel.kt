@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -65,6 +66,9 @@ class NavMenusViewModel @Inject constructor(
     private val menusPaginationMutex = Mutex()
     private val menuItemsPaginationMutex = Mutex()
     private val linkableItemsPaginationMutex = Mutex()
+
+    // Job for loading linkable items (cancelled when type changes)
+    private var linkableItemsLoadingJob: Job? = null
 
     fun setNavController(controller: NavHostController) {
         navController = controller
@@ -551,6 +555,10 @@ class NavMenusViewModel @Inject constructor(
     }
 
     fun updateMenuItemType(typeOption: MenuItemTypeOption) {
+        // Cancel any ongoing linkable items loading
+        linkableItemsLoadingJob?.cancel()
+        linkableItemsLoadingJob = null
+
         val currentState = _menuItemDetailState.value ?: return
         _menuItemDetailState.value = currentState.copy(
             selectedTypeOption = typeOption,
@@ -569,7 +577,7 @@ class NavMenusViewModel @Inject constructor(
     }
 
     private fun loadLinkableItems(typeOption: MenuItemTypeOption) {
-        viewModelScope.launch {
+        linkableItemsLoadingJob = viewModelScope.launch {
             val site = selectedSiteRepository.getSelectedSite() ?: return@launch
 
             val result = withContext(ioDispatcher) {
