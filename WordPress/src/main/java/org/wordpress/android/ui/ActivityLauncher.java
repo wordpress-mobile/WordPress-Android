@@ -16,7 +16,6 @@ import androidx.annotation.StringRes;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;

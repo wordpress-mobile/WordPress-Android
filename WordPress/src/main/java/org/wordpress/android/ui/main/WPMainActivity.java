@@ -42,7 +42,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
-import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler;

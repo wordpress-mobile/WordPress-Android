@@ -1,6 +1,5 @@
 package org.wordpress.android.modules;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
