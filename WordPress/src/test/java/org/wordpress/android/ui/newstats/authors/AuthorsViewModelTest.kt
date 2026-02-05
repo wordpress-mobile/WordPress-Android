@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.topauthors
+package org.wordpress.android.ui.newstats.authors
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -23,7 +23,7 @@ import org.wordpress.android.ui.newstats.repository.TopAuthorsResult
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
-class TopAuthorsViewModelTest : BaseUnitTest() {
+class AuthorsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
@@ -36,7 +36,7 @@ class TopAuthorsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var resourceProvider: ResourceProvider
 
-    private lateinit var viewModel: TopAuthorsViewModel
+    private lateinit var viewModel: AuthorsViewModel
 
     private val testSite = SiteModel().apply {
         id = 1
@@ -51,7 +51,7 @@ class TopAuthorsViewModelTest : BaseUnitTest() {
     }
 
     private fun initViewModel() {
-        viewModel = TopAuthorsViewModel(
+        viewModel = AuthorsViewModel(
             selectedSiteRepository,
             accountStore,
             statsRepository,
@@ -68,8 +68,8 @@ class TopAuthorsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(TopAuthorsCardUiState.Error::class.java)
-        assertThat((state as TopAuthorsCardUiState.Error).message).isEqualTo("No site selected")
+        assertThat(state).isInstanceOf(AuthorsCardUiState.Error::class.java)
+        assertThat((state as AuthorsCardUiState.Error).message).isEqualTo("No site selected")
     }
 
     @Test
@@ -81,8 +81,8 @@ class TopAuthorsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(TopAuthorsCardUiState.Error::class.java)
-        assertThat((state as TopAuthorsCardUiState.Error).message).isEqualTo(ERROR_MESSAGE)
+        assertThat(state).isInstanceOf(AuthorsCardUiState.Error::class.java)
+        assertThat((state as AuthorsCardUiState.Error).message).isEqualTo(ERROR_MESSAGE)
     }
     // endregion
 
@@ -96,7 +96,7 @@ class TopAuthorsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(TopAuthorsCardUiState.Loaded::class.java)
+        assertThat(state).isInstanceOf(AuthorsCardUiState.Loaded::class.java)
     }
 
     @Test
@@ -107,7 +107,7 @@ class TopAuthorsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as TopAuthorsCardUiState.Loaded
+        val state = viewModel.uiState.value as AuthorsCardUiState.Loaded
         assertThat(state.authors).hasSize(2)
         assertThat(state.authors[0].name).isEqualTo(TEST_AUTHOR_NAME_1)
         assertThat(state.authors[0].views).isEqualTo(TEST_AUTHOR_VIEWS_1)
@@ -124,7 +124,7 @@ class TopAuthorsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as TopAuthorsCardUiState.Loaded
+        val state = viewModel.uiState.value as AuthorsCardUiState.Loaded
         assertThat(state.maxViewsForBar).isEqualTo(TEST_AUTHOR_VIEWS_1)
     }
 
@@ -151,7 +151,7 @@ class TopAuthorsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as TopAuthorsCardUiState.Loaded
+        val state = viewModel.uiState.value as AuthorsCardUiState.Loaded
         assertThat(state.authors).hasSize(10)
         assertThat(state.hasMoreItems).isTrue()
     }
@@ -164,7 +164,7 @@ class TopAuthorsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as TopAuthorsCardUiState.Loaded
+        val state = viewModel.uiState.value as AuthorsCardUiState.Loaded
         assertThat(state.hasMoreItems).isFalse()
     }
 
@@ -182,7 +182,7 @@ class TopAuthorsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as TopAuthorsCardUiState.Loaded
+        val state = viewModel.uiState.value as AuthorsCardUiState.Loaded
         assertThat(state.authors).isEmpty()
         assertThat(state.maxViewsForBar).isEqualTo(0L)
         assertThat(state.hasMoreItems).isFalse()
@@ -363,7 +363,7 @@ class TopAuthorsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as TopAuthorsCardUiState.Loaded
+        val state = viewModel.uiState.value as AuthorsCardUiState.Loaded
         assertThat(state.authors[0].change).isInstanceOf(StatsViewChange.Positive::class.java)
         val change = state.authors[0].change as StatsViewChange.Positive
         assertThat(change.value).isEqualTo(50)
@@ -393,7 +393,7 @@ class TopAuthorsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as TopAuthorsCardUiState.Loaded
+        val state = viewModel.uiState.value as AuthorsCardUiState.Loaded
         assertThat(state.authors[0].change).isInstanceOf(StatsViewChange.Negative::class.java)
         val change = state.authors[0].change as StatsViewChange.Negative
         assertThat(change.value).isEqualTo(50)
@@ -423,7 +423,7 @@ class TopAuthorsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as TopAuthorsCardUiState.Loaded
+        val state = viewModel.uiState.value as AuthorsCardUiState.Loaded
         assertThat(state.authors[0].change).isEqualTo(StatsViewChange.NoChange)
     }
     // endregion

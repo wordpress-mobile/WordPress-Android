@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.topauthors
+package org.wordpress.android.ui.newstats.authors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -40,8 +40,8 @@ private val CardPadding = 16.dp
 private const val LOADING_ITEM_COUNT = 4
 
 @Composable
-fun TopAuthorsCard(
-    uiState: TopAuthorsCardUiState,
+fun AuthorsCard(
+    uiState: AuthorsCardUiState,
     onShowAllClick: () -> Unit,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
@@ -54,12 +54,12 @@ fun TopAuthorsCard(
 ) {
     StatsCardContainer(modifier = modifier) {
         when (uiState) {
-            is TopAuthorsCardUiState.Loading -> LoadingContent()
-            is TopAuthorsCardUiState.Loaded -> LoadedContent(
+            is AuthorsCardUiState.Loading -> LoadingContent()
+            is AuthorsCardUiState.Loaded -> LoadedContent(
                 uiState, onShowAllClick, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
             )
-            is TopAuthorsCardUiState.Error -> StatsCardErrorContent(
+            is AuthorsCardUiState.Error -> StatsCardErrorContent(
                 titleResId = R.string.stats_authors_title,
                 errorMessage = uiState.message,
                 onRetry = onRetry,
@@ -117,7 +117,7 @@ private fun LoadingContent() {
 
 @Composable
 private fun LoadedContent(
-    state: TopAuthorsCardUiState.Loaded,
+    state: AuthorsCardUiState.Loaded,
     onShowAllClick: () -> Unit,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
@@ -164,7 +164,7 @@ private fun LoadedContent(
 
 @Composable
 private fun AuthorRow(
-    author: TopAuthorUiItem,
+    author: AuthorUiItem,
     percentage: Float
 ) {
     StatsListItem(
@@ -211,10 +211,10 @@ fun AuthorAvatar(
 // Previews
 @Preview(showBackground = true)
 @Composable
-private fun TopAuthorsCardLoadingPreview() {
+private fun AuthorsCardLoadingPreview() {
     AppThemeM3 {
-        TopAuthorsCard(
-            uiState = TopAuthorsCardUiState.Loading,
+        AuthorsCard(
+            uiState = AuthorsCardUiState.Loading,
             onShowAllClick = {},
             onRetry = {},
             onRemoveCard = {}
@@ -224,15 +224,15 @@ private fun TopAuthorsCardLoadingPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun TopAuthorsCardLoadedPreview() {
+private fun AuthorsCardLoadedPreview() {
     AppThemeM3 {
-        TopAuthorsCard(
-            uiState = TopAuthorsCardUiState.Loaded(
+        AuthorsCard(
+            uiState = AuthorsCardUiState.Loaded(
                 authors = listOf(
-                    TopAuthorUiItem("John Doe", null, 3464, StatsViewChange.Positive(124, 3.7)),
-                    TopAuthorUiItem("Jane Smith", null, 556, StatsViewChange.Positive(45, 8.8)),
-                    TopAuthorUiItem("Bob Johnson", null, 522, StatsViewChange.Negative(12, 2.2)),
-                    TopAuthorUiItem("Alice Brown", null, 485, StatsViewChange.NoChange)
+                    AuthorUiItem("John Doe", null, 3464, StatsViewChange.Positive(124, 3.7)),
+                    AuthorUiItem("Jane Smith", null, 556, StatsViewChange.Positive(45, 8.8)),
+                    AuthorUiItem("Bob Johnson", null, 522, StatsViewChange.Negative(12, 2.2)),
+                    AuthorUiItem("Alice Brown", null, 485, StatsViewChange.NoChange)
                 ),
                 maxViewsForBar = 3464,
                 hasMoreItems = true
@@ -246,10 +246,10 @@ private fun TopAuthorsCardLoadedPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun TopAuthorsCardErrorPreview() {
+private fun AuthorsCardErrorPreview() {
     AppThemeM3 {
-        TopAuthorsCard(
-            uiState = TopAuthorsCardUiState.Error("Failed to load author data"),
+        AuthorsCard(
+            uiState = AuthorsCardUiState.Error("Failed to load author data"),
             onShowAllClick = {},
             onRetry = {},
             onRemoveCard = {}

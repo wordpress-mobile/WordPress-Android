@@ -123,7 +123,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.newstats.topauthors.TopAuthorsDetailActivity"
+            android:name=".ui.newstats.authors.AuthorsDetailActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:exported="false" />
 

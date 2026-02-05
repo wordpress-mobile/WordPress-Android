@@ -19,7 +19,7 @@ import org.wordpress.android.ui.newstats.datasource.TopAuthorsData
 import org.wordpress.android.ui.newstats.datasource.TopAuthorsDataResult
 
 @ExperimentalCoroutinesApi
-class StatsRepositoryTopAuthorsTest : BaseUnitTest() {
+class StatsRepositoryAuthorsTest : BaseUnitTest() {
     @Mock
     private lateinit var statsDataSource: StatsDataSource
 

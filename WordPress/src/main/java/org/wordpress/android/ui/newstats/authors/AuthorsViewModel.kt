@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.topauthors
+package org.wordpress.android.ui.newstats.authors
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,21 +23,21 @@ import kotlin.math.abs
 private const val CARD_MAX_ITEMS = 10
 
 @HiltViewModel
-class TopAuthorsViewModel @Inject constructor(
+class AuthorsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val statsRepository: StatsRepository,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<TopAuthorsCardUiState>(TopAuthorsCardUiState.Loading)
-    val uiState: StateFlow<TopAuthorsCardUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<AuthorsCardUiState>(AuthorsCardUiState.Loading)
+    val uiState: StateFlow<AuthorsCardUiState> = _uiState.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
 
-    private var allAuthors: List<TopAuthorUiItem> = emptyList()
+    private var allAuthors: List<AuthorUiItem> = emptyList()
     private var cachedTotalViews: Long = 0L
     private var cachedTotalViewsChange: Long = 0L
     private var cachedTotalViewsChangePercent: Double = 0.0
@@ -48,11 +48,11 @@ class TopAuthorsViewModel @Inject constructor(
 
     fun loadData() {
         viewModelScope.launch {
-            _uiState.value = TopAuthorsCardUiState.Loading
+            _uiState.value = AuthorsCardUiState.Loading
 
             val site = selectedSiteRepository.getSelectedSite()
             if (site == null) {
-                _uiState.value = TopAuthorsCardUiState.Error("No site selected")
+                _uiState.value = AuthorsCardUiState.Error("No site selected")
                 return@launch
             }
 
@@ -86,8 +86,8 @@ class TopAuthorsViewModel @Inject constructor(
         }
     }
 
-    fun getDetailData(): TopAuthorsDetailData {
-        return TopAuthorsDetailData(
+    fun getDetailData(): AuthorsDetailData {
+        return AuthorsDetailData(
             authors = allAuthors,
             totalViews = cachedTotalViews,
             totalViewsChange = cachedTotalViewsChange,
@@ -113,14 +113,14 @@ class TopAuthorsViewModel @Inject constructor(
 
                 if (result.authors.isEmpty()) {
                     allAuthors = emptyList()
-                    _uiState.value = TopAuthorsCardUiState.Loaded(
+                    _uiState.value = AuthorsCardUiState.Loaded(
                         authors = emptyList(),
                         maxViewsForBar = 0,
                         hasMoreItems = false
                     )
                 } else {
                     val authors = result.authors.map { author ->
-                        TopAuthorUiItem(
+                        AuthorUiItem(
                             name = author.name,
                             avatarUrl = author.avatarUrl,
                             views = author.views,
@@ -135,7 +135,7 @@ class TopAuthorsViewModel @Inject constructor(
                     val cardAuthors = authors.take(CARD_MAX_ITEMS)
                     val maxViewsForBar = cardAuthors.firstOrNull()?.views ?: 1L
 
-                    _uiState.value = TopAuthorsCardUiState.Loaded(
+                    _uiState.value = AuthorsCardUiState.Loaded(
                         authors = cardAuthors,
                         maxViewsForBar = maxViewsForBar,
                         hasMoreItems = authors.size > CARD_MAX_ITEMS
@@ -143,7 +143,7 @@ class TopAuthorsViewModel @Inject constructor(
                 }
             }
             is TopAuthorsResult.Error -> {
-                _uiState.value = TopAuthorsCardUiState.Error(result.message)
+                _uiState.value = AuthorsCardUiState.Error(result.message)
             }
         }
     }
@@ -157,8 +157,8 @@ class TopAuthorsViewModel @Inject constructor(
     }
 }
 
-data class TopAuthorsDetailData(
-    val authors: List<TopAuthorUiItem>,
+data class AuthorsDetailData(
+    val authors: List<AuthorUiItem>,
     val totalViews: Long,
     val totalViewsChange: Long,
     val totalViewsChangePercent: Double,

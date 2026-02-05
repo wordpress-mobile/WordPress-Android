@@ -1,26 +1,26 @@
-package org.wordpress.android.ui.newstats.topauthors
+package org.wordpress.android.ui.newstats.authors
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.ui.newstats.components.StatsViewChange
 
 /**
- * UI State for the Top Authors stats card.
+ * UI State for the Authors stats card.
  */
-sealed class TopAuthorsCardUiState {
-    data object Loading : TopAuthorsCardUiState()
+sealed class AuthorsCardUiState {
+    data object Loading : AuthorsCardUiState()
 
     data class Loaded(
-        val authors: List<TopAuthorUiItem>,
+        val authors: List<AuthorUiItem>,
         val maxViewsForBar: Long,
         val hasMoreItems: Boolean
-    ) : TopAuthorsCardUiState()
+    ) : AuthorsCardUiState()
 
-    data class Error(val message: String) : TopAuthorsCardUiState()
+    data class Error(val message: String) : AuthorsCardUiState()
 }
 
 /**
- * A single author item in the top authors list.
+ * A single author item in the authors list.
  *
  * @param name The author's display name
  * @param avatarUrl URL to the author's avatar image
@@ -28,7 +28,7 @@ sealed class TopAuthorsCardUiState {
  * @param change The change compared to the previous period
  */
 @Parcelize
-data class TopAuthorUiItem(
+data class AuthorUiItem(
     val name: String,
     val avatarUrl: String?,
     val views: Long,

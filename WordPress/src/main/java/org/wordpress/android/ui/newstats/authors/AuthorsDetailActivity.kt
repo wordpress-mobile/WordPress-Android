@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.topauthors
+package org.wordpress.android.ui.newstats.authors
 
 import android.content.Context
 import android.content.Intent
@@ -40,12 +40,12 @@ private const val EXTRA_TOTAL_VIEWS_CHANGE_PERCENT = "extra_total_views_change_p
 private const val EXTRA_DATE_RANGE = "extra_date_range"
 
 @AndroidEntryPoint
-class TopAuthorsDetailActivity : BaseAppCompatActivity() {
+class AuthorsDetailActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val authors = intent.extras
-            ?.getParcelableArrayListCompat<TopAuthorUiItem>(EXTRA_AUTHORS)
+            ?.getParcelableArrayListCompat<AuthorUiItem>(EXTRA_AUTHORS)
             ?: arrayListOf()
         val totalViews = intent.getLongExtra(EXTRA_TOTAL_VIEWS, 0L)
         val totalViewsChange = intent.getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L)
@@ -56,7 +56,7 @@ class TopAuthorsDetailActivity : BaseAppCompatActivity() {
 
         setContent {
             AppThemeM3 {
-                TopAuthorsDetailScreen(
+                AuthorsDetailScreen(
                     authors = authors,
                     maxViewsForBar = maxViewsForBar,
                     totalViews = totalViews,
@@ -73,13 +73,13 @@ class TopAuthorsDetailActivity : BaseAppCompatActivity() {
         @Suppress("LongParameterList")
         fun start(
             context: Context,
-            authors: List<TopAuthorUiItem>,
+            authors: List<AuthorUiItem>,
             totalViews: Long,
             totalViewsChange: Long,
             totalViewsChangePercent: Double,
             dateRange: String
         ) {
-            val intent = Intent(context, TopAuthorsDetailActivity::class.java).apply {
+            val intent = Intent(context, AuthorsDetailActivity::class.java).apply {
                 putExtra(EXTRA_AUTHORS, ArrayList(authors))
                 putExtra(EXTRA_TOTAL_VIEWS, totalViews)
                 putExtra(EXTRA_TOTAL_VIEWS_CHANGE, totalViewsChange)
@@ -93,8 +93,8 @@ class TopAuthorsDetailActivity : BaseAppCompatActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TopAuthorsDetailScreen(
-    authors: List<TopAuthorUiItem>,
+private fun AuthorsDetailScreen(
+    authors: List<AuthorUiItem>,
     maxViewsForBar: Long,
     totalViews: Long,
     totalViewsChange: Long,
@@ -163,7 +163,7 @@ private fun TopAuthorsDetailScreen(
 @Composable
 private fun DetailAuthorRow(
     position: Int,
-    author: TopAuthorUiItem,
+    author: AuthorUiItem,
     percentage: Float
 ) {
     StatsDetailListItem(
@@ -178,20 +178,20 @@ private fun DetailAuthorRow(
 
 @Preview(showBackground = true)
 @Composable
-private fun TopAuthorsDetailScreenPreview() {
+private fun AuthorsDetailScreenPreview() {
     AppThemeM3 {
-        TopAuthorsDetailScreen(
+        AuthorsDetailScreen(
             authors = listOf(
-                TopAuthorUiItem("John Doe", null, 3464, StatsViewChange.Positive(124, 3.7)),
-                TopAuthorUiItem("Jane Smith", null, 556, StatsViewChange.Positive(45, 8.8)),
-                TopAuthorUiItem("Bob Johnson", null, 522, StatsViewChange.Negative(12, 2.2)),
-                TopAuthorUiItem("Alice Brown", null, 485, StatsViewChange.Positive(33, 7.3)),
-                TopAuthorUiItem("Charlie Wilson", null, 412, StatsViewChange.NoChange),
-                TopAuthorUiItem("Diana Miller", null, 387, StatsViewChange.Negative(8, 2.0)),
-                TopAuthorUiItem("Edward Davis", null, 298, StatsViewChange.Positive(21, 7.6)),
-                TopAuthorUiItem("Fiona Garcia", null, 245, StatsViewChange.Positive(15, 6.5)),
-                TopAuthorUiItem("George Martinez", null, 201, StatsViewChange.Negative(5, 2.4)),
-                TopAuthorUiItem("Hannah Anderson", null, 156, StatsViewChange.Positive(12, 8.3))
+                AuthorUiItem("John Doe", null, 3464, StatsViewChange.Positive(124, 3.7)),
+                AuthorUiItem("Jane Smith", null, 556, StatsViewChange.Positive(45, 8.8)),
+                AuthorUiItem("Bob Johnson", null, 522, StatsViewChange.Negative(12, 2.2)),
+                AuthorUiItem("Alice Brown", null, 485, StatsViewChange.Positive(33, 7.3)),
+                AuthorUiItem("Charlie Wilson", null, 412, StatsViewChange.NoChange),
+                AuthorUiItem("Diana Miller", null, 387, StatsViewChange.Negative(8, 2.0)),
+                AuthorUiItem("Edward Davis", null, 298, StatsViewChange.Positive(21, 7.6)),
+                AuthorUiItem("Fiona Garcia", null, 245, StatsViewChange.Positive(15, 6.5)),
+                AuthorUiItem("George Martinez", null, 201, StatsViewChange.Negative(5, 2.4)),
+                AuthorUiItem("Hannah Anderson", null, 156, StatsViewChange.Positive(12, 8.3))
             ),
             maxViewsForBar = 3464,
             totalViews = 6726,
