@@ -412,7 +412,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.process)
     implementation(libs.android.volley)
     implementation(libs.google.play.review)
-    implementation(libs.google.play.services.auth)
     implementation(libs.google.mlkit.barcode.scanning.common)
     implementation(libs.google.mlkit.text.recognition)
     implementation(libs.google.mlkit.barcode.scanning.main)
