@@ -12,8 +12,10 @@ import uniffi.wp_api.StatsCountryViewsParams
 import uniffi.wp_api.StatsCountryViewsPeriod
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
+import uniffi.wp_api.WpComLanguage
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import rs.wordpress.api.kotlin.fromLocale
 import javax.inject.Inject
 
 /**
@@ -51,7 +53,7 @@ class StatsDataSourceImpl @Inject constructor(
             unit = unit.toApiUnit(),
             quantity = quantity.toUInt(),
             endDate = endDate,
-            locale = localeManagerWrapper.getLocale().toString()
+            locale = wpComLanguage
         )
 
         val result = wpComApiClient.request { requestBuilder ->
@@ -110,20 +112,23 @@ class StatsDataSourceImpl @Inject constructor(
         StatsUnit.MONTH -> StatsVisitsUnit.MONTH
     }
 
+    private val wpComLanguage: WpComLanguage?
+        get() = WpComLanguage.fromLocale(localeManagerWrapper.getLocale())
+
     private fun buildTopPostsParams(dateRange: StatsDateRange, max: Int) = when (dateRange) {
         is StatsDateRange.Preset -> StatsTopPostsParams(
             period = StatsTopPostsPeriod.DAY,
             date = dateRange.date,
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = localeManagerWrapper.getLocale().toString()
+            locale = wpComLanguage
         )
         is StatsDateRange.Custom -> StatsTopPostsParams(
             period = StatsTopPostsPeriod.DAY,
             date = dateRange.date,
             startDate = dateRange.startDate,
             max = max.coerceAtLeast(1).toUInt(),
-            locale = localeManagerWrapper.getLocale().toString()
+            locale = wpComLanguage
         )
     }
 
@@ -192,14 +197,14 @@ class StatsDataSourceImpl @Inject constructor(
                 date = dateRange.date,
                 num = dateRange.num.toUInt(),
                 max = max.coerceAtLeast(1).toUInt(),
-                locale = localeManagerWrapper.getLocale().toString()
+                locale = wpComLanguage
             )
             is StatsDateRange.Custom -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
                 date = dateRange.date,
                 startDate = dateRange.startDate,
                 max = max.coerceAtLeast(1).toUInt(),
-                locale = localeManagerWrapper.getLocale().toString()
+                locale = wpComLanguage
             )
         }
 
@@ -246,7 +251,7 @@ class StatsDataSourceImpl @Inject constructor(
             date = dateRange.date,
             num = dateRange.num.toUInt(),
             max = max.coerceAtLeast(1).toUInt(),
-            locale = localeManagerWrapper.getLocale().toString(),
+            locale = wpComLanguage,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsCountryViewsParams(
@@ -254,7 +259,7 @@ class StatsDataSourceImpl @Inject constructor(
             date = dateRange.date,
             startDate = dateRange.startDate,
             max = max.coerceAtLeast(1).toUInt(),
-            locale = localeManagerWrapper.getLocale().toString(),
+            locale = wpComLanguage,
             summarize = true
         )
     }
