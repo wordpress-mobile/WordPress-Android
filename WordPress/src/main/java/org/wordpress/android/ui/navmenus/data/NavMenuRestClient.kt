@@ -562,6 +562,6 @@ class NavMenuRestClient @Inject constructor(
     }
 
     companion object {
-        private const val PAGE_SIZE = 5u // TODO 20
+        private const val PAGE_SIZE = 20u
     }
 }
