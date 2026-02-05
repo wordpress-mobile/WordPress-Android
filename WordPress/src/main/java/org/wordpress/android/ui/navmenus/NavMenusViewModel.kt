@@ -110,6 +110,7 @@ class NavMenusViewModel @Inject constructor(
                 _menuListState.value = MenuListUiState(
                     isLoading = false,
                     isRefreshing = false,
+                    canLoadMore = true,
                     error = e.message ?: resourceProvider.getString(R.string.error_generic)
                 )
             }
@@ -128,7 +129,7 @@ class NavMenusViewModel @Inject constructor(
                     _menuListState.value = currentState.copy(isLoadingMore = false)
                     return@launch
                 }
-                val offset = currentMenus.size
+                val offset = currentState.menus.size
 
                 @Suppress("TooGenericExceptionCaught")
                 try {
@@ -178,7 +179,7 @@ class NavMenusViewModel @Inject constructor(
             }
             is NavMenuRestClient.NavMenuListResult.Error -> {
                 val errorMessage = menusResult.message.takeIf { it.isNotBlank() } ?: "Failed to load menus"
-                MenuListUiState(isLoading = false, error = errorMessage)
+                MenuListUiState(isLoading = false, canLoadMore = true, error = errorMessage)
             }
         }
     }
@@ -265,6 +266,7 @@ class NavMenusViewModel @Inject constructor(
                         is NavMenuRestClient.NavMenuItemListResult.Error -> {
                             _menuItemListState.value = _menuItemListState.value.copy(
                                 isLoading = false,
+                                canLoadMore = true,
                                 error = result.message
                             )
                         }
@@ -286,7 +288,7 @@ class NavMenusViewModel @Inject constructor(
                     _menuItemListState.value = currentState.copy(isLoadingMore = false)
                     return@launch
                 }
-                val offset = currentMenuItems.size
+                val offset = currentState.items.size
 
                 @Suppress("TooGenericExceptionCaught")
                 try {
@@ -601,6 +603,7 @@ class NavMenusViewModel @Inject constructor(
                         currentState.copy(
                             linkableItemsState = LinkableItemsState(
                                 isLoading = false,
+                                canLoadMore = true,
                                 error = result.message
                             )
                         )
