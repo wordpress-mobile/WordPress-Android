@@ -28,7 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import android.content.res.Configuration
+import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
+import org.wordpress.android.ui.navmenus.LocationUiModel
 import org.wordpress.android.ui.navmenus.MenuDetailUiState
 
 @Composable
@@ -201,3 +204,68 @@ private fun SaveButton(
     }
 }
 
+// region Previews
+
+private val sampleLocations = listOf(
+    LocationUiModel(name = "primary", description = "Primary Menu", menuId = 0L),
+    LocationUiModel(name = "footer", description = "Footer Menu", menuId = 0L),
+    LocationUiModel(name = "social", description = "Social Links Menu", menuId = 0L)
+)
+
+@Preview(name = "New Menu Light", showBackground = true)
+@Preview(name = "New Menu Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun MenuDetailScreenNewPreview() {
+    MenuDetailScreen(
+        state = MenuDetailUiState(
+            isNew = true,
+            availableLocations = sampleLocations
+        ),
+        onNameChange = {},
+        onDescriptionChange = {},
+        onAutoAddChange = {},
+        onLocationToggle = {},
+        onSaveClick = {}
+    )
+}
+
+@Preview(name = "Edit Menu Light", showBackground = true)
+@Preview(name = "Edit Menu Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun MenuDetailScreenEditPreview() {
+    MenuDetailScreen(
+        state = MenuDetailUiState(
+            menuId = 1L,
+            name = "Main Menu",
+            description = "Primary navigation for the site",
+            autoAdd = true,
+            selectedLocations = listOf("primary"),
+            availableLocations = sampleLocations,
+            isNew = false
+        ),
+        onNameChange = {},
+        onDescriptionChange = {},
+        onAutoAddChange = {},
+        onLocationToggle = {},
+        onSaveClick = {}
+    )
+}
+
+@Preview(name = "Saving Light", showBackground = true)
+@Preview(name = "Saving Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun MenuDetailScreenSavingPreview() {
+    MenuDetailScreen(
+        state = MenuDetailUiState(
+            name = "Main Menu",
+            isSaving = true
+        ),
+        onNameChange = {},
+        onDescriptionChange = {},
+        onAutoAddChange = {},
+        onLocationToggle = {},
+        onSaveClick = {}
+    )
+}
+
+// endregion
