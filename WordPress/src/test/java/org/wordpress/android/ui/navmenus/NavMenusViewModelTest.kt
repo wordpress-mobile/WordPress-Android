@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -38,6 +39,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
         whenever(resourceProvider.getString(any())).thenAnswer { invocation ->
             "String resource ${invocation.arguments[0]}"
         }
+        setupDefaultLinkableItemsMocks()
         viewModel = NavMenusViewModel(
             selectedSiteRepository = selectedSiteRepository,
             navMenuRestClient = navMenuRestClient,
@@ -45,6 +47,15 @@ class NavMenusViewModelTest : BaseUnitTest() {
             mainDispatcher = testDispatcher(),
             ioDispatcher = testDispatcher()
         )
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun setupDefaultLinkableItemsMocks() = test {
+        val emptySuccess = NavMenuRestClient.LinkableItemsResult.Success(emptyList())
+        lenient().`when`(navMenuRestClient.fetchPosts(any())).thenReturn(emptySuccess)
+        lenient().`when`(navMenuRestClient.fetchPages(any())).thenReturn(emptySuccess)
+        lenient().`when`(navMenuRestClient.fetchCategories(any())).thenReturn(emptySuccess)
+        lenient().`when`(navMenuRestClient.fetchTags(any())).thenReturn(emptySuccess)
     }
 
     @Test
@@ -193,7 +204,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when updateSelectedLinkableItem called with empty title, then title is auto-filled`() = test {
+    fun `when updateSelectedLinkableItem called, then title is set from item`() = test {
         viewModel.navigateToCreateMenuItem()
         val testItem = LinkableItemOption(id = 789L, title = "Auto Title")
 
@@ -201,6 +212,28 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
         val state = viewModel.menuItemDetailState.first()
         assertThat(state?.title).isEqualTo("Auto Title")
+    }
+
+    @Test
+    fun `when updateSelectedLinkableItem called with existing title, then title is replaced`() = test {
+        viewModel.navigateToCreateMenuItem()
+        viewModel.updateMenuItemTitle("Existing Title")
+        val testItem = LinkableItemOption(id = 789L, title = "New Title")
+
+        viewModel.updateSelectedLinkableItem(testItem)
+
+        val state = viewModel.menuItemDetailState.first()
+        assertThat(state?.title).isEqualTo("New Title")
+    }
+
+    @Test
+    fun `when updateMenuItemType called with non-custom type, then loading state is set`() = test {
+        viewModel.navigateToCreateMenuItem()
+
+        viewModel.updateMenuItemType(MenuItemTypeOption.POST)
+
+        val state = viewModel.menuItemDetailState.first()
+        assertThat(state?.linkableItemsState?.isLoading).isTrue()
     }
 
     @Test

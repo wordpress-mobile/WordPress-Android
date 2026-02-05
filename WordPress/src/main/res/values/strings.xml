@@ -4578,6 +4578,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="menu_item_type_tag">Tag</string>
     <string name="menu_item_link_to_label">Link to</string>
     <string name="menu_item_select_item">Select an item</string>
+    <string name="menu_item_select_post">Select a post</string>
+    <string name="menu_item_select_page">Select a page</string>
+    <string name="menu_item_select_category">Select a category</string>
+    <string name="menu_item_select_tag">Select a tag</string>
     <string name="menu_item_no_items_found">No items found</string>
     <string name="menu_item_loading_items">Loading…</string>
     <string name="menu_item_select_required">Please select an item to link to</string>

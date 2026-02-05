@@ -112,11 +112,11 @@ class NavMenusViewModel @Inject constructor(
         val itemCountByMenuId = buildItemCountMap(allItemsResult)
 
         return when (menusResult) {
-            is NavMenuRestClient.NavMenusResult.Success -> {
+            is NavMenuRestClient.NavMenuListResult.Success -> {
                 currentMenus = menusResult.menus
                 buildSuccessState(menusResult.menus, locationsResult, itemCountByMenuId)
             }
-            is NavMenuRestClient.NavMenusResult.Error -> {
+            is NavMenuRestClient.NavMenuListResult.Error -> {
                 val errorMessage = menusResult.message.takeIf { it.isNotBlank() } ?: "Failed to load menus"
                 MenuListUiState(isLoading = false, error = errorMessage)
             }
@@ -124,12 +124,12 @@ class NavMenusViewModel @Inject constructor(
     }
 
     private fun buildItemCountMap(
-        result: NavMenuRestClient.NavMenuItemsResult
+        result: NavMenuRestClient.NavMenuItemListResult
     ): Map<Long, Int> = when (result) {
-        is NavMenuRestClient.NavMenuItemsResult.Success -> {
+        is NavMenuRestClient.NavMenuItemListResult.Success -> {
             result.items.groupingBy { it.menuId }.eachCount()
         }
-        is NavMenuRestClient.NavMenuItemsResult.Error -> emptyMap()
+        is NavMenuRestClient.NavMenuItemListResult.Error -> emptyMap()
     }
 
     private fun buildSuccessState(
@@ -203,7 +203,7 @@ class NavMenusViewModel @Inject constructor(
 
                 withContext(mainDispatcher) {
                     when (result) {
-                        is NavMenuRestClient.NavMenuItemsResult.Success -> {
+                        is NavMenuRestClient.NavMenuItemListResult.Success -> {
                             currentMenuItems = result.items
                             val sortedItems = sortItemsHierarchically(result.items)
                             _menuItemListState.value = _menuItemListState.value.copy(
@@ -211,7 +211,7 @@ class NavMenusViewModel @Inject constructor(
                                 items = sortedItems
                             )
                         }
-                        is NavMenuRestClient.NavMenuItemsResult.Error -> {
+                        is NavMenuRestClient.NavMenuItemListResult.Error -> {
                             _menuItemListState.value = _menuItemListState.value.copy(
                                 isLoading = false,
                                 error = result.message
@@ -461,8 +461,54 @@ class NavMenusViewModel @Inject constructor(
             url = if (typeOption == MenuItemTypeOption.CUSTOM_LINK) currentState.url else "",
             objectId = 0L,
             selectedLinkableItem = null,
-            linkableItemsState = LinkableItemsState()
+            linkableItemsState = LinkableItemsState(isLoading = typeOption != MenuItemTypeOption.CUSTOM_LINK)
         )
+
+        // Load linkable items for non-custom types
+        if (typeOption != MenuItemTypeOption.CUSTOM_LINK) {
+            loadLinkableItems(typeOption)
+        }
+    }
+
+    private fun loadLinkableItems(typeOption: MenuItemTypeOption) {
+        viewModelScope.launch {
+            val site = selectedSiteRepository.getSelectedSite() ?: return@launch
+
+            val result = withContext(ioDispatcher) {
+                when (typeOption) {
+                    MenuItemTypeOption.POST -> navMenuRestClient.fetchPosts(site)
+                    MenuItemTypeOption.PAGE -> navMenuRestClient.fetchPages(site)
+                    MenuItemTypeOption.CATEGORY -> navMenuRestClient.fetchCategories(site)
+                    MenuItemTypeOption.TAG -> navMenuRestClient.fetchTags(site)
+                    MenuItemTypeOption.CUSTOM_LINK -> {
+                        NavMenuRestClient.LinkableItemsResult.Success(emptyList())
+                    }
+                }
+            }
+
+            val currentState = _menuItemDetailState.value ?: return@launch
+            // Only update if the type hasn't changed while loading
+            if (currentState.selectedTypeOption == typeOption) {
+                _menuItemDetailState.value = when (result) {
+                    is NavMenuRestClient.LinkableItemsResult.Success -> {
+                        currentState.copy(
+                            linkableItemsState = LinkableItemsState(
+                                isLoading = false,
+                                items = result.items
+                            )
+                        )
+                    }
+                    is NavMenuRestClient.LinkableItemsResult.Error -> {
+                        currentState.copy(
+                            linkableItemsState = LinkableItemsState(
+                                isLoading = false,
+                                error = result.message
+                            )
+                        )
+                    }
+                }
+            }
+        }
     }
 
     fun updateSelectedLinkableItem(item: LinkableItemOption) {
@@ -470,7 +516,7 @@ class NavMenusViewModel @Inject constructor(
         _menuItemDetailState.value = currentState.copy(
             selectedLinkableItem = item,
             objectId = item.id,
-            title = currentState.title.ifBlank { item.title }
+            title = item.title
         )
     }
 
