@@ -610,6 +610,7 @@ class NavMenusViewModel @Inject constructor(
         }
     }
 
+    @Suppress("LongMethod")
     fun loadMoreLinkableItems() {
         viewModelScope.launch {
             linkableItemsPaginationMutex.withLock {
