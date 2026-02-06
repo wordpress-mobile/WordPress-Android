@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -167,12 +169,14 @@ class NavMenusViewModel @Inject constructor(
             }
         }
     }
+    private suspend fun fetchMenuData(site: SiteModel, offset: Int): MenuListUiState = coroutineScope {
+        val menusDeferred = async { navMenuRestClient.fetchMenus(site, offset) }
+        val locationsDeferred = async { navMenuRestClient.fetchMenuLocations(site) }
 
-    private suspend fun fetchMenuData(site: SiteModel, offset: Int): MenuListUiState {
-        val menusResult = navMenuRestClient.fetchMenus(site, offset)
-        val locationsResult = navMenuRestClient.fetchMenuLocations(site)
+        val menusResult = menusDeferred.await()
+        val locationsResult = locationsDeferred.await()
 
-        return when (menusResult) {
+        when (menusResult) {
             is NavMenuRestClient.NavMenuListResult.Success -> {
                 currentMenus = menusResult.menus
                 buildSuccessState(menusResult.menus, locationsResult, menusResult.canLoadMore)
