@@ -86,7 +86,10 @@ allprojects {
             freeCompilerArgs += [
                     "-opt-in=kotlin.RequiresOptIn",
                     "-Xjvm-default=all",
-                    "-Xannotation-default-target=param-property"
+                    "-Xannotation-default-target=param-property",
+                    // Suppress Glide KSP codegen visibility warning (bumptech/glide#5601)
+                    "-Xwarning-level=" +
+                        "EXPOSED_PACKAGE_PRIVATE_TYPE_FROM_INTERNAL_WARNING:disabled"
             ]
         }
     }
