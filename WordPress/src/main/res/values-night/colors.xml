@@ -7,8 +7,6 @@
     <color name="p2_author_bg_stroke">#1E1E1E</color>
     <color name="bottom_bar_notification_badge">@color/background_dark_elevated</color>
 
-    <color name="promo_indicator_color_default" tools:ignore="UnusedResources">@color/white_translucent_20</color>
-
     <!-- Post History -->
 
     <color name="post_history_underlying_background">@color/gray_100</color>

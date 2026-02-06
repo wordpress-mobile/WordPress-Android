@@ -1041,14 +1041,6 @@
         <item name="android:layout_weight">20</item>
     </style>
 
-    <!-- To use with the LoginFlow Theme -->
-    <style name="Widget.LoginFlow.TextView.PromoTitle" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
-        <item name="android:gravity">center</item>
-        <item name="fixWidowWords">true</item>
-        <item name="android:textSize">@dimen/prologue_promo_title_size</item>
-    </style>
-
     <!-- Main actions styles -->
     <style name="MainBottomSheetRowLayout" parent="MySiteListRowLayout">
         <item name="android:minHeight">@dimen/main_bottom_sheet_list_row_min_height</item>

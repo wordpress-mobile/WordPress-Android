@@ -16,8 +16,6 @@
 
     <!-- Post History -->
 
-    <color name="promo_indicator_color_default" tools:ignore="UnusedResources">@color/black_translucent_20</color>
-
     <color name="post_history_underlying_background">@color/neutral_0</color>
 
     <!-- Login Prologue Revamped -->
