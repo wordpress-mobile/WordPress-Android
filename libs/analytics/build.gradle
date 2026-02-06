@@ -18,4 +18,9 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         compileSdk rootProject.compileSdkVersion
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.toVersion(libs.versions.java.get())
+        targetCompatibility JavaVersion.toVersion(libs.versions.java.get())
+    }
 }

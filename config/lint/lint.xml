@@ -36,6 +36,7 @@
     <issue id="MissingNullAnnotationOnMethodReturnType">
         <ignore path="**/generated/**" />
     </issue>
+    <issue id="Aligned16KB" severity="ignore" /> <!-- Will be addressed by removing Gutenberg Mobile -->
     <issue id="VectorRaster" severity="warning" /> <!--    fluxc-->
     <!-- SECURITY -->
     <issue id="TrustAllX509TrustManager">
@@ -74,6 +75,9 @@
         <ignore path="**/src/wordpress/res" /> <!-- drawable-hdpi, drawable-xxhdpi -->
     </issue>
     <issue id="ObsoleteSdkInt">
+        <ignore path="**/generated/ksp/**/org/wordpress/android/ui/main/Hilt_WPMainNavigationView.java" />
+    </issue>
+    <issue id="UseRequiresApi"> <!-- Hilt's View codegen emits @TargetApi instead of @RequiresApi -->
         <ignore path="**/generated/ksp/**/org/wordpress/android/ui/main/Hilt_WPMainNavigationView.java" />
     </issue>
     <issue id="IconDensities" severity="warning" /> <!--    fluxc-->
