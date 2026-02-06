@@ -1,661 +1,534 @@
 package org.wordpress.android.ui.posts
 
-import android.content.Context
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.model.SiteModel
 
 @RunWith(MockitoJUnitRunner::class)
-@Suppress("LargeClass")
 class GutenbergKitSettingsBuilderTest {
-    // ===== Plugin Logic Tests =====
-    @Mock
-    lateinit var appContext: Context
+    // ===== Auth Header Tests =====
 
     @Test
-    fun `plugins disabled when feature flag is off regardless of site configuration`() {
+    fun `WPCom site returns Bearer token header`() {
+        val header = GutenbergKitSettingsBuilder.buildAuthHeader(
+            shouldUseWPComRestApi = true,
+            accessToken = "my_token",
+            username = null,
+            password = null
+        )
+
+        assertThat(header).isEqualTo("Bearer my_token")
+    }
+
+    @Test
+    fun `WPCom site with null token returns null`() {
+        val header = GutenbergKitSettingsBuilder.buildAuthHeader(
+            shouldUseWPComRestApi = true,
+            accessToken = null,
+            username = null,
+            password = null
+        )
+
+        assertThat(header).isNull()
+    }
+
+    @Test
+    fun `WPCom site with empty token returns null`() {
+        val header = GutenbergKitSettingsBuilder.buildAuthHeader(
+            shouldUseWPComRestApi = true,
+            accessToken = "",
+            username = null,
+            password = null
+        )
+
+        assertThat(header).isNull()
+    }
+
+    @Test
+    fun `self-hosted site returns Basic auth header`() {
+        val header = GutenbergKitSettingsBuilder.buildAuthHeader(
+            shouldUseWPComRestApi = false,
+            accessToken = null,
+            username = "testuser",
+            password = "testpass"
+        )
+
+        assertThat(header).isNotNull()
+        assertThat(header).startsWith("Basic ")
+    }
+
+    @Test
+    fun `Basic auth with null username returns null`() {
+        val header = GutenbergKitSettingsBuilder.buildAuthHeader(
+            shouldUseWPComRestApi = false,
+            accessToken = null,
+            username = null,
+            password = "password123"
+        )
+
+        assertThat(header).isNull()
+    }
+
+    @Test
+    fun `Basic auth with empty username returns null`() {
+        val header = GutenbergKitSettingsBuilder.buildAuthHeader(
+            shouldUseWPComRestApi = false,
+            accessToken = null,
+            username = "",
+            password = "password123"
+        )
+
+        assertThat(header).isNull()
+    }
+
+    @Test
+    fun `Basic auth with null password returns null`() {
+        val header = GutenbergKitSettingsBuilder.buildAuthHeader(
+            shouldUseWPComRestApi = false,
+            accessToken = null,
+            username = "username",
+            password = null
+        )
+
+        assertThat(header).isNull()
+    }
+
+    @Test
+    fun `Basic auth with empty password returns null`() {
+        val header = GutenbergKitSettingsBuilder.buildAuthHeader(
+            shouldUseWPComRestApi = false,
+            accessToken = null,
+            username = "username",
+            password = ""
+        )
+
+        assertThat(header).isNull()
+    }
+
+    @Test
+    fun `Basic auth with both empty returns null`() {
+        val header = GutenbergKitSettingsBuilder.buildAuthHeader(
+            shouldUseWPComRestApi = false,
+            accessToken = null,
+            username = "",
+            password = ""
+        )
+
+        assertThat(header).isNull()
+    }
+
+    @Test
+    fun `special characters in Basic auth are encoded`() {
+        val header = GutenbergKitSettingsBuilder.buildAuthHeader(
+            shouldUseWPComRestApi = false,
+            accessToken = null,
+            username = "user@example.com",
+            password = "p@ss:word!123"
+        )
+
+        assertThat(header).isNotNull()
+        assertThat(header).startsWith("Basic ")
+    }
+
+    // ===== Plugin Logic Tests =====
+
+    @Test
+    fun `plugins disabled when feature flag is off`() {
         val testCases = listOf(
-            // isWPCom, isJetpackConnected, applicationPassword
-            Triple(true, false, null),        // WPCom site
-            Triple(false, true, "password"),  // Jetpack with password
-            Triple(false, false, null),       // Self-hosted
+            Triple(true, false, null),
+            Triple(false, true, "password"),
+            Triple(false, false, null),
         )
 
         testCases.forEach { (isWPCom, isJetpack, password) ->
-            val siteConfig = createSiteConfig(
-                isWPCom = isWPCom,
+            val result = GutenbergKitSettingsBuilder.shouldUsePlugins(
+                isFeatureEnabled = false,
+                isWPComSite = isWPCom,
                 isJetpackConnected = isJetpack,
-                apiRestPasswordPlain = password
+                applicationPassword = password
             )
 
-            val settings = GutenbergKitSettingsBuilder.buildSettings(
-                siteConfig = siteConfig,
-                postConfig = createPostConfig(),
-                appConfig = createAppConfig(),
-
-                featureConfig = createFeatureConfig(), // Both features disabled
-            )
-
-            assertThat(settings["plugins"])
-                .withFailMessage("Expected plugins=false for WPCom=$isWPCom, Jetpack=$isJetpack, password=$password")
-                .isEqualTo(false)
+            assertThat(result)
+                .withFailMessage(
+                    "Expected false for WPCom=$isWPCom, " +
+                        "Jetpack=$isJetpack, password=$password"
+                )
+                .isFalse()
         }
     }
 
     @Test
-    fun `plugins enabled for WPCom sites when feature flag is on`() {
-        val siteConfig = createSiteConfig(isWPCom = true)
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(),
-
-            featureConfig = createFeatureConfig(isPluginsFeatureEnabled = true),
-
+    fun `plugins enabled for WPCom sites when feature is on`() {
+        val result = GutenbergKitSettingsBuilder.shouldUsePlugins(
+            isFeatureEnabled = true,
+            isWPComSite = true,
+            isJetpackConnected = false,
+            applicationPassword = null
         )
 
-        assertThat(settings["plugins"]).isEqualTo(true)
+        assertThat(result).isTrue()
     }
 
     @Test
-    fun `plugins enabled for Jetpack sites with application password when feature flag is on`() {
-        val siteConfig = createSiteConfig(
-            isWPCom = false,
+    fun `plugins enabled for Jetpack with app password when feature is on`() {
+        val result = GutenbergKitSettingsBuilder.shouldUsePlugins(
+            isFeatureEnabled = true,
+            isWPComSite = false,
             isJetpackConnected = true,
-            apiRestPasswordPlain = "validPassword123"
+            applicationPassword = "validPassword"
         )
 
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(),
-
-            featureConfig = createFeatureConfig(isPluginsFeatureEnabled = true),
-
-        )
-
-        assertThat(settings["plugins"]).isEqualTo(true)
+        assertThat(result).isTrue()
     }
 
     @Test
-    fun `plugins disabled for Jetpack sites without application password`() {
-        val passwordVariants = listOf(null, "")
-
-        passwordVariants.forEach { password ->
-            val siteConfig = createSiteConfig(
-                isWPCom = false,
+    fun `plugins disabled for Jetpack without app password`() {
+        listOf(null, "").forEach { password ->
+            val result = GutenbergKitSettingsBuilder.shouldUsePlugins(
+                isFeatureEnabled = true,
+                isWPComSite = false,
                 isJetpackConnected = true,
-                apiRestPasswordPlain = password
+                applicationPassword = password
             )
 
-            val settings = GutenbergKitSettingsBuilder.buildSettings(
-                siteConfig = siteConfig,
-                postConfig = createPostConfig(),
-                appConfig = createAppConfig(),
-
-                featureConfig = createFeatureConfig(isPluginsFeatureEnabled = true),
-
-            )
-
-            assertThat(settings["plugins"])
-                .withFailMessage("Expected plugins=false for password=$password")
-                .isEqualTo(false)
+            assertThat(result)
+                .withFailMessage(
+                    "Expected false for password=$password"
+                )
+                .isFalse()
         }
     }
 
     @Test
-    fun `plugins disabled for self-hosted sites without Jetpack`() {
-        val siteConfig = createSiteConfig(
-            isWPCom = false,
+    fun `plugins disabled for self-hosted without Jetpack`() {
+        val result = GutenbergKitSettingsBuilder.shouldUsePlugins(
+            isFeatureEnabled = true,
+            isWPComSite = false,
             isJetpackConnected = false,
-            apiRestPasswordPlain = "password" // Has password but no Jetpack
+            applicationPassword = "password"
         )
 
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(),
-
-            featureConfig = createFeatureConfig(isPluginsFeatureEnabled = true),
-
-        )
-
-        assertThat(settings["plugins"]).isEqualTo(false)
+        assertThat(result).isFalse()
     }
 
-    // ===== Authentication Flow Tests =====
+    // ===== Site API Namespace Tests =====
 
     @Test
-    fun `WPCom site uses Bearer token and public API`() {
-        val siteConfig = createSiteConfig(
-            url = "https://example.wordpress.com",
-            siteId = 123,
-            isWPCom = true,
-            isUsingWpComRestApi = true
+    fun `namespace is empty for non-WPCom sites`() {
+        val result = GutenbergKitSettingsBuilder.buildSiteApiNamespace(
+            shouldUseWPComRestApi = false,
+            siteId = 123L,
+            siteUrl = "https://example.com"
         )
 
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(accessToken = "test_bearer_token"),
-
-            featureConfig = createFeatureConfig(),
-
-        )
-
-        assertThat(settings["authHeader"]).isEqualTo("Bearer test_bearer_token")
-        assertThat(settings["siteApiRoot"]).isEqualTo("https://public-api.wordpress.com/")
-        assertThat(settings["siteApiNamespace"] as Array<*>)
-            .containsExactly("sites/123/", "sites/example.wordpress.com/")
+        assertThat(result).isEmpty()
     }
 
     @Test
-    fun `Jetpack site with application password uses Basic auth and site API`() {
-        val siteConfig = createSiteConfig(
-            url = "https://mysite.com",
-            siteId = 789,
-            isJetpackConnected = true,
-            wpApiRestUrl = "https://mysite.com/wp-json/",
-            apiRestUsernamePlain = "testuser",
-            apiRestPasswordPlain = "testpass123"
+    fun `namespace includes site ID and host for WPCom sites`() {
+        val result = GutenbergKitSettingsBuilder.buildSiteApiNamespace(
+            shouldUseWPComRestApi = true,
+            siteId = 456L,
+            siteUrl = "https://example.wordpress.com"
         )
 
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(accessToken = "unused_token"),
-
-            featureConfig = createFeatureConfig(),
-
+        assertThat(result).containsExactly(
+            "sites/456/",
+            "sites/example.wordpress.com/"
         )
-
-        assertThat(settings["authHeader"] as String).startsWith("Basic ")
-        assertThat(settings["siteApiRoot"]).isEqualTo("https://mysite.com/wp-json/")
-        assertThat(settings["siteApiNamespace"] as Array<*>).isEmpty()
     }
 
     @Test
-    fun `Jetpack site without password falls back to Bearer when WPCom REST available`() {
-        val siteConfig = createSiteConfig(
-            isJetpackConnected = true,
-            isUsingWpComRestApi = true,
-            apiRestPasswordPlain = null
+    fun `namespace includes only site ID when host extraction fails`() {
+        val result = GutenbergKitSettingsBuilder.buildSiteApiNamespace(
+            shouldUseWPComRestApi = true,
+            siteId = 789L,
+            siteUrl = "not-a-valid-url"
         )
 
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(accessToken = "fallback_token"),
-
-            featureConfig = createFeatureConfig(),
-
-        )
-
-        assertThat(settings["authHeader"]).isEqualTo("Bearer fallback_token")
-        assertThat(settings["siteApiRoot"]).isEqualTo("https://public-api.wordpress.com/")
+        assertThat(result).containsExactly("sites/789/")
     }
 
-    // ===== Authentication Edge Cases Tests =====
+    // ===== Extract Host Tests =====
 
     @Test
-    fun `WPCom site with null access token returns null auth header`() {
-        val siteConfig = createSiteConfig(
-            isWPCom = true,
-            isUsingWpComRestApi = true
-        )
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(accessToken = null),
-            featureConfig = createFeatureConfig()
-        )
-
-        assertThat(settings["authHeader"]).isNull()
-    }
-
-    @Test
-    fun `WPCom site with empty access token returns null auth header`() {
-        val siteConfig = createSiteConfig(
-            isWPCom = true,
-            isUsingWpComRestApi = true
-        )
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(accessToken = ""),
-            featureConfig = createFeatureConfig()
-        )
-
-        assertThat(settings["authHeader"]).isNull()
-    }
-
-    @Test
-    fun `Basic auth with null username returns null auth header`() {
-        val siteConfig = createSiteConfig(
-            isJetpackConnected = true,
-            apiRestUsernamePlain = null,
-            apiRestPasswordPlain = "password123"
-        )
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(),
-            featureConfig = createFeatureConfig()
-        )
-
-        assertThat(settings["authHeader"]).isNull()
-    }
-
-    @Test
-    fun `Basic auth with empty username returns null auth header`() {
-        val siteConfig = createSiteConfig(
-            isJetpackConnected = true,
-            apiRestUsernamePlain = "",
-            apiRestPasswordPlain = "password123"
-        )
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(),
-            featureConfig = createFeatureConfig()
-        )
-
-        assertThat(settings["authHeader"]).isNull()
-    }
-
-    @Test
-    fun `Basic auth with null password returns null auth header`() {
-        val siteConfig = createSiteConfig(
-            isJetpackConnected = true,
-            apiRestUsernamePlain = "username",
-            apiRestPasswordPlain = null
-        )
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(),
-            featureConfig = createFeatureConfig()
-        )
-
-        assertThat(settings["authHeader"]).isNull()
-    }
-
-    @Test
-    fun `Basic auth with empty password returns null auth header`() {
-        val siteConfig = createSiteConfig(
-            isJetpackConnected = true,
-            apiRestUsernamePlain = "username",
-            apiRestPasswordPlain = ""
-        )
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(),
-            featureConfig = createFeatureConfig()
-        )
-
-        assertThat(settings["authHeader"]).isNull()
-    }
-
-    @Test
-    fun `Basic auth with both username and password empty returns null auth header`() {
-        val siteConfig = createSiteConfig(
-            isJetpackConnected = true,
-            apiRestUsernamePlain = "",
-            apiRestPasswordPlain = ""
-        )
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(),
-            featureConfig = createFeatureConfig()
-        )
-
-        assertThat(settings["authHeader"]).isNull()
-    }
-
-    @Test
-    fun `Valid WPCom authentication returns proper Bearer header`() {
-        val siteConfig = createSiteConfig(
-            isWPCom = true,
-            isUsingWpComRestApi = true
-        )
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(accessToken = "valid_token_123"),
-            featureConfig = createFeatureConfig()
-        )
-
-        assertThat(settings["authHeader"]).isEqualTo("Bearer valid_token_123")
-    }
-
-    @Test
-    fun `Valid Basic auth returns proper Basic header`() {
-        val siteConfig = createSiteConfig(
-            isJetpackConnected = true,
-            apiRestUsernamePlain = "testuser",
-            apiRestPasswordPlain = "testpass"
-        )
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(),
-            featureConfig = createFeatureConfig()
-        )
-
-        val authHeader = settings["authHeader"] as String?
-        assertThat(authHeader).isNotNull()
-        assertThat(authHeader).startsWith("Basic ")
-        // Verify it's a valid Base64 encoded string
-        val encodedPart = authHeader?.removePrefix("Basic ")
-        assertThat(encodedPart).isNotEmpty()
-    }
-
-    @Test
-    fun `Special characters in Basic auth credentials are handled correctly`() {
-        val siteConfig = createSiteConfig(
-            isJetpackConnected = true,
-            apiRestUsernamePlain = "user@example.com",
-            apiRestPasswordPlain = "p@ss:word!123"
-        )
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(),
-            featureConfig = createFeatureConfig()
-        )
-
-        val authHeader = settings["authHeader"] as String?
-        assertThat(authHeader).isNotNull()
-        assertThat(authHeader).startsWith("Basic ")
-    }
-
-    // ===== Complete Scenario Tests =====
-
-    @Test
-    fun `complete settings for WPCom simple site with all features enabled`() {
-        val siteConfig = GutenbergKitSettingsBuilder.SiteConfig(
-            url = "https://example.wordpress.com",
-            siteId = 123,
-            isWPCom = true,
-            isWPComAtomic = false,
-            isJetpackConnected = false,
-            isUsingWpComRestApi = true,
-            wpApiRestUrl = null,
-            apiRestUsernamePlain = null,
-            apiRestPasswordPlain = null,
-            selfHostedSiteId = 0,
-            webEditor = "gutenberg",
-            apiRestUsernameProcessed = null,
-            apiRestPasswordProcessed = null
-        )
-
-        val postConfig = GutenbergKitSettingsBuilder.PostConfig(
-            remotePostId = 456L,
-            isPage = false,
-            title = "Test Post",
-            content = "Test Content"
-        )
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = postConfig,
-            appConfig = createAppConfig(
-                accessToken = "test_token",
-                cookies = "test_cookies"
-            ),
-            featureConfig = createFeatureConfig(
-                isPluginsFeatureEnabled = true,
-                isThemeStylesFeatureEnabled = true
+    fun `extractHost returns host from valid URL`() {
+        assertThat(
+            GutenbergKitSettingsBuilder.extractHost(
+                "https://example.wordpress.com"
             )
-        )
-
-        // Verify all settings are correctly configured
-        assertThat(settings["postId"]).isEqualTo(456)
-        assertThat(settings["postType"]).isEqualTo("post")
-        assertThat(settings["postTitle"]).isEqualTo("Test Post")
-        assertThat(settings["postContent"]).isEqualTo("Test Content")
-        assertThat(settings["siteURL"]).isEqualTo("https://example.wordpress.com")
-        assertThat(settings["authHeader"]).isEqualTo("Bearer test_token")
-        assertThat(settings["siteApiRoot"]).isEqualTo("https://public-api.wordpress.com/")
-        assertThat(settings["plugins"]).isEqualTo(true) // WPCom with feature enabled
-        assertThat(settings["themeStyles"]).isEqualTo(true)
-        assertThat(settings["locale"]).isEqualTo("en-us")
-        assertThat(settings["cookies"]).isEqualTo("test_cookies")
+        ).isEqualTo("example.wordpress.com")
     }
 
     @Test
-    fun `complete settings for Jetpack site with application password`() {
-        val siteConfig = GutenbergKitSettingsBuilder.SiteConfig(
-            url = "https://jetpack-site.com",
-            siteId = 999,
-            isWPCom = false,
-            isWPComAtomic = false,
-            isJetpackConnected = true,
-            isUsingWpComRestApi = false,
-            wpApiRestUrl = "https://jetpack-site.com/wp-json/",
-            apiRestUsernamePlain = "admin",
-            apiRestPasswordPlain = "securepass",
-            selfHostedSiteId = 999,
-            webEditor = "gutenberg",
-            apiRestUsernameProcessed = "admin",
-            apiRestPasswordProcessed = "securepass"
-        )
-
-        val postConfig = GutenbergKitSettingsBuilder.PostConfig(
-            remotePostId = 100L,
-            isPage = true,
-            title = "Test Page",
-            content = "Page Content"
-        )
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = postConfig,
-            appConfig = createAppConfig(
-                accessToken = "unused",
-                locale = "fr_FR"
-            ),
-            featureConfig = createFeatureConfig(isPluginsFeatureEnabled = true)
-        )
-
-        assertThat(settings["postType"]).isEqualTo("page")
-        assertThat(settings["authHeader"] as String).startsWith("Basic ")
-        assertThat(settings["siteApiRoot"]).isEqualTo("https://jetpack-site.com/wp-json/")
-        assertThat(settings["siteApiNamespace"] as Array<*>).isEmpty()
-        assertThat(settings["plugins"]).isEqualTo(true) // Jetpack with password and feature enabled
-        assertThat(settings["locale"]).isEqualTo("fr-fr")
+    fun `extractHost returns null for invalid URL`() {
+        assertThat(
+            GutenbergKitSettingsBuilder.extractHost("not-a-url")
+        ).isNull()
     }
 
     @Test
-    fun `locale transformation handles underscores correctly`() {
-        val testCases = mapOf(
-            "en_US" to "en-us",
-            "fr_FR" to "fr-fr",
-            "de_DE" to "de-de",
-            "es_ES" to "es-es",
-            "pt_BR" to "pt-br"
-        )
-
-        testCases.forEach { (input, expected) ->
-            val settings = GutenbergKitSettingsBuilder.buildSettings(
-                siteConfig = createSiteConfig(),
-                postConfig = createPostConfig(),
-                appConfig = createAppConfig(locale = input),
-                featureConfig = createFeatureConfig()
+    fun `extractHost strips path from URL`() {
+        assertThat(
+            GutenbergKitSettingsBuilder.extractHost(
+                "https://example.com/blog/page"
             )
+        ).isEqualTo("example.com")
+    }
 
-            assertThat(settings["locale"])
-                .withFailMessage("Expected $input to transform to $expected")
-                .isEqualTo(expected)
+    // ===== buildPostConfiguration Tests =====
+
+    // --- WPCom site configuration ---
+
+    @Test
+    fun `WPCom site uses WPCom API root`() {
+        val config = buildWPComConfig()
+
+        assertThat(config.siteApiRoot)
+            .isEqualTo("https://public-api.wordpress.com/")
+    }
+
+    @Test
+    fun `WPCom site sets Bearer auth header`() {
+        val config = buildWPComConfig(accessToken = "wpcom_token")
+
+        assertThat(config.authHeader)
+            .isEqualTo("Bearer wpcom_token")
+    }
+
+    @Test
+    fun `WPCom site sets site API namespace with ID and host`() {
+        val config = buildWPComConfig(
+            siteUrl = "https://mysite.wordpress.com",
+            siteId = 42L
+        )
+
+        assertThat(config.siteApiNamespace).containsExactly(
+            "sites/42/",
+            "sites/mysite.wordpress.com/"
+        )
+    }
+
+    @Test
+    fun `WPCom site sets editor assets endpoint`() {
+        val config = buildWPComConfig(siteId = 100L)
+
+        assertThat(config.editorAssetsEndpoint).isEqualTo(
+            "https://public-api.wordpress.com/" +
+                "wpcom/v2/sites/100/editor-assets"
+        )
+    }
+
+    @Test
+    fun `WPCom site with missing token uses empty auth header`() {
+        val config = buildWPComConfig(accessToken = null)
+
+        assertThat(config.authHeader).isEmpty()
+    }
+
+    // --- Self-hosted site configuration ---
+
+    @Test
+    fun `self-hosted site uses wpApiRestUrl as API root`() {
+        val config = buildSelfHostedConfig(
+            wpApiRestUrl = "https://mysite.com/wp-json/"
+        )
+
+        assertThat(config.siteApiRoot)
+            .isEqualTo("https://mysite.com/wp-json/")
+    }
+
+    @Test
+    fun `self-hosted site falls back to siteUrl wp-json when no REST URL`() {
+        val config = buildSelfHostedConfig(
+            siteUrl = "https://mysite.com",
+            wpApiRestUrl = null
+        )
+
+        assertThat(config.siteApiRoot)
+            .isEqualTo("https://mysite.com/wp-json/")
+    }
+
+    @Test
+    fun `self-hosted site sets Basic auth header`() {
+        val config = buildSelfHostedConfig(
+            applicationPassword = "app_pass",
+            apiRestUsername = "admin"
+        )
+
+        assertThat(config.authHeader).startsWith("Basic ")
+    }
+
+    @Test
+    fun `self-hosted site has empty namespace`() {
+        val config = buildSelfHostedConfig()
+
+        assertThat(config.siteApiNamespace).isEmpty()
+    }
+
+    @Test
+    fun `self-hosted site has null editor assets endpoint`() {
+        val config = buildSelfHostedConfig()
+
+        assertThat(config.editorAssetsEndpoint).isNull()
+    }
+
+    // --- Application password overrides WPCom REST API ---
+
+    @Test
+    fun `app password forces non-WPCom API even if site uses WPCom REST`() {
+        val site = SiteModel().apply {
+            url = "https://mysite.wordpress.com"
+            siteId = 123L
+            setIsWPCom(true)
+            setIsJetpackConnected(false)
+            origin = SiteModel.ORIGIN_WPCOM_REST
+            wpApiRestUrl = "https://mysite.com/wp-json/"
+            apiRestPasswordPlain = "app_pass"
+            apiRestUsernamePlain = "admin"
         }
-    }
-
-    @Test
-    fun `feature flags control themeStyles and plugins independently`() {
-        val siteConfig = createSiteConfig(isWPCom = true)
-
-        // Test all combinations
-        val flagCombinations = listOf(
-            Triple(false, false, Pair(false, false)),
-            Triple(false, true, Pair(false, true)),
-            Triple(true, false, Pair(true, false)),
-            Triple(true, true, Pair(true, true))
-        )
-
-        flagCombinations.forEach { (plugins, themes, expected) ->
-            val settings = GutenbergKitSettingsBuilder.buildSettings(
-                siteConfig = siteConfig,
-                postConfig = createPostConfig(),
-                appConfig = createAppConfig(),
-
-                featureConfig = createFeatureConfig(
-                    isPluginsFeatureEnabled = plugins,
-                    isThemeStylesFeatureEnabled = themes
-                ),
+        val config = GutenbergKitSettingsBuilder
+            .buildPostConfiguration(
+                site = site,
+                accessToken = "wpcom_token"
             )
 
-            assertThat(settings["plugins"]).isEqualTo(expected.first)
-            assertThat(settings["themeStyles"]).isEqualTo(expected.second)
-        }
+        assertThat(config.siteApiRoot)
+            .isEqualTo("https://mysite.com/wp-json/")
+        assertThat(config.authHeader).startsWith("Basic ")
+        assertThat(config.siteApiNamespace).isEmpty()
+    }
+
+    // --- Post configuration ---
+
+    @Test
+    fun `post type is post by default`() {
+        val config = buildWPComConfig()
+
+        assertThat(config.postType).isEqualTo("post")
     }
 
     @Test
-    fun `self-hosted site uses correct API endpoint when wpApiRestUrl is null`() {
-        val siteConfig = createSiteConfig(
-            url = "https://selfhosted.org",
-            wpApiRestUrl = null,
-            apiRestPasswordPlain = "password"
-        )
+    fun `null post title becomes empty string`() {
+        val config = buildWPComConfig()
 
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(),
-
-            featureConfig = createFeatureConfig(),
-
-        )
-
-        assertThat(settings["siteApiRoot"]).isEqualTo("https://selfhosted.org/wp-json/")
+        assertThat(config.title).isEmpty()
     }
 
     @Test
-    fun `namespaceExcludedPaths is always included`() {
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = createSiteConfig(),
-            postConfig = createPostConfig(),
-            appConfig = createAppConfig(),
+    fun `null post content becomes empty string`() {
+        val config = buildWPComConfig()
 
-            featureConfig = createFeatureConfig(),
+        assertThat(config.content).isEmpty()
+    }
 
+    @Test
+    fun `null remote ID results in null post ID`() {
+        val config = buildWPComConfig()
+
+        assertThat(config.postId).isNull()
+    }
+
+    @Test
+    fun `null post status defaults to draft`() {
+        val config = buildWPComConfig()
+
+        assertThat(config.postStatus).isEqualTo("draft")
+    }
+
+    // --- Asset caching ---
+
+    @Test
+    fun `asset caching is always enabled`() {
+        val config = buildWPComConfig()
+
+        assertThat(config.enableAssetCaching).isTrue()
+    }
+
+    @Test
+    fun `cached hosts includes s0 wp com and site host`() {
+        val config = buildWPComConfig(
+            siteUrl = "https://mysite.wordpress.com"
         )
 
-        val excludedPaths = settings["namespaceExcludedPaths"] as Array<*>
-        assertThat(excludedPaths).containsExactly(
+        assertThat(config.cachedAssetHosts).containsExactlyInAnyOrder(
+            "s0.wp.com",
+            "mysite.wordpress.com"
+        )
+    }
+
+    @Test
+    fun `cached hosts includes only s0 wp com for invalid URL`() {
+        val config = buildWPComConfig(siteUrl = "not-a-url")
+
+        assertThat(config.cachedAssetHosts)
+            .containsExactly("s0.wp.com")
+    }
+
+    // --- Namespace excluded paths ---
+
+    @Test
+    fun `namespace excluded paths are always set`() {
+        val config = buildWPComConfig()
+
+        assertThat(config.namespaceExcludedPaths).containsExactly(
             "/wpcom/v2/following/recommendations",
             "/wpcom/v2/following/mine"
         )
     }
 
+    // --- Site URL passthrough ---
+
     @Test
-    fun `null post data is handled correctly`() {
-        val postConfig = GutenbergKitSettingsBuilder.PostConfig(
-            remotePostId = null,
-            isPage = false,
-            title = null,
-            content = null
+    fun `site URL is passed through to configuration`() {
+        val config = buildWPComConfig(
+            siteUrl = "https://example.wordpress.com"
         )
 
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = createSiteConfig(),
-            postConfig = postConfig,
-            appConfig = createAppConfig(),
-
-            featureConfig = createFeatureConfig(),
-
-        )
-
-        assertThat(settings["postId"]).isNull()
-        assertThat(settings["postTitle"]).isNull()
-        assertThat(settings["postContent"]).isNull()
-        assertThat(settings["postType"]).isEqualTo("post") // Still defaults to post
+        assertThat(config.siteURL)
+            .isEqualTo("https://example.wordpress.com")
     }
 
-    // ===== Helper Methods =====
+    // ===== Helpers =====
 
-    private fun createFeatureConfig(
-        isPluginsFeatureEnabled: Boolean = false,
-        isThemeStylesFeatureEnabled: Boolean = false
-    ) = GutenbergKitSettingsBuilder.FeatureConfig(
-        isPluginsFeatureEnabled = isPluginsFeatureEnabled,
-        isThemeStylesFeatureEnabled = isThemeStylesFeatureEnabled
-    )
+    private fun buildWPComConfig(
+        siteUrl: String = "https://example.wordpress.com",
+        siteId: Long = 123L,
+        accessToken: String? = "test_token"
+    ): org.wordpress.gutenberg.model.EditorConfiguration {
+        val site = SiteModel().apply {
+            url = siteUrl
+            this.siteId = siteId
+            setIsWPCom(true)
+            setIsJetpackConnected(false)
+            origin = SiteModel.ORIGIN_WPCOM_REST
+        }
+        return GutenbergKitSettingsBuilder.buildPostConfiguration(
+            site = site,
+            accessToken = accessToken
+        )
+    }
 
-    private fun createAppConfig(
-        accessToken: String? = "token",
-        locale: String = "en_US",
-        cookies: Any? = null
-    ) = GutenbergKitSettingsBuilder.AppConfig(
-        accessToken = accessToken,
-        locale = locale,
-        cookies = cookies,
-        accountUserId = 123L,
-        accountUserName = "testuser",
-        userAgent = UserAgent(appContext = appContext, appName = "foo"),
-        isJetpackSsoEnabled = false
-    )
-
-    private fun createSiteConfig(
-        url: String = "https://test.com",
-        siteId: Long = 1,
-        isWPCom: Boolean = false,
-        isWPComAtomic: Boolean = false,
-        isJetpackConnected: Boolean = false,
-        isUsingWpComRestApi: Boolean = false,
-        wpApiRestUrl: String? = null,
-        apiRestUsernamePlain: String? = null,
-        apiRestPasswordPlain: String? = null
-    ) = GutenbergKitSettingsBuilder.SiteConfig(
-        url = url,
-        siteId = siteId,
-        isWPCom = isWPCom,
-        isWPComAtomic = isWPComAtomic,
-        isJetpackConnected = isJetpackConnected,
-        isUsingWpComRestApi = isUsingWpComRestApi,
-        wpApiRestUrl = wpApiRestUrl,
-        apiRestUsernamePlain = apiRestUsernamePlain,
-        apiRestPasswordPlain = apiRestPasswordPlain,
-        selfHostedSiteId = siteId,
-        webEditor = "gutenberg",
-        apiRestUsernameProcessed = apiRestUsernamePlain,
-        apiRestPasswordProcessed = apiRestPasswordPlain
-    )
-
-    private fun createPostConfig(
-        remotePostId: Long? = 1L,
-        isPage: Boolean = false,
-        title: String? = "Test",
-        content: String? = "Content"
-    ) = GutenbergKitSettingsBuilder.PostConfig(
-        remotePostId = remotePostId,
-        isPage = isPage,
-        title = title,
-        content = content
-    )
+    private fun buildSelfHostedConfig(
+        siteUrl: String = "https://mysite.com",
+        wpApiRestUrl: String? = "https://mysite.com/wp-json/",
+        applicationPassword: String? = "app_pass",
+        apiRestUsername: String? = "admin"
+    ): org.wordpress.gutenberg.model.EditorConfiguration {
+        val site = SiteModel().apply {
+            url = siteUrl
+            siteId = 999L
+            setIsWPCom(false)
+            setIsJetpackConnected(false)
+            this.wpApiRestUrl = wpApiRestUrl
+            apiRestPasswordPlain = applicationPassword
+            apiRestUsernamePlain = apiRestUsername
+        }
+        return GutenbergKitSettingsBuilder.buildPostConfiguration(
+            site = site,
+            accessToken = null
+        )
+    }
 }
