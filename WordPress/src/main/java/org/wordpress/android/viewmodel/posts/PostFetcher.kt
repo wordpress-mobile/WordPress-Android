@@ -54,7 +54,9 @@ class PostFetcher constructor(
             }
     }
 
-    @Suppress("unused")
+    // ImplicitSamInstance is a false positive here – RemoteId is a data class
+    // with proper equals/hashCode, so HashSet.remove() matches by value correctly.
+    @Suppress("unused", "ImplicitSamInstance")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onPostChanged(event: OnPostChanged) {
         (event.causeOfChange as? UpdatePost)?.let { updatePostCauseOfChange ->

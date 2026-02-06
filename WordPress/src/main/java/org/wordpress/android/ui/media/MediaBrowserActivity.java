@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.media;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -669,29 +668,28 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     }
 
     @Override
-    @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getOnBackPressedDispatcher().onBackPressed();
-                return true;
-            case R.id.menu_new_media:
-                // Do Nothing (handled in action view click listener)
-                return true;
-            case R.id.menu_search:
-                mSearchMenuItem = item;
-                mSearchMenuItem.setOnActionExpandListener(this);
-                mSearchMenuItem.expandActionView();
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            getOnBackPressedDispatcher().onBackPressed();
+            return true;
+        } else if (itemId == R.id.menu_new_media) {
+            // Do Nothing (handled in action view click listener)
+            return true;
+        } else if (itemId == R.id.menu_search) {
+            mSearchMenuItem = item;
+            mSearchMenuItem.setOnActionExpandListener(this);
+            mSearchMenuItem.expandActionView();
 
-                mSearchView = (SearchView) item.getActionView();
-                mSearchView.setOnQueryTextListener(this);
+            mSearchView = (SearchView) item.getActionView();
+            mSearchView.setOnQueryTextListener(this);
 
-                // load last saved query
-                if (!TextUtils.isEmpty(mQuery)) {
-                    onQueryTextSubmit(mQuery);
-                    mSearchView.setQuery(mQuery, true);
-                }
-                return true;
+            // load last saved query
+            if (!TextUtils.isEmpty(mQuery)) {
+                onQueryTextSubmit(mQuery);
+                mSearchView.setQuery(mQuery, true);
+            }
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui;
 
-import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -148,20 +147,19 @@ public class AppLogViewerActivity extends BaseAppCompatActivity {
     }
 
     @Override
-    @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.app_log_share:
-                shareAppLog();
-                return true;
-            case R.id.app_log_copy_to_clipboard:
-                copyAppLogToClipboard();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            finish();
+            return true;
+        } else if (itemId == R.id.app_log_share) {
+            shareAppLog();
+            return true;
+        } else if (itemId == R.id.app_log_copy_to_clipboard) {
+            copyAppLogToClipboard();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 }
