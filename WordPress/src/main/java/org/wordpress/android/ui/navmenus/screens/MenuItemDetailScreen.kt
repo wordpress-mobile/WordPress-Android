@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.navmenus.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,10 +48,9 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import android.content.res.Configuration
-import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.navmenus.LinkableItemOption
@@ -517,15 +517,16 @@ private val sampleLinkableItems = listOf(
     LinkableItemOption(id = 4L, title = "Privacy Policy")
 )
 
-@Preview(name = "New Custom Link Light", showBackground = true)
-@Preview(name = "New Custom Link Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "New Page Link Light", showBackground = true)
+@Preview(name = "New Page Link Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun MenuItemDetailScreenNewCustomLinkPreview() {
+private fun MenuItemDetailScreenNewPagePreview() {
     AppThemeM3 {
         MenuItemDetailScreen(
             state = MenuItemDetailUiState(
                 isNew = true,
-                selectedTypeOption = MenuItemTypeOption.CUSTOM_LINK,
+                selectedTypeOption = MenuItemTypeOption.PAGE,
+                linkableItemsState = LinkableItemsState(items = sampleLinkableItems),
                 availableParents = sampleParents
             ),
             onTitleChange = {},
@@ -540,16 +541,15 @@ private fun MenuItemDetailScreenNewCustomLinkPreview() {
     }
 }
 
-@Preview(name = "New Page Link Light", showBackground = true)
-@Preview(name = "New Page Link Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "New Custom Link Light", showBackground = true)
+@Preview(name = "New Custom Link Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun MenuItemDetailScreenNewPagePreview() {
+private fun MenuItemDetailScreenNewCustomLinkPreview() {
     AppThemeM3 {
         MenuItemDetailScreen(
             state = MenuItemDetailUiState(
                 isNew = true,
-                selectedTypeOption = MenuItemTypeOption.PAGE,
-                linkableItemsState = LinkableItemsState(items = sampleLinkableItems),
+                selectedTypeOption = MenuItemTypeOption.CUSTOM_LINK,
                 availableParents = sampleParents
             ),
             onTitleChange = {},
@@ -614,3 +614,4 @@ private fun MenuItemDetailScreenSavingPreview() {
 }
 
 // endregion
+
