@@ -28,6 +28,21 @@ pr_size_checker.check_diff_size(
 
 android_unit_test_checker.check_missing_tests
 
+# Check for PR versions of wordpress-rs
+toml_file = 'gradle/libs.versions.toml'
+toml_content = File.read(toml_file)
+wordpress_rs_match = toml_content.match(/^wordpress-rs\s*=\s*'(.+)'/s)
+
+if wordpress_rs_match
+  wordpress_rs_version = wordpress_rs_match[1]
+  if wordpress_rs_version.match?(/^\d+-[a-f0-9]+$/)
+    failure(
+      "This PR includes a PR version of `wordpress-rs` (`#{wordpress_rs_version}`). " \
+      'Please merge the corresponding wordpress-rs PR and update to a `trunk` version before merging.'
+    )
+  end
+end
+
 # skip remaining checks if the PR is still a Draft
 if github.pr_draft?
   message('This PR is still a Draft: some checks will be skipped.')
