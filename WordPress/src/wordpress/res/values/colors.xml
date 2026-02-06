@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Login Prologue Revamped -->
+    <color name="login_prologue_revamped_background">@color/gray_0</color>
+    <color name="login_prologue_revamped_icon">@color/gray_80</color>
+</resources>

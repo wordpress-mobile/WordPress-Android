@@ -18,10 +18,6 @@
 
     <color name="post_history_underlying_background">@color/neutral_0</color>
 
-    <!-- Login Prologue Revamped -->
-    <color name="login_prologue_revamped_background">@color/gray_0</color>
-    <color name="login_prologue_revamped_icon">@color/gray_80</color>
-
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_50</color>
     <color name="prepublishing_action_type_enabled_color">@color/black</color>
