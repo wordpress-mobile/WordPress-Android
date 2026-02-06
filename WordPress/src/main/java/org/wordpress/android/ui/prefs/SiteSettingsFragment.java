@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -2287,37 +2286,37 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private final class ActionModeCallback implements ActionMode.Callback {
         @Override
-        @SuppressLint("NonConstantResourceId")
         public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.menu_delete:
-                    SparseBooleanArray checkedItems = getAdapter().getItemsSelected();
+            int itemId = item.getItemId();
+            if (itemId == R.id.menu_delete) {
+                SparseBooleanArray checkedItems = getAdapter().getItemsSelected();
 
-                    HashMap<String, Object> properties = new HashMap<>();
-                    properties.put("num_items_deleted", checkedItems.size());
-                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETED_LIST_ITEMS,
-                            mSite, properties);
+                HashMap<String, Object> properties = new HashMap<>();
+                properties.put("num_items_deleted", checkedItems.size());
+                AnalyticsUtils.trackWithSiteDetails(
+                        AnalyticsTracker.Stat.SITE_SETTINGS_DELETED_LIST_ITEMS,
+                        mSite, properties);
 
-                    for (int i = checkedItems.size() - 1; i >= 0; i--) {
-                        final int index = checkedItems.keyAt(i);
+                for (int i = checkedItems.size() - 1; i >= 0; i--) {
+                    final int index = checkedItems.keyAt(i);
 
-                        if (checkedItems.get(index)) {
-                            mEditingList.remove(index);
-                        }
+                    if (checkedItems.get(index)) {
+                        mEditingList.remove(index);
                     }
+                }
 
-                    mSiteSettings.saveSettings();
-                    mActionMode.finish();
-                    return true;
-                case R.id.menu_select_all:
-                    for (int i = 0; i < getAdapter().getItemCount(); i++) {
-                        getAdapter().setItemSelected(i);
-                    }
+                mSiteSettings.saveSettings();
+                mActionMode.finish();
+                return true;
+            } else if (itemId == R.id.menu_select_all) {
+                for (int i = 0; i < getAdapter().getItemCount(); i++) {
+                    getAdapter().setItemSelected(i);
+                }
 
-                    mActionMode.invalidate();
-                    return true;
-                default:
-                    return false;
+                mActionMode.invalidate();
+                return true;
+            } else {
+                return false;
             }
         }
 
