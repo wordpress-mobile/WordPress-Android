@@ -31,6 +31,7 @@ import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel
+import org.wordpress.android.ui.posts.GutenbergEditorPreloader
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -43,7 +44,6 @@ import javax.inject.Inject
 import javax.inject.Named
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
-import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
 import org.wordpress.android.ui.utils.UiString
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
@@ -64,8 +64,8 @@ class MySiteViewModel @Inject constructor(
     private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice,
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
     private val applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice,
-    private val gutenbergKitWarmupHelper: GutenbergKitWarmupHelper,
     private val siteCapabilityChecker: SiteCapabilityChecker,
+    private val gutenbergEditorPreloader: GutenbergEditorPreloader,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -166,6 +166,7 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { site ->
             if (isPullToRefresh) {
                 siteCapabilityChecker.clearCacheForSite(site.siteId)
+                gutenbergEditorPreloader.clear()
             }
             buildDashboardOrSiteItems(site)
         } ?: run {
@@ -248,7 +249,7 @@ class MySiteViewModel @Inject constructor(
         dashboardCardsViewModelSlice.onCleared()
         dashboardItemsViewModelSlice.onCleared()
         accountDataViewModelSlice.onCleared()
-        gutenbergKitWarmupHelper.clearWarmupState()
+        gutenbergEditorPreloader.clear()
         super.onCleared()
     }
 
@@ -291,8 +292,7 @@ class MySiteViewModel @Inject constructor(
             dashboardItemsViewModelSlice.buildItems(site)
             dashboardCardsViewModelSlice.clearValue()
         }
-        // Trigger GutenbergView warmup for the selected site
-        gutenbergKitWarmupHelper.warmupIfNeeded(site, viewModelScope)
+        gutenbergEditorPreloader.preloadIfNeeded(site, viewModelScope)
     }
 
     private fun onSitePicked(site: SiteModel) {
