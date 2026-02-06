@@ -88,8 +88,8 @@ class TrackNetworkRequestsInterceptor(
     }
 
     private fun shouldRedactRequestBody(request: Request): Boolean {
-        val path = request.url.encodedPath
-        return REDACTED_BODY_PATHS.any { path.endsWith(it) }
+        val pathSegments = request.url.pathSegments
+        return REDACTED_BODY_PATHS.any { it in pathSegments }
     }
 
     private fun getOrCreateChuckerInterceptor(): ChuckerInterceptor {
