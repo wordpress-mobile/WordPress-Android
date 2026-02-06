@@ -125,14 +125,19 @@ class TrackNetworkRequestsInterceptor(
 
     /**
      * A [Interceptor.Chain] wrapper that presents a redacted request body
-     * to Chucker while ensuring the actual network call uses the original
-     * request with the real body.
+     * to Chucker for logging purposes, while ensuring the actual network
+     * call uses the original request with the real body intact.
+     *
+     * This achieves selective logging redaction without affecting the
+     * actual HTTP request/response.
      */
     private class RedactedBodyChain(
         private val delegate: Interceptor.Chain
     ) : Interceptor.Chain {
         private val redactedRequest: Request by lazy {
             val original = delegate.request()
+            // Falls back to plain text if original has no body;
+            // the redacted placeholder still needs a content type.
             val contentType = original.body?.contentType()
                 ?: "text/plain".toMediaType()
             val redactedBody = REDACTED_BODY_PLACEHOLDER
