@@ -5,10 +5,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.navmenus.models.NavMenuItemModel
@@ -17,6 +20,7 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.navmenus.data.NavMenuRestClient
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.R
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -58,6 +62,14 @@ class NavMenusViewModel @Inject constructor(
     private var currentMenus = listOf<NavMenuModel>()
     private var currentMenuItems = listOf<NavMenuItemModel>()
 
+    // Mutexes for pagination to prevent race conditions
+    private val menusPaginationMutex = Mutex()
+    private val menuItemsPaginationMutex = Mutex()
+    private val linkableItemsPaginationMutex = Mutex()
+
+    // Job for loading linkable items (cancelled when type changes)
+    private var linkableItemsLoadingJob: Job? = null
+
     fun setNavController(controller: NavHostController) {
         navController = controller
     }
@@ -90,7 +102,7 @@ class NavMenusViewModel @Inject constructor(
 
             @Suppress("TooGenericExceptionCaught")
             try {
-                val newState = withContext(ioDispatcher) { fetchMenuData(site) }
+                val newState = withContext(ioDispatcher) { fetchMenuData(site, offset = 0) }
                 _menuListState.value = newState
             } catch (e: CancellationException) {
                 throw e
@@ -98,48 +110,86 @@ class NavMenusViewModel @Inject constructor(
                 _menuListState.value = MenuListUiState(
                     isLoading = false,
                     isRefreshing = false,
+                    canLoadMore = true,
                     error = e.message ?: resourceProvider.getString(R.string.error_generic)
                 )
             }
         }
     }
 
-    private suspend fun fetchMenuData(site: SiteModel): MenuListUiState {
-        val menusResult = navMenuRestClient.fetchMenus(site)
-        val locationsResult = navMenuRestClient.fetchMenuLocations(site)
-        val allItemsResult = navMenuRestClient.fetchAllMenuItems(site)
+    fun loadMoreMenus() {
+        viewModelScope.launch {
+            menusPaginationMutex.withLock {
+                val currentState = _menuListState.value
+                if (currentState.isLoading || currentState.isLoadingMore || !currentState.canLoadMore) return@launch
 
-        val itemCountByMenuId = buildItemCountMap(allItemsResult)
+                _menuListState.value = currentState.copy(isLoadingMore = true)
 
-        return when (menusResult) {
-            is NavMenuRestClient.NavMenuListResult.Success -> {
-                currentMenus = menusResult.menus
-                buildSuccessState(menusResult.menus, locationsResult, itemCountByMenuId)
-            }
-            is NavMenuRestClient.NavMenuListResult.Error -> {
-                val errorMessage = menusResult.message.takeIf { it.isNotBlank() } ?: "Failed to load menus"
-                MenuListUiState(isLoading = false, error = errorMessage)
+                val site = selectedSiteRepository.getSelectedSite() ?: run {
+                    _menuListState.value = currentState.copy(isLoadingMore = false)
+                    return@launch
+                }
+                val offset = currentState.menus.size
+
+                @Suppress("TooGenericExceptionCaught")
+                try {
+                    val result = withContext(ioDispatcher) {
+                        navMenuRestClient.fetchMenus(site, offset)
+                    }
+
+                    when (result) {
+                        is NavMenuRestClient.NavMenuListResult.Success -> {
+                            currentMenus = currentMenus + result.menus
+                            val allMenus = currentMenus.map { it.toUiModel() }
+                            _menuListState.value = _menuListState.value.copy(
+                                isLoadingMore = false,
+                                canLoadMore = result.canLoadMore,
+                                menus = allMenus
+                            )
+                        }
+                        is NavMenuRestClient.NavMenuListResult.Error -> {
+                            _menuListState.value = _menuListState.value.copy(
+                                isLoadingMore = false,
+                                canLoadMore = true
+                            )
+                            _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
+                        }
+                    }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    AppLog.e(AppLog.T.API, "Failed to load more menus", e)
+                    _menuListState.value = _menuListState.value.copy(
+                        isLoadingMore = false,
+                        canLoadMore = true
+                    )
+                }
             }
         }
     }
 
-    private fun buildItemCountMap(
-        result: NavMenuRestClient.NavMenuItemListResult
-    ): Map<Long, Int> = when (result) {
-        is NavMenuRestClient.NavMenuItemListResult.Success -> {
-            result.items.groupingBy { it.menuId }.eachCount()
+    private suspend fun fetchMenuData(site: SiteModel, offset: Int): MenuListUiState {
+        val menusResult = navMenuRestClient.fetchMenus(site, offset)
+        val locationsResult = navMenuRestClient.fetchMenuLocations(site)
+
+        return when (menusResult) {
+            is NavMenuRestClient.NavMenuListResult.Success -> {
+                currentMenus = menusResult.menus
+                buildSuccessState(menusResult.menus, locationsResult, menusResult.canLoadMore)
+            }
+            is NavMenuRestClient.NavMenuListResult.Error -> {
+                val errorMessage = menusResult.message.takeIf { it.isNotBlank() } ?: "Failed to load menus"
+                MenuListUiState(isLoading = false, canLoadMore = true, error = errorMessage)
+            }
         }
-        is NavMenuRestClient.NavMenuItemListResult.Error -> emptyMap()
     }
 
     private fun buildSuccessState(
         menus: List<NavMenuModel>,
         locationsResult: NavMenuRestClient.NavMenuLocationsResult,
-        itemCountByMenuId: Map<Long, Int>
+        canLoadMore: Boolean
     ): MenuListUiState {
-        val menuUiModels = menus.map { menu ->
-            menu.toUiModel(itemCountByMenuId[menu.remoteMenuId] ?: 0)
-        }
+        val menuUiModels = menus.map { menu -> menu.toUiModel() }
 
         val locations = when (locationsResult) {
             is NavMenuRestClient.NavMenuLocationsResult.Success -> {
@@ -150,6 +200,7 @@ class NavMenusViewModel @Inject constructor(
 
         return MenuListUiState(
             isLoading = false,
+            canLoadMore = canLoadMore,
             menus = menuUiModels,
             locations = locations
         )
@@ -199,7 +250,7 @@ class NavMenusViewModel @Inject constructor(
             val site = selectedSiteRepository.getSelectedSite() ?: return@launch
 
             withContext(ioDispatcher) {
-                val result = navMenuRestClient.fetchMenuItems(site, menuId)
+                val result = navMenuRestClient.fetchMenuItems(site, menuId, offset = 0)
 
                 withContext(mainDispatcher) {
                     when (result) {
@@ -208,12 +259,14 @@ class NavMenusViewModel @Inject constructor(
                             val sortedItems = sortItemsHierarchically(result.items)
                             _menuItemListState.value = _menuItemListState.value.copy(
                                 isLoading = false,
+                                canLoadMore = result.canLoadMore,
                                 items = sortedItems
                             )
                         }
                         is NavMenuRestClient.NavMenuItemListResult.Error -> {
                             _menuItemListState.value = _menuItemListState.value.copy(
                                 isLoading = false,
+                                canLoadMore = true,
                                 error = result.message
                             )
                         }
@@ -223,9 +276,61 @@ class NavMenusViewModel @Inject constructor(
         }
     }
 
+    fun loadMoreMenuItems() {
+        viewModelScope.launch {
+            menuItemsPaginationMutex.withLock {
+                val currentState = _menuItemListState.value
+                if (currentState.isLoading || currentState.isLoadingMore || !currentState.canLoadMore) return@launch
+
+                _menuItemListState.value = currentState.copy(isLoadingMore = true)
+
+                val site = selectedSiteRepository.getSelectedSite() ?: run {
+                    _menuItemListState.value = currentState.copy(isLoadingMore = false)
+                    return@launch
+                }
+                val offset = currentState.items.size
+
+                @Suppress("TooGenericExceptionCaught")
+                try {
+                    val result = withContext(ioDispatcher) {
+                        navMenuRestClient.fetchMenuItems(site, currentState.menuId, offset)
+                    }
+
+                    when (result) {
+                        is NavMenuRestClient.NavMenuItemListResult.Success -> {
+                            currentMenuItems = currentMenuItems + result.items
+                            val sortedItems = sortItemsHierarchically(currentMenuItems)
+                            _menuItemListState.value = _menuItemListState.value.copy(
+                                isLoadingMore = false,
+                                canLoadMore = result.canLoadMore,
+                                items = sortedItems
+                            )
+                        }
+                        is NavMenuRestClient.NavMenuItemListResult.Error -> {
+                            _menuItemListState.value = _menuItemListState.value.copy(
+                                isLoadingMore = false,
+                                canLoadMore = true
+                            )
+                            _uiEvent.value = NavMenusUiEvent.ShowError(result.message)
+                        }
+                    }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    AppLog.e(AppLog.T.API, "Failed to load more menu items", e)
+                    _menuItemListState.value = _menuItemListState.value.copy(
+                        isLoadingMore = false,
+                        canLoadMore = true
+                    )
+                }
+            }
+        }
+    }
+
     private fun sortItemsHierarchically(items: List<NavMenuItemModel>): List<MenuItemUiModel> {
         val result = mutableListOf<MenuItemUiModel>()
         val itemsById = items.associateBy { it.remoteItemId }
+        val childrenByParentId = items.groupBy { it.parentId }
         val visited = mutableSetOf<Long>()
 
         fun addItemWithChildren(item: NavMenuItemModel, indentLevel: Int) {
@@ -233,15 +338,15 @@ class NavMenusViewModel @Inject constructor(
             visited.add(item.remoteItemId)
             result.add(item.toUiModel(indentLevel))
 
-            // Find and add children sorted by menu order
-            items.filter { it.parentId == item.remoteItemId }
-                .sortedBy { it.menuOrder }
-                .forEach { child ->
+            // Get pre-computed children sorted by menu order
+            childrenByParentId[item.remoteItemId]
+                ?.sortedBy { it.menuOrder }
+                ?.forEach { child ->
                     addItemWithChildren(child, indentLevel + 1)
                 }
         }
 
-        // Start with root items (parent = 0)
+        // Start with root items (parent = 0 or parent not in items)
         items.filter { it.parentId == 0L || itemsById[it.parentId] == null }
             .sortedBy { it.menuOrder }
             .forEach { rootItem ->
@@ -453,6 +558,10 @@ class NavMenusViewModel @Inject constructor(
     }
 
     fun updateMenuItemType(typeOption: MenuItemTypeOption) {
+        // Cancel any ongoing linkable items loading
+        linkableItemsLoadingJob?.cancel()
+        linkableItemsLoadingJob = null
+
         val currentState = _menuItemDetailState.value ?: return
         _menuItemDetailState.value = currentState.copy(
             selectedTypeOption = typeOption,
@@ -471,19 +580,11 @@ class NavMenusViewModel @Inject constructor(
     }
 
     private fun loadLinkableItems(typeOption: MenuItemTypeOption) {
-        viewModelScope.launch {
+        linkableItemsLoadingJob = viewModelScope.launch {
             val site = selectedSiteRepository.getSelectedSite() ?: return@launch
 
             val result = withContext(ioDispatcher) {
-                when (typeOption) {
-                    MenuItemTypeOption.POST -> navMenuRestClient.fetchPosts(site)
-                    MenuItemTypeOption.PAGE -> navMenuRestClient.fetchPages(site)
-                    MenuItemTypeOption.CATEGORY -> navMenuRestClient.fetchCategories(site)
-                    MenuItemTypeOption.TAG -> navMenuRestClient.fetchTags(site)
-                    MenuItemTypeOption.CUSTOM_LINK -> {
-                        NavMenuRestClient.LinkableItemsResult.Success(emptyList())
-                    }
-                }
+                fetchLinkableItems(site, typeOption, offset = 0)
             }
 
             val currentState = _menuItemDetailState.value ?: return@launch
@@ -494,6 +595,7 @@ class NavMenusViewModel @Inject constructor(
                         currentState.copy(
                             linkableItemsState = LinkableItemsState(
                                 isLoading = false,
+                                canLoadMore = result.canLoadMore,
                                 items = result.items
                             )
                         )
@@ -502,11 +604,95 @@ class NavMenusViewModel @Inject constructor(
                         currentState.copy(
                             linkableItemsState = LinkableItemsState(
                                 isLoading = false,
+                                canLoadMore = true,
                                 error = result.message
                             )
                         )
                     }
                 }
+            }
+        }
+    }
+
+    @Suppress("LongMethod")
+    fun loadMoreLinkableItems() {
+        viewModelScope.launch {
+            linkableItemsPaginationMutex.withLock {
+                val currentState = _menuItemDetailState.value ?: return@launch
+                val linkableState = currentState.linkableItemsState
+                if (linkableState.isLoading || linkableState.isLoadingMore || !linkableState.canLoadMore) {
+                    return@launch
+                }
+
+                _menuItemDetailState.value = currentState.copy(
+                    linkableItemsState = linkableState.copy(isLoadingMore = true)
+                )
+
+                val site = selectedSiteRepository.getSelectedSite() ?: run {
+                    _menuItemDetailState.value = currentState.copy(
+                        linkableItemsState = linkableState.copy(isLoadingMore = false)
+                    )
+                    return@launch
+                }
+                val offset = linkableState.items.size
+
+                @Suppress("TooGenericExceptionCaught")
+                try {
+                    val result = withContext(ioDispatcher) {
+                        fetchLinkableItems(site, currentState.selectedTypeOption, offset)
+                    }
+
+                    val updatedState = _menuItemDetailState.value ?: return@launch
+                    // Only update if the type hasn't changed while loading
+                    if (updatedState.selectedTypeOption == currentState.selectedTypeOption) {
+                        _menuItemDetailState.value = when (result) {
+                            is NavMenuRestClient.LinkableItemsResult.Success -> {
+                                updatedState.copy(
+                                    linkableItemsState = updatedState.linkableItemsState.copy(
+                                        isLoadingMore = false,
+                                        canLoadMore = result.canLoadMore,
+                                        items = updatedState.linkableItemsState.items + result.items
+                                    )
+                                )
+                            }
+                            is NavMenuRestClient.LinkableItemsResult.Error -> {
+                                updatedState.copy(
+                                    linkableItemsState = updatedState.linkableItemsState.copy(
+                                        isLoadingMore = false,
+                                        canLoadMore = true
+                                    )
+                                )
+                            }
+                        }
+                    }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    AppLog.e(AppLog.T.API, "Failed to load more linkable items", e)
+                    val updatedState = _menuItemDetailState.value ?: return@launch
+                    _menuItemDetailState.value = updatedState.copy(
+                        linkableItemsState = updatedState.linkableItemsState.copy(
+                            isLoadingMore = false,
+                            canLoadMore = true
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    private suspend fun fetchLinkableItems(
+        site: SiteModel,
+        typeOption: MenuItemTypeOption,
+        offset: Int
+    ): NavMenuRestClient.LinkableItemsResult {
+        return when (typeOption) {
+            MenuItemTypeOption.POST -> navMenuRestClient.fetchPosts(site, offset)
+            MenuItemTypeOption.PAGE -> navMenuRestClient.fetchPages(site, offset)
+            MenuItemTypeOption.CATEGORY -> navMenuRestClient.fetchCategories(site, offset)
+            MenuItemTypeOption.TAG -> navMenuRestClient.fetchTags(site, offset)
+            MenuItemTypeOption.CUSTOM_LINK -> {
+                NavMenuRestClient.LinkableItemsResult.Success(emptyList(), canLoadMore = false)
             }
         }
     }
@@ -537,10 +723,7 @@ class NavMenusViewModel @Inject constructor(
         val indentLevel = item.indentLevel
 
         // Find the sibling to swap with
-        val siblingIndex = when (direction) {
-            ReorderDirection.UP -> findPreviousSiblingIndex(currentItems, index, indentLevel)
-            ReorderDirection.DOWN -> findNextSiblingIndex(currentItems, index, indentLevel)
-        }
+        val siblingIndex = findSiblingIndex(currentItems, index, indentLevel, direction)
         if (siblingIndex < 0) return
 
         val sibling = currentItems[siblingIndex]
@@ -594,25 +777,21 @@ class NavMenusViewModel @Inject constructor(
         }
     }
 
-    private fun findPreviousSiblingIndex(
+    private fun findSiblingIndex(
         items: List<MenuItemUiModel>,
         fromIndex: Int,
-        indentLevel: Int
-    ): Int = (fromIndex - 1 downTo 0)
-        .asSequence()
-        .takeWhile { items[it].indentLevel >= indentLevel }
-        .firstOrNull { items[it].indentLevel == indentLevel }
-        ?: -1
-
-    private fun findNextSiblingIndex(
-        items: List<MenuItemUiModel>,
-        fromIndex: Int,
-        indentLevel: Int
-    ): Int = ((fromIndex + 1) until items.size)
-        .asSequence()
-        .takeWhile { items[it].indentLevel >= indentLevel }
-        .firstOrNull { items[it].indentLevel == indentLevel }
-        ?: -1
+        indentLevel: Int,
+        direction: ReorderDirection
+    ): Int {
+        val range = when (direction) {
+            ReorderDirection.UP -> (fromIndex - 1 downTo 0)
+            ReorderDirection.DOWN -> ((fromIndex + 1) until items.size)
+        }
+        return range.asSequence()
+            .takeWhile { items[it].indentLevel >= indentLevel }
+            .firstOrNull { items[it].indentLevel == indentLevel }
+            ?: -1
+    }
 
     private fun findSubtreeEnd(items: List<MenuItemUiModel>, startIndex: Int): Int {
         val startIndent = items[startIndex].indentLevel
@@ -691,7 +870,7 @@ class NavMenusViewModel @Inject constructor(
                 resourceProvider.getString(R.string.menu_item_url_required)
             state.selectedTypeOption != MenuItemTypeOption.CUSTOM_LINK && state.objectId <= 0 ->
                 resourceProvider.getString(R.string.menu_item_select_required)
-            state.url.isNotBlank() && !isValidUrl(state.url) ->
+            state.url.isNotBlank() && !isValidLinkUrl(state.url) ->
                 resourceProvider.getString(R.string.menu_item_invalid_url)
             else -> null
         }
@@ -753,13 +932,21 @@ class NavMenusViewModel @Inject constructor(
         _uiEvent.value = null
     }
 
-    private fun isValidUrl(url: String): Boolean {
-        val normalizedUrl = url.trim().lowercase()
-        val dangerousSchemes = listOf("javascript:", "data:", "vbscript:")
-        if (dangerousSchemes.any { normalizedUrl.startsWith(it) }) {
-            return false
+    /**
+     * Validates a URL against WordPress's allowed protocols.
+     * See: https://developer.wordpress.org/reference/functions/wp_allowed_protocols/
+     */
+    private fun isValidLinkUrl(url: String): Boolean {
+        val trimmedUrl = url.trim()
+        if (trimmedUrl.isEmpty()) return false
+
+        return when {
+            // Anchor links are valid (e.g., #section or #contact)
+            trimmedUrl.startsWith("#") -> trimmedUrl.length > 1
+            // Protocol-relative URLs are valid
+            trimmedUrl.startsWith("//") -> trimmedUrl.length > 2
+            else -> ALLOWED_PROTOCOLS.any { trimmedUrl.lowercase().startsWith("$it:") }
         }
-        return android.webkit.URLUtil.isValidUrl(url)
     }
 
     private fun sanitizeInput(input: String, maxLength: Int): String {
@@ -771,5 +958,15 @@ class NavMenusViewModel @Inject constructor(
         private const val MAX_MENU_DESCRIPTION_LENGTH = 500
         private const val MAX_MENU_ITEM_TITLE_LENGTH = 200
         private const val MAX_MENU_ITEM_DESCRIPTION_LENGTH = 500
+
+        /**
+         * WordPress allowed protocols from wp_allowed_protocols().
+         * See: https://developer.wordpress.org/reference/functions/wp_allowed_protocols/
+         */
+        private val ALLOWED_PROTOCOLS = listOf(
+            "http", "https", "ftp", "ftps", "mailto", "news", "irc", "irc6", "ircs",
+            "gopher", "nntp", "feed", "telnet", "mms", "rtsp", "sms", "svn", "tel",
+            "fax", "xmpp", "webcal", "urn"
+        )
     }
 }

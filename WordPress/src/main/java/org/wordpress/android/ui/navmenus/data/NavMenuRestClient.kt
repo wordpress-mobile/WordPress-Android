@@ -47,13 +47,14 @@ class NavMenuRestClient @Inject constructor(
 ) {
     // ========== Menu Operations ==========
 
-    suspend fun fetchMenus(site: SiteModel): NavMenuListResult {
+    suspend fun fetchMenus(site: SiteModel, offset: Int = 0): NavMenuListResult {
         val client = wpApiClientProvider.getWpApiClient(site)
 
         val response = client.request { requestBuilder ->
             requestBuilder.navMenus().listWithEditContext(
                 NavMenuListParams(
-                    perPage = 100u
+                    perPage = PAGE_SIZE,
+                    offset = offset.toUInt()
                 )
             )
         }
@@ -62,7 +63,8 @@ class NavMenuRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} nav menus")
                 val menus = response.response.data.map { it.toNavMenuModel(site.id) }
-                NavMenuListResult.Success(menus)
+                val canLoadMore = response.response.data.size.toUInt() == PAGE_SIZE
+                NavMenuListResult.Success(menus, canLoadMore)
             }
             else -> {
                 val errorMessage = parseErrorMessage(response)
@@ -154,13 +156,14 @@ class NavMenuRestClient @Inject constructor(
 
     // ========== Menu Item Operations ==========
 
-    suspend fun fetchMenuItems(site: SiteModel, menuId: Long): NavMenuItemListResult {
+    suspend fun fetchMenuItems(site: SiteModel, menuId: Long, offset: Int = 0): NavMenuItemListResult {
         val client = wpApiClientProvider.getWpApiClient(site)
 
         val response = client.request { requestBuilder ->
             requestBuilder.navMenuItems().listWithEditContext(
                 NavMenuItemListParams(
-                    perPage = 100u,
+                    perPage = PAGE_SIZE,
+                    offset = offset.toUInt(),
                     menus = listOf(menuId)
                 )
             )
@@ -170,36 +173,12 @@ class NavMenuRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} menu items")
                 val items = response.response.data.map { it.toNavMenuItemModel(site.id, menuId) }
-                NavMenuItemListResult.Success(items)
+                val canLoadMore = response.response.data.size.toUInt() == PAGE_SIZE
+                NavMenuItemListResult.Success(items, canLoadMore)
             }
             else -> {
                 val errorMessage = parseErrorMessage(response)
                 appLogWrapper.e(AppLog.T.API, "Failed to fetch menu items: $errorMessage")
-                NavMenuItemListResult.Error(errorMessage)
-            }
-        }
-    }
-
-    suspend fun fetchAllMenuItems(site: SiteModel): NavMenuItemListResult {
-        val client = wpApiClientProvider.getWpApiClient(site)
-
-        val response = client.request { requestBuilder ->
-            requestBuilder.navMenuItems().listWithEditContext(
-                NavMenuItemListParams(
-                    perPage = 100u
-                )
-            )
-        }
-
-        return when (response) {
-            is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} total menu items")
-                val items = response.response.data.map { it.toNavMenuItemModel(site.id) }
-                NavMenuItemListResult.Success(items)
-            }
-            else -> {
-                val errorMessage = parseErrorMessage(response)
-                appLogWrapper.e(AppLog.T.API, "Failed to fetch all menu items: $errorMessage")
                 NavMenuItemListResult.Error(errorMessage)
             }
         }
@@ -307,33 +286,34 @@ class NavMenuRestClient @Inject constructor(
     // ========== Linkable Items Operations ==========
 
     /**
-     * Fetches posts for menu item linking. Limited to 20 items, sorted by date (newest first).
+     * Fetches posts for menu item linking. Sorted by date (newest first).
      */
-    suspend fun fetchPosts(site: SiteModel): LinkableItemsResult =
-        fetchPostType(site, PostEndpointType.Posts, "posts")
+    suspend fun fetchPosts(site: SiteModel, offset: Int = 0): LinkableItemsResult =
+        fetchPostType(site, PostEndpointType.Posts, "posts", offset)
 
     /**
-     * Fetches pages for menu item linking. Limited to 20 items, sorted by date (newest first).
+     * Fetches pages for menu item linking. Sorted by date (newest first).
      */
-    suspend fun fetchPages(site: SiteModel): LinkableItemsResult =
-        fetchPostType(site, PostEndpointType.Pages, "pages")
+    suspend fun fetchPages(site: SiteModel, offset: Int = 0): LinkableItemsResult =
+        fetchPostType(site, PostEndpointType.Pages, "pages", offset)
 
     /**
-     * Fetches categories for menu item linking. Limited to 20 items, sorted alphabetically.
+     * Fetches categories for menu item linking. Sorted alphabetically.
      */
-    suspend fun fetchCategories(site: SiteModel): LinkableItemsResult =
-        fetchTermType(site, TermEndpointType.Categories, "categories")
+    suspend fun fetchCategories(site: SiteModel, offset: Int = 0): LinkableItemsResult =
+        fetchTermType(site, TermEndpointType.Categories, "categories", offset)
 
     /**
-     * Fetches tags for menu item linking. Limited to 20 items, sorted alphabetically.
+     * Fetches tags for menu item linking. Sorted alphabetically.
      */
-    suspend fun fetchTags(site: SiteModel): LinkableItemsResult =
-        fetchTermType(site, TermEndpointType.Tags, "tags")
+    suspend fun fetchTags(site: SiteModel, offset: Int = 0): LinkableItemsResult =
+        fetchTermType(site, TermEndpointType.Tags, "tags", offset)
 
     private suspend fun fetchPostType(
         site: SiteModel,
         endpointType: PostEndpointType,
-        typeName: String
+        typeName: String,
+        offset: Int
     ): LinkableItemsResult {
         val client = wpApiClientProvider.getWpApiClient(site)
 
@@ -342,6 +322,7 @@ class NavMenuRestClient @Inject constructor(
                 postEndpointType = endpointType,
                 params = PostListParams(
                     perPage = PAGE_SIZE,
+                    offset = offset.toUInt(),
                     order = WpApiParamOrder.DESC,
                     orderby = WpApiParamPostsOrderBy.DATE
                 )
@@ -357,7 +338,8 @@ class NavMenuRestClient @Inject constructor(
                         ?: ""
                     LinkableItemOption(it.id, title)
                 }
-                LinkableItemsResult.Success(items)
+                val canLoadMore = response.response.data.size.toUInt() == PAGE_SIZE
+                LinkableItemsResult.Success(items, canLoadMore)
             }
             else -> {
                 val errorMessage = parseErrorMessage(response)
@@ -370,7 +352,8 @@ class NavMenuRestClient @Inject constructor(
     private suspend fun fetchTermType(
         site: SiteModel,
         endpointType: TermEndpointType,
-        typeName: String
+        typeName: String,
+        offset: Int
     ): LinkableItemsResult {
         val client = wpApiClientProvider.getWpApiClient(site)
 
@@ -379,6 +362,7 @@ class NavMenuRestClient @Inject constructor(
                 termEndpointType = endpointType,
                 params = TermListParams(
                     perPage = PAGE_SIZE,
+                    offset = offset.toUInt(),
                     order = WpApiParamOrder.ASC,
                     orderby = WpApiParamTermsOrderBy.NAME
                 )
@@ -389,7 +373,8 @@ class NavMenuRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 appLogWrapper.d(AppLog.T.API, "Fetched ${response.response.data.size} $typeName")
                 val items = response.response.data.map { LinkableItemOption(it.id, it.name) }
-                LinkableItemsResult.Success(items)
+                val canLoadMore = response.response.data.size.toUInt() == PAGE_SIZE
+                LinkableItemsResult.Success(items, canLoadMore)
             }
             else -> {
                 val errorMessage = parseErrorMessage(response)
@@ -432,40 +417,15 @@ class NavMenuRestClient @Inject constructor(
     private fun parseErrorMessage(response: WpRequestResult<*>): String {
         appLogWrapper.e(AppLog.T.API, "API error: $response")
 
-        // Check for network availability first
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return context.getString(R.string.no_network_message)
         }
 
         return when (response) {
-            is WpRequestResult.Success -> "Unexpected error"
-
-            is WpRequestResult.WpError<*> -> {
-                // Extract the specific error message from the API response
+            is WpRequestResult.WpError<*> ->
                 response.errorMessage.takeIf { it.isNotBlank() }
                     ?: context.getString(R.string.request_failed_message)
-            }
-
-            is WpRequestResult.InvalidHttpStatusCode<*> -> {
-                context.getString(R.string.request_failed_message)
-            }
-
-            is WpRequestResult.ResponseParsingError<*> -> {
-                context.getString(R.string.request_failed_message)
-            }
-
-            is WpRequestResult.SiteUrlParsingError<*> -> {
-                context.getString(R.string.request_failed_message)
-            }
-
-            is WpRequestResult.RequestExecutionFailed<*> -> {
-                context.getString(R.string.request_failed_message)
-            }
-
-            is WpRequestResult.MediaFileNotFound<*>,
-            is WpRequestResult.UnknownError<*> -> {
-                context.getString(R.string.request_failed_message)
-            }
+            else -> context.getString(R.string.request_failed_message)
         }
     }
 
@@ -531,7 +491,7 @@ class NavMenuRestClient @Inject constructor(
     // ========== Result Types ==========
 
     sealed class NavMenuListResult {
-        data class Success(val menus: List<NavMenuModel>) : NavMenuListResult()
+        data class Success(val menus: List<NavMenuModel>, val canLoadMore: Boolean) : NavMenuListResult()
         data class Error(val message: String) : NavMenuListResult()
     }
 
@@ -546,7 +506,10 @@ class NavMenuRestClient @Inject constructor(
     }
 
     sealed class NavMenuItemListResult {
-        data class Success(val items: List<NavMenuItemModel>) : NavMenuItemListResult()
+        data class Success(
+            val items: List<NavMenuItemModel>,
+            val canLoadMore: Boolean
+        ) : NavMenuItemListResult()
         data class Error(val message: String) : NavMenuItemListResult()
     }
 
@@ -566,7 +529,10 @@ class NavMenuRestClient @Inject constructor(
     }
 
     sealed class LinkableItemsResult {
-        data class Success(val items: List<LinkableItemOption>) : LinkableItemsResult()
+        data class Success(
+            val items: List<LinkableItemOption>,
+            val canLoadMore: Boolean
+        ) : LinkableItemsResult()
         data class Error(val message: String) : LinkableItemsResult()
     }
 

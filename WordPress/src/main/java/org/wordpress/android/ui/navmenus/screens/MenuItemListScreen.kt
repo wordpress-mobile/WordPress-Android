@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -22,6 +23,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,6 +43,7 @@ fun MenuItemListScreen(
     onEditItemClick: (Long) -> Unit,
     onMoveItemUp: (Long) -> Unit,
     onMoveItemDown: (Long) -> Unit,
+    onLoadMore: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -60,72 +65,111 @@ fun MenuItemListScreen(
                 )
             }
             else -> {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize()
+                MenuItemListContent(
+                    state = state,
+                    onEditItemClick = onEditItemClick,
+                    onMoveItemUp = onMoveItemUp,
+                    onMoveItemDown = onMoveItemDown,
+                    onLoadMore = onLoadMore
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MenuItemListContent(
+    state: MenuItemListUiState,
+    onEditItemClick: (Long) -> Unit,
+    onMoveItemUp: (Long) -> Unit,
+    onMoveItemDown: (Long) -> Unit,
+    onLoadMore: () -> Unit
+) {
+    val listState = rememberLazyListState()
+
+    val lastVisibleItemIndex = remember {
+        derivedStateOf {
+            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+        }
+    }
+
+    LaunchedEffect(lastVisibleItemIndex.value, state.items.size, state.canLoadMore) {
+        val shouldLoadMore = lastVisibleItemIndex.value >= state.items.size - 1 &&
+            state.canLoadMore &&
+            !state.isLoadingMore
+        if (shouldLoadMore) {
+            onLoadMore()
+        }
+    }
+
+    LazyColumn(
+        state = listState,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(
+            items = state.items,
+            key = { it.id }
+        ) { item ->
+            val index = state.items.indexOf(item)
+            val canMoveUp = hasPreviousSibling(state.items, index, item.indentLevel)
+            val canMoveDown = hasNextSibling(state.items, index, item.indentLevel)
+
+            Column(
+                modifier = Modifier.animateItem(
+                    placementSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessMedium
+                    )
+                )
+            ) {
+                MenuItemListItem(
+                    item = item,
+                    canMoveUp = canMoveUp,
+                    canMoveDown = canMoveDown,
+                    onEditClick = { onEditItemClick(item.id) },
+                    onMoveUp = { onMoveItemUp(item.id) },
+                    onMoveDown = { onMoveItemDown(item.id) }
+                )
+                HorizontalDivider()
+            }
+        }
+
+        if (state.isLoadingMore) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    items(
-                        items = state.items,
-                        key = { it.id }
-                    ) { item ->
-                        val index = state.items.indexOf(item)
-                        val indentLevel = item.indentLevel
-
-                        // Find previous sibling: look backwards for an item at the same indent
-                        // level, stopping if we hit an item with a lower indent level (different
-                        // parent context)
-                        val canMoveUp = run {
-                            for (i in (index - 1) downTo 0) {
-                                val otherItem = state.items[i]
-                                if (otherItem.indentLevel < indentLevel) {
-                                    return@run false
-                                }
-                                if (otherItem.indentLevel == indentLevel) {
-                                    return@run true
-                                }
-                            }
-                            false
-                        }
-
-                        // Find next sibling: look forwards for an item at the same indent level,
-                        // stopping if we hit an item with a lower indent level (different parent
-                        // context)
-                        val canMoveDown = run {
-                            for (i in (index + 1) until state.items.size) {
-                                val otherItem = state.items[i]
-                                if (otherItem.indentLevel < indentLevel) {
-                                    return@run false
-                                }
-                                if (otherItem.indentLevel == indentLevel) {
-                                    return@run true
-                                }
-                            }
-                            false
-                        }
-
-                        Column(
-                            modifier = Modifier.animateItem(
-                                placementSpec = spring(
-                                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                                    stiffness = Spring.StiffnessMedium
-                                )
-                            )
-                        ) {
-                            MenuItemListItem(
-                                item = item,
-                                canMoveUp = canMoveUp,
-                                canMoveDown = canMoveDown,
-                                onEditClick = { onEditItemClick(item.id) },
-                                onMoveUp = { onMoveItemUp(item.id) },
-                                onMoveDown = { onMoveItemDown(item.id) }
-                            )
-                            HorizontalDivider()
-                        }
-                    }
+                    CircularProgressIndicator()
                 }
             }
         }
     }
 }
+
+/**
+ * Checks if there's a previous sibling at the same indent level.
+ * Looks backwards, stopping if we hit an item with a lower indent level (different parent context).
+ */
+private fun hasPreviousSibling(items: List<MenuItemUiModel>, index: Int, indentLevel: Int): Boolean =
+    (index - 1 downTo 0)
+        .asSequence()
+        .map { items[it].indentLevel }
+        .takeWhile { it >= indentLevel }
+        .any { it == indentLevel }
+
+/**
+ * Checks if there's a next sibling at the same indent level.
+ * Looks forwards, stopping if we hit an item with a lower indent level (different parent context).
+ */
+private fun hasNextSibling(items: List<MenuItemUiModel>, index: Int, indentLevel: Int): Boolean =
+    (index + 1 until items.size)
+        .asSequence()
+        .map { items[it].indentLevel }
+        .takeWhile { it >= indentLevel }
+        .any { it == indentLevel }
 
 @Composable
 private fun MenuItemListItem(

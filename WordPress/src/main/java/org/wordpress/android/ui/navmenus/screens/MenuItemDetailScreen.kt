@@ -1,14 +1,21 @@
 package org.wordpress.android.ui.navmenus.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -18,13 +25,20 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +48,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.navmenus.LinkableItemOption
 import org.wordpress.android.ui.navmenus.LinkableItemsState
@@ -50,6 +65,7 @@ fun MenuItemDetailScreen(
     onDescriptionChange: (String) -> Unit,
     onTypeChange: (MenuItemTypeOption) -> Unit,
     onLinkableItemChange: (LinkableItemOption) -> Unit,
+    onLoadMoreLinkableItems: () -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -69,7 +85,8 @@ fun MenuItemDetailScreen(
             onParentChange = onParentChange,
             onDescriptionChange = onDescriptionChange,
             onTypeChange = onTypeChange,
-            onLinkableItemChange = onLinkableItemChange
+            onLinkableItemChange = onLinkableItemChange,
+            onLoadMoreLinkableItems = onLoadMoreLinkableItems
         )
 
         SaveButton(
@@ -89,7 +106,8 @@ private fun ItemFieldsCard(
     onParentChange: (Long) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onTypeChange: (MenuItemTypeOption) -> Unit,
-    onLinkableItemChange: (LinkableItemOption) -> Unit
+    onLinkableItemChange: (LinkableItemOption) -> Unit,
+    onLoadMoreLinkableItems: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -137,11 +155,12 @@ private fun ItemFieldsCard(
                     singleLine = true
                 )
             } else if (state.isNew) {
-                LinkableItemDropdown(
+                LinkableItemSelector(
                     linkableItemsState = state.linkableItemsState,
                     selectedItem = state.selectedLinkableItem,
                     selectedType = state.selectedTypeOption,
-                    onItemSelected = onLinkableItemChange
+                    onItemSelected = onLinkableItemChange,
+                    onLoadMore = onLoadMoreLinkableItems
                 )
             }
 
@@ -208,21 +227,18 @@ private fun TypeDropdown(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LinkableItemDropdown(
+private fun LinkableItemSelector(
     linkableItemsState: LinkableItemsState,
     selectedItem: LinkableItemOption?,
     selectedType: MenuItemTypeOption,
-    onItemSelected: (LinkableItemOption) -> Unit
+    onItemSelected: (LinkableItemOption) -> Unit,
+    onLoadMore: () -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
 
-    val placeholderText = when (selectedType) {
-        MenuItemTypeOption.POST -> stringResource(R.string.menu_item_select_post)
-        MenuItemTypeOption.PAGE -> stringResource(R.string.menu_item_select_page)
-        MenuItemTypeOption.CATEGORY -> stringResource(R.string.menu_item_select_category)
-        MenuItemTypeOption.TAG -> stringResource(R.string.menu_item_select_tag)
-        MenuItemTypeOption.CUSTOM_LINK -> stringResource(R.string.menu_item_select_item)
-    }
+    val placeholderText = getTypeSelectionLabel(selectedType)
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -233,65 +249,142 @@ private fun LinkableItemDropdown(
             modifier = Modifier.padding(bottom = 4.dp)
         )
 
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { if (!linkableItemsState.isLoading) expanded = it }
+        OutlinedTextField(
+            value = when {
+                linkableItemsState.isLoading -> stringResource(R.string.menu_item_loading_items)
+                selectedItem != null -> selectedItem.title
+                else -> placeholderText
+            },
+            onValueChange = {},
+            readOnly = true,
+            trailingIcon = {
+                if (linkableItemsState.isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.size(20.dp))
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = null
+                    )
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = !linkableItemsState.isLoading) { showBottomSheet = true },
+            textStyle = MaterialTheme.typography.bodyMedium,
+            enabled = false
+        )
+    }
+
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showBottomSheet = false },
+            sheetState = sheetState
         ) {
-            OutlinedTextField(
-                value = when {
-                    linkableItemsState.isLoading -> stringResource(R.string.menu_item_loading_items)
-                    selectedItem != null -> selectedItem.title
-                    else -> placeholderText
-                },
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = {
-                    if (linkableItemsState.isLoading) {
-                        CircularProgressIndicator(modifier = Modifier.size(20.dp))
-                    } else {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            LinkableItemBottomSheetContent(
+                linkableItemsState = linkableItemsState,
+                selectedType = selectedType,
+                onItemSelected = { item ->
+                    onItemSelected(item)
+                    scope.launch {
+                        sheetState.hide()
+                        showBottomSheet = false
                     }
                 },
+                onLoadMore = onLoadMore
+            )
+        }
+    }
+}
+
+@Composable
+private fun LinkableItemBottomSheetContent(
+    linkableItemsState: LinkableItemsState,
+    selectedType: MenuItemTypeOption,
+    onItemSelected: (LinkableItemOption) -> Unit,
+    onLoadMore: () -> Unit
+) {
+    val listState = rememberLazyListState()
+
+    val lastVisibleItemIndex = remember {
+        derivedStateOf {
+            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+        }
+    }
+
+    LaunchedEffect(
+        lastVisibleItemIndex.value,
+        linkableItemsState.items.size,
+        linkableItemsState.canLoadMore
+    ) {
+        val shouldLoadMore = lastVisibleItemIndex.value >= linkableItemsState.items.size - 1 &&
+            linkableItemsState.canLoadMore &&
+            !linkableItemsState.isLoadingMore
+        if (shouldLoadMore) {
+            onLoadMore()
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+    ) {
+        Text(
+            text = getTypeSelectionLabel(selectedType),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+        )
+        HorizontalDivider()
+
+        if (linkableItemsState.items.isEmpty() && !linkableItemsState.isLoading) {
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-                textStyle = MaterialTheme.typography.bodyMedium,
-                enabled = !linkableItemsState.isLoading
-            )
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.menu_item_no_items_found),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        } else {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.weight(1f, fill = false)
+            ) {
+                items(linkableItemsState.items.size) { index ->
+                    val item = linkableItemsState.items[index]
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onItemSelected(item) }
+                            .padding(horizontal = 16.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = item.title,
+                            style = MaterialTheme.typography.bodyLarge,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    if (index < linkableItemsState.items.size - 1) {
+                        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                    }
+                }
 
-            if (!linkableItemsState.isLoading) {
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    if (linkableItemsState.items.isEmpty()) {
+                if (linkableItemsState.isLoadingMore) {
+                    item {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                text = stringResource(R.string.menu_item_no_items_found),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    } else {
-                        linkableItemsState.items.forEach { item ->
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = item.title,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                },
-                                onClick = {
-                                    onItemSelected(item)
-                                    expanded = false
-                                }
-                            )
+                            CircularProgressIndicator(modifier = Modifier.size(24.dp))
                         }
                     }
                 }
@@ -374,6 +467,15 @@ private fun ParentDropdown(
             }
         }
     }
+}
+
+@Composable
+private fun getTypeSelectionLabel(type: MenuItemTypeOption): String = when (type) {
+    MenuItemTypeOption.POST -> stringResource(R.string.menu_item_select_post)
+    MenuItemTypeOption.PAGE -> stringResource(R.string.menu_item_select_page)
+    MenuItemTypeOption.CATEGORY -> stringResource(R.string.menu_item_select_category)
+    MenuItemTypeOption.TAG -> stringResource(R.string.menu_item_select_tag)
+    MenuItemTypeOption.CUSTOM_LINK -> stringResource(R.string.menu_item_select_item)
 }
 
 @Composable

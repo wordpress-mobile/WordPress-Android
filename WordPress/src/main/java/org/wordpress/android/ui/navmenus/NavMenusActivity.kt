@@ -129,6 +129,7 @@ class NavMenusActivity : BaseAppCompatActivity() {
                             onEditMenuClick = { viewModel.navigateToEditMenu(it) },
                             onMenuItemsClick = { viewModel.navigateToMenuItems(it) },
                             onRefresh = { viewModel.refreshMenus() },
+                            onLoadMore = { viewModel.loadMoreMenus() },
                             modifier = Modifier.padding(contentPadding)
                         )
                     }
@@ -151,6 +152,7 @@ class NavMenusActivity : BaseAppCompatActivity() {
                             onEditItemClick = { viewModel.navigateToEditMenuItem(it) },
                             onMoveItemUp = { viewModel.moveMenuItemUp(it) },
                             onMoveItemDown = { viewModel.moveMenuItemDown(it) },
+                            onLoadMore = { viewModel.loadMoreMenuItems() },
                             modifier = Modifier.padding(contentPadding)
                         )
                     }
@@ -164,6 +166,7 @@ class NavMenusActivity : BaseAppCompatActivity() {
                             onDescriptionChange = { viewModel.updateMenuItemDescription(it) },
                             onTypeChange = { viewModel.updateMenuItemType(it) },
                             onLinkableItemChange = { viewModel.updateSelectedLinkableItem(it) },
+                            onLoadMoreLinkableItems = { viewModel.loadMoreLinkableItems() },
                             onSaveClick = { viewModel.saveMenuItem() },
                             modifier = Modifier.padding(contentPadding)
                         )
