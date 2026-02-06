@@ -13,6 +13,10 @@
 
     <color name="post_history_underlying_background">@color/gray_100</color>
 
+    <!-- Login Prologue Revamped -->
+    <color name="login_prologue_revamped_background">@color/gray_80</color>
+    <color name="login_prologue_revamped_icon">@color/white</color>
+
     <!-- Jetpack awareness in WordPress App -->
     <color name="jetpack_banner_background">@color/jetpack_green_90</color>
     <color name="jetpack_banner_divider">@color/gray_80</color>
