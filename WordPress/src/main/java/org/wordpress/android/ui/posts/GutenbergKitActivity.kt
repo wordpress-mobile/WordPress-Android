@@ -84,6 +84,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.gutenberg.model.EditorConfiguration
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
@@ -232,6 +233,7 @@ import java.util.regex.Pattern
 import javax.inject.Inject
 import kotlin.math.max
 import androidx.core.view.isNotEmpty
+import org.wordpress.android.util.EditorDependencyStore
 
 // ViewPager configuration constants
 private const val VIEW_PAGER_PAGE_CONTENT = 0
@@ -2208,41 +2210,57 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 onXpostsSettingsCapability(isXpostsCapable)
             }
 
-            val siteConfig = GutenbergKitSettingsBuilder.SiteConfig.fromSiteModel(siteModel)
+            val post = editPostRepository.getPost()
+            val configuration = buildEditorConfiguration(siteModel, post)
 
-            val postConfig = GutenbergKitSettingsBuilder.PostConfig.fromPostModel(
-                editPostRepository.getPost()
+            return GutenbergKitEditorFragment.newInstance(
+                configuration
             )
+        }
 
-            val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
-                isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
-                isThemeStylesFeatureEnabled = siteSettings?.useThemeStyles ?: true,
-                isNetworkLoggingEnabled = AppPrefs.isTrackNetworkRequestsEnabled()
-            )
+        private fun buildEditorConfiguration(
+            site: SiteModel,
+            post: PostImmutableModel?
+        ): EditorConfiguration {
+            val base = GutenbergKitSettingsBuilder
+                .buildPostConfiguration(
+                    site = site,
+                    post = post,
+                    accessToken = accountStore.accessToken
+                )
 
-            val appConfig = GutenbergKitSettingsBuilder.AppConfig(
-                accessToken = accountStore.accessToken,
-                locale = perAppLocaleManager.getCurrentLocaleLanguageCode(),
-                cookies = editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
-                accountUserId = accountStore.account.userId,
-                accountUserName = accountStore.account.userName,
-                userAgent = userAgent,
-                isJetpackSsoEnabled = isJetpackSsoEnabled
-            )
+            val locale = perAppLocaleManager
+                .getCurrentLocaleLanguageCode()
+                .replace("_", "-").lowercase()
 
-            val config = GutenbergKitSettingsBuilder.GutenbergKitConfig(
-                siteConfig = siteConfig,
-                postConfig = postConfig,
-                appConfig = appConfig,
-                featureConfig = featureConfig
-            )
-
-            return GutenbergKitEditorFragment.newInstanceWithBuilder(
-                getContext(),
-                isNewPost,
-                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
-                config
-            )
+            return base.toBuilder()
+                .setLocale(locale)
+                .setCookies(
+                    editPostAuthViewModel
+                        .getCookiesForPrivateSites(
+                            site, privateAtomicCookie
+                        )
+                )
+                .setPlugins(
+                    GutenbergKitSettingsBuilder
+                        .shouldUsePlugins(
+                            isFeatureEnabled =
+                                gutenbergKitPluginsFeature
+                                    .isEnabled(),
+                            isWPComSite = site.isWPCom,
+                            isJetpackConnected =
+                                site.isJetpackConnected,
+                            applicationPassword =
+                                site.apiRestPasswordPlain
+                        )
+                )
+                .setThemeStyles(
+                    siteSettings?.useThemeStyles ?: true
+                )
+                .setEnableNetworkLogging(
+                    AppPrefs.isTrackNetworkRequestsEnabled()
+                )
+                .build()
         }
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -3128,13 +3146,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     private fun refreshEditorSettings() {
         val payload = FetchEditorSettingsPayload(siteModel)
         dispatcher.dispatch(EditorSettingsActionBuilder.newFetchEditorSettingsAction(payload))
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    fun onEditorSettingsChanged(event: OnEditorSettingsChanged) {
-        val editorSettingsString = event.editorSettings?.toJsonString() ?: "undefined"
-        editorFragment?.startWithEditorSettings(editorSettingsString)
     }
 
     // EditorDataProvider methods
