@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.deeplinks.handlers
 
 import android.content.Intent
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.R
@@ -125,9 +126,7 @@ class ReaderLinkHandler
         ) {
             // Convert applink to https URL that OpenInReader can handle
             val httpsUri = UriWrapper(
-                android.net.Uri.parse(
-                    "https://$HOST_WORDPRESS_COM/$PATH_READ/${segments.joinToString("/")}"
-                )
+                "https://$HOST_WORDPRESS_COM/$PATH_READ/${segments.joinToString("/")}".toUri()
             )
             return OpenInReader(httpsUri)
         }
