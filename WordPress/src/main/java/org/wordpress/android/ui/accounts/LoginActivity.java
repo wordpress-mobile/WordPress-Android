@@ -157,7 +157,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
 
         FrameLayout fragmentContainer = new FrameLayout(this);
-        mFragmentContainerId = View.generateViewId();
+        mFragmentContainerId = R.id.fragment_container;
         fragmentContainer.setId(mFragmentContainerId);
         fragmentContainer.setFitsSystemWindows(false);
         fragmentContainer.setLayoutParams(new ViewGroup.LayoutParams(
