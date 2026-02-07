@@ -1,2 +1,5 @@
-- The app icon has a single-color option to match your device’s other themed icons. #aesthetic
-- Large, high-resolution images are more likely to load (but might take a few seconds).
+- Search media by title and see library space as a progress bar.
+- Authenticate with your app password to add new sites.
+- Log in without seeing the site picker and Quick Start guide.
+- See the My Site screen without the Plans menu.
+- Enjoy other new features, updates, and fixes.
