@@ -14,10 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -92,42 +88,14 @@ fun MenuListScreen(
             else -> {
                 val listState = rememberLazyListState()
 
-                // Detect when user scrolls to the last item
-                val lastVisibleItemIndex = remember {
-                    derivedStateOf {
-                        listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-                    }
-                }
-
-                LaunchedEffect(lastVisibleItemIndex.value, state.menus.size, state.canLoadMore) {
-                    val shouldLoadMore = lastVisibleItemIndex.value >= state.menus.size - 1 &&
-                        state.canLoadMore &&
-                        !state.isLoadingMore
-                    if (shouldLoadMore) {
-                        onLoadMore()
-                    }
-                }
-
-                LaunchedEffect(listState) {
-                    var prevIndex = listState.firstVisibleItemIndex
-                    var prevOffset = listState.firstVisibleItemScrollOffset
-                    snapshotFlow {
-                        listState.firstVisibleItemIndex to
-                            listState.firstVisibleItemScrollOffset
-                    }.collect { (index, offset) ->
-                        if (index > prevIndex ||
-                            (index == prevIndex && offset > prevOffset)
-                        ) {
-                            onFabVisibilityChange(false)
-                        } else if (index < prevIndex ||
-                            (index == prevIndex && offset < prevOffset)
-                        ) {
-                            onFabVisibilityChange(true)
-                        }
-                        prevIndex = index
-                        prevOffset = offset
-                    }
-                }
+                ObserveLoadMore(
+                    listState = listState,
+                    itemCount = state.menus.size,
+                    canLoadMore = state.canLoadMore,
+                    isLoadingMore = state.isLoadingMore,
+                    onLoadMore = onLoadMore
+                )
+                ObserveScrollDirectionForFab(listState, onFabVisibilityChange)
 
                 LazyColumn(
                     state = listState,

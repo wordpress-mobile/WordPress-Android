@@ -23,10 +23,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -91,41 +87,14 @@ private fun MenuItemListContent(
 ) {
     val listState = rememberLazyListState()
 
-    val lastVisibleItemIndex = remember {
-        derivedStateOf {
-            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-        }
-    }
-
-    LaunchedEffect(lastVisibleItemIndex.value, state.items.size, state.canLoadMore) {
-        val shouldLoadMore = lastVisibleItemIndex.value >= state.items.size - 1 &&
-            state.canLoadMore &&
-            !state.isLoadingMore
-        if (shouldLoadMore) {
-            onLoadMore()
-        }
-    }
-
-    LaunchedEffect(listState) {
-        var prevIndex = listState.firstVisibleItemIndex
-        var prevOffset = listState.firstVisibleItemScrollOffset
-        snapshotFlow {
-            listState.firstVisibleItemIndex to
-                listState.firstVisibleItemScrollOffset
-        }.collect { (index, offset) ->
-            if (index > prevIndex ||
-                (index == prevIndex && offset > prevOffset)
-            ) {
-                onFabVisibilityChange(false)
-            } else if (index < prevIndex ||
-                (index == prevIndex && offset < prevOffset)
-            ) {
-                onFabVisibilityChange(true)
-            }
-            prevIndex = index
-            prevOffset = offset
-        }
-    }
+    ObserveLoadMore(
+        listState = listState,
+        itemCount = state.items.size,
+        canLoadMore = state.canLoadMore,
+        isLoadingMore = state.isLoadingMore,
+        onLoadMore = onLoadMore
+    )
+    ObserveScrollDirectionForFab(listState, onFabVisibilityChange)
 
     LazyColumn(
         state = listState,
