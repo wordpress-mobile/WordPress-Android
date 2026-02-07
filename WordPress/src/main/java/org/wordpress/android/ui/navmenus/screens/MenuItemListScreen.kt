@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -44,6 +45,7 @@ fun MenuItemListScreen(
     onMoveItemUp: (Long) -> Unit,
     onMoveItemDown: (Long) -> Unit,
     onLoadMore: () -> Unit,
+    onFabVisibilityChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -70,7 +72,8 @@ fun MenuItemListScreen(
                     onEditItemClick = onEditItemClick,
                     onMoveItemUp = onMoveItemUp,
                     onMoveItemDown = onMoveItemDown,
-                    onLoadMore = onLoadMore
+                    onLoadMore = onLoadMore,
+                    onFabVisibilityChange = onFabVisibilityChange
                 )
             }
         }
@@ -83,7 +86,8 @@ private fun MenuItemListContent(
     onEditItemClick: (Long) -> Unit,
     onMoveItemUp: (Long) -> Unit,
     onMoveItemDown: (Long) -> Unit,
-    onLoadMore: () -> Unit
+    onLoadMore: () -> Unit,
+    onFabVisibilityChange: (Boolean) -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -99,6 +103,27 @@ private fun MenuItemListContent(
             !state.isLoadingMore
         if (shouldLoadMore) {
             onLoadMore()
+        }
+    }
+
+    LaunchedEffect(listState) {
+        var prevIndex = listState.firstVisibleItemIndex
+        var prevOffset = listState.firstVisibleItemScrollOffset
+        snapshotFlow {
+            listState.firstVisibleItemIndex to
+                listState.firstVisibleItemScrollOffset
+        }.collect { (index, offset) ->
+            if (index > prevIndex ||
+                (index == prevIndex && offset > prevOffset)
+            ) {
+                onFabVisibilityChange(false)
+            } else if (index < prevIndex ||
+                (index == prevIndex && offset < prevOffset)
+            ) {
+                onFabVisibilityChange(true)
+            }
+            prevIndex = index
+            prevOffset = offset
         }
     }
 

@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -47,6 +48,7 @@ fun MenuListScreen(
     onMenuItemsClick: (Long) -> Unit,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
+    onFabVisibilityChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
@@ -103,6 +105,27 @@ fun MenuListScreen(
                         !state.isLoadingMore
                     if (shouldLoadMore) {
                         onLoadMore()
+                    }
+                }
+
+                LaunchedEffect(listState) {
+                    var prevIndex = listState.firstVisibleItemIndex
+                    var prevOffset = listState.firstVisibleItemScrollOffset
+                    snapshotFlow {
+                        listState.firstVisibleItemIndex to
+                            listState.firstVisibleItemScrollOffset
+                    }.collect { (index, offset) ->
+                        if (index > prevIndex ||
+                            (index == prevIndex && offset > prevOffset)
+                        ) {
+                            onFabVisibilityChange(false)
+                        } else if (index < prevIndex ||
+                            (index == prevIndex && offset < prevOffset)
+                        ) {
+                            onFabVisibilityChange(true)
+                        }
+                        prevIndex = index
+                        prevOffset = offset
                     }
                 }
 
