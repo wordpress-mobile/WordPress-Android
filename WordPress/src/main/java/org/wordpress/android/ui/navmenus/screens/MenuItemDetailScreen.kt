@@ -613,4 +613,24 @@ private fun MenuItemDetailScreenSavingPreview() {
     }
 }
 
+@Preview(name = "Bottom Sheet Content Light", showBackground = true)
+@Preview(
+    name = "Bottom Sheet Content Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+private fun LinkableItemBottomSheetContentPreview() {
+    AppThemeM3 {
+        LinkableItemBottomSheetContent(
+            linkableItemsState = LinkableItemsState(
+                items = sampleLinkableItems
+            ),
+            selectedType = MenuItemTypeOption.PAGE,
+            onItemSelected = {},
+            onLoadMore = {}
+        )
+    }
+}
+
 // endregion
