@@ -157,7 +157,7 @@ class CountriesViewModel @Inject constructor(
 
                     // For bar percentage, use first item's views (list is sorted by views descending)
                     val cardCountries = countries.take(CARD_MAX_ITEMS)
-                    val maxViewsForBar = cardCountries.firstOrNull()?.views ?: 1L
+                    val maxViewsForBar = cardCountries.firstOrNull()?.views ?: 0L
 
                     _uiState.value = CountriesCardUiState.Loaded(
                         countries = cardCountries,

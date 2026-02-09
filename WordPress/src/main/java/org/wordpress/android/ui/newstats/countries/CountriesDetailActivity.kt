@@ -62,7 +62,7 @@ class CountriesDetailActivity : BaseAppCompatActivity() {
         val totalViewsChangePercent = intent.getDoubleExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0)
         val dateRange = intent.getStringExtra(EXTRA_DATE_RANGE) ?: ""
         // Calculate maxViewsForBar once (list is sorted by views descending)
-        val maxViewsForBar = countries.firstOrNull()?.views ?: 1L
+        val maxViewsForBar = countries.firstOrNull()?.views ?: 0L
 
         setContent {
             AppThemeM3 {

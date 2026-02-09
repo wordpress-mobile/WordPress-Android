@@ -137,7 +137,7 @@ class AuthorsViewModel @Inject constructor(
 
                     // For bar percentage, use first item's views (list is sorted by views descending)
                     val cardAuthors = authors.take(CARD_MAX_ITEMS)
-                    val maxViewsForBar = cardAuthors.firstOrNull()?.views ?: 1L
+                    val maxViewsForBar = cardAuthors.firstOrNull()?.views ?: 0L
 
                     _uiState.value = AuthorsCardUiState.Loaded(
                         authors = cardAuthors,
