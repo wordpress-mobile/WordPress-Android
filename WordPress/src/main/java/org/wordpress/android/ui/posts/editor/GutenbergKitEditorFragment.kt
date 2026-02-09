@@ -439,7 +439,6 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
     override fun onDestroy() {
         gutenbergView?.let { gutenbergView ->
-            gutenbergView.destroy()
             historyChangeListener = null
             featuredImageChangeListener = null
         }
