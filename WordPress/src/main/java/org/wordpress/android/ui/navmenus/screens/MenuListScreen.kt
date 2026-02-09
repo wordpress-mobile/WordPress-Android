@@ -205,7 +205,8 @@ private fun MenuListScreenPreview() {
             onEditMenuClick = {},
             onMenuItemsClick = {},
             onRefresh = {},
-            onLoadMore = {}
+            onLoadMore = {},
+            onFabVisibilityChange = {}
         )
     }
 }
@@ -220,7 +221,8 @@ private fun MenuListScreenLoadingPreview() {
             onEditMenuClick = {},
             onMenuItemsClick = {},
             onRefresh = {},
-            onLoadMore = {}
+            onLoadMore = {},
+            onFabVisibilityChange = {}
         )
     }
 }
@@ -235,7 +237,8 @@ private fun MenuListScreenEmptyPreview() {
             onEditMenuClick = {},
             onMenuItemsClick = {},
             onRefresh = {},
-            onLoadMore = {}
+            onLoadMore = {},
+            onFabVisibilityChange = {}
         )
     }
 }
@@ -250,7 +253,8 @@ private fun MenuListScreenErrorPreview() {
             onEditMenuClick = {},
             onMenuItemsClick = {},
             onRefresh = {},
-            onLoadMore = {}
+            onLoadMore = {},
+            onFabVisibilityChange = {}
         )
     }
 }

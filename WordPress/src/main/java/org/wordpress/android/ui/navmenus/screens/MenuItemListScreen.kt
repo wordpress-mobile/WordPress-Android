@@ -275,7 +275,8 @@ private fun MenuItemListScreenPreview() {
             onEditItemClick = {},
             onMoveItemUp = {},
             onMoveItemDown = {},
-            onLoadMore = {}
+            onLoadMore = {},
+            onFabVisibilityChange = {}
         )
     }
 }
@@ -290,7 +291,8 @@ private fun MenuItemListScreenLoadingPreview() {
             onEditItemClick = {},
             onMoveItemUp = {},
             onMoveItemDown = {},
-            onLoadMore = {}
+            onLoadMore = {},
+            onFabVisibilityChange = {}
         )
     }
 }
@@ -305,7 +307,8 @@ private fun MenuItemListScreenEmptyPreview() {
             onEditItemClick = {},
             onMoveItemUp = {},
             onMoveItemDown = {},
-            onLoadMore = {}
+            onLoadMore = {},
+            onFabVisibilityChange = {}
         )
     }
 }
@@ -320,7 +323,8 @@ private fun MenuItemListScreenErrorPreview() {
             onEditItemClick = {},
             onMoveItemUp = {},
             onMoveItemDown = {},
-            onLoadMore = {}
+            onLoadMore = {},
+            onFabVisibilityChange = {}
         )
     }
 }
