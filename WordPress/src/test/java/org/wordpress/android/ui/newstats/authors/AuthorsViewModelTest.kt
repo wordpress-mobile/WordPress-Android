@@ -63,13 +63,15 @@ class AuthorsViewModelTest : BaseUnitTest() {
     @Test
     fun `when no site selected, then error state is emitted`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+        whenever(resourceProvider.getString(R.string.stats_todays_stats_no_site_selected))
+            .thenReturn(NO_SITE_SELECTED_ERROR)
 
         initViewModel()
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(AuthorsCardUiState.Error::class.java)
-        assertThat((state as AuthorsCardUiState.Error).message).isEqualTo("No site selected")
+        assertThat((state as AuthorsCardUiState.Error).message).isEqualTo(NO_SITE_SELECTED_ERROR)
     }
 
     @Test
@@ -454,6 +456,8 @@ class AuthorsViewModelTest : BaseUnitTest() {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
         private const val ERROR_MESSAGE = "Network error"
+        private const val NO_SITE_SELECTED_ERROR = "No site selected"
+        private const val FAILED_TO_LOAD_ERROR = "Failed to load"
 
         private const val TEST_AUTHOR_NAME_1 = "John Doe"
         private const val TEST_AUTHOR_NAME_2 = "Jane Smith"
