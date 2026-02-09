@@ -60,7 +60,6 @@ class StatsDataSourceImpl @Inject constructor(
             unit = unit.toApiUnit(),
             quantity = quantity.toUInt(),
             endDate = endDate,
-            locale = wpComLanguage
         )
 
         val result = wpComApiClient.request { requestBuilder ->

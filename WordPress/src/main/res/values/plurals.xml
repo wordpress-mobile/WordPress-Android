@@ -20,10 +20,4 @@
         <item quantity="one">%1$d week ago</item>
         <item quantity="other">%1$d weeks ago</item>
     </plurals>
-
-    <!-- Navigation Menus -->
-    <plurals name="menu_item_count">
-        <item quantity="one">%1$d item</item>
-        <item quantity="other">%1$d items</item>
-    </plurals>
 </resources>

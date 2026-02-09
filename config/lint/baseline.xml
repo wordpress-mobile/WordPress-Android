@@ -4941,50 +4941,6 @@
     </issue>
 
     <issue
-        id="NonConstantResourceId"
-        message="Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements"
-        errorLine1="                        case R.id.radio_circles:"
-        errorLine2="                             ~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/posts/InsertMediaDialog.java"
-            line="134"
-            column="30"/>
-    </issue>
-
-    <issue
-        id="NonConstantResourceId"
-        message="Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements"
-        errorLine1="                        case R.id.radio_slideshow:"
-        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/posts/InsertMediaDialog.java"
-            line="137"
-            column="30"/>
-    </issue>
-
-    <issue
-        id="NonConstantResourceId"
-        message="Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements"
-        errorLine1="                        case R.id.radio_squares:"
-        errorLine2="                             ~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/posts/InsertMediaDialog.java"
-            line="140"
-            column="30"/>
-    </issue>
-
-    <issue
-        id="NonConstantResourceId"
-        message="Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements"
-        errorLine1="                        case R.id.radio_tiled:"
-        errorLine2="                             ~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/posts/InsertMediaDialog.java"
-            line="143"
-            column="30"/>
-    </issue>
-
-    <issue
         id="UseSwitchCompatOrMaterialCode"
         message="Use `SwitchCompat` from AppCompat or `SwitchMaterial` from Material library"
         errorLine1="        Switch switchControl = getSwitch((ViewGroup) view);"
