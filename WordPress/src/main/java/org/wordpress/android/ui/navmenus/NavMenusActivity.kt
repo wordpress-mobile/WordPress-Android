@@ -10,6 +10,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -21,6 +24,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -113,10 +119,16 @@ class NavMenusActivity : BaseAppCompatActivity() {
             .collectAsState(initial = navController.currentBackStackEntry)
         val currentRoute = currentBackStackEntry?.destination?.route
 
+        var isFabVisible by remember { mutableStateOf(true) }
+
+        LaunchedEffect(currentRoute) {
+            isFabVisible = true
+        }
+
         AppThemeM3 {
             Scaffold(
                 topBar = { NavMenusTopBar(currentRoute) },
-                floatingActionButton = { NavMenusFab(currentRoute) }
+                floatingActionButton = { NavMenusFab(currentRoute, isFabVisible) }
             ) { contentPadding ->
                 NavHost(
                     navController = navController,
@@ -130,6 +142,7 @@ class NavMenusActivity : BaseAppCompatActivity() {
                             onMenuItemsClick = { viewModel.navigateToMenuItems(it) },
                             onRefresh = { viewModel.refreshMenus() },
                             onLoadMore = { viewModel.loadMoreMenus() },
+                            onFabVisibilityChange = { isFabVisible = it },
                             modifier = Modifier.padding(contentPadding)
                         )
                     }
@@ -153,6 +166,7 @@ class NavMenusActivity : BaseAppCompatActivity() {
                             onMoveItemUp = { viewModel.moveMenuItemUp(it) },
                             onMoveItemDown = { viewModel.moveMenuItemDown(it) },
                             onLoadMore = { viewModel.loadMoreMenuItems() },
+                            onFabVisibilityChange = { isFabVisible = it },
                             modifier = Modifier.padding(contentPadding)
                         )
                     }
@@ -270,19 +284,42 @@ class NavMenusActivity : BaseAppCompatActivity() {
     }
 
     @Composable
-    private fun NavMenusFab(currentRoute: String?) {
-        when (currentRoute) {
-            NavMenuScreen.MenuList.name -> {
-                FloatingActionButton(onClick = { viewModel.navigateToCreateMenu() }) {
-                    Icon(Icons.Default.Add, contentDescription = stringResource(R.string.create_menu))
+    private fun NavMenusFab(currentRoute: String?, isVisible: Boolean) {
+        AnimatedVisibility(
+            visible = isVisible && (
+                currentRoute == NavMenuScreen.MenuList.name ||
+                    currentRoute == NavMenuScreen.MenuItemList.name
+                ),
+            enter = slideInVertically { it * 2 },
+            exit = slideOutVertically { it * 2 }
+        ) {
+            when (currentRoute) {
+                NavMenuScreen.MenuList.name -> {
+                    FloatingActionButton(
+                        onClick = { viewModel.navigateToCreateMenu() }
+                    ) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = stringResource(
+                                R.string.create_menu
+                            )
+                        )
+                    }
                 }
-            }
-            NavMenuScreen.MenuItemList.name -> {
-                FloatingActionButton(onClick = { viewModel.navigateToCreateMenuItem() }) {
-                    Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_menu_item))
+                NavMenuScreen.MenuItemList.name -> {
+                    FloatingActionButton(
+                        onClick = { viewModel.navigateToCreateMenuItem() }
+                    ) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = stringResource(
+                                R.string.add_menu_item
+                            )
+                        )
+                    }
                 }
+                else -> {}
             }
-            else -> {}
         }
     }
 
