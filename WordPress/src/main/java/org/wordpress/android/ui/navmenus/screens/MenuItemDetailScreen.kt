@@ -280,7 +280,7 @@ private fun LinkableItemSelector(
 
     if (showBottomSheet) {
         ModalBottomSheet(
-            onDismissRequest = { },
+            onDismissRequest = { showBottomSheet = false },
             sheetState = sheetState
         ) {
             LinkableItemBottomSheetContent(
@@ -290,6 +290,7 @@ private fun LinkableItemSelector(
                     onItemSelected(item)
                     scope.launch {
                         sheetState.hide()
+                        showBottomSheet = false
                     }
                 },
                 onLoadMore = onLoadMore
