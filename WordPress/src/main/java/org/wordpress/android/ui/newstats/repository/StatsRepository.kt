@@ -752,8 +752,8 @@ class StatsRepository @Inject constructor(
 
         // Fetch both periods in parallel
         val (currentResult, previousResult) = coroutineScope {
-            val currentDeferred = async { statsDataSource.fetchTopAuthors(siteId, currentDateRange) }
-            val previousDeferred = async { statsDataSource.fetchTopAuthors(siteId, previousDateRange) }
+            val currentDeferred = async { statsDataSource.fetchTopAuthors(siteId, currentDateRange, max = 0) }
+            val previousDeferred = async { statsDataSource.fetchTopAuthors(siteId, previousDateRange, max = 0) }
             currentDeferred.await() to previousDeferred.await()
         }
 

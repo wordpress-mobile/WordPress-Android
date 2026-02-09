@@ -183,11 +183,11 @@ class StatsRepositoryAuthorsTest : BaseUnitTest() {
 
         repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
 
-        // Verify data source is called twice (current and previous period)
+        // Verify data source is called twice (current and previous period) with no limit
         verify(statsDataSource, times(2)).fetchTopAuthors(
             siteId = eq(TEST_SITE_ID),
             dateRange = any(),
-            max = any()
+            max = eq(0)
         )
     }
 
