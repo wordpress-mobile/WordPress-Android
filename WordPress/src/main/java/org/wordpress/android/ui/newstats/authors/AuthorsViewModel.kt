@@ -14,6 +14,7 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TopAuthorItemData
+import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.repository.TopAuthorsResult
 import org.wordpress.android.ui.newstats.util.toDateRangeString
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -47,30 +48,39 @@ class AuthorsViewModel @Inject constructor(
     }
 
     fun loadData() {
+        val site = selectedSiteRepository.getSelectedSite()
+        if (site == null) {
+            _uiState.value = AuthorsCardUiState.Error(
+                resourceProvider.getString(R.string.stats_todays_stats_no_site_selected)
+            )
+            return
+        }
+
+        val accessToken = accountStore.accessToken
+        if (accessToken.isNullOrEmpty()) {
+            _uiState.value = AuthorsCardUiState.Error(
+                resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
+            )
+            return
+        }
+
+        statsRepository.init(accessToken)
+        _uiState.value = AuthorsCardUiState.Loading
+
         viewModelScope.launch {
-            _uiState.value = AuthorsCardUiState.Loading
-
-            val site = selectedSiteRepository.getSelectedSite()
-            if (site == null) {
-                _uiState.value = AuthorsCardUiState.Error("No site selected")
-                return@launch
-            }
-
-            initializeRepository()
             fetchTopAuthors(site)
         }
     }
 
     fun refresh() {
+        val site = selectedSiteRepository.getSelectedSite() ?: return
+        val accessToken = accountStore.accessToken
+        if (accessToken.isNullOrEmpty()) return
+
+        statsRepository.init(accessToken)
         viewModelScope.launch {
             _isRefreshing.value = true
-
-            val site = selectedSiteRepository.getSelectedSite()
-            if (site != null) {
-                initializeRepository()
-                fetchTopAuthors(site)
-            }
-
+            fetchTopAuthors(site)
             _isRefreshing.value = false
         }
     }
@@ -94,12 +104,6 @@ class AuthorsViewModel @Inject constructor(
             totalViewsChangePercent = cachedTotalViewsChangePercent,
             dateRange = currentPeriod.toDateRangeString(resourceProvider)
         )
-    }
-
-    private fun initializeRepository() {
-        accountStore.accessToken?.let { token ->
-            statsRepository.init(token)
-        }
     }
 
     private suspend fun fetchTopAuthors(site: SiteModel) {
