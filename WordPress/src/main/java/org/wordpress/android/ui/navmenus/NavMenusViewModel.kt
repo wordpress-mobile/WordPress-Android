@@ -849,7 +849,6 @@ class NavMenusViewModel @Inject constructor(
     ): Boolean {
         val itemToMove = currentMenuItems.find { it.remoteItemId == itemId }
         val swapWithItem = currentMenuItems.find { it.remoteItemId == targetItemId }
-
         if (itemToMove == null || swapWithItem == null) return false
 
         val updatedItemToMove = itemToMove.copy(menuOrder = swapWithItem.menuOrder)
@@ -862,7 +861,8 @@ class NavMenusViewModel @Inject constructor(
             result1
         }
 
-        if (result2 is NavMenuRestClient.NavMenuItemResult.Success) {
+        val success = result2 is NavMenuRestClient.NavMenuItemResult.Success
+        if (success) {
             currentMenuItems = currentMenuItems.map { item ->
                 when (item.remoteItemId) {
                     itemId -> updatedItemToMove
@@ -870,9 +870,8 @@ class NavMenusViewModel @Inject constructor(
                     else -> item
                 }
             }
-            return true
         }
-        return false
+        return success
     }
 
     fun saveMenuItem() {
