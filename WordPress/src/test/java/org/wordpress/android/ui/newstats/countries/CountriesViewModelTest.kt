@@ -527,7 +527,6 @@ class CountriesViewModelTest : BaseUnitTest() {
         private const val TEST_ACCESS_TOKEN = "test_access_token"
         private const val ERROR_MESSAGE = "Network error"
         private const val NO_SITE_SELECTED_ERROR = "No site selected"
-        private const val FAILED_TO_LOAD_ERROR = "Failed to load"
 
         private const val TEST_COUNTRY_CODE_1 = "US"
         private const val TEST_COUNTRY_CODE_2 = "UK"

@@ -457,7 +457,6 @@ class AuthorsViewModelTest : BaseUnitTest() {
         private const val TEST_ACCESS_TOKEN = "test_access_token"
         private const val ERROR_MESSAGE = "Network error"
         private const val NO_SITE_SELECTED_ERROR = "No site selected"
-        private const val FAILED_TO_LOAD_ERROR = "Failed to load"
 
         private const val TEST_AUTHOR_NAME_1 = "John Doe"
         private const val TEST_AUTHOR_NAME_2 = "Jane Smith"
