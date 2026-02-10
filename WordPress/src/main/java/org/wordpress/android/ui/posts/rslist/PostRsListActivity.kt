@@ -33,9 +33,11 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.ui.posts.rslist.screens.PostRsTabListScreen
 import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
@@ -176,16 +178,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
         val state by viewModel.tabState(tab)
             .collectAsState()
         val emptyMessage = stringResource(
-            when (tab) {
-                PostRsListTab.PUBLISHED ->
-                    R.string.posts_empty_list_published
-                PostRsListTab.DRAFTS ->
-                    R.string.posts_empty_list_drafts
-                PostRsListTab.SCHEDULED ->
-                    R.string.posts_empty_list_scheduled
-                PostRsListTab.TRASHED ->
-                    R.string.posts_empty_list_trashed
-            }
+            R.string.posts_empty_list
         )
 
         LaunchedEffect(tab) {
@@ -197,7 +190,23 @@ class PostRsListActivity : BaseAppCompatActivity() {
             emptyMessage = emptyMessage,
             onPostClick = { viewModel.onPostClicked(it) },
             onRefresh = { viewModel.refreshPosts(tab) },
-            onLoadMore = { viewModel.loadMorePosts(tab) }
+            onLoadMore = { viewModel.loadMorePosts(tab) },
+            onCreatePost = { createNewPost() }
+        )
+    }
+
+    private fun createNewPost() {
+        val site =
+            selectedSiteRepository.getSelectedSite()
+                ?: return
+        ActivityLauncher.addNewPostForResult(
+            this,
+            site,
+            false,
+            PagePostCreationSourcesDetail
+                .POST_FROM_POSTS_LIST,
+            -1,
+            EntryPoint.MY_SITE_CARD_ANSWER_PROMPT
         )
     }
 
