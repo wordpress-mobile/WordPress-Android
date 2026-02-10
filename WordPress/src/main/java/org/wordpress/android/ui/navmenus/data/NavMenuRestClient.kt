@@ -450,14 +450,12 @@ class NavMenuRestClient @Inject constructor(
         }
     }
 
-    private fun mapTypeLabelToType(typeLabel: String?): String {
-        return when (typeLabel?.lowercase()) {
-            "custom link" -> NavMenuItemModel.TYPE_CUSTOM
-            "page" -> NavMenuItemModel.TYPE_POST_TYPE
-            "post" -> NavMenuItemModel.TYPE_POST_TYPE
-            "category" -> NavMenuItemModel.TYPE_TAXONOMY
-            "tag" -> NavMenuItemModel.TYPE_TAXONOMY
-            else -> NavMenuItemModel.TYPE_CUSTOM
+    private fun NavMenuItemType.toTypeString(): String {
+        return when (this) {
+            NavMenuItemType.POST_TYPE -> NavMenuItemModel.TYPE_POST_TYPE
+            NavMenuItemType.TAXONOMY -> NavMenuItemModel.TYPE_TAXONOMY
+            NavMenuItemType.POST_TYPE_ARCHIVE -> NavMenuItemModel.TYPE_POST_TYPE_ARCHIVE
+            NavMenuItemType.CUSTOM -> NavMenuItemModel.TYPE_CUSTOM
         }
     }
 
@@ -485,7 +483,7 @@ class NavMenuRestClient @Inject constructor(
             menuId = menuId,
             title = title.raw ?: "",
             url = url,
-            type = mapTypeLabelToType(typeLabel),
+            type = itemType.toTypeString(),
             objectType = `object`,
             objectId = objectId,
             parentId = parent,
