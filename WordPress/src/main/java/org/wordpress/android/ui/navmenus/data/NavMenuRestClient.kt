@@ -417,6 +417,10 @@ class NavMenuRestClient @Inject constructor(
         )
     }
 
+    /**
+     * Converts a NavMenuItemModel type string to a NavMenuItemType enum.
+     * @return The corresponding NavMenuItemType, or CUSTOM if the type is not recognized
+     */
     private fun String.toNavMenuItemType(): NavMenuItemType {
         return when (this) {
             NavMenuItemModel.TYPE_POST_TYPE -> NavMenuItemType.POST_TYPE
