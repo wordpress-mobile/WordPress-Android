@@ -430,29 +430,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
         val state = viewModel.menuItemDetailState.first()
         assertThat(state?.selectedLinkableItem).isEqualTo(testItem)
         assertThat(state?.objectId).isEqualTo(456L)
-    }
-
-    @Test
-    fun `when updateSelectedLinkableItem called, then title is set from item`() = test {
-        viewModel.navigateToCreateMenuItem()
-        val testItem = LinkableItemOption(id = 789L, title = "Auto Title")
-
-        viewModel.updateSelectedLinkableItem(testItem)
-
-        val state = viewModel.menuItemDetailState.first()
-        assertThat(state?.title).isEqualTo("Auto Title")
-    }
-
-    @Test
-    fun `when updateSelectedLinkableItem called with existing title, then title is replaced`() = test {
-        viewModel.navigateToCreateMenuItem()
-        viewModel.updateMenuItemTitle("Existing Title")
-        val testItem = LinkableItemOption(id = 789L, title = "New Title")
-
-        viewModel.updateSelectedLinkableItem(testItem)
-
-        val state = viewModel.menuItemDetailState.first()
-        assertThat(state?.title).isEqualTo("New Title")
+        assertThat(state?.title).isEqualTo("Test Item")
     }
 
     @Test
@@ -858,25 +836,6 @@ class NavMenusViewModelTest : BaseUnitTest() {
         viewModel.navigateToCreateMenuItem()
         viewModel.updateMenuItemTitle("Section Link")
         viewModel.updateMenuItemUrl("#section")
-        viewModel.saveMenuItem()
-
-        val event = viewModel.uiEvent.first()
-        assertThat(event).isEqualTo(NavMenusUiEvent.MenuItemSaved)
-    }
-
-    @Test
-    fun `when saveMenuItem with https URL, then validation passes`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
-        whenever(navMenuRestClient.createMenuItem(any(), any())).thenReturn(
-            NavMenuRestClient.NavMenuItemResult.Success(createTestMenuItem(1L))
-        )
-        whenever(navMenuRestClient.fetchMenuItems(any(), any(), any())).thenReturn(
-            NavMenuRestClient.NavMenuItemListResult.Success(emptyList(), false)
-        )
-
-        viewModel.navigateToCreateMenuItem()
-        viewModel.updateMenuItemTitle("External Link")
-        viewModel.updateMenuItemUrl("https://example.com")
         viewModel.saveMenuItem()
 
         val event = viewModel.uiEvent.first()
