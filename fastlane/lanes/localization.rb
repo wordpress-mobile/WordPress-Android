@@ -110,18 +110,36 @@ platform :android do
 
       metadata_folder = File.join(PROJECT_ROOT_FOLDER, 'WordPress', app_values[:metadata_dir])
 
-      # <key in po file> => <path to txt file to read the content from>
+      # Translator comments for Play Store metadata
+      screenshot_comment = <<~COMMENT.chomp
+        translators: This is a promo message that will be attached on top of a screenshot in the Play Store.
+        No specified characters limit here, but try to keep as short as the source one.
+      COMMENT
+
+      # <key in po file> => <path to txt file> or <{ path:, comment: } hash>
       files = {
         release_note: File.join(metadata_folder, 'release_notes.txt'),
         release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
-        play_store_app_title: File.join(metadata_folder, 'title.txt'),
-        play_store_promo: File.join(metadata_folder, 'short_description.txt'),
-        play_store_desc: File.join(metadata_folder, 'full_description.txt')
+        play_store_app_title: {
+          path: File.join(metadata_folder, 'title.txt'),
+          comment: 'translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!'
+        },
+        play_store_promo: {
+          path: File.join(metadata_folder, 'short_description.txt'),
+          comment: 'translators: Short description of the app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!'
+        },
+        play_store_desc: {
+          path: File.join(metadata_folder, 'full_description.txt'),
+          comment: 'translators: Multi-paragraph text used to display in the Play Store. Limit to 4000 characters including spaces and commas!'
+        }
       }
       # Add entries for `screenshot_*.txt` files as well
       Dir.glob('screenshot_*.txt', base: metadata_folder).sort.each do |screenshot_file|
         key = :"play_store_#{File.basename(screenshot_file, '.txt')}"
-        files[key] = File.join(metadata_folder, screenshot_file)
+        files[key] = {
+          path: File.join(metadata_folder, screenshot_file),
+          comment: screenshot_comment
+        }
       end
 
       update_po_file_for_metadata_localization(
@@ -359,12 +377,12 @@ platform :android do
   end
 
   # Updates the `.po` file at the given `po_path` using the content of the `sources` files, interpolating `release_version` where appropriate.
-  # Internally, this calls the `an_update_metadata_source` release toolkit action and adds Git management to it.
+  # Internally, this calls the `gp_update_metadata_source` release toolkit action and adds Git management to it.
   #
   def update_po_file_for_metadata_localization(po_path:, sources:, release_version:, commit_message:)
     ensure_git_status_clean
 
-    an_update_metadata_source(
+    gp_update_metadata_source(
       po_file_path: po_path,
       source_files: sources,
       release_version: release_version
