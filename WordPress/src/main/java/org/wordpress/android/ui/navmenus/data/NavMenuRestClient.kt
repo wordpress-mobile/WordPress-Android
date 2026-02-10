@@ -422,7 +422,12 @@ class NavMenuRestClient @Inject constructor(
             NavMenuItemModel.TYPE_POST_TYPE -> NavMenuItemType.POST_TYPE
             NavMenuItemModel.TYPE_TAXONOMY -> NavMenuItemType.TAXONOMY
             NavMenuItemModel.TYPE_POST_TYPE_ARCHIVE -> NavMenuItemType.POST_TYPE_ARCHIVE
-            else -> NavMenuItemType.CUSTOM
+            else -> {
+                if (this != NavMenuItemModel.TYPE_CUSTOM) {
+                    appLogWrapper.w(AppLog.T.API, "Unknown menu item type: $this, defaulting to CUSTOM")
+                }
+                NavMenuItemType.CUSTOM
+            }
         }
     }
 
