@@ -86,27 +86,18 @@ platform :android do
   # PlayStore Metadata
   ########################################################################
 
-  #####################################################################################
-  # update_appstore_strings
-  # -----------------------------------------------------------------------------------
-  # This lane gets the data from the txt files in the `WordPress/metadata/` and
-  # `WordPress/jetpack_metadata/` folders and updates the `.po` files that is then
-  # picked by GlotPress for translations.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # fastlane update_appstore_strings [version:<version>]
+  # Updates the `PlayStoreStrings.po` files with the latest content from the `release_notes.txt` files
+  # and other metadata text sources in `WordPress/metadata/` and `WordPress/jetpack_metadata/`.
+  # The updated `.po` files are then picked up by GlotPress for translations.
   #
-  # Example:
-  # fastlane update_appstore_strings version:10.3
-  #####################################################################################
-  desc 'Updates the PlayStoreStrings.po files for WP + JP'
-  lane :update_appstore_strings do |options|
-    # If no `app:` is specified, call this for both WordPress and Jetpack
-    apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.downcase&.to_sym)
-    version = options.fetch(:version, current_release_version)
+  # @param [String] app The app to update. If nil, updates both WordPress and Jetpack.
+  # @param [String] version The current `x.y` version of the app. Defaults to current release version.
+  #
+  lane :update_appstore_strings do |app: nil, version: current_release_version|
+    apps = app.nil? ? %i[wordpress jetpack] : Array(app.to_s.downcase.to_sym)
 
-    apps.each do |app|
-      app_values = APP_SPECIFIC_VALUES[app]
+    apps.each do |current_app|
+      app_values = APP_SPECIFIC_VALUES[current_app]
 
       metadata_folder = File.join(PROJECT_ROOT_FOLDER, 'WordPress', app_values[:metadata_dir])
 
