@@ -63,7 +63,10 @@ object GutenbergKitSettingsBuilder {
         ).apply {
             setTitle(post?.title ?: "")
             setContent(post?.content ?: "")
-            setPostId(post?.remotePostId?.toInt())
+            setPostId(
+                if (post?.isLocalDraft == true) null
+                else post?.remotePostId?.toInt()
+            )
             setPostStatus(post?.status ?: "draft")
             setAuthHeader(authHeader)
             setSiteApiNamespace(siteApiNamespace)

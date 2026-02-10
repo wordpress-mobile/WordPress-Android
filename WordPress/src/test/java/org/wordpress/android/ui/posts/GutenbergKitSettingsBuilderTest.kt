@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 
 @RunWith(MockitoJUnitRunner::class)
@@ -427,6 +428,29 @@ class GutenbergKitSettingsBuilderTest {
     @Test
     fun `null remote ID results in null post ID`() {
         val config = buildWPComConfig()
+
+        assertThat(config.postId).isNull()
+    }
+
+    @Test
+    fun `local draft post results in null post ID`() {
+        val site = SiteModel().apply {
+            url = "https://example.wordpress.com"
+            siteId = 123L
+            setIsWPCom(true)
+            setIsJetpackConnected(false)
+            origin = SiteModel.ORIGIN_WPCOM_REST
+        }
+        val post = PostModel().apply {
+            setIsLocalDraft(true)
+            setRemotePostId(99L)
+        }
+        val config = GutenbergKitSettingsBuilder
+            .buildPostConfiguration(
+                site = site,
+                post = post,
+                accessToken = "test_token"
+            )
 
         assertThat(config.postId).isNull()
     }
