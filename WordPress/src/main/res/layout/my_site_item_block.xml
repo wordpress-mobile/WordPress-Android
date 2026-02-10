@@ -33,7 +33,7 @@
         android:text="@string/beta_label"
         android:textAllCaps="true"
         android:textColor="@color/white"
-        android:textSize="10sp"
+        android:textSize="11sp"
         android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
