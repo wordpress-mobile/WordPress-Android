@@ -86,9 +86,7 @@ platform :android do
   # PlayStore Metadata
   ########################################################################
 
-  # Updates the `PlayStoreStrings.po` files with the latest content from the `release_notes.txt` files
-  # and other metadata text sources in `WordPress/metadata/` and `WordPress/jetpack_metadata/`.
-  # The updated `.po` files are then picked up by GlotPress for translations.
+  # Updates the `PlayStoreStrings.po` files for both apps, commits, pushes, and creates a backmerge PR.
   #
   # @param [String] app The app to update. If nil, updates both WordPress and Jetpack.
   # @param [String] version The current `x.y` version of the app. Defaults to current release version.
@@ -97,53 +95,66 @@ platform :android do
     apps = app.nil? ? %i[wordpress jetpack] : Array(app.to_s.downcase.to_sym)
 
     apps.each do |current_app|
-      app_values = APP_SPECIFIC_VALUES[current_app]
-
-      metadata_folder = File.join(PROJECT_ROOT_FOLDER, 'WordPress', app_values[:metadata_dir])
-
-      # Translator comments for Play Store metadata
-      screenshot_comment = <<~COMMENT.chomp
-        translators: This is a promo message that will be attached on top of a screenshot in the Play Store.
-        No specified characters limit here, but try to keep as short as the source one.
-      COMMENT
-
-      # <key in po file> => <path to txt file> or <{ path:, comment: } hash>
-      files = {
-        release_note: File.join(metadata_folder, 'release_notes.txt'),
-        release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
-        play_store_app_title: {
-          path: File.join(metadata_folder, 'title.txt'),
-          comment: 'translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!'
-        },
-        play_store_promo: {
-          path: File.join(metadata_folder, 'short_description.txt'),
-          comment: 'translators: Short description of the app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!'
-        },
-        play_store_desc: {
-          path: File.join(metadata_folder, 'full_description.txt'),
-          comment: 'translators: Multi-paragraph text used to display in the Play Store. Limit to 4000 characters including spaces and commas!'
-        }
-      }
-      # Add entries for `screenshot_*.txt` files as well
-      Dir.glob('screenshot_*.txt', base: metadata_folder).sort.each do |screenshot_file|
-        key = :"play_store_#{File.basename(screenshot_file, '.txt')}"
-        files[key] = {
-          path: File.join(metadata_folder, screenshot_file),
-          comment: screenshot_comment
-        }
-      end
-
-      update_po_file_for_metadata_localization(
-        po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
-        sources: files,
-        release_version: version,
-        commit_message: "Update #{app_values[:display_name]} `PlayStoreStrings.po` for version #{version}"
-      )
+      generate_playstore_strings(app: current_app, version: version)
     end
 
     push_to_git_remote(tags: false)
 
     create_backmerge_pr(source_branch: git_branch, target_branch: "release/#{version}")
+  end
+
+  # Generates the `PlayStoreStrings.po` file for a given app from the metadata text sources.
+  # The updated `.po` file is then picked up by GlotPress for translations.
+  #
+  # @param [String] app The app to generate strings for. Must be `wordpress` or `jetpack`.
+  # @param [String] version The current `x.y` version of the app. Defaults to current release version.
+  # @param [Boolean] skip_commit If true, skips committing changes to git.
+  #
+  lane :generate_playstore_strings do |app:, version: current_release_version, skip_commit: false|
+    app = app.to_s.downcase.to_sym
+    app_values = APP_SPECIFIC_VALUES[app]
+
+    metadata_folder = File.join(PROJECT_ROOT_FOLDER, 'WordPress', app_values[:metadata_dir])
+
+    # Translator comments for Play Store metadata
+    screenshot_comment = <<~COMMENT.chomp
+      translators: This is a promo message that will be attached on top of a screenshot in the Play Store.
+      No specified characters limit here, but try to keep as short as the source one.
+    COMMENT
+
+    # <key in po file> => <path to txt file> or <{ path:, comment: } hash>
+    files = {
+      release_note: File.join(metadata_folder, 'release_notes.txt'),
+      release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
+      play_store_app_title: {
+        path: File.join(metadata_folder, 'title.txt'),
+        comment: 'translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!'
+      },
+      play_store_promo: {
+        path: File.join(metadata_folder, 'short_description.txt'),
+        comment: 'translators: Short description of the app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!'
+      },
+      play_store_desc: {
+        path: File.join(metadata_folder, 'full_description.txt'),
+        comment: 'translators: Multi-paragraph text used to display in the Play Store. Limit to 4000 characters including spaces and commas!'
+      }
+    }
+    # Add entries for `screenshot_*.txt` files as well
+    Dir.glob('screenshot_*.txt', base: metadata_folder).sort.each do |screenshot_file|
+      key = :"play_store_#{File.basename(screenshot_file, '.txt')}"
+      files[key] = {
+        path: File.join(metadata_folder, screenshot_file),
+        comment: screenshot_comment
+      }
+    end
+
+    update_po_file_for_metadata_localization(
+      po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
+      sources: files,
+      release_version: version,
+      commit_message: "Update #{app_values[:display_name]} `PlayStoreStrings.po` for version #{version}",
+      skip_commit: skip_commit
+    )
   end
 
   # Updates the metadata in the Play Store (Main store listing) from the content of `fastlane/{metadata|jetpack_metadata}/android/*/*.txt` files
@@ -367,10 +378,11 @@ platform :android do
     )
   end
 
-  # Updates the `.po` file at the given `po_path` using the content of the `sources` files, interpolating `release_version` where appropriate.
+  # Updates the `.po` file at the given `po_path` using the content of the `sources` files,
+  # interpolating `release_version` where appropriate.
   # Internally, this calls the `gp_update_metadata_source` release toolkit action and adds Git management to it.
   #
-  def update_po_file_for_metadata_localization(po_path:, sources:, release_version:, commit_message:)
+  def update_po_file_for_metadata_localization(po_path:, sources:, release_version:, commit_message:, skip_commit: false)
     ensure_git_status_clean
 
     gp_update_metadata_source(
@@ -378,6 +390,8 @@ platform :android do
       source_files: sources,
       release_version: release_version
     )
+
+    return if skip_commit
 
     git_add(path: po_path)
     git_commit(path: po_path, message: commit_message, allow_nothing_to_commit: true)
