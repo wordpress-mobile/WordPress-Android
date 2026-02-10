@@ -23,9 +23,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -44,6 +41,7 @@ fun MenuItemListScreen(
     onMoveItemUp: (Long) -> Unit,
     onMoveItemDown: (Long) -> Unit,
     onLoadMore: () -> Unit,
+    onFabVisibilityChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -70,7 +68,8 @@ fun MenuItemListScreen(
                     onEditItemClick = onEditItemClick,
                     onMoveItemUp = onMoveItemUp,
                     onMoveItemDown = onMoveItemDown,
-                    onLoadMore = onLoadMore
+                    onLoadMore = onLoadMore,
+                    onFabVisibilityChange = onFabVisibilityChange
                 )
             }
         }
@@ -83,24 +82,19 @@ private fun MenuItemListContent(
     onEditItemClick: (Long) -> Unit,
     onMoveItemUp: (Long) -> Unit,
     onMoveItemDown: (Long) -> Unit,
-    onLoadMore: () -> Unit
+    onLoadMore: () -> Unit,
+    onFabVisibilityChange: (Boolean) -> Unit
 ) {
     val listState = rememberLazyListState()
 
-    val lastVisibleItemIndex = remember {
-        derivedStateOf {
-            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-        }
-    }
-
-    LaunchedEffect(lastVisibleItemIndex.value, state.items.size, state.canLoadMore) {
-        val shouldLoadMore = lastVisibleItemIndex.value >= state.items.size - 1 &&
-            state.canLoadMore &&
-            !state.isLoadingMore
-        if (shouldLoadMore) {
-            onLoadMore()
-        }
-    }
+    ObserveLoadMore(
+        listState = listState,
+        itemCount = state.items.size,
+        canLoadMore = state.canLoadMore,
+        isLoadingMore = state.isLoadingMore,
+        onLoadMore = onLoadMore
+    )
+    ObserveScrollDirectionForFab(listState, onFabVisibilityChange)
 
     LazyColumn(
         state = listState,
