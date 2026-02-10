@@ -178,7 +178,16 @@ class PostRsListActivity : BaseAppCompatActivity() {
         val state by viewModel.tabState(tab)
             .collectAsState()
         val emptyMessage = stringResource(
-            R.string.posts_empty_list
+            when (tab) {
+                PostRsListTab.PUBLISHED ->
+                    R.string.posts_empty_list
+                PostRsListTab.DRAFTS ->
+                    R.string.posts_draft_empty
+                PostRsListTab.SCHEDULED ->
+                    R.string.posts_scheduled_empty
+                PostRsListTab.TRASHED ->
+                    R.string.posts_trashed_empty
+            }
         )
 
         LaunchedEffect(tab) {
