@@ -504,7 +504,7 @@ class NavMenusViewModel @Inject constructor(
             val state = _menuDetailState.value ?: return@launch
             val site = selectedSiteRepository.getSelectedSite() ?: return@launch
 
-            if (state.name.isBlank()) {
+            if (state.name.trim().isBlank()) {
                 _uiEvent.value = NavMenusUiEvent.ShowError(
                     resourceProvider.getString(R.string.menu_name_required)
                 )
@@ -516,8 +516,8 @@ class NavMenusViewModel @Inject constructor(
             val menu = NavMenuModel(
                 localSiteId = site.id,
                 remoteMenuId = state.menuId,
-                name = state.name,
-                description = state.description,
+                name = state.name.trim(),
+                description = state.description.trim(),
                 locations = state.selectedLocations.toJsonStringArray(),
                 autoAdd = state.autoAdd
             )
@@ -582,7 +582,7 @@ class NavMenusViewModel @Inject constructor(
     }
 
     fun updateMenuItemUrl(url: String) {
-        _menuItemDetailState.value = _menuItemDetailState.value?.copy(url = url.trim())
+        _menuItemDetailState.value = _menuItemDetailState.value?.copy(url = url)
     }
 
     fun updateMenuItemParent(parentId: Long) {
@@ -931,8 +931,8 @@ class NavMenusViewModel @Inject constructor(
             localSiteId = site.id,
             remoteItemId = state.itemId,
             menuId = state.menuId,
-            title = state.title,
-            url = state.url,
+            title = state.title.trim(),
+            url = state.url.trim(),
             type = state.type,
             objectType = state.objectType,
             objectId = state.objectId,
@@ -944,7 +944,7 @@ class NavMenusViewModel @Inject constructor(
             } else {
                 "[]"
             },
-            description = state.description,
+            description = state.description.trim(),
             attrTitle = state.attrTitle
         )
     }
@@ -1000,7 +1000,7 @@ class NavMenusViewModel @Inject constructor(
     }
 
     private fun sanitizeInput(input: String, maxLength: Int): String {
-        return input.trim().take(maxLength)
+        return input.take(maxLength)
     }
 
     companion object {
