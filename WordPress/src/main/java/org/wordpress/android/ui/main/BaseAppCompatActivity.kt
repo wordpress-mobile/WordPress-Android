@@ -29,6 +29,7 @@ import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.navmenus.NavMenusActivity
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity
 import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.rslist.PostRsListActivity
 import org.wordpress.android.ui.posts.GutenbergKitActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity
@@ -96,6 +97,7 @@ private val excludedActivities = listOf(
     MediaPreviewActivity::class.java.name,
     MenuActivity::class.java.name,
     NavMenusActivity::class.java.name,
+    PostRsListActivity::class.java.name,
     NewDomainSearchActivity::class.java.name,
     PersonalizationActivity::class.java.name,
     PurchaseDomainActivity::class.java.name,

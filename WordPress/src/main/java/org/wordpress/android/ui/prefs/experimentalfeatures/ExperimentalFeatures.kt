@@ -59,6 +59,11 @@ class ExperimentalFeatures @Inject constructor(
             "nav_menus",
             R.string.experimental_nav_menus,
             R.string.experimental_nav_menus_description
+        ),
+        POSTS_RS_LIST(
+            "posts_rs_list",
+            R.string.experimental_posts_rs_list,
+            R.string.experimental_posts_rs_list_description
         );
     }
 }

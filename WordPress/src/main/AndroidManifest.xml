@@ -959,6 +959,12 @@
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <activity
+            android:name=".ui.posts.rslist.PostRsListActivity"
+            android:label="@string/my_site_btn_blog_posts"
+            android:launchMode="singleTop"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!--Plugins-->
         <activity
             android:name=".ui.plugins.PluginDetailActivity"

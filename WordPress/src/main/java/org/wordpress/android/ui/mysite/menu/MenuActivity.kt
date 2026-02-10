@@ -57,6 +57,7 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.newstats.NewStatsActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.SiteSettingsFragment
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
@@ -71,6 +72,9 @@ class MenuActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
+
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
 
     private val viewModel: MenuViewModel by viewModels()
 
@@ -114,7 +118,18 @@ class MenuActivity : BaseAppCompatActivity() {
             is SiteNavigationAction.OpenActivityLog -> ActivityLauncher.viewActivityLogList(this, action.site)
             is SiteNavigationAction.OpenBackup -> ActivityLauncher.viewBackupList(this, action.site)
             is SiteNavigationAction.OpenScan -> ActivityLauncher.viewScan(this, action.site)
-            is SiteNavigationAction.OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(this, action.site)
+            is SiteNavigationAction.OpenPosts -> {
+                if (experimentalFeatures.isEnabled(
+                        ExperimentalFeatures.Feature.POSTS_RS_LIST
+                    ) && action.site.hasApplicationPassword()
+                ) {
+                    ActivityLauncher.viewPostsRsList(this)
+                } else {
+                    ActivityLauncher.viewCurrentBlogPosts(
+                        this, action.site
+                    )
+                }
+            }
             is SiteNavigationAction.OpenPages -> ActivityLauncher.viewCurrentBlogPages(this, action.site)
             is SiteNavigationAction.OpenPostTypes -> ActivityLauncher.viewPostTypes(this, action.site)
             is SiteNavigationAction.OpenAdmin -> ActivityLauncher.viewBlogAdmin(this, action.site)
