@@ -30,7 +30,10 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import android.content.res.Configuration
+import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.navmenus.MenuItemListUiState
 import org.wordpress.android.ui.navmenus.MenuItemUiModel
 
@@ -232,3 +235,98 @@ private fun MenuItemListItem(
         }
     }
 }
+
+// region Previews
+
+private val sampleMenuItems = listOf(
+    MenuItemUiModel(
+        id = 1L, title = "Home", url = "https://example.com",
+        type = "custom", typeLabel = "Custom Link", description = "",
+        parentId = 0L, menuOrder = 1, indentLevel = 0
+    ),
+    MenuItemUiModel(
+        id = 2L, title = "About Us", url = "https://example.com/about",
+        type = "post_type", typeLabel = "Page", description = "Learn more about our company",
+        parentId = 0L, menuOrder = 2, indentLevel = 0
+    ),
+    MenuItemUiModel(
+        id = 3L, title = "Our Team", url = "https://example.com/about/team",
+        type = "post_type", typeLabel = "Page", description = "",
+        parentId = 2L, menuOrder = 1, indentLevel = 1
+    ),
+    MenuItemUiModel(
+        id = 4L, title = "Contact", url = "https://example.com/contact",
+        type = "post_type", typeLabel = "Page", description = "",
+        parentId = 0L, menuOrder = 3, indentLevel = 0
+    )
+)
+
+@Preview(name = "Light Mode", showBackground = true)
+@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun MenuItemListScreenPreview() {
+    AppThemeM3 {
+        MenuItemListScreen(
+            state = MenuItemListUiState(
+                menuId = 1L,
+                menuName = "Main Menu",
+                items = sampleMenuItems
+            ),
+            onEditItemClick = {},
+            onMoveItemUp = {},
+            onMoveItemDown = {},
+            onLoadMore = {},
+            onFabVisibilityChange = {}
+        )
+    }
+}
+
+@Preview(name = "Loading Light", showBackground = true)
+@Preview(name = "Loading Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun MenuItemListScreenLoadingPreview() {
+    AppThemeM3 {
+        MenuItemListScreen(
+            state = MenuItemListUiState(isLoading = true, menuName = "Main Menu"),
+            onEditItemClick = {},
+            onMoveItemUp = {},
+            onMoveItemDown = {},
+            onLoadMore = {},
+            onFabVisibilityChange = {}
+        )
+    }
+}
+
+@Preview(name = "Empty Light", showBackground = true)
+@Preview(name = "Empty Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun MenuItemListScreenEmptyPreview() {
+    AppThemeM3 {
+        MenuItemListScreen(
+            state = MenuItemListUiState(menuName = "Main Menu", items = emptyList()),
+            onEditItemClick = {},
+            onMoveItemUp = {},
+            onMoveItemDown = {},
+            onLoadMore = {},
+            onFabVisibilityChange = {}
+        )
+    }
+}
+
+@Preview(name = "Error Light", showBackground = true)
+@Preview(name = "Error Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun MenuItemListScreenErrorPreview() {
+    AppThemeM3 {
+        MenuItemListScreen(
+            state = MenuItemListUiState(menuName = "Main Menu", error = "Failed to load menu items"),
+            onEditItemClick = {},
+            onMoveItemUp = {},
+            onMoveItemDown = {},
+            onLoadMore = {},
+            onFabVisibilityChange = {}
+        )
+    }
+}
+
+// endregion
