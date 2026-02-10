@@ -28,7 +28,8 @@ class EditorSettingsRepository @Inject constructor(
      */
     fun getSupportsEditorSettingsForSite(site: SiteModel): Boolean {
         val hasExistingEditorSettings = editorSettingsSqlUtils.getEditorSettingsForSite(site) != null
-        return hasExistingEditorSettings || appPrefsWrapper.getSiteSupportsEditorSettings(site.siteId)
+        return false
+//        return hasExistingEditorSettings || appPrefsWrapper.getSiteSupportsEditorSettings(site.siteId)
     }
 
     /**
@@ -53,9 +54,9 @@ class EditorSettingsRepository @Inject constructor(
                 else -> false
             }
 
-            appPrefsWrapper.setSiteSupportsEditorSettings(
-                site.siteId, supports
-            )
+//            appPrefsWrapper.setSiteSupportsEditorSettings(
+//                site.siteId, supports
+//            )
 
             supports
         }

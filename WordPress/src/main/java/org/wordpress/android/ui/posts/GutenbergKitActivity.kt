@@ -89,7 +89,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.EditorSettingsStore.FetchEditorSettingsPayload
-import org.wordpress.android.fluxc.store.EditorSettingsStore.OnEditorSettingsChanged
 import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
@@ -314,6 +313,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Inject lateinit var uploadStore: UploadStore
 
     @Inject lateinit var editorThemeStore: EditorThemeStore
+
+
 
     @Inject lateinit var imageLoader: FluxCImageLoader
 
@@ -2241,22 +2242,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                             site, privateAtomicCookie
                         )
                 )
-                .setPlugins(
-                    GutenbergKitSettingsBuilder
-                        .shouldUsePlugins(
-                            isFeatureEnabled =
-                                gutenbergKitPluginsFeature
-                                    .isEnabled(),
-                            isWPComSite = site.isWPCom,
-                            isJetpackConnected =
-                                site.isJetpackConnected,
-                            applicationPassword =
-                                site.apiRestPasswordPlain
-                        )
-                )
-                .setThemeStyles(
-                    siteSettings?.useThemeStyles ?: true
-                )
+                .setPlugins(false)
+                .setThemeStyles(false)
                 .setEnableNetworkLogging(
                     AppPrefs.isTrackNetworkRequestsEnabled()
                 )

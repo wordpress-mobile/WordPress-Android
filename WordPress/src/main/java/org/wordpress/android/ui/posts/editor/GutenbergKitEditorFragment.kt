@@ -156,13 +156,13 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
                 ARG_GUTENBERG_KIT_SETTINGS, EditorConfiguration::class.java
             )
         ).toBuilder()
-            .setThemeStyles(false) // Temporarily disabled during editor integration
+            .setCookies(mapOf())
             .setPlugins(false)     // Temporarily disabled during editor integration
             .build()
 
         val gutenbergView = GutenbergView(
             configuration = configuration,
-            dependencies = this.gutenbergEditorPreloader.getDependencies(),
+            dependencies = null,
             coroutineScope =  this.lifecycleScope,
             context = requireContext()
         )
@@ -215,6 +215,15 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
                 }
             }
         })
+
+        gutenbergView.setLatestContentProvider(
+            object : GutenbergView.LatestContentProvider {
+                override fun getLatestContent():
+                    GutenbergView.LatestContent? {
+                    return null
+                }
+            }
+        )
 
         gutenbergView.setEditorDidBecomeAvailable {
             mEditorFragmentListener.onEditorFragmentContentReady(ArrayList<Any?>(), false)
