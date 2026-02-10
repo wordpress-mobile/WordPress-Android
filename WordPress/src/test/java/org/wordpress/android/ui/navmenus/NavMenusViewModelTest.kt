@@ -8,6 +8,9 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.lenient
 import org.mockito.kotlin.any
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
@@ -52,7 +55,6 @@ class NavMenusViewModelTest : BaseUnitTest() {
         )
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun setupDefaultLinkableItemsMocks() = test {
         val emptySuccess = NavMenuRestClient.LinkableItemsResult.Success(
             items = emptyList(),
@@ -454,13 +456,13 @@ class NavMenusViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when updateMenuItemType called with non-custom type, then loading state is set`() = test {
+    fun `when updateMenuItemType called with non-custom type, then linkable items are fetched`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
         viewModel.navigateToCreateMenuItem()
 
         viewModel.updateMenuItemType(MenuItemTypeOption.POST)
 
-        val state = viewModel.menuItemDetailState.first()
-        assertThat(state?.linkableItemsState?.isLoading).isTrue()
+        verify(navMenuRestClient).fetchPosts(any(), any())
     }
 
     @Test
@@ -565,6 +567,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
         viewModel.navigateToEditMenuItem(20L)
         val detail = viewModel.menuItemDetailState.first()
         assertThat(detail?.menuOrder).isEqualTo(1) // Was 2, swapped to 1
+        verify(navMenuRestClient, times(2)).updateMenuItem(any(), any())
     }
 
     @Test
@@ -631,6 +634,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
         val event = viewModel.uiEvent.first()
         assertThat(event).isEqualTo(NavMenusUiEvent.MenuSaved)
+        verify(navMenuRestClient).createMenu(any(), any())
     }
 
     @Test
@@ -646,6 +650,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
         val event = viewModel.uiEvent.first()
         assertThat(event).isEqualTo(NavMenusUiEvent.MenuDeleted)
+        verify(navMenuRestClient).deleteMenu(any(), any())
     }
 
     @Test
@@ -665,6 +670,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
         val event = viewModel.uiEvent.first()
         assertThat(event).isEqualTo(NavMenusUiEvent.MenuItemSaved)
+        verify(navMenuRestClient).createMenuItem(any(), any())
     }
 
     @Test
@@ -681,6 +687,29 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
         val event = viewModel.uiEvent.first()
         assertThat(event).isEqualTo(NavMenusUiEvent.MenuItemDeleted)
+        verify(navMenuRestClient).deleteMenuItem(any(), any())
+    }
+
+    @Test
+    fun `when saveMenu called without site, then no API call is made`() = test {
+        viewModel.navigateToCreateMenu()
+        viewModel.updateMenuName("Test Menu")
+
+        viewModel.saveMenu()
+
+        verify(navMenuRestClient, never()).createMenu(any(), any())
+        verify(navMenuRestClient, never()).updateMenu(any(), any())
+    }
+
+    @Test
+    fun `when deleteMenu called without site, then no API call is made`() = test {
+        setupMenusInCache(listOf(createTestMenu(1L, "Menu")))
+        viewModel.navigateToEditMenu(1L)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+
+        viewModel.deleteMenu()
+
+        verify(navMenuRestClient, never()).deleteMenu(any(), any())
     }
 
     // endregion
@@ -706,6 +735,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
         assertThat(linkableItems).hasSize(2)
         assertThat(linkableItems?.get(0)?.title).isEqualTo("Home Page")
         assertThat(state?.linkableItemsState?.isLoading).isFalse()
+        verify(navMenuRestClient).fetchPages(any(), any())
     }
 
     @Test
