@@ -2,6 +2,7 @@ package org.wordpress.android.ui.newstats
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.StandardTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -18,7 +19,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner.Silent::class)
-class NewStatsViewModelTest : BaseUnitTest() {
+class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
@@ -213,6 +214,21 @@ class NewStatsViewModelTest : BaseUnitTest() {
     // endregion
 
     // region cardsToLoad tests
+    @Test
+    fun `when ViewModel is created, then cardsToLoad starts empty`() = test {
+        whenever(cardConfigurationRepository.getConfiguration(TEST_SITE_ID))
+            .thenReturn(StatsCardsConfiguration())
+
+        viewModel = NewStatsViewModel(
+            selectedSiteRepository,
+            cardConfigurationRepository,
+            networkUtilsWrapper
+        )
+
+        // Before advanceUntilIdle(), config hasn't loaded yet
+        assertThat(viewModel.cardsToLoad.value).isEmpty()
+    }
+
     @Test
     fun `when config loads, then cardsToLoad matches visible cards`() = test {
         val config = StatsCardsConfiguration(
