@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.rslist
 
 import org.wordpress.android.ui.posts.rslist.models.PostRsModel
+import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import java.text.DateFormat
 
@@ -45,7 +46,9 @@ sealed class PostRsListUiEvent {
 fun PostRsModel.toUiModel(
     dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ): PostUiModel {
-    val parsed = dateTimeUtilsWrapper.dateFromIso8601(date)
+    val parsed = DateTimeUtils.dateUTCFromIso8601(
+        normalizeIso8601(date)
+    )
     val formatted = if (status == "future" && parsed != null) {
         DateFormat.getDateTimeInstance(
             DateFormat.MEDIUM,
@@ -77,6 +80,14 @@ private fun mapStatusLabel(status: String): String {
 
 private fun stripHtml(html: String): String {
     return html.replace(Regex("<[^>]*>"), "").trim()
+}
+
+private fun normalizeIso8601(date: String): String {
+    return if (date.contains("+") || date.endsWith("Z")) {
+        date
+    } else {
+        "${date}+0000"
+    }
 }
 
 private const val MAX_EXCERPT_LENGTH = 150
