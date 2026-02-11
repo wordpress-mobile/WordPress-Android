@@ -984,6 +984,7 @@ class NavMenusViewModel @Inject constructor(
      * Normalizes a URL by adding https:// if no recognized protocol is present.
      * Matches WordPress web behavior where URLs are sanitized rather than rejected.
      */
+    @Suppress("ReturnCount")
     private fun normalizeUrl(url: String): String {
         val trimmed = url.trim()
         if (trimmed.isEmpty() || trimmed.startsWith("#")) return trimmed
