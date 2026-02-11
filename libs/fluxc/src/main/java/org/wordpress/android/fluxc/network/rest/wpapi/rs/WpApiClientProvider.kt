@@ -16,9 +16,11 @@ import uniffi.wp_api.CookiesNonceAuthenticationProvider
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
+import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpComBaseUrl
 import uniffi.wp_api.WpComDotOrgApiUrlResolver as WpComUrlResolver // checkstyle ignore
 import uniffi.wp_api.WpDynamicAuthenticationProvider
+import uniffi.wp_api.WpOrgSiteApiUrlResolver
 import java.net.URL
 import javax.inject.Inject
 import javax.inject.Named
@@ -71,13 +73,26 @@ class WpApiClientProvider @Inject constructor(
         site: SiteModel,
         uploadListener: WpRequestExecutor.UploadListener?,
     ): WpApiClient {
-        val authProvider =
+        val authProvider = if (site.isWPComSimpleSite) {
+            createWpComAuthProvider(accountStore)
+        } else {
             WpAuthenticationProvider.staticWithUsernameAndPassword(
                 username = site.apiRestUsernamePlain,
                 password = site.apiRestPasswordPlain,
             )
+        }
+
+        val urlResolver = if (site.isWPComSimpleSite) {
+            WpComUrlResolver(
+                siteId = site.siteId.toString(),
+                baseUrl = WpComBaseUrl.Production
+            )
+        } else {
+            WpOrgSiteApiUrlResolver(ParsedUrl.parse(site.buildUrl()))
+        }
+
         return WpApiClient(
-            wpOrgSiteApiRootUrl = URL(site.buildUrl()),
+            apiUrlResolver = urlResolver,
             authProvider = authProvider,
             requestExecutor = WpRequestExecutor(
                 interceptors = interceptors.toList(),
