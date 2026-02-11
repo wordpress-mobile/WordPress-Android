@@ -36,7 +36,8 @@ class CountriesViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
-    private var isInitialLoadDone = false
+    private var loadingPeriod: StatsPeriod? = null
+    private var loadedPeriod: StatsPeriod? = null
 
     private var allCountries: List<CountryItem> = emptyList()
     private var cachedMapData: String = ""
@@ -49,16 +50,22 @@ class CountriesViewModel @Inject constructor(
     fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
+            loadingPeriod = null
             _uiState.value = CountriesCardUiState.Error(
-                resourceProvider.getString(R.string.stats_todays_stats_no_site_selected)
+                resourceProvider.getString(
+                    R.string.stats_todays_stats_no_site_selected
+                )
             )
             return
         }
 
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
+            loadingPeriod = null
             _uiState.value = CountriesCardUiState.Error(
-                resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
+                resourceProvider.getString(
+                    R.string.stats_todays_stats_failed_to_load
+                )
             )
             return
         }
@@ -67,7 +74,11 @@ class CountriesViewModel @Inject constructor(
         _uiState.value = CountriesCardUiState.Loading
 
         viewModelScope.launch {
-            fetchCountryViews(site)
+            try {
+                fetchCountryViews(site)
+            } finally {
+                loadingPeriod = null
+            }
         }
     }
 
@@ -89,8 +100,8 @@ class CountriesViewModel @Inject constructor(
     }
 
     fun onPeriodChanged(period: StatsPeriod) {
-        if (isInitialLoadDone && currentPeriod == period) return
-        isInitialLoadDone = true
+        if (loadedPeriod == period || loadingPeriod == period) return
+        loadingPeriod = period
         currentPeriod = period
         loadData()
     }
@@ -113,6 +124,7 @@ class CountriesViewModel @Inject constructor(
 
         when (val result = statsRepository.fetchCountryViews(siteId, currentPeriod)) {
             is CountryViewsResult.Success -> {
+                loadedPeriod = currentPeriod
                 cachedTotalViews = result.totalViews
                 cachedTotalViewsChange = result.totalViewsChange
                 cachedTotalViewsChangePercent = result.totalViewsChangePercent

@@ -66,7 +66,8 @@ class NewStatsViewModel @Inject constructor(
     private fun observeConfigurationChanges() {
         viewModelScope.launch {
             cardConfigurationRepository.configurationFlow.collect { pair ->
-                if (pair != null && pair.first == siteId) {
+                val currentSiteId = siteId
+                if (pair != null && pair.first == currentSiteId) {
                     updateFromConfiguration(pair.second)
                 }
             }

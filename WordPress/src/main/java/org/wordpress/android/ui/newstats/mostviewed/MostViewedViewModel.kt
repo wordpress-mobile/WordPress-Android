@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.mostviewed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,7 +39,8 @@ class MostViewedViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
-    private var isInitialLoadDone = false
+    private var loadingPeriod: StatsPeriod? = null
+    private var loadedPeriod: StatsPeriod? = null
 
     // Cache for detail data - separate for each data source
     private var postsAllItems: List<MostViewedDetailItem> = emptyList()
@@ -52,8 +54,8 @@ class MostViewedViewModel @Inject constructor(
     private var referrersCachedTotalViewsChangePercent: Double = 0.0
 
     fun onPeriodChanged(period: StatsPeriod) {
-        if (isInitialLoadDone && currentPeriod == period) return
-        isInitialLoadDone = true
+        if (loadedPeriod == period || loadingPeriod == period) return
+        loadingPeriod = period
         currentPeriod = period
         loadData()
     }
@@ -104,8 +106,11 @@ class MostViewedViewModel @Inject constructor(
     fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
+            loadingPeriod = null
             val errorState = MostViewedCardUiState.Error(
-                message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected)
+                message = resourceProvider.getString(
+                    R.string.stats_todays_stats_no_site_selected
+                )
             )
             _postsUiState.value = errorState
             _referrersUiState.value = errorState
@@ -114,8 +119,11 @@ class MostViewedViewModel @Inject constructor(
 
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
+            loadingPeriod = null
             val errorState = MostViewedCardUiState.Error(
-                message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
+                message = resourceProvider.getString(
+                    R.string.stats_todays_stats_failed_to_load
+                )
             )
             _postsUiState.value = errorState
             _referrersUiState.value = errorState
@@ -127,7 +135,12 @@ class MostViewedViewModel @Inject constructor(
         _referrersUiState.value = MostViewedCardUiState.Loading
 
         viewModelScope.launch {
-            loadDataInternal(site.siteId)
+            try {
+                loadDataInternal(site.siteId)
+                loadedPeriod = currentPeriod
+            } finally {
+                loadingPeriod = null
+            }
         }
     }
 
@@ -167,13 +180,11 @@ class MostViewedViewModel @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadDataInternal(siteId: Long) {
-        // Load both data sources in parallel
-        viewModelScope.launch {
+    private suspend fun loadDataInternal(siteId: Long) = coroutineScope {
+        launch {
             loadDataForSourceInternal(siteId, MostViewedDataSource.POSTS_AND_PAGES)
         }
-        viewModelScope.launch {
+        launch {
             loadDataForSourceInternal(siteId, MostViewedDataSource.REFERRERS)
         }
     }
