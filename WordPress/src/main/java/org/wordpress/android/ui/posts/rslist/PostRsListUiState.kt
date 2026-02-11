@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.posts.rslist
 
 import org.wordpress.android.ui.posts.rslist.models.PostRsModel
-import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import java.text.DateFormat
 
 /**
@@ -42,13 +42,17 @@ sealed class PostRsListUiEvent {
 
 // ========== Mapping Functions ==========
 
-fun PostRsModel.toUiModel(): PostUiModel {
-    val parsed = DateTimeUtils.dateFromIso8601(date)
-    val formatted = if (parsed != null) {
-        DateFormat.getDateInstance(DateFormat.MEDIUM)
-            .format(parsed)
+fun PostRsModel.toUiModel(
+    dateTimeUtilsWrapper: DateTimeUtilsWrapper
+): PostUiModel {
+    val parsed = dateTimeUtilsWrapper.dateFromIso8601(date)
+    val formatted = if (status == "future" && parsed != null) {
+        DateFormat.getDateTimeInstance(
+            DateFormat.MEDIUM,
+            DateFormat.SHORT
+        ).format(parsed)
     } else {
-        date
+        dateTimeUtilsWrapper.javaDateToTimeSpan(parsed)
     }
     return PostUiModel(
         remoteId = remotePostId,

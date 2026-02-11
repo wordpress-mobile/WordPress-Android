@@ -16,6 +16,7 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.rslist.data.PostRsRestClient
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -24,6 +25,7 @@ import javax.inject.Named
 class PostRsListViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val postRsRestClient: PostRsRestClient,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
@@ -101,7 +103,7 @@ class PostRsListViewModel @Inject constructor(
                             is PostRsRestClient.PostRsListResult
                             .Success -> {
                                 val newModels = result.posts
-                                    .map { it.toUiModel() }
+                                    .map { it.toUiModel(dateTimeUtilsWrapper) }
                                 loadedCounts[tab] =
                                     offset + result.posts.size
                                 flow.value = flow.value.copy(
@@ -185,7 +187,7 @@ class PostRsListViewModel @Inject constructor(
                         is PostRsRestClient.PostRsListResult
                         .Success -> {
                             val uiModels = result.posts
-                                .map { it.toUiModel() }
+                                .map { it.toUiModel(dateTimeUtilsWrapper) }
                             loadedCounts[tab] = result.posts.size
                             flow.value = flow.value.copy(
                                 isLoading = false,
