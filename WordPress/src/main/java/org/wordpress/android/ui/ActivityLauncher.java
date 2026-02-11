@@ -108,7 +108,7 @@ import org.wordpress.android.ui.prefs.categories.list.CategoriesListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.navmenus.NavMenusActivity;
-import org.wordpress.android.ui.posts.rslist.PostRsListActivity;
+import org.wordpress.android.ui.posts_rs.PostRsListActivity;
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;

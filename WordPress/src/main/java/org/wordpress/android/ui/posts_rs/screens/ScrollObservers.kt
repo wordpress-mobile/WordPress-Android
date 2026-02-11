@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.rslist.screens
+package org.wordpress.android.ui.posts_rs.screens
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.rslist
+package org.wordpress.android.ui.posts_rs
 
 import androidx.annotation.StringRes
 import org.wordpress.android.R

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.rslist.models
+package org.wordpress.android.ui.posts_rs.models
 
 /**
  * Domain model for a post fetched via wordpress-rs.

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.rslist
+package org.wordpress.android.ui.posts_rs
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +15,7 @@ import org.wordpress.android.R
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.posts.rslist.data.PostRsRestClient
+import org.wordpress.android.ui.posts_rs.data.PostRsRestClient
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject

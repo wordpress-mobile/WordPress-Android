@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.rslist.screens
+package org.wordpress.android.ui.posts_rs.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -29,8 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.posts.rslist.PostTabUiState
-import org.wordpress.android.ui.posts.rslist.PostUiModel
+import org.wordpress.android.ui.posts_rs.PostTabUiState
+import org.wordpress.android.ui.posts_rs.PostUiModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

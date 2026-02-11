@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.rslist.screens
+package org.wordpress.android.ui.posts_rs.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.posts.rslist.PostUiModel
+import org.wordpress.android.ui.posts_rs.PostUiModel
 
 @Composable
 fun PostRsListItem(
