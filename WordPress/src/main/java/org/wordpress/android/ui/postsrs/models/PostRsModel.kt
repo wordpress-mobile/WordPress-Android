@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.postsrs.models
 
+import uniffi.wp_api.PostStatus
+
 /**
  * Domain model for a post fetched via wordpress-rs.
  * Maps from uniffi's AnyPostWithEditContext.
@@ -9,5 +11,5 @@ data class PostRsModel(
     val title: String,
     val excerpt: String,
     val date: String,
-    val status: String
+    val status: PostStatus
 )

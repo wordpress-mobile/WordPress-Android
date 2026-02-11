@@ -6,6 +6,7 @@ import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.viewmodel.ResourceProvider
+import uniffi.wp_api.PostStatus
 import java.text.DateFormat
 
 /**
@@ -53,7 +54,7 @@ fun PostRsModel.toUiModel(
     val parsed = DateTimeUtils.dateUTCFromIso8601(
         normalizeIso8601(date)
     )
-    val formatted = if (status == "future" && parsed != null) {
+    val formatted = if (status is PostStatus.Future && parsed != null) {
         DateFormat.getDateTimeInstance(
             DateFormat.MEDIUM,
             DateFormat.SHORT
@@ -76,29 +77,31 @@ fun PostRsModel.toUiModel(
 }
 
 private fun mapStatusLabel(
-    status: String,
+    status: PostStatus,
     resourceProvider: ResourceProvider
 ): String {
     return when (status) {
-        "publish" -> resourceProvider.getString(
+        is PostStatus.Publish -> resourceProvider.getString(
             R.string.post_status_post_published
         )
-        "draft" -> resourceProvider.getString(
+        is PostStatus.Draft -> resourceProvider.getString(
             R.string.post_status_draft
         )
-        "pending" -> resourceProvider.getString(
+        is PostStatus.Pending -> resourceProvider.getString(
             R.string.post_status_pending_review
         )
-        "private" -> resourceProvider.getString(
+        is PostStatus.Private -> resourceProvider.getString(
             R.string.post_status_post_private
         )
-        "future" -> resourceProvider.getString(
+        is PostStatus.Future -> resourceProvider.getString(
             R.string.post_status_post_scheduled
         )
-        "trash" -> resourceProvider.getString(
+        is PostStatus.Trash -> resourceProvider.getString(
             R.string.post_status_post_trashed
         )
-        else -> status.replaceFirstChar { it.uppercase() }
+        is PostStatus.Custom -> status.v1.replaceFirstChar {
+            it.uppercase()
+        }
     }
 }
 

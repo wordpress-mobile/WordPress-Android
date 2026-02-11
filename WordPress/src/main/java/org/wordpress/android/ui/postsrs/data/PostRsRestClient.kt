@@ -70,7 +70,7 @@ class PostRsRestClient @Inject constructor(
                         title = title,
                         excerpt = excerpt,
                         date = post.date,
-                        status = postStatusToString(post.status)
+                        status = post.status
                     )
                 }
                 val canLoadMore =
@@ -85,18 +85,6 @@ class PostRsRestClient @Inject constructor(
                 )
                 PostRsListResult.Error(errorMessage)
             }
-        }
-    }
-
-    private fun postStatusToString(status: PostStatus): String {
-        return when (status) {
-            is PostStatus.Publish -> "publish"
-            is PostStatus.Draft -> "draft"
-            is PostStatus.Pending -> "pending"
-            is PostStatus.Private -> "private"
-            is PostStatus.Future -> "future"
-            is PostStatus.Trash -> "trash"
-            is PostStatus.Custom -> status.v1
         }
     }
 

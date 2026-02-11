@@ -17,7 +17,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -107,7 +106,6 @@ fun PostRsListScreen(
                 TabContent(
                     tab = selectedTab,
                     tabStateFlow = tabStateFlow,
-                    onTabSelected = onTabSelected,
                     onPostClick = onPostClick,
                     onRefresh = onRefresh,
                     onLoadMore = onLoadMore,
@@ -122,7 +120,6 @@ fun PostRsListScreen(
 private fun TabContent(
     tab: PostRsListTab,
     tabStateFlow: (PostRsListTab) -> StateFlow<PostTabUiState>,
-    onTabSelected: (PostRsListTab) -> Unit,
     onPostClick: (Long) -> Unit,
     onRefresh: (PostRsListTab) -> Unit,
     onLoadMore: (PostRsListTab) -> Unit,
@@ -141,10 +138,6 @@ private fun TabContent(
                 R.string.posts_trashed_empty
         }
     )
-
-    LaunchedEffect(tab) {
-        onTabSelected(tab)
-    }
 
     PostRsTabListScreen(
         state = state,

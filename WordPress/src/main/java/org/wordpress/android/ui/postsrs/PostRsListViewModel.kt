@@ -40,6 +40,9 @@ class PostRsListViewModel @Inject constructor(
 ) : ViewModel() {
     init {
         dispatcher.register(this)
+        loadPostsInternal(
+            PostRsListTab.PUBLISHED, isRefresh = false
+        )
     }
 
     override fun onCleared() {
