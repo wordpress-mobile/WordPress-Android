@@ -72,7 +72,7 @@ fun ExperimentalFeaturesScreen(
         },
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            Column {
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 features.forEach { (feature, enabled) ->
                     FeatureToggle(
                         feature = feature,
