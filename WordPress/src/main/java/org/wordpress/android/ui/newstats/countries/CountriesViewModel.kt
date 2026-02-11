@@ -36,6 +36,7 @@ class CountriesViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
+    private var isInitialLoadDone = false
 
     private var allCountries: List<CountryItem> = emptyList()
     private var cachedMapData: String = ""
@@ -44,10 +45,6 @@ class CountriesViewModel @Inject constructor(
     private var cachedTotalViews: Long = 0L
     private var cachedTotalViewsChange: Long = 0L
     private var cachedTotalViewsChangePercent: Double = 0.0
-
-    init {
-        loadData()
-    }
 
     fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
@@ -92,10 +89,10 @@ class CountriesViewModel @Inject constructor(
     }
 
     fun onPeriodChanged(period: StatsPeriod) {
-        if (currentPeriod != period) {
-            currentPeriod = period
-            loadData()
-        }
+        if (isInitialLoadDone && currentPeriod == period) return
+        isInitialLoadDone = true
+        currentPeriod = period
+        loadData()
     }
 
     fun getDetailData(): CountriesDetailData {

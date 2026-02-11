@@ -38,6 +38,7 @@ class MostViewedViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
+    private var isInitialLoadDone = false
 
     // Cache for detail data - separate for each data source
     private var postsAllItems: List<MostViewedDetailItem> = emptyList()
@@ -50,12 +51,9 @@ class MostViewedViewModel @Inject constructor(
     private var referrersCachedTotalViewsChange: Long = 0L
     private var referrersCachedTotalViewsChangePercent: Double = 0.0
 
-    init {
-        loadData()
-    }
-
     fun onPeriodChanged(period: StatsPeriod) {
-        if (period == currentPeriod) return
+        if (isInitialLoadDone && currentPeriod == period) return
+        isInitialLoadDone = true
         currentPeriod = period
         loadData()
     }

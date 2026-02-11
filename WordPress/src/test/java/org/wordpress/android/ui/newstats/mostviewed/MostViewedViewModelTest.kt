@@ -67,6 +67,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
             statsRepository,
             resourceProvider
         )
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
     }
 
     // region Error states
