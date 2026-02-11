@@ -67,6 +67,9 @@ class ViewsStatsViewModel @Inject constructor(
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
     private var loadedPeriod: StatsPeriod? = null
 
+    private val _isPeriodInitialized = MutableStateFlow(false)
+    val isPeriodInitialized: StateFlow<Boolean> = _isPeriodInitialized.asStateFlow()
+
     init {
         initializeWithPersistedPeriod()
     }
@@ -87,6 +90,7 @@ class ViewsStatsViewModel @Inject constructor(
                     _selectedPeriod.value = restoredPeriod
                 }
             }
+            _isPeriodInitialized.value = true
         }
     }
 

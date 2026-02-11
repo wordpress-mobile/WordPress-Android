@@ -256,13 +256,17 @@ private fun TrafficTabContent(
     val hiddenCards by newStatsViewModel.hiddenCards.collectAsState()
     val isNetworkAvailable by newStatsViewModel.isNetworkAvailable.collectAsState()
     val cardsToLoad by newStatsViewModel.cardsToLoad.collectAsState()
+    val isPeriodInitialized by viewsStatsViewModel.isPeriodInitialized.collectAsState()
     var showAddCardSheet by remember { mutableStateOf(false) }
     val addCardSheetState = rememberModalBottomSheetState()
 
     // Propagate period changes only to visible card ViewModels.
     // cardsToLoad is empty until the configuration is loaded from the repository,
     // preventing data fetches for the default card set before the real config is known.
-    LaunchedEffect(selectedPeriod, cardsToLoad) {
+    // isPeriodInitialized prevents fetching with a stale default period before the
+    // persisted period is restored from preferences.
+    LaunchedEffect(selectedPeriod, cardsToLoad, isPeriodInitialized) {
+        if (!isPeriodInitialized) return@LaunchedEffect
         if (StatsCardType.TODAYS_STATS in cardsToLoad) {
             todaysStatsViewModel.loadDataIfNeeded()
         }
