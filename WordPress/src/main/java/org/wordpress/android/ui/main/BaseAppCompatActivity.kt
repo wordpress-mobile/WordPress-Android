@@ -29,7 +29,7 @@ import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.navmenus.NavMenusActivity
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity
 import org.wordpress.android.ui.posts.EditPostActivity
-import org.wordpress.android.ui.posts_rs.PostRsListActivity
+import org.wordpress.android.ui.postsrs.PostRsListActivity
 import org.wordpress.android.ui.posts.GutenbergKitActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity

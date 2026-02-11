@@ -1,6 +1,6 @@
-package org.wordpress.android.ui.posts_rs
+package org.wordpress.android.ui.postsrs
 
-import org.wordpress.android.ui.posts_rs.models.PostRsModel
+import org.wordpress.android.ui.postsrs.models.PostRsModel
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import java.text.DateFormat

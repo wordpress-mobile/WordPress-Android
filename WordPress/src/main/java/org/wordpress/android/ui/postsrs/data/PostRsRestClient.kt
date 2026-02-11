@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts_rs.data
+package org.wordpress.android.ui.postsrs.data
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -6,7 +6,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.ui.posts_rs.models.PostRsModel
+import org.wordpress.android.ui.postsrs.models.PostRsModel
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpRequestResult

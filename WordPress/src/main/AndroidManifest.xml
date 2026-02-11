@@ -960,7 +960,7 @@
             android:theme="@style/WordPress.NoActionBar"/>
 
         <activity
-            android:name=".ui.posts_rs.PostRsListActivity"
+            android:name=".ui.postsrs.PostRsListActivity"
             android:label="@string/my_site_btn_blog_posts"
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar"/>

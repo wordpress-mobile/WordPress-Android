@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts_rs
+package org.wordpress.android.ui.postsrs
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.posts_rs.data.PostRsRestClient
+import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts_rs
+package org.wordpress.android.ui.postsrs
 
 import android.content.Context
 import android.content.Intent
@@ -41,7 +41,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
-import org.wordpress.android.ui.posts_rs.screens.PostRsTabListScreen
+import org.wordpress.android.ui.postsrs.screens.PostRsTabListScreen
 import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 
