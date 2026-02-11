@@ -31,6 +31,14 @@ class NewStatsViewModel @Inject constructor(
     private val _isNetworkAvailable = MutableStateFlow(true)
     val isNetworkAvailable: StateFlow<Boolean> = _isNetworkAvailable.asStateFlow()
 
+    /**
+     * Cards whose data should be loaded. Empty until configuration is loaded from the
+     * repository to prevent fetching data for default cards that may not be visible.
+     * After configuration loads, mirrors [visibleCards].
+     */
+    private val _cardsToLoad = MutableStateFlow<List<StatsCardType>>(emptyList())
+    val cardsToLoad: StateFlow<List<StatsCardType>> = _cardsToLoad.asStateFlow()
+
     private val siteId: Long
         get() = selectedSiteRepository.getSelectedSite()?.siteId ?: 0L
 
@@ -68,6 +76,7 @@ class NewStatsViewModel @Inject constructor(
     private fun updateFromConfiguration(config: StatsCardsConfiguration) {
         _visibleCards.value = config.visibleCards
         _hiddenCards.value = config.hiddenCards()
+        _cardsToLoad.value = config.visibleCards
     }
 
     fun removeCard(cardType: StatsCardType) {

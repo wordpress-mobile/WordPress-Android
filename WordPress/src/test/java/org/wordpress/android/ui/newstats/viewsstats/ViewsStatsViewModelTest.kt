@@ -87,6 +87,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             SavedStateHandle(),
             cardsConfigurationRepository
         )
+        viewModel.loadDataIfNeeded()
     }
 
     @Test
@@ -380,9 +381,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         viewModel.onPeriodChanged(StatsPeriod.Last30Days)
+        viewModel.loadDataIfNeeded()
         advanceUntilIdle()
 
-        // Called twice: once during init, once during period change
+        // Called twice: once during init, once after period change
         verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
     }
 
@@ -401,9 +403,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             endDate = LocalDate.of(2024, 1, 15)
         )
         viewModel.onPeriodChanged(customPeriod)
+        viewModel.loadDataIfNeeded()
         advanceUntilIdle()
 
-        // Called twice: once during init, once during custom period change
+        // Called twice: once during init, once after custom period change
         verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
     }
 

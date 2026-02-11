@@ -37,7 +37,11 @@ class TodaysStatsViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
-    init {
+    private var isInitialLoadDone = false
+
+    fun loadDataIfNeeded() {
+        if (isInitialLoadDone) return
+        isInitialLoadDone = true
         loadData()
     }
 

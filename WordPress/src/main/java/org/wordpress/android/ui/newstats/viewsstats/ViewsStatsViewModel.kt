@@ -65,14 +65,16 @@ class ViewsStatsViewModel @Inject constructor(
 
     private var currentChartType: ChartType = ChartType.LINE
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
+    private var loadedPeriod: StatsPeriod? = null
 
     init {
         initializeWithPersistedPeriod()
     }
 
     /**
-     * Initializes the ViewModel by restoring the period from persisted preferences asynchronously,
-     * then loading data. This avoids blocking the main thread with disk I/O.
+     * Initializes the ViewModel by restoring the period from persisted preferences asynchronously.
+     * Data loading is deferred to [loadDataIfNeeded] which is called from the composable
+     * only when the VIEWS_STATS card is visible.
      */
     private fun initializeWithPersistedPeriod() {
         viewModelScope.launch {
@@ -85,8 +87,17 @@ class ViewsStatsViewModel @Inject constructor(
                     _selectedPeriod.value = restoredPeriod
                 }
             }
-            loadData()
         }
+    }
+
+    /**
+     * Loads data only if it hasn't been loaded for the current period yet.
+     * Called from the composable when the VIEWS_STATS card is visible.
+     */
+    fun loadDataIfNeeded() {
+        if (loadedPeriod == currentPeriod) return
+        loadedPeriod = currentPeriod
+        loadData()
     }
 
     fun onPeriodChanged(period: StatsPeriod) {
@@ -94,7 +105,6 @@ class ViewsStatsViewModel @Inject constructor(
         currentPeriod = period
         _selectedPeriod.value = period
         savePeriod(period)
-        loadData()
     }
 
     private fun savePeriod(period: StatsPeriod) {
