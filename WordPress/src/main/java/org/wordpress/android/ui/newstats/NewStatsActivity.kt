@@ -247,8 +247,10 @@ private fun TrafficTabContent(
     val isMostViewedRefreshing by mostViewedViewModel.isRefreshing.collectAsState()
     val isCountriesRefreshing by countriesViewModel.isRefreshing.collectAsState()
     val isAuthorsRefreshing by authorsViewModel.isRefreshing.collectAsState()
-    val isRefreshing = isTodaysStatsRefreshing || isViewsStatsRefreshing ||
-        isMostViewedRefreshing || isCountriesRefreshing || isAuthorsRefreshing
+    val isRefreshing = listOf(
+        isTodaysStatsRefreshing, isViewsStatsRefreshing,
+        isMostViewedRefreshing, isCountriesRefreshing, isAuthorsRefreshing
+    ).any { it }
     val pullToRefreshState = rememberPullToRefreshState()
 
     // Card configuration state
@@ -267,23 +269,19 @@ private fun TrafficTabContent(
     // persisted period is restored from preferences.
     LaunchedEffect(selectedPeriod, cardsToLoad, isPeriodInitialized) {
         if (!isPeriodInitialized) return@LaunchedEffect
-        if (StatsCardType.TODAYS_STATS in cardsToLoad) {
-            todaysStatsViewModel.loadDataIfNeeded()
-        }
-        if (StatsCardType.VIEWS_STATS in cardsToLoad) {
-            viewsStatsViewModel.loadDataIfNeeded()
-        }
-        if (StatsCardType.MOST_VIEWED_POSTS_AND_PAGES in cardsToLoad ||
-            StatsCardType.MOST_VIEWED_REFERRERS in cardsToLoad
-        ) {
-            mostViewedViewModel.onPeriodChanged(selectedPeriod)
-        }
-        if (StatsCardType.COUNTRIES in cardsToLoad) {
-            countriesViewModel.onPeriodChanged(selectedPeriod)
-        }
-        if (StatsCardType.AUTHORS in cardsToLoad) {
-            authorsViewModel.onPeriodChanged(selectedPeriod)
-        }
+        cardsToLoad.dispatchToVisibleCards(
+            onTodaysStats = { todaysStatsViewModel.loadDataIfNeeded() },
+            onViewsStats = { viewsStatsViewModel.loadDataIfNeeded() },
+            onMostViewed = {
+                mostViewedViewModel.onPeriodChanged(selectedPeriod)
+            },
+            onCountries = {
+                countriesViewModel.onPeriodChanged(selectedPeriod)
+            },
+            onAuthors = {
+                authorsViewModel.onPeriodChanged(selectedPeriod)
+            }
+        )
     }
 
     if (showAddCardSheet) {
@@ -301,30 +299,22 @@ private fun TrafficTabContent(
     // Once user retries or network becomes available, show cards instead
     var showNoConnectionScreen by remember { mutableStateOf(!isNetworkAvailable) }
 
+    val loadVisibleCards = {
+        visibleCards.dispatchToVisibleCards(
+            onTodaysStats = { todaysStatsViewModel.loadData() },
+            onViewsStats = { viewsStatsViewModel.loadData() },
+            onMostViewed = { mostViewedViewModel.loadData() },
+            onCountries = { countriesViewModel.loadData() },
+            onAuthors = { authorsViewModel.loadData() }
+        )
+    }
+
     // React to network availability changes
     LaunchedEffect(isNetworkAvailable) {
         if (isNetworkAvailable && showNoConnectionScreen) {
-            // Network became available while on no-connection screen - auto-load visible cards
             showNoConnectionScreen = false
-            if (StatsCardType.TODAYS_STATS in visibleCards) {
-                todaysStatsViewModel.loadData()
-            }
-            if (StatsCardType.VIEWS_STATS in visibleCards) {
-                viewsStatsViewModel.loadData()
-            }
-            if (StatsCardType.MOST_VIEWED_POSTS_AND_PAGES in visibleCards ||
-                StatsCardType.MOST_VIEWED_REFERRERS in visibleCards
-            ) {
-                mostViewedViewModel.loadData()
-            }
-            if (StatsCardType.COUNTRIES in visibleCards) {
-                countriesViewModel.loadData()
-            }
-            if (StatsCardType.AUTHORS in visibleCards) {
-                authorsViewModel.loadData()
-            }
+            loadVisibleCards()
         } else if (!isNetworkAvailable && !showNoConnectionScreen) {
-            // Network became unavailable while viewing cards - show no-connection screen
             showNoConnectionScreen = true
         }
     }
@@ -336,23 +326,7 @@ private fun TrafficTabContent(
                 val isAvailable = newStatsViewModel.checkNetworkStatus()
                 if (isAvailable) {
                     showNoConnectionScreen = false
-                    if (StatsCardType.TODAYS_STATS in visibleCards) {
-                        todaysStatsViewModel.loadData()
-                    }
-                    if (StatsCardType.VIEWS_STATS in visibleCards) {
-                        viewsStatsViewModel.loadData()
-                    }
-                    if (StatsCardType.MOST_VIEWED_POSTS_AND_PAGES in visibleCards ||
-                        StatsCardType.MOST_VIEWED_REFERRERS in visibleCards
-                    ) {
-                        mostViewedViewModel.loadData()
-                    }
-                    if (StatsCardType.COUNTRIES in visibleCards) {
-                        countriesViewModel.loadData()
-                    }
-                    if (StatsCardType.AUTHORS in visibleCards) {
-                        authorsViewModel.loadData()
-                    }
+                    loadVisibleCards()
                 }
             }
         )
@@ -365,23 +339,13 @@ private fun TrafficTabContent(
         state = pullToRefreshState,
         onRefresh = {
             newStatsViewModel.checkNetworkStatus()
-            if (StatsCardType.TODAYS_STATS in visibleCards) {
-                todaysStatsViewModel.refresh()
-            }
-            if (StatsCardType.VIEWS_STATS in visibleCards) {
-                viewsStatsViewModel.refresh()
-            }
-            if (StatsCardType.MOST_VIEWED_POSTS_AND_PAGES in visibleCards ||
-                StatsCardType.MOST_VIEWED_REFERRERS in visibleCards
-            ) {
-                mostViewedViewModel.refresh()
-            }
-            if (StatsCardType.COUNTRIES in visibleCards) {
-                countriesViewModel.refresh()
-            }
-            if (StatsCardType.AUTHORS in visibleCards) {
-                authorsViewModel.refresh()
-            }
+            visibleCards.dispatchToVisibleCards(
+                onTodaysStats = { todaysStatsViewModel.refresh() },
+                onViewsStats = { viewsStatsViewModel.refresh() },
+                onMostViewed = { mostViewedViewModel.refresh() },
+                onCountries = { countriesViewModel.refresh() },
+                onAuthors = { authorsViewModel.refresh() }
+            )
         },
         indicator = {
             PullToRefreshDefaults.Indicator(
@@ -563,6 +527,22 @@ private fun AddCardButton(
         Spacer(modifier = Modifier.width(8.dp))
         Text(stringResource(R.string.stats_add_card_title))
     }
+}
+
+private fun List<StatsCardType>.dispatchToVisibleCards(
+    onTodaysStats: () -> Unit,
+    onViewsStats: () -> Unit,
+    onMostViewed: () -> Unit,
+    onCountries: () -> Unit,
+    onAuthors: () -> Unit
+) {
+    if (StatsCardType.TODAYS_STATS in this) onTodaysStats()
+    if (StatsCardType.VIEWS_STATS in this) onViewsStats()
+    if (StatsCardType.MOST_VIEWED_POSTS_AND_PAGES in this ||
+        StatsCardType.MOST_VIEWED_REFERRERS in this
+    ) onMostViewed()
+    if (StatsCardType.COUNTRIES in this) onCountries()
+    if (StatsCardType.AUTHORS in this) onAuthors()
 }
 
 @Composable
