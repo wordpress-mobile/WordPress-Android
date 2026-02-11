@@ -3,8 +3,9 @@ package org.wordpress.android.ui.postsrs.screens
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
  * Observes scroll position and triggers [onLoadMore] when the
@@ -18,24 +19,20 @@ fun ObserveLoadMore(
     isLoadingMore: Boolean,
     onLoadMore: () -> Unit
 ) {
-    val lastVisibleItemIndex = remember {
-        derivedStateOf {
+    LaunchedEffect(listState) {
+        val scrollFlow = snapshotFlow {
             listState.layoutInfo
                 .visibleItemsInfo.lastOrNull()?.index ?: 0
         }
-    }
-
-    LaunchedEffect(
-        lastVisibleItemIndex.value,
-        itemCount,
-        canLoadMore
-    ) {
-        val shouldLoadMore =
-            lastVisibleItemIndex.value >= itemCount - 1 &&
-                canLoadMore &&
-                !isLoadingMore
-        if (shouldLoadMore) {
-            onLoadMore()
+        val stateFlow = snapshotFlow {
+            Triple(itemCount, canLoadMore, isLoadingMore)
         }
+        combine(scrollFlow, stateFlow) { lastVisible, (count, canLoad, loading) ->
+            lastVisible >= count - 1 && canLoad && !loading
+        }
+            .distinctUntilChanged()
+            .collect { shouldLoad ->
+                if (shouldLoad) onLoadMore()
+            }
     }
 }
