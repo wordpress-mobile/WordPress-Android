@@ -5,30 +5,10 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.PrimaryScrollableTabRow
-import androidx.compose.material3.Tab
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterNotNull
@@ -37,11 +17,10 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
-import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
-import org.wordpress.android.ui.postsrs.screens.PostRsTabListScreen
+import org.wordpress.android.ui.postsrs.screens.PostRsListScreen
 import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 
@@ -66,7 +45,18 @@ class PostRsListActivity : BaseAppCompatActivity() {
                         .DisposeOnViewTreeLifecycleDestroyed
                 )
                 setContent {
-                    PostRsListContent()
+                    val selectedTab by viewModel
+                        .selectedTab.collectAsState()
+                    PostRsListScreen(
+                        selectedTab = selectedTab,
+                        tabStateFlow = viewModel::tabState,
+                        onTabSelected = viewModel::onTabSelected,
+                        onPostClick = viewModel::onPostClicked,
+                        onRefresh = viewModel::refreshPosts,
+                        onLoadMore = viewModel::loadMorePosts,
+                        onCreatePost = ::createNewPost,
+                        onBack = ::finish
+                    )
                 }
             }
         )
@@ -113,112 +103,6 @@ class PostRsListActivity : BaseAppCompatActivity() {
                 ToastUtils.Duration.SHORT
             )
         }
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    private fun PostRsListContent() {
-        val selectedTab by viewModel.selectedTab.collectAsState()
-
-        AppThemeM3 {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                stringResource(
-                                    R.string.my_site_btn_blog_posts
-                                )
-                            )
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = { finish() }) {
-                                Icon(
-                                    Icons.AutoMirrored.Filled
-                                        .ArrowBack,
-                                    contentDescription =
-                                        stringResource(R.string.back)
-                                )
-                            }
-                        }
-                    )
-                },
-                floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = { createNewPost() },
-                        containerColor = MaterialTheme
-                            .colorScheme.primaryContainer,
-                    ) {
-                        Icon(
-                            Icons.Rounded.Add,
-                            contentDescription =
-                                stringResource(
-                                    R.string.new_post
-                                )
-                        )
-                    }
-                }
-            ) { contentPadding ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(contentPadding)
-                ) {
-                    PrimaryScrollableTabRow(
-                        selectedTabIndex = selectedTab.ordinal
-                    ) {
-                        PostRsListTab.entries.forEach { tab ->
-                            Tab(
-                                selected = tab == selectedTab,
-                                onClick = {
-                                    viewModel.onTabSelected(tab)
-                                },
-                                text = {
-                                    Text(
-                                        stringResource(
-                                            tab.titleResId
-                                        )
-                                    )
-                                }
-                            )
-                        }
-                    }
-
-                    TabContent(selectedTab)
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun TabContent(tab: PostRsListTab) {
-        val state by viewModel.tabState(tab)
-            .collectAsState()
-        val emptyMessage = stringResource(
-            when (tab) {
-                PostRsListTab.PUBLISHED ->
-                    R.string.posts_empty_list
-                PostRsListTab.DRAFTS ->
-                    R.string.posts_draft_empty
-                PostRsListTab.SCHEDULED ->
-                    R.string.posts_scheduled_empty
-                PostRsListTab.TRASHED ->
-                    R.string.posts_trashed_empty
-            }
-        )
-
-        LaunchedEffect(tab) {
-            viewModel.onTabSelected(tab)
-        }
-
-        PostRsTabListScreen(
-            state = state,
-            emptyMessage = emptyMessage,
-            onPostClick = { viewModel.onPostClicked(it) },
-            onRefresh = { viewModel.refreshPosts(tab) },
-            onLoadMore = { viewModel.loadMorePosts(tab) },
-            onCreatePost = { createNewPost() }
-        )
     }
 
     private fun createNewPost() {
