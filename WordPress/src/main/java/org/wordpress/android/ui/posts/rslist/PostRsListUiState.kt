@@ -36,7 +36,6 @@ sealed class PostRsListUiEvent {
     ) : PostRsListUiEvent()
 
     data class OpenPost(
-        val siteLocalId: Int,
         val remotePostId: Long
     ) : PostRsListUiEvent()
 }

@@ -9,9 +9,5 @@ data class PostRsModel(
     val title: String,
     val excerpt: String,
     val date: String,
-    val modifiedDate: String,
-    val status: String,
-    val authorId: Long,
-    val featuredMediaId: Long,
-    val link: String
+    val status: String
 )

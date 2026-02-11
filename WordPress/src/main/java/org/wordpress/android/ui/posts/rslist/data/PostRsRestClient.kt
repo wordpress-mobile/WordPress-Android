@@ -70,11 +70,7 @@ class PostRsRestClient @Inject constructor(
                         title = title,
                         excerpt = excerpt,
                         date = post.date,
-                        modifiedDate = post.modified,
-                        status = postStatusToString(post.status),
-                        authorId = post.author ?: 0L,
-                        featuredMediaId = post.featuredMedia ?: 0L,
-                        link = post.link
+                        status = postStatusToString(post.status)
                     )
                 }
                 val canLoadMore =

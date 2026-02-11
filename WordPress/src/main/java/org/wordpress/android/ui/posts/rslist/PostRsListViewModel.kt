@@ -57,7 +57,7 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
-    fun loadPosts(tab: PostRsListTab) {
+    private fun loadPosts(tab: PostRsListTab) {
         loadPostsInternal(tab, isRefresh = false)
     }
 
@@ -140,7 +140,6 @@ class PostRsListViewModel @Inject constructor(
             return
         }
         _uiEvent.value = PostRsListUiEvent.OpenPost(
-            siteLocalId = site.id,
             remotePostId = remotePostId
         )
     }
