@@ -920,8 +920,6 @@ class NavMenusViewModel @Inject constructor(
                 resourceProvider.getString(R.string.menu_item_url_required)
             state.selectedTypeOption != MenuItemTypeOption.CUSTOM_LINK && state.objectId <= 0 ->
                 resourceProvider.getString(R.string.menu_item_select_required)
-            state.url.isNotBlank() && !isValidLinkUrl(state.url) ->
-                resourceProvider.getString(R.string.menu_item_invalid_url)
             else -> null
         }
     }
@@ -932,7 +930,7 @@ class NavMenusViewModel @Inject constructor(
             remoteItemId = state.itemId,
             menuId = state.menuId,
             title = state.title.trim(),
-            url = state.url.trim(),
+            url = normalizeUrl(state.url),
             type = state.type,
             objectType = state.objectType,
             objectId = state.objectId,
@@ -983,20 +981,23 @@ class NavMenusViewModel @Inject constructor(
     }
 
     /**
-     * Validates a URL against WordPress's allowed protocols.
-     * See: https://developer.wordpress.org/reference/functions/wp_allowed_protocols/
+     * Normalizes a URL by adding https:// if no recognized protocol is present.
+     * Matches WordPress web behavior where URLs are sanitized rather than rejected.
      */
-    private fun isValidLinkUrl(url: String): Boolean {
-        val trimmedUrl = url.trim()
-        if (trimmedUrl.isEmpty()) return false
-
-        return when {
-            // Anchor links are valid (e.g., #section or #contact)
-            trimmedUrl.startsWith("#") -> trimmedUrl.length > 1
-            // Protocol-relative URLs are valid
-            trimmedUrl.startsWith("//") -> trimmedUrl.length > 2
-            else -> ALLOWED_PROTOCOLS.any { trimmedUrl.lowercase().startsWith("$it:") }
+    private fun normalizeUrl(url: String): String {
+        val trimmed = url.trim()
+        if (trimmed.isEmpty() || trimmed.startsWith("#")) return trimmed
+        if (ALLOWED_PROTOCOLS.any { trimmed.lowercase().startsWith("$it:") }) {
+            return trimmed
         }
+        if (trimmed.startsWith("//")) return "https:$trimmed"
+        // Relative paths (e.g. /about, ./page, ../page) - keep as-is
+        if (trimmed.startsWith("/") || trimmed.startsWith("./") ||
+            trimmed.startsWith("../")
+        ) {
+            return trimmed
+        }
+        return "https://$trimmed"
     }
 
     private fun sanitizeInput(input: String, maxLength: Int): String {
@@ -1010,8 +1011,8 @@ class NavMenusViewModel @Inject constructor(
         private const val MAX_MENU_ITEM_DESCRIPTION_LENGTH = 500
 
         /**
-         * WordPress allowed protocols from wp_allowed_protocols().
-         * See: https://developer.wordpress.org/reference/functions/wp_allowed_protocols/
+         * Recognized protocols that should not have https:// prepended.
+         * Based on wp_allowed_protocols().
          */
         private val ALLOWED_PROTOCOLS = listOf(
             "http", "https", "ftp", "ftps", "mailto", "news", "irc", "irc6", "ircs",
