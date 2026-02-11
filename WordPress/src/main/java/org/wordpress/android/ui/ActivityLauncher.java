@@ -109,6 +109,8 @@ import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivit
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.navmenus.NavMenusActivity;
 import org.wordpress.android.ui.posts_rs.PostRsListActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -652,6 +654,13 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
+        if (site != null
+                && site.hasApplicationPassword()
+                && AppPrefs.getExperimentalFeatureConfig(
+                        ExperimentalFeatures.Feature.POSTS_RS_LIST.getPrefKey())) {
+            context.startActivity(PostRsListActivity.createIntent(context));
+            return;
+        }
         viewCurrentBlogPostsOfType(context, site, null);
     }
 
@@ -767,11 +776,6 @@ public class ActivityLauncher {
     public static void viewNavigationMenus(Context context, SiteModel site) {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MENUS, site);
         Intent intent = NavMenusActivity.createIntent(context);
-        context.startActivity(intent);
-    }
-
-    public static void viewPostsRsList(Context context) {
-        Intent intent = PostRsListActivity.createIntent(context);
         context.startActivity(intent);
     }
 

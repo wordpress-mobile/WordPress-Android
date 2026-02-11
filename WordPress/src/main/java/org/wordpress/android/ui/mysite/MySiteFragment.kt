@@ -23,7 +23,6 @@ import org.wordpress.android.databinding.MySiteFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
@@ -123,9 +122,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     @Inject
     lateinit var packageManagerWrapper: PackageManagerWrapper
-
-    @Inject
-    lateinit var experimentalFeatures: ExperimentalFeatures
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
@@ -557,18 +553,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
         is SiteNavigationAction.OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
         is SiteNavigationAction.OpenScan -> ActivityLauncher.viewScan(activity, action.site)
-        is SiteNavigationAction.OpenPosts -> {
-            if (experimentalFeatures.isEnabled(
-                    ExperimentalFeatures.Feature.POSTS_RS_LIST
-                ) && action.site.hasApplicationPassword()
-            ) {
-                ActivityLauncher.viewPostsRsList(requireActivity())
-            } else {
-                ActivityLauncher.viewCurrentBlogPosts(
-                    requireActivity(), action.site
-                )
-            }
-        }
+        is SiteNavigationAction.OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
         is SiteNavigationAction.OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
         is SiteNavigationAction.OpenPostTypes ->
             ActivityLauncher.viewPostTypes(requireActivity(), action.site)
