@@ -3,8 +3,10 @@ package org.wordpress.android.ui.postsrs
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -71,6 +73,7 @@ class PostRsListViewModel @Inject constructor(
     val uiEvent: Flow<PostRsListUiEvent> = _uiEvent.receiveAsFlow()
 
     private val paginationMutex = Mutex()
+    private var tabSelectionJob: Job? = null
 
     // Track loaded post count per tab for offset pagination
     private val loadedCounts = mutableMapOf<PostRsListTab, Int>()
@@ -80,9 +83,13 @@ class PostRsListViewModel @Inject constructor(
 
     fun onTabSelected(tab: PostRsListTab) {
         _selectedTab.value = tab
-        val state = tabStates.getValue(tab).value
-        if (state.posts.isEmpty() && !state.isLoading) {
-            loadPostsInternal(tab, isRefresh = false)
+        tabSelectionJob?.cancel()
+        tabSelectionJob = viewModelScope.launch {
+            delay(TAB_DEBOUNCE_MS)
+            val state = tabStates.getValue(tab).value
+            if (state.posts.isEmpty() && !state.isLoading) {
+                loadPostsInternal(tab, isRefresh = false)
+            }
         }
     }
 
@@ -217,5 +224,9 @@ class PostRsListViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    companion object {
+        private const val TAB_DEBOUNCE_MS = 300L
     }
 }
