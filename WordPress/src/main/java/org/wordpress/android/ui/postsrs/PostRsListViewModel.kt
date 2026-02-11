@@ -4,9 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -64,8 +67,8 @@ class PostRsListViewModel @Inject constructor(
     val selectedTab: StateFlow<PostRsListTab> =
         _selectedTab.asStateFlow()
 
-    private val _uiEvent = MutableStateFlow<PostRsListUiEvent?>(null)
-    val uiEvent: StateFlow<PostRsListUiEvent?> = _uiEvent.asStateFlow()
+    private val _uiEvent = Channel<PostRsListUiEvent>(Channel.BUFFERED)
+    val uiEvent: Flow<PostRsListUiEvent> = _uiEvent.receiveAsFlow()
 
     private val paginationMutex = Mutex()
 
@@ -139,10 +142,11 @@ class PostRsListViewModel @Inject constructor(
                         flow.value = flow.value.copy(
                             isLoadingMore = false
                         )
-                        _uiEvent.value =
+                        _uiEvent.trySend(
                             PostRsListUiEvent.ShowError(
                                 result.message
                             )
+                        )
                     }
                 }
             }
@@ -150,13 +154,11 @@ class PostRsListViewModel @Inject constructor(
     }
 
     fun onPostClicked(remotePostId: Long) {
-        _uiEvent.value = PostRsListUiEvent.OpenPost(
-            remotePostId = remotePostId
+        _uiEvent.trySend(
+            PostRsListUiEvent.OpenPost(
+                remotePostId = remotePostId
+            )
         )
-    }
-
-    fun consumeEvent() {
-        _uiEvent.value = null
     }
 
     private fun loadPostsInternal(

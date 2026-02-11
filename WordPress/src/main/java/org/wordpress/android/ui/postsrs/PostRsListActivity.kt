@@ -11,7 +11,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.PostStore
@@ -66,9 +65,8 @@ class PostRsListActivity : BaseAppCompatActivity() {
 
     private fun observeUiEvents() {
         lifecycleScope.launch {
-            viewModel.uiEvent.filterNotNull().collect { event ->
+            viewModel.uiEvent.collect { event ->
                 handleUiEvent(event)
-                viewModel.consumeEvent()
             }
         }
     }
