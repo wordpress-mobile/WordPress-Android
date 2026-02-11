@@ -3,6 +3,7 @@ package org.wordpress.android.ui.postsrs
 import org.wordpress.android.ui.postsrs.models.PostRsModel
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.HtmlUtils
 import java.text.DateFormat
 
 /**
@@ -60,7 +61,7 @@ fun PostRsModel.toUiModel(
     return PostUiModel(
         remoteId = remotePostId,
         title = title.ifBlank { "(Untitled)" },
-        excerpt = stripHtml(excerpt).take(MAX_EXCERPT_LENGTH),
+        excerpt = HtmlUtils.fastStripHtml(excerpt).take(MAX_EXCERPT_LENGTH),
         dateFormatted = formatted,
         statusLabel = mapStatusLabel(status)
     )
@@ -76,10 +77,6 @@ private fun mapStatusLabel(status: String): String {
         "trash" -> "Trashed"
         else -> status.replaceFirstChar { it.uppercase() }
     }
-}
-
-private fun stripHtml(html: String): String {
-    return html.replace(Regex("<[^>]*>"), "").trim()
 }
 
 private fun normalizeIso8601(date: String): String {
