@@ -126,7 +126,7 @@ class PostRsListViewModel @Inject constructor(
                     is PostRsRestClient.PostRsListResult
                     .Success -> {
                         val newModels = result.posts
-                            .map { it.toUiModel(dateTimeUtilsWrapper) }
+                            .map { it.toUiModel(dateTimeUtilsWrapper, resourceProvider) }
                         loadedCounts[tab] =
                             offset + result.posts.size
                         flow.value = flow.value.copy(
@@ -198,7 +198,7 @@ class PostRsListViewModel @Inject constructor(
                 is PostRsRestClient.PostRsListResult
                 .Success -> {
                     val uiModels = result.posts
-                        .map { it.toUiModel(dateTimeUtilsWrapper) }
+                        .map { it.toUiModel(dateTimeUtilsWrapper, resourceProvider) }
                     loadedCounts[tab] = result.posts.size
                     flow.value = flow.value.copy(
                         isLoading = false,

@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.postsrs
 
+import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.models.PostRsModel
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.HtmlUtils
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DateFormat
 
 /**
@@ -45,7 +47,8 @@ sealed class PostRsListUiEvent {
 // ========== Mapping Functions ==========
 
 fun PostRsModel.toUiModel(
-    dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    resourceProvider: ResourceProvider
 ): PostUiModel {
     val parsed = DateTimeUtils.dateUTCFromIso8601(
         normalizeIso8601(date)
@@ -60,21 +63,41 @@ fun PostRsModel.toUiModel(
     }
     return PostUiModel(
         remoteId = remotePostId,
-        title = title.ifBlank { "(Untitled)" },
-        excerpt = HtmlUtils.fastStripHtml(excerpt).take(MAX_EXCERPT_LENGTH),
+        title = title.ifBlank {
+            resourceProvider.getString(
+                R.string.untitled_in_parentheses
+            )
+        },
+        excerpt = HtmlUtils.fastStripHtml(excerpt)
+            .take(MAX_EXCERPT_LENGTH),
         dateFormatted = formatted,
-        statusLabel = mapStatusLabel(status)
+        statusLabel = mapStatusLabel(status, resourceProvider)
     )
 }
 
-private fun mapStatusLabel(status: String): String {
+private fun mapStatusLabel(
+    status: String,
+    resourceProvider: ResourceProvider
+): String {
     return when (status) {
-        "publish" -> "Published"
-        "draft" -> "Draft"
-        "pending" -> "Pending Review"
-        "private" -> "Private"
-        "future" -> "Scheduled"
-        "trash" -> "Trashed"
+        "publish" -> resourceProvider.getString(
+            R.string.post_status_post_published
+        )
+        "draft" -> resourceProvider.getString(
+            R.string.post_status_draft
+        )
+        "pending" -> resourceProvider.getString(
+            R.string.post_status_pending_review
+        )
+        "private" -> resourceProvider.getString(
+            R.string.post_status_post_private
+        )
+        "future" -> resourceProvider.getString(
+            R.string.post_status_post_scheduled
+        )
+        "trash" -> resourceProvider.getString(
+            R.string.post_status_post_trashed
+        )
         else -> status.replaceFirstChar { it.uppercase() }
     }
 }
