@@ -212,6 +212,41 @@ class NewStatsViewModelTest : BaseUnitTest() {
     }
     // endregion
 
+    // region cardsToLoad tests
+    @Test
+    fun `when config loads, then cardsToLoad matches visible cards`() = test {
+        val config = StatsCardsConfiguration(
+            visibleCards = listOf(StatsCardType.AUTHORS)
+        )
+        initViewModel(config)
+        advanceUntilIdle()
+
+        assertThat(viewModel.cardsToLoad.value).containsExactly(StatsCardType.AUTHORS)
+    }
+
+    @Test
+    fun `when config loads with default, then cardsToLoad matches default cards`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.cardsToLoad.value).isEqualTo(StatsCardType.defaultCards())
+    }
+
+    @Test
+    fun `when configuration changes via flow, then cardsToLoad is updated`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        val newConfig = StatsCardsConfiguration(
+            visibleCards = listOf(StatsCardType.COUNTRIES)
+        )
+        configurationFlow.value = TEST_SITE_ID to newConfig
+        advanceUntilIdle()
+
+        assertThat(viewModel.cardsToLoad.value).containsExactly(StatsCardType.COUNTRIES)
+    }
+    // endregion
+
     // region Network availability tests
     @Test
     fun `when initialized with network available, then isNetworkAvailable is true`() = test {

@@ -411,6 +411,34 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when initialized, then isPeriodInitialized is true`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.isPeriodInitialized.value).isTrue()
+    }
+
+    @Test
+    fun `when loadDataIfNeeded is called multiple times, then data is only loaded once`() = test {
+        val result = createPeriodStatsResult()
+
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // Should only be called once despite three calls to loadDataIfNeeded
+        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any())
+    }
+
+    @Test
     fun `when onChartTypeChanged is called, then chart type is updated`() = test {
         val result = createPeriodStatsResult()
 
