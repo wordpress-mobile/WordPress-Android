@@ -10,9 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
@@ -140,6 +143,21 @@ class PostRsListActivity : BaseAppCompatActivity() {
                             }
                         }
                     )
+                },
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = { createNewPost() },
+                        containerColor = MaterialTheme
+                            .colorScheme.primaryContainer,
+                    ) {
+                        Icon(
+                            Icons.Rounded.Add,
+                            contentDescription =
+                                stringResource(
+                                    R.string.new_post
+                                )
+                        )
+                    }
                 }
             ) { contentPadding ->
                 Column(
