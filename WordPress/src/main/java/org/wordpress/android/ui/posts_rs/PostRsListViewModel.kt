@@ -13,7 +13,6 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts_rs.data.PostRsRestClient
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -27,7 +26,6 @@ class PostRsListViewModel @Inject constructor(
     private val postRsRestClient: PostRsRestClient,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val resourceProvider: ResourceProvider,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val tabStates: Map<PostRsListTab, MutableStateFlow<PostTabUiState>> =
@@ -55,12 +53,8 @@ class PostRsListViewModel @Inject constructor(
         _selectedTab.value = tab
         val state = tabStates.getValue(tab).value
         if (state.posts.isEmpty() && !state.isLoading) {
-            loadPosts(tab)
+            loadPostsInternal(tab, isRefresh = false)
         }
-    }
-
-    private fun loadPosts(tab: PostRsListTab) {
-        loadPostsInternal(tab, isRefresh = false)
     }
 
     fun refreshPosts(tab: PostRsListTab) {
@@ -90,41 +84,39 @@ class PostRsListViewModel @Inject constructor(
 
                 val offset = loadedCounts[tab] ?: 0
 
-                withContext(ioDispatcher) {
-                    val result = postRsRestClient.fetchPosts(
+                val result = withContext(ioDispatcher) {
+                    postRsRestClient.fetchPosts(
                         site = site,
                         statuses = tab.statuses,
                         offset = offset,
                         order = tab.order
                     )
+                }
 
-                    withContext(mainDispatcher) {
-                        when (result) {
-                            is PostRsRestClient.PostRsListResult
-                            .Success -> {
-                                val newModels = result.posts
-                                    .map { it.toUiModel(dateTimeUtilsWrapper) }
-                                loadedCounts[tab] =
-                                    offset + result.posts.size
-                                flow.value = flow.value.copy(
-                                    isLoadingMore = false,
-                                    canLoadMore =
-                                        result.canLoadMore,
-                                    posts = flow.value.posts +
-                                        newModels
-                                )
-                            }
-                            is PostRsRestClient.PostRsListResult
-                            .Error -> {
-                                flow.value = flow.value.copy(
-                                    isLoadingMore = false
-                                )
-                                _uiEvent.value =
-                                    PostRsListUiEvent.ShowError(
-                                        result.message
-                                    )
-                            }
-                        }
+                when (result) {
+                    is PostRsRestClient.PostRsListResult
+                    .Success -> {
+                        val newModels = result.posts
+                            .map { it.toUiModel(dateTimeUtilsWrapper) }
+                        loadedCounts[tab] =
+                            offset + result.posts.size
+                        flow.value = flow.value.copy(
+                            isLoadingMore = false,
+                            canLoadMore =
+                                result.canLoadMore,
+                            posts = flow.value.posts +
+                                newModels
+                        )
+                    }
+                    is PostRsRestClient.PostRsListResult
+                    .Error -> {
+                        flow.value = flow.value.copy(
+                            isLoadingMore = false
+                        )
+                        _uiEvent.value =
+                            PostRsListUiEvent.ShowError(
+                                result.message
+                            )
                     }
                 }
             }
@@ -132,15 +124,6 @@ class PostRsListViewModel @Inject constructor(
     }
 
     fun onPostClicked(remotePostId: Long) {
-        val site = selectedSiteRepository.getSelectedSite()
-        if (site == null) {
-            _uiEvent.value = PostRsListUiEvent.ShowError(
-                resourceProvider.getString(
-                    R.string.menu_error_no_site_selected
-                )
-            )
-            return
-        }
         _uiEvent.value = PostRsListUiEvent.OpenPost(
             remotePostId = remotePostId
         )
@@ -174,37 +157,35 @@ class PostRsListViewModel @Inject constructor(
                 return@launch
             }
 
-            withContext(ioDispatcher) {
-                val result = postRsRestClient.fetchPosts(
+            val result = withContext(ioDispatcher) {
+                postRsRestClient.fetchPosts(
                     site = site,
                     statuses = tab.statuses,
                     offset = 0,
                     order = tab.order
                 )
+            }
 
-                withContext(mainDispatcher) {
-                    when (result) {
-                        is PostRsRestClient.PostRsListResult
-                        .Success -> {
-                            val uiModels = result.posts
-                                .map { it.toUiModel(dateTimeUtilsWrapper) }
-                            loadedCounts[tab] = result.posts.size
-                            flow.value = flow.value.copy(
-                                isLoading = false,
-                                isRefreshing = false,
-                                canLoadMore = result.canLoadMore,
-                                posts = uiModels
-                            )
-                        }
-                        is PostRsRestClient.PostRsListResult
-                        .Error -> {
-                            flow.value = flow.value.copy(
-                                isLoading = false,
-                                isRefreshing = false,
-                                error = result.message
-                            )
-                        }
-                    }
+            when (result) {
+                is PostRsRestClient.PostRsListResult
+                .Success -> {
+                    val uiModels = result.posts
+                        .map { it.toUiModel(dateTimeUtilsWrapper) }
+                    loadedCounts[tab] = result.posts.size
+                    flow.value = flow.value.copy(
+                        isLoading = false,
+                        isRefreshing = false,
+                        canLoadMore = result.canLoadMore,
+                        posts = uiModels
+                    )
+                }
+                is PostRsRestClient.PostRsListResult
+                .Error -> {
+                    flow.value = flow.value.copy(
+                        isLoading = false,
+                        isRefreshing = false,
+                        error = result.message
+                    )
                 }
             }
         }

@@ -71,7 +71,6 @@ class PostRsListActivity : BaseAppCompatActivity() {
             }
         )
 
-        viewModel.onTabSelected(PostRsListTab.PUBLISHED)
         observeUiEvents()
     }
 
