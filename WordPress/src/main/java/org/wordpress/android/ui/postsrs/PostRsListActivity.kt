@@ -9,7 +9,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -65,8 +67,10 @@ class PostRsListActivity : BaseAppCompatActivity() {
 
     private fun observeUiEvents() {
         lifecycleScope.launch {
-            viewModel.uiEvent.collect { event ->
-                handleUiEvent(event)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiEvent.collect { event ->
+                    handleUiEvent(event)
+                }
             }
         }
     }
