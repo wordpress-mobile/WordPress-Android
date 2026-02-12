@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION", "TYPEALIAS_EXPANSION_DEPRECATION")
+
 package org.wordpress.android.ui.posts
 
 import android.os.Bundle

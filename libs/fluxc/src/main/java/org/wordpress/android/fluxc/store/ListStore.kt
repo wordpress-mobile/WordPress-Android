@@ -145,7 +145,7 @@ class ListStore @Inject constructor(
     /**
      * A helper function that creates a [PagedListFactory] for the given [LIST_DESCRIPTOR] and [dataSource].
      */
-    private fun <LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM> createPagedListFactory(
+    private fun <LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM : Any> createPagedListFactory(
         listDescriptor: LIST_DESCRIPTOR,
         dataSource: ListItemDataSourceInterface<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>
     ): PagedListFactory<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM> {

@@ -33,7 +33,7 @@ import kotlin.coroutines.CoroutineContext
  * to either let the user know of each error or present the error in the empty view when it's visible.
  */
 @Suppress("LongParameterList")
-class PagedListWrapper<T>(
+class PagedListWrapper<T : Any>(
     val data: LiveData<PagedList<T>>,
     private val dispatcher: Dispatcher,
     private val listDescriptor: ListDescriptor,
