@@ -73,6 +73,7 @@ import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.countries.CountriesCard
 import org.wordpress.android.ui.newstats.countries.CountriesDetailActivity
 import org.wordpress.android.ui.newstats.countries.CountriesViewModel
+import org.wordpress.android.ui.newstats.countries.LocationType
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCard
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
@@ -240,6 +241,7 @@ private fun TrafficTabContent(
     val postsUiState by mostViewedViewModel.postsUiState.collectAsState()
     val referrersUiState by mostViewedViewModel.referrersUiState.collectAsState()
     val countriesUiState by countriesViewModel.uiState.collectAsState()
+    val selectedLocationType by countriesViewModel.selectedLocationType.collectAsState()
     val authorsUiState by authorsViewModel.uiState.collectAsState()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
@@ -455,18 +457,13 @@ private fun TrafficTabContent(
                     )
                     StatsCardType.COUNTRIES -> CountriesCard(
                         uiState = countriesUiState,
+                        selectedLocationType = selectedLocationType,
+                        onLocationTypeChanged = countriesViewModel::onLocationTypeChanged,
                         onShowAllClick = {
                             val detailData = countriesViewModel.getDetailData()
                             CountriesDetailActivity.start(
                                 context = context,
-                                countries = detailData.countries,
-                                mapData = detailData.mapData,
-                                minViews = detailData.minViews,
-                                maxViews = detailData.maxViews,
-                                totalViews = detailData.totalViews,
-                                totalViewsChange = detailData.totalViewsChange,
-                                totalViewsChangePercent = detailData.totalViewsChangePercent,
-                                dateRange = detailData.dateRange
+                                detailData = detailData
                             )
                         },
                         onRetry = countriesViewModel::onRetry,

@@ -4,10 +4,14 @@ import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.util.LocaleManagerWrapper
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.StatsCityViewsParams
+import uniffi.wp_api.StatsCityViewsPeriod
 import uniffi.wp_api.StatsCountryViewsParams
 import uniffi.wp_api.StatsCountryViewsPeriod
 import uniffi.wp_api.StatsReferrersParams
 import uniffi.wp_api.StatsReferrersPeriod
+import uniffi.wp_api.StatsRegionViewsParams
+import uniffi.wp_api.StatsRegionViewsPeriod
 import uniffi.wp_api.StatsTopAuthorsParams
 import uniffi.wp_api.StatsTopAuthorsPeriod
 import uniffi.wp_api.StatsTopPostsParams
@@ -316,6 +320,210 @@ class StatsDataSourceImpl @Inject constructor(
             else -> {
                 AppLog.e(T.STATS, "StatsDataSourceImpl: fetchCountryViews unexpected result - $result")
                 CountryViewsDataResult.Error("Unknown error: ${result::class.simpleName}")
+            }
+        }
+    }
+
+    private fun buildRegionViewsParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsRegionViewsParams(
+            period = StatsRegionViewsPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = max.coerceAtLeast(1).toUInt(),
+            locale = wpComLanguage,
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsRegionViewsParams(
+            period = StatsRegionViewsPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = max.coerceAtLeast(1).toUInt(),
+            locale = wpComLanguage,
+            summarize = true
+        )
+    }
+
+    override suspend fun fetchRegionViews(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): RegionViewsDataResult {
+        val params = buildRegionViewsParams(dateRange, max)
+        val result = wpComApiClient.request { requestBuilder ->
+            requestBuilder.statsRegionViews().getStatsRegionViews(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+
+        AppLog.d(
+            T.STATS,
+            "StatsDataSourceImpl: fetchRegionViews result type: " +
+                "${result::class.simpleName}"
+        )
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val summary = result.response.data.summary
+                val countryInfo = result.response.data.countryInfo.orEmpty()
+
+                val regions = summary?.views.orEmpty().map { regionView ->
+                    val code = regionView.countryCode.orEmpty()
+                    val info = countryInfo[code]
+                    RegionViewItem(
+                        location = regionView.location.orEmpty(),
+                        countryCode = code,
+                        views = regionView.views?.toLong() ?: 0L,
+                        flagIconUrl = info?.flagIcon
+                    )
+                }
+
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchRegionViews success - " +
+                        "${regions.size} regions"
+                )
+                RegionViewsDataResult.Success(
+                    RegionViewsData(
+                        regions = regions,
+                        totalViews = summary?.totalViews?.toLong() ?: 0L,
+                        otherViews = summary?.otherViews?.toLong() ?: 0L
+                    )
+                )
+            }
+            is WpRequestResult.WpError -> {
+                AppLog.e(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchRegionViews WpError - " +
+                        result.errorMessage
+                )
+                RegionViewsDataResult.Error(result.errorMessage)
+            }
+            is WpRequestResult.ResponseParsingError<*> -> {
+                AppLog.e(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchRegionViews " +
+                        "ResponseParsingError - $result"
+                )
+                RegionViewsDataResult.Error(
+                    "Response parsing error: $result"
+                )
+            }
+            else -> {
+                AppLog.e(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchRegionViews " +
+                        "unexpected result - $result"
+                )
+                RegionViewsDataResult.Error(
+                    "Unknown error: ${result::class.simpleName}"
+                )
+            }
+        }
+    }
+
+    private fun buildCityViewsParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsCityViewsParams(
+            period = StatsCityViewsPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = max.coerceAtLeast(1).toUInt(),
+            locale = wpComLanguage,
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsCityViewsParams(
+            period = StatsCityViewsPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = max.coerceAtLeast(1).toUInt(),
+            locale = wpComLanguage,
+            summarize = true
+        )
+    }
+
+    override suspend fun fetchCityViews(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): CityViewsDataResult {
+        val params = buildCityViewsParams(dateRange, max)
+        val result = wpComApiClient.request { requestBuilder ->
+            requestBuilder.statsCityViews().getStatsCityViews(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+
+        AppLog.d(
+            T.STATS,
+            "StatsDataSourceImpl: fetchCityViews result type: " +
+                "${result::class.simpleName}"
+        )
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val summary = result.response.data.summary
+                val countryInfo = result.response.data.countryInfo.orEmpty()
+
+                val cities = summary?.views.orEmpty().map { cityView ->
+                    val code = cityView.countryCode.orEmpty()
+                    val info = countryInfo[code]
+                    CityViewItem(
+                        location = cityView.location.orEmpty(),
+                        countryCode = code,
+                        views = cityView.views?.toLong() ?: 0L,
+                        latitude = cityView.coordinates?.latitude,
+                        longitude = cityView.coordinates?.longitude,
+                        flagIconUrl = info?.flagIcon
+                    )
+                }
+
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchCityViews success - " +
+                        "${cities.size} cities"
+                )
+                CityViewsDataResult.Success(
+                    CityViewsData(
+                        cities = cities,
+                        totalViews = summary?.totalViews?.toLong() ?: 0L,
+                        otherViews = summary?.otherViews?.toLong() ?: 0L
+                    )
+                )
+            }
+            is WpRequestResult.WpError -> {
+                AppLog.e(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchCityViews WpError - " +
+                        result.errorMessage
+                )
+                CityViewsDataResult.Error(result.errorMessage)
+            }
+            is WpRequestResult.ResponseParsingError<*> -> {
+                AppLog.e(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchCityViews " +
+                        "ResponseParsingError - $result"
+                )
+                CityViewsDataResult.Error(
+                    "Response parsing error: $result"
+                )
+            }
+            else -> {
+                AppLog.e(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchCityViews " +
+                        "unexpected result - $result"
+                )
+                CityViewsDataResult.Error(
+                    "Unknown error: ${result::class.simpleName}"
+                )
             }
         }
     }

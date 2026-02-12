@@ -28,6 +28,11 @@ import java.util.Locale
 private const val RGB_MASK = 0xFFFFFF
 
 /**
+ * Display mode for the GeoChart map.
+ */
+enum class GeoChartDisplayMode { COUNTRIES, REGIONS, CITIES }
+
+/**
  * A WebView component for displaying Google GeoChart maps.
  *
  * Security measures implemented (following the pattern from MapViewHolder in old stats):
@@ -46,6 +51,7 @@ private const val RGB_MASK = 0xFFFFFF
 fun StatsGeoChartWebView(
     mapData: String,
     modifier: Modifier = Modifier,
+    displayMode: GeoChartDisplayMode = GeoChartDisplayMode.COUNTRIES,
     onError: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -56,8 +62,14 @@ fun StatsGeoChartWebView(
     val backgroundColor = MaterialTheme.colorScheme.surface.toHexString()
     val viewsLabel = stringResource(R.string.stats_countries_views_header)
 
-    val htmlPage = remember(mapData, colorLow, colorHigh, backgroundColor, emptyColor, viewsLabel) {
-        buildGeoChartHtml(mapData, viewsLabel, colorLow, colorHigh, emptyColor, backgroundColor)
+    val htmlPage = remember(
+        mapData, colorLow, colorHigh, backgroundColor,
+        emptyColor, viewsLabel, displayMode
+    ) {
+        buildGeoChartHtml(
+            mapData, viewsLabel, colorLow, colorHigh,
+            emptyColor, backgroundColor, displayMode
+        )
     }
 
     AndroidView(
@@ -118,23 +130,47 @@ private fun buildGeoChartHtml(
     colorLow: String,
     colorHigh: String,
     emptyColor: String,
-    backgroundColor: String
+    backgroundColor: String,
+    displayMode: GeoChartDisplayMode = GeoChartDisplayMode.COUNTRIES
 ): String {
+    val dataHeader = when (displayMode) {
+        GeoChartDisplayMode.COUNTRIES ->
+            "['Country', '$viewsLabel']"
+        GeoChartDisplayMode.REGIONS ->
+            "['Region', '$viewsLabel']"
+        GeoChartDisplayMode.CITIES ->
+            "['Lat', 'Long', 'City', '$viewsLabel']"
+    }
+
+    val optionsExtra = when (displayMode) {
+        GeoChartDisplayMode.COUNTRIES ->
+            "resolution: 'countries',"
+        GeoChartDisplayMode.REGIONS ->
+            "resolution: 'provinces',"
+        GeoChartDisplayMode.CITIES ->
+            "displayMode: 'markers'," +
+                " sizeAxis: { minSize: 3, maxSize: 12 },"
+    }
+
     return """
         <html>
         <head>
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript"
+            src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript">
             google.charts.load('current', {'packages':['geochart']});
             google.charts.setOnLoadCallback(drawRegionsMap);
             function drawRegionsMap() {
                 var data = google.visualization.arrayToDataTable([
-                    ['Country', '$viewsLabel'],$mapData
+                    $dataHeader,$mapData
                 ]);
                 var options = {
                     keepAspectRatio: true,
                     region: 'world',
-                    colorAxis: { colors: ['#$colorLow', '#$colorHigh'] },
+                    $optionsExtra
+                    colorAxis: {
+                        colors: ['#$colorLow', '#$colorHigh']
+                    },
                     datalessRegionColor: '#$emptyColor',
                     backgroundColor: '#$backgroundColor',
                     legend: 'none',
@@ -148,7 +184,8 @@ private fun buildGeoChartHtml(
         </script>
         </head>
         <body style="margin: 0px;">
-        <div id="regions_div" style="width: 100%; height: 100%;"></div>
+        <div id="regions_div"
+            style="width: 100%; height: 100%;"></div>
         </body>
         </html>
     """.trimIndent()

@@ -42,8 +42,10 @@ private const val EXTRA_MIN_VIEWS = "extra_min_views"
 private const val EXTRA_MAX_VIEWS = "extra_max_views"
 private const val EXTRA_TOTAL_VIEWS = "extra_total_views"
 private const val EXTRA_TOTAL_VIEWS_CHANGE = "extra_total_views_change"
-private const val EXTRA_TOTAL_VIEWS_CHANGE_PERCENT = "extra_total_views_change_percent"
+private const val EXTRA_TOTAL_VIEWS_CHANGE_PERCENT =
+    "extra_total_views_change_percent"
 private const val EXTRA_DATE_RANGE = "extra_date_range"
+private const val EXTRA_LOCATION_TYPE = "extra_location_type"
 private const val MAP_ASPECT_RATIO = 8f / 5f
 
 @AndroidEntryPoint
@@ -52,17 +54,25 @@ class CountriesDetailActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val countries = intent.extras
-            ?.getParcelableArrayListCompat<CountriesDetailItem>(EXTRA_COUNTRIES)
-            ?: arrayListOf()
+            ?.getParcelableArrayListCompat<CountriesDetailItem>(
+                EXTRA_COUNTRIES
+            ) ?: arrayListOf()
         val mapData = intent.getStringExtra(EXTRA_MAP_DATA) ?: ""
         val minViews = intent.getLongExtra(EXTRA_MIN_VIEWS, 0L)
         val maxViews = intent.getLongExtra(EXTRA_MAX_VIEWS, 0L)
         val totalViews = intent.getLongExtra(EXTRA_TOTAL_VIEWS, 0L)
-        val totalViewsChange = intent.getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L)
-        val totalViewsChangePercent = intent.getDoubleExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0)
+        val totalViewsChange =
+            intent.getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L)
+        val totalViewsChangePercent =
+            intent.getDoubleExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0)
         val dateRange = intent.getStringExtra(EXTRA_DATE_RANGE) ?: ""
-        // Calculate maxViewsForBar once (list is sorted by views descending)
-        val maxViewsForBar = countries.firstOrNull()?.views ?: 0L
+        val locationTypeName =
+            intent.getStringExtra(EXTRA_LOCATION_TYPE)
+        val locationType = locationTypeName?.let {
+            LocationType.valueOf(it)
+        } ?: LocationType.COUNTRIES
+        val maxViewsForBar =
+            countries.firstOrNull()?.views ?: 0L
 
         setContent {
             AppThemeM3 {
@@ -76,43 +86,68 @@ class CountriesDetailActivity : BaseAppCompatActivity() {
                     totalViewsChange = totalViewsChange,
                     totalViewsChangePercent = totalViewsChangePercent,
                     dateRange = dateRange,
-                    onBackPressed = onBackPressedDispatcher::onBackPressed
+                    locationType = locationType,
+                    onBackPressed =
+                        onBackPressedDispatcher::onBackPressed
                 )
             }
         }
     }
 
     companion object {
-        @Suppress("LongParameterList")
         fun start(
             context: Context,
-            countries: List<CountryItem>,
-            mapData: String,
-            minViews: Long,
-            maxViews: Long,
-            totalViews: Long,
-            totalViewsChange: Long,
-            totalViewsChangePercent: Double,
-            dateRange: String
+            detailData: CountriesDetailData
         ) {
-            val detailItems = countries.map { country ->
-                CountriesDetailItem(
-                    countryCode = country.countryCode,
-                    countryName = country.countryName,
-                    views = country.views,
-                    flagIconUrl = country.flagIconUrl,
-                    change = country.change
-                )
+            val detailItems = when (detailData.locationType) {
+                LocationType.COUNTRIES -> {
+                    detailData.countries.map { country ->
+                        CountriesDetailItem(
+                            countryCode = country.countryCode,
+                            countryName = country.countryName,
+                            views = country.views,
+                            flagIconUrl = country.flagIconUrl,
+                            change = country.change
+                        )
+                    }
+                }
+                else -> {
+                    detailData.locationItems.orEmpty().map { item ->
+                        CountriesDetailItem(
+                            countryCode = item.id,
+                            countryName = item.name,
+                            views = item.views,
+                            flagIconUrl = item.flagIconUrl,
+                            change = item.change,
+                            latitude = item.latitude,
+                            longitude = item.longitude
+                        )
+                    }
+                }
             }
-            val intent = Intent(context, CountriesDetailActivity::class.java).apply {
-                putExtra(EXTRA_COUNTRIES, ArrayList(detailItems))
-                putExtra(EXTRA_MAP_DATA, mapData)
-                putExtra(EXTRA_MIN_VIEWS, minViews)
-                putExtra(EXTRA_MAX_VIEWS, maxViews)
-                putExtra(EXTRA_TOTAL_VIEWS, totalViews)
-                putExtra(EXTRA_TOTAL_VIEWS_CHANGE, totalViewsChange)
-                putExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, totalViewsChangePercent)
-                putExtra(EXTRA_DATE_RANGE, dateRange)
+            val intent = Intent(
+                context, CountriesDetailActivity::class.java
+            ).apply {
+                putExtra(
+                    EXTRA_COUNTRIES, ArrayList(detailItems)
+                )
+                putExtra(EXTRA_MAP_DATA, detailData.mapData)
+                putExtra(EXTRA_MIN_VIEWS, detailData.minViews)
+                putExtra(EXTRA_MAX_VIEWS, detailData.maxViews)
+                putExtra(EXTRA_TOTAL_VIEWS, detailData.totalViews)
+                putExtra(
+                    EXTRA_TOTAL_VIEWS_CHANGE,
+                    detailData.totalViewsChange
+                )
+                putExtra(
+                    EXTRA_TOTAL_VIEWS_CHANGE_PERCENT,
+                    detailData.totalViewsChangePercent
+                )
+                putExtra(EXTRA_DATE_RANGE, detailData.dateRange)
+                putExtra(
+                    EXTRA_LOCATION_TYPE,
+                    detailData.locationType.name
+                )
             }
             context.startActivity(intent)
         }
@@ -125,7 +160,9 @@ data class CountriesDetailItem(
     val countryName: String,
     val views: Long,
     val flagIconUrl: String?,
-    val change: CountryViewChange = CountryViewChange.NoChange
+    val change: CountryViewChange = CountryViewChange.NoChange,
+    val latitude: String? = null,
+    val longitude: String? = null
 ) : Parcelable
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -140,17 +177,32 @@ private fun CountriesDetailScreen(
     totalViewsChange: Long,
     totalViewsChangePercent: Double,
     dateRange: String,
+    locationType: LocationType,
     onBackPressed: () -> Unit
 ) {
+    val titleResId = when (locationType) {
+        LocationType.COUNTRIES -> R.string.stats_countries_title
+        LocationType.REGIONS -> R.string.stats_regions_title
+        LocationType.CITIES -> R.string.stats_cities_title
+    }
+    val displayMode = when (locationType) {
+        LocationType.COUNTRIES -> GeoChartDisplayMode.COUNTRIES
+        LocationType.REGIONS -> GeoChartDisplayMode.REGIONS
+        LocationType.CITIES -> GeoChartDisplayMode.CITIES
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(R.string.stats_countries_title)) },
+                title = {
+                    Text(text = stringResource(titleResId))
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
+                            contentDescription =
+                                stringResource(R.string.back)
                         )
                     }
                 }
@@ -176,6 +228,7 @@ private fun CountriesDetailScreen(
                 // Map
                 StatsGeoChartWebView(
                     mapData = mapData,
+                    displayMode = displayMode,
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(MAP_ASPECT_RATIO)
@@ -183,18 +236,25 @@ private fun CountriesDetailScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Legend
-                StatsMapLegend(minViews = minViews, maxViews = maxViews)
+                StatsMapLegend(
+                    minViews = minViews,
+                    maxViews = maxViews
+                )
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
             item {
-                StatsListHeader(leftHeaderResId = R.string.stats_countries_location_header)
+                StatsListHeader(
+                    leftHeaderResId =
+                        R.string.stats_countries_location_header
+                )
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
             itemsIndexed(countries) { index, country ->
                 val percentage = if (maxViewsForBar > 0) {
-                    country.views.toFloat() / maxViewsForBar.toFloat()
+                    country.views.toFloat() /
+                        maxViewsForBar.toFloat()
                 } else 0f
                 DetailCountryRow(
                     position = index + 1,
@@ -225,7 +285,12 @@ private fun DetailCountryRow(
         name = country.countryName,
         views = country.views,
         change = country.change.toStatsViewChange(),
-        icon = { CountryFlag(flagIconUrl = country.flagIconUrl, countryName = country.countryName) }
+        icon = {
+            CountryFlag(
+                flagIconUrl = country.flagIconUrl,
+                countryName = country.countryName
+            )
+        }
     )
 }
 
@@ -235,18 +300,29 @@ private fun CountriesDetailScreenPreview() {
     AppThemeM3 {
         CountriesDetailScreen(
             countries = listOf(
-                CountriesDetailItem("US", "United States", 3464, null, CountryViewChange.Positive(124, 3.7)),
-                CountriesDetailItem("ES", "Spain", 556, null, CountryViewChange.Positive(45, 8.8)),
-                CountriesDetailItem("GB", "United Kingdom", 522, null, CountryViewChange.Negative(12, 2.2)),
-                CountriesDetailItem("CA", "Canada", 485, null, CountryViewChange.Positive(33, 7.3)),
-                CountriesDetailItem("DE", "Germany", 412, null, CountryViewChange.NoChange),
-                CountriesDetailItem("FR", "France", 387, null, CountryViewChange.Negative(8, 2.0)),
-                CountriesDetailItem("AU", "Australia", 298, null, CountryViewChange.Positive(21, 7.6)),
-                CountriesDetailItem("BR", "Brazil", 245, null, CountryViewChange.Positive(15, 6.5)),
-                CountriesDetailItem("IN", "India", 201, null, CountryViewChange.Negative(5, 2.4)),
-                CountriesDetailItem("MX", "Mexico", 156, null, CountryViewChange.Positive(12, 8.3))
+                CountriesDetailItem(
+                    "US", "United States", 3464, null,
+                    CountryViewChange.Positive(124, 3.7)
+                ),
+                CountriesDetailItem(
+                    "ES", "Spain", 556, null,
+                    CountryViewChange.Positive(45, 8.8)
+                ),
+                CountriesDetailItem(
+                    "GB", "United Kingdom", 522, null,
+                    CountryViewChange.Negative(12, 2.2)
+                ),
+                CountriesDetailItem(
+                    "CA", "Canada", 485, null,
+                    CountryViewChange.Positive(33, 7.3)
+                ),
+                CountriesDetailItem(
+                    "DE", "Germany", 412, null,
+                    CountryViewChange.NoChange
+                )
             ),
-            mapData = "['US',3464],['ES',556],['GB',522],['CA',485]",
+            mapData = "['US',3464],['ES',556]," +
+                "['GB',522],['CA',485]",
             minViews = 156,
             maxViews = 3464,
             maxViewsForBar = 3464,
@@ -254,6 +330,7 @@ private fun CountriesDetailScreenPreview() {
             totalViewsChange = 225,
             totalViewsChangePercent = 3.5,
             dateRange = "Last 7 days",
+            locationType = LocationType.COUNTRIES,
             onBackPressed = {}
         )
     }
