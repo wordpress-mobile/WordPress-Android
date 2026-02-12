@@ -1,14 +1,15 @@
 package org.wordpress.android.ui.postsrs
 
 import android.text.format.DateUtils
+import androidx.annotation.StringRes
 import androidx.core.text.HtmlCompat
+import org.wordpress.android.R
 import uniffi.wp_api.AnyPostWithEditContext
 import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
 import java.text.SimpleDateFormat
 import java.util.Locale
-import java.util.TimeZone
 
 data class PostTabUiState(
     val posts: List<PostRsUiModel> = emptyList(),
@@ -24,7 +25,7 @@ data class PostRsUiModel(
     val title: String,
     val excerpt: String,
     val date: String,
-    val statusLabel: String,
+    @StringRes val statusLabelResId: Int = 0,
     val isPlaceholder: Boolean = false,
     val isError: Boolean = false
 )
@@ -41,7 +42,6 @@ fun PostItemState.toUiModel(postId: Long): PostRsUiModel {
             title = "",
             excerpt = "",
             date = "",
-            statusLabel = "",
             isPlaceholder = true
         )
         is PostItemState.Failed -> PostRsUiModel(
@@ -49,13 +49,13 @@ fun PostItemState.toUiModel(postId: Long): PostRsUiModel {
             title = "",
             excerpt = "",
             date = "",
-            statusLabel = "",
             isError = true
         )
     }
 }
 
-private fun FullEntityAnyPostWithEditContext.toUiModel(): PostRsUiModel {
+private fun FullEntityAnyPostWithEditContext.toUiModel():
+        PostRsUiModel {
     val post: AnyPostWithEditContext = data
     return PostRsUiModel(
         remotePostId = post.id,
@@ -68,38 +68,36 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(): PostRsUiModel {
                 ?: ""
             ).stripHtml(),
         date = (post.date ?: "").toRelativeDate(),
-        statusLabel = post.status.toLabel()
+        statusLabelResId = post.status.toLabelResId()
     )
 }
 
-private fun PostStatus?.toLabel(): String = when (this) {
-    is PostStatus.Publish -> "Published"
-    is PostStatus.Draft -> "Draft"
-    is PostStatus.Pending -> "Pending"
-    is PostStatus.Private -> "Private"
-    is PostStatus.Future -> "Scheduled"
-    is PostStatus.Trash -> "Trashed"
-    is PostStatus.Custom -> "Custom"
-    null -> ""
+@StringRes
+private fun PostStatus?.toLabelResId(): Int = when (this) {
+    is PostStatus.Publish -> R.string.post_status_post_published
+    is PostStatus.Draft -> R.string.post_status_draft
+    is PostStatus.Pending -> R.string.post_status_pending_review
+    is PostStatus.Private -> R.string.post_status_post_private
+    is PostStatus.Future -> R.string.post_status_post_scheduled
+    is PostStatus.Trash -> R.string.post_status_post_trashed
+    is PostStatus.Custom -> R.string.post_rs_status_custom
+    null -> 0
 }
 
 private fun String.stripHtml(): String {
     if (isBlank()) return this
-    return HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_LEGACY)
-        .toString()
-        .trim()
-}
-
-private val iso8601Format by lazy {
-    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).apply {
-        timeZone = TimeZone.getTimeZone("UTC")
-    }
+    return HtmlCompat.fromHtml(
+        this,
+        HtmlCompat.FROM_HTML_MODE_LEGACY
+    ).toString().trim()
 }
 
 private fun String.toRelativeDate(): String {
     if (isBlank()) return this
     val millis = try {
-        iso8601Format.parse(this)?.time ?: return this
+        // post.date is in site-local time, not UTC
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+            .parse(this)?.time ?: return this
     } catch (_: Exception) {
         return this
     }

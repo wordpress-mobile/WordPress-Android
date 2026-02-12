@@ -24,8 +24,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsUiModel
 
 @Composable
@@ -61,7 +63,9 @@ private fun PostContentItem(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = post.title.ifBlank { "(Untitled)" },
+                text = post.title.ifBlank {
+                    stringResource(R.string.untitled_in_parentheses)
+                },
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -78,9 +82,9 @@ private fun PostContentItem(
             }
             Spacer(modifier = Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (post.statusLabel.isNotBlank()) {
+                if (post.statusLabelResId != 0) {
                     Text(
-                        text = post.statusLabel,
+                        text = stringResource(post.statusLabelResId),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -161,7 +165,7 @@ private fun ErrorItem(modifier: Modifier = Modifier) {
         )
     ) {
         Text(
-            text = "Failed to load post",
+            text = stringResource(R.string.post_rs_failed_to_load),
             modifier = Modifier.padding(16.dp),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onErrorContainer

@@ -154,7 +154,7 @@ private fun ErrorContent(error: String) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Something went wrong",
+            text = stringResource(R.string.error_generic),
             style = MaterialTheme.typography.titleMedium
         )
         Spacer(modifier = Modifier.height(8.dp))

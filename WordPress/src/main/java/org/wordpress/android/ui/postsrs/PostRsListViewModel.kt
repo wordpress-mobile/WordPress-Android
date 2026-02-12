@@ -9,9 +9,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
 import rs.wordpress.cache.kotlin.hasMorePages
@@ -25,6 +27,7 @@ import javax.inject.Inject
 class PostRsListViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpSelfHostedServiceProvider,
+    private val resourceProvider: ResourceProvider,
 ) : ViewModel() {
     private val tabStates =
         mutableMapOf<PostRsListTab, MutableStateFlow<PostTabUiState>>()
@@ -44,7 +47,9 @@ class PostRsListViewModel @Inject constructor(
 
         val site = selectedSiteRepository.getSelectedSite() ?: run {
             getOrCreateStateFlow(tab).value = PostTabUiState(
-                error = "No site selected"
+                error = resourceProvider.getString(
+                    R.string.stats_todays_stats_no_site_selected
+                )
             )
             return
         }
@@ -93,7 +98,10 @@ class PostRsListViewModel @Inject constructor(
                 )
                 initializingTabs.remove(tab)
                 getOrCreateStateFlow(tab).value = PostTabUiState(
-                    error = e.message ?: "Failed to initialize"
+                    error = e.message
+                        ?: resourceProvider.getString(
+                            R.string.error_generic
+                        )
                 )
             }
         }
@@ -120,7 +128,10 @@ class PostRsListViewModel @Inject constructor(
                 state.value = state.value.copy(
                     isLoading = false,
                     isRefreshing = false,
-                    error = e.message ?: "Refresh failed"
+                    error = e.message
+                        ?: resourceProvider.getString(
+                            R.string.error_generic
+                        )
                 )
             }
         }
@@ -196,7 +207,10 @@ class PostRsListViewModel @Inject constructor(
             isLoading =
                 fetchingFirstPage && state.value.posts.isEmpty(),
             error = if (listInfo?.state == ListState.ERROR) {
-                listInfo.errorMessage ?: "Unknown error"
+                listInfo.errorMessage
+                    ?: resourceProvider.getString(
+                        R.string.error_generic
+                    )
             } else {
                 null
             }

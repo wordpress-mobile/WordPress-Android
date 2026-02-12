@@ -33,15 +33,16 @@ class WpSelfHostedServiceProvider @Inject constructor(
         }
     }
 
-    @Synchronized
-    fun clearService(siteId: Long) {
-        services.remove(siteId)?.close()
-    }
-
     private fun createService(site: SiteModel): WpSelfHostedService {
         val apiRoot = site.wpApiRestUrl
             ?.takeIf { it.isNotEmpty() }
             ?: "${site.url}/wp-json"
+
+        val username = site.apiRestUsernamePlain
+        val password = site.apiRestPasswordPlain
+        require(!username.isNullOrEmpty() && !password.isNullOrEmpty()) {
+            "Application password credentials missing for site"
+        }
 
         val apiUrlResolver = WpOrgSiteApiUrlResolver(
             ParsedUrl.parse(apiRoot)
@@ -49,8 +50,8 @@ class WpSelfHostedServiceProvider @Inject constructor(
 
         val authProvider =
             WpAuthenticationProvider.staticWithUsernameAndPassword(
-                site.apiRestUsernamePlain!!,
-                site.apiRestPasswordPlain!!
+                username,
+                password
             )
 
         val delegate = WpApiClientDelegate(
