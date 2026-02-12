@@ -792,7 +792,6 @@ Language: ja_JP
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack は統計、通知などの機能を提供し、理想の WordPress サイトの構築と成長をサポートします。\n\nWordPress アプリは現在、新しいサイトの作成をサポートしていません。</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack は統計、通知などの機能を提供し、理想の WordPress サイトの構築と成長をサポートします。</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Jetpack アプリで新しい WordPress サイトを作成する</string>
-    <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">端末で リアルタイムの通知を引き続き受信するには、Jetpack アプリに切り替えてください。</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Jetpack アプリに切り替えると、Reader を使用してお気に入りのサイトや投稿をすべて検索、フォロー、「いいね」できます。</string>
@@ -800,9 +799,6 @@ Language: ja_JP
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Jetpack アプリで通知を受け取る</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Jetpack アプリで任意のサイトをフォロー</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">新しい Jetpack アプリを使用して統計を入手する</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">「Jetpack でリンクを開く」を無効にできません</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">「Jetpack でリンクを開く」を有効にできません</string>
-    <string name="preference_open_links_in_jetpack">Jetpack でリンクを開く</string>
     <string name="jp_migration_need_help_button">ヘルプが必要ですか ?</string>
     <string name="jp_migration_got_it_button">OK</string>
     <string name="jp_migration_network_error_message">ネットワークに接続しないと、データと設定を転送できません。</string>

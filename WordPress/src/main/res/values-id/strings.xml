@@ -824,7 +824,6 @@ Language: id
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack menghadirkan fitur statistik, pemberitahuan, dan berbagai fitur lainnya untuk membantu membangun sekaligus mengembangkan situs WordPress impian Anda.\n\nAplikasi WordPress tidak dapat lagi digunakan untuk membuat situs baru.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack menghadirkan fitur statistik, pemberitahuan, dan berbagai fitur lainnya untuk membantu membangun sekaligus mengembangkan situs WordPress impian Anda.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Buat situs WordPress baru dengan aplikasi Jetpack</string>
-    <string name="deep_linking_weblinks_alias_label">tautanweb</string>
     <string name="deep_linking_urilinks_alias_label">tautanuri</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Ganti ke aplikasi Jetpack agar dapat tetap menerima  notifikasi real-time langsung di perangkat Anda.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Ganti ke aplikasi Jetpack untuk menemukan, mengikuti, dan memberi suka ke situs dan pos favorit lewat Reader.</string>
@@ -832,9 +831,6 @@ Language: id
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Dapatkan pemberitahuan dengan aplikasi Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Ikuti situs apa pun dengan aplikasi Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Dapatkan statistik situs Anda lewat aplikasi Jetpack baru</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Tidak dapat menonaktifkan fitur buka tautan di Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Tidak dapat mengaktifkan fitur buka tautan di Jetpack</string>
-    <string name="preference_open_links_in_jetpack">Buka tautan di Jetpack</string>
     <string name="jp_migration_need_help_button">Butuh bantuan?</string>
     <string name="jp_migration_got_it_button">Saya mengerti</string>
     <string name="jp_migration_network_error_message">Tanpa koneksi internet, kami tidak dapat mentransfer data dan pengaturan.</string>

@@ -826,7 +826,6 @@ Language: sq_AL
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack-u furnizon statistika, njoftime, etj, për t’ju ndihmuar të ngrini dhe fuqizoni sajtin tuaj WordPress që keni ëndërruar.\n\nAplikacioni WordPress nuk mbulon më krijimin e një sajti të ri.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack-u furnizon statistika, njoftime, etj, për t’ju ndihmuar të ngrini dhe fuqizoni sajtin tuaj WordPress që keni ëndërruar.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Krijoni një sajt të ri WordPress me aplikacionin Jetpack</string>
-    <string name="deep_linking_weblinks_alias_label">lidhje web</string>
     <string name="deep_linking_urilinks_alias_label">lidhje URI</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Që të vazhdoni të merrni në pajisjen tuaj njoftime të atypëratyshme, kaloni te aplikacioni Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Që të gjeni, ndiqni dhe pëlqeni krejt sajtet dhe postimet tuaj të parapëlqyer me Lexuesin, kaloni te aplikacioni Jetpack.</string>
@@ -834,9 +833,6 @@ Language: sq_AL
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Merrini njoftimet tuaja me aplikacionin Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Ndiqni çfarëdo sajti, me aplikacionin Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Merrni statistikat tuaja duke përdorur aplikacionin e ri Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">S’arrihet të çaktivizohet hapje lidhjesh në Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">S’arrihet të aktivizohet hapje lidhjesh në Jetpack</string>
-    <string name="preference_open_links_in_jetpack">Lidhjet hapi në Jetpack</string>
     <string name="jp_migration_need_help_button">Ju duhet ndihmë?</string>
     <string name="jp_migration_got_it_button">E kuptova</string>
     <string name="jp_migration_network_error_message">S’jeni në gjendje të shpërngulim të dhënat dhe rregullimet tuaja pa një lidhje në rrjet.</string>

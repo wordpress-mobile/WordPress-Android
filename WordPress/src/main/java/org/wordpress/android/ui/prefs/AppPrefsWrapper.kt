@@ -287,17 +287,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun isJetpackMigrationEligible() = AppPrefs.getIsJetpackMigrationEligible()
 
-    fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp(): Long =
-        AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
-
-    fun setOpenWebLinksWithJetpackOverlayLastShownTimestamp(lastShown: Long) =
-        AppPrefs.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(lastShown)
-
-    fun getIsOpenWebLinksWithJetpack(): Boolean = AppPrefs.getIsOpenWebLinksWithJetpack()
-
-    fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =
-        AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
-
     fun getShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Boolean =
         AppPrefs.getShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase)
 

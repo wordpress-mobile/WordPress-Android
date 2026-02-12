@@ -738,7 +738,6 @@ Language: zh_TW
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack 提供統計資料、通知等其他功能，可協助你建置和發展夢想中的 WordPress 網站。\n\nWordPress 應用程式不再支援建立新網站。</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack 提供統計資料、通知等其他功能，可協助你建置和發展夢想中的 WordPress 網站。</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">使用 Jetpack 應用程式建立新的 WordPress 網站</string>
-    <string name="deep_linking_weblinks_alias_label">網頁連結</string>
     <string name="deep_linking_urilinks_alias_label">URI 連結</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">切換至 Jetpack 應用程式，以便繼續 在你的裝置上接收即時通知。</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">切換至 Jetpack 應用程式，以便透過閱讀器搜尋、追蹤並按讚所有喜愛的網站及文章。</string>
@@ -746,9 +745,6 @@ Language: zh_TW
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">透過 Jetpack 應用程式接收通知</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">透過 Jetpack 應用程式追蹤任何網站</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">使用全新 Jetpack 應用程式取得統計資料</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">無法停用在 Jetpack 中開啟連結</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">無法啟用在 Jetpack 中開啟連結</string>
-    <string name="preference_open_links_in_jetpack">在 Jetpack 中開啟連結</string>
     <string name="jp_migration_need_help_button">需要協助嗎？</string>
     <string name="jp_migration_got_it_button">知道了</string>
     <string name="jp_migration_network_error_message">沒有網路連線的情況下，我們無法轉移你的資料和設定。</string>

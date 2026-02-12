@@ -821,7 +821,6 @@ Language: he_IL
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">השירות של Jetpack מאפשר גישה לנתונים סטטיסטיים, להודעות ולפרטים נוספים כדי לעזור לך לבנות ולפתח את האתר של WordPress שתמיד רצית.\n\nהאפליקציה של WordPress כבר לא תומכת ביצירת אתר חדש.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">השירות של Jetpack מאפשר גישה לנתונים סטטיסטיים, להודעות ולפרטים נוספים כדי לעזור לך לבנות ולפתח את האתר של WordPress שתמיד רצית.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">ליצור אתר WordPress.com חדש עם האפליקציה של Jetpack</string>
-    <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">יש לעבור לאפליקציה של Jetpack כדי להמשיך לקבל  התראות בזמן אמת אל המכשיר שלך.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">כדאי לעבור לאפליקציה של Jetpack כדי למצוא, לעקוב ולסמן לייק בכל האתרים והפוסטים האהובים עליך עם Reader.</string>
@@ -829,9 +828,6 @@ Language: he_IL
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">אפשר לקבל הודעות דרך האפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">אפשר לעקוב אחרי כל אתר דרך האפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">אפשר לקבל את הנתונים הסטטיסטיים שלך דרך האפליקציה החדשה של Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">אין אפשרות להשבית את פתיחת הקישורים ב-Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">אין אפשרות להפעיל את פתיחת הקישורים ב-Jetpack</string>
-    <string name="preference_open_links_in_jetpack">לפתוח את הקישורים ב-Jetpack</string>
     <string name="jp_migration_need_help_button">נדרשת לך עזרה?</string>
     <string name="jp_migration_got_it_button">הבנתי</string>
     <string name="jp_migration_network_error_message">אין לנו אפשרות להעביר את הנתונים וההגדרות שלך ללא חיבור לרשת.</string>

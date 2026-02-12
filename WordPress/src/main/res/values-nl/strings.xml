@@ -828,7 +828,6 @@ Language: nl
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack biedt statistieken, meldingen en meer om je te helpen de WordPress-site van je dromen te bouwen.\n\nDe WordPress-app ondersteunt het maken van een nieuwe site niet meer.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack biedt statistieken, meldingen en meer om je te helpen de WordPress-site van je dromen te bouwen.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Maak een nieuwe WordPress-site met de Jetpack-app</string>
-    <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">uri-links</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Schakel over naar de Jetpack-app om  realtime meldingen te blijven ontvangen op je apparaat.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Schakel over naar de Jetpack-app om je favoriete sites en berichten te vinden, te volgen en een like te geven met Reader.</string>
@@ -836,9 +835,6 @@ Language: nl
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Ontvang meldingen met de Jetpack-app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Volg sites met de Jetpack-app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Bekijk je statistieken met de nieuwe Jetpack-app</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Kan links openen in Jetpack niet uitschakelen</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Kan links openen in Jetpack niet inschakelen</string>
-    <string name="preference_open_links_in_jetpack">Links openen in Jetpack</string>
     <string name="jp_migration_need_help_button">Hulp nodig?</string>
     <string name="jp_migration_got_it_button">Duidelijk</string>
     <string name="jp_migration_network_error_message">We kunnen je gegevens en instellingen niet overdragen zonder netwerkverbinding.</string>

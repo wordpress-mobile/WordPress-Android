@@ -12,10 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.ActivityLauncherWrapper;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
@@ -47,7 +43,6 @@ public class DeepLinkingIntentReceiverActivity extends BaseAppCompatActivity {
     @Inject ActivityLauncherWrapper mActivityLauncherWrapper;
     @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     private DeepLinkingIntentReceiverViewModel mViewModel;
-    private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,7 +58,6 @@ public class DeepLinkingIntentReceiverActivity extends BaseAppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, callback);
 
         mViewModel = new ViewModelProvider(this).get(DeepLinkingIntentReceiverViewModel.class);
-        mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
         setupObservers();
 
         String action = getIntent().getAction();
@@ -105,36 +99,7 @@ public class DeepLinkingIntentReceiverActivity extends BaseAppCompatActivity {
             ToastUtils.showToast(getContext(), toastMessage);
             return null;
         }));
-        mViewModel.getShowOpenWebLinksWithJetpackOverlay().observe(this,
-                showOverlay -> showOverlay.applyIfNotHandled(unit -> {
-                    showOverlay();
-                    return null;
-                }));
-
-        observeOverlayEvents();
     }
-
-    private void observeOverlayEvents() {
-        mJetpackFullScreenViewModel.getAction().observe(this,
-                action -> {
-                    if (action instanceof ForwardToJetpack) {
-                        mViewModel.forwardDeepLinkToJetpack();
-                    } else {
-                        mViewModel.handleRequest();
-                    }
-                });
-    }
-
-    private void showOverlay() {
-        JetpackFeatureFullScreenOverlayFragment
-                .newInstance(
-                        null,
-                        true,
-                        false,
-                        JetpackFeatureCollectionOverlaySource.UNSPECIFIED)
-                .show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
-    }
-
 
     private DeepLinkEntryPoint extractEntryPoint(Intent intent) {
         return DeepLinkEntryPoint.fromResId(mPackageManagerWrapper.getActivityLabelResFromIntent(intent));

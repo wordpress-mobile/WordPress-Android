@@ -828,7 +828,6 @@ Language: de
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack bietet Statistiken, Benachrichtigungen und mehr, mit deren Hilfe du deine perfekte WordPress-Website gestalten und erweitern kannst.\n\nDie WordPress-App unterstützt das Erstellen neuer Websites nicht mehr.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack bietet Statistiken, Benachrichtigungen und mehr, mit deren Hilfe du deine perfekte WordPress-Website gestalten und erweitern kannst.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Eine neue WordPress-Website mit der Jetpack-App erstellen</string>
-    <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Wechsle zur Jetpack-App, um weiterhin  Benachrichtigungen in Echtzeit auf deinem Gerät zu erhalten.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Wechsle zur Jetpack-App, um mit dem Reader all deine Lieblings-Websites und -Beiträge zu finden, ihnen zu folgen und Likes dafür zu vergeben.</string>
@@ -836,9 +835,6 @@ Language: de
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Benachrichtigungen in der Jetpack-App erhalten</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Mit der Jetpack-App beliebigen Websites folgen</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Statistiken in der neuen Jetpack-App ansehen</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">„Open links“ (Links öffnen) kann in Jetpack nicht deaktiviert werden</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">„Open links“ (Links öffnen) kann in Jetpack nicht aktiviert werden</string>
-    <string name="preference_open_links_in_jetpack">Links in Jetpack öffnen</string>
     <string name="jp_migration_need_help_button">Brauchst du Hilfe?</string>
     <string name="jp_migration_got_it_button">Verstanden</string>
     <string name="jp_migration_network_error_message">Wir können deine Daten und Einstellungen ohne Netzwerkverbindung nicht übertragen.</string>

@@ -45,7 +45,6 @@ import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
 import org.wordpress.android.models.JetpackPoweredScreen;
-import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
@@ -91,8 +90,6 @@ public class AppSettingsFragment extends PreferenceFragment
     private PreferenceScreen mPrivacySettings;
     private WPSwitchPreference mStripImageLocation;
     private WPSwitchPreference mReportCrashPref;
-    private WPSwitchPreference mOpenWebLinksWithJetpack;
-
     private Preference mWhatsNew;
 
     @Inject SiteStore mSiteStore;
@@ -102,7 +99,6 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
-    @Inject DeepLinkOpenWebLinksWithJetpackHelper mOpenWebLinksWithJetpackHelper;
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
     @Inject PerAppLocaleManager mPerAppLocaleManager;
@@ -174,10 +170,6 @@ public class AppSettingsFragment extends PreferenceFragment
         mReportCrashPref = (WPSwitchPreference) WPPrefUtils
                 .getPrefAndSetChangeListener(this, R.string.pref_key_send_crash, this);
 
-        mOpenWebLinksWithJetpack =
-                (WPSwitchPreference) WPPrefUtils
-                        .getPrefAndSetChangeListener(this, R.string.pref_key_open_web_links_with_jetpack, this);
-
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
         setDetailListPreferenceValue(mImageMaxSizePref,
@@ -197,8 +189,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mStripImageLocation.setChecked(AppPrefs.isStripImageLocation());
 
-        mOpenWebLinksWithJetpack.setChecked(AppPrefs.getIsOpenWebLinksWithJetpack());
-
         mWhatsNew = findPreference(getString(R.string.pref_key_whats_new));
 
         removeWhatsNewPreference();
@@ -206,10 +196,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
-        }
-
-        if (!mOpenWebLinksWithJetpackHelper.shouldShowAppSetting()) {
-            removeOpenWebLinksWithJetpack();
         }
 
         final boolean showPrivacySettings = getActivity()
@@ -301,14 +287,6 @@ public class AppSettingsFragment extends PreferenceFragment
         preferenceScreen.addPreference(mWhatsNew);
     }
 
-
-    private void removeOpenWebLinksWithJetpack() {
-        Preference openWebLinksWithJetpackPreference =
-                findPreference(getString(R.string.pref_key_open_web_links_with_jetpack));
-        PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
-        preferenceScreen.removePreference(openWebLinksWithJetpackPreference);
-    }
 
     @Override
     public void onResume() {
@@ -471,8 +449,6 @@ public class AppSettingsFragment extends PreferenceFragment
         } else if (preference == mReportCrashPref) {
             AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED, Collections
                     .singletonMap(TRACK_ENABLED, newValue));
-        } else if (preference == mOpenWebLinksWithJetpack) {
-            handleOpenLinksInJetpack((Boolean) newValue);
         }
         return true;
     }
@@ -629,23 +605,4 @@ public class AppSettingsFragment extends PreferenceFragment
         mPerAppLocaleManager.onLanguageChanged(languageCode);
     }
 
-    private void handleOpenLinksInJetpack(Boolean newValue) {
-        try {
-            if (newValue) {
-                mOpenWebLinksWithJetpackHelper.disableDeepLinks();
-            } else {
-                mOpenWebLinksWithJetpackHelper.enableDeepLinks();
-            }
-            AppPrefs.setIsOpenWebLinksWithJetpack(newValue);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED, Collections
-                    .singletonMap(TRACK_ENABLED, newValue));
-        } catch (Exception e) {
-            ToastUtils.showToast(
-                    getActivity(),
-                    (newValue ? R.string.preference_open_links_in_jetpack_setting_change_enable_error
-                            : R.string.preference_open_links_in_jetpack_setting_change_disable_error),
-                    ToastUtils.Duration.LONG);
-            AppLog.e(AppLog.T.UTILS, "Unable to enable or disable open with Jetpack components ", e);
-        }
-    }
 }

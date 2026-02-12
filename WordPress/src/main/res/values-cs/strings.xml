@@ -165,7 +165,6 @@ Language: cs_CZ
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack poskytuje statistiky, upozornění a další, které vám pomohou vytvořit a rozšířit web WordPress vašich snů.\n\nAplikace WordPress již nepodporuje vytváření nového webu.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack poskytuje statistiky, upozornění a další, které vám pomohou vytvořit a rozšířit web WordPress vašich snů.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Vytvořte nový WordPress web pomocí aplikace Jetpack</string>
-    <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Přepněte na aplikaci Jetpack, abyste do svého zařízení nadále dostávali upozornění v reálném čase.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Přepněte do aplikace Jetpack a najděte, sledujte a lajkujte všechny své oblíbené stránky a příspěvky pomocí aplikace Reader.</string>
@@ -173,9 +172,6 @@ Language: cs_CZ
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Získejte oznámení pomocí aplikace Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Sledujte libovolnou stránku pomocí aplikace Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Získejte své statistiky pomocí nové aplikace Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Nelze zakázat otevřené odkazy v Jetpacku</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Nelze povolit otevřené odkazy v Jetpacku</string>
-    <string name="preference_open_links_in_jetpack">Otevřít odkazy v Jetpacku</string>
     <string name="jp_migration_need_help_button">Potřebujete pomoci?</string>
     <string name="jp_migration_got_it_button">Mám to</string>
     <string name="jp_migration_network_error_message">Bez připojení k síti nemůžeme přenést vaše data a nastavení.</string>

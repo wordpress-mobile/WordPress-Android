@@ -160,8 +160,6 @@ public class AppPrefs {
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
 
         SKIPPED_BLOGGING_PROMPT_DAY,
-        OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP,
-        OPEN_WEB_LINKS_WITH_JETPACK,
         SHOULD_HIDE_JETPACK_FEATURE_CARD,
         JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP,
         SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP,
@@ -1452,22 +1450,6 @@ public class AppPrefs {
 
     public static void setIsJetpackMigrationEligible(final boolean isEligible) {
         setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_ELIGIBLE, isEligible);
-    }
-
-    public static Long getOpenWebLinksWithJetpackOverlayLastShownTimestamp() {
-        return getLong(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP, 0L);
-    }
-
-    public static void setOpenWebLinksWithJetpackOverlayLastShownTimestamp(final Long overlayLastShownTimestamp) {
-        setLong(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP, overlayLastShownTimestamp);
-    }
-
-    public static Boolean getIsOpenWebLinksWithJetpack() {
-        return getBoolean(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK, false);
-    }
-
-    public static void setIsOpenWebLinksWithJetpack(final boolean isOpenWebLinksWithJetpack) {
-        setBoolean(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK, isOpenWebLinksWithJetpack);
     }
 
     public static Boolean getShouldHideJetpackFeatureCard(JetpackFeatureRemovalPhase phase) {

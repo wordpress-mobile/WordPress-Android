@@ -724,7 +724,6 @@ Language: en_CA
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.\n\nThe WordPress app no longer supports creating a new site.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Create a new WordPress site with the Jetpack app</string>
-    <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Switch to the Jetpack app to find, follow, and like all your favorite sites and posts with Reader.</string>
@@ -732,9 +731,6 @@ Language: en_CA
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Get your notifications with the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Follow any site with the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Get your stats using the new Jetpack app</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Unable to disable open links in Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Unable to enable open links in Jetpack</string>
-    <string name="preference_open_links_in_jetpack">Open links in Jetpack</string>
     <string name="jp_migration_need_help_button">Need help?</string>
     <string name="jp_migration_got_it_button">Got it</string>
     <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>

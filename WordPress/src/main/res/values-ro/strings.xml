@@ -828,7 +828,6 @@ Language: ro
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack oferă statistici, notificări și multe altele pentru a te ajuta să construiești și să dezvolți site-ul WordPress la care visezi.\nAplicația WordPress nu mai permite crearea unui site nou.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack oferă statistici, notificări și multe altele pentru a te ajuta să construiești și să dezvolți site-ul WordPress la care visezi.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Creează un site WordPress nou cu aplicația Jetpack</string>
-    <string name="deep_linking_weblinks_alias_label">legături web</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Comută la aplicația Jetpack pentru a continua să primești notificări în timp real pe dispozitivul tău.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Comută la aplicația Jetpack pentru a găsi, urmări și aprecia toate site-urile și articolele tale preferate din Cititor.</string>
@@ -836,9 +835,6 @@ Language: ro
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Cu aplicația Jetpack, primești notificări</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Cu aplicația Jetpack, poți să urmărești orice site</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Cu aplicația Jetpack, îți vezi statisticile</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Nu pot dezactiva deschiderea legăturilor în Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Nu pot activa deschiderea legăturilor în Jetpack</string>
-    <string name="preference_open_links_in_jetpack">Deschide legăturile în Jetpack</string>
     <string name="jp_migration_need_help_button">Ai nevoie de ajutor?</string>
     <string name="jp_migration_got_it_button">Am înțeles</string>
     <string name="jp_migration_network_error_message">Nu putem să transferăm datele și setările fără o conexiune la rețea.</string>

@@ -820,7 +820,6 @@ Language: it
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack fornisce statistiche, notifiche e altro per aiutarti a costruire e far crescere il sito WordPress dei tuoi sogni.\n\nL\'app WordPress non supporta più la creazione di un nuovo sito.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack fornisce statistiche, notifiche e altro per aiutarti a costruire e far crescere il sito WordPress dei tuoi sogni.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Crea un nuovo sito WordPress con l\'app Jetpack</string>
-    <string name="deep_linking_weblinks_alias_label">link web</string>
     <string name="deep_linking_urilinks_alias_label">link url</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Passa all\'app Jetpack per continuare a ricevere notifiche  in tempo reale sul tuo dispositivo.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Passa all\'app Jetpack per trovare, seguire e mettere mi piace a tutti i tuoi siti e post preferiti con Reader.</string>
@@ -828,9 +827,6 @@ Language: it
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Ricevi le tue notifiche con l\'app Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Segui qualsiasi sito con l\'app Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Ottieni le statistiche usando la nuova app di Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Impossibile disabilitare i collegamenti aperti in Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Impossibile abilitare i collegamenti aperti in Jetpack</string>
-    <string name="preference_open_links_in_jetpack">Apri i collegamenti in Jetpack</string>
     <string name="jp_migration_need_help_button">Hai bisogno di aiuto?</string>
     <string name="jp_migration_got_it_button">OK</string>
     <string name="jp_migration_network_error_message">Non siamo in grado di trasferire i dati e le impostazioni senza una connessione di rete.</string>

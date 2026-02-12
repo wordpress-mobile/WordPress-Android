@@ -49,7 +49,6 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.about.UnifiedAboutActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.debug.DebugSettingsActivity
-import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -622,11 +621,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private fun enableDeepLinkComponents() {
         packageManagerWrapper.enableReaderDeeplinks()
-        packageManagerWrapper.enableComponentEnabledSetting(
-            DeepLinkOpenWebLinksWithJetpackHelper.WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS
-        )
-        appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(0L)
-        appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
     }
 
     @Suppress("DEPRECATION")

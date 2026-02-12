@@ -74,7 +74,6 @@ import org.wordpress.android.push.GCMRegistrationScheduler
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
-import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalWidgetHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -107,7 +106,6 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.VolleyUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.AppConfig
-import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig
 import org.wordpress.android.util.enqueuePeriodicUploadWorkRequestForAllSites
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.AppReviewManager
@@ -217,13 +215,6 @@ class AppInitializer @Inject constructor(
 
     @Inject
     lateinit var oAuthAuthenticator: OAuthAuthenticator
-
-    // For jetpack focus
-    @Inject
-    lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
-
-    @Inject
-    lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
 
     @Inject
     lateinit var jetpackFeatureRemovalWidgetHelper: JetpackFeatureRemovalWidgetHelper
@@ -759,16 +750,6 @@ class AppInitializer @Inject constructor(
         }
     }
 
-    private fun enableDeepLinkingComponentsIfNeeded() {
-        if (openWebLinksWithJetpackFlowFeatureConfig.isEnabled()) {
-            if (!AppPrefs.getIsOpenWebLinksWithJetpack()) {
-                openWebLinksWithJetpackHelper.enableDeepLinks()
-            }
-        } else {
-            openWebLinksWithJetpackHelper.enableDeepLinks()
-        }
-    }
-
     private fun disableWidgetReceiversIfNeeded() {
         jetpackFeatureRemovalWidgetHelper.disableWidgetReceiversIfNeeded()
     }
@@ -837,9 +818,6 @@ class AppInitializer @Inject constructor(
             properties.putAll(readerTracker.getAnalyticsData())
 
             readerTracker.onAppGoesToBackground()
-
-            // Ensure that the deeplinking activity is are re-enabled if needed
-            enableDeepLinkingComponentsIfNeeded()
 
             AnalyticsTracker.track(Stat.APPLICATION_CLOSED, properties)
             AnalyticsTracker.endSession(false)

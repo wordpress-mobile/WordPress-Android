@@ -86,7 +86,6 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsReminderSchedulerListener;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
-import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
@@ -151,7 +150,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
-import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig;
 import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
@@ -264,8 +262,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject CreateSiteNotificationScheduler mCreateSiteNotificationScheduler;
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
-    @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
-    @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
     @Inject QRCodeAuthFlowFeatureConfig mQrCodeAuthFlowFeatureConfig;
     @Inject JetpackFeatureRemovalOverlayUtil mJetpackFeatureRemovalOverlayUtil;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
@@ -409,9 +405,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             checkDismissNotification();
             checkTrackAnalyticsEvent();
         }
-
-        // Ensure deep linking activities are enabled.They may have been disabled elsewhere and failed to get re-enabled
-        enableDeepLinkingComponentsIfNeeded();
 
         // monitor whether we're not the default app
         trackDefaultApp();
@@ -1073,10 +1066,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         // Load selected site
         initSelectedSite();
 
-        // ensure the deep linking activity is enabled. We might be returning from the external-browser
-        // viewing of a post
-        enableDeepLinkingComponentsIfNeeded();
-
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
 
@@ -1534,7 +1523,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     private void handleSiteRemoved() {
         mViewModel.handleSiteRemoved();
         if (!mViewModel.isSignedInWPComOrHasWPOrgSite()) {
-            mDeepLinkOpenWebLinksWithJetpackHelper.reset();
             showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
             return;
         }
@@ -1744,17 +1732,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         super.onPause();
 
         mWpAppNotifierHandler.removeListener(this);
-    }
-
-    private void enableDeepLinkingComponentsIfNeeded() {
-        if (mOpenWebLinksWithJetpackFlowFeatureConfig.isEnabled()) {
-            if (!AppPrefs.getIsOpenWebLinksWithJetpack()) {
-                mDeepLinkOpenWebLinksWithJetpackHelper.enableDeepLinks();
-            }
-        } else {
-            // re-enable all deep linking components
-            mDeepLinkOpenWebLinksWithJetpackHelper.enableDeepLinks();
-        }
     }
 
     private void showPrivacyConsentDialog() {

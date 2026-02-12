@@ -828,7 +828,6 @@ Language: tr
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack, hayalinizdeki WordPress sitesini oluşturmanıza ve büyütmenize yardımcı olacak istatistikler, bildirimler ve daha fazlasını sağlar.\n\nWordPress uygulaması artık yeni bir site oluşturmayı desteklemiyor.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack, hayalinizdeki WordPress sitesini oluşturmanıza ve büyütmenize yardımcı olacak istatistikleri, bildirimleri ve diğer özellikleri sağlar.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Jetpack uygulamasıyla yeni bir WordPress sitesi oluşturun</string>
-    <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Aygıtınızda gerçek zamanlı bildirimler almayı sürdürmek için Jetpack uygulamasına geçin.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Okuyucu ile tüm beğendiğiniz siteleri ve yazıları bulmak, takip etmek ve beğenmek için Jetpack uygulamasına geçin.</string>
@@ -836,9 +835,6 @@ Language: tr
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Bildirimlerinizi Jetpack uygulamasıyla alın</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Jetpack uygulamasıyla istediğiniz siteyi takip edin</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Yeni Jetpack uygulamasını kullanarak istatistiklerinizi alın</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Bağlantıları Jetpack ile açma özelliği kapatılamadı</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Bağlantıları Jetpack ile açma özelliği açılamadı</string>
-    <string name="preference_open_links_in_jetpack">Bağlantıları Jetpack ile aç</string>
     <string name="jp_migration_need_help_button">Yardıma mı ihtiyacınız var?</string>
     <string name="jp_migration_got_it_button">Anladım</string>
     <string name="jp_migration_network_error_message">Ağ bağlantısı olmadığı için verilerinizi ve ayarlarınızı aktaramıyoruz.</string>

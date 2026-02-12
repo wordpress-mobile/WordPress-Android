@@ -146,7 +146,6 @@ android {
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_STATIC_POSTERS", "false"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_SELF_HOSTED_USERS", "false"
         buildConfigField "boolean", "PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD", "false"
-        buildConfigField "boolean", "OPEN_WEB_LINKS_WITH_JETPACK_FLOW", "false"
         buildConfigField "boolean", "ENABLE_BLAZE_FEATURE", "false"
         buildConfigField "boolean", "WP_INDIVIDUAL_PLUGIN_OVERLAY", "false"
         buildConfigField "boolean", "SITE_EDITOR_MVP", "false"
@@ -174,7 +173,6 @@ android {
         buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
         buildConfigField "boolean", "ENABLE_WHATS_NEW_FEATURE", "true"
         buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
-        buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
         buildConfigField "boolean", "BLAZE_MANAGE_CAMPAIGNS", "false"
         buildConfigField "boolean", "DASHBOARD_PERSONALIZATION", "false"
         buildConfigField "boolean", "ENABLE_SITE_MONITORING", "false"
@@ -207,7 +205,6 @@ android {
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "false"
-            buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
             buildConfigField "String", "WPCOM_REDIRECT_URI", '"wordpress://wpcom-authorize"'
 
             manifestPlaceholders = [magicLinkScheme:"wordpress"]
@@ -229,7 +226,6 @@ android {
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
-            buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "false"
             buildConfigField "String", "WPCOM_REDIRECT_URI", '"jetpack://wpcom-authorize"'
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]

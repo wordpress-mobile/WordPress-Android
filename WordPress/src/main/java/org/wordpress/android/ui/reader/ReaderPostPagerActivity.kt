@@ -38,7 +38,6 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.WPLaunchActivity
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
-import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
 import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment.Companion.newInstance
@@ -187,9 +186,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
-
-    @Inject
-    lateinit var deepLinkOpenWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
 
     @Inject
     lateinit var jetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils
@@ -362,16 +358,12 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             this
         ) { action: JetpackFeatureOverlayActions? ->
             if (action is ForwardToJetpack) {
-                if (!deepLinkOpenWebLinksWithJetpackHelper.handleOpenLinksInJetpackIfPossible()) {
-                    finishDeepLinkRequestFromOverlay(intent.action!!, intent.data!!)
-                } else {
-                    WPActivityUtils.disableReaderDeeplinks(this)
-                    ActivityLauncher.openJetpackForDeeplink(
-                        this, intent.action,
-                        UriWrapper(intent.data!!)
-                    )
-                    finish()
-                }
+                WPActivityUtils.disableReaderDeeplinks(this)
+                ActivityLauncher.openJetpackForDeeplink(
+                    this, intent.action,
+                    UriWrapper(intent.data!!)
+                )
+                finish()
             } else {
                 finishDeepLinkRequestFromOverlay(intent.action!!, intent.data!!)
             }
@@ -407,9 +399,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             return
         }
 
-        if (!checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded()) {
-            finishDeepLinkRequest(action!!, uri)
-        }
+        finishDeepLinkRequest(action!!, uri)
     }
 
     private fun finishDeepLinkRequestFromOverlay(action: String, uri: Uri) {
@@ -596,23 +586,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             AppLog.e(AppLog.T.READER, e)
             return false
         }
-    }
-
-    @Suppress("ReturnCount")
-    private fun checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded(): Boolean {
-        if (!isSignedInWPComOrHasWPOrgSite) return false
-
-        if (!deepLinkOpenWebLinksWithJetpackHelper.shouldShowOpenLinksInJetpackOverlay()) return false
-
-        deepLinkOpenWebLinksWithJetpackHelper.onOverlayShown()
-        newInstance(
-            null,
-            isDeepLinkOverlay = true,
-            isFeatureCollectionOverlay = false,
-            featureCollectionOverlaySource = JetpackFeatureCollectionOverlaySource.UNSPECIFIED
-        )
-            .show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
-        return true
     }
 
     private val isSignedInWPComOrHasWPOrgSite: Boolean

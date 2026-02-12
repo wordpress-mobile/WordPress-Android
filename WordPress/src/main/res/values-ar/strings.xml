@@ -804,7 +804,6 @@ Language: ar
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">يوفر Jetpack الإحصاءات والتنبيهات والمزيد لمساعدتك على إنشاء الموقع الذي تحلم به على ووردبريس وتطويره.\n\nلا يدعم تطبيق ووردبريس إنشاء موقع جديد بعد الآن.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">يوفر Jetpack الإحصاءات والتنبيهات والمزيد لمساعدتك على إنشاء الموقع الذي تحلم به على ووردبريس وتطويره.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">إنشاء موقع جديد على ووردبريس باستخدام تطبيق Jetpack</string>
-    <string name="deep_linking_weblinks_alias_label">روابط الويب</string>
     <string name="deep_linking_urilinks_alias_label">روابط عناوين uri</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">قم بالتبديل إلى تطبيق Jetpack للاستمرار في تلقي   من التنبيهات في الوقت الفعلي على جهازك.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">قم بالتبديل إلى تطبيق Jetpack للعثور على كل المواقع والتدوينات التي تفضّلها ومتابعتها والإعجاب بها باستخدام القارئ.</string>
@@ -812,9 +811,6 @@ Language: ar
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">تلقي تنبيهاتك من خلال تطبيق Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">متابعة أي موقع باستخدام تطبيق Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">الحصول على إحصاءاتك باستخدام تطبيق Jetpack جديد</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">يتعذر تعطيل فتح الروابط في Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">يتعذر تمكين فتح الروابط في Jetpack</string>
-    <string name="preference_open_links_in_jetpack">فتح الروابط في Jetpack</string>
     <string name="jp_migration_need_help_button">هل تحتاج إلى مساعدة؟</string>
     <string name="jp_migration_got_it_button">فهمت</string>
     <string name="jp_migration_network_error_message">يتعذر علينا نقل بياناتك وإعداداتك من دون اتصال الشبكة.</string>
