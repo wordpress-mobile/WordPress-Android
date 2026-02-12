@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +25,9 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsUiModel
 import org.wordpress.android.ui.postsrs.PostTabUiState
 
@@ -32,9 +35,11 @@ import org.wordpress.android.ui.postsrs.PostTabUiState
 @Composable
 fun PostRsTabListScreen(
     state: PostTabUiState,
+    emptyMessageResId: Int,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
+    onCreatePost: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
@@ -59,7 +64,7 @@ fun PostRsTabListScreen(
                 ErrorContent(state.error)
             }
             state.posts.isEmpty() && !state.isRefreshing -> {
-                EmptyContent()
+                EmptyContent(emptyMessageResId, onCreatePost)
             }
             else -> PostListContent(
                 posts = state.posts,
@@ -162,18 +167,30 @@ private fun ErrorContent(error: String) {
 }
 
 @Composable
-private fun EmptyContent() {
-    Box(
+private fun EmptyContent(
+    emptyMessageResId: Int,
+    onCreatePost: () -> Unit
+) {
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(32.dp),
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "No posts",
+            text = stringResource(emptyMessageResId),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onCreatePost) {
+            Text(
+                text = stringResource(
+                    R.string.posts_empty_list_button
+                )
+            )
+        }
     }
 }
 

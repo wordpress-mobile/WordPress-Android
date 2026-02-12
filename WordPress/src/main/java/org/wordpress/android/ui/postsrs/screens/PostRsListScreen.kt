@@ -33,7 +33,8 @@ import org.wordpress.android.ui.postsrs.PostRsListViewModel
 fun PostRsListScreen(
     viewModel: PostRsListViewModel,
     onNavigateBack: () -> Unit,
-    onPostClick: (Long) -> Unit
+    onPostClick: (Long) -> Unit,
+    onCreatePost: () -> Unit
 ) {
     val tabs = PostRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -96,9 +97,11 @@ fun PostRsListScreen(
 
                 PostRsTabListScreen(
                     state = tabState,
+                    emptyMessageResId = tab.emptyMessageResId,
                     onRefresh = { viewModel.refreshTab(tab) },
                     onLoadMore = { viewModel.loadMorePosts(tab) },
-                    onPostClick = onPostClick
+                    onPostClick = onPostClick,
+                    onCreatePost = onCreatePost
                 )
             }
         }

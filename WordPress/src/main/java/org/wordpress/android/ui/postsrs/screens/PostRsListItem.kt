@@ -102,8 +102,8 @@ private fun PostContentItem(
 private fun PlaceholderItem(modifier: Modifier = Modifier) {
     val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
     val alpha by infiniteTransition.animateFloat(
-        initialValue = 0.3f,
-        targetValue = 0.7f,
+        initialValue = 0.06f,
+        targetValue = 0.14f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 800),
             repeatMode = RepeatMode.Reverse

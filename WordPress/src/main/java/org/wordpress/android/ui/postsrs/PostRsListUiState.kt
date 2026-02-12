@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.postsrs
 
+import androidx.core.text.HtmlCompat
 import uniffi.wp_api.AnyPostWithEditContext
 import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
@@ -62,9 +63,11 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(): PostRsUiModel {
         title = post.title?.raw?.takeIf { it.isNotBlank() }
             ?: post.title?.rendered
             ?: "",
-        excerpt = post.excerpt?.raw?.takeIf { it.isNotBlank() }
-            ?: post.excerpt?.rendered
-            ?: "",
+        excerpt = (
+            post.excerpt?.raw?.takeIf { it.isNotBlank() }
+                ?: post.excerpt?.rendered
+                ?: ""
+            ).stripHtml(),
         date = post.date ?: "",
         statusLabel = post.status.toLabel()
     )
@@ -79,4 +82,11 @@ private fun PostStatus?.toLabel(): String = when (this) {
     is PostStatus.Trash -> "Trashed"
     is PostStatus.Custom -> "Custom"
     null -> ""
+}
+
+private fun String.stripHtml(): String {
+    if (isBlank()) return this
+    return HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        .toString()
+        .trim()
 }
