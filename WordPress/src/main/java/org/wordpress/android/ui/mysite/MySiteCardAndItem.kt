@@ -399,7 +399,8 @@ sealed class MySiteCardAndItem(open val type: Type) {
             val secondaryText: UiString? = null,
             val onClick: ListItemInteraction,
             val disablePrimaryIconTint: Boolean = false,
-            val listItemAction: ListItemAction
+            val listItemAction: ListItemAction,
+            val showBetaBadge: Boolean = false
         ) : Item(LIST_ITEM)
     }
 

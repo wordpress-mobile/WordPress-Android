@@ -220,11 +220,18 @@ class NavMenusViewModel @Inject constructor(
             availableLocations = _menuListState.value.locations,
             isNew = true
         )
-        navController?.navigate(NavMenuScreen.MenuDetail.name)
+        navigateTo(NavMenuScreen.MenuDetail.name)
     }
 
     fun navigateToEditMenu(menuId: Long) {
-        val menu = currentMenus.find { it.remoteMenuId == menuId } ?: return
+        val menu = currentMenus.find { it.remoteMenuId == menuId }
+        if (menu == null) {
+            AppLog.w(AppLog.T.API, "Menu not found in cache: $menuId")
+            _uiEvent.value = NavMenusUiEvent.ShowError(
+                resourceProvider.getString(R.string.error_generic)
+            )
+            return
+        }
 
         _menuDetailState.value = MenuDetailUiState(
             menuId = menu.remoteMenuId,
@@ -235,17 +242,24 @@ class NavMenusViewModel @Inject constructor(
             availableLocations = _menuListState.value.locations,
             isNew = false
         )
-        navController?.navigate(NavMenuScreen.MenuDetail.name)
+        navigateTo(NavMenuScreen.MenuDetail.name)
     }
 
     fun navigateToMenuItems(menuId: Long) {
-        val menu = currentMenus.find { it.remoteMenuId == menuId } ?: return
+        val menu = currentMenus.find { it.remoteMenuId == menuId }
+        if (menu == null) {
+            AppLog.w(AppLog.T.API, "Menu not found in cache: $menuId")
+            _uiEvent.value = NavMenusUiEvent.ShowError(
+                resourceProvider.getString(R.string.error_generic)
+            )
+            return
+        }
         _menuItemListState.value = MenuItemListUiState(
             isLoading = true,
             menuId = menuId,
             menuName = menu.name
         )
-        navController?.navigate(NavMenuScreen.MenuItemList.name)
+        navigateTo(NavMenuScreen.MenuItemList.name)
         loadMenuItems(menuId)
     }
 
@@ -377,11 +391,18 @@ class NavMenusViewModel @Inject constructor(
             menuOrder = currentMenuItems.maxOfOrNull { it.menuOrder }?.plus(1) ?: 1,
             isNew = true
         )
-        navController?.navigate(NavMenuScreen.MenuItemDetail.name)
+        navigateTo(NavMenuScreen.MenuItemDetail.name)
     }
 
     fun navigateToEditMenuItem(itemId: Long) {
-        val item = currentMenuItems.find { it.remoteItemId == itemId } ?: return
+        val item = currentMenuItems.find { it.remoteItemId == itemId }
+        if (item == null) {
+            AppLog.w(AppLog.T.API, "Menu item not found in cache: $itemId")
+            _uiEvent.value = NavMenusUiEvent.ShowError(
+                resourceProvider.getString(R.string.error_generic)
+            )
+            return
+        }
         val availableParents = buildAvailableParents(itemId)
 
         _menuItemDetailState.value = MenuItemDetailUiState(
@@ -401,7 +422,7 @@ class NavMenusViewModel @Inject constructor(
             availableParents = availableParents,
             isNew = false
         )
-        navController?.navigate(NavMenuScreen.MenuItemDetail.name)
+        navigateTo(NavMenuScreen.MenuItemDetail.name)
     }
 
     private fun buildAvailableParents(excludeItemId: Long): List<ParentItemOption> {
@@ -437,7 +458,19 @@ class NavMenusViewModel @Inject constructor(
     }
 
     fun navigateBack() {
+        if (navController == null) {
+            AppLog.w(AppLog.T.MAIN, "NavController not set, cannot navigate back")
+            return
+        }
         navController?.navigateUp()
+    }
+
+    private fun navigateTo(route: String) {
+        if (navController == null) {
+            AppLog.w(AppLog.T.MAIN, "NavController not set, cannot navigate to $route")
+            return
+        }
+        navController?.navigate(route)
     }
 
     // Menu detail update methods
@@ -471,7 +504,7 @@ class NavMenusViewModel @Inject constructor(
             val state = _menuDetailState.value ?: return@launch
             val site = selectedSiteRepository.getSelectedSite() ?: return@launch
 
-            if (state.name.isBlank()) {
+            if (state.name.trim().isBlank()) {
                 _uiEvent.value = NavMenusUiEvent.ShowError(
                     resourceProvider.getString(R.string.menu_name_required)
                 )
@@ -483,8 +516,8 @@ class NavMenusViewModel @Inject constructor(
             val menu = NavMenuModel(
                 localSiteId = site.id,
                 remoteMenuId = state.menuId,
-                name = state.name,
-                description = state.description,
+                name = state.name.trim(),
+                description = state.description.trim(),
                 locations = state.selectedLocations.toJsonStringArray(),
                 autoAdd = state.autoAdd
             )
@@ -549,7 +582,7 @@ class NavMenusViewModel @Inject constructor(
     }
 
     fun updateMenuItemUrl(url: String) {
-        _menuItemDetailState.value = _menuItemDetailState.value?.copy(url = url.trim())
+        _menuItemDetailState.value = _menuItemDetailState.value?.copy(url = url)
     }
 
     fun updateMenuItemParent(parentId: Long) {
@@ -809,10 +842,13 @@ class NavMenusViewModel @Inject constructor(
 
     private enum class ReorderDirection { UP, DOWN }
 
-    private suspend fun updateMenuItemOrder(site: SiteModel, itemId: Long, targetItemId: Long): Boolean {
+    private suspend fun updateMenuItemOrder(
+        site: SiteModel,
+        itemId: Long,
+        targetItemId: Long
+    ): Boolean {
         val itemToMove = currentMenuItems.find { it.remoteItemId == itemId }
         val swapWithItem = currentMenuItems.find { it.remoteItemId == targetItemId }
-
         if (itemToMove == null || swapWithItem == null) return false
 
         val updatedItemToMove = itemToMove.copy(menuOrder = swapWithItem.menuOrder)
@@ -825,7 +861,17 @@ class NavMenusViewModel @Inject constructor(
             result1
         }
 
-        return result2 is NavMenuRestClient.NavMenuItemResult.Success
+        val success = result2 is NavMenuRestClient.NavMenuItemResult.Success
+        if (success) {
+            currentMenuItems = currentMenuItems.map { item ->
+                when (item.remoteItemId) {
+                    itemId -> updatedItemToMove
+                    targetItemId -> updatedSwapWithItem
+                    else -> item
+                }
+            }
+        }
+        return success
     }
 
     fun saveMenuItem() {
@@ -874,8 +920,6 @@ class NavMenusViewModel @Inject constructor(
                 resourceProvider.getString(R.string.menu_item_url_required)
             state.selectedTypeOption != MenuItemTypeOption.CUSTOM_LINK && state.objectId <= 0 ->
                 resourceProvider.getString(R.string.menu_item_select_required)
-            state.url.isNotBlank() && !isValidLinkUrl(state.url) ->
-                resourceProvider.getString(R.string.menu_item_invalid_url)
             else -> null
         }
     }
@@ -885,8 +929,8 @@ class NavMenusViewModel @Inject constructor(
             localSiteId = site.id,
             remoteItemId = state.itemId,
             menuId = state.menuId,
-            title = state.title,
-            url = state.url,
+            title = state.title.trim(),
+            url = normalizeUrl(state.url),
             type = state.type,
             objectType = state.objectType,
             objectId = state.objectId,
@@ -898,7 +942,7 @@ class NavMenusViewModel @Inject constructor(
             } else {
                 "[]"
             },
-            description = state.description,
+            description = state.description.trim(),
             attrTitle = state.attrTitle
         )
     }
@@ -937,24 +981,28 @@ class NavMenusViewModel @Inject constructor(
     }
 
     /**
-     * Validates a URL against WordPress's allowed protocols.
-     * See: https://developer.wordpress.org/reference/functions/wp_allowed_protocols/
+     * Normalizes a URL by adding https:// if no recognized protocol is present.
+     * Matches WordPress web behavior where URLs are sanitized rather than rejected.
      */
-    private fun isValidLinkUrl(url: String): Boolean {
-        val trimmedUrl = url.trim()
-        if (trimmedUrl.isEmpty()) return false
-
-        return when {
-            // Anchor links are valid (e.g., #section or #contact)
-            trimmedUrl.startsWith("#") -> trimmedUrl.length > 1
-            // Protocol-relative URLs are valid
-            trimmedUrl.startsWith("//") -> trimmedUrl.length > 2
-            else -> ALLOWED_PROTOCOLS.any { trimmedUrl.lowercase().startsWith("$it:") }
+    @Suppress("ReturnCount")
+    private fun normalizeUrl(url: String): String {
+        val trimmed = url.trim()
+        if (trimmed.isEmpty() || trimmed.startsWith("#")) return trimmed
+        if (ALLOWED_PROTOCOLS.any { trimmed.lowercase().startsWith("$it:") }) {
+            return trimmed
         }
+        if (trimmed.startsWith("//")) return "https:$trimmed"
+        // Relative paths (e.g. /about, ./page, ../page) - keep as-is
+        if (trimmed.startsWith("/") || trimmed.startsWith("./") ||
+            trimmed.startsWith("../")
+        ) {
+            return trimmed
+        }
+        return "https://$trimmed"
     }
 
     private fun sanitizeInput(input: String, maxLength: Int): String {
-        return input.trim().take(maxLength)
+        return input.take(maxLength)
     }
 
     companion object {
@@ -964,8 +1012,8 @@ class NavMenusViewModel @Inject constructor(
         private const val MAX_MENU_ITEM_DESCRIPTION_LENGTH = 500
 
         /**
-         * WordPress allowed protocols from wp_allowed_protocols().
-         * See: https://developer.wordpress.org/reference/functions/wp_allowed_protocols/
+         * Recognized protocols that should not have https:// prepended.
+         * Based on wp_allowed_protocols().
          */
         private val ALLOWED_PROTOCOLS = listOf(
             "http", "https", "ftp", "ftps", "mailto", "news", "irc", "irc6", "ircs",
