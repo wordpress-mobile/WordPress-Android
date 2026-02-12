@@ -997,7 +997,7 @@
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
     <string name="experimental_new_stats">New Stats</string>
     <string name="experimental_new_stats_description">Show stats in a more modern and advanced UI</string>
-<string name="experimental_posts_rs_list">New Post List</string>
+    <string name="experimental_posts_rs_list">New Post List</string>
     <string name="experimental_posts_rs_list_description">Use the new post list powered by the WordPress REST API (requires Application Password)</string>
     <string name="post_types_screen_title">Post Types</string>
 
