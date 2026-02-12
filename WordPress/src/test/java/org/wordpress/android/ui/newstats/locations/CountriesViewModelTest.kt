@@ -16,8 +16,12 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.repository.CityViewItemData
+import org.wordpress.android.ui.newstats.repository.CityViewsResult
 import org.wordpress.android.ui.newstats.repository.CountryViewItemData
 import org.wordpress.android.ui.newstats.repository.CountryViewsResult
+import org.wordpress.android.ui.newstats.repository.RegionViewItemData
+import org.wordpress.android.ui.newstats.repository.RegionViewsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -498,6 +502,318 @@ class CountriesViewModelTest : BaseUnitTest() {
     }
     // endregion
 
+    // region Regions
+    @Test
+    fun `when regions load, then map data is aggregated by country code`() =
+        test {
+            whenever(statsRepository.fetchCountryViews(any(), any()))
+                .thenReturn(createSuccessResult())
+            whenever(statsRepository.fetchRegionViews(any(), any()))
+                .thenReturn(createRegionsSuccessResult())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onLocationTypeChanged(LocationType.REGIONS)
+            advanceUntilIdle()
+
+            val state =
+                viewModel.uiState.value as CountriesCardUiState.Loaded
+            // Two regions in US (200+100=300), one in GB (150)
+            assertThat(state.mapData).contains("['US',300]")
+            assertThat(state.mapData).contains("['GB',150]")
+            // Should NOT contain region names in map data
+            assertThat(state.mapData).doesNotContain("California")
+            assertThat(state.mapData).doesNotContain("Texas")
+        }
+
+    @Test
+    fun `when regions load, then min and max are from aggregated values`() =
+        test {
+            whenever(statsRepository.fetchCountryViews(any(), any()))
+                .thenReturn(createSuccessResult())
+            whenever(statsRepository.fetchRegionViews(any(), any()))
+                .thenReturn(createRegionsSuccessResult())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onLocationTypeChanged(LocationType.REGIONS)
+            advanceUntilIdle()
+
+            val state =
+                viewModel.uiState.value as CountriesCardUiState.Loaded
+            // Aggregated: US=300, GB=150 -> min=150, max=300
+            assertThat(state.minViews).isEqualTo(150L)
+            assertThat(state.maxViews).isEqualTo(300L)
+        }
+
+    @Test
+    fun `when regions load, then list shows individual regions`() =
+        test {
+            whenever(statsRepository.fetchCountryViews(any(), any()))
+                .thenReturn(createSuccessResult())
+            whenever(statsRepository.fetchRegionViews(any(), any()))
+                .thenReturn(createRegionsSuccessResult())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onLocationTypeChanged(LocationType.REGIONS)
+            advanceUntilIdle()
+
+            val state =
+                viewModel.uiState.value as CountriesCardUiState.Loaded
+            assertThat(state.countries).hasSize(3)
+            assertThat(state.countries[0].countryName)
+                .isEqualTo("California")
+            assertThat(state.countries[1].countryName)
+                .isEqualTo("London")
+            assertThat(state.countries[2].countryName)
+                .isEqualTo("Texas")
+        }
+
+    @Test
+    fun `when region views fetch fails, then error state is emitted`() =
+        test {
+            whenever(statsRepository.fetchCountryViews(any(), any()))
+                .thenReturn(createSuccessResult())
+            whenever(statsRepository.fetchRegionViews(any(), any()))
+                .thenReturn(RegionViewsResult.Error(ERROR_MESSAGE))
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onLocationTypeChanged(LocationType.REGIONS)
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertThat(state)
+                .isInstanceOf(CountriesCardUiState.Error::class.java)
+            assertThat((state as CountriesCardUiState.Error).message)
+                .isEqualTo(ERROR_MESSAGE)
+        }
+    // endregion
+
+    // region Cities
+    @Test
+    fun `when cities load, then map data is aggregated by country code`() =
+        test {
+            whenever(statsRepository.fetchCountryViews(any(), any()))
+                .thenReturn(createSuccessResult())
+            whenever(statsRepository.fetchCityViews(any(), any()))
+                .thenReturn(createCitiesSuccessResult())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onLocationTypeChanged(LocationType.CITIES)
+            advanceUntilIdle()
+
+            val state =
+                viewModel.uiState.value as CountriesCardUiState.Loaded
+            // Two cities in US (120+80=200), one in GB (90)
+            assertThat(state.mapData).contains("['US',200]")
+            assertThat(state.mapData).contains("['GB',90]")
+            // Should NOT contain lat/long or city names
+            assertThat(state.mapData).doesNotContain("New York")
+            assertThat(state.mapData).doesNotContain("34.05")
+        }
+
+    @Test
+    fun `when cities load, then min and max are from aggregated values`() =
+        test {
+            whenever(statsRepository.fetchCountryViews(any(), any()))
+                .thenReturn(createSuccessResult())
+            whenever(statsRepository.fetchCityViews(any(), any()))
+                .thenReturn(createCitiesSuccessResult())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onLocationTypeChanged(LocationType.CITIES)
+            advanceUntilIdle()
+
+            val state =
+                viewModel.uiState.value as CountriesCardUiState.Loaded
+            // Aggregated: US=200, GB=90 -> min=90, max=200
+            assertThat(state.minViews).isEqualTo(90L)
+            assertThat(state.maxViews).isEqualTo(200L)
+        }
+
+    @Test
+    fun `when cities load, then list shows individual cities`() =
+        test {
+            whenever(statsRepository.fetchCountryViews(any(), any()))
+                .thenReturn(createSuccessResult())
+            whenever(statsRepository.fetchCityViews(any(), any()))
+                .thenReturn(createCitiesSuccessResult())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onLocationTypeChanged(LocationType.CITIES)
+            advanceUntilIdle()
+
+            val state =
+                viewModel.uiState.value as CountriesCardUiState.Loaded
+            assertThat(state.countries).hasSize(3)
+            assertThat(state.countries[0].countryName)
+                .isEqualTo("New York")
+            assertThat(state.countries[1].countryName)
+                .isEqualTo("London")
+            assertThat(state.countries[2].countryName)
+                .isEqualTo("Los Angeles")
+        }
+
+    @Test
+    fun `when city views fetch fails, then error state is emitted`() =
+        test {
+            whenever(statsRepository.fetchCountryViews(any(), any()))
+                .thenReturn(createSuccessResult())
+            whenever(statsRepository.fetchCityViews(any(), any()))
+                .thenReturn(CityViewsResult.Error(ERROR_MESSAGE))
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onLocationTypeChanged(LocationType.CITIES)
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertThat(state)
+                .isInstanceOf(CountriesCardUiState.Error::class.java)
+            assertThat((state as CountriesCardUiState.Error).message)
+                .isEqualTo(ERROR_MESSAGE)
+        }
+
+    @Test
+    fun `when cities with same country, then aggregated min equals zero`() =
+        test {
+            val singleCountryCities = CityViewsResult.Success(
+                cities = listOf(
+                    CityViewItemData(
+                        "New York", "US", 120,
+                        "40.71", "-74.00", null, 100
+                    ),
+                    CityViewItemData(
+                        "Los Angeles", "US", 80,
+                        "34.05", "-118.24", null, 70
+                    )
+                ),
+                totalViews = 200,
+                otherViews = 0,
+                totalViewsChange = 30,
+                totalViewsChangePercent = 17.6
+            )
+            whenever(statsRepository.fetchCountryViews(any(), any()))
+                .thenReturn(createSuccessResult())
+            whenever(statsRepository.fetchCityViews(any(), any()))
+                .thenReturn(singleCountryCities)
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onLocationTypeChanged(LocationType.CITIES)
+            advanceUntilIdle()
+
+            val state =
+                viewModel.uiState.value as CountriesCardUiState.Loaded
+            // Only one country group -> min == max -> minViews = 0
+            assertThat(state.minViews).isEqualTo(0L)
+            assertThat(state.maxViews).isEqualTo(200L)
+        }
+    // endregion
+
+    // region Location type switching
+    @Test
+    fun `when switching to regions, then regions are fetched`() =
+        test {
+            whenever(statsRepository.fetchCountryViews(any(), any()))
+                .thenReturn(createSuccessResult())
+            whenever(statsRepository.fetchRegionViews(any(), any()))
+                .thenReturn(createRegionsSuccessResult())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onLocationTypeChanged(LocationType.REGIONS)
+            advanceUntilIdle()
+
+            verify(statsRepository).fetchRegionViews(
+                eq(TEST_SITE_ID), any()
+            )
+        }
+
+    @Test
+    fun `when switching to same type, then data is not re-fetched`() =
+        test {
+            whenever(statsRepository.fetchCountryViews(any(), any()))
+                .thenReturn(createSuccessResult())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onLocationTypeChanged(LocationType.COUNTRIES)
+            advanceUntilIdle()
+
+            verify(statsRepository, times(1))
+                .fetchCountryViews(any(), any())
+        }
+
+    @Test
+    fun `when getDetailData for regions, then returns region data`() =
+        test {
+            whenever(statsRepository.fetchCountryViews(any(), any()))
+                .thenReturn(createSuccessResult())
+            whenever(statsRepository.fetchRegionViews(any(), any()))
+                .thenReturn(createRegionsSuccessResult())
+            whenever(
+                resourceProvider.getString(
+                    R.string.stats_period_last_7_days
+                )
+            ).thenReturn("Last 7 days")
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onLocationTypeChanged(LocationType.REGIONS)
+            advanceUntilIdle()
+
+            val detailData = viewModel.getDetailData()
+            assertThat(detailData.locationType)
+                .isEqualTo(LocationType.REGIONS)
+            assertThat(detailData.locationItems).hasSize(3)
+            assertThat(detailData.mapData).contains("['US',300]")
+        }
+
+    @Test
+    fun `when getDetailData for cities, then returns city data`() =
+        test {
+            whenever(statsRepository.fetchCountryViews(any(), any()))
+                .thenReturn(createSuccessResult())
+            whenever(statsRepository.fetchCityViews(any(), any()))
+                .thenReturn(createCitiesSuccessResult())
+            whenever(
+                resourceProvider.getString(
+                    R.string.stats_period_last_7_days
+                )
+            ).thenReturn("Last 7 days")
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onLocationTypeChanged(LocationType.CITIES)
+            advanceUntilIdle()
+
+            val detailData = viewModel.getDetailData()
+            assertThat(detailData.locationType)
+                .isEqualTo(LocationType.CITIES)
+            assertThat(detailData.locationItems).hasSize(3)
+            assertThat(detailData.mapData).contains("['US',200]")
+        }
+    // endregion
+
     // region Helper functions
     private fun createSuccessResult() = CountryViewsResult.Success(
         countries = listOf(
@@ -521,6 +837,73 @@ class CountriesViewModelTest : BaseUnitTest() {
         totalViewsChange = TEST_TOTAL_VIEWS_CHANGE,
         totalViewsChangePercent = TEST_TOTAL_VIEWS_CHANGE_PERCENT
     )
+    private fun createRegionsSuccessResult() =
+        RegionViewsResult.Success(
+            regions = listOf(
+                RegionViewItemData(
+                    location = "California",
+                    countryCode = "US",
+                    views = 200,
+                    flagIconUrl = null,
+                    previousViews = 180
+                ),
+                RegionViewItemData(
+                    location = "London",
+                    countryCode = "GB",
+                    views = 150,
+                    flagIconUrl = null,
+                    previousViews = 130
+                ),
+                RegionViewItemData(
+                    location = "Texas",
+                    countryCode = "US",
+                    views = 100,
+                    flagIconUrl = null,
+                    previousViews = 90
+                )
+            ),
+            totalViews = 450,
+            otherViews = 0,
+            totalViewsChange = 50,
+            totalViewsChangePercent = 12.5
+        )
+
+    private fun createCitiesSuccessResult() =
+        CityViewsResult.Success(
+            cities = listOf(
+                CityViewItemData(
+                    location = "New York",
+                    countryCode = "US",
+                    views = 120,
+                    latitude = "40.71",
+                    longitude = "-74.00",
+                    flagIconUrl = null,
+                    previousViews = 100
+                ),
+                CityViewItemData(
+                    location = "London",
+                    countryCode = "GB",
+                    views = 90,
+                    latitude = "51.51",
+                    longitude = "-0.13",
+                    flagIconUrl = null,
+                    previousViews = 80
+                ),
+                CityViewItemData(
+                    location = "Los Angeles",
+                    countryCode = "US",
+                    views = 80,
+                    latitude = "34.05",
+                    longitude = "-118.24",
+                    flagIconUrl = null,
+                    previousViews = 70
+                )
+            ),
+            totalViews = 290,
+            otherViews = 0,
+            totalViewsChange = 40,
+            totalViewsChangePercent = 16.0
+        )
     // endregion
 
     companion object {
