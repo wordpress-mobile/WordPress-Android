@@ -5,6 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import rs.wordpress.api.kotlin.WpRequestExecutor
+import rs.wordpress.cache.kotlin.DatabaseChangeNotifier
 import rs.wordpress.cache.kotlin.WordPressApiCache
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpApiClientDelegate
@@ -86,6 +87,9 @@ class WpSelfHostedServiceProvider @Inject constructor(
             val dbPath = File(cacheDir, "wp_api_cache.db").absolutePath
             val newCache = WordPressApiCache(dbPath)
             newCache.performMigrations()
+            newCache.cache.startListeningForUpdates(
+                DatabaseChangeNotifier
+            )
             cache = newCache
             newCache
         }

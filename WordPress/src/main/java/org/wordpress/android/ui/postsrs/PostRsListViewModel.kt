@@ -91,9 +91,12 @@ class PostRsListViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 collection.refresh()
+                loadItemsForTab(tab)
+                updateListInfoForTab(tab)
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
                 state.value = state.value.copy(
+                    isLoading = false,
                     isRefreshing = false,
                     error = e.message ?: "Refresh failed"
                 )
@@ -111,6 +114,8 @@ class PostRsListViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 collection.loadNextPage()
+                loadItemsForTab(tab)
+                updateListInfoForTab(tab)
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
                 state.value = state.value.copy(isLoadingMore = false)
