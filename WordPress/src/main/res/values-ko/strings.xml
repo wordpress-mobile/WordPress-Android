@@ -828,7 +828,6 @@ Language: ko_KR
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">젯팩에서는 꿈꾸는 워드프레스 사이트 제작 및 성장에 도움이 되는 통계, 알림 등이 제공됩니다.\n\n워드프레스 앱에서는 이제 새 사이트 생성이 지원되지 않습니다.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">젯팩에서는 꿈꾸는 워드프레스 사이트 제작 및 성장에 도움이 되는 통계, 알림 등이 제공됩니다.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">젯팩 앱으로 새 워드프레스 사이트 생성</string>
-    <string name="deep_linking_weblinks_alias_label">웹 링크</string>
     <string name="deep_linking_urilinks_alias_label">URL 링크</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">젯팩 앱으로 전환하여 계속  기기에서 실시간 알림을 받으세요.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">젯팩 앱으로 전환하여 리더를 통해 좋아하는 모든 사이트와 글을 찾고, 팔로우하고, 좋아요를 표시하세요.</string>
@@ -836,9 +835,6 @@ Language: ko_KR
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">젯팩 앱으로 알림 받기</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">젯팩 앱으로 사이트 팔로우</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">새 젯팩 앱을 사용하여 통계 받기</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">젯팩에서 링크 열기를 비활성화할 수 없음</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">젯팩에서 링크 여기를 활성화할 수 없음</string>
-    <string name="preference_open_links_in_jetpack">젯팩에서 링크 열기</string>
     <string name="jp_migration_need_help_button">도움말이 필요하신가요?</string>
     <string name="jp_migration_got_it_button">알겠습니다.</string>
     <string name="jp_migration_network_error_message">네트워크 연결 없이 데이터와 설정을 이전할 수 없습니다.</string>

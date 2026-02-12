@@ -636,7 +636,6 @@ Language: lv
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack nodrošina statistiku, paziņojumus un daudz ko citu, lai palīdzētu jums izveidot un attīstīt savu sapņu WordPress vietni.\n\nWordPress lietotne vairs neatbalsta jaunas vietnes izveidi.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack nodrošina statistiku, paziņojumus un citu informāciju, lai palīdzētu jums izveidot un attīstīt savu sapņu WordPress vietni.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Izveidojiet jaunu WordPress vietni, izmantojot lietotni Jetpack</string>
-    <string name="deep_linking_weblinks_alias_label">tīmekļa saites</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Pārslēdzieties uz Jetpack lietotni, lai turpinātu saņemt reāllaika paziņojumus savā ierīcē.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Pārslēdzieties uz lietotni Jetpack, lai atrastu, sekotu un patīk visām savām iecienītākajām vietnēm un ziņām, izmantojot programmu Reader.\nPārslēdzieties uz Jetpack lietotni, lai atrastu, sekotu un skatītu visas iecienītākās vietnes un ziņojumus, izmantojot Lasītāju.</string>
@@ -644,9 +643,6 @@ Language: lv
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Saņemiet paziņojumus, izmantojot Jetpack lietotni</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Sekojiet jebkurai vietnei, izmantojot Jetpack lietotni</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Iegūstiet savu statistiku, izmantojot jauno Jetpack lietotni</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Nevar atspējot atvērtās saites pakalpojumā Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Nevar iespējot atvērtās saites pakalpojumā Jetpack</string>
-    <string name="preference_open_links_in_jetpack">Atveriet saites pakalpojumā Jetpack</string>
     <string name="jp_migration_need_help_button">Vajadzīga palīdzība?</string>
     <string name="jp_migration_got_it_button">Sapratu</string>
     <string name="jp_migration_network_error_message">Mēs nevaram pārsūtīt jūsu datus un iestatījumus bez tīkla savienojuma.</string>

@@ -983,7 +983,6 @@ public final class AnalyticsTracker {
         READER_SAVED_POSTS_SUCCESS,
         READER_SAVED_POSTS_FAILED,
         DEEPLINK_CUSTOM_INTENT_RECEIVED,
-        APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED,
         JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED("remove_feature_overlay_displayed"),
         JETPACK_REMOVE_FEATURE_OVERLAY_LINK_TAPPED("remove_feature_overlay_link_tapped"),
         JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED("remove_feature_overlay_button_tapped"),

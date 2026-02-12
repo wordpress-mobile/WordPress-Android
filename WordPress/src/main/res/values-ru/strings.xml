@@ -828,7 +828,6 @@ Language: ru
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">В Jetpack есть статистика, уведомления и множество других функций, которые помогут создать сайт мечты.\n\nПриложение WordPress больше не поддерживает создание новых сайтов.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">В Jetpack есть статистика, уведомления и множество других функций, которые помогут создать сайт мечты.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Создайте новый сайт WordPress в приложении Jetpack</string>
-    <string name="deep_linking_weblinks_alias_label">веб-ссылки</string>
     <string name="deep_linking_urilinks_alias_label">URI-ссылки</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Перейдите в приложение Jetpack, чтобы получать на устройство  уведомления в реальном времени.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Перейдите в приложение Jetpack, чтобы найти, подписаться и поставить отметки «Нравится» любимым сайтам и записям в Чтиве.</string>
@@ -836,9 +835,6 @@ Language: ru
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Получайте уведомления в приложении Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Подпишитесь на любые сайты в приложении Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Просматривайте статистику в новом приложении Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Не удалось отключить открытие ссылок в Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Не удалось включить открытие ссылок в Jetpack</string>
-    <string name="preference_open_links_in_jetpack">Открывать ссылки в Jetpack</string>
     <string name="jp_migration_need_help_button">Нужна помощь?</string>
     <string name="jp_migration_got_it_button">Понятно</string>
     <string name="jp_migration_network_error_message">Не удаётся перенести ваши данные и настройки без подключения к сети.</string>

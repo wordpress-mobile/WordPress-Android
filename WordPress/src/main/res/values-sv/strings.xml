@@ -827,7 +827,6 @@ Language: sv_SE
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack visar statistik, aviseringar med mera för att hjälpa dig bygga dina drömmars WordPress-webbplats och få fler besökare.\n\nStödet för att skapa en ny webbplats finns inte kvar i WordPress-appen.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack visar statistik, aviseringar med mera för att hjälpa dig bygga dina drömmars WordPress-webbplats och få fler besökare.</string>
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Skapa en ny WordPress-webbplats med Jetpack-appen</string>
-    <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Byt till Jetpack-appen för att fortsätta ta emot aviseringar i realtid på din enhet.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Byt till Jetpack-appen för att hitta, följa och gilla alla dina favoritwebbplatser och inlägg med läsare.</string>
@@ -835,9 +834,6 @@ Language: sv_SE
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Få dina aviseringar med Jetpack-appen</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Följ vilken webbplats som helst med Jetpack-appen</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Få din statistik med den nya Jetpack-appen</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Det gick inte att inaktivera öppning av länkar i Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Det gick inte att aktivera öppning av länkar i Jetpack</string>
-    <string name="preference_open_links_in_jetpack">Öppna länkar i Jetpack</string>
     <string name="jp_migration_need_help_button">Behöver du hjälp?</string>
     <string name="jp_migration_got_it_button">Jag förstår</string>
     <string name="jp_migration_network_error_message">Vi kan inte överföra dina data och inställningar utan en nätverksanslutning.</string>
