@@ -8,6 +8,7 @@ import uniffi.wp_api.PostStatus
  */
 data class PostRsModel(
     val remotePostId: Long,
+    val authorId: Long,
     val title: String,
     val excerpt: String,
     val date: String,

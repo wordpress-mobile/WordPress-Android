@@ -62,6 +62,7 @@ class PostRsRestClient @Inject constructor(
                         post.excerpt?.rendered ?: ""
                     PostRsModel(
                         remotePostId = post.id,
+                        authorId = post.author ?: 0L,
                         title = title,
                         excerpt = excerpt,
                         date = post.date,
