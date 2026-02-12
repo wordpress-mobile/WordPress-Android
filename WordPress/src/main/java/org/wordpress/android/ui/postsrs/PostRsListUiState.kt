@@ -1,10 +1,14 @@
 package org.wordpress.android.ui.postsrs
 
+import android.text.format.DateUtils
 import androidx.core.text.HtmlCompat
 import uniffi.wp_api.AnyPostWithEditContext
 import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 data class PostTabUiState(
     val posts: List<PostRsUiModel> = emptyList(),
@@ -68,7 +72,7 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(): PostRsUiModel {
                 ?: post.excerpt?.rendered
                 ?: ""
             ).stripHtml(),
-        date = post.date ?: "",
+        date = (post.date ?: "").toRelativeDate(),
         statusLabel = post.status.toLabel()
     )
 }
@@ -89,4 +93,25 @@ private fun String.stripHtml(): String {
     return HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_LEGACY)
         .toString()
         .trim()
+}
+
+private val iso8601Format by lazy {
+    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).apply {
+        timeZone = TimeZone.getTimeZone("UTC")
+    }
+}
+
+private fun String.toRelativeDate(): String {
+    if (isBlank()) return this
+    val millis = try {
+        iso8601Format.parse(this)?.time ?: return this
+    } catch (_: Exception) {
+        return this
+    }
+    return DateUtils.getRelativeTimeSpanString(
+        millis,
+        System.currentTimeMillis(),
+        DateUtils.MINUTE_IN_MILLIS,
+        DateUtils.FORMAT_ABBREV_RELATIVE
+    ).toString()
 }
