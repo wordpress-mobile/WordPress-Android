@@ -227,6 +227,8 @@ private fun LoadedContent(
             // Map
             CountryMap(
                 mapData = state.mapData,
+                useMarkers =
+                    selectedLocationType == LocationType.CITIES,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(MAP_ASPECT_RATIO)
@@ -351,10 +353,12 @@ private fun LocationTypeSelector(
 @Composable
 private fun CountryMap(
     mapData: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    useMarkers: Boolean = false
 ) {
     StatsGeoChartWebView(
         mapData = mapData,
+        useMarkers = useMarkers,
         modifier = modifier
     )
 }

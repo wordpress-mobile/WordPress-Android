@@ -598,7 +598,7 @@ class CountriesViewModelTest : BaseUnitTest() {
 
     // region Cities
     @Test
-    fun `when cities load, then map data is aggregated by country code`() =
+    fun `when cities load, then map data uses lat long markers`() =
         test {
             whenever(statsRepository.fetchCountryViews(any(), any()))
                 .thenReturn(createSuccessResult())
@@ -613,16 +613,17 @@ class CountriesViewModelTest : BaseUnitTest() {
 
             val state =
                 viewModel.uiState.value as CountriesCardUiState.Loaded
-            // Two cities in US (120+80=200), one in GB (90)
-            assertThat(state.mapData).contains("['US',200]")
-            assertThat(state.mapData).contains("['GB',90]")
-            // Should NOT contain lat/long or city names
-            assertThat(state.mapData).doesNotContain("New York")
-            assertThat(state.mapData).doesNotContain("34.05")
+            // Should contain lat/long/name/views markers
+            assertThat(state.mapData)
+                .contains("40.71,-74.00,'New York',120")
+            assertThat(state.mapData)
+                .contains("51.51,-0.13,'London',90")
+            assertThat(state.mapData)
+                .contains("34.05,-118.24,'Los Angeles',80")
         }
 
     @Test
-    fun `when cities load, then min and max are from aggregated values`() =
+    fun `when cities load, then min and max are from individual cities`() =
         test {
             whenever(statsRepository.fetchCountryViews(any(), any()))
                 .thenReturn(createSuccessResult())
@@ -637,9 +638,9 @@ class CountriesViewModelTest : BaseUnitTest() {
 
             val state =
                 viewModel.uiState.value as CountriesCardUiState.Loaded
-            // Aggregated: US=200, GB=90 -> min=90, max=200
-            assertThat(state.minViews).isEqualTo(90L)
-            assertThat(state.maxViews).isEqualTo(200L)
+            // Per-city: min=80, max=120
+            assertThat(state.minViews).isEqualTo(80L)
+            assertThat(state.maxViews).isEqualTo(120L)
         }
 
     @Test
@@ -689,28 +690,28 @@ class CountriesViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when cities with same country, then aggregated min equals zero`() =
+    fun `when all cities have same views, then minViews is zero`() =
         test {
-            val singleCountryCities = CityViewsResult.Success(
+            val sameViewsCities = CityViewsResult.Success(
                 cities = listOf(
                     CityViewItemData(
-                        "New York", "US", 120,
-                        "40.71", "-74.00", null, 100
+                        "New York", "US", 100,
+                        "40.71", "-74.00", null, 80
                     ),
                     CityViewItemData(
-                        "Los Angeles", "US", 80,
-                        "34.05", "-118.24", null, 70
+                        "Los Angeles", "US", 100,
+                        "34.05", "-118.24", null, 80
                     )
                 ),
                 totalViews = 200,
                 otherViews = 0,
-                totalViewsChange = 30,
-                totalViewsChangePercent = 17.6
+                totalViewsChange = 40,
+                totalViewsChangePercent = 25.0
             )
             whenever(statsRepository.fetchCountryViews(any(), any()))
                 .thenReturn(createSuccessResult())
             whenever(statsRepository.fetchCityViews(any(), any()))
-                .thenReturn(singleCountryCities)
+                .thenReturn(sameViewsCities)
 
             initViewModel()
             advanceUntilIdle()
@@ -720,9 +721,9 @@ class CountriesViewModelTest : BaseUnitTest() {
 
             val state =
                 viewModel.uiState.value as CountriesCardUiState.Loaded
-            // Only one country group -> min == max -> minViews = 0
+            // min == max -> minViews = 0
             assertThat(state.minViews).isEqualTo(0L)
-            assertThat(state.maxViews).isEqualTo(200L)
+            assertThat(state.maxViews).isEqualTo(100L)
         }
     // endregion
 
@@ -811,7 +812,8 @@ class CountriesViewModelTest : BaseUnitTest() {
             assertThat(detailData.locationType)
                 .isEqualTo(LocationType.CITIES)
             assertThat(detailData.locationItems).hasSize(3)
-            assertThat(detailData.mapData).contains("['US',200]")
+            assertThat(detailData.mapData)
+                .contains("40.71,-74.00,'New York',120")
         }
     // endregion
 

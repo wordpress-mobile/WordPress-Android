@@ -50,6 +50,7 @@ private const val RGB_MASK = 0xFFFFFF
 fun StatsGeoChartWebView(
     mapData: String,
     modifier: Modifier = Modifier,
+    useMarkers: Boolean = false,
     onError: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -64,12 +65,12 @@ fun StatsGeoChartWebView(
 
     val htmlPage = remember(
         mapData, colorLow, colorHigh, backgroundColor,
-        emptyColor, viewsLabel
+        emptyColor, viewsLabel, useMarkers
     ) {
         isMapLoading.value = true
         buildGeoChartHtml(
             mapData, viewsLabel, colorLow, colorHigh,
-            emptyColor, backgroundColor
+            emptyColor, backgroundColor, useMarkers
         )
     }
 
@@ -153,10 +154,20 @@ private fun buildGeoChartHtml(
     colorLow: String,
     colorHigh: String,
     emptyColor: String,
-    backgroundColor: String
+    backgroundColor: String,
+    useMarkers: Boolean = false
 ): String {
-    val dataHeader = "['Country', '$viewsLabel']"
-    val optionsExtra = "resolution: 'countries',"
+    val dataHeader = if (useMarkers) {
+        "['Lat', 'Long', 'City', '$viewsLabel']"
+    } else {
+        "['Country', '$viewsLabel']"
+    }
+    val optionsExtra = if (useMarkers) {
+        "displayMode: 'markers'," +
+            " sizeAxis: { minSize: 3, maxSize: 12 },"
+    } else {
+        "resolution: 'countries',"
+    }
     return """
         <html>
         <head>

@@ -222,6 +222,8 @@ private fun CountriesDetailScreen(
                 // Map
                 StatsGeoChartWebView(
                     mapData = mapData,
+                    useMarkers =
+                        locationType == LocationType.CITIES,
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(MAP_ASPECT_RATIO)

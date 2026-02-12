@@ -469,16 +469,11 @@ class CountriesViewModel @Inject constructor(
                         hasMoreItems = false
                     )
                 } else {
-                    val mapData = buildCitiesMapData(result.cities)
-                    val aggregatedViews = result.cities
-                        .groupBy { it.countryCode }
-                        .mapValues { (_, items) ->
-                            items.sumOf { it.views }
-                        }.values
+                    val mapData = buildCitiesMapData(cities)
                     val minViews =
-                        aggregatedViews.minOrNull() ?: 0L
+                        cities.minOfOrNull { it.views } ?: 0L
                     val maxViews =
-                        aggregatedViews.maxOrNull() ?: 0L
+                        cities.maxOfOrNull { it.views } ?: 0L
 
                     allCities = cities
                     cachedCitiesMapData = mapData
@@ -587,13 +582,18 @@ class CountriesViewModel @Inject constructor(
     }
 
     private fun buildCitiesMapData(
-        cities: List<CityViewItemData>
+        cities: List<LocationItem>
     ): String {
-        return cities.groupBy { it.countryCode }
-            .mapValues { (_, items) -> items.sumOf { it.views } }
-            .entries.joinToString(",") { (code, views) ->
-                "['$code',$views]"
-            }
+        return cities.filter {
+            it.latitude != null && it.longitude != null
+        }.joinToString(",") { city ->
+            "[${city.latitude},${city.longitude}," +
+                "'${escapeJs(city.name)}',${city.views}]"
+        }
+    }
+
+    private fun escapeJs(value: String): String {
+        return value.replace("'", "\\'")
     }
 
     companion object
