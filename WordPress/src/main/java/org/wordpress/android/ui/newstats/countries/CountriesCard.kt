@@ -62,7 +62,13 @@ fun CountriesCard(
         when (uiState) {
             is CountriesCardUiState.Loading -> LoadingContent(
                 selectedLocationType = selectedLocationType,
-                onLocationTypeChanged = onLocationTypeChanged
+                onLocationTypeChanged = onLocationTypeChanged,
+                onRemoveCard = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
             )
             is CountriesCardUiState.Loaded -> LoadedContent(
                 uiState, selectedLocationType, onLocationTypeChanged,
@@ -89,23 +95,37 @@ fun CountriesCard(
 @Composable
 private fun LoadingContent(
     selectedLocationType: LocationType,
-    onLocationTypeChanged: (LocationType) -> Unit
+    onLocationTypeChanged: (LocationType) -> Unit,
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
 ) {
+    val titleResId = when (selectedLocationType) {
+        LocationType.COUNTRIES -> R.string.stats_countries_title
+        LocationType.REGIONS -> R.string.stats_regions_title
+        LocationType.CITIES -> R.string.stats_cities_title
+    }
     Column(modifier = Modifier.padding(CardPadding)) {
-        // Title placeholder
-        ShimmerBox(
-            modifier = Modifier
-                .width(100.dp)
-                .height(20.dp)
+        StatsCardHeader(
+            titleResId = titleResId,
+            onRemoveCard = onRemoveCard,
+            cardPosition = cardPosition,
+            onMoveUp = onMoveUp,
+            onMoveToTop = onMoveToTop,
+            onMoveDown = onMoveDown,
+            onMoveToBottom = onMoveToBottom
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         // Location type selector
         LocationTypeSelector(
             selectedType = selectedLocationType,
             onTypeSelected = onLocationTypeChanged
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         // Map placeholder
         ShimmerBox(
@@ -114,7 +134,7 @@ private fun LoadingContent(
                 .aspectRatio(MAP_ASPECT_RATIO)
                 .clip(RoundedCornerShape(8.dp))
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         // Legend placeholder
         ShimmerBox(
@@ -124,12 +144,21 @@ private fun LoadingContent(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
+        StatsListHeader(
+            leftHeaderResId =
+                R.string.stats_countries_location_header
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
         // List items placeholders
-        repeat(LOADING_ITEM_COUNT) {
+        repeat(LOADING_ITEM_COUNT) { index ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .padding(
+                        vertical = 12.dp,
+                        horizontal = 8.dp
+                    ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 ShimmerBox(
@@ -147,6 +176,9 @@ private fun LoadingContent(
                         .width(50.dp)
                         .height(16.dp)
                 )
+            }
+            if (index < LOADING_ITEM_COUNT - 1) {
+                Spacer(modifier = Modifier.height(4.dp))
             }
         }
     }
