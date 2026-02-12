@@ -808,23 +808,30 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
     // endregion
 
-    // region URL Validation
+    // region URL Normalization
 
     @Test
-    fun `when saveMenuItem with invalid URL, then error is shown`() = test {
+    fun `when saveMenuItem with bare domain, then https is prepended`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
+        whenever(navMenuRestClient.createMenuItem(any(), any())).thenReturn(
+            NavMenuRestClient.NavMenuItemResult.Success(createTestMenuItem(1L))
+        )
+        whenever(navMenuRestClient.fetchMenuItems(any(), any(), any())).thenReturn(
+            NavMenuRestClient.NavMenuItemListResult.Success(emptyList(), false)
+        )
+
         viewModel.navigateToCreateMenuItem()
         viewModel.updateMenuItemTitle("Test Link")
-        viewModel.updateMenuItemUrl("not-a-valid-url")
-
+        viewModel.updateMenuItemUrl("example.com")
         viewModel.saveMenuItem()
 
-        val event = viewModel.uiEvent.first()
-        assertThat(event).isInstanceOf(NavMenusUiEvent.ShowError::class.java)
+        verify(navMenuRestClient).createMenuItem(any(), org.mockito.kotlin.check {
+            assertThat(it.url).isEqualTo("https://example.com")
+        })
     }
 
     @Test
-    fun `when saveMenuItem with anchor URL, then validation passes`() = test {
+    fun `when saveMenuItem with anchor URL, then URL is preserved`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
         whenever(navMenuRestClient.createMenuItem(any(), any())).thenReturn(
             NavMenuRestClient.NavMenuItemResult.Success(createTestMenuItem(1L))
@@ -838,8 +845,49 @@ class NavMenusViewModelTest : BaseUnitTest() {
         viewModel.updateMenuItemUrl("#section")
         viewModel.saveMenuItem()
 
-        val event = viewModel.uiEvent.first()
-        assertThat(event).isEqualTo(NavMenusUiEvent.MenuItemSaved)
+        verify(navMenuRestClient).createMenuItem(any(), org.mockito.kotlin.check {
+            assertThat(it.url).isEqualTo("#section")
+        })
+    }
+
+    @Test
+    fun `when saveMenuItem with relative path, then URL is preserved`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
+        whenever(navMenuRestClient.createMenuItem(any(), any())).thenReturn(
+            NavMenuRestClient.NavMenuItemResult.Success(createTestMenuItem(1L))
+        )
+        whenever(navMenuRestClient.fetchMenuItems(any(), any(), any())).thenReturn(
+            NavMenuRestClient.NavMenuItemListResult.Success(emptyList(), false)
+        )
+
+        viewModel.navigateToCreateMenuItem()
+        viewModel.updateMenuItemTitle("About Page")
+        viewModel.updateMenuItemUrl("/about")
+        viewModel.saveMenuItem()
+
+        verify(navMenuRestClient).createMenuItem(any(), org.mockito.kotlin.check {
+            assertThat(it.url).isEqualTo("/about")
+        })
+    }
+
+    @Test
+    fun `when saveMenuItem with mailto URL, then URL is preserved`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
+        whenever(navMenuRestClient.createMenuItem(any(), any())).thenReturn(
+            NavMenuRestClient.NavMenuItemResult.Success(createTestMenuItem(1L))
+        )
+        whenever(navMenuRestClient.fetchMenuItems(any(), any(), any())).thenReturn(
+            NavMenuRestClient.NavMenuItemListResult.Success(emptyList(), false)
+        )
+
+        viewModel.navigateToCreateMenuItem()
+        viewModel.updateMenuItemTitle("Email Us")
+        viewModel.updateMenuItemUrl("mailto:hello@example.com")
+        viewModel.saveMenuItem()
+
+        verify(navMenuRestClient).createMenuItem(any(), org.mockito.kotlin.check {
+            assertThat(it.url).isEqualTo("mailto:hello@example.com")
+        })
     }
 
     // endregion
