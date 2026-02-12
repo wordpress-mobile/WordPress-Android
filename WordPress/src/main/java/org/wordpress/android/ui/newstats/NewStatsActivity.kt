@@ -277,7 +277,7 @@ private fun TrafficTabContent(
             onMostViewed = {
                 mostViewedViewModel.onPeriodChanged(selectedPeriod)
             },
-            onCountries = {
+            onLocations = {
                 countriesViewModel.onPeriodChanged(selectedPeriod)
             },
             onAuthors = {
@@ -306,7 +306,7 @@ private fun TrafficTabContent(
             onTodaysStats = { todaysStatsViewModel.loadData() },
             onViewsStats = { viewsStatsViewModel.loadData() },
             onMostViewed = { mostViewedViewModel.loadData() },
-            onCountries = { countriesViewModel.loadData() },
+            onLocations = { countriesViewModel.loadData() },
             onAuthors = { authorsViewModel.loadData() }
         )
     }
@@ -345,7 +345,7 @@ private fun TrafficTabContent(
                 onTodaysStats = { todaysStatsViewModel.refresh() },
                 onViewsStats = { viewsStatsViewModel.refresh() },
                 onMostViewed = { mostViewedViewModel.refresh() },
-                onCountries = { countriesViewModel.refresh() },
+                onLocations = { countriesViewModel.refresh() },
                 onAuthors = { authorsViewModel.refresh() }
             )
         },
@@ -455,7 +455,7 @@ private fun TrafficTabContent(
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
                         onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
                     )
-                    StatsCardType.COUNTRIES -> CountriesCard(
+                    StatsCardType.LOCATIONS -> CountriesCard(
                         uiState = countriesUiState,
                         selectedLocationType = selectedLocationType,
                         onLocationTypeChanged = countriesViewModel::onLocationTypeChanged,
@@ -530,7 +530,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     onTodaysStats: () -> Unit,
     onViewsStats: () -> Unit,
     onMostViewed: () -> Unit,
-    onCountries: () -> Unit,
+    onLocations: () -> Unit,
     onAuthors: () -> Unit
 ) {
     if (StatsCardType.TODAYS_STATS in this) onTodaysStats()
@@ -538,7 +538,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     if (StatsCardType.MOST_VIEWED_POSTS_AND_PAGES in this ||
         StatsCardType.MOST_VIEWED_REFERRERS in this
     ) onMostViewed()
-    if (StatsCardType.COUNTRIES in this) onCountries()
+    if (StatsCardType.LOCATIONS in this) onLocations()
     if (StatsCardType.AUTHORS in this) onAuthors()
 }
 

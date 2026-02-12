@@ -22,7 +22,7 @@ class StatsCardsConfigurationTest {
         assertThat(hiddenCards).containsExactlyInAnyOrder(
             StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
             StatsCardType.MOST_VIEWED_REFERRERS,
-            StatsCardType.COUNTRIES,
+            StatsCardType.LOCATIONS,
             StatsCardType.AUTHORS
         )
     }
@@ -35,7 +35,7 @@ class StatsCardsConfigurationTest {
                 StatsCardType.VIEWS_STATS,
                 StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
                 StatsCardType.MOST_VIEWED_REFERRERS,
-                StatsCardType.COUNTRIES,
+                StatsCardType.LOCATIONS,
                 StatsCardType.AUTHORS
             )
         )
@@ -56,7 +56,7 @@ class StatsCardsConfigurationTest {
             StatsCardType.VIEWS_STATS,
             StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
             StatsCardType.MOST_VIEWED_REFERRERS,
-            StatsCardType.COUNTRIES,
+            StatsCardType.LOCATIONS,
             StatsCardType.AUTHORS
         )
     }
@@ -78,7 +78,7 @@ class StatsCardsConfigurationTest {
         )
 
         assertThat(config.isCardVisible(StatsCardType.VIEWS_STATS)).isFalse()
-        assertThat(config.isCardVisible(StatsCardType.COUNTRIES)).isFalse()
+        assertThat(config.isCardVisible(StatsCardType.LOCATIONS)).isFalse()
     }
 
     @Test

@@ -106,7 +106,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
 
-        repository.addCard(TEST_SITE_ID, StatsCardType.COUNTRIES)
+        repository.addCard(TEST_SITE_ID, StatsCardType.LOCATIONS)
 
         val jsonCaptor = argumentCaptor<String>()
         verify(appPrefsWrapper).setStatsCardsConfigurationJson(eq(TEST_SITE_ID), jsonCaptor.capture())
@@ -187,7 +187,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
 
-        repository.moveCardToTop(TEST_SITE_ID, StatsCardType.COUNTRIES)
+        repository.moveCardToTop(TEST_SITE_ID, StatsCardType.LOCATIONS)
 
         val jsonCaptor = argumentCaptor<String>()
         verify(appPrefsWrapper).setStatsCardsConfigurationJson(eq(TEST_SITE_ID), jsonCaptor.capture())
@@ -239,7 +239,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
 
-        repository.moveCardDown(TEST_SITE_ID, StatsCardType.COUNTRIES)
+        repository.moveCardDown(TEST_SITE_ID, StatsCardType.LOCATIONS)
 
         verify(appPrefsWrapper, org.mockito.kotlin.never()).setStatsCardsConfigurationJson(any(), any())
     }
@@ -273,7 +273,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
 
-        repository.moveCardToBottom(TEST_SITE_ID, StatsCardType.COUNTRIES)
+        repository.moveCardToBottom(TEST_SITE_ID, StatsCardType.LOCATIONS)
 
         verify(appPrefsWrapper, org.mockito.kotlin.never()).setStatsCardsConfigurationJson(any(), any())
     }
