@@ -244,7 +244,6 @@ Language: ro
     <string name="more_content_description_recent_activity">Mai multe activități recente</string>
     <string name="more_content_description_pages">Mai multe pagini</string>
     <string name="more_content_description_posts">Mai multe articole</string>
-    <string name="more_content_description_quick_start">Mai multe pentru Inițiere rapidă</string>
     <string name="more_content_description_today_stats">Mai multe statistici pentru azi</string>
     <string name="more_content_description_blogging_prompts">Mai multe îndemnuri</string>
     <string name="more_content_description_promote_blaze">Mai multe despre Blaze</string>
@@ -397,7 +396,6 @@ Language: ro
     <string name="site_monitoring_tab_title_php_logs">Jurnale PHP</string>
     <string name="site_monitoring_tab_title_metrics">Valori metrice</string>
     <string name="site_monitoring">Monitorizare site</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Folosește &lt;b&gt;Descoperă&lt;/b&gt; ca să găsești site-uri și etichete. Încearcă să selectezi &lt;b&gt;Abonamente&lt;/b&gt; ca să vezi conținutul la care te-ai abonat și să-ți administrezi abonamentele.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Mergi la Abonamente</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blogurile la care te-ai abonat nu au publicat nimic recent</string>
     <string name="reader_no_followed_blogs_description_subs">Abonează-te la bloguri în Descoperă sau caută un blog care ți-a plăcut.</string>
@@ -825,9 +823,6 @@ Language: ro
     <string name="wp_jetpack_deep_link_overlay_description">Se pare că ai aplicația Jetpack instalată.\n\nÎn viitor vrei să deschizi legăturile în aplicația Jetpack?\n\nPoți schimba oricând asta în Setări aplicație &gt; Deschide legăturile în Jetpack</string>
     <string name="wp_jetpack_deep_link_overlay_title">Deschizi legăturile în Jetpack?</string>
     <string name="wp_jetpack_continue_without_jetpack">Continuă fără Jetpack</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack oferă statistici, notificări și multe altele pentru a te ajuta să construiești și să dezvolți site-ul WordPress la care visezi.\nAplicația WordPress nu mai permite crearea unui site nou.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack oferă statistici, notificări și multe altele pentru a te ajuta să construiești și să dezvolți site-ul WordPress la care visezi.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Creează un site WordPress nou cu aplicația Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">legături web</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Comută la aplicația Jetpack pentru a continua să primești notificări în timp real pe dispozitivul tău.</string>
@@ -937,24 +932,11 @@ Language: ro
     <string name="stats_action_card_blogging_reminders_title">Setează reamintirile pentru publicare</string>
     <string name="stats_action_card_grow_audience_button_label">Vezi cursul</string>
     <string name="stats_action_card_grow_audience_title">Crește-ți audiența</string>
-    <string name="quick_start_sites_type_all_tasks_completed">Ai finalizat toate sarcinile</string>
-    <string name="quick_start_list_task_complete">Ai finalizat sarcina</string>
     <string name="me_btn_scan_login_code">Scanează codul de autentificare</string>
     <string name="stats_insights_likes_guide_card">⭐️ Ultimul tău articol %1$s a avut %2$s aprecieri.</string>
     <string name="stats_most_popular_percent_views_empty">Activitate insuficientă. Revino mai târziu când site-ul va avea mai mulți vizitatori!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s%% din numărul total de abonați</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">Felicitări! Te descurci foarte bine&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">Fă cunoștință cu aplicația</string>
-    <string name="quick_start_list_upload_media_subtitle">Aduci elemente media pe site direct din dispozitiv sau cameră</string>
-    <string name="quick_start_list_upload_media_title">Încarcă fotografii sau videoclipuri</string>
-    <string name="quick_start_list_check_notification_subtitle">Primești actualizări în timp real, chiar din buzunar</string>
-    <string name="quick_start_dialog_upload_media_message">Selectează %1$s Media %2$s pentru a vedea biblioteca actuală.</string>
-    <string name="quick_start_dialog_check_notifications_message">Primești actualizări în timp real, chiar din buzunar.</string>
-    <string name="quick_start_dialog_check_notifications_title">Vezi notificările</string>
-    <string name="quick_start_dialog_check_notifications_message_short">Selectează %1$s fila Notificări %2$s pentru a primi actualizări din mers.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Selectează %1$s și %2$s pentru a încărca elemente media. Le poți adăuga în articole/pagini de pe orice dispozitiv.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Folosește &lt;b&gt; Descoperă &lt;/b&gt; pentru a găsi site-uri și etichete.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatură video</string>
     <string name="stats_details_top_commentators">Cei mai activi comentatori</string>
     <string name="stats_published_years_ago">Publicat acum %1$d ani</string>
@@ -974,8 +956,6 @@ Language: ro
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Răspunde</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Îndemn zilnic</string>
     <string name="blogging_prompts_onboarding_got_it">Am înțeles</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Atinge &lt;b&gt;%1$s&lt;/b&gt; pentru a vedea site-ul</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Selectează %1$s Cititor %2$s pentru a găsi alte site-uri.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Află mai mult despre îndemnuri</string>
     <string name="photo_picker_video_thumbnail_unselected">Video deselectat</string>
     <string name="photo_picker_video_thumbnail_selected">Video selectat</string>
@@ -1063,7 +1043,6 @@ Language: ro
     <string name="site_creation_intent_art">Artă</string>
     <string name="new_site_creation_intents_input_hint">De exemplu: modă, poezie, politică</string>
     <string name="new_site_creation_intents_title">Subiect site</string>
-    <string name="quick_start_site_menu_tab_message_short">Atinge &lt;b&gt;%1$s&lt;/b&gt; pentru a continua.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Nu azi</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Vezi mai multe îndemnuri</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Partajează îndemnul pentru publicare</string>
@@ -1152,7 +1131,6 @@ Language: ro
     <string name="comment_edit_user_name">Nume</string>
     <string name="comment_edit_menu_done">Gata</string>
     <string name="weekly_roundup">Rezumat săptămânal</string>
-    <string name="quick_start_list_create_site_message">Site-ul a fost creat! Finalizează o altă sarcină.</string>
     <string name="domains_free_plan_get_your_domain_title">Ia-ți domeniul</string>
     <string name="recommend_app_generic_get_template_error">Eroare necunoscută la aducerea șablonului recomandat pentru aplicație</string>
     <string name="recommend_app_bad_format_response">Am primit un răspuns invalid</string>
@@ -1164,8 +1142,6 @@ Language: ro
     <string name="blogging_reminders_notification_time">Ora notificării</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Vei primi reamintiri pentru publicare &lt;b&gt;în fiecare zi&lt;/b&gt; la &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s pe săptămână la %2$s</string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s din %2$s sunt finalizate</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Învață elementele de bază printr-un tur ghidat rapid.</string>
     <string name="comment_batch_moderation_error">Moderarea unuia sau a mai multor comentarii a eșuat</string>
     <string name="create_site_notification_create_site_action">Creează un site</string>
     <string name="create_site_notification_text">Cu doar câțiva pași rapizi, ai un site care rulează și funcționează</string>
@@ -1174,12 +1150,6 @@ Language: ro
     <string name="stats_disabled_enable_stats_button">Activează statistici site</string>
     <string name="stats_disabled_subtitle">Activează statistici site pentru a vedea informații detaliate despre trafic, aprecieri, comentarii și abonați.</string>
     <string name="stats_disabled_title">Cauți statisticile?</string>
-    <string name="quick_start_list_upload_icon_subtitle">Este afișat în fila navigatoarelor vizitatorilor tăi și în alte locuri online.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Arată-mi ce să fac</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">Vrei puțin ajutor ca să-ți administrezi site-ul cu aplicația?</string>
-    <string name="login_epilogue_create_new_site_button">Creează un site nou</string>
-    <string name="login_epilogue_mysites_subheading">Poți comuta între site-uri oricând.</string>
-    <string name="login_epilogue_mysites_heading">Alege un site pentru a-l deschide</string>
     <string name="scan_multisite_not_supported_subtitle">Regretăm, Scanarea Jetpack nu este compatibilă cu instalările WordPress multi-site în acest moment.</string>
     <string name="scan_multisite_not_supported_title">Instalările WordPress multi-site nu sunt acceptate</string>
     <string name="activity_log_visit_our_documentation_page">vizitează pagina cu documentație.</string>
@@ -1273,13 +1243,6 @@ Language: ro
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scanarea a fost finalizată&lt;/b&gt; &lt;br&gt; Nu am găsit amenințări</string>
     <string name="scan_fixing_threats_title_singular">Înlătur amenințarea</string>
     <string name="disable">Dezactivează</string>
-    <string name="quick_start_list_review_pages_subtitle">Verifică-ți paginile și fă modificări sau adaugă ori înlătură pagini.</string>
-    <string name="quick_start_list_view_site_title">Vezi site-ul</string>
-    <string name="quick_start_list_follow_site_subtitle">Descoperă și urmărește site-urile care te inspiră.</string>
-    <string name="quick_start_list_enable_sharing_title">Partajare pe media socială</string>
-    <string name="quick_start_list_enable_sharing_subtitle">Partajezi automat articole noi în media socială.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Dă-i site-ului un nume care să-ți reflecte personalitatea și prin care să arăți la ce se referă.</string>
-    <string name="quick_start_list_check_stats_title">Vezi statisticile site-ului</string>
     <string name="backup_download_status_failure_bullet2">Vom încerca oricum să creăm fișierul cu copia de siguranță care poate fi descărcată.</string>
     <string name="backup_download_status_failure_bullet1">Nu am putut găsi starea pentru a spune cât timp va dura crearea copiei de siguranță care poate fi descărcată.</string>
     <string name="backup_download_status_failure_heading">Nu am putut găsi starea pentru copia de siguranță care poate fi descărcată</string>
@@ -1352,9 +1315,6 @@ Language: ro
     <string name="backup_download_complete_failed_title">Descărcarea a eșuat</string>
     <string name="web_preview_tablet">Tabletă</string>
     <string name="web_preview_mobile">Mobil</string>
-    <string name="quick_start_dialog_review_pages_message_short">Selectează %1$s Pagini %2$s pentru a vedea lista cu pagini.</string>
-    <string name="quick_start_dialog_review_pages_message">Modifică paginile, adaugă sau înlătură pagini pe site.</string>
-    <string name="quick_start_dialog_review_pages_title">Revizuiește paginile site-ului</string>
     <string name="reader_menu_mark_as_unseen">Marchează ca nevăzut</string>
     <string name="reader_menu_mark_as_seen">Marchează ca văzut</string>
     <string name="error_media_upload_failed_for_reason">Încărcarea elementului media a eșuat.\n%1$s</string>
@@ -1573,7 +1533,6 @@ Language: ro
     <string name="mlp_create_blank_page">Creează o pagină goală</string>
     <string name="mlp_choose_layout_subtitle">Începe și alege dintr-o mare varietate de aranjamente gata pregătite. Sau începe cu o pagină goală.</string>
     <string name="mlp_choose_layout_title">Alege un aranjament</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Atinge Creează %1$s. %2$s Apoi selectează &lt;b&gt;Articol blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Alege de pe dispozitiv</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Editarea iconurilor de site pe site-urile WordPress auto-găzduite necesită modulul Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">Nu am putut găsi trecerea la pagina legată</string>
@@ -1601,8 +1560,6 @@ Language: ro
     <string name="send_link_by_email" a8c-src-lib="module:login">Trimite legătura prin email</string>
     <string name="reset_your_password" a8c-src-lib="module:login">Resetează-ți parola</string>
     <string name="reader_error_request_failed_title">A fost o problemă la gestionarea cererii. Te rog reîncearcă mai târziu.</string>
-    <string name="quick_start_list_update_site_title_title">Verifică titlul site-ului</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Atinge &lt;b&gt;%1$s&lt;/b&gt; pentru a seta un nou titlu</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Aruncarea acestui articol la gunoi va anula și modificările locale, sigur vrei să continui?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Titlul site-ului poate fi modificat numai de un utilizator cu rolul de administrator.</string>
     <string name="my_site_title_changer_dialog_hint">Titlul site-ului este afișat în bara de titluri a unui navigator web și, pentru majoritatea temelor, este afișat în antet.</string>
@@ -2054,29 +2011,12 @@ Language: ro
     <string name="stats_more_posts">Mai multe articole</string>
     <string name="stats_fewer_posts">Mai puține articole</string>
     <string name="new_site_creation_preview_back_pressed_warning">S-ar putea să pierzi ceea ce ai făcut. Sigur vrei să ieși?</string>
-    <string name="plans_loading_error_with_cache_button">Totuși vezi planurile</string>
-    <string name="plans_loading_error_with_cache_subtitle">Pentru a vedea planurile, este necesară o conexiune la internet, deci detaliile pot fi neactualizate.</string>
-    <string name="plans_loading_error_no_cache_subtitle">Pentru a vedea planurile, este necesară o conexiune la internet.</string>
-    <string name="plans_loading_error_no_plans_subtitle">Nu putem încărca planuri în acest moment. Te rog reîncearcă mai târziu.</string>
-    <string name="plans_loading_error_no_plans_title">Nu putem încărca planuri</string>
-    <string name="plans_loading_error_network_title">Nu ai conexiune</string>
     <string name="menu_switch_to_gutenberg_editor">Comută la editorul de blocuri</string>
     <string name="stats_loading_block_error">A fost o problemă la încărcarea datelor, reîncarcă pagina pentru a încerca din nou.</string>
     <string name="stats_loading_error">Datele nu au fost încărcate</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Editează articolele și paginile noi cu editorul de blocuri</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Folosește editorul de blocuri</string>
     <string name="exit">ieșire</string>
-    <string name="quick_start_sites_type_grow">Crește-ți audiența</string>
-    <string name="quick_start_sites_type_customize">Personalizează-ți site-ul</string>
-    <string name="quick_start_sites">Pașii următori</string>
-    <string name="quick_start_dialog_upload_icon_title">Alege un icon unic pentru site</string>
-    <string name="quick_start_dialog_upload_icon_message">Vizitatorii îți vor vedea iconul în navigatoarele lor. Adaugă un icon personalizat pentru un aspect rafinat și profesionist.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Selectează %1$s Statistici %2$s pentru a vedea rezultatele obținute de site.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Atinge %1$s Icon site %2$s pentru a încărca unul nou</string>
-    <string name="quick_start_dialog_publish_post_message">Redactează și publică un articol.</string>
-    <string name="quick_start_dialog_check_stats_title">Vezi statisticile site-ului</string>
-    <string name="quick_start_dialog_check_stats_message">Fii la curent cu performanța site-ului.</string>
-    <string name="quick_start_task_skip_menu_title">Sari sarcina</string>
     <string name="notification_channel_reminder_title">Reamintire</string>
     <string name="stats_select_next_period_description">Selectează perioada următoare</string>
     <string name="stats_select_previous_period_description">Selectează perioada anterioară</string>
@@ -2228,20 +2168,6 @@ Language: ro
     <string name="page_delete_error">A fost o problemă la ștergerea paginii</string>
     <string name="set_parent">Setează un părinte</string>
     <string name="dismiss">Respinge</string>
-    <string name="quick_start_focus_point_description">atinge aici</string>
-    <string name="quick_start_list_create_site_title">Creează-ți site-ul</string>
-    <string name="quick_start_list_create_site_subtitle">Obții un site care funcționează și rulează.</string>
-    <string name="quick_start_completed_tour_subtitle">Nu te simți bine când bifezi lucrurile dintr-o listă?</string>
-    <string name="quick_start_dialog_view_site_title">Vezi site-ul</string>
-    <string name="quick_start_dialog_view_site_message">Previzualizează site-ul pentru a vedea cum apare pentru vizitatori.</string>
-    <string name="quick_start_dialog_share_site_title">Partajează-ți site-ul</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Atinge %1$s Social %2$s pentru a continua</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Atinge %1$s Conexiuni %2$s pentru a-ți adăuga conturile din media socială</string>
-    <string name="quick_start_dialog_share_site_message">Conectează-ți conturile din media socială - site-ul tău va partaja automat articolele noi.</string>
-    <string name="quick_start_dialog_publish_post_title">Publică un articol</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nu, mulțumesc</string>
-    <string name="quick_start_dialog_follow_sites_title">Conectează-te cu alte site-uri</string>
-    <string name="quick_start_button_positive">Începe</string>
     <string name="content_description_more">Mai mult</string>
     <string name="my_site_create_new_site_title">Nu ai niciun site</string>
     <string name="reader_empty_subscribed_tags_subtitle">Adaugă etichete aici ca să găsești articole despre subiectele tale preferate</string>
@@ -2435,7 +2361,6 @@ Language: ro
     <string name="edit_photo_screen_title">Editează fotografia</string>
     <string name="share_intent_screen_title">Alege site-ul</string>
     <string name="signup_epilogue_screen_title">Cont nou</string>
-    <string name="login_epilogue_screen_title">Autentificat ca</string>
     <string name="person_detail_screen_title">Detalii personale</string>
     <string name="media_settings_screen_title">Detalii fișier</string>
     <string name="publicize_buttons_screen_title">Butoane de partajare</string>
@@ -2712,8 +2637,6 @@ Language: ro
     <string name="post_queued">Articolul este în coada de așteptare</string>
     <string name="uploading_post">Încarc „%s”</string>
     <string name="connection_to_server_lost">Conexiunea cu serverul s-a pierdut</string>
-    <string name="login_epilogue_mysites_other">Site-urile mele</string>
-    <string name="login_epilogue_mysites_one">Site-ul meu</string>
     <string name="login_email_client_not_found">Nu pot detecta aplicația ta client de email</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Te rog să introduci un cod de verificare</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Te rog să introduci un nume de utilizator</string>
@@ -2864,7 +2787,6 @@ Language: ro
     <string name="start_over_email_subject">Începe cu site-ul %s</string>
     <string name="site_picker_remove_site_error">Eroare la înlăturarea site-ului, încearcă din nou mai târziu</string>
     <string name="editor_post_saved_locally_failed_media">Articolul a eșuat la încărcările media și a fost salvat local</string>
-    <string name="sure_to_remove_account">Înlături acest site din aplicație?</string>
     <string name="photo_picker_title">Alege fotografie</string>
     <string name="error_publish_no_network">Dispozitivul este offline. Articolul a fost salvat local.</string>
     <string name="editor_post_saved_online">Articol salvat online</string>
@@ -2987,8 +2909,6 @@ Language: ro
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">În prezent indisponibilă. Te rog să-ți introduci parola</string>
     <string name="logging_in">Autentificare</string>
     <string name="web_address_dialog_hint">Făcută publică atunci când comentezi.</string>
-    <string name="plans">Planuri</string>
-    <string name="plan">Plan</string>
     <string name="export_your_content_message">Articolele, paginile și setările îți vor fi trimise pe email la %s.</string>
     <string name="export_your_content">Exportă conținutul tău</string>
     <string name="export_email_sent">Emailul de export a fost trimis!</string>

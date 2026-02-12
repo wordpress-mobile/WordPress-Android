@@ -220,7 +220,6 @@ Language: ja_JP
     <string name="more_content_description_recent_activity">最近のアクティビティをさらに表示</string>
     <string name="more_content_description_pages">ページをさらに表示</string>
     <string name="more_content_description_posts">投稿をさらに表示</string>
-    <string name="more_content_description_quick_start">クイックスタートをさらに表示</string>
     <string name="more_content_description_today_stats">今日の統計情報をさらに表示</string>
     <string name="more_content_description_blogging_prompts">プロンプトをさらに表示</string>
     <string name="more_content_description_promote_blaze">Blaze をさらに表示</string>
@@ -366,7 +365,6 @@ Language: ja_JP
     <string name="site_monitoring_tab_title_php_logs">PHP ログ</string>
     <string name="site_monitoring_tab_title_metrics">メトリクス</string>
     <string name="site_monitoring">サイトのモニタリング</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">サイトやタグを探すには、&lt;b&gt;「ディスカバー」&lt;/b&gt;を使います。 &lt;b&gt;「サブスクリプション」&lt;/b&gt; を選択して購読しているコンテンツを表示し、サブスクリプションを管理します。</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">サブスクリプションに移動</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">購読しているブログには、最近の投稿はありません</string>
     <string name="reader_no_followed_blogs_description_subs">「ディスカバー」でブログを購読するか、すでに気に入っているブログを検索します。</string>
@@ -789,9 +787,6 @@ Language: ja_JP
     <string name="wp_jetpack_deep_link_overlay_description">Jetpack アプリがインストールされているようです。\n\n今後は Jetpack アプリでリンクを開きますか ?\n\nこれは「アプリの設定」&gt;「Jetpack でリンクを開く」でいつでも変更できます</string>
     <string name="wp_jetpack_deep_link_overlay_title">Jetpack でリンクを開きますか ?</string>
     <string name="wp_jetpack_continue_without_jetpack">Jetpack なしで連携</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack は統計、通知などの機能を提供し、理想の WordPress サイトの構築と成長をサポートします。\n\nWordPress アプリは現在、新しいサイトの作成をサポートしていません。</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack は統計、通知などの機能を提供し、理想の WordPress サイトの構築と成長をサポートします。</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Jetpack アプリで新しい WordPress サイトを作成する</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">端末で リアルタイムの通知を引き続き受信するには、Jetpack アプリに切り替えてください。</string>
@@ -901,24 +896,11 @@ Language: ja_JP
     <string name="stats_action_card_blogging_reminders_title">ブログ投稿のリマインダーを設定</string>
     <string name="stats_action_card_grow_audience_button_label">コースを確認</string>
     <string name="stats_action_card_grow_audience_title">訪問者を増やす</string>
-    <string name="quick_start_sites_type_all_tasks_completed">すべてのタスクが完了しました</string>
-    <string name="quick_start_list_task_complete">タスクが完了しました</string>
     <string name="me_btn_scan_login_code">ログインコードをスキャン</string>
     <string name="stats_insights_likes_guide_card">⭐️最新の投稿 %1$s が%2$s回「いいね」されました。</string>
     <string name="stats_most_popular_percent_views_empty">アクティビティが足りません。 サイトの訪問者数が増えたら後でもう一度確認してください。</string>
     <string name="stats_total_subscribers_content_description">%1$s、購読者総数の %2$s%%</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">おめでとうございます ! 詳しくなりました&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">アプリについて知る</string>
-    <string name="quick_start_list_upload_media_subtitle">メディアを端末またはカメラからサイトに取り込む</string>
-    <string name="quick_start_list_upload_media_title">写真または動画をアップロードする</string>
-    <string name="quick_start_list_check_notification_subtitle">ポケットからリアルタイムで最新情報を入手する</string>
-    <string name="quick_start_dialog_upload_media_message">%1$sメディア%2$sを選択すると現在のライブラリを確認できます。</string>
-    <string name="quick_start_dialog_check_notifications_message">ポケットからリアルタイムで最新情報を入手できます。</string>
-    <string name="quick_start_dialog_check_notifications_title">通知を確認</string>
-    <string name="quick_start_dialog_check_notifications_message_short">%1$s「通知」タブ%2$sを選択すると、外出先で最新情報を確認できます。</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">%1$s「+」%2$sを選択するとメディアをアップロードできます。 端末から投稿やページに追加できます。</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">サイトやタグを探すには&lt;b&gt;「発見する」&lt;/b&gt;を使います。</string>
     <string name="photo_picker_video_thumbnail_content_description">動画のサムネイル</string>
     <string name="stats_details_top_commentators">上位コメント投稿者</string>
     <string name="stats_published_years_ago">%1$d年前に投稿</string>
@@ -938,8 +920,6 @@ Language: ja_JP
     <string name="blogging_prompts_answer_prompt_notification_answer_action">回答</string>
     <string name="blogging_prompts_answer_prompt_notification_title">毎日のプロンプト </string>
     <string name="blogging_prompts_onboarding_got_it">理解しました</string>
-    <string name="quick_start_dialog_view_your_site_message_short">&lt;b&gt;%1$s&lt;/b&gt;をタップしてサイトを表示</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">別のサイトを検索するには%1$s「Reader」%2$sを選択します。</string>
     <string name="blogging_reminders_prompt_help_button_desc">プロンプトについて詳しく読む</string>
     <string name="photo_picker_video_thumbnail_unselected">選択解除した動画</string>
     <string name="photo_picker_video_thumbnail_selected">選択中の動画</string>
@@ -1027,7 +1007,6 @@ Language: ja_JP
     <string name="site_creation_intent_art">アート</string>
     <string name="new_site_creation_intents_input_hint">例: ファッション、詩、政治</string>
     <string name="new_site_creation_intents_title">サイトのテーマ</string>
-    <string name="quick_start_site_menu_tab_message_short">&lt;b&gt;%1$s&lt;/b&gt; をタップして続行します。</string>
     <string name="my_site_blogging_prompt_card_menu_skip">今日にスキップ</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">プロンプトをさらに表示</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">ブログ作成のプロンプトを共有</string>
@@ -1114,7 +1093,6 @@ Language: ja_JP
     <string name="comment_edit_user_name">名前</string>
     <string name="comment_edit_menu_done">完了</string>
     <string name="weekly_roundup">1週間のまとめ</string>
-    <string name="quick_start_list_create_site_message">サイトを作成しました。 別のタスクを完了します。</string>
     <string name="domains_free_plan_get_your_domain_title">ドメインを取得</string>
     <string name="recommend_app_generic_get_template_error">おすすめのアプリテンプレートの取得中に不明なエラーが発生しました</string>
     <string name="recommend_app_bad_format_response">無効な応答を受信しました</string>
@@ -1126,8 +1104,6 @@ Language: ja_JP
     <string name="blogging_reminders_notification_time">通知時間</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">&lt;b&gt;毎日&lt;/b&gt;&lt;b&gt;%s&lt;/b&gt;時にブログ投稿のリマインダーを受け取ります。</string>
     <string name="blogging_reminders_site_settings_label">週に%1$s回%2$s時</string>
-    <string name="quick_start_sites_type_tasks_completed">%2$s個中%1$s個が完了</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">簡単なチュートリアルで基本を学びましょう。</string>
     <string name="comment_batch_moderation_error">1つ以上のコメントを承認できませんでした</string>
     <string name="create_site_notification_create_site_action">サイトを作成</string>
     <string name="create_site_notification_text">わずかな手順で迅速にサイトを立ち上げることができます</string>
@@ -1136,12 +1112,6 @@ Language: ja_JP
     <string name="stats_disabled_enable_stats_button">サイト統計情報を有効化</string>
     <string name="stats_disabled_subtitle">サイト統計情報を有効にすると、トラフィック、「いいね」、コメント、購読者に関する詳細を確認できます。</string>
     <string name="stats_disabled_title">統計情報をお探しですか ?</string>
-    <string name="quick_start_list_upload_icon_subtitle">訪問者のブラウザータブやオンライン上のその他の場所に表示されます。</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">表示</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">アプリでこのサイトを管理する方法をしりたいですか ?</string>
-    <string name="login_epilogue_create_new_site_button">新規サイトを作成</string>
-    <string name="login_epilogue_mysites_subheading">サイトはいつでも切り替えることができます。</string>
-    <string name="login_epilogue_mysites_heading">開くサイトを選択</string>
     <string name="scan_multisite_not_supported_subtitle">現在、Jetpack スキャンは WordPress のマルチサイトインストールとの互換性がありません。</string>
     <string name="scan_multisite_not_supported_title">WordPress マルチサイトには対応していません</string>
     <string name="activity_log_visit_our_documentation_page">ドキュメントページに移動する</string>
@@ -1235,13 +1205,6 @@ Language: ja_JP
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;スキャン完了&lt;/b&gt; &lt;br&gt;&lt;/br&gt;脅威は見つかりませんでした</string>
     <string name="scan_fixing_threats_title_singular">脅威の修正</string>
     <string name="disable">無効化</string>
-    <string name="quick_start_list_review_pages_subtitle">ページをチェックして変更を加えたり、ページを追加または削除したりしましょう。</string>
-    <string name="quick_start_list_view_site_title">サイトを表示</string>
-    <string name="quick_start_list_follow_site_subtitle">参考になるサイトを探してフォローしましょう。</string>
-    <string name="quick_start_list_enable_sharing_title">ソーシャル共有</string>
-    <string name="quick_start_list_enable_sharing_subtitle">新しい投稿を自分のソーシャルメディアと自動的に共有しましょう。</string>
-    <string name="quick_start_list_update_site_title_subtitle">サイトにその特徴とトピックがわかるような名前を付けてください。</string>
-    <string name="quick_start_list_check_stats_title">サイト統計情報を確認</string>
     <string name="backup_download_status_failure_bullet2">ダウンロード可能なバックアップファイルの作成を試みます。</string>
     <string name="backup_download_status_failure_bullet1">ダウンロード可能なバックアップにかかる時間を示すステータスが見つかりませんでした。</string>
     <string name="backup_download_status_failure_heading">ダウンロード可能なバックアップのステータスが見つかりませんでした</string>
@@ -1314,9 +1277,6 @@ Language: ja_JP
     <string name="backup_download_complete_failed_title">ダウンロード失敗</string>
     <string name="web_preview_tablet">タブレット</string>
     <string name="web_preview_mobile">モバイル</string>
-    <string name="quick_start_dialog_review_pages_message_short">%1$s ページ %2$s を選択してページリストを表示します。</string>
-    <string name="quick_start_dialog_review_pages_message">サイトのページを変更、追加、削除します。</string>
-    <string name="quick_start_dialog_review_pages_title">サイトページをレビュー</string>
     <string name="reader_menu_mark_as_unseen">未読にする</string>
     <string name="reader_menu_mark_as_seen">既読にする</string>
     <string name="error_media_upload_failed_for_reason">メディアのアップロードに失敗しました。\n%1$s</string>
@@ -1535,7 +1495,6 @@ Language: ja_JP
     <string name="mlp_create_blank_page">空白ページを作成</string>
     <string name="mlp_choose_layout_subtitle">事前に用意されたさまざまなページレイアウトを選ぶところから始めましょう。 空白ページから始めることもできます。</string>
     <string name="mlp_choose_layout_title">レイアウトを選択</string>
-    <string name="quick_start_dialog_create_new_post_message_short">「%1$s 作成」をタップします。%2$s 次に「&lt;b&gt;ブログ投稿&lt;/b&gt;」を選択します</string>
     <string name="photo_picker_choose_file">端末から選択</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">インストール型の WordPress サイトでサイトアイコンを編集するには Jetpack プラグインが必要です。</string>
     <string name="reader_toast_err_page_jump_not_found">リンクされたページジャンプが見つかりません</string>
@@ -1563,8 +1522,6 @@ Language: ja_JP
     <string name="send_link_by_email" a8c-src-lib="module:login">リンクをメールで送信</string>
     <string name="reset_your_password" a8c-src-lib="module:login">パスワードをリセット</string>
     <string name="reader_error_request_failed_title">リクエストの処理中に問題が発生しました。 後ほど、もう一度お試しください。</string>
-    <string name="quick_start_list_update_site_title_title">サイトタイトルを確認</string>
-    <string name="quick_start_dialog_update_site_title_message_short">新しいタイトルを設定するには&lt;b&gt;%1$s&lt;/b&gt;をタップしてください</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">この投稿をゴミ箱に移動するとローカルの変更も破棄されます。続行してもよいですか ?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">サイトのタイトルを変更できるのは管理者の役割を持つユーザーだけです。</string>
     <string name="my_site_title_changer_dialog_hint">サイトのタイトルは、Web ブラウザーのタイトルバーに表示され、ほとんどのテーマのヘッダーに表示されます。</string>
@@ -2016,29 +1973,12 @@ Language: ja_JP
     <string name="stats_more_posts">表示する投稿数を増やす</string>
     <string name="stats_fewer_posts">表示する投稿数を減らす</string>
     <string name="new_site_creation_preview_back_pressed_warning">作業内容が失われる可能性があります。終了してもよいですか ?</string>
-    <string name="plans_loading_error_with_cache_button">プランを表示</string>
-    <string name="plans_loading_error_with_cache_subtitle">プランを表示するにはインターネット接続が必須となるため、詳細情報が古い可能性があります。</string>
-    <string name="plans_loading_error_no_cache_subtitle">プランを表示するにはインターネット接続が必須です。</string>
-    <string name="plans_loading_error_no_plans_subtitle">現在、一時的にプランの読み込みができません。後ほど、もう一度お試しください。</string>
-    <string name="plans_loading_error_no_plans_title">プランの読み込みができません</string>
-    <string name="plans_loading_error_network_title">接続がありません</string>
     <string name="menu_switch_to_gutenberg_editor">ブロックエディターに切り替える</string>
     <string name="stats_loading_block_error">データの読み込み中に問題が発生しました。ページを更新してもう一度お試しください。</string>
     <string name="stats_loading_error">データは読み込まれていません</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">ブロックエディターで新しい投稿やページを編集</string>
     <string name="site_settings_gutenberg_default_for_new_posts">ブロックエディターを使用</string>
     <string name="exit">終了</string>
-    <string name="quick_start_sites_type_grow">訪問者を増やす</string>
-    <string name="quick_start_sites_type_customize">サイトをカスタマイズ</string>
-    <string name="quick_start_sites">次のステップ</string>
-    <string name="quick_start_dialog_upload_icon_title">独自のサイトアイコンを選択</string>
-    <string name="quick_start_dialog_upload_icon_message">訪問者のブラウザーにアイコンが表示されます。センスのよいカスタムアイコンを追加しましょう。</string>
-    <string name="quick_start_dialog_check_stats_message_short">サイトのパフォーマンスを表示するには%1$s「統計情報」%2$sを選択します。</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">新しいアイコンをアップロードするには %1$s サイトアイコン %2$s をタップ</string>
-    <string name="quick_start_dialog_publish_post_message">投稿の下書きを作成して公開してください。</string>
-    <string name="quick_start_dialog_check_stats_title">サイト統計情報を確認</string>
-    <string name="quick_start_dialog_check_stats_message">サイトのパフォーマンスを把握しましょう。</string>
-    <string name="quick_start_task_skip_menu_title">タスクをスキップ</string>
     <string name="notification_channel_reminder_title">リマインダー</string>
     <string name="stats_select_next_period_description">次の期間を選択</string>
     <string name="stats_select_previous_period_description">前の期間を選択</string>
@@ -2190,20 +2130,6 @@ Language: ja_JP
     <string name="page_delete_error">ページを削除中に問題が発生しました</string>
     <string name="set_parent">親の設定</string>
     <string name="dismiss">閉じる</string>
-    <string name="quick_start_focus_point_description">ここをタップ</string>
-    <string name="quick_start_list_create_site_title">サイトの作成</string>
-    <string name="quick_start_list_create_site_subtitle">サイトを立ち上げましょう。</string>
-    <string name="quick_start_completed_tour_subtitle">リストから消したいものがありますか ?</string>
-    <string name="quick_start_dialog_view_site_title">サイトを表示</string>
-    <string name="quick_start_dialog_view_site_message">サイトをプレビューして訪問者に表示される内容を確認できます。</string>
-    <string name="quick_start_dialog_share_site_title">サイトを共有</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">%1$s「ソーシャル」%2$sをタップして続行する</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">%1$s連携%2$sをタップして、SNS アカウントを追加</string>
-    <string name="quick_start_dialog_share_site_message">自分のソーシャルメディアアカウントと連携すると、サイトの新しい投稿が自動的に共有されるようになります。</string>
-    <string name="quick_start_dialog_publish_post_title">投稿を公開</string>
-    <string name="quick_start_dialog_need_help_button_negative">いいえ、結構です</string>
-    <string name="quick_start_dialog_follow_sites_title">別のサイトを接続</string>
-    <string name="quick_start_button_positive">移動</string>
     <string name="content_description_more">もっと見る</string>
     <string name="my_site_create_new_site_title">サイトがありません</string>
     <string name="reader_empty_subscribed_tags_subtitle">ここでタグを追加して、お気に入りのトピックに関する投稿を検索します</string>
@@ -2395,7 +2321,6 @@ Language: ja_JP
     <string name="edit_photo_screen_title">写真の編集</string>
     <string name="share_intent_screen_title">サイトの選択</string>
     <string name="signup_epilogue_screen_title">新しいアカウント</string>
-    <string name="login_epilogue_screen_title">現在のユーザーアカウント:</string>
     <string name="person_detail_screen_title">ユーザーの詳細</string>
     <string name="media_settings_screen_title">ファイルの詳細</string>
     <string name="publicize_buttons_screen_title">共有ボタン</string>
@@ -2672,8 +2597,6 @@ Language: ja_JP
     <string name="post_queued">待機中の投稿</string>
     <string name="uploading_post">「%s」をアップロード中</string>
     <string name="connection_to_server_lost">サーバーへの接続が失われました</string>
-    <string name="login_epilogue_mysites_other">自分のサイト</string>
-    <string name="login_epilogue_mysites_one">自分のサイト</string>
     <string name="login_email_client_not_found">メールクライアントアプリを検出できません</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">認証コードを入力してください</string>
     <string name="login_empty_username" a8c-src-lib="module:login">ユーザー名を入力してください</string>
@@ -2824,7 +2747,6 @@ Language: ja_JP
     <string name="start_over_email_subject">サイト %s をもう一度始める</string>
     <string name="site_picker_remove_site_error">サイトの削除中にエラーが発生しました。後でもう一度やり直してください</string>
     <string name="editor_post_saved_locally_failed_media">投稿はメディアアップロードに失敗し、ローカルに保存されました</string>
-    <string name="sure_to_remove_account">アプリからこのサイトを削除しますか ?</string>
     <string name="photo_picker_title">写真を選択</string>
     <string name="error_publish_no_network">端末がオフラインです。変更をローカルで保存しました。</string>
     <string name="editor_post_saved_online">投稿をオンラインで保存しました</string>
@@ -2946,8 +2868,6 @@ Language: ja_JP
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">現在ご利用いただけません。パスワードを入力してください</string>
     <string name="logging_in">ログインしています</string>
     <string name="web_address_dialog_hint">コメントする際に公開表示されます。</string>
-    <string name="plans">プラン</string>
-    <string name="plan">プラン</string>
     <string name="export_your_content_message">投稿、ページ、設定については、%s 宛てにメールで送信されます。</string>
     <string name="export_your_content">コンテンツをエクスポート</string>
     <string name="export_email_sent">エクスポートメールを送信しました。</string>

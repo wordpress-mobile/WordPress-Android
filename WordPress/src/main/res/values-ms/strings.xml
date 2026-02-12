@@ -110,8 +110,6 @@ Language: ms
     <string name="button_retry">Cuba Semula</string>
     <string name="connection_to_server_lost">Sambungan ke pelayan telah hilang</string>
     <string name="uploading_post">Memuat naik \"%s\"</string>
-    <string name="login_epilogue_mysites_one">Laman saya</string>
-    <string name="login_epilogue_mysites_other">Laman-laman saya</string>
     <string name="login_email_client_not_found">Tidak dapat mengesan aplikasi klien emel anda</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Sila masukkan kod pengesahan</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Sila masukkan nama pengguna</string>
@@ -256,7 +254,6 @@ Language: ms
     <string name="start_over_email_subject">Mula semula dengan laman %s</string>
     <string name="site_picker_remove_site_error">Ralat membuang laman, cuba lagi nanti</string>
     <string name="editor_post_saved_locally_failed_media">Kiriman mempunyai muat naik media yang telah gagal dan telah disimpan secara setempat</string>
-    <string name="sure_to_remove_account">Buang laman ini dari aplikasi?</string>
     <string name="photo_picker_title">Pilih gambar</string>
     <string name="editor_post_saved_online">Kiriman disimpan atas talian</string>
     <string name="site_settings_image_quality_hint">Kualiti gambar. Nilai lebih tinggi bermakna kualiti gambar yang lebih baik.</string>
@@ -365,8 +362,6 @@ Language: ms
     <string name="logging_in">Melog masuk</string>
     <string name="web_address_dialog_hint">Tunjukkan kepada umum apabila anda mengulas.</string>
     <string name="export_your_content_message">Kiriman, halaman, dan tetapan anda akan diemel kepada anda di %s.</string>
-    <string name="plan">Pelan</string>
-    <string name="plans">Pelan</string>
     <string name="export_your_content">Eksport kandungan anda</string>
     <string name="export_email_sent">Emel eksport dihantar!</string>
     <string name="exporting_content_progress">Mengeksport kandungan…</string>

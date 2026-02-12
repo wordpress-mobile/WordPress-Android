@@ -52,7 +52,6 @@ Language: lv
     <string name="more_content_description_recent_activity">Jaunākās aktivitātes un vairāk</string>
     <string name="more_content_description_pages">Vairāk lappušu</string>
     <string name="more_content_description_posts">Vairāk ierakstu</string>
-    <string name="more_content_description_quick_start">Ātrā sākšana vairāk</string>
     <string name="more_content_description_today_stats">Šodienas statistika vairāk</string>
     <string name="more_content_description_blogging_prompts">Uzvedina vairāk</string>
     <string name="more_content_description_promote_blaze">Uzliesmojieties vairāk</string>
@@ -205,7 +204,6 @@ Language: lv
     <string name="site_monitoring_tab_title_php_logs">PHP žurnāli</string>
     <string name="site_monitoring_tab_title_metrics">Metrika</string>
     <string name="site_monitoring">Vietnes uzraudzība</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Izmantojiet &lt;b&gt;Discover&lt;/b&gt;, lai atrastu vietnes un birkas. Mēģiniet atlasīt &lt;b&gt;Abonementi&lt;/b&gt;, lai skatītu abonēto saturu un pārvaldītu savus abonementus.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Dodieties uz abonementiem</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Jūsu abonētajos emuāros nav jaunu publikāciju.</string>
     <string name="reader_no_followed_blogs_description_subs">Abonējiet emuārus pakalpojumā Discover vai meklējiet emuāru, kas jums jau patīk.</string>
@@ -633,9 +631,6 @@ Language: lv
     <string name="wp_jetpack_deep_link_overlay_description">Izskatās, ka jums ir instalēta Jetpack lietotne.\n\nVai vēlaties nākotnē atvērt saites Jetpack lietotnē?\n\nTo vienmēr varat mainīt sadaļā Lietotnes iestatījumi &gt; Atvērt saites Jetpack.</string>
     <string name="wp_jetpack_deep_link_overlay_title">Vai atvērt saites pakalpojumā Jetpack?</string>
     <string name="wp_jetpack_continue_without_jetpack">Turpiniet bez Jetpack</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack nodrošina statistiku, paziņojumus un daudz ko citu, lai palīdzētu jums izveidot un attīstīt savu sapņu WordPress vietni.\n\nWordPress lietotne vairs neatbalsta jaunas vietnes izveidi.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack nodrošina statistiku, paziņojumus un citu informāciju, lai palīdzētu jums izveidot un attīstīt savu sapņu WordPress vietni.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Izveidojiet jaunu WordPress vietni, izmantojot lietotni Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">tīmekļa saites</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Pārslēdzieties uz Jetpack lietotni, lai turpinātu saņemt reāllaika paziņojumus savā ierīcē.</string>
@@ -745,24 +740,11 @@ Language: lv
     <string name="stats_action_card_blogging_reminders_title">Iestatīt atgādinājumus par emuāru rakstīšanu</string>
     <string name="stats_action_card_grow_audience_button_label">Pārbaudiet vēsturi</string>
     <string name="stats_action_card_grow_audience_title">Palieliniet savu auditoriju</string>
-    <string name="quick_start_sites_type_all_tasks_completed">Visi uzdevumi izpildīti</string>
-    <string name="quick_start_list_task_complete">Uzdevums pabeigts</string>
     <string name="me_btn_scan_login_code">Skenējiet pieteikšanās kodu</string>
     <string name="stats_insights_likes_guide_card">⭐️ Jūsu jaunākā ziņa %1$s ir saņēmusi %2$s atzīmes Patīk.</string>
     <string name="stats_most_popular_percent_views_empty">Nepietiekama aktivitāte. Atgriezieties vēlāk, kad jūsu vietni būs apmeklējuši vairāk apmeklētāju!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s%% no kopējā sekotāju skaita</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">Apsveicu! Jūs zināt, kā rīkoties&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">Iepazīstieties ar lietotni</string>
-    <string name="quick_start_list_upload_media_subtitle">Pārnesiet multividi tieši no savas ierīces vai kameras uz savu vietni</string>
-    <string name="quick_start_list_upload_media_title">Augšupielādējiet fotoattēlus vai videoklipus</string>
-    <string name="quick_start_list_check_notification_subtitle">Saņemiet reāllaika atjauninājumus no savas kabatas</string>
-    <string name="quick_start_dialog_upload_media_message">Atlasiet %1$s Media %2$s, lai skatītu savu pašreizējo bibliotēku.</string>
-    <string name="quick_start_dialog_check_notifications_message">Saņemiet reāllaika atjauninājumus no savas kabatas.</string>
-    <string name="quick_start_dialog_check_notifications_title">Pārbaudiet savus paziņojumus</string>
-    <string name="quick_start_dialog_check_notifications_message_short">Atlasiet cilni %1$s Paziņojumi %2$s, lai saņemtu atjauninājumus, atrodoties ceļā.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Lai augšupielādētu multividi, atlasiet %1$s plus %2$s. Varat to pievienot savām ziņām/lapām no jebkuras ierīces.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Izmantojiet &lt;b&gt; Atklāt &lt;/b&gt;, lai atrastu vietnes un birkas.</string>
     <string name="photo_picker_video_thumbnail_content_description">Video sīktēls</string>
     <string name="stats_details_top_commentators">Labākie komentētāji</string>
     <string name="stats_published_years_ago">Publicēts pirms %1$d gadiem</string>
@@ -782,8 +764,6 @@ Language: lv
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Atbilde</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Ikdienas uzvedne</string>
     <string name="blogging_prompts_onboarding_got_it">Sapratu</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Pieskarieties &lt;b&gt;%1$s&lt;/b&gt;, lai skatītu savu vietni</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Izmsantojiet %1$s Lasītāju %2$s, lai atrastu citas vietnes.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Uzziniet vairāk par uzvednēm</string>
     <string name="photo_picker_video_thumbnail_unselected">Videoklipa atlase ir atcelta</string>
     <string name="photo_picker_video_thumbnail_selected">Videoklips atlasīts</string>
@@ -871,7 +851,6 @@ Language: lv
     <string name="site_creation_intent_art">Art</string>
     <string name="new_site_creation_intents_input_hint">Piem. Mode, dzeja, politika</string>
     <string name="new_site_creation_intents_title">Vietnes tēma</string>
-    <string name="quick_start_site_menu_tab_message_short">Lai turpinātu, pieskarieties vienumam &lt;b&gt;%1$s&lt;/b&gt;.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Izlaist šodien</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Skatīt vairāk uzvedņu</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Kopīgojiet emuāru rakstīšanas uzvedni</string>
@@ -958,7 +937,6 @@ Language: lv
     <string name="comment_edit_user_name">Vārds</string>
     <string name="comment_edit_menu_done">Gatavs</string>
     <string name="weekly_roundup">Iknedēļas apkopojums</string>
-    <string name="quick_start_list_create_site_message">Vietne izveidota! Pabeidziet citu uzdevumu.</string>
     <string name="domains_free_plan_get_your_domain_title">Iegūstiet savu domēnu</string>
     <string name="recommend_app_generic_get_template_error">Nezināma kļūda, ienesot ieteicamās lietotnes veidni</string>
     <string name="recommend_app_bad_format_response">Saņemta nederīga atbilde</string>
@@ -970,8 +948,6 @@ Language: lv
     <string name="blogging_reminders_notification_time">Paziņojuma laiks</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Jūs saņemsiet atgādinājumus par emuāra rakstīšanu &lt;b&gt;katru dienu&lt;/b&gt; vietnē &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s nedēļa %2$s</string>
-    <string name="quick_start_sites_type_tasks_completed">Pabeigti %1$s no %2$s</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Apgūstiet pamatus, izmantojot ātru apskatu.</string>
     <string name="comment_batch_moderation_error">Neizdevās moderēt vienu vai vairākus komentārus</string>
     <string name="create_site_notification_create_site_action">Izveidot vietni</string>
     <string name="create_site_notification_text">Veiciet tikai dažas ātras darbības, lai jūsu vietne darbotos</string>
@@ -980,12 +956,6 @@ Language: lv
     <string name="stats_disabled_enable_stats_button">Iespējot vietnes statistiku</string>
     <string name="stats_disabled_subtitle">Iespējojiet vietnes statistiku, lai redzētu detalizētu informāciju par datplūsmu, Patīk, komentāriem un abonentiem.</string>
     <string name="stats_disabled_title">Vai meklējat statistiku?</string>
-    <string name="quick_start_list_upload_icon_subtitle">Tiek rādīts apmeklētāju pārlūkprogrammu cilnē un citās tiešsaistes vietās.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Parādiet man apkārtni</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">Vai vēlaties saņemt palīdzību šīs vietnes pārvaldībā ar lietotni?</string>
-    <string name="login_epilogue_create_new_site_button">Izveidojiet jaunu vietni</string>
-    <string name="login_epilogue_mysites_subheading">Vietnes var mainīt jebkurā laikā.</string>
-    <string name="login_epilogue_mysites_heading">Izvēlieties vietni, kuru atvērt</string>
     <string name="scan_multisite_not_supported_subtitle">Atvainojiet, Jetpack Scan pašlaik nav saderīgs ar vairāku vietņu WordPress instalācijām.</string>
     <string name="scan_multisite_not_supported_title">WordPress vairākas vietnes netiek atbalstītas</string>
     <string name="activity_log_visit_our_documentation_page">apmeklējiet mūsu dokumentācijas lapu</string>
@@ -1079,13 +1049,6 @@ Language: lv
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Skenēšana pabeigta&lt;/b&gt; &lt;br&gt; Draudi nav atrasti</string>
     <string name="scan_fixing_threats_title_singular">Draudu novēršana</string>
     <string name="disable">Atspējot</string>
-    <string name="quick_start_list_review_pages_subtitle">Pārbaudiet savas lapas un veiciet izmaiņas, vai pievienojiet vai noņemiet lapas.</string>
-    <string name="quick_start_list_view_site_title">Apmeklējiet savu vietni</string>
-    <string name="quick_start_list_follow_site_subtitle">Atklājiet un sekojiet vietnēm, kas jūs iedvesmo.</string>
-    <string name="quick_start_list_enable_sharing_title">Sociālā kopīgošana</string>
-    <string name="quick_start_list_enable_sharing_subtitle">Automātiski kopīgojiet jaunas ziņas savos sociālajos medijos.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Piešķiriet savai vietnei nosaukumu, kas atspoguļo tās personību un tēmu.</string>
-    <string name="quick_start_list_check_stats_title">Pārbaudiet vietnes statistiku</string>
     <string name="backup_download_status_failure_bullet2">Mēs joprojām mēģināsim izveidot lejupielādējamu dublējuma failu.</string>
     <string name="backup_download_status_failure_bullet1">Mums neizdevās atrast statusu, kas norādītu, cik ilgs būs lejupielādējamās dublējumkopijas izveides laiks.</string>
     <string name="backup_download_status_failure_heading">Hmm, mēs nevarējām atrast jūsu lejupielādējamā dublējuma statusu</string>
@@ -1158,9 +1121,6 @@ Language: lv
     <string name="backup_download_complete_failed_title">Neizdevās lejupielādēt</string>
     <string name="web_preview_tablet">Planšetdators</string>
     <string name="web_preview_mobile">Mobilais</string>
-    <string name="quick_start_dialog_review_pages_message_short">Atlasiet %1$s Pages %2$s, lai redzētu savu lapu sarakstu.</string>
-    <string name="quick_start_dialog_review_pages_message">Mainiet, pievienojiet vai noņemiet savas vietnes lapas.</string>
-    <string name="quick_start_dialog_review_pages_title">Pārskatiet vietnes lapas</string>
     <string name="reader_menu_mark_as_unseen">Atzīmēt kā neredzētu</string>
     <string name="reader_menu_mark_as_seen">Atzīmēt kā redzētu</string>
     <string name="error_media_upload_failed_for_reason">Multivides augšupielāde neizdevās. \n%1$s</string>
@@ -1379,7 +1339,6 @@ Language: lv
     <string name="mlp_create_blank_page">Izveidojiet tukšu lapu</string>
     <string name="mlp_choose_layout_subtitle">Sāciet, izvēloties no dažādiem iepriekš sagatavotiem lapu izkārtojumiem. Vai vienkārši sāciet ar tukšu lapu.</string>
     <string name="mlp_choose_layout_title">Izvēlieties izkārtojumu</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Piesitiet %1$s Izveidojiet. %2$s Pēc tam atlasiet &lt;b&gt;Emuāra ziņa&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Izvēlieties no ierīces</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Lai rediģētu vietņu ikonas pašnodrošinātās WordPress vietnēs, ir nepieciešams Jetpack spraudnis.</string>
     <string name="reader_toast_err_page_jump_not_found">Nevar atrast saistīto lapas lēcienu</string>
@@ -1407,8 +1366,6 @@ Language: lv
     <string name="send_link_by_email" a8c-src-lib="module:login">Nosūtīt saiti e-pastā</string>
     <string name="reset_your_password" a8c-src-lib="module:login">Atiestatiet paroli</string>
     <string name="reader_error_request_failed_title">Apstrādājot pieprasījumu, radās problēma. Lūdzu, pamēģiniet vēlreiz vēlāk.</string>
-    <string name="quick_start_list_update_site_title_title">Pārbaudiet savas vietnes nosaukumu</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Pieskarieties &lt;b&gt;%1$s&lt;/b&gt;, lai rakstītu jaunu nosaukumu</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Izmetot šo ziņu, tiks atceltas arī vietējās izmaiņas. Vai tiešām vēlaties turpināt?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Vietnes nosaukumu var mainīt tikai lietotājs ar administratora pilnvarām.</string>
     <string name="my_site_title_changer_dialog_hint">Vietnes nosaukums tiek parādīts tīmekļa pārlūkprogrammas virsraksta joslā, un lielākajai daļai motīvu tas tiek parādīts galvenē.</string>
@@ -1860,29 +1817,12 @@ Language: lv
     <string name="stats_more_posts">Vairāk ziņu</string>
     <string name="stats_fewer_posts">Mazāk ziņu</string>
     <string name="new_site_creation_preview_back_pressed_warning">Jūs varat zaudēt sasniegto. Vai esat pārliecināts, ka vēlaties iziet?</string>
-    <string name="plans_loading_error_with_cache_button">Jebkurā gadījumā skatiet plānus</string>
-    <string name="plans_loading_error_with_cache_subtitle">Lai skatītu plānus, ir nepieciešams interneta savienojums, tāpēc informācija var būt novecojusi.</string>
-    <string name="plans_loading_error_no_cache_subtitle">Lai skatītu plānus, ir nepieciešams interneta savienojums.</string>
-    <string name="plans_loading_error_no_plans_subtitle">Pašlaik nevaram ielādēt plānus. Lūdzu, pamēģiniet vēlreiz vēlāk.</string>
-    <string name="plans_loading_error_no_plans_title">Nevar ielādēt plānus</string>
-    <string name="plans_loading_error_network_title">Nav savienojuma</string>
     <string name="menu_switch_to_gutenberg_editor">Pārslēdzieties uz bloku redaktoru</string>
     <string name="stats_loading_block_error">Ielādējot datus, radās problēma. Atsvaidziniet lapu, lai mēģinātu vēlreiz.</string>
     <string name="stats_loading_error">Dati nav ielādēti</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Rediģējiet jaunas ziņas un lapas, izmantojot bloku redaktoru</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Izmantojiet bloku redaktoru</string>
     <string name="exit">izeja</string>
-    <string name="quick_start_sites_type_grow">Palieliniet savu auditoriju</string>
-    <string name="quick_start_sites_type_customize">Pielāgojiet savu vietni</string>
-    <string name="quick_start_sites">Nākamie soļi</string>
-    <string name="quick_start_dialog_upload_icon_title">Izvēlieties unikālu vietnes ikonu</string>
-    <string name="quick_start_dialog_upload_icon_message">Apmeklētāji savā pārlūkprogrammā redzēs jūsu ikonu. Pievienojiet pielāgotu ikonu, lai iegūtu izsmalcinātu, profesionālu izskatu.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Pieskarieties %1$s Statistika %2$s, lai redzētu, kā darbojas jūsu vietne.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Piesitiet %1$s Jūsu vietnes ikonai %2$s, lai augšupielādētu jaunu ikonu.</string>
-    <string name="quick_start_dialog_publish_post_message">Sagatavojiet un publicējiet savu pirmo ziņu.</string>
-    <string name="quick_start_dialog_check_stats_title">Pārbaudiet savas vietnes statistiku</string>
-    <string name="quick_start_dialog_check_stats_message">Sekojiet līdzi savas vietnes veiktspējai.</string>
-    <string name="quick_start_task_skip_menu_title">Izlaist uzdevumu</string>
     <string name="notification_channel_reminder_title">Atgādinājums</string>
     <string name="stats_select_next_period_description">Izvēlieties nākamo periodu</string>
     <string name="stats_select_previous_period_description">Izvēlieties iepriekšējo periodu</string>
@@ -2034,20 +1974,6 @@ Language: lv
     <string name="page_delete_error">Dzēšot lapu, radās problēma</string>
     <string name="set_parent">Iestatīt pamatu</string>
     <string name="dismiss">Nerādīt</string>
-    <string name="quick_start_focus_point_description">pieskarieties šeit</string>
-    <string name="quick_start_list_create_site_title">Izveidojiet savu vietni</string>
-    <string name="quick_start_list_create_site_subtitle">Sagatavojiet savu vietni.</string>
-    <string name="quick_start_completed_tour_subtitle">Vai nav patīkami svītrot lietas no saraksta?</string>
-    <string name="quick_start_dialog_view_site_title">Skatiet savu vietni</string>
-    <string name="quick_start_dialog_view_site_message">Priekšskatiet savu vietni, lai redzētu to, ko redzēs jūsu apmeklētāji.</string>
-    <string name="quick_start_dialog_share_site_title">Kopīgojiet savu vietni</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Pieskarieties %1$s Sociālais %2$s, lai turpinātu</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Pieskarieties %1$s Savienojumi %2$s, lai pievienotu savus sociālo mediju kontus</string>
-    <string name="quick_start_dialog_share_site_message">Pievienojieties saviem sociālo mediju kontiem - jūsu vietne automātiski kopīgos jaunas ziņas.</string>
-    <string name="quick_start_dialog_publish_post_title">Publicēt ziņu</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nē paldies</string>
-    <string name="quick_start_dialog_follow_sites_title">Savienot ar citām vietnēm</string>
-    <string name="quick_start_button_positive">Iet</string>
     <string name="content_description_more">Vairāk</string>
     <string name="my_site_create_new_site_title">Jums nav nevienas vietnes</string>
     <string name="reader_empty_subscribed_tags_subtitle">Pievienojiet birkas, lai atrastu ziņas par iecienītākajām tēmām</string>
@@ -2239,7 +2165,6 @@ Language: lv
     <string name="edit_photo_screen_title">Rediģēt fotoattēlu</string>
     <string name="share_intent_screen_title">Izvēlieties vietni</string>
     <string name="signup_epilogue_screen_title">Jauns konts</string>
-    <string name="login_epilogue_screen_title">Pieteicies kā</string>
     <string name="person_detail_screen_title">Personas informācija</string>
     <string name="media_settings_screen_title">Informācija par failu</string>
     <string name="publicize_buttons_screen_title">Koplietošanas pogas</string>
@@ -2516,8 +2441,6 @@ Language: lv
     <string name="post_queued">Rindā esoša ziņa</string>
     <string name="uploading_post">Notiek faila “%s” augšupielāde</string>
     <string name="connection_to_server_lost">Savienojums ar serveri tika zaudēts</string>
-    <string name="login_epilogue_mysites_other">Manas vietnes</string>
-    <string name="login_epilogue_mysites_one">Mana vietne</string>
     <string name="login_email_client_not_found">Nevar noteikt jūsu e-pasta klienta lietotni</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Lūdzu, ievadiet verifikācijas kodu</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Lūdzu, ievadiet lietotājvārdu</string>
@@ -2668,7 +2591,6 @@ Language: lv
     <string name="start_over_email_subject">Sākt no jauna vietnē %s</string>
     <string name="site_picker_remove_site_error">Noņemot vietni, radās kļūda. Mēģiniet vēlreiz vēlāk</string>
     <string name="editor_post_saved_locally_failed_media">Ziņu neizdevās augšupielādēt multivides failā, un tā tika saglabāta lokāli</string>
-    <string name="sure_to_remove_account">Vai noņemt šo vietni no lietotnes?</string>
     <string name="photo_picker_title">Izvēlieties fotoattēlu</string>
     <string name="error_publish_no_network">Ierīce ir bezsaistē. Ziņa saglabāta lokāli.</string>
     <string name="editor_post_saved_online">Ziņa saglabāta tiešsaistē</string>
@@ -2791,8 +2713,6 @@ Language: lv
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Pašlaik nav pieejams. Lūdzu ievadiet savu paroli</string>
     <string name="logging_in">Pieteikties</string>
     <string name="web_address_dialog_hint">Tiek parādīts publiski, kad komentējat.</string>
-    <string name="plans">Plāni</string>
-    <string name="plan">Plāns</string>
     <string name="export_your_content_message">Jūsu ziņas, lapas un iestatījumi tiks nosūtīti jums pa e-pastu uz adresi %s.</string>
     <string name="export_your_content">Eksportējiet savu saturu</string>
     <string name="export_email_sent">Eksportētais e-pasts nosūtīts!</string>

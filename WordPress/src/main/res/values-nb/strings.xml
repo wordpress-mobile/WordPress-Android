@@ -6,18 +6,12 @@ Generator: GlotPress/4.0.3
 Language: nb_NO
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="quick_start_sites_type_all_tasks_completed">Alle oppgaver fullført</string>
-    <string name="quick_start_list_task_complete">Oppgave fullført</string>
     <string name="me_btn_scan_login_code">Skann innloggingskode</string>
     <string name="stats_insights_likes_guide_card">⭐️ Ditt siste innlegg %1$s har fått %2$s likerklikk.</string>
     <string name="stats_most_popular_percent_views_empty">Ikke nok aktivitet. Kom tilbake senere når ditt nettsted har hatt flere besøkende!</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s%% av følgere totalt</string>
-    <string name="quick_start_sites_type_get_to_know_app">Bli kjent med appen</string>
-    <string name="quick_start_list_upload_media_title">Last opp fotografier eller videoer</string>
-    <string name="quick_start_dialog_check_notifications_title">Sjekk dine varsler</string>
     <string name="stats_details_top_commentators">Toppkommentatorer</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Bruk &lt;b&gt; Oppdag &lt;/b&gt; for å finne nettsteder og stikkord.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatyrbilde for video</string>
     <string name="stats_published_years_ago">Publisert for %1$d år siden</string>
     <string name="stats_published_a_year_ago">Publisert for et år siden</string>
@@ -35,8 +29,6 @@ Language: nb_NO
     <string name="blogging_prompts_notification_dismiss">Avvis</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Svar</string>
     <string name="blogging_prompts_onboarding_got_it">Oppfattet</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Trykk &lt;b&gt;%1$s&lt;/b&gt; for å se nettstedet ditt</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Velg %1$s Leser %2$s for å finne andre nettsteder.</string>
     <string name="stats_insights_popular_title">🔥 Mest populære tidspunkt</string>
     <string name="photo_picker_media_thumbnail_content_description">Media-miniatyrbilde</string>
     <string name="photo_picker_video_thumbnail_selected">Video valgt</string>
@@ -102,7 +94,6 @@ Language: nb_NO
     <string name="site_creation_intent_art">Kunst</string>
     <string name="new_site_creation_intents_input_hint">F.eks mote, poesi, politikk</string>
     <string name="new_site_creation_intents_title">Nettstedsemne</string>
-    <string name="quick_start_site_menu_tab_message_short">Trykk &lt;b&gt;%1$s&lt;/b&gt; for å fortsette</string>
     <string name="my_site_all_tab_title">Alle</string>
     <string name="new_site_creation_intents_header_title">Hva handler ditt nettsted om?</string>
     <string name="my_site_dashboard_tab_title">Hjem</string>
@@ -129,8 +120,6 @@ Language: nb_NO
     <string name="create_site_notification_title">Opprett ditt WordPress-nettsted</string>
     <string name="stats_disabled_enable_stats_error_message">Kunne ikke aktivere nettstedstatistikk</string>
     <string name="stats_disabled_enable_stats_button">Slå på nettstedstatistikk</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Vis meg rundt</string>
-    <string name="login_epilogue_create_new_site_button">Lag et nytt nettsted</string>
     <string name="blogging_reminders_tip">Tips</string>
     <string name="blogging_reminders_update">Oppdater</string>
     <string name="blogging_reminders_n_a_week">%s i uka</string>
@@ -160,8 +149,6 @@ Language: nb_NO
     <string name="threats_found_plural">Trusler funnet</string>
     <string name="disable">Slå av</string>
     <string name="scan_fixing_threats_title_singular">Fjerner trusel</string>
-    <string name="quick_start_list_enable_sharing_title">Sosial deling</string>
-    <string name="quick_start_list_view_site_title">Se nettstedet ditt</string>
     <string name="restore_status_bullet_clock_icon_content_desc">Klokke-ikon</string>
     <string name="restore_warning_action_button">Bekreft</string>
     <string name="backup_item_sqls_hint">(SQL)</string>
@@ -274,7 +261,6 @@ Language: nb_NO
     <string name="mlp_choose_layout_title">Velg et oppsett</string>
     <string name="mlp_create_page">Lag side</string>
     <string name="mlp_create_blank_page">Lag tom side</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Trykk %1$s Lag. %2$s Velg så &lt;b&gt;blogginnlegg&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Velg fra enheten</string>
     <string name="pick_file">Legg til fil</string>
     <string name="signup_confirmation_title" a8c-src-lib="module:login">Registreringsbekreftelse</string>
@@ -293,8 +279,6 @@ Language: nb_NO
     <string name="create_account" a8c-src-lib="module:login">Opprett konto</string>
     <string name="send_link_by_email" a8c-src-lib="module:login">Send lenke med e-post</string>
     <string name="reset_your_password" a8c-src-lib="module:login">Tilbakestill ditt passord</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Trykk &lt;b&gt;%1$s&lt;/b&gt; for å angi en ny tittel</string>
-    <string name="quick_start_list_update_site_title_title">Sjekk din nettstedstittel</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Å kaste dette innlegget vil også forkaste lokale endringer. Er du sikker på at du vil fortsette?</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ulagrede endringer</string>
     <string name="everyone">Alle</string>
@@ -702,29 +686,12 @@ Language: nb_NO
     <string name="editor_post_converted_back_to_draft">Innlegg konvertert tilbake til kladd</string>
     <string name="stats_site_not_loaded_yet">Nettstedet er ikke lastet inn ennå</string>
     <string name="new_site_creation_preview_back_pressed_warning">Din kan miste din fremdrift. Er du sikker på at du vil gå ut?</string>
-    <string name="plans_loading_error_with_cache_button">Se pakker likevel</string>
-    <string name="plans_loading_error_with_cache_subtitle">En Internet-forbindelse er nødvendig for å vise pakker, så detaljer kan være utdatert.</string>
-    <string name="plans_loading_error_no_cache_subtitle">En Internett-forbindelse er nødvendig for å vise abonnementspakker.</string>
-    <string name="plans_loading_error_no_plans_subtitle">Vi kan ikke laste inn pakker for øyeblikket. Vennligst prøv igjen senere.</string>
-    <string name="plans_loading_error_network_title">Ingen forbindelse</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Bruk blokkredigering</string>
-    <string name="plans_loading_error_no_plans_title">Kan ikke laste pakker</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Rediger nye innlegg og sider med blokkredigering</string>
     <string name="stats_loading_error">Data ikke lastet inn</string>
     <string name="stats_loading_block_error">Det oppsto et problem med lasting av dine data, oppfrisk siden og forsøk igjen.</string>
     <string name="menu_switch_to_gutenberg_editor">Bytt til blokkredigering</string>
     <string name="exit">gå ut</string>
-    <string name="quick_start_sites_type_grow">Gjør ditt publikum større</string>
-    <string name="quick_start_sites_type_customize">Tilpass ditt nettsted</string>
-    <string name="quick_start_sites">Neste trinn</string>
-    <string name="quick_start_dialog_upload_icon_message">Dine besøkende vil se ditt ikon i nettleseren. Legg til et tilpasset ikon for et polert og proft utseende.</string>
-    <string name="quick_start_dialog_upload_icon_title">Velg et unikt nettstedsikon</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Trykk %1$s Ditt nettstedsikon %2$s for å laste opp et nytt</string>
-    <string name="quick_start_dialog_publish_post_message">Kladd og publiser et innlegg.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Velg %1$s Statistkk %2$s for å se hvordan nettstedet ditt gjør det.</string>
-    <string name="quick_start_dialog_check_stats_title">Sjekk din besøksstatistikk</string>
-    <string name="quick_start_dialog_check_stats_message">Hold deg oppdatert om ytelsen til ditt nettsted.</string>
-    <string name="quick_start_task_skip_menu_title">Hopp over oppgave</string>
     <string name="notification_channel_reminder_title">Påminnelse</string>
     <string name="stats_select_next_period_description">Velg neste periode</string>
     <string name="stats_select_previous_period_description">Velg forrige periode</string>
@@ -871,19 +838,6 @@ Language: nb_NO
     <string name="page_delete_error">Det oppsto et problem med sletting av siden</string>
     <string name="page_parent_change_error">Det oppsto et problem med å endre sidens forelder</string>
     <string name="page_status_change_error">Det oppsto et problem med å å endre sidens status</string>
-    <string name="quick_start_focus_point_description">trykk her</string>
-    <string name="quick_start_list_create_site_subtitle">Få ditt nettsted opp og kjøre.</string>
-    <string name="quick_start_list_create_site_title">Opprett ditt nettsted</string>
-    <string name="quick_start_completed_tour_subtitle">Gjør det ikke godt å krysse ut ting fra en liste?</string>
-    <string name="quick_start_dialog_share_site_title">Del ditt netsted</string>
-    <string name="quick_start_dialog_view_site_title">Vis ditt nettsted</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Trykk %1$stilkoblinger%2$s for å legge til konti i sosiale medier</string>
-    <string name="quick_start_dialog_share_site_message">Koble til dine konti i sosiale medier - ditt nettsted vil automatisk dele nye innlegg.</string>
-    <string name="quick_start_dialog_view_site_message">Forhåndsvis ditt nettsted for å se hva dine besøkende vi se.</string>
-    <string name="quick_start_dialog_publish_post_title">Publiser et innlegg</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nei, takk</string>
-    <string name="quick_start_dialog_follow_sites_title">Følg andre nettsteder</string>
-    <string name="quick_start_button_positive">Gå</string>
     <string name="my_site_create_new_site_title">Du har ingen nettsteder</string>
     <string name="content_description_more">Mer</string>
     <string name="jetpack">Jetpack</string>
@@ -1060,7 +1014,6 @@ Language: nb_NO
     <string name="comment_unapproved_talkback">Kommentar satt ikke godkjent</string>
     <string name="notif_detail_screen_title">Varslingsdetalj %s</string>
     <string name="site_settings_quota_space_hint">Om du trenger mer plass, vurder å oppgradere din WordPress-pakke.</string>
-    <string name="login_epilogue_screen_title">Logget inn som</string>
     <string name="reader_screen_title">Leser</string>
     <string name="me_section_screen_title">Meg</string>
     <string name="my_site_section_screen_title">Mitt nettsted</string>
@@ -1324,8 +1277,6 @@ Language: nb_NO
     <string name="post_queued">Køoppstilt innlegg</string>
     <string name="connection_to_server_lost">Tilkoblingen til tjeneren forsvant</string>
     <string name="uploading_post">Laster opp «%s»</string>
-    <string name="login_epilogue_mysites_other">Nettstedene mine</string>
-    <string name="login_epilogue_mysites_one">Nettstedet mitt</string>
     <string name="login_email_client_not_found">Klarte ikke å oppdage E-postklientappen din</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Vennligst skriv inn en verifiseringskode</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Vennligst skriv inn et brukernavn</string>
@@ -1473,7 +1424,6 @@ Language: nb_NO
     <string name="start_over_email_subject">Start på nytt med nettstedet %s</string>
     <string name="site_picker_remove_site_error">Feil under fjerning av nettsted, prøv igjen senere</string>
     <string name="editor_post_saved_locally_failed_media">Innlegget klarte ikke å laste opp mediene, og har blitt lagret lokalt</string>
-    <string name="sure_to_remove_account">Vil du fjerne dette nettstedet fra appen?</string>
     <string name="photo_picker_title">Velg bilde</string>
     <string name="error_publish_no_network">Enheten er ikke på nett. Endringene er lagret lokalt.</string>
     <string name="editor_post_saved_online">Innlegget ble lagret på nettet</string>
@@ -1589,8 +1539,6 @@ Language: nb_NO
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Ikke tilgjengelig for øyeblikket. Vennligst skriv inn passordet ditt</string>
     <string name="logging_in">Logger inn</string>
     <string name="web_address_dialog_hint">Vises offentlig når du kommenterer.</string>
-    <string name="plans">Planer</string>
-    <string name="plan">Plan</string>
     <string name="export_your_content_message">Dine innlegg, sider og innstillinger vil bli sendt med E-post til deg til %s.</string>
     <string name="export_your_content">Eksporter innholdet ditt</string>
     <string name="export_email_sent">Eksporterings-E-posten ble sendt!</string>

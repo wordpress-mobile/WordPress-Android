@@ -240,7 +240,6 @@ Language: id
     <string name="more_content_description_recent_activity">Aktivitas terbaru selengkapnya</string>
     <string name="more_content_description_pages">Halaman selengkapnya</string>
     <string name="more_content_description_posts">Pos selengkapnya</string>
-    <string name="more_content_description_quick_start">Mulai cepat selengkapnya</string>
     <string name="more_content_description_today_stats">Statistik hari ini selengkapnya</string>
     <string name="more_content_description_blogging_prompts">Prompt selengkapnya</string>
     <string name="more_content_description_promote_blaze">Blaze selengkapnya</string>
@@ -393,7 +392,6 @@ Language: id
     <string name="site_monitoring_tab_title_php_logs">Log PHP</string>
     <string name="site_monitoring_tab_title_metrics">Metrik</string>
     <string name="site_monitoring">Pemantauan Situs</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Gunakan &lt;b&gt;Temukan&lt;/b&gt; untuk menemukan situs dan tag. Coba pilih &lt;b&gt;Langganan&lt;/b&gt; untuk melihat konten langganan dan mengelola langganan Anda.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Buka langganan</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blog langganan Anda belum mengeposkan apa pun akhir-akhir ini</string>
     <string name="reader_no_followed_blogs_description_subs">Langganan blog di Temukan atau cari blog yang sudah Anda sukai.</string>
@@ -821,9 +819,6 @@ Language: id
     <string name="wp_jetpack_deep_link_overlay_description">Aplikasi Jetpack sepertinya sudah terinstal.\n\nUntuk selanjutnya, apakah Anda ingin membuka tautan langsung di aplikasi Jetpack?\n\nPengaturan ini bisa diubah kapan pun lewat Pengaturan Aplikasi &gt; Buka tautan di Jetpack</string>
     <string name="wp_jetpack_deep_link_overlay_title">Buka tautan di Jetpack?</string>
     <string name="wp_jetpack_continue_without_jetpack">Lanjutkan tanpa Jetpack</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack menghadirkan fitur statistik, pemberitahuan, dan berbagai fitur lainnya untuk membantu membangun sekaligus mengembangkan situs WordPress impian Anda.\n\nAplikasi WordPress tidak dapat lagi digunakan untuk membuat situs baru.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack menghadirkan fitur statistik, pemberitahuan, dan berbagai fitur lainnya untuk membantu membangun sekaligus mengembangkan situs WordPress impian Anda.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Buat situs WordPress baru dengan aplikasi Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">tautanweb</string>
     <string name="deep_linking_urilinks_alias_label">tautanuri</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Ganti ke aplikasi Jetpack agar dapat tetap menerima  notifikasi real-time langsung di perangkat Anda.</string>
@@ -933,24 +928,11 @@ Language: id
     <string name="stats_action_card_blogging_reminders_title">Setel pengingat blogging Anda</string>
     <string name="stats_action_card_grow_audience_button_label">Periksa kursus</string>
     <string name="stats_action_card_grow_audience_title">Perbanyak audiens Anda</string>
-    <string name="quick_start_sites_type_all_tasks_completed">Semua tugas selesai</string>
-    <string name="quick_start_list_task_complete">Tugas selesai</string>
     <string name="me_btn_scan_login_code">Pindai Kode Login</string>
     <string name="stats_insights_likes_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
     <string name="stats_most_popular_percent_views_empty">Aktivitas tidak cukup. Periksa lagi nanti saat situs Anda lebih ramai pengunjung!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s%% dari total pelanggan</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">Selamat! Anda telah berhasil&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">Kenali aplikasinya</string>
-    <string name="quick_start_list_upload_media_subtitle">Masukkan media langsung dari perangkat atau kamera ke situs Anda</string>
-    <string name="quick_start_list_upload_media_title">Unggah foto atau video</string>
-    <string name="quick_start_list_check_notification_subtitle">Dapatkan pembaruan real-time dari saku Anda</string>
-    <string name="quick_start_dialog_upload_media_message">Pilih %1$s Media %2$s untuk melihat pustaka Anda saat ini.</string>
-    <string name="quick_start_dialog_check_notifications_message">Dapatkan pembaruan real-time dari saku Anda.</string>
-    <string name="quick_start_dialog_check_notifications_title">Periksa pemberitahuan Anda</string>
-    <string name="quick_start_dialog_check_notifications_message_short">Pilih %1$s tab Pemberitahuan %2$s untuk mendapatkan pembaruan di mana saja.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Pilih %1$s tambah %2$s untuk mengunggah media. Anda dapat menambahkannya ke pos/ halaman dari perangkat apa pun.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Gunakan &lt;b&gt; Jelajahi &lt;/b&gt; untuk menemukan situs dan tag.</string>
     <string name="photo_picker_video_thumbnail_content_description">Gambar Poster Video</string>
     <string name="stats_details_top_commentators">Komentator Teratas</string>
     <string name="stats_published_years_ago">Diposkan %1$d tahun yang lalu</string>
@@ -970,8 +952,6 @@ Language: id
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Jawaban</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Saran Harian</string>
     <string name="blogging_prompts_onboarding_got_it">Saya mengerti</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Ketuk &lt;b&gt;%1$s&lt;/b&gt; untuk melihat situs Anda</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Pilih %1$s Pembaca %2$s untuk menemukan situs lainnya.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Pelajari lebih lanjut tentang saran</string>
     <string name="photo_picker_video_thumbnail_unselected">Video tidak dipilih</string>
     <string name="photo_picker_video_thumbnail_selected">Video dipilih</string>
@@ -1059,7 +1039,6 @@ Language: id
     <string name="site_creation_intent_art">Seni</string>
     <string name="new_site_creation_intents_input_hint">Contohnya: Fesyen, Puisi, Politik</string>
     <string name="new_site_creation_intents_title">Topik situs</string>
-    <string name="quick_start_site_menu_tab_message_short">Ketuk untuk melanjutkan.&lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Lewati hari ini</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Lihat lebih banyak prompt</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Bagikan prompt blogging</string>
@@ -1148,7 +1127,6 @@ Language: id
     <string name="comment_edit_user_name">Nama</string>
     <string name="comment_edit_menu_done">Selesai</string>
     <string name="weekly_roundup">Ringkasan Mingguan</string>
-    <string name="quick_start_list_create_site_message">Situs telah dibuat! Selesaikan tugas lain.</string>
     <string name="domains_free_plan_get_your_domain_title">Dapatkan domain Anda</string>
     <string name="recommend_app_generic_get_template_error">Terjadi error yang tidak diketahui saat memuat templat rekomendasikan aplikasi</string>
     <string name="recommend_app_bad_format_response">Respons yang diterima tidak valid</string>
@@ -1160,8 +1138,6 @@ Language: id
     <string name="blogging_reminders_notification_time">Waktu pemberitahuan</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Anda akan mendapat pengingat blogging &lt;b&gt;setiap hari&lt;/b&gt; pada &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s seminggu pada %2$s</string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s dari %2$s selesai</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Pelajari dasar-dasarnya dengan panduan cepat.</string>
     <string name="comment_batch_moderation_error">Gagal memoderasi satu atau lebih komentar</string>
     <string name="create_site_notification_create_site_action">Buat situs</string>
     <string name="create_site_notification_text">Siapkan dan jalankan situs Anda hanya dengan beberapa langkah cepat</string>
@@ -1170,12 +1146,6 @@ Language: id
     <string name="stats_disabled_enable_stats_button">Aktifkan statistik situs</string>
     <string name="stats_disabled_subtitle">Aktifkan statistik situs untuk melihat detail informasi tentang lalu lintas kunjungan, suka, komentar, dan pelanggan Anda.</string>
     <string name="stats_disabled_title">Mencari statistik?</string>
-    <string name="quick_start_list_upload_icon_subtitle">Ditampilkan di tab peramban pengunjung Anda dan di tempat lain secara online.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Ajak aku berkeliling</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">Butuh sedikit bantuan dalam mengelola situs ini dengan aplikasi?</string>
-    <string name="login_epilogue_create_new_site_button">Buat situs baru</string>
-    <string name="login_epilogue_mysites_subheading">Anda dapat berganti situs kapan saja.</string>
-    <string name="login_epilogue_mysites_heading">Pilih situs yang ingin dibuka</string>
     <string name="scan_multisite_not_supported_subtitle">Mohon maaf, Jetpack Scan tidak kompatibel dengan penginstalan WordPress multisitus saat ini.</string>
     <string name="scan_multisite_not_supported_title">Multisitus WordPress tidak didukung</string>
     <string name="activity_log_visit_our_documentation_page">kunjungi halaman dokumentasi kami</string>
@@ -1269,13 +1239,6 @@ Language: id
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Pemindaian Selesai&lt;/b&gt; &lt;br&gt; Potensi ancaman tidak ditemukan</string>
     <string name="scan_fixing_threats_title_singular">Memperbaiki Ancaman</string>
     <string name="disable">Nonaktifkan</string>
-    <string name="quick_start_list_review_pages_subtitle">Periksa halaman dan lakukan perubahan, atau tambahkan atau hapus halaman.</string>
-    <string name="quick_start_list_view_site_title">Lihat situs Anda</string>
-    <string name="quick_start_list_follow_site_subtitle">Temukan dan ikuti situs yang menginspirasi Anda.</string>
-    <string name="quick_start_list_enable_sharing_title">Berbagi melalui media sosial</string>
-    <string name="quick_start_list_enable_sharing_subtitle">Bagikan pos baru secara otomatis ke media sosial Anda.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Berikan nama situs yang mencerminkan karakteristik dan topik situs Anda.</string>
-    <string name="quick_start_list_check_stats_title">Periksa statistik situs Anda</string>
     <string name="backup_download_status_failure_bullet2">Kami masih mencoba membuat file cadangan yang dapat diunduh.</string>
     <string name="backup_download_status_failure_bullet1">Kami tidak dapat menemukan status untuk memberitahukan kapan cadangan yang dapat diunduh ini selesai.</string>
     <string name="backup_download_status_failure_heading">Hmm, kami tidak dapat menemukan status cadangan yang dapat diunduh</string>
@@ -1348,9 +1311,6 @@ Language: id
     <string name="backup_download_complete_failed_title">Pengunduhan gagal</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Seluler</string>
-    <string name="quick_start_dialog_review_pages_message_short">Pilih %1$s Halaman %2$s untuk melihat daftar halaman Anda.</string>
-    <string name="quick_start_dialog_review_pages_message">Ubah, tambahkan, atau hapus halaman situs.</string>
-    <string name="quick_start_dialog_review_pages_title">Tinjau laman situs</string>
     <string name="reader_menu_mark_as_unseen">Tandai sebagai belum dilihat</string>
     <string name="reader_menu_mark_as_seen">Tandai sebagai telah dilihat</string>
     <string name="error_media_upload_failed_for_reason">Unggahan media gagal.\n%1$s</string>
@@ -1569,7 +1529,6 @@ Language: id
     <string name="mlp_create_blank_page">Buat halaman kosong</string>
     <string name="mlp_choose_layout_subtitle">Mulai dengan memilih satu tata letak halaman yang siap digunakan. Atau mulai dengan halaman kosong.</string>
     <string name="mlp_choose_layout_title">Pilih tata letak</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Ketuk %1$s Buat. %2$s Lalu pilih &lt;b&gt;Pos blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Pilih dari perangkat</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Penyuntingan ikon situs pada situs WordPress hosting sendiri memerlukan plugin Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">Tidak dapat menemukan lompatan halaman yang ditautkan</string>
@@ -1597,8 +1556,6 @@ Language: id
     <string name="send_link_by_email" a8c-src-lib="module:login">Kirim tautan lewat email</string>
     <string name="reset_your_password" a8c-src-lib="module:login">Reset kata sandi</string>
     <string name="reader_error_request_failed_title">Ada masalah saat menangani permintaan. Silakan coba lagi nanti.</string>
-    <string name="quick_start_list_update_site_title_title">Periksa judul situs Anda.</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Ketuk &lt;b&gt;%1$s&lt;/b&gt; untuk mengatur judul baru</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Membuang pos ini juga akan menghapus perubahan lokal, Anda yakin ingin melanjutkan?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Judul Situs hanya dapat diubah oleh pengguna yang berperan sebagai administrator.</string>
     <string name="my_site_title_changer_dialog_hint">Judul Situs ditampilkan di bilah judul perambah web dan ditampilkan pada header sebagian besar tema.</string>
@@ -2050,29 +2007,12 @@ Language: id
     <string name="stats_more_posts">Pos lebih banyak</string>
     <string name="stats_fewer_posts">Pos lebih sedikit</string>
     <string name="new_site_creation_preview_back_pressed_warning">Kemajuan proses Anda mungkin akan hilang. Anda yakin ingin keluar?</string>
-    <string name="plans_loading_error_with_cache_button">Lihat Paket</string>
-    <string name="plans_loading_error_with_cache_subtitle">Perlu sambungan internet untuk melihat Paket, beberapa detail mungkin usang.</string>
-    <string name="plans_loading_error_no_cache_subtitle">Perlu sambungan internet untuk melihat Paket.</string>
-    <string name="plans_loading_error_no_plans_subtitle">Saat ini kami tidak dapat memuat Paket. Silakan coba lagi nanti.</string>
-    <string name="plans_loading_error_no_plans_title">Tidak dapat memuat Paket</string>
-    <string name="plans_loading_error_network_title">Tidak ada koneksi</string>
     <string name="menu_switch_to_gutenberg_editor">Beralih ke penyunting blok</string>
     <string name="stats_loading_block_error">Terjadi masalah saat memuat data Anda, segarkan halaman untuk mencoba lagi.</string>
     <string name="stats_loading_error">Data tidak dimuat</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Sunting pos dan halaman baru dengan penyunting blok</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Gunakan Penyunting Blok</string>
     <string name="exit">keluar</string>
-    <string name="quick_start_sites_type_grow">Perbanyak audiens Anda</string>
-    <string name="quick_start_sites_type_customize">Sesuaikan situs Anda</string>
-    <string name="quick_start_sites">Langkah Berikutnya</string>
-    <string name="quick_start_dialog_upload_icon_title">Pilih ikon situs yang unik</string>
-    <string name="quick_start_dialog_upload_icon_message">Pengunjung Anda akan melihat ikon Anda di browser. Tambahkan ikon khusus untuk tampilan yang lebih profesional dan elegan.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Pilih %1$s Statistik %2$s untuk melihat performa situs Anda.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Ketuk %1$s Ikon Situs Anda %2$s untuk mengunggah ikon baru</string>
-    <string name="quick_start_dialog_publish_post_message">Buat konsep dan publikasikan pos.</string>
-    <string name="quick_start_dialog_check_stats_title">Periksa statistik situs Anda</string>
-    <string name="quick_start_dialog_check_stats_message">Ketahui info terbaru mengenai performa situs Anda.</string>
-    <string name="quick_start_task_skip_menu_title">Abaikan tugas</string>
     <string name="notification_channel_reminder_title">Pengingat</string>
     <string name="stats_select_next_period_description">Pilih periode selanjutnya</string>
     <string name="stats_select_previous_period_description">Pilih periode sebelumnya</string>
@@ -2224,20 +2164,6 @@ Language: id
     <string name="page_delete_error">Ada masalah saat menghapus halaman</string>
     <string name="set_parent">Atur Induk</string>
     <string name="dismiss">Tutup</string>
-    <string name="quick_start_focus_point_description">ketuk di sini</string>
-    <string name="quick_start_list_create_site_title">Buat situs Anda</string>
-    <string name="quick_start_list_create_site_subtitle">Buat situs Anda dan kelola.</string>
-    <string name="quick_start_completed_tour_subtitle">Lega rasanya saat satu pekerjaan terselesaikan!</string>
-    <string name="quick_start_dialog_view_site_title">Lihat situs Anda</string>
-    <string name="quick_start_dialog_view_site_message">Pratinjau situs Anda untuk mengetahui tampilan situs yang akan dilihat oleh pengunjung.</string>
-    <string name="quick_start_dialog_share_site_title">Bagikan situs Anda</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Ketuk %1$s Sosial %2$s untuk melanjutkan.</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Ketuk %1$s Koneksi %2$s untuk menambahkan akun media sosial Anda</string>
-    <string name="quick_start_dialog_share_site_message">Sambungkan ke akun media sosial Anda. Situs akan membagikan pos baru secara otomatis.</string>
-    <string name="quick_start_dialog_publish_post_title">Publikasikan pos</string>
-    <string name="quick_start_dialog_need_help_button_negative">Tidak, terima kasih</string>
-    <string name="quick_start_dialog_follow_sites_title">Hubungkan dengan situs lainnya</string>
-    <string name="quick_start_button_positive">Ayo</string>
     <string name="content_description_more">Lainnya</string>
     <string name="my_site_create_new_site_title">Anda belum memiliki situs</string>
     <string name="reader_empty_subscribed_tags_subtitle">Tambahkan tag di sini untuk menemukan pos tentang topik favorit Anda</string>
@@ -2430,7 +2356,6 @@ Language: id
     <string name="edit_photo_screen_title">Edit Foto</string>
     <string name="share_intent_screen_title">Pilih situs</string>
     <string name="signup_epilogue_screen_title">Akun baru</string>
-    <string name="login_epilogue_screen_title">Sudah login sebagai</string>
     <string name="person_detail_screen_title">Detail orang</string>
     <string name="media_settings_screen_title">Detail file</string>
     <string name="publicize_buttons_screen_title">Tombol berbagi</string>
@@ -2707,8 +2632,6 @@ Language: id
     <string name="post_queued">Pos yang diantrekan</string>
     <string name="uploading_post">Mengunggah \"%s\"</string>
     <string name="connection_to_server_lost">Koneksi ke server hilang</string>
-    <string name="login_epilogue_mysites_other">Situs saya</string>
-    <string name="login_epilogue_mysites_one">Situs saya</string>
     <string name="login_email_client_not_found">Tidak dapat mendeteksi aplikasi klien email Anda</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Masukkan kode verifikasi</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Masukkan nama pengguna</string>
@@ -2859,7 +2782,6 @@ Language: id
     <string name="start_over_email_subject">Mulai situs %s dari awal</string>
     <string name="site_picker_remove_site_error">Terjadi error saat menghapus situs, coba lagi nanti</string>
     <string name="editor_post_saved_locally_failed_media">Pos memiliki unggahan media yang gagal dan telah disimpan secara lokal</string>
-    <string name="sure_to_remove_account">Hapus situs ini dari aplikasi?</string>
     <string name="photo_picker_title">Pilih foto</string>
     <string name="error_publish_no_network">Perangkat offline. Pos disimpan secara lokal.</string>
     <string name="editor_post_saved_online">Pos disimpan secara online</string>
@@ -2982,8 +2904,6 @@ Language: id
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Saat ini tidak tersedia. Masukkan kata sandi Anda</string>
     <string name="logging_in">Proses masuk</string>
     <string name="web_address_dialog_hint">Ditampilkan secara publik saat Anda berkomentar.</string>
-    <string name="plans">Paket</string>
-    <string name="plan">Paket</string>
     <string name="export_your_content_message">Pos, halaman, dan pengaturan Anda akan dikirimkan melalui email kepada Anda pada %s.</string>
     <string name="export_your_content">Ekspor konten Anda</string>
     <string name="export_email_sent">Email ekspor sudah dikirimkan!</string>
