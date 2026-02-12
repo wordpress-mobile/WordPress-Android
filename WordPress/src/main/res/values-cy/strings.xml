@@ -99,8 +99,6 @@ Language: cy_GB
     <string name="logging_in">Mewngofnodi</string>
     <string name="web_address_dialog_hint">Dangos yn gyhoeddus pan fyddwch yn gwneud sylw</string>
     <string name="export_your_content_message">Bydd cofnodion, tudalennau a gosodiadau yn cael eu e-bost atoch i %s.</string>
-    <string name="plan">Cynllun</string>
-    <string name="plans">Cynlluniau</string>
     <string name="export_your_content">Allforio eich cynnwys</string>
     <string name="exporting_content_progress">Allforio cynnwys…</string>
     <string name="export_email_sent">Anfonwyd yr e-bost allforio!</string>

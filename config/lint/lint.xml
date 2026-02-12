@@ -2,7 +2,7 @@
 <lint>
     <!-- CORRECTNESS -->
     <issue id="MissingTranslation" severity="ignore" />
-    <issue id="ExtraTranslation" severity="ignore" />
+    <issue id="ExtraTranslation" severity="error" />
     <issue id="PluralsCandidate" severity="ignore" /> <!-- GlotPress doesn't support plurals -->
     <issue id="CredentialDependency" severity="ignore" /> <!-- False positive, fixed in AGP 8.6.0: https://issuetracker.google.com/issues/339841694 -->
     <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/18226 -->

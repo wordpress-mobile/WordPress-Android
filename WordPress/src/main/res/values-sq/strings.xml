@@ -244,7 +244,6 @@ Language: sq_AL
     <string name="more_content_description_recent_activity">Më tepër veprimtari së fundi</string>
     <string name="more_content_description_pages">Më tepër faqe</string>
     <string name="more_content_description_posts">Më tepër postime</string>
-    <string name="more_content_description_quick_start">Më tepër “Nisje e shpejtë”</string>
     <string name="more_content_description_today_stats">Më tepër “Statistika të sotme”</string>
     <string name="more_content_description_blogging_prompts">Më tepër hapa</string>
     <string name="reader_toast_success_undo">Blogu u zhbllokua</string>
@@ -396,7 +395,6 @@ Language: sq_AL
     <string name="site_monitoring_tab_title_php_logs">Regjistra PHP</string>
     <string name="site_monitoring_tab_title_metrics">Statistika</string>
     <string name="site_monitoring">Mbikëqyrje Sajti</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Përdorni &lt;b&gt;Zbuloni&lt;/b&gt;, që të gjeni sajte dhe etiketa. Provoni të përzgjidhni &lt;b&gt;Pajtime&lt;/b&gt;, që të shihni lëndë ku jeni pajtuar dhe të administroni pajtimet tuaja.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Kaloni te pajtime</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blogjet ku jeni pajtuar s’kanë postuar gjë tani së fundi</string>
     <string name="reader_no_followed_blogs_description_subs">Pajtohuni te blogje në Zbuloni, ose kërkoni për një blog që ju pëlqen tashmë.</string>
@@ -823,9 +821,6 @@ Language: sq_AL
     <string name="wp_jetpack_deep_link_overlay_description">Duket se keni të instaluar aplikacionin Jetpack.\n\nDoni që në të ardhmen lidhjet të hapen te aplikacioni Jetpack?\n\nMundeni përherë ta ndryshoni këtë, te Rregullime Aplikacioni &gt; Lidhjet hapi në Jetpack</string>
     <string name="wp_jetpack_deep_link_overlay_title">Të hapen lidhjet në Jetpack?</string>
     <string name="wp_jetpack_continue_without_jetpack">Vazhdo pa Jetpack-un</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack-u furnizon statistika, njoftime, etj, për t’ju ndihmuar të ngrini dhe fuqizoni sajtin tuaj WordPress që keni ëndërruar.\n\nAplikacioni WordPress nuk mbulon më krijimin e një sajti të ri.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack-u furnizon statistika, njoftime, etj, për t’ju ndihmuar të ngrini dhe fuqizoni sajtin tuaj WordPress që keni ëndërruar.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Krijoni një sajt të ri WordPress me aplikacionin Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">lidhje web</string>
     <string name="deep_linking_urilinks_alias_label">lidhje URI</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Që të vazhdoni të merrni në pajisjen tuaj njoftime të atypëratyshme, kaloni te aplikacioni Jetpack.</string>
@@ -935,24 +930,11 @@ Language: sq_AL
     <string name="stats_action_card_blogging_reminders_title">Ujdisni kujtuesit tuaj për blogim</string>
     <string name="stats_action_card_grow_audience_button_label">Hidhini një sy kursit</string>
     <string name="stats_action_card_grow_audience_title">Shtoni publikun tuaj</string>
-    <string name="quick_start_sites_type_all_tasks_completed">Krejt punët të mbaruara</string>
-    <string name="quick_start_list_task_complete">Punë e plotësuar</string>
     <string name="me_btn_scan_login_code">Skanoni Kod Hyrje</string>
     <string name="stats_insights_likes_guide_card">⭐️ Postimi juaj më i ri %1$s ka marrë %2$s pëlqime.</string>
     <string name="stats_most_popular_percent_views_empty">Pa veprimtari të mjaftueshme. Kontrolloni më vonë, kur sajti juaj të ketë më tepër vizitorë!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s%% e pajtimtarëve gjithsej</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">Përgëzime! Dini nga shkoni&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">Njihuni me aplikacionin</string>
-    <string name="quick_start_list_upload_media_subtitle">Sillni te sajti juaj media drejt e nga pajisja apo kamera juaj</string>
-    <string name="quick_start_list_upload_media_title">Ngarkoni foto ose video</string>
-    <string name="quick_start_list_check_notification_subtitle">Merrni nga xhepi përditësime të atypëratyshme</string>
-    <string name="quick_start_dialog_upload_media_message">Përzgjidhni %1$s Media %2$s që të shihni mediatekën tuaj të tanishme.</string>
-    <string name="quick_start_dialog_check_notifications_message">Merrni nga xhepi përditësime të atypëratyshme.</string>
-    <string name="quick_start_dialog_check_notifications_title">Shihni njoftimet për ju</string>
-    <string name="quick_start_dialog_check_notifications_message_short">Përzgjidhni %1$s skedë Njoftimesh %2$s që të merrni përditësime kudo që të jeni.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Përzgjidhni %1$s plus %2$s që të ngarkoni media. Mund ta shtoni te postimet/faqet tuaja prej çfarëdo pajisjeje.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Përdorni &lt;b&gt; Zbuloni &lt;/b&gt; që të gjeni sajte dhe etiketa.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniaturë Videoje</string>
     <string name="stats_details_top_commentators">Komentatorët Kryesues</string>
     <string name="stats_published_years_ago">Botuar %1$d vjet më parë</string>
@@ -972,8 +954,6 @@ Language: sq_AL
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Përgjigje</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Cytje e Përditshme</string>
     <string name="blogging_prompts_onboarding_got_it">E mora vesh</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të shihni sajtin tuaj</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Përzgjidhni %1$s Lexues %2$s që të gjeni sajte të tjerë.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Mësoni më tepër rreth cytjesh</string>
     <string name="photo_picker_video_thumbnail_unselected">Videoja u shpërzgjodh</string>
     <string name="photo_picker_video_thumbnail_selected">Videoja u përzgjodh</string>
@@ -1059,7 +1039,6 @@ Language: sq_AL
     <string name="site_creation_intent_art">Art</string>
     <string name="new_site_creation_intents_input_hint">P.sh., Modë, Poezi, Politikë</string>
     <string name="new_site_creation_intents_title">Temë sajti</string>
-    <string name="quick_start_site_menu_tab_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të vazhdohet.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Anashkaloje për sot</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Shihni më tepër cytje</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Ndani me të tjerë cytje blogimi</string>
@@ -1148,7 +1127,6 @@ Language: sq_AL
     <string name="comment_edit_user_name">Emër</string>
     <string name="comment_edit_menu_done">U bë</string>
     <string name="weekly_roundup">Përmbledhje Javore</string>
-    <string name="quick_start_list_create_site_message">Sajti u krijua! Plotësoni hap tjetër.</string>
     <string name="domains_free_plan_get_your_domain_title">Merrni përkatësinë tuaj</string>
     <string name="recommend_app_generic_get_template_error">Gabim i panjohur në prurje gjedheje aplikacioni të rekomanduar</string>
     <string name="recommend_app_bad_format_response">U mor përgjigje e pavlefshme</string>
@@ -1160,8 +1138,6 @@ Language: sq_AL
     <string name="blogging_reminders_notification_time">Kohë njoftimi</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Do të merrni kujtues për të bloguar &lt;b&gt;çdo ditë&lt;/b&gt; më &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s në javë më %2$s</string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s të plotësuar nga %2$s gjithsej</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Mësoni bazat, me një kalim të shpejtë nëpër to.</string>
     <string name="comment_batch_moderation_error">S’u arrit të moderohet një ose më shumë komente</string>
     <string name="create_site_notification_create_site_action">Krijoje sajtin</string>
     <string name="create_site_notification_text">Ndërtojeni dhe vëreni në punë sajtin tua vetëm me pak hapa të thjeshtë</string>
@@ -1170,12 +1146,6 @@ Language: sq_AL
     <string name="stats_disabled_enable_stats_button">Aktivizoni statistika sajti</string>
     <string name="stats_disabled_subtitle">Që të shihni të dhëna të hollësishme mbi trafikun tuaj, pëlqimet, komentet dhe pajtimtarët, aktivizoni statistika sajti.</string>
     <string name="stats_disabled_title">Po shihni për statistika?</string>
-    <string name="quick_start_list_upload_icon_subtitle">Shfaqur te skeda e shfletuesit të vizitorit tuaj dhe në vende të tjera në internet.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Tregomani ca</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">Doni pakëz ndihmë me administrimin e këtij sajti përmes aplikacionit?</string>
-    <string name="login_epilogue_create_new_site_button">Krijoni një sajt të ri</string>
-    <string name="login_epilogue_mysites_subheading">Mund të ndërroni sajte në çfarëdo kohe.</string>
-    <string name="login_epilogue_mysites_heading">Zgjidhni një sajt për hapje</string>
     <string name="scan_multisite_not_supported_subtitle">Na ndjeni, Jetpack Scan s’është i përputhshëm me instalime shumësajtëshe WordPress hëpërhë.</string>
     <string name="scan_multisite_not_supported_title">Instalimet shumësajtëshe WordPress nuk mbulohen</string>
     <string name="activity_log_visit_our_documentation_page">vizitoni faqen tonë të dokumentimit</string>
@@ -1269,13 +1239,6 @@ Language: sq_AL
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Kontrolli Përfundoi&lt;/b&gt; &lt;br&gt; S’u gjetën kërcënime</string>
     <string name="scan_fixing_threats_title_singular">Po zgjidhet Kërcënimi</string>
     <string name="disable">Çaktivizoje</string>
-    <string name="quick_start_list_review_pages_subtitle">Shihni faqe dhe bëni ndryshime, ose shtoni dhe hiqni faqe.</string>
-    <string name="quick_start_list_view_site_title">Shihni sajtin tuaj</string>
-    <string name="quick_start_list_follow_site_subtitle">Zbuloni dhe ndiqni sajte që ju frymëzojnë.</string>
-    <string name="quick_start_list_enable_sharing_title">Ndarje me të tjerë në shoqërorë</string>
-    <string name="quick_start_list_enable_sharing_subtitle">Ndani vetvetiu me të tjerët në rrjetet tuaja shoqërore postime të reja.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Jepini sajtit tuaj një emër që pasqyron personalitetin dhe subjektin e tij.</string>
-    <string name="quick_start_list_check_stats_title">Shihni statistikat e sajtit tuaj</string>
     <string name="backup_download_status_failure_bullet2">Do të përpiqemi të krijojmë kartelën e kopjeruajtjes tuaj të shkarkueshme.</string>
     <string name="backup_download_status_failure_bullet1">S’gjetëm dot gjendjen për të thënë se sa do të zgjasë krijimi i kopjeruajtjes tuaj të shkarkueshme.</string>
     <string name="backup_download_status_failure_heading">Hëm, s’gjetëm dot gjendjen e kopjeruajtjes tuaj të shkarkueshme</string>
@@ -1348,9 +1311,6 @@ Language: sq_AL
     <string name="backup_download_complete_failed_title">Shkarkimi dështoi</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Celular</string>
-    <string name="quick_start_dialog_review_pages_message_short">Që të shihni listën e faqeve tuaja, përzgjidhni %1$s Faqe %2$s.</string>
-    <string name="quick_start_dialog_review_pages_message">Ndryshoni, shtoni ose hiqni faqe të sajtit tuaj.</string>
-    <string name="quick_start_dialog_review_pages_title">Shqyrtoni faqe sajti</string>
     <string name="reader_menu_mark_as_unseen">Hiqi shenjë si i parë</string>
     <string name="reader_menu_mark_as_seen">Vëri shenjë si i parë</string>
     <string name="error_media_upload_failed_for_reason">Ngarkimi i medias dështoi.\n%1$s</string>
@@ -1568,7 +1528,6 @@ Language: sq_AL
     <string name="mlp_create_blank_page">Krijoni faqe të zbrazët</string>
     <string name="mlp_choose_layout_subtitle">Nisjani duke zgjedhur nga një larmi e madhe skemash të parapërgatitura faqesh. Ose thjesht fillojani me një faqe të zbrazët.</string>
     <string name="mlp_choose_layout_title">Zgjidhni një skemë</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Prekni %1$s Krijoni. %2$s Mandej përzgjidhni &lt;b&gt;Postim blogu&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Zgjidhni nga pajisje</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Përpunimi i ikonave të sajtit në sajte WordPress të vetëstrehuar lyp doemos shtojcën Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">S’arrihet të gjendet hedhja te faqja e lidhur</string>
@@ -1596,8 +1555,6 @@ Language: sq_AL
     <string name="send_link_by_email" a8c-src-lib="module:login">Dërgoje lidhjen me email</string>
     <string name="reset_your_password" a8c-src-lib="module:login">Ricaktoni fjalëkalimi tuaj</string>
     <string name="reader_error_request_failed_title">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni.</string>
-    <string name="quick_start_list_update_site_title_title">Kontrolloni titullin e sajtit tuaj</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të caktoni një titull të ri</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Shpënia te hedhurinat e këtij postimi do të hedhë tej edhe ndryshimet e paruajtura, jeni i sigurt se doni të vazhdohet?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Titulli i Sajtit mund të ndryshohet vetëm nga një përdorues në rolin e përgjegjësit.</string>
     <string name="my_site_title_changer_dialog_hint">Titulli i Sajtit shfaqet te shtylla e titujve e një shfletuesi dhe, për shumicën e temave, shfaqet te kryet.</string>
@@ -2049,29 +2006,12 @@ Language: sq_AL
     <string name="stats_more_posts">Më tepër postime</string>
     <string name="stats_fewer_posts">Më pak postime</string>
     <string name="new_site_creation_preview_back_pressed_warning">Mund të humbni sa keni bërë. Jeni i sigurt se doni të dilet?</string>
-    <string name="plans_loading_error_with_cache_button">Shihini Planet, Sido Qoftë</string>
-    <string name="plans_loading_error_with_cache_subtitle">Që të shihni Planet, lypset lidhje në internet, kështu që hollësitë mund të jenë të vjetruara.</string>
-    <string name="plans_loading_error_no_cache_subtitle">Që të shihni Planet, lypset një lidhje internet.</string>
-    <string name="plans_loading_error_no_plans_subtitle">S’i ngarkojmë dot Planet tani. Ju lutemi, riprovoni më vonë.</string>
-    <string name="plans_loading_error_no_plans_title">S’arrihet të ngarkohen Planet</string>
-    <string name="plans_loading_error_network_title">S\'ka lidhje</string>
     <string name="menu_switch_to_gutenberg_editor">Kaloni nën përpunuesin me blloqe</string>
     <string name="stats_loading_block_error">Pati një problem në ngarkimin e të dhënave tuaja, rifreskoni faqen dhe riprovoni.</string>
     <string name="stats_loading_error">S’u ngarkuan të dhëna</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Përpunoni postime dhe faqe të reja me përpunuesin me blloqe</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Përdorni Përpunuesin Me Blloqe</string>
     <string name="exit">dalje</string>
-    <string name="quick_start_sites_type_grow">Shtoni publikun tuaj</string>
-    <string name="quick_start_sites_type_customize">Përshtatni sajtin tuaj</string>
-    <string name="quick_start_sites">Hapat Pasues</string>
-    <string name="quick_start_dialog_upload_icon_title">Zgjidhni një ikonë sajti unike</string>
-    <string name="quick_start_dialog_upload_icon_message">Vizitorët tuaj do ta shohin në shfletuesin e tyre ikonën tuaj. Shtoni një ikonë vetjake, për një pamje të rafinuar, profesionale.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Përzgjidhni %1$s Statistika %2$s që të shihni se si po ecën sajti juaj.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Prekni %1$s Ikona e Sajtit Tuaj %2$s që të ngarkoni një të re</string>
-    <string name="quick_start_dialog_publish_post_message">Hartoni dhe botoni një postim.</string>
-    <string name="quick_start_dialog_check_stats_title">Ndiqni statistikat e sajtit tuaj</string>
-    <string name="quick_start_dialog_check_stats_message">Ndiqni funksionimin e sajtit tuaj.</string>
-    <string name="quick_start_task_skip_menu_title">Anashkaloje punën</string>
     <string name="notification_channel_reminder_title">Kujtues</string>
     <string name="stats_select_next_period_description">Përzgjidhni periudhën pasuese</string>
     <string name="stats_select_previous_period_description">Përzgjidhni periudhën e mëparshme</string>
@@ -2223,20 +2163,6 @@ Language: sq_AL
     <string name="page_delete_error">Pati një problem me fshirjen e faqes</string>
     <string name="set_parent">Caktojeni Mëmë</string>
     <string name="dismiss">Hidhe tej</string>
-    <string name="quick_start_focus_point_description">prekeni këtu</string>
-    <string name="quick_start_list_create_site_title">Krijoni sajtin tuaj</string>
-    <string name="quick_start_list_create_site_subtitle">Krijojeni dhe vëreni në punë sajtin tuaj.</string>
-    <string name="quick_start_completed_tour_subtitle">A s’ju kënaq t’u hiqni vizë gjërave në një listë?</string>
-    <string name="quick_start_dialog_view_site_title">Shihni sajtin tuaj</string>
-    <string name="quick_start_dialog_view_site_message">Bëni një paraparje të sajtit tuaj që të shihni ç’do të shohin vizitorët tuaj.</string>
-    <string name="quick_start_dialog_share_site_title">Ndajeni sajtin tuaj me të tjerë</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Prekni %1$s Shoqërorë %2$s që të vazhdohet</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Prekni %1$s Lidhje %2$s që të shtoni llogari tuajat nga media shoqërore</string>
-    <string name="quick_start_dialog_share_site_message">Lidhni llogaritë tuaja nga media shoqërore — sajti juaj do të ndajë vetvetiu me të tjerët postimet e reja.</string>
-    <string name="quick_start_dialog_publish_post_title">Botoni një postim</string>
-    <string name="quick_start_dialog_need_help_button_negative">Jo, faleminderit</string>
-    <string name="quick_start_dialog_follow_sites_title">Lidhuni me sajte të tjerë</string>
-    <string name="quick_start_button_positive">Jepi</string>
     <string name="content_description_more">Më tepër</string>
     <string name="my_site_create_new_site_title">S’keni ende ndonjë sajt</string>
     <string name="reader_empty_subscribed_tags_subtitle">Shtoni këtu etiketa që të gjeni postime rreth temave tuaja të parapëlqyera</string>
@@ -2430,7 +2356,6 @@ Language: sq_AL
     <string name="edit_photo_screen_title">Përpunoni Foto</string>
     <string name="share_intent_screen_title">Zgjidhni sajt</string>
     <string name="signup_epilogue_screen_title">Llogari e re</string>
-    <string name="login_epilogue_screen_title">I futur si</string>
     <string name="person_detail_screen_title">Hollësi personi</string>
     <string name="media_settings_screen_title">Hollësi kartele</string>
     <string name="publicize_buttons_screen_title">Butona ndarjesh me të tjerët</string>
@@ -2707,8 +2632,6 @@ Language: sq_AL
     <string name="post_queued">Postimi u vu në radhë</string>
     <string name="uploading_post">Po ngarkohet \"%s\"</string>
     <string name="connection_to_server_lost">Humbi lidhja me shërbyesin</string>
-    <string name="login_epilogue_mysites_other">Sajtet e mi</string>
-    <string name="login_epilogue_mysites_one">Sajti im</string>
     <string name="login_email_client_not_found">S’zbulohet dot aplikacioni juaj për email</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Ju lutem, jepni një kod verifikimi</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Ju lutemi, jepni emër përdoruesi</string>
@@ -2859,7 +2782,6 @@ Language: sq_AL
     <string name="start_over_email_subject">Fillojani nga e para me sajtin %s</string>
     <string name="site_picker_remove_site_error">Gabim në heqjen e sajtit, riprovoni më vonë</string>
     <string name="editor_post_saved_locally_failed_media">Postimi ka ngarkime mediash të papërfunduar dhe u ruajt lokalisht</string>
-    <string name="sure_to_remove_account">Të hiqet ky sajt nga aplikacioni?</string>
     <string name="photo_picker_title">Zgjidhni foto</string>
     <string name="error_publish_no_network">Pajisja është e palidhur në internet. Postimi u ruajt lokalisht.</string>
     <string name="editor_post_saved_online">Postimi u ruajt në internet</string>
@@ -2982,8 +2904,6 @@ Language: sq_AL
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Jo e mundshme këtë çast. Ju lutemi, jepni fjalëkalimin tuaj</string>
     <string name="logging_in">Po hyhet</string>
     <string name="web_address_dialog_hint">E shfaqur publikisht kur komentoni.</string>
-    <string name="plans">Plane</string>
-    <string name="plan">Plan</string>
     <string name="export_your_content_message">Postimet, faqet dhe rregullimet tuaja do t’ju dërgohen me email te %s.</string>
     <string name="export_your_content">Eksportoni lëndën tuaj</string>
     <string name="export_email_sent">Email-i i eksportimit u dërgua!</string>

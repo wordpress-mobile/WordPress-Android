@@ -161,7 +161,6 @@ Language: pl
     <string name="more_content_description_recent_activity">Ostatnia aktywność - więcej</string>
     <string name="more_content_description_pages">Więcej stron</string>
     <string name="more_content_description_posts">Więcej wpisów</string>
-    <string name="more_content_description_quick_start">Szybki start więcej</string>
     <string name="more_content_description_today_stats">Dzisiejsze statystyki więcej</string>
     <string name="more_content_description_blogging_prompts">Więcej monitów</string>
     <string name="more_content_description_promote_blaze">Więcej Blaze</string>
@@ -314,7 +313,6 @@ Language: pl
     <string name="site_monitoring_tab_title_php_logs">Dzienniki PHP</string>
     <string name="site_monitoring_tab_title_metrics">Metryki</string>
     <string name="site_monitoring">Monitorowanie witryny</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Skorzystaj  z &lt;b&gt;Discover&lt;/b&gt;, żeby znaleźć witryny i tagi. Spróbuj wybrać &lt;b&gt;Subskrypcje&lt;/b&gt;, żeby zobaczyć subskrybowaną treść i zarządzać swoimi subskrypcjami.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Idź do subskrypcji</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blogi, do których jesteś subskrybowany, ostatnio nic nie opublikowały</string>
     <string name="reader_no_followed_blogs_description_subs">Zasubskrybuj blogi w Discover lub poszukaj bloga, który już ci się podoba.</string>
@@ -742,9 +740,6 @@ Language: pl
     <string name="wp_jetpack_deep_link_overlay_description">Wygląda na to, że masz zainstalowaną aplikację Jetpack.\n\nChcesz otwierać odnośniki w aplikacji Jetpack w przyszłości?\n\nZawsze możesz to zmienić w Ustawieniach aplikacji &gt; Otwórz odnośniki w Jetpack</string>
     <string name="wp_jetpack_deep_link_overlay_title">Otwórz odnośniki w Jetpacku?</string>
     <string name="wp_jetpack_continue_without_jetpack">Kontynuuj bez Jetpacka</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack zapewnia statystyki, powiadomienia i więcej, aby pomóc zbudować i rozwijać wymarzoną witrynę z wykorzystaniem WordPressa.\n\nAplikacja WordPress nie obsługuje już tworzenia nowej witryny.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack zapewnia statystyki, powiadomienia i więcej, aby pomóc zbudować i rozwijać wymarzoną witrynę opartą o WordPressa.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Utwórz nową witrynę WordPress za pomocą aplikacji Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">odnośniki internetowe</string>
     <string name="deep_linking_urilinks_alias_label">urilinki</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Przełącz się na aplikację Jetpack, żeby dalej dostawać powiadomienia  w czasie rzeczywistym na swoim urządzeniu.</string>
@@ -854,24 +849,11 @@ Language: pl
     <string name="stats_action_card_blogging_reminders_title">Ustaw przypomnienia o blogowaniu</string>
     <string name="stats_action_card_grow_audience_button_label">Sprawdź kurs</string>
     <string name="stats_action_card_grow_audience_title">Rozwiń swoją społeczność</string>
-    <string name="quick_start_sites_type_all_tasks_completed">Ukończono wszystkie zadania</string>
-    <string name="quick_start_list_task_complete">Zadanie zostało ukończone</string>
     <string name="me_btn_scan_login_code">Zeskanuj kod logowania</string>
     <string name="stats_insights_likes_guide_card">⭐️ Twój ostatni wpis %1$s otrzymał %2$s polubień.</string>
     <string name="stats_most_popular_percent_views_empty">Za mało aktywności. Sprawdź później, gdy witryna będzie miała więcej odwiedzających!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s%% wszystkich subskrybentów</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">Gratulacje! Znasz się na rzeczy&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">Poznaj aplikację</string>
-    <string name="quick_start_list_upload_media_subtitle">Przenieś media prosto z twojego urządzenia lub aparatu na swoją witrynę</string>
-    <string name="quick_start_list_upload_media_title">Prześlij zdjęcia lub filmy</string>
-    <string name="quick_start_list_check_notification_subtitle">Zyskaj aktualizacje w czasie rzeczywistym prosto ze swojej kieszeni</string>
-    <string name="quick_start_dialog_upload_media_message">Wybierz %1$s Media %2$s, aby zobaczyć swoją bibliotekę.</string>
-    <string name="quick_start_dialog_check_notifications_message">Otrzymuj aktualizacje w czasie rzeczywistym prosto ze swojej kieszeni.</string>
-    <string name="quick_start_dialog_check_notifications_title">Sprawdź swoje powiadomienia</string>
-    <string name="quick_start_dialog_check_notifications_message_short">Wybierz zakładkę %2$s %1$s powiadomień , żeby otrzymywać aktualizacje w drodze.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Wybierz %1$s plus %2$s, aby wczytywać media. Możesz dodać to do swoich wpisów/stron z dowolnego urządzenia.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Skorzystaj z &lt;b&gt; Discover &lt;/b&gt;, żeby znaleźć witryny i tagi.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatura filmu</string>
     <string name="stats_details_top_commentators">Czołowi komentujący</string>
     <string name="stats_published_years_ago">Opublikowano %1$d lat temu</string>
@@ -891,8 +873,6 @@ Language: pl
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpowiedź</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Codzienny monit</string>
     <string name="blogging_prompts_onboarding_got_it">Rozumiem</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt; aby zobaczyć swoją witrynę</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Wybierz %1$s Czytnik %2$s, aby znaleźć inne witryny.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Dowiedz się więcej o promptach</string>
     <string name="photo_picker_video_thumbnail_unselected">Cofnięto zaznaczenie filmu</string>
     <string name="photo_picker_video_thumbnail_selected">Wybrano film</string>
@@ -980,7 +960,6 @@ Language: pl
     <string name="site_creation_intent_art">Sztuka</string>
     <string name="new_site_creation_intents_input_hint">Np. moda, poezja, polityka</string>
     <string name="new_site_creation_intents_title">Tematyka witryny</string>
-    <string name="quick_start_site_menu_tab_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt;, aby kontynuować.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Pomiń na dziś</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Zobacz więcej podpowiedzi</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Udostępnij monit blogowania</string>
@@ -1069,7 +1048,6 @@ Language: pl
     <string name="comment_edit_user_name">Nazwa</string>
     <string name="comment_edit_menu_done">Gotowe</string>
     <string name="weekly_roundup">W każdym tygodniu</string>
-    <string name="quick_start_list_create_site_message">Utworzono witrynę! Ukończ kolejne zadanie.</string>
     <string name="domains_free_plan_get_your_domain_title">Zdobądź własną domenę</string>
     <string name="recommend_app_generic_get_template_error">Nieznany błąd podczas pobierania rekomendowanego szablonu aplikacji</string>
     <string name="recommend_app_bad_format_response">Otrzymano nieprawidłową odpowiedź</string>
@@ -1081,8 +1059,6 @@ Language: pl
     <string name="blogging_reminders_notification_time">Czas powiadomienia</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Otrzymasz powiadomienia o blogowaniu &lt;b&gt;każdego dnia&lt;/b&gt; o &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s razy w tygodniu o %2$s</string>
-    <string name="quick_start_sites_type_tasks_completed">Wykonano %1$s z %2$s</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Naucz się podstaw przy pomocy krótkiego samouczka.</string>
     <string name="comment_batch_moderation_error">Nie udało się zmienić jednego lub więcej komentarzy</string>
     <string name="create_site_notification_create_site_action">Utwórz witrynę</string>
     <string name="create_site_notification_text">Uruchom swoją witrynę w kilku krótkich krokach</string>
@@ -1091,12 +1067,6 @@ Language: pl
     <string name="stats_disabled_enable_stats_button">Uaktywnij statystyki witryny</string>
     <string name="stats_disabled_subtitle">Uaktywnij statystyki witryny aby sprawdzić szczegółowe informacje o twoim ruchu, polubieniach, komentarzach i subskrybentach.</string>
     <string name="stats_disabled_title">Szukasz statystyk?</string>
-    <string name="quick_start_list_upload_icon_subtitle">Pokazane w zakładce przeglądarki odwiedzającego twoja witrynę, a także w innych miejscach na sieci.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Pokaż mi co i jak</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">Potrzebujesz pomocy w zarządzaniu tą witryną dzięki aplikacji?</string>
-    <string name="login_epilogue_create_new_site_button">Utwórz nową witrynę</string>
-    <string name="login_epilogue_mysites_subheading">Możesz przełączyć się pomiędzy witrynami w dowolnym momencie.</string>
-    <string name="login_epilogue_mysites_heading">Wybierz witrynę, która chcesz otworzyć</string>
     <string name="scan_multisite_not_supported_subtitle">Bardzo na przykro, skanowanie Jetpacka nie jest kompatybilne z instalacjami witryn multi WordPressa.</string>
     <string name="scan_multisite_not_supported_title">Witryny Multi WordPressa nie są wapierane</string>
     <string name="activity_log_visit_our_documentation_page">przejdź do strony z dokumentacją</string>
@@ -1190,13 +1160,6 @@ Language: pl
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Zakończono skanowanie&lt;/b&gt; &lt;br&gt; nie odnaleziono zagrożeń</string>
     <string name="scan_fixing_threats_title_singular">Naprawianie zagrożeń</string>
     <string name="disable">Wyłącz</string>
-    <string name="quick_start_list_review_pages_subtitle">Sprawdź swoje strony aby dokonywać zmian, lub dodawać lub usuwać strony.</string>
-    <string name="quick_start_list_view_site_title">Przejdź do swojej witryny</string>
-    <string name="quick_start_list_follow_site_subtitle">Odkrywaj i obserwuj witryny, które ciebie inspirują.</string>
-    <string name="quick_start_list_enable_sharing_title">Udostępnianie w mediach społecznościowych</string>
-    <string name="quick_start_list_enable_sharing_subtitle">Automatycznie udostępniaj nowe wpisy na swoich mediach społecznościowych.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Nadaj witrynie nazwę, która odzwierciedl jej osobowość i tematykę.</string>
-    <string name="quick_start_list_check_stats_title">Sprawdź statystyki swojej witryny</string>
     <string name="backup_download_status_failure_bullet2">Nadal będziemy próbować stworzyć plik kopii zapasowej, który będzie można pobrać.</string>
     <string name="backup_download_status_failure_bullet1">Nie mogliśmy odnaleźć statusu aby stwierdzić jak długo kopia zapasowa będzie wykonywana.</string>
     <string name="backup_download_status_failure_heading">Hmm, nie mogliśmy odnaleźć statusu dla twojego pliku kopii zapasowej do pobrania</string>
@@ -1269,9 +1232,6 @@ Language: pl
     <string name="backup_download_complete_failed_title">Nie powiodło się pobieranie</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Urządzenie przenośne</string>
-    <string name="quick_start_dialog_review_pages_message_short">Wybierz %1$s Strony %2$s aby zobaczyć listę swoich stron.</string>
-    <string name="quick_start_dialog_review_pages_message">Zmień, dodaj, lub usuń strony swojej witryny.</string>
-    <string name="quick_start_dialog_review_pages_title">Przejrzyj strony witryny</string>
     <string name="reader_menu_mark_as_unseen">Oznacz jako nie przeczytaną</string>
     <string name="reader_menu_mark_as_seen">Oznacz jako przeczytane</string>
     <string name="error_media_upload_failed_for_reason">Nie udało się przesłać plików mediów.\n%1$s</string>
@@ -1490,7 +1450,6 @@ Language: pl
     <string name="mlp_create_blank_page">Utwórz pustą stronę</string>
     <string name="mlp_choose_layout_subtitle">Zacznij od wybrania układu z szerokiej gamy gotowców lub rozpocznij z pustą stroną.</string>
     <string name="mlp_choose_layout_title">Wybierz układ</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Stuknij %1$s Utwórz. %2$s Następnie wybierz &lt;b&gt;Wpis na blogu&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Wybierz z urządzenia</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Edytowanie ikon witryn z samodzielnym hostingiem wymaga wtyczki Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">Nie można odnaleźć przejścia do linkowanej strony</string>
@@ -1518,8 +1477,6 @@ Language: pl
     <string name="send_link_by_email" a8c-src-lib="module:login">Wyślij odnośnik przez email</string>
     <string name="reset_your_password" a8c-src-lib="module:login">Zresetuj hasło</string>
     <string name="reader_error_request_failed_title">Wystąpił błąd podczas obsługi tego zapytania. Proszę spróbować ponownie później.</string>
-    <string name="quick_start_list_update_site_title_title">Sprawdź tytuł witryny</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt; aby nadać nowy tytuł</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Usunięcie tego wpisu anuluje lokalne zmiany, czy jesteś pewien/pewna że chcesz kontynuować?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Tytuł witryny może być zmieniony wyłącznie przez użytkownika z rolą administratora.</string>
     <string name="my_site_title_changer_dialog_hint">Tytuł witryny jest wyświetlony na pasku tytułu przeglądarki a także w nagłówku większości motywów.</string>
@@ -1971,29 +1928,12 @@ Language: pl
     <string name="stats_more_posts">Więcej wpisów</string>
     <string name="stats_fewer_posts">Mniej wpisów</string>
     <string name="new_site_creation_preview_back_pressed_warning">Utracisz postęp swoich prac. Czy na pewno chcesz wyjść?</string>
-    <string name="plans_loading_error_with_cache_button">Zobacz plany mimo to</string>
-    <string name="plans_loading_error_with_cache_subtitle">Wymagane jest połączenie z internetem aby przejrzeć plany subskrypcji, szczegóły mogą być nieaktualne.</string>
-    <string name="plans_loading_error_no_cache_subtitle">Wymagane jest połączenie z internetem aby przejrzeć plany subskrypcji.</string>
-    <string name="plans_loading_error_no_plans_subtitle">Nie możemy wczytać planów subskrypcji w tej chwili. Proszę spróbować później.</string>
-    <string name="plans_loading_error_no_plans_title">Nie można było wczytać planów subskrypcji</string>
-    <string name="plans_loading_error_network_title">Brak połączenia</string>
     <string name="menu_switch_to_gutenberg_editor">Przejdź na edytor blokowy</string>
     <string name="stats_loading_block_error">Wystąpił problem podczas wczytywania twoich danych, odśwież stronę i spróbuj ponownie.</string>
     <string name="stats_loading_error">Dane nie wczytane</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edytuj nowe wpisy i strony przy pomocy edytora blokowego</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Użyj edytora blokowego</string>
     <string name="exit">wyjdź</string>
-    <string name="quick_start_sites_type_grow">Rozwiń swoją społeczność</string>
-    <string name="quick_start_sites_type_customize">Spersonalizuj swoją witrynę</string>
-    <string name="quick_start_sites">Następne kroki</string>
-    <string name="quick_start_dialog_upload_icon_title">Wybierz unikatową ikonę witryny</string>
-    <string name="quick_start_dialog_upload_icon_message">Przeglądający twoją witrynę zobaczą twoją witrynę w swoich przeglądarkach. Dodaj własną ikonę aby uzyskać profesjonalny wygląd.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Wybierz %1$s statystyki %2$s aby sprawdzić jak radzi sobie twoja witryna.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Stuknij %1$s Ikonę Twojej Witryny %2$s aby wczytać nową</string>
-    <string name="quick_start_dialog_publish_post_message">Stwórz szkic i opublikuj swój pierwszy wpis.</string>
-    <string name="quick_start_dialog_check_stats_title">Sprawdź statystyki swojej witryny</string>
-    <string name="quick_start_dialog_check_stats_message">Bądź na bieżąco z wydajnością swojej witryny.</string>
-    <string name="quick_start_task_skip_menu_title">Pomiń zadanie</string>
     <string name="notification_channel_reminder_title">Przypomnienie</string>
     <string name="stats_select_next_period_description">Wybierz kolejny okres</string>
     <string name="stats_select_previous_period_description">Wybierz poprzedni okres</string>
@@ -2145,20 +2085,6 @@ Language: pl
     <string name="page_delete_error">Wystąpił błąd podczas usuwania strony</string>
     <string name="set_parent">Ustaw jako nadrzędną</string>
     <string name="dismiss">Odrzuć</string>
-    <string name="quick_start_focus_point_description">stuknij tutaj</string>
-    <string name="quick_start_list_create_site_title">Utwórz swoją witrynę</string>
-    <string name="quick_start_list_create_site_subtitle">Uruchom swoją witrynę.</string>
-    <string name="quick_start_completed_tour_subtitle">Czy to nie fajne uczucie wykreślać kolejne elementy z listy?</string>
-    <string name="quick_start_dialog_view_site_title">Zobacz swoją witrynę</string>
-    <string name="quick_start_dialog_view_site_message">Podejrzyj witrynę aby sprawdzić jej wygląd, który zobaczą odwiedzający.</string>
-    <string name="quick_start_dialog_share_site_title">Udostępnij swoją witrynę</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Stuknij %1$s media %2$s aby kontynuować</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Stuknij %1$s Połączenia %2$s aby dodać konta mediów społecznościowych</string>
-    <string name="quick_start_dialog_share_site_message">Połącz się ze swoimi kontami mediów społecznościowych - twoja witryna automatycznie udostępni nowe wpisy.</string>
-    <string name="quick_start_dialog_publish_post_title">Opublikuj wpis</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nie, dziękuję</string>
-    <string name="quick_start_dialog_follow_sites_title">Podłącz inne witryny</string>
-    <string name="quick_start_button_positive">Dalej</string>
     <string name="content_description_more">Więcej</string>
     <string name="my_site_create_new_site_title">Nie masz żadnych witryn</string>
     <string name="reader_empty_subscribed_tags_subtitle">Dodaj tagi aby wyszukać interesujące tematy</string>
@@ -2352,7 +2278,6 @@ Language: pl
     <string name="edit_photo_screen_title">Edytuj zdjęcie</string>
     <string name="share_intent_screen_title">Wybierz witrynę</string>
     <string name="signup_epilogue_screen_title">Nowe konto</string>
-    <string name="login_epilogue_screen_title">Zalogowano jako</string>
     <string name="person_detail_screen_title">Szczegóły osoby</string>
     <string name="media_settings_screen_title">Szczegóły pliku</string>
     <string name="publicize_buttons_screen_title">Przyciski udostępniania</string>
@@ -2629,8 +2554,6 @@ Language: pl
     <string name="post_queued">Wpis w kolejce</string>
     <string name="uploading_post">Przesyłanie \"%s\"</string>
     <string name="connection_to_server_lost">Połączenie z serwerem zostało utracone</string>
-    <string name="login_epilogue_mysites_other">Moje witryny</string>
-    <string name="login_epilogue_mysites_one">Moja witryna</string>
     <string name="login_email_client_not_found">Nie można rozpoznać twojej aplikacji do email</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Wprowadź kod weryfkacyjny</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Proszę podać nazwę użytkownika</string>
@@ -2781,7 +2704,6 @@ Language: pl
     <string name="start_over_email_subject">Zacznij jeszcze raz i stwórz od początku witrynę %s</string>
     <string name="site_picker_remove_site_error">Błąd usuwania witryny, spróbuj ponownie później</string>
     <string name="editor_post_saved_locally_failed_media">Wpis ma zakończone błędem próby przesyłania mediów i został zapisany lokalnie</string>
-    <string name="sure_to_remove_account">Usunąć tą witrynę z aplikacji?</string>
     <string name="photo_picker_title">Wybierz zdjęcie</string>
     <string name="error_publish_no_network">Urządzenie jest w trybie offline. Wpis zapisany lokalnie.</string>
     <string name="editor_post_saved_online">Wpis został zapisany online</string>
@@ -2904,8 +2826,6 @@ Language: pl
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Aktualnie niedostępne. Proszę wprowadzić hasło</string>
     <string name="logging_in">Logowanie</string>
     <string name="web_address_dialog_hint">Prezentowany kiedy dodajesz komentarze.</string>
-    <string name="plans">Plany</string>
-    <string name="plan">Plan</string>
     <string name="export_your_content_message">Twoje wpisy, strony i ustawienia zostaną przesłane na adres %s.</string>
     <string name="export_your_content">Wyeksportuj zawartość</string>
     <string name="export_email_sent">Wysłano email z danymi eksportowymi!</string>

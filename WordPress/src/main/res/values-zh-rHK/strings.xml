@@ -160,7 +160,6 @@ Language: zh_TW
     <string name="more_content_description_recent_activity">更多近期活動</string>
     <string name="more_content_description_pages">更多頁面</string>
     <string name="more_content_description_posts">更多文章</string>
-    <string name="more_content_description_quick_start">更多快速入門</string>
     <string name="more_content_description_today_stats">更多本日統計</string>
     <string name="more_content_description_blogging_prompts">更多提示</string>
     <string name="more_content_description_promote_blaze">更多 Blaze</string>
@@ -311,7 +310,6 @@ Language: zh_TW
     <string name="site_monitoring_tab_title_php_logs">PHP 記錄</string>
     <string name="site_monitoring_tab_title_metrics">指標</string>
     <string name="site_monitoring">網站監控</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">使用&lt;b&gt;探索&lt;/b&gt;功能來找出網站和分頁。 嘗試選取&lt;b&gt;訂閱&lt;/b&gt;，即可檢視已訂閱的內容並管理訂閱項目。</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">前往訂閱</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">你訂閱的網誌最近未張貼任何文章</string>
     <string name="reader_no_followed_blogs_description_subs">訂閱「探索」中的網誌或搜尋你已按讚的網誌。</string>
@@ -735,9 +733,6 @@ Language: zh_TW
     <string name="wp_jetpack_deep_link_overlay_description">你似乎已安裝 Jetpack 應用程式。\n\n之後要在 Jetpack 應用程式中開啟連結嗎？\n\n你隨時可在「應用程式設定」&gt;「在 Jetpack 中開啟連結」變更此設定</string>
     <string name="wp_jetpack_deep_link_overlay_title">在 Jetpack 中開啟連結嗎？</string>
     <string name="wp_jetpack_continue_without_jetpack">繼續但不使用 Jetpack</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack 提供統計資料、通知等其他功能，可協助你建置和發展夢想中的 WordPress 網站。\n\nWordPress 應用程式不再支援建立新網站。</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack 提供統計資料、通知等其他功能，可協助你建置和發展夢想中的 WordPress 網站。</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">使用 Jetpack 應用程式建立新的 WordPress 網站</string>
     <string name="deep_linking_weblinks_alias_label">網頁連結</string>
     <string name="deep_linking_urilinks_alias_label">URI 連結</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">切換至 Jetpack 應用程式，以便繼續 在你的裝置上接收即時通知。</string>
@@ -847,24 +842,11 @@ Language: zh_TW
     <string name="stats_action_card_blogging_reminders_title">設定你的網誌提醒</string>
     <string name="stats_action_card_grow_audience_button_label">查看課程</string>
     <string name="stats_action_card_grow_audience_title">讀者持續成長</string>
-    <string name="quick_start_sites_type_all_tasks_completed">所有工作都已完成</string>
-    <string name="quick_start_list_task_complete">工作完成</string>
     <string name="me_btn_scan_login_code">掃描登入碼</string>
     <string name="stats_insights_likes_guide_card">⭐️ 你的最新文章 %1$s 已獲得 %2$s 次按讚。</string>
     <string name="stats_most_popular_percent_views_empty">沒有足夠的活動。 有更多訪客造訪網站的時候，請再回來查看！</string>
     <string name="stats_total_subscribers_content_description">%1$s，訂閱者總人數的 %2$s%%</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">恭喜！ 你熟知&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">開始瞭解應用程式</string>
-    <string name="quick_start_list_upload_media_subtitle">從你的裝置或相機將媒體直接傳送到網站上</string>
-    <string name="quick_start_list_upload_media_title">上傳照片或影片</string>
-    <string name="quick_start_list_check_notification_subtitle">隨手查看即時更新資訊</string>
-    <string name="quick_start_dialog_upload_media_message">選取%1$s媒體%2$s以查看你目前的媒體庫</string>
-    <string name="quick_start_dialog_check_notifications_message">隨手查看即時更新資訊。</string>
-    <string name="quick_start_dialog_check_notifications_title">查看你的通知設定</string>
-    <string name="quick_start_dialog_check_notifications_message_short">選取%1$s通知分頁%2$s讓你在行動途中也可收到更新。</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">選取%1$s加號%2$s即可上傳媒體。 你可以從任何裝置將其新增至你的貼文/頁面。</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">使用&lt;b&gt;探索&lt;/b&gt;功能來找出網站和分頁。</string>
     <string name="photo_picker_video_thumbnail_content_description">影片縮圖</string>
     <string name="stats_details_top_commentators">踴躍回應者</string>
     <string name="stats_published_years_ago">%1$d 年前發佈</string>
@@ -884,8 +866,6 @@ Language: zh_TW
     <string name="blogging_prompts_answer_prompt_notification_answer_action">答案</string>
     <string name="blogging_prompts_answer_prompt_notification_title">每日提示</string>
     <string name="blogging_prompts_onboarding_got_it">完全了解</string>
-    <string name="quick_start_dialog_view_your_site_message_short">點選 &lt;b&gt;%1$s&lt;/b&gt; 即可檢視你的網站</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">選取「%1$s 閱讀器 %2$s」來尋找其他網站。</string>
     <string name="blogging_reminders_prompt_help_button_desc">深入瞭解提示</string>
     <string name="photo_picker_video_thumbnail_unselected">已取消選取影片</string>
     <string name="photo_picker_video_thumbnail_selected">已選取影片</string>
@@ -973,7 +953,6 @@ Language: zh_TW
     <string name="site_creation_intent_art">藝術</string>
     <string name="new_site_creation_intents_input_hint">例如： 時尚、詩歌、政治</string>
     <string name="new_site_creation_intents_title">網站主題</string>
-    <string name="quick_start_site_menu_tab_message_short">點選「&lt;b&gt;%1$s&lt;/b&gt;」以繼續。</string>
     <string name="my_site_blogging_prompt_card_menu_skip">今天跳過</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">檢視更多提示</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">分享網誌提示</string>
@@ -1062,7 +1041,6 @@ Language: zh_TW
     <string name="comment_edit_user_name">名稱</string>
     <string name="comment_edit_menu_done">搞定</string>
     <string name="weekly_roundup">每週綜合整理</string>
-    <string name="quick_start_list_create_site_message">網站已建立！ 完成另一項任務。</string>
     <string name="domains_free_plan_get_your_domain_title">取得你的網域</string>
     <string name="recommend_app_generic_get_template_error">擷取建議的應用程式範本時發生未知錯誤</string>
     <string name="recommend_app_bad_format_response">收到無效回應</string>
@@ -1074,8 +1052,6 @@ Language: zh_TW
     <string name="blogging_reminders_notification_time">通知時間</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">你會&lt;b&gt;每天&lt;/b&gt;在 &lt;b&gt;%s&lt;/b&gt; 收到寫網誌通知。</string>
     <string name="blogging_reminders_site_settings_label">每週在 %2$s 收到 %1$s 次通知</string>
-    <string name="quick_start_sites_type_tasks_completed">已完成 %1$s 個，共 %2$s 個</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">透過快速逐步解說瞭解基本知識。</string>
     <string name="comment_batch_moderation_error">無法審核一則或更多留言</string>
     <string name="create_site_notification_create_site_action">建立網站</string>
     <string name="create_site_notification_text">只要幾個快速步驟，即可讓你的網站上線運作</string>
@@ -1084,12 +1060,6 @@ Language: zh_TW
     <string name="stats_disabled_enable_stats_button">啟用網站統計資料</string>
     <string name="stats_disabled_subtitle">啟用網站統計資料即可查看網站詳細資訊，包括流量、按讚數、留言數和訂閱人數。</string>
     <string name="stats_disabled_title">在尋找統計資料嗎？</string>
-    <string name="quick_start_list_upload_icon_subtitle">在訪客瀏覽器分頁和其他線上位置顯示。</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">逐步說明</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">需要協助你透過應用程式管理此網站嗎？</string>
-    <string name="login_epilogue_create_new_site_button">建立一個新網站</string>
-    <string name="login_epilogue_mysites_subheading">你可以隨時切換網站。</string>
-    <string name="login_epilogue_mysites_heading">選擇要開啟的網站</string>
     <string name="scan_multisite_not_supported_subtitle">不好意思，Jetpack Scan 目前與多站台 WordPress 安裝不相容。</string>
     <string name="scan_multisite_not_supported_title">不支援 WordPress 多站台</string>
     <string name="activity_log_visit_our_documentation_page">請造訪我們的文件頁面</string>
@@ -1183,13 +1153,6 @@ Language: zh_TW
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;掃描完成&lt;/b&gt; &lt;br&gt; 未發現威脅</string>
     <string name="scan_fixing_threats_title_singular">正在修正威脅</string>
     <string name="disable">停用</string>
-    <string name="quick_start_list_review_pages_subtitle">檢查你的頁面並進行變更，或新增/移除頁面。</string>
-    <string name="quick_start_list_view_site_title">查看你的網站</string>
-    <string name="quick_start_list_follow_site_subtitle">探索並追蹤帶給你啟發的網站。</string>
-    <string name="quick_start_list_enable_sharing_title">社群分享</string>
-    <string name="quick_start_list_enable_sharing_subtitle">自動將新文章分享到社群媒體。</string>
-    <string name="quick_start_list_update_site_title_subtitle">為網站取一個能反映出自我風格和主題的名稱。</string>
-    <string name="quick_start_list_check_stats_title">檢視網站統計資料</string>
     <string name="backup_download_status_failure_bullet2">我們仍會嘗試為你建立可下載的備份檔案。</string>
     <string name="backup_download_status_failure_bullet1">我們擷取不到狀態，無法判斷需要花多久時間建立可下載的備份。</string>
     <string name="backup_download_status_failure_heading">看來，我們擷取不到可下載備份的狀態</string>
@@ -1262,9 +1225,6 @@ Language: zh_TW
     <string name="backup_download_complete_failed_title">下載失敗</string>
     <string name="web_preview_tablet">平板電腦</string>
     <string name="web_preview_mobile">行動裝置</string>
-    <string name="quick_start_dialog_review_pages_message_short">選取%1$s「頁面」%2$s以檢視頁面清單。</string>
-    <string name="quick_start_dialog_review_pages_message">變更、新增或移除網站的頁面。</string>
-    <string name="quick_start_dialog_review_pages_title">檢閱網站頁面</string>
     <string name="reader_menu_mark_as_unseen">標示為未讀。</string>
     <string name="reader_menu_mark_as_seen">標示為已讀。</string>
     <string name="error_media_upload_failed_for_reason">上傳媒體失敗。\n%1$s</string>
@@ -1483,7 +1443,6 @@ Language: zh_TW
     <string name="mlp_create_blank_page">建立空白頁面</string>
     <string name="mlp_choose_layout_subtitle">首先請從各種預先製作的頁面版面配置挑選。 或從空白頁面開始也可以。</string>
     <string name="mlp_choose_layout_title">選擇版面配置</string>
-    <string name="quick_start_dialog_create_new_post_message_short">點選 %1$s「建立」。 %2$s 然後選取&lt;b&gt;「網誌文章」&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">從裝置中選擇</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">你需要 Jetpack 外掛程式才能在自助託管的 WordPress 網站上編輯網站圖示。</string>
     <string name="reader_toast_err_page_jump_not_found">找不到連結的頁面跳轉</string>
@@ -1511,8 +1470,6 @@ Language: zh_TW
     <string name="send_link_by_email" a8c-src-lib="module:login">以電子郵件傳送連結</string>
     <string name="reset_your_password" a8c-src-lib="module:login">重設密碼</string>
     <string name="reader_error_request_failed_title">處理要求時發生問題。 請稍後再試一次。</string>
-    <string name="quick_start_list_update_site_title_title">確認網站標題</string>
-    <string name="quick_start_dialog_update_site_title_message_short">點選 &lt;b&gt;%1$s&lt;/b&gt; 以設定新標題</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">將這篇文章移至垃圾桶也會捨棄本機變更，確定要繼續此操作？</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">只有具有管理員角色的使用者才能變更網站標題。</string>
     <string name="my_site_title_changer_dialog_hint">網站標題會顯示在網頁瀏覽器的標題列中，且會顯示在大部分佈景主題的頁首中。</string>
@@ -1964,29 +1921,12 @@ Language: zh_TW
     <string name="stats_more_posts">更多文章</string>
     <string name="stats_fewer_posts">較少文章</string>
     <string name="new_site_creation_preview_back_pressed_warning">你可能會失去目前完成的進度，確定要結束嗎？</string>
-    <string name="plans_loading_error_with_cache_button">還是要檢視方案</string>
-    <string name="plans_loading_error_with_cache_subtitle">需有網際網路連線才能檢視「方案」，因此詳細資訊可能已過時。</string>
-    <string name="plans_loading_error_no_cache_subtitle">需有網際網路連線才能檢視「方案」。</string>
-    <string name="plans_loading_error_no_plans_subtitle">目前無法載入「方案」，請稍後再試一次。</string>
-    <string name="plans_loading_error_no_plans_title">無法載入「方案」</string>
-    <string name="plans_loading_error_network_title">沒有網路連線</string>
     <string name="menu_switch_to_gutenberg_editor">切換至區塊編輯器</string>
     <string name="stats_loading_block_error">載入資料時發生問題，請重新整理網頁並重試。</string>
     <string name="stats_loading_error">未載入資料</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">使用區塊編輯器編輯新文章和網頁</string>
     <string name="site_settings_gutenberg_default_for_new_posts">使用區塊編輯器</string>
     <string name="exit">結束</string>
-    <string name="quick_start_sites_type_grow">讀者持續成長</string>
-    <string name="quick_start_sites_type_customize">自訂你的網站</string>
-    <string name="quick_start_sites">後續步驟</string>
-    <string name="quick_start_dialog_upload_icon_title">選擇專屬網站圖示</string>
-    <string name="quick_start_dialog_upload_icon_message">你的訪客會在他們的瀏覽器上看到你的圖示。新增自訂圖示會讓網站看起來更專業幹練。</string>
-    <string name="quick_start_dialog_check_stats_message_short">選取「%1$s 統計資料 %2$s」以查看網站成效。</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">點選%1$s你的網站圖示%2$s以上傳新圖示</string>
-    <string name="quick_start_dialog_publish_post_message">撰寫草稿並發表文章。</string>
-    <string name="quick_start_dialog_check_stats_title">檢視網站統計資料</string>
-    <string name="quick_start_dialog_check_stats_message">隨時掌握你的網站成效。</string>
-    <string name="quick_start_task_skip_menu_title">略過任務</string>
     <string name="notification_channel_reminder_title">提醒</string>
     <string name="stats_select_next_period_description">選取下個期間</string>
     <string name="stats_select_previous_period_description">選取上個期間</string>
@@ -2137,20 +2077,6 @@ Language: zh_TW
     <string name="page_status_change_error">變更頁面狀態時發生問題</string>
     <string name="page_delete_error">刪除頁面時發生問題</string>
     <string name="set_parent">設定上層項目</string>
-    <string name="quick_start_focus_point_description">點選這裡</string>
-    <string name="quick_start_list_create_site_title">建立網站</string>
-    <string name="quick_start_list_create_site_subtitle">讓你的網站上線運作。</string>
-    <string name="quick_start_completed_tour_subtitle">清單中又少了一件事情，感覺不錯吧！</string>
-    <string name="quick_start_dialog_view_site_title">檢視你的網站</string>
-    <string name="quick_start_dialog_view_site_message">預覽你的網站即可查看訪客將會看到的內容。</string>
-    <string name="quick_start_dialog_share_site_title">分享你的網站</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">點選「%1$s社群%2$s」以繼續</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">點選%1$s「連結」%2$s以新增你的社交媒體帳號</string>
-    <string name="quick_start_dialog_share_site_message">連結到你的社交媒體帳號 - 你的網站會自動分享新文章。</string>
-    <string name="quick_start_dialog_publish_post_title">發表文章</string>
-    <string name="quick_start_dialog_need_help_button_negative">不用了，謝謝</string>
-    <string name="quick_start_dialog_follow_sites_title">連結其他網站</string>
-    <string name="quick_start_button_positive">執行</string>
     <string name="content_description_more">更多</string>
     <string name="my_site_create_new_site_title">你沒有任何網站</string>
     <string name="reader_empty_subscribed_tags_subtitle">請在此處新增標籤，尋找有關最愛主題的文章</string>
@@ -2344,7 +2270,6 @@ Language: zh_TW
     <string name="edit_photo_screen_title">編輯照片</string>
     <string name="share_intent_screen_title">挑選網站</string>
     <string name="signup_epilogue_screen_title">新增帳號</string>
-    <string name="login_epilogue_screen_title">已登入為</string>
     <string name="person_detail_screen_title">個人詳細資料</string>
     <string name="media_settings_screen_title">檔案詳細資料</string>
     <string name="publicize_buttons_screen_title">分享按鈕</string>
@@ -2621,8 +2546,6 @@ Language: zh_TW
     <string name="post_queued">已排進佇列的文章</string>
     <string name="uploading_post">正在上傳「%s」</string>
     <string name="connection_to_server_lost">與伺服器的連線中斷</string>
-    <string name="login_epilogue_mysites_other">我的網站</string>
-    <string name="login_epilogue_mysites_one">我的網站</string>
     <string name="login_email_client_not_found">無法偵測電子郵件用戶端應用程式</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">請輸入驗證碼</string>
     <string name="login_empty_username" a8c-src-lib="module:login">請輸入使用者名稱</string>
@@ -2773,7 +2696,6 @@ Language: zh_TW
     <string name="start_over_email_subject">重新開始設計網站 %s</string>
     <string name="site_picker_remove_site_error">移除網站時發生錯誤，請稍後再試</string>
     <string name="editor_post_saved_locally_failed_media">此文章的媒體上傳作業失敗，但已儲存到本機</string>
-    <string name="sure_to_remove_account">從應用程式移除此網站？</string>
     <string name="photo_picker_title">選擇照片</string>
     <string name="error_publish_no_network">裝置已離線。文章已儲存在本機上。</string>
     <string name="editor_post_saved_online">文章已在線上儲存</string>
@@ -2893,8 +2815,6 @@ Language: zh_TW
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">目前無法使用。請輸入你的密碼</string>
     <string name="logging_in">正在登入</string>
     <string name="web_address_dialog_hint">當你留言時公開顯示。</string>
-    <string name="plans">方案</string>
-    <string name="plan">方案</string>
     <string name="export_your_content_message">我們會將你的文章、頁面和設定寄到你的電子郵件地址：%s.</string>
     <string name="export_your_content">匯出你的內容</string>
     <string name="export_email_sent">匯出電子郵件已傳送！</string>
