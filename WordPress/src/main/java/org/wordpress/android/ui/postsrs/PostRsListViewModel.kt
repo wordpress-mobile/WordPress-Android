@@ -205,8 +205,7 @@ class PostRsListViewModel @Inject constructor(
             }
 
             when (result) {
-                is PostRsRestClient.PostRsListResult
-                .Success -> {
+                is PostRsRestClient.PostRsListResult.Success -> {
                     val uiModels = result.posts
                         .map { it.toUiModel(dateTimeUtilsWrapper, resourceProvider) }
                     loadedCounts[tab] = result.posts.size
@@ -217,8 +216,7 @@ class PostRsListViewModel @Inject constructor(
                         posts = uiModels
                     )
                 }
-                is PostRsRestClient.PostRsListResult
-                .Error -> {
+                is PostRsRestClient.PostRsListResult.Error -> {
                     flow.value = flow.value.copy(
                         isLoading = false,
                         isRefreshing = false,
@@ -230,6 +228,8 @@ class PostRsListViewModel @Inject constructor(
     }
 
     companion object {
+        // Delay before fetching posts after a tab switch to avoid redundant
+        // requests during rapid swiping
         private const val TAB_DEBOUNCE_MS = 300L
     }
 }
