@@ -29,11 +29,6 @@ data class PostRsUiModel(
     val isError: Boolean = false
 )
 
-sealed class PostRsListUiEvent {
-    data class ShowError(val message: String) : PostRsListUiEvent()
-    data class OpenPost(val remotePostId: Long) : PostRsListUiEvent()
-}
-
 fun PostItemState.toUiModel(postId: Long): PostRsUiModel {
     return when (this) {
         is PostItemState.Fresh -> data.toUiModel()

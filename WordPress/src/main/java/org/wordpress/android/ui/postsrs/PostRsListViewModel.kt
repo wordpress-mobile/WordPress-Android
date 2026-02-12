@@ -4,10 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,9 +31,6 @@ class PostRsListViewModel @Inject constructor(
     private val collections =
         mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
-
-    private val _events = MutableSharedFlow<PostRsListUiEvent>()
-    val events = _events.asSharedFlow()
 
     fun getTabState(tab: PostRsListTab): StateFlow<PostTabUiState> {
         return tabStates.getOrPut(tab) {
@@ -154,14 +149,6 @@ class PostRsListViewModel @Inject constructor(
                     e
                 )
                 state.value = state.value.copy(isLoadingMore = false)
-            }
-        }
-    }
-
-    fun refreshAllTabs() {
-        PostRsListTab.entries.forEach { tab ->
-            if (collections.containsKey(tab)) {
-                refreshTab(tab)
             }
         }
     }
