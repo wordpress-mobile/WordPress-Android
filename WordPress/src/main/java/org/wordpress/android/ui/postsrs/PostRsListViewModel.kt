@@ -26,6 +26,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -79,7 +80,7 @@ class PostRsListViewModel @Inject constructor(
     private var tabSelectionJob: Job? = null
 
     // Track loaded post count per tab for offset pagination
-    private val loadedCounts = mutableMapOf<PostRsListTab, Int>()
+    private val loadedCounts = ConcurrentHashMap<PostRsListTab, Int>()
 
     fun tabState(tab: PostRsListTab): StateFlow<PostTabUiState> =
         tabStates.getValue(tab).asStateFlow()
