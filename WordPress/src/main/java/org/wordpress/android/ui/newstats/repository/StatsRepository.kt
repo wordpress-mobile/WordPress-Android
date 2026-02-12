@@ -44,6 +44,7 @@ private const val NUM_DAYS_TODAY = 1
  * Repository for fetching stats data using the wordpress-rs API.
  * Handles hourly visits/views data for the Today's Stats card chart.
  */
+@Suppress("LargeClass")
 class StatsRepository @Inject constructor(
     private val statsDataSource: StatsDataSource,
     private val appLogWrapper: AppLogWrapper,

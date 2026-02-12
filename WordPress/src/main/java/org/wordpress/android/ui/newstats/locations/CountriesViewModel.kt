@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.countries
+package org.wordpress.android.ui.newstats.locations
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -169,6 +169,7 @@ class CountriesViewModel @Inject constructor(
         loadData()
     }
 
+    @Suppress("ReturnCount")
     fun onLocationTypeChanged(type: LocationType) {
         if (_selectedLocationType.value == type) return
         _selectedLocationType.value = type

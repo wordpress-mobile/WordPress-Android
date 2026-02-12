@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.countries
+package org.wordpress.android.ui.newstats.locations
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -26,6 +26,7 @@ import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
+@Suppress("LargeClass")
 class CountriesViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository

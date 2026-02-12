@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.countries
+package org.wordpress.android.ui.newstats.locations
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -146,6 +146,7 @@ private fun createWebViewClientWithErrorHandlers(
     }
 }
 
+@Suppress("LongParameterList")
 private fun buildGeoChartHtml(
     mapData: String,
     viewsLabel: String,

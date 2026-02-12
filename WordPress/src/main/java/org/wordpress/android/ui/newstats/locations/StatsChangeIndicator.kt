@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.countries
+package org.wordpress.android.ui.newstats.locations
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text

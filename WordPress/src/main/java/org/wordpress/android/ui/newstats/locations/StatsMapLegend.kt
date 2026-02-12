@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.countries
+package org.wordpress.android.ui.newstats.locations
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

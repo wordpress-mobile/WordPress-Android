@@ -70,10 +70,9 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.components.AddStatsCardBottomSheet
 import org.wordpress.android.ui.newstats.components.CardPosition
-import org.wordpress.android.ui.newstats.countries.CountriesCard
-import org.wordpress.android.ui.newstats.countries.CountriesDetailActivity
-import org.wordpress.android.ui.newstats.countries.CountriesViewModel
-import org.wordpress.android.ui.newstats.countries.LocationType
+import org.wordpress.android.ui.newstats.locations.CountriesCard
+import org.wordpress.android.ui.newstats.locations.CountriesDetailActivity
+import org.wordpress.android.ui.newstats.locations.CountriesViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCard
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
