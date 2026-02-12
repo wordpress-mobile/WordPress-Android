@@ -37,7 +37,7 @@ class PostRsRestClient @Inject constructor(
         val client = wpApiClientProvider.getWpApiClient(site)
 
         val response = client.request { requestBuilder ->
-            requestBuilder.posts().listWithEditContext(
+            requestBuilder.posts().listWithViewContext(
                 postEndpointType = PostEndpointType.Posts,
                 params = PostListParams(
                     perPage = PAGE_SIZE,
@@ -57,14 +57,9 @@ class PostRsRestClient @Inject constructor(
                     "Fetched ${posts.size} posts"
                 )
                 val models = posts.map { post ->
-                    val title =
-                        post.title?.raw?.takeIf { it.isNotBlank() }
-                            ?: post.title?.rendered
-                            ?: ""
+                    val title = post.title?.rendered ?: ""
                     val excerpt =
-                        post.excerpt?.raw?.takeIf { it.isNotBlank() }
-                            ?: post.excerpt?.rendered
-                            ?: ""
+                        post.excerpt?.rendered ?: ""
                     PostRsModel(
                         remotePostId = post.id,
                         title = title,

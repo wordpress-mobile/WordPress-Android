@@ -4,7 +4,7 @@ import uniffi.wp_api.PostStatus
 
 /**
  * Domain model for a post fetched via wordpress-rs.
- * Maps from uniffi's AnyPostWithEditContext.
+ * Maps from uniffi's AnyPostWithViewContext.
  */
 data class PostRsModel(
     val remotePostId: Long,
