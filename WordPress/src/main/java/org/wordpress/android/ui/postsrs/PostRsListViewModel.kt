@@ -3,12 +3,14 @@ package org.wordpress.android.ui.postsrs
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
 import org.wordpress.android.util.AppLog
@@ -26,8 +28,11 @@ class PostRsListViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpSelfHostedServiceProvider,
 ) : ViewModel() {
-    private val tabStates = mutableMapOf<PostRsListTab, MutableStateFlow<PostTabUiState>>()
-    private val collections = mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
+    private val tabStates =
+        mutableMapOf<PostRsListTab, MutableStateFlow<PostTabUiState>>()
+    private val collections =
+        mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
+    private val initializingTabs = mutableSetOf<PostRsListTab>()
 
     private val _events = MutableSharedFlow<PostRsListUiEvent>()
     val events = _events.asSharedFlow()
@@ -40,6 +45,7 @@ class PostRsListViewModel @Inject constructor(
 
     fun initTab(tab: PostRsListTab) {
         if (collections.containsKey(tab)) return
+        if (initializingTabs.contains(tab)) return
 
         val site = selectedSiteRepository.getSelectedSite() ?: run {
             getOrCreateStateFlow(tab).value = PostTabUiState(
@@ -48,38 +54,53 @@ class PostRsListViewModel @Inject constructor(
             return
         }
 
-        try {
-            val service = serviceProvider.getService(site)
-            val postService = service.posts()
-            val filter = PostListFilter(
-                status = tab.statuses,
-                order = tab.order,
-                orderby = WpApiParamPostsOrderBy.DATE
-            )
+        initializingTabs.add(tab)
 
-            val collection =
-                postService.getObservablePostMetadataCollectionWithEditContext(
-                    endpointType = PostEndpointType.Posts,
-                    filter = filter,
-                    perPage = PAGE_SIZE.toUInt()
+        viewModelScope.launch {
+            try {
+                val collection = withContext(Dispatchers.IO) {
+                    val service = serviceProvider.getService(site)
+                    val postService = service.posts()
+                    val filter = PostListFilter(
+                        status = tab.statuses,
+                        order = tab.order,
+                        orderby = WpApiParamPostsOrderBy.DATE
+                    )
+                    postService
+                        .getObservablePostMetadataCollectionWithEditContext(
+                            endpointType = PostEndpointType.Posts,
+                            filter = filter,
+                            perPage = PAGE_SIZE.toUInt()
+                        )
+                }
+
+                collections[tab] = collection
+                initializingTabs.remove(tab)
+
+                collection.addDataObserver {
+                    viewModelScope.launch {
+                        loadItemsForTab(tab)
+                    }
+                }
+
+                collection.addListInfoObserver {
+                    viewModelScope.launch {
+                        updateListInfoForTab(tab)
+                    }
+                }
+
+                refreshTab(tab)
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to init RS post list tab",
+                    e
                 )
-
-            collections[tab] = collection
-
-            collection.addDataObserver {
-                viewModelScope.launch { loadItemsForTab(tab) }
+                initializingTabs.remove(tab)
+                getOrCreateStateFlow(tab).value = PostTabUiState(
+                    error = e.message ?: "Failed to initialize"
+                )
             }
-
-            collection.addListInfoObserver {
-                viewModelScope.launch { updateListInfoForTab(tab) }
-            }
-
-            refreshTab(tab)
-        } catch (e: Exception) {
-            AppLog.e(AppLog.T.POSTS, "Failed to init RS post list tab", e)
-            getOrCreateStateFlow(tab).value = PostTabUiState(
-                error = e.message ?: "Failed to initialize"
-            )
         }
     }
 
@@ -90,11 +111,17 @@ class PostRsListViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                collection.refresh()
+                withContext(Dispatchers.IO) {
+                    collection.refresh()
+                }
                 loadItemsForTab(tab)
                 updateListInfoForTab(tab)
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to refresh tab $tab",
+                    e
+                )
                 state.value = state.value.copy(
                     isLoading = false,
                     isRefreshing = false,
@@ -107,17 +134,25 @@ class PostRsListViewModel @Inject constructor(
     fun loadMorePosts(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
         val state = getOrCreateStateFlow(tab)
-        if (state.value.isLoadingMore || !state.value.canLoadMore) return
+        if (state.value.isLoadingMore || !state.value.canLoadMore) {
+            return
+        }
 
         state.value = state.value.copy(isLoadingMore = true)
 
         viewModelScope.launch {
             try {
-                collection.loadNextPage()
+                withContext(Dispatchers.IO) {
+                    collection.loadNextPage()
+                }
                 loadItemsForTab(tab)
                 updateListInfoForTab(tab)
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to load more for tab $tab",
+                    e
+                )
                 state.value = state.value.copy(isLoadingMore = false)
             }
         }
@@ -136,9 +171,10 @@ class PostRsListViewModel @Inject constructor(
         val state = getOrCreateStateFlow(tab)
 
         try {
-            val items = collection.loadItems()
-            val uiModels = items.map { item ->
-                item.state.toUiModel(item.id)
+            val uiModels = withContext(Dispatchers.IO) {
+                collection.loadItems().map { item ->
+                    item.state.toUiModel(item.id)
+                }
             }
             state.value = state.value.copy(
                 posts = uiModels,
@@ -146,24 +182,32 @@ class PostRsListViewModel @Inject constructor(
                 error = null
             )
         } catch (e: Exception) {
-            AppLog.e(AppLog.T.POSTS, "Failed to load items for tab $tab", e)
+            AppLog.e(
+                AppLog.T.POSTS,
+                "Failed to load items for tab $tab",
+                e
+            )
         }
     }
 
-    private fun updateListInfoForTab(tab: PostRsListTab) {
+    private suspend fun updateListInfoForTab(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
         val state = getOrCreateStateFlow(tab)
 
-        val listInfo = collection.listInfo()
+        val listInfo = withContext(Dispatchers.IO) {
+            collection.listInfo()
+        }
         val morePages = listInfo?.hasMorePages ?: false
         val fetchingFirstPage =
             listInfo?.state == ListState.FETCHING_FIRST_PAGE
 
         state.value = state.value.copy(
             isRefreshing = fetchingFirstPage,
-            isLoadingMore = listInfo?.state == ListState.FETCHING_NEXT_PAGE,
+            isLoadingMore =
+                listInfo?.state == ListState.FETCHING_NEXT_PAGE,
             canLoadMore = morePages,
-            isLoading = fetchingFirstPage && state.value.posts.isEmpty(),
+            isLoading =
+                fetchingFirstPage && state.value.posts.isEmpty(),
             error = if (listInfo?.state == ListState.ERROR) {
                 listInfo.errorMessage ?: "Unknown error"
             } else {
@@ -172,7 +216,9 @@ class PostRsListViewModel @Inject constructor(
         )
     }
 
-    private fun getOrCreateStateFlow(tab: PostRsListTab): MutableStateFlow<PostTabUiState> {
+    private fun getOrCreateStateFlow(
+        tab: PostRsListTab
+    ): MutableStateFlow<PostTabUiState> {
         return tabStates.getOrPut(tab) {
             MutableStateFlow(PostTabUiState(isLoading = true))
         }
