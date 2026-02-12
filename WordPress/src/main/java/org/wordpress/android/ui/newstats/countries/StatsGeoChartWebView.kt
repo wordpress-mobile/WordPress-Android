@@ -28,11 +28,6 @@ import java.util.Locale
 private const val RGB_MASK = 0xFFFFFF
 
 /**
- * Display mode for the GeoChart map.
- */
-enum class GeoChartDisplayMode { COUNTRIES, REGIONS, CITIES }
-
-/**
  * A WebView component for displaying Google GeoChart maps.
  *
  * Security measures implemented (following the pattern from MapViewHolder in old stats):
@@ -51,7 +46,7 @@ enum class GeoChartDisplayMode { COUNTRIES, REGIONS, CITIES }
 fun StatsGeoChartWebView(
     mapData: String,
     modifier: Modifier = Modifier,
-    displayMode: GeoChartDisplayMode = GeoChartDisplayMode.COUNTRIES,
+    useMarkers: Boolean = false,
     onError: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -64,11 +59,11 @@ fun StatsGeoChartWebView(
 
     val htmlPage = remember(
         mapData, colorLow, colorHigh, backgroundColor,
-        emptyColor, viewsLabel, displayMode
+        emptyColor, viewsLabel, useMarkers
     ) {
         buildGeoChartHtml(
             mapData, viewsLabel, colorLow, colorHigh,
-            emptyColor, backgroundColor, displayMode
+            emptyColor, backgroundColor, useMarkers
         )
     }
 
@@ -123,7 +118,6 @@ private fun createWebViewClientWithErrorHandlers(onError: (() -> Unit)?): WebVie
     }
 }
 
-@Suppress("LongParameterList")
 private fun buildGeoChartHtml(
     mapData: String,
     viewsLabel: String,
@@ -131,27 +125,19 @@ private fun buildGeoChartHtml(
     colorHigh: String,
     emptyColor: String,
     backgroundColor: String,
-    displayMode: GeoChartDisplayMode = GeoChartDisplayMode.COUNTRIES
+    useMarkers: Boolean = false
 ): String {
-    val dataHeader = when (displayMode) {
-        GeoChartDisplayMode.COUNTRIES ->
-            "['Country', '$viewsLabel']"
-        GeoChartDisplayMode.REGIONS ->
-            "['Region', '$viewsLabel']"
-        GeoChartDisplayMode.CITIES ->
-            "['Lat', 'Long', 'City', '$viewsLabel']"
+    val dataHeader = if (useMarkers) {
+        "['Lat', 'Long', 'City', '$viewsLabel']"
+    } else {
+        "['Country', '$viewsLabel']"
     }
-
-    val optionsExtra = when (displayMode) {
-        GeoChartDisplayMode.COUNTRIES ->
-            "resolution: 'countries',"
-        GeoChartDisplayMode.REGIONS ->
-            "resolution: 'provinces',"
-        GeoChartDisplayMode.CITIES ->
-            "displayMode: 'markers'," +
-                " sizeAxis: { minSize: 3, maxSize: 12 },"
+    val optionsExtra = if (useMarkers) {
+        "displayMode: 'markers'," +
+            " sizeAxis: { minSize: 3, maxSize: 12 },"
+    } else {
+        "resolution: 'countries',"
     }
-
     return """
         <html>
         <head>

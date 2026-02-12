@@ -185,12 +185,6 @@ private fun CountriesDetailScreen(
         LocationType.REGIONS -> R.string.stats_regions_title
         LocationType.CITIES -> R.string.stats_cities_title
     }
-    val displayMode = when (locationType) {
-        LocationType.COUNTRIES -> GeoChartDisplayMode.COUNTRIES
-        LocationType.REGIONS -> GeoChartDisplayMode.REGIONS
-        LocationType.CITIES -> GeoChartDisplayMode.CITIES
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -228,7 +222,8 @@ private fun CountriesDetailScreen(
                 // Map
                 StatsGeoChartWebView(
                     mapData = mapData,
-                    displayMode = displayMode,
+                    useMarkers =
+                        locationType == LocationType.CITIES,
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(MAP_ASPECT_RATIO)

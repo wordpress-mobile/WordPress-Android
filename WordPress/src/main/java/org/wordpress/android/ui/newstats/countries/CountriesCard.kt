@@ -170,12 +170,6 @@ private fun LoadedContent(
         LocationType.REGIONS -> R.string.stats_regions_title
         LocationType.CITIES -> R.string.stats_cities_title
     }
-    val displayMode = when (selectedLocationType) {
-        LocationType.COUNTRIES -> GeoChartDisplayMode.COUNTRIES
-        LocationType.REGIONS -> GeoChartDisplayMode.REGIONS
-        LocationType.CITIES -> GeoChartDisplayMode.CITIES
-    }
-
     Column(modifier = Modifier.padding(CardPadding)) {
         StatsCardHeader(
             titleResId = titleResId,
@@ -201,7 +195,8 @@ private fun LoadedContent(
             // Map
             CountryMap(
                 mapData = state.mapData,
-                displayMode = displayMode,
+                useMarkers =
+                    selectedLocationType == LocationType.CITIES,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(MAP_ASPECT_RATIO)
@@ -327,11 +322,11 @@ private fun LocationTypeSelector(
 private fun CountryMap(
     mapData: String,
     modifier: Modifier = Modifier,
-    displayMode: GeoChartDisplayMode = GeoChartDisplayMode.COUNTRIES
+    useMarkers: Boolean = false
 ) {
     StatsGeoChartWebView(
         mapData = mapData,
-        displayMode = displayMode,
+        useMarkers = useMarkers,
         modifier = modifier
     )
 }
