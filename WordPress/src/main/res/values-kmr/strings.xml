@@ -125,7 +125,6 @@ Language: ku_TR
     <string name="mlp_preview_page">Pêşdîtin</string>
     <string name="mlp_create_page">Rûpelekê biafirîne</string>
     <string name="mlp_create_blank_page">Rûpeleke vala biafirîne</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Li %1$s Biafirîne\'yê bitikîne. %2$s Piştre&lt;b&gt;Şandiya Blogê&lt;/b&gt; hilbijêre</string>
     <string name="mlp_choose_layout_subtitle">Ji nav raxistinên pirrengî yên berê çêkirî hilbijêre û dest pê bike. An jî bi rûpeleke vala re dest pê bike.</string>
     <string name="mlp_choose_layout_title">Raxistinekê hilbijêre</string>
     <string name="photo_picker_choose_file">Ji cîhazê hilbijêre</string>
@@ -155,7 +154,6 @@ Language: ku_TR
     <string name="enter_email_to_continue_wordpress_com" a8c-src-lib="module:login">Ji bo têketinê an jî afirandina hesabekî WordPress.com\'ê navnîşana emaila xwe bikevê.</string>
     <string name="send_link_by_email" a8c-src-lib="module:login">Girêdanê bi emailê re bişîne</string>
     <string name="reader_error_request_failed_title">Di hêrana daxwazê de pirsgirêkek derket. Ji kerema xwe paşê dîsa biceribîne.</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Ji bo sazkirina sernavekî nû, li &lt;b&gt;%1$s&lt;/b&gt;ê bitikîne</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Jêbirina vê şandiyê ew ê guhertinên derhêlî jî rake. Tu bi rastî jî dixwazî dewam bikî?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Sernavê Malperê tenê ji aliyê rêveberekî dikare were guhertin.</string>
     <string name="error_update_site_title_network">Sernavê malperê nehat hildemandin. Girêdana tora xwe kontrol bike û dîsa biceribîne.</string>
@@ -580,23 +578,12 @@ Language: ku_TR
     <string name="stats_more_posts">Şandiyên zêdetir</string>
     <string name="stats_insights_posting_activity">Çalakiya Nivîsînê</string>
     <string name="new_site_creation_preview_back_pressed_warning">Dibe ku tu pêşveçûnê wenda bikî. Tu bi rastî jî dixwazî derkevî?</string>
-    <string name="plans_loading_error_with_cache_button">Dîsa jî Pakêtan Nîşan Bide</string>
-    <string name="plans_loading_error_with_cache_subtitle">Ji bo Pakêtan bibînî girêdana înternetê pêwîst e, ji ber wê dibe ku hûrgilî ne hildem bin.</string>
-    <string name="plans_loading_error_no_cache_subtitle">Ji bo Pakêtan bibînî girêdana înternetê pêwîst e.</string>
-    <string name="plans_loading_error_no_plans_subtitle">Niha em nikarin Pakêtên te bar bikin. Piştre dîsa biceribîne.</string>
-    <string name="plans_loading_error_no_plans_title">Pakêt nayên barkirin</string>
-    <string name="plans_loading_error_network_title">Înternet tune ye</string>
     <string name="menu_switch_to_gutenberg_editor">Derbasî edîtora blokê bibe</string>
     <string name="stats_loading_block_error">Di dema barkirina daneyên te de pirsgirêkek derket, rûpela xwe nû bike û dîsa biceribîne.</string>
     <string name="stats_loading_error">Dane nehatin barkirin</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Bi edîtora bloke şandî û rûpelên nû sererast bike</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Edîtora blokê bi kar bîne</string>
     <string name="exit">derketin</string>
-    <string name="quick_start_sites">Gavên Pêşve</string>
-    <string name="quick_start_dialog_upload_icon_message">Mêvanên te ew ê îkona te di gerokên xwe de bibînin. Ji bo xuyangeke profesyonel û balkêş îkoneke taybet tevlî bike.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Ji bo yeka din lê hilxînî, li %1$sÎkona Malpera Te%2$s\'yê bitepîne</string>
-    <string name="quick_start_dialog_check_stats_title">Amarên malpera xwe kontrol bike</string>
-    <string name="quick_start_task_skip_menu_title">Peywirê derbas bike</string>
     <string name="notification_channel_reminder_title">Bîranîner</string>
     <string name="stats_select_previous_period_description">Heyama paşî hilbijêre</string>
     <string name="stats_insights_popular">Dema Herî Populer</string>
@@ -742,15 +729,6 @@ Language: ku_TR
     <string name="page_status_change_error">Di guhertina rewşa rûpelê de pirsgirêkek derket</string>
     <string name="page_delete_error">Di jêbirina rûpelê de pirsgirêkek derket</string>
     <string name="set_parent">Dêûbav diyar bike</string>
-    <string name="quick_start_focus_point_description">vir bitepîne</string>
-    <string name="quick_start_list_create_site_title">Malpera xwe biafirîne</string>
-    <string name="quick_start_list_create_site_subtitle">Malpera xwe rake ser lingan û biweşîne.</string>
-    <string name="quick_start_dialog_share_site_title">Malpera xwe parve bike</string>
-    <string name="quick_start_dialog_view_site_title">Malpera xwe bibîne</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Ji bo tu hesabên xwe yên medyaya civakî tevlî bikî li %1$sGirêdan%2$s\'ê bitepîne</string>
-    <string name="quick_start_dialog_share_site_message">Hesabên xwe yên medyaya civakî girêbide – malpera te ew ê şandiyên nû bixweber parve bike.</string>
-    <string name="quick_start_dialog_publish_post_title">Şandiyekê biweşîne</string>
-    <string name="quick_start_button_positive">Here</string>
     <string name="content_description_more">Zêdetir</string>
     <string name="my_site_create_new_site_title">Ti malperên te tune ye</string>
     <string name="jetpack">Jetpack</string>
@@ -940,7 +918,6 @@ Language: ku_TR
     <string name="my_site_section_screen_title">Malpera Min</string>
     <string name="media_settings_screen_title">Hûrgiliya dosyeyê</string>
     <string name="notif_settings_screen_title">Sazkariyên danezanan</string>
-    <string name="login_epilogue_screen_title">Bi vî hesabî têketî ye:</string>
     <string name="person_detail_screen_title">Hûrguliya şexsî</string>
     <string name="permissions_denied_title">Destûr</string>
     <string name="version_with_name_param">Guherto %s</string>
@@ -1200,8 +1177,6 @@ Language: ku_TR
     <string name="post_queued">Şandî ket dorê</string>
     <string name="uploading_post">\"%s\" tê hilxistin</string>
     <string name="connection_to_server_lost">Girêdan bi serverê re qut bû</string>
-    <string name="login_epilogue_mysites_one">Malpera min</string>
-    <string name="login_epilogue_mysites_other">Malperên min</string>
     <string name="login_email_client_not_found">Sepana te ya epeyam-wergir bikare were tesbîtkirin</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Ji kerema xwe kodeke rastandinê bikevê</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Ji kerema xwe navekî bikarhêner bikevê</string>
@@ -1349,7 +1324,6 @@ Language: ku_TR
     <string name="start_over_email_subject">Ji serî ve dest bi malpera %s\'ê bike</string>
     <string name="site_picker_remove_site_error">Di rakirina malperê de çewtî derket, piştre dîsa biceribîne</string>
     <string name="editor_post_saved_locally_failed_media">Şandiyê hilxistinên medyayê bi ser nexist û bi ew derhêlî hatin tomarkirin</string>
-    <string name="sure_to_remove_account">Bila ev malper ji sepanê bê rakirin?</string>
     <string name="photo_picker_title">Wêne hilbijêre</string>
     <string name="error_publish_no_network">Cîhaz derhêl e. Şandî bi cîgehî hat tomarkirin.</string>
     <string name="editor_post_saved_online">Şandî bi serhêlî hat tomarkirin</string>
@@ -1463,8 +1437,6 @@ Language: ku_TR
     <string name="logging_in">Têketin pêk tê</string>
     <string name="web_address_dialog_hint">Dema ku te şîrove kir ew ê her kes bibîne.</string>
     <string name="export_your_content_message">Rûpel, şandî û sazkariyên te ew ê bi emailê ji ser %s\'ê ji te re bên şandin.</string>
-    <string name="plans">Pakêt</string>
-    <string name="plan">Pakêt</string>
     <string name="export_your_content">Naverokên xwe derxîne</string>
     <string name="export_email_sent">Emaila derxistinê hat şandin!</string>
     <string name="exporting_content_progress">Naverok tê derxistin…</string>
