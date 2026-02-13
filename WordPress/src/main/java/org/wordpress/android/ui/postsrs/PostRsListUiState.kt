@@ -2,8 +2,8 @@ package org.wordpress.android.ui.postsrs
 
 import android.text.format.DateUtils
 import androidx.annotation.StringRes
-import androidx.core.text.HtmlCompat
 import org.wordpress.android.R
+import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.AnyPostWithEditContext
 import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
@@ -86,10 +86,7 @@ private fun PostStatus?.toLabelResId(): Int = when (this) {
 
 private fun String.stripHtml(): String {
     if (isBlank()) return this
-    return HtmlCompat.fromHtml(
-        this,
-        HtmlCompat.FROM_HTML_MODE_LEGACY
-    ).toString().trim()
+    return HtmlUtils.fastStripHtml(this).trim()
 }
 
 private val postDateFormat = ThreadLocal.withInitial {
