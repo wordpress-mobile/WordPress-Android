@@ -59,6 +59,14 @@ private fun PostContentItem(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
+            if (post.date.isNotBlank()) {
+                Text(
+                    text = post.date,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+            }
             Text(
                 text = post.title.ifBlank {
                     stringResource(R.string.untitled_in_parentheses)
@@ -75,14 +83,6 @@ private fun PostContentItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
-                )
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            if (post.date.isNotBlank()) {
-                Text(
-                    text = post.date,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
