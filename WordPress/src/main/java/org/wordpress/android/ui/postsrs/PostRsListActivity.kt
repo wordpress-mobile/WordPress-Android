@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
@@ -12,6 +13,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.screens.PostRsListScreen
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
 
@@ -49,10 +51,17 @@ class PostRsListActivity : BaseAppCompatActivity() {
      */
     private fun openPost(remotePostId: Long) {
         val site = selectedSiteRepository.getSelectedSite()
-            ?: return
+        if (site == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found)
+            return
+        }
         val post = postStore.getPostByRemotePostId(
             remotePostId, site
-        ) ?: return
+        )
+        if (post == null) {
+            ToastUtils.showToast(this, R.string.post_not_found)
+            return
+        }
         ActivityLauncher.editPostOrPageForResult(
             this, site, post
         )
