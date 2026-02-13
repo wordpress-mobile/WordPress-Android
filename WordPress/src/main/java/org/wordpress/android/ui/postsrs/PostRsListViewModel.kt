@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.postsrs
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,9 +36,6 @@ class PostRsListViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
 ) : ViewModel() {
-    // All maps/sets are only accessed from the main thread:
-    // public functions are called from Compose/UI, and observer
-    // callbacks launch on viewModelScope (Main dispatcher).
     private val _tabStates =
         MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> =
@@ -56,6 +54,7 @@ class PostRsListViewModel @Inject constructor(
      * This FluxC dependency will be removed once the editor
      * supports loading posts via wordpress-rs.
      */
+    @MainThread
     fun openPost(remotePostId: Long) {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
@@ -79,6 +78,7 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /** Emits a [PostRsListEvent.CreatePost] for the selected site. */
+    @MainThread
     fun createNewPost() {
         val site = selectedSiteRepository.getSelectedSite()
             ?: return
@@ -90,6 +90,7 @@ class PostRsListViewModel @Inject constructor(
      * created yet. Creates the service, registers observers, then
      * triggers the first refresh.
      */
+    @MainThread
     @Suppress("ReturnCount")
     fun initTab(tab: PostRsListTab) {
         if (collections.containsKey(tab) || initializingTabs.contains(tab)) {
@@ -171,6 +172,7 @@ class PostRsListViewModel @Inject constructor(
      * indicator is only shown when [isUserRefresh] is true (i.e.
      * the user explicitly pulled to refresh).
      */
+    @MainThread
     fun refreshTab(
         tab: PostRsListTab,
         isUserRefresh: Boolean = false
@@ -216,6 +218,7 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /** Loads the next page of posts for [tab] if not already loading. */
+    @MainThread
     fun loadMorePosts(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
         val current = getTabUiState(tab)
