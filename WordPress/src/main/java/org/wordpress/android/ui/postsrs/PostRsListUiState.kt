@@ -105,7 +105,7 @@ private fun String.toRelativeDate(): String {
             millis,
             System.currentTimeMillis(),
             DateUtils.MINUTE_IN_MILLIS,
-            DateUtils.FORMAT_ABBREV_RELATIVE
+            DateUtils.FORMAT_ABBREV_RELATIVE or DateUtils.FORMAT_ABBREV_MONTH
         ).toString()
     } else {
         this
