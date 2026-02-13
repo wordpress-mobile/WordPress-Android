@@ -1,15 +1,9 @@
 package org.wordpress.android.ui.postsrs
 
-import android.text.format.DateUtils
 import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.AnyPostWithEditContext
-import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 data class PostTabUiState(
     val posts: List<PostRsUiModel> = emptyList(),
@@ -66,50 +60,8 @@ private fun FullEntityAnyPostWithEditContext.toUiModel():
                 ?: post.excerpt?.rendered
                 ?: ""
             ).let { HtmlUtils.fastStripHtml(it).trim() },
-        date = post.date.formatPostDate(post.status)
+        date = PostRsDateFormatter.format(
+            post.date, post.status
+        )
     )
-}
-
-private val postDateFormat = ThreadLocal.withInitial {
-    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-}
-
-private const val SECONDS_PER_DAY = 60L * 60 * 24
-private const val DAYS_PER_YEAR = 365L
-
-/**
- * Formats a post date string to match the old post list behavior:
- * - Scheduled posts always show an abbreviated absolute date
- * - Other posts < 1 year ago show relative time ("2 hr. ago")
- * - Older posts show an abbreviated absolute date ("Jan 2, 2023")
- */
-@Suppress("TooGenericExceptionCaught")
-private fun String.formatPostDate(status: PostStatus?): String {
-    if (isBlank()) return this
-    val millis = try {
-        postDateFormat.get()?.parse(this)?.time
-    } catch (_: Exception) {
-        null
-    } ?: return this
-
-    if (status is PostStatus.Future) {
-        return formatAbbrDate(millis)
-    }
-
-    val now = System.currentTimeMillis()
-    val secondsSince = (now - millis) / 1000
-    if (secondsSince < SECONDS_PER_DAY * DAYS_PER_YEAR) {
-        return DateUtils.getRelativeTimeSpanString(
-            millis,
-            now,
-            DateUtils.MINUTE_IN_MILLIS,
-            DateUtils.FORMAT_ABBREV_ALL
-        ).toString()
-    }
-    return formatAbbrDate(millis)
-}
-
-private fun formatAbbrDate(millis: Long): String {
-    val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
-    return dateFormat.format(Date(millis))
 }
