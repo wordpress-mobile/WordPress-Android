@@ -1,16 +1,13 @@
 package org.wordpress.android.ui.postsrs.screens
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -26,8 +23,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -40,7 +35,6 @@ import org.wordpress.android.ui.postsrs.PostRsListViewModel
 @Composable
 fun PostRsListScreen(
     viewModel: PostRsListViewModel,
-    isFetchingPost: Boolean,
     onNavigateBack: () -> Unit,
     onPostClick: (Long) -> Unit,
     onCreatePost: () -> Unit
@@ -48,12 +42,6 @@ fun PostRsListScreen(
     val tabs = PostRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.collect { page ->
-            viewModel.setCurrentTab(tabs[page])
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -86,69 +74,59 @@ fun PostRsListScreen(
             }
         }
     ) { contentPadding ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                PrimaryScrollableTabRow(
-                    selectedTabIndex = pagerState.currentPage,
-                    edgePadding = 0.dp
-                ) {
-                    tabs.forEachIndexed { index, tab ->
-                        Tab(
-                            selected = pagerState.currentPage == index,
-                            onClick = {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(
-                                        index
-                                    )
-                                }
-                            },
-                            text = {
-                                Text(
-                                    text = stringResource(
-                                        tab.labelResId
-                                    )
+            PrimaryScrollableTabRow(
+                selectedTabIndex = pagerState.currentPage,
+                edgePadding = 0.dp
+            ) {
+                tabs.forEachIndexed { index, tab ->
+                    Tab(
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(
+                                    index
                                 )
                             }
-                        )
-                    }
-                }
-
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.weight(1f)
-                ) { page ->
-                    val tab = tabs[page]
-
-                    LaunchedEffect(tab) {
-                        viewModel.initTab(tab)
-                    }
-
-                    val tabState by viewModel
-                        .getTabState(tab)
-                        .collectAsState()
-
-                    PostRsTabListScreen(
-                        state = tabState,
-                        emptyMessageResId = tab.emptyMessageResId,
-                        onRefresh = { viewModel.refreshTab(tab) },
-                        onLoadMore = {
-                            viewModel.loadMorePosts(tab)
                         },
-                        onPostClick = onPostClick,
-                        onCreatePost = onCreatePost
+                        text = {
+                            Text(
+                                text = stringResource(
+                                    tab.labelResId
+                                )
+                            )
+                        }
                     )
                 }
             }
 
-            if (isFetchingPost) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .align(Alignment.Center)
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.weight(1f)
+            ) { page ->
+                val tab = tabs[page]
+
+                LaunchedEffect(tab) {
+                    viewModel.initTab(tab)
+                }
+
+                val tabState by viewModel
+                    .getTabState(tab)
+                    .collectAsState()
+
+                PostRsTabListScreen(
+                    state = tabState,
+                    emptyMessageResId = tab.emptyMessageResId,
+                    onRefresh = { viewModel.refreshTab(tab) },
+                    onLoadMore = {
+                        viewModel.loadMorePosts(tab)
+                    },
+                    onPostClick = onPostClick,
+                    onCreatePost = onCreatePost
                 )
             }
         }
