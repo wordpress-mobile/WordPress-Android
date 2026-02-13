@@ -114,6 +114,16 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            // Date
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.25f)
+                    .height(12.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(placeholderColor)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            // Title
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
@@ -121,19 +131,12 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
                     .clip(RoundedCornerShape(4.dp))
                     .background(placeholderColor)
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
+            // Excerpt
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
                     .height(14.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(placeholderColor)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.3f)
-                    .height(12.dp)
                     .clip(RoundedCornerShape(4.dp))
                     .background(placeholderColor)
             )
