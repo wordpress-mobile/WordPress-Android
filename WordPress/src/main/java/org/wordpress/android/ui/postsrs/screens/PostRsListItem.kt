@@ -132,10 +132,18 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
                     .background(placeholderColor)
             )
             Spacer(modifier = Modifier.height(4.dp))
-            // Excerpt
+            // Excerpt (two lines)
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
+                    .height(14.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(placeholderColor)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
                     .height(14.dp)
                     .clip(RoundedCornerShape(4.dp))
                     .background(placeholderColor)
