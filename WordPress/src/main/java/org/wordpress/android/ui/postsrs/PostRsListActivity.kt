@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.PostStore
+import kotlinx.coroutines.launch
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -24,11 +26,10 @@ class PostRsListActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
-    @Inject
-    lateinit var postStore: PostStore
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        observeEvents()
 
         setContent {
             AppThemeM3 {
@@ -37,34 +38,33 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     onNavigateBack = {
                         onBackPressedDispatcher.onBackPressed()
                     },
-                    onPostClick = ::openPost,
+                    onPostClick = viewModel::openPost,
                     onCreatePost = ::createNewPost
                 )
             }
         }
     }
 
-    /**
-     * Opens a post in the editor if it exists in the local FluxC
-     * database. This FluxC dependency will be removed once the
-     * editor supports loading posts via wordpress-rs.
-     */
-    private fun openPost(remotePostId: Long) {
-        val site = selectedSiteRepository.getSelectedSite()
-        if (site == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found)
-            return
+    private fun observeEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.events.collect { event ->
+                    when (event) {
+                        is PostRsListEvent.EditPost ->
+                            ActivityLauncher.editPostOrPageForResult(
+                                this@PostRsListActivity,
+                                event.site,
+                                event.post
+                            )
+                        is PostRsListEvent.ShowError ->
+                            ToastUtils.showToast(
+                                this@PostRsListActivity,
+                                event.messageResId
+                            )
+                    }
+                }
+            }
         }
-        val post = postStore.getPostByRemotePostId(
-            remotePostId, site
-        )
-        if (post == null) {
-            ToastUtils.showToast(this, R.string.post_not_found)
-            return
-        }
-        ActivityLauncher.editPostOrPageForResult(
-            this, site, post
-        )
     }
 
     private fun createNewPost() {

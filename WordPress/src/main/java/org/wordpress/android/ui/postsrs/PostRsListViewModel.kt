@@ -4,13 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
 import org.wordpress.android.util.AppLog
@@ -29,6 +33,7 @@ class PostRsListViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpSelfHostedServiceProvider,
     private val resourceProvider: ResourceProvider,
+    private val postStore: PostStore,
 ) : ViewModel() {
     // All three maps are only accessed from the main thread:
     // public functions are called from Compose/UI, and observer
@@ -38,6 +43,37 @@ class PostRsListViewModel @Inject constructor(
     private val collections =
         mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
+
+    private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
+    val events = _events.receiveAsFlow()
+
+    /**
+     * Looks up a post in the local FluxC database and emits an
+     * [PostRsListEvent] to open the editor or show an error.
+     * This FluxC dependency will be removed once the editor
+     * supports loading posts via wordpress-rs.
+     */
+    fun openPost(remotePostId: Long) {
+        val site = selectedSiteRepository.getSelectedSite()
+        if (site == null) {
+            _events.trySend(
+                PostRsListEvent.ShowError(R.string.blog_not_found)
+            )
+            return
+        }
+        val post = postStore.getPostByRemotePostId(
+            remotePostId, site
+        )
+        if (post == null) {
+            _events.trySend(
+                PostRsListEvent.ShowError(R.string.post_not_found)
+            )
+            return
+        }
+        _events.trySend(
+            PostRsListEvent.EditPost(site, post)
+        )
+    }
 
     /** Returns an observable [StateFlow] of UI state for the given tab. */
     fun getTabState(tab: PostRsListTab): StateFlow<PostTabUiState> {
@@ -262,4 +298,15 @@ class PostRsListViewModel @Inject constructor(
     companion object {
         private const val PAGE_SIZE = 20
     }
+}
+
+sealed interface PostRsListEvent {
+    data class EditPost(
+        val site: SiteModel,
+        val post: PostModel
+    ) : PostRsListEvent
+
+    data class ShowError(
+        val messageResId: Int
+    ) : PostRsListEvent
 }
