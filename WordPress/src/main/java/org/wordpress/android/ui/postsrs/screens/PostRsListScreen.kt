@@ -50,6 +50,7 @@ import org.wordpress.android.ui.postsrs.PostTabUiState
 fun PostRsListScreen(
     tabStates: Map<PostRsListTab, PostTabUiState>,
     searchQuery: String,
+    onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PostRsListTab) -> Unit,
     onInitTab: (PostRsListTab) -> Unit,
     onRefreshTab: (PostRsListTab) -> Unit,
@@ -170,6 +171,7 @@ fun PostRsListScreen(
                     } else {
                         IconButton(onClick = {
                             isSearchActive = true
+                            onSearchOpen()
                         }) {
                             Icon(
                                 Icons.Default.Search,
@@ -256,6 +258,8 @@ fun PostRsListScreen(
                     state = tabState,
                     emptyMessageResId =
                         tab.emptyMessageResId,
+                    isSearchIdle = isSearchActive
+                        && searchQuery.isEmpty(),
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onPostClick = onPostClick,

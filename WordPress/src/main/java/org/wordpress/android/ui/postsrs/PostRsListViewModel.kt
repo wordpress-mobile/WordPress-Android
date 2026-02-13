@@ -90,6 +90,17 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
+     * Clears all cached collections and tab states so the list
+     * appears empty while the user types a search query.
+     */
+    @MainThread
+    fun onSearchOpen() {
+        clearCollections()
+        _tabStates.value = PostRsListTab.entries
+            .associateWith { PostTabUiState() }
+    }
+
+    /**
      * Updates the search query, clears all cached collections, and
      * re-initializes the given [activeTab] so it fetches posts
      * matching the new query.
@@ -100,12 +111,16 @@ class PostRsListViewModel @Inject constructor(
         activeTab: PostRsListTab
     ) {
         _searchQuery.value = query
+        clearCollections()
+        initTab(activeTab)
+    }
+
+    private fun clearCollections() {
         collections.values.forEach { it.close() }
         collections.clear()
         initializingTabs.clear()
         userRefreshingTabs.clear()
         _tabStates.value = emptyMap()
-        initTab(activeTab)
     }
 
     /**

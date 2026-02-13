@@ -37,6 +37,8 @@ class PostRsListActivity : BaseAppCompatActivity() {
                 PostRsListScreen(
                     tabStates = tabStates,
                     searchQuery = searchQuery,
+                    onSearchOpen =
+                        viewModel::onSearchOpen,
                     onSearchQueryChanged =
                         viewModel::onSearchQueryChanged,
                     onInitTab = viewModel::initTab,

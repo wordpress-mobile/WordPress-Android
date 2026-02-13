@@ -38,6 +38,7 @@ import org.wordpress.android.ui.postsrs.PostTabUiState
 fun PostRsTabListScreen(
     state: PostTabUiState,
     emptyMessageResId: Int,
+    isSearchIdle: Boolean = false,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
@@ -61,6 +62,7 @@ fun PostRsTabListScreen(
         }
     ) {
         when {
+            isSearchIdle -> Box(Modifier.fillMaxSize())
             state.isLoading -> ShimmerList()
             state.error != null && state.posts.isEmpty() -> {
                 ErrorContent(state.error)
