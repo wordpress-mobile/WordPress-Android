@@ -143,7 +143,7 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(4.dp))
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(0.6f)
+                    .fillMaxWidth(0.9f)
                     .height(14.dp)
                     .clip(RoundedCornerShape(4.dp))
                     .background(placeholderColor)
