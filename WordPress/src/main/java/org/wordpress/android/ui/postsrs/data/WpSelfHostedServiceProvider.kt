@@ -18,6 +18,13 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Creates and caches [WpSelfHostedService] instances for self-hosted
+ * WordPress sites that have application-password credentials. Each
+ * service is configured with the site's REST API root, authentication
+ * credentials, and a shared SQLite-backed [WordPressApiCache], then
+ * keyed by site ID so subsequent requests reuse the same instance.
+ */
 @Singleton
 class WpSelfHostedServiceProvider @Inject constructor(
     @ApplicationContext private val context: Context,
