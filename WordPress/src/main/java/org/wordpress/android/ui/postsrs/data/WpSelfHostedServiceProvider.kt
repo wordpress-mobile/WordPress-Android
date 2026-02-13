@@ -48,7 +48,6 @@ class WpSelfHostedServiceProvider @Inject constructor(
     }
 
     /** Removes all cached services. */
-    @Suppress("unused")
     @Synchronized
     fun clearAll() {
         services.clear()
