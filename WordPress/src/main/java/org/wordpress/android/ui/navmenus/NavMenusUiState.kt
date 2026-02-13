@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import org.json.JSONArray
 import org.json.JSONException
 import org.wordpress.android.R
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.ui.navmenus.models.NavMenuItemModel
 import org.wordpress.android.ui.navmenus.models.NavMenuLocationModel
 import org.wordpress.android.ui.navmenus.models.NavMenuModel
@@ -203,7 +204,8 @@ fun String.parseJsonStringArray(): List<String> {
     return try {
         val jsonArray = JSONArray(this)
         (0 until jsonArray.length()).map { jsonArray.getString(it) }
-    } catch (_: JSONException) {
+    } catch (e: JSONException) {
+        AppLog.w(AppLog.T.API, "Failed to parse JSON string array: $e")
         emptyList()
     }
 }

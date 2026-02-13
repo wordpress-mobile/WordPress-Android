@@ -222,7 +222,6 @@ Language: ar
     <string name="more_content_description_plans">خطط أكثر</string>
     <string name="more_content_description_pages">صفحات أكثر</string>
     <string name="more_content_description_posts">تدوينات أكثر</string>
-    <string name="more_content_description_quick_start">البدء السريع أكثر</string>
     <string name="more_content_description_today_stats">إحصاءات اليوم أكثر</string>
     <string name="more_content_description_blogging_prompts">موجّهات أكثر</string>
     <string name="more_content_description_promote_blaze">Blaze أكثر</string>
@@ -373,7 +372,6 @@ Language: ar
     <string name="site_monitoring_tab_title_php_logs">سجلات PHP</string>
     <string name="site_monitoring_tab_title_metrics">المقاييس</string>
     <string name="site_monitoring">مراقبة الموقع</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">استخدم &lt;b&gt;الاكتشاف&lt;/b&gt; للعثور على المواقع والوسوم. يمكنك محاولة تحديد &lt;b&gt;الاشتراكات&lt;/b&gt; لعرض المحتوى الذي تم الاشتراك فيه وإدارة اشتراكاتك.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">الانتقال إلى الاشتراكات</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">لم تنشر المدونات التي اشتركتَ فيها أي شيء مؤخرًا</string>
     <string name="reader_no_followed_blogs_description_subs">اشترك في المدونات ضمن \"اكتشاف\" أو ابحث عن مدونة تنال إعجابك بالفعل.</string>
@@ -801,9 +799,6 @@ Language: ar
     <string name="wp_jetpack_deep_link_overlay_description">يبدو أن تطبيق Jetpack مثبت لديك.\n\nهل ترغب في فتح الروابط في تطبيق Jetpack في المستقبل؟\n\nيمكنك دومًا تغيير ذلك في إعدادات التطبيق &gt; فتح الروابط في Jetpack</string>
     <string name="wp_jetpack_deep_link_overlay_title">هل تفتح الروابط في Jetpack؟</string>
     <string name="wp_jetpack_continue_without_jetpack">الاستمرار من دون Jetpack</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">يوفر Jetpack الإحصاءات والتنبيهات والمزيد لمساعدتك على إنشاء الموقع الذي تحلم به على ووردبريس وتطويره.\n\nلا يدعم تطبيق ووردبريس إنشاء موقع جديد بعد الآن.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">يوفر Jetpack الإحصاءات والتنبيهات والمزيد لمساعدتك على إنشاء الموقع الذي تحلم به على ووردبريس وتطويره.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">إنشاء موقع جديد على ووردبريس باستخدام تطبيق Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">روابط الويب</string>
     <string name="deep_linking_urilinks_alias_label">روابط عناوين uri</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">قم بالتبديل إلى تطبيق Jetpack للاستمرار في تلقي   من التنبيهات في الوقت الفعلي على جهازك.</string>
@@ -913,24 +908,11 @@ Language: ar
     <string name="stats_action_card_blogging_reminders_title">تعيين تذكيرات التدوين الخاصة بك</string>
     <string name="stats_action_card_grow_audience_button_label">التحقُّق من الدورة التدريبية</string>
     <string name="stats_action_card_grow_audience_title">تكبير جمهورك</string>
-    <string name="quick_start_sites_type_all_tasks_completed">جميع المهام مكتملة</string>
-    <string name="quick_start_list_task_complete">اكتملت المهمة</string>
     <string name="me_btn_scan_login_code">مسح رمز تسجيل الدخول ضوئيًا</string>
     <string name="stats_insights_likes_guide_card">⭐️ لقد تلقت آخر تدويناتك ⁦%1$s⁩ ⁦%2$s⁩ من الإعجابات.</string>
     <string name="stats_most_popular_percent_views_empty">لا يوجد نشاط كافٍ. تحقَّق من هذا مرة أخرى لاحقًا عندما يكون لدى موقعك مزيد من الزائرين!</string>
     <string name="stats_total_subscribers_content_description">%1$s، %2$s%% من إجمالي المشتركين</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">تهانينا! أنت تعلم كيفية التعامل مع هذا الأمر&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">التعرُّف على التطبيق</string>
-    <string name="quick_start_list_upload_media_subtitle">إحضار الوسائط مباشرةً من جهازك أو الكاميرا الخاصة بك إلى موقعك</string>
-    <string name="quick_start_list_upload_media_title">رفع الصور أو مقاطع الفيديو</string>
-    <string name="quick_start_list_check_notification_subtitle">الحصول على تحديثات في الوقت الفعلي من جيبك</string>
-    <string name="quick_start_dialog_upload_media_message">حدِّد ⁦%1$s⁩الوسائط⁦%2$s⁩ للاطلاع على مكتبتك الحالية.</string>
-    <string name="quick_start_dialog_check_notifications_message">احصل على تحديثات في الوقت الفعلي من جيبك.</string>
-    <string name="quick_start_dialog_check_notifications_title">التحقُّق من تنبيهاتك</string>
-    <string name="quick_start_dialog_check_notifications_message_short">حدِّد علامة تبويب ⁦%1$s⁩التنبيهات⁦%2$s⁩ للحصول على تحديثات في أثناء التنقل.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">حدِّد ⁦%1$s⁩علامة الجمع⁦%2$s⁩ لرفع الوسائط. يمكنك إضافتها إلى تدويناتك/ صفحاتك من أي جهاز.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">استخدم &lt;b&gt;الاكتشاف&lt;/b&gt; للعثور على المواقع والوسوم.</string>
     <string name="photo_picker_video_thumbnail_content_description">صورة مصغَّرة للفيديو</string>
     <string name="stats_details_top_commentators">أفضل المعلقين</string>
     <string name="stats_published_years_ago">تم النشر منذ ⁦%1$d⁩ من السنوات</string>
@@ -950,8 +932,6 @@ Language: ar
     <string name="blogging_prompts_answer_prompt_notification_answer_action">إجابة</string>
     <string name="blogging_prompts_answer_prompt_notification_title">مطالبة يومية</string>
     <string name="blogging_prompts_onboarding_got_it">فهمت</string>
-    <string name="quick_start_dialog_view_your_site_message_short">النقر على &lt;b&gt;%1$s&lt;/b&gt; لعرض موقعك</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">حدِّد ⁦%1$s⁩ القارئ ⁦%2$s⁩ للعثور على مواقع أخرى.</string>
     <string name="blogging_reminders_prompt_help_button_desc">معرفة المزيد حول المطالبات</string>
     <string name="photo_picker_video_thumbnail_unselected">تم إلغاء تحديد الفيديو</string>
     <string name="photo_picker_video_thumbnail_selected">تم تحديد الفيديو</string>
@@ -1039,7 +1019,6 @@ Language: ar
     <string name="site_creation_intent_art">الفن</string>
     <string name="new_site_creation_intents_input_hint">على سبيل المثال الموضة والشعر والسياسة</string>
     <string name="new_site_creation_intents_title">موضوع الموقع</string>
-    <string name="quick_start_site_menu_tab_message_short">انقر على &lt;b&gt;%1$s&lt;/b&gt; للمتابعة.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">التخطي لهذا اليوم</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">عرض مزيد من المطالبات</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">مشاركة مطالبة التدوين</string>
@@ -1128,7 +1107,6 @@ Language: ar
     <string name="comment_edit_user_name">الاسم</string>
     <string name="comment_edit_menu_done">تمّ</string>
     <string name="weekly_roundup">موجز أسبوعي</string>
-    <string name="quick_start_list_create_site_message">تم إنشاء الموقع! قم بإكمال مهمة أخرى.</string>
     <string name="domains_free_plan_get_your_domain_title">الحصول على نطاقك</string>
     <string name="recommend_app_generic_get_template_error">خطأ غير معروف في أثناء إحضار قالب توصية التطبيق</string>
     <string name="recommend_app_bad_format_response">تم تلقي ردّ غير صالح</string>
@@ -1140,8 +1118,6 @@ Language: ar
     <string name="blogging_reminders_notification_time">وقت التنبيه</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">ستحصل على تذكيرات للتدوين &lt;b&gt;يوميًا&lt;/b&gt; في &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">⁦%1$s⁩ في الأسبوع في ⁦%2$s⁩</string>
-    <string name="quick_start_sites_type_tasks_completed">⁦%1$s⁩ من ⁦%2$s⁩ مكتمل</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">تعرَّف على الأساسيات من خلال جولة سريعة.</string>
     <string name="comment_batch_moderation_error">فشل إدارة تعليق واحد أو أكثر</string>
     <string name="create_site_notification_create_site_action">إنشاء موقع</string>
     <string name="create_site_notification_text">إعداد موقعك وتشغيله ببعض الخطوات السريعة فقط</string>
@@ -1150,12 +1126,6 @@ Language: ar
     <string name="stats_disabled_enable_stats_button">تمكين إحصاءات الموقع</string>
     <string name="stats_disabled_subtitle">قم بتفعيل إحصاءات الموقع لمراجعة معلوماتك المفصّلة حول حركة المرور ومرات الإعجاب والتعليقات والمشتركين.</string>
     <string name="stats_disabled_title">هل تبحث عن الإحصاءات؟</string>
-    <string name="quick_start_list_upload_icon_subtitle">تظهر في علامة تبويب متصفح زائرك وأماكن أخرى عبر الإنترنت.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">خذني في جولة</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">هل تريد بعض المساعدة بشأن إدارة هذا الموقع باستخدام التطبيق؟</string>
-    <string name="login_epilogue_create_new_site_button">إنشاء موقع جديد</string>
-    <string name="login_epilogue_mysites_subheading">يمكنك تبديل المواقع في أي وقت.</string>
-    <string name="login_epilogue_mysites_heading">اختيار موقع لفتحه</string>
     <string name="scan_multisite_not_supported_subtitle">عذرًا، لكن عملية المسح على Jetpack Scan غير متوافقة مع تثبيت ووردبريس متعددة المواقع في الوقت الحالي.</string>
     <string name="scan_multisite_not_supported_title">مواقع ووردبريس المتعددة غير مدعومة</string>
     <string name="activity_log_visit_our_documentation_page">زيارة صفحة الوثائق الخاصة بنا</string>
@@ -1249,13 +1219,6 @@ Language: ar
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;انتهى الفحص&lt;/b&gt; &lt;br&gt; لم يتم العثور على تهديدات</string>
     <string name="scan_fixing_threats_title_singular">جاري معالجة التهديد</string>
     <string name="disable">تعطيل</string>
-    <string name="quick_start_list_review_pages_subtitle">تحقّق من صفحاتك وقم بإجراء تغييرات، أو إضافة الصفحات أو إزالتها.</string>
-    <string name="quick_start_list_view_site_title">مشاهدة موقعك</string>
-    <string name="quick_start_list_follow_site_subtitle">استكشف وتابع المواقع التي تُلهمك.</string>
-    <string name="quick_start_list_enable_sharing_title">المشاركة عبر شبكات التواصل الاجتماعي</string>
-    <string name="quick_start_list_enable_sharing_subtitle">شارك المقالات الجديدة تلقائيًّا على وسائل التواصل الاجتماعي الخاصة بك.</string>
-    <string name="quick_start_list_update_site_title_subtitle">حدِّد اسمًا لموقعك يعكس هويته وموضوعه.</string>
-    <string name="quick_start_list_check_stats_title">التحقّق من إحصاءات موقعك</string>
     <string name="backup_download_status_failure_bullet2">سنستمر في محاولة إنشاء ملف النسخ الاحتياطي القابل للتنزيل.</string>
     <string name="backup_download_status_failure_bullet1">يتعذر علينا العثور على الحالة حتى نخبرك بالمدة التي ستستغرقها عملية النسخة الاحتياطية القابلة للتنزيل لديك.</string>
     <string name="backup_download_status_failure_heading">حسنًا، لم نتمكن من العثور على حالة النسخ الاحتياطي القابلة للتنزيل</string>
@@ -1328,9 +1291,6 @@ Language: ar
     <string name="backup_download_complete_failed_title">فشل في التنزيل</string>
     <string name="web_preview_tablet">الأجهزة اللوحية</string>
     <string name="web_preview_mobile">الجوال</string>
-    <string name="quick_start_dialog_review_pages_message_short">حدّد %1$s الصفحات %2$s لرؤية قائمة صفحاتك.</string>
-    <string name="quick_start_dialog_review_pages_message">تغيير أو إضافة أو إزالة صفحات موقعك.</string>
-    <string name="quick_start_dialog_review_pages_title">مراجعة صفحات الموقع</string>
     <string name="reader_menu_mark_as_unseen">وضع علامة لم تتم المشاهدة</string>
     <string name="reader_menu_mark_as_seen">وضع علامة تمت المشاهدة</string>
     <string name="error_media_upload_failed_for_reason">فشل رفع الوسائط.\n%1$s</string>
@@ -1549,7 +1509,6 @@ Language: ar
     <string name="mlp_create_blank_page">إنشاء صفحة فارغة</string>
     <string name="mlp_choose_layout_subtitle">ابدأ بالاختيار من بين مجموعة متنوعة من تخطيطات الصفحات المعدَّة سابقًا. أو ما عليك سوى البدء بصفحة فارغة.</string>
     <string name="mlp_choose_layout_title">اختيار تخطيط</string>
-    <string name="quick_start_dialog_create_new_post_message_short">اضغط على إنشاء ⁦%1$s⁩. ⁦%2$s⁩ بعدها، حدِّد &lt;b&gt;مقالة&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">الاختيار من الجهاز</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">يتطلب تحرير أيقونات الموقع على مواقع ووردبريس المستضافة ذاتيًا إضافة Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">يتعذر العثور على الانتقال السريع بين الصفحات ذات الصلة</string>
@@ -1577,8 +1536,6 @@ Language: ar
     <string name="send_link_by_email" a8c-src-lib="module:login">إرسال الرابط عبر البريد الإلكتروني</string>
     <string name="reset_your_password" a8c-src-lib="module:login">إعادة تعيين كلمة المرور الخاصة بك</string>
     <string name="reader_error_request_failed_title">حدثت مشكلة أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقاً.</string>
-    <string name="quick_start_list_update_site_title_title">التحقُّق من عنوان موقعك</string>
-    <string name="quick_start_dialog_update_site_title_message_short">انقر على &lt;b&gt;⁦%1$s⁩&lt;/b&gt; لتعيين عنوان جديد</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">سيؤدي نقل هذه المقالة إلى سلة المهملات إلى تجاهل التغييرات المحلية كذلك، هل ترغب بالتأكيد في المتابعة؟</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">يمكن للمستخدم فقط تغيير عنوان الموقع باستخدام دور المسؤول.</string>
     <string name="my_site_title_changer_dialog_hint">يُعرض عنوان الموقع في شريط العناوين في متصفح الويب ويُعرض في رأس الصفحة في معظم القوالب.</string>
@@ -2030,29 +1987,12 @@ Language: ar
     <string name="stats_more_posts">مقالات أكثر</string>
     <string name="stats_fewer_posts">مقالات أقل</string>
     <string name="new_site_creation_preview_back_pressed_warning">قد تفقد التغييرات التي تجريها. هل أنت متأكد أنك تريد الخروج؟</string>
-    <string name="plans_loading_error_with_cache_button">استعراض الخطط على أية حال</string>
-    <string name="plans_loading_error_with_cache_subtitle">الاتصال بالانترنت مطلوب لاستعراض الخطط، لذلك قد تكون التفاصيل قديمة وغير محدثة.</string>
-    <string name="plans_loading_error_no_cache_subtitle">لاتصال بالانترنت مطلوب لاستعراض الخطط.</string>
-    <string name="plans_loading_error_no_plans_subtitle">لا يمكننا تحميل الخطط في الوقت الحالي. يرجى المحاولة في وقت لاحق.</string>
-    <string name="plans_loading_error_no_plans_title">لا يمكن تحميل الخطط</string>
-    <string name="plans_loading_error_network_title">لا يوجد اتصال</string>
     <string name="menu_switch_to_gutenberg_editor">التبديل إلى مُحرر المكوّنات</string>
     <string name="stats_loading_block_error">حدثت مشكلة أثناء تحميل بياناتك، يرجى تحديث الصفحة لإعادة المحاولة.</string>
     <string name="stats_loading_error">لم يتم تحميل البيانات</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">تحرير المقالات والصفحات الجديدة باستخدام مُحرر المكوّنات</string>
     <string name="site_settings_gutenberg_default_for_new_posts">استخدام مُحرر المكوّنات</string>
     <string name="exit">خروج</string>
-    <string name="quick_start_sites_type_grow">تنمية جمهورك</string>
-    <string name="quick_start_sites_type_customize">تخصيص موقعك</string>
-    <string name="quick_start_sites">الخطوات التالية</string>
-    <string name="quick_start_dialog_upload_icon_title">اختيار أيقونة موقع فريدة</string>
-    <string name="quick_start_dialog_upload_icon_message">سيرى زائروك أيقونتك في متصفحهم. أضف أيقونة مخصصة للحصول على مظهر جذّاب واحترافي.</string>
-    <string name="quick_start_dialog_check_stats_message_short">حدِّد ⁦%1$s⁩ الإحصاءات ⁦%2$s⁩ لمعرفة مستوى أداء موقعك.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">أنقر على %1$s أيقونة موقعك %2$s لرفع أيقونة جديدة</string>
-    <string name="quick_start_dialog_publish_post_message">اكتب مسودّة مقالة ثم أنشرها.</string>
-    <string name="quick_start_dialog_check_stats_title">التحقّق من إحصاءات موقعك</string>
-    <string name="quick_start_dialog_check_stats_message">واكب التحديثات المتعلقة بأداء موقعك.</string>
-    <string name="quick_start_task_skip_menu_title">تخطي المهمة</string>
     <string name="notification_channel_reminder_title">تذكير</string>
     <string name="stats_select_next_period_description">تحديد الفترة التالية</string>
     <string name="stats_select_previous_period_description">تحديد الفترة السابقة</string>
@@ -2204,20 +2144,6 @@ Language: ar
     <string name="page_delete_error">حدثت مشكلة أثناء حذف الصفحة</string>
     <string name="set_parent">تعيين الأصل</string>
     <string name="dismiss">تجاهل</string>
-    <string name="quick_start_focus_point_description">انقر هنا</string>
-    <string name="quick_start_list_create_site_title">إنشاء موقعك</string>
-    <string name="quick_start_list_create_site_subtitle">اجعل موقعك جاهزًا للعمل.</string>
-    <string name="quick_start_completed_tour_subtitle">أليس من الأفضل حذف أشياء من القائمة؟</string>
-    <string name="quick_start_dialog_view_site_title">عرض موقعك</string>
-    <string name="quick_start_dialog_view_site_message">قم بمعاينة موقعك لرؤية ما سيراه الزائرون.</string>
-    <string name="quick_start_dialog_share_site_title">مشاركة موقعك</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">النقر على ⁦%1$s⁩ من شبكات التواصل الاجتماعي ⁦%2$s⁩ للاستمرار</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">أنقر على %1$s الروابط %2$s لإضافة حساباتك على وسائل التواصل الاجتماعي</string>
-    <string name="quick_start_dialog_share_site_message">اتصل بحساباتك على وسائل التواصل الاجتماعي – سيشارك موقعك مقالات جديدة تلقائيًّا.</string>
-    <string name="quick_start_dialog_publish_post_title">نشر مقالة</string>
-    <string name="quick_start_dialog_need_help_button_negative">لا شكرًا</string>
-    <string name="quick_start_dialog_follow_sites_title">الربط بمواقع أخرى</string>
-    <string name="quick_start_button_positive">انتقال</string>
     <string name="content_description_more">المزيد</string>
     <string name="my_site_create_new_site_title">ليس لديك أي مواقع</string>
     <string name="reader_empty_subscribed_tags_subtitle">إضافة وسوم هنا للعثور على التدوينات المتعلقة بالموضوعات التي تفضِّلها</string>
@@ -2410,7 +2336,6 @@ Language: ar
     <string name="edit_photo_screen_title">تحرير الصورة</string>
     <string name="share_intent_screen_title">اختيار الموقع</string>
     <string name="signup_epilogue_screen_title">حساب جديد</string>
-    <string name="login_epilogue_screen_title">تم تسجيل الدخول كـ</string>
     <string name="person_detail_screen_title">تفاصيل الشخص</string>
     <string name="media_settings_screen_title">تفاصيل الملف</string>
     <string name="publicize_buttons_screen_title">أزرار المشاركة</string>
@@ -2687,8 +2612,6 @@ Language: ar
     <string name="post_queued">مقالة موضوعة في قائمة الانتظار</string>
     <string name="uploading_post">رفع \"%s\"</string>
     <string name="connection_to_server_lost">كان الاتصال بالخادم مفقودًا</string>
-    <string name="login_epilogue_mysites_other">مواقعي</string>
-    <string name="login_epilogue_mysites_one">موقعي</string>
     <string name="login_email_client_not_found">لا يمكن اكتشاف تطبيق عميل البريد الإلكتروني الخاص بك</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">يُرجى إدخال كود التحقق</string>
     <string name="login_empty_username" a8c-src-lib="module:login">الرجاء إدخال اسم المستخدم</string>
@@ -2839,7 +2762,6 @@ Language: ar
     <string name="start_over_email_subject">البدء من جديد في الموقع %s</string>
     <string name="site_picker_remove_site_error">حدث خطأ أثناء إزالة الموقع، حاول مرة أخرى لاحقًا</string>
     <string name="editor_post_saved_locally_failed_media">تحتوي المقالة على عمليات رفع غير مكتملة للوسائط وتم حفظها محليًا</string>
-    <string name="sure_to_remove_account">إزالة هذا الموقع من التطبيق؟</string>
     <string name="photo_picker_title">اختيار صورة</string>
     <string name="error_publish_no_network">الجهاز غير متصل بالإنترنت. تمّ حفظ المقالة محليًا.</string>
     <string name="editor_post_saved_online">تم حفظ المقالة على الإنترنت</string>
@@ -2962,8 +2884,6 @@ Language: ar
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">غير متاح حاليًا. يُرجى إدخال كلمة مرورك</string>
     <string name="logging_in">تسجيل الدخول</string>
     <string name="web_address_dialog_hint">تظهر للعامة أثناء تعليقك.</string>
-    <string name="plans">الخطط</string>
-    <string name="plan">خطة</string>
     <string name="export_your_content_message">سيتم إرسال مقالاتك وصفحاتك وإعداداتك إليك عبر البريد الإلكتروني على %s.</string>
     <string name="export_your_content">تصدير المحتوى الخاص بك</string>
     <string name="export_email_sent">تم إرسال البريد الإلكتروني للتصدير!</string>
