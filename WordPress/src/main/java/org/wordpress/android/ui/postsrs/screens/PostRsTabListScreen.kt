@@ -22,6 +22,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -93,7 +94,7 @@ private fun PostListContent(
                 .visibleItemsInfo.lastOrNull()?.index ?: 0
             val total = listState.layoutInfo.totalItemsCount
             lastVisible >= total - LOAD_MORE_THRESHOLD
-        }.collect { shouldLoad ->
+        }.distinctUntilChanged().collect { shouldLoad ->
             if (shouldLoad) onLoadMore()
         }
     }

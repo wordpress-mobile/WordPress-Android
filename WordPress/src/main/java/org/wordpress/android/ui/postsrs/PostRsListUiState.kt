@@ -84,7 +84,6 @@ private fun PostStatus?.toLabelResId(): Int = when (this) {
     null -> 0
 }
 
-
 private val postDateFormat = ThreadLocal.withInitial {
     SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
 }
