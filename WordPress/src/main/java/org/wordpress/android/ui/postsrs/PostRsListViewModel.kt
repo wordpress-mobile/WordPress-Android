@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
 import org.wordpress.android.util.AppLog
@@ -44,13 +45,14 @@ class PostRsListViewModel @Inject constructor(
 
     /**
      * Initializes the observable collection for [tab] if it hasn't been
-     * created yet. Creates the [WpSelfHostedService], builds a
-     * [PostListFilter], registers data and list-info observers, then
+     * created yet. Creates the service, registers observers, then
      * triggers the first refresh.
      */
+    @Suppress("ReturnCount")
     fun initTab(tab: PostRsListTab) {
-        if (collections.containsKey(tab)) return
-        if (initializingTabs.contains(tab)) return
+        if (collections.containsKey(tab) || initializingTabs.contains(tab)) {
+            return
+        }
 
         val site = selectedSiteRepository.getSelectedSite() ?: run {
             getOrCreateStateFlow(tab).value = PostTabUiState(
@@ -64,38 +66,12 @@ class PostRsListViewModel @Inject constructor(
         initializingTabs.add(tab)
 
         viewModelScope.launch {
+            @Suppress("TooGenericExceptionCaught")
             try {
-                val collection = withContext(Dispatchers.IO) {
-                    val service = serviceProvider.getService(site)
-                    val postService = service.posts()
-                    val filter = PostListFilter(
-                        status = tab.statuses,
-                        order = tab.order,
-                        orderby = WpApiParamPostsOrderBy.DATE
-                    )
-                    postService
-                        .getObservablePostMetadataCollectionWithEditContext(
-                            endpointType = PostEndpointType.Posts,
-                            filter = filter,
-                            perPage = PAGE_SIZE.toUInt()
-                        )
-                }
-
+                val collection = createCollection(site, tab)
                 collections[tab] = collection
                 initializingTabs.remove(tab)
-
-                collection.addDataObserver {
-                    viewModelScope.launch {
-                        loadItemsForTab(tab)
-                    }
-                }
-
-                collection.addListInfoObserver {
-                    viewModelScope.launch {
-                        updateListInfoForTab(tab)
-                    }
-                }
-
+                registerObservers(tab, collection)
                 refreshTab(tab)
             } catch (e: Exception) {
                 AppLog.e(
@@ -114,6 +90,36 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    private suspend fun createCollection(
+        site: SiteModel,
+        tab: PostRsListTab
+    ): ObservableMetadataCollection = withContext(Dispatchers.IO) {
+        val service = serviceProvider.getService(site)
+        val filter = PostListFilter(
+            status = tab.statuses,
+            order = tab.order,
+            orderby = WpApiParamPostsOrderBy.DATE
+        )
+        service.posts()
+            .getObservablePostMetadataCollectionWithEditContext(
+                endpointType = PostEndpointType.Posts,
+                filter = filter,
+                perPage = PAGE_SIZE.toUInt()
+            )
+    }
+
+    private fun registerObservers(
+        tab: PostRsListTab,
+        collection: ObservableMetadataCollection
+    ) {
+        collection.addDataObserver {
+            viewModelScope.launch { loadItemsForTab(tab) }
+        }
+        collection.addListInfoObserver {
+            viewModelScope.launch { updateListInfoForTab(tab) }
+        }
+    }
+
     /** Triggers a pull-to-refresh for the given tab's collection. */
     fun refreshTab(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
@@ -121,6 +127,7 @@ class PostRsListViewModel @Inject constructor(
         state.value = state.value.copy(isRefreshing = true, error = null)
 
         viewModelScope.launch {
+            @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) {
                     collection.refresh()
@@ -156,6 +163,7 @@ class PostRsListViewModel @Inject constructor(
         state.value = state.value.copy(isLoadingMore = true)
 
         viewModelScope.launch {
+            @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) {
                     collection.loadNextPage()
@@ -181,6 +189,7 @@ class PostRsListViewModel @Inject constructor(
         val collection = collections[tab] ?: return
         val state = getOrCreateStateFlow(tab)
 
+        @Suppress("TooGenericExceptionCaught")
         try {
             val uiModels = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->

@@ -100,23 +100,31 @@ class PostRsListActivity : BaseAppCompatActivity() {
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChanged(event: OnPostChanged) {
-        val pending = pendingPostRemoteId ?: return
-        val cause = event.causeOfChange as? UpdatePost ?: return
-        if (cause.remotePostId != pending) return
+        val pending = pendingPostRemoteId
+        val cause = event.causeOfChange as? UpdatePost
+        if (pending == null || cause == null || cause.remotePostId != pending) {
+            return
+        }
 
         pendingPostRemoteId = null
 
         if (event.isError) {
             AppLog.e(
                 AppLog.T.POSTS,
-                "Failed to fetch post $pending: ${event.error?.message}"
+                "Failed to fetch post $pending: " +
+                    "${event.error?.message}"
             )
-            return
+        } else {
+            val site = selectedSiteRepository.getSelectedSite()
+            if (site != null) {
+                val post = postStore.getPostByRemotePostId(
+                    pending, site
+                )
+                ActivityLauncher.editPostOrPageForResult(
+                    this, site, post
+                )
+            }
         }
-
-        val site = selectedSiteRepository.getSelectedSite() ?: return
-        val post = postStore.getPostByRemotePostId(pending, site)
-        ActivityLauncher.editPostOrPageForResult(this, site, post)
     }
 
     private fun createNewPost() {

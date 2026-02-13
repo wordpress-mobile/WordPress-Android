@@ -92,19 +92,27 @@ private fun String.stripHtml(): String {
     ).toString().trim()
 }
 
+@Suppress("TooGenericExceptionCaught")
 private fun String.toRelativeDate(): String {
-    if (isBlank()) return this
-    val millis = try {
+    val millis = if (isNotBlank()) {
         // post.date is in site-local time, not UTC
-        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-            .parse(this)?.time ?: return this
-    } catch (_: Exception) {
-        return this
+        try {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+                .parse(this)?.time
+        } catch (_: Exception) {
+            null
+        }
+    } else {
+        null
     }
-    return DateUtils.getRelativeTimeSpanString(
-        millis,
-        System.currentTimeMillis(),
-        DateUtils.MINUTE_IN_MILLIS,
-        DateUtils.FORMAT_ABBREV_RELATIVE
-    ).toString()
+    return if (millis != null) {
+        DateUtils.getRelativeTimeSpanString(
+            millis,
+            System.currentTimeMillis(),
+            DateUtils.MINUTE_IN_MILLIS,
+            DateUtils.FORMAT_ABBREV_RELATIVE
+        ).toString()
+    } else {
+        this
+    }
 }
