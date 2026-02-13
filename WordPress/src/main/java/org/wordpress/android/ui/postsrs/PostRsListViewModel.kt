@@ -41,9 +41,7 @@ class PostRsListViewModel @Inject constructor(
 
     /** Returns an observable [StateFlow] of UI state for the given tab. */
     fun getTabState(tab: PostRsListTab): StateFlow<PostTabUiState> {
-        return tabStates.getOrPut(tab) {
-            MutableStateFlow(PostTabUiState(isLoading = true))
-        }.asStateFlow()
+        return getOrCreateStateFlow(tab).asStateFlow()
     }
 
     /**

@@ -86,47 +86,55 @@ fun PostRsListScreen(
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
                 PrimaryScrollableTabRow(
-                selectedTabIndex = pagerState.currentPage,
-                edgePadding = 0.dp
-            ) {
-                tabs.forEachIndexed { index, tab ->
-                    Tab(
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(index)
+                    selectedTabIndex = pagerState.currentPage,
+                    edgePadding = 0.dp
+                ) {
+                    tabs.forEachIndexed { index, tab ->
+                        Tab(
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(
+                                        index
+                                    )
+                                }
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(
+                                        tab.labelResId
+                                    )
+                                )
                             }
+                        )
+                    }
+                }
+
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxSize()
+                ) { page ->
+                    val tab = tabs[page]
+
+                    LaunchedEffect(tab) {
+                        viewModel.initTab(tab)
+                    }
+
+                    val tabState by viewModel
+                        .getTabState(tab)
+                        .collectAsState()
+
+                    PostRsTabListScreen(
+                        state = tabState,
+                        emptyMessageResId = tab.emptyMessageResId,
+                        onRefresh = { viewModel.refreshTab(tab) },
+                        onLoadMore = {
+                            viewModel.loadMorePosts(tab)
                         },
-                        text = {
-                            Text(
-                                text = stringResource(tab.labelResId)
-                            )
-                        }
+                        onPostClick = onPostClick,
+                        onCreatePost = onCreatePost
                     )
                 }
-            }
-
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier.fillMaxSize()
-            ) { page ->
-                val tab = tabs[page]
-
-                LaunchedEffect(tab) {
-                    viewModel.initTab(tab)
-                }
-
-                val tabState by viewModel.getTabState(tab).collectAsState()
-
-                PostRsTabListScreen(
-                    state = tabState,
-                    emptyMessageResId = tab.emptyMessageResId,
-                    onRefresh = { viewModel.refreshTab(tab) },
-                    onLoadMore = { viewModel.loadMorePosts(tab) },
-                    onPostClick = onPostClick,
-                    onCreatePost = onCreatePost
-                )
-            }
             }
 
             if (isFetchingPost) {
