@@ -80,12 +80,12 @@ fun PostRsListScreen(
                 .padding(contentPadding)
         ) {
             PrimaryScrollableTabRow(
-                selectedTabIndex = pagerState.currentPage,
+                selectedTabIndex = pagerState.settledPage,
                 edgePadding = 0.dp
             ) {
                 tabs.forEachIndexed { index, tab ->
                     Tab(
-                        selected = pagerState.currentPage == index,
+                        selected = pagerState.settledPage == index,
                         onClick = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(
