@@ -33,6 +33,10 @@ class WpSelfHostedServiceProvider @Inject constructor(
         }
     }
 
+    /**
+     * Builds a [WpSelfHostedService] for the given site using its
+     * application-password credentials and REST API root URL.
+     */
     private fun createService(site: SiteModel): WpSelfHostedService {
         val apiRoot = site.wpApiRestUrl
             ?.takeIf { it.isNotEmpty() }
@@ -79,6 +83,10 @@ class WpSelfHostedServiceProvider @Inject constructor(
         )
     }
 
+    /**
+     * Returns the shared [WordPressApiCache], creating and initializing
+     * the backing SQLite database on first access.
+     */
     private fun getOrCreateCache(): WordPressApiCache {
         return cache ?: run {
             val cacheDir = File(context.filesDir, "wp_rs_cache")
