@@ -84,8 +84,10 @@ class WpSelfHostedServiceProvider @Inject constructor(
     }
 
     /**
-     * Returns the shared [WordPressApiCache], creating and initializing
-     * the backing SQLite database on first access.
+     * Lazily initializes a shared [WordPressApiCache] on first access,
+     * creating the backing SQLite database, running migrations, and
+     * registering a [DatabaseChangeNotifier] for change updates.
+     * Subsequent calls return the cached instance.
      */
     private fun getOrCreateCache(): WordPressApiCache {
         return cache ?: run {
