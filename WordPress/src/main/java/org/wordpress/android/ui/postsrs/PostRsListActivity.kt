@@ -13,6 +13,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.UpdatePost
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.store.PostStore
@@ -116,18 +117,40 @@ class PostRsListActivity : BaseAppCompatActivity() {
     }
 
     /**
-     * Handles FluxC post-fetch completion triggered by [openPost].
-     * Called by EventBus when the dispatcher emits [OnPostChanged].
+     * Handles FluxC [OnPostChanged] events. If this is the response
+     * to the fetch triggered by [openPost], opens the editor.
+     * Otherwise refreshes the current tab when a post is updated,
+     * auto-saved, deleted, or restored so the list stays current.
      */
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChanged(event: OnPostChanged) {
+        if (handlePendingFetch(event)) return
+
+        if (!event.isError) {
+            when (event.causeOfChange) {
+                is UpdatePost,
+                is CauseOfOnPostChanged.RemoteAutoSavePost,
+                is CauseOfOnPostChanged.DeletePost,
+                is CauseOfOnPostChanged.RestorePost ->
+                    viewModel.onPostUploaded()
+                else -> { /* ignore fetches, likes, etc. */ }
+            }
+        }
+    }
+
+    /**
+     * If we're waiting for a post fetch triggered by [openPost],
+     * checks whether this event completes it. Returns true if
+     * the event was consumed.
+     */
+    private fun handlePendingFetch(event: OnPostChanged): Boolean {
         val pending = pendingPostRemoteId
         val cause = event.causeOfChange as? UpdatePost
         if (pending == null || cause == null ||
             cause.remotePostId != pending
         ) {
-            return
+            return false
         }
 
         pendingPostRemoteId = null
@@ -153,6 +176,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                 )
             }
         }
+        return true
     }
 
     /**
