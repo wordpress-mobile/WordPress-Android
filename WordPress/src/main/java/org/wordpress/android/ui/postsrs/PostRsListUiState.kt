@@ -66,7 +66,7 @@ private fun FullEntityAnyPostWithEditContext.toUiModel():
             post.excerpt?.raw?.takeIf { it.isNotBlank() }
                 ?: post.excerpt?.rendered
                 ?: ""
-            ).stripHtml(),
+            ).let { HtmlUtils.fastStripHtml(it).trim() },
         date = post.date.toRelativeDate(),
         statusLabelResId = post.status.toLabelResId()
     )
@@ -84,10 +84,6 @@ private fun PostStatus?.toLabelResId(): Int = when (this) {
     null -> 0
 }
 
-private fun String.stripHtml(): String {
-    if (isBlank()) return this
-    return HtmlUtils.fastStripHtml(this).trim()
-}
 
 private val postDateFormat = ThreadLocal.withInitial {
     SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
