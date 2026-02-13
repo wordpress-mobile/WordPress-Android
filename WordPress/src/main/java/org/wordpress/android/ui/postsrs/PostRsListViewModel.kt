@@ -35,12 +35,19 @@ class PostRsListViewModel @Inject constructor(
         mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
 
+    /** Returns an observable [StateFlow] of UI state for the given tab. */
     fun getTabState(tab: PostRsListTab): StateFlow<PostTabUiState> {
         return tabStates.getOrPut(tab) {
             MutableStateFlow(PostTabUiState(isLoading = true))
         }.asStateFlow()
     }
 
+    /**
+     * Initializes the observable collection for [tab] if it hasn't been
+     * created yet. Creates the [WpSelfHostedService], builds a
+     * [PostListFilter], registers data and list-info observers, then
+     * triggers the first refresh.
+     */
     fun initTab(tab: PostRsListTab) {
         if (collections.containsKey(tab)) return
         if (initializingTabs.contains(tab)) return
@@ -107,6 +114,7 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /** Triggers a pull-to-refresh for the given tab's collection. */
     fun refreshTab(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
         val state = getOrCreateStateFlow(tab)
@@ -137,6 +145,7 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /** Loads the next page of posts for [tab] if not already loading. */
     fun loadMorePosts(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
         val state = getOrCreateStateFlow(tab)
@@ -164,6 +173,10 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Reads cached items from the collection and maps them to
+     * [PostRsUiModel] instances for display.
+     */
     private suspend fun loadItemsForTab(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
         val state = getOrCreateStateFlow(tab)
@@ -188,6 +201,10 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Reads pagination and sync state from the collection's list info
+     * and updates the tab's UI state accordingly.
+     */
     private suspend fun updateListInfoForTab(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
         val state = getOrCreateStateFlow(tab)
@@ -217,6 +234,7 @@ class PostRsListViewModel @Inject constructor(
         )
     }
 
+    /** Returns the mutable state flow for [tab], creating one if needed. */
     private fun getOrCreateStateFlow(
         tab: PostRsListTab
     ): MutableStateFlow<PostTabUiState> {
