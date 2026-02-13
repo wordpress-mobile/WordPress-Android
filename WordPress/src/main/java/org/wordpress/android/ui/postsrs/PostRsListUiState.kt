@@ -61,7 +61,7 @@ private fun FullEntityAnyPostWithEditContext.toUiModel():
                 ?: ""
             ).let { HtmlUtils.fastStripHtml(it).trim() },
         date = PostRsDateFormatter.format(
-            post.date, post.status
+            post.dateGmt, post.status
         )
     )
 }
