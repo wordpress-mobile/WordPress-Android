@@ -1,11 +1,8 @@
 package org.wordpress.android.ui.postsrs
 
 import android.text.format.DateUtils
-import androidx.annotation.StringRes
-import org.wordpress.android.R
 import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.AnyPostWithEditContext
-import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
 import java.text.SimpleDateFormat
@@ -25,7 +22,6 @@ data class PostRsUiModel(
     val title: String,
     val excerpt: String,
     val date: String,
-    @StringRes val statusLabelResId: Int = 0,
     val isPlaceholder: Boolean = false,
     val isError: Boolean = false
 )
@@ -67,21 +63,8 @@ private fun FullEntityAnyPostWithEditContext.toUiModel():
                 ?: post.excerpt?.rendered
                 ?: ""
             ).let { HtmlUtils.fastStripHtml(it).trim() },
-        date = post.date.toRelativeDate(),
-        statusLabelResId = post.status.toLabelResId()
+        date = post.date.toRelativeDate()
     )
-}
-
-@StringRes
-private fun PostStatus?.toLabelResId(): Int = when (this) {
-    is PostStatus.Publish -> R.string.post_status_post_published
-    is PostStatus.Draft -> R.string.post_status_draft
-    is PostStatus.Pending -> R.string.post_status_pending_review
-    is PostStatus.Private -> R.string.post_status_post_private
-    is PostStatus.Future -> R.string.post_status_post_scheduled
-    is PostStatus.Trash -> R.string.post_status_post_trashed
-    is PostStatus.Custom -> R.string.post_rs_status_custom
-    null -> 0
 }
 
 private val postDateFormat = ThreadLocal.withInitial {
