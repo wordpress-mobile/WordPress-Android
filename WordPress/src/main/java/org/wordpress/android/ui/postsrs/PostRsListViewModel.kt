@@ -43,6 +43,7 @@ class PostRsListViewModel @Inject constructor(
     private val collections =
         mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
+    private val userRefreshingTabs = mutableSetOf<PostRsListTab>()
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
@@ -164,11 +165,26 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
-    /** Triggers a pull-to-refresh for the given tab's collection. */
-    fun refreshTab(tab: PostRsListTab) {
+    /**
+     * Triggers a refresh for the given tab's collection. The PTR
+     * indicator is only shown when [isUserRefresh] is true (i.e.
+     * the user explicitly pulled to refresh).
+     */
+    fun refreshTab(
+        tab: PostRsListTab,
+        isUserRefresh: Boolean = false
+    ) {
         val collection = collections[tab] ?: return
         val state = getOrCreateStateFlow(tab)
-        state.value = state.value.copy(isRefreshing = true, error = null)
+
+        if (isUserRefresh) {
+            userRefreshingTabs.add(tab)
+            state.value = state.value.copy(
+                isRefreshing = true, error = null
+            )
+        } else {
+            state.value = state.value.copy(error = null)
+        }
 
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
@@ -184,6 +200,7 @@ class PostRsListViewModel @Inject constructor(
                     "Failed to refresh tab $tab",
                     e
                 )
+                userRefreshingTabs.remove(tab)
                 state.value = state.value.copy(
                     isLoading = false,
                     isRefreshing = false,
@@ -268,9 +285,14 @@ class PostRsListViewModel @Inject constructor(
         val morePages = listInfo?.hasMorePages ?: false
         val fetchingFirstPage =
             listInfo?.state == ListState.FETCHING_FIRST_PAGE
+        val isUserRefresh = userRefreshingTabs.contains(tab)
+
+        if (!fetchingFirstPage) {
+            userRefreshingTabs.remove(tab)
+        }
 
         state.value = state.value.copy(
-            isRefreshing = fetchingFirstPage,
+            isRefreshing = isUserRefresh && fetchingFirstPage,
             isLoadingMore =
                 listInfo?.state == ListState.FETCHING_NEXT_PAGE,
             canLoadMore = morePages,

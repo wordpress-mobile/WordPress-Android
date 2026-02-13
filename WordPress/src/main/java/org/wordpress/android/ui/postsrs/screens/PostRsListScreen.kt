@@ -121,7 +121,11 @@ fun PostRsListScreen(
                 PostRsTabListScreen(
                     state = tabState,
                     emptyMessageResId = tab.emptyMessageResId,
-                    onRefresh = { viewModel.refreshTab(tab) },
+                    onRefresh = {
+                        viewModel.refreshTab(
+                            tab, isUserRefresh = true
+                        )
+                    },
                     onLoadMore = {
                         viewModel.loadMorePosts(tab)
                     },
