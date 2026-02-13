@@ -119,7 +119,7 @@ fun PostRsListScreen(
 
                 HorizontalPager(
                     state = pagerState,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.weight(1f)
                 ) { page ->
                     val tab = tabs[page]
 
