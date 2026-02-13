@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -27,9 +29,18 @@ class PostRsListActivity : BaseAppCompatActivity() {
         observeEvents()
 
         setContent {
+            val tabStates by viewModel.tabStates
+                .collectAsState()
             AppThemeM3 {
                 PostRsListScreen(
-                    viewModel = viewModel,
+                    tabStates = tabStates,
+                    onInitTab = viewModel::initTab,
+                    onRefreshTab = { tab ->
+                        viewModel.refreshTab(
+                            tab, isUserRefresh = true
+                        )
+                    },
+                    onLoadMore = viewModel::loadMorePosts,
                     onNavigateBack = {
                         onBackPressedDispatcher.onBackPressed()
                     },

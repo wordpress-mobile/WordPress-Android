@@ -20,8 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,12 +27,15 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsListTab
-import org.wordpress.android.ui.postsrs.PostRsListViewModel
+import org.wordpress.android.ui.postsrs.PostTabUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostRsListScreen(
-    viewModel: PostRsListViewModel,
+    tabStates: Map<PostRsListTab, PostTabUiState>,
+    onInitTab: (PostRsListTab) -> Unit,
+    onRefreshTab: (PostRsListTab) -> Unit,
+    onLoadMore: (PostRsListTab) -> Unit,
     onNavigateBack: () -> Unit,
     onPostClick: (Long) -> Unit,
     onCreatePost: () -> Unit
@@ -47,13 +48,19 @@ fun PostRsListScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(R.string.my_site_btn_blog_posts))
+                    Text(
+                        text = stringResource(
+                            R.string.my_site_btn_blog_posts
+                        )
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
+                            contentDescription = stringResource(
+                                R.string.back
+                            )
                         )
                     }
                 }
@@ -111,24 +118,17 @@ fun PostRsListScreen(
                 val tab = tabs[page]
 
                 LaunchedEffect(tab) {
-                    viewModel.initTab(tab)
+                    onInitTab(tab)
                 }
 
-                val tabState by viewModel
-                    .getTabState(tab)
-                    .collectAsState()
+                val tabState = tabStates[tab]
+                    ?: PostTabUiState(isLoading = true)
 
                 PostRsTabListScreen(
                     state = tabState,
                     emptyMessageResId = tab.emptyMessageResId,
-                    onRefresh = {
-                        viewModel.refreshTab(
-                            tab, isUserRefresh = true
-                        )
-                    },
-                    onLoadMore = {
-                        viewModel.loadMorePosts(tab)
-                    },
+                    onRefresh = { onRefreshTab(tab) },
+                    onLoadMore = { onLoadMore(tab) },
                     onPostClick = onPostClick,
                     onCreatePost = onCreatePost
                 )

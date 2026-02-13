@@ -35,11 +35,13 @@ class PostRsListViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
 ) : ViewModel() {
-    // All three maps are only accessed from the main thread:
+    // All maps/sets are only accessed from the main thread:
     // public functions are called from Compose/UI, and observer
     // callbacks launch on viewModelScope (Main dispatcher).
-    private val tabStates =
-        mutableMapOf<PostRsListTab, MutableStateFlow<PostTabUiState>>()
+    private val _tabStates =
+        MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
+    val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> =
+        _tabStates.asStateFlow()
     private val collections =
         mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
@@ -83,11 +85,6 @@ class PostRsListViewModel @Inject constructor(
         _events.trySend(PostRsListEvent.CreatePost(site))
     }
 
-    /** Returns an observable [StateFlow] of UI state for the given tab. */
-    fun getTabState(tab: PostRsListTab): StateFlow<PostTabUiState> {
-        return getOrCreateStateFlow(tab).asStateFlow()
-    }
-
     /**
      * Initializes the observable collection for [tab] if it hasn't been
      * created yet. Creates the service, registers observers, then
@@ -100,11 +97,13 @@ class PostRsListViewModel @Inject constructor(
         }
 
         val site = selectedSiteRepository.getSelectedSite() ?: run {
-            getOrCreateStateFlow(tab).value = PostTabUiState(
-                error = resourceProvider.getString(
-                    R.string.stats_todays_stats_no_site_selected
+            updateTabUiState(tab) {
+                PostTabUiState(
+                    error = resourceProvider.getString(
+                        R.string.stats_todays_stats_no_site_selected
+                    )
                 )
-            )
+            }
             return
         }
 
@@ -125,12 +124,14 @@ class PostRsListViewModel @Inject constructor(
                     e
                 )
                 initializingTabs.remove(tab)
-                getOrCreateStateFlow(tab).value = PostTabUiState(
-                    error = e.message
-                        ?: resourceProvider.getString(
-                            R.string.error_generic
-                        )
-                )
+                updateTabUiState(tab) {
+                    PostTabUiState(
+                        error = e.message
+                            ?: resourceProvider.getString(
+                                R.string.error_generic
+                            )
+                    )
+                }
             }
         }
     }
@@ -175,15 +176,14 @@ class PostRsListViewModel @Inject constructor(
         isUserRefresh: Boolean = false
     ) {
         val collection = collections[tab] ?: return
-        val state = getOrCreateStateFlow(tab)
 
         if (isUserRefresh) {
             userRefreshingTabs.add(tab)
-            state.value = state.value.copy(
-                isRefreshing = true, error = null
-            )
+            updateTabUiState(tab) {
+                copy(isRefreshing = true, error = null)
+            }
         } else {
-            state.value = state.value.copy(error = null)
+            updateTabUiState(tab) { copy(error = null) }
         }
 
         viewModelScope.launch {
@@ -201,14 +201,16 @@ class PostRsListViewModel @Inject constructor(
                     e
                 )
                 userRefreshingTabs.remove(tab)
-                state.value = state.value.copy(
-                    isLoading = false,
-                    isRefreshing = false,
-                    error = e.message
-                        ?: resourceProvider.getString(
-                            R.string.error_generic
-                        )
-                )
+                updateTabUiState(tab) {
+                    copy(
+                        isLoading = false,
+                        isRefreshing = false,
+                        error = e.message
+                            ?: resourceProvider.getString(
+                                R.string.error_generic
+                            )
+                    )
+                }
             }
         }
     }
@@ -216,12 +218,12 @@ class PostRsListViewModel @Inject constructor(
     /** Loads the next page of posts for [tab] if not already loading. */
     fun loadMorePosts(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
-        val state = getOrCreateStateFlow(tab)
-        if (state.value.isLoadingMore || !state.value.canLoadMore) {
+        val current = getTabUiState(tab)
+        if (current.isLoadingMore || !current.canLoadMore) {
             return
         }
 
-        state.value = state.value.copy(isLoadingMore = true)
+        updateTabUiState(tab) { copy(isLoadingMore = true) }
 
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
@@ -237,7 +239,9 @@ class PostRsListViewModel @Inject constructor(
                     "Failed to load more for tab $tab",
                     e
                 )
-                state.value = state.value.copy(isLoadingMore = false)
+                updateTabUiState(tab) {
+                    copy(isLoadingMore = false)
+                }
             }
         }
     }
@@ -248,7 +252,6 @@ class PostRsListViewModel @Inject constructor(
      */
     private suspend fun loadItemsForTab(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
-        val state = getOrCreateStateFlow(tab)
 
         @Suppress("TooGenericExceptionCaught")
         try {
@@ -257,11 +260,13 @@ class PostRsListViewModel @Inject constructor(
                     item.state.toUiModel(item.id)
                 }
             }
-            state.value = state.value.copy(
-                posts = uiModels,
-                isLoading = false,
-                error = null
-            )
+            updateTabUiState(tab) {
+                copy(
+                    posts = uiModels,
+                    isLoading = false,
+                    error = null
+                )
+            }
         } catch (e: Exception) {
             AppLog.e(
                 AppLog.T.POSTS,
@@ -277,7 +282,6 @@ class PostRsListViewModel @Inject constructor(
      */
     private suspend fun updateListInfoForTab(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
-        val state = getOrCreateStateFlow(tab)
 
         val listInfo = withContext(Dispatchers.IO) {
             collection.listInfo()
@@ -291,29 +295,37 @@ class PostRsListViewModel @Inject constructor(
             userRefreshingTabs.remove(tab)
         }
 
-        state.value = state.value.copy(
-            isRefreshing = isUserRefresh && fetchingFirstPage,
-            isLoadingMore =
-                listInfo?.state == ListState.FETCHING_NEXT_PAGE,
-            canLoadMore = morePages,
-            error = if (listInfo?.state == ListState.ERROR) {
-                listInfo.errorMessage
-                    ?: resourceProvider.getString(
-                        R.string.error_generic
-                    )
-            } else {
-                null
-            }
-        )
+        updateTabUiState(tab) {
+            copy(
+                isRefreshing = isUserRefresh && fetchingFirstPage,
+                isLoadingMore =
+                    listInfo?.state == ListState.FETCHING_NEXT_PAGE,
+                canLoadMore = morePages,
+                error = if (listInfo?.state == ListState.ERROR) {
+                    listInfo.errorMessage
+                        ?: resourceProvider.getString(
+                            R.string.error_generic
+                        )
+                } else {
+                    null
+                }
+            )
+        }
     }
 
-    /** Returns the mutable state flow for [tab], creating one if needed. */
-    private fun getOrCreateStateFlow(
-        tab: PostRsListTab
-    ): MutableStateFlow<PostTabUiState> {
-        return tabStates.getOrPut(tab) {
-            MutableStateFlow(PostTabUiState(isLoading = true))
-        }
+    /** Returns the current UI state for [tab], or a default loading state. */
+    private fun getTabUiState(tab: PostRsListTab): PostTabUiState {
+        return _tabStates.value[tab]
+            ?: PostTabUiState(isLoading = true)
+    }
+
+    /** Updates the UI state for [tab] by applying [update] to the current state. */
+    private fun updateTabUiState(
+        tab: PostRsListTab,
+        update: PostTabUiState.() -> PostTabUiState
+    ) {
+        val current = getTabUiState(tab)
+        _tabStates.value = _tabStates.value + (tab to current.update())
     }
 
     override fun onCleared() {
