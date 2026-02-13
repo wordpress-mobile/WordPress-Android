@@ -40,6 +40,20 @@ class WpSelfHostedServiceProvider @Inject constructor(
         }
     }
 
+    /** Removes the cached service for [siteId], if any. */
+    @Suppress("unused")
+    @Synchronized
+    fun clearSite(siteId: Long) {
+        services.remove(siteId)
+    }
+
+    /** Removes all cached services. */
+    @Suppress("unused")
+    @Synchronized
+    fun clearAll() {
+        services.clear()
+    }
+
     /**
      * Builds a [WpSelfHostedService] for the given site using its
      * application-password credentials and REST API root URL.

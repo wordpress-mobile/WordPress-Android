@@ -92,15 +92,16 @@ private fun String.stripHtml(): String {
     ).toString().trim()
 }
 
-private val postDateFormat =
+private val postDateFormat = ThreadLocal.withInitial {
     SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+}
 
 @Suppress("TooGenericExceptionCaught")
 private fun String.toRelativeDate(): String {
     val millis = if (isNotBlank()) {
         // post.date is in site-local time, not UTC
         try {
-            postDateFormat.parse(this)?.time
+            postDateFormat.get()?.parse(this)?.time
         } catch (_: Exception) {
             null
         }
