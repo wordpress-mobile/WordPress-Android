@@ -75,6 +75,13 @@ class PostRsListViewModel @Inject constructor(
         )
     }
 
+    /** Emits a [PostRsListEvent.CreatePost] for the selected site. */
+    fun createNewPost() {
+        val site = selectedSiteRepository.getSelectedSite()
+            ?: return
+        _events.trySend(PostRsListEvent.CreatePost(site))
+    }
+
     /** Returns an observable [StateFlow] of UI state for the given tab. */
     fun getTabState(tab: PostRsListTab): StateFlow<PostTabUiState> {
         return getOrCreateStateFlow(tab).asStateFlow()
@@ -304,6 +311,10 @@ sealed interface PostRsListEvent {
     data class EditPost(
         val site: SiteModel,
         val post: PostModel
+    ) : PostRsListEvent
+
+    data class CreatePost(
+        val site: SiteModel
     ) : PostRsListEvent
 
     data class ShowError(
