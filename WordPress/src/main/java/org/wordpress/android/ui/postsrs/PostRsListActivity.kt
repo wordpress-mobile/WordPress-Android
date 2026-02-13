@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.UpdatePost
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
@@ -151,6 +152,18 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     this, site, post
                 )
             }
+        }
+    }
+
+    /**
+     * Refreshes the current tab when a FluxC post upload completes
+     * without error, so the list reflects the change.
+     */
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPostUploaded(event: OnPostUploaded) {
+        if (!event.isError) {
+            viewModel.onPostUploaded()
         }
     }
 

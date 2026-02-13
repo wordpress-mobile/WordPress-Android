@@ -39,6 +39,21 @@ class PostRsListViewModel @Inject constructor(
         mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
 
+    private var currentTab: PostRsListTab = PostRsListTab.entries.first()
+
+    /** Updates the currently visible tab, used by [onPostUploaded]. */
+    fun setCurrentTab(tab: PostRsListTab) {
+        currentTab = tab
+    }
+
+    /**
+     * Called when FluxC reports a post was uploaded successfully.
+     * Refreshes the current tab so the list reflects the change.
+     */
+    fun onPostUploaded() {
+        refreshTab(currentTab)
+    }
+
     /** Returns an observable [StateFlow] of UI state for the given tab. */
     fun getTabState(tab: PostRsListTab): StateFlow<PostTabUiState> {
         return getOrCreateStateFlow(tab).asStateFlow()
