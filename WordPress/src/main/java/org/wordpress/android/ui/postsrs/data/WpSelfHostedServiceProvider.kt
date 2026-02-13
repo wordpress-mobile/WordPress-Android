@@ -95,11 +95,11 @@ class WpSelfHostedServiceProvider @Inject constructor(
         val wpApiCache = getOrCreateCache()
 
         return WpSelfHostedService(
-            site.url,
-            apiRoot,
-            apiUrlResolver,
-            delegate,
-            wpApiCache.cache
+            siteUrl = site.url,
+            apiRoot = apiRoot,
+            apiUrlResolver = apiUrlResolver,
+            delegate = delegate,
+            cache = wpApiCache.cache
         )
     }
 
