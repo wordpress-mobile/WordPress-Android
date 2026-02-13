@@ -90,7 +90,7 @@ private fun PostContentItem(
 }
 
 @Composable
-private fun PlaceholderItem(modifier: Modifier = Modifier) {
+internal fun PlaceholderItem(modifier: Modifier = Modifier) {
     val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
     val alpha by infiniteTransition.animateFloat(
         initialValue = 0.06f,

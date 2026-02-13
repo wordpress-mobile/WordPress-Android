@@ -61,7 +61,7 @@ fun PostRsTabListScreen(
         }
     ) {
         when {
-            state.isLoading -> LoadingContent()
+            state.isLoading -> ShimmerList()
             state.error != null && state.posts.isEmpty() -> {
                 ErrorContent(state.error)
             }
@@ -134,12 +134,11 @@ private fun PostListContent(
 }
 
 @Composable
-private fun LoadingContent() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
+private fun ShimmerList() {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(SHIMMER_ITEM_COUNT) {
+            PlaceholderItem()
+        }
     }
 }
 
@@ -196,3 +195,4 @@ private fun EmptyContent(
 }
 
 private const val LOAD_MORE_THRESHOLD = 5
+private const val SHIMMER_ITEM_COUNT = 8
