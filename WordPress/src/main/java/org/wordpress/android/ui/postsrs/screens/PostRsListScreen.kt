@@ -2,12 +2,17 @@ package org.wordpress.android.ui.postsrs.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -17,12 +22,23 @@ import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -33,6 +49,8 @@ import org.wordpress.android.ui.postsrs.PostTabUiState
 @Composable
 fun PostRsListScreen(
     tabStates: Map<PostRsListTab, PostTabUiState>,
+    searchQuery: String,
+    onSearchQueryChanged: (String, PostRsListTab) -> Unit,
     onInitTab: (PostRsListTab) -> Unit,
     onRefreshTab: (PostRsListTab) -> Unit,
     onLoadMore: (PostRsListTab) -> Unit,
@@ -43,34 +61,142 @@ fun PostRsListScreen(
     val tabs = PostRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
+    var isSearchActive by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    val activeTab = tabs[pagerState.settledPage]
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = stringResource(
-                            R.string.my_site_btn_blog_posts
+                    if (isSearchActive) {
+                        TextField(
+                            value = searchQuery,
+                            onValueChange = { query ->
+                                onSearchQueryChanged(
+                                    query, activeTab
+                                )
+                            },
+                            placeholder = {
+                                Text(
+                                    stringResource(
+                                        R.string
+                                            .post_list_search_prompt
+                                    )
+                                )
+                            },
+                            singleLine = true,
+                            keyboardOptions =
+                                KeyboardOptions.Default.copy(
+                                    imeAction = ImeAction.Search
+                                ),
+                            keyboardActions = KeyboardActions(
+                                onSearch = {
+                                    focusManager.clearFocus()
+                                }
+                            ),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor =
+                                    Color.Transparent,
+                                unfocusedContainerColor =
+                                    Color.Transparent,
+                                focusedIndicatorColor =
+                                    Color.Transparent,
+                                unfocusedIndicatorColor =
+                                    Color.Transparent
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .focusRequester(focusRequester)
                         )
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(
-                                R.string.back
+                    } else {
+                        Text(
+                            text = stringResource(
+                                R.string.my_site_btn_blog_posts
                             )
                         )
                     }
+                },
+                navigationIcon = {
+                    if (isSearchActive) {
+                        IconButton(onClick = {
+                            isSearchActive = false
+                            onSearchQueryChanged(
+                                "", activeTab
+                            )
+                        }) {
+                            Icon(
+                                Icons.AutoMirrored.Filled
+                                    .ArrowBack,
+                                contentDescription =
+                                    stringResource(
+                                        R.string.back
+                                    )
+                            )
+                        }
+                    } else {
+                        IconButton(
+                            onClick = onNavigateBack
+                        ) {
+                            Icon(
+                                Icons.AutoMirrored.Filled
+                                    .ArrowBack,
+                                contentDescription =
+                                    stringResource(
+                                        R.string.back
+                                    )
+                            )
+                        }
+                    }
+                },
+                actions = {
+                    if (isSearchActive) {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(onClick = {
+                                onSearchQueryChanged(
+                                    "", activeTab
+                                )
+                            }) {
+                                Icon(
+                                    Icons.Default.Close,
+                                    contentDescription =
+                                        stringResource(
+                                            R.string.clear
+                                        )
+                                )
+                            }
+                        }
+                    } else {
+                        IconButton(onClick = {
+                            isSearchActive = true
+                        }) {
+                            Icon(
+                                Icons.Default.Search,
+                                contentDescription =
+                                    stringResource(
+                                        R.string
+                                            .post_list_search_prompt
+                                    )
+                            )
+                        }
+                    }
                 }
             )
+
+            if (isSearchActive) {
+                LaunchedEffect(Unit) {
+                    focusRequester.requestFocus()
+                }
+            }
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onCreatePost,
-                containerColor = MaterialTheme.colorScheme.onSurface,
-                contentColor = MaterialTheme.colorScheme.surface
+                containerColor =
+                    MaterialTheme.colorScheme.onSurface,
+                contentColor =
+                    MaterialTheme.colorScheme.surface
             ) {
                 Icon(
                     Icons.Default.Add,
@@ -92,12 +218,14 @@ fun PostRsListScreen(
             ) {
                 tabs.forEachIndexed { index, tab ->
                     Tab(
-                        selected = pagerState.settledPage == index,
+                        selected =
+                            pagerState.settledPage == index,
                         onClick = {
                             coroutineScope.launch {
-                                pagerState.animateScrollToPage(
-                                    index
-                                )
+                                pagerState
+                                    .animateScrollToPage(
+                                        index
+                                    )
                             }
                         },
                         text = {
@@ -126,7 +254,8 @@ fun PostRsListScreen(
 
                 PostRsTabListScreen(
                     state = tabState,
-                    emptyMessageResId = tab.emptyMessageResId,
+                    emptyMessageResId =
+                        tab.emptyMessageResId,
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onPostClick = onPostClick,

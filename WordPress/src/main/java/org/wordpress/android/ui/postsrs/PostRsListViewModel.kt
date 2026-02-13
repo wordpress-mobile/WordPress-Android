@@ -40,6 +40,10 @@ class PostRsListViewModel @Inject constructor(
         MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> =
         _tabStates.asStateFlow()
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
     private val collections =
         mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
@@ -83,6 +87,25 @@ class PostRsListViewModel @Inject constructor(
         val site = selectedSiteRepository.getSelectedSite()
             ?: return
         _events.trySend(PostRsListEvent.CreatePost(site))
+    }
+
+    /**
+     * Updates the search query, clears all cached collections, and
+     * re-initializes the given [activeTab] so it fetches posts
+     * matching the new query.
+     */
+    @MainThread
+    fun onSearchQueryChanged(
+        query: String,
+        activeTab: PostRsListTab
+    ) {
+        _searchQuery.value = query
+        collections.values.forEach { it.close() }
+        collections.clear()
+        initializingTabs.clear()
+        userRefreshingTabs.clear()
+        _tabStates.value = emptyMap()
+        initTab(activeTab)
     }
 
     /**
@@ -142,10 +165,12 @@ class PostRsListViewModel @Inject constructor(
         tab: PostRsListTab
     ): ObservableMetadataCollection = withContext(Dispatchers.IO) {
         val service = serviceProvider.getService(site)
+        val query = _searchQuery.value
         val filter = PostListFilter(
             status = tab.statuses,
             order = tab.order,
-            orderby = WpApiParamPostsOrderBy.DATE
+            orderby = WpApiParamPostsOrderBy.DATE,
+            search = query.ifBlank { null }
         )
         service.posts()
             .getObservablePostMetadataCollectionWithEditContext(
