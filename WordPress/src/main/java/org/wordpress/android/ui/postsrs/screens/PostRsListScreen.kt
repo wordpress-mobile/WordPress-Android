@@ -62,7 +62,8 @@ fun PostRsListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onCreatePost,
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.onSurface,
+                contentColor = MaterialTheme.colorScheme.surface
             ) {
                 Icon(
                     Icons.Default.Add,
