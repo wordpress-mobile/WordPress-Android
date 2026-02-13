@@ -296,8 +296,6 @@ class PostRsListViewModel @Inject constructor(
             isLoadingMore =
                 listInfo?.state == ListState.FETCHING_NEXT_PAGE,
             canLoadMore = morePages,
-            isLoading =
-                fetchingFirstPage && state.value.posts.isEmpty(),
             error = if (listInfo?.state == ListState.ERROR) {
                 listInfo.errorMessage
                     ?: resourceProvider.getString(
