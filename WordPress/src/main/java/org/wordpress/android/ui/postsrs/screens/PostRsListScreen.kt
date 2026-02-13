@@ -1,13 +1,16 @@
 package org.wordpress.android.ui.postsrs.screens
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -23,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -35,6 +39,7 @@ import org.wordpress.android.ui.postsrs.PostRsListViewModel
 @Composable
 fun PostRsListScreen(
     viewModel: PostRsListViewModel,
+    isFetchingPost: Boolean,
     onNavigateBack: () -> Unit,
     onPostClick: (Long) -> Unit,
     onCreatePost: () -> Unit
@@ -74,12 +79,13 @@ fun PostRsListScreen(
             }
         }
     ) { contentPadding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            PrimaryScrollableTabRow(
+            Column(modifier = Modifier.fillMaxSize()) {
+                PrimaryScrollableTabRow(
                 selectedTabIndex = pagerState.currentPage,
                 edgePadding = 0.dp
             ) {
@@ -119,6 +125,15 @@ fun PostRsListScreen(
                     onLoadMore = { viewModel.loadMorePosts(tab) },
                     onPostClick = onPostClick,
                     onCreatePost = onCreatePost
+                )
+            }
+            }
+
+            if (isFetchingPost) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .align(Alignment.Center)
                 )
             }
         }

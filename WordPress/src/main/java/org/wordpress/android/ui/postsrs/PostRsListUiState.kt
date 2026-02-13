@@ -67,7 +67,7 @@ private fun FullEntityAnyPostWithEditContext.toUiModel():
                 ?: post.excerpt?.rendered
                 ?: ""
             ).stripHtml(),
-        date = (post.date ?: "").toRelativeDate(),
+        date = post.date.toRelativeDate(),
         statusLabelResId = post.status.toLabelResId()
     )
 }

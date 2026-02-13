@@ -89,6 +89,7 @@ class WpSelfHostedServiceProvider @Inject constructor(
      * registering a [DatabaseChangeNotifier] for change updates.
      * Subsequent calls return the cached instance.
      */
+    @Synchronized
     private fun getOrCreateCache(): WordPressApiCache {
         return cache ?: run {
             val cacheDir = File(context.filesDir, "wp_rs_cache")

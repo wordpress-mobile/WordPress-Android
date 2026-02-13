@@ -30,6 +30,9 @@ class PostRsListViewModel @Inject constructor(
     private val serviceProvider: WpSelfHostedServiceProvider,
     private val resourceProvider: ResourceProvider,
 ) : ViewModel() {
+    // All three maps are only accessed from the main thread:
+    // public functions are called from Compose/UI, and observer
+    // callbacks launch on viewModelScope (Main dispatcher).
     private val tabStates =
         mutableMapOf<PostRsListTab, MutableStateFlow<PostTabUiState>>()
     private val collections =
