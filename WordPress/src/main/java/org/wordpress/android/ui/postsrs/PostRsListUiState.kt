@@ -2,6 +2,7 @@ package org.wordpress.android.ui.postsrs
 
 import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.AnyPostWithEditContext
+import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
 
@@ -19,6 +20,7 @@ data class PostRsUiModel(
     val title: String,
     val excerpt: String,
     val date: String,
+    val statusLabel: String? = null,
     val isPlaceholder: Boolean = false,
     val isError: Boolean = false
 )
@@ -62,6 +64,18 @@ private fun FullEntityAnyPostWithEditContext.toUiModel():
             ).let { HtmlUtils.fastStripHtml(it).trim() },
         date = PostRsDateFormatter.format(
             post.dateGmt, post.status
-        )
+        ),
+        statusLabel = post.status.toLabel()
     )
+}
+
+private fun PostStatus?.toLabel(): String? = when (this) {
+    is PostStatus.Publish -> "Published"
+    is PostStatus.Draft -> "Draft"
+    is PostStatus.Pending -> "Pending"
+    is PostStatus.Private -> "Private"
+    is PostStatus.Future -> "Scheduled"
+    is PostStatus.Trash -> "Trashed"
+    is PostStatus.Custom -> null
+    null -> null
 }

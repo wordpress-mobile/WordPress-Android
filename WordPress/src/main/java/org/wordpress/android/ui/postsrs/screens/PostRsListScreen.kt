@@ -214,30 +214,32 @@ fun PostRsListScreen(
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            PrimaryScrollableTabRow(
-                selectedTabIndex = pagerState.settledPage,
-                edgePadding = 0.dp
-            ) {
-                tabs.forEachIndexed { index, tab ->
-                    Tab(
-                        selected =
-                            pagerState.settledPage == index,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState
-                                    .animateScrollToPage(
-                                        index
+            if (!isSearchActive) {
+                PrimaryScrollableTabRow(
+                    selectedTabIndex = pagerState.settledPage,
+                    edgePadding = 0.dp
+                ) {
+                    tabs.forEachIndexed { index, tab ->
+                        Tab(
+                            selected =
+                                pagerState.settledPage == index,
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState
+                                        .animateScrollToPage(
+                                            index
+                                        )
+                                }
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(
+                                        tab.labelResId
                                     )
-                            }
-                        },
-                        text = {
-                            Text(
-                                text = stringResource(
-                                    tab.labelResId
                                 )
-                            )
-                        }
-                    )
+                            }
+                        )
+                    }
                 }
             }
 

@@ -24,6 +24,7 @@ import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
 import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
+import uniffi.wp_api.PostStatus
 import uniffi.wp_api.WpApiParamPostsOrderBy
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile_cache.ListState
@@ -181,8 +182,13 @@ class PostRsListViewModel @Inject constructor(
     ): ObservableMetadataCollection = withContext(Dispatchers.IO) {
         val service = serviceProvider.getService(site)
         val query = _searchQuery.value
+        val isSearching = query.isNotBlank()
         val filter = PostListFilter(
-            status = tab.statuses,
+            status = if (isSearching) {
+                ALL_STATUSES
+            } else {
+                tab.statuses
+            },
             order = tab.order,
             orderby = WpApiParamPostsOrderBy.DATE,
             search = query.ifBlank { null }
@@ -381,6 +387,14 @@ class PostRsListViewModel @Inject constructor(
 
     companion object {
         private const val PAGE_SIZE = 20
+        private val ALL_STATUSES = listOf(
+            PostStatus.Publish,
+            PostStatus.Private,
+            PostStatus.Draft,
+            PostStatus.Pending,
+            PostStatus.Future,
+            PostStatus.Trash
+        )
     }
 }
 
