@@ -32,6 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -232,16 +233,16 @@ fun PostRsListScreen(
                 }
             }
 
+            LaunchedEffect(pagerState) {
+                snapshotFlow { pagerState.settledPage }
+                    .collect { page -> onInitTab(tabs[page]) }
+            }
+
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.weight(1f)
             ) { page ->
                 val tab = tabs[page]
-
-                LaunchedEffect(tab) {
-                    onInitTab(tab)
-                }
-
                 val tabState = tabStates[tab]
                     ?: PostTabUiState(isLoading = true)
 
