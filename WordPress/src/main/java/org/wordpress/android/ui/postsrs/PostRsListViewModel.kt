@@ -334,9 +334,6 @@ class PostRsListViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         collections.values.forEach { it.close() }
-        collections.clear()
-        initializingTabs.clear()
-        userRefreshingTabs.clear()
     }
 
     companion object {

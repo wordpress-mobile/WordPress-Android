@@ -133,21 +133,18 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.height(4.dp))
             // Excerpt (two lines)
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.9f)
-                    .height(14.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(placeholderColor)
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.9f)
-                    .height(14.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(placeholderColor)
-            )
+            repeat(2) { index ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f)
+                        .height(14.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(placeholderColor)
+                )
+                if (index == 0) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+            }
         }
     }
 }
