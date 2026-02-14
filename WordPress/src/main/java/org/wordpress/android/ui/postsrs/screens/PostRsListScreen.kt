@@ -262,6 +262,8 @@ fun PostRsListScreen(
                         tab.emptyMessageResId,
                     isSearchIdle = isSearchActive
                         && searchQuery.isEmpty(),
+                    isSearching = isSearchActive
+                        && searchQuery.isNotEmpty(),
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onPostClick = onPostClick,

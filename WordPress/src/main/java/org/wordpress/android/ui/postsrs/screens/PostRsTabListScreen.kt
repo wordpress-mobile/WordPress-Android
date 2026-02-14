@@ -39,6 +39,7 @@ fun PostRsTabListScreen(
     state: PostTabUiState,
     emptyMessageResId: Int,
     isSearchIdle: Boolean = false,
+    isSearching: Boolean = false,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
@@ -68,7 +69,13 @@ fun PostRsTabListScreen(
                 ErrorContent(state.error)
             }
             state.posts.isEmpty() && !state.isRefreshing -> {
-                EmptyContent(emptyMessageResId, onCreatePost)
+                if (isSearching) {
+                    NoSearchResults()
+                } else {
+                    EmptyContent(
+                        emptyMessageResId, onCreatePost
+                    )
+                }
             }
             else -> PostListContent(
                 posts = state.posts,
@@ -193,6 +200,27 @@ private fun EmptyContent(
                 )
             )
         }
+    }
+}
+
+@Composable
+private fun NoSearchResults() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(
+                R.string.post_list_search_nothing_found
+            ),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme
+                .onSurfaceVariant
+        )
     }
 }
 
