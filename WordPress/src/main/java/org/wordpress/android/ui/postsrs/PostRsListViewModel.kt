@@ -5,10 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,7 +27,6 @@ import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
 import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
-import uniffi.wp_api.PostStatus
 import uniffi.wp_api.WpApiParamPostsOrderBy
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile_cache.ListState
@@ -44,6 +46,7 @@ class PostRsListViewModel @Inject constructor(
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+    private var activeSearchTab = PostRsListTab.PUBLISHED
 
     private val collections =
         mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
@@ -52,6 +55,19 @@ class PostRsListViewModel @Inject constructor(
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
+
+    init {
+        @OptIn(FlowPreview::class)
+        viewModelScope.launch {
+            _searchQuery
+                .debounce(SEARCH_DEBOUNCE_MS)
+                .filter { it.length >= MIN_SEARCH_QUERY_LENGTH }
+                .collect {
+                    clearCollections()
+                    initTab(activeSearchTab)
+                }
+        }
+    }
 
     /**
      * Looks up a post in the local FluxC database and emits an
@@ -102,16 +118,32 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
-     * Updates the search query, clears all cached collections, and
-     * re-initializes the given [activeTab] so it fetches posts
-     * matching the new query.
+     * Updates the search query. Non-blank queries are debounced
+     * before triggering an API call. Blank queries immediately
+     * clear results so the idle state appears without delay.
      */
     @MainThread
     fun onSearchQueryChanged(
         query: String,
         activeTab: PostRsListTab
     ) {
+        activeSearchTab = activeTab
         _searchQuery.value = query
+        if (query.isBlank()) {
+            clearCollections()
+            _tabStates.value = PostRsListTab.entries
+                .associateWith { PostTabUiState() }
+        }
+    }
+
+    /**
+     * Closes search mode: clears the query, tears down all
+     * collections, and immediately re-initializes [activeTab]
+     * so the normal tab content appears without debounce delay.
+     */
+    @MainThread
+    fun onSearchClose(activeTab: PostRsListTab) {
+        _searchQuery.value = ""
         clearCollections()
         initTab(activeTab)
     }
@@ -304,9 +336,14 @@ class PostRsListViewModel @Inject constructor(
 
         @Suppress("TooGenericExceptionCaught")
         try {
+            val showStatus =
+                _searchQuery.value.isNotBlank()
             val uiModels = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
-                    item.state.toUiModel(item.id)
+                    item.state.toUiModel(
+                        item.id,
+                        showStatus = showStatus
+                    )
                 }
             }
             updateTabUiState(tab) {
@@ -384,14 +421,11 @@ class PostRsListViewModel @Inject constructor(
 
     companion object {
         private const val PAGE_SIZE = 20
-        private val ALL_STATUSES = listOf(
-            PostStatus.Publish,
-            PostStatus.Private,
-            PostStatus.Draft,
-            PostStatus.Pending,
-            PostStatus.Future,
-            PostStatus.Trash
-        )
+        private const val SEARCH_DEBOUNCE_MS = 250L
+        internal const val MIN_SEARCH_QUERY_LENGTH = 3
+        private val ALL_STATUSES =
+            PostRsListTab.entries
+                .flatMap { it.statuses }.distinct()
     }
 }
 

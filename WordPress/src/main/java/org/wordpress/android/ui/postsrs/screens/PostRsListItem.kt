@@ -59,9 +59,14 @@ private fun PostContentItem(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
+            val statusLabel = if (post.statusLabelResId != 0) {
+                stringResource(post.statusLabelResId)
+            } else {
+                null
+            }
             val dateText = buildString {
-                if (!post.statusLabel.isNullOrBlank()) {
-                    append(post.statusLabel)
+                if (!statusLabel.isNullOrBlank()) {
+                    append(statusLabel)
                     if (post.date.isNotBlank()) {
                         append(" \u2022 ")
                     }

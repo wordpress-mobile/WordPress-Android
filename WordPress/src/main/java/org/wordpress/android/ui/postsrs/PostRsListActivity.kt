@@ -41,6 +41,8 @@ class PostRsListActivity : BaseAppCompatActivity() {
                         viewModel::onSearchOpen,
                     onSearchQueryChanged =
                         viewModel::onSearchQueryChanged,
+                    onSearchClose =
+                        viewModel::onSearchClose,
                     onInitTab = viewModel::initTab,
                     onRefreshTab = { tab ->
                         viewModel.refreshTab(

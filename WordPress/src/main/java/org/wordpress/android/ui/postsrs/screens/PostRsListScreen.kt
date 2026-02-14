@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsListTab
+import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.postsrs.PostTabUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,6 +53,7 @@ fun PostRsListScreen(
     searchQuery: String,
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PostRsListTab) -> Unit,
+    onSearchClose: (PostRsListTab) -> Unit,
     onInitTab: (PostRsListTab) -> Unit,
     onRefreshTab: (PostRsListTab) -> Unit,
     onLoadMore: (PostRsListTab) -> Unit,
@@ -120,35 +122,22 @@ fun PostRsListScreen(
                     }
                 },
                 navigationIcon = {
-                    if (isSearchActive) {
-                        IconButton(onClick = {
+                    IconButton(onClick = {
+                        if (isSearchActive) {
                             isSearchActive = false
-                            onSearchQueryChanged(
-                                "", activeTab
-                            )
-                        }) {
-                            Icon(
-                                Icons.AutoMirrored.Filled
-                                    .ArrowBack,
-                                contentDescription =
-                                    stringResource(
-                                        R.string.back
-                                    )
-                            )
+                            onSearchClose(activeTab)
+                        } else {
+                            onNavigateBack()
                         }
-                    } else {
-                        IconButton(
-                            onClick = onNavigateBack
-                        ) {
-                            Icon(
-                                Icons.AutoMirrored.Filled
-                                    .ArrowBack,
-                                contentDescription =
-                                    stringResource(
-                                        R.string.back
-                                    )
-                            )
-                        }
+                    }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled
+                                .ArrowBack,
+                            contentDescription =
+                                stringResource(
+                                    R.string.back
+                                )
+                        )
                     }
                 },
                 actions = {
@@ -261,9 +250,11 @@ fun PostRsListScreen(
                     emptyMessageResId =
                         tab.emptyMessageResId,
                     isSearchIdle = isSearchActive
-                        && searchQuery.isEmpty(),
+                        && searchQuery.length
+                        < MIN_SEARCH_QUERY_LENGTH,
                     isSearching = isSearchActive
-                        && searchQuery.isNotEmpty(),
+                        && searchQuery.length
+                        >= MIN_SEARCH_QUERY_LENGTH,
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onPostClick = onPostClick,

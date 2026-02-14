@@ -69,13 +69,19 @@ fun PostRsTabListScreen(
                 ErrorContent(state.error)
             }
             state.posts.isEmpty() && !state.isRefreshing -> {
-                if (isSearching) {
-                    NoSearchResults()
-                } else {
-                    EmptyContent(
-                        emptyMessageResId, onCreatePost
-                    )
-                }
+                EmptyContent(
+                    emptyMessageResId = if (isSearching) {
+                        R.string
+                            .post_list_search_nothing_found
+                    } else {
+                        emptyMessageResId
+                    },
+                    onCreatePost = if (isSearching) {
+                        null
+                    } else {
+                        onCreatePost
+                    }
+                )
             }
             else -> PostListContent(
                 posts = state.posts,
@@ -177,7 +183,7 @@ private fun ErrorContent(error: String) {
 @Composable
 private fun EmptyContent(
     emptyMessageResId: Int,
-    onCreatePost: () -> Unit
+    onCreatePost: (() -> Unit)?
 ) {
     Column(
         modifier = Modifier
@@ -192,35 +198,16 @@ private fun EmptyContent(
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onCreatePost) {
-            Text(
-                text = stringResource(
-                    R.string.posts_empty_list_button
+        if (onCreatePost != null) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onCreatePost) {
+                Text(
+                    text = stringResource(
+                        R.string.posts_empty_list_button
+                    )
                 )
-            )
+            }
         }
-    }
-}
-
-@Composable
-private fun NoSearchResults() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(
-                R.string.post_list_search_nothing_found
-            ),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme
-                .onSurfaceVariant
-        )
     }
 }
 
