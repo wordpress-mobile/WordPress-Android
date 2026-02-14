@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -111,16 +112,16 @@ fun PostRsListScreen(
                 }
             }
 
+            LaunchedEffect(pagerState) {
+                snapshotFlow { pagerState.settledPage }
+                    .collect { page -> onInitTab(tabs[page]) }
+            }
+
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.weight(1f)
             ) { page ->
                 val tab = tabs[page]
-
-                LaunchedEffect(tab) {
-                    onInitTab(tab)
-                }
-
                 val tabState = tabStates[tab]
                     ?: PostTabUiState(isLoading = true)
 
