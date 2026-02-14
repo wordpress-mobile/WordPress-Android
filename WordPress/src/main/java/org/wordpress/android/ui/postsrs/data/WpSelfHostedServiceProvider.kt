@@ -40,13 +40,6 @@ class WpSelfHostedServiceProvider @Inject constructor(
         }
     }
 
-    /** Removes the cached service for [siteId], if any. */
-    @Suppress("unused")
-    @Synchronized
-    fun clearSite(siteId: Long) {
-        services.remove(siteId)
-    }
-
     /** Removes all cached services. */
     @Synchronized
     fun clearAll() {
