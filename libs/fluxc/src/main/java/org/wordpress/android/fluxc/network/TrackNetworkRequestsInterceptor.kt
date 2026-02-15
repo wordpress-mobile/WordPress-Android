@@ -4,8 +4,14 @@ import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.chuckerteam.chucker.api.RetentionManager
+import okhttp3.Call
+import okhttp3.Connection
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import java.util.concurrent.TimeUnit
 
 /**
  * Retention period options for tracked network requests.
@@ -70,10 +76,20 @@ class TrackNetworkRequestsInterceptor(
         // 3. HashMap lookup (negligible)
         // See: https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-14.0.0_r1/core/java/android/app/SharedPreferencesImpl.java#345
         return if (preference.isEnabled()) {
-            getOrCreateChuckerInterceptor().intercept(chain)
+            val chucker = getOrCreateChuckerInterceptor()
+            if (shouldRedactRequestBody(chain.request())) {
+                chucker.intercept(RedactedBodyChain(chain))
+            } else {
+                chucker.intercept(chain)
+            }
         } else {
             chain.proceed(chain.request())
         }
+    }
+
+    private fun shouldRedactRequestBody(request: Request): Boolean {
+        val pathSegments = request.url.pathSegments
+        return REDACTED_BODY_PATHS.any { it in pathSegments }
     }
 
     private fun getOrCreateChuckerInterceptor(): ChuckerInterceptor {
@@ -107,6 +123,59 @@ class TrackNetworkRequestsInterceptor(
             .build()
     }
 
+    /**
+     * A [Interceptor.Chain] wrapper that presents a redacted request body
+     * to Chucker for logging purposes, while ensuring the actual network
+     * call uses the original request with the real body intact.
+     *
+     * This achieves selective logging redaction without affecting the
+     * actual HTTP request/response.
+     */
+    private class RedactedBodyChain(
+        private val delegate: Interceptor.Chain
+    ) : Interceptor.Chain {
+        private val redactedRequest: Request by lazy {
+            val original = delegate.request()
+            // Falls back to plain text if original has no body;
+            // the redacted placeholder still needs a content type.
+            val contentType = original.body?.contentType()
+                ?: "text/plain".toMediaType()
+            val redactedBody = REDACTED_BODY_PLACEHOLDER
+                .toRequestBody(contentType)
+            original.newBuilder().method(original.method, redactedBody).build()
+        }
+
+        override fun request(): Request = redactedRequest
+
+        override fun proceed(request: Request): Response {
+            return delegate.proceed(delegate.request())
+        }
+
+        override fun connection(): Connection? = delegate.connection()
+        override fun call(): Call = delegate.call()
+        override fun connectTimeoutMillis(): Int =
+            delegate.connectTimeoutMillis()
+        override fun withConnectTimeout(
+            timeout: Int,
+            unit: TimeUnit
+        ): Interceptor.Chain =
+            RedactedBodyChain(delegate.withConnectTimeout(timeout, unit))
+        override fun readTimeoutMillis(): Int =
+            delegate.readTimeoutMillis()
+        override fun withReadTimeout(
+            timeout: Int,
+            unit: TimeUnit
+        ): Interceptor.Chain =
+            RedactedBodyChain(delegate.withReadTimeout(timeout, unit))
+        override fun writeTimeoutMillis(): Int =
+            delegate.writeTimeoutMillis()
+        override fun withWriteTimeout(
+            timeout: Int,
+            unit: TimeUnit
+        ): Interceptor.Chain =
+            RedactedBodyChain(delegate.withWriteTimeout(timeout, unit))
+    }
+
     companion object {
         private val SENSITIVE_HEADERS = setOf(
             "Authorization",
@@ -116,5 +185,13 @@ class TrackNetworkRequestsInterceptor(
         )
 
         private const val MAX_CONTENT_LENGTH = 250_000L
+
+        private const val REDACTED_BODY_PLACEHOLDER =
+            "[Body redacted — contains sensitive information]"
+
+        private val REDACTED_BODY_PATHS = listOf(
+            "xmlrpc.php",
+            "wp-login.php"
+        )
     }
 }

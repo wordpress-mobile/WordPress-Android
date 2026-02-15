@@ -181,7 +181,6 @@ class ScanViewModelTest : BaseUnitTest() {
 
         val error = observers.uiStates.last() as ErrorUiState
         with(error) {
-            assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
             assertThat(title).isEqualTo(UiStringRes(R.string.scan_no_network_title))
             assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_no_network_subtitle))
             assertThat(buttonText).isEqualTo(UiStringRes(R.string.retry))
@@ -220,7 +219,6 @@ class ScanViewModelTest : BaseUnitTest() {
 
             val state = observers.uiStates.last() as ErrorUiState
             with(state) {
-                assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
                 assertThat(title).isEqualTo(UiStringRes(R.string.scan_request_failed_title))
                 assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_request_failed_subtitle))
                 assertThat(buttonText).isEqualTo(UiStringRes(R.string.contact_support))
@@ -326,8 +324,6 @@ class ScanViewModelTest : BaseUnitTest() {
 
             val state = observers.uiStates.last() as ErrorUiState
             with(state) {
-                assertThat(image).isEqualTo(R.drawable.ic_baseline_security_white_24dp)
-                assertThat(imageColorResId).isEqualTo(R.color.gray)
                 assertThat(title).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_title))
                 assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_subtitle))
             }
@@ -352,8 +348,6 @@ class ScanViewModelTest : BaseUnitTest() {
 
             val state = observers.uiStates.last() as ErrorUiState
             with(state) {
-                assertThat(image).isEqualTo(R.drawable.ic_shield_warning_white)
-                assertThat(imageColorResId).isEqualTo(R.color.error_60)
                 assertThat(title).isEqualTo(UiStringRes(R.string.scan_vault_press_active_on_site_title))
                 assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_vault_press_active_on_site_subtitle))
             }
@@ -446,7 +440,6 @@ class ScanViewModelTest : BaseUnitTest() {
 
         val errorState = observers.uiStates.last() as ErrorUiState
         with(errorState) {
-            assertThat(image).isEqualTo(R.drawable.img_illustration_empty_results_216dp)
             assertThat(title).isEqualTo(UiStringRes(R.string.scan_start_request_failed_title))
             assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_start_request_failed_subtitle))
             assertThat(buttonText).isEqualTo(UiStringRes(R.string.contact_support))

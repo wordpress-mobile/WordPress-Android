@@ -8,8 +8,9 @@ gem 'nokogiri'
 
 ### Fastlane Plugins
 
+gem 'fastlane-plugin-firebase_app_distribution', '~> 0.10'
 gem 'fastlane-plugin-sentry'
-gem 'fastlane-plugin-wpmreleasetoolkit', '~> 13.8'
+gem 'fastlane-plugin-wpmreleasetoolkit', '~> 14.0'
 # gem 'fastlane-plugin-wpmreleasetoolkit', path: '../../release-toolkit'
 # gem 'fastlane-plugin-wpmreleasetoolkit', git: 'https://github.com/wordpress-mobile/release-toolkit', branch: ''
 

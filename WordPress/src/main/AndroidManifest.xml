@@ -112,6 +112,16 @@
             android:label="@string/stats"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.newstats.mostviewed.MostViewedDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.newstats.countries.CountriesDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
         <!-- Account activities -->
         <activity
             android:name=".ui.main.MeActivity"
@@ -349,14 +359,6 @@
         <activity
             android:name=".ui.history.HistoryDetailActivity"
             android:label="@string/history_detail_title"
-            android:theme="@style/WordPress.NoActionBar" />
-
-        <!-- plans -->
-        <activity
-            android:name=".ui.plans.PlansActivity"
-            android:label="@string/plans"
-            android:launchMode="singleTop"
-            android:parentActivityName=".ui.main.WPMainActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Stats Activities -->
@@ -949,6 +951,11 @@
         <activity
             android:name=".ui.selfhostedusers.SelfHostedUsersActivity"
             android:label="@string/users"
+            android:launchMode="singleTop"
+            android:theme="@style/WordPress.NoActionBar"/>
+        <activity
+            android:name=".ui.navmenus.NavMenusActivity"
+            android:label="@string/menus"
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar"/>
 

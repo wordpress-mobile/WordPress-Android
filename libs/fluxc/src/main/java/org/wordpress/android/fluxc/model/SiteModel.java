@@ -886,6 +886,10 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         return !isWPCom() && mApiRestUsernamePlain != null && mApiRestPasswordPlain != null;
     }
 
+    public boolean hasApplicationPassword() {
+        return mApiRestUsernamePlain != null && mApiRestPasswordPlain != null;
+    }
+
     public void setSpaceAvailable(long spaceAvailable) {
         mSpaceAvailable = spaceAvailable;
     }

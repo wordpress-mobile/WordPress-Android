@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.mysite.items
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -14,6 +16,7 @@ import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsBuilderTest {
     @Mock
@@ -40,7 +43,7 @@ class SiteItemsBuilderTest {
     }
 
     @Test
-    fun `always adds stats, publish, posts, media, comment, and view admin items`() {
+    fun `always adds stats, publish, posts, media, comment, and view admin items`() = runTest {
         setupHeaders()
 
         val buildSiteItems = siteItemsBuilder.build(
@@ -64,11 +67,10 @@ class SiteItemsBuilderTest {
     }
 
     @Test
-    fun `adds all the items in the correct order`() {
+    fun `adds all the items in the correct order`() = runTest {
         setupHeaders(
             addActivityLogItem = true,
             addSiteMonitoringItem = true,
-            addPlanItem = false,
             addPagesItem = true,
             addAdminItem = true,
             addSubscribersItem = true,
@@ -116,40 +118,41 @@ class SiteItemsBuilderTest {
     }
 
     @Test
-    fun `given site domains flag is not enabled, when build site domains is invoked, then site domains is built`() {
-        whenever(siteListItemBuilder.buildDomainsItemIfAvailable(siteModel, SITE_ITEM_ACTION))
-            .thenReturn(null)
+    fun `given site domains flag is not enabled, when build site domains is invoked, then site domains is built`() =
+        runTest {
+            whenever(siteListItemBuilder.buildDomainsItemIfAvailable(siteModel, SITE_ITEM_ACTION))
+                .thenReturn(null)
 
-        val siteDomainsItems = siteItemsBuilder.build(
-            SiteItemsBuilderParams(
-                site = siteModel,
-                onClick = SITE_ITEM_ACTION
+            val siteDomainsItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                    site = siteModel,
+                    onClick = SITE_ITEM_ACTION
+                )
             )
-        )
 
-        assertThat(siteDomainsItems).doesNotContain(DOMAINS_ITEM)
-    }
+            assertThat(siteDomainsItems).doesNotContain(DOMAINS_ITEM)
+        }
 
     @Test
-    fun `given site domains flag is enabled, when build site domains is invoked, then site domains is built`() {
-        whenever(siteListItemBuilder.buildDomainsItemIfAvailable(siteModel, SITE_ITEM_ACTION))
-            .thenReturn(DOMAINS_ITEM)
+    fun `given site domains flag is enabled, when build site domains is invoked, then site domains is built`() =
+        runTest {
+            whenever(siteListItemBuilder.buildDomainsItemIfAvailable(siteModel, SITE_ITEM_ACTION))
+                .thenReturn(DOMAINS_ITEM)
 
-        val siteDomainsItems = siteItemsBuilder.build(
-            SiteItemsBuilderParams(
-                site = siteModel,
-                onClick = SITE_ITEM_ACTION
+            val siteDomainsItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                    site = siteModel,
+                    onClick = SITE_ITEM_ACTION
+                )
             )
-        )
 
-        assertThat(siteDomainsItems).contains(DOMAINS_ITEM)
-    }
+            assertThat(siteDomainsItems).contains(DOMAINS_ITEM)
+        }
 
     @Suppress("ComplexMethod", "LongMethod")
     private fun setupHeaders(
         addActivityLogItem: Boolean = false,
         addSiteMonitoringItem: Boolean = false,
-        addPlanItem: Boolean = false,
         addPagesItem: Boolean = false,
         addAdminItem: Boolean = false,
         addSubscribersItem: Boolean = false,
@@ -162,14 +165,6 @@ class SiteItemsBuilderTest {
         addBackupItem: Boolean = false,
         addScanItem: Boolean = false
     ) {
-        if (addPlanItem) {
-            whenever(
-                siteListItemBuilder.buildPlanItemIfAvailable(
-                    siteModel,
-                    SITE_ITEM_ACTION
-                )
-            ).thenReturn(PLAN_ITEM)
-        }
         if (addActivityLogItem) {
             whenever(siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
                 ACTIVITY_ITEM

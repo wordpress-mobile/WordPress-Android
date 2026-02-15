@@ -291,7 +291,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
                 if (webPreviewUiState instanceof WebPreviewFullscreenUiState) {
                     WebPreviewFullscreenUiState state = (WebPreviewFullscreenUiState) webPreviewUiState;
-                    mUiHelpers.setImageOrHide(mActionableEmptyView.image, state.getImageRes());
                     mUiHelpers.setTextOrHide(mActionableEmptyView.title, state.getTitleText());
                     mUiHelpers.setTextOrHide(mActionableEmptyView.subtitle, state.getSubtitleText());
                     mUiHelpers.updateVisibility(mActionableEmptyView.button, state.getButtonVisibility());

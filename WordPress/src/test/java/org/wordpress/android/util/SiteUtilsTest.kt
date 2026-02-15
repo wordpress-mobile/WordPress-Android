@@ -7,10 +7,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.plans.PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
-import org.wordpress.android.ui.plans.PlansConstants.BLOGGER_PLAN_TWO_YEARS_ID
-import org.wordpress.android.ui.plans.PlansConstants.FREE_PLAN_ID
-import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
+import org.wordpress.android.util.PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
+import org.wordpress.android.util.PlansConstants.BLOGGER_PLAN_TWO_YEARS_ID
+import org.wordpress.android.util.PlansConstants.FREE_PLAN_ID
+import org.wordpress.android.util.PlansConstants.PREMIUM_PLAN_ID
 import org.wordpress.android.util.image.BlavatarShape.CIRCULAR
 import org.wordpress.android.util.image.BlavatarShape.SQUARE
 import org.wordpress.android.util.image.BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES

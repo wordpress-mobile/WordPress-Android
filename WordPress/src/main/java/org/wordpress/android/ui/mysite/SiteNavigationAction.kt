@@ -18,7 +18,6 @@ sealed class SiteNavigationAction {
     data class OpenActivityLog(val site: SiteModel) : SiteNavigationAction()
     data class OpenBackup(val site: SiteModel) : SiteNavigationAction()
     data class OpenScan(val site: SiteModel) : SiteNavigationAction()
-    data class OpenPlan(val site: SiteModel) : SiteNavigationAction()
     data class OpenPosts(val site: SiteModel) : SiteNavigationAction()
     data class OpenPages(val site: SiteModel) : SiteNavigationAction()
     data class OpenPostTypes(val site: SiteModel) : SiteNavigationAction()
@@ -81,6 +80,8 @@ sealed class SiteNavigationAction {
     data class OpenSiteMonitoring(val site: SiteModel) : SiteNavigationAction()
 
     object OpenApplicationPasswordsList : SiteNavigationAction()
+
+    data class OpenMenus(val site: SiteModel) : SiteNavigationAction()
     data class OpenApplicationPasswordAuthentication(val url: String) : SiteNavigationAction()
     // alternativeUrl used to open the web view authentication if necessary
     data class OpenApplicationPasswordAutoAuthentication(

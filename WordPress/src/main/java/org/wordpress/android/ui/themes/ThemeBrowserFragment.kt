@@ -27,7 +27,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.ThemeModel
 import org.wordpress.android.fluxc.store.ThemeStore
 import org.wordpress.android.ui.ScrollableViewInitializedListener
-import org.wordpress.android.ui.plans.PlansConstants
+import org.wordpress.android.util.PlansConstants
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils

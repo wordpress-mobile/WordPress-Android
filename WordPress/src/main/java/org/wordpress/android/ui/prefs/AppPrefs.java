@@ -195,6 +195,7 @@ public class AppPrefs {
         PINNED_SITE_IDS,
         READER_READING_PREFERENCES_JSON,
         SHOULD_SHOW_READER_ANNOUNCEMENT_CARD,
+        STATS_CARDS_CONFIGURATION_JSON,
     }
 
     /**
@@ -1769,6 +1770,26 @@ public class AppPrefs {
         } else {
             setString(DeletablePrefKey.READER_READING_PREFERENCES_JSON, json);
         }
+    }
+
+    @Nullable
+    public static String getStatsCardsConfigurationJson(long siteId) {
+        return prefs().getString(getStatsCardsConfigurationKey(siteId), null);
+    }
+
+    public static void setStatsCardsConfigurationJson(long siteId, @Nullable String json) {
+        SharedPreferences.Editor editor = prefs().edit();
+        if (json == null) {
+            editor.remove(getStatsCardsConfigurationKey(siteId));
+        } else {
+            editor.putString(getStatsCardsConfigurationKey(siteId), json);
+        }
+        editor.apply();
+    }
+
+    @NonNull
+    private static String getStatsCardsConfigurationKey(long siteId) {
+        return DeletablePrefKey.STATS_CARDS_CONFIGURATION_JSON.name() + siteId;
     }
 
     /**

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jetpack.scan.history
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -90,21 +89,14 @@ class ScanHistoryViewModel @Inject constructor(
 
         sealed class ErrorUiState : UiState(errorVisible = true) {
             abstract val title: UiString
-            abstract val img: Int
             abstract val retry: () -> Unit
 
             data class NoConnection(override val retry: () -> Unit) : ErrorUiState() {
                 override val title: UiString = UiStringRes(R.string.scan_history_no_connection)
-
-                @DrawableRes
-                override val img: Int = R.drawable.img_illustration_cloud_off_152dp
             }
 
             data class RequestFailed(override val retry: () -> Unit) : ErrorUiState() {
                 override val title: UiString = UiStringRes(R.string.scan_history_request_failed)
-
-                @DrawableRes
-                override val img: Int = R.drawable.img_illustration_cloud_off_152dp
             }
         }
     }

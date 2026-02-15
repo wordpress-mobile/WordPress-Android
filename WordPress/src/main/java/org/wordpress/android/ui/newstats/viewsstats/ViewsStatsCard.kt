@@ -29,22 +29,16 @@ import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,29 +49,39 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
-import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
-import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
-import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
+import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
+import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import com.patrykandpatrick.vico.compose.common.fill
 import com.patrykandpatrick.vico.compose.common.shader.verticalGradient
+import com.patrykandpatrick.vico.core.cartesian.CartesianDrawingContext
+import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
 import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.core.common.Insets
 import com.patrykandpatrick.vico.core.common.component.LineComponent
 import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.components.CardPosition
+import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
 import kotlin.math.abs
@@ -91,12 +95,31 @@ private val BadgeCornerRadius = 4.dp
 private val ChangeBadgePositiveColor = Color(0xFF4CAF50)
 private val ChangeBadgeNegativeColor = Color(0xFFE91E63)
 
+// Preview sample data constants
+private const val SAMPLE_CURRENT_VIEWS = 7467L
+private const val SAMPLE_PREVIOUS_VIEWS = 8289L
+private const val SAMPLE_VIEWS_DIFFERENCE = -822L
+private const val SAMPLE_VIEWS_PERCENTAGE = -9.9
+private const val SAMPLE_VISITORS = 2000L
+private const val SAMPLE_VISITORS_PERCENTAGE = 5.6
+private const val SAMPLE_POSTS = 5L
+private const val SAMPLE_POSTS_PERCENTAGE = 25.0
+private const val SAMPLE_PERIOD_AVERAGE = 1066L
+private val SAMPLE_CURRENT_PERIOD_DATA = listOf(800L, 1200L, 950L, 1100L, 1300L, 1017L, 1100L)
+private val SAMPLE_PREVIOUS_PERIOD_DATA = listOf(1000L, 1400L, 1150L, 1200L, 1350L, 1089L, 1100L)
+
 @Composable
 fun ViewsStatsCard(
     uiState: ViewsStatsCardUiState,
     onChartTypeChanged: (ChartType) -> Unit,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    onRemoveCard: () -> Unit,
+    modifier: Modifier = Modifier,
+    cardPosition: CardPosition? = null,
+    onMoveUp: (() -> Unit)? = null,
+    onMoveToTop: (() -> Unit)? = null,
+    onMoveDown: (() -> Unit)? = null,
+    onMoveToBottom: (() -> Unit)? = null
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
 
@@ -114,8 +137,14 @@ fun ViewsStatsCard(
     ) {
         when (uiState) {
             is ViewsStatsCardUiState.Loading -> LoadingContent()
-            is ViewsStatsCardUiState.Loaded -> LoadedContent(uiState, onChartTypeChanged)
-            is ViewsStatsCardUiState.Error -> ErrorContent(uiState, onRetry)
+            is ViewsStatsCardUiState.Loaded -> LoadedContent(
+                uiState, onChartTypeChanged, onRemoveCard,
+                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+            )
+            is ViewsStatsCardUiState.Error -> ErrorContent(
+                uiState, onRetry, onRemoveCard,
+                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+            )
         }
     }
 }
@@ -227,7 +256,13 @@ private fun LoadingContent() {
 @Composable
 private fun LoadedContent(
     state: ViewsStatsCardUiState.Loaded,
-    onChartTypeChanged: (ChartType) -> Unit
+    onChartTypeChanged: (ChartType) -> Unit,
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
 ) {
     Column(
         modifier = Modifier
@@ -237,13 +272,19 @@ private fun LoadedContent(
         // Header Section
         HeaderSection(
             state = state,
-            onChartTypeChanged = onChartTypeChanged
+            onChartTypeChanged = onChartTypeChanged,
+            onRemoveCard = onRemoveCard,
+            cardPosition = cardPosition,
+            onMoveUp = onMoveUp,
+            onMoveToTop = onMoveToTop,
+            onMoveDown = onMoveDown,
+            onMoveToBottom = onMoveToBottom
         )
         Spacer(modifier = Modifier.height(16.dp))
         // Chart Section
         ViewsStatsChart(
             chartData = state.chartData,
-            weeklyAverage = state.weeklyAverage,
+            periodAverage = state.periodAverage,
             chartType = state.chartType
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -255,10 +296,14 @@ private fun LoadedContent(
 @Composable
 private fun HeaderSection(
     state: ViewsStatsCardUiState.Loaded,
-    onChartTypeChanged: (ChartType) -> Unit
+    onChartTypeChanged: (ChartType) -> Unit,
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
 ) {
-    var showMenu by remember { mutableStateOf(false) }
-
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -270,24 +315,20 @@ private fun HeaderSection(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            Box {
-                IconButton(onClick = { showMenu = true }) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = stringResource(R.string.more_options),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+            StatsCardMenu(
+                onRemoveClick = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom,
+                additionalContent = {
+                    ChartTypeMenuItems(
+                        currentChartType = state.chartType,
+                        onChartTypeSelected = onChartTypeChanged
                     )
                 }
-                ChartTypeMenu(
-                    expanded = showMenu,
-                    currentChartType = state.chartType,
-                    onDismiss = { showMenu = false },
-                    onChartTypeSelected = { chartType ->
-                        onChartTypeChanged(chartType)
-                        showMenu = false
-                    }
-                )
-            }
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
         Row(
@@ -295,18 +336,18 @@ private fun HeaderSection(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
-            // Left: Current and previous week totals with difference
+            // Left: Current and previous period totals with difference
             Column {
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(
-                        text = formatStatValue(state.currentWeekViews),
+                        text = formatStatValue(state.currentPeriodViews),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = formatStatValue(state.previousWeekViews),
+                        text = formatStatValue(state.previousPeriodViews),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -320,65 +361,53 @@ private fun HeaderSection(
             // Right: Date ranges with colored dots and average
             Column(horizontalAlignment = Alignment.End) {
                 DateRangeWithDot(
-                    dateRange = state.currentWeekDateRange,
+                    dateRange = state.currentPeriodDateRange,
                     dotColor = MaterialTheme.colorScheme.primary,
                     isFilled = true
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 DateRangeWithDot(
-                    dateRange = state.previousWeekDateRange,
+                    dateRange = state.previousPeriodDateRange,
                     dotColor = MaterialTheme.colorScheme.outline,
                     isFilled = true
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                AverageRow(average = state.weeklyAverage)
+                AverageRow(average = state.periodAverage)
             }
         }
     }
 }
 
+/**
+ * Menu items for chart type selection. Used as additionalContent in StatsCardMenu.
+ */
 @Composable
-private fun ChartTypeMenu(
-    expanded: Boolean,
+private fun ChartTypeMenuItems(
     currentChartType: ChartType,
-    onDismiss: () -> Unit,
     onChartTypeSelected: (ChartType) -> Unit
 ) {
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = onDismiss
-    ) {
-        DropdownMenuItem(
-            text = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ShowChart,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = stringResource(R.string.stats_chart_type_lines))
-                }
-            },
-            onClick = { onChartTypeSelected(ChartType.LINE) },
-            enabled = currentChartType != ChartType.LINE
-        )
-        DropdownMenuItem(
-            text = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.BarChart,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = stringResource(R.string.stats_chart_type_bars))
-                }
-            },
-            onClick = { onChartTypeSelected(ChartType.BAR) },
-            enabled = currentChartType != ChartType.BAR
-        )
-    }
+    DropdownMenuItem(
+        text = { Text(text = stringResource(R.string.stats_chart_type_lines)) },
+        onClick = { onChartTypeSelected(ChartType.LINE) },
+        enabled = currentChartType != ChartType.LINE,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ShowChart,
+                contentDescription = null
+            )
+        }
+    )
+    DropdownMenuItem(
+        text = { Text(text = stringResource(R.string.stats_chart_type_bars)) },
+        onClick = { onChartTypeSelected(ChartType.BAR) },
+        enabled = currentChartType != ChartType.BAR,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.BarChart,
+                contentDescription = null
+            )
+        }
+    )
 }
 
 @Composable
@@ -460,33 +489,33 @@ private fun AverageRow(average: Long) {
 @Composable
 private fun ViewsStatsChart(
     chartData: ViewsStatsChartData,
-    weeklyAverage: Long,
+    periodAverage: Long,
     chartType: ChartType
 ) {
     // Key the model producer on chartType so it gets recreated when chart type changes
     val modelProducer = remember(chartType) { CartesianChartModelProducer() }
 
     // Use both lists as keys to ensure LaunchedEffect re-runs when either changes
-    LaunchedEffect(chartData.currentWeek, chartData.previousWeek, chartType) {
-        if (chartData.currentWeek.isNotEmpty()) {
-            // Check hasPreviousWeek inside the effect to avoid capturing stale values
-            val hasPreviousWeek = chartData.previousWeek.isNotEmpty()
+    LaunchedEffect(chartData.currentPeriod, chartData.previousPeriod, chartType) {
+        if (chartData.currentPeriod.isNotEmpty()) {
+            // Check hasPreviousPeriod inside the effect to avoid capturing stale values
+            val hasPreviousPeriod = chartData.previousPeriod.isNotEmpty()
             when (chartType) {
                 ChartType.LINE -> modelProducer.runTransaction {
                     lineSeries {
-                        series(chartData.currentWeek.map { it.views.toInt() })
-                        if (hasPreviousWeek) {
-                            series(chartData.previousWeek.map { it.views.toInt() })
+                        series(chartData.currentPeriod.map { it.views.toInt() })
+                        if (hasPreviousPeriod) {
+                            series(chartData.previousPeriod.map { it.views.toInt() })
                         }
                     }
                 }
                 ChartType.BAR -> modelProducer.runTransaction {
                     columnSeries {
                         // Current period first (primary color)
-                        series(chartData.currentWeek.map { it.views.toInt() })
+                        series(chartData.currentPeriod.map { it.views.toInt() })
                         // Previous period second (grey)
-                        if (hasPreviousWeek) {
-                            series(chartData.previousWeek.map { it.views.toInt() })
+                        if (hasPreviousPeriod) {
+                            series(chartData.previousPeriod.map { it.views.toInt() })
                         }
                     }
                 }
@@ -494,7 +523,7 @@ private fun ViewsStatsChart(
         }
     }
 
-    if (chartData.currentWeek.isEmpty()) {
+    if (chartData.currentPeriod.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -515,16 +544,43 @@ private fun ViewsStatsChart(
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
-    // X-axis formatter to show date labels from current week data
-    val dateLabels = chartData.currentWeek.map { it.label }
-    val bottomAxisValueFormatter = CartesianValueFormatter { context, value, _ ->
+    // X-axis formatter to show date labels from current period data
+    val dateLabels = chartData.currentPeriod.map { it.label }
+    val bottomAxisValueFormatter = CartesianValueFormatter { _, value, _ ->
         val index = value.toInt()
         if (index in dateLabels.indices) dateLabels[index] else ""
     }
 
+    // Marker value formatter to show date and views on touch
+    val markerValueFormatter = remember(chartData) {
+        ChartMarkerValueFormatter(
+            currentPeriodData = chartData.currentPeriod,
+            previousPeriodData = chartData.previousPeriod
+        )
+    }
+
+    // Marker that shows on touch
+    val marker = rememberDefaultCartesianMarker(
+        label = rememberTextComponent(
+            color = MaterialTheme.colorScheme.onSurface,
+            textSize = 12.sp,
+            lineCount = 3,
+            padding = Insets(horizontalDp = 12f, verticalDp = 8f),
+            background = rememberShapeComponent(
+                fill = fill(MaterialTheme.colorScheme.surfaceContainer),
+                shape = CorneredShape.rounded(allPercent = 25)
+            )
+        ),
+        guideline = LineComponent(
+            fill = fill(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
+            thicknessDp = 1f
+        ),
+        valueFormatter = markerValueFormatter
+    )
+
     // Horizontal line for period average
     val averageLine = HorizontalLine(
-        y = { weeklyAverage.toDouble() },
+        y = { periodAverage.toDouble() },
         line = LineComponent(
             fill = fill(MaterialTheme.colorScheme.outline),
             thicknessDp = 1f
@@ -535,7 +591,7 @@ private fun ViewsStatsChart(
         ChartType.LINE -> {
             val areaGradient = ShaderProvider.verticalGradient(
                 colors = arrayOf(
-                    primaryColor.copy(alpha = 0.4f),
+                    primaryColor.copy(alpha = 0.8f),
                     primaryColor.copy(alpha = 0f)
                 )
             )
@@ -558,6 +614,7 @@ private fun ViewsStatsChart(
                     ),
                     startAxis = VerticalAxis.rememberStart(line = null),
                     bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter),
+                    marker = marker,
                     decorations = listOf(averageLine)
                 ),
                 modelProducer = modelProducer,
@@ -589,6 +646,7 @@ private fun ViewsStatsChart(
                     ),
                     startAxis = VerticalAxis.rememberStart(line = null),
                     bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter),
+                    marker = marker,
                     decorations = listOf(averageLine)
                 ),
                 modelProducer = modelProducer,
@@ -693,18 +751,38 @@ private fun ChangeBadge(change: StatChange) {
 @Composable
 private fun ErrorContent(
     state: ViewsStatsCardUiState.Error,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        Text(
-            text = stringResource(R.string.stats_views),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.stats_views),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            StatsCardMenu(
+                onRemoveClick = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Box(
             modifier = Modifier
@@ -750,9 +828,40 @@ private fun ViewsStatsCardLoadingPreview() {
         ViewsStatsCard(
             uiState = ViewsStatsCardUiState.Loading,
             onChartTypeChanged = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
+}
+
+private fun sampleLoadedState(): ViewsStatsCardUiState.Loaded {
+    val currentPeriodLabels = listOf("Jan 14", "Jan 15", "Jan 16", "Jan 17", "Jan 18", "Jan 19", "Jan 20")
+    val previousPeriodLabels = listOf("Jan 7", "Jan 8", "Jan 9", "Jan 10", "Jan 11", "Jan 12", "Jan 13")
+
+    return ViewsStatsCardUiState.Loaded(
+        currentPeriodViews = SAMPLE_CURRENT_VIEWS,
+        previousPeriodViews = SAMPLE_PREVIOUS_VIEWS,
+        viewsDifference = SAMPLE_VIEWS_DIFFERENCE,
+        viewsPercentageChange = SAMPLE_VIEWS_PERCENTAGE,
+        currentPeriodDateRange = "14-20 Jan",
+        previousPeriodDateRange = "7-13 Jan",
+        chartData = ViewsStatsChartData(
+            currentPeriod = currentPeriodLabels.zip(SAMPLE_CURRENT_PERIOD_DATA) { label, views ->
+                ChartDataPoint(label, views)
+            },
+            previousPeriod = previousPeriodLabels.zip(SAMPLE_PREVIOUS_PERIOD_DATA) { label, views ->
+                ChartDataPoint(label, views)
+            }
+        ),
+        periodAverage = SAMPLE_PERIOD_AVERAGE,
+        bottomStats = listOf(
+            StatItem("Views", SAMPLE_CURRENT_VIEWS, StatChange.Negative(SAMPLE_VIEWS_PERCENTAGE)),
+            StatItem("Visitors", SAMPLE_VISITORS, StatChange.Negative(SAMPLE_VISITORS_PERCENTAGE)),
+            StatItem("Likes", 0, StatChange.NoChange),
+            StatItem("Comments", 0, StatChange.NoChange),
+            StatItem("Posts", SAMPLE_POSTS, StatChange.Positive(SAMPLE_POSTS_PERCENTAGE))
+        )
+    )
 }
 
 @Preview(showBackground = true)
@@ -760,44 +869,10 @@ private fun ViewsStatsCardLoadingPreview() {
 private fun ViewsStatsCardLoadedPreview() {
     AppThemeM3 {
         ViewsStatsCard(
-            uiState = ViewsStatsCardUiState.Loaded(
-                currentWeekViews = 7467,
-                previousWeekViews = 8289,
-                viewsDifference = -822,
-                viewsPercentageChange = -9.9,
-                currentWeekDateRange = "14-20 Jan",
-                previousWeekDateRange = "7-13 Jan",
-                chartData = ViewsStatsChartData(
-                    currentWeek = listOf(
-                        DailyDataPoint("Jan 14", 800),
-                        DailyDataPoint("Jan 15", 1200),
-                        DailyDataPoint("Jan 16", 950),
-                        DailyDataPoint("Jan 17", 1100),
-                        DailyDataPoint("Jan 18", 1300),
-                        DailyDataPoint("Jan 19", 1017),
-                        DailyDataPoint("Jan 20", 1100)
-                    ),
-                    previousWeek = listOf(
-                        DailyDataPoint("Jan 7", 1000),
-                        DailyDataPoint("Jan 8", 1400),
-                        DailyDataPoint("Jan 9", 1150),
-                        DailyDataPoint("Jan 10", 1200),
-                        DailyDataPoint("Jan 11", 1350),
-                        DailyDataPoint("Jan 12", 1089),
-                        DailyDataPoint("Jan 13", 1100)
-                    )
-                ),
-                weeklyAverage = 1066,
-                bottomStats = listOf(
-                    StatItem("Views", 7467, StatChange.Negative(9.9)),
-                    StatItem("Visitors", 2000, StatChange.Negative(5.6)),
-                    StatItem("Likes", 0, StatChange.NoChange),
-                    StatItem("Comments", 0, StatChange.NoChange),
-                    StatItem("Posts", 5, StatChange.Positive(25.0))
-                )
-            ),
+            uiState = sampleLoadedState(),
             onChartTypeChanged = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -811,7 +886,8 @@ private fun ViewsStatsCardErrorPreview() {
                 message = stringResource(R.string.stats_todays_stats_failed_to_load)
             ),
             onChartTypeChanged = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
     }
 }
@@ -821,44 +897,49 @@ private fun ViewsStatsCardErrorPreview() {
 private fun ViewsStatsCardLoadedDarkPreview() {
     AppThemeM3 {
         ViewsStatsCard(
-            uiState = ViewsStatsCardUiState.Loaded(
-                currentWeekViews = 7467,
-                previousWeekViews = 8289,
-                viewsDifference = -822,
-                viewsPercentageChange = -9.9,
-                currentWeekDateRange = "14-20 Jan",
-                previousWeekDateRange = "7-13 Jan",
-                chartData = ViewsStatsChartData(
-                    currentWeek = listOf(
-                        DailyDataPoint("Jan 14", 800),
-                        DailyDataPoint("Jan 15", 1200),
-                        DailyDataPoint("Jan 16", 950),
-                        DailyDataPoint("Jan 17", 1100),
-                        DailyDataPoint("Jan 18", 1300),
-                        DailyDataPoint("Jan 19", 1017),
-                        DailyDataPoint("Jan 20", 1100)
-                    ),
-                    previousWeek = listOf(
-                        DailyDataPoint("Jan 7", 1000),
-                        DailyDataPoint("Jan 8", 1400),
-                        DailyDataPoint("Jan 9", 1150),
-                        DailyDataPoint("Jan 10", 1200),
-                        DailyDataPoint("Jan 11", 1350),
-                        DailyDataPoint("Jan 12", 1089),
-                        DailyDataPoint("Jan 13", 1100)
-                    )
-                ),
-                weeklyAverage = 1066,
-                bottomStats = listOf(
-                    StatItem("Views", 7467, StatChange.Negative(9.9)),
-                    StatItem("Visitors", 2000, StatChange.Negative(5.6)),
-                    StatItem("Likes", 0, StatChange.NoChange),
-                    StatItem("Comments", 0, StatChange.NoChange),
-                    StatItem("Posts", 5, StatChange.Positive(25.0))
-                )
-            ),
+            uiState = sampleLoadedState(),
             onChartTypeChanged = {},
-            onRetry = {}
+            onRetry = {},
+            onRemoveCard = {}
         )
+    }
+}
+
+/**
+ * Custom marker value formatter that displays the date label and views count
+ * for both current and previous period data points at the touched x-coordinate.
+ */
+private class ChartMarkerValueFormatter(
+    private val currentPeriodData: List<ChartDataPoint>,
+    private val previousPeriodData: List<ChartDataPoint>
+) : DefaultCartesianMarker.ValueFormatter {
+    override fun format(
+        context: CartesianDrawingContext,
+        targets: List<CartesianMarker.Target>
+    ): CharSequence {
+        val target = targets.firstOrNull() ?: return ""
+        val x = target.x.toInt()
+        return formatBothPeriods(x)
+    }
+
+    private fun formatBothPeriods(x: Int): String {
+        val hasCurrent = x in currentPeriodData.indices
+        val hasPrevious = x in previousPeriodData.indices
+
+        if (!hasCurrent && !hasPrevious) return ""
+
+        return buildString {
+            // Show current period with date and value
+            if (hasCurrent) {
+                val current = currentPeriodData[x]
+                append("● ${current.label}: ${formatStatValue(current.views)}")
+            }
+            // Show previous period with date and value
+            if (hasPrevious) {
+                if (hasCurrent) append("\n")
+                val previous = previousPeriodData[x]
+                append("○ ${previous.label}: ${formatStatValue(previous.views)}")
+            }
+        }
     }
 }

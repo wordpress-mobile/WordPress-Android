@@ -77,10 +77,6 @@ import org.wordpress.android.ui.people.PeopleListFragment;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
-import org.wordpress.android.ui.plans.PlanDetailsFragment;
-import org.wordpress.android.ui.plans.PlansActivity;
-import org.wordpress.android.ui.plans.PlansListAdapter;
-import org.wordpress.android.ui.plans.PlansListFragment;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginListFragment;
@@ -237,8 +233,6 @@ public interface AppComponent {
 
     void inject(PeopleInviteDialogFragment object);
 
-    void inject(PlansActivity object);
-
     void inject(MediaBrowserActivity object);
 
     void inject(MediaGridFragment object);
@@ -306,8 +300,6 @@ public interface AppComponent {
     void inject(ReaderPostAdapter object);
 
     void inject(ReaderTagAdapter object);
-
-    void inject(PlansListFragment object);
 
     void inject(ReaderSiteHeaderView object);
 
@@ -380,10 +372,6 @@ public interface AppComponent {
     void inject(PublicizeConnectionAdapter object);
 
     void inject(PublicizeServiceAdapter object);
-
-    void inject(PlansListAdapter object);
-
-    void inject(PlanDetailsFragment object);
 
     void inject(DomainsDashboardFragment object);
 

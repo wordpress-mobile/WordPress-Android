@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -58,16 +59,22 @@ public class ReaderSiteHeaderView extends LinearLayout {
         void onBlogInfoFailed();
     }
 
+    public interface OnSubscriptionSettingsClickListener {
+        void onSubscriptionSettingsClicked(long blogId, String blogName, String blogUrl);
+    }
+
     private long mBlogId;
     private long mFeedId;
     private boolean mIsFeed;
 
     private ReaderFollowButton mFollowButton;
     @Nullable private ProgressBar mFollowProgress;
+    @Nullable private ImageButton mSubscriptionSettingsButton;
     private ReaderBlog mBlogInfo;
     @Nullable private WeakReference<OnBlogInfoLoadedListener> mBlogInfoListenerRef;
     @Nullable private WeakReference<OnBlogInfoFailedListener> mBlogInfoFailedListenerRef;
     @Nullable private WeakReference<OnFollowListener> mFollowListenerRef;
+    @Nullable private WeakReference<OnSubscriptionSettingsClickListener> mSubscriptionSettingsListenerRef;
 
     private final ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
@@ -95,6 +102,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         final View view = inflate(context, R.layout.reader_site_header_view, this);
         mFollowButton = view.findViewById(R.id.follow_button);
         mFollowProgress = view.findViewById(R.id.follow_button_progress);
+        mSubscriptionSettingsButton = view.findViewById(R.id.subscription_settings_button);
         view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
@@ -108,6 +116,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     public void setOnBlogInfoFailedListener(@Nullable OnBlogInfoFailedListener listener) {
         mBlogInfoFailedListenerRef = listener != null ? new WeakReference<>(listener) : null;
+    }
+
+    public void setOnSubscriptionSettingsClickListener(@Nullable OnSubscriptionSettingsClickListener listener) {
+        mSubscriptionSettingsListenerRef = listener != null ? new WeakReference<>(listener) : null;
     }
 
     public void loadBlogInfo(
@@ -235,6 +247,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
             }
         });
 
+        // Show subscription settings button for followed WordPress.com blogs (not external feeds)
+        updateSubscriptionSettingsButtonVisibility(blogInfo);
+
         if (layoutInfo.getVisibility() != View.VISIBLE) {
             layoutInfo.setVisibility(View.VISIBLE);
         }
@@ -302,6 +317,11 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         mFollowButton.setIsFollowed(isAskingToFollow);
 
+        // Disable subscription settings button while unsubscribing
+        if (!isAskingToFollow && mSubscriptionSettingsButton != null) {
+            mSubscriptionSettingsButton.setEnabled(false);
+        }
+
         OnFollowListener followListener =
                 mFollowListenerRef != null ? mFollowListenerRef.get() : null;
         if (followListener != null) {
@@ -321,11 +341,21 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 return;
             }
             setFollowButtonLoading(false);
-            if (!succeeded) {
+            if (succeeded) {
+                // Update cached blog info and subscription settings button visibility
+                if (mBlogInfo != null) {
+                    mBlogInfo.isFollowing = isAskingToFollow;
+                    updateSubscriptionSettingsButtonVisibility(mBlogInfo);
+                }
+            } else {
                 int errResId = isAskingToFollow ? R.string.reader_toast_err_unable_to_follow_blog
                         : R.string.reader_toast_err_unable_to_unfollow_blog;
                 ToastUtils.showToast(getContext(), errResId);
                 mFollowButton.setIsFollowed(!isAskingToFollow);
+                // Re-enable subscription settings button if unsubscribe failed
+                if (!isAskingToFollow && mSubscriptionSettingsButton != null) {
+                    mSubscriptionSettingsButton.setEnabled(true);
+                }
             }
         };
 
@@ -354,6 +384,29 @@ public class ReaderSiteHeaderView extends LinearLayout {
         if (!result) {
             setFollowButtonLoading(false);
             mFollowButton.setIsFollowed(!isAskingToFollow);
+        }
+    }
+
+    private void updateSubscriptionSettingsButtonVisibility(ReaderBlog blogInfo) {
+        if (mSubscriptionSettingsButton == null) {
+            return;
+        }
+
+        // Only show settings for followed WordPress.com blogs (not external feeds)
+        boolean showSettings = blogInfo.isFollowing && !mIsFeed && mAccountStore.hasAccessToken();
+        mSubscriptionSettingsButton.setVisibility(showSettings ? View.VISIBLE : View.GONE);
+        mSubscriptionSettingsButton.setEnabled(showSettings);
+
+        if (showSettings) {
+            mSubscriptionSettingsButton.setOnClickListener(v -> {
+                OnSubscriptionSettingsClickListener listener =
+                        mSubscriptionSettingsListenerRef != null ? mSubscriptionSettingsListenerRef.get() : null;
+                if (listener != null) {
+                    String blogName = blogInfo.hasName() ? blogInfo.getName() : "";
+                    String blogUrl = blogInfo.hasUrl() ? UrlUtils.getHost(blogInfo.getUrl()) : "";
+                    listener.onSubscriptionSettingsClicked(mBlogId, blogName, blogUrl);
+                }
+            });
         }
     }
 }

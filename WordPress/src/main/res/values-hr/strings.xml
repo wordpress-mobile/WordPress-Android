@@ -142,8 +142,6 @@ Language: hr
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Trenutačno nedostupno. Molimo unesite svoju lozinku</string>
     <string name="logging_in">Prijavljivanje</string>
     <string name="web_address_dialog_hint">Prikazuje se javno kada komentirate.</string>
-    <string name="plan">Plan</string>
-    <string name="plans">Planovi</string>
     <string name="export_your_content_message">Vaše će objave, stranice i postavke biti poslani e-poštom na %s.</string>
     <string name="export_your_content">Izvezite svoj sadržaj</string>
     <string name="exporting_content_progress">Izvoz sadržaja …</string>

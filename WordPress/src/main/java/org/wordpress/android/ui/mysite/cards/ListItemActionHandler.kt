@@ -26,7 +26,6 @@ class ListItemActionHandler @Inject constructor(
             ListItemAction.ACTIVITY_LOG -> SiteNavigationAction.OpenActivityLog(selectedSite)
             ListItemAction.BACKUP -> SiteNavigationAction.OpenBackup(selectedSite)
             ListItemAction.SCAN -> SiteNavigationAction.OpenScan(selectedSite)
-            ListItemAction.PLAN -> SiteNavigationAction.OpenPlan(selectedSite)
             ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
             ListItemAction.PAGES -> SiteNavigationAction.OpenPages(selectedSite)
             ListItemAction.POST_TYPES -> SiteNavigationAction.OpenPostTypes(selectedSite)
@@ -47,6 +46,7 @@ class ListItemActionHandler @Inject constructor(
             ListItemAction.MORE -> SiteNavigationAction.OpenMore(selectedSite)
             ListItemAction.SITE_MONITORING -> SiteNavigationAction.OpenSiteMonitoring(selectedSite)
             ListItemAction.APPLICATION_PASSWORDS -> SiteNavigationAction.OpenApplicationPasswordsList
+            ListItemAction.MENUS -> SiteNavigationAction.OpenMenus(selectedSite)
         }
     }
 

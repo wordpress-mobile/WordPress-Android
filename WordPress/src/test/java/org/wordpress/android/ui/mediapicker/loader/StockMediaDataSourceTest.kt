@@ -139,7 +139,6 @@ class StockMediaDataSourceTest : BaseUnitTest() {
 
         (result as MediaLoadingResult.Failure).apply {
             assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.no_network_message)
-            assertThat(this.image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
         }
         verifyNoInteractions(stockMediaStore)
     }

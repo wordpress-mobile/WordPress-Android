@@ -113,7 +113,6 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(true)
         val captor = argumentCaptor<MySiteCardAndItemBuilderParams.SiteItemsBuilderParams>()
 
-
         // When
         siteItemsViewModelSlice.buildSiteItems(site = site)
         advanceUntilIdle()
@@ -131,6 +130,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
 
         // When
         siteItemsViewModelSlice.buildSiteItems(site = site)
+        advanceUntilIdle()
 
         // Then
         verify(siteItemsBuilder).build(captor.capture())

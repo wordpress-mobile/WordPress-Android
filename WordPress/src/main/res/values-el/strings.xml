@@ -49,9 +49,6 @@ Language: el_GR
     <string name="my_site_bottom_sheet_add_page">Σελίδες του ιστότοπου</string>
     <string name="reader_save_for_later_display_name">Αποθηκεύτηκε</string>
     <string name="post_list_tab_drafts">Προσχέδια</string>
-    <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>
-    <string name="quick_start_sites">Επόμενα βήματα</string>
-    <string name="quick_start_sites_type_customize">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="notification_channel_reminder_title">Υπενθύμιση</string>
     <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="stats_traffic_change">%1$s (%2$s)</string>
@@ -155,11 +152,6 @@ Language: el_GR
     <string name="page_moved_to_trash">Η σελίδα διαγράφηκε</string>
     <string name="page_moved_to_draft">Η σελίδα μεταφέρθηκε στα Πρόχειρα</string>
     <string name="page_permanently_deleted">Η σελίδα έχει διαγραφεί οριστικά</string>
-    <string name="quick_start_list_create_site_title">Δημιουργήστε τον ιστότοπο σας</string>
-    <string name="quick_start_dialog_view_site_title">Προβολή ιστοτόπου</string>
-    <string name="quick_start_dialog_publish_post_title">Δημοσίευστε ένα άρθρο</string>
-    <string name="quick_start_dialog_follow_sites_title">Συνδεθείτε με άλλους ιστότοπους</string>
-    <string name="quick_start_button_positive">Μετάβαση</string>
     <string name="my_site_create_new_site_title">Δεν έχετε ιστότοπους</string>
     <string name="content_description_more">Περισσότερα</string>
     <string name="jetpack">Jetpack</string>
@@ -249,7 +241,6 @@ Language: el_GR
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s από %2$s</string>
     <string name="comment_liked_talkback">Το σχόλιο σας αρέσει</string>
-    <string name="login_epilogue_screen_title">Συνδεδεμένος ως</string>
     <string name="me_section_screen_title">Εγώ</string>
     <string name="notif_settings_screen_title">Ρυθμίσεις ειδοποιήσεων</string>
     <string name="notifications_screen_title">Ειδοποιήσεις</string>
@@ -414,8 +405,6 @@ Language: el_GR
     <string name="uploading_media">Μεταφόρτωση πολυμέσων …</string>
     <string name="button_retry">Προσπαθήστε ξανά</string>
     <string name="uploading_post">Μεταφόρτωση του \"%s\"</string>
-    <string name="login_epilogue_mysites_one">Ο ιστότοπος μου</string>
-    <string name="login_epilogue_mysites_other">Οι ιστότοποι μου</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Παρακαλώ εισάγετε έναν κωδικό επαλήθευσης</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Παρακαλώ δώστε ένα όνομα χρήστη</string>
     <string name="login_site_address_more_help" a8c-src-lib="module:login">Χρειάζεστε περισσότερη βοήθεια;</string>
@@ -509,7 +498,6 @@ Language: el_GR
     <string name="start_over_email_subject">Αρχίστε από την αρχή με τον ιστότοπο %s</string>
     <string name="site_picker_remove_site_error">Σφάλμα κατά την απομάκρυνση του ιστότοπου, προσπαθήστε ξανά αργότερα</string>
     <string name="editor_post_saved_locally_failed_media">Το άρθρο έχει μη ολοκληρωμένες μεταφορτώσεις πολυμέσων και έχει αποθηκευτεί τοπικά.</string>
-    <string name="sure_to_remove_account">Αφαίρεση αυτού του ιστότοπου από την εφαρμογή;</string>
     <string name="photo_picker_title">Επιλέξτε φωτογραφία</string>
     <string name="error_publish_no_network">Η συσκευή είναι εκτός δικτύου. Το άρθρο αποθηκεύτηκε τοπικά.</string>
     <string name="editor_post_saved_online">Το άρθρο αποθηκεύτηκε διαδικτυακά</string>
@@ -633,8 +621,6 @@ Language: el_GR
     <string name="logging_in">Γίνεται σύνδεση</string>
     <string name="web_address_dialog_hint">Εμφανίζεται δημοσίως όταν σχολιάζετε.</string>
     <string name="export_your_content_message">Τα άρθρα, οι σελίδες και οι ρυθμίσεις σας θα σας αποσταλούν με ηλ. ταχυδρομείο στο %s.</string>
-    <string name="plan">Πρόγραμμα</string>
-    <string name="plans">Προγράμματα</string>
     <string name="export_your_content">Εξαγωγή του περιεχομένου σας</string>
     <string name="exporting_content_progress">Εξαγωγή περιεχομένου…</string>
     <string name="export_email_sent">E-mail εξαγωγής στάλθηκε!</string>

@@ -23,8 +23,8 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
 import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
-import org.wordpress.android.ui.plans.PlansConstants.FREE_PLAN_ID
-import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
+import org.wordpress.android.util.PlansConstants.FREE_PLAN_ID
+import org.wordpress.android.util.PlansConstants.PREMIUM_PLAN_ID
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper

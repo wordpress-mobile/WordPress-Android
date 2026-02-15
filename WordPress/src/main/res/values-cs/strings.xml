@@ -162,9 +162,6 @@ Language: cs_CZ
     <string name="wp_jetpack_deep_link_overlay_description">Vypadá to, že máte nainstalovanou aplikaci Jetpack.\n\nChtěli byste v budoucnu otevřít odkazy v aplikaci Jetpack?\n\nToto můžete kdykoli změnit v Nastavení aplikace &gt; Otevřít odkazy v Jetpacku</string>
     <string name="wp_jetpack_deep_link_overlay_title">Otevřít odkazy v Jetpacku?</string>
     <string name="wp_jetpack_continue_without_jetpack">Pokračujte bez Jetpacku</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack poskytuje statistiky, upozornění a další, které vám pomohou vytvořit a rozšířit web WordPress vašich snů.\n\nAplikace WordPress již nepodporuje vytváření nového webu.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack poskytuje statistiky, upozornění a další, které vám pomohou vytvořit a rozšířit web WordPress vašich snů.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Vytvořte nový WordPress web pomocí aplikace Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Přepněte na aplikaci Jetpack, abyste do svého zařízení nadále dostávali upozornění v reálném čase.</string>
@@ -273,23 +270,10 @@ Language: cs_CZ
     <string name="stats_action_card_blogging_reminders_title">Nastavte si připomenutí blogů</string>
     <string name="stats_action_card_grow_audience_button_label">Zkontrolujte průběh</string>
     <string name="stats_action_card_grow_audience_title">Rozšiřte své publikum</string>
-    <string name="quick_start_sites_type_all_tasks_completed">Všechny úkoly splněny</string>
-    <string name="quick_start_list_task_complete">Úkol dokončen</string>
     <string name="me_btn_scan_login_code">Naskenujte přihlašovací kód</string>
     <string name="stats_insights_likes_guide_card">⭐️ Váš poslední příspěvek %1$s má %2$s lajků.</string>
     <string name="stats_most_popular_percent_views_empty">Nedostatek aktivity. Vraťte se později, až budou mít vaše stránky více návštěvníků!</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">Gratuluji! Vyznáte se&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">Seznamte se s aplikací</string>
-    <string name="quick_start_list_upload_media_subtitle">Přeneste média přímo ze zařízení nebo fotoaparátu na svůj web</string>
-    <string name="quick_start_list_upload_media_title">Nahrajte fotografie nebo videa</string>
-    <string name="quick_start_list_check_notification_subtitle">Získejte aktualizace v reálném čase z vaší kapsy</string>
-    <string name="quick_start_dialog_upload_media_message">Chcete-li zobrazit svou aktuální knihovnu, vyberte %1$s Media %2$s.</string>
-    <string name="quick_start_dialog_check_notifications_message">Získejte aktualizace v reálném čase z vaší kapsy.</string>
-    <string name="quick_start_dialog_check_notifications_title">Zkontrolujte svá oznámení</string>
-    <string name="quick_start_dialog_check_notifications_message_short">Vyberte kartu %1$s Oznámení %2$s a získejte aktualizace na cestách.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Chcete-li nahrát média, vyberte %1$s plus %2$s. Můžete jej přidat do svých příspěvků/stránek z jakéhokoli zařízení.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Pomocí &lt;b&gt; Objevit &lt;/b&gt; vyhledejte stránky a značky.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatura videa</string>
     <string name="stats_details_top_commentators">Nejlepší komentátoři</string>
     <string name="stats_published_years_ago">Publikováno před %1$d lety</string>
@@ -309,8 +293,6 @@ Language: cs_CZ
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpověď</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Denní výzva</string>
     <string name="blogging_prompts_onboarding_got_it">Mám to</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Klepnutím na &lt;b&gt;%1$s&lt;/b&gt; zobrazíte svůj web</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Chcete-li najít další stránky, vyberte %1$s čtečku %2$s.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Další informace o výzvách</string>
     <string name="photo_picker_video_thumbnail_unselected">Výběr videa zrušen</string>
     <string name="photo_picker_video_thumbnail_selected">Video vybráno</string>
@@ -398,7 +380,6 @@ Language: cs_CZ
     <string name="site_creation_intent_art">Umění</string>
     <string name="new_site_creation_intents_input_hint">Např.: móda, poezie, politika</string>
     <string name="new_site_creation_intents_title">Téma webu</string>
-    <string name="quick_start_site_menu_tab_message_short">Pokračujte klepnutím na &lt;b&gt;%1$s&lt;/b&gt;.</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Zobrazit další výzvy</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Pro dnešek přeskočte</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Sdílejte výzvu k blogování</string>
@@ -485,7 +466,6 @@ Language: cs_CZ
     <string name="comment_edit_user_name">Jméno</string>
     <string name="comment_edit_menu_done">Hotovo</string>
     <string name="weekly_roundup">Týdenní shrnutí</string>
-    <string name="quick_start_list_create_site_message">Stránka vytvořena! Dokončete další úkol.</string>
     <string name="domains_free_plan_get_your_domain_title">Získejte svou doménu</string>
     <string name="recommend_app_generic_get_template_error">Neznámá chyba při načítání šablony doporučené aplikace</string>
     <string name="recommend_app_bad_format_response">Přijata neplatná odpověď</string>
@@ -497,8 +477,6 @@ Language: cs_CZ
     <string name="blogging_reminders_notification_time">Doba oznámení</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Připomenutí blogu budete dostávat &lt;b&gt;každý&lt;/b&gt; na &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s týdně v %2$s</string>
-    <string name="quick_start_sites_type_tasks_completed">Dokončeno: %1$s z %2$s</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Naučte se základy pomocí rychlého průvodce.</string>
     <string name="comment_batch_moderation_error">Nepodařilo se moderovat jeden nebo více komentářů</string>
     <string name="create_site_notification_create_site_action">Vytvořit stránku</string>
     <string name="create_site_notification_text">Zprovozněte svůj web v několika rychlých krocích</string>
@@ -507,12 +485,6 @@ Language: cs_CZ
     <string name="stats_disabled_enable_stats_button">Povolit statistiky webu</string>
     <string name="stats_disabled_subtitle">Povolte statistiky webu, abyste viděli podrobné informace o své návštěvnosti, hodnoceních Líbí se mi, komentářích a odběratelích.</string>
     <string name="stats_disabled_title">Hledáte statistiky?</string>
-    <string name="quick_start_list_upload_icon_subtitle">Zobrazuje se na kartě prohlížeče návštěvníka a na dalších místech online.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Ukaž mi to</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">Chcete trochu pomoci se správou tohoto webu pomocí aplikace?</string>
-    <string name="login_epilogue_create_new_site_button">Vytvořte nový web</string>
-    <string name="login_epilogue_mysites_subheading">Stránky můžete kdykoli změnit.</string>
-    <string name="login_epilogue_mysites_heading">Vyberte web, který chcete otevřít</string>
     <string name="scan_multisite_not_supported_subtitle">Je nám líto, Jetpack Scan v tuto chvíli není kompatibilní s vícemístnými instalacemi WordPress.</string>
     <string name="scan_multisite_not_supported_title">WordPress síť webů není podporována</string>
     <string name="activity_log_visit_our_documentation_page">navštivte naši stránku s dokumentací</string>
@@ -606,13 +578,6 @@ Language: cs_CZ
     <string name="scan_finished_potential_threats_found_message_singular">&lt;b&gt;Skenování dokončeno&lt;/b&gt;&lt;br&gt;Nalezena 1 potenciální hrozba</string>
     <string name="disable">Zakázat</string>
     <string name="scan_fixing_threats_title_singular">Oprava hrozby</string>
-    <string name="quick_start_list_review_pages_subtitle">Zkontrolujte své stránky a proveďte změny nebo je přidejte nebo odeberte.</string>
-    <string name="quick_start_list_view_site_title">Navštívit váš web</string>
-    <string name="quick_start_list_follow_site_subtitle">Objevujte a sledujte weby, které vás inspirují.</string>
-    <string name="quick_start_list_enable_sharing_title">Povolit sdílení</string>
-    <string name="quick_start_list_enable_sharing_subtitle">Automaticky sdílejte nové příspěvky na svých sociálních médiích.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Pojmenujte svůj web podle jeho osobnosti a tématu.</string>
-    <string name="quick_start_list_check_stats_title">Zkontrolujte své statistiky</string>
     <string name="backup_download_status_failure_bullet2">Stále se pokusíme vytvořit váš záložní soubor ke stažení.</string>
     <string name="backup_download_status_failure_bullet1">Nepodařilo se nám najít stav, který by říkal, jak dlouho bude vaše zálohování ke stažení trvat.</string>
     <string name="restore_status_bullet_clock_icon_content_desc">Ikona hodin</string>
@@ -682,9 +647,6 @@ Language: cs_CZ
     <string name="restore_details_description_with_two_parameters">%1$s %2$s je vybraný bod pro obnovení.</string>
     <string name="restore_details_action_button">Obnovit web</string>
     <string name="restore_details_icon_content_description">Ikona obnovení</string>
-    <string name="quick_start_dialog_review_pages_title">Zkontrolujte stránky webu</string>
-    <string name="quick_start_dialog_review_pages_message">Změňte, přidejte nebo odeberte stránky svého webu.</string>
-    <string name="quick_start_dialog_review_pages_message_short">Chcete-li zobrazit seznam stránek, vyberte %1$s stránky %2$s.</string>
     <string name="web_preview_mobile">Mobil</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="backup_download_complete_failed_title">Stažení se nezdařilo</string>
@@ -901,7 +863,6 @@ Language: cs_CZ
     <string name="mlp_preview_page">Náhled</string>
     <string name="mlp_create_page">Vytvořit stránku</string>
     <string name="mlp_create_blank_page">Vytvořit prázdnou stránku</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Klepněte na %1$s Vytvořit. %2$s Poté vyberte &lt;b&gt;Blogový příspěvek&lt;/b&gt;</string>
     <string name="mlp_choose_layout_title">Vyberte rozložení</string>
     <string name="mlp_choose_layout_subtitle">Začněte výběrem z široké škály předem připravených rozvržení stránky. Nebo jen začněte s prázdnou stránkou.</string>
     <string name="label_close_button">Zavřít</string>
@@ -932,8 +893,6 @@ Language: cs_CZ
     <string name="or_type_your_password" a8c-src-lib="module:login">Nebo zadejte své heslo</string>
     <string name="enter_email_to_continue_wordpress_com" a8c-src-lib="module:login">Zadejte svou e-mailovou adresu pro přihlášení nebo vytvořte účet WordPress.com.</string>
     <string name="reader_error_request_failed_title">Při zpracování požadavku došlo k problému. Prosím zkuste to znovu později.</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Klepnutím na &lt;b&gt;%1$s&lt;/b&gt; nastavíte nový název</string>
-    <string name="quick_start_list_update_site_title_title">Zadejte název svého webu</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Vymazáním tohoto příspěvku také zrušíte místní změny. Opravdu chcete pokračovat?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Název webu může změnit pouze uživatel s rolí správce.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Neuložené změny</string>
@@ -1375,29 +1334,12 @@ Language: cs_CZ
     <string name="stats_insights_posting_activity">Aktivita publikování</string>
     <string name="stats_site_not_loaded_yet">Stránka dosud nenačtena</string>
     <string name="new_site_creation_preview_back_pressed_warning">Můžete ztratit svůj pokrok. Opravdu chcete skončit?</string>
-    <string name="plans_loading_error_with_cache_button">Zobrazit plány stejně</string>
-    <string name="plans_loading_error_no_plans_subtitle">V tuto chvíli nemůžeme načíst plány. Prosím zkuste to znovu později.</string>
-    <string name="plans_loading_error_no_cache_subtitle">K prohlížení plánů je vyžadováno připojení k internetu.</string>
-    <string name="plans_loading_error_with_cache_subtitle">K zobrazení plánů je vyžadováno připojení k internetu, takže podrobnosti mohou být zastaralé.</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Použijte Editor bloků</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Upravujte nové příspěvky a stránky pomocí editoru bloků.</string>
     <string name="stats_loading_error">Data nebyla načtena</string>
     <string name="stats_loading_block_error">Při načítání dat došlo k potížím. Obnovte stránku a zkuste to znovu.</string>
     <string name="menu_switch_to_gutenberg_editor">Přepnout na blokový editor</string>
-    <string name="plans_loading_error_network_title">Bez připojení</string>
-    <string name="plans_loading_error_no_plans_title">Nelze načíst plány</string>
     <string name="exit">exit</string>
-    <string name="quick_start_sites">Další kroky</string>
-    <string name="quick_start_dialog_upload_icon_message">Návštěvníci uvidí vaši ikonu ve svém prohlížeči. Přidejte vlastní ikonu pro vyleštěný profesionální vzhled.</string>
-    <string name="quick_start_dialog_upload_icon_title">Nahrát ikonu webu</string>
-    <string name="quick_start_sites_type_customize">Přizpůsobte si svůj web</string>
-    <string name="quick_start_sites_type_grow">Rozšiřte své publikum</string>
-    <string name="quick_start_dialog_publish_post_message">Navrhněte a publikujte svůj první příspěvek.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Klepnutím na ikonu %1$s vašeho webu %2$s nahrajte novou</string>
-    <string name="quick_start_dialog_check_stats_message_short">Klepnutím na %1$s Statistiky %2$s zobrazíte výkon svého webu.</string>
-    <string name="quick_start_dialog_check_stats_message">Mějte aktuální informace o výkonu svého webu.</string>
-    <string name="quick_start_dialog_check_stats_title">Zkontrolujte statistiky svého webu</string>
-    <string name="quick_start_task_skip_menu_title">Přeskočit úkol</string>
     <string name="notification_channel_reminder_title">Připomenutí</string>
     <string name="stats_insights_popular">Nejoblíbenější čas</string>
     <string name="stats_select_previous_period_description">Vyberte předchozí období</string>
@@ -1548,21 +1490,7 @@ Language: cs_CZ
     <string name="page_delete_error">Stránku se nepodařilo odstranit</string>
     <string name="set_parent">Nastavit nadřazenou stránku</string>
     <string name="dismiss">Odmítnout</string>
-    <string name="quick_start_focus_point_description">kliknout zde</string>
-    <string name="quick_start_list_create_site_title">Vytvořit stránku</string>
-    <string name="quick_start_completed_tour_subtitle">Dobrý pocit odškrtnout něco ze seznamu, co?</string>
-    <string name="quick_start_list_create_site_subtitle">Zprovozněte svůj web</string>
-    <string name="quick_start_dialog_view_site_title">Zobrazit stránku</string>
-    <string name="quick_start_dialog_share_site_title">Sdílení stránky</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Propojte se sociální sítí klikem na položku v sekci %1$s Připojení %2$s </string>
-    <string name="quick_start_dialog_view_site_message">Zobrazte náhled pro kontrolu, jak uvidí stránku ostatní</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Klikněte na %1$s Sdílení %2$s</string>
-    <string name="quick_start_dialog_share_site_message">Propojte se socialní sítí - příspěvky se budou automaticky sdílet.</string>
-    <string name="quick_start_dialog_publish_post_title">Zveřejnit příspěvek</string>
-    <string name="quick_start_dialog_follow_sites_title">Sledujte další stránky</string>
-    <string name="quick_start_dialog_need_help_button_negative">Ne, děkuji</string>
     <string name="content_description_more">Hotovo</string>
-    <string name="quick_start_button_positive">Go</string>
     <string name="my_site_create_new_site_title">Nemáte žádné stránky</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -1751,7 +1679,6 @@ Language: cs_CZ
     <string name="comment_unapproved_talkback">Komentář nebyl schválen</string>
     <string name="my_site_section_screen_title">Mé stránky</string>
     <string name="notif_settings_screen_title">Nastavení upozornění</string>
-    <string name="login_epilogue_screen_title">Přihlášen jako</string>
     <string name="person_detail_screen_title">Osobní profil</string>
     <string name="media_settings_screen_title">Detail souboru</string>
     <string name="publicize_buttons_screen_title">Sdílející tlačítka</string>
@@ -2026,8 +1953,6 @@ Language: cs_CZ
     <string name="post_queued">Příspěvek ve frontě</string>
     <string name="uploading_post">Nuhrávání \"%s\"</string>
     <string name="connection_to_server_lost">Připojení k serveru bylo ztraceno</string>
-    <string name="login_epilogue_mysites_other">Moje weby</string>
-    <string name="login_epilogue_mysites_one">Můj web</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Vložte ověřovací kód</string>
     <string name="login_email_client_not_found">Nepodařilo se najít e-mailovou aplikaci</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Vložte uživatelské jméno</string>
@@ -2178,7 +2103,6 @@ Language: cs_CZ
     <string name="start_over_email_subject">Začít znovu s touto stránkou %s </string>
     <string name="site_picker_remove_site_error">Chyba při odstraňování webu, zkuste to později</string>
     <string name="editor_post_saved_locally_failed_media">Příspěvek selhal při nahrávání médií a byl uložen lokálně na zařízení</string>
-    <string name="sure_to_remove_account">Odstranit tento web z aplikace?</string>
     <string name="photo_picker_title">Zvolit obrázek</string>
     <string name="error_publish_no_network">Zařízení je offline. Příspěvek byl uložen lokálně.</string>
     <string name="editor_post_saved_online">Příspěvek je uložený online</string>
@@ -2298,8 +2222,6 @@ Language: cs_CZ
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Momentálně nedostupné. Prosím zadejte své heslo</string>
     <string name="logging_in">Přihlašování</string>
     <string name="web_address_dialog_hint">Veřejně se zobrazí při komentování.</string>
-    <string name="plan">Plán</string>
-    <string name="plans">Plány</string>
     <string name="export_your_content_message">Vaše příspěvky, stránky a nastavení budou zaslány na %s.</string>
     <string name="export_your_content">Exportovat svůj obsah</string>
     <string name="exporting_content_progress">Exportování obsahu…</string>

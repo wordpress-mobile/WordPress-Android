@@ -27,7 +27,6 @@ import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.people.PeopleInviteViewModel;
-import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.BasicDialogViewModel;
 import org.wordpress.android.ui.posts.EditPostAuthViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
@@ -244,11 +243,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PostListMainViewModel.class)
     abstract ViewModel postListMainViewModel(PostListMainViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(PlansViewModel.class)
-    abstract ViewModel plansViewModel(PlansViewModel viewModel);
 
     @Binds
     @IntoMap

@@ -60,18 +60,18 @@ class SiteItemsViewModelSlice @Inject constructor(
     private suspend fun rebuildSiteItemsForJetpackCapabilities(site: SiteModel) {
         jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect { purchasedProducts ->
             // if the site has scan or backup enabled, then only rebuild the site items
-            if(purchasedProducts.scan || purchasedProducts.backup) {
+            if (purchasedProducts.scan || purchasedProducts.backup) {
                 val items = siteItemsBuilder.build(
                     getParams(
                         shouldEnableFocusPoints = false,
                         site = site,
                         backupAvailable = purchasedProducts.backup,
-                        scanAvailable = purchasedProducts.scan && !site.isWPCom && !site.isWPComAtomic
+                        scanAvailable = purchasedProducts.scan
                     )
                 )
                 _uiModel.postValue(items)
             }
-        } // end collect
+        }
     }
 
     fun getParams(

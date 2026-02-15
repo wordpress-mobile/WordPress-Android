@@ -28,9 +28,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 import com.google.android.material.R as MaterialR
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -129,6 +132,8 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoFailedListener
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnBlogInfoLoadedListener
+import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView.OnSubscriptionSettingsClickListener
+import org.wordpress.android.ui.reader.subscription.ReaderSubscriptionSettingsBottomSheetFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
@@ -236,6 +241,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private var postSearchAdapterPos = 0
     private var siteSearchAdapterPos = 0
     private var searchTabsPos = NO_POSITION
+    private var pendingScrollToBlogId: Long? = null
 
     private var isFilterableScreen = false
     private var isFiltered = false
@@ -303,6 +309,18 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
         }
     }
+
+    /*
+     * called when user clicks on subscription settings button in the blog header
+     */
+    private val subscriptionSettingsClickListener =
+        OnSubscriptionSettingsClickListener { blogId, blogName, blogUrl ->
+            ReaderSubscriptionSettingsBottomSheetFragment.newInstance(
+                blogId = blogId,
+                blogName = blogName,
+                blogUrl = blogUrl
+            ).show(childFragmentManager, ReaderSubscriptionSettingsBottomSheetFragment.TAG)
+        }
 
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
@@ -536,6 +554,14 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             viewLifecycleOwner
         ) { readerData: FollowStatusChanged ->
             setFollowStatusForBlog(readerData)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                postListViewModel.scrollToSiteId.collect { blogId ->
+                    pendingScrollToBlogId = blogId
+                }
+            }
         }
     }
 
@@ -832,6 +858,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         bottomNavController = null
         readerPostAdapter?.setOnBlogInfoLoadedListener(null)
         readerPostAdapter?.setOnBlogInfoFailedListener(null)
+        readerPostAdapter?.setOnSubscriptionSettingsClickListener(null)
     }
 
     override fun onStart() {
@@ -1990,6 +2017,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     AppLog.d(AppLog.T.READER, "reader post list > restoring position")
                     recyclerView.scrollRecycleViewToPosition(restorePosition)
                 }
+                pendingScrollToBlogId?.let { blogId ->
+                    scrollToFirstPostFromBlog(blogId)
+                    pendingScrollToBlogId = null
+                }
                 if (isSearching && !isSearchTabsShowing()) {
                     showSearchTabs()
                 } else if (isSearching) {
@@ -2031,6 +2062,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             if (activity is OnBlogInfoFailedListener) {
                 readerPostAdapter!!.setOnBlogInfoFailedListener(activity as OnBlogInfoFailedListener?)
             }
+            readerPostAdapter!!.setOnSubscriptionSettingsClickListener(subscriptionSettingsClickListener)
             if (getPostListType().isTagType) {
                 readerPostAdapter!!.setCurrentTag(currentTag)
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
@@ -2210,6 +2242,17 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         hideNewPostsBar()
         if (hasPostAdapter()) {
             getPostAdapter().refresh()
+        }
+    }
+
+    /*
+     * scroll to the first post from the specified blog
+     */
+    private fun scrollToFirstPostFromBlog(blogId: Long) {
+        if (!hasPostAdapter()) return
+        val position = getPostAdapter().getPositionOfFirstPostFromBlog(blogId)
+        if (position > -1) {
+            recyclerView.scrollRecycleViewToPosition(position)
         }
     }
 

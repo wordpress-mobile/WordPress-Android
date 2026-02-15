@@ -169,7 +169,6 @@ Language: gl_ES
     <string name="more_content_description_recent_activity">Máis sobre a actividade recente</string>
     <string name="more_content_description_pages">Máis sobre as páxinas</string>
     <string name="more_content_description_posts">Máis sobre as entradas</string>
-    <string name="more_content_description_quick_start">Máis sobre o inicio rápido</string>
     <string name="more_content_description_today_stats">Máis sobre as estatísticas de hoxe</string>
     <string name="more_content_description_blogging_prompts">Máis sobre as indicacións</string>
     <string name="more_content_description_promote_blaze">Máis sobre Blaze</string>
@@ -322,7 +321,6 @@ Language: gl_ES
     <string name="site_monitoring_tab_title_php_logs">Rexistros de PHP</string>
     <string name="site_monitoring_tab_title_metrics">Métricas</string>
     <string name="site_monitoring">Supervisión do sitio</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Utiliza &lt;b&gt;Descubrir&lt;/b&gt; para encontrar sitios e etiquetas. Proba a seleccionar &lt;b&gt;Subscricións&lt;/b&gt; para ver o contido subscrito e xestionar as túas subscricións.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Ir a subscricións</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Os blogs aos que estás subscrito non publicaron nada recientemente</string>
     <string name="reader_no_followed_blogs_description_subs">Subscríbete a blogs en Descubrir ou busca un blog que xa che guste.</string>
@@ -750,9 +748,6 @@ Language: gl_ES
     <string name="wp_jetpack_deep_link_overlay_description">Parece que tes a aplicación de Jetpack instalada.\n\nQuixeras abrir as ligazóns na aplicación Jetpack a partir de agora?\n\nSempre podes modificar este comportamento en Configuración &gt; Abrir ligazóns en Jetpack</string>
     <string name="wp_jetpack_deep_link_overlay_title">Abrir ligazóns en Jetpack?</string>
     <string name="wp_jetpack_continue_without_jetpack">Continuar sen Jetpack</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">O Jetpack fornece estatísticas, notificacións e moito máis para axudarche a crear e desenvolver o sitio WordPress dos teus soños.\n\nA aplicación WordPress xa non é compatíbel coa creación de sitios novos.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack fornece estatísticas, notificacións e moito máis para axudarche a crear e desenvolver o sitio WordPress dos teus soños.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Crear un novo sitio WordPress coa aplicación Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Muda para a aplicación Jetpack para continuar a recibir notificacións en tempo real no seu dispositivo.</string>
@@ -862,24 +857,11 @@ Language: gl_ES
     <string name="stats_action_card_blogging_reminders_title">Configura os teus recordatorios de blogueo</string>
     <string name="stats_action_card_grow_audience_button_label">Consulta o curso</string>
     <string name="stats_action_card_grow_audience_title">Fai crecer a túa audiencia</string>
-    <string name="quick_start_sites_type_all_tasks_completed">Todas as tarefas están completas</string>
-    <string name="quick_start_list_task_complete">Tarefa completada</string>
     <string name="me_btn_scan_login_code">Explorar código de acceso</string>
     <string name="stats_insights_likes_guide_card">⭐️  A túa última entrada %1$s recibiu %2$s gústame.</string>
     <string name="stats_most_popular_percent_views_empty">Non hai suficiente actividade. Volve a comprobalo máis tarde, cando o teu sitio teña máis visitas!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s%% do total de subscritores</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">Noraboa! Xa sabes manexarte&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">Coñece a aplicación</string>
-    <string name="quick_start_list_upload_media_subtitle">Sube os medios directamente ao teu sitio desde o teu dispositivo ou cámara</string>
-    <string name="quick_start_list_upload_media_title">Sube fotos ou vídeos</string>
-    <string name="quick_start_list_check_notification_subtitle">Obtén actualizacións en tempo real desde o teu peto</string>
-    <string name="quick_start_dialog_upload_media_message">Selecciona %1$s Medios %2$s para ver a túa biblioteca actual.</string>
-    <string name="quick_start_dialog_check_notifications_message">Obtén actualizacións en tempo real desde o teu peto.</string>
-    <string name="quick_start_dialog_check_notifications_title">Comproba os teus avisos</string>
-    <string name="quick_start_dialog_check_notifications_message_short">Selecciona a %1$s Pestana de avisos %2$s para recibir actualizacións sobre a marcha.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Selecciona %1$s Máis %2$s para subir medios. Podes engadilos ás túas entradas ou páxinas desde calquera dispositivo.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Utiliza &lt;b&gt; Descubrir &lt;/b&gt; para encontrar sitios e etiquetas.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatura de vídeo</string>
     <string name="stats_details_top_commentators">Principais comentaristas</string>
     <string name="stats_published_years_ago">Publicada fai %1$d anos</string>
@@ -899,8 +881,6 @@ Language: gl_ES
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Resposta</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Estímulo diario</string>
     <string name="blogging_prompts_onboarding_got_it">Entendido</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para ver o teu sitio</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Selecciona o %1$s Lector %2$s para descubrir outros sitios.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Aprende máis sobre os estímulos</string>
     <string name="photo_picker_video_thumbnail_unselected">Vídeo non seleccionado</string>
     <string name="photo_picker_video_thumbnail_selected">Vídeo seleccionado</string>
@@ -988,7 +968,6 @@ Language: gl_ES
     <string name="site_creation_intent_art">Arte</string>
     <string name="new_site_creation_intents_input_hint">P.ex.: Moda, poesía, política</string>
     <string name="new_site_creation_intents_title">Temática do sitio</string>
-    <string name="quick_start_site_menu_tab_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Omitir hoxe</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Ver máis estímulos</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Comparte o estímulo de bloguear</string>
@@ -1077,7 +1056,6 @@ Language: gl_ES
     <string name="comment_edit_user_name">Nome</string>
     <string name="comment_edit_menu_done">Feito</string>
     <string name="weekly_roundup">Resumo semanal</string>
-    <string name="quick_start_list_create_site_message">Sitio creado! Completa outra tarefa.</string>
     <string name="domains_free_plan_get_your_domain_title">Obtén o teu dominio</string>
     <string name="recommend_app_generic_get_template_error">Erro descoñecido ao recuperar o modelo recomendado da aplicación</string>
     <string name="recommend_app_bad_format_response">Resposta recibida non válida</string>
@@ -1089,8 +1067,6 @@ Language: gl_ES
     <string name="blogging_reminders_notification_time">Hora do aviso</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Recibirás recordatorios para bloguear &lt;b&gt;todos os días&lt;/b&gt; ás &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s á semana ás %2$s</string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s de %2$s completado</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Aprende o básico cun recorrido rápido.</string>
     <string name="comment_batch_moderation_error">Fallou a moderación dun o máis comentarios</string>
     <string name="create_site_notification_create_site_action">Crear un sitio</string>
     <string name="create_site_notification_text">Ten o teu sitio activo e funcionando en só uns rápidos pasos</string>
@@ -1099,12 +1075,6 @@ Language: gl_ES
     <string name="stats_disabled_enable_stats_button">Activar as estatísticas do sitio</string>
     <string name="stats_disabled_subtitle">Activa as estatísticas do sitio para ver información detallada sobre o tráfico, os «Gústame», os comentarios e os subscritores.</string>
     <string name="stats_disabled_title">Buscas as estatísticas?</string>
-    <string name="quick_start_list_upload_icon_subtitle">Mostrado na pestana do navegador do teu visitante e noutros sitios en liña.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Móstrame o camiño</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">Queres unha pequena axuda para xestionar este sitio coa aplicación?</string>
-    <string name="login_epilogue_create_new_site_button">Crear un novo sitio</string>
-    <string name="login_epilogue_mysites_subheading">Podes cambiar os sitios en calquera momento.</string>
-    <string name="login_epilogue_mysites_heading">Elixe un sitio para abrir</string>
     <string name="scan_multisite_not_supported_subtitle">Sentímolo, neste momento Jetpack Scan non é compatible coas instalacións multisitio de WordPress.</string>
     <string name="scan_multisite_not_supported_title">Os multisitios de WordPress non son compatibles</string>
     <string name="activity_log_visit_our_documentation_page">visita a nosa páxina de documentación</string>
@@ -1198,13 +1168,6 @@ Language: gl_ES
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Exploración finalizada&lt;/b&gt;&lt;br&gt;Non se encontraron ameazas potenciais</string>
     <string name="scan_fixing_threats_title_singular">Corrixindo a ameaza</string>
     <string name="disable">Desactivar</string>
-    <string name="quick_start_list_review_pages_subtitle">Revisa as túas páxinas e fai cambios, ou engade ou elimina páxinas.</string>
-    <string name="quick_start_list_view_site_title">Visita o teu sitio</string>
-    <string name="quick_start_list_follow_site_subtitle">Descobre e segue sitios que te inspiren.</string>
-    <string name="quick_start_list_enable_sharing_title">Compartir socialmente</string>
-    <string name="quick_start_list_enable_sharing_subtitle">Comparte automaticamente as novas entradas nos teus medios sociais.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Dálle un nome ao teu sitio que reflexe a súa personalidade e temática.</string>
-    <string name="quick_start_list_check_stats_title">Revisa as túas estatísticas</string>
     <string name="backup_download_status_failure_bullet2">Trataremos de crear un arquivo de copia de seguridade descargable.</string>
     <string name="backup_download_status_failure_bullet1">Non puidemos encontrar o estado para dicir canto tardará a túa copia de seguridade descargable.</string>
     <string name="backup_download_status_failure_heading">Vaia, non puidemos encontrar o estado da túa copia de seguridade descargable</string>
@@ -1277,9 +1240,6 @@ Language: gl_ES
     <string name="backup_download_complete_failed_title">A descarga fallou</string>
     <string name="web_preview_tablet">Tableta</string>
     <string name="web_preview_mobile">Dispositivos móbiles</string>
-    <string name="quick_start_dialog_review_pages_message_short">Selecciona %1$s Páxinas %2$s para ver a túa lista de páxinas.</string>
-    <string name="quick_start_dialog_review_pages_message">Cambia, engade ou elimina páxinas no teu sitio.</string>
-    <string name="quick_start_dialog_review_pages_title">Revisar as páxinas do sitio</string>
     <string name="reader_menu_mark_as_unseen">Marcar como non lida</string>
     <string name="reader_menu_mark_as_seen">Marcar como lida</string>
     <string name="error_media_upload_failed_for_reason">Non se puideron subir los elementos multimedia.\n%1$s</string>
@@ -1498,7 +1458,6 @@ Language: gl_ES
     <string name="mlp_create_blank_page">Crear unha páxina en branco</string>
     <string name="mlp_choose_layout_subtitle">Empeza elixindo entre unha ampla variedade de deseños de páxina prefabricados. Ou simplemente empeza cunha páxina en branco.</string>
     <string name="mlp_choose_layout_title">Elixir un deseño</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Toca %1$s Crear. %2$s Despois selecciona &lt;b&gt;Entrada do blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Elixir o dispositivo</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Para editares as iconas nos sitios auto-aloxados precisas o plugin Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">Non se puido encontrar o salto de páxina enlazado</string>
@@ -1526,8 +1485,6 @@ Language: gl_ES
     <string name="send_link_by_email" a8c-src-lib="module:login">Enviar o enlace por correo electrónico</string>
     <string name="reset_your_password" a8c-src-lib="module:login">Restablecer o teu contrasinal</string>
     <string name="reader_error_request_failed_title">Ocorreu un problema ao xestionar a petición. Por favor, inténtao de novo máis tarde.</string>
-    <string name="quick_start_list_update_site_title_title">Comproba o título do teu sitio</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para configurar un novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Ao enviar esta entrada á papeleira tamén se descartarán os cambios locais. Estás seguro de que queres seguir?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">O título do sitio só pode ser cambiado por un usuario co perfil de administrador.</string>
     <string name="my_site_title_changer_dialog_hint">O título do sitio móstrase na barra de título dun navegador web e na cabeceira da maioría dos temas.</string>
@@ -1979,29 +1936,12 @@ Language: gl_ES
     <string name="stats_more_posts">Máis entradas</string>
     <string name="stats_fewer_posts">Menos entradas</string>
     <string name="new_site_creation_preview_back_pressed_warning">Podes perder o que levas feito. Estás seguro de que queres saír?</string>
-    <string name="plans_loading_error_with_cache_button">Ver os plans</string>
-    <string name="plans_loading_error_with_cache_subtitle">Requírese unha conexión a Internet para ver os plans, así que os detalles poderían estar desactualizados.</string>
-    <string name="plans_loading_error_no_cache_subtitle">Requírese unha conexión a Internet para ver os plans.</string>
-    <string name="plans_loading_error_no_plans_subtitle">Non podemos cargar os plans neste momento. Por favor, inténtao de novo.</string>
-    <string name="plans_loading_error_no_plans_title">Non se poden cargar os plans</string>
-    <string name="plans_loading_error_network_title">Non hai conexión</string>
     <string name="menu_switch_to_gutenberg_editor">Cambiar ao editor de bloques</string>
     <string name="stats_loading_block_error">Houbo un problema ao cargar os teus datos, recarga a páxina e inténtao de novo.</string>
     <string name="stats_loading_error">Datos non cargados</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edita as novas entradas e páxinas co editor de bloques</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Usar editor de bloques</string>
     <string name="exit">saír</string>
-    <string name="quick_start_sites_type_grow">Fai crecer a túa audiencia</string>
-    <string name="quick_start_sites_type_customize">Personaliza o teu sitio</string>
-    <string name="quick_start_sites">Seguintes pasos</string>
-    <string name="quick_start_dialog_upload_icon_title">Elixe unha icona do sitio único</string>
-    <string name="quick_start_dialog_upload_icon_message">Os teus visitantes verán a túa icona no seu navegador. Engade unha icona personalizada para conseguir un aspecto profesional e refinado.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Toca en %1$s Estatísticas %2$s para ver como está rendendo o teu sitio.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icona do teu sitio %2$s para subir un novo</string>
-    <string name="quick_start_dialog_publish_post_message">Garda en borrador e publica unha entrada.</string>
-    <string name="quick_start_dialog_check_stats_title">Revisa as estatísticas do teu sitio</string>
-    <string name="quick_start_dialog_check_stats_message">Mantente ao día sobre o rendemento do teu sitio.</string>
-    <string name="quick_start_task_skip_menu_title">Saltar tarefa</string>
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Elixe o seguinte período</string>
     <string name="stats_select_previous_period_description">Elixe o período anterior</string>
@@ -2153,20 +2093,6 @@ Language: gl_ES
     <string name="page_delete_error">Houbo un problema ao borrar a páxina</string>
     <string name="set_parent">Facer superior</string>
     <string name="dismiss">Descartar</string>
-    <string name="quick_start_focus_point_description">toca aquí</string>
-    <string name="quick_start_list_create_site_title">Crea o teu sitio</string>
-    <string name="quick_start_list_create_site_subtitle">Pon o teu sitio en marcha.</string>
-    <string name="quick_start_completed_tour_subtitle">A que se sinte un ben terminando unha lista?</string>
-    <string name="quick_start_dialog_view_site_title">Ver o teu sitio</string>
-    <string name="quick_start_dialog_view_site_message">Previsualiza o teu sitio para ver o que verán os teus visitantes.</string>
-    <string name="quick_start_dialog_share_site_title">Comparte o teu sitio</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Toca en %1$s Social %2$s para continuar</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Toca en %1$s Conexións %2$s para engadir as túas contas de medios sociais</string>
-    <string name="quick_start_dialog_share_site_message">Conecta coas túas contas de medios sociais - o teu sitio compartirá automaticamente as novas entradas.</string>
-    <string name="quick_start_dialog_publish_post_title">Publica unha entrada</string>
-    <string name="quick_start_dialog_need_help_button_negative">Non, grazas</string>
-    <string name="quick_start_dialog_follow_sites_title">Segue outros sitios</string>
-    <string name="quick_start_button_positive">Ir</string>
     <string name="content_description_more">Máis</string>
     <string name="my_site_create_new_site_title">Non tes sitios</string>
     <string name="reader_empty_subscribed_tags_subtitle">Engade aquí etiquetas para descubrir entradas sobre as túas temáticas favoritas</string>
@@ -2360,7 +2286,6 @@ Language: gl_ES
     <string name="edit_photo_screen_title">Editar foto</string>
     <string name="share_intent_screen_title">Elixe o sitio</string>
     <string name="signup_epilogue_screen_title">Nova conta</string>
-    <string name="login_epilogue_screen_title">Conectado como</string>
     <string name="person_detail_screen_title">Detalle da persoa</string>
     <string name="media_settings_screen_title">Detalles do arquivo</string>
     <string name="publicize_buttons_screen_title">Botóns de compartir</string>
@@ -2637,8 +2562,6 @@ Language: gl_ES
     <string name="post_queued">Entrada á espera</string>
     <string name="uploading_post">Subindo «%s»</string>
     <string name="connection_to_server_lost">Perdeuse a conexión co servidor</string>
-    <string name="login_epilogue_mysites_other">Os meus sitios</string>
-    <string name="login_epilogue_mysites_one">O meu sitio</string>
     <string name="login_email_client_not_found">Non se puido detectar un cliente de correo electrónico</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Por favor, introduce un código de verificación</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Por favor, introduce un nome de usuario</string>
@@ -2789,7 +2712,6 @@ Language: gl_ES
     <string name="start_over_email_subject">Empezar co sitio %s</string>
     <string name="site_picker_remove_site_error">Erro ao borrar o sitio, inténtao de novo máis tarde</string>
     <string name="editor_post_saved_locally_failed_media">A entrada fallou ao subir os medios e gardouse localmente</string>
-    <string name="sure_to_remove_account">Borrar este sitio da aplicación?</string>
     <string name="photo_picker_title">Elixir foto</string>
     <string name="error_publish_no_network">O dispositivo está desconectado. A entrada guardarase localmente.</string>
     <string name="editor_post_saved_online">A entrada gardouse en liña</string>
@@ -2912,8 +2834,6 @@ Language: gl_ES
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Non dispoñible neste momento. Introduce o teu contrasinal.. </string>
     <string name="logging_in">Conectando</string>
     <string name="web_address_dialog_hint">Móstrase publicamente no teus comentarios.</string>
-    <string name="plans">Plans</string>
-    <string name="plan">Plan</string>
     <string name="export_your_content_message">Os teus artigos, páxinas e configuración enviaránseche a %s.</string>
     <string name="export_your_content">Exportar os contidos</string>
     <string name="export_email_sent">Mensaxe de exportación enviada</string>
