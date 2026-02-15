@@ -62,9 +62,10 @@ class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
         selectedSite.value = SiteUiModel(siteId, iconUrl, siteName, siteUrl) {}
 
         assertThat(settingsModel).isNotNull
-        assertThat(settingsModel!!.buttonEnabled).isTrue()
-        assertThat(settingsModel!!.siteTitle).isEqualTo(siteName)
-        assertThat(settingsModel!!.color).isEqualTo(DARK)
+        val nonNullSettings = settingsModel!!
+        assertThat(nonNullSettings.buttonEnabled).isTrue()
+        assertThat(nonNullSettings.siteTitle).isEqualTo(siteName)
+        assertThat(nonNullSettings.color).isEqualTo(DARK)
     }
 
     @Test
@@ -79,9 +80,10 @@ class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
         }
 
         assertThat(settingsModel).isNotNull
-        assertThat(settingsModel!!.buttonEnabled).isFalse()
-        assertThat(settingsModel!!.siteTitle).isNull()
-        assertThat(settingsModel!!.color).isEqualTo(DARK)
+        val nonNullSettings = settingsModel!!
+        assertThat(nonNullSettings.buttonEnabled).isFalse()
+        assertThat(nonNullSettings.siteTitle).isNull()
+        assertThat(nonNullSettings.color).isEqualTo(DARK)
     }
 
     @Test

@@ -109,13 +109,13 @@ class LocalePickerViewModelTest : BaseUnitTest() {
         assertThat(firstLocale.localeCode).isEqualTo("en_US")
         assertThat(firstLocale.localizedLabel).isEqualTo("English (United States)")
 
-        val secondLocale = lastState.listData?.get(1)
+        val secondLocale = lastState.listData.get(1)
         assertThat(secondLocale is LocaleRow).isTrue()
         assertThat((secondLocale as LocaleRow).label).isEqualTo("Italian")
         assertThat(secondLocale.localeCode).isEqualTo("it")
         assertThat(secondLocale.localizedLabel).isEqualTo("Italiano")
 
-        val thirdLocale = lastState.listData?.get(2)
+        val thirdLocale = lastState.listData.get(2)
         assertThat(thirdLocale is LocaleRow).isTrue()
         assertThat((thirdLocale as LocaleRow).label).isEqualTo("Russian")
         assertThat(thirdLocale.localeCode).isEqualTo("ru")

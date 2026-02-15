@@ -109,7 +109,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         whenever(wpComApiClient.request<SupportBotsRequestGetBotConversationResponse>(any()))
             .thenReturn(successResponse)
 
-        val result = repository.loadConversation(testChatId.toLong())
+        val result = repository.loadConversation(testChatId)
 
         assertThat(result).isNotNull
         assertThat(result?.id).isEqualTo(testChatId)
@@ -236,7 +236,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         whenever(wpComApiClient.request<SupportBotsRequestAddMessageToBotConversationResponse>(any()))
             .thenReturn(successResponse)
 
-        val result = repository.sendMessageToConversation(existingChatId.toLong(), newMessage)
+        val result = repository.sendMessageToConversation(existingChatId, newMessage)
 
         assertThat(result).isNotNull
         assertThat(result?.id).isEqualTo(existingChatId)
