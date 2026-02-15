@@ -1,5 +1,6 @@
 package org.wordpress.android.support.he.ui
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
@@ -316,6 +317,7 @@ class HESupportViewModel @Inject constructor(
         )
     }
 
+    @SuppressLint("Recycle") // False positive: descriptor is closed via .use {}
     @Suppress("TooGenericExceptionCaught")
     private suspend fun getFileSize(uri: Uri): Long? = withContext(ioDispatcher) {
         try {
