@@ -110,7 +110,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
                     is ErrorUiState.GenericRequestFailed,
                     is ErrorUiState.ScanRequestFailed,
                     is ErrorUiState.MultisiteNotSupported,
-                    is ErrorUiState.VaultPressActiveOnSite -> updateErrorLayout(uiState as ErrorUiState)
+                    is ErrorUiState.VaultPressActiveOnSite -> updateErrorLayout(uiState)
                 }
             }
         )

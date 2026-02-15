@@ -119,7 +119,7 @@ class TempAttachmentsUtil @Inject constructor(
                 AppLog.d(AppLog.T.SUPPORT, "Download response code: $responseCode")
 
                 if (response.isSuccessful) {
-                    response.body?.byteStream()?.use { input ->
+                    response.body.byteStream().use { input ->
                         tempFile.outputStream().use { output ->
                             input.copyTo(output)
                         }

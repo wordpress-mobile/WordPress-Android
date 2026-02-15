@@ -97,8 +97,8 @@ class ViewsStatsViewModel @Inject constructor(
 
             if (currentWeekStats != null && previousWeekStats != null) {
                 _uiState.value = buildLoadedState(
-                    currentWeekResult as WeeklyStatsWithDailyDataResult.Success,
-                    previousWeekResult as WeeklyStatsWithDailyDataResult.Success
+                    currentWeekResult,
+                    previousWeekResult
                 )
             } else {
                 _uiState.value = ViewsStatsCardUiState.Error(
