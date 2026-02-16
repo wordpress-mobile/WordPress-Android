@@ -22,10 +22,26 @@ data class PostRsUiModel(
     val title: String,
     val excerpt: String,
     val date: String,
+    val link: String = "",
+    val hasPassword: Boolean = false,
+    val status: PostStatus? = null,
     @StringRes val statusLabelResId: Int = 0,
+    val actions: List<PostRsMenuAction> = emptyList(),
     val isPlaceholder: Boolean = false,
     val isError: Boolean = false
 )
+
+enum class PostRsMenuAction(@StringRes val labelResId: Int) {
+    VIEW(R.string.button_view),
+    READ(R.string.button_read),
+    MOVE_TO_DRAFT(R.string.button_move_to_draft),
+    DUPLICATE(R.string.button_copy),
+    SHARE(R.string.button_share),
+    BLAZE(R.string.button_promote_with_blaze),
+    STATS(R.string.button_stats),
+    COMMENTS(R.string.button_comments),
+    TRASH(R.string.button_trash),
+}
 
 fun PostItemState.toUiModel(
     postId: Long,
@@ -75,6 +91,9 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
         date = PostRsDateFormatter.format(
             post.dateGmt, post.status
         ),
+        link = post.link,
+        hasPassword = !post.password.isNullOrEmpty(),
+        status = post.status,
         statusLabelResId = if (showStatus) {
             post.status.toLabel()
         } else {

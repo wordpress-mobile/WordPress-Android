@@ -51,6 +51,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.PostRsListTab
 import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
+import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostTabUiState
 
 private val AUTHOR_FILTER_OPTIONS = listOf(
@@ -75,6 +76,7 @@ fun PostRsListScreen(
     onLoadMore: (PostRsListTab) -> Unit,
     onNavigateBack: () -> Unit,
     onPostClick: (Long) -> Unit,
+    onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
     onCreatePost: () -> Unit
 ) {
     val tabs = PostRsListTab.entries
@@ -280,6 +282,7 @@ fun PostRsListScreen(
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onPostClick = onPostClick,
+                    onPostMenuAction = onPostMenuAction,
                     onCreatePost = onCreatePost
                 )
             }

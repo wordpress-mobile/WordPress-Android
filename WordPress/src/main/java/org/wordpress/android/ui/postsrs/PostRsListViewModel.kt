@@ -21,13 +21,16 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
 import org.wordpress.android.util.AppLog
+import uniffi.wp_api.PostStatus
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
 import rs.wordpress.cache.kotlin.hasMorePages
+import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.WpApiParamPostsOrderBy
 import uniffi.wp_mobile.PostListFilter
@@ -41,6 +44,7 @@ class PostRsListViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
     private val accountStore: AccountStore,
+    private val blazeFeatureUtils: BlazeFeatureUtils,
 ) : ViewModel() {
     private val _tabStates =
         MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
@@ -376,6 +380,7 @@ class PostRsListViewModel @Inject constructor(
      */
     private suspend fun loadItemsForTab(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
+        val site = selectedSiteRepository.getSelectedSite()
 
         @Suppress("TooGenericExceptionCaught")
         try {
@@ -383,10 +388,21 @@ class PostRsListViewModel @Inject constructor(
                 _searchQuery.value.isNotBlank()
             val uiModels = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
-                    item.state.toUiModel(
+                    val model = item.state.toUiModel(
                         item.id,
                         showStatus = showStatus
                     )
+                    if (site != null) {
+                        model.copy(
+                            actions = getMenuActions(
+                                model.status,
+                                site,
+                                model.hasPassword
+                            )
+                        )
+                    } else {
+                        model
+                    }
                 }
             }
             updateTabUiState(tab) {
@@ -442,6 +458,151 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    @Suppress("CyclomaticComplexMethod")
+    @MainThread
+    fun onPostMenuAction(
+        remotePostId: Long,
+        action: PostRsMenuAction
+    ) {
+        val site =
+            selectedSiteRepository.getSelectedSite() ?: return
+        val postUi = findPost(remotePostId) ?: return
+
+        when (action) {
+            PostRsMenuAction.VIEW ->
+                _events.trySend(
+                    PostRsListEvent.ViewPost(postUi.link)
+                )
+            PostRsMenuAction.READ ->
+                _events.trySend(
+                    PostRsListEvent.ReadPost(
+                        site.siteId, remotePostId
+                    )
+                )
+            PostRsMenuAction.SHARE ->
+                _events.trySend(
+                    PostRsListEvent.SharePost(
+                        postUi.link, postUi.title
+                    )
+                )
+            PostRsMenuAction.STATS ->
+                _events.trySend(
+                    PostRsListEvent.ViewStats(
+                        site, remotePostId,
+                        postUi.title, postUi.link
+                    )
+                )
+            PostRsMenuAction.COMMENTS ->
+                _events.trySend(
+                    PostRsListEvent.ViewComments(
+                        site.siteId, remotePostId
+                    )
+                )
+            PostRsMenuAction.MOVE_TO_DRAFT,
+            PostRsMenuAction.DUPLICATE,
+            PostRsMenuAction.BLAZE,
+            PostRsMenuAction.TRASH ->
+                handleFluxCAction(
+                    action, remotePostId, site
+                )
+        }
+    }
+
+    private fun handleFluxCAction(
+        action: PostRsMenuAction,
+        remotePostId: Long,
+        site: SiteModel
+    ) {
+        val post = postStore.getPostByRemotePostId(
+            remotePostId, site
+        )
+        if (post == null) {
+            _events.trySend(
+                PostRsListEvent.ShowError(
+                    R.string.post_not_found
+                )
+            )
+            return
+        }
+        if (action == PostRsMenuAction.DUPLICATE) {
+            duplicatePost(site, post)
+            return
+        }
+        val event = when (action) {
+            PostRsMenuAction.MOVE_TO_DRAFT ->
+                PostRsListEvent.MoveToDraft(site, post)
+            PostRsMenuAction.BLAZE ->
+                PostRsListEvent.PromoteWithBlaze(site, post)
+            PostRsMenuAction.TRASH ->
+                PostRsListEvent.TrashPost(site, post)
+            else -> return
+        }
+        _events.trySend(event)
+    }
+
+    private fun duplicatePost(
+        site: SiteModel,
+        postToCopy: PostModel
+    ) {
+        val newPost = postStore.instantiatePostModel(
+            site, false,
+            postToCopy.title,
+            postToCopy.content,
+            FluxCPostStatus.DRAFT.toString(),
+            postToCopy.categoryIdList,
+            postToCopy.postFormat,
+            true
+        )
+        _events.trySend(
+            PostRsListEvent.EditPost(site, newPost)
+        )
+    }
+
+    private fun getMenuActions(
+        status: PostStatus?,
+        site: SiteModel,
+        hasPassword: Boolean
+    ): List<PostRsMenuAction> {
+        val isTrashed = status is PostStatus.Trash
+        val isPublished = status is PostStatus.Publish
+        val isPrivate = status is PostStatus.Private
+        val isDraft = status is PostStatus.Draft
+
+        return buildList {
+            if (!isTrashed) add(PostRsMenuAction.VIEW)
+            if (!isTrashed) add(PostRsMenuAction.READ)
+            if (isPublished || isPrivate || isTrashed) {
+                add(PostRsMenuAction.MOVE_TO_DRAFT)
+            }
+            if (isPublished || isPrivate || isDraft) {
+                add(PostRsMenuAction.DUPLICATE)
+            }
+            if (!isTrashed) add(PostRsMenuAction.SHARE)
+            if (isPublished && !hasPassword &&
+                blazeFeatureUtils.isSiteBlazeEligible(site)
+            ) {
+                add(PostRsMenuAction.BLAZE)
+            }
+            if (isPublished &&
+                site.isUsingWpComRestApi
+            ) {
+                add(PostRsMenuAction.STATS)
+            }
+            if (isPublished || isPrivate) {
+                add(PostRsMenuAction.COMMENTS)
+            }
+            if (!isTrashed) add(PostRsMenuAction.TRASH)
+        }
+    }
+
+    private fun findPost(
+        remotePostId: Long
+    ): PostRsUiModel? {
+        return _tabStates.value.values
+            .flatMap { it.posts }
+            .firstOrNull { it.remotePostId == remotePostId }
+    }
+
     /** Returns the current UI state for [tab], or a default loading state. */
     private fun getTabUiState(tab: PostRsListTab): PostTabUiState {
         return _tabStates.value[tab]
@@ -484,5 +645,44 @@ sealed interface PostRsListEvent {
 
     data class ShowError(
         val messageResId: Int
+    ) : PostRsListEvent
+
+    data class ViewPost(val url: String) : PostRsListEvent
+
+    data class ReadPost(
+        val blogId: Long,
+        val postId: Long
+    ) : PostRsListEvent
+
+    data class MoveToDraft(
+        val site: SiteModel,
+        val post: PostModel
+    ) : PostRsListEvent
+
+    data class SharePost(
+        val url: String,
+        val title: String
+    ) : PostRsListEvent
+
+    data class PromoteWithBlaze(
+        val site: SiteModel,
+        val post: PostModel
+    ) : PostRsListEvent
+
+    data class ViewStats(
+        val site: SiteModel,
+        val remotePostId: Long,
+        val postTitle: String,
+        val postUrl: String
+    ) : PostRsListEvent
+
+    data class ViewComments(
+        val blogId: Long,
+        val postId: Long
+    ) : PostRsListEvent
+
+    data class TrashPost(
+        val site: SiteModel,
+        val post: PostModel
     ) : PostRsListEvent
 }

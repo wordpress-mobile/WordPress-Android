@@ -11,16 +11,28 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.postsrs.screens.PostRsListScreen
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
+import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.setContent
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PostRsListActivity : BaseAppCompatActivity() {
+    @Inject
+    lateinit var dispatcher: Dispatcher
+
     private val viewModel: PostRsListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +76,8 @@ class PostRsListActivity : BaseAppCompatActivity() {
                         onBackPressedDispatcher.onBackPressed()
                     },
                     onPostClick = viewModel::openPost,
+                    onPostMenuAction =
+                        viewModel::onPostMenuAction,
                     onCreatePost = viewModel::createNewPost
                 )
             }
@@ -74,31 +88,78 @@ class PostRsListActivity : BaseAppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
-                    when (event) {
-                        is PostRsListEvent.EditPost ->
-                            ActivityLauncher.editPostOrPageForResult(
-                                this@PostRsListActivity,
-                                event.site,
-                                event.post
-                            )
-                        is PostRsListEvent.CreatePost ->
-                            ActivityLauncher.addNewPostForResult(
-                                this@PostRsListActivity,
-                                event.site,
-                                false,
-                                PagePostCreationSourcesDetail
-                                    .POST_FROM_POSTS_LIST,
-                                -1,
-                                null
-                            )
-                        is PostRsListEvent.ShowError ->
-                            ToastUtils.showToast(
-                                this@PostRsListActivity,
-                                event.messageResId
-                            )
-                    }
+                    handleEvent(event)
                 }
             }
+        }
+    }
+
+    @Suppress("CyclomaticComplexMethod")
+    private fun handleEvent(event: PostRsListEvent) {
+        when (event) {
+            is PostRsListEvent.EditPost ->
+                ActivityLauncher.editPostOrPageForResult(
+                    this, event.site, event.post
+                )
+            is PostRsListEvent.CreatePost ->
+                ActivityLauncher.addNewPostForResult(
+                    this, event.site, false,
+                    PagePostCreationSourcesDetail
+                        .POST_FROM_POSTS_LIST,
+                    -1, null
+                )
+            is PostRsListEvent.ShowError ->
+                ToastUtils.showToast(this, event.messageResId)
+            is PostRsListEvent.ViewPost ->
+                ActivityLauncher.openUrlExternal(
+                    this, event.url
+                )
+            is PostRsListEvent.ReadPost ->
+                ReaderActivityLauncher.showReaderPostDetail(
+                    this, event.blogId, event.postId
+                )
+            is PostRsListEvent.MoveToDraft -> {
+                event.post.setStatus(
+                    PostStatus.DRAFT.toString()
+                )
+                dispatcher.dispatch(
+                    PostActionBuilder.newPushPostAction(
+                        RemotePostPayload(
+                            event.post, event.site
+                        )
+                    )
+                )
+            }
+            is PostRsListEvent.SharePost ->
+                ActivityLauncher.openShareIntent(
+                    this, event.url, event.title
+                )
+            is PostRsListEvent.PromoteWithBlaze ->
+                ActivityLauncher.openPromoteWithBlaze(
+                    this, event.post,
+                    BlazeFlowSource.POSTS_LIST
+                )
+            is PostRsListEvent.ViewStats ->
+                StatsDetailActivity.start(
+                    this, event.site,
+                    event.remotePostId, "post",
+                    event.postTitle, event.postUrl
+                )
+            is PostRsListEvent.ViewComments ->
+                ReaderActivityLauncher.showReaderPostDetail(
+                    this, false,
+                    event.blogId, event.postId,
+                    DirectOperation.COMMENT_JUMP,
+                    false
+                )
+            is PostRsListEvent.TrashPost ->
+                dispatcher.dispatch(
+                    PostActionBuilder.newDeletePostAction(
+                        RemotePostPayload(
+                            event.post, event.site
+                        )
+                    )
+                )
         }
     }
 
