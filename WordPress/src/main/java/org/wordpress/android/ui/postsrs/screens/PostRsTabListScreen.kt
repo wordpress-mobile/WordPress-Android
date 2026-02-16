@@ -38,13 +38,13 @@ import org.wordpress.android.ui.postsrs.PostTabUiState
 fun PostRsTabListScreen(
     state: PostTabUiState,
     emptyMessageResId: Int,
-    isSearchIdle: Boolean = false,
-    isSearching: Boolean = false,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
     onCreatePost: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isSearchIdle: Boolean = false,
+    isSearching: Boolean = false
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
 
