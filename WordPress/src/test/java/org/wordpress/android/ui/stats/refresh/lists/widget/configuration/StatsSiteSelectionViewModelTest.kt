@@ -104,7 +104,7 @@ class StatsSiteSelectionViewModelTest : BaseUnitTest() {
         assertThat(sites).hasSize(2)
         val jetpackSite = sites!![0]
         assertThat(jetpackSite.title).isEqualTo(jetpackSiteName)
-        val wpComSite = sites!![1]
+        val wpComSite = sites[1]
         assertThat(wpComSite.title).isEqualTo(siteName)
     }
 

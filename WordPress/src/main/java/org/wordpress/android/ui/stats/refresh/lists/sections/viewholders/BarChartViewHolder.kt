@@ -159,13 +159,13 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 override fun onNothingSelected() {
                     item.selectedItem
                     highlightColumn(cutEntries.indexOfFirst { it.id == item.selectedItem }, hasOverlappingEntries)
-                    item.onBarSelected?.invoke(item.selectedItem)
+                    item.onBarSelected(item.selectedItem)
                 }
 
                 override fun onValueSelected(e: Entry, h: Highlight) {
                     val value = (e as? BarEntry)?.data as? String
                     highlightColumn(e.x.toInt(), hasOverlappingEntries)
-                    item.onBarSelected?.invoke(value)
+                    item.onBarSelected(value)
                 }
             })
         } else {

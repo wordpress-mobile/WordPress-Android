@@ -178,7 +178,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!)
+                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 verify(siteStore, times(1)).sites
                 cancelAndIgnoreRemainingEvents()
             }
@@ -217,7 +217,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!)
+                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -255,7 +255,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!)
+                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -293,7 +293,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!)
+                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -331,7 +331,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!)
+                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 cancelAndIgnoreRemainingEvents()
             }
         }

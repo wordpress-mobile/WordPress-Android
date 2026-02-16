@@ -227,11 +227,11 @@ class WPWebViewViewModelTest : BaseUnitTest() {
 
         viewModel.togglePreviewModeSelectorVisibility(true)
         assertThat(previewModeSelectorStatus).isNotNull()
-        assertThat(previewModeSelectorStatus!!.isVisible).isTrue()
+        assertThat(previewModeSelectorStatus.isVisible).isTrue()
 
         viewModel.togglePreviewModeSelectorVisibility(false)
         assertThat(previewModeSelectorStatus).isNotNull()
-        assertThat(previewModeSelectorStatus!!.isVisible).isFalse()
+        assertThat(previewModeSelectorStatus.isVisible).isFalse()
     }
 
     @Test
@@ -247,14 +247,14 @@ class WPWebViewViewModelTest : BaseUnitTest() {
 
         assertThat(previewModeSelectorStatus).isNotNull()
         assertThat(previewModeSelectorStatus!!.isVisible).isFalse()
-        assertThat(previewModeSelectorStatus!!.selectedPreviewMode).isEqualTo(MOBILE)
+        assertThat(previewModeSelectorStatus.selectedPreviewMode).isEqualTo(MOBILE)
 
         viewModel.selectPreviewMode(DESKTOP)
         viewModel.togglePreviewModeSelectorVisibility(true)
 
         assertThat(previewModeSelectorStatus).isNotNull()
-        assertThat(previewModeSelectorStatus!!.isVisible).isTrue()
-        assertThat(previewModeSelectorStatus!!.selectedPreviewMode).isEqualTo(DESKTOP)
+        assertThat(previewModeSelectorStatus.isVisible).isTrue()
+        assertThat(previewModeSelectorStatus.selectedPreviewMode).isEqualTo(DESKTOP)
     }
 
     @Test
