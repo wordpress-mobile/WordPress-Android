@@ -13,12 +13,14 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.navmenus.data.NavMenuRestClient
 import org.wordpress.android.ui.navmenus.models.NavMenuItemModel
 import org.wordpress.android.ui.navmenus.models.NavMenuLocationModel
 import org.wordpress.android.ui.navmenus.models.NavMenuModel
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
@@ -32,6 +34,9 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private lateinit var viewModel: NavMenusViewModel
 
@@ -50,6 +55,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
             selectedSiteRepository = selectedSiteRepository,
             navMenuRestClient = navMenuRestClient,
             resourceProvider = resourceProvider,
+            analyticsTrackerWrapper = analyticsTrackerWrapper,
             mainDispatcher = testDispatcher(),
             ioDispatcher = testDispatcher()
         )
@@ -391,6 +397,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
         assertThat(state?.selectedTypeOption).isEqualTo(MenuItemTypeOption.CUSTOM_LINK)
         assertThat(state?.type).isEqualTo(NavMenuItemModel.TYPE_CUSTOM)
         assertThat(state?.isNew).isTrue()
+        verify(analyticsTrackerWrapper).track(Stat.MENUS_OPENED_ITEM_EDITOR)
     }
 
     @Test
@@ -505,6 +512,8 @@ class NavMenusViewModelTest : BaseUnitTest() {
 
         val event = viewModel.uiEvent.first()
         assertThat(event).isInstanceOf(NavMenusUiEvent.ShowError::class.java)
+        verify(analyticsTrackerWrapper, never())
+            .track(Stat.MENUS_OPENED_ITEM_EDITOR)
     }
 
     @Test
@@ -546,6 +555,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
         val detail = viewModel.menuItemDetailState.first()
         assertThat(detail?.menuOrder).isEqualTo(1) // Was 2, swapped to 1
         verify(navMenuRestClient, times(2)).updateMenuItem(any(), any())
+        verify(analyticsTrackerWrapper).track(Stat.MENUS_ORDERED_ITEMS)
     }
 
     @Test
@@ -613,6 +623,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
         val event = viewModel.uiEvent.first()
         assertThat(event).isEqualTo(NavMenusUiEvent.MenuSaved)
         verify(navMenuRestClient).createMenu(any(), any())
+        verify(analyticsTrackerWrapper).track(Stat.MENUS_CREATED_MENU)
     }
 
     @Test
@@ -629,6 +640,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
         val event = viewModel.uiEvent.first()
         assertThat(event).isEqualTo(NavMenusUiEvent.MenuDeleted)
         verify(navMenuRestClient).deleteMenu(any(), any())
+        verify(analyticsTrackerWrapper).track(Stat.MENUS_DELETED_MENU)
     }
 
     @Test
@@ -649,6 +661,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
         val event = viewModel.uiEvent.first()
         assertThat(event).isEqualTo(NavMenusUiEvent.MenuItemSaved)
         verify(navMenuRestClient).createMenuItem(any(), any())
+        verify(analyticsTrackerWrapper).track(Stat.MENUS_CREATED_ITEM)
     }
 
     @Test
@@ -666,6 +679,7 @@ class NavMenusViewModelTest : BaseUnitTest() {
         val event = viewModel.uiEvent.first()
         assertThat(event).isEqualTo(NavMenusUiEvent.MenuItemDeleted)
         verify(navMenuRestClient).deleteMenuItem(any(), any())
+        verify(analyticsTrackerWrapper).track(Stat.MENUS_DELETED_ITEM)
     }
 
     @Test
