@@ -57,7 +57,8 @@ fun <T : LocalContentEntityData, E : LocalMigrationError> LocalMigrationResult<T
  */
 inline fun <T : Any?, U : LocalContentEntityData, E : LocalMigrationError> Iterable<T>.foldAllToSingleResult(
     transform: (T) -> LocalMigrationResult<U, E>,
-) = fold(EmptyResult) { current: LocalMigrationResult<LocalContentEntityData, LocalMigrationError>, item ->
+): LocalMigrationResult<LocalContentEntityData, LocalMigrationError> =
+    fold(EmptyResult) { current: LocalMigrationResult<LocalContentEntityData, LocalMigrationError>, item ->
     when (val result = transform(item)) {
         is Failure -> return result
         else -> current

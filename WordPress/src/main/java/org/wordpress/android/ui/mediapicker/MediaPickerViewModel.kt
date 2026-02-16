@@ -124,7 +124,7 @@ class MediaPickerViewModel @Inject constructor(
                 filter = domainModel?.filter,
                 searchExpanded = searchExpanded
             ),
-            !domainModel?.domainItems.isNullOrEmpty() && domainModel?.isLoading == true,
+            !domainModel?.domainItems.isNullOrEmpty() && domainModel.isLoading == true,
             buildBrowseMenuUiModel(softAskRequest, searchExpanded),
             progressDialogUiModel ?: Hidden,
             showPartialAccessPrompt ?: false,

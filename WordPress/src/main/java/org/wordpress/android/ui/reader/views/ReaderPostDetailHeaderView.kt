@@ -109,7 +109,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         if (!showAuthorsAvatar) {
             imageManager.cancelRequestAndClearImageView(authorAvatarImage)
         } else {
-            imageManager.loadIntoCircle(authorAvatarImage, ImageType.BLAVATAR_CIRCULAR, state.authorAvatarUrl!!)
+            imageManager.loadIntoCircle(authorAvatarImage, ImageType.BLAVATAR_CIRCULAR, state.authorAvatarUrl)
         }
     }
 

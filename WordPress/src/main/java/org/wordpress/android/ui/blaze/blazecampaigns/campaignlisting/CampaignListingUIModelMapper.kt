@@ -17,7 +17,7 @@ class CampaignListingUIModelMapper @Inject constructor(
 
     private fun mapToCampaignModel(campaignModel:BlazeCampaignModel): CampaignModel {
         return CampaignModel(
-            id = campaignModel.campaignId.toString(),
+            id = campaignModel.campaignId,
             title = UiString.UiStringText(campaignModel.title),
             status = CampaignStatus.fromString(campaignModel.uiStatus),
             featureImageUrl = campaignModel.imageUrl,
