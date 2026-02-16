@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.postsrs
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.util.HtmlUtils
@@ -31,17 +32,53 @@ data class PostRsUiModel(
     val isError: Boolean = false
 )
 
-enum class PostRsMenuAction(@StringRes val labelResId: Int) {
-    VIEW(R.string.button_view),
-    READ(R.string.button_read),
-    MOVE_TO_DRAFT(R.string.button_move_to_draft),
-    DUPLICATE(R.string.button_copy),
-    SHARE(R.string.button_share),
-    BLAZE(R.string.button_promote_with_blaze),
-    STATS(R.string.button_stats),
-    COMMENTS(R.string.button_comments),
-    TRASH(R.string.button_trash),
-    DELETE_PERMANENTLY(R.string.button_delete_permanently),
+enum class PostRsMenuAction(
+    @StringRes val labelResId: Int,
+    @DrawableRes val iconResId: Int,
+    val isDestructive: Boolean = false
+) {
+    VIEW(
+        R.string.button_view,
+        R.drawable.gb_ic_external
+    ),
+    READ(
+        R.string.button_read,
+        R.drawable.ic_reader_glasses_white_24dp
+    ),
+    MOVE_TO_DRAFT(
+        R.string.button_move_to_draft,
+        R.drawable.gb_ic_move_to
+    ),
+    DUPLICATE(
+        R.string.button_copy,
+        R.drawable.gb_ic_copy
+    ),
+    SHARE(
+        R.string.button_share,
+        R.drawable.gb_ic_share
+    ),
+    BLAZE(
+        R.string.button_promote_with_blaze,
+        R.drawable.ic_blaze_flame_24dp
+    ),
+    STATS(
+        R.string.button_stats,
+        R.drawable.gb_ic_chart_bar
+    ),
+    COMMENTS(
+        R.string.button_comments,
+        R.drawable.gb_ic_comment
+    ),
+    TRASH(
+        R.string.button_trash,
+        R.drawable.gb_ic_trash,
+        isDestructive = true
+    ),
+    DELETE_PERMANENTLY(
+        R.string.button_delete_permanently,
+        R.drawable.gb_ic_trash,
+        isDestructive = true
+    ),
 }
 
 fun PostItemState.toUiModel(

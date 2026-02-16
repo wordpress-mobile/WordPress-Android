@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -169,10 +170,25 @@ private fun PostMenuButton(
             onDismissRequest = { expanded = false }
         ) {
             actions.forEach { action ->
+                val color = if (action.isDestructive) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
                 DropdownMenuItem(
                     text = {
                         Text(
-                            stringResource(action.labelResId)
+                            stringResource(action.labelResId),
+                            color = color
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(
+                                action.iconResId
+                            ),
+                            contentDescription = null,
+                            tint = color
                         )
                     },
                     onClick = {
