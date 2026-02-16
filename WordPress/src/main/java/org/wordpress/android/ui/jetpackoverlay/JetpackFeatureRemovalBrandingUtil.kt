@@ -119,22 +119,18 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
 
     private fun getQuantityUiString(interval: Pluralisable): UiStringPluralRes {
         return when (interval) {
-            is Weeks -> (interval as? Weeks)?.run {
-                UiStringPluralRes(
-                    zeroRes = otherRes,
-                    oneRes = oneRes,
-                    otherRes = otherRes,
-                    count = number.toInt(),
-                )
-            } ?: error("Pluralisable interval should be of type Weeks")
-            is Days -> (interval as? Days)?.run {
-                UiStringPluralRes(
-                    zeroRes = otherRes,
-                    oneRes = oneRes,
-                    otherRes = otherRes,
-                    count = number.toInt(),
-                )
-            } ?: error("Pluralisable interval should be of type Days")
+            is Weeks -> UiStringPluralRes(
+                zeroRes = interval.otherRes,
+                oneRes = interval.oneRes,
+                otherRes = interval.otherRes,
+                count = interval.number.toInt(),
+            )
+            is Days -> UiStringPluralRes(
+                zeroRes = interval.otherRes,
+                oneRes = interval.oneRes,
+                otherRes = interval.otherRes,
+                count = interval.number.toInt(),
+            )
         }
     }
 }

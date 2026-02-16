@@ -140,7 +140,7 @@ class DebugSettingsViewModel
         return RemoteFieldConfigDefaults.remoteFieldConfigDefaults.mapNotNull { remoteField ->
             val remoteConfig = remoteConfigFields.find { remoteField.key == it.key }
             remoteConfig?.let {
-                Field(remoteField.key, remoteConfig.value.toString(), remoteConfig.source.toString())
+                Field(remoteField.key, remoteConfig.value, remoteConfig.source.toString())
             }
         }.sortedBy { it.remoteFieldKey }
     }
