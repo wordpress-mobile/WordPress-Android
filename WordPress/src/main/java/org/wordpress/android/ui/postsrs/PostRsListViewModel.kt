@@ -79,6 +79,15 @@ class PostRsListViewModel @Inject constructor(
     private val initializingTabs = mutableSetOf<PostRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PostRsListTab>()
 
+    private val _trashConfirmPostId = MutableStateFlow<Long?>(null)
+    val trashConfirmPostId: StateFlow<Long?> =
+        _trashConfirmPostId.asStateFlow()
+
+    private val _deleteConfirmPostId =
+        MutableStateFlow<Long?>(null)
+    val deleteConfirmPostId: StateFlow<Long?> =
+        _deleteConfirmPostId.asStateFlow()
+
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
@@ -498,15 +507,49 @@ class PostRsListViewModel @Inject constructor(
                         site.siteId, remotePostId
                     )
                 )
+            PostRsMenuAction.TRASH ->
+                _trashConfirmPostId.value = remotePostId
+            PostRsMenuAction.DELETE_PERMANENTLY ->
+                _deleteConfirmPostId.value = remotePostId
             PostRsMenuAction.MOVE_TO_DRAFT,
             PostRsMenuAction.DUPLICATE,
-            PostRsMenuAction.BLAZE,
-            PostRsMenuAction.TRASH,
-            PostRsMenuAction.DELETE_PERMANENTLY ->
+            PostRsMenuAction.BLAZE ->
                 handleFluxCAction(
                     action, remotePostId, site
                 )
         }
+    }
+
+    @MainThread
+    fun onConfirmTrash() {
+        val postId = _trashConfirmPostId.value ?: return
+        _trashConfirmPostId.value = null
+        val site =
+            selectedSiteRepository.getSelectedSite() ?: return
+        handleFluxCAction(
+            PostRsMenuAction.TRASH, postId, site
+        )
+    }
+
+    @MainThread
+    fun onDismissTrash() {
+        _trashConfirmPostId.value = null
+    }
+
+    @MainThread
+    fun onConfirmDelete() {
+        val postId = _deleteConfirmPostId.value ?: return
+        _deleteConfirmPostId.value = null
+        val site =
+            selectedSiteRepository.getSelectedSite() ?: return
+        handleFluxCAction(
+            PostRsMenuAction.DELETE_PERMANENTLY, postId, site
+        )
+    }
+
+    @MainThread
+    fun onDismissDelete() {
+        _deleteConfirmPostId.value = null
     }
 
     private fun handleFluxCAction(

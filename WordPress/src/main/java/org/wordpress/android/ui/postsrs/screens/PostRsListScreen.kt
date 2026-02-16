@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -27,6 +28,7 @@ import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -77,7 +79,13 @@ fun PostRsListScreen(
     onNavigateBack: () -> Unit,
     onPostClick: (Long) -> Unit,
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
-    onCreatePost: () -> Unit
+    onCreatePost: () -> Unit,
+    showTrashConfirmation: Boolean = false,
+    onConfirmTrash: () -> Unit = {},
+    onDismissTrash: () -> Unit = {},
+    showDeleteConfirmation: Boolean = false,
+    onConfirmDelete: () -> Unit = {},
+    onDismissDelete: () -> Unit = {}
 ) {
     val tabs = PostRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -85,6 +93,80 @@ fun PostRsListScreen(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val activeTab = tabs[pagerState.settledPage]
+
+    if (showTrashConfirmation) {
+        AlertDialog(
+            onDismissRequest = onDismissTrash,
+            title = {
+                Text(
+                    stringResource(R.string.button_trash)
+                )
+            },
+            text = {
+                Text(
+                    stringResource(
+                        R.string
+                            .dialog_confirm_trash_post
+                    )
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = onConfirmTrash) {
+                    Text(
+                        stringResource(
+                            R.string.button_trash
+                        )
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismissTrash) {
+                    Text(
+                        stringResource(R.string.cancel)
+                    )
+                }
+            }
+        )
+    }
+
+    if (showDeleteConfirmation) {
+        AlertDialog(
+            onDismissRequest = onDismissDelete,
+            title = {
+                Text(
+                    stringResource(
+                        R.string
+                            .button_delete_permanently
+                    )
+                )
+            },
+            text = {
+                Text(
+                    stringResource(
+                        R.string
+                            .dialog_confirm_delete_permanently_post
+                    )
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = onConfirmDelete) {
+                    Text(
+                        stringResource(
+                            R.string
+                                .button_delete_permanently
+                        )
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismissDelete) {
+                    Text(
+                        stringResource(R.string.cancel)
+                    )
+                }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {

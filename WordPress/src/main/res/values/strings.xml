@@ -371,7 +371,8 @@
     <string name="delete_page">Delete page?</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
-    <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
+    <string name="dialog_confirm_delete_permanently_post">Permanently delete this post?</string>
+    <string name="dialog_confirm_trash_post">Trash this post?</string>
 
     <!-- scheduled post sync confirmation dialog -->
     <string name="dialog_confirm_scheduled_post_sync_title">Ready to Sync?</string>

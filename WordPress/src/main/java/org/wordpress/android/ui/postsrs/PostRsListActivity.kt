@@ -51,6 +51,10 @@ class PostRsListActivity : BaseAppCompatActivity() {
                 .collectAsState()
             val authorFilter by viewModel.authorFilter
                 .collectAsState()
+            val trashConfirmPostId by viewModel
+                .trashConfirmPostId.collectAsState()
+            val deleteConfirmPostId by viewModel
+                .deleteConfirmPostId.collectAsState()
             AppThemeM3 {
                 PostRsListScreen(
                     tabStates = tabStates,
@@ -80,7 +84,19 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     onPostClick = viewModel::openPost,
                     onPostMenuAction =
                         viewModel::onPostMenuAction,
-                    onCreatePost = viewModel::createNewPost
+                    onCreatePost = viewModel::createNewPost,
+                    showTrashConfirmation =
+                        trashConfirmPostId != null,
+                    onConfirmTrash =
+                        viewModel::onConfirmTrash,
+                    onDismissTrash =
+                        viewModel::onDismissTrash,
+                    showDeleteConfirmation =
+                        deleteConfirmPostId != null,
+                    onConfirmDelete =
+                        viewModel::onConfirmDelete,
+                    onDismissDelete =
+                        viewModel::onDismissDelete
                 )
             }
         }
