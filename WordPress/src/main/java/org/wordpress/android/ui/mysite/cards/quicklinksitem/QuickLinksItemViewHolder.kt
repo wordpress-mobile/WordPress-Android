@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.mysite.cards.quicklinksitem
 
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.databinding.QuickLinkItemBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
@@ -11,9 +13,13 @@ class QuickLinksItemViewHolder(
     private val binding: QuickLinkItemBinding = parent.viewBinding(QuickLinkItemBinding::inflate)
 ) : RecyclerView.ViewHolder(binding.root) {
     fun onBind(item: QuickLinkItem) = with(binding) {
-        quickLinkItem.setText(item.label.stringRes)
-        quickLinkItem.setIconResource(item.icon)
-        quickLinkItem.setOnClickListener { item.onClick.click() }
-        if (item.disableTint) quickLinkItem.iconTint = null
+        quickLinkIcon.setImageResource(item.icon)
+        if (item.disableTint) {
+            ImageViewCompat.setImageTintList(quickLinkIcon, null)
+        }
+        quickLinkLabel.setText(item.label.stringRes)
+        quickLinkBetaBadge.visibility =
+            if (item.showBetaBadge) View.VISIBLE else View.GONE
+        quickLinkItemRoot.setOnClickListener { item.onClick.click() }
     }
 }

@@ -2,17 +2,60 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/quick_link_item_root"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:minHeight="48dp"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/quick_link_item"
-        style="@style/MySiteQuickLinkItem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="@string/my_site_btn_site_pages"
-        tools:icon="@drawable/ic_pages_white_24dp"
+    <ImageView
+        android:id="@+id/quick_link_icon"
+        android:layout_width="@dimen/quick_link_ribbon_icon_size"
+        android:layout_height="@dimen/quick_link_ribbon_icon_size"
+        android:layout_marginEnd="@dimen/quick_link_ribbon_icon_padding"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/wpColorOnSurfaceMedium"
+        tools:src="@drawable/ic_gridicons_menus" />
+
+    <TextView
+        android:id="@+id/quick_link_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="san-serif"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="@dimen/quick_link_ribbon_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/quick_link_beta_badge"
+        app:layout_constraintStart_toEndOf="@+id/quick_link_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/my_site_btn_site_pages" />
+
+    <TextView
+        android:id="@+id/quick_link_beta_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:background="@drawable/bg_beta_pill"
+        android:paddingStart="@dimen/margin_small"
+        android:paddingEnd="@dimen/margin_small"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:text="@string/beta_label"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
