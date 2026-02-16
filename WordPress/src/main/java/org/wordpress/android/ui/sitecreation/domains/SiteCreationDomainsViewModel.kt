@@ -268,7 +268,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             query = query?.value,
             data = state.data,
             errorFetchingSuggestions = isError,
-            errorResId = if (isError) (state as Error).errorMessageResId else null
+            errorResId = if (isError) state.errorMessageResId else null
         )
         return if (items.isEmpty()) {
             if (isNonEmptyUserQuery(query) && (state is Success || state is Ready)) {

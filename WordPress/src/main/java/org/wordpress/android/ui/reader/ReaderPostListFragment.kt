@@ -1957,7 +1957,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     private fun setCurrentTagFromEmptyViewButton(button: ActionableEmptyViewButtonType) {
-        var tag: ReaderTag? = when (button) {
+        val tag: ReaderTag = when (button) {
             ActionableEmptyViewButtonType.DISCOVER -> ReaderUtils.getTagFromEndpoint(
                 ReaderTag.DISCOVER_PATH
             )
@@ -1965,12 +1965,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             ActionableEmptyViewButtonType.FOLLOWED -> ReaderUtils.getTagFromEndpoint(
                 ReaderTag.FOLLOWING_PATH
             )
-        }
-        if (tag == null) {
-            tag = ReaderUtils.getDefaultTag()
-        }
+        } ?: ReaderUtils.getDefaultTag()
 
-        postListViewModel.onEmptyStateButtonTapped(tag!!)
+        postListViewModel.onEmptyStateButtonTapped(tag)
     }
 
     private fun announceListStateForAccessibility() {

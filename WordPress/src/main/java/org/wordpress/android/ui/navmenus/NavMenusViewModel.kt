@@ -22,7 +22,9 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.navmenus.data.NavMenuRestClient
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -35,6 +37,7 @@ class NavMenusViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val navMenuRestClient: NavMenuRestClient,
     private val resourceProvider: ResourceProvider,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -391,6 +394,7 @@ class NavMenusViewModel @Inject constructor(
             menuOrder = currentMenuItems.maxOfOrNull { it.menuOrder }?.plus(1) ?: 1,
             isNew = true
         )
+        analyticsTrackerWrapper.track(Stat.MENUS_OPENED_ITEM_EDITOR)
         navigateTo(NavMenuScreen.MenuItemDetail.name)
     }
 
@@ -422,6 +426,7 @@ class NavMenusViewModel @Inject constructor(
             availableParents = availableParents,
             isNew = false
         )
+        analyticsTrackerWrapper.track(Stat.MENUS_OPENED_ITEM_EDITOR)
         navigateTo(NavMenuScreen.MenuItemDetail.name)
     }
 
@@ -533,6 +538,15 @@ class NavMenusViewModel @Inject constructor(
                     _menuDetailState.value = state.copy(isSaving = false)
                     when (result) {
                         is NavMenuRestClient.NavMenuResult.Success -> {
+                            if (state.isNew) {
+                                analyticsTrackerWrapper.track(
+                                    Stat.MENUS_CREATED_MENU
+                                )
+                            } else {
+                                analyticsTrackerWrapper.track(
+                                    Stat.MENUS_SAVED_MENU
+                                )
+                            }
                             _uiEvent.value = NavMenusUiEvent.MenuSaved
                             navigateBack()
                             loadMenus()
@@ -562,6 +576,9 @@ class NavMenusViewModel @Inject constructor(
                     _menuDetailState.value = state.copy(isDeleting = false)
                     when (result) {
                         is NavMenuRestClient.NavMenuDeleteResult.Success -> {
+                            analyticsTrackerWrapper.track(
+                                Stat.MENUS_DELETED_MENU
+                            )
                             _uiEvent.value = NavMenusUiEvent.MenuDeleted
                             navigateBack()
                             loadMenus()
@@ -763,6 +780,8 @@ class NavMenusViewModel @Inject constructor(
         val siblingIndex = findSiblingIndex(currentItems, index, indentLevel, direction)
         if (siblingIndex < 0) return
 
+        analyticsTrackerWrapper.track(Stat.MENUS_ORDERED_ITEMS)
+
         val sibling = currentItems[siblingIndex]
 
         // Get the end indices for both subtrees (item + descendants, sibling + descendants)
@@ -899,6 +918,15 @@ class NavMenusViewModel @Inject constructor(
                     _menuItemDetailState.value = state.copy(isSaving = false)
                     when (result) {
                         is NavMenuRestClient.NavMenuItemResult.Success -> {
+                            if (state.isNew) {
+                                analyticsTrackerWrapper.track(
+                                    Stat.MENUS_CREATED_ITEM
+                                )
+                            } else {
+                                analyticsTrackerWrapper.track(
+                                    Stat.MENUS_EDITED_ITEM
+                                )
+                            }
                             _uiEvent.value = NavMenusUiEvent.MenuItemSaved
                             navigateBack()
                             loadMenuItems(state.menuId)
@@ -963,6 +991,9 @@ class NavMenusViewModel @Inject constructor(
                     _menuItemDetailState.value = state.copy(isDeleting = false)
                     when (result) {
                         is NavMenuRestClient.NavMenuItemDeleteResult.Success -> {
+                            analyticsTrackerWrapper.track(
+                                Stat.MENUS_DELETED_ITEM
+                            )
                             _uiEvent.value = NavMenusUiEvent.MenuItemDeleted
                             navigateBack()
                             loadMenuItems(state.menuId)
