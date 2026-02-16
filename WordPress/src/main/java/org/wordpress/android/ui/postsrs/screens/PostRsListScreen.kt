@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.postsrs.screens
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,8 +12,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -27,8 +32,11 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -40,9 +48,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.PostRsListTab
 import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.postsrs.PostTabUiState
+
+private val AUTHOR_FILTER_OPTIONS = listOf(
+    AuthorFilterSelection.EVERYONE,
+    AuthorFilterSelection.ME
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,9 +64,12 @@ fun PostRsListScreen(
     tabStates: Map<PostRsListTab, PostTabUiState>,
     isSearchActive: Boolean,
     searchQuery: String,
+    isAuthorFilterVisible: Boolean,
+    authorFilter: AuthorFilterSelection,
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PostRsListTab) -> Unit,
     onSearchClose: (PostRsListTab) -> Unit,
+    onAuthorFilterChanged: (AuthorFilterSelection, PostRsListTab) -> Unit,
     onInitTab: (PostRsListTab) -> Unit,
     onRefreshTab: (PostRsListTab) -> Unit,
     onLoadMore: (PostRsListTab) -> Unit,
@@ -155,6 +172,16 @@ fun PostRsListScreen(
                             }
                         }
                     } else {
+                        if (isAuthorFilterVisible) {
+                            AuthorFilterButton(
+                                authorFilter = authorFilter,
+                                onAuthorFilterChanged = {
+                                    onAuthorFilterChanged(
+                                        it, activeTab
+                                    )
+                                }
+                            )
+                        }
                         IconButton(onClick = onSearchOpen) {
                             Icon(
                                 Icons.Default.Search,
@@ -254,6 +281,61 @@ fun PostRsListScreen(
                     onLoadMore = { onLoadMore(tab) },
                     onPostClick = onPostClick,
                     onCreatePost = onCreatePost
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AuthorFilterButton(
+    authorFilter: AuthorFilterSelection,
+    onAuthorFilterChanged: (AuthorFilterSelection) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            Icon(
+                Icons.Outlined.Person,
+                contentDescription = stringResource(
+                    R.string.post_list_author_filter
+                )
+            )
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            AUTHOR_FILTER_OPTIONS.forEach { selection ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            stringResource(
+                                when (selection) {
+                                    AuthorFilterSelection.EVERYONE ->
+                                        R.string.everyone
+                                    AuthorFilterSelection.ME ->
+                                        R.string.me
+                                }
+                            )
+                        )
+                    },
+                    onClick = {
+                        expanded = false
+                        onAuthorFilterChanged(selection)
+                    },
+                    trailingIcon = if (
+                        selection == authorFilter
+                    ) {
+                        {
+                            Icon(
+                                Icons.Default.Check,
+                                contentDescription = null
+                            )
+                        }
+                    } else {
+                        null
+                    }
                 )
             }
         }

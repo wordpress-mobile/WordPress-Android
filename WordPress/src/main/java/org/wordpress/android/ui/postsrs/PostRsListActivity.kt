@@ -35,17 +35,24 @@ class PostRsListActivity : BaseAppCompatActivity() {
                 .collectAsState()
             val searchQuery by viewModel.searchQuery
                 .collectAsState()
+            val authorFilter by viewModel.authorFilter
+                .collectAsState()
             AppThemeM3 {
                 PostRsListScreen(
                     tabStates = tabStates,
                     isSearchActive = isSearchActive,
                     searchQuery = searchQuery,
+                    isAuthorFilterVisible =
+                        viewModel.isAuthorFilterVisible,
+                    authorFilter = authorFilter,
                     onSearchOpen =
                         viewModel::onSearchOpen,
                     onSearchQueryChanged =
                         viewModel::onSearchQueryChanged,
                     onSearchClose =
                         viewModel::onSearchClose,
+                    onAuthorFilterChanged =
+                        viewModel::onAuthorFilterChanged,
                     onInitTab = viewModel::initTab,
                     onRefreshTab = { tab ->
                         viewModel.refreshTab(

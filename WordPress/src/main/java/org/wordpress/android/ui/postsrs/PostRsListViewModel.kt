@@ -18,8 +18,10 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -38,11 +40,27 @@ class PostRsListViewModel @Inject constructor(
     private val serviceProvider: WpSelfHostedServiceProvider,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
+    private val accountStore: AccountStore,
 ) : ViewModel() {
     private val _tabStates =
         MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> =
         _tabStates.asStateFlow()
+
+    private val _authorFilter =
+        MutableStateFlow(AuthorFilterSelection.EVERYONE)
+    val authorFilter: StateFlow<AuthorFilterSelection> =
+        _authorFilter.asStateFlow()
+
+    val isAuthorFilterVisible: Boolean
+        get() {
+            val site = selectedSiteRepository.getSelectedSite()
+                ?: return false
+            return site.isUsingWpComRestApi
+                && site.hasCapabilityEditOthersPosts
+                && site.isSingleUserSite != null
+                && !site.isSingleUserSite
+        }
 
     private val _isSearchActive = MutableStateFlow(false)
     val isSearchActive: StateFlow<Boolean> =
@@ -154,6 +172,20 @@ class PostRsListViewModel @Inject constructor(
         initTab(activeTab)
     }
 
+    /**
+     * Updates the author filter and reloads all tabs.
+     */
+    @MainThread
+    fun onAuthorFilterChanged(
+        selection: AuthorFilterSelection,
+        activeTab: PostRsListTab
+    ) {
+        if (_authorFilter.value == selection) return
+        _authorFilter.value = selection
+        clearCollections()
+        initTab(activeTab)
+    }
+
     private fun clearCollections() {
         collections.values.forEach { it.close() }
         collections.clear()
@@ -220,6 +252,11 @@ class PostRsListViewModel @Inject constructor(
     ): ObservableMetadataCollection = withContext(Dispatchers.IO) {
         val service = serviceProvider.getService(site)
         val query = _searchQuery.value
+        val authorIds = when (_authorFilter.value) {
+            AuthorFilterSelection.ME ->
+                listOf(accountStore.account.userId)
+            AuthorFilterSelection.EVERYONE -> emptyList()
+        }
         val filter = PostListFilter(
             status = if (query.isNotBlank()) {
                 ALL_STATUSES
@@ -228,7 +265,8 @@ class PostRsListViewModel @Inject constructor(
             },
             order = tab.order,
             orderby = WpApiParamPostsOrderBy.DATE,
-            search = query.ifBlank { null }
+            search = query.ifBlank { null },
+            author = authorIds
         )
         service.posts()
             .getObservablePostMetadataCollectionWithEditContext(
