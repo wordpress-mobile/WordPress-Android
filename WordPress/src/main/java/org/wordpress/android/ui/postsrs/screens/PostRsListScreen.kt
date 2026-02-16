@@ -27,11 +27,8 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -51,6 +48,7 @@ import org.wordpress.android.ui.postsrs.PostTabUiState
 @Composable
 fun PostRsListScreen(
     tabStates: Map<PostRsListTab, PostTabUiState>,
+    isSearchActive: Boolean,
     searchQuery: String,
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PostRsListTab) -> Unit,
@@ -65,7 +63,6 @@ fun PostRsListScreen(
     val tabs = PostRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
-    var isSearchActive by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val activeTab = tabs[pagerState.settledPage]
@@ -125,7 +122,6 @@ fun PostRsListScreen(
                 navigationIcon = {
                     IconButton(onClick = {
                         if (isSearchActive) {
-                            isSearchActive = false
                             onSearchClose(activeTab)
                         } else {
                             onNavigateBack()
@@ -159,10 +155,7 @@ fun PostRsListScreen(
                             }
                         }
                     } else {
-                        IconButton(onClick = {
-                            isSearchActive = true
-                            onSearchOpen()
-                        }) {
+                        IconButton(onClick = onSearchOpen) {
                             Icon(
                                 Icons.Default.Search,
                                 contentDescription =

@@ -44,6 +44,10 @@ class PostRsListViewModel @Inject constructor(
     val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> =
         _tabStates.asStateFlow()
 
+    private val _isSearchActive = MutableStateFlow(false)
+    val isSearchActive: StateFlow<Boolean> =
+        _isSearchActive.asStateFlow()
+
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
     private var activeSearchTab = PostRsListTab.PUBLISHED
@@ -112,6 +116,7 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun onSearchOpen() {
+        _isSearchActive.value = true
         clearCollections()
     }
 
@@ -144,6 +149,7 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun onSearchClose(activeTab: PostRsListTab) {
+        _isSearchActive.value = false
         _searchQuery.value = ""
         clearCollections()
         initTab(activeTab)
