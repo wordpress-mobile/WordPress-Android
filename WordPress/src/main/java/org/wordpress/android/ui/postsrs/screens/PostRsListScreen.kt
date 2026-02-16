@@ -233,7 +233,8 @@ fun PostRsListScreen(
 
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                userScrollEnabled = !isSearchActive
             ) { page ->
                 val tab = tabs[page]
                 val tabState = tabStates[tab]

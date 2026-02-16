@@ -68,6 +68,10 @@ class PostRsListViewModel @Inject constructor(
                 .filter { it.length >= MIN_SEARCH_QUERY_LENGTH }
                 .collect {
                     clearCollections()
+                    _tabStates.value = PostRsListTab.entries
+                        .associateWith {
+                            PostTabUiState(isLoading = true)
+                        }
                     initTab(activeSearchTab)
                 }
         }
@@ -134,11 +138,6 @@ class PostRsListViewModel @Inject constructor(
         _searchQuery.value = query
         if (query.isBlank()) {
             clearCollections()
-        } else if (query.length >= MIN_SEARCH_QUERY_LENGTH) {
-            _tabStates.value = PostRsListTab.entries
-                .associateWith {
-                    PostTabUiState(isLoading = true)
-                }
         }
     }
 
