@@ -13,6 +13,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.ui.ActivityLauncher
@@ -153,14 +155,21 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     false
                 )
             is PostRsListEvent.TrashPost ->
-                dispatcher.dispatch(
-                    PostActionBuilder.newDeletePostAction(
-                        RemotePostPayload(
-                            event.post, event.site
-                        )
-                    )
-                )
+                dispatchDeletePost(event.site, event.post)
+            is PostRsListEvent.DeletePost ->
+                dispatchDeletePost(event.site, event.post)
         }
+    }
+
+    private fun dispatchDeletePost(
+        site: SiteModel,
+        post: PostModel
+    ) {
+        dispatcher.dispatch(
+            PostActionBuilder.newDeletePostAction(
+                RemotePostPayload(post, site)
+            )
+        )
     }
 
     companion object {

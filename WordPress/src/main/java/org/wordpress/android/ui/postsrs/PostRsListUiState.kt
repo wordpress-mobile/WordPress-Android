@@ -41,6 +41,7 @@ enum class PostRsMenuAction(@StringRes val labelResId: Int) {
     STATS(R.string.button_stats),
     COMMENTS(R.string.button_comments),
     TRASH(R.string.button_trash),
+    DELETE_PERMANENTLY(R.string.button_delete_permanently),
 }
 
 fun PostItemState.toUiModel(

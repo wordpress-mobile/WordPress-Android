@@ -501,7 +501,8 @@ class PostRsListViewModel @Inject constructor(
             PostRsMenuAction.MOVE_TO_DRAFT,
             PostRsMenuAction.DUPLICATE,
             PostRsMenuAction.BLAZE,
-            PostRsMenuAction.TRASH ->
+            PostRsMenuAction.TRASH,
+            PostRsMenuAction.DELETE_PERMANENTLY ->
                 handleFluxCAction(
                     action, remotePostId, site
                 )
@@ -535,9 +536,30 @@ class PostRsListViewModel @Inject constructor(
                 PostRsListEvent.PromoteWithBlaze(site, post)
             PostRsMenuAction.TRASH ->
                 PostRsListEvent.TrashPost(site, post)
+            PostRsMenuAction.DELETE_PERMANENTLY ->
+                PostRsListEvent.DeletePost(site, post)
             else -> return
         }
+        if (action == PostRsMenuAction.MOVE_TO_DRAFT ||
+            action == PostRsMenuAction.TRASH ||
+            action == PostRsMenuAction.DELETE_PERMANENTLY
+        ) {
+            removePostFromList(remotePostId)
+        }
         _events.trySend(event)
+    }
+
+    private fun removePostFromList(remotePostId: Long) {
+        _tabStates.value = _tabStates.value.mapValues { (_, state) ->
+            val filtered = state.posts.filter {
+                it.remotePostId != remotePostId
+            }
+            if (filtered.size == state.posts.size) {
+                state
+            } else {
+                state.copy(posts = filtered)
+            }
+        }
     }
 
     private fun duplicatePost(
@@ -568,16 +590,23 @@ class PostRsListViewModel @Inject constructor(
         val isPrivate = status is PostStatus.Private
         val isDraft = status is PostStatus.Draft
 
+        if (isTrashed) {
+            return listOf(
+                PostRsMenuAction.MOVE_TO_DRAFT,
+                PostRsMenuAction.DELETE_PERMANENTLY
+            )
+        }
+
         return buildList {
-            if (!isTrashed) add(PostRsMenuAction.VIEW)
-            if (!isTrashed) add(PostRsMenuAction.READ)
-            if (isPublished || isPrivate || isTrashed) {
+            add(PostRsMenuAction.VIEW)
+            add(PostRsMenuAction.READ)
+            if (isPublished || isPrivate) {
                 add(PostRsMenuAction.MOVE_TO_DRAFT)
             }
             if (isPublished || isPrivate || isDraft) {
                 add(PostRsMenuAction.DUPLICATE)
             }
-            if (!isTrashed) add(PostRsMenuAction.SHARE)
+            add(PostRsMenuAction.SHARE)
             if (isPublished && !hasPassword &&
                 blazeFeatureUtils.isSiteBlazeEligible(site)
             ) {
@@ -591,7 +620,7 @@ class PostRsListViewModel @Inject constructor(
             if (isPublished || isPrivate) {
                 add(PostRsMenuAction.COMMENTS)
             }
-            if (!isTrashed) add(PostRsMenuAction.TRASH)
+            add(PostRsMenuAction.TRASH)
         }
     }
 
@@ -682,6 +711,11 @@ sealed interface PostRsListEvent {
     ) : PostRsListEvent
 
     data class TrashPost(
+        val site: SiteModel,
+        val post: PostModel
+    ) : PostRsListEvent
+
+    data class DeletePost(
         val site: SiteModel,
         val post: PostModel
     ) : PostRsListEvent
