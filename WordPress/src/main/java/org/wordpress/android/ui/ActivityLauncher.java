@@ -95,9 +95,11 @@ import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
+import org.wordpress.android.ui.postsrs.PostRsListActivity;
 import org.wordpress.android.posttypes.CptPostTypesActivity;
 import org.wordpress.android.posttypes.bridge.SiteReference;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
@@ -651,6 +653,14 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
+        if (site != null
+                && !site.isWPCom()
+                && site.hasApplicationPassword()
+                && AppPrefs.getExperimentalFeatureConfig(
+                        Feature.RS_POST_LIST.getPrefKey())) {
+            context.startActivity(PostRsListActivity.Companion.createIntent(context));
+            return;
+        }
         viewCurrentBlogPostsOfType(context, site, null);
     }
 
