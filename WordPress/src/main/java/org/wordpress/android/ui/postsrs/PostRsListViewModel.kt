@@ -133,6 +133,11 @@ class PostRsListViewModel @Inject constructor(
             clearCollections()
             _tabStates.value = PostRsListTab.entries
                 .associateWith { PostTabUiState() }
+        } else if (query.length >= MIN_SEARCH_QUERY_LENGTH) {
+            _tabStates.value = PostRsListTab.entries
+                .associateWith {
+                    PostTabUiState(isLoading = true)
+                }
         }
     }
 
