@@ -113,8 +113,6 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun onSearchOpen() {
         clearCollections()
-        _tabStates.value = PostRsListTab.entries
-            .associateWith { PostTabUiState() }
     }
 
     /**
@@ -131,8 +129,6 @@ class PostRsListViewModel @Inject constructor(
         _searchQuery.value = query
         if (query.isBlank()) {
             clearCollections()
-            _tabStates.value = PostRsListTab.entries
-                .associateWith { PostTabUiState() }
         } else if (query.length >= MIN_SEARCH_QUERY_LENGTH) {
             _tabStates.value = PostRsListTab.entries
                 .associateWith {
@@ -219,9 +215,8 @@ class PostRsListViewModel @Inject constructor(
     ): ObservableMetadataCollection = withContext(Dispatchers.IO) {
         val service = serviceProvider.getService(site)
         val query = _searchQuery.value
-        val isSearching = query.isNotBlank()
         val filter = PostListFilter(
-            status = if (isSearching) {
+            status = if (query.isNotBlank()) {
                 ALL_STATUSES
             } else {
                 tab.statuses
