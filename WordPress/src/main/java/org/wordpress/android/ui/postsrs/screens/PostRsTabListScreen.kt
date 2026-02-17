@@ -42,7 +42,9 @@ fun PostRsTabListScreen(
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
     onCreatePost: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isSearchIdle: Boolean = false,
+    isSearching: Boolean = false
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -61,12 +63,25 @@ fun PostRsTabListScreen(
         }
     ) {
         when {
+            isSearchIdle -> Box(Modifier.fillMaxSize())
             state.isLoading -> ShimmerList()
             state.error != null && state.posts.isEmpty() -> {
                 ErrorContent(state.error)
             }
             state.posts.isEmpty() && !state.isRefreshing -> {
-                EmptyContent(emptyMessageResId, onCreatePost)
+                EmptyContent(
+                    emptyMessageResId = if (isSearching) {
+                        R.string
+                            .post_list_search_nothing_found
+                    } else {
+                        emptyMessageResId
+                    },
+                    onCreatePost = if (isSearching) {
+                        null
+                    } else {
+                        onCreatePost
+                    }
+                )
             }
             else -> PostListContent(
                 posts = state.posts,
@@ -168,7 +183,7 @@ private fun ErrorContent(error: String) {
 @Composable
 private fun EmptyContent(
     emptyMessageResId: Int,
-    onCreatePost: () -> Unit
+    onCreatePost: (() -> Unit)?
 ) {
     Column(
         modifier = Modifier
@@ -183,13 +198,15 @@ private fun EmptyContent(
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onCreatePost) {
-            Text(
-                text = stringResource(
-                    R.string.posts_empty_list_button
+        if (onCreatePost != null) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onCreatePost) {
+                Text(
+                    text = stringResource(
+                        R.string.posts_empty_list_button
+                    )
                 )
-            )
+            }
         }
     }
 }

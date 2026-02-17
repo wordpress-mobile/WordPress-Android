@@ -610,6 +610,7 @@
     <!--               -->
 
     <!-- General -->
+    <string name="bullet_with_spaces" translatable="false">" • "</string>
     <string name="discussion">Discussion</string>
     <string name="privacy">Privacy</string>
     <string name="related_posts">Related Posts</string>

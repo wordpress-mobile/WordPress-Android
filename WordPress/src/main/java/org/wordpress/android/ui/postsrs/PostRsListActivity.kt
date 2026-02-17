@@ -31,9 +31,21 @@ class PostRsListActivity : BaseAppCompatActivity() {
         setContent {
             val tabStates by viewModel.tabStates
                 .collectAsState()
+            val isSearchActive by viewModel.isSearchActive
+                .collectAsState()
+            val searchQuery by viewModel.searchQuery
+                .collectAsState()
             AppThemeM3 {
                 PostRsListScreen(
                     tabStates = tabStates,
+                    isSearchActive = isSearchActive,
+                    searchQuery = searchQuery,
+                    onSearchOpen =
+                        viewModel::onSearchOpen,
+                    onSearchQueryChanged =
+                        viewModel::onSearchQueryChanged,
+                    onSearchClose =
+                        viewModel::onSearchClose,
                     onInitTab = viewModel::initTab,
                     onRefreshTab = { tab ->
                         viewModel.refreshTab(

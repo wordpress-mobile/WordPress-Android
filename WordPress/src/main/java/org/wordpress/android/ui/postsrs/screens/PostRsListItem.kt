@@ -59,9 +59,26 @@ private fun PostContentItem(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            if (post.date.isNotBlank()) {
+            val statusLabel = if (post.statusLabelResId != 0) {
+                stringResource(post.statusLabelResId)
+            } else {
+                null
+            }
+            val bullet = stringResource(
+                R.string.bullet_with_spaces
+            )
+            val dateText = buildString {
+                if (!statusLabel.isNullOrBlank()) {
+                    append(statusLabel)
+                    if (post.date.isNotBlank()) {
+                        append(bullet)
+                    }
+                }
+                append(post.date)
+            }
+            if (dateText.isNotBlank()) {
                 Text(
-                    text = post.date,
+                    text = dateText,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary
                 )

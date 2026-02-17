@@ -5,10 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -40,6 +43,15 @@ class PostRsListViewModel @Inject constructor(
         MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> =
         _tabStates.asStateFlow()
+
+    private val _isSearchActive = MutableStateFlow(false)
+    val isSearchActive: StateFlow<Boolean> =
+        _isSearchActive.asStateFlow()
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+    private var activeSearchTab = PostRsListTab.PUBLISHED
+
     private val collections =
         mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
@@ -47,6 +59,23 @@ class PostRsListViewModel @Inject constructor(
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
+
+    init {
+        @OptIn(FlowPreview::class)
+        viewModelScope.launch {
+            _searchQuery
+                .debounce(SEARCH_DEBOUNCE_MS)
+                .filter { it.length >= MIN_SEARCH_QUERY_LENGTH }
+                .collect {
+                    clearCollections()
+                    _tabStates.value = PostRsListTab.entries
+                        .associateWith {
+                            PostTabUiState(isLoading = true)
+                        }
+                    initTab(activeSearchTab)
+                }
+        }
+    }
 
     /**
      * Looks up a post in the local FluxC database and emits an
@@ -83,6 +112,54 @@ class PostRsListViewModel @Inject constructor(
         val site = selectedSiteRepository.getSelectedSite()
             ?: return
         _events.trySend(PostRsListEvent.CreatePost(site))
+    }
+
+    /**
+     * Clears all cached collections and tab states so the list
+     * appears empty while the user types a search query.
+     */
+    @MainThread
+    fun onSearchOpen() {
+        _isSearchActive.value = true
+        clearCollections()
+    }
+
+    /**
+     * Updates the search query. Non-blank queries are debounced
+     * before triggering an API call. Blank queries immediately
+     * clear results so the idle state appears without delay.
+     */
+    @MainThread
+    fun onSearchQueryChanged(
+        query: String,
+        activeTab: PostRsListTab
+    ) {
+        activeSearchTab = activeTab
+        _searchQuery.value = query
+        if (query.isBlank()) {
+            clearCollections()
+        }
+    }
+
+    /**
+     * Closes search mode: clears the query, tears down all
+     * collections, and immediately re-initializes [activeTab]
+     * so the normal tab content appears without debounce delay.
+     */
+    @MainThread
+    fun onSearchClose(activeTab: PostRsListTab) {
+        _isSearchActive.value = false
+        _searchQuery.value = ""
+        clearCollections()
+        initTab(activeTab)
+    }
+
+    private fun clearCollections() {
+        collections.values.forEach { it.close() }
+        collections.clear()
+        initializingTabs.clear()
+        userRefreshingTabs.clear()
+        _tabStates.value = emptyMap()
     }
 
     /**
@@ -142,10 +219,16 @@ class PostRsListViewModel @Inject constructor(
         tab: PostRsListTab
     ): ObservableMetadataCollection = withContext(Dispatchers.IO) {
         val service = serviceProvider.getService(site)
+        val query = _searchQuery.value
         val filter = PostListFilter(
-            status = tab.statuses,
+            status = if (query.isNotBlank()) {
+                ALL_STATUSES
+            } else {
+                tab.statuses
+            },
             order = tab.order,
-            orderby = WpApiParamPostsOrderBy.DATE
+            orderby = WpApiParamPostsOrderBy.DATE,
+            search = query.ifBlank { null }
         )
         service.posts()
             .getObservablePostMetadataCollectionWithEditContext(
@@ -258,9 +341,14 @@ class PostRsListViewModel @Inject constructor(
 
         @Suppress("TooGenericExceptionCaught")
         try {
+            val showStatus =
+                _searchQuery.value.isNotBlank()
             val uiModels = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
-                    item.state.toUiModel(item.id)
+                    item.state.toUiModel(
+                        item.id,
+                        showStatus = showStatus
+                    )
                 }
             }
             updateTabUiState(tab) {
@@ -338,6 +426,11 @@ class PostRsListViewModel @Inject constructor(
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val SEARCH_DEBOUNCE_MS = 250L
+        internal const val MIN_SEARCH_QUERY_LENGTH = 3
+        private val ALL_STATUSES =
+            PostRsListTab.entries
+                .flatMap { it.statuses }.distinct()
     }
 }
 
