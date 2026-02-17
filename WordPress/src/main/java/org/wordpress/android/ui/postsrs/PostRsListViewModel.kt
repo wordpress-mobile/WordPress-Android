@@ -229,7 +229,12 @@ class PostRsListViewModel @Inject constructor(
             PostRsMenuAction.MOVE_TO_DRAFT ->
                 moveToDraft(site, remotePostId)
             PostRsMenuAction.DUPLICATE ->
-                duplicatePost(site, remotePostId)
+                _events.trySend(
+                    PostRsListEvent.ShowToast(
+                        R.string
+                            .post_rs_not_implemented_yet
+                    )
+                )
         }
     }
 
@@ -304,19 +309,6 @@ class PostRsListViewModel @Inject constructor(
                 result,
                 R.string.post_rs_moved_to_draft,
                 R.string.post_rs_error_update_status
-            )
-        }
-    }
-
-    private fun duplicatePost(site: SiteModel, postId: Long) {
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                restClient.duplicatePost(site, postId)
-            }
-            handleActionResult(
-                result,
-                R.string.post_rs_duplicated,
-                R.string.post_rs_error_duplicate
             )
         }
     }

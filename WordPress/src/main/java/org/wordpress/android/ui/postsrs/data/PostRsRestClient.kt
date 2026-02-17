@@ -7,9 +7,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.PostCreateParams
 import uniffi.wp_api.PostEndpointType
-import uniffi.wp_api.PostRetrieveParams
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
 import javax.inject.Inject
@@ -84,49 +82,6 @@ class PostRsRestClient @Inject constructor(
         }
     }
 
-    suspend fun duplicatePost(
-        site: SiteModel,
-        postId: Long
-    ): PostActionResult {
-        val client = wpApiClientProvider.getWpApiClient(site)
-
-        val retrieveResponse = client.request {
-            it.posts().retrieveWithEditContext(
-                PostEndpointType.Posts,
-                postId,
-                PostRetrieveParams()
-            )
-        }
-
-        val originalPost = when (retrieveResponse) {
-            is WpRequestResult.Success ->
-                retrieveResponse.response.data
-            else -> return PostActionResult.Error(
-                parseErrorMessage(retrieveResponse)
-            )
-        }
-
-        val createResponse = client.request {
-            it.posts().create(
-                PostEndpointType.Posts,
-                PostCreateParams(
-                    title = originalPost.title?.raw,
-                    content = originalPost.content.raw,
-                    excerpt = originalPost.excerpt?.raw,
-                    status = PostStatus.Draft,
-                    meta = null
-                )
-            )
-        }
-
-        return when (createResponse) {
-            is WpRequestResult.Success -> PostActionResult.Success
-            else -> PostActionResult.Error(
-                parseErrorMessage(createResponse)
-            )
-        }
-    }
-
     private fun parseErrorMessage(
         response: WpRequestResult<*>
     ): String {
@@ -150,4 +105,5 @@ class PostRsRestClient @Inject constructor(
         data object Success : PostActionResult()
         data class Error(val message: String) : PostActionResult()
     }
+
 }
