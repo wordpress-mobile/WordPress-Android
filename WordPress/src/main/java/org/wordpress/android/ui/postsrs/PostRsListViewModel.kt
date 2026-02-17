@@ -22,6 +22,7 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
@@ -274,7 +275,14 @@ class PostRsListViewModel @Inject constructor(
                     ) {
                         add(PostRsMenuAction.BLAZE)
                     }
-                    add(PostRsMenuAction.STATS)
+                    if (site != null &&
+                        SiteUtils.isAccessedViaWPComRest(
+                            site
+                        ) &&
+                        site.hasCapabilityViewStats
+                    ) {
+                        add(PostRsMenuAction.STATS)
+                    }
                     add(PostRsMenuAction.COMMENTS)
                     add(PostRsMenuAction.TRASH)
                 }
