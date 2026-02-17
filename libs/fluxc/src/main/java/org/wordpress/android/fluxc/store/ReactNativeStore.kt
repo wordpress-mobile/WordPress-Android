@@ -175,8 +175,8 @@ class ReactNativeStore @VisibleForTesting constructor(
 
         val usingSavedRestUrl = wpApiRestUrl != null
         if (!usingSavedRestUrl) {
-            wpApiRestUrl = discoveryWPAPIRestClient.discoverWPAPIBaseURL(site.url)
-                    ?: slashJoin(site.url, "wp-json/")
+            wpApiRestUrl = discoveryWPAPIRestClient.discoverWPAPIBaseURL(site.url) // discover rest api endpoint
+                    ?: slashJoin(site.url, "wp-json/") // fallback to ".../wp-json/" default if discovery fails
             site.wpApiRestUrl = wpApiRestUrl
             persistSiteSafely(site)
         }
@@ -209,9 +209,11 @@ class ReactNativeStore @VisibleForTesting constructor(
             is Error -> when (response.statusCode()) {
                 HttpURLConnection.HTTP_UNAUTHORIZED -> {
                     if (usingSavedNonce) {
+                        // Call with saved nonce failed, so try getting a new one
                         val previousNonce = nonce?.value
                         val newNonce = nonceRestClient.requestNonce(site)?.value
 
+                        // Try original call again if we have a new nonce
                         val nonceIsUpdated = newNonce != null && newNonce != previousNonce
                         if (nonceIsUpdated) {
                             return when (method) {
@@ -226,16 +228,23 @@ class ReactNativeStore @VisibleForTesting constructor(
                 }
 
                 HttpURLConnection.HTTP_NOT_FOUND -> {
+                    // call failed with 'not found' so clear the (failing) rest url
                     site.wpApiRestUrl = null
                     persistSiteSafely(site)
 
                     if (usingSavedRestUrl) {
+                        // If we did the previous call with a saved rest url, try again by making
+                        // recursive call. This time there is no saved rest url to use
+                        // so the rest url will be retrieved using discovery
                         executeWPAPIRequest(site, path, method, params, body, enableCaching)
                     } else {
+                        // Already used discovery to fetch the rest base url and still got
+                        // 'not found', so just return the error response
                         response
                     }
                 }
 
+                // For all other failures just return the error response
                 else -> response
             }
         }
