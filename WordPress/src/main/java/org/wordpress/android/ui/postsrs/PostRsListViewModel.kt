@@ -62,13 +62,10 @@ class PostRsListViewModel @Inject constructor(
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
-    private val _trashConfirmPostId = MutableStateFlow<Long?>(null)
-    val trashConfirmPostId: StateFlow<Long?> =
-        _trashConfirmPostId.asStateFlow()
-
-    private val _deleteConfirmPostId = MutableStateFlow<Long?>(null)
-    val deleteConfirmPostId: StateFlow<Long?> =
-        _deleteConfirmPostId.asStateFlow()
+    private val _pendingConfirmation =
+        MutableStateFlow<PendingConfirmation?>(null)
+    val pendingConfirmation: StateFlow<PendingConfirmation?> =
+        _pendingConfirmation.asStateFlow()
 
     init {
         @OptIn(FlowPreview::class)
@@ -218,9 +215,11 @@ class PostRsListViewModel @Inject constructor(
                 )
             )
             PostRsMenuAction.TRASH ->
-                _trashConfirmPostId.value = remotePostId
+                _pendingConfirmation.value =
+                    PendingConfirmation.Trash(remotePostId)
             PostRsMenuAction.DELETE_PERMANENTLY ->
-                _deleteConfirmPostId.value = remotePostId
+                _pendingConfirmation.value =
+                    PendingConfirmation.Delete(remotePostId)
             PostRsMenuAction.PUBLISH ->
                 sendNotImplemented()
             PostRsMenuAction.MOVE_TO_DRAFT ->
@@ -231,25 +230,14 @@ class PostRsListViewModel @Inject constructor(
     }
 
     @MainThread
-    fun onConfirmTrash() {
-        _trashConfirmPostId.value = null
+    fun onConfirmPendingAction() {
+        _pendingConfirmation.value = null
         sendNotImplemented()
     }
 
     @MainThread
-    fun onDismissTrash() {
-        _trashConfirmPostId.value = null
-    }
-
-    @MainThread
-    fun onConfirmDelete() {
-        _deleteConfirmPostId.value = null
-        sendNotImplemented()
-    }
-
-    @MainThread
-    fun onDismissDelete() {
-        _deleteConfirmPostId.value = null
+    fun onDismissPendingAction() {
+        _pendingConfirmation.value = null
     }
 
     private fun sendNotImplemented() {

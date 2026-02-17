@@ -9,13 +9,16 @@ import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
 
+sealed interface PendingConfirmation {
+    data class Trash(val postId: Long) : PendingConfirmation
+    data class Delete(val postId: Long) : PendingConfirmation
+}
+
 class ConfirmationDialogState(
     val showTrash: Boolean = false,
     val showDelete: Boolean = false,
-    val onConfirmTrash: () -> Unit = {},
-    val onDismissTrash: () -> Unit = {},
-    val onConfirmDelete: () -> Unit = {},
-    val onDismissDelete: () -> Unit = {}
+    val onConfirm: () -> Unit = {},
+    val onDismiss: () -> Unit = {}
 )
 
 data class PostTabUiState(

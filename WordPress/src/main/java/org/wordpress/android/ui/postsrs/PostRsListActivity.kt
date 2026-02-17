@@ -41,9 +41,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                 .collectAsState()
             val searchQuery by viewModel.searchQuery
                 .collectAsState()
-            val trashPostId by viewModel.trashConfirmPostId
-                .collectAsState()
-            val deletePostId by viewModel.deleteConfirmPostId
+            val confirmation by viewModel.pendingConfirmation
                 .collectAsState()
             AppThemeM3 {
                 PostRsListScreen(
@@ -52,18 +50,14 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     searchQuery = searchQuery,
                     confirmationDialog =
                         ConfirmationDialogState(
-                            showTrash =
-                                trashPostId != null,
-                            showDelete =
-                                deletePostId != null,
-                            onConfirmTrash =
-                                viewModel::onConfirmTrash,
-                            onDismissTrash =
-                                viewModel::onDismissTrash,
-                            onConfirmDelete =
-                                viewModel::onConfirmDelete,
-                            onDismissDelete =
-                                viewModel::onDismissDelete
+                            showTrash = confirmation
+                                is PendingConfirmation.Trash,
+                            showDelete = confirmation
+                                is PendingConfirmation.Delete,
+                            onConfirm =
+                                viewModel::onConfirmPendingAction,
+                            onDismiss =
+                                viewModel::onDismissPendingAction
                         ),
                     onSearchOpen =
                         viewModel::onSearchOpen,
@@ -80,8 +74,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     onLoadMore =
                         viewModel::loadMorePosts,
                     onNavigateBack = {
-                        onBackPressedDispatcher
-                            .onBackPressed()
+                        onBackPressedDispatcher.onBackPressed()
                     },
                     onPostClick = viewModel::openPost,
                     onPostMenuAction =
