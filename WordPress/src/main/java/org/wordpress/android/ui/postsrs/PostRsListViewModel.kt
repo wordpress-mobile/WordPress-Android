@@ -257,7 +257,8 @@ class PostRsListViewModel @Inject constructor(
 
     private fun getMenuActions(
         tab: PostRsListTab,
-        hasPassword: Boolean
+        hasPassword: Boolean,
+        commentsOpen: Boolean
     ): List<PostRsMenuAction> {
         val site = selectedSiteRepository.getSelectedSite()
         return buildList {
@@ -283,7 +284,9 @@ class PostRsListViewModel @Inject constructor(
                     ) {
                         add(PostRsMenuAction.STATS)
                     }
-                    add(PostRsMenuAction.COMMENTS)
+                    if (commentsOpen) {
+                        add(PostRsMenuAction.COMMENTS)
+                    }
                     add(PostRsMenuAction.TRASH)
                 }
                 PostRsListTab.DRAFTS -> {
@@ -526,7 +529,9 @@ class PostRsListViewModel @Inject constructor(
                 }
                 model.copy(
                     actions = getMenuActions(
-                        effectiveTab, model.hasPassword
+                        effectiveTab,
+                        model.hasPassword,
+                        model.commentsOpen
                     )
                 )
             }

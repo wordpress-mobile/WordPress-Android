@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.AnyPostWithEditContext
+import uniffi.wp_api.PostCommentStatus
 import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
@@ -36,6 +37,7 @@ data class PostRsUiModel(
     val date: String,
     val link: String = "",
     val hasPassword: Boolean = false,
+    val commentsOpen: Boolean = false,
     val status: PostStatus? = null,
     @StringRes val statusLabelResId: Int = 0,
     val actions: List<PostRsMenuAction> = emptyList(),
@@ -134,6 +136,8 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
         ),
         link = post.link,
         hasPassword = !post.password.isNullOrEmpty(),
+        commentsOpen =
+            post.commentStatus is PostCommentStatus.Open,
         status = post.status,
         statusLabelResId = if (showStatus) {
             post.status.toLabel()
