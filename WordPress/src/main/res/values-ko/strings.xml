@@ -244,7 +244,6 @@ Language: ko_KR
     <string name="more_content_description_recent_activity">최근 활동 더 보기</string>
     <string name="more_content_description_pages">페이지 더 보기</string>
     <string name="more_content_description_posts">글 더 보기</string>
-    <string name="more_content_description_quick_start">퀵 스타트 더 보기</string>
     <string name="more_content_description_today_stats">오늘의 통계 더 보기</string>
     <string name="more_content_description_blogging_prompts">프롬프트 더 보기</string>
     <string name="more_content_description_promote_blaze">Blaze 더 보기</string>
@@ -397,7 +396,6 @@ Language: ko_KR
     <string name="site_monitoring_tab_title_php_logs">PHP 로그</string>
     <string name="site_monitoring_tab_title_metrics">지표</string>
     <string name="site_monitoring">사이트 모니터링</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">사이트와 태그를 찾으려면 &lt;b&gt;발견&lt;/b&gt;을 사용하세요. 구독한 콘텐츠를 보고 구독을 관리하려면 &lt;b&gt;구독&lt;/b&gt;을 선택해 보세요.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">구독으로 이동</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">구독하는 블로그에 최근 발행된 내용이 없습니다.</string>
     <string name="reader_no_followed_blogs_description_subs">발견에서 블로그를 구독하거나 이미 좋아하는 블로그를 검색하세요.</string>
@@ -825,9 +823,6 @@ Language: ko_KR
     <string name="wp_jetpack_deep_link_overlay_description">젯팩 앱을 설치하신 것 같습니다.\n\n앞으로 젯팩 앱에서 링크를 여시겠어요?\n\n언제든지 젯팩의 앱 설정 &gt; 링크 열기에서 변경하실 수 있습니다.</string>
     <string name="wp_jetpack_deep_link_overlay_title">젯팩에서 링크 열기 여부</string>
     <string name="wp_jetpack_continue_without_jetpack">젯팩 없이 계속</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">젯팩에서는 꿈꾸는 워드프레스 사이트 제작 및 성장에 도움이 되는 통계, 알림 등이 제공됩니다.\n\n워드프레스 앱에서는 이제 새 사이트 생성이 지원되지 않습니다.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">젯팩에서는 꿈꾸는 워드프레스 사이트 제작 및 성장에 도움이 되는 통계, 알림 등이 제공됩니다.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">젯팩 앱으로 새 워드프레스 사이트 생성</string>
     <string name="deep_linking_weblinks_alias_label">웹 링크</string>
     <string name="deep_linking_urilinks_alias_label">URL 링크</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">젯팩 앱으로 전환하여 계속  기기에서 실시간 알림을 받으세요.</string>
@@ -937,24 +932,11 @@ Language: ko_KR
     <string name="stats_action_card_blogging_reminders_title">블로깅 알림 설정</string>
     <string name="stats_action_card_grow_audience_button_label">과정 확인</string>
     <string name="stats_action_card_grow_audience_title">잠재 고객 성장</string>
-    <string name="quick_start_sites_type_all_tasks_completed">모든 작업이 완료됨</string>
-    <string name="quick_start_list_task_complete">작업 완료</string>
     <string name="me_btn_scan_login_code">로그인 코드 검사</string>
     <string name="stats_insights_likes_guide_card">⭐️ 최신 글 %1$s에 %2$s 좋아요가 있습니다.</string>
     <string name="stats_most_popular_percent_views_empty">활동이 충분하지 않습니다. 나중에 사이트의 방문자가 증가하면 다시 확인하세요!</string>
     <string name="stats_total_subscribers_content_description">%1$s, 총 구독자 중 %2$s%%</string>
     <string name="stats_value_percent">%1$s(%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">축하합니다! 척척박사&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">앱 알아보기</string>
-    <string name="quick_start_list_upload_media_subtitle">미디어를 기기 또는 카메라에서 사이트로 바로 가져오기</string>
-    <string name="quick_start_list_upload_media_title">사진 또는 비디오 업로드</string>
-    <string name="quick_start_list_check_notification_subtitle">간편하게 실시간 업데이트 받기</string>
-    <string name="quick_start_dialog_upload_media_message">현재 라이브러리를 참조하려면 %1$s 미디어 %2$s을(를) 선택하세요.</string>
-    <string name="quick_start_dialog_check_notifications_message">간편하게 실시간 업데이트를 받으세요.</string>
-    <string name="quick_start_dialog_check_notifications_title">알림 확인</string>
-    <string name="quick_start_dialog_check_notifications_message_short">상시 업데이트를 받으려면 %1$s 알림 탭 %2$s을(를) 선택하세요.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">미디어를 업로드하려면 %1$s 및 %2$s을(를) 선택하세요. 어떤 기기에서나 글/페이지에 추가할 수 있습니다.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">사이트와 태그를 찾으려면 &lt;b&gt; 검색 &lt;/b&gt;을(를) 사용하세요.</string>
     <string name="photo_picker_video_thumbnail_content_description">비디오 썸네일</string>
     <string name="stats_details_top_commentators">최상위 댓글 작성자</string>
     <string name="stats_published_years_ago">%1$d년 전에 발행됨</string>
@@ -974,8 +956,6 @@ Language: ko_KR
     <string name="blogging_prompts_answer_prompt_notification_answer_action">답변</string>
     <string name="blogging_prompts_answer_prompt_notification_title">일일 프롬프트</string>
     <string name="blogging_prompts_onboarding_got_it">알겠습니다</string>
-    <string name="quick_start_dialog_view_your_site_message_short">&lt;b&gt;%1$s&lt;/b&gt;을(를) 눌러서 사이트 보기</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">다른 사이트를 찾으려면 %1$s 리더 %2$s을(를) 선택하세요.</string>
     <string name="blogging_reminders_prompt_help_button_desc">프롬프트 더 알아보기</string>
     <string name="photo_picker_video_thumbnail_unselected">비디오 선택 안 됨</string>
     <string name="photo_picker_video_thumbnail_selected">비디오 선택됨</string>
@@ -1063,7 +1043,6 @@ Language: ko_KR
     <string name="site_creation_intent_art">예술</string>
     <string name="new_site_creation_intents_input_hint">예: 패션, 시, 정치</string>
     <string name="new_site_creation_intents_title">사이트 주제</string>
-    <string name="quick_start_site_menu_tab_message_short">계속하려면 &lt;b&gt;%1$s&lt;/b&gt;을(를) 누르세요.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">오늘 건너뛰기</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">더 많은 프롬프트 보기</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">블로깅 프롬프트 공유</string>
@@ -1152,7 +1131,6 @@ Language: ko_KR
     <string name="comment_edit_user_name">이름</string>
     <string name="comment_edit_menu_done">완료</string>
     <string name="weekly_roundup">주간 총정리</string>
-    <string name="quick_start_list_create_site_message">사이트가 생성되었습니다! 다른 작업을 완료하세요.</string>
     <string name="domains_free_plan_get_your_domain_title">도메인 가져오기</string>
     <string name="recommend_app_generic_get_template_error">권장 앱 템플릿 가져오기 중 알 수 없는 오류 발생</string>
     <string name="recommend_app_bad_format_response">유효하지 않은 응답 수신됨</string>
@@ -1164,8 +1142,6 @@ Language: ko_KR
     <string name="blogging_reminders_notification_time">알림 시간</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">블로깅에 대한 알림을 &lt;b&gt;매일&lt;/b&gt; &lt;b&gt;%s&lt;/b&gt;에 받게 됩니다.</string>
     <string name="blogging_reminders_site_settings_label">일주일에 %1$s번 %2$s</string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s/%2$s개 완료</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">간단한 연습을 통해 기본 사항을 알아보세요.</string>
     <string name="comment_batch_moderation_error">하나 이상의 댓글 검토 실패</string>
     <string name="create_site_notification_create_site_action">사이트 생성하기</string>
     <string name="create_site_notification_text">간단한 몇 가지 단계로 사이트를 설정하고 운영하세요.</string>
@@ -1174,12 +1150,6 @@ Language: ko_KR
     <string name="stats_disabled_enable_stats_button">사이트 통계 활성화</string>
     <string name="stats_disabled_subtitle">트래픽, 좋아요, 댓글, 구독자에 대한 자세한 내용을 참조하려면 사이트 통계를 활성화하세요.</string>
     <string name="stats_disabled_title">통계를 찾으시나요?</string>
-    <string name="quick_start_list_upload_icon_subtitle">방문자의 브라우저 탭과 다른 온라인 위치에 표시됩니다.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">주변 보여주기</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">앱으로 이 사이트를 관리하는 도움말이 조금 필요하신가요?</string>
-    <string name="login_epilogue_create_new_site_button">새 사이트 생성</string>
-    <string name="login_epilogue_mysites_subheading">언제든지 사이트를 전환할 수 있습니다.</string>
-    <string name="login_epilogue_mysites_heading">개설할 사이트 선택</string>
     <string name="scan_multisite_not_supported_subtitle">죄송합니다. 지금은 Jetpack Scan이 멀티사이트 WordPress 설치와 호환되지 않습니다.</string>
     <string name="scan_multisite_not_supported_title">WordPress 멀티사이트는 지원되지 않습니다.</string>
     <string name="activity_log_visit_our_documentation_page">설명서 페이지 방문</string>
@@ -1273,13 +1243,6 @@ Language: ko_KR
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;스캔 완료됨&lt;/b&gt; &lt;br&gt; 찾은 위협 없음</string>
     <string name="scan_fixing_threats_title_singular">위협 해결 중</string>
     <string name="disable">비활성화</string>
-    <string name="quick_start_list_review_pages_subtitle">페이지를 점검하고 내용을 변경하거나 페이지를 추가 또는 제거하세요.</string>
-    <string name="quick_start_list_view_site_title">사이트 보기</string>
-    <string name="quick_start_list_follow_site_subtitle">회원님께 영감을 주는 사이트를 발견하고 팔로우하세요.</string>
-    <string name="quick_start_list_enable_sharing_title">소셜 공유</string>
-    <string name="quick_start_list_enable_sharing_subtitle">새 글을 소셜 미디어에 자동으로 공유합니다.</string>
-    <string name="quick_start_list_update_site_title_subtitle">개성과 게시글을 반영하는 이름을 사이트에 지정하세요.</string>
-    <string name="quick_start_list_check_stats_title">사이트 통계 확인</string>
     <string name="backup_download_status_failure_bullet2">그래도 다운로드 가능한 백업 파일 만들기는 시도됩니다.</string>
     <string name="backup_download_status_failure_bullet1">다운로드 가능한 백업에 걸리는 시간을 알려주는 상태를 찾을 수 없습니다.</string>
     <string name="backup_download_status_failure_heading">다운로드 가능한 백업 상태를 찾을 수 없습니다.</string>
@@ -1352,9 +1315,6 @@ Language: ko_KR
     <string name="backup_download_complete_failed_title">다운로드 실패</string>
     <string name="web_preview_tablet">태블릿</string>
     <string name="web_preview_mobile">모바일</string>
-    <string name="quick_start_dialog_review_pages_message_short">페이지 목록을 참조하려면 %1$s 페이지 %2$s을(를) 선택하세요.</string>
-    <string name="quick_start_dialog_review_pages_message">사이트의 페이지를 변경, 추가 또는 제거합니다.</string>
-    <string name="quick_start_dialog_review_pages_title">사이트 페이지 검토</string>
     <string name="reader_menu_mark_as_unseen">안 읽음으로 표시</string>
     <string name="reader_menu_mark_as_seen">읽음으로 표시</string>
     <string name="error_media_upload_failed_for_reason">미디어 업로드에 실패했습니다.\n%1$s</string>
@@ -1573,7 +1533,6 @@ Language: ko_KR
     <string name="mlp_create_blank_page">빈 페이지 만들기</string>
     <string name="mlp_choose_layout_subtitle">넓고 다양한 이전에 만들어진 페이지 레이아웃에서 선택하여 시작하세요. 또는 빈 페이지로 시작하세요.</string>
     <string name="mlp_choose_layout_title">레이아웃을 선택하기</string>
-    <string name="quick_start_dialog_create_new_post_message_short">%1$s 만들기를 %2$s탭하세요. 다음 &lt;b&gt;블로그 글&lt;/b&gt;을 선택하세요</string>
     <string name="photo_picker_choose_file">장치에서 선택하기</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">자체 호스팅 워드프레스 사이트의 사이트 아이콘 편집은 잿펙 플러그인이 필요합니다.</string>
     <string name="reader_toast_err_page_jump_not_found">연결한 페이지 점프를 찾을 수 없습니다</string>
@@ -1601,8 +1560,6 @@ Language: ko_KR
     <string name="send_link_by_email" a8c-src-lib="module:login">이메일로 링크 보내기</string>
     <string name="reset_your_password" a8c-src-lib="module:login">비밀번호 재설정하기</string>
     <string name="reader_error_request_failed_title">요청을 처리하는 중에 문제가 있었습니다. 나중에 다시 시도하시기 바랍니다.</string>
-    <string name="quick_start_list_update_site_title_title">사이트 제목 확인</string>
-    <string name="quick_start_dialog_update_site_title_message_short">&lt;b&gt;%1$s&lt;/b&gt;(을)를 눌러 새 제목 설정하기</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">이 글을 휴지통에 버리면 로컬 변경사항도 취소될 것입니다. 계속하기 원하시는게 맞나요?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">사이트 제목은 사용자가 관리자 역할일 때만 바꿀 수 있습니다.</string>
     <string name="my_site_title_changer_dialog_hint">사이트 제목은 웹브라우저의 제목표시줄에 보이고 대부분의 테마에서 헤더에 보입니다.</string>
@@ -2054,29 +2011,12 @@ Language: ko_KR
     <string name="stats_more_posts">글 더 보기</string>
     <string name="stats_fewer_posts">글 적게 보기</string>
     <string name="new_site_creation_preview_back_pressed_warning">진행 상황을 놓칠 수 있습니다. 종료하시겠습니까?</string>
-    <string name="plans_loading_error_with_cache_button">그래도 요금제 보기</string>
-    <string name="plans_loading_error_with_cache_subtitle">요금제를 보려면 인터넷에 연결되어야 합니다. 세부 사항이 오래되었을 수 있습니다.</string>
-    <string name="plans_loading_error_no_cache_subtitle">요금제를 보려면 인터넷에 연결되어야 합니다.</string>
-    <string name="plans_loading_error_no_plans_subtitle">현재는 요금제를 로드할 수 없습니다. 나중에 다시 시도하세요.</string>
-    <string name="plans_loading_error_no_plans_title">요금제를 로드할 수 없음</string>
-    <string name="plans_loading_error_network_title">연결 없음</string>
     <string name="menu_switch_to_gutenberg_editor">블록 편집기로 전환</string>
     <string name="stats_loading_block_error">데이터 로드 중에 문제가 발생했습니다. 페이지를 새로 고치고 다시 시도하세요.</string>
     <string name="stats_loading_error">데이터가 로드되지 않음</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">블록 편집기로 새 글과 페이지 편집</string>
     <string name="site_settings_gutenberg_default_for_new_posts">블록 편집기 사용</string>
     <string name="exit">종료</string>
-    <string name="quick_start_sites_type_grow">방문자 늘리기</string>
-    <string name="quick_start_sites_type_customize">사이트를 사용자 정의 하기</string>
-    <string name="quick_start_sites">다음 단계</string>
-    <string name="quick_start_dialog_upload_icon_title">고유한 사이트 아이콘 선택</string>
-    <string name="quick_start_dialog_upload_icon_message">방문자의 브라우저에 아이콘이 표시됩니다. 깔끔하고 전문적인 모양을 만들려면 사용자 정의 아이콘을 추가하세요.</string>
-    <string name="quick_start_dialog_check_stats_message_short">사이트의 성과를 참조하려면 %1$s 통계 %2$s을(를) 선택합니다.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">새로 업로드하려면 %1$s사이트 아이콘%2$s을 탭합니다.</string>
-    <string name="quick_start_dialog_publish_post_message">임시글을 작성하여 글을 게시하세요.</string>
-    <string name="quick_start_dialog_check_stats_title">사이트 통계 확인</string>
-    <string name="quick_start_dialog_check_stats_message">사이트의 성과를 최신 상태로 유지하세요.</string>
-    <string name="quick_start_task_skip_menu_title">작업 건너뛰기</string>
     <string name="notification_channel_reminder_title">알림</string>
     <string name="stats_select_next_period_description">다음 기간 선택</string>
     <string name="stats_select_previous_period_description">이전 기간 선택</string>
@@ -2228,20 +2168,6 @@ Language: ko_KR
     <string name="page_delete_error">페이지를 삭제하는 중에 문제가 발생했습니다.</string>
     <string name="set_parent">상위 항목 설정</string>
     <string name="dismiss">무시</string>
-    <string name="quick_start_focus_point_description">여기를 탭하세요.</string>
-    <string name="quick_start_list_create_site_title">사이트 만들기</string>
-    <string name="quick_start_list_create_site_subtitle">사이트 가동 및 작동</string>
-    <string name="quick_start_completed_tour_subtitle">목록에서 항목을 지우는 것이 좋지 않나요?</string>
-    <string name="quick_start_dialog_view_site_title">사이트 보기</string>
-    <string name="quick_start_dialog_view_site_message">새 사이트를 미리 보며 방문자에게 표시되는 내용을 참조하세요.</string>
-    <string name="quick_start_dialog_share_site_title">사이트 공유</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">계속하려면 %1$s소셜%2$s 탭하기</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">%1$s 연결 %2$s을 탭하여 소셜 미디어 계정 추가</string>
-    <string name="quick_start_dialog_share_site_message">소셜 미디어 계정을 연결하세요. 그러면 사이트에서 새 글을 자동으로 공유합니다.</string>
-    <string name="quick_start_dialog_publish_post_title">글 게시</string>
-    <string name="quick_start_dialog_need_help_button_negative">안 함</string>
-    <string name="quick_start_dialog_follow_sites_title">다른 사이트와 연결</string>
-    <string name="quick_start_button_positive">이동</string>
     <string name="content_description_more">더 보기</string>
     <string name="my_site_create_new_site_title">사이트가 없습니다</string>
     <string name="reader_empty_subscribed_tags_subtitle">즐겨 찾는 주제에 대한 글을 찾으려면 여기에 태그 추가</string>
@@ -2435,7 +2361,6 @@ Language: ko_KR
     <string name="edit_photo_screen_title">사진 편집</string>
     <string name="share_intent_screen_title">사이트 선택</string>
     <string name="signup_epilogue_screen_title">새 계정</string>
-    <string name="login_epilogue_screen_title">다음 계정으로 로그인됨</string>
     <string name="person_detail_screen_title">사용자 세부정보</string>
     <string name="media_settings_screen_title">파일 세부정보</string>
     <string name="publicize_buttons_screen_title">공유 버튼</string>
@@ -2712,8 +2637,6 @@ Language: ko_KR
     <string name="post_queued">대기 중인 글</string>
     <string name="uploading_post">\"%s\" 업로드 중</string>
     <string name="connection_to_server_lost">서버와의 연결이 끊겼습니다</string>
-    <string name="login_epilogue_mysites_other">내 사이트</string>
-    <string name="login_epilogue_mysites_one">내 사이트</string>
     <string name="login_email_client_not_found">이메일 클라이언트 앱을 감지할 수 없습니다.</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">확인 코드를 입력하세요.</string>
     <string name="login_empty_username" a8c-src-lib="module:login">사용자명을 입력하세요.</string>
@@ -2864,7 +2787,6 @@ Language: ko_KR
     <string name="start_over_email_subject">%s 사이트를 처음부터 다시 시작합니다.</string>
     <string name="site_picker_remove_site_error">사이트 제거 중 오류가 발생했습니다. 나중에 다시 시도하세요.</string>
     <string name="editor_post_saved_locally_failed_media">글에 완료되지 않은 미디어 업로드가 있어 글이 로컬에 저장되었습니다.</string>
-    <string name="sure_to_remove_account">앱에서 이 사이트를 제거할까요?</string>
     <string name="photo_picker_title">사진 선택</string>
     <string name="error_publish_no_network">기기가 오프라인 상태입니다. 변경사항이 로컬로 저장되었습니다.</string>
     <string name="editor_post_saved_online">글이 온라인으로 저장되었습니다.</string>
@@ -2987,8 +2909,6 @@ Language: ko_KR
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">현재 사용할 수 없습니다. 비밀번호를 입력하세요.</string>
     <string name="logging_in">로그인 중</string>
     <string name="web_address_dialog_hint">댓글을 달 때 공개적으로 표시합니다.</string>
-    <string name="plans">계획</string>
-    <string name="plan">계획</string>
     <string name="export_your_content_message">글, 페이지, 설정을 %s로 발송할 것입니다.</string>
     <string name="export_your_content">콘텐츠 내보내기</string>
     <string name="export_email_sent">전송된 이메일을 내보내세요!</string>

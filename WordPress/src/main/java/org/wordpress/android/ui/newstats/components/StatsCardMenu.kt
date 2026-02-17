@@ -96,7 +96,7 @@ fun StatsCardMenu(
                         onDismissRequest = { moveSubMenuExpanded = false }
                     ) {
                         // Move Up (hidden for first card)
-                        if (cardPosition?.canMoveUp == true && onMoveUp != null) {
+                        if (cardPosition.canMoveUp && onMoveUp != null) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.stats_card_move_up)) },
                                 onClick = {
@@ -114,7 +114,7 @@ fun StatsCardMenu(
                         }
 
                         // Move to Top (hidden for first card or when only 2 cards)
-                        if (cardPosition?.canMoveUp == true &&
+                        if (cardPosition.canMoveUp &&
                             cardPosition.showMoveToTopBottom &&
                             onMoveToTop != null) {
                             DropdownMenuItem(
@@ -134,7 +134,7 @@ fun StatsCardMenu(
                         }
 
                         // Move Down (hidden for last card)
-                        if (cardPosition?.canMoveDown == true && onMoveDown != null) {
+                        if (cardPosition.canMoveDown && onMoveDown != null) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.stats_card_move_down)) },
                                 onClick = {
@@ -152,7 +152,7 @@ fun StatsCardMenu(
                         }
 
                         // Move to Bottom (hidden for last card or when only 2 cards)
-                        if (cardPosition?.canMoveDown == true &&
+                        if (cardPosition.canMoveDown &&
                             cardPosition.showMoveToTopBottom &&
                             onMoveToBottom != null) {
                             DropdownMenuItem(

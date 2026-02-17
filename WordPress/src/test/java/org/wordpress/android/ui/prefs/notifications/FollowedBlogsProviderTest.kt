@@ -266,9 +266,9 @@ class FollowedBlogsProviderTest {
         emailFrequency: String
     ) {
         assertThat(this.clickHandler!!.emailPostFrequency).isEqualTo(emailFrequency)
-        assertThat(this.clickHandler!!.shouldNotifyPosts).isEqualTo(shouldNotifyPosts)
-        assertThat(this.clickHandler!!.shouldEmailPosts).isEqualTo(shouldEmailPosts)
-        assertThat(this.clickHandler!!.shouldEmailComments).isEqualTo(shouldEmailComments)
+        assertThat(this.clickHandler.shouldNotifyPosts).isEqualTo(shouldNotifyPosts)
+        assertThat(this.clickHandler.shouldEmailPosts).isEqualTo(shouldEmailPosts)
+        assertThat(this.clickHandler.shouldEmailComments).isEqualTo(shouldEmailComments)
     }
 
     private fun PreferenceModel.assertModel(

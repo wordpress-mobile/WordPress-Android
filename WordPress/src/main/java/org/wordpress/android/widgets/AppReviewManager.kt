@@ -45,9 +45,8 @@ object AppReviewManager {
         // to include launch times in the future.
         launchTimes = preferences.getInt(KEY_RATING_LAUNCH_TIMES, 0)
         launchTimes++
-        preferences.edit().apply {
-            this.putInt(KEY_RATING_LAUNCH_TIMES, launchTimes)
-            this.apply()
+        preferences.edit {
+            putInt(KEY_RATING_LAUNCH_TIMES, launchTimes)
         }
 
         inAppReviewsShownDate = Date(preferences.getLong(IN_APP_REVIEWS_SHOWN_DATE, 0))

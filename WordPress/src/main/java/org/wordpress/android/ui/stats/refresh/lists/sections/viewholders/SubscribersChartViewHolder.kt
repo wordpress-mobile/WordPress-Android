@@ -115,7 +115,7 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
                     override fun onValueSelected(e: Entry, h: Highlight) {
                         drawChartMarker(h)
-                        item.onLineSelected?.invoke()
+                        item.onLineSelected()
                     }
                 })
             } else {

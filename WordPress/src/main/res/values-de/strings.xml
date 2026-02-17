@@ -244,7 +244,6 @@ Language: de
     <string name="more_content_description_recent_activity">Letzte Aktivität ‒ mehr</string>
     <string name="more_content_description_pages">Seiten ‒ mehr</string>
     <string name="more_content_description_posts">Beiträge ‒ mehr</string>
-    <string name="more_content_description_quick_start">Schnellstart ‒ mehr</string>
     <string name="more_content_description_today_stats">Statistiken von heute ‒ mehr</string>
     <string name="more_content_description_blogging_prompts">Schreibanregungen ‒ mehr</string>
     <string name="more_content_description_promote_blaze">Blaze ‒ mehr</string>
@@ -397,7 +396,6 @@ Language: de
     <string name="site_monitoring_tab_title_php_logs">PHP-Protokolle</string>
     <string name="site_monitoring_tab_title_metrics">Metriken</string>
     <string name="site_monitoring">Website-Überwachung</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Benutze &lt;b&gt;Entdecken&lt;/b&gt;, um Websites und Schlagwörter zu finden. Versuche &lt;b&gt;Abonnements&lt;/b&gt; auszuwählen, um abonnierte Inhalte anzuzeigen und deine Abonnements zu verwalten.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Zu den Abonnements gehen</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Die Blogs, die du abonniert hast, haben in letzter Zeit nichts veröffentlicht</string>
     <string name="reader_no_followed_blogs_description_subs">Abonniere Blogs in Entdecken oder suche nach einem Blog, den du bereits magst.</string>
@@ -825,9 +823,6 @@ Language: de
     <string name="wp_jetpack_deep_link_overlay_description">Offenbar hast du die Jetpack-App installiert.\n\nMöchtest du Links in Zukunft in der Jetpack-App öffnen?\n\nDu kannst dies jederzeit unter „App-Einstellungen“ &gt; „Links in Jetpack öffnen“ ändern</string>
     <string name="wp_jetpack_deep_link_overlay_title">Links in Jetpack öffnen?</string>
     <string name="wp_jetpack_continue_without_jetpack">Ohne Jetpack fortfahren</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack bietet Statistiken, Benachrichtigungen und mehr, mit deren Hilfe du deine perfekte WordPress-Website gestalten und erweitern kannst.\n\nDie WordPress-App unterstützt das Erstellen neuer Websites nicht mehr.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack bietet Statistiken, Benachrichtigungen und mehr, mit deren Hilfe du deine perfekte WordPress-Website gestalten und erweitern kannst.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Eine neue WordPress-Website mit der Jetpack-App erstellen</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Wechsle zur Jetpack-App, um weiterhin  Benachrichtigungen in Echtzeit auf deinem Gerät zu erhalten.</string>
@@ -937,24 +932,11 @@ Language: de
     <string name="stats_action_card_blogging_reminders_title">Deine Blog-Erinnerungen einrichten</string>
     <string name="stats_action_card_grow_audience_button_label">Verlauf überprüfen</string>
     <string name="stats_action_card_grow_audience_title">Vergrößere deine Reichweite</string>
-    <string name="quick_start_sites_type_all_tasks_completed">Alle Aufgaben erledigt</string>
-    <string name="quick_start_list_task_complete">Aufgabe abgeschlossen</string>
     <string name="me_btn_scan_login_code">Anmeldecode scannen</string>
     <string name="stats_insights_likes_guide_card">⭐️Dein neuster Beitrag %1$s hat %2$s Likes.</string>
     <string name="stats_most_popular_percent_views_empty">Nicht genug Aktivität. Schau später nochmal vorbei, wenn mehr Besucher auf deiner Website waren!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s %% der Abonnenten insgesamt</string>
     <string name="stats_value_percent">%1$s (%2$s %%)</string>
-    <string name="quick_start_completed_tour_title">Gratulation! Du kennst dich aus&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">Die App kennenlernen</string>
-    <string name="quick_start_list_upload_media_subtitle">Bringe Medien direkt von deinem Gerät oder Kamera auf deine Website</string>
-    <string name="quick_start_list_upload_media_title">Lade Fotos oder Videos hoch</string>
-    <string name="quick_start_list_check_notification_subtitle">Erhalte Echtzeitupdates von überall aus</string>
-    <string name="quick_start_dialog_upload_media_message">Wähle %1$s Medien %2$s, um deine aktuelle Bibliothek zu sehen.</string>
-    <string name="quick_start_dialog_check_notifications_message">Erhalte Echtzeitupdates von überall aus.</string>
-    <string name="quick_start_dialog_check_notifications_title">Deine Benachrichtigungen ansehen</string>
-    <string name="quick_start_dialog_check_notifications_message_short">Wähle das %1$s Benachrichtigungen-Tab %2$s, um jederzeit Aktualisierungen zu erhalten.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Wähle %1$s Plus %2$s, um Medien hochzuladen. Du kannst sie von jedem Gerät aus in deine Beiträge/Seiten einfügen.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Benutze &lt;b&gt; Entdecken &lt;/b&gt;, um Websites und Tags zu finden.</string>
     <string name="photo_picker_video_thumbnail_content_description">Video-Vorschaubild</string>
     <string name="stats_details_top_commentators">Top-Kommentatoren</string>
     <string name="stats_published_years_ago">Vor %1$d Jahren veröffentlicht</string>
@@ -974,8 +956,6 @@ Language: de
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Antwort</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Tägliche Aufforderung</string>
     <string name="blogging_prompts_onboarding_got_it">Verstanden</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Tippe auf &lt;b&gt;%1$s&lt;/b&gt;, um deine Website anzuzeigen</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Wähle %1$s Reader %2$s aus, um andere Websites zu finden.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Weitere Informationen zu den Aufforderungen</string>
     <string name="photo_picker_video_thumbnail_unselected">Video nicht ausgewählt</string>
     <string name="photo_picker_video_thumbnail_selected">Video ausgewählt</string>
@@ -1063,7 +1043,6 @@ Language: de
     <string name="site_creation_intent_art">Kunst</string>
     <string name="new_site_creation_intents_input_hint">z. B. Mode, Poesie, Politik</string>
     <string name="new_site_creation_intents_title">Website-Thema</string>
-    <string name="quick_start_site_menu_tab_message_short">Tippe zum Fortfahren auf &lt;b&gt;%1$s&lt;/b&gt;.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Für heute überspringen</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Mehr Themenvorschläge anzeigen</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Blog-Vorschlag teilen</string>
@@ -1152,7 +1131,6 @@ Language: de
     <string name="comment_edit_user_name">Name</string>
     <string name="comment_edit_menu_done">Fertig</string>
     <string name="weekly_roundup">Wöchentliche Zusammenfassung</string>
-    <string name="quick_start_list_create_site_message">Website erstellt! Schließe eine weitere Aufgabe ab.</string>
     <string name="domains_free_plan_get_your_domain_title">Hol dir deine Domain</string>
     <string name="recommend_app_generic_get_template_error">Unbekannter Fehler beim Abrufen des empfohlenen App-Templates</string>
     <string name="recommend_app_bad_format_response">Ungültige Antwort erhalten</string>
@@ -1164,8 +1142,6 @@ Language: de
     <string name="blogging_reminders_notification_time">Zeit für Benachrichtigungen</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Du erhältst &lt;b&gt;jeden Tag&lt;/b&gt; um &lt;b&gt;%s&lt;/b&gt; Uhr eine Erinnerung zum Bloggen.</string>
     <string name="blogging_reminders_site_settings_label">%1$s Mal pro Woche um %2$s Uhr.</string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s von %2$s abgeschlossen</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Lerne die Grundlagen mit einer kurzen Erklärung.</string>
     <string name="comment_batch_moderation_error">Das Moderieren von einem oder mehrerer Kommentare ist fehlgeschlagen</string>
     <string name="create_site_notification_create_site_action">Website erstellen</string>
     <string name="create_site_notification_text">Richte deine Website mit wenigen schnellen Schritten ein</string>
@@ -1174,12 +1150,6 @@ Language: de
     <string name="stats_disabled_enable_stats_button">Website-Statistiken aktivieren</string>
     <string name="stats_disabled_subtitle">Aktiviere die Website-Statistiken, um ausführliche Informationen zu deinem Traffic, deinen Likes, Kommentaren und Abonnenten anzuzeigen.</string>
     <string name="stats_disabled_title">Du suchst die Statistiken?</string>
-    <string name="quick_start_list_upload_icon_subtitle">Auf dem Browser-Tab deines Besuchers und an anderen Stellen online anzeigen</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Zeig mir alles</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">Brauchst du ein wenig Hilfe dabei, diese Website mit der App zu verwalten?</string>
-    <string name="login_epilogue_create_new_site_button">Eine neue Website erstellen</string>
-    <string name="login_epilogue_mysites_subheading">Du kannst die Websites jederzeit wechseln.</string>
-    <string name="login_epilogue_mysites_heading">Wähle eine Website aus, die geöffnet werden soll</string>
     <string name="scan_multisite_not_supported_subtitle">Es tut uns leid, aber Jetpack Scan ist derzeit nicht mit WordPress-Multisite-Installationen kompatibel.</string>
     <string name="scan_multisite_not_supported_title">WordPress-Multisites werden nicht unterstützt</string>
     <string name="activity_log_visit_our_documentation_page">besuche unsere Dokumentationsseite</string>
@@ -1273,13 +1243,6 @@ Language: de
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan abgeschlossen&lt;/b&gt; &lt;br&gt; Keine Bedrohungen gefunden</string>
     <string name="scan_fixing_threats_title_singular">Bedrohung wird behoben</string>
     <string name="disable">Deaktivieren</string>
-    <string name="quick_start_list_review_pages_subtitle">Prüfe deine Seiten und nimm Änderungen vor. Du kannst auch Seiten hinzufügen oder entfernen.</string>
-    <string name="quick_start_list_view_site_title">Sieh dir deine Website an</string>
-    <string name="quick_start_list_follow_site_subtitle">Entdecke und folge Websites, die dich inspirieren.</string>
-    <string name="quick_start_list_enable_sharing_title">Teilen über soziale Netzwerke</string>
-    <string name="quick_start_list_enable_sharing_subtitle">Neue Beiträge automatisch in deinen sozialen Medien teilen.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Wähle einen Namen für deine Website, der am besten zu ihrer Persönlichkeit und Ausrichtung passt.</string>
-    <string name="quick_start_list_check_stats_title">Überprüfe deine Website-Statistiken</string>
     <string name="backup_download_status_failure_bullet2">Wir versuchen weiterhin, deine Backup-Datei zum Herunterladen zu erstellen.</string>
     <string name="backup_download_status_failure_bullet1">Wir konnten den Status nicht finden, der angibt, wie lange dein Backup zum Herunterladen dauert.</string>
     <string name="backup_download_status_failure_heading">Wir konnten den Status deines Backups zum Herunterladen leider nicht finden.</string>
@@ -1352,9 +1315,6 @@ Language: de
     <string name="backup_download_complete_failed_title">Download fehlgeschlagen</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Mobil</string>
-    <string name="quick_start_dialog_review_pages_message_short">Wähle %1$s Seiten %2$s aus, um deine Seitenliste anzuzeigen.</string>
-    <string name="quick_start_dialog_review_pages_message">Du kannst die Seiten deiner Website ändern, hinzufügen oder entfernen.</string>
-    <string name="quick_start_dialog_review_pages_title">Website-Seiten prüfen</string>
     <string name="reader_menu_mark_as_unseen">Als nicht gesehen markieren</string>
     <string name="reader_menu_mark_as_seen">Als gesehen markieren</string>
     <string name="error_media_upload_failed_for_reason">Medien-Upload fehlgeschlagen.\n%1$s</string>
@@ -1573,7 +1533,6 @@ Language: de
     <string name="mlp_create_blank_page">Leere Seite erstellen</string>
     <string name="mlp_choose_layout_subtitle">Beginne mit der Auswahl eines der vielen vorgefertigten Seitenlayouts. Oder beginne einfach mit einer leeren Seite.</string>
     <string name="mlp_choose_layout_title">Layout auswählen</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Tippe auf %1$s Erstellen. %2$s Wähle anschließend &lt;b&gt;Blogbeitrag&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Von Gerät auswählen</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Zum Bearbeiten von Website-Icons auf selbst gehosteten WordPress-Websites ist das Jetpack-Plugin erforderlich.</string>
     <string name="reader_toast_err_page_jump_not_found">Der verlinkte Seitensprung kann nicht gefunden werden</string>
@@ -1601,8 +1560,6 @@ Language: de
     <string name="send_link_by_email" a8c-src-lib="module:login">Link per E-Mail senden</string>
     <string name="reset_your_password" a8c-src-lib="module:login">Dein Passwort zurücksetzen</string>
     <string name="reader_error_request_failed_title">Bei der Bearbeitung der Anfrage ist ein Problem aufgetreten. Bitte versuche es später erneut.</string>
-    <string name="quick_start_list_update_site_title_title">Prüfe deinen Website-Titel</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Tippe auf &lt;b&gt;%1$s&lt;/b&gt;, um einen neuen Titel festzulegen.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Wenn dieser Beitrag in den Papierkorb verschoben wird, werden auch lokale Änderungen verworfen. Möchtest du wirklich fortfahren?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Der Website-Titel kann nur von einem Benutzer mit Administratorrolle geändert werden.</string>
     <string name="my_site_title_changer_dialog_hint">Der Website-Titel wird in der Titelleiste eines Webbrowsers angezeigt und wird bei den meisten Themes im Header angezeigt.</string>
@@ -2054,29 +2011,12 @@ Language: de
     <string name="stats_more_posts">Mehr Beiträge</string>
     <string name="stats_fewer_posts">Weniger Beiträge</string>
     <string name="new_site_creation_preview_back_pressed_warning">Du kannst deinen Fortschritt verlieren. Bist du sicher, dass du abbrechen willst?</string>
-    <string name="plans_loading_error_with_cache_button">Tarife trotzdem ansehen</string>
-    <string name="plans_loading_error_with_cache_subtitle">Für die Ansicht der Tarife ist eine Internetverbindung erforderlich, sodass Details möglicherweise nicht mehr aktuell sind.</string>
-    <string name="plans_loading_error_no_cache_subtitle">Für die Ansicht der Tarife ist eine Internetverbindung erforderlich.</string>
-    <string name="plans_loading_error_no_plans_subtitle">Wir können momentan keine Tarife laden. Bitte versuche es später erneut.</string>
-    <string name="plans_loading_error_no_plans_title">Tarife können nicht geladen werden</string>
-    <string name="plans_loading_error_network_title">Keine Verbindung</string>
     <string name="menu_switch_to_gutenberg_editor">Zum Block-Editor wechseln</string>
     <string name="stats_loading_block_error">Beim Laden deiner Daten ist ein Problem aufgetreten. Aktualisiere deine Seite, um es erneut zu versuchen.</string>
     <string name="stats_loading_error">Daten nicht geladen</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Bearbeite neue Beiträge und Seiten mit dem Block-Editor.</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Block-Editor benutzen</string>
     <string name="exit">beenden</string>
-    <string name="quick_start_sites_type_grow">Vergrößere deine Reichweite</string>
-    <string name="quick_start_sites_type_customize">Passe deine Website an</string>
-    <string name="quick_start_sites">Nächste Schritte</string>
-    <string name="quick_start_dialog_upload_icon_title">Wähle ein einzigartiges Website-Icon aus</string>
-    <string name="quick_start_dialog_upload_icon_message">Deine Besucher sehen dein Symbol in ihrem Browser. Füge ein individuelles Symbol hinzu, um einen eleganten, professionellen Look zu erhalten.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Wähle %1$s Statistiken %2$s aus, um zu sehen, wie deine Website funktioniert.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Tippe auf %1$s Dein Website-Icon %2$s, um ein neues hochzuladen.</string>
-    <string name="quick_start_dialog_publish_post_message">Entwirf und veröffentliche einen Beitrag.</string>
-    <string name="quick_start_dialog_check_stats_title">Die Statistiken deiner Website überprüfen</string>
-    <string name="quick_start_dialog_check_stats_message">Bleib auf dem Laufenden über die Leistung deiner Website.</string>
-    <string name="quick_start_task_skip_menu_title">Aufgabe überspringen</string>
     <string name="notification_channel_reminder_title">Erinnerung</string>
     <string name="stats_select_next_period_description">Nächsten Zeitraum auswählen</string>
     <string name="stats_select_previous_period_description">Vorherigen Zeitraum auswählen</string>
@@ -2228,20 +2168,6 @@ Language: de
     <string name="page_delete_error">Beim Löschen der Seite ist ein Problem aufgetreten</string>
     <string name="set_parent">Übergeordnete festlegen</string>
     <string name="dismiss">Verwerfen</string>
-    <string name="quick_start_focus_point_description">Hier tippen</string>
-    <string name="quick_start_list_create_site_title">Erstelle deine Website</string>
-    <string name="quick_start_list_create_site_subtitle">Website einrichten.</string>
-    <string name="quick_start_completed_tour_subtitle">Fühlt es sich nicht gut an, Dinge von einer Liste zu streichen?</string>
-    <string name="quick_start_dialog_view_site_title">Deine Website ansehen</string>
-    <string name="quick_start_dialog_view_site_message">Zeige eine Vorschau deiner Website an, um zu sehen, wie sie deinen Besuchern angezeigt wird.</string>
-    <string name="quick_start_dialog_share_site_title">Website teilen</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tippe auf %1$sSocial%2$s, um fortzufahren.</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Tippe auf die %1$s Verbindungen %2$s, um deine Social-Media-Konten hinzuzufügen</string>
-    <string name="quick_start_dialog_share_site_message">Verknüpfe deine Social Media-Konten, sodass deine Website automatisch neue Beiträge teilt.</string>
-    <string name="quick_start_dialog_publish_post_title">Beitrag veröffentlichen</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nein, danke</string>
-    <string name="quick_start_dialog_follow_sites_title">Mit anderen Websites verbinden</string>
-    <string name="quick_start_button_positive">Los</string>
     <string name="content_description_more">Mehr</string>
     <string name="my_site_create_new_site_title">Du hast keine Websites</string>
     <string name="reader_empty_subscribed_tags_subtitle">Füge hier Schlagwörter hinzu, um Beiträge zu deinen Lieblingsthemen zu finden</string>
@@ -2435,7 +2361,6 @@ Language: de
     <string name="edit_photo_screen_title">Foto bearbeiten</string>
     <string name="share_intent_screen_title">Website auswählen</string>
     <string name="signup_epilogue_screen_title">Neues Konto</string>
-    <string name="login_epilogue_screen_title">Angemeldet als</string>
     <string name="person_detail_screen_title">Persönliches Detail</string>
     <string name="media_settings_screen_title">Datei-Details</string>
     <string name="publicize_buttons_screen_title">Teilen-Buttons</string>
@@ -2712,8 +2637,6 @@ Language: de
     <string name="post_queued">Beitrag in Warteschlange</string>
     <string name="uploading_post">„%s“ wird hochgeladen</string>
     <string name="connection_to_server_lost">Die Serververbindung ist abgebrochen</string>
-    <string name="login_epilogue_mysites_other">Meine Websites</string>
-    <string name="login_epilogue_mysites_one">Meine Website</string>
     <string name="login_email_client_not_found">E-Mail-Client-App wird nicht erkannt.</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Bitte gib einen Verifizierungscode ein.</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Bitte gib einen Benutzernamen ein.</string>
@@ -2864,7 +2787,6 @@ Language: de
     <string name="start_over_email_subject">Mit der Website %s neu beginnen</string>
     <string name="site_picker_remove_site_error">Beim Entfernen der Website ist ein Fehler aufgetreten. Bitte versuche es später erneut.</string>
     <string name="editor_post_saved_locally_failed_media">Es befinden sich nicht fertiggestellte Medien-Uploads im Beitrag; er wurde lokal gespeichert.</string>
-    <string name="sure_to_remove_account">Möchtest du diese Website aus der App entfernen?</string>
     <string name="photo_picker_title">Foto auswählen</string>
     <string name="error_publish_no_network">Das Gerät ist offline. Der Beitrag wurde lokal gespeichert.</string>
     <string name="editor_post_saved_online">Der Beitrag wurde online gespeichert</string>
@@ -2987,8 +2909,6 @@ Language: de
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Zur Zeit nicht verfügbar. Bitte gib dein Passwort ein</string>
     <string name="logging_in">Anmeldung läuft</string>
     <string name="web_address_dialog_hint">Wird mit deinem Kommentar veröffentlicht.</string>
-    <string name="plans">Tarife</string>
-    <string name="plan">Tarif</string>
     <string name="export_your_content_message">Deine Beiträge, Seiten und Einstellungen werden dir per E-Mail an %s gesendet.</string>
     <string name="export_your_content">Exportiere deine Inhalte</string>
     <string name="export_email_sent">Exort E-Mail gesendet!</string>

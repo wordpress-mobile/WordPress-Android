@@ -312,21 +312,20 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             return
         }
 
-        childFragmentManager.beginTransaction().apply {
-            val selectedTag = uiState.selectedReaderTag
-            val fragment = when {
-                selectedTag.isDiscover -> ReaderDiscoverFragment()
-                selectedTag.isTags -> ReaderTagsFeedFragment.newInstance(selectedTag)
-                else -> ReaderPostListFragment.newInstanceForTag(
-                    selectedTag,
-                    ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
-                    true,
-                    selectedTag.isFilterable
-                )
-            }
-            replace(R.id.container, fragment, uiState.selectedReaderTag.tagSlug)
-            commit()
+        val selectedTag = uiState.selectedReaderTag
+        val fragment = when {
+            selectedTag.isDiscover -> ReaderDiscoverFragment()
+            selectedTag.isTags -> ReaderTagsFeedFragment.newInstance(selectedTag)
+            else -> ReaderPostListFragment.newInstanceForTag(
+                selectedTag,
+                ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
+                true,
+                selectedTag.isFilterable
+            )
         }
+        childFragmentManager.beginTransaction()
+            .replace(R.id.container, fragment, uiState.selectedReaderTag.tagSlug)
+            .commit()
         viewModel.uiState.value?.let {
             if (it is ContentUiState) {
                 viewModel.onTagChanged(uiState.selectedReaderTag)

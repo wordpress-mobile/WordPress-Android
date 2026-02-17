@@ -142,7 +142,7 @@ class ReaderPostNewViewHolder(
             imageManager.loadIntoCircle(
                 blogSectionImageAuthorAvatar,
                 BLAVATAR_CIRCULAR,
-                state.blogSection.authorAvatarUrl!!
+                state.blogSection.authorAvatarUrl
             )
         }
 

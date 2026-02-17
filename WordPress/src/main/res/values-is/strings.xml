@@ -22,7 +22,6 @@ Language: is
     <string name="start_over_email_body">Ég vil byrja upp á nýtt með vefinn %s</string>
     <string name="start_over_email_subject">Byrja upp á nýtt með vefinn %s</string>
     <string name="site_picker_remove_site_error">Villa við að eyða vef, reyndu aftur síðar</string>
-    <string name="sure_to_remove_account">Fjarlægja þennan vef úr appinu?</string>
     <string name="photo_picker_title">Veldu mynd</string>
     <string name="site_settings_image_quality_hint">Gæði mynda. Hærra gildi þýðir betri gæði mynda.</string>
     <string name="site_settings_optimize_images_summary">Virkjaðu til þess að minnka og þjappa myndum</string>
@@ -126,8 +125,6 @@ Language: is
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Ekki tiltækt í augnablikinu. Vinsamlegast sláðu inn lykilorðið þitt.</string>
     <string name="logging_in">Skrá inn</string>
     <string name="web_address_dialog_hint">Birt öllum þegar þú skrifar athugasemd.</string>
-    <string name="plan">Plön</string>
-    <string name="plans">Áskriftarleiðir</string>
     <string name="export_your_content_message">Færslurnar þínar, síður og stillingar verða sendar til þín á netfangið %s.</string>
     <string name="export_your_content">Flyttu út efnið þitt</string>
     <string name="export_email_sent">Tölvupóstur með útflutningi sendur!</string>

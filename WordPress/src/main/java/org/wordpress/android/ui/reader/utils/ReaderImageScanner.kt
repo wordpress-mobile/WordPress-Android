@@ -107,7 +107,7 @@ class ReaderImageScanner(private val content: String, private val isPrivate: Boo
             // Check if the image tag's class suggests it's a good enough size.
             // Only do this if we don't already have a winner, since we can't be sure of the width
             // and shouldn't replace an image we know for sure is larger than [minImageWidth].
-            if (currentImageUrl == null && hasSuitableClassForFeaturedImage(imageTag!!)) {
+            if (currentImageUrl == null && hasSuitableClassForFeaturedImage(imageTag)) {
                 currentImageUrl = imageUrl
             }
 

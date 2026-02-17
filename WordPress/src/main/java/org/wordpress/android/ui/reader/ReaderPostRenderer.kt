@@ -183,17 +183,17 @@ class ReaderPostRenderer(
     private fun replaceImageTag(imageTag: String, imageUrl: String) {
         val origSize = getImageSize(imageTag, imageUrl)
         val hasWidth = (origSize != null && origSize.width > 0)
-        val isFullSize = hasWidth && (origSize!!.width >= minFullSizeWidthDp)
+        val isFullSize = hasWidth && (origSize.width >= minFullSizeWidthDp)
         val isMidSize = hasWidth
-                && (origSize!!.width >= minMidSizeWidthDp)
+                && (origSize.width >= minMidSizeWidthDp)
                 && (origSize.width < minFullSizeWidthDp)
 
         val newImageTag = if (isFullSize) {
-            makeFullSizeImageTag(imageUrl, origSize!!.width, origSize.height)
+            makeFullSizeImageTag(imageUrl, origSize.width, origSize.height)
         } else if (isMidSize) {
-            makeImageTag(imageUrl, origSize!!.width, origSize.height, "size-medium")
+            makeImageTag(imageUrl, origSize.width, origSize.height, "size-medium")
         } else if (hasWidth) {
-            makeImageTag(imageUrl, origSize!!.width, origSize.height, "size-none")
+            makeImageTag(imageUrl, origSize.width, origSize.height, "size-none")
         } else {
             "<img class='size-none' src='$imageUrl' />"
         }

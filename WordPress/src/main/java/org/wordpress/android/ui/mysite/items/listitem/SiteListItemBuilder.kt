@@ -290,15 +290,15 @@ class SiteListItemBuilder @Inject constructor(
      * https://wordpress.org/documentation/article/roles-and-capabilities/#edit_theme_options
      */
     suspend fun buildMenusItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        val isEnabled = experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NAV_MENUS) &&
-            site.hasApplicationPassword() &&
+        val isEnabled = site.hasApplicationPassword() &&
             siteCapabilityChecker.hasEditThemeOptionsCapability(site)
         return if (isEnabled) {
             ListItem(
                 R.drawable.ic_gridicons_menus,
                 UiStringRes(R.string.menus),
                 onClick = ListItemInteraction.create(ListItemAction.MENUS, onClick),
-                listItemAction = ListItemAction.MENUS
+                listItemAction = ListItemAction.MENUS,
+                showBetaBadge = true
             )
         } else {
             null

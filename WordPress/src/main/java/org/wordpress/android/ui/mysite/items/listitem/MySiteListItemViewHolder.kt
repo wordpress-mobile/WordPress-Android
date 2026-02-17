@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite.items.listitem
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.widget.ImageViewCompat
@@ -37,6 +38,7 @@ class MySiteListItemViewHolder(
         uiHelpers.setImageOrHide(mySiteItemSecondaryIcon, cardAndItem.secondaryIcon)
         uiHelpers.setTextOrHide(mySiteItemPrimaryText, cardAndItem.primaryText)
         uiHelpers.setTextOrHide(mySiteItemSecondaryText, cardAndItem.secondaryText)
+        mySiteItemBetaBadge.visibility = if (cardAndItem.showBetaBadge) View.VISIBLE else View.GONE
         itemView.setOnClickListener { cardAndItem.onClick.click() }
     }
 

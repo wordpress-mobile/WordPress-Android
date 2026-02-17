@@ -1067,8 +1067,8 @@ class PostListItemUiStateHelperTest {
 
         // Assert
         assertThat(state.data.postInfo!!.size).isEqualTo(2)
-        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
-        assertThat(state.data.postInfo!![1]).isEqualTo(UiStringText(authorDisplayName))
+        assertThat(state.data.postInfo[0]).isEqualTo(UiStringText(FORMATTER_DATE))
+        assertThat(state.data.postInfo[1]).isEqualTo(UiStringText(authorDisplayName))
     }
 
     @Test
@@ -1082,7 +1082,7 @@ class PostListItemUiStateHelperTest {
 
         // Assert
         assertThat(state.data.postInfo!!.size).isEqualTo(1)
-        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
+        assertThat(state.data.postInfo[0]).isEqualTo(UiStringText(FORMATTER_DATE))
     }
 
     @Test
@@ -1096,7 +1096,7 @@ class PostListItemUiStateHelperTest {
 
         // Assert
         assertThat(state.data.postInfo!!.size).isEqualTo(1)
-        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
+        assertThat(state.data.postInfo[0]).isEqualTo(UiStringText(FORMATTER_DATE))
     }
 
     @Test
@@ -1112,8 +1112,8 @@ class PostListItemUiStateHelperTest {
 
         // Assert
         assertThat(state.data.postInfo!!.size).isEqualTo(2)
-        assertThat(state.data.postInfo!![0]).isEqualTo((UiStringText(FORMATTER_DATE)))
-        assertThat(state.data.postInfo!![1]).isEqualTo(UiStringText(authorDisplayName))
+        assertThat(state.data.postInfo[0]).isEqualTo((UiStringText(FORMATTER_DATE)))
+        assertThat(state.data.postInfo[1]).isEqualTo(UiStringText(authorDisplayName))
     }
 
     @Test
@@ -1129,7 +1129,7 @@ class PostListItemUiStateHelperTest {
 
         // Assert
         assertThat(state.data.postInfo!!.size).isEqualTo(1)
-        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
+        assertThat(state.data.postInfo[0]).isEqualTo(UiStringText(FORMATTER_DATE))
     }
 
     @Test
@@ -1144,7 +1144,7 @@ class PostListItemUiStateHelperTest {
         // Assert
         assertThat(state.data.postInfo!!.size).isEqualTo(2)
         assertThat(state.data.statuses[0]).isEqualTo(UiStringRes(R.string.post_status_post_private))
-        assertThat(state.data.postInfo!![1]).isEqualTo(UiStringText(FORMATTER_DATE))
+        assertThat(state.data.postInfo[1]).isEqualTo(UiStringText(FORMATTER_DATE))
     }
 
     @Test
