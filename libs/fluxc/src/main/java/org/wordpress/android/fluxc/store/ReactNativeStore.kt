@@ -182,7 +182,9 @@ class ReactNativeStore @VisibleForTesting constructor(
         }
         val fullRestUrl = slashJoin(wpApiRestUrl, path)
 
-        // Use Basic auth for sites with application passwords instead of nonce auth
+        // Use Basic auth for sites with application passwords instead of nonce auth.
+        // Application passwords authenticate via REST API Basic auth and cannot
+        // authenticate via wp-login.php (which is required for nonce-based auth).
         if (site.hasApplicationPassword()) {
             return executeWithApplicationPassword(
                 site, path, method, params, body, enableCaching,
@@ -261,9 +263,15 @@ class ReactNativeStore @VisibleForTesting constructor(
         fullRestUrl: String,
         usingSavedRestUrl: Boolean
     ): ReactNativeFetchResponse {
-        val authHeaderValue = Credentials.basic(
-            site.apiRestUsernamePlain, site.apiRestPasswordPlain
-        )
+        val username = site.apiRestUsernamePlain
+        val password = site.apiRestPasswordPlain
+        if (username == null || password == null) {
+            val error = BaseNetworkError(GenericErrorType.UNKNOWN).apply {
+                message = "Application password credentials missing"
+            }
+            return Error(error)
+        }
+        val authHeaderValue = Credentials.basic(username, password)
         val headers = mapOf(AUTHORIZATION_HEADER to authHeaderValue)
 
         val response = when (method) {
