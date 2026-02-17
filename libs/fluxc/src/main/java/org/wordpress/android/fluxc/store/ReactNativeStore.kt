@@ -160,7 +160,7 @@ class ReactNativeStore @VisibleForTesting constructor(
         return Error(error)
     }
 
-    @Suppress("ComplexMethod", "NestedBlockDepth", "LongParameterList")
+    @Suppress("ComplexMethod", "NestedBlockDepth", "LongParameterList", "LongMethod", "ReturnCount")
     private suspend fun executeWPAPIRequest(
         site: SiteModel,
         path: String,
