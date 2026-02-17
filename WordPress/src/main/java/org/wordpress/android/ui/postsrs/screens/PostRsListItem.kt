@@ -64,11 +64,14 @@ private fun PostContentItem(
             } else {
                 null
             }
+            val bullet = stringResource(
+                R.string.bullet_with_spaces
+            )
             val dateText = buildString {
                 if (!statusLabel.isNullOrBlank()) {
                     append(statusLabel)
                     if (post.date.isNotBlank()) {
-                        append(" \u2022 ")
+                        append(bullet)
                     }
                 }
                 append(post.date)
