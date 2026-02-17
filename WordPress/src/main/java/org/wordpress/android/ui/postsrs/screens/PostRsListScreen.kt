@@ -13,6 +13,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -22,6 +23,7 @@ import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -42,14 +44,18 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsListTab
 import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
+import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostTabUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Suppress("LongParameterList")
 fun PostRsListScreen(
     tabStates: Map<PostRsListTab, PostTabUiState>,
     isSearchActive: Boolean,
     searchQuery: String,
+    showTrashConfirmation: Boolean,
+    showDeleteConfirmation: Boolean,
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PostRsListTab) -> Unit,
     onSearchClose: (PostRsListTab) -> Unit,
@@ -58,7 +64,12 @@ fun PostRsListScreen(
     onLoadMore: (PostRsListTab) -> Unit,
     onNavigateBack: () -> Unit,
     onPostClick: (Long) -> Unit,
-    onCreatePost: () -> Unit
+    onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
+    onCreatePost: () -> Unit,
+    onConfirmTrash: () -> Unit,
+    onDismissTrash: () -> Unit,
+    onConfirmDelete: () -> Unit,
+    onDismissDelete: () -> Unit
 ) {
     val tabs = PostRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -253,9 +264,74 @@ fun PostRsListScreen(
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onPostClick = onPostClick,
+                    onPostMenuAction = onPostMenuAction,
                     onCreatePost = onCreatePost
                 )
             }
         }
+    }
+
+    if (showTrashConfirmation) {
+        AlertDialog(
+            onDismissRequest = onDismissTrash,
+            title = {
+                Text(stringResource(R.string.trash))
+            },
+            text = {
+                Text(
+                    stringResource(
+                        R.string
+                            .post_rs_confirm_trash_message
+                    )
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = onConfirmTrash) {
+                    Text(
+                        stringResource(R.string.trash)
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismissTrash) {
+                    Text(
+                        stringResource(R.string.cancel)
+                    )
+                }
+            }
+        )
+    }
+
+    if (showDeleteConfirmation) {
+        AlertDialog(
+            onDismissRequest = onDismissDelete,
+            title = {
+                Text(stringResource(R.string.delete))
+            },
+            text = {
+                Text(
+                    stringResource(
+                        R.string
+                            .post_rs_confirm_delete_message
+                    )
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = onConfirmDelete) {
+                    Text(
+                        stringResource(R.string.delete),
+                        color = MaterialTheme
+                            .colorScheme.error
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismissDelete) {
+                    Text(
+                        stringResource(R.string.cancel)
+                    )
+                }
+            }
+        )
     }
 }

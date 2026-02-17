@@ -16,12 +16,13 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
 import org.wordpress.android.util.AppLog
+import uniffi.wp_api.PostStatus
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
@@ -38,6 +39,7 @@ class PostRsListViewModel @Inject constructor(
     private val serviceProvider: WpSelfHostedServiceProvider,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
+    private val blazeFeatureUtils: BlazeFeatureUtils,
 ) : ViewModel() {
     private val _tabStates =
         MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
@@ -59,6 +61,14 @@ class PostRsListViewModel @Inject constructor(
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
+
+    private val _trashConfirmPostId = MutableStateFlow<Long?>(null)
+    val trashConfirmPostId: StateFlow<Long?> =
+        _trashConfirmPostId.asStateFlow()
+
+    private val _deleteConfirmPostId = MutableStateFlow<Long?>(null)
+    val deleteConfirmPostId: StateFlow<Long?> =
+        _deleteConfirmPostId.asStateFlow()
 
     init {
         @OptIn(FlowPreview::class)
@@ -152,6 +162,153 @@ class PostRsListViewModel @Inject constructor(
         _searchQuery.value = ""
         clearCollections()
         initTab(activeTab)
+    }
+
+    /** Routes a menu action tap to the appropriate event or dialog. */
+    @MainThread
+    @Suppress("LongMethod", "ReturnCount")
+    fun onPostMenuAction(
+        remotePostId: Long,
+        action: PostRsMenuAction
+    ) {
+        val site =
+            selectedSiteRepository.getSelectedSite() ?: return
+        val post = findPost(remotePostId)
+
+        when (action) {
+            PostRsMenuAction.VIEW -> {
+                val url = post?.link ?: return
+                _events.trySend(PostRsListEvent.ViewPost(url))
+            }
+            PostRsMenuAction.READ -> _events.trySend(
+                PostRsListEvent.ReadPost(
+                    site.siteId, remotePostId
+                )
+            )
+            PostRsMenuAction.SHARE -> {
+                val url = post?.link ?: return
+                _events.trySend(
+                    PostRsListEvent.SharePost(
+                        url, post.title
+                    )
+                )
+            }
+            PostRsMenuAction.BLAZE -> {
+                val fluxcPost =
+                    postStore.getPostByRemotePostId(
+                        remotePostId, site
+                    ) ?: return
+                _events.trySend(
+                    PostRsListEvent.PromoteWithBlaze(
+                        site, fluxcPost
+                    )
+                )
+            }
+            PostRsMenuAction.STATS -> _events.trySend(
+                PostRsListEvent.ViewStats(
+                    site = site,
+                    postId = remotePostId,
+                    title = post?.title ?: "",
+                    url = post?.link ?: ""
+                )
+            )
+            PostRsMenuAction.COMMENTS -> _events.trySend(
+                PostRsListEvent.ViewComments(
+                    site.siteId, remotePostId
+                )
+            )
+            PostRsMenuAction.TRASH ->
+                _trashConfirmPostId.value = remotePostId
+            PostRsMenuAction.DELETE_PERMANENTLY ->
+                _deleteConfirmPostId.value = remotePostId
+            PostRsMenuAction.MOVE_TO_DRAFT -> AppLog.d(
+                AppLog.T.POSTS,
+                "Move to draft: no-op (networking excluded)"
+            )
+            PostRsMenuAction.DUPLICATE -> AppLog.d(
+                AppLog.T.POSTS,
+                "Duplicate: no-op (networking excluded)"
+            )
+        }
+    }
+
+    @MainThread
+    fun onConfirmTrash() {
+        val postId = _trashConfirmPostId.value
+        _trashConfirmPostId.value = null
+        AppLog.d(
+            AppLog.T.POSTS,
+            "Trash post $postId: no-op (networking excluded)"
+        )
+    }
+
+    @MainThread
+    fun onDismissTrash() {
+        _trashConfirmPostId.value = null
+    }
+
+    @MainThread
+    fun onConfirmDelete() {
+        val postId = _deleteConfirmPostId.value
+        _deleteConfirmPostId.value = null
+        AppLog.d(
+            AppLog.T.POSTS,
+            "Delete post $postId: no-op (networking excluded)"
+        )
+    }
+
+    @MainThread
+    fun onDismissDelete() {
+        _deleteConfirmPostId.value = null
+    }
+
+    private fun findPost(remotePostId: Long): PostRsUiModel? {
+        return _tabStates.value.values
+            .flatMap { it.posts }
+            .firstOrNull { it.remotePostId == remotePostId }
+    }
+
+    private fun getMenuActions(
+        status: PostStatus?,
+        hasPassword: Boolean
+    ): List<PostRsMenuAction> {
+        val site = selectedSiteRepository.getSelectedSite()
+        return buildList {
+            when (status) {
+                is PostStatus.Publish,
+                is PostStatus.Private -> {
+                    add(PostRsMenuAction.VIEW)
+                    add(PostRsMenuAction.READ)
+                    add(PostRsMenuAction.MOVE_TO_DRAFT)
+                    add(PostRsMenuAction.DUPLICATE)
+                    add(PostRsMenuAction.SHARE)
+                    if (site != null &&
+                        !hasPassword &&
+                        blazeFeatureUtils
+                            .isSiteBlazeEligible(site)
+                    ) {
+                        add(PostRsMenuAction.BLAZE)
+                    }
+                    add(PostRsMenuAction.STATS)
+                    add(PostRsMenuAction.COMMENTS)
+                    add(PostRsMenuAction.TRASH)
+                }
+                is PostStatus.Draft,
+                is PostStatus.Pending -> {
+                    add(PostRsMenuAction.DUPLICATE)
+                    add(PostRsMenuAction.TRASH)
+                }
+                is PostStatus.Future -> {
+                    add(PostRsMenuAction.DUPLICATE)
+                    add(PostRsMenuAction.TRASH)
+                }
+                is PostStatus.Trash -> {
+                    add(PostRsMenuAction.MOVE_TO_DRAFT)
+                    add(PostRsMenuAction.DELETE_PERMANENTLY)
+                }
+                else -> {}
+            }
+        }
     }
 
     private fun clearCollections() {
@@ -343,13 +500,20 @@ class PostRsListViewModel @Inject constructor(
         try {
             val showStatus =
                 _searchQuery.value.isNotBlank()
-            val uiModels = withContext(Dispatchers.IO) {
+            val items = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
                     item.state.toUiModel(
                         item.id,
                         showStatus = showStatus
                     )
                 }
+            }
+            val uiModels = items.map { model ->
+                model.copy(
+                    actions = getMenuActions(
+                        model.status, model.hasPassword
+                    )
+                )
             }
             updateTabUiState(tab) {
                 copy(
@@ -432,19 +596,4 @@ class PostRsListViewModel @Inject constructor(
             PostRsListTab.entries
                 .flatMap { it.statuses }.distinct()
     }
-}
-
-sealed interface PostRsListEvent {
-    data class EditPost(
-        val site: SiteModel,
-        val post: PostModel
-    ) : PostRsListEvent
-
-    data class CreatePost(
-        val site: SiteModel
-    ) : PostRsListEvent
-
-    data class ShowError(
-        val messageResId: Int
-    ) : PostRsListEvent
 }

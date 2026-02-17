@@ -13,9 +13,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
+import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.postsrs.screens.PostRsListScreen
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
+import org.wordpress.android.ui.stats.StatsConstants
+import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.setContent
 
@@ -35,11 +40,19 @@ class PostRsListActivity : BaseAppCompatActivity() {
                 .collectAsState()
             val searchQuery by viewModel.searchQuery
                 .collectAsState()
+            val trashPostId by viewModel.trashConfirmPostId
+                .collectAsState()
+            val deletePostId by viewModel.deleteConfirmPostId
+                .collectAsState()
             AppThemeM3 {
                 PostRsListScreen(
                     tabStates = tabStates,
                     isSearchActive = isSearchActive,
                     searchQuery = searchQuery,
+                    showTrashConfirmation =
+                        trashPostId != null,
+                    showDeleteConfirmation =
+                        deletePostId != null,
                     onSearchOpen =
                         viewModel::onSearchOpen,
                     onSearchQueryChanged =
@@ -52,12 +65,25 @@ class PostRsListActivity : BaseAppCompatActivity() {
                             tab, isUserRefresh = true
                         )
                     },
-                    onLoadMore = viewModel::loadMorePosts,
+                    onLoadMore =
+                        viewModel::loadMorePosts,
                     onNavigateBack = {
-                        onBackPressedDispatcher.onBackPressed()
+                        onBackPressedDispatcher
+                            .onBackPressed()
                     },
                     onPostClick = viewModel::openPost,
-                    onCreatePost = viewModel::createNewPost
+                    onPostMenuAction =
+                        viewModel::onPostMenuAction,
+                    onCreatePost =
+                        viewModel::createNewPost,
+                    onConfirmTrash =
+                        viewModel::onConfirmTrash,
+                    onDismissTrash =
+                        viewModel::onDismissTrash,
+                    onConfirmDelete =
+                        viewModel::onConfirmDelete,
+                    onDismissDelete =
+                        viewModel::onDismissDelete
                 )
             }
         }
@@ -67,37 +93,78 @@ class PostRsListActivity : BaseAppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
-                    when (event) {
-                        is PostRsListEvent.EditPost ->
-                            ActivityLauncher.editPostOrPageForResult(
-                                this@PostRsListActivity,
-                                event.site,
-                                event.post
-                            )
-                        is PostRsListEvent.CreatePost ->
-                            ActivityLauncher.addNewPostForResult(
-                                this@PostRsListActivity,
-                                event.site,
-                                false,
-                                PagePostCreationSourcesDetail
-                                    .POST_FROM_POSTS_LIST,
-                                -1,
-                                null
-                            )
-                        is PostRsListEvent.ShowError ->
-                            ToastUtils.showToast(
-                                this@PostRsListActivity,
-                                event.messageResId
-                            )
-                    }
+                    handleEvent(event)
                 }
             }
         }
     }
 
+    @Suppress("LongMethod")
+    private fun handleEvent(event: PostRsListEvent) {
+        when (event) {
+            is PostRsListEvent.EditPost ->
+                ActivityLauncher.editPostOrPageForResult(
+                    this, event.site, event.post
+                )
+            is PostRsListEvent.CreatePost ->
+                ActivityLauncher.addNewPostForResult(
+                    this,
+                    event.site,
+                    false,
+                    PagePostCreationSourcesDetail
+                        .POST_FROM_POSTS_LIST,
+                    -1,
+                    null
+                )
+            is PostRsListEvent.ShowError ->
+                ToastUtils.showToast(
+                    this, event.messageResId
+                )
+            is PostRsListEvent.ViewPost ->
+                ActivityLauncher.openUrlExternal(
+                    this, event.url
+                )
+            is PostRsListEvent.ReadPost ->
+                ReaderActivityLauncher.showReaderPostDetail(
+                    this, event.blogId, event.postId
+                )
+            is PostRsListEvent.SharePost ->
+                ActivityLauncher.openShareIntent(
+                    this, event.url, event.title
+                )
+            is PostRsListEvent.PromoteWithBlaze ->
+                ActivityLauncher.openPromoteWithBlaze(
+                    this,
+                    event.post,
+                    BlazeFlowSource.POSTS_LIST
+                )
+            is PostRsListEvent.ViewStats ->
+                StatsDetailActivity.start(
+                    this,
+                    event.site,
+                    event.postId,
+                    StatsConstants.ITEM_TYPE_POST,
+                    event.title,
+                    event.url
+                )
+            is PostRsListEvent.ViewComments ->
+                ReaderActivityLauncher.showReaderPostDetail(
+                    this,
+                    false,
+                    event.blogId,
+                    event.postId,
+                    DirectOperation.COMMENT_JUMP,
+                    false
+                )
+        }
+    }
+
     companion object {
         fun createIntent(context: Context): Intent {
-            return Intent(context, PostRsListActivity::class.java)
+            return Intent(
+                context,
+                PostRsListActivity::class.java
+            )
         }
     }
 }
