@@ -51,6 +51,10 @@ enum class PostRsMenuAction(
         R.string.button_read,
         R.drawable.ic_reader_glasses_white_24dp
     ),
+    PUBLISH(
+        R.string.button_publish,
+        R.drawable.gb_ic_globe
+    ),
     MOVE_TO_DRAFT(
         R.string.button_move_to_draft,
         R.drawable.gb_ic_move_to

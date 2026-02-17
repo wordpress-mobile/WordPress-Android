@@ -221,6 +221,8 @@ class PostRsListViewModel @Inject constructor(
                 _trashConfirmPostId.value = remotePostId
             PostRsMenuAction.DELETE_PERMANENTLY ->
                 _deleteConfirmPostId.value = remotePostId
+            PostRsMenuAction.PUBLISH ->
+                sendNotImplemented()
             PostRsMenuAction.MOVE_TO_DRAFT ->
                 sendNotImplemented()
             PostRsMenuAction.DUPLICATE ->
@@ -289,7 +291,11 @@ class PostRsListViewModel @Inject constructor(
                     add(PostRsMenuAction.TRASH)
                 }
                 PostRsListTab.DRAFTS -> {
+                    add(PostRsMenuAction.VIEW)
+                    add(PostRsMenuAction.READ)
+                    add(PostRsMenuAction.PUBLISH)
                     add(PostRsMenuAction.DUPLICATE)
+                    add(PostRsMenuAction.SHARE)
                     add(PostRsMenuAction.TRASH)
                 }
                 PostRsListTab.SCHEDULED -> {
