@@ -221,25 +221,17 @@ class PostRsListViewModel @Inject constructor(
                 _trashConfirmPostId.value = remotePostId
             PostRsMenuAction.DELETE_PERMANENTLY ->
                 _deleteConfirmPostId.value = remotePostId
-            PostRsMenuAction.MOVE_TO_DRAFT -> AppLog.d(
-                AppLog.T.POSTS,
-                "Move to draft: no-op (networking excluded)"
-            )
-            PostRsMenuAction.DUPLICATE -> AppLog.d(
-                AppLog.T.POSTS,
-                "Duplicate: no-op (networking excluded)"
-            )
+            PostRsMenuAction.MOVE_TO_DRAFT ->
+                sendNotImplemented()
+            PostRsMenuAction.DUPLICATE ->
+                sendNotImplemented()
         }
     }
 
     @MainThread
     fun onConfirmTrash() {
-        val postId = _trashConfirmPostId.value
         _trashConfirmPostId.value = null
-        AppLog.d(
-            AppLog.T.POSTS,
-            "Trash post $postId: no-op (networking excluded)"
-        )
+        sendNotImplemented()
     }
 
     @MainThread
@@ -249,17 +241,21 @@ class PostRsListViewModel @Inject constructor(
 
     @MainThread
     fun onConfirmDelete() {
-        val postId = _deleteConfirmPostId.value
         _deleteConfirmPostId.value = null
-        AppLog.d(
-            AppLog.T.POSTS,
-            "Delete post $postId: no-op (networking excluded)"
-        )
+        sendNotImplemented()
     }
 
     @MainThread
     fun onDismissDelete() {
         _deleteConfirmPostId.value = null
+    }
+
+    private fun sendNotImplemented() {
+        _events.trySend(
+            PostRsListEvent.ShowError(
+                R.string.post_rs_not_implemented_yet
+            )
+        )
     }
 
     private fun findPost(remotePostId: Long): PostRsUiModel? {
