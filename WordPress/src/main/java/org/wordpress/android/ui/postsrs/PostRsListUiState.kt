@@ -15,8 +15,7 @@ sealed interface PendingConfirmation {
 }
 
 class ConfirmationDialogState(
-    val showTrash: Boolean = false,
-    val showDelete: Boolean = false,
+    val pending: PendingConfirmation? = null,
     val onConfirm: () -> Unit = {},
     val onDismiss: () -> Unit = {}
 )

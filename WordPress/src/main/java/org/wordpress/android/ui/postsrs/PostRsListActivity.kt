@@ -50,10 +50,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     searchQuery = searchQuery,
                     confirmationDialog =
                         ConfirmationDialogState(
-                            showTrash = confirmation
-                                is PendingConfirmation.Trash,
-                            showDelete = confirmation
-                                is PendingConfirmation.Delete,
+                            pending = confirmation,
                             onConfirm =
                                 viewModel::onConfirmPendingAction,
                             onDismiss =

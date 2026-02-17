@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.ConfirmationDialogState
+import org.wordpress.android.ui.postsrs.PendingConfirmation
 import org.wordpress.android.ui.postsrs.PostRsListTab
 import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
@@ -267,18 +268,15 @@ fun PostRsListScreen(
         }
     }
 
-    if (confirmationDialog.showTrash) {
-        ConfirmationDialog(
+    when (confirmationDialog.pending) {
+        is PendingConfirmation.Trash -> ConfirmationDialog(
             titleResId = R.string.trash,
             messageResId =
                 R.string.post_rs_confirm_trash_message,
             onConfirm = confirmationDialog.onConfirm,
             onDismiss = confirmationDialog.onDismiss
         )
-    }
-
-    if (confirmationDialog.showDelete) {
-        ConfirmationDialog(
+        is PendingConfirmation.Delete -> ConfirmationDialog(
             titleResId = R.string.delete,
             messageResId =
                 R.string.post_rs_confirm_delete_message,
@@ -286,6 +284,7 @@ fun PostRsListScreen(
             onConfirm = confirmationDialog.onConfirm,
             onDismiss = confirmationDialog.onDismiss
         )
+        null -> {}
     }
 }
 
