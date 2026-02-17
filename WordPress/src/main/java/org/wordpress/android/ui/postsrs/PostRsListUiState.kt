@@ -9,6 +9,15 @@ import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
 
+data class ConfirmationDialogState(
+    val showTrash: Boolean = false,
+    val showDelete: Boolean = false,
+    val onConfirmTrash: () -> Unit = {},
+    val onDismissTrash: () -> Unit = {},
+    val onConfirmDelete: () -> Unit = {},
+    val onDismissDelete: () -> Unit = {}
+)
+
 data class PostTabUiState(
     val posts: List<PostRsUiModel> = emptyList(),
     val isLoading: Boolean = false,
@@ -27,7 +36,6 @@ data class PostRsUiModel(
     val hasPassword: Boolean = false,
     val status: PostStatus? = null,
     @StringRes val statusLabelResId: Int = 0,
-    val featuredImageId: Long = 0,
     val actions: List<PostRsMenuAction> = emptyList(),
     val isPlaceholder: Boolean = false,
     val isError: Boolean = false
@@ -121,7 +129,6 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
         link = post.link,
         hasPassword = !post.password.isNullOrEmpty(),
         status = post.status,
-        featuredImageId = post.featuredMedia ?: 0,
         statusLabelResId = if (showStatus) {
             post.status.toLabel()
         } else {

@@ -49,10 +49,21 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     tabStates = tabStates,
                     isSearchActive = isSearchActive,
                     searchQuery = searchQuery,
-                    showTrashConfirmation =
-                        trashPostId != null,
-                    showDeleteConfirmation =
-                        deletePostId != null,
+                    confirmationDialog =
+                        ConfirmationDialogState(
+                            showTrash =
+                                trashPostId != null,
+                            showDelete =
+                                deletePostId != null,
+                            onConfirmTrash =
+                                viewModel::onConfirmTrash,
+                            onDismissTrash =
+                                viewModel::onDismissTrash,
+                            onConfirmDelete =
+                                viewModel::onConfirmDelete,
+                            onDismissDelete =
+                                viewModel::onDismissDelete
+                        ),
                     onSearchOpen =
                         viewModel::onSearchOpen,
                     onSearchQueryChanged =
@@ -75,15 +86,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     onPostMenuAction =
                         viewModel::onPostMenuAction,
                     onCreatePost =
-                        viewModel::createNewPost,
-                    onConfirmTrash =
-                        viewModel::onConfirmTrash,
-                    onDismissTrash =
-                        viewModel::onDismissTrash,
-                    onConfirmDelete =
-                        viewModel::onConfirmDelete,
-                    onDismissDelete =
-                        viewModel::onDismissDelete
+                        viewModel::createNewPost
                 )
             }
         }

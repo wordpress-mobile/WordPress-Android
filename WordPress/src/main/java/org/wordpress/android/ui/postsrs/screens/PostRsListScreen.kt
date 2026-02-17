@@ -42,6 +42,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.postsrs.ConfirmationDialogState
 import org.wordpress.android.ui.postsrs.PostRsListTab
 import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
@@ -49,13 +50,11 @@ import org.wordpress.android.ui.postsrs.PostTabUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Suppress("LongParameterList")
 fun PostRsListScreen(
     tabStates: Map<PostRsListTab, PostTabUiState>,
     isSearchActive: Boolean,
     searchQuery: String,
-    showTrashConfirmation: Boolean,
-    showDeleteConfirmation: Boolean,
+    confirmationDialog: ConfirmationDialogState,
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PostRsListTab) -> Unit,
     onSearchClose: (PostRsListTab) -> Unit,
@@ -65,11 +64,7 @@ fun PostRsListScreen(
     onNavigateBack: () -> Unit,
     onPostClick: (Long) -> Unit,
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
-    onCreatePost: () -> Unit,
-    onConfirmTrash: () -> Unit,
-    onDismissTrash: () -> Unit,
-    onConfirmDelete: () -> Unit,
-    onDismissDelete: () -> Unit
+    onCreatePost: () -> Unit
 ) {
     val tabs = PostRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -271,67 +266,81 @@ fun PostRsListScreen(
         }
     }
 
-    if (showTrashConfirmation) {
-        AlertDialog(
-            onDismissRequest = onDismissTrash,
-            title = {
-                Text(stringResource(R.string.trash))
-            },
-            text = {
-                Text(
-                    stringResource(
-                        R.string
-                            .post_rs_confirm_trash_message
-                    )
-                )
-            },
-            confirmButton = {
-                TextButton(onClick = onConfirmTrash) {
-                    Text(
-                        stringResource(R.string.trash)
-                    )
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = onDismissTrash) {
-                    Text(
-                        stringResource(R.string.cancel)
-                    )
-                }
-            }
+    if (confirmationDialog.showTrash) {
+        TrashConfirmationDialog(
+            onConfirm = confirmationDialog.onConfirmTrash,
+            onDismiss = confirmationDialog.onDismissTrash
         )
     }
 
-    if (showDeleteConfirmation) {
-        AlertDialog(
-            onDismissRequest = onDismissDelete,
-            title = {
-                Text(stringResource(R.string.delete))
-            },
-            text = {
-                Text(
-                    stringResource(
-                        R.string
-                            .post_rs_confirm_delete_message
-                    )
-                )
-            },
-            confirmButton = {
-                TextButton(onClick = onConfirmDelete) {
-                    Text(
-                        stringResource(R.string.delete),
-                        color = MaterialTheme
-                            .colorScheme.error
-                    )
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = onDismissDelete) {
-                    Text(
-                        stringResource(R.string.cancel)
-                    )
-                }
-            }
+    if (confirmationDialog.showDelete) {
+        DeleteConfirmationDialog(
+            onConfirm = confirmationDialog.onConfirmDelete,
+            onDismiss = confirmationDialog.onDismissDelete
         )
     }
+}
+
+@Composable
+private fun TrashConfirmationDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(stringResource(R.string.trash))
+        },
+        text = {
+            Text(
+                stringResource(
+                    R.string.post_rs_confirm_trash_message
+                )
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(stringResource(R.string.trash))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun DeleteConfirmationDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(stringResource(R.string.delete))
+        },
+        text = {
+            Text(
+                stringResource(
+                    R.string
+                        .post_rs_confirm_delete_message
+                )
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(
+                    stringResource(R.string.delete),
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
 }

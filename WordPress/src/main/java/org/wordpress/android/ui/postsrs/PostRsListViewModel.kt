@@ -22,12 +22,12 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
 import org.wordpress.android.util.AppLog
-import uniffi.wp_api.PostStatus
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
 import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
+import uniffi.wp_api.PostStatus
 import uniffi.wp_api.WpApiParamPostsOrderBy
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile_cache.ListState
@@ -258,6 +258,8 @@ class PostRsListViewModel @Inject constructor(
         )
     }
 
+    // TODO: replace linear scan with a map lookup if
+    //  post counts grow large
     private fun findPost(remotePostId: Long): PostRsUiModel? {
         return _tabStates.value.values
             .flatMap { it.posts }
