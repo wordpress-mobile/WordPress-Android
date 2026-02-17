@@ -64,6 +64,7 @@ import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 
 private const val CONTENT_TOTAL_LINES = 3
 
+@Suppress("ComposableNaming")
 @SuppressLint("ResourceType")
 @Composable
 fun ReaderTagsFeedPostListItem(

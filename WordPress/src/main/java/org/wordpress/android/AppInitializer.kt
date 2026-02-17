@@ -84,6 +84,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorFileUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorInitializer
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker
+import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
@@ -221,6 +222,9 @@ class AppInitializer @Inject constructor(
     // For jetpack focus
     @Inject
     lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
+
+    @Inject
+    lateinit var wpSelfHostedServiceProvider: WpSelfHostedServiceProvider
 
     @Inject
     lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
@@ -715,6 +719,9 @@ class AppInitializer @Inject constructor(
 
         // Clear WordPress.com account cookie cache
         wordPressCookieAuthenticator.clearAllCachedCookies()
+
+        // Clear cached wordpress-rs services
+        wpSelfHostedServiceProvider.clearAll()
     }
 
     /*

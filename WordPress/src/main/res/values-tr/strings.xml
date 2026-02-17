@@ -244,7 +244,6 @@ Language: tr
     <string name="more_content_description_recent_activity">Son etkinlik daha fazla</string>
     <string name="more_content_description_pages">Sayfa daha fazla</string>
     <string name="more_content_description_posts">Gönderi daha fazla</string>
-    <string name="more_content_description_quick_start">Hızlı başlangıç daha fazla</string>
     <string name="more_content_description_today_stats">Bugünün istatistikleri daha fazla</string>
     <string name="more_content_description_blogging_prompts">İstemler daha fazla</string>
     <string name="more_content_description_promote_blaze">Blaze daha fazla</string>
@@ -397,7 +396,6 @@ Language: tr
     <string name="site_monitoring_tab_title_php_logs">PHP günlükleri</string>
     <string name="site_monitoring_tab_title_metrics">Ölçümler</string>
     <string name="site_monitoring">Site izleme</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Siteleri ve etiketleri bulmak için &lt;b&gt;Keşfet&lt;/b&gt; üzerine dokunun. Abone olunan içerikleri görüntülemek ve aboneliklerinizi yönetmek için &lt;b&gt;Abonelikler&lt;/b&gt; üzerine dokunmayı deneyin.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Aboneliklere git</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Abone olduğunuz bloglar yakın zamanda herhangi bir yazı yayınlamadı</string>
     <string name="reader_no_followed_blogs_description_subs">Keşfette bloglara abone olun veya zaten sevdiğiniz bir blogu arayın.</string>
@@ -825,9 +823,6 @@ Language: tr
     <string name="wp_jetpack_deep_link_overlay_description">Görünüşe göre aygıtınızda Jetpack uygulaması kurulu.\n\nBundan sonra bağlantıları Jetpack uygulamasında açmak ister misiniz?\n\nİstediğiniz zaman bunu Uygulama ayarları &gt; Bağlantıları Jetpack ile aç seçeneğini kullanarak değiştirebilirsiniz</string>
     <string name="wp_jetpack_deep_link_overlay_title">Bağlantılar Jetpack ile açılsın mı?</string>
     <string name="wp_jetpack_continue_without_jetpack">Jetpack kullanmadan ilerle</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack, hayalinizdeki WordPress sitesini oluşturmanıza ve büyütmenize yardımcı olacak istatistikler, bildirimler ve daha fazlasını sağlar.\n\nWordPress uygulaması artık yeni bir site oluşturmayı desteklemiyor.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack, hayalinizdeki WordPress sitesini oluşturmanıza ve büyütmenize yardımcı olacak istatistikleri, bildirimleri ve diğer özellikleri sağlar.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Jetpack uygulamasıyla yeni bir WordPress sitesi oluşturun</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Aygıtınızda gerçek zamanlı bildirimler almayı sürdürmek için Jetpack uygulamasına geçin.</string>
@@ -937,24 +932,11 @@ Language: tr
     <string name="stats_action_card_blogging_reminders_title">Blog hatırlatıcılarınızı ayarlayın</string>
     <string name="stats_action_card_grow_audience_button_label">Kursa göz at</string>
     <string name="stats_action_card_grow_audience_title">Kitlenizi genişletin</string>
-    <string name="quick_start_sites_type_all_tasks_completed">Tüm görevler tamamlandı</string>
-    <string name="quick_start_list_task_complete">Görev tamamlandı</string>
     <string name="me_btn_scan_login_code">Oturum açma kodunu tara</string>
     <string name="stats_insights_likes_guide_card">⭐️ Son yazınız (%1$s) %2$s beğeni aldı.</string>
     <string name="stats_most_popular_percent_views_empty">Yeterli etkinlik yok. Sitenizin daha fazla ziyaretçisi olduğunda yeniden bakın!</string>
     <string name="stats_total_subscribers_content_description">%1$s, toplam abonelerin %2$s%% kadarı</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">Tebrikler! Yolunuzu biliyorsunuz&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">Uygulamayı tanıyın</string>
-    <string name="quick_start_list_upload_media_subtitle">Ortam dosyalarınızı doğrudan aygıtınızdan veya kameranızdan sitenize aktarın</string>
-    <string name="quick_start_list_upload_media_title">Tamamlandı: Fotoğraf ya da video yükleme</string>
-    <string name="quick_start_list_check_notification_subtitle">Gerçek zamanlı güncellemeler cebinize gelsin</string>
-    <string name="quick_start_dialog_upload_media_message">Geçerli kitaplığınızı görmek için %1$s Ortam %2$s seçin.</string>
-    <string name="quick_start_dialog_check_notifications_message">Cebinizden gerçek zamanlı güncellemeler alın.</string>
-    <string name="quick_start_dialog_check_notifications_title">Bildirimlerinize bakın</string>
-    <string name="quick_start_dialog_check_notifications_message_short">Hareket halindeyken güncellemeleri almak için %1$s Bildirimleri sekmesini %2$s seçin.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Ortam yüklemek için %1$s artı %2$s seçin. Herhangi bir aygıttan yazılarınıza / sayfalarınıza ekleyebilirsiniz.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Siteleri ve etiketleri bulmak için &lt;b&gt;Keşfet&lt;/b&gt; kullanın.</string>
     <string name="photo_picker_video_thumbnail_content_description">Video küçük görseli</string>
     <string name="stats_details_top_commentators">En iyi yorumcular</string>
     <string name="stats_published_years_ago">%1$d yıl önce yayınlandı</string>
@@ -974,8 +956,6 @@ Language: tr
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Yanıtla</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Günlük hatırlatıcı</string>
     <string name="blogging_prompts_onboarding_got_it">Anladım</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Sitenizi görüntülemek için &lt;b&gt;%1$s&lt;/b&gt; üzerine dokunun</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Diğer siteleri bulmak için %1$s Okuyucu %2$s üzerine dokunun.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Hatırlatıcılar hakkında ayrıntılı bilgi alın</string>
     <string name="photo_picker_video_thumbnail_unselected">Video seçilmemiş</string>
     <string name="photo_picker_video_thumbnail_selected">Video seçilmiş</string>
@@ -1063,7 +1043,6 @@ Language: tr
     <string name="site_creation_intent_art">Sanat</string>
     <string name="new_site_creation_intents_input_hint">Örnek: Moda, Şiir, Politika</string>
     <string name="new_site_creation_intents_title">Site konusu</string>
-    <string name="quick_start_site_menu_tab_message_short">İlerlemek için &lt;b&gt;%1$s&lt;/b&gt; üzerine dokunun.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Bugünlük atla</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Diğer istemleri görüntüle</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Blog paylaşma istemi</string>
@@ -1152,7 +1131,6 @@ Language: tr
     <string name="comment_edit_user_name">Ad</string>
     <string name="comment_edit_menu_done">Bitti</string>
     <string name="weekly_roundup">Haftalık özet</string>
-    <string name="quick_start_list_create_site_message">Site oluşturuldu! Başka bir görevi tamamlayın.</string>
     <string name="domains_free_plan_get_your_domain_title">Etki alanınızı alın</string>
     <string name="recommend_app_generic_get_template_error">Önerilen uygulama şablonu alınırken bilinmeyen bir sorun çıktı</string>
     <string name="recommend_app_bad_format_response">Geçersiz yanıt alındı</string>
@@ -1164,8 +1142,6 @@ Language: tr
     <string name="blogging_reminders_notification_time">Bildirim zamanı</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">&lt;b&gt;Her gün&lt;/b&gt; (&lt;b&gt;%s&lt;/b&gt;) blog yazmanız gerektiğini hatırlatan bildirimler alacaksınız.</string>
     <string name="blogging_reminders_site_settings_label">Haftada %1$s, %2$s</string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s / %2$s tamamlandı</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Hızlı bir şekilde temel bilgileri alın.</string>
     <string name="comment_batch_moderation_error">Bir ya da birkaç yorum değerlendirilemedi</string>
     <string name="create_site_notification_create_site_action">Site oluştur</string>
     <string name="create_site_notification_text">Sitenizi bir kaç kolay adımda ayağa kaldırın</string>
@@ -1174,12 +1150,6 @@ Language: tr
     <string name="stats_disabled_enable_stats_button">Site istatistiklerini etkinleştir</string>
     <string name="stats_disabled_subtitle">Trafiğiniz, beğenileriniz, yorumlarınız ve aboneleriniz hakkındaki ayrıntılı bilgileri görmek için site istatistiklerini etkinleştirin.</string>
     <string name="stats_disabled_title">İstatistikleri mi arıyorsunuz?</string>
-    <string name="quick_start_list_upload_icon_subtitle">Ziyaretçinizin tarayıcı sekmesinde ve diğer çevrim içi yerlerde görüntülenir.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Bana etrafı göster</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">Bu siteyi uygulamayla yönetmek için biraz yardım ister misiniz?</string>
-    <string name="login_epilogue_create_new_site_button">Yeni site oluştur</string>
-    <string name="login_epilogue_mysites_subheading">Siteleri istediğiniz zaman değiştirebilirsiniz.</string>
-    <string name="login_epilogue_mysites_heading">Lütfen açmak için bir site seçin</string>
     <string name="scan_multisite_not_supported_subtitle">Kusura bakmayın. Jetpack Scan henüz çoklu site WordPress kurulumları ile uyumlu değil.</string>
     <string name="scan_multisite_not_supported_title">WordPress çoklu siteleri desteklenmiyor</string>
     <string name="activity_log_visit_our_documentation_page">belgeler sayfamıza bakın</string>
@@ -1273,13 +1243,6 @@ Language: tr
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Tarama bitti&lt;/b&gt; &lt;br&gt; Tehdit bulunmadı</string>
     <string name="scan_fixing_threats_title_singular">Tehditler düzeltiliyor</string>
     <string name="disable">Etkisizleştir</string>
-    <string name="quick_start_list_review_pages_subtitle">Sayfalarınızı denetleyin, değişiklikler yapın, ekleyin ve kaldırın.</string>
-    <string name="quick_start_list_view_site_title">Sitenizi görüntüleyin</string>
-    <string name="quick_start_list_follow_site_subtitle">Size ilham veren siteleri keşfedin ve takip edin.</string>
-    <string name="quick_start_list_enable_sharing_title">Sosyal ağ paylaşımı</string>
-    <string name="quick_start_list_enable_sharing_subtitle">Yeni yazıları sosyal ağlarınızda paylaşın.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Sitenize kişiliğini ve konusunu yansıtan bir ad verin.</string>
-    <string name="quick_start_list_check_stats_title">Sitenizin istatistiklerini gözden geçirin</string>
     <string name="backup_download_status_failure_bullet2">Yine de indirilebilir yedek dosyanızı oluşturmaya çalışacağız.</string>
     <string name="backup_download_status_failure_bullet1">İndirilebilir yedeğinizin hazırlanmasının ne kadar süreceğini ilişkin bir durum bilgisi bulunamadı.</string>
     <string name="backup_download_status_failure_heading">Kusura bakmayın. İndirilebilir yedeğinizin durum bilgisi bulunamadı</string>
@@ -1352,9 +1315,6 @@ Language: tr
     <string name="backup_download_complete_failed_title">Dosya indirilemedi</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Mobil</string>
-    <string name="quick_start_dialog_review_pages_message_short">Sayfa listenizi görmek için %1$s Sayfalar %2$s üzerine dokunun.</string>
-    <string name="quick_start_dialog_review_pages_message">Sitenizde sayfaları değiştirin, ekleyin veya kaldırın.</string>
-    <string name="quick_start_dialog_review_pages_title">Site sayfalarını değerlendirin</string>
     <string name="reader_menu_mark_as_unseen">Görülmedi olarak işaretle</string>
     <string name="reader_menu_mark_as_seen">Görüldü olarak işaretle</string>
     <string name="error_media_upload_failed_for_reason">Ortam yüklenemedi.\n%1$s</string>
@@ -1573,7 +1533,6 @@ Language: tr
     <string name="mlp_create_blank_page">Boş sayfa oluştur</string>
     <string name="mlp_choose_layout_subtitle">Önceden hazırlanmış çeşitli sayfa yerleşimleri arasından seçim yaparak ya da boş bir sayfayla başlayın.</string>
     <string name="mlp_choose_layout_title">Bir yerleşim seçin</string>
-    <string name="quick_start_dialog_create_new_post_message_short">%1$s Oluştur üzerine dokunun. %2$s Ardından &lt;b&gt;Blog yazısı&lt;/b&gt; üzerine dokunun</string>
     <string name="photo_picker_choose_file">Aygıttan seçin</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Kendi kendine barındırılan WordPress sitelerinde site simgelerini düzenlemek için Jetpack eklentisi gerekir.</string>
     <string name="reader_toast_err_page_jump_not_found">Bağlantılı sayfa atlaması bulunamıyor</string>
@@ -1601,8 +1560,6 @@ Language: tr
     <string name="send_link_by_email" a8c-src-lib="module:login">Bağlantıyı e-postayla gönder</string>
     <string name="reset_your_password" a8c-src-lib="module:login">Parolanızı sıfırlayın</string>
     <string name="reader_error_request_failed_title">İstek işlenirken bir sorun çıktı. Lütfen bir süre sonra yeniden deneyin.</string>
-    <string name="quick_start_list_update_site_title_title">Site başlığınızı denetleyin</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Yeni bir başlık belirlemek için &lt;b&gt;%1$s&lt;/b&gt; dokunun</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Bu yazının çöpe atılması, yerel değişiklikleri yok sayar. İlerlemek istediğinize emin misiniz?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Site başlığı yalnızca yönetici rolüne sahip bir kullanıcı tarafından değiştirilebilir.</string>
     <string name="my_site_title_changer_dialog_hint">Site başlığı, tarayıcının başlık çubuğunda görüntülenir ve çoğu temada üst bilgide görüntülenir.</string>
@@ -2054,29 +2011,12 @@ Language: tr
     <string name="stats_more_posts">Daha fazla yazı</string>
     <string name="stats_fewer_posts">Daha az yazı</string>
     <string name="new_site_creation_preview_back_pressed_warning">İlerleme durumunuz kaybolabilir. Çıkmak istediğinize emin misiniz?</string>
-    <string name="plans_loading_error_with_cache_button">Yine de paketleri görüntüle</string>
-    <string name="plans_loading_error_with_cache_subtitle">Paketleri görüntüleyebilmek için etkin bir internet bağlantısı gereklidir. Bu nedenle bilgiler güncel olmayabilir.</string>
-    <string name="plans_loading_error_no_cache_subtitle">Paketleri görüntüleyebilmek için etkin bir internet bağlantısı gereklidir.</string>
-    <string name="plans_loading_error_no_plans_subtitle">Şu anda paketleri yükleyemiyoruz. Lütfen bir süre sonra yeniden deneyin.</string>
-    <string name="plans_loading_error_no_plans_title">Paketler yüklenemedi</string>
-    <string name="plans_loading_error_network_title">Bağlantı yok</string>
     <string name="menu_switch_to_gutenberg_editor">Blok düzenleyiciye geç</string>
     <string name="stats_loading_block_error">Verileriniz yüklenirken bir sorun çıktı. Sayfanızı yenileyip yeniden deneyin.</string>
     <string name="stats_loading_error">Veriler yüklenmedi</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Blog düzenleyicisi ile yeni yazıları ve sayfaları düzenleyin</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Blok düzenleyiciyi kullan</string>
     <string name="exit">çıkış</string>
-    <string name="quick_start_sites_type_grow">Kitlenizi genişletin</string>
-    <string name="quick_start_sites_type_customize">Sitenizi özelleştirin</string>
-    <string name="quick_start_sites">Sonraki adımlar</string>
-    <string name="quick_start_dialog_upload_icon_title">Benzersiz bir site simgesi seçin</string>
-    <string name="quick_start_dialog_upload_icon_message">Ziyaretçileriniz tarayıcılarında sizin simgenizi görür. Gösterişli ve profesyonel bir görünüm için bir özel simge ekleyin.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Sitenizin performansını görmek için %1$s İstatistikler %2$s üzerine dokunun.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Yeni bir tane yüklemek için %1$s Site simgeniz %2$s üzerine dokunun</string>
-    <string name="quick_start_dialog_publish_post_message">Bir yazıyı taslak olarak yazın ve yayınlayın.</string>
-    <string name="quick_start_dialog_check_stats_title">Sitenizin istatistiklerine bakın</string>
-    <string name="quick_start_dialog_check_stats_message">Sitenizin performansıyla ilgili bilgilerinizi güncelleyin.</string>
-    <string name="quick_start_task_skip_menu_title">Görevi geç</string>
     <string name="notification_channel_reminder_title">Hatırlatıcı</string>
     <string name="stats_select_next_period_description">Sonraki dönemi seç</string>
     <string name="stats_select_previous_period_description">Önceki dönemi seç</string>
@@ -2228,20 +2168,6 @@ Language: tr
     <string name="page_delete_error">Sayfa silinirken sorun çıktı</string>
     <string name="set_parent">Üst öge ayarla</string>
     <string name="dismiss">Kapat</string>
-    <string name="quick_start_focus_point_description">buraya dokunun</string>
-    <string name="quick_start_list_create_site_title">Sitenizi oluşturun</string>
-    <string name="quick_start_list_create_site_subtitle">Sitenizi ayağa kaldırın ve yayınlayın.</string>
-    <string name="quick_start_completed_tour_subtitle">Listedeki bazı işleri tamamlamak iyi hissettirmiyor mu?</string>
-    <string name="quick_start_dialog_view_site_title">Sitenizi görüntüleyin</string>
-    <string name="quick_start_dialog_view_site_message">Ziyaretçilerinizin neler göreceğini anlamak için sitenizin ön izlemesine bakın.</string>
-    <string name="quick_start_dialog_share_site_title">Sitenizi paylaşın</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">İlerlemek için %1$s Sosyal %2$s üzerine dokunun</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Sosyal medya hesaplarınızı eklemek için %1$s Bağlantılar %2$s seçeneğine dokunun</string>
-    <string name="quick_start_dialog_share_site_message">Sosyal medya hesaplarınıza bağlanın. Siteniz yeni yazıları otomatik olarak paylaşır.</string>
-    <string name="quick_start_dialog_publish_post_title">Bir yazı yayınla</string>
-    <string name="quick_start_dialog_need_help_button_negative">Hayır, teşekkürler</string>
-    <string name="quick_start_dialog_follow_sites_title">Diğer sitelerle bağlantı kurun</string>
-    <string name="quick_start_button_positive">Git</string>
     <string name="content_description_more">Daha fazlası</string>
     <string name="my_site_create_new_site_title">Herhangi bir siteniz yok</string>
     <string name="reader_empty_subscribed_tags_subtitle">Beğendiğiniz konularla ilgili yazıları bulmak için buraya etiket ekleyin</string>
@@ -2435,7 +2361,6 @@ Language: tr
     <string name="edit_photo_screen_title">Fotoğrafı düzenle</string>
     <string name="share_intent_screen_title">Site seçin</string>
     <string name="signup_epilogue_screen_title">Yeni hesap</string>
-    <string name="login_epilogue_screen_title">Oturum açılan hesap</string>
     <string name="person_detail_screen_title">Kişi bilgileri</string>
     <string name="media_settings_screen_title">Dosya bilgileri</string>
     <string name="publicize_buttons_screen_title">Paylaşım düğmeleri</string>
@@ -2712,8 +2637,6 @@ Language: tr
     <string name="post_queued">Yazı kuyruğa alındı</string>
     <string name="uploading_post">\"%s\" yükleniyor</string>
     <string name="connection_to_server_lost">Sunucuyla bağlantı kesildi</string>
-    <string name="login_epilogue_mysites_other">Sitelerim</string>
-    <string name="login_epilogue_mysites_one">Benim sitem</string>
     <string name="login_email_client_not_found">E-posta istemcisi uygulamanızı öğrenemedik</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Lütfen bir doğrulama kodu yazın</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Lütfen bir kullanıcı adı yazın</string>
@@ -2864,7 +2787,6 @@ Language: tr
     <string name="start_over_email_subject">%s sitesine baştan başla</string>
     <string name="site_picker_remove_site_error">Site kaldırılırken sorun çıktı. Lütfen bir süre sonra yeniden deneyin</string>
     <string name="editor_post_saved_locally_failed_media">Yazı ortamı yükleyemedi ve yerel olarak kaydedildi</string>
-    <string name="sure_to_remove_account">Bu site uygulamadan kaldırılsın mı?</string>
     <string name="photo_picker_title">Fotoğraf seçin</string>
     <string name="error_publish_no_network">Aygıt çevrim dışı. Yazılar yerel olarak kaydedildi.</string>
     <string name="editor_post_saved_online">Yazı çevrim içi kaydedildi</string>
@@ -2987,8 +2909,6 @@ Language: tr
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Şu an kullanılamıyor. Lütfen parolanızı yazın</string>
     <string name="logging_in">Oturum açılıyor</string>
     <string name="web_address_dialog_hint">Yorum yaptığınızda herkes tarafından görülebilir.</string>
-    <string name="plans">Paketler</string>
-    <string name="plan">Paket</string>
     <string name="export_your_content_message">Yazılarınız, sayfalarınız ve ayarlarınız size %s adresine e-posta ile gönderilecek.</string>
     <string name="export_your_content">İçeriğinizi dışa aktarın</string>
     <string name="export_email_sent">Dışa aktarma e-postası gönderildi!</string>

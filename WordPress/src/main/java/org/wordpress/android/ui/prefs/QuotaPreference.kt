@@ -3,6 +3,7 @@
 package org.wordpress.android.ui.prefs
 
 import android.content.Context
+import androidx.core.content.res.use
 import android.content.res.Resources
 import android.preference.Preference
 import android.util.AttributeSet
@@ -27,13 +28,12 @@ class QuotaPreference(
     init {
         layoutResource = R.layout.quota_preference
 
-        context.obtainStyledAttributes(attrs, R.styleable.QuotaPreference).apply {
-            for (i in 0 until indexCount) {
-                when (getIndex(i)) {
-                    R.styleable.QuotaPreference_longClickHint -> hint = getString(i)
+        context.obtainStyledAttributes(attrs, R.styleable.QuotaPreference).use {
+            for (i in 0 until it.indexCount) {
+                when (it.getIndex(i)) {
+                    R.styleable.QuotaPreference_longClickHint -> hint = it.getString(i)
                 }
             }
-            recycle()
         }
     }
 

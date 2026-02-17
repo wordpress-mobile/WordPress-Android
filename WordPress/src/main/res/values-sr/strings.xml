@@ -84,10 +84,6 @@ Language: sr_RS
     <string name="threat_fix_all_status_success_message_plural">Претње су успешно исправљене.</string>
     <string name="threat_fix_all_confirmation_message_plural">Молимо потврдите да желите да исправите свих %s активних претњи.</string>
     <string name="scan_idle_threats_description_plural">Скенирањем је пронађено %1$s потенцијалних претњи са %2$s. Молимо прегледајте их и примените радњу или притисните дугме за поправку свих. Ми смо %3$s ако смо Вам потребни.</string>
-    <string name="quick_start_list_follow_site_subtitle">Откријте и пратите веб места која Вас инспиришу.</string>
-    <string name="quick_start_list_enable_sharing_title">Дељење на друштвеним мрежама</string>
-    <string name="quick_start_list_view_site_title">Видите своје веб место</string>
-    <string name="quick_start_list_check_stats_title">Провери статистику свог сајта</string>
     <string name="restore_warning_action_button">Потврди</string>
     <string name="photo_picker_use_audio">Употреби овај звучни запис</string>
     <string name="photo_picker_choose_audio">Одабери звучни запис са уређаја</string>
@@ -198,8 +194,6 @@ Language: sr_RS
     <string name="or_type_your_password" a8c-src-lib="module:login">Или укуцајте своју лозинку</string>
     <string name="send_link_by_email" a8c-src-lib="module:login">Пошаљи повезницу електронском поштом</string>
     <string name="reset_your_password" a8c-src-lib="module:login">Ресетујте своју лозинку</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Додирни &lt;b&gt;%1$s&lt;/b&gt; за постављање новог наслова</string>
-    <string name="quick_start_list_update_site_title_title">Проверите наслов свог сајта</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Наслов сајта може да измени само корисник са администраторском улогом.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Несачуване измене</string>
     <string name="everyone">Сви</string>
@@ -500,19 +494,10 @@ Language: sr_RS
     <string name="stats_site_not_loaded_yet">Сајт још увек није учитан</string>
     <string name="stats_insights_posting_activity">Активност објављивања</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Користи блоковски уређивач</string>
-    <string name="plans_loading_error_network_title">Нема везе</string>
     <string name="menu_switch_to_gutenberg_editor">Пребаци на блоковски уређивач</string>
     <string name="stats_loading_error">Подаци нису учитани</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Уреди нове чланке и странице са уређивачем блокова</string>
     <string name="exit">излаз</string>
-    <string name="quick_start_sites_type_grow">Увећајте свој аудиторијум</string>
-    <string name="quick_start_sites_type_customize">Прилагодите свој сајт</string>
-    <string name="quick_start_sites">Наредни кораци</string>
-    <string name="quick_start_dialog_upload_icon_title">Одаберите јединствену иконицу сајта</string>
-    <string name="quick_start_dialog_publish_post_message">Направи нацрт и објави чланак</string>
-    <string name="quick_start_dialog_check_stats_title">Провери статистику свог сајта</string>
-    <string name="quick_start_dialog_check_stats_message">Прати редовно перформансе свог веб места.</string>
-    <string name="quick_start_task_skip_menu_title">Прескочи задатак</string>
     <string name="notification_channel_reminder_title">Подсетник</string>
     <string name="stats_insights_popular">Најпопуларније време</string>
     <string name="stats_select_next_period_description">Одабери наредни период</string>
@@ -649,16 +634,6 @@ Language: sr_RS
     <string name="page_status_change_error">Догодио се проблем приликом промене статуса странице</string>
     <string name="page_parent_change_error">Догодио се проблем приликом промене родитеља странице</string>
     <string name="page_delete_dialog_message">Да ли сте сигурни да желите да обришете страницу %s?</string>
-    <string name="quick_start_focus_point_description">додирни овде</string>
-    <string name="quick_start_list_create_site_subtitle">Направите и покрените своју веб локацију.</string>
-    <string name="quick_start_list_create_site_title">Креирај свој сајт</string>
-    <string name="quick_start_dialog_view_site_title">Види свој сајт</string>
-    <string name="quick_start_dialog_share_site_title">Подели свој сајт</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Додирните %1$s Друштвене мреже %2$s да бисте наставили.</string>
-    <string name="quick_start_dialog_publish_post_title">Објави чланак</string>
-    <string name="quick_start_dialog_need_help_button_negative">Не, хвала</string>
-    <string name="quick_start_dialog_follow_sites_title">Повежи са другим веб местима</string>
-    <string name="quick_start_button_positive">Крени</string>
     <string name="content_description_more">Више</string>
     <string name="my_site_create_new_site_title">Немате ниједан сајт</string>
     <string name="jetpack">Jetpack</string>
@@ -824,7 +799,6 @@ Language: sr_RS
     <string name="comment_unliked_talkback">Уклоњено свиђање са коментара</string>
     <string name="notifications_screen_title">Обавештења</string>
     <string name="publicize_buttons_screen_title">Дугмићи за дељење</string>
-    <string name="login_epilogue_screen_title">Пријављен као</string>
     <string name="person_detail_screen_title">Детаљи особе</string>
     <string name="media_settings_screen_title">Детаљи датотеке</string>
     <string name="reader_screen_title">Читач</string>
@@ -1057,8 +1031,6 @@ Language: sr_RS
     <string name="post_queued">Чланак на чекању</string>
     <string name="uploading_post">Отпремање \"%s\"</string>
     <string name="connection_to_server_lost">Веза са сервером је изгубљена</string>
-    <string name="login_epilogue_mysites_other">Моји сајтови</string>
-    <string name="login_epilogue_mysites_one">Мој сајт</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Молимо унесите верификациони код</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Унесите корисничко име</string>
     <string name="login_log_in_for_deeplink" a8c-src-lib="module:login">Улогујте се на WordPress.com како би приступили чланку.</string>
@@ -1266,8 +1238,6 @@ Language: sr_RS
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Тренутно недоступно. Молимо вас унесите вашу шифру</string>
     <string name="logging_in">Пријављивање</string>
     <string name="web_address_dialog_hint">Приказано свима када коментаришете.</string>
-    <string name="plans">Планови</string>
-    <string name="plan">План</string>
     <string name="export_your_content_message">Ваши постови, стране и подешавања ће вам бити послата емаилом на %s.</string>
     <string name="export_your_content">Извезите ваш садржај</string>
     <string name="exporting_content_progress">Извозим садржај…</string>

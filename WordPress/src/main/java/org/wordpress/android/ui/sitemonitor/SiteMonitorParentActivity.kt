@@ -140,7 +140,7 @@ class SiteMonitorParentActivity : BaseAppCompatActivity(), SiteMonitorWebViewCli
     }
 
     private fun getInitialTab(): Int {
-        val tab = intent?.getSerializableExtraCompat(ARG_SITE_MONITOR_TYPE_KEY) as SiteMonitorType?
+        val tab = intent?.getSerializableExtraCompat<SiteMonitorType>(ARG_SITE_MONITOR_TYPE_KEY)
             ?: SiteMonitorType.METRICS
         return when (tab) {
             SiteMonitorType.METRICS -> 0

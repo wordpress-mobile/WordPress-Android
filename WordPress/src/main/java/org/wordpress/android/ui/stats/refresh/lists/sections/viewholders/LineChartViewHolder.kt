@@ -134,12 +134,12 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             if (isClickable) {
                 setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                     override fun onNothingSelected() {
-                        item.onLineSelected?.invoke(item.selectedItemPeriod)
+                        item.onLineSelected(item.selectedItemPeriod)
                     }
 
                     override fun onValueSelected(e: Entry, h: Highlight) {
                         drawChartMarker(h, item.selectedType)
-                        item.onLineSelected?.invoke(e.data as? String)
+                        item.onLineSelected(e.data as? String)
                     }
                 })
             } else {

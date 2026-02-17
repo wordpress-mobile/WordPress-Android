@@ -20,6 +20,7 @@ import uniffi.wp_api.NavMenuCreateParams
 import uniffi.wp_api.NavMenuItemCreateParams
 import uniffi.wp_api.NavMenuItemListParams
 import uniffi.wp_api.NavMenuItemStatus
+import uniffi.wp_api.NavMenuItemType
 import uniffi.wp_api.NavMenuItemUpdateParams
 import uniffi.wp_api.NavMenuItemWithEditContext
 import uniffi.wp_api.NavMenuListParams
@@ -389,6 +390,7 @@ class NavMenuRestClient @Inject constructor(
     private fun buildMenuItemCreateParams(item: NavMenuItemModel): NavMenuItemCreateParams {
         return NavMenuItemCreateParams(
             title = item.title,
+            navMenuItemType = item.type.toNavMenuItemType(),
             url = item.url.takeIf { it.isNotEmpty() },
             status = NavMenuItemStatus.PUBLISH,
             menus = item.menuId,
@@ -403,6 +405,7 @@ class NavMenuRestClient @Inject constructor(
     private fun buildMenuItemUpdateParams(item: NavMenuItemModel): NavMenuItemUpdateParams {
         return NavMenuItemUpdateParams(
             title = item.title,
+            navMenuItemType = item.type.toNavMenuItemType(),
             url = item.url.takeIf { it.isNotEmpty() },
             status = NavMenuItemStatus.PUBLISH,
             menus = item.menuId,
@@ -412,6 +415,24 @@ class NavMenuRestClient @Inject constructor(
             objectId = item.objectId.takeIf { it > 0 },
             description = item.description.takeIf { it.isNotEmpty() }
         )
+    }
+
+    /**
+     * Converts a NavMenuItemModel type string to a NavMenuItemType enum.
+     * @return The corresponding NavMenuItemType, or CUSTOM if the type is not recognized
+     */
+    private fun String.toNavMenuItemType(): NavMenuItemType {
+        return when (this) {
+            NavMenuItemModel.TYPE_POST_TYPE -> NavMenuItemType.POST_TYPE
+            NavMenuItemModel.TYPE_TAXONOMY -> NavMenuItemType.TAXONOMY
+            NavMenuItemModel.TYPE_POST_TYPE_ARCHIVE -> NavMenuItemType.POST_TYPE_ARCHIVE
+            else -> {
+                if (this != NavMenuItemModel.TYPE_CUSTOM) {
+                    appLogWrapper.w(AppLog.T.API, "Unknown menu item type: $this, defaulting to CUSTOM")
+                }
+                NavMenuItemType.CUSTOM
+            }
+        }
     }
 
     private fun parseErrorMessage(response: WpRequestResult<*>): String {
@@ -429,14 +450,12 @@ class NavMenuRestClient @Inject constructor(
         }
     }
 
-    private fun mapTypeLabelToType(typeLabel: String?): String {
-        return when (typeLabel?.lowercase()) {
-            "custom link" -> NavMenuItemModel.TYPE_CUSTOM
-            "page" -> NavMenuItemModel.TYPE_POST_TYPE
-            "post" -> NavMenuItemModel.TYPE_POST_TYPE
-            "category" -> NavMenuItemModel.TYPE_TAXONOMY
-            "tag" -> NavMenuItemModel.TYPE_TAXONOMY
-            else -> NavMenuItemModel.TYPE_CUSTOM
+    private fun NavMenuItemType.toTypeString(): String {
+        return when (this) {
+            NavMenuItemType.POST_TYPE -> NavMenuItemModel.TYPE_POST_TYPE
+            NavMenuItemType.TAXONOMY -> NavMenuItemModel.TYPE_TAXONOMY
+            NavMenuItemType.POST_TYPE_ARCHIVE -> NavMenuItemModel.TYPE_POST_TYPE_ARCHIVE
+            NavMenuItemType.CUSTOM -> NavMenuItemModel.TYPE_CUSTOM
         }
     }
 
@@ -464,7 +483,7 @@ class NavMenuRestClient @Inject constructor(
             menuId = menuId,
             title = title.raw ?: "",
             url = url,
-            type = mapTypeLabelToType(typeLabel),
+            type = itemType.toTypeString(),
             objectType = `object`,
             objectId = objectId,
             parentId = parent,

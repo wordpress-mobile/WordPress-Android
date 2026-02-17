@@ -244,7 +244,6 @@ Language: nl
     <string name="more_content_description_recent_activity">Meer recente activiteit</string>
     <string name="more_content_description_pages">Meer pagina\'s</string>
     <string name="more_content_description_posts">Meer berichten</string>
-    <string name="more_content_description_quick_start">Meer snel starten</string>
     <string name="more_content_description_today_stats">Meer statistieken van vandaag</string>
     <string name="more_content_description_blogging_prompts">Meer prompts</string>
     <string name="more_content_description_promote_blaze">Meer vuur</string>
@@ -397,7 +396,6 @@ Language: nl
     <string name="site_monitoring_tab_title_php_logs">PHP-logboeken</string>
     <string name="site_monitoring_tab_title_metrics">Meetwaarden</string>
     <string name="site_monitoring">Sitebewaking</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Gebruik &lt;b&gt;Ontdekken&lt;/b&gt; om sites en tags te zoeken. Probeer &lt;b&gt;Abonnementen&lt;/b&gt; te selecteren om geabonneerde inhoud te bekijken en je abonnementen te beheren.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Ga naar abonnementen</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">De blogs waarop je geabonneerd bent hebben recent niets geplaatst</string>
     <string name="reader_no_followed_blogs_description_subs">Abonneer je op blogs in Ontdek of zoek een blog die je al leuk vindt.</string>
@@ -825,9 +823,6 @@ Language: nl
     <string name="wp_jetpack_deep_link_overlay_description">Het lijkt erop dat je de Jetpack-app geïnstalleerd hebt.\n\nWil je links in de toekomst in de Jetpack-app openen?\n\nJe kan dit altijd veranderen in App-instellingen &gt; Links openen in Jetpack</string>
     <string name="wp_jetpack_deep_link_overlay_title">Links openen in Jetpack?</string>
     <string name="wp_jetpack_continue_without_jetpack">Doorgaan zonder Jetpack</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack biedt statistieken, meldingen en meer om je te helpen de WordPress-site van je dromen te bouwen.\n\nDe WordPress-app ondersteunt het maken van een nieuwe site niet meer.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack biedt statistieken, meldingen en meer om je te helpen de WordPress-site van je dromen te bouwen.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Maak een nieuwe WordPress-site met de Jetpack-app</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">uri-links</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Schakel over naar de Jetpack-app om  realtime meldingen te blijven ontvangen op je apparaat.</string>
@@ -937,24 +932,11 @@ Language: nl
     <string name="stats_action_card_blogging_reminders_title">Stel je blogging herinneringen in</string>
     <string name="stats_action_card_grow_audience_button_label">Check de cursus</string>
     <string name="stats_action_card_grow_audience_title">Breid je publiek uit</string>
-    <string name="quick_start_sites_type_all_tasks_completed">Alle taken afgerond</string>
-    <string name="quick_start_list_task_complete">Taak voltooid</string>
     <string name="me_btn_scan_login_code">Login code scannen</string>
     <string name="stats_insights_likes_guide_card">⭐️ Je nieuwste bericht %1$s heeft %2$s likes gekregen.</string>
     <string name="stats_most_popular_percent_views_empty">Niet genoeg activiteit. Keer nog eens terug wanneer je site meer bezoekers heeft gehad!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s%% van het totale aantal abonnees</string>
     <string name="stats_value_percent">%1$s %2$s%%()</string>
-    <string name="quick_start_completed_tour_title">Gefeliciteerd! Je weet hoe alles werkt&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">Leer de app gebruiken</string>
-    <string name="quick_start_list_upload_media_subtitle">Upload media direct vanuit je apparaat of camera naar je site</string>
-    <string name="quick_start_list_upload_media_title">Foto’s of video’s uploaden</string>
-    <string name="quick_start_list_check_notification_subtitle">Ontvang realtime updates in je broekzak</string>
-    <string name="quick_start_dialog_upload_media_message">Selecteer %1$s Media %2$s om je huidige bibliotheek te bekijken.</string>
-    <string name="quick_start_dialog_check_notifications_message">Ontvang realtime updates in je broekzak.</string>
-    <string name="quick_start_dialog_check_notifications_title">Controleer je meldingen</string>
-    <string name="quick_start_dialog_check_notifications_message_short">Selecteer het %1$s tabblad Meldingen %2$s om onderweg updates te ontvangen.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Selecteer het %1$s plusje %2$s om media te uploaden. Je kan vanuit elk apparaat media aan je berichten/pagina\'s toevoegen.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Gebruik &lt;b&gt;Ontdekken&lt;/b&gt; om sites en tags te zoeken.</string>
     <string name="photo_picker_video_thumbnail_content_description">Video thumbnail</string>
     <string name="stats_details_top_commentators">Top commentators</string>
     <string name="stats_published_years_ago">%1$d jaar geleden gepubliceerd</string>
@@ -974,8 +956,6 @@ Language: nl
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Antwoord</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Dagelijkse opdracht</string>
     <string name="blogging_prompts_onboarding_got_it">Duidelijk</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Tik op &lt;b&gt;%1$s&lt;/b&gt; om je site te bekijken</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Selecteer %1$s Lezer %2$s om andere sites te zoeken.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Lees verder over prompts</string>
     <string name="photo_picker_video_thumbnail_unselected">Video gedeselecteerd</string>
     <string name="photo_picker_video_thumbnail_selected">Video geselecteerd</string>
@@ -1063,7 +1043,6 @@ Language: nl
     <string name="site_creation_intent_art">Kunst</string>
     <string name="new_site_creation_intents_input_hint">Bijv. mode, poëzie, politiek</string>
     <string name="new_site_creation_intents_title">Onderwerp van de site</string>
-    <string name="quick_start_site_menu_tab_message_short">Tik op &lt;b&gt;%1$s&lt;/b&gt; om door te gaan.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Sla deze prompt over</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Bekijk meer prompts</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Blog-opdracht delen</string>
@@ -1152,7 +1131,6 @@ Language: nl
     <string name="comment_edit_user_name">Naam</string>
     <string name="comment_edit_menu_done">Klaar</string>
     <string name="weekly_roundup">Wekelijks overzicht</string>
-    <string name="quick_start_list_create_site_message">Site gemaakt! Rond nog een taak af.</string>
     <string name="domains_free_plan_get_your_domain_title">Verkrijg je domein</string>
     <string name="recommend_app_generic_get_template_error">Onbekende fout bij het ophalen van aanbevolen app template</string>
     <string name="recommend_app_bad_format_response">Ongeldige reactie ontvangen</string>
@@ -1164,8 +1142,6 @@ Language: nl
     <string name="blogging_reminders_notification_time">Meldingtijd</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Je krijgt herinneringen om te bloggen &lt;b&gt;elke dag&lt;/b&gt; om &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s per week op %2$s</string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s van %2$s afgerond</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Leer de basis met een snelle walkthrough.</string>
     <string name="comment_batch_moderation_error">Kan een of meerdere reacties niet modereren</string>
     <string name="create_site_notification_create_site_action">Site maken</string>
     <string name="create_site_notification_text">Krijg je site in slechts een paar snelle stappen aan de slag</string>
@@ -1174,12 +1150,6 @@ Language: nl
     <string name="stats_disabled_enable_stats_button">Sitestatistieken inschakelen</string>
     <string name="stats_disabled_subtitle">Schakel sitestatistieken in om gedetailleerde informatie te zien over je verkeer, vind-ik-leuks, reacties en abonnees.</string>
     <string name="stats_disabled_title">Op zoek naar statistieken?</string>
-    <string name="quick_start_list_upload_icon_subtitle">Getoond in de browser tab van je bezoeker en andere plaatsen online.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Laat me rondleiden</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">Wil je een beetje hulp bij het beheren van deze site met de app?</string>
-    <string name="login_epilogue_create_new_site_button">Maak een nieuwe site</string>
-    <string name="login_epilogue_mysites_subheading">Je kunt op elk moment sites wisselen.</string>
-    <string name="login_epilogue_mysites_heading">Kies een site om te openen</string>
     <string name="scan_multisite_not_supported_subtitle">Jetpack Scan is op dit moment niet compatibel met WordPress multisite installaties.</string>
     <string name="scan_multisite_not_supported_title">WordPress multisites worden niet ondersteund</string>
     <string name="activity_log_visit_our_documentation_page">bezoek onze documentatie pagina</string>
@@ -1273,13 +1243,6 @@ Language: nl
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan afgerond&lt;/b&gt;&lt;br&gt;Geen bedreigingen gevonden</string>
     <string name="scan_fixing_threats_title_singular">Bedreiging oplossen</string>
     <string name="disable">Uitschakelen</string>
-    <string name="quick_start_list_review_pages_subtitle">Controleer je pagina\'s en maak wijzigingen, of voeg pagina\'s toe of verwijder ze.</string>
-    <string name="quick_start_list_view_site_title">Je site bekijken</string>
-    <string name="quick_start_list_follow_site_subtitle">Ontdek en volg sites die je inspireren.</string>
-    <string name="quick_start_list_enable_sharing_title">Sociaal delen</string>
-    <string name="quick_start_list_enable_sharing_subtitle">Deel automatisch nieuwe berichten op je sociale media.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Geef je site een naam die de persoonlijkheid en het onderwerp weerspiegelt.</string>
-    <string name="quick_start_list_check_stats_title">Controleer je site-statistieken</string>
     <string name="backup_download_status_failure_bullet2">We zullen nog steeds proberen om je downloadbare back-upbestand te maken.</string>
     <string name="backup_download_status_failure_bullet1">We konden de status niet vinden om aan te geven hoe lang je downloadbare back-up zal duren.</string>
     <string name="backup_download_status_failure_heading">We konden je downloadbare back-up status niet vinden</string>
@@ -1352,9 +1315,6 @@ Language: nl
     <string name="backup_download_complete_failed_title">Download mislukt</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Mobiel</string>
-    <string name="quick_start_dialog_review_pages_message_short">Selecteer %1$s Pagina\'s %2$s om je paginalijst te zien.</string>
-    <string name="quick_start_dialog_review_pages_message">Verander, voeg toe, of verwijder pagina\'s van je site.</string>
-    <string name="quick_start_dialog_review_pages_title">Beoordeel site pagina\'s</string>
     <string name="reader_menu_mark_as_unseen">Markeer als ongezien</string>
     <string name="reader_menu_mark_as_seen">Markeer als gezien</string>
     <string name="error_media_upload_failed_for_reason">Media upload mislukt.\n%1$s</string>
@@ -1573,7 +1533,6 @@ Language: nl
     <string name="mlp_create_blank_page">Maak een lege pagina</string>
     <string name="mlp_choose_layout_subtitle">Ga aan de slag door te kiezen uit een breed scala aan vooraf gemaakte pagina lay-outs. Of begin gewoon met een lege pagina.</string>
     <string name="mlp_choose_layout_title">Kies een lay-out</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Tik op %1$s Maken. %2$s Selecteer vervolgens &lt;b&gt;Blogbericht&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Kies van welk apparaat</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Voor het bewerken van site iconen op door jezelf gehoste WordPress sites is de Jetpack plugin vereist.</string>
     <string name="reader_toast_err_page_jump_not_found">Kan de gekoppelde pagina sprong niet vinden</string>
@@ -1601,8 +1560,6 @@ Language: nl
     <string name="send_link_by_email" a8c-src-lib="module:login">Link per e-mail verzenden</string>
     <string name="reset_your_password" a8c-src-lib="module:login">Reset je wachtwoord</string>
     <string name="reader_error_request_failed_title">Er is een probleem opgetreden bij het verwerken van de aanvraag. Probeer het later opnieuw.</string>
-    <string name="quick_start_list_update_site_title_title">Bekijk je site titel</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Tikken &lt;b&gt;%1$s&lt;/b&gt; om een nieuwe titel in te stellen</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Dit bericht naar de prullenbak verplaatsen zal ook lokale wijzigingen negeren, weet je zeker dat je verder wil gaan?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">De site titel kan alleen gewijzigd worden door een gebruiker met de beheerder rol.</string>
     <string name="my_site_title_changer_dialog_hint">De site titel wordt getoond in de titelbalk van een webbrowser en wordt getoond in de header van de meeste thema\'s.</string>
@@ -2054,29 +2011,12 @@ Language: nl
     <string name="stats_more_posts">Meer berichten</string>
     <string name="stats_fewer_posts">Minder berichten</string>
     <string name="new_site_creation_preview_back_pressed_warning">Je kan je voortgang verliezen. Weet je zeker dat je wil afsluiten?</string>
-    <string name="plans_loading_error_with_cache_button">Abonnementen toch weergeven</string>
-    <string name="plans_loading_error_with_cache_subtitle">Een internetverbinding is vereist om abonnementen te bekijken, dus details kunnen verouderd zijn.</string>
-    <string name="plans_loading_error_no_cache_subtitle">Je hebt een internetverbinding nodig om abonnementen te bekijken.</string>
-    <string name="plans_loading_error_no_plans_subtitle">We kunnen abonnementen momenteel niet laden. Probeer het later opnieuw.</string>
-    <string name="plans_loading_error_no_plans_title">Abonnementen kunnen niet worden geladen</string>
-    <string name="plans_loading_error_network_title">Geen verbinding</string>
     <string name="menu_switch_to_gutenberg_editor">Overschakelen naar de blok-editor</string>
     <string name="stats_loading_block_error">Er is een probleem opgetreden bij het laden van je gegevens. Ververs je pagina om het opnieuw te proberen.</string>
     <string name="stats_loading_error">Gegevens niet geladen</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Bewerk nieuwe berichten en pagina\'s met de blok-editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Blok-editor gebruiken</string>
     <string name="exit">afsluiten</string>
-    <string name="quick_start_sites_type_grow">Breid je publiek uit</string>
-    <string name="quick_start_sites_type_customize">Pas je site aan</string>
-    <string name="quick_start_sites">Volgende stappen</string>
-    <string name="quick_start_dialog_upload_icon_title">Kies een uniek site icoon</string>
-    <string name="quick_start_dialog_upload_icon_message">Je bezoekers zien je icoon in hun browser. Voeg een aangepast icoon toe voor een stijlvolle, professionele look.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Selecteer %1$s Statistieken %2$s om te zien hoe je site presteert.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Tik op %1$s je site icoon %2$s om een nieuwe te uploaden</string>
-    <string name="quick_start_dialog_publish_post_message">Stel een bericht op en publiceer het.</string>
-    <string name="quick_start_dialog_check_stats_title">Controleer je site-statistieken</string>
-    <string name="quick_start_dialog_check_stats_message">Houd de prestaties van je site bij.</string>
-    <string name="quick_start_task_skip_menu_title">Taak overslaan</string>
     <string name="notification_channel_reminder_title">Herinnering</string>
     <string name="stats_select_next_period_description">Volgende periode selecteren</string>
     <string name="stats_select_previous_period_description">Vorige periode selecteren</string>
@@ -2228,20 +2168,6 @@ Language: nl
     <string name="page_delete_error">Er is een probleem opgetreden bij het verwijderen van de pagina</string>
     <string name="set_parent">Instellen als hoofditem</string>
     <string name="dismiss">Negeren</string>
-    <string name="quick_start_focus_point_description">tik hier</string>
-    <string name="quick_start_list_create_site_title">Je site maken</string>
-    <string name="quick_start_list_create_site_subtitle">Ga aan de slag met je site.</string>
-    <string name="quick_start_completed_tour_subtitle">Voelt het niet goed om dingen af te strepen?</string>
-    <string name="quick_start_dialog_view_site_title">Je site bekijken</string>
-    <string name="quick_start_dialog_view_site_message">Bekijk een voorbeeld van je site om te zien wat je bezoekers zien.</string>
-    <string name="quick_start_dialog_share_site_title">Je site delen</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tik op %1$s Social %2$s om door te gaan</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Op %1$s verbindingen %2$s tikken om je sociale media accounts toe te voegen</string>
-    <string name="quick_start_dialog_share_site_message">Koppel je site aan je sociale media accounts en je site zal nieuwe berichten automatisch delen.</string>
-    <string name="quick_start_dialog_publish_post_title">Een bericht publiceren</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nee, dank je</string>
-    <string name="quick_start_dialog_follow_sites_title">Maak verbinding met andere sites</string>
-    <string name="quick_start_button_positive">Starten</string>
     <string name="content_description_more">Meer</string>
     <string name="my_site_create_new_site_title">Je hebt geen sites</string>
     <string name="reader_empty_subscribed_tags_subtitle">Voeg hier tags toe om berichten te vinden over je favoriete onderwerpen</string>
@@ -2435,7 +2361,6 @@ Language: nl
     <string name="edit_photo_screen_title">Foto bewerken</string>
     <string name="share_intent_screen_title">Site kiezen</string>
     <string name="signup_epilogue_screen_title">Nieuw account</string>
-    <string name="login_epilogue_screen_title">Ingelogd als</string>
     <string name="person_detail_screen_title">Persoons detail</string>
     <string name="media_settings_screen_title">Bestandsgegevens</string>
     <string name="publicize_buttons_screen_title">Deelknoppen</string>
@@ -2712,8 +2637,6 @@ Language: nl
     <string name="post_queued">Bericht in wachtrij</string>
     <string name="uploading_post">\"%s\" wordt geüpload</string>
     <string name="connection_to_server_lost">De verbinding met de server is verbroken</string>
-    <string name="login_epilogue_mysites_other">Mijn sites</string>
-    <string name="login_epilogue_mysites_one">Mijn site</string>
     <string name="login_email_client_not_found">Kan je e-mailclient app niet detecteren</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Voer een verificatiecode in</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Voer een gebruikersnaam in</string>
@@ -2864,7 +2787,6 @@ Language: nl
     <string name="start_over_email_subject">Opnieuw beginnen met de site %s</string>
     <string name="site_picker_remove_site_error">Fout bij verwijderen van site. Probeer het later opnieuw</string>
     <string name="editor_post_saved_locally_failed_media">Het bericht bevat mislukte media-uploads en is lokaal opgeslagen</string>
-    <string name="sure_to_remove_account">Deze site uit de app verwijderen?</string>
     <string name="photo_picker_title">Kies een foto</string>
     <string name="error_publish_no_network">Apparaat is offline. Bericht lokaal opgeslagen.</string>
     <string name="editor_post_saved_online">Het bericht is online opgeslagen</string>
@@ -2987,8 +2909,6 @@ Language: nl
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Momenteel niet beschikbaar. Voer je wachtwoord in</string>
     <string name="logging_in">Bezig met inloggen</string>
     <string name="web_address_dialog_hint">Wordt openbaar getoond als je reageert.</string>
-    <string name="plans">Plans</string>
-    <string name="plan">Abonnement</string>
     <string name="export_your_content_message">Je berichten, pagina\'s en instellingen worden naar je e-mailadres, %s, verzonden.</string>
     <string name="export_your_content">Exporteer je content</string>
     <string name="export_email_sent">Exporteer verzonden e-mail!</string>

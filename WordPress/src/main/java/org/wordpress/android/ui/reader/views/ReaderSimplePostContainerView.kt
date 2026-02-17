@@ -45,7 +45,7 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
         recyclerView.adapter = ReaderRelatedPostsAdapter(uiHelpers, imageManager)
     }
 
-    fun showPosts(state: RelatedPostsUiState) = with(binding) {
+    fun showPosts(state: RelatedPostsUiState): Unit = with(binding) {
         if (state.cards?.size == 0) return
 
         railcarJsonStrings.clear()

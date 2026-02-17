@@ -6,8 +6,6 @@ Generator: GlotPress/4.0.3
 Language: eu_ES
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="quick_start_list_upload_media_title">Igo argazki edo bideoak</string>
-    <string name="quick_start_dialog_check_notifications_title">Egiaztatu zure jakinarazpenak</string>
     <string name="reader_comment_menu_edit">Editatu</string>
     <string name="reader_comment_menu_trash">Zakarrontzira mugitu</string>
     <string name="reader_comment_menu_spam">Markatu zabor bezala</string>
@@ -30,7 +28,6 @@ Language: eu_ES
     <string name="my_site_btn_domains">Domeinuak</string>
     <string name="create_site_notification_create_site_action">Sortu gunea</string>
     <string name="stats_disabled_title">Estatistiken bila?</string>
-    <string name="login_epilogue_create_new_site_button">Sortu gune berria</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">Utzi</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Zirrriborrora mugitu</string>
     <string name="post_status_post_published">Argitaratuta</string>
@@ -70,8 +67,6 @@ Language: eu_ES
     <string name="stats_fewer_posts">Bidalketa gutxiago</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Erabili bloke editorea</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Editatu bidalketa eta orrialde berriak bloke editorearekin</string>
-    <string name="quick_start_sites_type_customize">Pertsonalizatu zure gunea</string>
-    <string name="quick_start_sites">Hurrengo urratsak</string>
     <string name="stats_posts_and_pages">Bidalketak eta orrialdeak</string>
     <string name="stats_videos_views_label">Ikustaldiak</string>
     <string name="stats_videos_title_label">Izenburua</string>
@@ -111,8 +106,6 @@ Language: eu_ES
     <string name="notification_settings_main_hint_off">Gaitu jakinarazpenak</string>
     <string name="notification_settings_main_hint_on">Desgaitu jakinarazpenak</string>
     <string name="add_media_progress">Media gehitzen</string>
-    <string name="login_epilogue_mysites_other">Nire guneak</string>
-    <string name="login_epilogue_mysites_one">Nire gunea</string>
     <string name="login_site_address_help_title" a8c-src-lib="module:login">Zein da nire gunearen helbidea?</string>
     <string name="post_title">Izenburua</string>
     <string name="post_status_draft">Zirriborroa</string>
@@ -124,7 +117,6 @@ Language: eu_ES
     <string name="media_videos">Bideoak</string>
     <string name="media_documents">Dokumentuak</string>
     <string name="tabbar_accessibility_label_notifications">Jakinarazpenak. Kudeatu zure jakinarazpenak.</string>
-    <string name="sure_to_remove_account">Kendu gunea aplikaziotik?</string>
     <string name="reader_label_visit">Gunea bisitatu</string>
     <string name="reader_toast_err_comment_not_found">Ez da iruzkina aurkitu!</string>
     <string name="error_notif_q_action_reply">Ezin izan da iruzkina erantzun. Mesedez saiatu berriro beranduago.</string>
@@ -175,8 +167,6 @@ Language: eu_ES
     <string name="checking_email" a8c-src-lib="module:login">E-posta egiaztatzen</string>
     <string name="logging_in">Saioa hasten</string>
     <string name="web_address_dialog_hint">Publikoki erakusten da iruzkinak egitean.</string>
-    <string name="plan">Plana</string>
-    <string name="plans">Planak</string>
     <string name="export_your_content_message">Zure bidalketak, orrialdeak eta ezarpenak e-posta bidez bidaliko zaizkizu %s helbidera.</string>
     <string name="export_your_content">Esportatu zure edukia</string>
     <string name="exporting_content_progress">Edukia esportatzen…</string>

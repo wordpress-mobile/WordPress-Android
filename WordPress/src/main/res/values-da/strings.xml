@@ -32,8 +32,6 @@ Language: da_DK
     <string name="alignment_left">Venstre</string>
     <string name="error_fetch_users_list">Kunne ikke hente sidens brugere</string>
     <string name="people_dropdown_item_team">Hold</string>
-    <string name="plan">Plan</string>
-    <string name="plans">Planer</string>
     <string name="export_your_content">Eksporter dit indhold</string>
     <string name="exporting_content_progress">Eksporterer indhold…</string>
     <string name="show_purchases">Vis køb</string>

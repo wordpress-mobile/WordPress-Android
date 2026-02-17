@@ -32,7 +32,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import android.content.res.Configuration
+import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.navmenus.MenuListUiState
 import org.wordpress.android.ui.navmenus.MenuUiModel
 
@@ -183,3 +186,77 @@ private fun MenuListItem(
         }
     }
 }
+
+// region Previews
+
+private val sampleMenus = listOf(
+    MenuUiModel(id = 1L, name = "Main Menu", description = "Primary navigation menu", locations = listOf("primary")),
+    MenuUiModel(id = 2L, name = "Footer Menu", description = "Links in the footer", locations = listOf("footer")),
+    MenuUiModel(id = 3L, name = "Social Menu", description = "", locations = emptyList())
+)
+
+@Preview(name = "Light Mode", showBackground = true)
+@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun MenuListScreenPreview() {
+    AppThemeM3 {
+        MenuListScreen(
+            state = MenuListUiState(menus = sampleMenus),
+            onEditMenuClick = {},
+            onMenuItemsClick = {},
+            onRefresh = {},
+            onLoadMore = {},
+            onFabVisibilityChange = {}
+        )
+    }
+}
+
+@Preview(name = "Loading Light", showBackground = true)
+@Preview(name = "Loading Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun MenuListScreenLoadingPreview() {
+    AppThemeM3 {
+        MenuListScreen(
+            state = MenuListUiState(isLoading = true),
+            onEditMenuClick = {},
+            onMenuItemsClick = {},
+            onRefresh = {},
+            onLoadMore = {},
+            onFabVisibilityChange = {}
+        )
+    }
+}
+
+@Preview(name = "Empty Light", showBackground = true)
+@Preview(name = "Empty Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun MenuListScreenEmptyPreview() {
+    AppThemeM3 {
+        MenuListScreen(
+            state = MenuListUiState(menus = emptyList()),
+            onEditMenuClick = {},
+            onMenuItemsClick = {},
+            onRefresh = {},
+            onLoadMore = {},
+            onFabVisibilityChange = {}
+        )
+    }
+}
+
+@Preview(name = "Error Light", showBackground = true)
+@Preview(name = "Error Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun MenuListScreenErrorPreview() {
+    AppThemeM3 {
+        MenuListScreen(
+            state = MenuListUiState(error = "Failed to load menus. Please try again."),
+            onEditMenuClick = {},
+            onMenuItemsClick = {},
+            onRefresh = {},
+            onLoadMore = {},
+            onFabVisibilityChange = {}
+        )
+    }
+}
+
+// endregion
