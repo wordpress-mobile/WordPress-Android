@@ -95,7 +95,7 @@ GEM
     emoji_regex (3.2.3)
     erubi (1.13.1)
     excon (0.112.0)
-    faraday (1.10.4)
+    faraday (1.10.5)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
       faraday-excon (~> 1.1)
@@ -389,6 +389,7 @@ PLATFORMS
 
 DEPENDENCIES
   danger-dangermattic (~> 1.2)
+  faraday (~> 1.10, >= 1.10.5)
   fastlane (~> 2)
   fastlane-plugin-firebase_app_distribution (~> 0.10)
   fastlane-plugin-sentry
