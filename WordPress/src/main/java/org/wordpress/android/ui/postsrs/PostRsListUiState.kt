@@ -9,7 +9,7 @@ import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
 
-data class ConfirmationDialogState(
+class ConfirmationDialogState(
     val showTrash: Boolean = false,
     val showDelete: Boolean = false,
     val onConfirmTrash: () -> Unit = {},

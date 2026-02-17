@@ -513,17 +513,15 @@ class PostRsListViewModel @Inject constructor(
 
         @Suppress("TooGenericExceptionCaught")
         try {
-            val showStatus =
-                _searchQuery.value.isNotBlank()
+            val isSearch = _searchQuery.value.isNotBlank()
             val items = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
                     item.state.toUiModel(
                         item.id,
-                        showStatus = showStatus
+                        showStatus = isSearch
                     )
                 }
             }
-            val isSearch = _searchQuery.value.isNotBlank()
             val uiModels = items.map { model ->
                 val effectiveTab = if (isSearch) {
                     tabForStatus(model.status)
