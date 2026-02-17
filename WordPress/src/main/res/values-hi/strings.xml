@@ -33,7 +33,6 @@ Language: hi_IN
     <string name="stats_months_and_years_views_label">व्यू</string>
     <string name="stats_insights_today_stats">आज</string>
     <string name="stats_videos_title_label">शीर्षक</string>
-    <string name="quick_start_button_positive">जाओ</string>
     <string name="support_identity_input_dialog_email_label">ईमेल</string>
     <string name="notification_settings_followed_dialog_email_posts_weekly">साप्ताहिक</string>
     <string name="notification_settings_followed_dialog_email_posts_daily">प्रतिदिन</string>
@@ -86,7 +85,6 @@ Language: hi_IN
     <string name="editor_uploading_post">आपकी पोस्ट अपलोड हो रहे है</string>
     <string name="uploading_media">मीडिया अपलोड हो रही है…</string>
     <string name="button_retry">पुन: प्रयास करें</string>
-    <string name="login_epilogue_mysites_one">मेरी साइट</string>
     <string name="login_site_address" a8c-src-lib="module:login">साइट का पता</string>
     <string name="login_continue" a8c-src-lib="module:login">जारी रखें</string>
     <string name="next">अगला</string>

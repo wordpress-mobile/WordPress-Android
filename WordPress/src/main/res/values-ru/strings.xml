@@ -244,7 +244,6 @@ Language: ru
     <string name="more_content_description_recent_activity">Другие недавние действия</string>
     <string name="more_content_description_pages">Другие страницы</string>
     <string name="more_content_description_posts">Другие записи</string>
-    <string name="more_content_description_quick_start">Другие ознакомительные занятия</string>
     <string name="more_content_description_today_stats">Другая статистика за сегодня</string>
     <string name="more_content_description_blogging_prompts">Другие подсказки</string>
     <string name="more_content_description_promote_blaze">Другое: Blaze</string>
@@ -397,7 +396,6 @@ Language: ru
     <string name="site_monitoring_tab_title_php_logs">Журналы PHP</string>
     <string name="site_monitoring_tab_title_metrics">Показатели</string>
     <string name="site_monitoring">Мониторинг сайтов</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Используйте раздел &lt;b&gt;Поиск&lt;/b&gt;, чтобы искать сайты и теги. Перейдите в раздел &lt;b&gt;Подписки&lt;/b&gt;, чтобы просмотреть подписной контент и управлять своими подписками.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Перейти в «Подписки»</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">В блогах, на которые вы подписаны, в последнее время ничего нового не публиковалось</string>
     <string name="reader_no_followed_blogs_description_subs">Подписывайтесь на блоги с помощью раздела «Поиск» или найдите блог, который вам уже понравился.</string>
@@ -825,9 +823,6 @@ Language: ru
     <string name="wp_jetpack_deep_link_overlay_description">Кажется, у вас установлено приложение Jetpack.\n\nОткрывать в дальнейшем ссылки в приложении Jetpack?\n\nЭто можно изменить в любой момент в разделе «Настройки приложения &gt; Открывать ссылки в Jetpack»</string>
     <string name="wp_jetpack_deep_link_overlay_title">Открывать ссылки в Jetpack?</string>
     <string name="wp_jetpack_continue_without_jetpack">Продолжить без Jetpack</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">В Jetpack есть статистика, уведомления и множество других функций, которые помогут создать сайт мечты.\n\nПриложение WordPress больше не поддерживает создание новых сайтов.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">В Jetpack есть статистика, уведомления и множество других функций, которые помогут создать сайт мечты.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Создайте новый сайт WordPress в приложении Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">веб-ссылки</string>
     <string name="deep_linking_urilinks_alias_label">URI-ссылки</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Перейдите в приложение Jetpack, чтобы получать на устройство  уведомления в реальном времени.</string>
@@ -937,24 +932,11 @@ Language: ru
     <string name="stats_action_card_blogging_reminders_title">Установите напоминания о блоггинге</string>
     <string name="stats_action_card_grow_audience_button_label">Смотреть курс</string>
     <string name="stats_action_card_grow_audience_title">Увеличьте аудиторию</string>
-    <string name="quick_start_sites_type_all_tasks_completed">Все задачи выполнены</string>
-    <string name="quick_start_list_task_complete">Задача выполнена.</string>
     <string name="me_btn_scan_login_code">Отсканировать код для входа</string>
     <string name="stats_insights_likes_guide_card">⭐️%2$s ― столько отметок \"Нравится\" получала ваша последняя публикация %1$s.</string>
     <string name="stats_most_popular_percent_views_empty">Недостаточно активности. Вернитесь позже, когда на сайте будет больше посетителей!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s%% от общего количества подписчиков</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">Поздравляем! Теперь вы знаете, как тут всё устроено&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">Изучите приложение</string>
-    <string name="quick_start_list_upload_media_subtitle">Загружайте на сайт файлы с устройства или сделанные на камеру фото и видео</string>
-    <string name="quick_start_list_upload_media_title">Загружайте фото и видео</string>
-    <string name="quick_start_list_check_notification_subtitle">Получайте обновления в реальном времени прямо на мобильное устройство</string>
-    <string name="quick_start_dialog_upload_media_message">Нажмите %1$sМедиафайлы%2$s, чтобы открыть библиотеку.</string>
-    <string name="quick_start_dialog_check_notifications_message">Получайте обновления в реальном времени прямо на мобильное устройство.</string>
-    <string name="quick_start_dialog_check_notifications_title">Проверка уведомлений</string>
-    <string name="quick_start_dialog_check_notifications_message_short">Перейдите на вкладку %1$sУведомления%2$s, чтобы получать изменения на ходу.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Нажмите %1$s и %2$s, чтобы загрузить медиафайл. Можете добавить его в записи или на страницы с любого устройства.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Используйте раздел &lt;b&gt;Поиск&lt;/b&gt;, чтобы искать сайты и метки.</string>
     <string name="photo_picker_video_thumbnail_content_description">Миниатюра видео</string>
     <string name="stats_details_top_commentators">Топ комментаторов</string>
     <string name="stats_published_years_ago">Опубликовано %1$d г./лет назад</string>
@@ -974,8 +956,6 @@ Language: ru
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Ответ</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Ежедневная подсказка</string>
     <string name="blogging_prompts_onboarding_got_it">Понятно</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Нажмите &lt;b&gt;%1$s&lt;/b&gt; для просмотра своего сайта</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Выберите %1$s Чтиво %2$s для поиска других сайтов.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Узнайте больше о подсказках</string>
     <string name="photo_picker_video_thumbnail_unselected">Выделение с видео снято</string>
     <string name="photo_picker_video_thumbnail_selected">Выбрано видео</string>
@@ -1063,7 +1043,6 @@ Language: ru
     <string name="site_creation_intent_art">Искусство</string>
     <string name="new_site_creation_intents_input_hint">Пример: Мода, поэзия, политика</string>
     <string name="new_site_creation_intents_title">Тема сайта</string>
-    <string name="quick_start_site_menu_tab_message_short">Нажмите &lt;b&gt;%1$s&lt;/b&gt;, чтобы продолжить.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Пропустить сейчас</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Смотреть другие подсказки</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Поделиться подсказкой о ведении блога</string>
@@ -1152,7 +1131,6 @@ Language: ru
     <string name="comment_edit_user_name">Имя</string>
     <string name="comment_edit_menu_done">Готово</string>
     <string name="weekly_roundup">За неделю</string>
-    <string name="quick_start_list_create_site_message">Сайт создан! Выполните ещё задачу.</string>
     <string name="domains_free_plan_get_your_domain_title">Получите собственный домен</string>
     <string name="recommend_app_generic_get_template_error">Возникла неизвестная ошибка получания шаблона приложения рекомендаций</string>
     <string name="recommend_app_bad_format_response">Получен неверный ответ</string>
@@ -1164,8 +1142,6 @@ Language: ru
     <string name="blogging_reminders_notification_time">Время уведомления</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Вы получите напоминания о необходимости писать в блог &lt;b&gt;ежедневно&lt;/b&gt; в &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s в неделю в %2$s</string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s из %2$s завершено</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Изучите основы с помощью быстрого пошагового руководства.</string>
     <string name="comment_batch_moderation_error">Неудалось отмодерировать один или несколько комментариев</string>
     <string name="create_site_notification_create_site_action">Создание сайта</string>
     <string name="create_site_notification_text">Получите работающий сайт всего за пару шагов</string>
@@ -1174,12 +1150,6 @@ Language: ru
     <string name="stats_disabled_enable_stats_button">Включить статистику сайта</string>
     <string name="stats_disabled_subtitle">Включите статистику сайта, чтобы посмотреть подробные данные о посещаемости, пользовательских оценках, комментариях и о подписчиках.</string>
     <string name="stats_disabled_title">Ищите статистику?</string>
-    <string name="quick_start_list_upload_icon_subtitle">Показывается посетителям на вкладках браузера и некоторых других местах онлайн.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Покажите мне</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">Нужна помощь по управлению сайтом через приложение?</string>
-    <string name="login_epilogue_create_new_site_button">Создать новый сайт</string>
-    <string name="login_epilogue_mysites_subheading">Вы можете переключить сайт в любое время.</string>
-    <string name="login_epilogue_mysites_heading">Выберите сайт, чтобы открыть его</string>
     <string name="scan_multisite_not_supported_subtitle">К сожалению, на данный момент система Jetpack Scan несовместима с мультисайтовыми установками WordPress.</string>
     <string name="scan_multisite_not_supported_title">Мультисайтовые установки WordPress не поддерживаются</string>
     <string name="activity_log_visit_our_documentation_page">посетите нашу страницу документации</string>
@@ -1273,13 +1243,6 @@ Language: ru
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Проверка завершена&lt;/b&gt; &lt;br&gt;&lt;/br&gt; Угроз не найдено</string>
     <string name="scan_fixing_threats_title_singular">Устранение угрозы</string>
     <string name="disable">Отключить</string>
-    <string name="quick_start_list_review_pages_subtitle">Просмотрите ваши страницы, внесите изменение или добавьте/удалите страницы.</string>
-    <string name="quick_start_list_view_site_title">Просмотрите свой сайт</string>
-    <string name="quick_start_list_follow_site_subtitle">Находите и подписывайтесь на сайты вдохновляющие вас.</string>
-    <string name="quick_start_list_enable_sharing_title">Поделиться в социальных сетях</string>
-    <string name="quick_start_list_enable_sharing_subtitle">Автоматически делитесь вашими новыми записями в социальных сетях.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Задайте вашему сайту название отражающее его суть и тематику.</string>
-    <string name="quick_start_list_check_stats_title">Посмотрите статистику сайта</string>
     <string name="backup_download_status_failure_bullet2">Мы всё еще пытаемся создать файл скачиваемой резервной копии.</string>
     <string name="backup_download_status_failure_bullet1">Мы пока не можем оценить как долго займет создание резервной копии сайта.</string>
     <string name="backup_download_status_failure_heading">Хм, не удается получить статус создания скачиваемой резервной копии</string>
@@ -1352,9 +1315,6 @@ Language: ru
     <string name="backup_download_complete_failed_title">Загрузка не удалась.</string>
     <string name="web_preview_tablet">Планшет</string>
     <string name="web_preview_mobile">Мобильное устройство</string>
-    <string name="quick_start_dialog_review_pages_message_short">Выберите %1$s страницы %2$s для просмотра списка страниц.</string>
-    <string name="quick_start_dialog_review_pages_message">Изменить, добавить или удалить страницы вашего сайта.</string>
-    <string name="quick_start_dialog_review_pages_title">Обзор страниц сайта</string>
     <string name="reader_menu_mark_as_unseen">Отметить как непрочитанное</string>
     <string name="reader_menu_mark_as_seen">Отметить как прочитанное</string>
     <string name="error_media_upload_failed_for_reason">Загрузка медиафайла не удалась.\n%1$s</string>
@@ -1573,7 +1533,6 @@ Language: ru
     <string name="mlp_create_blank_page">Создать пустую страницу</string>
     <string name="mlp_choose_layout_subtitle">Начните с выбора заранее подготовленных вариантов макета, или начните с пустой страницы.</string>
     <string name="mlp_choose_layout_title">Выберите макет</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Нажмите %1$s Создать. %2$s Затем выберите &lt;b&gt;Запись блога&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Выбрать с устройства</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Редактирование значков сайта на самостоятельно размещенном сайте WordPress требует наличия плагина Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">Не найден переход на ссылаемую страницу</string>
@@ -1601,8 +1560,6 @@ Language: ru
     <string name="send_link_by_email" a8c-src-lib="module:login">Прислать ссылку по электронной почте</string>
     <string name="reset_your_password" a8c-src-lib="module:login">Сбросить пароль</string>
     <string name="reader_error_request_failed_title">При выполнении запроса возникла проблема. Повторите попытку позже.</string>
-    <string name="quick_start_list_update_site_title_title">Проверьте название сайта</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Нажмите &lt;b&gt;%1$s&lt;/b&gt; для установки нового названия</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Удаление в корзину этой записи отменит локальные изменения, вы точно хотите продолжить?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Название сайта может быть изменено только администратором.</string>
     <string name="my_site_title_changer_dialog_hint">Название сайта отображается в заголовке браузера и отображается большинством тем в заголовке сайта.</string>
@@ -2054,29 +2011,12 @@ Language: ru
     <string name="stats_more_posts">Больше записей</string>
     <string name="stats_fewer_posts">Меньше записей</string>
     <string name="new_site_creation_preview_back_pressed_warning">Вы можете потерять ваш прогресс, вы точно хотите выйти?</string>
-    <string name="plans_loading_error_with_cache_button">Всё равно посмотреть тарифы</string>
-    <string name="plans_loading_error_with_cache_subtitle">Для просмотра тарифов требуется подключение к Интернет, данные могут быть неактуальны.</string>
-    <string name="plans_loading_error_no_cache_subtitle">Для просмотра тарифов требуется подключение к Интернет.</string>
-    <string name="plans_loading_error_no_plans_subtitle">Невозможно было загрузить тарифы. Пожалуйста, попробуйте позже.</string>
-    <string name="plans_loading_error_no_plans_title">Невозможно загрузить тарифы</string>
-    <string name="plans_loading_error_network_title">Нет подключения</string>
     <string name="menu_switch_to_gutenberg_editor">Переключиться на редактор блоков</string>
     <string name="stats_loading_block_error">Возникла проблема загрузки данных, обновите страницу, чтобы попробовать снова.</string>
     <string name="stats_loading_error">Данные не загружены</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Редактировать новые записи и страницы в редакторе блоков</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Использовать редактор блоков</string>
     <string name="exit">выход</string>
-    <string name="quick_start_sites_type_grow">Привлекайте аудиторию</string>
-    <string name="quick_start_sites_type_customize">Настроить ваш сайт</string>
-    <string name="quick_start_sites">Следующие шаги</string>
-    <string name="quick_start_dialog_upload_icon_title">Выберите уникальный значок сайта</string>
-    <string name="quick_start_dialog_upload_icon_message">Ваши посетители увидят ваш значок в своем браузере. Добавьте пользовательский значок для стильного, профессионального вида.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Нажмите %1$s Статистика %2$s для просмотра как живет ваш сайт.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Нажмите %1$s Значок вашего сайта %2$s для загрузки нового</string>
-    <string name="quick_start_dialog_publish_post_message">Создайте черновик и опубликуйте свою первую запись.</string>
-    <string name="quick_start_dialog_check_stats_title">Посмотреть статистику сайта</string>
-    <string name="quick_start_dialog_check_stats_message">Будьте в курсе статистики вашего сайта.</string>
-    <string name="quick_start_task_skip_menu_title">Пропустить задачу</string>
     <string name="notification_channel_reminder_title">Напоминание</string>
     <string name="stats_select_next_period_description">Выбор следующего периода</string>
     <string name="stats_select_previous_period_description">Выбор предыдущего периода</string>
@@ -2228,20 +2168,6 @@ Language: ru
     <string name="page_delete_error">Возникла проблема при удалении страницы</string>
     <string name="set_parent">Установить родителя</string>
     <string name="dismiss">Закрыть</string>
-    <string name="quick_start_focus_point_description">нажмите здесь</string>
-    <string name="quick_start_list_create_site_title">Создайте ваш сайт</string>
-    <string name="quick_start_list_create_site_subtitle">Запустите ваш сайт</string>
-    <string name="quick_start_completed_tour_subtitle">правда хорошо просто выбирать из списка?</string>
-    <string name="quick_start_dialog_view_site_title">Посмотреть ваш сайт</string>
-    <string name="quick_start_dialog_view_site_message">Посмотрите ваш сайт перед тем, как его увидят посетители.</string>
-    <string name="quick_start_dialog_share_site_title">Делитесь содержимым сайта</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Нажмите %1$s Социальные сети %2$s для продолжения</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Нажмите %1$s Подключения %2$s для добавления учетных записей в соцсетях</string>
-    <string name="quick_start_dialog_share_site_message">Подключите ваши учетные записи в соцсетях и ваш сайт автоматически будет делиться новыми записями.</string>
-    <string name="quick_start_dialog_publish_post_title">Опубликовать запись</string>
-    <string name="quick_start_dialog_need_help_button_negative">Нет, спасибо</string>
-    <string name="quick_start_dialog_follow_sites_title">Подпишитесь на другие сайты</string>
-    <string name="quick_start_button_positive">Вперед</string>
     <string name="content_description_more">Больше</string>
     <string name="my_site_create_new_site_title">У вас нет сайтов</string>
     <string name="reader_empty_subscribed_tags_subtitle">Добавьте любимые метки здесь, чтобы найти по ним записи</string>
@@ -2435,7 +2361,6 @@ Language: ru
     <string name="edit_photo_screen_title">Изменить фото</string>
     <string name="share_intent_screen_title">Выберите сайт</string>
     <string name="signup_epilogue_screen_title">Новая учетная запись</string>
-    <string name="login_epilogue_screen_title">Вход от</string>
     <string name="person_detail_screen_title">Информация о человеке</string>
     <string name="media_settings_screen_title">Информация о файле</string>
     <string name="publicize_buttons_screen_title">Кнопки поделиться</string>
@@ -2712,8 +2637,6 @@ Language: ru
     <string name="post_queued">Запись в очереди</string>
     <string name="uploading_post">Выполняется загрузка записи «%s»</string>
     <string name="connection_to_server_lost">Соединение с сервером прервано</string>
-    <string name="login_epilogue_mysites_other">Мои сайты</string>
-    <string name="login_epilogue_mysites_one">Мой сайт</string>
     <string name="login_email_client_not_found">Не удалось определить ваш почтовый клиент</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Введите проверочный код.</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Введите имя пользователя</string>
@@ -2864,7 +2787,6 @@ Language: ru
     <string name="start_over_email_subject">Переделать сайт %s</string>
     <string name="site_picker_remove_site_error">Невозможно удалить сайт, попробуйте позже.</string>
     <string name="editor_post_saved_locally_failed_media">Эта запись сохранена локально: она содержит медиафайлы, загрузка которых не завершена.</string>
-    <string name="sure_to_remove_account">Удалить этот сайт из приложения?</string>
     <string name="photo_picker_title">Выбрать фото</string>
     <string name="error_publish_no_network">Нет доступа к сети. Запись сохранена локально.</string>
     <string name="editor_post_saved_online">Запись сохранена в Интернете.</string>
@@ -2987,8 +2909,6 @@ Language: ru
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">В настоящий момент ссылка недоступна. Введите пароль</string>
     <string name="logging_in">Вход в систему</string>
     <string name="web_address_dialog_hint">Отображается для всех пользователей, когда вы добавляете комментарии.</string>
-    <string name="plans">Тарифные планы</string>
-    <string name="plan">Тарифный план</string>
     <string name="export_your_content_message">Ваши записи, страницы и настройки будут отправлены вам по электронной почте %s.</string>
     <string name="export_your_content">Экспортируйте ваше содержимое</string>
     <string name="export_email_sent">Сообщение об экспорте отправлено.</string>

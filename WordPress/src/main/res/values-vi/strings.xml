@@ -38,23 +38,10 @@ Language: vi_VN
     <string name="stats_action_card_blogging_reminders_title">Nhắc đăng bài</string>
     <string name="stats_action_card_grow_audience_button_label">Chọn khóa học</string>
     <string name="stats_action_card_grow_audience_title">Thu hút độc giả</string>
-    <string name="quick_start_sites_type_all_tasks_completed">Đã hoàn thành xong!</string>
-    <string name="quick_start_list_task_complete">Hoàn thành mục tiêu</string>
     <string name="me_btn_scan_login_code">Quét mã đăng nhập</string>
     <string name="stats_insights_likes_guide_card">⭐️ Bài đăng gần nhất %1$s đã nhận %2$s lượt thích.</string>
     <string name="stats_most_popular_percent_views_empty">Chưa có hoạt động. Kiểm tra lại sau khi trang của bạn có khách truy cập!</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">Chúc mừng! Bạn đã rành rồi đó&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">Hiểu cách dùng app</string>
-    <string name="quick_start_list_upload_media_subtitle">Tải media từ thiết bị lên trang của bạn</string>
-    <string name="quick_start_list_upload_media_title">Tải lên ảnh hoặc video</string>
-    <string name="quick_start_list_check_notification_subtitle">Cập nhật thời gian thực trong bàn tay</string>
-    <string name="quick_start_dialog_upload_media_message">Chọn %1$s Media %2$s để xem thư viện media của bạn.</string>
-    <string name="quick_start_dialog_check_notifications_message">Cập nhật thời gian thực trong bàn tay.</string>
-    <string name="quick_start_dialog_check_notifications_title">Xem thông báo của bạn</string>
-    <string name="quick_start_dialog_check_notifications_message_short">Chọn tab %1$s Thông báo %2$s để nhận cập nhật mới.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">Chọn %1$s thêm %2$s để tải lên media. Bạn có thể thêm nó vào bài viết/trang từ bất kỳ thiết bị nào.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Dùng &lt;b&gt; Khám phá &lt;/b&gt; để tìm blog và thẻ.</string>
     <string name="photo_picker_video_thumbnail_content_description">Ảnh đại diện video</string>
     <string name="stats_details_top_commentators">Top người bình luận</string>
     <string name="stats_published_years_ago">Đăng %1$d năm trước</string>
@@ -74,8 +61,6 @@ Language: vi_VN
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Câu hỏi</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Nhắc Mỗi Ngày</string>
     <string name="blogging_prompts_onboarding_got_it">Đã hiểu</string>
-    <string name="quick_start_dialog_view_your_site_message_short">Nhấn &lt;b&gt;%1$s&lt;/b&gt; để xem blog của bạn</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Chọn %1$s Đọc %2$s để tìm những blog khác.</string>
     <string name="stats_insights_popular_title">🔥 Ưa Chuộng</string>
     <string name="blogging_reminders_prompt_help_button_desc">Tìm hiểu thêm về nhắc nhở</string>
     <string name="photo_picker_video_thumbnail_unselected">Bỏ chọn video</string>
@@ -161,7 +146,6 @@ Language: vi_VN
     <string name="site_creation_intent_art">Nghệ thuật</string>
     <string name="new_site_creation_intents_input_hint">E.g. Thời trang, Thơ, Chính trị</string>
     <string name="new_site_creation_intents_title">Chủ đề blog</string>
-    <string name="quick_start_site_menu_tab_message_short">Nhấn &lt;b&gt;%1$s&lt;/b&gt; để tiếp tục.</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Xem nhiều nhắc nhở hơn</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Chia sẻ nhắc viết bài</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Đã trả lời</string>
@@ -246,7 +230,6 @@ Language: vi_VN
     <string name="comment_edit_user_name">Tên</string>
     <string name="comment_edit_menu_done">Xong</string>
     <string name="weekly_roundup">Tóm Tắt Tuần</string>
-    <string name="quick_start_list_create_site_message">Đã tạo blog! Tiếp tục nhiệm vụ khác.</string>
     <string name="domains_free_plan_get_your_domain_title">Tên miền miễn phí</string>
     <string name="recommend_app_generic_get_template_error">Xảy ra lỗi khi tải mẫu ứng dụng đề xuất</string>
     <string name="me_btn_share">Giới thiệu WordPress cho bạn bè</string>
@@ -258,8 +241,6 @@ Language: vi_VN
     <string name="blogging_reminders_notification_time">Thời gian thông báo</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Bạn sẽ nhận thông báo &lt;b&gt;mỗi ngày&lt;/b&gt; vào lúc &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s mỗi tuần vào lúc %2$s</string>
-    <string name="quick_start_sites_type_tasks_completed">Đã xong %1$s trong tổng số %2$s</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Học cách sử dụng cơ bản với hướng dẫn nhanh.</string>
     <string name="comment_batch_moderation_error">Không thể kiểm duyệt một hoặc nhiều bình luận</string>
     <string name="create_site_notification_create_site_action">Tạo blog</string>
     <string name="create_site_notification_title">Tạo trang WordPress của bạn</string>
@@ -268,13 +249,7 @@ Language: vi_VN
     <string name="stats_disabled_enable_stats_error_message">Không thể bật thống kê blog</string>
     <string name="stats_disabled_subtitle">Bật thống kê blog để xem thông tin chi tiết về số lượt truy cập, lượt thích, lượt bình luận, lượt theo dõi.</string>
     <string name="stats_disabled_title">Đang tìm thống kê?</string>
-    <string name="quick_start_list_upload_icon_subtitle">Hiển thị trên tab trình duyệt của khách truy cập và những nơi khác.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">Hướng dẫn thêm</string>
     <string name="scan_multisite_not_supported_subtitle">Rất tiếc, Jetpack Scan không tương thích với cài đặt nhiều trang WordPress cùng lúc.</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">Cần trợ giúp quản lý blog này trong ứng dụng?</string>
-    <string name="login_epilogue_create_new_site_button">Tạo blog mới</string>
-    <string name="login_epilogue_mysites_subheading">Bạn có thể chuyển sang blog khác bất cứ lúc nào.</string>
-    <string name="login_epilogue_mysites_heading">Chọn một blog</string>
     <string name="scan_multisite_not_supported_title">Không hỗ trợ nhiều trang WordPress cùng lúc</string>
     <string name="activity_log_visit_our_documentation_page">xem trang tài liệu</string>
     <string name="activity_log_multisite_message">Jetpack Backup for Multisite cung cấp các bản sao lưu có thể tải xuống, dễ dàng khôi phục nội dung. Tìm hiểu thêm %1$s.</string>
@@ -366,13 +341,6 @@ Language: vi_VN
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Quét Xong&lt;/b&gt; &lt;br&gt; Không tìm thấy mối đe dọa</string>
     <string name="scan_fixing_threats_title_singular">Sửa mối đe dọa</string>
     <string name="disable">Tắt</string>
-    <string name="quick_start_list_review_pages_subtitle">Kiểm tra và cập nhật các trang, thêm hoặc xóa chúng.</string>
-    <string name="quick_start_list_enable_sharing_title">Chia sẻ mạng xã hội</string>
-    <string name="quick_start_list_enable_sharing_subtitle">Tự động chia sẻ bài viết mới với mạng xã hội của bạn.</string>
-    <string name="quick_start_list_view_site_title">Ghé thăm blog</string>
-    <string name="quick_start_list_follow_site_subtitle">Khám phá và theo dõi những blog mà bạn thích.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Chọn tên blog thể hiện tính cách và chủ đề của trang.</string>
-    <string name="quick_start_list_check_stats_title">Xem thống kê</string>
     <string name="backup_download_status_failure_bullet2">Chúng tôi đang cố gắng tạo tập tin sao lưu có thể tải xuống của bạn.</string>
     <string name="backup_download_status_failure_bullet1">Chúng tôi không thể biết sẽ mất bao lâu để bản sao lưu của bạn có thể tải xuống.</string>
     <string name="backup_download_status_failure_heading">Hmm, chúng tôi không tìm thấy bản sao lưu có thể tải xuống của bạn</string>
@@ -444,9 +412,6 @@ Language: vi_VN
     <string name="restore_details_header">Khôi phục Blog</string>
     <string name="backup_download_complete_failed_title">Tải về thất bại</string>
     <string name="web_preview_tablet">Máy tính bảng</string>
-    <string name="quick_start_dialog_review_pages_message_short">Chọn %1$s Trang %2$s để xem danh sách trang.</string>
-    <string name="quick_start_dialog_review_pages_message">Cập nhật, tạo hoặc xóa trang.</string>
-    <string name="quick_start_dialog_review_pages_title">Xem lại trang</string>
     <string name="web_preview_mobile">Điện thoại</string>
     <string name="reader_menu_mark_as_unseen">Đánh dấu chưa đọc</string>
     <string name="reader_menu_mark_as_seen">Đánh dấu đã đọc</string>
@@ -661,7 +626,6 @@ Language: vi_VN
     <string name="label_close_button">Đóng</string>
     <string name="mlp_preview_page">Xem trước</string>
     <string name="mlp_choose_layout_title">Chọn bố cục</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Nhấn %1$s Tạo. %2$s Chọn tiếp &lt;b&gt;Bài viết&lt;/b&gt;</string>
     <string name="mlp_create_page">Tạo trang</string>
     <string name="mlp_create_blank_page">Tạo trang trống</string>
     <string name="mlp_choose_layout_subtitle">Bắt đầu bằng cách chọn một trong những bố cục cho sẵn. Hoặc tạo một trang trống.</string>
@@ -692,8 +656,6 @@ Language: vi_VN
     <string name="reset_your_password" a8c-src-lib="module:login">Đổi mật khẩu</string>
     <string name="get_started" a8c-src-lib="module:login">Bắt đầu</string>
     <string name="reader_error_request_failed_title">Xảy ra lỗi khi xử lý yêu cầu. Xin thử lại sau.</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Nhấn &lt;b&gt;%1$s&lt;/b&gt; để thêm tựa đề mới</string>
-    <string name="quick_start_list_update_site_title_title">Kiểm tra tiêu đề blog</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Cho bài này vào thùng rác sẽ hủy bỏ hết thay đổi, bạn có chắc muốn tiếp tục?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Chỉ có quản trị viên mới có quyền đổi tiêu đề blog.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Thay đổi chưa được lưu</string>
@@ -1131,29 +1093,12 @@ Language: vi_VN
     <string name="stats_fewer_posts">Ít bài hơn</string>
     <string name="stats_site_not_loaded_yet">Chưa tải blog xong</string>
     <string name="new_site_creation_preview_back_pressed_warning">Bạn sẽ mất quá trình này. Bạn có chắc muốn thoát?</string>
-    <string name="plans_loading_error_with_cache_button">Vẫn xem các Gói</string>
-    <string name="plans_loading_error_no_cache_subtitle">Cần có kết nối mạng để xem các Gói.</string>
-    <string name="plans_loading_error_with_cache_subtitle">Thông chi tiết về các Gói có thể bị lỗi thời nếu không dùng mạng.</string>
-    <string name="plans_loading_error_no_plans_subtitle">Không thể tải các Gói vào lúc này. Hãy thử lại sau.</string>
-    <string name="plans_loading_error_network_title">Không có mạng</string>
     <string name="menu_switch_to_gutenberg_editor">Dùng trình soạn thảo khối</string>
     <string name="stats_loading_block_error">Xảy ra lỗi khi tải dữ liệu của bạn, làm tươi trang để thử lại.</string>
     <string name="stats_loading_error">Không thể tải dữ liệu</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Dùng Trình soạn thảo Khối</string>
-    <string name="plans_loading_error_no_plans_title">Không thể tải các Gói</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Sửa bài mới và trang với trình soạn thảo khối</string>
     <string name="exit">thoát</string>
-    <string name="quick_start_sites_type_grow">Thu hút độc giả</string>
-    <string name="quick_start_sites">Kế tiếp</string>
-    <string name="quick_start_dialog_upload_icon_message">Khách truy cập trang sẽ thấy biểu tượng của bạn trên trình duyệt. Thêm một biểu tượng xinh đẹp hoặc chuyên nghiệp.</string>
-    <string name="quick_start_sites_type_customize">Tùy biến blog</string>
-    <string name="quick_start_dialog_upload_icon_title">Chọn biểu tượng blog</string>
-    <string name="quick_start_dialog_check_stats_message_short">Nhấn %1$s Thống Kê %2$s để xem hiệu suất blog.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Nhấn %1$s Biểu Tượng Blog %2$s để tải lên ngay.</string>
-    <string name="quick_start_dialog_publish_post_message">Tạo nháp và đăng một bài viết.</string>
-    <string name="quick_start_dialog_check_stats_title">Kiểm tra thống kê blog</string>
-    <string name="quick_start_dialog_check_stats_message">Tối ưu hóa hiệu suất blog.</string>
-    <string name="quick_start_task_skip_menu_title">Bỏ qua</string>
     <string name="notification_channel_reminder_title">Lượt nhắc</string>
     <string name="stats_select_next_period_description">Chọn chu kỳ kế</string>
     <string name="stats_select_previous_period_description">Chọn chu kỳ trước</string>
@@ -1300,19 +1245,6 @@ Language: vi_VN
     <string name="page_delete_dialog_message">Bạn có chắc muốn xóa vĩnh viễn trang %s?</string>
     <string name="page_status_change_error">Xảy ra lỗi khi thay đổi trạng thái trang</string>
     <string name="page_delete_error">Xảy ra lỗi khi xóa trang</string>
-    <string name="quick_start_focus_point_description">nhấn vào đây</string>
-    <string name="quick_start_list_create_site_title">Tạo blog của bạn</string>
-    <string name="quick_start_list_create_site_subtitle">Đưa blog của bạn lên và chạy.</string>
-    <string name="quick_start_completed_tour_subtitle">Thật là tốt khi hoàn thành mọi thứ, đúng không?</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Nhấn %1$s Kết nối %2$s để thêm các tài khoản mạng xã hội của bạn</string>
-    <string name="quick_start_dialog_view_site_title">Blog của tôi</string>
-    <string name="quick_start_dialog_share_site_title">Chia sẻ blog của bạn</string>
-    <string name="quick_start_dialog_share_site_message">Kết nối tới các tài khoản mạng xã hội của bạn - blog của bạn sẽ tự động chia sẻ các bài viết mới.</string>
-    <string name="quick_start_dialog_view_site_message">Xem trước trang của bạn hiển thị như thế nào.</string>
-    <string name="quick_start_dialog_publish_post_title">Viết bài</string>
-    <string name="quick_start_dialog_need_help_button_negative">Để sau</string>
-    <string name="quick_start_dialog_follow_sites_title">Theo dõi các blog khác</string>
-    <string name="quick_start_button_positive">Bắt đầu</string>
     <string name="content_description_more">Thêm</string>
     <string name="my_site_create_new_site_title">Bạn chưa có blog nào</string>
     <string name="jetpack">Jetpack</string>
@@ -1501,7 +1433,6 @@ Language: vi_VN
     <string name="site_settings_quota_space_value">%1$s của %2$s</string>
     <string name="share_intent_screen_title">Chọn blog</string>
     <string name="reader_screen_title">Đọc</string>
-    <string name="login_epilogue_screen_title">Đăng nhập như</string>
     <string name="person_detail_screen_title">Chi tiết người</string>
     <string name="media_settings_screen_title">Chi tiết tập tin</string>
     <string name="publicize_buttons_screen_title">Nút chia sẻ</string>
@@ -1775,8 +1706,6 @@ Language: vi_VN
     <string name="post_queued">Bài viết đã lên lịch</string>
     <string name="uploading_post">Đang tải lên \"%s\"</string>
     <string name="connection_to_server_lost">Mất kết nối tới máy chủ</string>
-    <string name="login_epilogue_mysites_other">Blog của tôi</string>
-    <string name="login_epilogue_mysites_one">Blog của tôi</string>
     <string name="login_email_client_not_found">Không nhận diện được ứng dụng email</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">Hãy nhập mã xác minh</string>
     <string name="login_empty_username" a8c-src-lib="module:login">Hãy nhập tên người dùng</string>
@@ -1924,7 +1853,6 @@ Language: vi_VN
     <string name="start_over_email_subject">Làm lại từ đầu với %s</string>
     <string name="site_picker_remove_site_error">Lỗi xóa blog, xin thử lại sau</string>
     <string name="editor_post_saved_locally_failed_media">Bài viết này có media chưa được tải lên và đã được lưu cục bộ</string>
-    <string name="sure_to_remove_account">Xóa blog này khỏi ứng dụng?</string>
     <string name="photo_picker_title">Chọn ảnh</string>
     <string name="error_publish_no_network">Thiết bị ngoại tuyến. Đã lưu bài viết cục bộ.</string>
     <string name="editor_post_saved_online">Đã lưu bài viết online</string>
@@ -2040,8 +1968,6 @@ Language: vi_VN
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">Hiện tại không sẵn có. Vui lòng nhập mật khẩu của bạn</string>
     <string name="logging_in">Đang đăng nhập</string>
     <string name="web_address_dialog_hint">Hiển thị công khai khi bạn bình luận.</string>
-    <string name="plans">Các gói dịch vụ</string>
-    <string name="plan">Gói dịch vụ</string>
     <string name="export_your_content_message">Các bài viết, trang và thiết lập sẽ được gửi tới email %s.</string>
     <string name="export_your_content">Xuất nội dung của bạn</string>
     <string name="exporting_content_progress">Đang xuất nội dung…</string>

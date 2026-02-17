@@ -242,7 +242,6 @@ Language: he_IL
     <string name="more_content_description_recent_activity">פעילויות אחרונות – להציג עוד</string>
     <string name="more_content_description_pages">עמודים – להציג עוד</string>
     <string name="more_content_description_posts">פוסטים – להציג עוד</string>
-    <string name="more_content_description_quick_start">התחלה מהירה – להציג עוד</string>
     <string name="more_content_description_today_stats">הנתונים הסטטיסטיים של היום – להציג עוד</string>
     <string name="more_content_description_blogging_prompts">הצעות כתיבה – להציג עוד</string>
     <string name="more_content_description_promote_blaze">Blaze – להציג עוד</string>
@@ -394,7 +393,6 @@ Language: he_IL
     <string name="site_monitoring_tab_title_php_logs">קובצי יומן של PHP</string>
     <string name="site_monitoring_tab_title_metrics">מדדים</string>
     <string name="site_monitoring">ניטור האתר</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">יש להשתמש באפשרות &lt;b&gt;היכרות&lt;/b&gt; כדי לחפש אתרים ותגיות. כדאי לבחור את האפשרות &lt;b&gt;מינויים&lt;/b&gt; כדי לראות תוכן שנרשמת אליו ולנהל את המינויים שלך.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">לעבור למינויים</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">הבלוגים שנרשמת אליהם לא פרסמו תוכן לאחרונה</string>
     <string name="reader_no_followed_blogs_description_subs">אפשר להירשם לעדכונים מבלוגים דרך \'היכרות\' או לחפש בלוג שכבר מצא חן בעיניך.</string>
@@ -818,9 +816,6 @@ Language: he_IL
     <string name="wp_jetpack_deep_link_overlay_description">נראה שכבר התקנת את האפליקציה של Jetpack.\n\nהאם ברצונך לפתוח קישורים באפליקציה של Jetpack בעתיד?\n\nתמיד אפשר לשנות זאת מאוחר יותר דרך \'הגדרות אפליקציה\' &gt; \'לפתוח קישורים ב-Jetpack\'</string>
     <string name="wp_jetpack_deep_link_overlay_title">האם לפתוח את הקישורים ב-Jetpack?</string>
     <string name="wp_jetpack_continue_without_jetpack">להמשיך בלי Jetpack</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">השירות של Jetpack מאפשר גישה לנתונים סטטיסטיים, להודעות ולפרטים נוספים כדי לעזור לך לבנות ולפתח את האתר של WordPress שתמיד רצית.\n\nהאפליקציה של WordPress כבר לא תומכת ביצירת אתר חדש.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">השירות של Jetpack מאפשר גישה לנתונים סטטיסטיים, להודעות ולפרטים נוספים כדי לעזור לך לבנות ולפתח את האתר של WordPress שתמיד רצית.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">ליצור אתר WordPress.com חדש עם האפליקציה של Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">יש לעבור לאפליקציה של Jetpack כדי להמשיך לקבל  התראות בזמן אמת אל המכשיר שלך.</string>
@@ -929,24 +924,11 @@ Language: he_IL
     <string name="stats_action_card_blogging_reminders_title">להגדיר את התזכורות שלך לכתוב בלוג</string>
     <string name="stats_action_card_grow_audience_button_label">לעיין בקורס</string>
     <string name="stats_action_card_grow_audience_title">להגדיל את הקהל שלך</string>
-    <string name="quick_start_sites_type_all_tasks_completed">כל המשימות הושלמו</string>
-    <string name="quick_start_list_task_complete">המשימה הושלמה</string>
     <string name="me_btn_scan_login_code">סריקת קוד כניסה למערכת</string>
     <string name="stats_insights_likes_guide_card">הפוסט האחרון שלך %1$s קיבל %2$s לייקים.</string>
     <string name="stats_most_popular_percent_views_empty">אין מספיק פעילות. כדאי לחזור לכאן מאוחד יותר לאחר שעוד מבקרים נכנסו לאתר!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s%% מסך כל המנויים</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="quick_start_completed_tour_title">ברכותינו! כבר יש לך ניסיון בעבודה עם האפליקציה&lt;br/&gt;</string>
-    <string name="quick_start_sites_type_get_to_know_app">היכרות עם האפליקציה</string>
-    <string name="quick_start_list_upload_media_subtitle">להעביר מדיה לאתר ישירות מהמכשיר או מהמצלמה</string>
-    <string name="quick_start_list_upload_media_title">להעלות תמונות או סרטונים</string>
-    <string name="quick_start_list_check_notification_subtitle">לקבל עדכונים בזמן אמת למכשיר הנייד</string>
-    <string name="quick_start_dialog_upload_media_message">יש לבחור ⁦%1$s⁩ מדיה ⁦%2$s⁩ כדי לראות את הספרייה הנוכחית שלך.</string>
-    <string name="quick_start_dialog_check_notifications_message">לקבל עדכונים בזמן אמת למכשיר הנייד.</string>
-    <string name="quick_start_dialog_check_notifications_title">לבדוק את ההודעות שלך</string>
-    <string name="quick_start_dialog_check_notifications_message_short">יש לבחור את ⁦%1$s⁩הלשונית \'הודעות\'⁦%2$s⁩ כדי לקבל עדכונים מכל מקום.</string>
-    <string name="quick_start_dialog_upload_media_message_short_plus">יש לבחור את ⁦%1$s⁩ פלוס ⁦%2$s⁩ כדי להעלות מדיה. אפשר להוסיף את המדיה לפוסטים/לעמודים מכל מכשיר.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">יש להשתמש באפשרות &lt;b&gt; היכרות &lt;/b&gt; כדי לחפש אתרים ותגיות.</string>
     <string name="photo_picker_video_thumbnail_content_description">תמונה ממוזערת לסרטון</string>
     <string name="stats_details_top_commentators">מגיבים מובילים</string>
     <string name="stats_published_years_ago">פורסמו לפני ⁦%1$d⁩ שנים</string>
@@ -966,8 +948,6 @@ Language: he_IL
     <string name="blogging_prompts_answer_prompt_notification_answer_action">תשובה</string>
     <string name="blogging_prompts_answer_prompt_notification_title">הצעה יומית</string>
     <string name="blogging_prompts_onboarding_got_it">הבנתי</string>
-    <string name="quick_start_dialog_view_your_site_message_short">יש להקיש על &lt;b&gt;%1$s&lt;/b&gt; כדי להציג את האתר שלך</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">יש לבחור ⁦%1$s⁩ Reader ⁦%2$s⁩ כדי למצוא אתרים אחרים.</string>
     <string name="blogging_reminders_prompt_help_button_desc">מידע נוסף על הצעות</string>
     <string name="photo_picker_video_thumbnail_unselected">הבחירה בסרטון בוטלה</string>
     <string name="photo_picker_video_thumbnail_selected">הסרטון נבחר</string>
@@ -1055,7 +1035,6 @@ Language: he_IL
     <string name="site_creation_intent_art">אומנות</string>
     <string name="new_site_creation_intents_input_hint">לדוגמה, אופנה, שירה ופוליטיקה</string>
     <string name="new_site_creation_intents_title">נושא האתר</string>
-    <string name="quick_start_site_menu_tab_message_short">יש להקיש &lt;b&gt;%1$s&lt;/b&gt; להמשך.</string>
     <string name="my_site_blogging_prompt_card_menu_skip">לדלג להיום</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">להציג הצעות נוספות</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">לשתף הצעה לפרסום בבלוג</string>
@@ -1144,7 +1123,6 @@ Language: he_IL
     <string name="comment_edit_user_name">שם</string>
     <string name="comment_edit_menu_done">הושלם</string>
     <string name="weekly_roundup">סיכום שבועי</string>
-    <string name="quick_start_list_create_site_message">האתר נוצר! להשלים משימה אחרת.</string>
     <string name="domains_free_plan_get_your_domain_title">לקבל דומיין</string>
     <string name="recommend_app_generic_get_template_error">שגיאה לא ידועה בהבאת תבנית האפליקציה המומלצת</string>
     <string name="recommend_app_bad_format_response">התקבלה תגובה לא חוקית</string>
@@ -1156,8 +1134,6 @@ Language: he_IL
     <string name="blogging_reminders_notification_time">מועד ההודעות</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">אנחנו נשלח לך תזכורות לכתוב בלוג &lt;b&gt;בכל יום&lt;/b&gt; בשעה &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">⁦%1$s⁩ בשבוע בשעה ⁦%2$s⁩</string>
-    <string name="quick_start_sites_type_tasks_completed">הושלמו ⁦%1$s⁩ מתוך ⁦%2$s⁩</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">כדאי ללמוד את השלבים הבסיסיים באמצעות סקירה זריזה.</string>
     <string name="comment_batch_moderation_error">לא ניתן היה לאשר תגובה אחת או יותר</string>
     <string name="create_site_notification_create_site_action">יצירת אתר</string>
     <string name="create_site_notification_text">הפעלת האתר שלך במספר מועט של שלבים מהירים</string>
@@ -1166,12 +1142,6 @@ Language: he_IL
     <string name="stats_disabled_enable_stats_button">הפעלת הנתונים הסטטיסטיים של האתר</string>
     <string name="stats_disabled_subtitle">יש להפעיל את הנתונים הסטטיסטיים כדי להציג מידע מפורט אודות התעבורה, הלייקים, התגובות והמינויים שלך.</string>
     <string name="stats_disabled_title">רוצה להציג את הנתונים הסטטיסטיים?</string>
-    <string name="quick_start_list_upload_icon_subtitle">מוצג בלשונית הדפדפן של המבקרים באתר שלך ובמיקומים שונים באינטרנט.</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_positive">הראו לי את הסביבה</string>
-    <string name="quick_start_dialog_need_help_manage_site_title">נדרשת לך עזרה בניהול האתר עם האפליקציה?</string>
-    <string name="login_epilogue_create_new_site_button">ליצור אתר חדש</string>
-    <string name="login_epilogue_mysites_subheading">אפשר להחליף בין אתרים בכל עת.</string>
-    <string name="login_epilogue_mysites_heading">בחירת אתר לפתיחה</string>
     <string name="scan_multisite_not_supported_subtitle">מצטערים, Jetpack Scan לא תואמת להתקנות WordPress של ריבוי אתרים נכון לעכשיו.</string>
     <string name="scan_multisite_not_supported_title">ריבוי אתרי WordPress אינו נתמך</string>
     <string name="activity_log_visit_our_documentation_page">היכנס לעמוד המסמכים שלנו</string>
@@ -1265,13 +1235,6 @@ Language: he_IL
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;הסריקה הסתיימה&lt;/b&gt; &lt;br&gt; לא נמצאו איומים</string>
     <string name="scan_fixing_threats_title_singular">מתקן את האיום</string>
     <string name="disable">להשבית</string>
-    <string name="quick_start_list_review_pages_subtitle">לבדוק את העמודים ולבצע שינויים או להוסיף ולהסיר עמודים.</string>
-    <string name="quick_start_list_view_site_title">הצגת האתר שלך</string>
-    <string name="quick_start_list_follow_site_subtitle">לגלות אתרים שמספקים לך השראה ולעקוב אחריהם.</string>
-    <string name="quick_start_list_enable_sharing_title">שיתוף ברשתות חברתיות</string>
-    <string name="quick_start_list_enable_sharing_subtitle">לשתף באופן אוטומטי פוסטים חדשים ברשתות החברתיות.</string>
-    <string name="quick_start_list_update_site_title_subtitle">כדאי לתת לאתר שלך שם שמשקף את האישיות שלו והנושאים שמוצגים בו.</string>
-    <string name="quick_start_list_check_stats_title">בדיקת הנתונים הסטטיסטיים של האתר שלך</string>
     <string name="backup_download_status_failure_bullet2">אנחנו נמשיך לנסות ליצור את קובץ הגיבוי שלך להורדה.</string>
     <string name="backup_download_status_failure_bullet1">לא הצלחנו למצוא את הסטטוס כדי לציין כמה זמן צפויה להימשך היצירה של הגיבוי להורדה.</string>
     <string name="backup_download_status_failure_heading">ניסינו אבל לא הצלחנו למצוא את הסטטוס של הגיבוי להורדה</string>
@@ -1344,9 +1307,6 @@ Language: he_IL
     <string name="backup_download_complete_failed_title">ההורדה נכשלה</string>
     <string name="web_preview_tablet">טאבלט</string>
     <string name="web_preview_mobile">טלפון נייד</string>
-    <string name="quick_start_dialog_review_pages_message_short">יש לבחור באפשרות ⁦%1$s⁩ עמודים ⁦%2$s⁩ כדי להציג את רשימת העמודים שלך.</string>
-    <string name="quick_start_dialog_review_pages_message">לשנות, להוסיף או להסיר עמודים באתר.</string>
-    <string name="quick_start_dialog_review_pages_title">לבדוק עמודים באתר</string>
     <string name="reader_menu_mark_as_unseen">לסמן כ\'לא נקרא\'</string>
     <string name="reader_menu_mark_as_seen">לסמן כ\'נקרא\'</string>
     <string name="error_media_upload_failed_for_reason">העלאת המדיה נכשלה.\n%1$s</string>
@@ -1565,7 +1525,6 @@ Language: he_IL
     <string name="mlp_create_blank_page">ליצור עמוד ריק</string>
     <string name="mlp_choose_layout_subtitle">ניתן להתחיל באמצעות בחירה ממגוון רחב של פריסות עמוד שהוכנו מראש. או פשוט להתחיל מעמוד ריק.</string>
     <string name="mlp_choose_layout_title">יש לבחור פריסה</string>
-    <string name="quick_start_dialog_create_new_post_message_short">יש להקיש על ⁦%1$s⁩ כדי ליצור. ⁦%2$s⁩ לאחר מכן, יש לבחור &lt;b&gt;פוסט בבלוג&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">לבחור מהמכשיר</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">לעריכה של סמלי אתר באתרים באחסון עצמי ב-WordPress נדרש התוסף של Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">אין אפשרות למצוא את מעבר העמוד המקושר</string>
@@ -1593,8 +1552,6 @@ Language: he_IL
     <string name="send_link_by_email" a8c-src-lib="module:login">לשלוח את הקישור באימייל</string>
     <string name="reset_your_password" a8c-src-lib="module:login">יש לאפס את הסיסמה שלך</string>
     <string name="reader_error_request_failed_title">הייתה בעיה בטיפול בבקשה הזאת. יש לנסות שוב מאוחר יותר.</string>
-    <string name="quick_start_list_update_site_title_title">בדיקת כותרת האתר שלך</string>
-    <string name="quick_start_dialog_update_site_title_message_short">יש להקיש &lt;b&gt;⁦%1$s⁩&lt;/b&gt; כדי להגדיר שם חדש</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">העברת הפוסט לפח תבטל גם שינויים מקומיים, האם ברצונך להמשיך?</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">רק משתמשים בעלי תפקיד של מנהלי מערכת יכולים לשנות את שם האתר.</string>
     <string name="my_site_title_changer_dialog_hint">שם האתר מוצג בסרגל הכותרת של הדפדפן ובתור הכותרת עליונה ברוב ערכות העיצוב.</string>
@@ -2046,29 +2003,12 @@ Language: he_IL
     <string name="stats_more_posts">פוסטים נוספים</string>
     <string name="stats_fewer_posts">פחות פוסטים</string>
     <string name="new_site_creation_preview_back_pressed_warning">ייתכן שההתקדמות שלך לא תישמר. באם ברצונך לצאת?</string>
-    <string name="plans_loading_error_with_cache_button">להציג את התוכניות בכל מקרה</string>
-    <string name="plans_loading_error_with_cache_subtitle">נדרש חיבור פעיל לאינטרנט כדי להציג תוכניות ולכן ייתכן שהפרטים לא מעודכנים.</string>
-    <string name="plans_loading_error_no_cache_subtitle">נדרש חיבור לאינטרנט כדי להציג תוכניות.</string>
-    <string name="plans_loading_error_no_plans_subtitle">אין באפשרותנו לטעון את התוכניות כרגע. יש לנסות שוב מאוחר יותר.</string>
-    <string name="plans_loading_error_no_plans_title">אין אפשרות לטעון תוכניות</string>
-    <string name="plans_loading_error_network_title">אין חיבור</string>
     <string name="menu_switch_to_gutenberg_editor">מעבר לעורך הבלוקים</string>
     <string name="stats_loading_block_error">הייתה בעיה בטעינת הנתונים שלך, יש לרענן את העמוד ולנסות שוב.</string>
     <string name="stats_loading_error">הנתונים לא נטענו</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">לעריכת פוסטים ועמודים חדשים עם עורך הבלוקים</string>
     <string name="site_settings_gutenberg_default_for_new_posts">שימוש בעורך הבלוקים</string>
     <string name="exit">יציאה</string>
-    <string name="quick_start_sites_type_grow">להגדיל את הקהל שלך</string>
-    <string name="quick_start_sites_type_customize">להתאים אישית את האתר שלך</string>
-    <string name="quick_start_sites">לשלב הבא</string>
-    <string name="quick_start_dialog_upload_icon_title">בחירת סמל אתר ייחודי</string>
-    <string name="quick_start_dialog_upload_icon_message">המבקרים באתר יראו את הסמל שלך בדפדפן שלהם. ניתן להוסיף סמל מותאם אישית למראה נקי ומקצועי.</string>
-    <string name="quick_start_dialog_check_stats_message_short">יש לבחור ⁦%1$s⁩ נתונים סטטיסטיים ⁦%2$s⁩ כדי להציג את הביצועים של האתר שלך.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">יש להקיש על %1$s סמל האתר שלך %2$s כדי להעלות פריט חדש</string>
-    <string name="quick_start_dialog_publish_post_message">רישום טיוטה ופרסום פוסט.</string>
-    <string name="quick_start_dialog_check_stats_title">בדיקת הנתונים הסטטיסטיים של האתר שלך</string>
-    <string name="quick_start_dialog_check_stats_message">לקבל עדכונים על הביצועים של האתר שלך.</string>
-    <string name="quick_start_task_skip_menu_title">דילוג על המשימה</string>
     <string name="notification_channel_reminder_title">תזכורת</string>
     <string name="stats_select_next_period_description">בחירת התקופה הבאה</string>
     <string name="stats_select_previous_period_description">בחירת התקופה הקודמת</string>
@@ -2220,20 +2160,6 @@ Language: he_IL
     <string name="page_delete_error">אירעה בעיה במחיקת העמוד</string>
     <string name="set_parent">הגדרת הורה</string>
     <string name="dismiss">ביטול</string>
-    <string name="quick_start_focus_point_description">יש להקיש כאן</string>
-    <string name="quick_start_list_create_site_title">יצירת האתר שלך</string>
-    <string name="quick_start_list_create_site_subtitle">הפעל את האתר שלך.</string>
-    <string name="quick_start_completed_tour_subtitle">שמחים שהשלמת את המטרה שהצבת לעצמך!</string>
-    <string name="quick_start_dialog_view_site_title">הצגת האתר שלך</string>
-    <string name="quick_start_dialog_view_site_message">באפשרותך להציג תצוגה מקדימה של האתר כדי לבחון מה יראו המבקרים.</string>
-    <string name="quick_start_dialog_share_site_title">שיתוף האתר שלך</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">יש להקיש על ⁦%1$s⁩ רשתות חברתיות ⁦%2$s⁩ כדי להמשיך</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">יש להקיש על %1$s חשבונות מקושרים %2$s כדי להוסיף חשבונות של רשתות חברתיות</string>
-    <string name="quick_start_dialog_share_site_message">התחברות לחשבונות שלך ברשתות החברתיות – האתר שלך ישתף באופן אוטומטי פוסטים חדשים.</string>
-    <string name="quick_start_dialog_publish_post_title">פרסום פוסט</string>
-    <string name="quick_start_dialog_need_help_button_negative">לא תודה</string>
-    <string name="quick_start_dialog_follow_sites_title">להתחבר עם אתרים אחרים</string>
-    <string name="quick_start_button_positive">מעבר אל</string>
     <string name="content_description_more">עוד</string>
     <string name="my_site_create_new_site_title">אין לך עוד אתרים</string>
     <string name="reader_empty_subscribed_tags_subtitle">ניתן להוסיף כאן תגיות כדי למצוא פוסטים על הנושאים המועדפים עליך</string>
@@ -2427,7 +2353,6 @@ Language: he_IL
     <string name="edit_photo_screen_title">עריכת תמונה</string>
     <string name="share_intent_screen_title">בחר אתר</string>
     <string name="signup_epilogue_screen_title">חשבון חדש</string>
-    <string name="login_epilogue_screen_title">מחובר בתור</string>
     <string name="person_detail_screen_title">פרטי המשתמש</string>
     <string name="media_settings_screen_title">פרטי הקובץ</string>
     <string name="publicize_buttons_screen_title">כפתורי שיתוף</string>
@@ -2704,8 +2629,6 @@ Language: he_IL
     <string name="post_queued">הפוסט נמצא בתור</string>
     <string name="uploading_post">מעלה את \"%s\"</string>
     <string name="connection_to_server_lost">החיבור לשרת אבד</string>
-    <string name="login_epilogue_mysites_other">האתרים שלי</string>
-    <string name="login_epilogue_mysites_one">האתר שלי</string>
     <string name="login_email_client_not_found">לא ניתן לאתר את האפליקציה של שירות האימייל שלך</string>
     <string name="login_empty_2fa" a8c-src-lib="module:login">יש להזין קוד אימות</string>
     <string name="login_empty_username" a8c-src-lib="module:login">נא להכניס שם משתמש</string>
@@ -2856,7 +2779,6 @@ Language: he_IL
     <string name="start_over_email_subject">התחלה מחדש של בניית האתר %s</string>
     <string name="site_picker_remove_site_error">שגיאה בהסרת האתר, יש לנסות שוב מאוחר יותר</string>
     <string name="editor_post_saved_locally_failed_media">בפוסט קיימים פריטי מדיה שהעלאתם טרם הסתיימה והם נשמרו במחשב המקומי</string>
-    <string name="sure_to_remove_account">האם להסיר את האתר מהאפליקציה?</string>
     <string name="photo_picker_title">בחירת תמונה</string>
     <string name="error_publish_no_network">המכשיר אינו מחובר. השינויים נשמרו בשרת המקומי.</string>
     <string name="editor_post_saved_online">הפוסט נשמר ברשת</string>
@@ -2978,8 +2900,6 @@ Language: he_IL
     <string name="magic_link_unavailable_error_message" a8c-src-lib="module:login">לא זמין כרגע. יש להזין סיסמה</string>
     <string name="logging_in">נכנס</string>
     <string name="web_address_dialog_hint">תוצג באופן ציבורי בעת פרסום תגובות שלך.</string>
-    <string name="plans">תוכניות</string>
-    <string name="plan">תוכנית</string>
     <string name="export_your_content_message">הפוסטים, העמודים וההגדרות שלך יישלחו באימייל לכתובת %s.</string>
     <string name="export_your_content">יצוא התוכן שלך</string>
     <string name="export_email_sent">אימייל יצוא נשלח!</string>

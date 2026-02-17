@@ -68,7 +68,7 @@ fun ReaderFilterChipGroup(
 
         val tagChipText: UiString = remember(selectedItem, tagsFilterCount) {
             if (isTagSelected) {
-                selectedItem?.text ?: UiString.UiStringText("")
+                selectedItem.text
             } else {
                 UiString.UiStringPluralRes(
                     zeroRes = R.string.reader_filter_chip_tag_zero,
@@ -81,7 +81,7 @@ fun ReaderFilterChipGroup(
 
         val blogChipText: UiString = remember(selectedItem, blogsFilterCount) {
             if (isBlogSelected) {
-                selectedItem?.text ?: UiString.UiStringText("")
+                selectedItem.text
             } else {
                 UiString.UiStringPluralRes(
                     zeroRes = R.string.reader_filter_chip_blog_zero,

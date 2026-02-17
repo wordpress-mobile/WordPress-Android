@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.media
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import androidx.core.net.toUri
@@ -61,6 +62,7 @@ class VideoLoader
         }
     }
 
+    @SuppressLint("Recycle") // False positive: cursor is closed via .use {}
     private fun getSizeFromContentUri(contentUri: Uri) =
         appContext.contentResolver.query(contentUri, null, null, null, null, null).use { cursor ->
             cursor?.moveToFirst()?.takeIf { true }?.let {

@@ -22,7 +22,7 @@ class WpComApiClientProvider @Inject constructor() {
 
         return WpComApiClient(
             requestExecutor = WpRequestExecutor(httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient)),
-            authProvider = WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = accessToken!!)
+            authProvider = WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = accessToken)
             )
         )
     }

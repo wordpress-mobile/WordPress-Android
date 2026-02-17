@@ -85,7 +85,7 @@ allprojects {
             allWarningsAsErrors = true
             freeCompilerArgs += [
                     "-opt-in=kotlin.RequiresOptIn",
-                    "-Xjvm-default=all",
+                    "-jvm-default=no-compatibility",
                     "-Xannotation-default-target=param-property",
                     // Suppress Glide KSP codegen visibility warning (bumptech/glide#5601)
                     "-Xwarning-level=" +
