@@ -150,6 +150,10 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     DirectOperation.COMMENT_JUMP,
                     false
                 )
+            is PostRsListEvent.ShowToast ->
+                ToastUtils.showToast(
+                    this, event.messageResId
+                )
         }
     }
 

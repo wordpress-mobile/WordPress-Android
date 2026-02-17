@@ -45,4 +45,8 @@ sealed interface PostRsListEvent {
         val blogId: Long,
         val postId: Long
     ) : PostRsListEvent
+
+    data class ShowToast(
+        val messageResId: Int
+    ) : PostRsListEvent
 }

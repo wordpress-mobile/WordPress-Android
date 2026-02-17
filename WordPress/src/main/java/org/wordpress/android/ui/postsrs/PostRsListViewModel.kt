@@ -20,6 +20,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.postsrs.data.PostRsRestClient
+import org.wordpress.android.ui.postsrs.data.PostRsRestClient.PostActionResult
 import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SiteUtils
@@ -38,6 +40,7 @@ import javax.inject.Inject
 class PostRsListViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpSelfHostedServiceProvider,
+    private val restClient: PostRsRestClient,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
     private val blazeFeatureUtils: BlazeFeatureUtils,
@@ -222,18 +225,26 @@ class PostRsListViewModel @Inject constructor(
                 _pendingConfirmation.value =
                     PendingConfirmation.Delete(remotePostId)
             PostRsMenuAction.PUBLISH ->
-                sendNotImplemented()
+                publishPost(site, remotePostId)
             PostRsMenuAction.MOVE_TO_DRAFT ->
-                sendNotImplemented()
+                moveToDraft(site, remotePostId)
             PostRsMenuAction.DUPLICATE ->
-                sendNotImplemented()
+                duplicatePost(site, remotePostId)
         }
     }
 
     @MainThread
     fun onConfirmPendingAction() {
+        val site =
+            selectedSiteRepository.getSelectedSite() ?: return
+        when (val confirmation = _pendingConfirmation.value) {
+            is PendingConfirmation.Trash ->
+                trashPost(site, confirmation.postId)
+            is PendingConfirmation.Delete ->
+                deletePost(site, confirmation.postId)
+            null -> Unit
+        }
         _pendingConfirmation.value = null
-        sendNotImplemented()
     }
 
     @MainThread
@@ -241,12 +252,103 @@ class PostRsListViewModel @Inject constructor(
         _pendingConfirmation.value = null
     }
 
-    private fun sendNotImplemented() {
-        _events.trySend(
-            PostRsListEvent.ShowError(
-                R.string.post_rs_not_implemented_yet
+    private fun trashPost(site: SiteModel, postId: Long) {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                restClient.trashPost(site, postId)
+            }
+            handleActionResult(
+                result,
+                R.string.post_rs_trashed,
+                R.string.post_rs_error_trash
             )
-        )
+        }
+    }
+
+    private fun deletePost(site: SiteModel, postId: Long) {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                restClient.deletePost(site, postId)
+            }
+            handleActionResult(
+                result,
+                R.string.post_rs_deleted,
+                R.string.post_rs_error_delete
+            )
+        }
+    }
+
+    private fun publishPost(site: SiteModel, postId: Long) {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                restClient.updatePostStatus(
+                    site, postId, PostStatus.Publish
+                )
+            }
+            handleActionResult(
+                result,
+                R.string.post_rs_published,
+                R.string.post_rs_error_update_status
+            )
+        }
+    }
+
+    private fun moveToDraft(site: SiteModel, postId: Long) {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                restClient.updatePostStatus(
+                    site, postId, PostStatus.Draft
+                )
+            }
+            handleActionResult(
+                result,
+                R.string.post_rs_moved_to_draft,
+                R.string.post_rs_error_update_status
+            )
+        }
+    }
+
+    private fun duplicatePost(site: SiteModel, postId: Long) {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                restClient.duplicatePost(site, postId)
+            }
+            handleActionResult(
+                result,
+                R.string.post_rs_duplicated,
+                R.string.post_rs_error_duplicate
+            )
+        }
+    }
+
+    private fun handleActionResult(
+        result: PostActionResult,
+        successResId: Int,
+        errorResId: Int
+    ) {
+        when (result) {
+            is PostActionResult.Success -> {
+                _events.trySend(
+                    PostRsListEvent.ShowToast(successResId)
+                )
+                refreshAllTabs()
+            }
+            is PostActionResult.Error -> {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Post action failed: ${result.message}"
+                )
+                _events.trySend(
+                    PostRsListEvent.ShowError(errorResId)
+                )
+            }
+        }
+    }
+
+    private fun refreshAllTabs() {
+        collections.keys.toList().forEach { tab ->
+            refreshTab(tab)
+        }
     }
 
     private fun findPost(remotePostId: Long): PostRsUiModel? {
