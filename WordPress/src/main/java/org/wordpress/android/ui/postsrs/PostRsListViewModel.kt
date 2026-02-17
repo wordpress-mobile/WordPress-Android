@@ -601,7 +601,7 @@ class PostRsListViewModel @Inject constructor(
         update: PostTabUiState.() -> PostTabUiState
     ) {
         val current = getTabUiState(tab)
-        _tabStates.value = _tabStates.value + (tab to current.update())
+        _tabStates.value += (tab to current.update())
     }
 
     override fun onCleared() {
