@@ -258,8 +258,6 @@ class PostRsListViewModel @Inject constructor(
         )
     }
 
-    // TODO: replace linear scan with a map lookup if
-    //  post counts grow large
     private fun findPost(remotePostId: Long): PostRsUiModel? {
         return _tabStates.value.values
             .flatMap { it.posts }
@@ -267,14 +265,13 @@ class PostRsListViewModel @Inject constructor(
     }
 
     private fun getMenuActions(
-        status: PostStatus?,
+        tab: PostRsListTab,
         hasPassword: Boolean
     ): List<PostRsMenuAction> {
         val site = selectedSiteRepository.getSelectedSite()
         return buildList {
-            when (status) {
-                is PostStatus.Publish,
-                is PostStatus.Private -> {
+            when (tab) {
+                PostRsListTab.PUBLISHED -> {
                     add(PostRsMenuAction.VIEW)
                     add(PostRsMenuAction.READ)
                     add(PostRsMenuAction.MOVE_TO_DRAFT)
@@ -291,22 +288,36 @@ class PostRsListViewModel @Inject constructor(
                     add(PostRsMenuAction.COMMENTS)
                     add(PostRsMenuAction.TRASH)
                 }
-                is PostStatus.Draft,
-                is PostStatus.Pending -> {
+                PostRsListTab.DRAFTS -> {
                     add(PostRsMenuAction.DUPLICATE)
                     add(PostRsMenuAction.TRASH)
                 }
-                is PostStatus.Future -> {
-                    add(PostRsMenuAction.DUPLICATE)
+                PostRsListTab.SCHEDULED -> {
+                    add(PostRsMenuAction.VIEW)
+                    add(PostRsMenuAction.READ)
+                    add(PostRsMenuAction.SHARE)
                     add(PostRsMenuAction.TRASH)
                 }
-                is PostStatus.Trash -> {
+                PostRsListTab.TRASHED -> {
                     add(PostRsMenuAction.MOVE_TO_DRAFT)
                     add(PostRsMenuAction.DELETE_PERMANENTLY)
                 }
-                else -> {}
             }
         }
+    }
+
+    /**
+     * Maps a [PostStatus] to the corresponding [PostRsListTab].
+     * Used during search when posts from all statuses are
+     * shown together and menu actions must be per-post.
+     */
+    private fun tabForStatus(
+        status: PostStatus?
+    ): PostRsListTab {
+        if (status == null) return PostRsListTab.PUBLISHED
+        return PostRsListTab.entries.firstOrNull { tab ->
+            tab.statuses.any { it == status }
+        } ?: PostRsListTab.PUBLISHED
     }
 
     private fun clearCollections() {
@@ -506,10 +517,16 @@ class PostRsListViewModel @Inject constructor(
                     )
                 }
             }
+            val isSearch = _searchQuery.value.isNotBlank()
             val uiModels = items.map { model ->
+                val effectiveTab = if (isSearch) {
+                    tabForStatus(model.status)
+                } else {
+                    tab
+                }
                 model.copy(
                     actions = getMenuActions(
-                        model.status, model.hasPassword
+                        effectiveTab, model.hasPassword
                     )
                 )
             }

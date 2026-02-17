@@ -28,6 +28,7 @@ import org.wordpress.android.util.extensions.setContent
 class PostRsListActivity : BaseAppCompatActivity() {
     private val viewModel: PostRsListViewModel by viewModels()
 
+    @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
