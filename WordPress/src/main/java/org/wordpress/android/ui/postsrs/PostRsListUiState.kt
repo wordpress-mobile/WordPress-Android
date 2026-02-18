@@ -15,7 +15,7 @@ sealed interface PendingConfirmation {
     data class Delete(val postId: Long) : PendingConfirmation
 }
 
-class ConfirmationDialogState(
+data class ConfirmationDialogState(
     val pending: PendingConfirmation? = null,
     val onConfirm: () -> Unit = {},
     val onDismiss: () -> Unit = {}

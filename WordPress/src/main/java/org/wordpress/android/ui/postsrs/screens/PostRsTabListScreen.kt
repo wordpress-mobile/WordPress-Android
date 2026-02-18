@@ -137,7 +137,8 @@ private fun PostListContent(
                     onPostMenuAction(
                         post.remotePostId, action
                     )
-                }
+                },
+                modifier = Modifier.animateItem()
             )
         }
 

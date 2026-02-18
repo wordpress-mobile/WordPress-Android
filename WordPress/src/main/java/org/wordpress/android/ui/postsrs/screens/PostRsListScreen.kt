@@ -82,83 +82,46 @@ fun PostRsListScreen(
                     if (isSearchActive) {
                         TextField(
                             value = searchQuery,
-                            onValueChange = { query ->
-                                onSearchQueryChanged(
-                                    query, activeTab
-                                )
-                            },
+                            onValueChange = { query -> onSearchQueryChanged(query, activeTab) },
                             placeholder = {
-                                Text(
-                                    stringResource(
-                                        R.string
-                                            .post_list_search_prompt
-                                    )
-                                )
+                                Text(stringResource(R.string.post_list_search_prompt))
                             },
                             singleLine = true,
-                            keyboardOptions =
-                                KeyboardOptions.Default.copy(
-                                    imeAction = ImeAction.Search
-                                ),
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                imeAction = ImeAction.Search
+                            ),
                             keyboardActions = KeyboardActions(
-                                onSearch = {
-                                    focusManager.clearFocus()
-                                }
+                                onSearch = { focusManager.clearFocus() }
                             ),
                             colors = TextFieldDefaults.colors(
-                                focusedContainerColor =
-                                    Color.Transparent,
-                                unfocusedContainerColor =
-                                    Color.Transparent,
-                                focusedIndicatorColor =
-                                    Color.Transparent,
-                                unfocusedIndicatorColor =
-                                    Color.Transparent
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
                             ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .focusRequester(focusRequester)
+                            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
                         )
                     } else {
-                        Text(
-                            text = stringResource(
-                                R.string.my_site_btn_blog_posts
-                            )
-                        )
+                        Text(text = stringResource(R.string.my_site_btn_blog_posts))
                     }
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        if (isSearchActive) {
-                            onSearchClose(activeTab)
-                        } else {
-                            onNavigateBack()
-                        }
+                        if (isSearchActive) onSearchClose(activeTab) else onNavigateBack()
                     }) {
                         Icon(
-                            Icons.AutoMirrored.Filled
-                                .ArrowBack,
-                            contentDescription =
-                                stringResource(
-                                    R.string.back
-                                )
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 },
                 actions = {
                     if (isSearchActive) {
                         if (searchQuery.isNotEmpty()) {
-                            IconButton(onClick = {
-                                onSearchQueryChanged(
-                                    "", activeTab
-                                )
-                            }) {
+                            IconButton(onClick = { onSearchQueryChanged("", activeTab) }) {
                                 Icon(
                                     Icons.Default.Close,
-                                    contentDescription =
-                                        stringResource(
-                                            R.string.clear
-                                        )
+                                    contentDescription = stringResource(R.string.clear)
                                 )
                             }
                         }
@@ -166,11 +129,7 @@ fun PostRsListScreen(
                         IconButton(onClick = onSearchOpen) {
                             Icon(
                                 Icons.Default.Search,
-                                contentDescription =
-                                    stringResource(
-                                        R.string
-                                            .post_list_search_prompt
-                                    )
+                                contentDescription = stringResource(R.string.post_list_search_prompt)
                             )
                         }
                     }
@@ -178,33 +137,23 @@ fun PostRsListScreen(
             )
 
             if (isSearchActive) {
-                LaunchedEffect(Unit) {
-                    focusRequester.requestFocus()
-                }
+                LaunchedEffect(Unit) { focusRequester.requestFocus() }
             }
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onCreatePost,
-                containerColor =
-                    MaterialTheme.colorScheme.onSurface,
-                contentColor =
-                    MaterialTheme.colorScheme.surface
+                containerColor = MaterialTheme.colorScheme.onSurface,
+                contentColor = MaterialTheme.colorScheme.surface
             ) {
                 Icon(
                     Icons.Default.Add,
-                    contentDescription = stringResource(
-                        R.string.posts_empty_list_button
-                    )
+                    contentDescription = stringResource(R.string.posts_empty_list_button)
                 )
             }
         }
     ) { contentPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
-        ) {
+        Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
             if (!isSearchActive) {
                 PrimaryScrollableTabRow(
                     selectedTabIndex = pagerState.settledPage,
@@ -212,31 +161,18 @@ fun PostRsListScreen(
                 ) {
                     tabs.forEachIndexed { index, tab ->
                         Tab(
-                            selected =
-                                pagerState.settledPage == index,
+                            selected = pagerState.settledPage == index,
                             onClick = {
-                                coroutineScope.launch {
-                                    pagerState
-                                        .animateScrollToPage(
-                                            index
-                                        )
-                                }
+                                coroutineScope.launch { pagerState.animateScrollToPage(index) }
                             },
-                            text = {
-                                Text(
-                                    text = stringResource(
-                                        tab.labelResId
-                                    )
-                                )
-                            }
+                            text = { Text(text = stringResource(tab.labelResId)) }
                         )
                     }
                 }
             }
 
             LaunchedEffect(pagerState) {
-                snapshotFlow { pagerState.settledPage }
-                    .collect { page -> onInitTab(tabs[page]) }
+                snapshotFlow { pagerState.settledPage }.collect { page -> onInitTab(tabs[page]) }
             }
 
             HorizontalPager(
@@ -245,19 +181,13 @@ fun PostRsListScreen(
                 userScrollEnabled = !isSearchActive
             ) { page ->
                 val tab = tabs[page]
-                val tabState = tabStates[tab]
-                    ?: PostTabUiState(isLoading = true)
+                val tabState = tabStates[tab] ?: PostTabUiState(isLoading = true)
 
                 PostRsTabListScreen(
                     state = tabState,
-                    emptyMessageResId =
-                        tab.emptyMessageResId,
-                    isSearchIdle = isSearchActive
-                        && searchQuery.length
-                        < MIN_SEARCH_QUERY_LENGTH,
-                    isSearching = isSearchActive
-                        && searchQuery.length
-                        >= MIN_SEARCH_QUERY_LENGTH,
+                    emptyMessageResId = tab.emptyMessageResId,
+                    isSearchIdle = isSearchActive && searchQuery.length < MIN_SEARCH_QUERY_LENGTH,
+                    isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH,
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onPostClick = onPostClick,
@@ -271,15 +201,13 @@ fun PostRsListScreen(
     when (confirmationDialog.pending) {
         is PendingConfirmation.Trash -> ConfirmationDialog(
             titleResId = R.string.trash,
-            messageResId =
-                R.string.post_rs_confirm_trash_message,
+            messageResId = R.string.post_rs_confirm_trash_message,
             onConfirm = confirmationDialog.onConfirm,
             onDismiss = confirmationDialog.onDismiss
         )
         is PendingConfirmation.Delete -> ConfirmationDialog(
             titleResId = R.string.delete,
-            messageResId =
-                R.string.post_rs_confirm_delete_message,
+            messageResId = R.string.post_rs_confirm_delete_message,
             isDestructive = true,
             onConfirm = confirmationDialog.onConfirm,
             onDismiss = confirmationDialog.onDismiss
@@ -304,18 +232,12 @@ private fun ConfirmationDialog(
             TextButton(onClick = onConfirm) {
                 Text(
                     stringResource(titleResId),
-                    color = if (isDestructive) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        Color.Unspecified
-                    }
+                    color = if (isDestructive) MaterialTheme.colorScheme.error else Color.Unspecified
                 )
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
-            }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
         }
     )
 }

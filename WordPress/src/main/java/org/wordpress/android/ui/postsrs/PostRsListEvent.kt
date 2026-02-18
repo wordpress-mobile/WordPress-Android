@@ -13,10 +13,6 @@ sealed interface PostRsListEvent {
         val site: SiteModel
     ) : PostRsListEvent
 
-    data class ShowError(
-        val messageResId: Int
-    ) : PostRsListEvent
-
     data class ViewPost(val url: String) : PostRsListEvent
 
     data class ReadPost(
@@ -45,4 +41,10 @@ sealed interface PostRsListEvent {
         val blogId: Long,
         val postId: Long
     ) : PostRsListEvent
+
+    data class ShowToast(
+        val messageResId: Int
+    ) : PostRsListEvent
+
+    data object Finish : PostRsListEvent
 }
