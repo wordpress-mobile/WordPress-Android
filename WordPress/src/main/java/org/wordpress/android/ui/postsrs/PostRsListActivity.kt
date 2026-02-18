@@ -35,49 +35,30 @@ class PostRsListActivity : BaseAppCompatActivity() {
         observeEvents()
 
         setContent {
-            val tabStates by viewModel.tabStates
-                .collectAsState()
-            val isSearchActive by viewModel.isSearchActive
-                .collectAsState()
-            val searchQuery by viewModel.searchQuery
-                .collectAsState()
-            val confirmation by viewModel.pendingConfirmation
-                .collectAsState()
+            val tabStates by viewModel.tabStates.collectAsState()
+            val isSearchActive by viewModel.isSearchActive.collectAsState()
+            val searchQuery by viewModel.searchQuery.collectAsState()
+            val confirmation by viewModel.pendingConfirmation.collectAsState()
             AppThemeM3 {
                 PostRsListScreen(
                     tabStates = tabStates,
                     isSearchActive = isSearchActive,
                     searchQuery = searchQuery,
-                    confirmationDialog =
-                        ConfirmationDialogState(
-                            pending = confirmation,
-                            onConfirm =
-                                viewModel::onConfirmPendingAction,
-                            onDismiss =
-                                viewModel::onDismissPendingAction
-                        ),
-                    onSearchOpen =
-                        viewModel::onSearchOpen,
-                    onSearchQueryChanged =
-                        viewModel::onSearchQueryChanged,
-                    onSearchClose =
-                        viewModel::onSearchClose,
+                    confirmationDialog = ConfirmationDialogState(
+                        pending = confirmation,
+                        onConfirm = viewModel::onConfirmPendingAction,
+                        onDismiss = viewModel::onDismissPendingAction
+                    ),
+                    onSearchOpen = viewModel::onSearchOpen,
+                    onSearchQueryChanged = viewModel::onSearchQueryChanged,
+                    onSearchClose = viewModel::onSearchClose,
                     onInitTab = viewModel::initTab,
-                    onRefreshTab = { tab ->
-                        viewModel.refreshTab(
-                            tab, isUserRefresh = true
-                        )
-                    },
-                    onLoadMore =
-                        viewModel::loadMorePosts,
-                    onNavigateBack = {
-                        onBackPressedDispatcher.onBackPressed()
-                    },
+                    onRefreshTab = { tab -> viewModel.refreshTab(tab, isUserRefresh = true) },
+                    onLoadMore = viewModel::loadMorePosts,
+                    onNavigateBack = { onBackPressedDispatcher.onBackPressed() },
                     onPostClick = viewModel::openPost,
-                    onPostMenuAction =
-                        viewModel::onPostMenuAction,
-                    onCreatePost =
-                        viewModel::createNewPost
+                    onPostMenuAction = viewModel::onPostMenuAction,
+                    onCreatePost = viewModel::createNewPost
                 )
             }
         }
@@ -86,9 +67,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
     private fun observeEvents() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collect { event ->
-                    handleEvent(event)
-                }
+                viewModel.events.collect { event -> handleEvent(event) }
             }
         }
     }
@@ -97,69 +76,35 @@ class PostRsListActivity : BaseAppCompatActivity() {
     private fun handleEvent(event: PostRsListEvent) {
         when (event) {
             is PostRsListEvent.EditPost ->
-                ActivityLauncher.editPostOrPageForResult(
-                    this, event.site, event.post
-                )
+                ActivityLauncher.editPostOrPageForResult(this, event.site, event.post)
             is PostRsListEvent.CreatePost ->
                 ActivityLauncher.addNewPostForResult(
-                    this,
-                    event.site,
-                    false,
-                    PagePostCreationSourcesDetail
-                        .POST_FROM_POSTS_LIST,
-                    -1,
-                    null
+                    this, event.site, false,
+                    PagePostCreationSourcesDetail.POST_FROM_POSTS_LIST, -1, null
                 )
-            is PostRsListEvent.ViewPost ->
-                ActivityLauncher.openUrlExternal(
-                    this, event.url
-                )
+            is PostRsListEvent.ViewPost -> ActivityLauncher.openUrlExternal(this, event.url)
             is PostRsListEvent.ReadPost ->
-                ReaderActivityLauncher.showReaderPostDetail(
-                    this, event.blogId, event.postId
-                )
+                ReaderActivityLauncher.showReaderPostDetail(this, event.blogId, event.postId)
             is PostRsListEvent.SharePost ->
-                ActivityLauncher.openShareIntent(
-                    this, event.url, event.title
-                )
+                ActivityLauncher.openShareIntent(this, event.url, event.title)
             is PostRsListEvent.PromoteWithBlaze ->
-                ActivityLauncher.openPromoteWithBlaze(
-                    this,
-                    event.post,
-                    BlazeFlowSource.POSTS_LIST
-                )
+                ActivityLauncher.openPromoteWithBlaze(this, event.post, BlazeFlowSource.POSTS_LIST)
             is PostRsListEvent.ViewStats ->
                 StatsDetailActivity.start(
-                    this,
-                    event.site,
-                    event.postId,
-                    StatsConstants.ITEM_TYPE_POST,
-                    event.title,
-                    event.url
+                    this, event.site, event.postId,
+                    StatsConstants.ITEM_TYPE_POST, event.title, event.url
                 )
             is PostRsListEvent.ViewComments ->
                 ReaderActivityLauncher.showReaderPostDetail(
-                    this,
-                    false,
-                    event.blogId,
-                    event.postId,
-                    DirectOperation.COMMENT_JUMP,
-                    false
+                    this, false, event.blogId, event.postId,
+                    DirectOperation.COMMENT_JUMP, false
                 )
-            is PostRsListEvent.ShowToast ->
-                ToastUtils.showToast(
-                    this, event.messageResId
-                )
+            is PostRsListEvent.ShowToast -> ToastUtils.showToast(this, event.messageResId)
             is PostRsListEvent.Finish -> finish()
         }
     }
 
     companion object {
-        fun createIntent(context: Context): Intent {
-            return Intent(
-                context,
-                PostRsListActivity::class.java
-            )
-        }
+        fun createIntent(context: Context) = Intent(context, PostRsListActivity::class.java)
     }
 }

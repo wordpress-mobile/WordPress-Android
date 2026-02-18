@@ -51,9 +51,7 @@ fun PostRsListItem(
     when {
         post.isPlaceholder -> PlaceholderItem(modifier)
         post.isError -> ErrorItem(modifier)
-        else -> PostContentItem(
-            post, onClick, onMenuAction, modifier
-        )
+        else -> PostContentItem(post, onClick, onMenuAction, modifier)
     }
 }
 
@@ -66,86 +64,55 @@ private fun PostContentItem(
 ) {
     Card(
         onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 1.dp
-        )
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Row(
-            modifier = Modifier.padding(
-                start = 16.dp,
-                top = 16.dp,
-                bottom = 16.dp
-            ),
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
             verticalAlignment = Alignment.Top
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                val statusLabel =
-                    if (post.statusLabelResId != 0) {
-                        stringResource(post.statusLabelResId)
-                    } else {
-                        null
-                    }
-                val bullet = stringResource(
-                    R.string.bullet_with_spaces
-                )
+                val statusLabel = if (post.statusLabelResId != 0) {
+                    stringResource(post.statusLabelResId)
+                } else {
+                    null
+                }
+                val bullet = stringResource(R.string.bullet_with_spaces)
                 val dateText = buildString {
                     if (!statusLabel.isNullOrBlank()) {
                         append(statusLabel)
-                        if (post.date.isNotBlank()) {
-                            append(bullet)
-                        }
+                        if (post.date.isNotBlank()) append(bullet)
                     }
                     append(post.date)
                 }
                 if (dateText.isNotBlank()) {
                     Text(
                         text = dateText,
-                        style = MaterialTheme.typography
-                            .labelSmall,
-                        color = MaterialTheme.colorScheme
-                            .primary
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary
                     )
-                    Spacer(
-                        modifier = Modifier.height(4.dp)
-                    )
+                    Spacer(modifier = Modifier.height(4.dp))
                 }
                 Text(
-                    text = post.title.ifBlank {
-                        stringResource(
-                            R.string.untitled_in_parentheses
-                        )
-                    },
-                    style = MaterialTheme.typography
-                        .titleMedium,
+                    text = post.title.ifBlank { stringResource(R.string.untitled_in_parentheses) },
+                    style = MaterialTheme.typography.titleMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 if (post.excerpt.isNotBlank()) {
-                    Spacer(
-                        modifier = Modifier.height(4.dp)
-                    )
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = post.excerpt,
-                        style = MaterialTheme.typography
-                            .bodyMedium,
-                        color = MaterialTheme.colorScheme
-                            .onSurfaceVariant,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
             }
             if (post.actions.isNotEmpty()) {
-                PostMenuButton(
-                    actions = post.actions,
-                    onAction = onMenuAction
-                )
+                PostMenuButton(actions = post.actions, onAction = onMenuAction)
             }
         }
     }
@@ -162,17 +129,11 @@ private fun PostMenuButton(
         IconButton(onClick = { expanded = true }) {
             Icon(
                 Icons.Default.MoreVert,
-                contentDescription = stringResource(
-                    R.string.more
-                ),
-                tint = MaterialTheme.colorScheme
-                    .onSurfaceVariant
+                contentDescription = stringResource(R.string.more),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             actions.forEach { action ->
                 val color = if (action.isDestructive) {
                     MaterialTheme.colorScheme.error
@@ -181,12 +142,7 @@ private fun PostMenuButton(
                 }
                 DropdownMenuItem(
                     text = {
-                        Text(
-                            text = stringResource(
-                                action.labelResId
-                            ),
-                            color = color
-                        )
+                        Text(text = stringResource(action.labelResId), color = color)
                     },
                     onClick = {
                         expanded = false
@@ -194,9 +150,7 @@ private fun PostMenuButton(
                     },
                     leadingIcon = {
                         Icon(
-                            painter = painterResource(
-                                action.iconResId
-                            ),
+                            painter = painterResource(action.iconResId),
                             contentDescription = null,
                             modifier = Modifier.size(20.dp),
                             tint = color
@@ -220,20 +174,14 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
         ),
         label = "shimmerAlpha"
     )
-    val placeholderColor =
-        MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
+    val placeholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
 
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            // Date
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.25f)
@@ -242,7 +190,6 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
                     .background(placeholderColor)
             )
             Spacer(modifier = Modifier.height(4.dp))
-            // Title
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
@@ -251,7 +198,6 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
                     .background(placeholderColor)
             )
             Spacer(modifier = Modifier.height(4.dp))
-            // Excerpt (two lines)
             repeat(2) { index ->
                 Box(
                     modifier = Modifier
@@ -271,12 +217,8 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
 @Composable
 private fun ErrorItem(modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer
-        )
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
     ) {
         Text(
             text = stringResource(R.string.post_rs_failed_to_load),
