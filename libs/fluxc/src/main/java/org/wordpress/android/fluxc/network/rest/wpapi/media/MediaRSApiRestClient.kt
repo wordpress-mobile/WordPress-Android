@@ -229,6 +229,7 @@ class MediaRSApiRestClient @Inject constructor(
         dispatcher.dispatch(MediaActionBuilder.newDeletedMediaAction(payload))
     }
 
+    @Suppress("LongMethod")
     fun uploadMedia(site: SiteModel, media: MediaModel?) {
         if (media == null || media.id == 0) {
             // we can't have a MediaModel without an ID - otherwise we can't keep track of them.
