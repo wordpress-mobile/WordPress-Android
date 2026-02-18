@@ -28,6 +28,12 @@ class PostRsRestClient @Inject constructor(
 ) {
     private val wpComClients = mutableMapOf<Long, WpApiClient>()
 
+    /** Removes all cached WP.com API clients (e.g. on sign-out). */
+    @Synchronized
+    fun clearWpComClients() {
+        wpComClients.clear()
+    }
+
     suspend fun trashPost(site: SiteModel, postId: Long): PostActionResult {
         val client = getApiClient(site)
         val response = client.request { it.posts().trash(PostEndpointType.Posts, postId) }
@@ -63,6 +69,7 @@ class PostRsRestClient @Inject constructor(
         }
     }
 
+    @Synchronized
     private fun getApiClient(site: SiteModel): WpApiClient {
         if (!site.isWPCom) return wpApiClientProvider.getWpApiClient(site)
         return wpComClients.getOrPut(site.siteId) {
