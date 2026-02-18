@@ -264,6 +264,7 @@ class PostRsListViewModel @Inject constructor(
             }
             handleActionResult(
                 result,
+                postId,
                 R.string.post_rs_trashed,
                 R.string.post_rs_error_trash
             )
@@ -277,6 +278,7 @@ class PostRsListViewModel @Inject constructor(
             }
             handleActionResult(
                 result,
+                postId,
                 R.string.post_rs_deleted,
                 R.string.post_rs_error_delete
             )
@@ -292,6 +294,7 @@ class PostRsListViewModel @Inject constructor(
             }
             handleActionResult(
                 result,
+                postId,
                 R.string.post_rs_published,
                 R.string.post_rs_error_update_status
             )
@@ -307,6 +310,7 @@ class PostRsListViewModel @Inject constructor(
             }
             handleActionResult(
                 result,
+                postId,
                 R.string.post_rs_moved_to_draft,
                 R.string.post_rs_error_update_status
             )
@@ -315,11 +319,13 @@ class PostRsListViewModel @Inject constructor(
 
     private fun handleActionResult(
         result: PostActionResult,
+        postId: Long,
         successResId: Int,
         errorResId: Int
     ) {
         when (result) {
             is PostActionResult.Success -> {
+                removePostFromState(postId)
                 _events.trySend(
                     PostRsListEvent.ShowToast(successResId)
                 )
@@ -340,6 +346,20 @@ class PostRsListViewModel @Inject constructor(
     private fun refreshAllTabs() {
         collections.keys.toList().forEach { tab ->
             refreshTab(tab)
+        }
+    }
+
+    private fun removePostFromState(postId: Long) {
+        _tabStates.value = _tabStates.value.mapValues {
+            (_, state) ->
+            val filtered = state.posts.filter {
+                it.remotePostId != postId
+            }
+            if (filtered.size != state.posts.size) {
+                state.copy(posts = filtered)
+            } else {
+                state
+            }
         }
     }
 
