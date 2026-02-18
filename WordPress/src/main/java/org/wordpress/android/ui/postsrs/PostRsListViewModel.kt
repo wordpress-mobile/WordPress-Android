@@ -75,11 +75,15 @@ class PostRsListViewModel @Inject constructor(
     val pendingConfirmation: StateFlow<PendingConfirmation?> =
         _pendingConfirmation.asStateFlow()
 
-    private val site: SiteModel? =
+    private val _site: SiteModel? =
         selectedSiteRepository.getSelectedSite()
+    private val site: SiteModel
+        get() = requireNotNull(_site) {
+            "No selected site — Activity should have finished"
+        }
 
     init {
-        if (site == null) {
+        if (_site == null) {
             _events.trySend(
                 PostRsListEvent.ShowToast(
                     R.string.blog_not_found
@@ -117,14 +121,14 @@ class PostRsListViewModel @Inject constructor(
     fun openPost(remotePostId: Long) {
         val post = getFluxCPost(remotePostId) ?: return
         _events.trySend(
-            PostRsListEvent.EditPost(site!!, post)
+            PostRsListEvent.EditPost(site, post)
         )
     }
 
     /** Emits a [PostRsListEvent.CreatePost] for the selected site. */
     @MainThread
     fun createNewPost() {
-        _events.trySend(PostRsListEvent.CreatePost(site!!))
+        _events.trySend(PostRsListEvent.CreatePost(site))
     }
 
     /**
@@ -190,7 +194,7 @@ class PostRsListViewModel @Inject constructor(
             }
             PostRsMenuAction.READ -> _events.trySend(
                 PostRsListEvent.ReadPost(
-                    site!!.siteId, remotePostId
+                    site.siteId, remotePostId
                 )
             )
             PostRsMenuAction.SHARE -> {
@@ -213,13 +217,13 @@ class PostRsListViewModel @Inject constructor(
                     getFluxCPost(remotePostId) ?: return
                 _events.trySend(
                     PostRsListEvent.PromoteWithBlaze(
-                        site!!, post
+                        site, post
                     )
                 )
             }
             PostRsMenuAction.STATS -> _events.trySend(
                 PostRsListEvent.ViewStats(
-                    site = site!!,
+                    site = site,
                     postId = remotePostId,
                     title = post?.title ?: "",
                     url = post?.link ?: ""
@@ -227,7 +231,7 @@ class PostRsListViewModel @Inject constructor(
             )
             PostRsMenuAction.COMMENTS -> _events.trySend(
                 PostRsListEvent.ViewComments(
-                    site!!.siteId, remotePostId
+                    site.siteId, remotePostId
                 )
             )
             PostRsMenuAction.TRASH ->
@@ -237,9 +241,9 @@ class PostRsListViewModel @Inject constructor(
                 _pendingConfirmation.value =
                     PendingConfirmation.Delete(remotePostId)
             PostRsMenuAction.PUBLISH ->
-                publishPost(site!!, remotePostId)
+                publishPost(site, remotePostId)
             PostRsMenuAction.MOVE_TO_DRAFT ->
-                moveToDraft(site!!, remotePostId)
+                moveToDraft(site, remotePostId)
             PostRsMenuAction.DUPLICATE ->
                 _events.trySend(
                     PostRsListEvent.ShowToast(
@@ -254,9 +258,9 @@ class PostRsListViewModel @Inject constructor(
     fun onConfirmPendingAction() {
         when (val confirmation = _pendingConfirmation.value) {
             is PendingConfirmation.Trash ->
-                trashPost(site!!, confirmation.postId)
+                trashPost(site, confirmation.postId)
             is PendingConfirmation.Delete ->
-                deletePost(site!!, confirmation.postId)
+                deletePost(site, confirmation.postId)
             null -> Unit
         }
         _pendingConfirmation.value = null
@@ -410,7 +414,7 @@ class PostRsListViewModel @Inject constructor(
      */
     private fun getFluxCPost(remotePostId: Long): PostModel? {
         val post = postStore.getPostByRemotePostId(
-            remotePostId, site!!
+            remotePostId, site
         )
         if (post == null) {
             _events.trySend(
@@ -437,12 +441,12 @@ class PostRsListViewModel @Inject constructor(
                     add(PostRsMenuAction.SHARE)
                     if (!hasPassword &&
                         blazeFeatureUtils
-                            .isSiteBlazeEligible(site!!)
+                            .isSiteBlazeEligible(site)
                     ) {
                         add(PostRsMenuAction.BLAZE)
                     }
                     if (SiteUtils.isAccessedViaWPComRest(
-                            site!!
+                            site
                         ) &&
                         site.hasCapabilityViewStats
                     ) {
@@ -513,7 +517,7 @@ class PostRsListViewModel @Inject constructor(
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
-                val collection = createCollection(site!!, tab)
+                val collection = createCollection(site, tab)
                 collections[tab] = collection
                 initializingTabs.remove(tab)
                 registerObservers(tab, collection)
