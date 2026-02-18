@@ -277,6 +277,8 @@ class MediaRSApiRestClient @Inject constructor(
                     val responseMedia: MediaModel = mediaResponse.response.data.toMediaModel(site.id).apply {
                         id = media.id // be sure we are using the same local id when getting the remote response
                         localSiteId = site.id
+                        localPostId = media.localPostId
+                        markedLocallyAsFeatured = media.markedLocallyAsFeatured
                     }
                     notifyMediaUploaded(
                         media = responseMedia,
