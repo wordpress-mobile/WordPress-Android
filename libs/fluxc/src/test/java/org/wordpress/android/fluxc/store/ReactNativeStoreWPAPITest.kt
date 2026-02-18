@@ -6,6 +6,7 @@ import com.android.volley.VolleyError
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import okhttp3.Credentials
 import org.mockito.kotlin.any
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
@@ -45,7 +46,6 @@ class ReactNativeStoreWPAPITest {
     private val wpApiRestClient = mock<ReactNativeWPAPIRestClient>()
     private val discoveryWPAPIRestClient = mock<DiscoveryWPAPIRestClient>()
     private val nonceRestClient = mock<NonceRestClient>()
-
     private lateinit var store: ReactNativeStore
     private lateinit var site: SiteModel
 
@@ -495,11 +495,93 @@ class ReactNativeStoreWPAPITest {
         assertEquals(UNKNOWN, errorType)
     }
 
-    private suspend fun ReactNativeWPAPIRestClient.getRequest(url: String, nonce: String? = null) =
-        getRequest(url, paramMap, ReactNativeFetchResponse::Success, ReactNativeFetchResponse::Error, nonce)
+    //
+    // Application password tests
+    //
 
-    private suspend fun ReactNativeWPAPIRestClient.postRequest(url: String, nonce: String? = null) =
-        postRequest(url, bodyMap, ReactNativeFetchResponse::Success, ReactNativeFetchResponse::Error, nonce)
+    @Test
+    fun `site with application password uses Basic auth for GET request`() = test {
+        site.apiRestUsernamePlain = "user"
+        site.apiRestPasswordPlain = "pass"
+        val appPasswordAuthHeader = Credentials.basic("user", "pass")
+
+        val fetchUrl = "${site.wpApiRestUrl}/$restPath"
+        val successResponse = mock<Success>()
+        val expectedHeaders = mapOf("Authorization" to appPasswordAuthHeader)
+        whenever(
+            wpApiRestClient.getRequest(
+                fetchUrl, paramMap, ::Success, ::Error,
+                null, true, expectedHeaders
+            )
+        ).thenReturn(successResponse)
+
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
+        assertEquals(successResponse, actualResponse)
+        verify(nonceRestClient, never()).getNonce(any<SiteModel>())
+        verify(nonceRestClient, never()).requestNonce(any())
+    }
+
+    @Test
+    fun `site with application password uses Basic auth for POST request`() = test {
+        site.apiRestUsernamePlain = "user"
+        site.apiRestPasswordPlain = "pass"
+        val appPasswordAuthHeader = Credentials.basic("user", "pass")
+
+        val postUrl = "${site.wpApiRestUrl}/$restPath"
+        val successResponse = mock<Success>()
+        val expectedHeaders = mapOf("Authorization" to appPasswordAuthHeader)
+        whenever(
+            wpApiRestClient.postRequest(
+                postUrl, bodyMap, ::Success, ::Error,
+                null, expectedHeaders
+            )
+        ).thenReturn(successResponse)
+
+        val actualResponse = store.executePostRequest(site, restPathWithParams, bodyMap)
+        assertEquals(successResponse, actualResponse)
+        verify(nonceRestClient, never()).getNonce(any<SiteModel>())
+        verify(nonceRestClient, never()).requestNonce(any())
+    }
+
+    @Test
+    fun `site with application password does not retry nonce on 401`() = test {
+        site.apiRestUsernamePlain = "user"
+        site.apiRestPasswordPlain = "pass"
+        val appPasswordAuthHeader = Credentials.basic("user", "pass")
+
+        val fetchUrl = "${site.wpApiRestUrl}/$restPath"
+        val unauthorizedResponse = errorResponse(StatusCode.UNAUTHORIZED_401)
+        val expectedHeaders = mapOf("Authorization" to appPasswordAuthHeader)
+        whenever(
+            wpApiRestClient.getRequest(
+                fetchUrl, paramMap, ::Success, ::Error,
+                null, true, expectedHeaders
+            )
+        ).thenReturn(unauthorizedResponse)
+
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
+        assertEquals(unauthorizedResponse, actualResponse)
+        verify(nonceRestClient, never()).getNonce(any<SiteModel>())
+        verify(nonceRestClient, never()).requestNonce(any())
+    }
+
+    private suspend fun ReactNativeWPAPIRestClient.getRequest(
+        url: String,
+        nonce: String? = null,
+        headers: Map<String, String> = emptyMap()
+    ) = getRequest(
+        url, paramMap, ReactNativeFetchResponse::Success,
+        ReactNativeFetchResponse::Error, nonce, true, headers
+    )
+
+    private suspend fun ReactNativeWPAPIRestClient.postRequest(
+        url: String,
+        nonce: String? = null,
+        headers: Map<String, String> = emptyMap()
+    ) = postRequest(
+        url, bodyMap, ReactNativeFetchResponse::Success,
+        ReactNativeFetchResponse::Error, nonce, headers
+    )
 
     private fun errorResponse(statusCode: Int): ReactNativeFetchResponse = Error(mock()).apply {
         error.volleyError = VolleyError(NetworkResponse(statusCode, null, false, 0L, null))
