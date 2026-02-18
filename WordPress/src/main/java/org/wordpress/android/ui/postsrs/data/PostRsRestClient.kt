@@ -26,6 +26,8 @@ class PostRsRestClient @Inject constructor(
     private val accountStore: AccountStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) {
+    private val wpComClients = mutableMapOf<Long, WpApiClient>()
+
     suspend fun trashPost(site: SiteModel, postId: Long): PostActionResult {
         val client = getApiClient(site)
         val response = client.request { it.posts().trash(PostEndpointType.Posts, postId) }
@@ -63,14 +65,16 @@ class PostRsRestClient @Inject constructor(
 
     private fun getApiClient(site: SiteModel): WpApiClient {
         if (!site.isWPCom) return wpApiClientProvider.getWpApiClient(site)
-        val token = requireNotNull(accountStore.accessToken) { "WP.com access token is required" }
-        val apiRootUrl = URL("https://public-api.wordpress.com/wp/v2/sites/${site.siteId}/")
-        val authProvider = WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = token))
-        return WpApiClient(
-            wpOrgSiteApiRootUrl = apiRootUrl,
-            authProvider = authProvider,
-            requestExecutor = WpRequestExecutor(emptyList())
-        )
+        return wpComClients.getOrPut(site.siteId) {
+            val token = requireNotNull(accountStore.accessToken) { "WP.com access token is required" }
+            val apiRootUrl = URL("https://public-api.wordpress.com/wp/v2/sites/${site.siteId}/")
+            val authProvider = WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = token))
+            WpApiClient(
+                wpOrgSiteApiRootUrl = apiRootUrl,
+                authProvider = authProvider,
+                requestExecutor = WpRequestExecutor(emptyList())
+            )
+        }
     }
 
     private fun parseErrorMessage(response: WpRequestResult<*>): String {
