@@ -71,8 +71,6 @@ class PostRsListViewModel @Inject constructor(
     val pendingConfirmation: StateFlow<PendingConfirmation?> =
         _pendingConfirmation.asStateFlow()
 
-    private var postsById = emptyMap<Long, PostRsUiModel>()
-
     init {
         @OptIn(FlowPreview::class)
         viewModelScope.launch {
@@ -85,7 +83,6 @@ class PostRsListViewModel @Inject constructor(
                         .associateWith {
                             PostTabUiState(isLoading = true)
                         }
-                    postsById = emptyMap()
                     initTab(activeSearchTab)
                 }
         }
@@ -389,18 +386,20 @@ class PostRsListViewModel @Inject constructor(
                 state
             }
         }
-        rebuildPostIndex()
-    }
-
-    private fun rebuildPostIndex() {
-        postsById = _tabStates.value.values
-            .flatMap { it.posts }
-            .associateBy { it.remotePostId }
     }
 
     private fun findPost(
         remotePostId: Long
-    ): PostRsUiModel? = postsById[remotePostId]
+    ): PostRsUiModel? {
+        for (state in _tabStates.value.values) {
+            for (post in state.posts) {
+                if (post.remotePostId == remotePostId) {
+                    return post
+                }
+            }
+        }
+        return null
+    }
 
     private fun getMenuActions(
         tab: PostRsListTab,
@@ -478,7 +477,6 @@ class PostRsListViewModel @Inject constructor(
         initializingTabs.clear()
         userRefreshingTabs.clear()
         _tabStates.value = emptyMap()
-        postsById = emptyMap()
     }
 
     /**
@@ -749,7 +747,6 @@ class PostRsListViewModel @Inject constructor(
     ) {
         val current = getTabUiState(tab)
         _tabStates.value += (tab to current.update())
-        rebuildPostIndex()
     }
 
     override fun onCleared() {
