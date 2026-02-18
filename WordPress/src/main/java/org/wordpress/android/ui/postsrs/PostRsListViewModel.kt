@@ -71,6 +71,8 @@ class PostRsListViewModel @Inject constructor(
     val pendingConfirmation: StateFlow<PendingConfirmation?> =
         _pendingConfirmation.asStateFlow()
 
+    private var postsById = emptyMap<Long, PostRsUiModel>()
+
     init {
         @OptIn(FlowPreview::class)
         viewModelScope.launch {
@@ -83,6 +85,7 @@ class PostRsListViewModel @Inject constructor(
                         .associateWith {
                             PostTabUiState(isLoading = true)
                         }
+                    postsById = emptyMap()
                     initTab(activeSearchTab)
                 }
         }
@@ -173,12 +176,23 @@ class PostRsListViewModel @Inject constructor(
         action: PostRsMenuAction
     ) {
         val site =
-            selectedSiteRepository.getSelectedSite() ?: return
+            selectedSiteRepository.getSelectedSite()
+        if (site == null) {
+            AppLog.w(AppLog.T.POSTS, "No site selected")
+            return
+        }
         val post = findPost(remotePostId)
 
         when (action) {
             PostRsMenuAction.VIEW -> {
-                val url = post?.link ?: return
+                val url = post?.link
+                if (url == null) {
+                    AppLog.w(
+                        AppLog.T.POSTS,
+                        "No link for post $remotePostId"
+                    )
+                    return
+                }
                 _events.trySend(PostRsListEvent.ViewPost(url))
             }
             PostRsMenuAction.READ -> _events.trySend(
@@ -187,7 +201,14 @@ class PostRsListViewModel @Inject constructor(
                 )
             )
             PostRsMenuAction.SHARE -> {
-                val url = post?.link ?: return
+                val url = post?.link
+                if (url == null) {
+                    AppLog.w(
+                        AppLog.T.POSTS,
+                        "No link for post $remotePostId"
+                    )
+                    return
+                }
                 _events.trySend(
                     PostRsListEvent.SharePost(
                         url, post.title
@@ -198,7 +219,14 @@ class PostRsListViewModel @Inject constructor(
                 val fluxcPost =
                     postStore.getPostByRemotePostId(
                         remotePostId, site
-                    ) ?: return
+                    )
+                if (fluxcPost == null) {
+                    AppLog.w(
+                        AppLog.T.POSTS,
+                        "Post $remotePostId not in FluxC"
+                    )
+                    return
+                }
                 _events.trySend(
                     PostRsListEvent.PromoteWithBlaze(
                         site, fluxcPost
@@ -361,13 +389,18 @@ class PostRsListViewModel @Inject constructor(
                 state
             }
         }
+        rebuildPostIndex()
     }
 
-    private fun findPost(remotePostId: Long): PostRsUiModel? {
-        return _tabStates.value.values
+    private fun rebuildPostIndex() {
+        postsById = _tabStates.value.values
             .flatMap { it.posts }
-            .firstOrNull { it.remotePostId == remotePostId }
+            .associateBy { it.remotePostId }
     }
+
+    private fun findPost(
+        remotePostId: Long
+    ): PostRsUiModel? = postsById[remotePostId]
 
     private fun getMenuActions(
         tab: PostRsListTab,
@@ -445,6 +478,7 @@ class PostRsListViewModel @Inject constructor(
         initializingTabs.clear()
         userRefreshingTabs.clear()
         _tabStates.value = emptyMap()
+        postsById = emptyMap()
     }
 
     /**
@@ -715,6 +749,7 @@ class PostRsListViewModel @Inject constructor(
     ) {
         val current = getTabUiState(tab)
         _tabStates.value += (tab to current.update())
+        rebuildPostIndex()
     }
 
     override fun onCleared() {
