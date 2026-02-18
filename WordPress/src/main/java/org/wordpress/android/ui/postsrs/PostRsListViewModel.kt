@@ -23,7 +23,7 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient.PostActionResult
-import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
+import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -42,7 +42,7 @@ import javax.inject.Inject
 @Suppress("LargeClass")
 class PostRsListViewModel @Inject constructor(
     selectedSiteRepository: SelectedSiteRepository,
-    private val serviceProvider: WpSelfHostedServiceProvider,
+    private val serviceProvider: WpServiceProvider,
     private val restClient: PostRsRestClient,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,

@@ -24,7 +24,7 @@ import javax.inject.Singleton
  * keyed by site ID so subsequent requests reuse the same instance.
  */
 @Singleton
-class WpSelfHostedServiceProvider @Inject constructor(
+class WpServiceProvider @Inject constructor(
     @ApplicationContext private val context: Context,
     private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) {
