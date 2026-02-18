@@ -19,85 +19,49 @@ class PostRsRestClient @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) {
-    suspend fun trashPost(
-        site: SiteModel,
-        postId: Long
-    ): PostActionResult {
+    suspend fun trashPost(site: SiteModel, postId: Long): PostActionResult {
         val client = wpApiClientProvider.getWpApiClient(site)
-        val response = client.request {
-            it.posts().trash(PostEndpointType.Posts, postId)
-        }
+        val response = client.request { it.posts().trash(PostEndpointType.Posts, postId) }
         return when (response) {
             is WpRequestResult.Success -> PostActionResult.Success
-            else -> PostActionResult.Error(
-                parseErrorMessage(response)
-            )
+            else -> PostActionResult.Error(parseErrorMessage(response))
         }
     }
 
-    suspend fun deletePost(
-        site: SiteModel,
-        postId: Long
-    ): PostActionResult {
+    suspend fun deletePost(site: SiteModel, postId: Long): PostActionResult {
         val client = wpApiClientProvider.getWpApiClient(site)
-        val response = client.request {
-            it.posts().delete(PostEndpointType.Posts, postId)
-        }
+        val response = client.request { it.posts().delete(PostEndpointType.Posts, postId) }
         return when (response) {
             is WpRequestResult.Success -> {
                 if (response.response.data.deleted) {
                     PostActionResult.Success
                 } else {
-                    PostActionResult.Error(
-                        context.getString(
-                            R.string.post_rs_error_delete
-                        )
-                    )
+                    PostActionResult.Error(context.getString(R.string.post_rs_error_delete))
                 }
             }
-            else -> PostActionResult.Error(
-                parseErrorMessage(response)
-            )
+            else -> PostActionResult.Error(parseErrorMessage(response))
         }
     }
 
-    suspend fun updatePostStatus(
-        site: SiteModel,
-        postId: Long,
-        newStatus: PostStatus
-    ): PostActionResult {
+    suspend fun updatePostStatus(site: SiteModel, postId: Long, newStatus: PostStatus): PostActionResult {
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request {
-            it.posts().update(
-                PostEndpointType.Posts,
-                postId,
-                PostUpdateParams(status = newStatus, meta = null)
-            )
+            it.posts().update(PostEndpointType.Posts, postId, PostUpdateParams(status = newStatus, meta = null))
         }
         return when (response) {
             is WpRequestResult.Success -> PostActionResult.Success
-            else -> PostActionResult.Error(
-                parseErrorMessage(response)
-            )
+            else -> PostActionResult.Error(parseErrorMessage(response))
         }
     }
 
-    private fun parseErrorMessage(
-        response: WpRequestResult<*>
-    ): String {
+    private fun parseErrorMessage(response: WpRequestResult<*>): String {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return context.getString(R.string.no_network_message)
         }
         return when (response) {
             is WpRequestResult.WpError<*> ->
-                response.errorMessage.takeIf {
-                    it.isNotBlank()
-                } ?: context.getString(
-                    R.string.request_failed_message
-                )
-            else -> context.getString(
-                R.string.request_failed_message
-            )
+                response.errorMessage.takeIf { it.isNotBlank() } ?: context.getString(R.string.request_failed_message)
+            else -> context.getString(R.string.request_failed_message)
         }
     }
 
