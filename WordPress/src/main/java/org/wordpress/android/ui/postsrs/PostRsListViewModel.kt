@@ -24,6 +24,7 @@ import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient.PostActionResult
 import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.cache.kotlin.ObservableMetadataCollection
@@ -45,6 +46,7 @@ class PostRsListViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
     private val blazeFeatureUtils: BlazeFeatureUtils,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ViewModel() {
     private val _tabStates =
         MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
@@ -284,6 +286,7 @@ class PostRsListViewModel @Inject constructor(
     }
 
     private fun trashPost(site: SiteModel, postId: Long) {
+        if (!checkNetwork()) return
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 restClient.trashPost(site, postId)
@@ -298,6 +301,7 @@ class PostRsListViewModel @Inject constructor(
     }
 
     private fun deletePost(site: SiteModel, postId: Long) {
+        if (!checkNetwork()) return
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 restClient.deletePost(site, postId)
@@ -312,6 +316,7 @@ class PostRsListViewModel @Inject constructor(
     }
 
     private fun publishPost(site: SiteModel, postId: Long) {
+        if (!checkNetwork()) return
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 restClient.updatePostStatus(
@@ -328,6 +333,7 @@ class PostRsListViewModel @Inject constructor(
     }
 
     private fun moveToDraft(site: SiteModel, postId: Long) {
+        if (!checkNetwork()) return
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 restClient.updatePostStatus(
@@ -341,6 +347,18 @@ class PostRsListViewModel @Inject constructor(
                 R.string.post_rs_error_update_status
             )
         }
+    }
+
+    private fun checkNetwork(): Boolean {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            _events.trySend(
+                PostRsListEvent.ShowToast(
+                    R.string.no_network_message
+                )
+            )
+            return false
+        }
+        return true
     }
 
     private fun handleActionResult(
