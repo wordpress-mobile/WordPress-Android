@@ -999,7 +999,7 @@
     <string name="experimental_new_stats">New Stats</string>
     <string name="experimental_new_stats_description">Show stats in a more modern and advanced UI</string>
     <string name="experimental_rs_post_list">New Post List</string>
-    <string name="experimental_rs_post_list_description">Show post list in a more modern UI for sites with application passwords</string>
+    <string name="experimental_rs_post_list_description">Show post list in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
     <string name="post_rs_not_implemented_yet">Not implemented yet</string>
     <string name="post_rs_confirm_trash_message">Are you sure you want to trash this post?</string>

@@ -654,7 +654,7 @@ public class ActivityLauncher {
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
         if (site != null
-                && site.hasApplicationPassword()
+                && (site.hasApplicationPassword() || site.isWPCom())
                 && AppPrefs.getExperimentalFeatureConfig(
                         Feature.RS_POST_LIST.getPrefKey())) {
             context.startActivity(PostRsListActivity.Companion.createIntent(context));
