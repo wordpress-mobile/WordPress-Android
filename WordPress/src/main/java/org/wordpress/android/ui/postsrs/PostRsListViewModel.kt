@@ -16,17 +16,19 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.WpSelfHostedServiceProvider
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
 import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
+import uniffi.wp_api.PostStatus
 import uniffi.wp_api.WpApiParamPostsOrderBy
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile_cache.ListState
@@ -38,6 +40,7 @@ class PostRsListViewModel @Inject constructor(
     private val serviceProvider: WpSelfHostedServiceProvider,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
+    private val blazeFeatureUtils: BlazeFeatureUtils,
 ) : ViewModel() {
     private val _tabStates =
         MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
@@ -59,6 +62,11 @@ class PostRsListViewModel @Inject constructor(
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
+
+    private val _pendingConfirmation =
+        MutableStateFlow<PendingConfirmation?>(null)
+    val pendingConfirmation: StateFlow<PendingConfirmation?> =
+        _pendingConfirmation.asStateFlow()
 
     init {
         @OptIn(FlowPreview::class)
@@ -152,6 +160,169 @@ class PostRsListViewModel @Inject constructor(
         _searchQuery.value = ""
         clearCollections()
         initTab(activeTab)
+    }
+
+    /** Routes a menu action tap to the appropriate event or dialog. */
+    @MainThread
+    @Suppress("LongMethod", "ReturnCount")
+    fun onPostMenuAction(
+        remotePostId: Long,
+        action: PostRsMenuAction
+    ) {
+        val site =
+            selectedSiteRepository.getSelectedSite() ?: return
+        val post = findPost(remotePostId)
+
+        when (action) {
+            PostRsMenuAction.VIEW -> {
+                val url = post?.link ?: return
+                _events.trySend(PostRsListEvent.ViewPost(url))
+            }
+            PostRsMenuAction.READ -> _events.trySend(
+                PostRsListEvent.ReadPost(
+                    site.siteId, remotePostId
+                )
+            )
+            PostRsMenuAction.SHARE -> {
+                val url = post?.link ?: return
+                _events.trySend(
+                    PostRsListEvent.SharePost(
+                        url, post.title
+                    )
+                )
+            }
+            PostRsMenuAction.BLAZE -> {
+                val fluxcPost =
+                    postStore.getPostByRemotePostId(
+                        remotePostId, site
+                    ) ?: return
+                _events.trySend(
+                    PostRsListEvent.PromoteWithBlaze(
+                        site, fluxcPost
+                    )
+                )
+            }
+            PostRsMenuAction.STATS -> _events.trySend(
+                PostRsListEvent.ViewStats(
+                    site = site,
+                    postId = remotePostId,
+                    title = post?.title ?: "",
+                    url = post?.link ?: ""
+                )
+            )
+            PostRsMenuAction.COMMENTS -> _events.trySend(
+                PostRsListEvent.ViewComments(
+                    site.siteId, remotePostId
+                )
+            )
+            PostRsMenuAction.TRASH ->
+                _pendingConfirmation.value =
+                    PendingConfirmation.Trash(remotePostId)
+            PostRsMenuAction.DELETE_PERMANENTLY ->
+                _pendingConfirmation.value =
+                    PendingConfirmation.Delete(remotePostId)
+            PostRsMenuAction.PUBLISH ->
+                sendNotImplemented()
+            PostRsMenuAction.MOVE_TO_DRAFT ->
+                sendNotImplemented()
+            PostRsMenuAction.DUPLICATE ->
+                sendNotImplemented()
+        }
+    }
+
+    @MainThread
+    fun onConfirmPendingAction() {
+        _pendingConfirmation.value = null
+        sendNotImplemented()
+    }
+
+    @MainThread
+    fun onDismissPendingAction() {
+        _pendingConfirmation.value = null
+    }
+
+    private fun sendNotImplemented() {
+        _events.trySend(
+            PostRsListEvent.ShowError(
+                R.string.post_rs_not_implemented_yet
+            )
+        )
+    }
+
+    private fun findPost(remotePostId: Long): PostRsUiModel? {
+        return _tabStates.value.values
+            .flatMap { it.posts }
+            .firstOrNull { it.remotePostId == remotePostId }
+    }
+
+    private fun getMenuActions(
+        tab: PostRsListTab,
+        hasPassword: Boolean,
+        commentsOpen: Boolean
+    ): List<PostRsMenuAction> {
+        val site = selectedSiteRepository.getSelectedSite()
+        return buildList {
+            when (tab) {
+                PostRsListTab.PUBLISHED -> {
+                    add(PostRsMenuAction.VIEW)
+                    add(PostRsMenuAction.READ)
+                    add(PostRsMenuAction.MOVE_TO_DRAFT)
+                    add(PostRsMenuAction.DUPLICATE)
+                    add(PostRsMenuAction.SHARE)
+                    if (site != null &&
+                        !hasPassword &&
+                        blazeFeatureUtils
+                            .isSiteBlazeEligible(site)
+                    ) {
+                        add(PostRsMenuAction.BLAZE)
+                    }
+                    if (site != null &&
+                        SiteUtils.isAccessedViaWPComRest(
+                            site
+                        ) &&
+                        site.hasCapabilityViewStats
+                    ) {
+                        add(PostRsMenuAction.STATS)
+                    }
+                    if (commentsOpen) {
+                        add(PostRsMenuAction.COMMENTS)
+                    }
+                    add(PostRsMenuAction.TRASH)
+                }
+                PostRsListTab.DRAFTS -> {
+                    add(PostRsMenuAction.VIEW)
+                    add(PostRsMenuAction.READ)
+                    add(PostRsMenuAction.PUBLISH)
+                    add(PostRsMenuAction.DUPLICATE)
+                    add(PostRsMenuAction.SHARE)
+                    add(PostRsMenuAction.TRASH)
+                }
+                PostRsListTab.SCHEDULED -> {
+                    add(PostRsMenuAction.VIEW)
+                    add(PostRsMenuAction.READ)
+                    add(PostRsMenuAction.SHARE)
+                    add(PostRsMenuAction.TRASH)
+                }
+                PostRsListTab.TRASHED -> {
+                    add(PostRsMenuAction.MOVE_TO_DRAFT)
+                    add(PostRsMenuAction.DELETE_PERMANENTLY)
+                }
+            }
+        }
+    }
+
+    /**
+     * Maps a [PostStatus] to the corresponding [PostRsListTab].
+     * Used during search when posts from all statuses are
+     * shown together and menu actions must be per-post.
+     */
+    private fun tabForStatus(
+        status: PostStatus?
+    ): PostRsListTab {
+        if (status == null) return PostRsListTab.PUBLISHED
+        return PostRsListTab.entries.firstOrNull { tab ->
+            tab.statuses.any { it == status }
+        } ?: PostRsListTab.PUBLISHED
     }
 
     private fun clearCollections() {
@@ -341,15 +512,28 @@ class PostRsListViewModel @Inject constructor(
 
         @Suppress("TooGenericExceptionCaught")
         try {
-            val showStatus =
-                _searchQuery.value.isNotBlank()
-            val uiModels = withContext(Dispatchers.IO) {
+            val isSearch = _searchQuery.value.isNotBlank()
+            val items = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
                     item.state.toUiModel(
                         item.id,
-                        showStatus = showStatus
+                        showStatus = isSearch
                     )
                 }
+            }
+            val uiModels = items.map { model ->
+                val effectiveTab = if (isSearch) {
+                    tabForStatus(model.status)
+                } else {
+                    tab
+                }
+                model.copy(
+                    actions = getMenuActions(
+                        effectiveTab,
+                        model.hasPassword,
+                        model.commentsOpen
+                    )
+                )
             }
             updateTabUiState(tab) {
                 copy(
@@ -416,7 +600,7 @@ class PostRsListViewModel @Inject constructor(
         update: PostTabUiState.() -> PostTabUiState
     ) {
         val current = getTabUiState(tab)
-        _tabStates.value = _tabStates.value + (tab to current.update())
+        _tabStates.value += (tab to current.update())
     }
 
     override fun onCleared() {
@@ -432,19 +616,4 @@ class PostRsListViewModel @Inject constructor(
             PostRsListTab.entries
                 .flatMap { it.statuses }.distinct()
     }
-}
-
-sealed interface PostRsListEvent {
-    data class EditPost(
-        val site: SiteModel,
-        val post: PostModel
-    ) : PostRsListEvent
-
-    data class CreatePost(
-        val site: SiteModel
-    ) : PostRsListEvent
-
-    data class ShowError(
-        val messageResId: Int
-    ) : PostRsListEvent
 }

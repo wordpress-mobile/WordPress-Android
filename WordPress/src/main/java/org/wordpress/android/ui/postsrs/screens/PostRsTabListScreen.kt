@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
 import org.wordpress.android.ui.postsrs.PostTabUiState
 
@@ -41,6 +42,7 @@ fun PostRsTabListScreen(
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
+    onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
     onCreatePost: () -> Unit,
     modifier: Modifier = Modifier,
     isSearchIdle: Boolean = false,
@@ -88,7 +90,8 @@ fun PostRsTabListScreen(
                 isLoadingMore = state.isLoadingMore,
                 canLoadMore = state.canLoadMore,
                 onLoadMore = onLoadMore,
-                onPostClick = onPostClick
+                onPostClick = onPostClick,
+                onPostMenuAction = onPostMenuAction
             )
         }
     }
@@ -100,7 +103,8 @@ private fun PostListContent(
     isLoadingMore: Boolean,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
-    onPostClick: (Long) -> Unit
+    onPostClick: (Long) -> Unit,
+    onPostMenuAction: (Long, PostRsMenuAction) -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -126,7 +130,14 @@ private fun PostListContent(
         ) { post ->
             PostRsListItem(
                 post = post,
-                onClick = { onPostClick(post.remotePostId) }
+                onClick = {
+                    onPostClick(post.remotePostId)
+                },
+                onMenuAction = { action ->
+                    onPostMenuAction(
+                        post.remotePostId, action
+                    )
+                }
             )
         }
 
