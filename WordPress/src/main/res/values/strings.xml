@@ -1008,11 +1008,9 @@
     <string name="post_rs_deleted">Post permanently deleted</string>
     <string name="post_rs_published">Post published</string>
     <string name="post_rs_moved_to_draft">Post moved to drafts</string>
-    <string name="post_rs_duplicated">Post duplicated</string>
     <string name="post_rs_error_trash">Failed to trash post</string>
     <string name="post_rs_error_delete">Failed to delete post</string>
     <string name="post_rs_error_update_status">Failed to update post status</string>
-    <string name="post_rs_error_duplicate">Failed to duplicate post</string>
     <string name="post_types_screen_title">Post Types</string>
 
     <!-- Debug settings -->

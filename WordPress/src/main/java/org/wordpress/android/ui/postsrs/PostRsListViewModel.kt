@@ -99,7 +99,7 @@ class PostRsListViewModel @Inject constructor(
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
             _events.trySend(
-                PostRsListEvent.ShowError(R.string.blog_not_found)
+                PostRsListEvent.ShowToast(R.string.blog_not_found)
             )
             return
         }
@@ -108,7 +108,7 @@ class PostRsListViewModel @Inject constructor(
         )
         if (post == null) {
             _events.trySend(
-                PostRsListEvent.ShowError(R.string.post_not_found)
+                PostRsListEvent.ShowToast(R.string.post_not_found)
             )
             return
         }
@@ -337,7 +337,7 @@ class PostRsListViewModel @Inject constructor(
                     "Post action failed: ${result.message}"
                 )
                 _events.trySend(
-                    PostRsListEvent.ShowError(errorResId)
+                    PostRsListEvent.ShowToast(errorResId)
                 )
             }
         }

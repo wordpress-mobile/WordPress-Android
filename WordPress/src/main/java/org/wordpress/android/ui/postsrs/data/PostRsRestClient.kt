@@ -105,5 +105,4 @@ class PostRsRestClient @Inject constructor(
         data object Success : PostActionResult()
         data class Error(val message: String) : PostActionResult()
     }
-
 }

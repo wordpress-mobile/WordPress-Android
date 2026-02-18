@@ -110,10 +110,6 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     -1,
                     null
                 )
-            is PostRsListEvent.ShowError ->
-                ToastUtils.showToast(
-                    this, event.messageResId
-                )
             is PostRsListEvent.ViewPost ->
                 ActivityLauncher.openUrlExternal(
                     this, event.url
