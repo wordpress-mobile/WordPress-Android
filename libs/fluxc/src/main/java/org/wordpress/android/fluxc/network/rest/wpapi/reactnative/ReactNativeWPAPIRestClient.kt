@@ -28,7 +28,8 @@ class ReactNativeWPAPIRestClient @Inject constructor(
         successHandler: (data: JsonElement?) -> ReactNativeFetchResponse,
         errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse,
         nonce: String? = null,
-        enableCaching: Boolean = true
+        enableCaching: Boolean = true,
+        headers: Map<String, String> = emptyMap()
     ): ReactNativeFetchResponse {
         val response =
                 wpApiGsonRequestBuilder.syncGetRequest(
@@ -38,7 +39,8 @@ class ReactNativeWPAPIRestClient @Inject constructor(
                         emptyMap(),
                         JsonElement::class.java,
                         enableCaching,
-                        nonce = nonce)
+                        nonce = nonce,
+                        headers = headers)
         return when (response) {
             is Success -> successHandler(response.data)
             is Error -> errorHandler(response.error)
@@ -51,6 +53,7 @@ class ReactNativeWPAPIRestClient @Inject constructor(
         successHandler: (data: JsonElement?) -> ReactNativeFetchResponse,
         errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse,
         nonce: String? = null,
+        headers: Map<String, String> = emptyMap()
     ): ReactNativeFetchResponse {
         val response =
             wpApiGsonRequestBuilder.syncPostRequest(
@@ -58,7 +61,8 @@ class ReactNativeWPAPIRestClient @Inject constructor(
                 url,
                 body,
                 JsonElement::class.java,
-                nonce = nonce)
+                nonce = nonce,
+                headers = headers)
         return when (response) {
             is Success -> successHandler(response.data)
             is Error -> errorHandler(response.error)
