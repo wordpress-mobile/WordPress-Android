@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
+import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
 import org.wordpress.android.fluxc.network.rest.wpapi.NonceRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.ReactNativeWPAPIRestClient
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
@@ -435,6 +436,29 @@ class ReactNativeStoreWPAPITest {
         val actualResponse = store.executeGetRequest(site, restPathWithParams)
         assertEquals(successResponse, actualResponse)
         inOrder(nonceRestClient, wpApiRestClient) {
+            verify(nonceRestClient).requestNonce(site)
+            verify(wpApiRestClient).getRequest(fetchUrl, nonce.value)
+        }
+    }
+
+    @Test
+    fun `nonce unknown, so requests nonce`() = test {
+        // previous nonce request unknown
+        initStore(Unknown(site.username))
+
+        // refreshes nonce because latest attempt to refresh nonce was not recent
+        val nonce = Available("a_nonce", site.username)
+        whenever(nonceRestClient.requestNonce(site))
+                .thenReturn(nonce)
+
+        val fetchUrl = "${site.wpApiRestUrl}/$restPath"
+        val successResponse = mock<Success>()
+        whenever(wpApiRestClient.getRequest(fetchUrl, nonce.value)) // passes null for nonce
+                .thenReturn(successResponse)
+
+        val actualResponse = store.executeGetRequest(site, restPathWithParams)
+        assertEquals(successResponse, actualResponse)
+        inOrder(wpApiRestClient, nonceRestClient) {
             verify(nonceRestClient).requestNonce(site)
             verify(wpApiRestClient).getRequest(fetchUrl, nonce.value)
         }
