@@ -37,6 +37,7 @@ import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
 
 @HiltViewModel
+@Suppress("LargeClass")
 class PostRsListViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpSelfHostedServiceProvider,
