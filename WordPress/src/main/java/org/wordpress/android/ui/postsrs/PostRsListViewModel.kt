@@ -40,7 +40,7 @@ import javax.inject.Inject
 @HiltViewModel
 @Suppress("LargeClass")
 class PostRsListViewModel @Inject constructor(
-    private val selectedSiteRepository: SelectedSiteRepository,
+    selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpSelfHostedServiceProvider,
     private val restClient: PostRsRestClient,
     private val resourceProvider: ResourceProvider,
@@ -74,20 +74,37 @@ class PostRsListViewModel @Inject constructor(
     val pendingConfirmation: StateFlow<PendingConfirmation?> =
         _pendingConfirmation.asStateFlow()
 
+    private val site: SiteModel? =
+        selectedSiteRepository.getSelectedSite()
+
     init {
-        @OptIn(FlowPreview::class)
-        viewModelScope.launch {
-            _searchQuery
-                .debounce(SEARCH_DEBOUNCE_MS)
-                .filter { it.length >= MIN_SEARCH_QUERY_LENGTH }
-                .collect {
-                    clearCollections()
-                    _tabStates.value = PostRsListTab.entries
-                        .associateWith {
-                            PostTabUiState(isLoading = true)
-                        }
-                    initTab(activeSearchTab)
-                }
+        if (site == null) {
+            _events.trySend(
+                PostRsListEvent.ShowToast(
+                    R.string.blog_not_found
+                )
+            )
+            _events.trySend(PostRsListEvent.Finish)
+        } else {
+            @OptIn(FlowPreview::class)
+            viewModelScope.launch {
+                _searchQuery
+                    .debounce(SEARCH_DEBOUNCE_MS)
+                    .filter {
+                        it.length >= MIN_SEARCH_QUERY_LENGTH
+                    }
+                    .collect {
+                        clearCollections()
+                        _tabStates.value =
+                            PostRsListTab.entries
+                                .associateWith {
+                                    PostTabUiState(
+                                        isLoading = true
+                                    )
+                                }
+                        initTab(activeSearchTab)
+                    }
+            }
         }
     }
 
@@ -99,13 +116,7 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun openPost(remotePostId: Long) {
-        val site = selectedSiteRepository.getSelectedSite()
-        if (site == null) {
-            _events.trySend(
-                PostRsListEvent.ShowToast(R.string.blog_not_found)
-            )
-            return
-        }
+        val site = site ?: return
         val post = postStore.getPostByRemotePostId(
             remotePostId, site
         )
@@ -123,8 +134,7 @@ class PostRsListViewModel @Inject constructor(
     /** Emits a [PostRsListEvent.CreatePost] for the selected site. */
     @MainThread
     fun createNewPost() {
-        val site = selectedSiteRepository.getSelectedSite()
-            ?: return
+        val site = site ?: return
         _events.trySend(PostRsListEvent.CreatePost(site))
     }
 
@@ -175,12 +185,7 @@ class PostRsListViewModel @Inject constructor(
         remotePostId: Long,
         action: PostRsMenuAction
     ) {
-        val site =
-            selectedSiteRepository.getSelectedSite()
-        if (site == null) {
-            AppLog.w(AppLog.T.POSTS, "No site selected")
-            return
-        }
+        val site = site ?: return
         val post = findPost(remotePostId)
 
         when (action) {
@@ -268,8 +273,7 @@ class PostRsListViewModel @Inject constructor(
 
     @MainThread
     fun onConfirmPendingAction() {
-        val site =
-            selectedSiteRepository.getSelectedSite() ?: return
+        val site = site ?: return
         when (val confirmation = _pendingConfirmation.value) {
             is PendingConfirmation.Trash ->
                 trashPost(site, confirmation.postId)
@@ -425,7 +429,6 @@ class PostRsListViewModel @Inject constructor(
         hasPassword: Boolean,
         commentsOpen: Boolean
     ): List<PostRsMenuAction> {
-        val site = selectedSiteRepository.getSelectedSite()
         return buildList {
             when (tab) {
                 PostRsListTab.PUBLISHED -> {
@@ -510,16 +513,7 @@ class PostRsListViewModel @Inject constructor(
             return
         }
 
-        val site = selectedSiteRepository.getSelectedSite() ?: run {
-            updateTabUiState(tab) {
-                PostTabUiState(
-                    error = resourceProvider.getString(
-                        R.string.stats_todays_stats_no_site_selected
-                    )
-                )
-            }
-            return
-        }
+        val site = site ?: return
 
         initializingTabs.add(tab)
 

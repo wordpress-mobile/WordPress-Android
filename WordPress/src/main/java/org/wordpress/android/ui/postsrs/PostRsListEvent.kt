@@ -45,4 +45,6 @@ sealed interface PostRsListEvent {
     data class ShowToast(
         val messageResId: Int
     ) : PostRsListEvent
+
+    data object Finish : PostRsListEvent
 }

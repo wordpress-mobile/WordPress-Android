@@ -150,6 +150,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                 ToastUtils.showToast(
                     this, event.messageResId
                 )
+            is PostRsListEvent.Finish -> finish()
         }
     }
 
