@@ -137,7 +137,9 @@ class MostViewedViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 loadDataInternal(site.siteId)
-                loadedPeriod = currentPeriod
+                if (!hasErrorState()) {
+                    loadedPeriod = currentPeriod
+                }
             } finally {
                 loadingPeriod = null
             }
@@ -248,6 +250,11 @@ class MostViewedViewModel @Inject constructor(
                 _referrersUiState.value = loadedState
             }
         }
+    }
+
+    private fun hasErrorState(): Boolean {
+        return _postsUiState.value is MostViewedCardUiState.Error ||
+            _referrersUiState.value is MostViewedCardUiState.Error
     }
 
     private fun setErrorState(dataSource: MostViewedDataSource, message: String) {
