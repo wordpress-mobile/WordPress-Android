@@ -33,10 +33,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
@@ -110,6 +112,16 @@ private fun PostContentItem(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+            }
+            if (post.featuredImageUrl != null) {
+                AsyncImage(
+                    model = post.featuredImageUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(2.dp)),
+                    contentScale = ContentScale.Crop
+                )
             }
             if (post.actions.isNotEmpty()) {
                 PostMenuButton(actions = post.actions, onAction = onMenuAction)

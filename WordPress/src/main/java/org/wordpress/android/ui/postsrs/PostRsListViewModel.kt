@@ -494,8 +494,36 @@ class PostRsListViewModel @Inject constructor(
                 model.copy(actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen))
             }
             updateTabUiState(tab) { copy(posts = uiModels, isLoading = false, error = null) }
+            resolveFeaturedImages(tab, uiModels)
         } catch (e: Exception) {
             AppLog.e(AppLog.T.POSTS, "Failed to load items for tab $tab", e)
+        }
+    }
+
+    private fun resolveFeaturedImages(tab: PostRsListTab, posts: List<PostRsUiModel>) {
+        val unresolved = posts.filter {
+            it.featuredMediaId != null && it.featuredImageUrl == null
+        }
+        if (unresolved.isEmpty()) return
+
+        viewModelScope.launch {
+            for (post in unresolved) {
+                val mediaId = post.featuredMediaId ?: continue
+                val url = withContext(Dispatchers.IO) {
+                    restClient.fetchMediaUrl(site, mediaId)
+                } ?: continue
+                updateTabUiState(tab) {
+                    copy(
+                        posts = this.posts.map {
+                            if (it.remotePostId == post.remotePostId) {
+                                it.copy(featuredImageUrl = url)
+                            } else {
+                                it
+                            }
+                        }
+                    )
+                }
+            }
         }
     }
 

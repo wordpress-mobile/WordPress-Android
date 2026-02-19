@@ -19,6 +19,24 @@ class PostRsRestClient @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) {
+    private val mediaUrlCache = mutableMapOf<Long, String>()
+
+    suspend fun fetchMediaUrl(site: SiteModel, mediaId: Long): String? {
+        mediaUrlCache[mediaId]?.let { return it }
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.media().retrieveWithEditContext(mediaId)
+        }
+        return when (response) {
+            is WpRequestResult.Success -> {
+                val url = response.response.data.sourceUrl
+                mediaUrlCache[mediaId] = url
+                url
+            }
+            else -> null
+        }
+    }
+
     suspend fun trashPost(site: SiteModel, postId: Long): PostActionResult {
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request { it.posts().trash(PostEndpointType.Posts, postId) }
