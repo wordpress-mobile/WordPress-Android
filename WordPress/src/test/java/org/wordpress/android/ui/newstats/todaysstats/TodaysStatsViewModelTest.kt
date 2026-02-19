@@ -63,6 +63,7 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
             statsRepository,
             resourceProvider
         )
+        viewModel.loadData()
     }
 
     @Test
@@ -463,6 +464,34 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         // Verify onCardClick callback can be invoked without error
         state.onCardClick()
         // If we reached here, the callback is present and invocable
+    }
+
+    @Test
+    fun `when loadDataIfNeeded is called multiple times, then data is only loaded once`() = test {
+        val aggregates = createTodayAggregates()
+
+        whenever(statsRepository.fetchTodayAggregates(any()))
+            .thenReturn(TodayAggregatesResult.Success(aggregates))
+        whenever(statsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
+
+        viewModel = TodaysStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // Should only be called once despite three calls to loadDataIfNeeded
+        verify(statsRepository, times(1)).fetchTodayAggregates(eq(TEST_SITE_ID))
     }
 
     @Test
