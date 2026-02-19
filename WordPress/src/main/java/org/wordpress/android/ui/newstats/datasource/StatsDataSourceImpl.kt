@@ -4,12 +4,14 @@ import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.util.LocaleManagerWrapper
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.StatsReferrersParams
-import uniffi.wp_api.StatsReferrersPeriod
-import uniffi.wp_api.StatsTopPostsParams
-import uniffi.wp_api.StatsTopPostsPeriod
 import uniffi.wp_api.StatsCountryViewsParams
 import uniffi.wp_api.StatsCountryViewsPeriod
+import uniffi.wp_api.StatsReferrersParams
+import uniffi.wp_api.StatsReferrersPeriod
+import uniffi.wp_api.StatsTopAuthorsParams
+import uniffi.wp_api.StatsTopAuthorsPeriod
+import uniffi.wp_api.StatsTopPostsParams
+import uniffi.wp_api.StatsTopPostsPeriod
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
 import uniffi.wp_api.WpComLanguage
@@ -314,6 +316,90 @@ class StatsDataSourceImpl @Inject constructor(
             else -> {
                 AppLog.e(T.STATS, "StatsDataSourceImpl: fetchCountryViews unexpected result - $result")
                 CountryViewsDataResult.Error("Unknown error: ${result::class.simpleName}")
+            }
+        }
+    }
+
+    private fun buildTopAuthorsParams(dateRange: StatsDateRange, max: Int) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsTopAuthorsParams(
+            period = StatsTopAuthorsPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = if (max > 0) max.toUInt() else null,
+            locale = wpComLanguage,
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsTopAuthorsParams(
+            period = StatsTopAuthorsPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = if (max > 0) max.toUInt() else null,
+            locale = wpComLanguage,
+            summarize = true
+        )
+    }
+
+    override suspend fun fetchTopAuthors(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): TopAuthorsDataResult {
+        val params = buildTopAuthorsParams(dateRange, max)
+        AppLog.d(T.STATS, "fetchTopAuthors - siteId=$siteId, dateRange=$dateRange, max=$max")
+
+        val result = wpComApiClient.request { requestBuilder ->
+            requestBuilder.statsTopAuthors().getStatsTopAuthors(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+
+        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchTopAuthors result type: ${result::class.simpleName}")
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val authors = result.response.data.summary?.authors.orEmpty()
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchTopAuthors success - ${authors.size} authors"
+                )
+
+                val authorItems = authors.map { author ->
+                    TopAuthorItem(
+                        name = author.name,
+                        avatarUrl = author.avatar,
+                        views = author.views.toLong()
+                    )
+                }
+                val totalViews = authorItems.sumOf { it.views }
+
+                TopAuthorsDataResult.Success(
+                    TopAuthorsData(
+                        authors = authorItems,
+                        totalViews = totalViews
+                    )
+                )
+            }
+            is WpRequestResult.WpError -> {
+                AppLog.e(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchTopAuthors WpError - ${result.errorMessage}"
+                )
+                TopAuthorsDataResult.Error(result.errorMessage)
+            }
+            is WpRequestResult.ResponseParsingError<*> -> {
+                AppLog.e(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchTopAuthors ResponseParsingError - $result"
+                )
+                TopAuthorsDataResult.Error("Response parsing error: $result")
+            }
+            else -> {
+                AppLog.e(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchTopAuthors unexpected result - $result"
+                )
+                TopAuthorsDataResult.Error("Unknown error: ${result::class.simpleName}")
             }
         }
     }

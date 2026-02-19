@@ -78,6 +78,9 @@ import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsCard
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsViewModel
+import org.wordpress.android.ui.newstats.authors.AuthorsCard
+import org.wordpress.android.ui.newstats.authors.AuthorsDetailActivity
+import org.wordpress.android.ui.newstats.authors.AuthorsViewModel
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
 
@@ -228,6 +231,7 @@ private fun TrafficTabContent(
     todaysStatsViewModel: TodaysStatsViewModel = viewModel(),
     mostViewedViewModel: MostViewedViewModel = viewModel(),
     countriesViewModel: CountriesViewModel = viewModel(),
+    authorsViewModel: AuthorsViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -236,13 +240,15 @@ private fun TrafficTabContent(
     val postsUiState by mostViewedViewModel.postsUiState.collectAsState()
     val referrersUiState by mostViewedViewModel.referrersUiState.collectAsState()
     val countriesUiState by countriesViewModel.uiState.collectAsState()
+    val authorsUiState by authorsViewModel.uiState.collectAsState()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
     val isMostViewedRefreshing by mostViewedViewModel.isRefreshing.collectAsState()
     val isCountriesRefreshing by countriesViewModel.isRefreshing.collectAsState()
+    val isAuthorsRefreshing by authorsViewModel.isRefreshing.collectAsState()
     val isRefreshing = isTodaysStatsRefreshing || isViewsStatsRefreshing ||
-        isMostViewedRefreshing || isCountriesRefreshing
+        isMostViewedRefreshing || isCountriesRefreshing || isAuthorsRefreshing
     val pullToRefreshState = rememberPullToRefreshState()
 
     // Card configuration state
@@ -252,10 +258,11 @@ private fun TrafficTabContent(
     var showAddCardSheet by remember { mutableStateOf(false) }
     val addCardSheetState = rememberModalBottomSheetState()
 
-    // Propagate period changes to the MostViewedViewModel and CountriesViewModel
+    // Propagate period changes to the MostViewedViewModel, CountriesViewModel, and AuthorsViewModel
     LaunchedEffect(selectedPeriod) {
         mostViewedViewModel.onPeriodChanged(selectedPeriod)
         countriesViewModel.onPeriodChanged(selectedPeriod)
+        authorsViewModel.onPeriodChanged(selectedPeriod)
     }
 
     if (showAddCardSheet) {
@@ -282,6 +289,7 @@ private fun TrafficTabContent(
             viewsStatsViewModel.loadData()
             mostViewedViewModel.loadData()
             countriesViewModel.loadData()
+            authorsViewModel.loadData()
         } else if (!isNetworkAvailable && !showNoConnectionScreen) {
             // Network became unavailable while viewing cards - show no-connection screen
             showNoConnectionScreen = true
@@ -299,6 +307,7 @@ private fun TrafficTabContent(
                     viewsStatsViewModel.loadData()
                     mostViewedViewModel.loadData()
                     countriesViewModel.loadData()
+                    authorsViewModel.loadData()
                 }
             }
         )
@@ -315,6 +324,7 @@ private fun TrafficTabContent(
             viewsStatsViewModel.refresh()
             mostViewedViewModel.refresh()
             countriesViewModel.refresh()
+            authorsViewModel.refresh()
         },
         indicator = {
             PullToRefreshDefaults.Indicator(
@@ -439,6 +449,27 @@ private fun TrafficTabContent(
                             )
                         },
                         onRetry = countriesViewModel::onRetry,
+                        onRemoveCard = { newStatsViewModel.removeCard(cardType) },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
+                        onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
+                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
+                    )
+                    StatsCardType.AUTHORS -> AuthorsCard(
+                        uiState = authorsUiState,
+                        onShowAllClick = {
+                            val detailData = authorsViewModel.getDetailData()
+                            AuthorsDetailActivity.start(
+                                context = context,
+                                authors = detailData.authors,
+                                totalViews = detailData.totalViews,
+                                totalViewsChange = detailData.totalViewsChange,
+                                totalViewsChangePercent = detailData.totalViewsChangePercent,
+                                dateRange = detailData.dateRange
+                            )
+                        },
+                        onRetry = authorsViewModel::onRetry,
                         onRemoveCard = { newStatsViewModel.removeCard(cardType) },
                         cardPosition = cardPosition,
                         onMoveUp = { newStatsViewModel.moveCardUp(cardType) },

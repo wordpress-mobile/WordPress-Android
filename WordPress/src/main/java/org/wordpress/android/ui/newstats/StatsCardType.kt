@@ -15,7 +15,8 @@ enum class StatsCardType(
     VIEWS_STATS(R.string.stats_views, 1),
     MOST_VIEWED_POSTS_AND_PAGES(R.string.stats_most_viewed_posts_and_pages, 2),
     MOST_VIEWED_REFERRERS(R.string.stats_most_viewed_referrers, 3),
-    COUNTRIES(R.string.stats_countries_title, 4);
+    COUNTRIES(R.string.stats_countries_title, 4),
+    AUTHORS(R.string.stats_authors_title, 5);
 
     companion object {
         /**
@@ -26,7 +27,8 @@ enum class StatsCardType(
             VIEWS_STATS,
             MOST_VIEWED_POSTS_AND_PAGES,
             MOST_VIEWED_REFERRERS,
-            COUNTRIES
+            COUNTRIES,
+            AUTHORS
         )
     }
 }

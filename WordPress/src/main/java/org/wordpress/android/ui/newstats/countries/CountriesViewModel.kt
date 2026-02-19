@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.CountryViewItemData
+import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.repository.CountryViewsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.util.toDateRangeString
@@ -49,30 +50,39 @@ class CountriesViewModel @Inject constructor(
     }
 
     fun loadData() {
+        val site = selectedSiteRepository.getSelectedSite()
+        if (site == null) {
+            _uiState.value = CountriesCardUiState.Error(
+                resourceProvider.getString(R.string.stats_todays_stats_no_site_selected)
+            )
+            return
+        }
+
+        val accessToken = accountStore.accessToken
+        if (accessToken.isNullOrEmpty()) {
+            _uiState.value = CountriesCardUiState.Error(
+                resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
+            )
+            return
+        }
+
+        statsRepository.init(accessToken)
+        _uiState.value = CountriesCardUiState.Loading
+
         viewModelScope.launch {
-            _uiState.value = CountriesCardUiState.Loading
-
-            val site = selectedSiteRepository.getSelectedSite()
-            if (site == null) {
-                _uiState.value = CountriesCardUiState.Error("No site selected")
-                return@launch
-            }
-
-            initializeRepository()
             fetchCountryViews(site)
         }
     }
 
     fun refresh() {
+        val site = selectedSiteRepository.getSelectedSite() ?: return
+        val accessToken = accountStore.accessToken
+        if (accessToken.isNullOrEmpty()) return
+
+        statsRepository.init(accessToken)
         viewModelScope.launch {
             _isRefreshing.value = true
-
-            val site = selectedSiteRepository.getSelectedSite()
-            if (site != null) {
-                initializeRepository()
-                fetchCountryViews(site)
-            }
-
+            fetchCountryViews(site)
             _isRefreshing.value = false
         }
     }
@@ -99,12 +109,6 @@ class CountriesViewModel @Inject constructor(
             totalViewsChangePercent = cachedTotalViewsChangePercent,
             dateRange = currentPeriod.toDateRangeString(resourceProvider)
         )
-    }
-
-    private fun initializeRepository() {
-        accountStore.accessToken?.let { token ->
-            statsRepository.init(token)
-        }
     }
 
     private suspend fun fetchCountryViews(site: SiteModel) {
@@ -153,7 +157,7 @@ class CountriesViewModel @Inject constructor(
 
                     // For bar percentage, use first item's views (list is sorted by views descending)
                     val cardCountries = countries.take(CARD_MAX_ITEMS)
-                    val maxViewsForBar = cardCountries.firstOrNull()?.views ?: 1L
+                    val maxViewsForBar = cardCountries.firstOrNull()?.views ?: 0L
 
                     _uiState.value = CountriesCardUiState.Loaded(
                         countries = cardCountries,
