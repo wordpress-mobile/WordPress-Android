@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -13,6 +14,7 @@ import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
+import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
 import java.net.URL
@@ -23,6 +25,7 @@ import javax.inject.Singleton
 class PostRsRestClient @Inject constructor(
     @ApplicationContext private val context: Context,
     private val wpApiClientProvider: WpApiClientProvider,
+    private val wpAppNotifierHandler: WpAppNotifierHandler,
     private val accountStore: AccountStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) {
@@ -79,7 +82,12 @@ class PostRsRestClient @Inject constructor(
             WpApiClient(
                 wpOrgSiteApiRootUrl = apiRootUrl,
                 authProvider = authProvider,
-                requestExecutor = WpRequestExecutor(emptyList())
+                requestExecutor = WpRequestExecutor(emptyList()),
+                appNotifier = object : WpAppNotifier {
+                    override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
+                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
+                    }
+                }
             )
         }
     }
