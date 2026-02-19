@@ -13,6 +13,7 @@ import uniffi.wp_api.WpApiMiddlewarePipeline
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
+import uniffi.wp_api.WpDynamicAuthenticationProvider
 import uniffi.wp_mobile.WpService
 import java.io.File
 import javax.inject.Inject
@@ -57,8 +58,14 @@ class WpServiceProvider @Inject constructor(
 
     private fun createDelegate(site: SiteModel): WpApiClientDelegate {
         val authProvider = if (site.isWPCom) {
-            val token = requireNotNull(accountStore.accessToken) { "WP.com access token is required" }
-            WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = token))
+            WpAuthenticationProvider.dynamic(object : WpDynamicAuthenticationProvider {
+                override fun auth() = WpAuthentication.Bearer(
+                    token = requireNotNull(accountStore.accessToken) {
+                        "WP.com access token is required"
+                    }
+                )
+                override suspend fun refresh() = accountStore.accessToken != null
+            })
         } else {
             val username = site.apiRestUsernamePlain
             val password = site.apiRestPasswordPlain
