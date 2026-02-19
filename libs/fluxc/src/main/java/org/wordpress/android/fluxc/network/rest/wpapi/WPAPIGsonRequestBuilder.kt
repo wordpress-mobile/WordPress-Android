@@ -19,9 +19,11 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
         clazz: Class<T>,
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
-        nonce: String? = null
+        nonce: String? = null,
+        headers: Map<String, String> = emptyMap()
     ) = suspendCancellableCoroutine<WPAPIResponse<T>> { cont ->
-        callMethod(Method.GET, url, params, body, clazz, cont, enableCaching, cacheTimeToLive, nonce, restClient)
+        callMethod(Method.GET, url, params, body, clazz, cont, enableCaching, cacheTimeToLive, nonce, restClient,
+            headers)
     }
     suspend fun <T> syncGetRequest(
         restClient: BaseWPAPIRestClient,
@@ -31,9 +33,11 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
         type: Type,
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
-        nonce: String? = null
+        nonce: String? = null,
+        headers: Map<String, String> = emptyMap()
     ) = suspendCancellableCoroutine<WPAPIResponse<T>> { cont ->
-        callMethod(Method.GET, url, params, body, type, cont, enableCaching, cacheTimeToLive, nonce, restClient)
+        callMethod(Method.GET, url, params, body, type, cont, enableCaching, cacheTimeToLive, nonce, restClient,
+            headers)
     }
 
     suspend fun <T> syncPostRequest(
@@ -41,9 +45,10 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
         url: String,
         body: Map<String, Any> = emptyMap(),
         clazz: Class<T>,
-        nonce: String? = null
+        nonce: String? = null,
+        headers: Map<String, String> = emptyMap()
     ) = suspendCancellableCoroutine<WPAPIResponse<T>> { cont ->
-        callMethod(Method.POST, url, null, body, clazz, cont, false, 0, nonce, restClient)
+        callMethod(Method.POST, url, null, body, clazz, cont, false, 0, nonce, restClient, headers)
     }
 
     suspend fun <T> syncPutRequest(
@@ -77,7 +82,8 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
         enableCaching: Boolean,
         cacheTimeToLive: Int,
         nonce: String?,
-        restClient: BaseWPAPIRestClient
+        restClient: BaseWPAPIRestClient,
+        headers: Map<String, String> = emptyMap()
     ) {
         val request = WPAPIGsonRequest(method, url, params, body, clazz, { response ->
             cont.resume(Success(response))
@@ -97,6 +103,8 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
             request.addHeader("x-wp-nonce", nonce)
         }
 
+        headers.forEach { (key, value) -> request.addHeader(key, value) }
+
         restClient.add(request)
     }
 
@@ -111,7 +119,8 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
         enableCaching: Boolean,
         cacheTimeToLive: Int,
         nonce: String?,
-        restClient: BaseWPAPIRestClient
+        restClient: BaseWPAPIRestClient,
+        headers: Map<String, String> = emptyMap()
     ) {
         val request = WPAPIGsonRequest<T>(method, url, params, body, type, { response ->
             cont.resume(Success(response))
@@ -130,6 +139,8 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
         if (nonce != null) {
             request.addHeader("x-wp-nonce", nonce)
         }
+
+        headers.forEach { (key, value) -> request.addHeader(key, value) }
 
         restClient.add(request)
     }

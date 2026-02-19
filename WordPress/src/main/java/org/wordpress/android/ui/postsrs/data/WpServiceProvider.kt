@@ -7,34 +7,32 @@ import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpApp
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.cache.kotlin.DatabaseChangeNotifier
 import rs.wordpress.cache.kotlin.WordPressApiCache
-import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpApiClientDelegate
 import uniffi.wp_api.WpApiMiddlewarePipeline
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
-import uniffi.wp_api.WpOrgSiteApiUrlResolver
-import uniffi.wp_mobile.WpSelfHostedService
+import uniffi.wp_mobile.WpService
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Creates and caches [WpSelfHostedService] instances for self-hosted
+ * Creates and caches [WpService] instances for self-hosted
  * WordPress sites that have application-password credentials. Each
  * service is configured with the site's REST API root, authentication
  * credentials, and a shared SQLite-backed [WordPressApiCache], then
  * keyed by site ID so subsequent requests reuse the same instance.
  */
 @Singleton
-class WpSelfHostedServiceProvider @Inject constructor(
+class WpServiceProvider @Inject constructor(
     @ApplicationContext private val context: Context,
     private val wpAppNotifierHandler: WpAppNotifierHandler,
 ) {
-    private val services = mutableMapOf<Long, WpSelfHostedService>()
+    private val services = mutableMapOf<Long, WpService>()
     private var cache: WordPressApiCache? = null
 
     @Synchronized
-    fun getService(site: SiteModel): WpSelfHostedService {
+    fun getService(site: SiteModel): WpService {
         return services.getOrPut(site.siteId) {
             createService(site)
         }
@@ -47,10 +45,10 @@ class WpSelfHostedServiceProvider @Inject constructor(
     }
 
     /**
-     * Builds a [WpSelfHostedService] for the given site using its
+     * Builds a [WpService] for the given site using its
      * application-password credentials and REST API root URL.
      */
-    private fun createService(site: SiteModel): WpSelfHostedService {
+    private fun createService(site: SiteModel): WpService {
         val apiRoot = site.wpApiRestUrl
             ?.takeIf { it.isNotEmpty() }
             ?: "${site.url}/wp-json"
@@ -61,15 +59,7 @@ class WpSelfHostedServiceProvider @Inject constructor(
             "Application password credentials missing for site"
         }
 
-        val apiUrlResolver = WpOrgSiteApiUrlResolver(
-            ParsedUrl.parse(apiRoot)
-        )
-
-        val authProvider =
-            WpAuthenticationProvider.staticWithUsernameAndPassword(
-                username,
-                password
-            )
+        val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(username, password)
 
         val delegate = WpApiClientDelegate(
             authProvider = authProvider,
@@ -87,13 +77,7 @@ class WpSelfHostedServiceProvider @Inject constructor(
 
         val wpApiCache = getOrCreateCache()
 
-        return WpSelfHostedService(
-            siteUrl = site.url,
-            apiRoot = apiRoot,
-            apiUrlResolver = apiUrlResolver,
-            delegate = delegate,
-            cache = wpApiCache.cache
-        )
+        return WpService.selfHosted(site.url, apiRoot, delegate, wpApiCache.cache)
     }
 
     /**

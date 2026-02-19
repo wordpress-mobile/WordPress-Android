@@ -8,35 +8,50 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
 
 @Composable
 fun PostRsListItem(
     post: PostRsUiModel,
     onClick: () -> Unit,
+    onMenuAction: (PostRsMenuAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when {
         post.isPlaceholder -> PlaceholderItem(modifier)
         post.isError -> ErrorItem(modifier)
-        else -> PostContentItem(post, onClick, modifier)
+        else -> PostContentItem(post, onClick, onMenuAction, modifier)
     }
 }
 
@@ -44,45 +59,103 @@ fun PostRsListItem(
 private fun PostContentItem(
     post: PostRsUiModel,
     onClick: () -> Unit,
+    onMenuAction: (PostRsMenuAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row(
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
+            verticalAlignment = Alignment.Top
         ) {
-            if (post.date.isNotBlank()) {
+            Column(modifier = Modifier.weight(1f)) {
+                val statusLabel = if (post.statusLabelResId != 0) {
+                    stringResource(post.statusLabelResId)
+                } else {
+                    null
+                }
+                val bullet = stringResource(R.string.bullet_with_spaces)
+                val dateText = buildString {
+                    if (!statusLabel.isNullOrBlank()) {
+                        append(statusLabel)
+                        if (post.date.isNotBlank()) append(bullet)
+                    }
+                    append(post.date)
+                }
+                if (dateText.isNotBlank()) {
+                    Text(
+                        text = dateText,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
                 Text(
-                    text = post.date,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-            }
-            Text(
-                text = post.title.ifBlank {
-                    stringResource(R.string.untitled_in_parentheses)
-                },
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-            if (post.excerpt.isNotBlank()) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = post.excerpt,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = post.title.ifBlank { stringResource(R.string.untitled_in_parentheses) },
+                    style = MaterialTheme.typography.titleMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
+                )
+                if (post.excerpt.isNotBlank()) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = post.excerpt,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+            if (post.actions.isNotEmpty()) {
+                PostMenuButton(actions = post.actions, onAction = onMenuAction)
+            }
+        }
+    }
+}
+
+@Composable
+private fun PostMenuButton(
+    actions: List<PostRsMenuAction>,
+    onAction: (PostRsMenuAction) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            Icon(
+                Icons.Default.MoreVert,
+                contentDescription = stringResource(R.string.more),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            actions.forEach { action ->
+                val color = if (action.isDestructive) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
+                DropdownMenuItem(
+                    text = {
+                        Text(text = stringResource(action.labelResId), color = color)
+                    },
+                    onClick = {
+                        expanded = false
+                        onAction(action)
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(action.iconResId),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                            tint = color
+                        )
+                    }
                 )
             }
         }
@@ -101,20 +174,14 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
         ),
         label = "shimmerAlpha"
     )
-    val placeholderColor =
-        MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
+    val placeholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
 
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            // Date
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.25f)
@@ -123,7 +190,6 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
                     .background(placeholderColor)
             )
             Spacer(modifier = Modifier.height(4.dp))
-            // Title
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
@@ -132,7 +198,6 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
                     .background(placeholderColor)
             )
             Spacer(modifier = Modifier.height(4.dp))
-            // Excerpt (two lines)
             repeat(2) { index ->
                 Box(
                     modifier = Modifier
@@ -152,12 +217,8 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
 @Composable
 private fun ErrorItem(modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer
-        )
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
     ) {
         Text(
             text = stringResource(R.string.post_rs_failed_to_load),
