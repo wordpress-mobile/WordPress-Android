@@ -245,12 +245,16 @@ private fun TrafficTabContent(
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
-    val isMostViewedRefreshing by mostViewedViewModel.isRefreshing.collectAsState()
+    val isMostViewedPostsRefreshing by mostViewedViewModel
+        .isPostsRefreshing.collectAsState()
+    val isMostViewedReferrersRefreshing by mostViewedViewModel
+        .isReferrersRefreshing.collectAsState()
     val isLocationsRefreshing by locationsViewModel.isRefreshing.collectAsState()
     val isAuthorsRefreshing by authorsViewModel.isRefreshing.collectAsState()
     val isRefreshing = listOf(
         isTodaysStatsRefreshing, isViewsStatsRefreshing,
-        isMostViewedRefreshing, isLocationsRefreshing, isAuthorsRefreshing
+        isMostViewedPostsRefreshing, isMostViewedReferrersRefreshing,
+        isLocationsRefreshing, isAuthorsRefreshing
     ).any { it }
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -273,8 +277,13 @@ private fun TrafficTabContent(
         cardsToLoad.dispatchToVisibleCards(
             onTodaysStats = { todaysStatsViewModel.loadDataIfNeeded() },
             onViewsStats = { viewsStatsViewModel.loadDataIfNeeded() },
-            onMostViewed = {
-                mostViewedViewModel.onPeriodChanged(selectedPeriod)
+            onMostViewedPosts = {
+                mostViewedViewModel.onPeriodChangedPosts(selectedPeriod)
+            },
+            onMostViewedReferrers = {
+                mostViewedViewModel.onPeriodChangedReferrers(
+                    selectedPeriod
+                )
             },
             onLocations = {
                 locationsViewModel.onPeriodChanged(selectedPeriod)
@@ -304,7 +313,10 @@ private fun TrafficTabContent(
         visibleCards.dispatchToVisibleCards(
             onTodaysStats = { todaysStatsViewModel.loadData() },
             onViewsStats = { viewsStatsViewModel.loadData() },
-            onMostViewed = { mostViewedViewModel.loadData() },
+            onMostViewedPosts = { mostViewedViewModel.loadPosts() },
+            onMostViewedReferrers = {
+                mostViewedViewModel.loadReferrers()
+            },
             onLocations = { locationsViewModel.loadData() },
             onAuthors = { authorsViewModel.loadData() }
         )
@@ -343,7 +355,12 @@ private fun TrafficTabContent(
             visibleCards.dispatchToVisibleCards(
                 onTodaysStats = { todaysStatsViewModel.refresh() },
                 onViewsStats = { viewsStatsViewModel.refresh() },
-                onMostViewed = { mostViewedViewModel.refresh() },
+                onMostViewedPosts = {
+                    mostViewedViewModel.refreshPosts()
+                },
+                onMostViewedReferrers = {
+                    mostViewedViewModel.refreshReferrers()
+                },
                 onLocations = { locationsViewModel.refresh() },
                 onAuthors = { authorsViewModel.refresh() }
             )
@@ -525,18 +542,23 @@ private fun AddCardButton(
     }
 }
 
+@Suppress("LongParameterList")
 private fun List<StatsCardType>.dispatchToVisibleCards(
     onTodaysStats: () -> Unit,
     onViewsStats: () -> Unit,
-    onMostViewed: () -> Unit,
+    onMostViewedPosts: () -> Unit,
+    onMostViewedReferrers: () -> Unit,
     onLocations: () -> Unit,
     onAuthors: () -> Unit
 ) {
     if (StatsCardType.TODAYS_STATS in this) onTodaysStats()
     if (StatsCardType.VIEWS_STATS in this) onViewsStats()
-    if (StatsCardType.MOST_VIEWED_POSTS_AND_PAGES in this ||
-        StatsCardType.MOST_VIEWED_REFERRERS in this
-    ) onMostViewed()
+    if (StatsCardType.MOST_VIEWED_POSTS_AND_PAGES in this) {
+        onMostViewedPosts()
+    }
+    if (StatsCardType.MOST_VIEWED_REFERRERS in this) {
+        onMostViewedReferrers()
+    }
     if (StatsCardType.LOCATIONS in this) onLocations()
     if (StatsCardType.AUTHORS in this) onAuthors()
 }
