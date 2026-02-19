@@ -84,7 +84,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorFileUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorInitializer
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -228,7 +228,7 @@ class AppInitializer @Inject constructor(
     lateinit var wpServiceProvider: WpServiceProvider
 
     @Inject
-    lateinit var postRsRestClient: PostRsRestClient
+    lateinit var wpApiClientProvider: WpApiClientProvider
 
     @Inject
     lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
@@ -726,7 +726,7 @@ class AppInitializer @Inject constructor(
 
         // Clear cached wordpress-rs services and API clients
         wpServiceProvider.clearAll()
-        postRsRestClient.clearWpComClients()
+        wpApiClientProvider.clearWpComClients()
     }
 
     /*

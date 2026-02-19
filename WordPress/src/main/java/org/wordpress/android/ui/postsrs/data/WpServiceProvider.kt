@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.createWpComAuthProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.cache.kotlin.DatabaseChangeNotifier
@@ -11,9 +12,7 @@ import rs.wordpress.cache.kotlin.WordPressApiCache
 import uniffi.wp_api.WpApiClientDelegate
 import uniffi.wp_api.WpApiMiddlewarePipeline
 import uniffi.wp_api.WpAppNotifier
-import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
-import uniffi.wp_api.WpDynamicAuthenticationProvider
 import uniffi.wp_mobile.WpService
 import java.io.File
 import javax.inject.Inject
@@ -94,18 +93,3 @@ class WpServiceProvider @Inject constructor(
         }
     }
 }
-
-/**
- * Creates a [WpAuthenticationProvider] that reads the WordPress.com OAuth bearer token from
- * [AccountStore] on every request. This ensures cached API clients automatically pick up
- * refreshed tokens without needing to be recreated.
- */
-internal fun createWpComAuthProvider(accountStore: AccountStore): WpAuthenticationProvider =
-    WpAuthenticationProvider.dynamic(object : WpDynamicAuthenticationProvider {
-        override fun auth() = WpAuthentication.Bearer(
-            token = requireNotNull(accountStore.accessToken) {
-                "WP.com access token is required"
-            }
-        )
-        override suspend fun refresh() = accountStore.accessToken != null
-    })
