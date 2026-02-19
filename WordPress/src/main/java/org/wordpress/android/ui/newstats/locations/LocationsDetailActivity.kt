@@ -69,7 +69,8 @@ class LocationsDetailActivity : BaseAppCompatActivity() {
         val locationTypeName =
             intent.getStringExtra(EXTRA_LOCATION_TYPE)
         val locationType = locationTypeName?.let {
-            LocationType.valueOf(it)
+            runCatching { LocationType.valueOf(it) }
+                .getOrDefault(LocationType.COUNTRIES)
         } ?: LocationType.COUNTRIES
         val maxViewsForBar =
             countries.firstOrNull()?.views ?: 0L
@@ -99,31 +100,16 @@ class LocationsDetailActivity : BaseAppCompatActivity() {
             context: Context,
             detailData: LocationsDetailData
         ) {
-            val detailItems = when (detailData.locationType) {
-                LocationType.COUNTRIES -> {
-                    detailData.countries.map { country ->
-                        LocationsDetailItem(
-                            countryCode = country.countryCode,
-                            countryName = country.countryName,
-                            views = country.views,
-                            flagIconUrl = country.flagIconUrl,
-                            change = country.change
-                        )
-                    }
-                }
-                else -> {
-                    detailData.locationItems.orEmpty().map { item ->
-                        LocationsDetailItem(
-                            countryCode = item.id,
-                            countryName = item.name,
-                            views = item.views,
-                            flagIconUrl = item.flagIconUrl,
-                            change = item.change,
-                            latitude = item.latitude,
-                            longitude = item.longitude
-                        )
-                    }
-                }
+            val detailItems = detailData.items.map { item ->
+                LocationsDetailItem(
+                    id = item.id,
+                    name = item.name,
+                    views = item.views,
+                    flagIconUrl = item.flagIconUrl,
+                    change = item.change,
+                    latitude = item.latitude,
+                    longitude = item.longitude
+                )
             }
             val intent = Intent(
                 context, LocationsDetailActivity::class.java
@@ -156,8 +142,8 @@ class LocationsDetailActivity : BaseAppCompatActivity() {
 
 @Parcelize
 data class LocationsDetailItem(
-    val countryCode: String,
-    val countryName: String,
+    val id: String,
+    val name: String,
     val views: Long,
     val flagIconUrl: String?,
     val change: CountryViewChange = CountryViewChange.NoChange,
@@ -277,13 +263,13 @@ private fun DetailCountryRow(
     StatsDetailListItem(
         position = position,
         percentage = percentage,
-        name = country.countryName,
+        name = country.name,
         views = country.views,
         change = country.change.toStatsViewChange(),
         icon = {
             CountryFlag(
                 flagIconUrl = country.flagIconUrl,
-                countryName = country.countryName
+                countryName = country.name
             )
         }
     )

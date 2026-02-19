@@ -221,7 +221,7 @@ private fun LoadedContent(
         )
         Spacer(modifier = Modifier.height(12.dp))
 
-        if (state.countries.isEmpty()) {
+        if (state.items.isEmpty()) {
             StatsCardEmptyContent()
         } else {
             // Map
@@ -249,16 +249,16 @@ private fun LoadedContent(
             Spacer(modifier = Modifier.height(8.dp))
 
             // Location list (capped at 10 items)
-            state.countries.forEachIndexed { index, country ->
+            state.items.forEachIndexed { index, item ->
                 val percentage = if (state.maxViewsForBar > 0) {
-                    country.views.toFloat() /
+                    item.views.toFloat() /
                         state.maxViewsForBar.toFloat()
                 } else 0f
-                CountryRow(
-                    country = country,
+                LocationRow(
+                    item = item,
                     percentage = percentage
                 )
-                if (index < state.countries.lastIndex) {
+                if (index < state.items.lastIndex) {
                     Spacer(modifier = Modifier.height(4.dp))
                 }
             }
@@ -305,8 +305,6 @@ private fun ErrorContent(
             selectedType = selectedLocationType,
             onTypeSelected = onLocationTypeChanged
         )
-        Spacer(modifier = Modifier.height(12.dp))
-
         Spacer(modifier = Modifier.height(12.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -364,19 +362,19 @@ private fun CountryMap(
 }
 
 @Composable
-private fun CountryRow(
-    country: CountryItem,
+private fun LocationRow(
+    item: LocationItem,
     percentage: Float
 ) {
     StatsListItem(
         percentage = percentage,
-        name = country.countryName,
-        views = country.views,
-        change = country.change.toStatsViewChange(),
+        name = item.name,
+        views = item.views,
+        change = item.change.toStatsViewChange(),
         icon = {
             CountryFlag(
-                flagIconUrl = country.flagIconUrl,
-                countryName = country.countryName
+                flagIconUrl = item.flagIconUrl,
+                countryName = item.name
             )
         }
     )
@@ -429,20 +427,20 @@ private fun LocationsCardLoadedPreview() {
     AppThemeM3 {
         LocationsCard(
             uiState = LocationsCardUiState.Loaded(
-                countries = listOf(
-                    CountryItem(
+                items = listOf(
+                    LocationItem(
                         "US", "United States", 3464, null,
                         CountryViewChange.Positive(124, 3.7)
                     ),
-                    CountryItem(
+                    LocationItem(
                         "ES", "Spain", 556, null,
                         CountryViewChange.Positive(45, 8.8)
                     ),
-                    CountryItem(
+                    LocationItem(
                         "GB", "United Kingdom", 522, null,
                         CountryViewChange.Negative(12, 2.2)
                     ),
-                    CountryItem(
+                    LocationItem(
                         "CA", "Canada", 485, null,
                         CountryViewChange.NoChange
                     )
@@ -469,12 +467,12 @@ private fun LocationsCardRegionsPreview() {
     AppThemeM3 {
         LocationsCard(
             uiState = LocationsCardUiState.Loaded(
-                countries = listOf(
-                    CountryItem(
+                items = listOf(
+                    LocationItem(
                         "CA", "California", 1234, null,
                         CountryViewChange.Positive(100, 8.8)
                     ),
-                    CountryItem(
+                    LocationItem(
                         "TX", "Texas", 890, null,
                         CountryViewChange.Positive(45, 5.3)
                     )

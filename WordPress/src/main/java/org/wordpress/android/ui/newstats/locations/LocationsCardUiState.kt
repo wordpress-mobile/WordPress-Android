@@ -13,7 +13,7 @@ sealed class LocationsCardUiState {
     data object Loading : LocationsCardUiState()
 
     data class Loaded(
-        val countries: List<CountryItem>,
+        val items: List<LocationItem>,
         val mapData: String,
         val minViews: Long,
         val maxViews: Long,
@@ -23,23 +23,6 @@ sealed class LocationsCardUiState {
 
     data class Error(val message: String) : LocationsCardUiState()
 }
-
-/**
- * A single country item in the countries list.
- *
- * @param countryCode ISO 3166-1 alpha-2 country code (e.g., "US", "GB")
- * @param countryName Full country name
- * @param views Number of views from this country
- * @param flagIconUrl URL to the country flag icon
- * @param change The change compared to the previous period
- */
-data class CountryItem(
-    val countryCode: String,
-    val countryName: String,
-    val views: Long,
-    val flagIconUrl: String?,
-    val change: CountryViewChange = CountryViewChange.NoChange
-)
 
 /**
  * Represents the change in views for a country compared to the previous period.

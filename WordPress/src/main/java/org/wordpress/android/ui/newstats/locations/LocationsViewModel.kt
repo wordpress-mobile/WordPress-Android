@@ -16,7 +16,6 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.CityViewItemData
 import org.wordpress.android.ui.newstats.repository.CityViewsResult
-import org.wordpress.android.ui.newstats.repository.CountryViewItemData
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.repository.CountryViewsResult
 import org.wordpress.android.ui.newstats.repository.RegionViewItemData
@@ -70,8 +69,6 @@ class LocationsViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
-    private var loadingPeriod: StatsPeriod? = null
-    private var loadedPeriod: StatsPeriod? = null
 
     // Per-type loaded period tracking for lazy fetching
     private var countriesLoadedPeriod: StatsPeriod? = null
@@ -79,7 +76,7 @@ class LocationsViewModel @Inject constructor(
     private var citiesLoadedPeriod: StatsPeriod? = null
 
     // Countries cache
-    private var allCountries: List<CountryItem> = emptyList()
+    private var allCountries: List<LocationItem> = emptyList()
     private var cachedCountriesMapData: String = ""
     private var cachedCountriesMinViews: Long = 0L
     private var cachedCountriesMaxViews: Long = 0L
@@ -108,7 +105,6 @@ class LocationsViewModel @Inject constructor(
     fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
-            loadingPeriod = null
             setAllStatesError(
                 resourceProvider.getString(
                     R.string.stats_todays_stats_no_site_selected
@@ -119,7 +115,6 @@ class LocationsViewModel @Inject constructor(
 
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
-            loadingPeriod = null
             setAllStatesError(
                 resourceProvider.getString(
                     R.string.stats_todays_stats_failed_to_load
@@ -132,11 +127,7 @@ class LocationsViewModel @Inject constructor(
         setCurrentTypeLoading()
 
         viewModelScope.launch {
-            try {
-                fetchForCurrentType(site)
-            } finally {
-                loadingPeriod = null
-            }
+            fetchForCurrentType(site)
         }
     }
 
@@ -160,8 +151,9 @@ class LocationsViewModel @Inject constructor(
     }
 
     fun onPeriodChanged(period: StatsPeriod) {
-        if (loadedPeriod == period || loadingPeriod == period) return
-        loadingPeriod = period
+        if (period == currentPeriod &&
+            isTypeLoadedForCurrentPeriod(_selectedLocationType.value)
+        ) return
         currentPeriod = period
         // Reset all per-type loaded periods on period change
         countriesLoadedPeriod = null
@@ -192,8 +184,7 @@ class LocationsViewModel @Inject constructor(
     fun getDetailData(): LocationsDetailData {
         return when (_selectedLocationType.value) {
             LocationType.COUNTRIES -> LocationsDetailData(
-                countries = allCountries,
-                locationItems = null,
+                items = allCountries,
                 mapData = cachedCountriesMapData,
                 minViews = cachedCountriesMinViews,
                 maxViews = cachedCountriesMaxViews,
@@ -207,8 +198,7 @@ class LocationsViewModel @Inject constructor(
                 locationType = LocationType.COUNTRIES
             )
             LocationType.REGIONS -> LocationsDetailData(
-                countries = emptyList(),
-                locationItems = allRegions,
+                items = allRegions,
                 mapData = cachedRegionsMapData,
                 minViews = cachedRegionsMinViews,
                 maxViews = cachedRegionsMaxViews,
@@ -222,8 +212,7 @@ class LocationsViewModel @Inject constructor(
                 locationType = LocationType.REGIONS
             )
             LocationType.CITIES -> LocationsDetailData(
-                countries = emptyList(),
-                locationItems = allCities,
+                items = allCities,
                 mapData = cachedCitiesMapData,
                 minViews = cachedCitiesMinViews,
                 maxViews = cachedCitiesMaxViews,
@@ -316,7 +305,6 @@ class LocationsViewModel @Inject constructor(
     private fun handleCountryViewsSuccess(
         result: CountryViewsResult.Success
     ) {
-        loadedPeriod = currentPeriod
         countriesLoadedPeriod = currentPeriod
         cachedCountriesTotalViews = result.totalViews
         cachedCountriesTotalViewsChange = result.totalViewsChange
@@ -331,12 +319,15 @@ class LocationsViewModel @Inject constructor(
             _countriesUiState.value = emptyLoadedState()
         } else {
             val countries = result.countries.map { country ->
-                CountryItem(
-                    countryCode = country.countryCode,
-                    countryName = country.countryName,
+                LocationItem(
+                    id = country.countryCode,
+                    name = country.countryName,
                     views = country.views,
                     flagIconUrl = country.flagIconUrl,
-                    change = country.toCountryViewChange()
+                    change = toViewChange(
+                        country.viewsChange,
+                        country.viewsChangePercent
+                    )
                 )
             }
 
@@ -350,12 +341,12 @@ class LocationsViewModel @Inject constructor(
                 if (minViews == maxViews) 0L else minViews
             cachedCountriesMaxViews = maxViews
 
-            val cardCountries = countries.take(CARD_MAX_ITEMS)
+            val cardItems = countries.take(CARD_MAX_ITEMS)
             val maxViewsForBar =
-                cardCountries.firstOrNull()?.views ?: 0L
+                cardItems.firstOrNull()?.views ?: 0L
 
             _countriesUiState.value = LocationsCardUiState.Loaded(
-                countries = cardCountries,
+                items = cardItems,
                 mapData = mapData,
                 minViews = cachedCountriesMinViews,
                 maxViews = cachedCountriesMaxViews,
@@ -385,7 +376,6 @@ class LocationsViewModel @Inject constructor(
     private fun handleRegionViewsSuccess(
         result: RegionViewsResult.Success
     ) {
-        loadedPeriod = currentPeriod
         regionsLoadedPeriod = currentPeriod
         cachedRegionsTotalViews = result.totalViews
         cachedRegionsTotalViewsChange = result.totalViewsChange
@@ -421,9 +411,7 @@ class LocationsViewModel @Inject constructor(
                 cardRegions.firstOrNull()?.views ?: 0L
 
             _regionsUiState.value = LocationsCardUiState.Loaded(
-                countries = cardRegions.map {
-                    it.toCountryItem()
-                },
+                items = cardRegions,
                 mapData = mapData,
                 minViews = cachedRegionsMinViews,
                 maxViews = cachedRegionsMaxViews,
@@ -453,7 +441,6 @@ class LocationsViewModel @Inject constructor(
     private fun handleCityViewsSuccess(
         result: CityViewsResult.Success
     ) {
-        loadedPeriod = currentPeriod
         citiesLoadedPeriod = currentPeriod
         cachedCitiesTotalViews = result.totalViews
         cachedCitiesTotalViewsChange = result.totalViewsChange
@@ -484,27 +471,13 @@ class LocationsViewModel @Inject constructor(
                 cardCities.firstOrNull()?.views ?: 0L
 
             _citiesUiState.value = LocationsCardUiState.Loaded(
-                countries = cardCities.map {
-                    it.toCountryItem()
-                },
+                items = cardCities,
                 mapData = mapData,
                 minViews = cachedCitiesMinViews,
                 maxViews = cachedCitiesMaxViews,
                 maxViewsForBar = maxViewsForBar,
                 hasMoreItems = cities.size > CARD_MAX_ITEMS
             )
-        }
-    }
-
-    private fun CountryViewItemData.toCountryViewChange(): CountryViewChange {
-        return when {
-            viewsChange > 0 -> CountryViewChange.Positive(
-                viewsChange, abs(viewsChangePercent)
-            )
-            viewsChange < 0 -> CountryViewChange.Negative(
-                abs(viewsChange), abs(viewsChangePercent)
-            )
-            else -> CountryViewChange.NoChange
         }
     }
 
@@ -545,21 +518,11 @@ class LocationsViewModel @Inject constructor(
         )
     }
 
-    private fun LocationItem.toCountryItem(): CountryItem {
-        return CountryItem(
-            countryCode = id,
-            countryName = name,
-            views = views,
-            flagIconUrl = flagIconUrl,
-            change = change
-        )
-    }
-
     private fun buildCountriesMapData(
-        countries: List<CountryItem>
+        countries: List<LocationItem>
     ): String {
         return countries.joinToString(",") { country ->
-            val safeCode = country.countryCode
+            val safeCode = country.id
                 .filter { it.isLetter() }
                 .take(MAX_COUNTRY_CODE_LENGTH)
             "['$safeCode',${country.views}]"
@@ -591,11 +554,15 @@ class LocationsViewModel @Inject constructor(
     }
 
     private fun escapeJs(value: String): String {
-        return value.replace("'", "\\'")
+        return value
+            .replace("\\", "\\\\")
+            .replace("'", "\\'")
+            .replace("\n", "\\n")
+            .replace("\r", "\\r")
     }
 
     private fun emptyLoadedState() = LocationsCardUiState.Loaded(
-        countries = emptyList(),
+        items = emptyList(),
         mapData = "",
         minViews = 0,
         maxViews = 0,
@@ -607,8 +574,7 @@ class LocationsViewModel @Inject constructor(
 }
 
 data class LocationsDetailData(
-    val countries: List<CountryItem>,
-    val locationItems: List<LocationItem>?,
+    val items: List<LocationItem>,
     val mapData: String,
     val minViews: Long,
     val maxViews: Long,

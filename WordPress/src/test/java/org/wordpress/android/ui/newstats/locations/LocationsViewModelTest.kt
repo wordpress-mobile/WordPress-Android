@@ -115,12 +115,12 @@ class LocationsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as LocationsCardUiState.Loaded
-        assertThat(state.countries).hasSize(2)
-        assertThat(state.countries[0].countryCode).isEqualTo(TEST_COUNTRY_CODE_1)
-        assertThat(state.countries[0].countryName).isEqualTo(TEST_COUNTRY_NAME_1)
-        assertThat(state.countries[0].views).isEqualTo(TEST_COUNTRY_VIEWS_1)
-        assertThat(state.countries[1].countryCode).isEqualTo(TEST_COUNTRY_CODE_2)
-        assertThat(state.countries[1].views).isEqualTo(TEST_COUNTRY_VIEWS_2)
+        assertThat(state.items).hasSize(2)
+        assertThat(state.items[0].id).isEqualTo(TEST_COUNTRY_CODE_1)
+        assertThat(state.items[0].name).isEqualTo(TEST_COUNTRY_NAME_1)
+        assertThat(state.items[0].views).isEqualTo(TEST_COUNTRY_VIEWS_1)
+        assertThat(state.items[1].id).isEqualTo(TEST_COUNTRY_CODE_2)
+        assertThat(state.items[1].views).isEqualTo(TEST_COUNTRY_VIEWS_2)
     }
 
     @Test
@@ -199,7 +199,7 @@ class LocationsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as LocationsCardUiState.Loaded
-        assertThat(state.countries).hasSize(10)
+        assertThat(state.items).hasSize(10)
         assertThat(state.hasMoreItems).isTrue()
     }
 
@@ -231,7 +231,7 @@ class LocationsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as LocationsCardUiState.Loaded
-        assertThat(state.countries).isEmpty()
+        assertThat(state.items).isEmpty()
         assertThat(state.mapData).isEmpty()
         assertThat(state.hasMoreItems).isFalse()
     }
@@ -387,7 +387,7 @@ class LocationsViewModelTest : BaseUnitTest() {
 
         val detailData = viewModel.getDetailData()
 
-        assertThat(detailData.countries).hasSize(2)
+        assertThat(detailData.items).hasSize(2)
         assertThat(detailData.totalViews).isEqualTo(TEST_TOTAL_VIEWS)
         assertThat(detailData.totalViewsChange).isEqualTo(TEST_TOTAL_VIEWS_CHANGE)
         assertThat(detailData.totalViewsChangePercent).isEqualTo(TEST_TOTAL_VIEWS_CHANGE_PERCENT)
@@ -423,7 +423,7 @@ class LocationsViewModelTest : BaseUnitTest() {
 
         val detailData = viewModel.getDetailData()
         // Card shows max 10, but detail data should have all 15
-        assertThat(detailData.countries).hasSize(15)
+        assertThat(detailData.items).hasSize(15)
     }
 
     @Test
@@ -473,8 +473,8 @@ class LocationsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as LocationsCardUiState.Loaded
-        assertThat(state.countries[0].change).isInstanceOf(CountryViewChange.Positive::class.java)
-        val change = state.countries[0].change as CountryViewChange.Positive
+        assertThat(state.items[0].change).isInstanceOf(CountryViewChange.Positive::class.java)
+        val change = state.items[0].change as CountryViewChange.Positive
         assertThat(change.value).isEqualTo(50)
         assertThat(change.percentage).isEqualTo(50.0)
     }
@@ -505,8 +505,8 @@ class LocationsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as LocationsCardUiState.Loaded
-        assertThat(state.countries[0].change).isInstanceOf(CountryViewChange.Negative::class.java)
-        val change = state.countries[0].change as CountryViewChange.Negative
+        assertThat(state.items[0].change).isInstanceOf(CountryViewChange.Negative::class.java)
+        val change = state.items[0].change as CountryViewChange.Negative
         assertThat(change.value).isEqualTo(50)
         assertThat(change.percentage).isEqualTo(50.0)
     }
@@ -537,7 +537,7 @@ class LocationsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as LocationsCardUiState.Loaded
-        assertThat(state.countries[0].change).isEqualTo(CountryViewChange.NoChange)
+        assertThat(state.items[0].change).isEqualTo(CountryViewChange.NoChange)
     }
     // endregion
 
@@ -603,12 +603,12 @@ class LocationsViewModelTest : BaseUnitTest() {
 
             val state =
                 viewModel.uiState.value as LocationsCardUiState.Loaded
-            assertThat(state.countries).hasSize(3)
-            assertThat(state.countries[0].countryName)
+            assertThat(state.items).hasSize(3)
+            assertThat(state.items[0].name)
                 .isEqualTo("California")
-            assertThat(state.countries[1].countryName)
+            assertThat(state.items[1].name)
                 .isEqualTo("London")
-            assertThat(state.countries[2].countryName)
+            assertThat(state.items[2].name)
                 .isEqualTo("Texas")
         }
 
@@ -697,12 +697,12 @@ class LocationsViewModelTest : BaseUnitTest() {
 
             val state =
                 viewModel.uiState.value as LocationsCardUiState.Loaded
-            assertThat(state.countries).hasSize(3)
-            assertThat(state.countries[0].countryName)
+            assertThat(state.items).hasSize(3)
+            assertThat(state.items[0].name)
                 .isEqualTo("New York")
-            assertThat(state.countries[1].countryName)
+            assertThat(state.items[1].name)
                 .isEqualTo("London")
-            assertThat(state.countries[2].countryName)
+            assertThat(state.items[2].name)
                 .isEqualTo("Los Angeles")
         }
 
@@ -823,7 +823,7 @@ class LocationsViewModelTest : BaseUnitTest() {
             val detailData = viewModel.getDetailData()
             assertThat(detailData.locationType)
                 .isEqualTo(LocationType.REGIONS)
-            assertThat(detailData.locationItems).hasSize(3)
+            assertThat(detailData.items).hasSize(3)
             assertThat(detailData.mapData).contains("['US',300]")
         }
 
@@ -849,7 +849,7 @@ class LocationsViewModelTest : BaseUnitTest() {
             val detailData = viewModel.getDetailData()
             assertThat(detailData.locationType)
                 .isEqualTo(LocationType.CITIES)
-            assertThat(detailData.locationItems).hasSize(3)
+            assertThat(detailData.items).hasSize(3)
             assertThat(detailData.mapData)
                 .contains("40.71,-74.00,'New York',120")
         }
