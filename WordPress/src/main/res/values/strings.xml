@@ -1587,6 +1587,8 @@
     <string name="stats_most_viewed_title">Most Viewed</string>
     <string name="stats_most_viewed_posts_and_pages">Posts &amp; Pages</string>
     <string name="stats_most_viewed_referrers">Referrers</string>
+    <string name="stats_most_viewed_title_header">Title</string>
+    <string name="stats_most_viewed_referrer_header">Referrer</string>
     <string name="stats_show_all">Show All</string>
     <string name="stats_most_viewed_top_n">Top %d</string>
 
@@ -1594,6 +1596,10 @@
     <string name="stats_countries_title">Countries</string>
     <string name="stats_countries_location_header">Locations</string>
     <string name="stats_countries_views_header">Views</string>
+
+    <!-- Authors Stats Card -->
+    <string name="stats_authors_title">Authors</string>
+    <string name="stats_authors_author_header">Author</string>
 
     <!-- Stats Card Configuration -->
     <string name="stats_card_remove">Remove Card</string>

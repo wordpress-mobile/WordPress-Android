@@ -10,6 +10,7 @@ import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
+import org.wordpress.android.ui.newstats.datasource.TopAuthorsDataResult
 import org.wordpress.android.ui.newstats.datasource.TopPostsDataResult
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import kotlinx.coroutines.withContext
@@ -735,6 +736,67 @@ class StatsRepository @Inject constructor(
             }
         }
     }
+
+    /**
+     * Fetches top authors stats for a specific site and period with comparison data.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param period The stats period to fetch
+     * @return Top authors data with comparison or error
+     */
+    suspend fun fetchTopAuthors(
+        siteId: Long,
+        period: StatsPeriod
+    ): TopAuthorsResult = withContext(ioDispatcher) {
+        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
+
+        // Fetch both periods in parallel
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async { statsDataSource.fetchTopAuthors(siteId, currentDateRange, max = 0) }
+            val previousDeferred = async { statsDataSource.fetchTopAuthors(siteId, previousDateRange, max = 0) }
+            currentDeferred.await() to previousDeferred.await()
+        }
+
+        when (currentResult) {
+            is TopAuthorsDataResult.Success -> {
+                val previousAuthorsMap = if (previousResult is TopAuthorsDataResult.Success) {
+                    previousResult.data.authors.associateBy { it.name }
+                } else {
+                    emptyMap()
+                }
+
+                val totalViews = currentResult.data.authors.sumOf { it.views }
+                val previousTotalViews = if (previousResult is TopAuthorsDataResult.Success) {
+                    previousResult.data.authors.sumOf { it.views }
+                } else {
+                    0L
+                }
+                val totalChange = totalViews - previousTotalViews
+                val totalChangePercent = if (previousTotalViews > 0) {
+                    (totalChange.toDouble() / previousTotalViews.toDouble()) * PERCENTAGE_MULTIPLIER
+                } else if (totalViews > 0) PERCENTAGE_MULTIPLIER else PERCENTAGE_NO_CHANGE
+
+                TopAuthorsResult.Success(
+                    authors = currentResult.data.authors.map { author ->
+                        val previousViews = previousAuthorsMap[author.name]?.views ?: 0L
+                        TopAuthorItemData(
+                            name = author.name,
+                            avatarUrl = author.avatarUrl,
+                            views = author.views,
+                            previousViews = previousViews
+                        )
+                    },
+                    totalViews = totalViews,
+                    totalViewsChange = totalChange,
+                    totalViewsChangePercent = totalChangePercent
+                )
+            }
+            is TopAuthorsDataResult.Error -> {
+                appLogWrapper.e(AppLog.T.STATS, "Error fetching top authors: ${currentResult.message}")
+                TopAuthorsResult.Error(currentResult.message)
+            }
+        }
+    }
 }
 
 /**
@@ -889,6 +951,38 @@ data class CountryViewItemData(
     val countryName: String,
     val views: Long,
     val flagIconUrl: String?,
+    val previousViews: Long
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double get() = if (previousViews > 0) {
+        (viewsChange.toDouble() / previousViews.toDouble()) * PERCENTAGE_MULTIPLIER
+    } else if (views > 0) {
+        PERCENTAGE_MULTIPLIER
+    } else {
+        PERCENTAGE_NO_CHANGE
+    }
+}
+
+/**
+ * Result wrapper for top authors fetch operation.
+ */
+sealed class TopAuthorsResult {
+    data class Success(
+        val authors: List<TopAuthorItemData>,
+        val totalViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
+    ) : TopAuthorsResult()
+    data class Error(val message: String) : TopAuthorsResult()
+}
+
+/**
+ * Data for a single top author item from the repository layer.
+ */
+data class TopAuthorItemData(
+    val name: String,
+    val avatarUrl: String?,
+    val views: Long,
     val previousViews: Long
 ) {
     val viewsChange: Long get() = views - previousViews

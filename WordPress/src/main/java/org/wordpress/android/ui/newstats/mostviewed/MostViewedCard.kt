@@ -240,13 +240,19 @@ private fun HeaderSection(
 
 @Composable
 private fun ColumnHeadersRow(cardType: StatsCardType) {
+    val headerResId = when (cardType) {
+        StatsCardType.MOST_VIEWED_POSTS_AND_PAGES -> R.string.stats_most_viewed_title_header
+        StatsCardType.MOST_VIEWED_REFERRERS -> R.string.stats_most_viewed_referrer_header
+        else -> cardType.displayNameResId
+    }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(cardType.displayNameResId),
+            text = stringResource(headerResId),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
