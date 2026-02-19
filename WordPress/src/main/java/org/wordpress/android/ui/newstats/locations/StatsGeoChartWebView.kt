@@ -74,6 +74,8 @@ fun StatsGeoChartWebView(
         )
     }
 
+    val lastLoadedHtml = remember { mutableStateOf<String?>(null) }
+
     Box(modifier = modifier.clip(RoundedCornerShape(8.dp))) {
         AndroidView(
             modifier = Modifier.fillMaxSize(),
@@ -89,14 +91,20 @@ fun StatsGeoChartWebView(
                 }
             },
             update = { webView ->
-                val base64Html = Base64.encodeToString(
-                    htmlPage.toByteArray(), Base64.DEFAULT
-                )
-                webView.loadData(
-                    base64Html,
-                    "text/html; charset=UTF-8",
-                    "base64"
-                )
+                if (htmlPage != lastLoadedHtml.value) {
+                    lastLoadedHtml.value = htmlPage
+                    val base64Html = Base64.encodeToString(
+                        htmlPage.toByteArray(), Base64.DEFAULT
+                    )
+                    webView.loadData(
+                        base64Html,
+                        "text/html; charset=UTF-8",
+                        "base64"
+                    )
+                }
+            },
+            onRelease = { webView ->
+                webView.destroy()
             }
         )
 

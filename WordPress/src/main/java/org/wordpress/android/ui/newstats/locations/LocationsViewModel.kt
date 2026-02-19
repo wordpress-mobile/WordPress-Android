@@ -290,19 +290,28 @@ class LocationsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchCountryViews(site: SiteModel) {
         val siteId = site.siteId
 
-        when (val result = statsRepository.fetchCountryViews(
-            siteId, currentPeriod
-        )) {
-            is CountryViewsResult.Success -> {
-                handleCountryViewsSuccess(result)
+        try {
+            when (val result = statsRepository.fetchCountryViews(
+                siteId, currentPeriod
+            )) {
+                is CountryViewsResult.Success -> {
+                    handleCountryViewsSuccess(result)
+                }
+                is CountryViewsResult.Error -> {
+                    _countriesUiState.value =
+                        LocationsCardUiState.Error(result.message)
+                }
             }
-            is CountryViewsResult.Error -> {
-                _countriesUiState.value =
-                    LocationsCardUiState.Error(result.message)
-            }
+        } catch (e: Exception) {
+            _countriesUiState.value = LocationsCardUiState.Error(
+                e.message ?: resourceProvider.getString(
+                    R.string.stats_todays_stats_unknown_error
+                )
+            )
         }
     }
 
@@ -360,19 +369,28 @@ class LocationsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchRegionViews(site: SiteModel) {
         val siteId = site.siteId
 
-        when (val result = statsRepository.fetchRegionViews(
-            siteId, currentPeriod
-        )) {
-            is RegionViewsResult.Success -> {
-                handleRegionViewsSuccess(result)
+        try {
+            when (val result = statsRepository.fetchRegionViews(
+                siteId, currentPeriod
+            )) {
+                is RegionViewsResult.Success -> {
+                    handleRegionViewsSuccess(result)
+                }
+                is RegionViewsResult.Error -> {
+                    _regionsUiState.value =
+                        LocationsCardUiState.Error(result.message)
+                }
             }
-            is RegionViewsResult.Error -> {
-                _regionsUiState.value =
-                    LocationsCardUiState.Error(result.message)
-            }
+        } catch (e: Exception) {
+            _regionsUiState.value = LocationsCardUiState.Error(
+                e.message ?: resourceProvider.getString(
+                    R.string.stats_todays_stats_unknown_error
+                )
+            )
         }
     }
 
@@ -425,19 +443,28 @@ class LocationsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchCityViews(site: SiteModel) {
         val siteId = site.siteId
 
-        when (val result = statsRepository.fetchCityViews(
-            siteId, currentPeriod
-        )) {
-            is CityViewsResult.Success -> {
-                handleCityViewsSuccess(result)
+        try {
+            when (val result = statsRepository.fetchCityViews(
+                siteId, currentPeriod
+            )) {
+                is CityViewsResult.Success -> {
+                    handleCityViewsSuccess(result)
+                }
+                is CityViewsResult.Error -> {
+                    _citiesUiState.value =
+                        LocationsCardUiState.Error(result.message)
+                }
             }
-            is CityViewsResult.Error -> {
-                _citiesUiState.value =
-                    LocationsCardUiState.Error(result.message)
-            }
+        } catch (e: Exception) {
+            _citiesUiState.value = LocationsCardUiState.Error(
+                e.message ?: resourceProvider.getString(
+                    R.string.stats_todays_stats_unknown_error
+                )
+            )
         }
     }
 
@@ -550,7 +577,8 @@ class LocationsViewModel @Inject constructor(
         cities: List<LocationItem>
     ): String {
         return cities.filter {
-            it.latitude != null && it.longitude != null
+            it.latitude?.toDoubleOrNull() != null &&
+                it.longitude?.toDoubleOrNull() != null
         }.joinToString(",") { city ->
             "[${city.latitude},${city.longitude}," +
                 "'${escapeJs(city.name)}',${city.views}]"
