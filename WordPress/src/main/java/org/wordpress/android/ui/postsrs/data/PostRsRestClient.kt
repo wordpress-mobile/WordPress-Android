@@ -71,6 +71,11 @@ class PostRsRestClient @Inject constructor(
         }
     }
 
+    /**
+     * Returns an API client for [site]. Self-hosted sites delegate to [WpApiClientProvider];
+     * WordPress.com sites use a cached [WpApiClient] with bearer-token auth and a
+     * WP.com-specific URL resolver for correct URL construction.
+     */
     @Synchronized
     private fun getApiClient(site: SiteModel): WpApiClient {
         if (!site.isWPCom) return wpApiClientProvider.getWpApiClient(site)
