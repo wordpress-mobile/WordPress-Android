@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
+import okhttp3.Credentials
 import org.wordpress.android.fluxc.network.rest.wpapi.NonceRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.ReactNativeWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.reactnative.ReactNativeWPComRestClient
@@ -159,7 +160,7 @@ class ReactNativeStore @VisibleForTesting constructor(
         return Error(error)
     }
 
-    @Suppress("ComplexMethod", "NestedBlockDepth", "LongParameterList")
+    @Suppress("ComplexMethod", "NestedBlockDepth", "LongParameterList", "LongMethod", "ReturnCount")
     private suspend fun executeWPAPIRequest(
         site: SiteModel,
         path: String,
@@ -180,6 +181,16 @@ class ReactNativeStore @VisibleForTesting constructor(
             persistSiteSafely(site)
         }
         val fullRestUrl = slashJoin(wpApiRestUrl, path)
+
+        // Use Basic auth for sites with application passwords instead of nonce auth.
+        // Application passwords authenticate via REST API Basic auth and cannot
+        // authenticate via wp-login.php (which is required for nonce-based auth).
+        if (site.hasApplicationPassword()) {
+            return executeWithApplicationPassword(
+                site, path, method, params, body, enableCaching,
+                fullRestUrl, usingSavedRestUrl
+            )
+        }
 
         var nonce = nonceRestClient.getNonce(site)
         val usingSavedNonce = nonce is Available
@@ -208,8 +219,10 @@ class ReactNativeStore @VisibleForTesting constructor(
                         val nonceIsUpdated = newNonce != null && newNonce != previousNonce
                         if (nonceIsUpdated) {
                             return when (method) {
-                                RequestMethod.GET -> executeGet(fullRestUrl, params, newNonce, enableCaching)
-                                RequestMethod.POST -> executePost(fullRestUrl, body, newNonce)
+                                RequestMethod.GET ->
+                                    executeGet(fullRestUrl, params, newNonce, enableCaching)
+                                RequestMethod.POST ->
+                                    executePost(fullRestUrl, body, newNonce)
                             }
                         }
                     }
@@ -227,14 +240,63 @@ class ReactNativeStore @VisibleForTesting constructor(
                         // so the rest url will be retrieved using discovery
                         executeWPAPIRequest(site, path, method, params, body, enableCaching)
                     } else {
-                        // Already used discovery to fetch the rest base url and still got 'not found', so
-                        // just return the error response
+                        // Already used discovery to fetch the rest base url and still got
+                        // 'not found', so just return the error response
                         response
                     }
-
-                    // For all other failures just return the error response
                 }
 
+                // For all other failures just return the error response
+                else -> response
+            }
+        }
+    }
+
+    @Suppress("LongParameterList")
+    private suspend fun executeWithApplicationPassword(
+        site: SiteModel,
+        path: String,
+        method: RequestMethod,
+        params: Map<String, String>,
+        body: Map<String, Any>,
+        enableCaching: Boolean,
+        fullRestUrl: String,
+        usingSavedRestUrl: Boolean
+    ): ReactNativeFetchResponse {
+        val username = site.apiRestUsernamePlain
+        val password = site.apiRestPasswordPlain
+        if (username == null || password == null) {
+            val error = BaseNetworkError(GenericErrorType.UNKNOWN).apply {
+                message = "Application password credentials missing"
+            }
+            return Error(error)
+        }
+        val authHeaderValue = Credentials.basic(username, password)
+        val headers = mapOf(AUTHORIZATION_HEADER to authHeaderValue)
+
+        val response = when (method) {
+            RequestMethod.GET -> executeGet(
+                fullRestUrl, params, nonce = null, enableCaching, headers
+            )
+            RequestMethod.POST -> executePost(
+                fullRestUrl, body, nonce = null, headers
+            )
+        }
+        return when (response) {
+            is Success -> response
+            is Error -> when (response.statusCode()) {
+                HttpURLConnection.HTTP_NOT_FOUND -> {
+                    site.wpApiRestUrl = null
+                    persistSiteSafely(site)
+
+                    if (usingSavedRestUrl) {
+                        executeWPAPIRequest(
+                            site, path, method, params, body, enableCaching
+                        )
+                    } else {
+                        response
+                    }
+                }
                 else -> response
             }
         }
@@ -244,16 +306,24 @@ class ReactNativeStore @VisibleForTesting constructor(
         fullRestApiUrl: String,
         params: Map<String, String>,
         nonce: String?,
-        enableCaching: Boolean
+        enableCaching: Boolean,
+        headers: Map<String, String> = emptyMap()
     ): ReactNativeFetchResponse =
-            wpAPIRestClient.getRequest(fullRestApiUrl, params, ::Success, ::Error, nonce, enableCaching)
+            wpAPIRestClient.getRequest(
+                fullRestApiUrl, params, ::Success, ::Error,
+                nonce, enableCaching, headers
+            )
 
     private suspend fun executePost(
         fullRestApiUrl: String,
         body: Map<String, Any>,
-        nonce: String?
+        nonce: String?,
+        headers: Map<String, String> = emptyMap()
     ): ReactNativeFetchResponse =
-        wpAPIRestClient.postRequest(fullRestApiUrl, body, ::Success, ::Error, nonce)
+        wpAPIRestClient.postRequest(
+            fullRestApiUrl, body, ::Success, ::Error,
+            nonce, headers
+        )
 
     private fun parseUrlAndParamsForWPCom(
         pathWithParams: String,
@@ -294,6 +364,7 @@ class ReactNativeStore @VisibleForTesting constructor(
     private fun getNonce(site: SiteModel) = nonceRestClient.getNonce(site)
 
     companion object {
+        private const val AUTHORIZATION_HEADER = "Authorization"
         private const val FIVE_MIN_MILLIS: Long = 5 * 60 * 1000
 
         /**

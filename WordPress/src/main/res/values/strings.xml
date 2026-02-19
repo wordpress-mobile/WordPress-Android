@@ -610,6 +610,7 @@
     <!--               -->
 
     <!-- General -->
+    <string name="bullet_with_spaces" translatable="false">" • "</string>
     <string name="discussion">Discussion</string>
     <string name="privacy">Privacy</string>
     <string name="related_posts">Related Posts</string>
@@ -1000,6 +1001,16 @@
     <string name="experimental_rs_post_list">New Post List</string>
     <string name="experimental_rs_post_list_description">Use wordpress-rs for the post list on self-hosted sites with application passwords</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
+    <string name="post_rs_not_implemented_yet">Not implemented yet</string>
+    <string name="post_rs_confirm_trash_message">Are you sure you want to trash this post?</string>
+    <string name="post_rs_confirm_delete_message">This will permanently delete this post. This action cannot be undone.</string>
+    <string name="post_rs_trashed">Post moved to trash</string>
+    <string name="post_rs_deleted">Post permanently deleted</string>
+    <string name="post_rs_published">Post published</string>
+    <string name="post_rs_moved_to_draft">Post moved to drafts</string>
+    <string name="post_rs_error_trash">Failed to trash post</string>
+    <string name="post_rs_error_delete">Failed to delete post</string>
+    <string name="post_rs_error_update_status">Failed to update post status</string>
     <string name="post_types_screen_title">Post Types</string>
 
     <!-- Debug settings -->
