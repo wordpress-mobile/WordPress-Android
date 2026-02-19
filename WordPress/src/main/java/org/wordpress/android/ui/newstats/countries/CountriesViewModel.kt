@@ -21,6 +21,7 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 private const val CARD_MAX_ITEMS = 10
+private const val MAX_COUNTRY_CODE_LENGTH = 2
 
 @HiltViewModel
 class CountriesViewModel @Inject constructor(
@@ -198,7 +199,10 @@ class CountriesViewModel @Inject constructor(
      */
     private fun buildMapData(countries: List<CountryItem>): String {
         return countries.joinToString(",") { country ->
-            "['${country.countryCode}',${country.views}]"
+            val safeCode = country.countryCode
+                .filter { it.isLetter() }
+                .take(MAX_COUNTRY_CODE_LENGTH)
+            "['$safeCode',${country.views}]"
         }
     }
 }
