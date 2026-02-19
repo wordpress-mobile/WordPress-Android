@@ -87,9 +87,12 @@ class AuthorsViewModel @Inject constructor(
 
         statsRepository.init(accessToken)
         viewModelScope.launch {
-            _isRefreshing.value = true
-            fetchTopAuthors(site)
-            _isRefreshing.value = false
+            try {
+                _isRefreshing.value = true
+                fetchTopAuthors(site)
+            } finally {
+                _isRefreshing.value = false
+            }
         }
     }
 

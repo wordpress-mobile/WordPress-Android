@@ -94,12 +94,15 @@ class MostViewedViewModel @Inject constructor(
 
         statsRepository.init(accessToken)
         viewModelScope.launch {
-            _isPostsRefreshing.value = true
-            loadDataForSourceInternal(
-                site.siteId,
-                MostViewedDataSource.POSTS_AND_PAGES
-            )
-            _isPostsRefreshing.value = false
+            try {
+                _isPostsRefreshing.value = true
+                loadDataForSourceInternal(
+                    site.siteId,
+                    MostViewedDataSource.POSTS_AND_PAGES
+                )
+            } finally {
+                _isPostsRefreshing.value = false
+            }
         }
     }
 
@@ -110,12 +113,15 @@ class MostViewedViewModel @Inject constructor(
 
         statsRepository.init(accessToken)
         viewModelScope.launch {
-            _isReferrersRefreshing.value = true
-            loadDataForSourceInternal(
-                site.siteId,
-                MostViewedDataSource.REFERRERS
-            )
-            _isReferrersRefreshing.value = false
+            try {
+                _isReferrersRefreshing.value = true
+                loadDataForSourceInternal(
+                    site.siteId,
+                    MostViewedDataSource.REFERRERS
+                )
+            } finally {
+                _isReferrersRefreshing.value = false
+            }
         }
     }
 

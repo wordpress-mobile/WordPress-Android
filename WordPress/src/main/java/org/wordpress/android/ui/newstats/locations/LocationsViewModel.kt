@@ -138,11 +138,14 @@ class LocationsViewModel @Inject constructor(
 
         statsRepository.init(accessToken)
         viewModelScope.launch {
-            _isRefreshing.value = true
-            // Reset loaded period for current type to force re-fetch
-            resetLoadedPeriodForCurrentType()
-            fetchForCurrentType(site)
-            _isRefreshing.value = false
+            try {
+                _isRefreshing.value = true
+                // Reset loaded period for current type to force re-fetch
+                resetLoadedPeriodForCurrentType()
+                fetchForCurrentType(site)
+            } finally {
+                _isRefreshing.value = false
+            }
         }
     }
 
