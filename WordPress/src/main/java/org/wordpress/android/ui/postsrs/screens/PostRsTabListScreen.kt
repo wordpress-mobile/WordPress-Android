@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
 import org.wordpress.android.ui.postsrs.PostTabUiState
 
@@ -41,8 +42,11 @@ fun PostRsTabListScreen(
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
+    onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
     onCreatePost: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isSearchIdle: Boolean = false,
+    isSearching: Boolean = false
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -61,19 +65,33 @@ fun PostRsTabListScreen(
         }
     ) {
         when {
+            isSearchIdle -> Box(Modifier.fillMaxSize())
             state.isLoading -> ShimmerList()
             state.error != null && state.posts.isEmpty() -> {
                 ErrorContent(state.error)
             }
             state.posts.isEmpty() && !state.isRefreshing -> {
-                EmptyContent(emptyMessageResId, onCreatePost)
+                EmptyContent(
+                    emptyMessageResId = if (isSearching) {
+                        R.string
+                            .post_list_search_nothing_found
+                    } else {
+                        emptyMessageResId
+                    },
+                    onCreatePost = if (isSearching) {
+                        null
+                    } else {
+                        onCreatePost
+                    }
+                )
             }
             else -> PostListContent(
                 posts = state.posts,
                 isLoadingMore = state.isLoadingMore,
                 canLoadMore = state.canLoadMore,
                 onLoadMore = onLoadMore,
-                onPostClick = onPostClick
+                onPostClick = onPostClick,
+                onPostMenuAction = onPostMenuAction
             )
         }
     }
@@ -85,7 +103,8 @@ private fun PostListContent(
     isLoadingMore: Boolean,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
-    onPostClick: (Long) -> Unit
+    onPostClick: (Long) -> Unit,
+    onPostMenuAction: (Long, PostRsMenuAction) -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -111,7 +130,15 @@ private fun PostListContent(
         ) { post ->
             PostRsListItem(
                 post = post,
-                onClick = { onPostClick(post.remotePostId) }
+                onClick = {
+                    onPostClick(post.remotePostId)
+                },
+                onMenuAction = { action ->
+                    onPostMenuAction(
+                        post.remotePostId, action
+                    )
+                },
+                modifier = Modifier.animateItem()
             )
         }
 
@@ -168,7 +195,7 @@ private fun ErrorContent(error: String) {
 @Composable
 private fun EmptyContent(
     emptyMessageResId: Int,
-    onCreatePost: () -> Unit
+    onCreatePost: (() -> Unit)?
 ) {
     Column(
         modifier = Modifier
@@ -183,13 +210,15 @@ private fun EmptyContent(
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onCreatePost) {
-            Text(
-                text = stringResource(
-                    R.string.posts_empty_list_button
+        if (onCreatePost != null) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onCreatePost) {
+                Text(
+                    text = stringResource(
+                        R.string.posts_empty_list_button
+                    )
                 )
-            )
+            }
         }
     }
 }

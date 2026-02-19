@@ -430,6 +430,39 @@ class MediaRsApiRestClientTest {
     }
 
     @Test
+    fun `uploadMedia preserves local metadata from original media model`() = runTest {
+        val testSite = createTestSite()
+        val localPostId = 42
+        val testMedia = createTestMedia().apply {
+            filePath = "/valid/path/file.jpg"
+            this.localPostId = localPostId
+            markedLocallyAsFeatured = true
+        }
+        val mediaWithEditContext = createTestMediaWithEditContext(testMedia.id.toLong())
+        val mediaRequestResult: WpRequestResult<MediaRequestCreateResponse> =
+            WpRequestResult.Success(
+                response = MediaRequestCreateResponse(
+                    mediaWithEditContext, mock<WpNetworkHeaderMap>()
+                )
+            )
+
+        whenever(fileCheckWrapper.canReadFile(any())).thenReturn(true)
+        whenever(wpApiClient.request<MediaRequestCreateResponse>(any()))
+            .thenReturn(mediaRequestResult)
+
+        restClient.uploadMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as ProgressPayload
+        assertEquals(testMedia.id, payload.media?.id)
+        assertEquals(localPostId, payload.media?.localPostId)
+        assertTrue(payload.media?.markedLocallyAsFeatured == true)
+    }
+
+    @Test
     fun `uploadMedia with error response dispatches error action`() = runTest {
         val testSite = createTestSite()
         val testMedia = createTestMedia().apply {
