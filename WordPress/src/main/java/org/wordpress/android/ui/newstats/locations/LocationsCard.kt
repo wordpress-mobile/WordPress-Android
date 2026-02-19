@@ -37,6 +37,7 @@ import org.wordpress.android.ui.newstats.components.StatsCardEmptyContent
 import org.wordpress.android.ui.newstats.components.StatsCardHeader
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsListItem
+import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 
 private val CardPadding = 16.dp
@@ -370,7 +371,7 @@ private fun LocationRow(
         percentage = percentage,
         name = item.name,
         views = item.views,
-        change = item.change.toStatsViewChange(),
+        change = item.change,
         icon = {
             CountryFlag(
                 flagIconUrl = item.flagIconUrl,
@@ -430,19 +431,19 @@ private fun LocationsCardLoadedPreview() {
                 items = listOf(
                     LocationItem(
                         "US", "United States", 3464, null,
-                        CountryViewChange.Positive(124, 3.7)
+                        StatsViewChange.Positive(124, 3.7)
                     ),
                     LocationItem(
                         "ES", "Spain", 556, null,
-                        CountryViewChange.Positive(45, 8.8)
+                        StatsViewChange.Positive(45, 8.8)
                     ),
                     LocationItem(
                         "GB", "United Kingdom", 522, null,
-                        CountryViewChange.Negative(12, 2.2)
+                        StatsViewChange.Negative(12, 2.2)
                     ),
                     LocationItem(
                         "CA", "Canada", 485, null,
-                        CountryViewChange.NoChange
+                        StatsViewChange.NoChange
                     )
                 ),
                 mapData = "['US',3464],['ES',556]," +
@@ -470,11 +471,11 @@ private fun LocationsCardRegionsPreview() {
                 items = listOf(
                     LocationItem(
                         "CA", "California", 1234, null,
-                        CountryViewChange.Positive(100, 8.8)
+                        StatsViewChange.Positive(100, 8.8)
                     ),
                     LocationItem(
                         "TX", "Texas", 890, null,
-                        CountryViewChange.Positive(45, 5.3)
+                        StatsViewChange.Positive(45, 5.3)
                     )
                 ),
                 mapData = "['California',1234],['Texas',890]",

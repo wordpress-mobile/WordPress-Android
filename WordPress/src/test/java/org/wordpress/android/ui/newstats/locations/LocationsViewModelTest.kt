@@ -22,6 +22,7 @@ import org.wordpress.android.ui.newstats.repository.CountryViewItemData
 import org.wordpress.android.ui.newstats.repository.CountryViewsResult
 import org.wordpress.android.ui.newstats.repository.RegionViewItemData
 import org.wordpress.android.ui.newstats.repository.RegionViewsResult
+import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -448,7 +449,7 @@ class LocationsViewModelTest : BaseUnitTest() {
 
     // region Change calculations
     @Test
-    fun `when country has positive change, then CountryViewChange_Positive is returned`() = test {
+    fun `when country has positive change, then StatsViewChange_Positive is returned`() = test {
         val countries = listOf(
             CountryViewItemData(
                 countryCode = "US",
@@ -473,14 +474,14 @@ class LocationsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as LocationsCardUiState.Loaded
-        assertThat(state.items[0].change).isInstanceOf(CountryViewChange.Positive::class.java)
-        val change = state.items[0].change as CountryViewChange.Positive
+        assertThat(state.items[0].change).isInstanceOf(StatsViewChange.Positive::class.java)
+        val change = state.items[0].change as StatsViewChange.Positive
         assertThat(change.value).isEqualTo(50)
         assertThat(change.percentage).isEqualTo(50.0)
     }
 
     @Test
-    fun `when country has negative change, then CountryViewChange_Negative is returned`() = test {
+    fun `when country has negative change, then StatsViewChange_Negative is returned`() = test {
         val countries = listOf(
             CountryViewItemData(
                 countryCode = "US",
@@ -505,14 +506,14 @@ class LocationsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as LocationsCardUiState.Loaded
-        assertThat(state.items[0].change).isInstanceOf(CountryViewChange.Negative::class.java)
-        val change = state.items[0].change as CountryViewChange.Negative
+        assertThat(state.items[0].change).isInstanceOf(StatsViewChange.Negative::class.java)
+        val change = state.items[0].change as StatsViewChange.Negative
         assertThat(change.value).isEqualTo(50)
         assertThat(change.percentage).isEqualTo(50.0)
     }
 
     @Test
-    fun `when country has no change, then CountryViewChange_NoChange is returned`() = test {
+    fun `when country has no change, then StatsViewChange_NoChange is returned`() = test {
         val countries = listOf(
             CountryViewItemData(
                 countryCode = "US",
@@ -537,7 +538,7 @@ class LocationsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as LocationsCardUiState.Loaded
-        assertThat(state.items[0].change).isEqualTo(CountryViewChange.NoChange)
+        assertThat(state.items[0].change).isEqualTo(StatsViewChange.NoChange)
     }
     // endregion
 

@@ -22,6 +22,7 @@ import org.wordpress.android.ui.newstats.repository.RegionViewItemData
 import org.wordpress.android.ui.newstats.repository.RegionViewsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.util.toDateRangeString
+import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import kotlin.math.abs
@@ -487,15 +488,15 @@ class LocationsViewModel @Inject constructor(
     private fun toViewChange(
         change: Long,
         percent: Double
-    ): CountryViewChange {
+    ): StatsViewChange {
         return when {
-            change > 0 -> CountryViewChange.Positive(
+            change > 0 -> StatsViewChange.Positive(
                 change, abs(percent)
             )
-            change < 0 -> CountryViewChange.Negative(
+            change < 0 -> StatsViewChange.Negative(
                 abs(change), abs(percent)
             )
-            else -> CountryViewChange.NoChange
+            else -> StatsViewChange.NoChange
         }
     }
 

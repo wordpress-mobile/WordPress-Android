@@ -3,7 +3,6 @@ package org.wordpress.android.ui.newstats.locations
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -27,10 +26,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.components.StatsDetailListItem
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
@@ -54,7 +53,7 @@ class LocationsDetailActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val countries = intent.extras
-            ?.getParcelableArrayListCompat<LocationsDetailItem>(
+            ?.getParcelableArrayListCompat<LocationItem>(
                 EXTRA_COUNTRIES
             ) ?: arrayListOf()
         val mapData = intent.getStringExtra(EXTRA_MAP_DATA) ?: ""
@@ -100,22 +99,12 @@ class LocationsDetailActivity : BaseAppCompatActivity() {
             context: Context,
             detailData: LocationsDetailData
         ) {
-            val detailItems = detailData.items.map { item ->
-                LocationsDetailItem(
-                    id = item.id,
-                    name = item.name,
-                    views = item.views,
-                    flagIconUrl = item.flagIconUrl,
-                    change = item.change,
-                    latitude = item.latitude,
-                    longitude = item.longitude
-                )
-            }
             val intent = Intent(
                 context, LocationsDetailActivity::class.java
             ).apply {
                 putExtra(
-                    EXTRA_COUNTRIES, ArrayList(detailItems)
+                    EXTRA_COUNTRIES,
+                    ArrayList(detailData.items)
                 )
                 putExtra(EXTRA_MAP_DATA, detailData.mapData)
                 putExtra(EXTRA_MIN_VIEWS, detailData.minViews)
@@ -140,21 +129,10 @@ class LocationsDetailActivity : BaseAppCompatActivity() {
     }
 }
 
-@Parcelize
-data class LocationsDetailItem(
-    val id: String,
-    val name: String,
-    val views: Long,
-    val flagIconUrl: String?,
-    val change: CountryViewChange = CountryViewChange.NoChange,
-    val latitude: String? = null,
-    val longitude: String? = null
-) : Parcelable
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LocationsDetailScreen(
-    countries: List<LocationsDetailItem>,
+    countries: List<LocationItem>,
     mapData: String,
     minViews: Long,
     maxViews: Long,
@@ -257,7 +235,7 @@ private fun LocationsDetailScreen(
 @Composable
 private fun DetailCountryRow(
     position: Int,
-    country: LocationsDetailItem,
+    country: LocationItem,
     percentage: Float
 ) {
     StatsDetailListItem(
@@ -265,7 +243,7 @@ private fun DetailCountryRow(
         percentage = percentage,
         name = country.name,
         views = country.views,
-        change = country.change.toStatsViewChange(),
+        change = country.change,
         icon = {
             CountryFlag(
                 flagIconUrl = country.flagIconUrl,
@@ -281,25 +259,25 @@ private fun LocationsDetailScreenPreview() {
     AppThemeM3 {
         LocationsDetailScreen(
             countries = listOf(
-                LocationsDetailItem(
+                LocationItem(
                     "US", "United States", 3464, null,
-                    CountryViewChange.Positive(124, 3.7)
+                    StatsViewChange.Positive(124, 3.7)
                 ),
-                LocationsDetailItem(
+                LocationItem(
                     "ES", "Spain", 556, null,
-                    CountryViewChange.Positive(45, 8.8)
+                    StatsViewChange.Positive(45, 8.8)
                 ),
-                LocationsDetailItem(
+                LocationItem(
                     "GB", "United Kingdom", 522, null,
-                    CountryViewChange.Negative(12, 2.2)
+                    StatsViewChange.Negative(12, 2.2)
                 ),
-                LocationsDetailItem(
+                LocationItem(
                     "CA", "Canada", 485, null,
-                    CountryViewChange.Positive(33, 7.3)
+                    StatsViewChange.Positive(33, 7.3)
                 ),
-                LocationsDetailItem(
+                LocationItem(
                     "DE", "Germany", 412, null,
-                    CountryViewChange.NoChange
+                    StatsViewChange.NoChange
                 )
             ),
             mapData = "['US',3464],['ES',556]," +
