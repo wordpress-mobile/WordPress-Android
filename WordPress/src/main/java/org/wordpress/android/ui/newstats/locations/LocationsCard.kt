@@ -44,8 +44,8 @@ private const val MAP_ASPECT_RATIO = 8f / 5f
 private const val LOADING_ITEM_COUNT = 4
 
 @Composable
-fun CountriesCard(
-    uiState: CountriesCardUiState,
+fun LocationsCard(
+    uiState: LocationsCardUiState,
     selectedLocationType: LocationType,
     onLocationTypeChanged: (LocationType) -> Unit,
     onShowAllClick: () -> Unit,
@@ -60,7 +60,7 @@ fun CountriesCard(
 ) {
     StatsCardContainer(modifier = modifier) {
         when (uiState) {
-            is CountriesCardUiState.Loading -> LoadingContent(
+            is LocationsCardUiState.Loading -> LoadingContent(
                 selectedLocationType = selectedLocationType,
                 onLocationTypeChanged = onLocationTypeChanged,
                 onRemoveCard = onRemoveCard,
@@ -70,13 +70,13 @@ fun CountriesCard(
                 onMoveDown = onMoveDown,
                 onMoveToBottom = onMoveToBottom
             )
-            is CountriesCardUiState.Loaded -> LoadedContent(
+            is LocationsCardUiState.Loaded -> LoadedContent(
                 uiState, selectedLocationType, onLocationTypeChanged,
                 onShowAllClick, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop,
                 onMoveDown, onMoveToBottom
             )
-            is CountriesCardUiState.Error -> ErrorContent(
+            is LocationsCardUiState.Error -> ErrorContent(
                 uiState = uiState,
                 selectedLocationType = selectedLocationType,
                 onLocationTypeChanged = onLocationTypeChanged,
@@ -186,7 +186,7 @@ private fun LoadingContent(
 
 @Composable
 private fun LoadedContent(
-    state: CountriesCardUiState.Loaded,
+    state: LocationsCardUiState.Loaded,
     selectedLocationType: LocationType,
     onLocationTypeChanged: (LocationType) -> Unit,
     onShowAllClick: () -> Unit,
@@ -272,7 +272,7 @@ private fun LoadedContent(
 
 @Composable
 private fun ErrorContent(
-    uiState: CountriesCardUiState.Error,
+    uiState: LocationsCardUiState.Error,
     selectedLocationType: LocationType,
     onLocationTypeChanged: (LocationType) -> Unit,
     onRetry: () -> Unit,
@@ -410,10 +410,10 @@ fun CountryFlag(
 // Previews
 @Preview(showBackground = true)
 @Composable
-private fun CountriesCardLoadingPreview() {
+private fun LocationsCardLoadingPreview() {
     AppThemeM3 {
-        CountriesCard(
-            uiState = CountriesCardUiState.Loading,
+        LocationsCard(
+            uiState = LocationsCardUiState.Loading,
             selectedLocationType = LocationType.COUNTRIES,
             onLocationTypeChanged = {},
             onShowAllClick = {},
@@ -425,10 +425,10 @@ private fun CountriesCardLoadingPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun CountriesCardLoadedPreview() {
+private fun LocationsCardLoadedPreview() {
     AppThemeM3 {
-        CountriesCard(
-            uiState = CountriesCardUiState.Loaded(
+        LocationsCard(
+            uiState = LocationsCardUiState.Loaded(
                 countries = listOf(
                     CountryItem(
                         "US", "United States", 3464, null,
@@ -465,10 +465,10 @@ private fun CountriesCardLoadedPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun CountriesCardRegionsPreview() {
+private fun LocationsCardRegionsPreview() {
     AppThemeM3 {
-        CountriesCard(
-            uiState = CountriesCardUiState.Loaded(
+        LocationsCard(
+            uiState = LocationsCardUiState.Loaded(
                 countries = listOf(
                     CountryItem(
                         "CA", "California", 1234, null,
@@ -496,10 +496,10 @@ private fun CountriesCardRegionsPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun CountriesCardErrorPreview() {
+private fun LocationsCardErrorPreview() {
     AppThemeM3 {
-        CountriesCard(
-            uiState = CountriesCardUiState.Error(
+        LocationsCard(
+            uiState = LocationsCardUiState.Error(
                 "Failed to load country data"
             ),
             selectedLocationType = LocationType.COUNTRIES,

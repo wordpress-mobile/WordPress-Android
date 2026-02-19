@@ -31,25 +31,25 @@ private const val CARD_MAX_ITEMS = 10
 private const val MAX_COUNTRY_CODE_LENGTH = 2
 
 @HiltViewModel
-class CountriesViewModel @Inject constructor(
+class LocationsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val statsRepository: StatsRepository,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _countriesUiState =
-        MutableStateFlow<CountriesCardUiState>(CountriesCardUiState.Loading)
+        MutableStateFlow<LocationsCardUiState>(LocationsCardUiState.Loading)
     private val _regionsUiState =
-        MutableStateFlow<CountriesCardUiState>(CountriesCardUiState.Loading)
+        MutableStateFlow<LocationsCardUiState>(LocationsCardUiState.Loading)
     private val _citiesUiState =
-        MutableStateFlow<CountriesCardUiState>(CountriesCardUiState.Loading)
+        MutableStateFlow<LocationsCardUiState>(LocationsCardUiState.Loading)
 
     private val _selectedLocationType =
         MutableStateFlow(LocationType.COUNTRIES)
     val selectedLocationType: StateFlow<LocationType> =
         _selectedLocationType.asStateFlow()
 
-    val uiState: StateFlow<CountriesCardUiState> = combine(
+    val uiState: StateFlow<LocationsCardUiState> = combine(
         _selectedLocationType,
         _countriesUiState,
         _regionsUiState,
@@ -63,7 +63,7 @@ class CountriesViewModel @Inject constructor(
     }.stateIn(
         viewModelScope,
         SharingStarted.Eagerly,
-        CountriesCardUiState.Loading
+        LocationsCardUiState.Loading
     )
 
     private val _isRefreshing = MutableStateFlow(false)
@@ -189,9 +189,9 @@ class CountriesViewModel @Inject constructor(
         }
     }
 
-    fun getDetailData(): CountriesDetailData {
+    fun getDetailData(): LocationsDetailData {
         return when (_selectedLocationType.value) {
-            LocationType.COUNTRIES -> CountriesDetailData(
+            LocationType.COUNTRIES -> LocationsDetailData(
                 countries = allCountries,
                 locationItems = null,
                 mapData = cachedCountriesMapData,
@@ -206,7 +206,7 @@ class CountriesViewModel @Inject constructor(
                 ),
                 locationType = LocationType.COUNTRIES
             )
-            LocationType.REGIONS -> CountriesDetailData(
+            LocationType.REGIONS -> LocationsDetailData(
                 countries = emptyList(),
                 locationItems = allRegions,
                 mapData = cachedRegionsMapData,
@@ -221,7 +221,7 @@ class CountriesViewModel @Inject constructor(
                 ),
                 locationType = LocationType.REGIONS
             )
-            LocationType.CITIES -> CountriesDetailData(
+            LocationType.CITIES -> LocationsDetailData(
                 countries = emptyList(),
                 locationItems = allCities,
                 mapData = cachedCitiesMapData,
@@ -240,7 +240,7 @@ class CountriesViewModel @Inject constructor(
     }
 
     private fun setAllStatesError(message: String) {
-        val error = CountriesCardUiState.Error(message)
+        val error = LocationsCardUiState.Error(message)
         _countriesUiState.value = error
         _regionsUiState.value = error
         _citiesUiState.value = error
@@ -253,11 +253,11 @@ class CountriesViewModel @Inject constructor(
     private fun setTypeLoading(type: LocationType) {
         when (type) {
             LocationType.COUNTRIES ->
-                _countriesUiState.value = CountriesCardUiState.Loading
+                _countriesUiState.value = LocationsCardUiState.Loading
             LocationType.REGIONS ->
-                _regionsUiState.value = CountriesCardUiState.Loading
+                _regionsUiState.value = LocationsCardUiState.Loading
             LocationType.CITIES ->
-                _citiesUiState.value = CountriesCardUiState.Loading
+                _citiesUiState.value = LocationsCardUiState.Loading
         }
     }
 
@@ -308,7 +308,7 @@ class CountriesViewModel @Inject constructor(
             }
             is CountryViewsResult.Error -> {
                 _countriesUiState.value =
-                    CountriesCardUiState.Error(result.message)
+                    LocationsCardUiState.Error(result.message)
             }
         }
     }
@@ -354,7 +354,7 @@ class CountriesViewModel @Inject constructor(
             val maxViewsForBar =
                 cardCountries.firstOrNull()?.views ?: 0L
 
-            _countriesUiState.value = CountriesCardUiState.Loaded(
+            _countriesUiState.value = LocationsCardUiState.Loaded(
                 countries = cardCountries,
                 mapData = mapData,
                 minViews = cachedCountriesMinViews,
@@ -376,7 +376,7 @@ class CountriesViewModel @Inject constructor(
             }
             is RegionViewsResult.Error -> {
                 _regionsUiState.value =
-                    CountriesCardUiState.Error(result.message)
+                    LocationsCardUiState.Error(result.message)
             }
         }
     }
@@ -420,7 +420,7 @@ class CountriesViewModel @Inject constructor(
             val maxViewsForBar =
                 cardRegions.firstOrNull()?.views ?: 0L
 
-            _regionsUiState.value = CountriesCardUiState.Loaded(
+            _regionsUiState.value = LocationsCardUiState.Loaded(
                 countries = cardRegions.map {
                     it.toCountryItem()
                 },
@@ -444,7 +444,7 @@ class CountriesViewModel @Inject constructor(
             }
             is CityViewsResult.Error -> {
                 _citiesUiState.value =
-                    CountriesCardUiState.Error(result.message)
+                    LocationsCardUiState.Error(result.message)
             }
         }
     }
@@ -483,7 +483,7 @@ class CountriesViewModel @Inject constructor(
             val maxViewsForBar =
                 cardCities.firstOrNull()?.views ?: 0L
 
-            _citiesUiState.value = CountriesCardUiState.Loaded(
+            _citiesUiState.value = LocationsCardUiState.Loaded(
                 countries = cardCities.map {
                     it.toCountryItem()
                 },
@@ -594,7 +594,7 @@ class CountriesViewModel @Inject constructor(
         return value.replace("'", "\\'")
     }
 
-    private fun emptyLoadedState() = CountriesCardUiState.Loaded(
+    private fun emptyLoadedState() = LocationsCardUiState.Loaded(
         countries = emptyList(),
         mapData = "",
         minViews = 0,
@@ -606,7 +606,7 @@ class CountriesViewModel @Inject constructor(
     companion object
 }
 
-data class CountriesDetailData(
+data class LocationsDetailData(
     val countries: List<CountryItem>,
     val locationItems: List<LocationItem>?,
     val mapData: String,

@@ -70,9 +70,9 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.components.AddStatsCardBottomSheet
 import org.wordpress.android.ui.newstats.components.CardPosition
-import org.wordpress.android.ui.newstats.locations.CountriesCard
-import org.wordpress.android.ui.newstats.locations.CountriesDetailActivity
-import org.wordpress.android.ui.newstats.locations.CountriesViewModel
+import org.wordpress.android.ui.newstats.locations.LocationsCard
+import org.wordpress.android.ui.newstats.locations.LocationsDetailActivity
+import org.wordpress.android.ui.newstats.locations.LocationsViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCard
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
@@ -230,7 +230,7 @@ private fun TrafficTabContent(
     viewsStatsViewModel: ViewsStatsViewModel,
     todaysStatsViewModel: TodaysStatsViewModel = viewModel(),
     mostViewedViewModel: MostViewedViewModel = viewModel(),
-    countriesViewModel: CountriesViewModel = viewModel(),
+    locationsViewModel: LocationsViewModel = viewModel(),
     authorsViewModel: AuthorsViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel()
 ) {
@@ -239,18 +239,18 @@ private fun TrafficTabContent(
     val viewsStatsUiState by viewsStatsViewModel.uiState.collectAsState()
     val postsUiState by mostViewedViewModel.postsUiState.collectAsState()
     val referrersUiState by mostViewedViewModel.referrersUiState.collectAsState()
-    val countriesUiState by countriesViewModel.uiState.collectAsState()
-    val selectedLocationType by countriesViewModel.selectedLocationType.collectAsState()
+    val locationsUiState by locationsViewModel.uiState.collectAsState()
+    val selectedLocationType by locationsViewModel.selectedLocationType.collectAsState()
     val authorsUiState by authorsViewModel.uiState.collectAsState()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
     val isMostViewedRefreshing by mostViewedViewModel.isRefreshing.collectAsState()
-    val isCountriesRefreshing by countriesViewModel.isRefreshing.collectAsState()
+    val isLocationsRefreshing by locationsViewModel.isRefreshing.collectAsState()
     val isAuthorsRefreshing by authorsViewModel.isRefreshing.collectAsState()
     val isRefreshing = listOf(
         isTodaysStatsRefreshing, isViewsStatsRefreshing,
-        isMostViewedRefreshing, isCountriesRefreshing, isAuthorsRefreshing
+        isMostViewedRefreshing, isLocationsRefreshing, isAuthorsRefreshing
     ).any { it }
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -277,7 +277,7 @@ private fun TrafficTabContent(
                 mostViewedViewModel.onPeriodChanged(selectedPeriod)
             },
             onLocations = {
-                countriesViewModel.onPeriodChanged(selectedPeriod)
+                locationsViewModel.onPeriodChanged(selectedPeriod)
             },
             onAuthors = {
                 authorsViewModel.onPeriodChanged(selectedPeriod)
@@ -305,7 +305,7 @@ private fun TrafficTabContent(
             onTodaysStats = { todaysStatsViewModel.loadData() },
             onViewsStats = { viewsStatsViewModel.loadData() },
             onMostViewed = { mostViewedViewModel.loadData() },
-            onLocations = { countriesViewModel.loadData() },
+            onLocations = { locationsViewModel.loadData() },
             onAuthors = { authorsViewModel.loadData() }
         )
     }
@@ -344,7 +344,7 @@ private fun TrafficTabContent(
                 onTodaysStats = { todaysStatsViewModel.refresh() },
                 onViewsStats = { viewsStatsViewModel.refresh() },
                 onMostViewed = { mostViewedViewModel.refresh() },
-                onLocations = { countriesViewModel.refresh() },
+                onLocations = { locationsViewModel.refresh() },
                 onAuthors = { authorsViewModel.refresh() }
             )
         },
@@ -454,18 +454,18 @@ private fun TrafficTabContent(
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
                         onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
                     )
-                    StatsCardType.LOCATIONS -> CountriesCard(
-                        uiState = countriesUiState,
+                    StatsCardType.LOCATIONS -> LocationsCard(
+                        uiState = locationsUiState,
                         selectedLocationType = selectedLocationType,
-                        onLocationTypeChanged = countriesViewModel::onLocationTypeChanged,
+                        onLocationTypeChanged = locationsViewModel::onLocationTypeChanged,
                         onShowAllClick = {
-                            val detailData = countriesViewModel.getDetailData()
-                            CountriesDetailActivity.start(
+                            val detailData = locationsViewModel.getDetailData()
+                            LocationsDetailActivity.start(
                                 context = context,
                                 detailData = detailData
                             )
                         },
-                        onRetry = countriesViewModel::onRetry,
+                        onRetry = locationsViewModel::onRetry,
                         onRemoveCard = { newStatsViewModel.removeCard(cardType) },
                         cardPosition = cardPosition,
                         onMoveUp = { newStatsViewModel.moveCardUp(cardType) },

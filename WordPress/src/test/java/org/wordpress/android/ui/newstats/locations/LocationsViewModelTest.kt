@@ -27,7 +27,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
-class CountriesViewModelTest : BaseUnitTest() {
+class LocationsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
@@ -40,7 +40,7 @@ class CountriesViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var resourceProvider: ResourceProvider
 
-    private lateinit var viewModel: CountriesViewModel
+    private lateinit var viewModel: LocationsViewModel
 
     private val testSite = SiteModel().apply {
         id = 1
@@ -55,7 +55,7 @@ class CountriesViewModelTest : BaseUnitTest() {
     }
 
     private fun initViewModel() {
-        viewModel = CountriesViewModel(
+        viewModel = LocationsViewModel(
             selectedSiteRepository,
             accountStore,
             statsRepository,
@@ -75,8 +75,8 @@ class CountriesViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(CountriesCardUiState.Error::class.java)
-        assertThat((state as CountriesCardUiState.Error).message).isEqualTo(NO_SITE_SELECTED_ERROR)
+        assertThat(state).isInstanceOf(LocationsCardUiState.Error::class.java)
+        assertThat((state as LocationsCardUiState.Error).message).isEqualTo(NO_SITE_SELECTED_ERROR)
     }
 
     @Test
@@ -88,8 +88,8 @@ class CountriesViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(CountriesCardUiState.Error::class.java)
-        assertThat((state as CountriesCardUiState.Error).message).isEqualTo(ERROR_MESSAGE)
+        assertThat(state).isInstanceOf(LocationsCardUiState.Error::class.java)
+        assertThat((state as LocationsCardUiState.Error).message).isEqualTo(ERROR_MESSAGE)
     }
     // endregion
 
@@ -103,7 +103,7 @@ class CountriesViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(CountriesCardUiState.Loaded::class.java)
+        assertThat(state).isInstanceOf(LocationsCardUiState.Loaded::class.java)
     }
 
     @Test
@@ -114,7 +114,7 @@ class CountriesViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as CountriesCardUiState.Loaded
+        val state = viewModel.uiState.value as LocationsCardUiState.Loaded
         assertThat(state.countries).hasSize(2)
         assertThat(state.countries[0].countryCode).isEqualTo(TEST_COUNTRY_CODE_1)
         assertThat(state.countries[0].countryName).isEqualTo(TEST_COUNTRY_NAME_1)
@@ -131,7 +131,7 @@ class CountriesViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as CountriesCardUiState.Loaded
+        val state = viewModel.uiState.value as LocationsCardUiState.Loaded
         val expectedMapData = "['$TEST_COUNTRY_CODE_1',$TEST_COUNTRY_VIEWS_1]," +
             "['$TEST_COUNTRY_CODE_2',$TEST_COUNTRY_VIEWS_2]"
         assertThat(state.mapData).isEqualTo(expectedMapData)
@@ -145,7 +145,7 @@ class CountriesViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as CountriesCardUiState.Loaded
+        val state = viewModel.uiState.value as LocationsCardUiState.Loaded
         assertThat(state.minViews).isEqualTo(TEST_COUNTRY_VIEWS_2)
         assertThat(state.maxViews).isEqualTo(TEST_COUNTRY_VIEWS_1)
     }
@@ -168,7 +168,7 @@ class CountriesViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as CountriesCardUiState.Loaded
+        val state = viewModel.uiState.value as LocationsCardUiState.Loaded
         assertThat(state.minViews).isEqualTo(0L)
         assertThat(state.maxViews).isEqualTo(100L)
     }
@@ -198,7 +198,7 @@ class CountriesViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as CountriesCardUiState.Loaded
+        val state = viewModel.uiState.value as LocationsCardUiState.Loaded
         assertThat(state.countries).hasSize(10)
         assertThat(state.hasMoreItems).isTrue()
     }
@@ -211,7 +211,7 @@ class CountriesViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as CountriesCardUiState.Loaded
+        val state = viewModel.uiState.value as LocationsCardUiState.Loaded
         assertThat(state.hasMoreItems).isFalse()
     }
 
@@ -230,7 +230,7 @@ class CountriesViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as CountriesCardUiState.Loaded
+        val state = viewModel.uiState.value as LocationsCardUiState.Loaded
         assertThat(state.countries).isEmpty()
         assertThat(state.mapData).isEmpty()
         assertThat(state.hasMoreItems).isFalse()
@@ -282,7 +282,7 @@ class CountriesViewModelTest : BaseUnitTest() {
 
         verify(statsRepository, times(1)).fetchCountryViews(any(), any())
         assertThat(viewModel.uiState.value)
-            .isInstanceOf(CountriesCardUiState.Loaded::class.java)
+            .isInstanceOf(LocationsCardUiState.Loaded::class.java)
     }
 
     @Test
@@ -303,7 +303,7 @@ class CountriesViewModelTest : BaseUnitTest() {
 
         verify(statsRepository, times(2)).fetchCountryViews(any(), any())
         assertThat(viewModel.uiState.value)
-            .isInstanceOf(CountriesCardUiState.Loaded::class.java)
+            .isInstanceOf(LocationsCardUiState.Loaded::class.java)
     }
     // endregion
 
@@ -472,7 +472,7 @@ class CountriesViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as CountriesCardUiState.Loaded
+        val state = viewModel.uiState.value as LocationsCardUiState.Loaded
         assertThat(state.countries[0].change).isInstanceOf(CountryViewChange.Positive::class.java)
         val change = state.countries[0].change as CountryViewChange.Positive
         assertThat(change.value).isEqualTo(50)
@@ -504,7 +504,7 @@ class CountriesViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as CountriesCardUiState.Loaded
+        val state = viewModel.uiState.value as LocationsCardUiState.Loaded
         assertThat(state.countries[0].change).isInstanceOf(CountryViewChange.Negative::class.java)
         val change = state.countries[0].change as CountryViewChange.Negative
         assertThat(change.value).isEqualTo(50)
@@ -536,7 +536,7 @@ class CountriesViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as CountriesCardUiState.Loaded
+        val state = viewModel.uiState.value as LocationsCardUiState.Loaded
         assertThat(state.countries[0].change).isEqualTo(CountryViewChange.NoChange)
     }
     // endregion
@@ -557,7 +557,7 @@ class CountriesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             val state =
-                viewModel.uiState.value as CountriesCardUiState.Loaded
+                viewModel.uiState.value as LocationsCardUiState.Loaded
             // Two regions in US (200+100=300), one in GB (150)
             assertThat(state.mapData).contains("['US',300]")
             assertThat(state.mapData).contains("['GB',150]")
@@ -581,7 +581,7 @@ class CountriesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             val state =
-                viewModel.uiState.value as CountriesCardUiState.Loaded
+                viewModel.uiState.value as LocationsCardUiState.Loaded
             // Aggregated: US=300, GB=150 -> min=150, max=300
             assertThat(state.minViews).isEqualTo(150L)
             assertThat(state.maxViews).isEqualTo(300L)
@@ -602,7 +602,7 @@ class CountriesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             val state =
-                viewModel.uiState.value as CountriesCardUiState.Loaded
+                viewModel.uiState.value as LocationsCardUiState.Loaded
             assertThat(state.countries).hasSize(3)
             assertThat(state.countries[0].countryName)
                 .isEqualTo("California")
@@ -628,8 +628,8 @@ class CountriesViewModelTest : BaseUnitTest() {
 
             val state = viewModel.uiState.value
             assertThat(state)
-                .isInstanceOf(CountriesCardUiState.Error::class.java)
-            assertThat((state as CountriesCardUiState.Error).message)
+                .isInstanceOf(LocationsCardUiState.Error::class.java)
+            assertThat((state as LocationsCardUiState.Error).message)
                 .isEqualTo(ERROR_MESSAGE)
         }
     // endregion
@@ -650,7 +650,7 @@ class CountriesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             val state =
-                viewModel.uiState.value as CountriesCardUiState.Loaded
+                viewModel.uiState.value as LocationsCardUiState.Loaded
             // Should contain lat/long/name/views markers
             assertThat(state.mapData)
                 .contains("40.71,-74.00,'New York',120")
@@ -675,7 +675,7 @@ class CountriesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             val state =
-                viewModel.uiState.value as CountriesCardUiState.Loaded
+                viewModel.uiState.value as LocationsCardUiState.Loaded
             // Per-city: min=80, max=120
             assertThat(state.minViews).isEqualTo(80L)
             assertThat(state.maxViews).isEqualTo(120L)
@@ -696,7 +696,7 @@ class CountriesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             val state =
-                viewModel.uiState.value as CountriesCardUiState.Loaded
+                viewModel.uiState.value as LocationsCardUiState.Loaded
             assertThat(state.countries).hasSize(3)
             assertThat(state.countries[0].countryName)
                 .isEqualTo("New York")
@@ -722,8 +722,8 @@ class CountriesViewModelTest : BaseUnitTest() {
 
             val state = viewModel.uiState.value
             assertThat(state)
-                .isInstanceOf(CountriesCardUiState.Error::class.java)
-            assertThat((state as CountriesCardUiState.Error).message)
+                .isInstanceOf(LocationsCardUiState.Error::class.java)
+            assertThat((state as LocationsCardUiState.Error).message)
                 .isEqualTo(ERROR_MESSAGE)
         }
 
@@ -758,7 +758,7 @@ class CountriesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             val state =
-                viewModel.uiState.value as CountriesCardUiState.Loaded
+                viewModel.uiState.value as LocationsCardUiState.Loaded
             // min == max -> minViews = 0
             assertThat(state.minViews).isEqualTo(0L)
             assertThat(state.maxViews).isEqualTo(100L)

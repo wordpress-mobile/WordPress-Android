@@ -49,12 +49,12 @@ private const val EXTRA_LOCATION_TYPE = "extra_location_type"
 private const val MAP_ASPECT_RATIO = 8f / 5f
 
 @AndroidEntryPoint
-class CountriesDetailActivity : BaseAppCompatActivity() {
+class LocationsDetailActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val countries = intent.extras
-            ?.getParcelableArrayListCompat<CountriesDetailItem>(
+            ?.getParcelableArrayListCompat<LocationsDetailItem>(
                 EXTRA_COUNTRIES
             ) ?: arrayListOf()
         val mapData = intent.getStringExtra(EXTRA_MAP_DATA) ?: ""
@@ -76,7 +76,7 @@ class CountriesDetailActivity : BaseAppCompatActivity() {
 
         setContent {
             AppThemeM3 {
-                CountriesDetailScreen(
+                LocationsDetailScreen(
                     countries = countries,
                     mapData = mapData,
                     minViews = minViews,
@@ -97,12 +97,12 @@ class CountriesDetailActivity : BaseAppCompatActivity() {
     companion object {
         fun start(
             context: Context,
-            detailData: CountriesDetailData
+            detailData: LocationsDetailData
         ) {
             val detailItems = when (detailData.locationType) {
                 LocationType.COUNTRIES -> {
                     detailData.countries.map { country ->
-                        CountriesDetailItem(
+                        LocationsDetailItem(
                             countryCode = country.countryCode,
                             countryName = country.countryName,
                             views = country.views,
@@ -113,7 +113,7 @@ class CountriesDetailActivity : BaseAppCompatActivity() {
                 }
                 else -> {
                     detailData.locationItems.orEmpty().map { item ->
-                        CountriesDetailItem(
+                        LocationsDetailItem(
                             countryCode = item.id,
                             countryName = item.name,
                             views = item.views,
@@ -126,7 +126,7 @@ class CountriesDetailActivity : BaseAppCompatActivity() {
                 }
             }
             val intent = Intent(
-                context, CountriesDetailActivity::class.java
+                context, LocationsDetailActivity::class.java
             ).apply {
                 putExtra(
                     EXTRA_COUNTRIES, ArrayList(detailItems)
@@ -155,7 +155,7 @@ class CountriesDetailActivity : BaseAppCompatActivity() {
 }
 
 @Parcelize
-data class CountriesDetailItem(
+data class LocationsDetailItem(
     val countryCode: String,
     val countryName: String,
     val views: Long,
@@ -167,8 +167,8 @@ data class CountriesDetailItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CountriesDetailScreen(
-    countries: List<CountriesDetailItem>,
+private fun LocationsDetailScreen(
+    countries: List<LocationsDetailItem>,
     mapData: String,
     minViews: Long,
     maxViews: Long,
@@ -271,7 +271,7 @@ private fun CountriesDetailScreen(
 @Composable
 private fun DetailCountryRow(
     position: Int,
-    country: CountriesDetailItem,
+    country: LocationsDetailItem,
     percentage: Float
 ) {
     StatsDetailListItem(
@@ -291,27 +291,27 @@ private fun DetailCountryRow(
 
 @Preview(showBackground = true)
 @Composable
-private fun CountriesDetailScreenPreview() {
+private fun LocationsDetailScreenPreview() {
     AppThemeM3 {
-        CountriesDetailScreen(
+        LocationsDetailScreen(
             countries = listOf(
-                CountriesDetailItem(
+                LocationsDetailItem(
                     "US", "United States", 3464, null,
                     CountryViewChange.Positive(124, 3.7)
                 ),
-                CountriesDetailItem(
+                LocationsDetailItem(
                     "ES", "Spain", 556, null,
                     CountryViewChange.Positive(45, 8.8)
                 ),
-                CountriesDetailItem(
+                LocationsDetailItem(
                     "GB", "United Kingdom", 522, null,
                     CountryViewChange.Negative(12, 2.2)
                 ),
-                CountriesDetailItem(
+                LocationsDetailItem(
                     "CA", "Canada", 485, null,
                     CountryViewChange.Positive(33, 7.3)
                 ),
-                CountriesDetailItem(
+                LocationsDetailItem(
                     "DE", "Germany", 412, null,
                     CountryViewChange.NoChange
                 )

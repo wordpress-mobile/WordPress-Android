@@ -9,8 +9,8 @@ import org.wordpress.android.ui.newstats.components.StatsViewChange
 /**
  * UI State for the Countries stats card.
  */
-sealed class CountriesCardUiState {
-    data object Loading : CountriesCardUiState()
+sealed class LocationsCardUiState {
+    data object Loading : LocationsCardUiState()
 
     data class Loaded(
         val countries: List<CountryItem>,
@@ -19,9 +19,9 @@ sealed class CountriesCardUiState {
         val maxViews: Long,
         val maxViewsForBar: Long,
         val hasMoreItems: Boolean
-    ) : CountriesCardUiState()
+    ) : LocationsCardUiState()
 
-    data class Error(val message: String) : CountriesCardUiState()
+    data class Error(val message: String) : LocationsCardUiState()
 }
 
 /**
