@@ -326,7 +326,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when same period is re-selected after partial error, then data is re-fetched`() =
+    fun `when same period is re-selected after partial error, only failed source is re-fetched`() =
         test {
             stubFailedToLoadError()
             // Posts succeeds, referrers fails
@@ -362,11 +362,12 @@ class MostViewedViewModelTest : BaseUnitTest() {
             viewModel.onPeriodChanged(StatsPeriod.Last7Days)
             advanceUntilIdle()
 
-            // Should re-fetch because one source was in error
-            verify(statsRepository, times(2)).fetchMostViewed(
+            // Posts already loaded for this period — should NOT re-fetch
+            verify(statsRepository, times(1)).fetchMostViewed(
                 any(), any(),
                 eq(MostViewedDataSource.POSTS_AND_PAGES)
             )
+            // Referrers failed — should re-fetch
             verify(statsRepository, times(2)).fetchMostViewed(
                 any(), any(),
                 eq(MostViewedDataSource.REFERRERS)
@@ -385,12 +386,14 @@ class MostViewedViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        assertThat(viewModel.isRefreshing.value).isFalse()
+        assertThat(viewModel.isPostsRefreshing.value).isFalse()
+        assertThat(viewModel.isReferrersRefreshing.value).isFalse()
 
         viewModel.refresh()
         advanceUntilIdle()
 
-        assertThat(viewModel.isRefreshing.value).isFalse()
+        assertThat(viewModel.isPostsRefreshing.value).isFalse()
+        assertThat(viewModel.isReferrersRefreshing.value).isFalse()
     }
 
     @Test
