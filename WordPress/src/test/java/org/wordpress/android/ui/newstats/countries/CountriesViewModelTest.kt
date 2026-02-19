@@ -56,6 +56,7 @@ class CountriesViewModelTest : BaseUnitTest() {
             statsRepository,
             resourceProvider
         )
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
     }
 
     // region Error states
@@ -260,6 +261,44 @@ class CountriesViewModelTest : BaseUnitTest() {
 
         // Should only be called once during init
         verify(statsRepository, times(1)).fetchCountryViews(any(), any())
+    }
+
+    @Test
+    fun `when same period is re-selected after success, then fetch is skipped`() = test {
+        whenever(statsRepository.fetchCountryViews(any(), any()))
+            .thenReturn(createSuccessResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // Simulate card removal and re-addition with the same period
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        advanceUntilIdle()
+
+        verify(statsRepository, times(1)).fetchCountryViews(any(), any())
+        assertThat(viewModel.uiState.value)
+            .isInstanceOf(CountriesCardUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `when same period is re-selected after error, then data is re-fetched`() = test {
+        whenever(statsRepository.fetchCountryViews(any(), any()))
+            .thenReturn(CountryViewsResult.Error(ERROR_MESSAGE))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // loadedPeriod should not be set after error, so re-selecting
+        // the same period should trigger a new fetch
+        whenever(statsRepository.fetchCountryViews(any(), any()))
+            .thenReturn(createSuccessResult())
+
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        advanceUntilIdle()
+
+        verify(statsRepository, times(2)).fetchCountryViews(any(), any())
+        assertThat(viewModel.uiState.value)
+            .isInstanceOf(CountriesCardUiState.Loaded::class.java)
     }
     // endregion
 

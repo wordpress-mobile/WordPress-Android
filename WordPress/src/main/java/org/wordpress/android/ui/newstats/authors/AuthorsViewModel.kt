@@ -37,29 +37,33 @@ class AuthorsViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
+    private var loadingPeriod: StatsPeriod? = null
+    private var loadedPeriod: StatsPeriod? = null
 
     private var allAuthors: List<AuthorUiItem> = emptyList()
     private var cachedTotalViews: Long = 0L
     private var cachedTotalViewsChange: Long = 0L
     private var cachedTotalViewsChangePercent: Double = 0.0
 
-    init {
-        loadData()
-    }
-
     fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
+            loadingPeriod = null
             _uiState.value = AuthorsCardUiState.Error(
-                resourceProvider.getString(R.string.stats_todays_stats_no_site_selected)
+                resourceProvider.getString(
+                    R.string.stats_todays_stats_no_site_selected
+                )
             )
             return
         }
 
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
+            loadingPeriod = null
             _uiState.value = AuthorsCardUiState.Error(
-                resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
+                resourceProvider.getString(
+                    R.string.stats_todays_stats_failed_to_load
+                )
             )
             return
         }
@@ -68,7 +72,11 @@ class AuthorsViewModel @Inject constructor(
         _uiState.value = AuthorsCardUiState.Loading
 
         viewModelScope.launch {
-            fetchTopAuthors(site)
+            try {
+                fetchTopAuthors(site)
+            } finally {
+                loadingPeriod = null
+            }
         }
     }
 
@@ -90,10 +98,10 @@ class AuthorsViewModel @Inject constructor(
     }
 
     fun onPeriodChanged(period: StatsPeriod) {
-        if (currentPeriod != period) {
-            currentPeriod = period
-            loadData()
-        }
+        if (loadedPeriod == period || loadingPeriod == period) return
+        loadingPeriod = period
+        currentPeriod = period
+        loadData()
     }
 
     fun getDetailData(): AuthorsDetailData {
@@ -111,6 +119,7 @@ class AuthorsViewModel @Inject constructor(
 
         when (val result = statsRepository.fetchTopAuthors(siteId, currentPeriod)) {
             is TopAuthorsResult.Success -> {
+                loadedPeriod = currentPeriod
                 cachedTotalViews = result.totalViews
                 cachedTotalViewsChange = result.totalViewsChange
                 cachedTotalViewsChangePercent = result.totalViewsChangePercent

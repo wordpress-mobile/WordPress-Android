@@ -37,7 +37,12 @@ class TodaysStatsViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
-    init {
+    private var isLoading = false
+    private var isLoadedSuccessfully = false
+
+    fun loadDataIfNeeded() {
+        if (isLoadedSuccessfully || isLoading) return
+        isLoading = true
         loadData()
     }
 
@@ -53,8 +58,11 @@ class TodaysStatsViewModel @Inject constructor(
     fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
+            isLoading = false
             _uiState.value = TodaysStatsCardUiState.Error(
-                message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected),
+                message = resourceProvider.getString(
+                    R.string.stats_todays_stats_no_site_selected
+                ),
                 onRetry = ::loadData
             )
             return
@@ -62,8 +70,11 @@ class TodaysStatsViewModel @Inject constructor(
 
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
+            isLoading = false
             _uiState.value = TodaysStatsCardUiState.Error(
-                message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
+                message = resourceProvider.getString(
+                    R.string.stats_todays_stats_failed_to_load
+                ),
                 onRetry = ::loadData
             )
             return
@@ -73,7 +84,11 @@ class TodaysStatsViewModel @Inject constructor(
         _uiState.value = TodaysStatsCardUiState.Loading
 
         viewModelScope.launch {
-            loadDataInternal(site)
+            try {
+                loadDataInternal(site)
+            } finally {
+                isLoading = false
+            }
         }
     }
 
@@ -88,6 +103,7 @@ class TodaysStatsViewModel @Inject constructor(
             }
 
             if (todayStats != null) {
+                isLoadedSuccessfully = true
                 _uiState.value = TodaysStatsCardUiState.Loaded(
                     views = todayStats.views,
                     visitors = todayStats.visitors,

@@ -65,14 +65,20 @@ class ViewsStatsViewModel @Inject constructor(
 
     private var currentChartType: ChartType = ChartType.LINE
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
+    private var loadingPeriod: StatsPeriod? = null
+    private var loadedPeriod: StatsPeriod? = null
+
+    private val _isPeriodInitialized = MutableStateFlow(false)
+    val isPeriodInitialized: StateFlow<Boolean> = _isPeriodInitialized.asStateFlow()
 
     init {
         initializeWithPersistedPeriod()
     }
 
     /**
-     * Initializes the ViewModel by restoring the period from persisted preferences asynchronously,
-     * then loading data. This avoids blocking the main thread with disk I/O.
+     * Initializes the ViewModel by restoring the period from persisted preferences asynchronously.
+     * Data loading is deferred to [loadDataIfNeeded] which is called from the composable
+     * only when the VIEWS_STATS card is visible.
      */
     private fun initializeWithPersistedPeriod() {
         viewModelScope.launch {
@@ -85,8 +91,20 @@ class ViewsStatsViewModel @Inject constructor(
                     _selectedPeriod.value = restoredPeriod
                 }
             }
-            loadData()
+            _isPeriodInitialized.value = true
         }
+    }
+
+    /**
+     * Loads data only if it hasn't been loaded (or isn't currently loading)
+     * for the current period. Called from the composable when the
+     * VIEWS_STATS card is visible.
+     */
+    fun loadDataIfNeeded() {
+        val targetPeriod = currentPeriod
+        if (loadedPeriod == targetPeriod || loadingPeriod == targetPeriod) return
+        loadingPeriod = targetPeriod
+        loadData()
     }
 
     fun onPeriodChanged(period: StatsPeriod) {
@@ -94,7 +112,6 @@ class ViewsStatsViewModel @Inject constructor(
         currentPeriod = period
         _selectedPeriod.value = period
         savePeriod(period)
-        loadData()
     }
 
     private fun savePeriod(period: StatsPeriod) {
@@ -214,16 +231,22 @@ class ViewsStatsViewModel @Inject constructor(
     fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
+            loadingPeriod = null
             _uiState.value = ViewsStatsCardUiState.Error(
-                message = resourceProvider.getString(R.string.stats_todays_stats_no_site_selected)
+                message = resourceProvider.getString(
+                    R.string.stats_todays_stats_no_site_selected
+                )
             )
             return
         }
 
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
+            loadingPeriod = null
             _uiState.value = ViewsStatsCardUiState.Error(
-                message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
+                message = resourceProvider.getString(
+                    R.string.stats_todays_stats_failed_to_load
+                )
             )
             return
         }
@@ -239,22 +262,32 @@ class ViewsStatsViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun loadDataInternal(site: SiteModel) {
         try {
-            val result = statsRepository.fetchStatsForPeriod(site.siteId, currentPeriod)
-
+            val result = statsRepository.fetchStatsForPeriod(
+                site.siteId,
+                currentPeriod
+            )
             when (result) {
                 is PeriodStatsResult.Success -> {
+                    loadedPeriod = currentPeriod
                     _uiState.value = buildLoadedState(result)
                 }
                 is PeriodStatsResult.Error -> {
                     _uiState.value = ViewsStatsCardUiState.Error(
-                        message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
+                        message = resourceProvider.getString(
+                            R.string.stats_todays_stats_failed_to_load
+                        )
                     )
                 }
             }
         } catch (e: Exception) {
             _uiState.value = ViewsStatsCardUiState.Error(
-                message = e.message ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error)
+                message = e.message
+                    ?: resourceProvider.getString(
+                        R.string.stats_todays_stats_unknown_error
+                    )
             )
+        } finally {
+            loadingPeriod = null
         }
     }
 
