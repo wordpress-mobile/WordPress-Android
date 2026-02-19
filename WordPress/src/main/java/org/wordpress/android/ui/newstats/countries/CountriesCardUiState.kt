@@ -2,6 +2,7 @@ package org.wordpress.android.ui.newstats.countries
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import org.wordpress.android.ui.newstats.components.StatsViewChange
 
 /**
  * UI State for the Countries stats card.
@@ -48,4 +49,13 @@ sealed class CountryViewChange : Parcelable {
     data class Negative(val value: Long, val percentage: Double) : CountryViewChange()
     @Parcelize
     data object NoChange : CountryViewChange()
+}
+
+/**
+ * Converts [CountryViewChange] to [StatsViewChange] for use with shared components.
+ */
+fun CountryViewChange.toStatsViewChange(): StatsViewChange = when (this) {
+    is CountryViewChange.Positive -> StatsViewChange.Positive(value, percentage)
+    is CountryViewChange.Negative -> StatsViewChange.Negative(value, percentage)
+    is CountryViewChange.NoChange -> StatsViewChange.NoChange
 }

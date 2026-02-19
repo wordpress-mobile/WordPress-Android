@@ -67,6 +67,20 @@ interface StatsDataSource {
         dateRange: StatsDateRange,
         max: Int = 10
     ): CountryViewsDataResult
+
+    /**
+     * Fetches top authors stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of authors to return
+     * @return Result containing the top authors data or an error
+     */
+    suspend fun fetchTopAuthors(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): TopAuthorsDataResult
 }
 
 /**
@@ -212,4 +226,29 @@ data class CountryViewItem(
     val countryName: String,
     val views: Long,
     val flagIconUrl: String?
+)
+
+/**
+ * Result wrapper for top authors fetch operation.
+ */
+sealed class TopAuthorsDataResult {
+    data class Success(val data: TopAuthorsData) : TopAuthorsDataResult()
+    data class Error(val message: String) : TopAuthorsDataResult()
+}
+
+/**
+ * Top authors data from the API.
+ */
+data class TopAuthorsData(
+    val authors: List<TopAuthorItem>,
+    val totalViews: Long
+)
+
+/**
+ * A single top author item from the API.
+ */
+data class TopAuthorItem(
+    val name: String,
+    val avatarUrl: String?,
+    val views: Long
 )

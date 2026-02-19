@@ -1,17 +1,19 @@
-package org.wordpress.android.ui.newstats.countries
+package org.wordpress.android.ui.newstats.authors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,15 +33,15 @@ import org.wordpress.android.ui.newstats.components.StatsCardErrorContent
 import org.wordpress.android.ui.newstats.components.StatsCardHeader
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsListItem
+import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 
 private val CardPadding = 16.dp
-private const val MAP_ASPECT_RATIO = 8f / 5f
 private const val LOADING_ITEM_COUNT = 4
 
 @Composable
-fun CountriesCard(
-    uiState: CountriesCardUiState,
+fun AuthorsCard(
+    uiState: AuthorsCardUiState,
     onShowAllClick: () -> Unit,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
@@ -52,13 +54,13 @@ fun CountriesCard(
 ) {
     StatsCardContainer(modifier = modifier) {
         when (uiState) {
-            is CountriesCardUiState.Loading -> LoadingContent()
-            is CountriesCardUiState.Loaded -> LoadedContent(
+            is AuthorsCardUiState.Loading -> LoadingContent()
+            is AuthorsCardUiState.Loaded -> LoadedContent(
                 uiState, onShowAllClick, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
             )
-            is CountriesCardUiState.Error -> StatsCardErrorContent(
-                titleResId = R.string.stats_countries_title,
+            is AuthorsCardUiState.Error -> StatsCardErrorContent(
+                titleResId = R.string.stats_authors_title,
                 errorMessage = uiState.message,
                 onRetry = onRetry,
                 onRemoveCard = onRemoveCard,
@@ -83,23 +85,6 @@ private fun LoadingContent() {
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Map placeholder
-        ShimmerBox(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(MAP_ASPECT_RATIO)
-                .clip(RoundedCornerShape(8.dp))
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Legend placeholder
-        ShimmerBox(
-            modifier = Modifier
-                .width(150.dp)
-                .height(16.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
         // List items placeholders
         repeat(LOADING_ITEM_COUNT) {
             Row(
@@ -109,7 +94,9 @@ private fun LoadingContent() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 ShimmerBox(
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 ShimmerBox(
@@ -130,7 +117,7 @@ private fun LoadingContent() {
 
 @Composable
 private fun LoadedContent(
-    state: CountriesCardUiState.Loaded,
+    state: AuthorsCardUiState.Loaded,
     onShowAllClick: () -> Unit,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
@@ -141,7 +128,7 @@ private fun LoadedContent(
 ) {
     Column(modifier = Modifier.padding(CardPadding)) {
         StatsCardHeader(
-            titleResId = R.string.stats_countries_title,
+            titleResId = R.string.stats_authors_title,
             onRemoveCard = onRemoveCard,
             cardPosition = cardPosition,
             onMoveUp = onMoveUp,
@@ -151,35 +138,19 @@ private fun LoadedContent(
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (state.countries.isEmpty()) {
+        if (state.authors.isEmpty()) {
             StatsCardEmptyContent()
         } else {
-            // Map
-            CountryMap(
-                mapData = state.mapData,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(MAP_ASPECT_RATIO)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Legend
-            StatsMapLegend(
-                minViews = state.minViews,
-                maxViews = state.maxViews
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            StatsListHeader(leftHeaderResId = R.string.stats_countries_location_header)
+            StatsListHeader(leftHeaderResId = R.string.stats_authors_author_header)
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Country list (capped at 10 items)
-            state.countries.forEachIndexed { index, country ->
+            // Author list (capped at 10 items)
+            state.authors.forEachIndexed { index, author ->
                 val percentage = if (state.maxViewsForBar > 0) {
-                    country.views.toFloat() / state.maxViewsForBar.toFloat()
+                    author.views.toFloat() / state.maxViewsForBar.toFloat()
                 } else 0f
-                CountryRow(country = country, percentage = percentage)
-                if (index < state.countries.lastIndex) {
+                AuthorRow(author = author, percentage = percentage)
+                if (index < state.authors.lastIndex) {
                     Spacer(modifier = Modifier.height(4.dp))
                 }
             }
@@ -192,59 +163,58 @@ private fun LoadedContent(
 }
 
 @Composable
-private fun CountryMap(
-    mapData: String,
-    modifier: Modifier = Modifier
-) {
-    StatsGeoChartWebView(
-        mapData = mapData,
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun CountryRow(
-    country: CountryItem,
+private fun AuthorRow(
+    author: AuthorUiItem,
     percentage: Float
 ) {
     StatsListItem(
         percentage = percentage,
-        name = country.countryName,
-        views = country.views,
-        change = country.change.toStatsViewChange(),
-        icon = { CountryFlag(flagIconUrl = country.flagIconUrl, countryName = country.countryName) }
+        name = author.name,
+        views = author.views,
+        change = author.change,
+        icon = { AuthorAvatar(avatarUrl = author.avatarUrl, name = author.name) }
     )
 }
 
 @Composable
-fun CountryFlag(
-    flagIconUrl: String?,
-    countryName: String,
+fun AuthorAvatar(
+    avatarUrl: String?,
+    name: String,
     modifier: Modifier = Modifier,
-    size: Dp = 24.dp
+    size: Dp = 40.dp
 ) {
-    if (flagIconUrl != null) {
+    if (avatarUrl != null) {
         AsyncImage(
-            model = flagIconUrl,
-            contentDescription = countryName,
-            modifier = modifier.size(size)
+            model = avatarUrl,
+            contentDescription = name,
+            modifier = modifier
+                .size(size)
+                .clip(CircleShape)
         )
     } else {
         Box(
             modifier = modifier
                 .size(size)
-                .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(4.dp))
-        )
+                .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Default.Person,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(size * 0.6f)
+            )
+        }
     }
 }
 
 // Previews
 @Preview(showBackground = true)
 @Composable
-private fun CountriesCardLoadingPreview() {
+private fun AuthorsCardLoadingPreview() {
     AppThemeM3 {
-        CountriesCard(
-            uiState = CountriesCardUiState.Loading,
+        AuthorsCard(
+            uiState = AuthorsCardUiState.Loading,
             onShowAllClick = {},
             onRetry = {},
             onRemoveCard = {}
@@ -254,19 +224,16 @@ private fun CountriesCardLoadingPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun CountriesCardLoadedPreview() {
+private fun AuthorsCardLoadedPreview() {
     AppThemeM3 {
-        CountriesCard(
-            uiState = CountriesCardUiState.Loaded(
-                countries = listOf(
-                    CountryItem("US", "United States", 3464, null, CountryViewChange.Positive(124, 3.7)),
-                    CountryItem("ES", "Spain", 556, null, CountryViewChange.Positive(45, 8.8)),
-                    CountryItem("GB", "United Kingdom", 522, null, CountryViewChange.Negative(12, 2.2)),
-                    CountryItem("CA", "Canada", 485, null, CountryViewChange.NoChange)
+        AuthorsCard(
+            uiState = AuthorsCardUiState.Loaded(
+                authors = listOf(
+                    AuthorUiItem("John Doe", null, 3464, StatsViewChange.Positive(124, 3.7)),
+                    AuthorUiItem("Jane Smith", null, 556, StatsViewChange.Positive(45, 8.8)),
+                    AuthorUiItem("Bob Johnson", null, 522, StatsViewChange.Negative(12, 2.2)),
+                    AuthorUiItem("Alice Brown", null, 485, StatsViewChange.NoChange)
                 ),
-                mapData = "['US',3464],['ES',556],['GB',522],['CA',485]",
-                minViews = 485,
-                maxViews = 3464,
                 maxViewsForBar = 3464,
                 hasMoreItems = true
             ),
@@ -279,10 +246,10 @@ private fun CountriesCardLoadedPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun CountriesCardErrorPreview() {
+private fun AuthorsCardErrorPreview() {
     AppThemeM3 {
-        CountriesCard(
-            uiState = CountriesCardUiState.Error("Failed to load country data"),
+        AuthorsCard(
+            uiState = AuthorsCardUiState.Error("Failed to load author data"),
             onShowAllClick = {},
             onRetry = {},
             onRemoveCard = {}

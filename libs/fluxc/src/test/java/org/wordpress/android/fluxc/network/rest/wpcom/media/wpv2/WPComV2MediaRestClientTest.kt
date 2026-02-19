@@ -85,6 +85,45 @@ class WPComV2MediaRestClientTest {
     }
 
     @Test
+    fun `upload preserves local metadata from original media model`() {
+        createFileThenRunTest {
+            whenever(okHttpClient.newCall(any())).thenReturn(mockedCall)
+            whenever(mockedCall.enqueue(any())).then {
+                (it.arguments.first() as Callback).onResponse(
+                        mockedCall,
+                        mock {
+                            on { body } doReturn UnitTestUtils.getStringFromResourceFile(
+                                    this::class.java,
+                                    "media/media-upload-wp-api-success.json"
+                            ).toResponseBody("application/json".toMediaType())
+                            on { isSuccessful } doReturn true
+                        }
+                )
+                countDownLatch.countDown()
+            }
+
+            val media = MediaTestUtils.generateMediaFromPath(0, 0L, "./image.jpg").apply {
+                localPostId = 42
+                markedLocallyAsFeatured = true
+            }
+
+            countDownLatch = CountDownLatch(1)
+            restClient.uploadMedia(SiteModel(), media)
+
+            countDownLatch.await()
+
+            verify(dispatcher).dispatch(argThat {
+                val payload = payload as ProgressPayload
+                type == UPLOADED_MEDIA
+                        && payload.completed
+                        && payload.media?.id == media.id
+                        && payload.media?.localPostId == 42
+                        && payload.media?.markedLocallyAsFeatured == true
+            })
+        }
+    }
+
+    @Test
     fun `emit failure action when upload fails`() {
         createFileThenRunTest {
             whenever(okHttpClient.newCall(any())).thenReturn(mockedCall)
