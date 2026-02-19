@@ -303,62 +303,7 @@ class CountriesViewModel @Inject constructor(
             siteId, currentPeriod
         )) {
             is CountryViewsResult.Success -> {
-                loadedPeriod = currentPeriod
-                countriesLoadedPeriod = currentPeriod
-                cachedCountriesTotalViews = result.totalViews
-                cachedCountriesTotalViewsChange = result.totalViewsChange
-                cachedCountriesTotalViewsChangePercent =
-                    result.totalViewsChangePercent
-
-                if (result.countries.isEmpty()) {
-                    allCountries = emptyList()
-                    cachedCountriesMapData = ""
-                    cachedCountriesMinViews = 0L
-                    cachedCountriesMaxViews = 0L
-                    _countriesUiState.value = CountriesCardUiState.Loaded(
-                        countries = emptyList(),
-                        mapData = "",
-                        minViews = 0,
-                        maxViews = 0,
-                        maxViewsForBar = 0,
-                        hasMoreItems = false
-                    )
-                } else {
-                    val countries = result.countries.map { country ->
-                        CountryItem(
-                            countryCode = country.countryCode,
-                            countryName = country.countryName,
-                            views = country.views,
-                            flagIconUrl = country.flagIconUrl,
-                            change = country.toCountryViewChange()
-                        )
-                    }
-
-                    val mapData = buildCountriesMapData(countries)
-                    val minViews =
-                        countries.minOfOrNull { it.views } ?: 0L
-                    val maxViews =
-                        countries.maxOfOrNull { it.views } ?: 0L
-
-                    allCountries = countries
-                    cachedCountriesMapData = mapData
-                    cachedCountriesMinViews =
-                        if (minViews == maxViews) 0L else minViews
-                    cachedCountriesMaxViews = maxViews
-
-                    val cardCountries = countries.take(CARD_MAX_ITEMS)
-                    val maxViewsForBar =
-                        cardCountries.firstOrNull()?.views ?: 0L
-
-                    _countriesUiState.value = CountriesCardUiState.Loaded(
-                        countries = cardCountries,
-                        mapData = mapData,
-                        minViews = cachedCountriesMinViews,
-                        maxViews = cachedCountriesMaxViews,
-                        maxViewsForBar = maxViewsForBar,
-                        hasMoreItems = countries.size > CARD_MAX_ITEMS
-                    )
-                }
+                handleCountryViewsSuccess(result)
             }
             is CountryViewsResult.Error -> {
                 _countriesUiState.value =
@@ -367,7 +312,58 @@ class CountriesViewModel @Inject constructor(
         }
     }
 
-    @Suppress("CyclomaticComplexity")
+    private fun handleCountryViewsSuccess(
+        result: CountryViewsResult.Success
+    ) {
+        loadedPeriod = currentPeriod
+        countriesLoadedPeriod = currentPeriod
+        cachedCountriesTotalViews = result.totalViews
+        cachedCountriesTotalViewsChange = result.totalViewsChange
+        cachedCountriesTotalViewsChangePercent =
+            result.totalViewsChangePercent
+
+        if (result.countries.isEmpty()) {
+            allCountries = emptyList()
+            cachedCountriesMapData = ""
+            cachedCountriesMinViews = 0L
+            cachedCountriesMaxViews = 0L
+            _countriesUiState.value = emptyLoadedState()
+        } else {
+            val countries = result.countries.map { country ->
+                CountryItem(
+                    countryCode = country.countryCode,
+                    countryName = country.countryName,
+                    views = country.views,
+                    flagIconUrl = country.flagIconUrl,
+                    change = country.toCountryViewChange()
+                )
+            }
+
+            val mapData = buildCountriesMapData(countries)
+            val minViews = countries.minOfOrNull { it.views } ?: 0L
+            val maxViews = countries.maxOfOrNull { it.views } ?: 0L
+
+            allCountries = countries
+            cachedCountriesMapData = mapData
+            cachedCountriesMinViews =
+                if (minViews == maxViews) 0L else minViews
+            cachedCountriesMaxViews = maxViews
+
+            val cardCountries = countries.take(CARD_MAX_ITEMS)
+            val maxViewsForBar =
+                cardCountries.firstOrNull()?.views ?: 0L
+
+            _countriesUiState.value = CountriesCardUiState.Loaded(
+                countries = cardCountries,
+                mapData = mapData,
+                minViews = cachedCountriesMinViews,
+                maxViews = cachedCountriesMaxViews,
+                maxViewsForBar = maxViewsForBar,
+                hasMoreItems = countries.size > CARD_MAX_ITEMS
+            )
+        }
+    }
+
     private suspend fun fetchRegionViews(site: SiteModel) {
         val siteId = site.siteId
 
@@ -375,61 +371,7 @@ class CountriesViewModel @Inject constructor(
             siteId, currentPeriod
         )) {
             is RegionViewsResult.Success -> {
-                loadedPeriod = currentPeriod
-                regionsLoadedPeriod = currentPeriod
-                cachedRegionsTotalViews = result.totalViews
-                cachedRegionsTotalViewsChange = result.totalViewsChange
-                cachedRegionsTotalViewsChangePercent =
-                    result.totalViewsChangePercent
-
-                val regions = result.regions.map { it.toLocationItem() }
-
-                if (regions.isEmpty()) {
-                    allRegions = emptyList()
-                    cachedRegionsMapData = ""
-                    cachedRegionsMinViews = 0L
-                    cachedRegionsMaxViews = 0L
-                    _regionsUiState.value = CountriesCardUiState.Loaded(
-                        countries = emptyList(),
-                        mapData = "",
-                        minViews = 0,
-                        maxViews = 0,
-                        maxViewsForBar = 0,
-                        hasMoreItems = false
-                    )
-                } else {
-                    val mapData = buildRegionsMapData(result.regions)
-                    val aggregatedViews = result.regions
-                        .groupBy { it.countryCode }
-                        .mapValues { (_, items) ->
-                            items.sumOf { it.views }
-                        }.values
-                    val minViews =
-                        aggregatedViews.minOrNull() ?: 0L
-                    val maxViews =
-                        aggregatedViews.maxOrNull() ?: 0L
-
-                    allRegions = regions
-                    cachedRegionsMapData = mapData
-                    cachedRegionsMinViews =
-                        if (minViews == maxViews) 0L else minViews
-                    cachedRegionsMaxViews = maxViews
-
-                    val cardRegions = regions.take(CARD_MAX_ITEMS)
-                    val maxViewsForBar =
-                        cardRegions.firstOrNull()?.views ?: 0L
-
-                    _regionsUiState.value = CountriesCardUiState.Loaded(
-                        countries = cardRegions.map {
-                            it.toCountryItem()
-                        },
-                        mapData = mapData,
-                        minViews = cachedRegionsMinViews,
-                        maxViews = cachedRegionsMaxViews,
-                        maxViewsForBar = maxViewsForBar,
-                        hasMoreItems = regions.size > CARD_MAX_ITEMS
-                    )
-                }
+                handleRegionViewsSuccess(result)
             }
             is RegionViewsResult.Error -> {
                 _regionsUiState.value =
@@ -439,6 +381,57 @@ class CountriesViewModel @Inject constructor(
     }
 
     @Suppress("CyclomaticComplexity")
+    private fun handleRegionViewsSuccess(
+        result: RegionViewsResult.Success
+    ) {
+        loadedPeriod = currentPeriod
+        regionsLoadedPeriod = currentPeriod
+        cachedRegionsTotalViews = result.totalViews
+        cachedRegionsTotalViewsChange = result.totalViewsChange
+        cachedRegionsTotalViewsChangePercent =
+            result.totalViewsChangePercent
+
+        val regions = result.regions.map { it.toLocationItem() }
+
+        if (regions.isEmpty()) {
+            allRegions = emptyList()
+            cachedRegionsMapData = ""
+            cachedRegionsMinViews = 0L
+            cachedRegionsMaxViews = 0L
+            _regionsUiState.value = emptyLoadedState()
+        } else {
+            val mapData = buildRegionsMapData(result.regions)
+            val aggregatedViews = result.regions
+                .groupBy { it.countryCode }
+                .mapValues { (_, items) ->
+                    items.sumOf { it.views }
+                }.values
+            val minViews = aggregatedViews.minOrNull() ?: 0L
+            val maxViews = aggregatedViews.maxOrNull() ?: 0L
+
+            allRegions = regions
+            cachedRegionsMapData = mapData
+            cachedRegionsMinViews =
+                if (minViews == maxViews) 0L else minViews
+            cachedRegionsMaxViews = maxViews
+
+            val cardRegions = regions.take(CARD_MAX_ITEMS)
+            val maxViewsForBar =
+                cardRegions.firstOrNull()?.views ?: 0L
+
+            _regionsUiState.value = CountriesCardUiState.Loaded(
+                countries = cardRegions.map {
+                    it.toCountryItem()
+                },
+                mapData = mapData,
+                minViews = cachedRegionsMinViews,
+                maxViews = cachedRegionsMaxViews,
+                maxViewsForBar = maxViewsForBar,
+                hasMoreItems = regions.size > CARD_MAX_ITEMS
+            )
+        }
+    }
+
     private suspend fun fetchCityViews(site: SiteModel) {
         val siteId = site.siteId
 
@@ -446,61 +439,59 @@ class CountriesViewModel @Inject constructor(
             siteId, currentPeriod
         )) {
             is CityViewsResult.Success -> {
-                loadedPeriod = currentPeriod
-                citiesLoadedPeriod = currentPeriod
-                cachedCitiesTotalViews = result.totalViews
-                cachedCitiesTotalViewsChange = result.totalViewsChange
-                cachedCitiesTotalViewsChangePercent =
-                    result.totalViewsChangePercent
-
-                val cities = result.cities.map { it.toLocationItem() }
-
-                if (cities.isEmpty()) {
-                    allCities = emptyList()
-                    cachedCitiesMapData = ""
-                    cachedCitiesMinViews = 0L
-                    cachedCitiesMaxViews = 0L
-                    _citiesUiState.value = CountriesCardUiState.Loaded(
-                        countries = emptyList(),
-                        mapData = "",
-                        minViews = 0,
-                        maxViews = 0,
-                        maxViewsForBar = 0,
-                        hasMoreItems = false
-                    )
-                } else {
-                    val mapData = buildCitiesMapData(cities)
-                    val minViews =
-                        cities.minOfOrNull { it.views } ?: 0L
-                    val maxViews =
-                        cities.maxOfOrNull { it.views } ?: 0L
-
-                    allCities = cities
-                    cachedCitiesMapData = mapData
-                    cachedCitiesMinViews =
-                        if (minViews == maxViews) 0L else minViews
-                    cachedCitiesMaxViews = maxViews
-
-                    val cardCities = cities.take(CARD_MAX_ITEMS)
-                    val maxViewsForBar =
-                        cardCities.firstOrNull()?.views ?: 0L
-
-                    _citiesUiState.value = CountriesCardUiState.Loaded(
-                        countries = cardCities.map {
-                            it.toCountryItem()
-                        },
-                        mapData = mapData,
-                        minViews = cachedCitiesMinViews,
-                        maxViews = cachedCitiesMaxViews,
-                        maxViewsForBar = maxViewsForBar,
-                        hasMoreItems = cities.size > CARD_MAX_ITEMS
-                    )
-                }
+                handleCityViewsSuccess(result)
             }
             is CityViewsResult.Error -> {
                 _citiesUiState.value =
                     CountriesCardUiState.Error(result.message)
             }
+        }
+    }
+
+    @Suppress("CyclomaticComplexity")
+    private fun handleCityViewsSuccess(
+        result: CityViewsResult.Success
+    ) {
+        loadedPeriod = currentPeriod
+        citiesLoadedPeriod = currentPeriod
+        cachedCitiesTotalViews = result.totalViews
+        cachedCitiesTotalViewsChange = result.totalViewsChange
+        cachedCitiesTotalViewsChangePercent =
+            result.totalViewsChangePercent
+
+        val cities = result.cities.map { it.toLocationItem() }
+
+        if (cities.isEmpty()) {
+            allCities = emptyList()
+            cachedCitiesMapData = ""
+            cachedCitiesMinViews = 0L
+            cachedCitiesMaxViews = 0L
+            _citiesUiState.value = emptyLoadedState()
+        } else {
+            val mapData = buildCitiesMapData(cities)
+            val minViews = cities.minOfOrNull { it.views } ?: 0L
+            val maxViews = cities.maxOfOrNull { it.views } ?: 0L
+
+            allCities = cities
+            cachedCitiesMapData = mapData
+            cachedCitiesMinViews =
+                if (minViews == maxViews) 0L else minViews
+            cachedCitiesMaxViews = maxViews
+
+            val cardCities = cities.take(CARD_MAX_ITEMS)
+            val maxViewsForBar =
+                cardCities.firstOrNull()?.views ?: 0L
+
+            _citiesUiState.value = CountriesCardUiState.Loaded(
+                countries = cardCities.map {
+                    it.toCountryItem()
+                },
+                mapData = mapData,
+                minViews = cachedCitiesMinViews,
+                maxViews = cachedCitiesMaxViews,
+                maxViewsForBar = maxViewsForBar,
+                hasMoreItems = cities.size > CARD_MAX_ITEMS
+            )
         }
     }
 
@@ -595,6 +586,15 @@ class CountriesViewModel @Inject constructor(
     private fun escapeJs(value: String): String {
         return value.replace("'", "\\'")
     }
+
+    private fun emptyLoadedState() = CountriesCardUiState.Loaded(
+        countries = emptyList(),
+        mapData = "",
+        minViews = 0,
+        maxViews = 0,
+        maxViewsForBar = 0,
+        hasMoreItems = false
+    )
 
     companion object
 }

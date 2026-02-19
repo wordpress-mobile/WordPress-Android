@@ -358,69 +358,42 @@ class StatsDataSourceImpl @Inject constructor(
                 params = params
             )
         }
-
-        AppLog.d(
-            T.STATS,
-            "StatsDataSourceImpl: fetchRegionViews result type: " +
-                "${result::class.simpleName}"
-        )
-
+        logResultType("fetchRegionViews", result)
         return when (result) {
             is WpRequestResult.Success -> {
                 val summary = result.response.data.summary
-                val countryInfo = result.response.data.countryInfo.orEmpty()
-
-                val regions = summary?.views.orEmpty().map { regionView ->
-                    val code = regionView.countryCode.orEmpty()
-                    val info = countryInfo[code]
-                    RegionViewItem(
-                        location = regionView.location.orEmpty(),
-                        countryCode = code,
-                        views = regionView.views?.toLong() ?: 0L,
-                        flagIconUrl = info?.flagIcon
-                    )
-                }
-
+                val countryInfo =
+                    result.response.data.countryInfo.orEmpty()
+                val regions =
+                    summary?.views.orEmpty().map { regionView ->
+                        val code = regionView.countryCode.orEmpty()
+                        val info = countryInfo[code]
+                        RegionViewItem(
+                            location =
+                                regionView.location.orEmpty(),
+                            countryCode = code,
+                            views =
+                                regionView.views?.toLong() ?: 0L,
+                            flagIconUrl = info?.flagIcon
+                        )
+                    }
                 AppLog.d(
                     T.STATS,
-                    "StatsDataSourceImpl: fetchRegionViews success - " +
-                        "${regions.size} regions"
+                    "StatsDataSourceImpl: fetchRegionViews " +
+                        "success - ${regions.size} regions"
                 )
                 RegionViewsDataResult.Success(
                     RegionViewsData(
                         regions = regions,
-                        totalViews = summary?.totalViews?.toLong() ?: 0L,
-                        otherViews = summary?.otherViews?.toLong() ?: 0L
+                        totalViews =
+                            summary?.totalViews?.toLong() ?: 0L,
+                        otherViews =
+                            summary?.otherViews?.toLong() ?: 0L
                     )
                 )
             }
-            is WpRequestResult.WpError -> {
-                AppLog.e(
-                    T.STATS,
-                    "StatsDataSourceImpl: fetchRegionViews WpError - " +
-                        result.errorMessage
-                )
-                RegionViewsDataResult.Error(result.errorMessage)
-            }
-            is WpRequestResult.ResponseParsingError<*> -> {
-                AppLog.e(
-                    T.STATS,
-                    "StatsDataSourceImpl: fetchRegionViews " +
-                        "ResponseParsingError - $result"
-                )
-                RegionViewsDataResult.Error(
-                    "Response parsing error: $result"
-                )
-            }
-            else -> {
-                AppLog.e(
-                    T.STATS,
-                    "StatsDataSourceImpl: fetchRegionViews " +
-                        "unexpected result - $result"
-                )
-                RegionViewsDataResult.Error(
-                    "Unknown error: ${result::class.simpleName}"
-                )
+            else -> logErrorAndReturn("fetchRegionViews", result) {
+                RegionViewsDataResult.Error(it)
             }
         }
     }
@@ -459,71 +432,46 @@ class StatsDataSourceImpl @Inject constructor(
                 params = params
             )
         }
-
-        AppLog.d(
-            T.STATS,
-            "StatsDataSourceImpl: fetchCityViews result type: " +
-                "${result::class.simpleName}"
-        )
-
+        logResultType("fetchCityViews", result)
         return when (result) {
             is WpRequestResult.Success -> {
                 val summary = result.response.data.summary
-                val countryInfo = result.response.data.countryInfo.orEmpty()
-
-                val cities = summary?.views.orEmpty().map { cityView ->
-                    val code = cityView.countryCode.orEmpty()
-                    val info = countryInfo[code]
-                    CityViewItem(
-                        location = cityView.location.orEmpty(),
-                        countryCode = code,
-                        views = cityView.views?.toLong() ?: 0L,
-                        latitude = cityView.coordinates?.latitude,
-                        longitude = cityView.coordinates?.longitude,
-                        flagIconUrl = info?.flagIcon
-                    )
-                }
-
+                val countryInfo =
+                    result.response.data.countryInfo.orEmpty()
+                val cities =
+                    summary?.views.orEmpty().map { cityView ->
+                        val code = cityView.countryCode.orEmpty()
+                        val info = countryInfo[code]
+                        CityViewItem(
+                            location =
+                                cityView.location.orEmpty(),
+                            countryCode = code,
+                            views =
+                                cityView.views?.toLong() ?: 0L,
+                            latitude =
+                                cityView.coordinates?.latitude,
+                            longitude =
+                                cityView.coordinates?.longitude,
+                            flagIconUrl = info?.flagIcon
+                        )
+                    }
                 AppLog.d(
                     T.STATS,
-                    "StatsDataSourceImpl: fetchCityViews success - " +
-                        "${cities.size} cities"
+                    "StatsDataSourceImpl: fetchCityViews " +
+                        "success - ${cities.size} cities"
                 )
                 CityViewsDataResult.Success(
                     CityViewsData(
                         cities = cities,
-                        totalViews = summary?.totalViews?.toLong() ?: 0L,
-                        otherViews = summary?.otherViews?.toLong() ?: 0L
+                        totalViews =
+                            summary?.totalViews?.toLong() ?: 0L,
+                        otherViews =
+                            summary?.otherViews?.toLong() ?: 0L
                     )
                 )
             }
-            is WpRequestResult.WpError -> {
-                AppLog.e(
-                    T.STATS,
-                    "StatsDataSourceImpl: fetchCityViews WpError - " +
-                        result.errorMessage
-                )
-                CityViewsDataResult.Error(result.errorMessage)
-            }
-            is WpRequestResult.ResponseParsingError<*> -> {
-                AppLog.e(
-                    T.STATS,
-                    "StatsDataSourceImpl: fetchCityViews " +
-                        "ResponseParsingError - $result"
-                )
-                CityViewsDataResult.Error(
-                    "Response parsing error: $result"
-                )
-            }
-            else -> {
-                AppLog.e(
-                    T.STATS,
-                    "StatsDataSourceImpl: fetchCityViews " +
-                        "unexpected result - $result"
-                )
-                CityViewsDataResult.Error(
-                    "Unknown error: ${result::class.simpleName}"
-                )
+            else -> logErrorAndReturn("fetchCityViews", result) {
+                CityViewsDataResult.Error(it)
             }
         }
     }
@@ -610,5 +558,38 @@ class StatsDataSourceImpl @Inject constructor(
                 TopAuthorsDataResult.Error("Unknown error: ${result::class.simpleName}")
             }
         }
+    }
+
+    private fun logResultType(methodName: String, result: WpRequestResult<*>) {
+        AppLog.d(
+            T.STATS,
+            "StatsDataSourceImpl: $methodName result type: " +
+                "${result::class.simpleName}"
+        )
+    }
+
+    private fun <T> logErrorAndReturn(
+        methodName: String,
+        result: WpRequestResult<*>,
+        errorFactory: (String) -> T
+    ): T {
+        val (logMessage, errorMessage) = when (result) {
+            is WpRequestResult.WpError -> {
+                "StatsDataSourceImpl: $methodName WpError - " +
+                    result.errorMessage to result.errorMessage
+            }
+            is WpRequestResult.ResponseParsingError<*> -> {
+                "StatsDataSourceImpl: $methodName " +
+                    "ResponseParsingError - $result" to
+                    "Response parsing error: $result"
+            }
+            else -> {
+                "StatsDataSourceImpl: $methodName " +
+                    "unexpected result - $result" to
+                    "Unknown error: ${result::class.simpleName}"
+            }
+        }
+        AppLog.e(T.STATS, logMessage)
+        return errorFactory(errorMessage)
     }
 }

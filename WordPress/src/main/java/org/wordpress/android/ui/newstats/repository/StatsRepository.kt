@@ -766,56 +766,58 @@ class StatsRepository @Inject constructor(
 
         when (currentResult) {
             is RegionViewsDataResult.Success -> {
-                val previousMap =
-                    if (previousResult is RegionViewsDataResult.Success) {
-                        previousResult.data.regions.associateBy { it.location }
-                    } else {
-                        emptyMap()
-                    }
-
-                val totalViews =
-                    currentResult.data.regions.sumOf { it.views }
-                val previousTotalViews =
-                    if (previousResult is RegionViewsDataResult.Success) {
-                        previousResult.data.regions.sumOf { it.views }
-                    } else {
-                        0L
-                    }
-                val totalChange = totalViews - previousTotalViews
-                val totalChangePercent = if (previousTotalViews > 0) {
-                    (totalChange.toDouble() / previousTotalViews.toDouble()) *
-                        PERCENTAGE_MULTIPLIER
-                } else if (totalViews > 0) {
-                    PERCENTAGE_MULTIPLIER
-                } else {
-                    PERCENTAGE_NO_CHANGE
-                }
-
-                RegionViewsResult.Success(
-                    regions = currentResult.data.regions.map { region ->
-                        val prev = previousMap[region.location]?.views ?: 0L
-                        RegionViewItemData(
-                            location = region.location,
-                            countryCode = region.countryCode,
-                            views = region.views,
-                            flagIconUrl = region.flagIconUrl,
-                            previousViews = prev
-                        )
-                    },
-                    totalViews = totalViews,
-                    otherViews = currentResult.data.otherViews,
-                    totalViewsChange = totalChange,
-                    totalViewsChangePercent = totalChangePercent
-                )
+                buildRegionViewsSuccess(currentResult, previousResult)
             }
             is RegionViewsDataResult.Error -> {
                 appLogWrapper.e(
                     AppLog.T.STATS,
-                    "Error fetching region views: ${currentResult.message}"
+                    "Error fetching region views: " +
+                        currentResult.message
                 )
                 RegionViewsResult.Error(currentResult.message)
             }
         }
+    }
+
+    private fun buildRegionViewsSuccess(
+        currentResult: RegionViewsDataResult.Success,
+        previousResult: RegionViewsDataResult
+    ): RegionViewsResult {
+        val previousMap =
+            if (previousResult is RegionViewsDataResult.Success) {
+                previousResult.data.regions.associateBy { it.location }
+            } else {
+                emptyMap()
+            }
+
+        val totalViews = currentResult.data.regions.sumOf { it.views }
+        val previousTotalViews =
+            if (previousResult is RegionViewsDataResult.Success) {
+                previousResult.data.regions.sumOf { it.views }
+            } else {
+                0L
+            }
+        val totalChange = totalViews - previousTotalViews
+        val totalChangePercent = calculateChangePercent(
+            totalViews, previousTotalViews, totalChange
+        )
+
+        return RegionViewsResult.Success(
+            regions = currentResult.data.regions.map { region ->
+                val prev = previousMap[region.location]?.views ?: 0L
+                RegionViewItemData(
+                    location = region.location,
+                    countryCode = region.countryCode,
+                    views = region.views,
+                    flagIconUrl = region.flagIconUrl,
+                    previousViews = prev
+                )
+            },
+            totalViews = totalViews,
+            otherViews = currentResult.data.otherViews,
+            totalViewsChange = totalChange,
+            totalViewsChangePercent = totalChangePercent
+        )
     }
 
     /**
@@ -844,58 +846,60 @@ class StatsRepository @Inject constructor(
 
         when (currentResult) {
             is CityViewsDataResult.Success -> {
-                val previousMap =
-                    if (previousResult is CityViewsDataResult.Success) {
-                        previousResult.data.cities.associateBy { it.location }
-                    } else {
-                        emptyMap()
-                    }
-
-                val totalViews =
-                    currentResult.data.cities.sumOf { it.views }
-                val previousTotalViews =
-                    if (previousResult is CityViewsDataResult.Success) {
-                        previousResult.data.cities.sumOf { it.views }
-                    } else {
-                        0L
-                    }
-                val totalChange = totalViews - previousTotalViews
-                val totalChangePercent = if (previousTotalViews > 0) {
-                    (totalChange.toDouble() / previousTotalViews.toDouble()) *
-                        PERCENTAGE_MULTIPLIER
-                } else if (totalViews > 0) {
-                    PERCENTAGE_MULTIPLIER
-                } else {
-                    PERCENTAGE_NO_CHANGE
-                }
-
-                CityViewsResult.Success(
-                    cities = currentResult.data.cities.map { city ->
-                        val prev = previousMap[city.location]?.views ?: 0L
-                        CityViewItemData(
-                            location = city.location,
-                            countryCode = city.countryCode,
-                            views = city.views,
-                            latitude = city.latitude,
-                            longitude = city.longitude,
-                            flagIconUrl = city.flagIconUrl,
-                            previousViews = prev
-                        )
-                    },
-                    totalViews = totalViews,
-                    otherViews = currentResult.data.otherViews,
-                    totalViewsChange = totalChange,
-                    totalViewsChangePercent = totalChangePercent
-                )
+                buildCityViewsSuccess(currentResult, previousResult)
             }
             is CityViewsDataResult.Error -> {
                 appLogWrapper.e(
                     AppLog.T.STATS,
-                    "Error fetching city views: ${currentResult.message}"
+                    "Error fetching city views: " +
+                        currentResult.message
                 )
                 CityViewsResult.Error(currentResult.message)
             }
         }
+    }
+
+    private fun buildCityViewsSuccess(
+        currentResult: CityViewsDataResult.Success,
+        previousResult: CityViewsDataResult
+    ): CityViewsResult {
+        val previousMap =
+            if (previousResult is CityViewsDataResult.Success) {
+                previousResult.data.cities.associateBy { it.location }
+            } else {
+                emptyMap()
+            }
+
+        val totalViews = currentResult.data.cities.sumOf { it.views }
+        val previousTotalViews =
+            if (previousResult is CityViewsDataResult.Success) {
+                previousResult.data.cities.sumOf { it.views }
+            } else {
+                0L
+            }
+        val totalChange = totalViews - previousTotalViews
+        val totalChangePercent = calculateChangePercent(
+            totalViews, previousTotalViews, totalChange
+        )
+
+        return CityViewsResult.Success(
+            cities = currentResult.data.cities.map { city ->
+                val prev = previousMap[city.location]?.views ?: 0L
+                CityViewItemData(
+                    location = city.location,
+                    countryCode = city.countryCode,
+                    views = city.views,
+                    latitude = city.latitude,
+                    longitude = city.longitude,
+                    flagIconUrl = city.flagIconUrl,
+                    previousViews = prev
+                )
+            },
+            totalViews = totalViews,
+            otherViews = currentResult.data.otherViews,
+            totalViewsChange = totalChange,
+            totalViewsChangePercent = totalChangePercent
+        )
     }
 
     /**
@@ -957,6 +961,19 @@ class StatsRepository @Inject constructor(
                 TopAuthorsResult.Error(currentResult.message)
             }
         }
+    }
+
+    private fun calculateChangePercent(
+        totalViews: Long,
+        previousTotalViews: Long,
+        totalChange: Long
+    ): Double = if (previousTotalViews > 0) {
+        (totalChange.toDouble() / previousTotalViews.toDouble()) *
+            PERCENTAGE_MULTIPLIER
+    } else if (totalViews > 0) {
+        PERCENTAGE_MULTIPLIER
+    } else {
+        PERCENTAGE_NO_CHANGE
     }
 }
 
