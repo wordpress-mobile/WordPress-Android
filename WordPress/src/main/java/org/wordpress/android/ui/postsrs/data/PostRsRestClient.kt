@@ -15,9 +15,6 @@ import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_api.WpAppNotifier
-import uniffi.wp_api.WpAuthentication
-import uniffi.wp_api.WpAuthenticationProvider
-import uniffi.wp_api.WpDynamicAuthenticationProvider
 import java.net.URL
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -78,16 +75,7 @@ class PostRsRestClient @Inject constructor(
         if (!site.isWPCom) return wpApiClientProvider.getWpApiClient(site)
         return wpComClients.getOrPut(site.siteId) {
             val apiRootUrl = URL("https://public-api.wordpress.com/wp/v2/sites/${site.siteId}/")
-            val authProvider = WpAuthenticationProvider.dynamic(
-                object : WpDynamicAuthenticationProvider {
-                    override fun auth() = WpAuthentication.Bearer(
-                        token = requireNotNull(accountStore.accessToken) {
-                            "WP.com access token is required"
-                        }
-                    )
-                    override suspend fun refresh() = accountStore.accessToken != null
-                }
-            )
+            val authProvider = createWpComAuthProvider(accountStore)
             WpApiClient(
                 wpOrgSiteApiRootUrl = apiRootUrl,
                 authProvider = authProvider,

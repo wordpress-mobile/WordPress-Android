@@ -58,14 +58,7 @@ class WpServiceProvider @Inject constructor(
 
     private fun createDelegate(site: SiteModel): WpApiClientDelegate {
         val authProvider = if (site.isWPCom) {
-            WpAuthenticationProvider.dynamic(object : WpDynamicAuthenticationProvider {
-                override fun auth() = WpAuthentication.Bearer(
-                    token = requireNotNull(accountStore.accessToken) {
-                        "WP.com access token is required"
-                    }
-                )
-                override suspend fun refresh() = accountStore.accessToken != null
-            })
+            createWpComAuthProvider(accountStore)
         } else {
             val username = site.apiRestUsernamePlain
             val password = site.apiRestPasswordPlain
@@ -101,3 +94,18 @@ class WpServiceProvider @Inject constructor(
         }
     }
 }
+
+/**
+ * Creates a [WpAuthenticationProvider] that reads the WordPress.com OAuth bearer token from
+ * [AccountStore] on every request. This ensures cached API clients automatically pick up
+ * refreshed tokens without needing to be recreated.
+ */
+internal fun createWpComAuthProvider(accountStore: AccountStore): WpAuthenticationProvider =
+    WpAuthenticationProvider.dynamic(object : WpDynamicAuthenticationProvider {
+        override fun auth() = WpAuthentication.Bearer(
+            token = requireNotNull(accountStore.accessToken) {
+                "WP.com access token is required"
+            }
+        )
+        override suspend fun refresh() = accountStore.accessToken != null
+    })
