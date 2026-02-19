@@ -15,7 +15,8 @@ import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_api.WpAppNotifier
-import java.net.URL
+import uniffi.wp_api.WpComBaseUrl
+import uniffi.wp_api.WpComDotOrgApiUrlResolver
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -74,10 +75,13 @@ class PostRsRestClient @Inject constructor(
     private fun getApiClient(site: SiteModel): WpApiClient {
         if (!site.isWPCom) return wpApiClientProvider.getWpApiClient(site)
         return wpComClients.getOrPut(site.siteId) {
-            val apiRootUrl = URL("https://public-api.wordpress.com/wp/v2/sites/${site.siteId}/")
+            val urlResolver = WpComDotOrgApiUrlResolver(
+                siteId = site.siteId.toString(),
+                baseUrl = WpComBaseUrl.Production
+            )
             val authProvider = createWpComAuthProvider(accountStore)
             WpApiClient(
-                wpOrgSiteApiRootUrl = apiRootUrl,
+                apiUrlResolver = urlResolver,
                 authProvider = authProvider,
                 requestExecutor = WpRequestExecutor(emptyList()),
                 appNotifier = object : WpAppNotifier {
