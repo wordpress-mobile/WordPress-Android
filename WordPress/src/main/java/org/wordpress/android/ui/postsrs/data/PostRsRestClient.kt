@@ -16,7 +16,7 @@ import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpComBaseUrl
-import uniffi.wp_api.WpComDotOrgApiUrlResolver
+import uniffi.wp_api.WpComDotOrgApiUrlResolver as WpComUrlResolver // checkstyle ignore
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -80,7 +80,7 @@ class PostRsRestClient @Inject constructor(
     private fun getApiClient(site: SiteModel): WpApiClient {
         if (!site.isWPCom) return wpApiClientProvider.getWpApiClient(site)
         return wpComClients.getOrPut(site.siteId) {
-            val urlResolver = WpComDotOrgApiUrlResolver(
+            val urlResolver = WpComUrlResolver(
                 siteId = site.siteId.toString(),
                 baseUrl = WpComBaseUrl.Production
             )
