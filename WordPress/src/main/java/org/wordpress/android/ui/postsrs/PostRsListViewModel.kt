@@ -489,9 +489,16 @@ class PostRsListViewModel @Inject constructor(
                     item.state.toUiModel(item.id, showStatus = isSearch)
                 }
             }
+            val existingPosts = getTabUiState(tab).posts
             val uiModels = items.map { model ->
                 val effectiveTab = if (isSearch) tabForStatus(model.status) else tab
-                model.copy(actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen))
+                val existingUrl = existingPosts
+                    .firstOrNull { it.remotePostId == model.remotePostId }
+                    ?.featuredImageUrl
+                model.copy(
+                    actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen),
+                    featuredImageUrl = existingUrl
+                )
             }
             updateTabUiState(tab) { copy(posts = uiModels, isLoading = false, error = null) }
             resolveFeaturedImages(tab, uiModels)

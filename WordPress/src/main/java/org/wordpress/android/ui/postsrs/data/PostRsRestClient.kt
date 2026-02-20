@@ -6,6 +6,8 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.PhotonUtils
+import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
@@ -29,12 +31,22 @@ class PostRsRestClient @Inject constructor(
         }
         return when (response) {
             is WpRequestResult.Success -> {
-                val url = response.response.data.sourceUrl
+                val sourceUrl = response.response.data.sourceUrl
+                val url = toPhotonUrl(site, sourceUrl)
                 mediaUrlCache[mediaId] = url
                 url
             }
             else -> null
         }
+    }
+
+    private fun toPhotonUrl(site: SiteModel, sourceUrl: String): String {
+        if (!SiteUtils.isPhotonCapable(site)) return sourceUrl
+        val density = context.resources.displayMetrics.density
+        val sizePx = (FEATURED_IMAGE_SIZE_DP * density).toInt()
+        return PhotonUtils.getPhotonImageUrl(
+            sourceUrl, sizePx, sizePx, site.isPrivateWPComAtomic
+        )
     }
 
     suspend fun trashPost(site: SiteModel, postId: Long): PostActionResult {
@@ -86,5 +98,9 @@ class PostRsRestClient @Inject constructor(
     sealed class PostActionResult {
         data object Success : PostActionResult()
         data class Error(val message: String) : PostActionResult()
+    }
+
+    companion object {
+        private const val FEATURED_IMAGE_SIZE_DP = 64
     }
 }
