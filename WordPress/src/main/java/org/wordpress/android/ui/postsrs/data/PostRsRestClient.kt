@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.PhotonUtils
@@ -33,10 +34,14 @@ class PostRsRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 val sourceUrl = response.response.data.sourceUrl
                 val url = toPhotonUrl(site, sourceUrl)
+                AppLog.d(AppLog.T.POSTS, "fetchMediaUrl: mediaId=$mediaId url=$url")
                 mediaUrlCache[mediaId] = url
                 url
             }
-            else -> null
+            else -> {
+                AppLog.w(AppLog.T.POSTS, "fetchMediaUrl: mediaId=$mediaId failed: $response")
+                null
+            }
         }
     }
 

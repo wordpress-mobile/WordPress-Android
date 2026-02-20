@@ -40,7 +40,7 @@ data class PostRsUiModel(
     val commentsOpen: Boolean = false,
     val status: PostStatus? = null,
     @StringRes val statusLabelResId: Int = 0,
-    val featuredImageId: Long? = null,
+    val featuredImageId: Long = 0L,
     val featuredImageUrl: String? = null,
     val actions: List<PostRsMenuAction> = emptyList(),
     val isPlaceholder: Boolean = false,
@@ -137,7 +137,7 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
             post.dateGmt, post.status
         ),
         link = post.link,
-        featuredImageId = post.featuredMedia,
+        featuredImageId = post.featuredMedia ?: 0L,
         hasPassword = !post.password.isNullOrEmpty(),
         commentsOpen =
             post.commentStatus is PostCommentStatus.Open,

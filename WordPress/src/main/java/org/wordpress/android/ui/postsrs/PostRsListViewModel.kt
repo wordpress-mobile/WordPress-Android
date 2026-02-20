@@ -507,15 +507,22 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Fetches featured image URLs for posts that have a non-zero [PostRsUiModel.featuredImageId]
+     * but no resolved URL yet. Each URL is fetched on IO and the tab state is updated
+     * progressively so images appear as they load.
+     */
     private fun resolveFeaturedImages(tab: PostRsListTab, posts: List<PostRsUiModel>) {
+        val mediaIds = posts.map { "${it.remotePostId}:${it.featuredImageId}" }
+        AppLog.d(AppLog.T.POSTS, "resolveFeaturedImages: posts=$mediaIds")
         val unresolved = posts.filter {
-            it.featuredImageId != null && it.featuredImageUrl == null
+            it.featuredImageId != 0L && it.featuredImageUrl == null
         }
         if (unresolved.isEmpty()) return
 
         viewModelScope.launch {
             for (post in unresolved) {
-                val mediaId = post.featuredImageId ?: continue
+                val mediaId = post.featuredImageId
                 val url = withContext(Dispatchers.IO) {
                     restClient.fetchMediaUrl(site, mediaId)
                 } ?: continue
