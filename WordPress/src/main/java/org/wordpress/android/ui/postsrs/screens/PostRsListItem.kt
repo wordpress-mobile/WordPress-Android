@@ -71,8 +71,11 @@ private fun PostContentItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Box {
+            val endPadding = if (post.actions.isNotEmpty()) 48.dp else 16.dp
             Row(
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
+                modifier = Modifier.padding(
+                    start = 16.dp, top = 16.dp, end = endPadding, bottom = 16.dp
+                ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
