@@ -87,9 +87,12 @@ class AuthorsViewModel @Inject constructor(
 
         statsRepository.init(accessToken)
         viewModelScope.launch {
-            _isRefreshing.value = true
-            fetchTopAuthors(site)
-            _isRefreshing.value = false
+            try {
+                _isRefreshing.value = true
+                fetchTopAuthors(site)
+            } finally {
+                _isRefreshing.value = false
+            }
         }
     }
 
@@ -114,50 +117,63 @@ class AuthorsViewModel @Inject constructor(
         )
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchTopAuthors(site: SiteModel) {
         val siteId = site.siteId
 
-        when (val result = statsRepository.fetchTopAuthors(siteId, currentPeriod)) {
-            is TopAuthorsResult.Success -> {
-                loadedPeriod = currentPeriod
-                cachedTotalViews = result.totalViews
-                cachedTotalViewsChange = result.totalViewsChange
-                cachedTotalViewsChangePercent = result.totalViewsChangePercent
+        try {
+            when (val result = statsRepository.fetchTopAuthors(
+                siteId, currentPeriod
+            )) {
+                is TopAuthorsResult.Success -> {
+                    loadedPeriod = currentPeriod
+                    cachedTotalViews = result.totalViews
+                    cachedTotalViewsChange = result.totalViewsChange
+                    cachedTotalViewsChangePercent =
+                        result.totalViewsChangePercent
 
-                if (result.authors.isEmpty()) {
-                    allAuthors = emptyList()
-                    _uiState.value = AuthorsCardUiState.Loaded(
-                        authors = emptyList(),
-                        maxViewsForBar = 0,
-                        hasMoreItems = false
-                    )
-                } else {
-                    val authors = result.authors.map { author ->
-                        AuthorUiItem(
-                            name = author.name,
-                            avatarUrl = author.avatarUrl,
-                            views = author.views,
-                            change = author.toStatsViewChange()
+                    if (result.authors.isEmpty()) {
+                        allAuthors = emptyList()
+                        _uiState.value = AuthorsCardUiState.Loaded(
+                            authors = emptyList(),
+                            maxViewsForBar = 0,
+                            hasMoreItems = false
+                        )
+                    } else {
+                        val authors = result.authors.map { author ->
+                            AuthorUiItem(
+                                name = author.name,
+                                avatarUrl = author.avatarUrl,
+                                views = author.views,
+                                change = author.toStatsViewChange()
+                            )
+                        }
+
+                        allAuthors = authors
+
+                        val cardAuthors = authors.take(CARD_MAX_ITEMS)
+                        val maxViewsForBar =
+                            cardAuthors.firstOrNull()?.views ?: 0L
+
+                        _uiState.value = AuthorsCardUiState.Loaded(
+                            authors = cardAuthors,
+                            maxViewsForBar = maxViewsForBar,
+                            hasMoreItems =
+                                authors.size > CARD_MAX_ITEMS
                         )
                     }
-
-                    // Store all authors for detail screen
-                    allAuthors = authors
-
-                    // For bar percentage, use first item's views (list is sorted by views descending)
-                    val cardAuthors = authors.take(CARD_MAX_ITEMS)
-                    val maxViewsForBar = cardAuthors.firstOrNull()?.views ?: 0L
-
-                    _uiState.value = AuthorsCardUiState.Loaded(
-                        authors = cardAuthors,
-                        maxViewsForBar = maxViewsForBar,
-                        hasMoreItems = authors.size > CARD_MAX_ITEMS
-                    )
+                }
+                is TopAuthorsResult.Error -> {
+                    _uiState.value =
+                        AuthorsCardUiState.Error(result.message)
                 }
             }
-            is TopAuthorsResult.Error -> {
-                _uiState.value = AuthorsCardUiState.Error(result.message)
-            }
+        } catch (e: Exception) {
+            _uiState.value = AuthorsCardUiState.Error(
+                e.message ?: resourceProvider.getString(
+                    R.string.stats_todays_stats_unknown_error
+                )
+            )
         }
     }
 

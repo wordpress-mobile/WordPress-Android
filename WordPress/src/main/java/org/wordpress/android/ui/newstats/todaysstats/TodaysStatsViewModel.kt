@@ -49,9 +49,12 @@ class TodaysStatsViewModel @Inject constructor(
     fun refresh() {
         val site = selectedSiteRepository.getSelectedSite() ?: return
         viewModelScope.launch {
-            _isRefreshing.value = true
-            loadDataInternal(site)
-            _isRefreshing.value = false
+            try {
+                _isRefreshing.value = true
+                loadDataInternal(site)
+            } finally {
+                _isRefreshing.value = false
+            }
         }
     }
 

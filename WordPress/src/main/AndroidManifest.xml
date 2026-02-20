@@ -118,7 +118,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.newstats.countries.CountriesDetailActivity"
+            android:name=".ui.newstats.locations.LocationsDetailActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:exported="false" />
 

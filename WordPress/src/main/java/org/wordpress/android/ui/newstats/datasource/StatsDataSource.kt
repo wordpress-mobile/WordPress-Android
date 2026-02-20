@@ -69,6 +69,34 @@ interface StatsDataSource {
     ): CountryViewsDataResult
 
     /**
+     * Fetches region views stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of regions to return
+     * @return Result containing the region views data or an error
+     */
+    suspend fun fetchRegionViews(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): RegionViewsDataResult
+
+    /**
+     * Fetches city views stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of cities to return
+     * @return Result containing the city views data or an error
+     */
+    suspend fun fetchCityViews(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): CityViewsDataResult
+
+    /**
      * Fetches top authors stats for a specific site.
      *
      * @param siteId The WordPress.com site ID
@@ -225,6 +253,62 @@ data class CountryViewItem(
     val countryCode: String,
     val countryName: String,
     val views: Long,
+    val flagIconUrl: String?
+)
+
+/**
+ * Result wrapper for region views fetch operation.
+ */
+sealed class RegionViewsDataResult {
+    data class Success(val data: RegionViewsData) : RegionViewsDataResult()
+    data class Error(val message: String) : RegionViewsDataResult()
+}
+
+/**
+ * Region views data from the API.
+ */
+data class RegionViewsData(
+    val regions: List<RegionViewItem>,
+    val totalViews: Long,
+    val otherViews: Long
+)
+
+/**
+ * A single region view item from the API.
+ */
+data class RegionViewItem(
+    val location: String,
+    val countryCode: String,
+    val views: Long,
+    val flagIconUrl: String?
+)
+
+/**
+ * Result wrapper for city views fetch operation.
+ */
+sealed class CityViewsDataResult {
+    data class Success(val data: CityViewsData) : CityViewsDataResult()
+    data class Error(val message: String) : CityViewsDataResult()
+}
+
+/**
+ * City views data from the API.
+ */
+data class CityViewsData(
+    val cities: List<CityViewItem>,
+    val totalViews: Long,
+    val otherViews: Long
+)
+
+/**
+ * A single city view item from the API.
+ */
+data class CityViewItem(
+    val location: String,
+    val countryCode: String,
+    val views: Long,
+    val latitude: String?,
+    val longitude: String?,
     val flagIconUrl: String?
 )
 

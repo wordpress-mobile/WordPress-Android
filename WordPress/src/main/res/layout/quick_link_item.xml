@@ -9,14 +9,15 @@
     android:clickable="true"
     android:focusable="true"
     android:minHeight="48dp"
-    android:paddingStart="12dp"
-    android:paddingEnd="12dp">
+    android:paddingStart="@dimen/margin_medium"
+    android:paddingEnd="@dimen/margin_medium"
+    android:paddingTop="@dimen/margin_medium_large"
+    android:paddingBottom="@dimen/margin_medium_large">
 
     <ImageView
         android:id="@+id/quick_link_icon"
         android:layout_width="@dimen/quick_link_ribbon_icon_size"
         android:layout_height="@dimen/quick_link_ribbon_icon_size"
-        android:layout_marginEnd="@dimen/quick_link_ribbon_icon_padding"
         android:importantForAccessibility="no"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,6 +29,7 @@
         android:id="@+id/quick_link_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/quick_link_ribbon_icon_padding"
         android:fontFamily="san-serif"
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/quick_link_ribbon_text_size"
