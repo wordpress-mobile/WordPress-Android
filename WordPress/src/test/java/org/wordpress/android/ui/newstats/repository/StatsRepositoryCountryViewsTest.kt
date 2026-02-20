@@ -18,6 +18,7 @@ import org.wordpress.android.ui.newstats.datasource.CountryViewItem
 import org.wordpress.android.ui.newstats.datasource.CountryViewsData
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 
 @ExperimentalCoroutinesApi
 class StatsRepositoryCountryViewsTest : BaseUnitTest() {
@@ -185,7 +186,7 @@ class StatsRepositoryCountryViewsTest : BaseUnitTest() {
 
         whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
             .thenReturn(CountryViewsDataResult.Success(currentData))
-            .thenReturn(CountryViewsDataResult.Error("Network error"))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.NETWORK_ERROR))
 
         val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
 
@@ -199,13 +200,13 @@ class StatsRepositoryCountryViewsTest : BaseUnitTest() {
     @Test
     fun `given error response, when fetchCountryViews, then error result is returned`() = test {
         whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
-            .thenReturn(CountryViewsDataResult.Error("Network error"))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.NETWORK_ERROR))
 
         val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
 
         assertThat(result).isInstanceOf(CountryViewsResult.Error::class.java)
         assertThat((result as CountryViewsResult.Error).messageResId)
-            .isEqualTo(R.string.stats_todays_stats_failed_to_load)
+            .isEqualTo(R.string.stats_error_network)
     }
 
     @Test

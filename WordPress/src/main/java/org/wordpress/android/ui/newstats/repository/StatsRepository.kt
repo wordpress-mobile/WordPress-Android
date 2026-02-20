@@ -21,6 +21,7 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.newstats.StatsPeriod
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.util.AppLog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -53,6 +54,22 @@ class StatsRepository @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
+
+    @StringRes
+    private fun mapErrorToStringRes(
+        errorType: StatsErrorType
+    ): Int = when (errorType) {
+        StatsErrorType.AUTH_ERROR ->
+            R.string.stats_error_auth
+        StatsErrorType.NETWORK_ERROR ->
+            R.string.stats_error_network
+        StatsErrorType.PARSING_ERROR ->
+            R.string.stats_error_parsing
+        StatsErrorType.API_ERROR ->
+            R.string.stats_todays_stats_failed_to_load
+        StatsErrorType.UNKNOWN ->
+            R.string.stats_todays_stats_unknown_error
+    }
 
     fun init(accessToken: String) {
         statsDataSource.init(accessToken)
@@ -92,8 +109,11 @@ class StatsRepository @Inject constructor(
             }
 
             is StatsVisitsDataResult.Error -> {
-                appLogWrapper.e(AppLog.T.STATS, "API Error fetching today aggregates: ${result.message}")
-                TodayAggregatesResult.Error(result.message)
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "API Error fetching today aggregates: ${result.errorType}"
+                )
+                TodayAggregatesResult.Error(result.errorType.name)
             }
         }
     }
@@ -131,8 +151,11 @@ class StatsRepository @Inject constructor(
             }
 
             is StatsVisitsDataResult.Error -> {
-                appLogWrapper.e(AppLog.T.STATS, "API Error fetching hourly views: ${result.message}")
-                HourlyViewsResult.Error(result.message)
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "API Error fetching hourly views: ${result.errorType}"
+                )
+                HourlyViewsResult.Error(result.errorType.name)
             }
         }
     }
@@ -180,8 +203,11 @@ class StatsRepository @Inject constructor(
                 }
 
                 is StatsVisitsDataResult.Error -> {
-                    appLogWrapper.e(AppLog.T.STATS, "API Error fetching weekly stats: ${result.message}")
-                    WeeklyStatsResult.Error(result.message)
+                    appLogWrapper.e(
+                        AppLog.T.STATS,
+                        "API Error fetching weekly stats: ${result.errorType}"
+                    )
+                    WeeklyStatsResult.Error(result.errorType.name)
                 }
             }
         }
@@ -214,8 +240,11 @@ class StatsRepository @Inject constructor(
                 }
 
                 is StatsVisitsDataResult.Error -> {
-                    appLogWrapper.e(AppLog.T.STATS, "API Error fetching daily views: ${result.message}")
-                    DailyViewsResult.Error(result.message)
+                    appLogWrapper.e(
+                        AppLog.T.STATS,
+                        "API Error fetching daily views: ${result.errorType}"
+                    )
+                    DailyViewsResult.Error(result.errorType.name)
                 }
             }
         }
@@ -275,9 +304,10 @@ class StatsRepository @Inject constructor(
             is StatsVisitsDataResult.Error -> {
                 appLogWrapper.e(
                     AppLog.T.STATS,
-                    "API Error fetching weekly stats with daily data: ${result.message}"
+                    "API Error fetching weekly stats with daily data: " +
+                        "${result.errorType}"
                 )
-                WeeklyStatsWithDailyDataResult.Error(result.message)
+                WeeklyStatsWithDailyDataResult.Error(result.errorType.name)
             }
         }
     }
@@ -365,13 +395,18 @@ class StatsRepository @Inject constructor(
         currentResult: StatsVisitsDataResult,
         previousResult: StatsVisitsDataResult
     ): PeriodStatsResult.Error {
-        val errorMessage = when {
-            currentResult is StatsVisitsDataResult.Error -> currentResult.message
-            previousResult is StatsVisitsDataResult.Error -> previousResult.message
-            else -> "Unknown error"
+        val errorType = when {
+            currentResult is StatsVisitsDataResult.Error ->
+                currentResult.errorType
+            previousResult is StatsVisitsDataResult.Error ->
+                previousResult.errorType
+            else -> StatsErrorType.UNKNOWN
         }
-        appLogWrapper.e(AppLog.T.STATS, "API Error fetching period stats: $errorMessage")
-        return PeriodStatsResult.Error(errorMessage)
+        appLogWrapper.e(
+            AppLog.T.STATS,
+            "API Error fetching period stats: $errorType"
+        )
+        return PeriodStatsResult.Error(errorType.name)
     }
 
     private fun buildPeriodAggregates(
@@ -577,8 +612,11 @@ class StatsRepository @Inject constructor(
             )
         } else {
             val error = currentResult as TopPostsDataResult.Error
-            appLogWrapper.e(AppLog.T.STATS, "Error fetching top posts: ${error.message}")
-            MostViewedResult.Error(error.message)
+            appLogWrapper.e(
+                AppLog.T.STATS,
+                "Error fetching top posts: ${error.errorType}"
+            )
+            MostViewedResult.Error(error.errorType.name)
         }
     }
 
@@ -624,8 +662,11 @@ class StatsRepository @Inject constructor(
             )
         } else {
             val error = currentResult as ReferrersDataResult.Error
-            appLogWrapper.e(AppLog.T.STATS, "Error fetching referrers: ${error.message}")
-            MostViewedResult.Error(error.message)
+            appLogWrapper.e(
+                AppLog.T.STATS,
+                "Error fetching referrers: ${error.errorType}"
+            )
+            MostViewedResult.Error(error.errorType.name)
         }
     }
 
@@ -736,8 +777,14 @@ class StatsRepository @Inject constructor(
                 )
             }
             is CountryViewsDataResult.Error -> {
-                appLogWrapper.e(AppLog.T.STATS, "Error fetching country views: ${currentResult.message}")
-                CountryViewsResult.Error(R.string.stats_todays_stats_failed_to_load)
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching country views: " +
+                        "${currentResult.errorType}"
+                )
+                CountryViewsResult.Error(
+                    mapErrorToStringRes(currentResult.errorType)
+                )
             }
         }
     }
@@ -774,9 +821,11 @@ class StatsRepository @Inject constructor(
                 appLogWrapper.e(
                     AppLog.T.STATS,
                     "Error fetching region views: " +
-                        currentResult.message
+                        "${currentResult.errorType}"
                 )
-                RegionViewsResult.Error(R.string.stats_todays_stats_failed_to_load)
+                RegionViewsResult.Error(
+                    mapErrorToStringRes(currentResult.errorType)
+                )
             }
         }
     }
@@ -854,9 +903,11 @@ class StatsRepository @Inject constructor(
                 appLogWrapper.e(
                     AppLog.T.STATS,
                     "Error fetching city views: " +
-                        currentResult.message
+                        "${currentResult.errorType}"
                 )
-                CityViewsResult.Error(R.string.stats_todays_stats_failed_to_load)
+                CityViewsResult.Error(
+                    mapErrorToStringRes(currentResult.errorType)
+                )
             }
         }
     }
@@ -959,8 +1010,14 @@ class StatsRepository @Inject constructor(
                 )
             }
             is TopAuthorsDataResult.Error -> {
-                appLogWrapper.e(AppLog.T.STATS, "Error fetching top authors: ${currentResult.message}")
-                TopAuthorsResult.Error(R.string.stats_todays_stats_failed_to_load)
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching top authors: " +
+                        "${currentResult.errorType}"
+                )
+                TopAuthorsResult.Error(
+                    mapErrorToStringRes(currentResult.errorType)
+                )
             }
         }
     }

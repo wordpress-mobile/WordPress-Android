@@ -17,6 +17,7 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.TopAuthorItem
 import org.wordpress.android.ui.newstats.datasource.TopAuthorsData
+import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.newstats.datasource.TopAuthorsDataResult
 
 @ExperimentalCoroutinesApi
@@ -155,7 +156,7 @@ class StatsRepositoryAuthorsTest : BaseUnitTest() {
 
         whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
             .thenReturn(TopAuthorsDataResult.Success(currentData))
-            .thenReturn(TopAuthorsDataResult.Error("Network error"))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.NETWORK_ERROR))
 
         val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
 
@@ -169,13 +170,13 @@ class StatsRepositoryAuthorsTest : BaseUnitTest() {
     @Test
     fun `given error response, when fetchTopAuthors, then error result is returned`() = test {
         whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
-            .thenReturn(TopAuthorsDataResult.Error("Network error"))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.NETWORK_ERROR))
 
         val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
 
         assertThat(result).isInstanceOf(TopAuthorsResult.Error::class.java)
         assertThat((result as TopAuthorsResult.Error).messageResId)
-            .isEqualTo(R.string.stats_todays_stats_failed_to_load)
+            .isEqualTo(R.string.stats_error_network)
     }
 
     @Test
