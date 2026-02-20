@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.newstats.StatsPeriod
 import androidx.annotation.StringRes
-import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.util.AppLog
 import java.time.LocalDate
@@ -54,27 +53,6 @@ class StatsRepository @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
-
-    private data class MappedError(
-        @StringRes val messageResId: Int,
-        val isAuthError: Boolean
-    )
-
-    private fun mapError(errorType: StatsErrorType) = MappedError(
-        messageResId = when (errorType) {
-            StatsErrorType.AUTH_ERROR ->
-                R.string.stats_error_auth
-            StatsErrorType.NETWORK_ERROR ->
-                R.string.stats_error_network
-            StatsErrorType.PARSING_ERROR ->
-                R.string.stats_error_parsing
-            StatsErrorType.API_ERROR ->
-                R.string.stats_error_api
-            StatsErrorType.UNKNOWN ->
-                R.string.stats_error_unknown
-        },
-        isAuthError = errorType == StatsErrorType.AUTH_ERROR
-    )
 
     fun init(accessToken: String) {
         statsDataSource.init(accessToken)
@@ -787,11 +765,10 @@ class StatsRepository @Inject constructor(
                     "Error fetching country views: " +
                         "${currentResult.errorType}"
                 )
-                mapError(currentResult.errorType).let {
-                    CountryViewsResult.Error(
-                        it.messageResId, it.isAuthError
-                    )
-                }
+                CountryViewsResult.Error(
+                    currentResult.errorType.messageResId,
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                )
             }
         }
     }
@@ -830,11 +807,10 @@ class StatsRepository @Inject constructor(
                     "Error fetching region views: " +
                         "${currentResult.errorType}"
                 )
-                mapError(currentResult.errorType).let {
-                    RegionViewsResult.Error(
-                        it.messageResId, it.isAuthError
-                    )
-                }
+                RegionViewsResult.Error(
+                    currentResult.errorType.messageResId,
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                )
             }
         }
     }
@@ -914,11 +890,10 @@ class StatsRepository @Inject constructor(
                     "Error fetching city views: " +
                         "${currentResult.errorType}"
                 )
-                mapError(currentResult.errorType).let {
-                    CityViewsResult.Error(
-                        it.messageResId, it.isAuthError
-                    )
-                }
+                CityViewsResult.Error(
+                    currentResult.errorType.messageResId,
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                )
             }
         }
     }
@@ -1026,11 +1001,10 @@ class StatsRepository @Inject constructor(
                     "Error fetching top authors: " +
                         "${currentResult.errorType}"
                 )
-                mapError(currentResult.errorType).let {
-                    TopAuthorsResult.Error(
-                        it.messageResId, it.isAuthError
-                    )
-                }
+                TopAuthorsResult.Error(
+                    currentResult.errorType.messageResId,
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                )
             }
         }
     }
