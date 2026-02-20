@@ -652,12 +652,18 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    private static boolean shouldUseNewPostList(@Nullable SiteModel site) {
+        if (site != null && AppPrefs.getExperimentalFeatureConfig(Feature.RS_POST_LIST.getPrefKey())) {
+            if (site.hasApplicationPassword()) {
+                return true;
+            }
+            return site.isUsingWpComRestApi();
+        }
+        return false;
+    }
+
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
-        if (site != null
-                && !site.isWPCom()
-                && site.hasApplicationPassword()
-                && AppPrefs.getExperimentalFeatureConfig(
-                        Feature.RS_POST_LIST.getPrefKey())) {
+        if (shouldUseNewPostList(site)) {
             context.startActivity(PostRsListActivity.Companion.createIntent(context));
             return;
         }
@@ -722,7 +728,6 @@ public class ActivityLauncher {
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
-
 
     public static void viewPageParentForResult(@NonNull Fragment fragment, @NonNull SiteModel site,
                                                @NonNull Long pageRemoteId) {

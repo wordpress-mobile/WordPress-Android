@@ -55,6 +55,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder
 import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.auth.WordPressCookieAuthenticator
 import org.wordpress.android.fluxc.store.AccountStore
@@ -225,6 +226,9 @@ class AppInitializer @Inject constructor(
 
     @Inject
     lateinit var wpServiceProvider: WpServiceProvider
+
+    @Inject
+    lateinit var wpApiClientProvider: WpApiClientProvider
 
     @Inject
     lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
@@ -720,8 +724,9 @@ class AppInitializer @Inject constructor(
         // Clear WordPress.com account cookie cache
         wordPressCookieAuthenticator.clearAllCachedCookies()
 
-        // Clear cached wordpress-rs services
+        // Clear cached wordpress-rs services and API clients
         wpServiceProvider.clearAll()
+        wpApiClientProvider.clearWpComClients()
     }
 
     /*

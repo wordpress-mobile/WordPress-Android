@@ -4,6 +4,8 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.createWpComAuthProvider
+import org.wordpress.android.fluxc.store.AccountStore
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.cache.kotlin.DatabaseChangeNotifier
 import rs.wordpress.cache.kotlin.WordPressApiCache
@@ -17,25 +19,23 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Creates and caches [WpService] instances for self-hosted
- * WordPress sites that have application-password credentials. Each
- * service is configured with the site's REST API root, authentication
- * credentials, and a shared SQLite-backed [WordPressApiCache], then
- * keyed by site ID so subsequent requests reuse the same instance.
+ * Creates and caches [WpService] instances for both self-hosted WordPress sites (using application
+ * passwords) and WordPress.com sites (using OAuth bearer tokens). Each service is configured with
+ * the appropriate authentication and a shared SQLite-backed [WordPressApiCache], then keyed by
+ * local site ID so subsequent requests reuse the same instance.
  */
 @Singleton
 class WpServiceProvider @Inject constructor(
     @ApplicationContext private val context: Context,
     private val wpAppNotifierHandler: WpAppNotifierHandler,
+    private val accountStore: AccountStore,
 ) {
-    private val services = mutableMapOf<Long, WpService>()
+    private val services = mutableMapOf<Int, WpService>()
     private var cache: WordPressApiCache? = null
 
     @Synchronized
     fun getService(site: SiteModel): WpService {
-        return services.getOrPut(site.siteId) {
-            createService(site)
-        }
+        return services.getOrPut(site.id) { createService(site) }
     }
 
     /** Removes all cached services. */
@@ -44,61 +44,50 @@ class WpServiceProvider @Inject constructor(
         services.clear()
     }
 
-    /**
-     * Builds a [WpService] for the given site using its
-     * application-password credentials and REST API root URL.
-     */
     private fun createService(site: SiteModel): WpService {
-        val apiRoot = site.wpApiRestUrl
-            ?.takeIf { it.isNotEmpty() }
-            ?: "${site.url}/wp-json"
+        val delegate = createDelegate(site)
+        val wpApiCache = getOrCreateCache()
+        return if (site.isWPCom) {
+            WpService.wordpressCom(site.siteId.toULong(), delegate, wpApiCache.cache)
+        } else {
+            val apiRoot = site.wpApiRestUrl?.takeIf { it.isNotEmpty() } ?: "${site.url}/wp-json"
+            WpService.selfHosted(site.url, apiRoot, delegate, wpApiCache.cache)
+        }
+    }
 
-        val username = site.apiRestUsernamePlain
-        val password = site.apiRestPasswordPlain
-        require(!username.isNullOrEmpty() && !password.isNullOrEmpty()) {
-            "Application password credentials missing for site"
+    private fun createDelegate(site: SiteModel): WpApiClientDelegate {
+        val authProvider = if (site.isWPCom) {
+            createWpComAuthProvider(accountStore)
+        } else {
+            val username = site.apiRestUsernamePlain
+            val password = site.apiRestPasswordPlain
+            require(!username.isNullOrEmpty() && !password.isNullOrEmpty()) {
+                "Application password credentials missing for site"
+            }
+            WpAuthenticationProvider.staticWithUsernameAndPassword(username, password)
         }
 
-        val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(username, password)
-
-        val delegate = WpApiClientDelegate(
+        return WpApiClientDelegate(
             authProvider = authProvider,
             requestExecutor = WpRequestExecutor(emptyList()),
             middlewarePipeline = WpApiMiddlewarePipeline(emptyList()),
             appNotifier = object : WpAppNotifier {
-                override suspend fun requestedWithInvalidAuthentication(
-                    requestUrl: String
-                ) {
-                    wpAppNotifierHandler
-                        .notifyRequestedWithInvalidAuthentication(site)
+                override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
+                    wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
                 }
             }
         )
-
-        val wpApiCache = getOrCreateCache()
-
-        return WpService.selfHosted(site.url, apiRoot, delegate, wpApiCache.cache)
     }
 
-    /**
-     * Lazily initializes a shared [WordPressApiCache] on first access,
-     * creating the backing SQLite database, running migrations, and
-     * registering a [DatabaseChangeNotifier] for change updates.
-     * Subsequent calls return the cached instance.
-     */
     @Synchronized
     private fun getOrCreateCache(): WordPressApiCache {
         return cache ?: run {
             val cacheDir = File(context.filesDir, "wp_rs_cache")
-            if (!cacheDir.exists()) {
-                cacheDir.mkdirs()
-            }
+            if (!cacheDir.exists()) cacheDir.mkdirs()
             val dbPath = File(cacheDir, "wp_api_cache.db").absolutePath
             val newCache = WordPressApiCache(dbPath)
             newCache.performMigrations()
-            newCache.cache.startListeningForUpdates(
-                DatabaseChangeNotifier
-            )
+            newCache.cache.startListeningForUpdates(DatabaseChangeNotifier)
             cache = newCache
             newCache
         }
