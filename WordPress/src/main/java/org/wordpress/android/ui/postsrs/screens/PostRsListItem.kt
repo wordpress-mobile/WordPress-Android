@@ -116,7 +116,7 @@ private fun PostContentItem(
                 }
             }
             Column(
-                modifier = Modifier.padding(end = 16.dp),
+                modifier = Modifier.padding(start = 8.dp, end = 16.dp),
                 horizontalAlignment = Alignment.End
             ) {
                 if (post.actions.isNotEmpty()) {
