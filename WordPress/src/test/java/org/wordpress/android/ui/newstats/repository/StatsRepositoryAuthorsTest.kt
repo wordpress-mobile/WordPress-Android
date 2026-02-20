@@ -180,6 +180,30 @@ class StatsRepositoryAuthorsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given auth error, when fetchTopAuthors, then isAuthError is true`() = test {
+        whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.AUTH_ERROR))
+
+        val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(TopAuthorsResult.Error::class.java)
+        val error = result as TopAuthorsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_auth)
+        assertThat(error.isAuthError).isTrue()
+    }
+
+    @Test
+    fun `given non-auth error, when fetchTopAuthors, then isAuthError is false`() = test {
+        whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.NETWORK_ERROR))
+
+        val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(TopAuthorsResult.Error::class.java)
+        assertThat((result as TopAuthorsResult.Error).isAuthError).isFalse()
+    }
+
+    @Test
     fun `when fetchTopAuthors is called, then data source is called twice for comparison`() = test {
         whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
             .thenReturn(TopAuthorsDataResult.Success(createTopAuthorsData()))

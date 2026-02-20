@@ -87,6 +87,58 @@ class AuthorsViewModelTest : BaseUnitTest() {
         assertThat((state as AuthorsCardUiState.Error).messageResId)
             .isEqualTo(R.string.stats_todays_stats_failed_to_load)
     }
+
+    @Test
+    fun `when auth error, then isAuthError is true in ui state`() = test {
+        whenever(statsRepository.fetchTopAuthors(any(), any()))
+            .thenReturn(
+                TopAuthorsResult.Error(
+                    R.string.stats_error_auth,
+                    isAuthError = true
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(AuthorsCardUiState.Error::class.java)
+        assertThat((state as AuthorsCardUiState.Error).isAuthError).isTrue()
+    }
+
+    @Test
+    fun `when non-auth error, then isAuthError is false in ui state`() = test {
+        whenever(statsRepository.fetchTopAuthors(any(), any()))
+            .thenReturn(
+                TopAuthorsResult.Error(R.string.stats_error_network)
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(AuthorsCardUiState.Error::class.java)
+        assertThat((state as AuthorsCardUiState.Error).isAuthError).isFalse()
+    }
+
+    @Test
+    fun `when getAdminUrl called with site, then returns admin url`() = test {
+        testSite.adminUrl = "https://example.com/wp-admin"
+
+        initViewModel()
+
+        assertThat(viewModel.getAdminUrl())
+            .isEqualTo("https://example.com/wp-admin")
+    }
+
+    @Test
+    fun `when getAdminUrl called without site, then returns null`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+
+        initViewModel()
+
+        assertThat(viewModel.getAdminUrl()).isNull()
+    }
     // endregion
 
     // region Success states

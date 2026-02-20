@@ -210,6 +210,30 @@ class StatsRepositoryCountryViewsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given auth error, when fetchCountryViews, then isAuthError is true`() = test {
+        whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.AUTH_ERROR))
+
+        val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(CountryViewsResult.Error::class.java)
+        val error = result as CountryViewsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_auth)
+        assertThat(error.isAuthError).isTrue()
+    }
+
+    @Test
+    fun `given non-auth error, when fetchCountryViews, then isAuthError is false`() = test {
+        whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.NETWORK_ERROR))
+
+        val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(CountryViewsResult.Error::class.java)
+        assertThat((result as CountryViewsResult.Error).isAuthError).isFalse()
+    }
+
+    @Test
     fun `when fetchCountryViews is called, then data source is called twice for comparison`() = test {
         whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
             .thenReturn(CountryViewsDataResult.Success(createCountryViewsData()))

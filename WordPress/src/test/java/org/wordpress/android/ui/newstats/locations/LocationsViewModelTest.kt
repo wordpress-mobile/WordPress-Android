@@ -92,6 +92,104 @@ class LocationsViewModelTest : BaseUnitTest() {
         assertThat((state as LocationsCardUiState.Error).messageResId)
             .isEqualTo(R.string.stats_todays_stats_failed_to_load)
     }
+
+    @Test
+    fun `when auth error on countries, then isAuthError is true`() = test {
+        whenever(statsRepository.fetchCountryViews(any(), any()))
+            .thenReturn(
+                CountryViewsResult.Error(
+                    R.string.stats_error_auth,
+                    isAuthError = true
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(LocationsCardUiState.Error::class.java)
+        assertThat((state as LocationsCardUiState.Error).isAuthError).isTrue()
+    }
+
+    @Test
+    fun `when auth error on regions, then isAuthError is true`() = test {
+        whenever(statsRepository.fetchCountryViews(any(), any()))
+            .thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchRegionViews(any(), any()))
+            .thenReturn(
+                RegionViewsResult.Error(
+                    R.string.stats_error_auth,
+                    isAuthError = true
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onLocationTypeChanged(LocationType.REGIONS)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(LocationsCardUiState.Error::class.java)
+        assertThat((state as LocationsCardUiState.Error).isAuthError).isTrue()
+    }
+
+    @Test
+    fun `when auth error on cities, then isAuthError is true`() = test {
+        whenever(statsRepository.fetchCountryViews(any(), any()))
+            .thenReturn(createSuccessResult())
+        whenever(statsRepository.fetchCityViews(any(), any()))
+            .thenReturn(
+                CityViewsResult.Error(
+                    R.string.stats_error_auth,
+                    isAuthError = true
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onLocationTypeChanged(LocationType.CITIES)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(LocationsCardUiState.Error::class.java)
+        assertThat((state as LocationsCardUiState.Error).isAuthError).isTrue()
+    }
+
+    @Test
+    fun `when non-auth error, then isAuthError is false`() = test {
+        whenever(statsRepository.fetchCountryViews(any(), any()))
+            .thenReturn(
+                CountryViewsResult.Error(R.string.stats_error_network)
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state).isInstanceOf(LocationsCardUiState.Error::class.java)
+        assertThat((state as LocationsCardUiState.Error).isAuthError).isFalse()
+    }
+
+    @Test
+    fun `when getAdminUrl called with site, then returns admin url`() = test {
+        testSite.adminUrl = "https://example.com/wp-admin"
+
+        initViewModel()
+
+        assertThat(viewModel.getAdminUrl())
+            .isEqualTo("https://example.com/wp-admin")
+    }
+
+    @Test
+    fun `when getAdminUrl called without site, then returns null`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+
+        initViewModel()
+
+        assertThat(viewModel.getAdminUrl()).isNull()
+    }
     // endregion
 
     // region Success states
