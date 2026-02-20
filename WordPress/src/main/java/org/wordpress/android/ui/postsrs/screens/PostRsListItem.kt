@@ -128,6 +128,13 @@ private fun PostContentItem(
                             .clip(RoundedCornerShape(2.dp)),
                         contentScale = ContentScale.Crop
                     )
+                } else if (post.featuredImageId != 0L) {
+                    Box(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(RoundedCornerShape(2.dp))
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                    )
                 }
             }
             if (post.actions.isNotEmpty()) {
