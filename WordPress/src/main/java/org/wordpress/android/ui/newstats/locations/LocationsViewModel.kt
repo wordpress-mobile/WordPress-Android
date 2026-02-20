@@ -601,8 +601,6 @@ class LocationsViewModel @Inject constructor(
         maxViewsForBar = 0,
         hasMoreItems = false
     )
-
-    companion object
 }
 
 data class LocationsDetailData(

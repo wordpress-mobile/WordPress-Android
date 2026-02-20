@@ -8,7 +8,7 @@ import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.components.StatsViewChange.NoChange
 
 /**
- * UI State for the Countries stats card.
+ * UI State for the Locations stats card.
  */
 sealed class LocationsCardUiState {
     data object Loading : LocationsCardUiState()
