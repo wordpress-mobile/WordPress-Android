@@ -509,13 +509,13 @@ class PostRsListViewModel @Inject constructor(
 
     private fun resolveFeaturedImages(tab: PostRsListTab, posts: List<PostRsUiModel>) {
         val unresolved = posts.filter {
-            it.featuredMediaId != null && it.featuredImageUrl == null
+            it.featuredImageId != null && it.featuredImageUrl == null
         }
         if (unresolved.isEmpty()) return
 
         viewModelScope.launch {
             for (post in unresolved) {
-                val mediaId = post.featuredMediaId ?: continue
+                val mediaId = post.featuredImageId ?: continue
                 val url = withContext(Dispatchers.IO) {
                     restClient.fetchMediaUrl(site, mediaId)
                 } ?: continue
