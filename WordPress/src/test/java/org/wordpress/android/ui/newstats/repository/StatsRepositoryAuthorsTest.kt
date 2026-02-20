@@ -204,6 +204,45 @@ class StatsRepositoryAuthorsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given parsing error, when fetchTopAuthors, then correct message is returned`() = test {
+        whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.PARSING_ERROR))
+
+        val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(TopAuthorsResult.Error::class.java)
+        val error = result as TopAuthorsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_parsing)
+        assertThat(error.isAuthError).isFalse()
+    }
+
+    @Test
+    fun `given api error, when fetchTopAuthors, then correct message is returned`() = test {
+        whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.API_ERROR))
+
+        val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(TopAuthorsResult.Error::class.java)
+        val error = result as TopAuthorsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_api)
+        assertThat(error.isAuthError).isFalse()
+    }
+
+    @Test
+    fun `given unknown error, when fetchTopAuthors, then correct message is returned`() = test {
+        whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.UNKNOWN))
+
+        val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(TopAuthorsResult.Error::class.java)
+        val error = result as TopAuthorsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_unknown)
+        assertThat(error.isAuthError).isFalse()
+    }
+
+    @Test
     fun `when fetchTopAuthors is called, then data source is called twice for comparison`() = test {
         whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
             .thenReturn(TopAuthorsDataResult.Success(createTopAuthorsData()))

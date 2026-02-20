@@ -234,6 +234,45 @@ class StatsRepositoryCountryViewsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given parsing error, when fetchCountryViews, then correct message is returned`() = test {
+        whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.PARSING_ERROR))
+
+        val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(CountryViewsResult.Error::class.java)
+        val error = result as CountryViewsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_parsing)
+        assertThat(error.isAuthError).isFalse()
+    }
+
+    @Test
+    fun `given api error, when fetchCountryViews, then correct message is returned`() = test {
+        whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.API_ERROR))
+
+        val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(CountryViewsResult.Error::class.java)
+        val error = result as CountryViewsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_api)
+        assertThat(error.isAuthError).isFalse()
+    }
+
+    @Test
+    fun `given unknown error, when fetchCountryViews, then correct message is returned`() = test {
+        whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.UNKNOWN))
+
+        val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(CountryViewsResult.Error::class.java)
+        val error = result as CountryViewsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_unknown)
+        assertThat(error.isAuthError).isFalse()
+    }
+
+    @Test
     fun `when fetchCountryViews is called, then data source is called twice for comparison`() = test {
         whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
             .thenReturn(CountryViewsDataResult.Success(createCountryViewsData()))
