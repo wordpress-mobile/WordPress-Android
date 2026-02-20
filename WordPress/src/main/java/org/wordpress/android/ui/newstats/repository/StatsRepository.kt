@@ -19,6 +19,8 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.newstats.StatsPeriod
+import androidx.annotation.StringRes
+import org.wordpress.android.R
 import org.wordpress.android.util.AppLog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -735,7 +737,7 @@ class StatsRepository @Inject constructor(
             }
             is CountryViewsDataResult.Error -> {
                 appLogWrapper.e(AppLog.T.STATS, "Error fetching country views: ${currentResult.message}")
-                CountryViewsResult.Error(currentResult.message)
+                CountryViewsResult.Error(R.string.stats_todays_stats_failed_to_load)
             }
         }
     }
@@ -774,7 +776,7 @@ class StatsRepository @Inject constructor(
                     "Error fetching region views: " +
                         currentResult.message
                 )
-                RegionViewsResult.Error(currentResult.message)
+                RegionViewsResult.Error(R.string.stats_todays_stats_failed_to_load)
             }
         }
     }
@@ -854,7 +856,7 @@ class StatsRepository @Inject constructor(
                     "Error fetching city views: " +
                         currentResult.message
                 )
-                CityViewsResult.Error(currentResult.message)
+                CityViewsResult.Error(R.string.stats_todays_stats_failed_to_load)
             }
         }
     }
@@ -958,7 +960,7 @@ class StatsRepository @Inject constructor(
             }
             is TopAuthorsDataResult.Error -> {
                 appLogWrapper.e(AppLog.T.STATS, "Error fetching top authors: ${currentResult.message}")
-                TopAuthorsResult.Error(currentResult.message)
+                TopAuthorsResult.Error(R.string.stats_todays_stats_failed_to_load)
             }
         }
     }
@@ -1118,7 +1120,7 @@ sealed class CountryViewsResult {
         val totalViewsChange: Long,
         val totalViewsChangePercent: Double
     ) : CountryViewsResult()
-    data class Error(val message: String) : CountryViewsResult()
+    data class Error(@StringRes val messageResId: Int) : CountryViewsResult()
 }
 
 /**
@@ -1152,7 +1154,7 @@ sealed class RegionViewsResult {
         val totalViewsChange: Long,
         val totalViewsChangePercent: Double
     ) : RegionViewsResult()
-    data class Error(val message: String) : RegionViewsResult()
+    data class Error(@StringRes val messageResId: Int) : RegionViewsResult()
 }
 
 /**
@@ -1186,7 +1188,7 @@ sealed class CityViewsResult {
         val totalViewsChange: Long,
         val totalViewsChangePercent: Double
     ) : CityViewsResult()
-    data class Error(val message: String) : CityViewsResult()
+    data class Error(@StringRes val messageResId: Int) : CityViewsResult()
 }
 
 /**
@@ -1221,7 +1223,7 @@ sealed class TopAuthorsResult {
         val totalViewsChange: Long,
         val totalViewsChangePercent: Double
     ) : TopAuthorsResult()
-    data class Error(val message: String) : TopAuthorsResult()
+    data class Error(@StringRes val messageResId: Int) : TopAuthorsResult()
 }
 
 /**

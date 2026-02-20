@@ -61,7 +61,7 @@ fun AuthorsCard(
             )
             is AuthorsCardUiState.Error -> StatsCardErrorContent(
                 titleResId = R.string.stats_authors_title,
-                errorMessage = uiState.message,
+                errorMessageResId = uiState.messageResId,
                 onRetry = onRetry,
                 onRemoveCard = onRemoveCard,
                 cardPosition = cardPosition,
@@ -249,7 +249,7 @@ private fun AuthorsCardLoadedPreview() {
 private fun AuthorsCardErrorPreview() {
     AppThemeM3 {
         AuthorsCard(
-            uiState = AuthorsCardUiState.Error("Failed to load author data"),
+            uiState = AuthorsCardUiState.Error(R.string.stats_todays_stats_failed_to_load),
             onShowAllClick = {},
             onRetry = {},
             onRemoveCard = {}

@@ -11,6 +11,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
@@ -168,12 +169,13 @@ class StatsRepositoryAuthorsTest : BaseUnitTest() {
     @Test
     fun `given error response, when fetchTopAuthors, then error result is returned`() = test {
         whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
-            .thenReturn(TopAuthorsDataResult.Error(ERROR_MESSAGE))
+            .thenReturn(TopAuthorsDataResult.Error("Network error"))
 
         val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
 
         assertThat(result).isInstanceOf(TopAuthorsResult.Error::class.java)
-        assertThat((result as TopAuthorsResult.Error).message).isEqualTo(ERROR_MESSAGE)
+        assertThat((result as TopAuthorsResult.Error).messageResId)
+            .isEqualTo(R.string.stats_todays_stats_failed_to_load)
     }
 
     @Test
@@ -228,7 +230,6 @@ class StatsRepositoryAuthorsTest : BaseUnitTest() {
 
     companion object {
         private const val TEST_SITE_ID = 123L
-        private const val ERROR_MESSAGE = "Test error message"
 
         private const val TEST_AUTHOR_NAME_1 = "John Doe"
         private const val TEST_AUTHOR_NAME_2 = "Jane Smith"

@@ -107,9 +107,7 @@ class LocationsViewModel @Inject constructor(
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
             setAllStatesError(
-                resourceProvider.getString(
-                    R.string.stats_todays_stats_no_site_selected
-                )
+                R.string.stats_todays_stats_no_site_selected
             )
             return
         }
@@ -117,9 +115,7 @@ class LocationsViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
             setAllStatesError(
-                resourceProvider.getString(
-                    R.string.stats_todays_stats_failed_to_load
-                )
+                R.string.stats_todays_stats_failed_to_load
             )
             return
         }
@@ -232,8 +228,8 @@ class LocationsViewModel @Inject constructor(
         }
     }
 
-    private fun setAllStatesError(message: String) {
-        val error = LocationsCardUiState.Error(message)
+    private fun setAllStatesError(@androidx.annotation.StringRes messageResId: Int) {
+        val error = LocationsCardUiState.Error(messageResId)
         _countriesUiState.value = error
         _regionsUiState.value = error
         _citiesUiState.value = error
@@ -303,14 +299,12 @@ class LocationsViewModel @Inject constructor(
                 }
                 is CountryViewsResult.Error -> {
                     _countriesUiState.value =
-                        LocationsCardUiState.Error(result.message)
+                        LocationsCardUiState.Error(result.messageResId)
                 }
             }
         } catch (e: Exception) {
             _countriesUiState.value = LocationsCardUiState.Error(
-                e.message ?: resourceProvider.getString(
-                    R.string.stats_todays_stats_unknown_error
-                )
+                R.string.stats_todays_stats_unknown_error
             )
         }
     }
@@ -382,14 +376,12 @@ class LocationsViewModel @Inject constructor(
                 }
                 is RegionViewsResult.Error -> {
                     _regionsUiState.value =
-                        LocationsCardUiState.Error(result.message)
+                        LocationsCardUiState.Error(result.messageResId)
                 }
             }
         } catch (e: Exception) {
             _regionsUiState.value = LocationsCardUiState.Error(
-                e.message ?: resourceProvider.getString(
-                    R.string.stats_todays_stats_unknown_error
-                )
+                R.string.stats_todays_stats_unknown_error
             )
         }
     }
@@ -456,14 +448,12 @@ class LocationsViewModel @Inject constructor(
                 }
                 is CityViewsResult.Error -> {
                     _citiesUiState.value =
-                        LocationsCardUiState.Error(result.message)
+                        LocationsCardUiState.Error(result.messageResId)
                 }
             }
         } catch (e: Exception) {
             _citiesUiState.value = LocationsCardUiState.Error(
-                e.message ?: resourceProvider.getString(
-                    R.string.stats_todays_stats_unknown_error
-                )
+                R.string.stats_todays_stats_unknown_error
             )
         }
     }

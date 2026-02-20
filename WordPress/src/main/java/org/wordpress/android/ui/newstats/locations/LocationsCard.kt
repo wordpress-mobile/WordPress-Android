@@ -312,7 +312,7 @@ private fun ErrorContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = uiState.message,
+                text = stringResource(uiState.messageResId),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error
             )
@@ -499,7 +499,7 @@ private fun LocationsCardErrorPreview() {
     AppThemeM3 {
         LocationsCard(
             uiState = LocationsCardUiState.Error(
-                "Failed to load country data"
+                R.string.stats_todays_stats_failed_to_load
             ),
             selectedLocationType = LocationType.COUNTRIES,
             onLocationTypeChanged = {},

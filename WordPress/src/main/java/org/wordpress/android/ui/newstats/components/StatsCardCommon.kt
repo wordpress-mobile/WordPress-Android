@@ -124,7 +124,7 @@ fun StatsCardEmptyContent() {
 @Composable
 fun StatsCardErrorContent(
     @StringRes titleResId: Int,
-    errorMessage: String,
+    @StringRes errorMessageResId: Int,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
@@ -149,7 +149,7 @@ fun StatsCardErrorContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = errorMessage,
+                text = stringResource(errorMessageResId),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error
             )

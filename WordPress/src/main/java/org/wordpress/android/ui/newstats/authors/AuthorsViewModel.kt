@@ -50,9 +50,7 @@ class AuthorsViewModel @Inject constructor(
         if (site == null) {
             loadingPeriod = null
             _uiState.value = AuthorsCardUiState.Error(
-                resourceProvider.getString(
-                    R.string.stats_todays_stats_no_site_selected
-                )
+                R.string.stats_todays_stats_no_site_selected
             )
             return
         }
@@ -61,9 +59,7 @@ class AuthorsViewModel @Inject constructor(
         if (accessToken.isNullOrEmpty()) {
             loadingPeriod = null
             _uiState.value = AuthorsCardUiState.Error(
-                resourceProvider.getString(
-                    R.string.stats_todays_stats_failed_to_load
-                )
+                R.string.stats_todays_stats_failed_to_load
             )
             return
         }
@@ -165,14 +161,12 @@ class AuthorsViewModel @Inject constructor(
                 }
                 is TopAuthorsResult.Error -> {
                     _uiState.value =
-                        AuthorsCardUiState.Error(result.message)
+                        AuthorsCardUiState.Error(result.messageResId)
                 }
             }
         } catch (e: Exception) {
             _uiState.value = AuthorsCardUiState.Error(
-                e.message ?: resourceProvider.getString(
-                    R.string.stats_todays_stats_unknown_error
-                )
+                R.string.stats_todays_stats_unknown_error
             )
         }
     }
