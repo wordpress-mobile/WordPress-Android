@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,6 +63,7 @@ class PostRsListViewModel @Inject constructor(
     private val collections = mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PostRsListTab>()
+    private val resolveImageJobs = mutableMapOf<PostRsListTab, Job>()
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
@@ -440,8 +442,6 @@ class PostRsListViewModel @Inject constructor(
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
-                loadItemsForTab(tab)
-                updateListInfoForTab(tab)
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
                 userRefreshingTabs.remove(tab)
@@ -468,8 +468,6 @@ class PostRsListViewModel @Inject constructor(
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
-                loadItemsForTab(tab)
-                updateListInfoForTab(tab)
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
                 updateTabUiState(tab) { copy(isLoadingMore = false) }
@@ -520,7 +518,8 @@ class PostRsListViewModel @Inject constructor(
         }
         if (unresolved.isEmpty()) return
 
-        viewModelScope.launch {
+        resolveImageJobs[tab]?.cancel()
+        resolveImageJobs[tab] = viewModelScope.launch {
             for (post in unresolved) {
                 val mediaId = post.featuredImageId
                 val url = withContext(Dispatchers.IO) {
