@@ -23,6 +23,7 @@ import org.wordpress.android.ui.newstats.repository.RegionViewsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.util.toDateRangeString
 import org.wordpress.android.ui.newstats.components.StatsViewChange
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import kotlin.math.abs
@@ -314,6 +315,7 @@ class LocationsViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
+            AppLog.e(AppLog.T.STATS, "Error fetching country views", e)
             _countriesUiState.value = LocationsCardUiState.Error(
                 R.string.stats_todays_stats_unknown_error
             )
@@ -394,6 +396,7 @@ class LocationsViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
+            AppLog.e(AppLog.T.STATS, "Error fetching region views", e)
             _regionsUiState.value = LocationsCardUiState.Error(
                 R.string.stats_todays_stats_unknown_error
             )
@@ -469,6 +472,7 @@ class LocationsViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
+            AppLog.e(AppLog.T.STATS, "Error fetching city views", e)
             _citiesUiState.value = LocationsCardUiState.Error(
                 R.string.stats_todays_stats_unknown_error
             )

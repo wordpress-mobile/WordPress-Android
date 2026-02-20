@@ -16,6 +16,7 @@ import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TopAuthorItemData
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.repository.TopAuthorsResult
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.ui.newstats.util.toDateRangeString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -170,6 +171,7 @@ class AuthorsViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
+            AppLog.e(AppLog.T.STATS, "Error fetching top authors", e)
             _uiState.value = AuthorsCardUiState.Error(
                 R.string.stats_todays_stats_unknown_error
             )
