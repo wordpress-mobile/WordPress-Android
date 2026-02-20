@@ -526,6 +526,13 @@ class PostRsListViewModel @Inject constructor(
                 val url = withContext(Dispatchers.IO) {
                     restClient.fetchMediaUrl(site, mediaId)
                 } ?: continue
+                val postCount = getTabUiState(tab).posts.size
+                val match = getTabUiState(tab).posts.any { it.remotePostId == post.remotePostId }
+                AppLog.d(
+                    AppLog.T.POSTS,
+                    "resolveFeaturedImages: setting url for postId=${post.remotePostId} " +
+                        "postCount=$postCount match=$match url=$url"
+                )
                 updateTabUiState(tab) {
                     copy(
                         posts = this.posts.map {
@@ -537,6 +544,14 @@ class PostRsListViewModel @Inject constructor(
                         }
                     )
                 }
+                val updatedUrl = getTabUiState(tab).posts
+                    .firstOrNull { it.remotePostId == post.remotePostId }
+                    ?.featuredImageUrl
+                AppLog.d(
+                    AppLog.T.POSTS,
+                    "resolveFeaturedImages: after update postId=${post.remotePostId} " +
+                        "storedUrl=$updatedUrl"
+                )
             }
         }
     }
