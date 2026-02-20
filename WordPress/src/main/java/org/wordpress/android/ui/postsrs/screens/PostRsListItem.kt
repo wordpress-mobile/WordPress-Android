@@ -39,9 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter
 import org.wordpress.android.R
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
 
@@ -122,16 +120,8 @@ private fun PostContentItem(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .size(64.dp)
-                        .clip(RoundedCornerShape(2.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant),
-                    contentScale = ContentScale.Crop,
-                    onError = { state ->
-                        AppLog.e(
-                            AppLog.T.POSTS,
-                            "AsyncImage error: url=${post.featuredImageUrl} " +
-                                "error=${state.result.throwable.message}"
-                        )
-                    }
+                        .clip(RoundedCornerShape(2.dp)),
+                    contentScale = ContentScale.Crop
                 )
             }
             if (post.actions.isNotEmpty()) {

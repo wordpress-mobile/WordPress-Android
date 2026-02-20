@@ -34,7 +34,6 @@ class PostRsRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 val sourceUrl = response.response.data.sourceUrl
                 val url = toPhotonUrl(site, sourceUrl)
-                AppLog.d(AppLog.T.POSTS, "fetchMediaUrl: mediaId=$mediaId url=$url")
                 mediaUrlCache[mediaId] = url
                 url
             }
