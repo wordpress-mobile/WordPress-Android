@@ -70,54 +70,60 @@ private fun PostContentItem(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
-        Box {
-            val endPadding = if (post.actions.isNotEmpty()) 48.dp else 16.dp
-            Row(
-                modifier = Modifier.padding(
-                    start = 16.dp, top = 16.dp, end = endPadding, bottom = 16.dp
-                ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    val statusLabel = if (post.statusLabelResId != 0) {
-                        stringResource(post.statusLabelResId)
-                    } else {
-                        null
+        Row(
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                val statusLabel = if (post.statusLabelResId != 0) {
+                    stringResource(post.statusLabelResId)
+                } else {
+                    null
+                }
+                val bullet = stringResource(R.string.bullet_with_spaces)
+                val dateText = buildString {
+                    if (!statusLabel.isNullOrBlank()) {
+                        append(statusLabel)
+                        if (post.date.isNotBlank()) append(bullet)
                     }
-                    val bullet = stringResource(R.string.bullet_with_spaces)
-                    val dateText = buildString {
-                        if (!statusLabel.isNullOrBlank()) {
-                            append(statusLabel)
-                            if (post.date.isNotBlank()) append(bullet)
-                        }
-                        append(post.date)
-                    }
-                    if (dateText.isNotBlank()) {
-                        Text(
-                            text = dateText,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                    }
+                    append(post.date)
+                }
+                if (dateText.isNotBlank()) {
                     Text(
-                        text = post.title.ifBlank {
-                            stringResource(R.string.untitled_in_parentheses)
-                        },
-                        style = MaterialTheme.typography.titleMedium,
+                        text = dateText,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+                Text(
+                    text = post.title.ifBlank {
+                        stringResource(R.string.untitled_in_parentheses)
+                    },
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                if (post.excerpt.isNotBlank()) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = post.excerpt,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                    if (post.excerpt.isNotBlank()) {
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = post.excerpt,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
+                }
+            }
+            Column(
+                modifier = Modifier.padding(end = 16.dp),
+                horizontalAlignment = Alignment.End
+            ) {
+                if (post.actions.isNotEmpty()) {
+                    PostMenuButton(
+                        actions = post.actions,
+                        onAction = onMenuAction
+                    )
                 }
                 if (post.featuredImageUrl != null) {
                     AsyncImage(
@@ -137,13 +143,6 @@ private fun PostContentItem(
                     )
                 }
             }
-            if (post.actions.isNotEmpty()) {
-                PostMenuButton(
-                    actions = post.actions,
-                    onAction = onMenuAction,
-                    modifier = Modifier.align(Alignment.TopEnd)
-                )
-            }
         }
     }
 }
@@ -151,12 +150,11 @@ private fun PostContentItem(
 @Composable
 private fun PostMenuButton(
     actions: List<PostRsMenuAction>,
-    onAction: (PostRsMenuAction) -> Unit,
-    modifier: Modifier = Modifier
+    onAction: (PostRsMenuAction) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Box(modifier = modifier) {
+    Box {
         IconButton(onClick = { expanded = true }) {
             Icon(
                 Icons.Default.MoreVert,

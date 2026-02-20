@@ -38,7 +38,8 @@ class PostRsRestClient @Inject constructor(
                 url
             }
             else -> {
-                AppLog.w(AppLog.T.POSTS, "fetchMediaUrl: mediaId=$mediaId failed: $response")
+                val msg = (response as? WpRequestResult.WpError<*>)?.errorMessage
+                AppLog.w(AppLog.T.POSTS, "fetchMediaUrl: mediaId=$mediaId failed: $msg")
                 null
             }
         }
