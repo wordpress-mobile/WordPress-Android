@@ -96,6 +96,9 @@ class AuthorsViewModel @Inject constructor(
         loadData()
     }
 
+    fun getAdminUrl(): String? =
+        selectedSiteRepository.getSelectedSite()?.adminUrl
+
     fun onPeriodChanged(period: StatsPeriod) {
         if (loadedPeriod == period || loadingPeriod == period) return
         loadingPeriod = period
@@ -160,8 +163,10 @@ class AuthorsViewModel @Inject constructor(
                     }
                 }
                 is TopAuthorsResult.Error -> {
-                    _uiState.value =
-                        AuthorsCardUiState.Error(result.messageResId)
+                    _uiState.value = AuthorsCardUiState.Error(
+                        result.messageResId,
+                        result.isAuthError
+                    )
                 }
             }
         } catch (e: Exception) {

@@ -55,21 +55,26 @@ class StatsRepository @Inject constructor(
 ) {
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
-    @StringRes
-    private fun mapErrorToStringRes(
-        errorType: StatsErrorType
-    ): Int = when (errorType) {
-        StatsErrorType.AUTH_ERROR ->
-            R.string.stats_error_auth
-        StatsErrorType.NETWORK_ERROR ->
-            R.string.stats_error_network
-        StatsErrorType.PARSING_ERROR ->
-            R.string.stats_error_parsing
-        StatsErrorType.API_ERROR ->
-            R.string.stats_todays_stats_failed_to_load
-        StatsErrorType.UNKNOWN ->
-            R.string.stats_todays_stats_unknown_error
-    }
+    private data class MappedError(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean
+    )
+
+    private fun mapError(errorType: StatsErrorType) = MappedError(
+        messageResId = when (errorType) {
+            StatsErrorType.AUTH_ERROR ->
+                R.string.stats_error_auth
+            StatsErrorType.NETWORK_ERROR ->
+                R.string.stats_error_network
+            StatsErrorType.PARSING_ERROR ->
+                R.string.stats_error_parsing
+            StatsErrorType.API_ERROR ->
+                R.string.stats_todays_stats_failed_to_load
+            StatsErrorType.UNKNOWN ->
+                R.string.stats_todays_stats_unknown_error
+        },
+        isAuthError = errorType == StatsErrorType.AUTH_ERROR
+    )
 
     fun init(accessToken: String) {
         statsDataSource.init(accessToken)
@@ -782,9 +787,11 @@ class StatsRepository @Inject constructor(
                     "Error fetching country views: " +
                         "${currentResult.errorType}"
                 )
-                CountryViewsResult.Error(
-                    mapErrorToStringRes(currentResult.errorType)
-                )
+                mapError(currentResult.errorType).let {
+                    CountryViewsResult.Error(
+                        it.messageResId, it.isAuthError
+                    )
+                }
             }
         }
     }
@@ -823,9 +830,11 @@ class StatsRepository @Inject constructor(
                     "Error fetching region views: " +
                         "${currentResult.errorType}"
                 )
-                RegionViewsResult.Error(
-                    mapErrorToStringRes(currentResult.errorType)
-                )
+                mapError(currentResult.errorType).let {
+                    RegionViewsResult.Error(
+                        it.messageResId, it.isAuthError
+                    )
+                }
             }
         }
     }
@@ -905,9 +914,11 @@ class StatsRepository @Inject constructor(
                     "Error fetching city views: " +
                         "${currentResult.errorType}"
                 )
-                CityViewsResult.Error(
-                    mapErrorToStringRes(currentResult.errorType)
-                )
+                mapError(currentResult.errorType).let {
+                    CityViewsResult.Error(
+                        it.messageResId, it.isAuthError
+                    )
+                }
             }
         }
     }
@@ -1015,9 +1026,11 @@ class StatsRepository @Inject constructor(
                     "Error fetching top authors: " +
                         "${currentResult.errorType}"
                 )
-                TopAuthorsResult.Error(
-                    mapErrorToStringRes(currentResult.errorType)
-                )
+                mapError(currentResult.errorType).let {
+                    TopAuthorsResult.Error(
+                        it.messageResId, it.isAuthError
+                    )
+                }
             }
         }
     }
@@ -1177,7 +1190,10 @@ sealed class CountryViewsResult {
         val totalViewsChange: Long,
         val totalViewsChangePercent: Double
     ) : CountryViewsResult()
-    data class Error(@StringRes val messageResId: Int) : CountryViewsResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : CountryViewsResult()
 }
 
 /**
@@ -1211,7 +1227,10 @@ sealed class RegionViewsResult {
         val totalViewsChange: Long,
         val totalViewsChangePercent: Double
     ) : RegionViewsResult()
-    data class Error(@StringRes val messageResId: Int) : RegionViewsResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : RegionViewsResult()
 }
 
 /**
@@ -1245,7 +1264,10 @@ sealed class CityViewsResult {
         val totalViewsChange: Long,
         val totalViewsChangePercent: Double
     ) : CityViewsResult()
-    data class Error(@StringRes val messageResId: Int) : CityViewsResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : CityViewsResult()
 }
 
 /**
@@ -1280,7 +1302,10 @@ sealed class TopAuthorsResult {
         val totalViewsChange: Long,
         val totalViewsChangePercent: Double
     ) : TopAuthorsResult()
-    data class Error(@StringRes val messageResId: Int) : TopAuthorsResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : TopAuthorsResult()
 }
 
 /**

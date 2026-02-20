@@ -150,6 +150,9 @@ class LocationsViewModel @Inject constructor(
         loadData()
     }
 
+    fun getAdminUrl(): String? =
+        selectedSiteRepository.getSelectedSite()?.adminUrl
+
     fun onPeriodChanged(period: StatsPeriod) {
         if (period == currentPeriod &&
             isTypeLoadedForCurrentPeriod(_selectedLocationType.value)
@@ -228,8 +231,13 @@ class LocationsViewModel @Inject constructor(
         }
     }
 
-    private fun setAllStatesError(@androidx.annotation.StringRes messageResId: Int) {
-        val error = LocationsCardUiState.Error(messageResId)
+    private fun setAllStatesError(
+        @androidx.annotation.StringRes messageResId: Int,
+        isAuthError: Boolean = false
+    ) {
+        val error = LocationsCardUiState.Error(
+            messageResId, isAuthError
+        )
         _countriesUiState.value = error
         _regionsUiState.value = error
         _citiesUiState.value = error
@@ -299,7 +307,10 @@ class LocationsViewModel @Inject constructor(
                 }
                 is CountryViewsResult.Error -> {
                     _countriesUiState.value =
-                        LocationsCardUiState.Error(result.messageResId)
+                        LocationsCardUiState.Error(
+                            result.messageResId,
+                            result.isAuthError
+                        )
                 }
             }
         } catch (e: Exception) {
@@ -376,7 +387,10 @@ class LocationsViewModel @Inject constructor(
                 }
                 is RegionViewsResult.Error -> {
                     _regionsUiState.value =
-                        LocationsCardUiState.Error(result.messageResId)
+                        LocationsCardUiState.Error(
+                            result.messageResId,
+                            result.isAuthError
+                        )
                 }
             }
         } catch (e: Exception) {
@@ -448,7 +462,10 @@ class LocationsViewModel @Inject constructor(
                 }
                 is CityViewsResult.Error -> {
                     _citiesUiState.value =
-                        LocationsCardUiState.Error(result.messageResId)
+                        LocationsCardUiState.Error(
+                            result.messageResId,
+                            result.isAuthError
+                        )
                 }
             }
         } catch (e: Exception) {

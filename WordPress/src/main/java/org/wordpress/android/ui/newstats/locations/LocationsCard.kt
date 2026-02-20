@@ -57,7 +57,8 @@ fun LocationsCard(
     onMoveUp: (() -> Unit)? = null,
     onMoveToTop: (() -> Unit)? = null,
     onMoveDown: (() -> Unit)? = null,
-    onMoveToBottom: (() -> Unit)? = null
+    onMoveToBottom: (() -> Unit)? = null,
+    onOpenWpAdmin: (() -> Unit)? = null
 ) {
     StatsCardContainer(modifier = modifier) {
         when (uiState) {
@@ -72,7 +73,8 @@ fun LocationsCard(
                 onMoveToBottom = onMoveToBottom
             )
             is LocationsCardUiState.Loaded -> LoadedContent(
-                uiState, selectedLocationType, onLocationTypeChanged,
+                uiState, selectedLocationType,
+                onLocationTypeChanged,
                 onShowAllClick, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop,
                 onMoveDown, onMoveToBottom
@@ -87,7 +89,8 @@ fun LocationsCard(
                 onMoveUp = onMoveUp,
                 onMoveToTop = onMoveToTop,
                 onMoveDown = onMoveDown,
-                onMoveToBottom = onMoveToBottom
+                onMoveToBottom = onMoveToBottom,
+                onOpenWpAdmin = onOpenWpAdmin
             )
         }
     }
@@ -282,7 +285,8 @@ private fun ErrorContent(
     onMoveUp: (() -> Unit)?,
     onMoveToTop: (() -> Unit)?,
     onMoveDown: (() -> Unit)?,
-    onMoveToBottom: (() -> Unit)?
+    onMoveToBottom: (() -> Unit)?,
+    onOpenWpAdmin: (() -> Unit)? = null
 ) {
     val titleResId = when (selectedLocationType) {
         LocationType.COUNTRIES -> R.string.stats_countries_title
@@ -317,8 +321,20 @@ private fun ErrorContent(
                 color = MaterialTheme.colorScheme.error
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(text = stringResource(R.string.retry))
+            if (onOpenWpAdmin != null) {
+                Button(onClick = onOpenWpAdmin) {
+                    Text(
+                        text = stringResource(
+                            R.string.my_site_btn_wp_admin
+                        )
+                    )
+                }
+            } else {
+                Button(onClick = onRetry) {
+                    Text(
+                        text = stringResource(R.string.retry)
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(24.dp))

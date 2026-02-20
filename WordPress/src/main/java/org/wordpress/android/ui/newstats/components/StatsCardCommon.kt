@@ -131,7 +131,8 @@ fun StatsCardErrorContent(
     onMoveUp: (() -> Unit)?,
     onMoveToTop: (() -> Unit)?,
     onMoveDown: (() -> Unit)?,
-    onMoveToBottom: (() -> Unit)?
+    onMoveToBottom: (() -> Unit)?,
+    onOpenWpAdmin: (() -> Unit)? = null
 ) {
     Column(modifier = Modifier.padding(CardPadding)) {
         StatsCardHeader(
@@ -154,8 +155,20 @@ fun StatsCardErrorContent(
                 color = MaterialTheme.colorScheme.error
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(text = stringResource(R.string.retry))
+            if (onOpenWpAdmin != null) {
+                Button(onClick = onOpenWpAdmin) {
+                    Text(
+                        text = stringResource(
+                            R.string.my_site_btn_wp_admin
+                        )
+                    )
+                }
+            } else {
+                Button(onClick = onRetry) {
+                    Text(
+                        text = stringResource(R.string.retry)
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(24.dp))

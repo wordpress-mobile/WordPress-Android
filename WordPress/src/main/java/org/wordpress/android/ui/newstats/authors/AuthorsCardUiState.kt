@@ -17,7 +17,10 @@ sealed class AuthorsCardUiState {
         val hasMoreItems: Boolean
     ) : AuthorsCardUiState()
 
-    data class Error(@StringRes val messageResId: Int) : AuthorsCardUiState()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : AuthorsCardUiState()
 }
 
 /**

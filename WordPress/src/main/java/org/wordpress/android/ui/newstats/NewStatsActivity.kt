@@ -66,6 +66,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.components.AddStatsCardBottomSheet
@@ -79,8 +80,10 @@ import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsCard
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsViewModel
 import org.wordpress.android.ui.newstats.authors.AuthorsCard
+import org.wordpress.android.ui.newstats.authors.AuthorsCardUiState
 import org.wordpress.android.ui.newstats.authors.AuthorsDetailActivity
 import org.wordpress.android.ui.newstats.authors.AuthorsViewModel
+import org.wordpress.android.ui.newstats.locations.LocationsCardUiState
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
 
@@ -488,7 +491,14 @@ private fun TrafficTabContent(
                         onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
                         onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
-                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
+                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (locationsUiState as?
+                                LocationsCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl = locationsViewModel::getAdminUrl,
+                            context = context
+                        )
                     )
                     StatsCardType.AUTHORS -> AuthorsCard(
                         uiState = authorsUiState,
@@ -509,7 +519,14 @@ private fun TrafficTabContent(
                         onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
                         onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
-                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
+                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (authorsUiState as?
+                                AuthorsCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl = authorsViewModel::getAdminUrl,
+                            context = context
+                        )
                     )
                 }
             }
@@ -670,6 +687,20 @@ private fun StatsPeriod.getDisplayLabel(): String {
         }
         else -> stringResource(id = labelResId)
     }
+}
+
+private fun buildOpenWpAdminAction(
+    isAuthError: Boolean,
+    getAdminUrl: () -> String?,
+    context: Context
+): (() -> Unit)? = if (isAuthError) {
+    {
+        getAdminUrl()?.let { url ->
+            ActivityLauncher.openUrlExternal(context, url)
+        }
+    }
+} else {
+    null
 }
 
 @Preview
