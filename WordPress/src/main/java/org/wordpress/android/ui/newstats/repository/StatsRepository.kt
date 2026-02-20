@@ -3,8 +3,10 @@ package org.wordpress.android.ui.newstats.repository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.wordpress.android.ui.newstats.datasource.CityViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
+import org.wordpress.android.ui.newstats.datasource.RegionViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
@@ -42,6 +44,7 @@ private const val NUM_DAYS_TODAY = 1
  * Repository for fetching stats data using the wordpress-rs API.
  * Handles hourly visits/views data for the Today's Stats card chart.
  */
+@Suppress("LargeClass")
 class StatsRepository @Inject constructor(
     private val statsDataSource: StatsDataSource,
     private val appLogWrapper: AppLogWrapper,
@@ -738,6 +741,168 @@ class StatsRepository @Inject constructor(
     }
 
     /**
+     * Fetches region views stats for a specific site and period with comparison data.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param period The stats period to fetch
+     * @return Region views data with comparison or error
+     */
+    suspend fun fetchRegionViews(
+        siteId: Long,
+        period: StatsPeriod
+    ): RegionViewsResult = withContext(ioDispatcher) {
+        val (currentDateRange, previousDateRange) =
+            calculateComparisonDateRanges(period)
+
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async {
+                statsDataSource.fetchRegionViews(siteId, currentDateRange)
+            }
+            val previousDeferred = async {
+                statsDataSource.fetchRegionViews(siteId, previousDateRange)
+            }
+            currentDeferred.await() to previousDeferred.await()
+        }
+
+        when (currentResult) {
+            is RegionViewsDataResult.Success -> {
+                buildRegionViewsSuccess(currentResult, previousResult)
+            }
+            is RegionViewsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching region views: " +
+                        currentResult.message
+                )
+                RegionViewsResult.Error(currentResult.message)
+            }
+        }
+    }
+
+    private fun buildRegionViewsSuccess(
+        currentResult: RegionViewsDataResult.Success,
+        previousResult: RegionViewsDataResult
+    ): RegionViewsResult {
+        val previousMap =
+            if (previousResult is RegionViewsDataResult.Success) {
+                previousResult.data.regions.associateBy { it.location }
+            } else {
+                emptyMap()
+            }
+
+        val totalViews = currentResult.data.regions.sumOf { it.views }
+        val previousTotalViews =
+            if (previousResult is RegionViewsDataResult.Success) {
+                previousResult.data.regions.sumOf { it.views }
+            } else {
+                0L
+            }
+        val totalChange = totalViews - previousTotalViews
+        val totalChangePercent = calculateChangePercent(
+            totalViews, previousTotalViews, totalChange
+        )
+
+        return RegionViewsResult.Success(
+            regions = currentResult.data.regions.map { region ->
+                val prev = previousMap[region.location]?.views ?: 0L
+                RegionViewItemData(
+                    location = region.location,
+                    countryCode = region.countryCode,
+                    views = region.views,
+                    flagIconUrl = region.flagIconUrl,
+                    previousViews = prev
+                )
+            },
+            totalViews = totalViews,
+            otherViews = currentResult.data.otherViews,
+            totalViewsChange = totalChange,
+            totalViewsChangePercent = totalChangePercent
+        )
+    }
+
+    /**
+     * Fetches city views stats for a specific site and period with comparison data.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param period The stats period to fetch
+     * @return City views data with comparison or error
+     */
+    suspend fun fetchCityViews(
+        siteId: Long,
+        period: StatsPeriod
+    ): CityViewsResult = withContext(ioDispatcher) {
+        val (currentDateRange, previousDateRange) =
+            calculateComparisonDateRanges(period)
+
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async {
+                statsDataSource.fetchCityViews(siteId, currentDateRange)
+            }
+            val previousDeferred = async {
+                statsDataSource.fetchCityViews(siteId, previousDateRange)
+            }
+            currentDeferred.await() to previousDeferred.await()
+        }
+
+        when (currentResult) {
+            is CityViewsDataResult.Success -> {
+                buildCityViewsSuccess(currentResult, previousResult)
+            }
+            is CityViewsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching city views: " +
+                        currentResult.message
+                )
+                CityViewsResult.Error(currentResult.message)
+            }
+        }
+    }
+
+    private fun buildCityViewsSuccess(
+        currentResult: CityViewsDataResult.Success,
+        previousResult: CityViewsDataResult
+    ): CityViewsResult {
+        val previousMap =
+            if (previousResult is CityViewsDataResult.Success) {
+                previousResult.data.cities.associateBy { it.location }
+            } else {
+                emptyMap()
+            }
+
+        val totalViews = currentResult.data.cities.sumOf { it.views }
+        val previousTotalViews =
+            if (previousResult is CityViewsDataResult.Success) {
+                previousResult.data.cities.sumOf { it.views }
+            } else {
+                0L
+            }
+        val totalChange = totalViews - previousTotalViews
+        val totalChangePercent = calculateChangePercent(
+            totalViews, previousTotalViews, totalChange
+        )
+
+        return CityViewsResult.Success(
+            cities = currentResult.data.cities.map { city ->
+                val prev = previousMap[city.location]?.views ?: 0L
+                CityViewItemData(
+                    location = city.location,
+                    countryCode = city.countryCode,
+                    views = city.views,
+                    latitude = city.latitude,
+                    longitude = city.longitude,
+                    flagIconUrl = city.flagIconUrl,
+                    previousViews = prev
+                )
+            },
+            totalViews = totalViews,
+            otherViews = currentResult.data.otherViews,
+            totalViewsChange = totalChange,
+            totalViewsChangePercent = totalChangePercent
+        )
+    }
+
+    /**
      * Fetches top authors stats for a specific site and period with comparison data.
      *
      * @param siteId The WordPress.com site ID
@@ -796,6 +961,19 @@ class StatsRepository @Inject constructor(
                 TopAuthorsResult.Error(currentResult.message)
             }
         }
+    }
+
+    private fun calculateChangePercent(
+        totalViews: Long,
+        previousTotalViews: Long,
+        totalChange: Long
+    ): Double = if (previousTotalViews > 0) {
+        (totalChange.toDouble() / previousTotalViews.toDouble()) *
+            PERCENTAGE_MULTIPLIER
+    } else if (totalViews > 0) {
+        PERCENTAGE_MULTIPLIER
+    } else {
+        PERCENTAGE_NO_CHANGE
     }
 }
 
@@ -950,6 +1128,76 @@ data class CountryViewItemData(
     val countryCode: String,
     val countryName: String,
     val views: Long,
+    val flagIconUrl: String?,
+    val previousViews: Long
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double get() = if (previousViews > 0) {
+        (viewsChange.toDouble() / previousViews.toDouble()) * PERCENTAGE_MULTIPLIER
+    } else if (views > 0) {
+        PERCENTAGE_MULTIPLIER
+    } else {
+        PERCENTAGE_NO_CHANGE
+    }
+}
+
+/**
+ * Result wrapper for region views fetch operation.
+ */
+sealed class RegionViewsResult {
+    data class Success(
+        val regions: List<RegionViewItemData>,
+        val totalViews: Long,
+        val otherViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
+    ) : RegionViewsResult()
+    data class Error(val message: String) : RegionViewsResult()
+}
+
+/**
+ * Data for a single region view item from the repository layer.
+ */
+data class RegionViewItemData(
+    val location: String,
+    val countryCode: String,
+    val views: Long,
+    val flagIconUrl: String?,
+    val previousViews: Long
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double get() = if (previousViews > 0) {
+        (viewsChange.toDouble() / previousViews.toDouble()) * PERCENTAGE_MULTIPLIER
+    } else if (views > 0) {
+        PERCENTAGE_MULTIPLIER
+    } else {
+        PERCENTAGE_NO_CHANGE
+    }
+}
+
+/**
+ * Result wrapper for city views fetch operation.
+ */
+sealed class CityViewsResult {
+    data class Success(
+        val cities: List<CityViewItemData>,
+        val totalViews: Long,
+        val otherViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
+    ) : CityViewsResult()
+    data class Error(val message: String) : CityViewsResult()
+}
+
+/**
+ * Data for a single city view item from the repository layer.
+ */
+data class CityViewItemData(
+    val location: String,
+    val countryCode: String,
+    val views: Long,
+    val latitude: String?,
+    val longitude: String?,
     val flagIconUrl: String?,
     val previousViews: Long
 ) {

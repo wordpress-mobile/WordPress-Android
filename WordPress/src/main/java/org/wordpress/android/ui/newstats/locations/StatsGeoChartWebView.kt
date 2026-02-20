@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.newstats.countries
+package org.wordpress.android.ui.newstats.locations
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -10,9 +10,12 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import org.wordpress.android.ui.newstats.util.ShimmerBox
 import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 import java.util.Locale
@@ -46,6 +50,7 @@ private const val RGB_MASK = 0xFFFFFF
 fun StatsGeoChartWebView(
     mapData: String,
     modifier: Modifier = Modifier,
+    useMarkers: Boolean = false,
     onError: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -56,45 +61,84 @@ fun StatsGeoChartWebView(
     val backgroundColor = MaterialTheme.colorScheme.surface.toHexString()
     val viewsLabel = stringResource(R.string.stats_countries_views_header)
 
-    val htmlPage = remember(mapData, colorLow, colorHigh, backgroundColor, emptyColor, viewsLabel) {
-        buildGeoChartHtml(mapData, viewsLabel, colorLow, colorHigh, emptyColor, backgroundColor)
+    val isMapLoading = remember { mutableStateOf(true) }
+
+    val htmlPage = remember(
+        mapData, colorLow, colorHigh, backgroundColor,
+        emptyColor, viewsLabel, useMarkers
+    ) {
+        isMapLoading.value = true
+        buildGeoChartHtml(
+            mapData, viewsLabel, colorLow, colorHigh,
+            emptyColor, backgroundColor, useMarkers
+        )
     }
 
-    AndroidView(
-        modifier = modifier.clip(RoundedCornerShape(8.dp)),
-        factory = { ctx ->
-            WebView(ctx).apply {
-                setBackgroundColor(Color.TRANSPARENT)
+    val lastLoadedHtml = remember { mutableStateOf<String?>(null) }
 
-                // Set up WebViewClient with error handlers (matching old stats MapViewHolder pattern)
-                webViewClient = createWebViewClientWithErrorHandlers(onError)
-
-                // Settings matching the old stats implementation
-                settings.javaScriptEnabled = true
-                settings.cacheMode = WebSettings.LOAD_NO_CACHE
+    Box(modifier = modifier.clip(RoundedCornerShape(8.dp))) {
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { ctx ->
+                WebView(ctx).apply {
+                    setBackgroundColor(Color.TRANSPARENT)
+                    webViewClient =
+                        createWebViewClientWithErrorHandlers(
+                            onError
+                        ) { isMapLoading.value = false }
+                    settings.javaScriptEnabled = true
+                    settings.cacheMode = WebSettings.LOAD_NO_CACHE
+                }
+            },
+            update = { webView ->
+                if (htmlPage != lastLoadedHtml.value) {
+                    lastLoadedHtml.value = htmlPage
+                    val base64Html = Base64.encodeToString(
+                        htmlPage.toByteArray(), Base64.DEFAULT
+                    )
+                    webView.loadData(
+                        base64Html,
+                        "text/html; charset=UTF-8",
+                        "base64"
+                    )
+                }
+            },
+            onRelease = { webView ->
+                webView.destroy()
             }
-        },
-        update = { webView ->
-            val base64Html = Base64.encodeToString(htmlPage.toByteArray(), Base64.DEFAULT)
-            webView.loadData(base64Html, "text/html; charset=UTF-8", "base64")
+        )
+
+        if (isMapLoading.value) {
+            ShimmerBox(modifier = Modifier.fillMaxSize())
         }
-    )
+    }
 }
 
 /**
  * Creates a WebViewClient with error handlers for graceful degradation.
  * This follows the same pattern as MapViewHolder in the old stats implementation.
  */
-private fun createWebViewClientWithErrorHandlers(onError: (() -> Unit)?): WebViewClient {
+private fun createWebViewClientWithErrorHandlers(
+    onError: (() -> Unit)?,
+    onPageLoaded: () -> Unit
+): WebViewClient {
     return object : WebViewClient() {
+        override fun onPageFinished(
+            view: WebView?,
+            url: String?
+        ) {
+            super.onPageFinished(view, url)
+            onPageLoaded()
+        }
+
         override fun onReceivedError(
             view: WebView?,
             request: WebResourceRequest?,
             error: WebResourceError?
         ) {
             super.onReceivedError(view, request, error)
-            // Trigger error callback for main frame errors
             if (request?.isForMainFrame == true) {
+                onPageLoaded()
                 onError?.invoke()
             }
         }
@@ -104,8 +148,8 @@ private fun createWebViewClientWithErrorHandlers(onError: (() -> Unit)?): WebVie
             handler: SslErrorHandler?,
             error: SslError?
         ) {
-            // Do not proceed on SSL errors - this is the secure default behavior
             super.onReceivedSslError(view, handler, error)
+            onPageLoaded()
             onError?.invoke()
         }
     }
@@ -118,23 +162,39 @@ private fun buildGeoChartHtml(
     colorLow: String,
     colorHigh: String,
     emptyColor: String,
-    backgroundColor: String
+    backgroundColor: String,
+    useMarkers: Boolean = false
 ): String {
+    val dataHeader = if (useMarkers) {
+        "['Lat', 'Long', 'City', '$viewsLabel']"
+    } else {
+        "['Country', '$viewsLabel']"
+    }
+    val optionsExtra = if (useMarkers) {
+        "displayMode: 'markers'," +
+            " sizeAxis: { minSize: 3, maxSize: 12 },"
+    } else {
+        "resolution: 'countries',"
+    }
     return """
         <html>
         <head>
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript"
+            src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript">
             google.charts.load('current', {'packages':['geochart']});
             google.charts.setOnLoadCallback(drawRegionsMap);
             function drawRegionsMap() {
                 var data = google.visualization.arrayToDataTable([
-                    ['Country', '$viewsLabel'],$mapData
+                    $dataHeader,$mapData
                 ]);
                 var options = {
                     keepAspectRatio: true,
                     region: 'world',
-                    colorAxis: { colors: ['#$colorLow', '#$colorHigh'] },
+                    $optionsExtra
+                    colorAxis: {
+                        colors: ['#$colorLow', '#$colorHigh']
+                    },
                     datalessRegionColor: '#$emptyColor',
                     backgroundColor: '#$backgroundColor',
                     legend: 'none',
@@ -148,7 +208,8 @@ private fun buildGeoChartHtml(
         </script>
         </head>
         <body style="margin: 0px;">
-        <div id="regions_div" style="width: 100%; height: 100%;"></div>
+        <div id="regions_div"
+            style="width: 100%; height: 100%;"></div>
         </body>
         </html>
     """.trimIndent()

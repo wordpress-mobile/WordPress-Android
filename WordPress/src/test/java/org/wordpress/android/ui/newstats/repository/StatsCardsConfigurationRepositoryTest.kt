@@ -83,7 +83,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
     fun `when removeCard is called, then card is removed from visible cards`() = test {
         val initialJson = """
             {
-                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "COUNTRIES"]
+                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "LOCATIONS"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
@@ -93,7 +93,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
         val jsonCaptor = argumentCaptor<String>()
         verify(appPrefsWrapper).setStatsCardsConfigurationJson(eq(TEST_SITE_ID), jsonCaptor.capture())
         assertThat(jsonCaptor.firstValue).contains("TODAYS_STATS")
-        assertThat(jsonCaptor.firstValue).contains("COUNTRIES")
+        assertThat(jsonCaptor.firstValue).contains("LOCATIONS")
         assertThat(jsonCaptor.firstValue).doesNotContain("VIEWS_STATS")
     }
 
@@ -106,12 +106,12 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
 
-        repository.addCard(TEST_SITE_ID, StatsCardType.COUNTRIES)
+        repository.addCard(TEST_SITE_ID, StatsCardType.LOCATIONS)
 
         val jsonCaptor = argumentCaptor<String>()
         verify(appPrefsWrapper).setStatsCardsConfigurationJson(eq(TEST_SITE_ID), jsonCaptor.capture())
         assertThat(jsonCaptor.firstValue).contains("TODAYS_STATS")
-        assertThat(jsonCaptor.firstValue).contains("COUNTRIES")
+        assertThat(jsonCaptor.firstValue).contains("LOCATIONS")
     }
 
     @Test
@@ -132,7 +132,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
         // JSON with old "MOST_VIEWED" card type that no longer exists
         val jsonWithInvalidCardType = """
             {
-                "visibleCards": ["TODAYS_STATS", "MOST_VIEWED", "COUNTRIES"]
+                "visibleCards": ["TODAYS_STATS", "MOST_VIEWED", "LOCATIONS"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(jsonWithInvalidCardType)
@@ -148,7 +148,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
     fun `when moveCardUp is called, then card is moved up one position`() = test {
         val initialJson = """
             {
-                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "COUNTRIES"]
+                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "LOCATIONS"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
@@ -167,7 +167,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
     fun `when moveCardUp is called on first card, then nothing changes`() = test {
         val initialJson = """
             {
-                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "COUNTRIES"]
+                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "LOCATIONS"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
@@ -182,19 +182,19 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
     fun `when moveCardToTop is called, then card is moved to first position`() = test {
         val initialJson = """
             {
-                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "COUNTRIES"]
+                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "LOCATIONS"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
 
-        repository.moveCardToTop(TEST_SITE_ID, StatsCardType.COUNTRIES)
+        repository.moveCardToTop(TEST_SITE_ID, StatsCardType.LOCATIONS)
 
         val jsonCaptor = argumentCaptor<String>()
         verify(appPrefsWrapper).setStatsCardsConfigurationJson(eq(TEST_SITE_ID), jsonCaptor.capture())
-        // COUNTRIES should now be at position 0
-        assertThat(jsonCaptor.firstValue.indexOf("COUNTRIES"))
+        // LOCATIONS should now be at position 0
+        assertThat(jsonCaptor.firstValue.indexOf("LOCATIONS"))
             .isLessThan(jsonCaptor.firstValue.indexOf("TODAYS_STATS"))
-        assertThat(jsonCaptor.firstValue.indexOf("COUNTRIES"))
+        assertThat(jsonCaptor.firstValue.indexOf("LOCATIONS"))
             .isLessThan(jsonCaptor.firstValue.indexOf("VIEWS_STATS"))
     }
 
@@ -202,7 +202,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
     fun `when moveCardToTop is called on first card, then nothing changes`() = test {
         val initialJson = """
             {
-                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "COUNTRIES"]
+                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "LOCATIONS"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
@@ -216,7 +216,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
     fun `when moveCardDown is called, then card is moved down one position`() = test {
         val initialJson = """
             {
-                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "COUNTRIES"]
+                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "LOCATIONS"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
@@ -225,21 +225,21 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
 
         val jsonCaptor = argumentCaptor<String>()
         verify(appPrefsWrapper).setStatsCardsConfigurationJson(eq(TEST_SITE_ID), jsonCaptor.capture())
-        // VIEWS_STATS should now be after COUNTRIES
+        // VIEWS_STATS should now be after LOCATIONS
         assertThat(jsonCaptor.firstValue.indexOf("VIEWS_STATS"))
-            .isGreaterThan(jsonCaptor.firstValue.indexOf("COUNTRIES"))
+            .isGreaterThan(jsonCaptor.firstValue.indexOf("LOCATIONS"))
     }
 
     @Test
     fun `when moveCardDown is called on last card, then nothing changes`() = test {
         val initialJson = """
             {
-                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "COUNTRIES"]
+                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "LOCATIONS"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
 
-        repository.moveCardDown(TEST_SITE_ID, StatsCardType.COUNTRIES)
+        repository.moveCardDown(TEST_SITE_ID, StatsCardType.LOCATIONS)
 
         verify(appPrefsWrapper, org.mockito.kotlin.never()).setStatsCardsConfigurationJson(any(), any())
     }
@@ -248,7 +248,7 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
     fun `when moveCardToBottom is called, then card is moved to last position`() = test {
         val initialJson = """
             {
-                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "COUNTRIES"]
+                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "LOCATIONS"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
@@ -261,19 +261,19 @@ class StatsCardsConfigurationRepositoryTest : BaseUnitTest() {
         assertThat(jsonCaptor.firstValue.indexOf("TODAYS_STATS"))
             .isGreaterThan(jsonCaptor.firstValue.indexOf("VIEWS_STATS"))
         assertThat(jsonCaptor.firstValue.indexOf("TODAYS_STATS"))
-            .isGreaterThan(jsonCaptor.firstValue.indexOf("COUNTRIES"))
+            .isGreaterThan(jsonCaptor.firstValue.indexOf("LOCATIONS"))
     }
 
     @Test
     fun `when moveCardToBottom is called on last card, then nothing changes`() = test {
         val initialJson = """
             {
-                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "COUNTRIES"]
+                "visibleCards": ["TODAYS_STATS", "VIEWS_STATS", "LOCATIONS"]
             }
         """.trimIndent()
         whenever(appPrefsWrapper.getStatsCardsConfigurationJson(TEST_SITE_ID)).thenReturn(initialJson)
 
-        repository.moveCardToBottom(TEST_SITE_ID, StatsCardType.COUNTRIES)
+        repository.moveCardToBottom(TEST_SITE_ID, StatsCardType.LOCATIONS)
 
         verify(appPrefsWrapper, org.mockito.kotlin.never()).setStatsCardsConfigurationJson(any(), any())
     }
