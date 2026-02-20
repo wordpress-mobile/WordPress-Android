@@ -154,10 +154,7 @@ private fun PostMenuButton(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.CenterEnd
-    ) {
+    Box {
         IconButton(onClick = { expanded = true }) {
             Icon(
                 Icons.Default.MoreVert,
