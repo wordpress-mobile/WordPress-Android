@@ -108,7 +108,7 @@ class LocationsViewModel @Inject constructor(
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
             setAllStatesError(
-                R.string.stats_todays_stats_no_site_selected
+                R.string.stats_error_no_site
             )
             return
         }
@@ -116,7 +116,7 @@ class LocationsViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
             setAllStatesError(
-                R.string.stats_todays_stats_failed_to_load
+                R.string.stats_error_api
             )
             return
         }
@@ -317,7 +317,7 @@ class LocationsViewModel @Inject constructor(
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, "Error fetching country views", e)
             _countriesUiState.value = LocationsCardUiState.Error(
-                R.string.stats_todays_stats_unknown_error
+                R.string.stats_error_unknown
             )
         }
     }
@@ -398,7 +398,7 @@ class LocationsViewModel @Inject constructor(
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, "Error fetching region views", e)
             _regionsUiState.value = LocationsCardUiState.Error(
-                R.string.stats_todays_stats_unknown_error
+                R.string.stats_error_unknown
             )
         }
     }
@@ -474,7 +474,7 @@ class LocationsViewModel @Inject constructor(
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, "Error fetching city views", e)
             _citiesUiState.value = LocationsCardUiState.Error(
-                R.string.stats_todays_stats_unknown_error
+                R.string.stats_error_unknown
             )
         }
     }

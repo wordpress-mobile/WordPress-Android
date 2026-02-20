@@ -71,13 +71,13 @@ class AuthorsViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(AuthorsCardUiState.Error::class.java)
         assertThat((state as AuthorsCardUiState.Error).messageResId)
-            .isEqualTo(R.string.stats_todays_stats_no_site_selected)
+            .isEqualTo(R.string.stats_error_no_site)
     }
 
     @Test
     fun `when fetch fails, then error state is emitted`() = test {
         whenever(statsRepository.fetchTopAuthors(any(), any()))
-            .thenReturn(TopAuthorsResult.Error(R.string.stats_todays_stats_failed_to_load))
+            .thenReturn(TopAuthorsResult.Error(R.string.stats_error_api))
 
         initViewModel()
         advanceUntilIdle()
@@ -85,7 +85,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(AuthorsCardUiState.Error::class.java)
         assertThat((state as AuthorsCardUiState.Error).messageResId)
-            .isEqualTo(R.string.stats_todays_stats_failed_to_load)
+            .isEqualTo(R.string.stats_error_api)
     }
 
     @Test

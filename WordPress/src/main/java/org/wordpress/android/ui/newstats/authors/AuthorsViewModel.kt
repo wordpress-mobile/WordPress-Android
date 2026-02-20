@@ -51,7 +51,7 @@ class AuthorsViewModel @Inject constructor(
         if (site == null) {
             loadingPeriod = null
             _uiState.value = AuthorsCardUiState.Error(
-                R.string.stats_todays_stats_no_site_selected
+                R.string.stats_error_no_site
             )
             return
         }
@@ -60,7 +60,7 @@ class AuthorsViewModel @Inject constructor(
         if (accessToken.isNullOrEmpty()) {
             loadingPeriod = null
             _uiState.value = AuthorsCardUiState.Error(
-                R.string.stats_todays_stats_failed_to_load
+                R.string.stats_error_api
             )
             return
         }
@@ -173,7 +173,7 @@ class AuthorsViewModel @Inject constructor(
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, "Error fetching top authors", e)
             _uiState.value = AuthorsCardUiState.Error(
-                R.string.stats_todays_stats_unknown_error
+                R.string.stats_error_unknown
             )
         }
     }

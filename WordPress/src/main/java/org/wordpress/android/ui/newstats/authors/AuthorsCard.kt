@@ -252,7 +252,7 @@ private fun AuthorsCardLoadedPreview() {
 private fun AuthorsCardErrorPreview() {
     AppThemeM3 {
         AuthorsCard(
-            uiState = AuthorsCardUiState.Error(R.string.stats_todays_stats_failed_to_load),
+            uiState = AuthorsCardUiState.Error(R.string.stats_error_api),
             onShowAllClick = {},
             onRetry = {},
             onRemoveCard = {}

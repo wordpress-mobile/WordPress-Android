@@ -76,13 +76,13 @@ class LocationsViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(LocationsCardUiState.Error::class.java)
         assertThat((state as LocationsCardUiState.Error).messageResId)
-            .isEqualTo(R.string.stats_todays_stats_no_site_selected)
+            .isEqualTo(R.string.stats_error_no_site)
     }
 
     @Test
     fun `when fetch fails, then error state is emitted`() = test {
         whenever(statsRepository.fetchCountryViews(any(), any()))
-            .thenReturn(CountryViewsResult.Error(R.string.stats_todays_stats_failed_to_load))
+            .thenReturn(CountryViewsResult.Error(R.string.stats_error_api))
 
         initViewModel()
         advanceUntilIdle()
@@ -90,7 +90,7 @@ class LocationsViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(LocationsCardUiState.Error::class.java)
         assertThat((state as LocationsCardUiState.Error).messageResId)
-            .isEqualTo(R.string.stats_todays_stats_failed_to_load)
+            .isEqualTo(R.string.stats_error_api)
     }
 
     @Test
@@ -387,7 +387,7 @@ class LocationsViewModelTest : BaseUnitTest() {
     @Test
     fun `when same period is re-selected after error, then data is re-fetched`() = test {
         whenever(statsRepository.fetchCountryViews(any(), any()))
-            .thenReturn(CountryViewsResult.Error(R.string.stats_todays_stats_failed_to_load))
+            .thenReturn(CountryViewsResult.Error(R.string.stats_error_api))
 
         initViewModel()
         advanceUntilIdle()
@@ -717,7 +717,7 @@ class LocationsViewModelTest : BaseUnitTest() {
             whenever(statsRepository.fetchCountryViews(any(), any()))
                 .thenReturn(createSuccessResult())
             whenever(statsRepository.fetchRegionViews(any(), any()))
-                .thenReturn(RegionViewsResult.Error(R.string.stats_todays_stats_failed_to_load))
+                .thenReturn(RegionViewsResult.Error(R.string.stats_error_api))
 
             initViewModel()
             advanceUntilIdle()
@@ -729,7 +729,7 @@ class LocationsViewModelTest : BaseUnitTest() {
             assertThat(state)
                 .isInstanceOf(LocationsCardUiState.Error::class.java)
             assertThat((state as LocationsCardUiState.Error).messageResId)
-                .isEqualTo(R.string.stats_todays_stats_failed_to_load)
+                .isEqualTo(R.string.stats_error_api)
         }
     // endregion
 
@@ -811,7 +811,7 @@ class LocationsViewModelTest : BaseUnitTest() {
             whenever(statsRepository.fetchCountryViews(any(), any()))
                 .thenReturn(createSuccessResult())
             whenever(statsRepository.fetchCityViews(any(), any()))
-                .thenReturn(CityViewsResult.Error(R.string.stats_todays_stats_failed_to_load))
+                .thenReturn(CityViewsResult.Error(R.string.stats_error_api))
 
             initViewModel()
             advanceUntilIdle()
@@ -823,7 +823,7 @@ class LocationsViewModelTest : BaseUnitTest() {
             assertThat(state)
                 .isInstanceOf(LocationsCardUiState.Error::class.java)
             assertThat((state as LocationsCardUiState.Error).messageResId)
-                .isEqualTo(R.string.stats_todays_stats_failed_to_load)
+                .isEqualTo(R.string.stats_error_api)
         }
 
     @Test

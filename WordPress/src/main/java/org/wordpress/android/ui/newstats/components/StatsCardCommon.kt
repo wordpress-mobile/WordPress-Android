@@ -132,7 +132,8 @@ fun StatsCardErrorContent(
     onMoveToTop: (() -> Unit)?,
     onMoveDown: (() -> Unit)?,
     onMoveToBottom: (() -> Unit)?,
-    onOpenWpAdmin: (() -> Unit)? = null
+    onOpenWpAdmin: (() -> Unit)? = null,
+    headerExtra: @Composable (() -> Unit)? = null
 ) {
     Column(modifier = Modifier.padding(CardPadding)) {
         StatsCardHeader(
@@ -144,7 +145,13 @@ fun StatsCardErrorContent(
             onMoveDown = onMoveDown,
             onMoveToBottom = onMoveToBottom
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        if (headerExtra != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            headerExtra()
+        }
+        Spacer(modifier = Modifier.height(
+            if (headerExtra != null) 12.dp else 24.dp
+        ))
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally

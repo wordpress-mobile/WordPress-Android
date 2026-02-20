@@ -69,9 +69,9 @@ class StatsRepository @Inject constructor(
             StatsErrorType.PARSING_ERROR ->
                 R.string.stats_error_parsing
             StatsErrorType.API_ERROR ->
-                R.string.stats_todays_stats_failed_to_load
+                R.string.stats_error_api
             StatsErrorType.UNKNOWN ->
-                R.string.stats_todays_stats_unknown_error
+                R.string.stats_error_unknown
         },
         isAuthError = errorType == StatsErrorType.AUTH_ERROR
     )

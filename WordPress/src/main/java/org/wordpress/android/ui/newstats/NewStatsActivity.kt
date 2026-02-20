@@ -86,6 +86,8 @@ import org.wordpress.android.ui.newstats.authors.AuthorsViewModel
 import org.wordpress.android.ui.newstats.locations.LocationsCardUiState
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
+import android.widget.Toast
+import org.wordpress.android.util.AppLog
 
 @AndroidEntryPoint
 class NewStatsActivity : BaseAppCompatActivity() {
@@ -695,8 +697,19 @@ private fun buildOpenWpAdminAction(
     context: Context
 ): (() -> Unit)? = if (isAuthError) {
     {
-        getAdminUrl()?.let { url ->
+        val url = getAdminUrl()
+        if (url != null) {
             ActivityLauncher.openUrlExternal(context, url)
+        } else {
+            AppLog.w(
+                AppLog.T.STATS,
+                "Admin URL is null, cannot open WP Admin"
+            )
+            Toast.makeText(
+                context,
+                R.string.stats_error_admin_url_unavailable,
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 } else {
