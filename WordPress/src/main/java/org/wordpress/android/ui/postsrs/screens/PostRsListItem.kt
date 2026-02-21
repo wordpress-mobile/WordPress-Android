@@ -6,6 +6,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,8 +24,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.foundation.clickable
-import androidx.compose.ui.semantics.Role
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -120,7 +120,7 @@ private fun PostContentItem(
             Column(
                 modifier = Modifier
                     .padding(start = 8.dp, end = 16.dp)
-                    .width(64.dp),
+                    .width(FEATURED_IMAGE_SIZE),
                 horizontalAlignment = Alignment.End
             ) {
                 if (post.actions.isNotEmpty()) {
@@ -134,14 +134,14 @@ private fun PostContentItem(
                         model = post.featuredImageUrl,
                         contentDescription = null,
                         modifier = Modifier
-                            .size(64.dp)
+                            .size(FEATURED_IMAGE_SIZE)
                             .clip(RoundedCornerShape(2.dp)),
                         contentScale = ContentScale.Crop
                     )
                 } else if (post.featuredImageId != 0L) {
                     Box(
                         modifier = Modifier
-                            .size(64.dp)
+                            .size(FEATURED_IMAGE_SIZE)
                             .clip(RoundedCornerShape(2.dp))
                             .background(MaterialTheme.colorScheme.surfaceVariant)
                     )
@@ -160,7 +160,7 @@ private fun PostMenuButton(
 
     Box(
         modifier = Modifier
-            .size(width = 64.dp, height = 48.dp)
+            .size(width = FEATURED_IMAGE_SIZE, height = 48.dp)
             .clickable(
                 role = Role.Button,
                 onClickLabel = stringResource(R.string.more),
@@ -268,3 +268,5 @@ private fun ErrorItem(modifier: Modifier = Modifier) {
         )
     }
 }
+
+private val FEATURED_IMAGE_SIZE = 64.dp
