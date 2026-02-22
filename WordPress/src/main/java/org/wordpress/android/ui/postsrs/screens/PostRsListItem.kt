@@ -35,15 +35,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
+import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 
 @Composable
 fun PostRsListItem(
@@ -131,19 +134,23 @@ private fun PostContentItem(
                 }
                 if (post.featuredImageUrl != null) {
                     AsyncImage(
-                        model = post.featuredImageUrl,
-                        contentDescription = null,
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(post.featuredImageUrl)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = stringResource(
+                            R.string.featured_image_desc
+                        ),
                         modifier = Modifier
                             .size(FEATURED_IMAGE_SIZE)
                             .clip(RoundedCornerShape(2.dp)),
                         contentScale = ContentScale.Crop
                     )
                 } else if (post.featuredImageId != 0L) {
-                    Box(
+                    ShimmerBox(
                         modifier = Modifier
                             .size(FEATURED_IMAGE_SIZE)
                             .clip(RoundedCornerShape(2.dp))
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
                     )
                 }
             }
@@ -200,6 +207,25 @@ private fun PostMenuButton(
             }
         }
     }
+}
+
+@Composable
+private fun ShimmerBox(modifier: Modifier = Modifier) {
+    val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0.06f,
+        targetValue = 0.14f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 800),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "shimmerAlpha"
+    )
+    Box(
+        modifier = modifier.background(
+            MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
+        )
+    )
 }
 
 @Composable
@@ -269,4 +295,4 @@ private fun ErrorItem(modifier: Modifier = Modifier) {
     }
 }
 
-private val FEATURED_IMAGE_SIZE = 64.dp
+private val FEATURED_IMAGE_SIZE = PostRsRestClient.FEATURED_IMAGE_SIZE_DP.dp

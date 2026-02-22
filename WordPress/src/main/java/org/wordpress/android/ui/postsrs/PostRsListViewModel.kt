@@ -362,6 +362,8 @@ class PostRsListViewModel @Inject constructor(
         collections.clear()
         initializingTabs.clear()
         userRefreshingTabs.clear()
+        resolveImageJobs.values.forEach { it.cancel() }
+        resolveImageJobs.clear()
         _tabStates.value = emptyMap()
     }
 
@@ -507,8 +509,8 @@ class PostRsListViewModel @Inject constructor(
 
     /**
      * Fetches featured image URLs for posts that have a non-zero [PostRsUiModel.featuredImageId]
-     * but no resolved URL yet. Each URL is fetched on IO and the tab state is updated
-     * progressively so images appear as they load.
+     * but no resolved URL yet. All URLs are fetched concurrently on IO and the tab state is
+     * updated progressively so images appear as they load.
      */
     private fun resolveFeaturedImages(tab: PostRsListTab, posts: List<PostRsUiModel>) {
         val unresolved = posts.filter {
@@ -518,21 +520,22 @@ class PostRsListViewModel @Inject constructor(
 
         resolveImageJobs[tab]?.cancel()
         resolveImageJobs[tab] = viewModelScope.launch {
-            for (post in unresolved) {
-                val mediaId = post.featuredImageId
-                val url = withContext(Dispatchers.IO) {
-                    restClient.fetchMediaUrl(site, mediaId)
-                } ?: continue
-                updateTabUiState(tab) {
-                    copy(
-                        posts = this.posts.map {
-                            if (it.remotePostId == post.remotePostId) {
-                                it.copy(featuredImageUrl = url)
-                            } else {
-                                it
+            unresolved.map { post ->
+                launch {
+                    val url = withContext(Dispatchers.IO) {
+                        restClient.fetchMediaUrl(site, post.featuredImageId)
+                    } ?: return@launch
+                    updateTabUiState(tab) {
+                        copy(
+                            posts = this.posts.map {
+                                if (it.remotePostId == post.remotePostId) {
+                                    it.copy(featuredImageUrl = url)
+                                } else {
+                                    it
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }

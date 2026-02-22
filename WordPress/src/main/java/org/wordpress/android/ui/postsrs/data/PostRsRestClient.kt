@@ -4,8 +4,8 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.SiteUtils
@@ -13,6 +13,7 @@ import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,7 +23,7 @@ class PostRsRestClient @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) {
-    private val mediaUrlCache = mutableMapOf<Long, String>()
+    private val mediaUrlCache = ConcurrentHashMap<Long, String>()
 
     suspend fun fetchMediaUrl(site: SiteModel, mediaId: Long): String? {
         mediaUrlCache[mediaId]?.let { return it }
@@ -106,6 +107,6 @@ class PostRsRestClient @Inject constructor(
     }
 
     companion object {
-        private const val FEATURED_IMAGE_SIZE_DP = 64
+        const val FEATURED_IMAGE_SIZE_DP = 64
     }
 }
