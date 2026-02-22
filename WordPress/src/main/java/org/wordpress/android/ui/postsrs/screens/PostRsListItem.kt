@@ -102,9 +102,7 @@ private fun PostContentItem(
                     Spacer(modifier = Modifier.height(4.dp))
                 }
                 Text(
-                    text = post.title.ifBlank {
-                        stringResource(R.string.untitled_in_parentheses)
-                    },
+                    text = post.title.ifBlank { stringResource(R.string.untitled_in_parentheses) },
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
@@ -230,47 +228,32 @@ private fun ShimmerBox(modifier: Modifier = Modifier) {
 
 @Composable
 internal fun PlaceholderItem(modifier: Modifier = Modifier) {
-    val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
-    val alpha by infiniteTransition.animateFloat(
-        initialValue = 0.06f,
-        targetValue = 0.14f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 800),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "shimmerAlpha"
-    )
-    val placeholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
-
     Card(
         modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Box(
+            ShimmerBox(
                 modifier = Modifier
                     .fillMaxWidth(0.25f)
                     .height(12.dp)
                     .clip(RoundedCornerShape(4.dp))
-                    .background(placeholderColor)
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Box(
+            ShimmerBox(
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
                     .height(20.dp)
                     .clip(RoundedCornerShape(4.dp))
-                    .background(placeholderColor)
             )
             Spacer(modifier = Modifier.height(4.dp))
             repeat(2) { index ->
-                Box(
+                ShimmerBox(
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
                         .height(14.dp)
                         .clip(RoundedCornerShape(4.dp))
-                        .background(placeholderColor)
                 )
                 if (index == 0) {
                     Spacer(modifier = Modifier.height(4.dp))
