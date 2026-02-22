@@ -10,6 +10,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
@@ -25,25 +26,49 @@ class PostRsRestClient @Inject constructor(
 ) {
     private val mediaUrlCache = ConcurrentHashMap<Long, String>()
 
-    suspend fun fetchMediaUrl(site: SiteModel, mediaId: Long): String? {
-        mediaUrlCache[mediaId]?.let { return it }
+    /**
+     * Fetches media source URLs for the given [mediaIds] in a single
+     * network call using the `include` parameter, returning a map of
+     * media ID to Photon-optimised URL. IDs already in the local cache
+     * are returned immediately without a network round-trip.
+     */
+    suspend fun fetchMediaUrls(
+        site: SiteModel,
+        mediaIds: List<Long>
+    ): Map<Long, String> {
+        val result = mutableMapOf<Long, String>()
+        val uncached = mutableListOf<Long>()
+        for (id in mediaIds) {
+            val cached = mediaUrlCache[id]
+            if (cached != null) result[id] = cached else uncached.add(id)
+        }
+        if (uncached.isEmpty()) return result
+
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request {
-            it.media().retrieveWithEditContext(mediaId)
+            it.media().listWithEditContext(
+                MediaListParams(include = uncached)
+            )
         }
-        return when (response) {
+        when (response) {
             is WpRequestResult.Success -> {
-                val sourceUrl = response.response.data.sourceUrl
-                val url = toPhotonUrl(site, sourceUrl)
-                mediaUrlCache[mediaId] = url
-                url
+                for (media in response.response.data) {
+                    val url = toPhotonUrl(site, media.sourceUrl)
+                    mediaUrlCache[media.id] = url
+                    result[media.id] = url
+                }
             }
             else -> {
-                val msg = (response as? WpRequestResult.WpError<*>)?.errorMessage
-                AppLog.w(AppLog.T.POSTS, "fetchMediaUrl: mediaId=$mediaId failed: $msg")
-                null
+                val msg =
+                    (response as? WpRequestResult.WpError<*>)
+                        ?.errorMessage
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "fetchMediaUrls failed: $msg"
+                )
             }
         }
+        return result
     }
 
     private fun toPhotonUrl(site: SiteModel, sourceUrl: String): String {

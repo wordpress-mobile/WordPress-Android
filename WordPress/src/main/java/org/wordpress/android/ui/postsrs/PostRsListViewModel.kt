@@ -508,35 +508,36 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
-     * Fetches featured image URLs for posts that have a non-zero [PostRsUiModel.featuredImageId]
-     * but no resolved URL yet. All URLs are fetched concurrently on IO and the tab state is
-     * updated progressively so images appear as they load.
+     * Fetches featured image URLs for posts that have a non-zero
+     * [PostRsUiModel.featuredImageId] but no resolved URL yet.
+     * All URLs are fetched in a single batched network call.
      */
-    private fun resolveFeaturedImages(tab: PostRsListTab, posts: List<PostRsUiModel>) {
-        val unresolved = posts.filter {
-            it.featuredImageId != 0L && it.featuredImageUrl == null
-        }
-        if (unresolved.isEmpty()) return
+    private fun resolveFeaturedImages(
+        tab: PostRsListTab,
+        posts: List<PostRsUiModel>
+    ) {
+        val unresolvedIds = posts
+            .filter { it.featuredImageId != 0L && it.featuredImageUrl == null }
+            .map { it.featuredImageId }
+        if (unresolvedIds.isEmpty()) return
 
         resolveImageJobs[tab]?.cancel()
         resolveImageJobs[tab] = viewModelScope.launch {
-            unresolved.map { post ->
-                launch {
-                    val url = withContext(Dispatchers.IO) {
-                        restClient.fetchMediaUrl(site, post.featuredImageId)
-                    } ?: return@launch
-                    updateTabUiState(tab) {
-                        copy(
-                            posts = this.posts.map {
-                                if (it.remotePostId == post.remotePostId) {
-                                    it.copy(featuredImageUrl = url)
-                                } else {
-                                    it
-                                }
-                            }
-                        )
+            val urls = withContext(Dispatchers.IO) {
+                restClient.fetchMediaUrls(site, unresolvedIds)
+            }
+            if (urls.isEmpty()) return@launch
+            updateTabUiState(tab) {
+                copy(
+                    posts = this.posts.map { post ->
+                        val url = urls[post.featuredImageId]
+                        if (url != null) {
+                            post.copy(featuredImageUrl = url)
+                        } else {
+                            post
+                        }
                     }
-                }
+                )
             }
         }
     }
