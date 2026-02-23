@@ -206,39 +206,32 @@ class PostRsListViewModel @Inject constructor(
         _pendingConfirmation.value = null
     }
 
-    private fun trashPost(site: SiteModel, postId: Long) {
-        if (!checkNetwork()) return
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) { restClient.trashPost(site, postId) }
-            handleActionResult(result, postId, R.string.post_rs_trashed, R.string.post_rs_error_trash)
-        }
-    }
+    private fun trashPost(site: SiteModel, postId: Long) = executePostAction(
+        postId, R.string.post_rs_trashed, R.string.post_rs_error_trash
+    ) { restClient.trashPost(site, postId) }
 
-    private fun deletePost(site: SiteModel, postId: Long) {
-        if (!checkNetwork()) return
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) { restClient.deletePost(site, postId) }
-            handleActionResult(result, postId, R.string.post_rs_deleted, R.string.post_rs_error_delete)
-        }
-    }
+    private fun deletePost(site: SiteModel, postId: Long) = executePostAction(
+        postId, R.string.post_rs_deleted, R.string.post_rs_error_delete
+    ) { restClient.deletePost(site, postId) }
 
-    private fun publishPost(site: SiteModel, postId: Long) {
-        if (!checkNetwork()) return
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                restClient.updatePostStatus(site, postId, PostStatus.Publish)
-            }
-            handleActionResult(result, postId, R.string.post_rs_published, R.string.post_rs_error_update_status)
-        }
-    }
+    private fun publishPost(site: SiteModel, postId: Long) = executePostAction(
+        postId, R.string.post_rs_published, R.string.post_rs_error_update_status
+    ) { restClient.updatePostStatus(site, postId, PostStatus.Publish) }
 
-    private fun moveToDraft(site: SiteModel, postId: Long) {
+    private fun moveToDraft(site: SiteModel, postId: Long) = executePostAction(
+        postId, R.string.post_rs_moved_to_draft, R.string.post_rs_error_update_status
+    ) { restClient.updatePostStatus(site, postId, PostStatus.Draft) }
+
+    private fun executePostAction(
+        postId: Long,
+        successResId: Int,
+        errorResId: Int,
+        action: suspend () -> PostActionResult
+    ) {
         if (!checkNetwork()) return
         viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                restClient.updatePostStatus(site, postId, PostStatus.Draft)
-            }
-            handleActionResult(result, postId, R.string.post_rs_moved_to_draft, R.string.post_rs_error_update_status)
+            val result = withContext(Dispatchers.IO) { action() }
+            handleActionResult(result, postId, successResId, errorResId)
         }
     }
 
