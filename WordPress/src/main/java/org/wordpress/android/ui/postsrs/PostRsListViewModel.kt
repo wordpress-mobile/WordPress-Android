@@ -631,6 +631,7 @@ class PostRsListViewModel @Inject constructor(
 
         updateTabUiState(tab) {
             copy(
+                isLoading = isLoading && fetchingFirstPage,
                 isRefreshing = isUserRefresh && fetchingFirstPage,
                 isLoadingMore = listInfo?.state == ListState.FETCHING_NEXT_PAGE,
                 canLoadMore = morePages,
