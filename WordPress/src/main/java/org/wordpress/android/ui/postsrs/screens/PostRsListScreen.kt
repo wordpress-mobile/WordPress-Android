@@ -3,6 +3,7 @@ package org.wordpress.android.ui.postsrs.screens
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -16,6 +17,9 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -48,6 +52,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -66,6 +71,7 @@ fun PostRsListScreen(
     searchQuery: String,
     authorFilter: AuthorFilterSelection,
     isAuthorFilterSupported: Boolean,
+    avatarUrl: String?,
     confirmationDialog: ConfirmationDialogState,
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PostRsListTab) -> Unit,
@@ -140,6 +146,7 @@ fun PostRsListScreen(
                         if (isAuthorFilterSupported) {
                             AuthorFilterButton(
                                 authorFilter = authorFilter,
+                                avatarUrl = avatarUrl,
                                 onSelectionChanged = { selection ->
                                     onAuthorFilterChanged(selection, activeTab)
                                 }
@@ -238,21 +245,33 @@ fun PostRsListScreen(
 @Composable
 private fun AuthorFilterButton(
     authorFilter: AuthorFilterSelection,
+    avatarUrl: String?,
     onSelectionChanged: (AuthorFilterSelection) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val icon = if (authorFilter == AuthorFilterSelection.ME) {
-        Icons.Filled.Person
-    } else {
-        Icons.Outlined.Person
-    }
+    val hasAvatar = !avatarUrl.isNullOrBlank()
+    val contentDesc = stringResource(R.string.post_list_toggle_author_filter)
+
     IconButton(onClick = { expanded = true }) {
-        Icon(
-            icon,
-            contentDescription = stringResource(
-                R.string.post_list_toggle_author_filter
+        if (authorFilter == AuthorFilterSelection.ME && hasAvatar) {
+            AsyncImage(
+                model = avatarUrl,
+                contentDescription = contentDesc,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(24.dp)
+                    .clip(CircleShape)
             )
-        )
+        } else {
+            Icon(
+                if (authorFilter == AuthorFilterSelection.ME) {
+                    Icons.Filled.Person
+                } else {
+                    Icons.Outlined.Person
+                },
+                contentDescription = contentDesc
+            )
+        }
     }
     DropdownMenu(
         expanded = expanded,
@@ -261,7 +280,8 @@ private fun AuthorFilterButton(
         AuthorFilterSelection.entries.forEach { selection ->
             val label = when (selection) {
                 AuthorFilterSelection.ME -> stringResource(R.string.me)
-                AuthorFilterSelection.EVERYONE -> stringResource(R.string.everyone)
+                AuthorFilterSelection.EVERYONE ->
+                    stringResource(R.string.everyone)
             }
             DropdownMenuItem(
                 text = {
@@ -273,6 +293,27 @@ private fun AuthorFilterButton(
                             Color.Unspecified
                         }
                     )
+                },
+                leadingIcon = {
+                    if (selection == AuthorFilterSelection.ME && hasAvatar) {
+                        AsyncImage(
+                            model = avatarUrl,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clip(CircleShape)
+                        )
+                    } else {
+                        Icon(
+                            if (selection == AuthorFilterSelection.ME) {
+                                Icons.Filled.Person
+                            } else {
+                                Icons.Outlined.Person
+                            },
+                            contentDescription = null
+                        )
+                    }
                 },
                 onClick = {
                     expanded = false

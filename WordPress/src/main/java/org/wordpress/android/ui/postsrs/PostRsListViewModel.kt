@@ -81,6 +81,8 @@ class PostRsListViewModel @Inject constructor(
     private val site: SiteModel
         get() = requireNotNull(_site) { "No selected site — Activity should have finished" }
 
+    val avatarUrl: String? = accountStore.account?.avatarUrl
+
     val isAuthorFilterSupported: Boolean by lazy {
         _site != null &&
             _site.isUsingWpComRestApi &&

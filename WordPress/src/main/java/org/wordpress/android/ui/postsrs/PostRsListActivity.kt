@@ -47,6 +47,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     searchQuery = searchQuery,
                     authorFilter = authorFilter,
                     isAuthorFilterSupported = viewModel.isAuthorFilterSupported,
+                    avatarUrl = viewModel.avatarUrl,
                     confirmationDialog = ConfirmationDialogState(
                         pending = confirmation,
                         onConfirm = viewModel::onConfirmPendingAction,
