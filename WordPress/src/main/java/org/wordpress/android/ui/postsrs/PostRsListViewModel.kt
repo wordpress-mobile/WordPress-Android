@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,6 +63,7 @@ class PostRsListViewModel @Inject constructor(
     private val collections = mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PostRsListTab>()
+    private val resolveImageJobs = mutableMapOf<PostRsListTab, Job>()
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
@@ -360,6 +362,8 @@ class PostRsListViewModel @Inject constructor(
         collections.clear()
         initializingTabs.clear()
         userRefreshingTabs.clear()
+        resolveImageJobs.values.forEach { it.cancel() }
+        resolveImageJobs.clear()
         _tabStates.value = emptyMap()
     }
 
@@ -440,8 +444,6 @@ class PostRsListViewModel @Inject constructor(
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
-                loadItemsForTab(tab)
-                updateListInfoForTab(tab)
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
                 userRefreshingTabs.remove(tab)
@@ -468,8 +470,6 @@ class PostRsListViewModel @Inject constructor(
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
-                loadItemsForTab(tab)
-                updateListInfoForTab(tab)
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
                 updateTabUiState(tab) { copy(isLoadingMore = false) }
@@ -489,13 +489,56 @@ class PostRsListViewModel @Inject constructor(
                     item.state.toUiModel(item.id, showStatus = isSearch)
                 }
             }
+            val existingPosts = getTabUiState(tab).posts
             val uiModels = items.map { model ->
                 val effectiveTab = if (isSearch) tabForStatus(model.status) else tab
-                model.copy(actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen))
+                val existingUrl = existingPosts
+                    .firstOrNull { it.remotePostId == model.remotePostId }
+                    ?.featuredImageUrl
+                model.copy(
+                    actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen),
+                    featuredImageUrl = existingUrl
+                )
             }
             updateTabUiState(tab) { copy(posts = uiModels, isLoading = false, error = null) }
+            resolveFeaturedImages(tab, uiModels)
         } catch (e: Exception) {
             AppLog.e(AppLog.T.POSTS, "Failed to load items for tab $tab", e)
+        }
+    }
+
+    /**
+     * Fetches featured image URLs for posts that have a non-zero
+     * [PostRsUiModel.featuredImageId] but no resolved URL yet.
+     * All URLs are fetched in a single batched network call.
+     */
+    private fun resolveFeaturedImages(
+        tab: PostRsListTab,
+        posts: List<PostRsUiModel>
+    ) {
+        val unresolvedIds = posts
+            .filter { it.featuredImageId != 0L && it.featuredImageUrl == null }
+            .map { it.featuredImageId }
+        if (unresolvedIds.isEmpty()) return
+
+        resolveImageJobs[tab]?.cancel()
+        resolveImageJobs[tab] = viewModelScope.launch {
+            val urls = withContext(Dispatchers.IO) {
+                restClient.fetchMediaUrls(site, unresolvedIds)
+            }
+            if (urls.isEmpty()) return@launch
+            updateTabUiState(tab) {
+                copy(
+                    posts = this.posts.map { post ->
+                        val url = urls[post.featuredImageId]
+                        if (url != null) {
+                            post.copy(featuredImageUrl = url)
+                        } else {
+                            post
+                        }
+                    }
+                )
+            }
         }
     }
 
