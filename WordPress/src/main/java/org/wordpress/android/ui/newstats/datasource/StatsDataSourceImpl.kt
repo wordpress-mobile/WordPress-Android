@@ -497,7 +497,6 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
-
     override suspend fun fetchClicks(
         siteId: Long,
         dateRange: StatsDateRange,
@@ -524,6 +523,16 @@ class StatsDataSourceImpl @Inject constructor(
         // TODO: Wire RS types when available
         return VideoPlaysDataResult.Error(StatsErrorType.UNKNOWN)
     }
+
+    override suspend fun fetchFileDownloads(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): FileDownloadsDataResult {
+        // TODO: Wire RS types when available
+        return FileDownloadsDataResult.Error(StatsErrorType.UNKNOWN)
+    }
+
     private fun logResultType(methodName: String, result: WpRequestResult<*>) {
         AppLog.d(
             T.STATS,

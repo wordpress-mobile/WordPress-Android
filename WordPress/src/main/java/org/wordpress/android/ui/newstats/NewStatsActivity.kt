@@ -84,6 +84,7 @@ import org.wordpress.android.ui.newstats.authors.AuthorsCardUiState
 import org.wordpress.android.ui.newstats.authors.AuthorsDetailActivity
 import org.wordpress.android.ui.newstats.authors.AuthorsViewModel
 import org.wordpress.android.ui.newstats.clicks.ClicksViewModel
+import org.wordpress.android.ui.newstats.filedownloads.FileDownloadsViewModel
 import org.wordpress.android.ui.newstats.locations.LocationsCardUiState
 import org.wordpress.android.ui.newstats.searchterms.SearchTermsViewModel
 import org.wordpress.android.ui.newstats.videoplays.VideoPlaysViewModel
@@ -244,6 +245,7 @@ private fun TrafficTabContent(
     clicksViewModel: ClicksViewModel = viewModel(),
     searchTermsViewModel: SearchTermsViewModel = viewModel(),
     videoPlaysViewModel: VideoPlaysViewModel = viewModel(),
+    fileDownloadsViewModel: FileDownloadsViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -257,6 +259,7 @@ private fun TrafficTabContent(
     val clicksUiState by clicksViewModel.uiState.collectAsState()
     val searchTermsUiState by searchTermsViewModel.uiState.collectAsState()
     val videoPlaysUiState by videoPlaysViewModel.uiState.collectAsState()
+    val fileDownloadsUiState by fileDownloadsViewModel.uiState.collectAsState()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
@@ -271,12 +274,14 @@ private fun TrafficTabContent(
         .isRefreshing.collectAsState()
     val isVideoPlaysRefreshing by videoPlaysViewModel
         .isRefreshing.collectAsState()
+    val isFileDownloadsRefreshing by fileDownloadsViewModel
+        .isRefreshing.collectAsState()
     val isRefreshing = listOf(
         isTodaysStatsRefreshing, isViewsStatsRefreshing,
         isMostViewedPostsRefreshing, isMostViewedReferrersRefreshing,
         isLocationsRefreshing, isAuthorsRefreshing,
         isClicksRefreshing, isSearchTermsRefreshing,
-        isVideoPlaysRefreshing
+        isVideoPlaysRefreshing, isFileDownloadsRefreshing
     ).any { it }
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -322,6 +327,9 @@ private fun TrafficTabContent(
             onVideoPlays = {
                 videoPlaysViewModel.onPeriodChanged(selectedPeriod)
             },
+            onFileDownloads = {
+                fileDownloadsViewModel.onPeriodChanged(selectedPeriod)
+            }
         )
     }
 
@@ -353,6 +361,7 @@ private fun TrafficTabContent(
             onClicks = { clicksViewModel.loadData() },
             onSearchTerms = { searchTermsViewModel.loadData() },
             onVideoPlays = { videoPlaysViewModel.loadData() },
+            onFileDownloads = { fileDownloadsViewModel.loadData() }
         )
     }
 
@@ -400,6 +409,9 @@ private fun TrafficTabContent(
                 onClicks = { clicksViewModel.refresh() },
                 onSearchTerms = { searchTermsViewModel.refresh() },
                 onVideoPlays = { videoPlaysViewModel.refresh() },
+                onFileDownloads = {
+                    fileDownloadsViewModel.refresh()
+                }
             )
         },
         indicator = {
@@ -661,6 +673,41 @@ private fun TrafficTabContent(
                             newStatsViewModel.moveCardToBottom(cardType)
                         }
                     )
+                    StatsCardType.FILE_DOWNLOADS -> MostViewedCard(
+                        uiState = fileDownloadsUiState,
+                        cardType = cardType,
+                        onShowAllClick = {
+                            val detailData =
+                                fileDownloadsViewModel.getDetailData()
+                            MostViewedDetailActivity.start(
+                                context = context,
+                                cardType = detailData.cardType,
+                                items = detailData.items,
+                                totalViews = detailData.totalViews,
+                                totalViewsChange = detailData.totalViewsChange,
+                                totalViewsChangePercent =
+                                    detailData.totalViewsChangePercent,
+                                dateRange = detailData.dateRange,
+                                valueHeaderResId =
+                                    R.string.stats_file_downloads_value_label
+                            )
+                        },
+                        onRetry = fileDownloadsViewModel::onRetry,
+                        onRemoveCard = {
+                            newStatsViewModel.removeCard(cardType)
+                        },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = {
+                            newStatsViewModel.moveCardToTop(cardType)
+                        },
+                        onMoveDown = {
+                            newStatsViewModel.moveCardDown(cardType)
+                        },
+                        onMoveToBottom = {
+                            newStatsViewModel.moveCardToBottom(cardType)
+                        }
+                    )
                 }
             }
 
@@ -703,6 +750,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     onClicks: () -> Unit,
     onSearchTerms: () -> Unit,
     onVideoPlays: () -> Unit,
+    onFileDownloads: () -> Unit
 ) {
     if (StatsCardType.TODAYS_STATS in this) onTodaysStats()
     if (StatsCardType.VIEWS_STATS in this) onViewsStats()
@@ -717,6 +765,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     if (StatsCardType.CLICKS in this) onClicks()
     if (StatsCardType.SEARCH_TERMS in this) onSearchTerms()
     if (StatsCardType.VIDEO_PLAYS in this) onVideoPlays()
+    if (StatsCardType.FILE_DOWNLOADS in this) onFileDownloads()
 }
 
 @Composable

@@ -248,11 +248,15 @@ private fun ColumnHeadersRow(cardType: StatsCardType) {
         StatsCardType.CLICKS -> R.string.stats_clicks_link_label
         StatsCardType.SEARCH_TERMS -> R.string.stats_search_terms_label
         StatsCardType.VIDEO_PLAYS -> R.string.stats_videos_title_label
+        StatsCardType.FILE_DOWNLOADS ->
+            R.string.stats_file_downloads_title_label
         else -> cardType.displayNameResId
     }
 
     val valueHeaderResId = when (cardType) {
         StatsCardType.CLICKS -> R.string.stats_clicks_label
+        StatsCardType.FILE_DOWNLOADS ->
+            R.string.stats_file_downloads_value_label
         else -> R.string.stats_views
     }
 

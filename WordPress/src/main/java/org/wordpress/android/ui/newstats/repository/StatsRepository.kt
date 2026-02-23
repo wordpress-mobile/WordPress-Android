@@ -6,6 +6,7 @@ import kotlinx.coroutines.coroutineScope
 import org.wordpress.android.ui.newstats.datasource.CityViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
+import org.wordpress.android.ui.newstats.datasource.FileDownloadsDataResult
 import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.RegionViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.SearchTermsDataResult
@@ -1209,6 +1210,76 @@ class StatsRepository @Inject constructor(
         }
     }
 
+    suspend fun fetchFileDownloads(
+        siteId: Long,
+        period: StatsPeriod
+    ): FileDownloadsResult = withContext(ioDispatcher) {
+        val (currentDateRange, previousDateRange) =
+            calculateComparisonDateRanges(period)
+
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async {
+                statsDataSource.fetchFileDownloads(
+                    siteId, currentDateRange, max = 0
+                )
+            }
+            val previousDeferred = async {
+                statsDataSource.fetchFileDownloads(
+                    siteId, previousDateRange, max = 0
+                )
+            }
+            currentDeferred.await() to previousDeferred.await()
+        }
+
+        when (currentResult) {
+            is FileDownloadsDataResult.Success -> {
+                val previousMap =
+                    if (previousResult
+                            is FileDownloadsDataResult.Success
+                    ) {
+                        previousResult.items
+                            .associateBy { it.name }
+                    } else {
+                        emptyMap()
+                    }
+                val total =
+                    currentResult.items.sumOf { it.downloads }
+                val prevTotal =
+                    previousMap.values.sumOf { it.downloads }
+                val change = total - prevTotal
+                val changePct =
+                    calculateChangePercent(total, prevTotal, change)
+
+                FileDownloadsResult.Success(
+                    items = currentResult.items.map { item ->
+                        val prev =
+                            previousMap[item.name]?.downloads ?: 0L
+                        FileDownloadItemData(
+                            name = item.name,
+                            downloads = item.downloads,
+                            previousDownloads = prev
+                        )
+                    },
+                    totalDownloads = total,
+                    totalDownloadsChange = change,
+                    totalDownloadsChangePercent = changePct
+                )
+            }
+            is FileDownloadsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching file downloads: " +
+                        "${currentResult.errorType}"
+                )
+                FileDownloadsResult.Error(
+                    currentResult.errorType.messageResId,
+                    currentResult.errorType ==
+                        StatsErrorType.AUTH_ERROR
+                )
+            }
+        }
+    }
+
     private fun calculateChangePercent(
         totalViews: Long,
         previousTotalViews: Long,
@@ -1585,6 +1656,37 @@ data class VideoPlayItemData(
             (viewsChange.toDouble() / previousViews.toDouble()) *
                 PERCENTAGE_MULTIPLIER
         } else if (views > 0) {
+            PERCENTAGE_MULTIPLIER
+        } else {
+            PERCENTAGE_NO_CHANGE
+        }
+}
+
+sealed class FileDownloadsResult {
+    data class Success(
+        val items: List<FileDownloadItemData>,
+        val totalDownloads: Long,
+        val totalDownloadsChange: Long,
+        val totalDownloadsChangePercent: Double
+    ) : FileDownloadsResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : FileDownloadsResult()
+}
+
+data class FileDownloadItemData(
+    val name: String,
+    val downloads: Long,
+    val previousDownloads: Long
+) {
+    val downloadsChange: Long get() = downloads - previousDownloads
+    val downloadsChangePercent: Double
+        get() = if (previousDownloads > 0) {
+            (downloadsChange.toDouble() /
+                previousDownloads.toDouble()) *
+                PERCENTAGE_MULTIPLIER
+        } else if (downloads > 0) {
             PERCENTAGE_MULTIPLIER
         } else {
             PERCENTAGE_NO_CHANGE

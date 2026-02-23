@@ -18,7 +18,8 @@ enum class StatsCardType(
     AUTHORS(R.string.stats_authors_title),
     CLICKS(R.string.stats_clicks),
     SEARCH_TERMS(R.string.stats_search_terms),
-    VIDEO_PLAYS(R.string.stats_videos);
+    VIDEO_PLAYS(R.string.stats_videos),
+    FILE_DOWNLOADS(R.string.stats_file_downloads);
 
     companion object {
         /**
