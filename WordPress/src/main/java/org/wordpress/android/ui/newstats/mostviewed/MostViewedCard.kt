@@ -241,9 +241,17 @@ private fun HeaderSection(
 @Composable
 private fun ColumnHeadersRow(cardType: StatsCardType) {
     val headerResId = when (cardType) {
-        StatsCardType.MOST_VIEWED_POSTS_AND_PAGES -> R.string.stats_most_viewed_title_header
-        StatsCardType.MOST_VIEWED_REFERRERS -> R.string.stats_most_viewed_referrer_header
+        StatsCardType.MOST_VIEWED_POSTS_AND_PAGES ->
+            R.string.stats_most_viewed_title_header
+        StatsCardType.MOST_VIEWED_REFERRERS ->
+            R.string.stats_most_viewed_referrer_header
+        StatsCardType.CLICKS -> R.string.stats_clicks_link_label
         else -> cardType.displayNameResId
+    }
+
+    val valueHeaderResId = when (cardType) {
+        StatsCardType.CLICKS -> R.string.stats_clicks_label
+        else -> R.string.stats_views
     }
 
     Row(
@@ -258,7 +266,7 @@ private fun ColumnHeadersRow(cardType: StatsCardType) {
         )
 
         Text(
-            text = stringResource(R.string.stats_views),
+            text = stringResource(valueHeaderResId),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

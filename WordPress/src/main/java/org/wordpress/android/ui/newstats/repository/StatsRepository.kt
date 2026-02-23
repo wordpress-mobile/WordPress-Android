@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.wordpress.android.ui.newstats.datasource.CityViewsDataResult
+import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.RegionViewsDataResult
@@ -1009,6 +1010,71 @@ class StatsRepository @Inject constructor(
         }
     }
 
+    suspend fun fetchClicks(
+        siteId: Long,
+        period: StatsPeriod
+    ): ClicksResult = withContext(ioDispatcher) {
+        val (currentDateRange, previousDateRange) =
+            calculateComparisonDateRanges(period)
+
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async {
+                statsDataSource.fetchClicks(
+                    siteId, currentDateRange, max = 0
+                )
+            }
+            val previousDeferred = async {
+                statsDataSource.fetchClicks(
+                    siteId, previousDateRange, max = 0
+                )
+            }
+            currentDeferred.await() to previousDeferred.await()
+        }
+
+        when (currentResult) {
+            is ClicksDataResult.Success -> {
+                val previousMap =
+                    if (previousResult is ClicksDataResult.Success) {
+                        previousResult.items.associateBy { it.name }
+                    } else {
+                        emptyMap()
+                    }
+                val total = currentResult.items.sumOf { it.clicks }
+                val prevTotal = previousMap.values.sumOf { it.clicks }
+                val change = total - prevTotal
+                val changePct =
+                    calculateChangePercent(total, prevTotal, change)
+
+                ClicksResult.Success(
+                    items = currentResult.items.map { item ->
+                        val prev =
+                            previousMap[item.name]?.clicks ?: 0L
+                        ClickItemData(
+                            name = item.name,
+                            clicks = item.clicks,
+                            previousClicks = prev
+                        )
+                    },
+                    totalClicks = total,
+                    totalClicksChange = change,
+                    totalClicksChangePercent = changePct
+                )
+            }
+            is ClicksDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching clicks: " +
+                        "${currentResult.errorType}"
+                )
+                ClicksResult.Error(
+                    currentResult.errorType.messageResId,
+                    currentResult.errorType ==
+                        StatsErrorType.AUTH_ERROR
+                )
+            }
+        }
+    }
+
     private fun calculateChangePercent(
         totalViews: Long,
         previousTotalViews: Long,
@@ -1299,4 +1365,34 @@ data class TopAuthorItemData(
     } else {
         PERCENTAGE_NO_CHANGE
     }
+}
+
+sealed class ClicksResult {
+    data class Success(
+        val items: List<ClickItemData>,
+        val totalClicks: Long,
+        val totalClicksChange: Long,
+        val totalClicksChangePercent: Double
+    ) : ClicksResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : ClicksResult()
+}
+
+data class ClickItemData(
+    val name: String,
+    val clicks: Long,
+    val previousClicks: Long
+) {
+    val clicksChange: Long get() = clicks - previousClicks
+    val clicksChangePercent: Double
+        get() = if (previousClicks > 0) {
+            (clicksChange.toDouble() / previousClicks.toDouble()) *
+                PERCENTAGE_MULTIPLIER
+        } else if (clicks > 0) {
+            PERCENTAGE_MULTIPLIER
+        } else {
+            PERCENTAGE_NO_CHANGE
+        }
 }

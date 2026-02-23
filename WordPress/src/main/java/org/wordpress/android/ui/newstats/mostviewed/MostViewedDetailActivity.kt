@@ -58,6 +58,7 @@ private const val EXTRA_TOTAL_VIEWS = "extra_total_views"
 private const val EXTRA_TOTAL_VIEWS_CHANGE = "extra_total_views_change"
 private const val EXTRA_TOTAL_VIEWS_CHANGE_PERCENT = "extra_total_views_change_percent"
 private const val EXTRA_DATE_RANGE = "extra_date_range"
+private const val EXTRA_VALUE_HEADER_RES_ID = "extra_value_header_res_id"
 
 @AndroidEntryPoint
 class MostViewedDetailActivity : BaseAppCompatActivity() {
@@ -72,6 +73,9 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
         val totalViewsChange = intent.getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L)
         val totalViewsChangePercent = intent.getDoubleExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0)
         val dateRange = intent.getStringExtra(EXTRA_DATE_RANGE) ?: ""
+        val valueHeaderResId = intent.getIntExtra(
+            EXTRA_VALUE_HEADER_RES_ID, R.string.stats_views
+        )
         // Calculate maxViewsForBar once (list is sorted by views descending)
         val maxViewsForBar = items.firstOrNull()?.views ?: 1L
 
@@ -85,6 +89,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
                     totalViewsChange = totalViewsChange,
                     totalViewsChangePercent = totalViewsChangePercent,
                     dateRange = dateRange,
+                    valueHeaderResId = valueHeaderResId,
                     onBackPressed = onBackPressedDispatcher::onBackPressed
                 )
             }
@@ -100,15 +105,22 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
             totalViews: Long,
             totalViewsChange: Long,
             totalViewsChangePercent: Double,
-            dateRange: String
+            dateRange: String,
+            valueHeaderResId: Int = R.string.stats_views
         ) {
-            val intent = Intent(context, MostViewedDetailActivity::class.java).apply {
+            val intent = Intent(
+                context, MostViewedDetailActivity::class.java
+            ).apply {
                 putExtra(EXTRA_CARD_TYPE, cardType)
                 putExtra(EXTRA_ITEMS, ArrayList(items))
                 putExtra(EXTRA_TOTAL_VIEWS, totalViews)
                 putExtra(EXTRA_TOTAL_VIEWS_CHANGE, totalViewsChange)
-                putExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, totalViewsChangePercent)
+                putExtra(
+                    EXTRA_TOTAL_VIEWS_CHANGE_PERCENT,
+                    totalViewsChangePercent
+                )
                 putExtra(EXTRA_DATE_RANGE, dateRange)
+                putExtra(EXTRA_VALUE_HEADER_RES_ID, valueHeaderResId)
             }
             context.startActivity(intent)
         }
@@ -125,6 +137,7 @@ private fun MostViewedDetailScreen(
     totalViewsChange: Long,
     totalViewsChangePercent: Double,
     dateRange: String,
+    valueHeaderResId: Int = R.string.stats_views,
     onBackPressed: () -> Unit
 ) {
     val title = stringResource(cardType.displayNameResId)
@@ -162,7 +175,10 @@ private fun MostViewedDetailScreen(
             }
 
             item {
-                ColumnHeaders(itemCount = items.size)
+                ColumnHeaders(
+                    itemCount = items.size,
+                    valueHeaderResId = valueHeaderResId
+                )
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
@@ -185,18 +201,23 @@ private fun MostViewedDetailScreen(
 }
 
 @Composable
-private fun ColumnHeaders(itemCount: Int) {
+private fun ColumnHeaders(
+    itemCount: Int,
+    valueHeaderResId: Int = R.string.stats_views
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(R.string.stats_most_viewed_top_n, itemCount),
+            text = stringResource(
+                R.string.stats_most_viewed_top_n, itemCount
+            ),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
-            text = stringResource(R.string.stats_views),
+            text = stringResource(valueHeaderResId),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

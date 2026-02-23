@@ -497,6 +497,15 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
+
+    override suspend fun fetchClicks(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): ClicksDataResult {
+        // TODO: Wire RS types when available
+        return ClicksDataResult.Error(StatsErrorType.UNKNOWN)
+    }
     private fun logResultType(methodName: String, result: WpRequestResult<*>) {
         AppLog.d(
             T.STATS,

@@ -83,6 +83,7 @@ import org.wordpress.android.ui.newstats.authors.AuthorsCard
 import org.wordpress.android.ui.newstats.authors.AuthorsCardUiState
 import org.wordpress.android.ui.newstats.authors.AuthorsDetailActivity
 import org.wordpress.android.ui.newstats.authors.AuthorsViewModel
+import org.wordpress.android.ui.newstats.clicks.ClicksViewModel
 import org.wordpress.android.ui.newstats.locations.LocationsCardUiState
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
@@ -231,12 +232,14 @@ private fun StatsTabContent(tab: StatsTab, viewsStatsViewModel: ViewsStatsViewMo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Suppress("LongMethod")
 private fun TrafficTabContent(
     viewsStatsViewModel: ViewsStatsViewModel,
     todaysStatsViewModel: TodaysStatsViewModel = viewModel(),
     mostViewedViewModel: MostViewedViewModel = viewModel(),
     locationsViewModel: LocationsViewModel = viewModel(),
     authorsViewModel: AuthorsViewModel = viewModel(),
+    clicksViewModel: ClicksViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -247,6 +250,7 @@ private fun TrafficTabContent(
     val locationsUiState by locationsViewModel.uiState.collectAsState()
     val selectedLocationType by locationsViewModel.selectedLocationType.collectAsState()
     val authorsUiState by authorsViewModel.uiState.collectAsState()
+    val clicksUiState by clicksViewModel.uiState.collectAsState()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
@@ -256,10 +260,12 @@ private fun TrafficTabContent(
         .isReferrersRefreshing.collectAsState()
     val isLocationsRefreshing by locationsViewModel.isRefreshing.collectAsState()
     val isAuthorsRefreshing by authorsViewModel.isRefreshing.collectAsState()
+    val isClicksRefreshing by clicksViewModel.isRefreshing.collectAsState()
     val isRefreshing = listOf(
         isTodaysStatsRefreshing, isViewsStatsRefreshing,
         isMostViewedPostsRefreshing, isMostViewedReferrersRefreshing,
-        isLocationsRefreshing, isAuthorsRefreshing
+        isLocationsRefreshing, isAuthorsRefreshing,
+        isClicksRefreshing,
     ).any { it }
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -295,7 +301,10 @@ private fun TrafficTabContent(
             },
             onAuthors = {
                 authorsViewModel.onPeriodChanged(selectedPeriod)
-            }
+            },
+            onClicks = {
+                clicksViewModel.onPeriodChanged(selectedPeriod)
+            },
         )
     }
 
@@ -323,7 +332,8 @@ private fun TrafficTabContent(
                 mostViewedViewModel.loadReferrers()
             },
             onLocations = { locationsViewModel.loadData() },
-            onAuthors = { authorsViewModel.loadData() }
+            onAuthors = { authorsViewModel.loadData() },
+            onClicks = { clicksViewModel.loadData() },
         )
     }
 
@@ -367,7 +377,8 @@ private fun TrafficTabContent(
                     mostViewedViewModel.refreshReferrers()
                 },
                 onLocations = { locationsViewModel.refresh() },
-                onAuthors = { authorsViewModel.refresh() }
+                onAuthors = { authorsViewModel.refresh() },
+                onClicks = { clicksViewModel.refresh() },
             )
         },
         indicator = {
@@ -530,6 +541,39 @@ private fun TrafficTabContent(
                             context = context
                         )
                     )
+                    StatsCardType.CLICKS -> MostViewedCard(
+                        uiState = clicksUiState,
+                        cardType = cardType,
+                        onShowAllClick = {
+                            val detailData = clicksViewModel.getDetailData()
+                            MostViewedDetailActivity.start(
+                                context = context,
+                                cardType = detailData.cardType,
+                                items = detailData.items,
+                                totalViews = detailData.totalViews,
+                                totalViewsChange = detailData.totalViewsChange,
+                                totalViewsChangePercent =
+                                    detailData.totalViewsChangePercent,
+                                dateRange = detailData.dateRange,
+                                valueHeaderResId = R.string.stats_clicks_label
+                            )
+                        },
+                        onRetry = clicksViewModel::onRetry,
+                        onRemoveCard = {
+                            newStatsViewModel.removeCard(cardType)
+                        },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = {
+                            newStatsViewModel.moveCardToTop(cardType)
+                        },
+                        onMoveDown = {
+                            newStatsViewModel.moveCardDown(cardType)
+                        },
+                        onMoveToBottom = {
+                            newStatsViewModel.moveCardToBottom(cardType)
+                        }
+                    )
                 }
             }
 
@@ -568,7 +612,8 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     onMostViewedPosts: () -> Unit,
     onMostViewedReferrers: () -> Unit,
     onLocations: () -> Unit,
-    onAuthors: () -> Unit
+    onAuthors: () -> Unit,
+    onClicks: () -> Unit,
 ) {
     if (StatsCardType.TODAYS_STATS in this) onTodaysStats()
     if (StatsCardType.VIEWS_STATS in this) onViewsStats()
@@ -580,6 +625,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     }
     if (StatsCardType.LOCATIONS in this) onLocations()
     if (StatsCardType.AUTHORS in this) onAuthors()
+    if (StatsCardType.CLICKS in this) onClicks()
 }
 
 @Composable
