@@ -301,6 +301,7 @@ class PostRsListViewModel @Inject constructor(
         collections.keys.toList().forEach { tab -> refreshTab(tab) }
     }
 
+    /** Optimistically removes a post from every tab's UI state so it disappears immediately. */
     private fun removePostFromState(postId: Long) {
         _tabStates.value = _tabStates.value.mapValues { (_, state) ->
             val filtered = state.posts.filter { it.remotePostId != postId }
@@ -423,6 +424,11 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Builds an observable post collection for the given [tab] on IO.
+     * When a search query is active, the filter includes all statuses;
+     * otherwise it uses only the statuses for the tab.
+     */
     private suspend fun createCollection(
         site: SiteModel,
         tab: PostRsListTab
