@@ -247,6 +247,7 @@ private fun ColumnHeadersRow(cardType: StatsCardType) {
             R.string.stats_most_viewed_referrer_header
         StatsCardType.CLICKS -> R.string.stats_clicks_link_label
         StatsCardType.SEARCH_TERMS -> R.string.stats_search_terms_label
+        StatsCardType.VIDEO_PLAYS -> R.string.stats_videos_title_label
         else -> cardType.displayNameResId
     }
 

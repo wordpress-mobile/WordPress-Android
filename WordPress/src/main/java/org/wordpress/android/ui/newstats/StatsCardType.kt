@@ -17,7 +17,8 @@ enum class StatsCardType(
     LOCATIONS(R.string.stats_countries_location_header),
     AUTHORS(R.string.stats_authors_title),
     CLICKS(R.string.stats_clicks),
-    SEARCH_TERMS(R.string.stats_search_terms);
+    SEARCH_TERMS(R.string.stats_search_terms),
+    VIDEO_PLAYS(R.string.stats_videos);
 
     companion object {
         /**

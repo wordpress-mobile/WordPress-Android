@@ -16,6 +16,7 @@ import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
 import org.wordpress.android.ui.newstats.datasource.TopAuthorsDataResult
 import org.wordpress.android.ui.newstats.datasource.TopPostsDataResult
+import org.wordpress.android.ui.newstats.datasource.VideoPlaysDataResult
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -1142,6 +1143,72 @@ class StatsRepository @Inject constructor(
         }
     }
 
+    suspend fun fetchVideoPlays(
+        siteId: Long,
+        period: StatsPeriod
+    ): VideoPlaysResult = withContext(ioDispatcher) {
+        val (currentDateRange, previousDateRange) =
+            calculateComparisonDateRanges(period)
+
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async {
+                statsDataSource.fetchVideoPlays(
+                    siteId, currentDateRange, max = 0
+                )
+            }
+            val previousDeferred = async {
+                statsDataSource.fetchVideoPlays(
+                    siteId, previousDateRange, max = 0
+                )
+            }
+            currentDeferred.await() to previousDeferred.await()
+        }
+
+        when (currentResult) {
+            is VideoPlaysDataResult.Success -> {
+                val previousMap =
+                    if (previousResult is VideoPlaysDataResult.Success
+                    ) {
+                        previousResult.items.associateBy { it.title }
+                    } else {
+                        emptyMap()
+                    }
+                val total = currentResult.items.sumOf { it.views }
+                val prevTotal = previousMap.values.sumOf { it.views }
+                val change = total - prevTotal
+                val changePct =
+                    calculateChangePercent(total, prevTotal, change)
+
+                VideoPlaysResult.Success(
+                    items = currentResult.items.map { item ->
+                        val prev =
+                            previousMap[item.title]?.views ?: 0L
+                        VideoPlayItemData(
+                            title = item.title,
+                            views = item.views,
+                            previousViews = prev
+                        )
+                    },
+                    totalViews = total,
+                    totalViewsChange = change,
+                    totalViewsChangePercent = changePct
+                )
+            }
+            is VideoPlaysDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching video plays: " +
+                        "${currentResult.errorType}"
+                )
+                VideoPlaysResult.Error(
+                    currentResult.errorType.messageResId,
+                    currentResult.errorType ==
+                        StatsErrorType.AUTH_ERROR
+                )
+            }
+        }
+    }
+
     private fun calculateChangePercent(
         totalViews: Long,
         previousTotalViews: Long,
@@ -1479,6 +1546,36 @@ sealed class SearchTermsResult {
 
 data class SearchTermItemData(
     val name: String,
+    val views: Long,
+    val previousViews: Long
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double
+        get() = if (previousViews > 0) {
+            (viewsChange.toDouble() / previousViews.toDouble()) *
+                PERCENTAGE_MULTIPLIER
+        } else if (views > 0) {
+            PERCENTAGE_MULTIPLIER
+        } else {
+            PERCENTAGE_NO_CHANGE
+        }
+}
+
+sealed class VideoPlaysResult {
+    data class Success(
+        val items: List<VideoPlayItemData>,
+        val totalViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
+    ) : VideoPlaysResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : VideoPlaysResult()
+}
+
+data class VideoPlayItemData(
+    val title: String,
     val views: Long,
     val previousViews: Long
 ) {

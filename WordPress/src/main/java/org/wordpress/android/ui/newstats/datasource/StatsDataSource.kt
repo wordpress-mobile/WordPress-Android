@@ -137,6 +137,20 @@ interface StatsDataSource {
         dateRange: StatsDateRange,
         max: Int = 10
     ): SearchTermsDataResult
+
+    /**
+     * Fetches video plays stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the video plays data or an error
+     */
+    suspend fun fetchVideoPlays(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): VideoPlaysDataResult
 }
 
 
