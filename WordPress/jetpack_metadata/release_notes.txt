@@ -1,4 +1,10 @@
-- Search media by title and see library space as a progress bar.
-- Authenticate with your app password to add new sites.
-- Log in without seeing the site picker and Quick Start guide.
-- Enjoy other new features, updates, and fixes.
+* [*] Navigation Menus is now available to all eligible users (with an application password) [#22582]
+* [*] Reader: Add subscription settings bottom sheet with push notification and email options [#22535]
+* [*] Reader: Scroll to restored blog post after undoing "Block this site" [#22532]
+* [*] Reader: Fix inverted visibility of subscription settings button [#22550]
+* [*] Stats: Fix "Hours" timeframe incorrectly displayed as "Years" [#22615]
+* [*] Stats: Update empty/disabled view UI [#22530]
+* [*] My Site: Restore spacing in menu and quick link items, fix TalkBack accessibility [#22612]
+* [*] Media: Fix WP Media Library search results hidden behind keyboard [#22531]
+* [*] Media: Preserve featured image metadata in REST API upload responses on self-hosted sites [#22607]
+* [*] Self-hosted: Fix 401 authentication errors with application passwords [#22603]
