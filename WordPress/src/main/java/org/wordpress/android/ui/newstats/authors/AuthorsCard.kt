@@ -50,25 +50,28 @@ fun AuthorsCard(
     onMoveUp: (() -> Unit)? = null,
     onMoveToTop: (() -> Unit)? = null,
     onMoveDown: (() -> Unit)? = null,
-    onMoveToBottom: (() -> Unit)? = null
+    onMoveToBottom: (() -> Unit)? = null,
+    onOpenWpAdmin: (() -> Unit)? = null
 ) {
     StatsCardContainer(modifier = modifier) {
         when (uiState) {
             is AuthorsCardUiState.Loading -> LoadingContent()
             is AuthorsCardUiState.Loaded -> LoadedContent(
                 uiState, onShowAllClick, onRemoveCard,
-                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+                cardPosition, onMoveUp, onMoveToTop,
+                onMoveDown, onMoveToBottom
             )
             is AuthorsCardUiState.Error -> StatsCardErrorContent(
                 titleResId = R.string.stats_authors_title,
-                errorMessage = uiState.message,
+                errorMessageResId = uiState.messageResId,
                 onRetry = onRetry,
                 onRemoveCard = onRemoveCard,
                 cardPosition = cardPosition,
                 onMoveUp = onMoveUp,
                 onMoveToTop = onMoveToTop,
                 onMoveDown = onMoveDown,
-                onMoveToBottom = onMoveToBottom
+                onMoveToBottom = onMoveToBottom,
+                onOpenWpAdmin = onOpenWpAdmin
             )
         }
     }
@@ -249,7 +252,7 @@ private fun AuthorsCardLoadedPreview() {
 private fun AuthorsCardErrorPreview() {
     AppThemeM3 {
         AuthorsCard(
-            uiState = AuthorsCardUiState.Error("Failed to load author data"),
+            uiState = AuthorsCardUiState.Error(R.string.stats_error_api),
             onShowAllClick = {},
             onRetry = {},
             onRemoveCard = {}

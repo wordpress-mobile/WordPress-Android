@@ -66,23 +66,28 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.components.AddStatsCardBottomSheet
 import org.wordpress.android.ui.newstats.components.CardPosition
-import org.wordpress.android.ui.newstats.countries.CountriesCard
-import org.wordpress.android.ui.newstats.countries.CountriesDetailActivity
-import org.wordpress.android.ui.newstats.countries.CountriesViewModel
+import org.wordpress.android.ui.newstats.locations.LocationsCard
+import org.wordpress.android.ui.newstats.locations.LocationsDetailActivity
+import org.wordpress.android.ui.newstats.locations.LocationsViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCard
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsCard
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsViewModel
 import org.wordpress.android.ui.newstats.authors.AuthorsCard
+import org.wordpress.android.ui.newstats.authors.AuthorsCardUiState
 import org.wordpress.android.ui.newstats.authors.AuthorsDetailActivity
 import org.wordpress.android.ui.newstats.authors.AuthorsViewModel
+import org.wordpress.android.ui.newstats.locations.LocationsCardUiState
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
+import android.widget.Toast
+import org.wordpress.android.util.AppLog
 
 @AndroidEntryPoint
 class NewStatsActivity : BaseAppCompatActivity() {
@@ -230,7 +235,7 @@ private fun TrafficTabContent(
     viewsStatsViewModel: ViewsStatsViewModel,
     todaysStatsViewModel: TodaysStatsViewModel = viewModel(),
     mostViewedViewModel: MostViewedViewModel = viewModel(),
-    countriesViewModel: CountriesViewModel = viewModel(),
+    locationsViewModel: LocationsViewModel = viewModel(),
     authorsViewModel: AuthorsViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel()
 ) {
@@ -239,7 +244,8 @@ private fun TrafficTabContent(
     val viewsStatsUiState by viewsStatsViewModel.uiState.collectAsState()
     val postsUiState by mostViewedViewModel.postsUiState.collectAsState()
     val referrersUiState by mostViewedViewModel.referrersUiState.collectAsState()
-    val countriesUiState by countriesViewModel.uiState.collectAsState()
+    val locationsUiState by locationsViewModel.uiState.collectAsState()
+    val selectedLocationType by locationsViewModel.selectedLocationType.collectAsState()
     val authorsUiState by authorsViewModel.uiState.collectAsState()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
@@ -248,12 +254,12 @@ private fun TrafficTabContent(
         .isPostsRefreshing.collectAsState()
     val isMostViewedReferrersRefreshing by mostViewedViewModel
         .isReferrersRefreshing.collectAsState()
-    val isCountriesRefreshing by countriesViewModel.isRefreshing.collectAsState()
+    val isLocationsRefreshing by locationsViewModel.isRefreshing.collectAsState()
     val isAuthorsRefreshing by authorsViewModel.isRefreshing.collectAsState()
     val isRefreshing = listOf(
         isTodaysStatsRefreshing, isViewsStatsRefreshing,
         isMostViewedPostsRefreshing, isMostViewedReferrersRefreshing,
-        isCountriesRefreshing, isAuthorsRefreshing
+        isLocationsRefreshing, isAuthorsRefreshing
     ).any { it }
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -284,8 +290,8 @@ private fun TrafficTabContent(
                     selectedPeriod
                 )
             },
-            onCountries = {
-                countriesViewModel.onPeriodChanged(selectedPeriod)
+            onLocations = {
+                locationsViewModel.onPeriodChanged(selectedPeriod)
             },
             onAuthors = {
                 authorsViewModel.onPeriodChanged(selectedPeriod)
@@ -316,7 +322,7 @@ private fun TrafficTabContent(
             onMostViewedReferrers = {
                 mostViewedViewModel.loadReferrers()
             },
-            onCountries = { countriesViewModel.loadData() },
+            onLocations = { locationsViewModel.loadData() },
             onAuthors = { authorsViewModel.loadData() }
         )
     }
@@ -360,7 +366,7 @@ private fun TrafficTabContent(
                 onMostViewedReferrers = {
                     mostViewedViewModel.refreshReferrers()
                 },
-                onCountries = { countriesViewModel.refresh() },
+                onLocations = { locationsViewModel.refresh() },
                 onAuthors = { authorsViewModel.refresh() }
             )
         },
@@ -470,29 +476,31 @@ private fun TrafficTabContent(
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
                         onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
                     )
-                    StatsCardType.COUNTRIES -> CountriesCard(
-                        uiState = countriesUiState,
+                    StatsCardType.LOCATIONS -> LocationsCard(
+                        uiState = locationsUiState,
+                        selectedLocationType = selectedLocationType,
+                        onLocationTypeChanged = locationsViewModel::onLocationTypeChanged,
                         onShowAllClick = {
-                            val detailData = countriesViewModel.getDetailData()
-                            CountriesDetailActivity.start(
+                            val detailData = locationsViewModel.getDetailData()
+                            LocationsDetailActivity.start(
                                 context = context,
-                                countries = detailData.countries,
-                                mapData = detailData.mapData,
-                                minViews = detailData.minViews,
-                                maxViews = detailData.maxViews,
-                                totalViews = detailData.totalViews,
-                                totalViewsChange = detailData.totalViewsChange,
-                                totalViewsChangePercent = detailData.totalViewsChangePercent,
-                                dateRange = detailData.dateRange
+                                detailData = detailData
                             )
                         },
-                        onRetry = countriesViewModel::onRetry,
+                        onRetry = locationsViewModel::onRetry,
                         onRemoveCard = { newStatsViewModel.removeCard(cardType) },
                         cardPosition = cardPosition,
                         onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
                         onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
-                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
+                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (locationsUiState as?
+                                LocationsCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl = locationsViewModel::getAdminUrl,
+                            context = context
+                        )
                     )
                     StatsCardType.AUTHORS -> AuthorsCard(
                         uiState = authorsUiState,
@@ -513,7 +521,14 @@ private fun TrafficTabContent(
                         onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
                         onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
-                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
+                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (authorsUiState as?
+                                AuthorsCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl = authorsViewModel::getAdminUrl,
+                            context = context
+                        )
                     )
                 }
             }
@@ -552,7 +567,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     onViewsStats: () -> Unit,
     onMostViewedPosts: () -> Unit,
     onMostViewedReferrers: () -> Unit,
-    onCountries: () -> Unit,
+    onLocations: () -> Unit,
     onAuthors: () -> Unit
 ) {
     if (StatsCardType.TODAYS_STATS in this) onTodaysStats()
@@ -563,7 +578,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     if (StatsCardType.MOST_VIEWED_REFERRERS in this) {
         onMostViewedReferrers()
     }
-    if (StatsCardType.COUNTRIES in this) onCountries()
+    if (StatsCardType.LOCATIONS in this) onLocations()
     if (StatsCardType.AUTHORS in this) onAuthors()
 }
 
@@ -674,6 +689,31 @@ private fun StatsPeriod.getDisplayLabel(): String {
         }
         else -> stringResource(id = labelResId)
     }
+}
+
+private fun buildOpenWpAdminAction(
+    isAuthError: Boolean,
+    getAdminUrl: () -> String?,
+    context: Context
+): (() -> Unit)? = if (isAuthError) {
+    {
+        val url = getAdminUrl()
+        if (url != null) {
+            ActivityLauncher.openUrlExternal(context, url)
+        } else {
+            AppLog.w(
+                AppLog.T.STATS,
+                "Admin URL is null, cannot open WP Admin"
+            )
+            Toast.makeText(
+                context,
+                R.string.stats_error_admin_url_unavailable,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+} else {
+    null
 }
 
 @Preview

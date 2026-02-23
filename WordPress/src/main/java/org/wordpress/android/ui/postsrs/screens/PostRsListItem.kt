@@ -6,6 +6,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -22,7 +24,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,13 +34,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
+import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 
 @Composable
 fun PostRsListItem(
@@ -111,8 +118,39 @@ private fun PostContentItem(
                     )
                 }
             }
-            if (post.actions.isNotEmpty()) {
-                PostMenuButton(actions = post.actions, onAction = onMenuAction)
+            Column(
+                modifier = Modifier
+                    .padding(start = 8.dp, end = 16.dp)
+                    .width(FEATURED_IMAGE_SIZE),
+                horizontalAlignment = Alignment.End
+            ) {
+                if (post.actions.isNotEmpty()) {
+                    PostMenuButton(
+                        actions = post.actions,
+                        onAction = onMenuAction
+                    )
+                }
+                if (post.featuredImageUrl != null) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(post.featuredImageUrl)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = stringResource(
+                            R.string.featured_image_desc
+                        ),
+                        modifier = Modifier
+                            .size(FEATURED_IMAGE_SIZE)
+                            .clip(RoundedCornerShape(2.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                } else if (post.featuredImageId != 0L) {
+                    ShimmerBox(
+                        modifier = Modifier
+                            .size(FEATURED_IMAGE_SIZE)
+                            .clip(RoundedCornerShape(2.dp))
+                    )
+                }
             }
         }
     }
@@ -125,14 +163,21 @@ private fun PostMenuButton(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Box {
-        IconButton(onClick = { expanded = true }) {
-            Icon(
-                Icons.Default.MoreVert,
-                contentDescription = stringResource(R.string.more),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
+    Box(
+        modifier = Modifier
+            .size(width = FEATURED_IMAGE_SIZE, height = 48.dp)
+            .clickable(
+                role = Role.Button,
+                onClickLabel = stringResource(R.string.more),
+                onClick = { expanded = true }
+            ),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        Icon(
+            Icons.Default.MoreVert,
+            contentDescription = stringResource(R.string.more),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             actions.forEach { action ->
                 val color = if (action.isDestructive) {
@@ -163,7 +208,7 @@ private fun PostMenuButton(
 }
 
 @Composable
-internal fun PlaceholderItem(modifier: Modifier = Modifier) {
+private fun ShimmerBox(modifier: Modifier = Modifier) {
     val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
     val alpha by infiniteTransition.animateFloat(
         initialValue = 0.06f,
@@ -174,37 +219,41 @@ internal fun PlaceholderItem(modifier: Modifier = Modifier) {
         ),
         label = "shimmerAlpha"
     )
-    val placeholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
+    Box(
+        modifier = modifier.background(
+            MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
+        )
+    )
+}
 
+@Composable
+internal fun PlaceholderItem(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Box(
+            ShimmerBox(
                 modifier = Modifier
                     .fillMaxWidth(0.25f)
                     .height(12.dp)
                     .clip(RoundedCornerShape(4.dp))
-                    .background(placeholderColor)
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Box(
+            ShimmerBox(
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
                     .height(20.dp)
                     .clip(RoundedCornerShape(4.dp))
-                    .background(placeholderColor)
             )
             Spacer(modifier = Modifier.height(4.dp))
             repeat(2) { index ->
-                Box(
+                ShimmerBox(
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
                         .height(14.dp)
                         .clip(RoundedCornerShape(4.dp))
-                        .background(placeholderColor)
                 )
                 if (index == 0) {
                     Spacer(modifier = Modifier.height(4.dp))
@@ -228,3 +277,5 @@ private fun ErrorItem(modifier: Modifier = Modifier) {
         )
     }
 }
+
+private val FEATURED_IMAGE_SIZE = PostRsRestClient.FEATURED_IMAGE_SIZE_DP.dp

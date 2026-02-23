@@ -69,6 +69,34 @@ interface StatsDataSource {
     ): CountryViewsDataResult
 
     /**
+     * Fetches region views stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of regions to return
+     * @return Result containing the region views data or an error
+     */
+    suspend fun fetchRegionViews(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): RegionViewsDataResult
+
+    /**
+     * Fetches city views stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of cities to return
+     * @return Result containing the city views data or an error
+     */
+    suspend fun fetchCityViews(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): CityViewsDataResult
+
+    /**
      * Fetches top authors stats for a specific site.
      *
      * @param siteId The WordPress.com site ID
@@ -113,7 +141,7 @@ enum class StatsUnit {
  */
 sealed class StatsVisitsDataResult {
     data class Success(val data: StatsVisitsData) : StatsVisitsDataResult()
-    data class Error(val message: String) : StatsVisitsDataResult()
+    data class Error(val errorType: StatsErrorType) : StatsVisitsDataResult()
 }
 
 /**
@@ -173,7 +201,7 @@ data class PostsDataPoint(
  */
 sealed class TopPostsDataResult {
     data class Success(val items: List<TopPostDataItem>) : TopPostsDataResult()
-    data class Error(val message: String) : TopPostsDataResult()
+    data class Error(val errorType: StatsErrorType) : TopPostsDataResult()
 }
 
 /**
@@ -190,7 +218,7 @@ data class TopPostDataItem(
  */
 sealed class ReferrersDataResult {
     data class Success(val items: List<ReferrerDataItem>) : ReferrersDataResult()
-    data class Error(val message: String) : ReferrersDataResult()
+    data class Error(val errorType: StatsErrorType) : ReferrersDataResult()
 }
 
 /**
@@ -206,7 +234,7 @@ data class ReferrerDataItem(
  */
 sealed class CountryViewsDataResult {
     data class Success(val data: CountryViewsData) : CountryViewsDataResult()
-    data class Error(val message: String) : CountryViewsDataResult()
+    data class Error(val errorType: StatsErrorType) : CountryViewsDataResult()
 }
 
 /**
@@ -229,11 +257,67 @@ data class CountryViewItem(
 )
 
 /**
+ * Result wrapper for region views fetch operation.
+ */
+sealed class RegionViewsDataResult {
+    data class Success(val data: RegionViewsData) : RegionViewsDataResult()
+    data class Error(val errorType: StatsErrorType) : RegionViewsDataResult()
+}
+
+/**
+ * Region views data from the API.
+ */
+data class RegionViewsData(
+    val regions: List<RegionViewItem>,
+    val totalViews: Long,
+    val otherViews: Long
+)
+
+/**
+ * A single region view item from the API.
+ */
+data class RegionViewItem(
+    val location: String,
+    val countryCode: String,
+    val views: Long,
+    val flagIconUrl: String?
+)
+
+/**
+ * Result wrapper for city views fetch operation.
+ */
+sealed class CityViewsDataResult {
+    data class Success(val data: CityViewsData) : CityViewsDataResult()
+    data class Error(val errorType: StatsErrorType) : CityViewsDataResult()
+}
+
+/**
+ * City views data from the API.
+ */
+data class CityViewsData(
+    val cities: List<CityViewItem>,
+    val totalViews: Long,
+    val otherViews: Long
+)
+
+/**
+ * A single city view item from the API.
+ */
+data class CityViewItem(
+    val location: String,
+    val countryCode: String,
+    val views: Long,
+    val latitude: String?,
+    val longitude: String?,
+    val flagIconUrl: String?
+)
+
+/**
  * Result wrapper for top authors fetch operation.
  */
 sealed class TopAuthorsDataResult {
     data class Success(val data: TopAuthorsData) : TopAuthorsDataResult()
-    data class Error(val message: String) : TopAuthorsDataResult()
+    data class Error(val errorType: StatsErrorType) : TopAuthorsDataResult()
 }
 
 /**

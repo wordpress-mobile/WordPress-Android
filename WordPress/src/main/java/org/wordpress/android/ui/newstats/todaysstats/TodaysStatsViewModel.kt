@@ -49,9 +49,12 @@ class TodaysStatsViewModel @Inject constructor(
     fun refresh() {
         val site = selectedSiteRepository.getSelectedSite() ?: return
         viewModelScope.launch {
-            _isRefreshing.value = true
-            loadDataInternal(site)
-            _isRefreshing.value = false
+            try {
+                _isRefreshing.value = true
+                loadDataInternal(site)
+            } finally {
+                _isRefreshing.value = false
+            }
         }
     }
 
@@ -61,7 +64,7 @@ class TodaysStatsViewModel @Inject constructor(
             isLoading = false
             _uiState.value = TodaysStatsCardUiState.Error(
                 message = resourceProvider.getString(
-                    R.string.stats_todays_stats_no_site_selected
+                    R.string.stats_error_no_site
                 ),
                 onRetry = ::loadData
             )
@@ -73,7 +76,7 @@ class TodaysStatsViewModel @Inject constructor(
             isLoading = false
             _uiState.value = TodaysStatsCardUiState.Error(
                 message = resourceProvider.getString(
-                    R.string.stats_todays_stats_failed_to_load
+                    R.string.stats_error_api
                 ),
                 onRetry = ::loadData
             )
@@ -114,13 +117,13 @@ class TodaysStatsViewModel @Inject constructor(
                 )
             } else {
                 _uiState.value = TodaysStatsCardUiState.Error(
-                    message = resourceProvider.getString(R.string.stats_todays_stats_failed_to_load),
+                    message = resourceProvider.getString(R.string.stats_error_api),
                     onRetry = ::loadData
                 )
             }
         } catch (e: Exception) {
             _uiState.value = TodaysStatsCardUiState.Error(
-                message = e.message ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error),
+                message = e.message ?: resourceProvider.getString(R.string.stats_error_unknown),
                 onRetry = ::loadData
             )
         }

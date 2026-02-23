@@ -3,8 +3,10 @@ package org.wordpress.android.ui.newstats.repository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.wordpress.android.ui.newstats.datasource.CityViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
+import org.wordpress.android.ui.newstats.datasource.RegionViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
@@ -17,6 +19,8 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.newstats.StatsPeriod
+import androidx.annotation.StringRes
+import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.util.AppLog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -42,6 +46,7 @@ private const val NUM_DAYS_TODAY = 1
  * Repository for fetching stats data using the wordpress-rs API.
  * Handles hourly visits/views data for the Today's Stats card chart.
  */
+@Suppress("LargeClass")
 class StatsRepository @Inject constructor(
     private val statsDataSource: StatsDataSource,
     private val appLogWrapper: AppLogWrapper,
@@ -87,8 +92,11 @@ class StatsRepository @Inject constructor(
             }
 
             is StatsVisitsDataResult.Error -> {
-                appLogWrapper.e(AppLog.T.STATS, "API Error fetching today aggregates: ${result.message}")
-                TodayAggregatesResult.Error(result.message)
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "API Error fetching today aggregates: ${result.errorType}"
+                )
+                TodayAggregatesResult.Error(result.errorType.name)
             }
         }
     }
@@ -126,8 +134,11 @@ class StatsRepository @Inject constructor(
             }
 
             is StatsVisitsDataResult.Error -> {
-                appLogWrapper.e(AppLog.T.STATS, "API Error fetching hourly views: ${result.message}")
-                HourlyViewsResult.Error(result.message)
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "API Error fetching hourly views: ${result.errorType}"
+                )
+                HourlyViewsResult.Error(result.errorType.name)
             }
         }
     }
@@ -175,8 +186,11 @@ class StatsRepository @Inject constructor(
                 }
 
                 is StatsVisitsDataResult.Error -> {
-                    appLogWrapper.e(AppLog.T.STATS, "API Error fetching weekly stats: ${result.message}")
-                    WeeklyStatsResult.Error(result.message)
+                    appLogWrapper.e(
+                        AppLog.T.STATS,
+                        "API Error fetching weekly stats: ${result.errorType}"
+                    )
+                    WeeklyStatsResult.Error(result.errorType.name)
                 }
             }
         }
@@ -209,8 +223,11 @@ class StatsRepository @Inject constructor(
                 }
 
                 is StatsVisitsDataResult.Error -> {
-                    appLogWrapper.e(AppLog.T.STATS, "API Error fetching daily views: ${result.message}")
-                    DailyViewsResult.Error(result.message)
+                    appLogWrapper.e(
+                        AppLog.T.STATS,
+                        "API Error fetching daily views: ${result.errorType}"
+                    )
+                    DailyViewsResult.Error(result.errorType.name)
                 }
             }
         }
@@ -270,9 +287,10 @@ class StatsRepository @Inject constructor(
             is StatsVisitsDataResult.Error -> {
                 appLogWrapper.e(
                     AppLog.T.STATS,
-                    "API Error fetching weekly stats with daily data: ${result.message}"
+                    "API Error fetching weekly stats with daily data: " +
+                        "${result.errorType}"
                 )
-                WeeklyStatsWithDailyDataResult.Error(result.message)
+                WeeklyStatsWithDailyDataResult.Error(result.errorType.name)
             }
         }
     }
@@ -360,13 +378,18 @@ class StatsRepository @Inject constructor(
         currentResult: StatsVisitsDataResult,
         previousResult: StatsVisitsDataResult
     ): PeriodStatsResult.Error {
-        val errorMessage = when {
-            currentResult is StatsVisitsDataResult.Error -> currentResult.message
-            previousResult is StatsVisitsDataResult.Error -> previousResult.message
-            else -> "Unknown error"
+        val errorType = when {
+            currentResult is StatsVisitsDataResult.Error ->
+                currentResult.errorType
+            previousResult is StatsVisitsDataResult.Error ->
+                previousResult.errorType
+            else -> StatsErrorType.UNKNOWN
         }
-        appLogWrapper.e(AppLog.T.STATS, "API Error fetching period stats: $errorMessage")
-        return PeriodStatsResult.Error(errorMessage)
+        appLogWrapper.e(
+            AppLog.T.STATS,
+            "API Error fetching period stats: $errorType"
+        )
+        return PeriodStatsResult.Error(errorType.name)
     }
 
     private fun buildPeriodAggregates(
@@ -572,8 +595,11 @@ class StatsRepository @Inject constructor(
             )
         } else {
             val error = currentResult as TopPostsDataResult.Error
-            appLogWrapper.e(AppLog.T.STATS, "Error fetching top posts: ${error.message}")
-            MostViewedResult.Error(error.message)
+            appLogWrapper.e(
+                AppLog.T.STATS,
+                "Error fetching top posts: ${error.errorType}"
+            )
+            MostViewedResult.Error(error.errorType.name)
         }
     }
 
@@ -619,8 +645,11 @@ class StatsRepository @Inject constructor(
             )
         } else {
             val error = currentResult as ReferrersDataResult.Error
-            appLogWrapper.e(AppLog.T.STATS, "Error fetching referrers: ${error.message}")
-            MostViewedResult.Error(error.message)
+            appLogWrapper.e(
+                AppLog.T.STATS,
+                "Error fetching referrers: ${error.errorType}"
+            )
+            MostViewedResult.Error(error.errorType.name)
         }
     }
 
@@ -731,10 +760,185 @@ class StatsRepository @Inject constructor(
                 )
             }
             is CountryViewsDataResult.Error -> {
-                appLogWrapper.e(AppLog.T.STATS, "Error fetching country views: ${currentResult.message}")
-                CountryViewsResult.Error(currentResult.message)
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching country views: " +
+                        "${currentResult.errorType}"
+                )
+                CountryViewsResult.Error(
+                    currentResult.errorType.messageResId,
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                )
             }
         }
+    }
+
+    /**
+     * Fetches region views stats for a specific site and period with comparison data.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param period The stats period to fetch
+     * @return Region views data with comparison or error
+     */
+    suspend fun fetchRegionViews(
+        siteId: Long,
+        period: StatsPeriod
+    ): RegionViewsResult = withContext(ioDispatcher) {
+        val (currentDateRange, previousDateRange) =
+            calculateComparisonDateRanges(period)
+
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async {
+                statsDataSource.fetchRegionViews(siteId, currentDateRange)
+            }
+            val previousDeferred = async {
+                statsDataSource.fetchRegionViews(siteId, previousDateRange)
+            }
+            currentDeferred.await() to previousDeferred.await()
+        }
+
+        when (currentResult) {
+            is RegionViewsDataResult.Success -> {
+                buildRegionViewsSuccess(currentResult, previousResult)
+            }
+            is RegionViewsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching region views: " +
+                        "${currentResult.errorType}"
+                )
+                RegionViewsResult.Error(
+                    currentResult.errorType.messageResId,
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                )
+            }
+        }
+    }
+
+    private fun buildRegionViewsSuccess(
+        currentResult: RegionViewsDataResult.Success,
+        previousResult: RegionViewsDataResult
+    ): RegionViewsResult {
+        val previousMap =
+            if (previousResult is RegionViewsDataResult.Success) {
+                previousResult.data.regions.associateBy { it.location }
+            } else {
+                emptyMap()
+            }
+
+        val totalViews = currentResult.data.regions.sumOf { it.views }
+        val previousTotalViews =
+            if (previousResult is RegionViewsDataResult.Success) {
+                previousResult.data.regions.sumOf { it.views }
+            } else {
+                0L
+            }
+        val totalChange = totalViews - previousTotalViews
+        val totalChangePercent = calculateChangePercent(
+            totalViews, previousTotalViews, totalChange
+        )
+
+        return RegionViewsResult.Success(
+            regions = currentResult.data.regions.map { region ->
+                val prev = previousMap[region.location]?.views ?: 0L
+                RegionViewItemData(
+                    location = region.location,
+                    countryCode = region.countryCode,
+                    views = region.views,
+                    flagIconUrl = region.flagIconUrl,
+                    previousViews = prev
+                )
+            },
+            totalViews = totalViews,
+            otherViews = currentResult.data.otherViews,
+            totalViewsChange = totalChange,
+            totalViewsChangePercent = totalChangePercent
+        )
+    }
+
+    /**
+     * Fetches city views stats for a specific site and period with comparison data.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param period The stats period to fetch
+     * @return City views data with comparison or error
+     */
+    suspend fun fetchCityViews(
+        siteId: Long,
+        period: StatsPeriod
+    ): CityViewsResult = withContext(ioDispatcher) {
+        val (currentDateRange, previousDateRange) =
+            calculateComparisonDateRanges(period)
+
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async {
+                statsDataSource.fetchCityViews(siteId, currentDateRange)
+            }
+            val previousDeferred = async {
+                statsDataSource.fetchCityViews(siteId, previousDateRange)
+            }
+            currentDeferred.await() to previousDeferred.await()
+        }
+
+        when (currentResult) {
+            is CityViewsDataResult.Success -> {
+                buildCityViewsSuccess(currentResult, previousResult)
+            }
+            is CityViewsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching city views: " +
+                        "${currentResult.errorType}"
+                )
+                CityViewsResult.Error(
+                    currentResult.errorType.messageResId,
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                )
+            }
+        }
+    }
+
+    private fun buildCityViewsSuccess(
+        currentResult: CityViewsDataResult.Success,
+        previousResult: CityViewsDataResult
+    ): CityViewsResult {
+        val previousMap =
+            if (previousResult is CityViewsDataResult.Success) {
+                previousResult.data.cities.associateBy { it.location }
+            } else {
+                emptyMap()
+            }
+
+        val totalViews = currentResult.data.cities.sumOf { it.views }
+        val previousTotalViews =
+            if (previousResult is CityViewsDataResult.Success) {
+                previousResult.data.cities.sumOf { it.views }
+            } else {
+                0L
+            }
+        val totalChange = totalViews - previousTotalViews
+        val totalChangePercent = calculateChangePercent(
+            totalViews, previousTotalViews, totalChange
+        )
+
+        return CityViewsResult.Success(
+            cities = currentResult.data.cities.map { city ->
+                val prev = previousMap[city.location]?.views ?: 0L
+                CityViewItemData(
+                    location = city.location,
+                    countryCode = city.countryCode,
+                    views = city.views,
+                    latitude = city.latitude,
+                    longitude = city.longitude,
+                    flagIconUrl = city.flagIconUrl,
+                    previousViews = prev
+                )
+            },
+            totalViews = totalViews,
+            otherViews = currentResult.data.otherViews,
+            totalViewsChange = totalChange,
+            totalViewsChangePercent = totalChangePercent
+        )
     }
 
     /**
@@ -792,10 +996,30 @@ class StatsRepository @Inject constructor(
                 )
             }
             is TopAuthorsDataResult.Error -> {
-                appLogWrapper.e(AppLog.T.STATS, "Error fetching top authors: ${currentResult.message}")
-                TopAuthorsResult.Error(currentResult.message)
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching top authors: " +
+                        "${currentResult.errorType}"
+                )
+                TopAuthorsResult.Error(
+                    currentResult.errorType.messageResId,
+                    currentResult.errorType == StatsErrorType.AUTH_ERROR
+                )
             }
         }
+    }
+
+    private fun calculateChangePercent(
+        totalViews: Long,
+        previousTotalViews: Long,
+        totalChange: Long
+    ): Double = if (previousTotalViews > 0) {
+        (totalChange.toDouble() / previousTotalViews.toDouble()) *
+            PERCENTAGE_MULTIPLIER
+    } else if (totalViews > 0) {
+        PERCENTAGE_MULTIPLIER
+    } else {
+        PERCENTAGE_NO_CHANGE
     }
 }
 
@@ -940,7 +1164,10 @@ sealed class CountryViewsResult {
         val totalViewsChange: Long,
         val totalViewsChangePercent: Double
     ) : CountryViewsResult()
-    data class Error(val message: String) : CountryViewsResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : CountryViewsResult()
 }
 
 /**
@@ -964,6 +1191,82 @@ data class CountryViewItemData(
 }
 
 /**
+ * Result wrapper for region views fetch operation.
+ */
+sealed class RegionViewsResult {
+    data class Success(
+        val regions: List<RegionViewItemData>,
+        val totalViews: Long,
+        val otherViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
+    ) : RegionViewsResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : RegionViewsResult()
+}
+
+/**
+ * Data for a single region view item from the repository layer.
+ */
+data class RegionViewItemData(
+    val location: String,
+    val countryCode: String,
+    val views: Long,
+    val flagIconUrl: String?,
+    val previousViews: Long
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double get() = if (previousViews > 0) {
+        (viewsChange.toDouble() / previousViews.toDouble()) * PERCENTAGE_MULTIPLIER
+    } else if (views > 0) {
+        PERCENTAGE_MULTIPLIER
+    } else {
+        PERCENTAGE_NO_CHANGE
+    }
+}
+
+/**
+ * Result wrapper for city views fetch operation.
+ */
+sealed class CityViewsResult {
+    data class Success(
+        val cities: List<CityViewItemData>,
+        val totalViews: Long,
+        val otherViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
+    ) : CityViewsResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : CityViewsResult()
+}
+
+/**
+ * Data for a single city view item from the repository layer.
+ */
+data class CityViewItemData(
+    val location: String,
+    val countryCode: String,
+    val views: Long,
+    val latitude: String?,
+    val longitude: String?,
+    val flagIconUrl: String?,
+    val previousViews: Long
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double get() = if (previousViews > 0) {
+        (viewsChange.toDouble() / previousViews.toDouble()) * PERCENTAGE_MULTIPLIER
+    } else if (views > 0) {
+        PERCENTAGE_MULTIPLIER
+    } else {
+        PERCENTAGE_NO_CHANGE
+    }
+}
+
+/**
  * Result wrapper for top authors fetch operation.
  */
 sealed class TopAuthorsResult {
@@ -973,7 +1276,10 @@ sealed class TopAuthorsResult {
         val totalViewsChange: Long,
         val totalViewsChangePercent: Double
     ) : TopAuthorsResult()
-    data class Error(val message: String) : TopAuthorsResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : TopAuthorsResult()
 }
 
 /**

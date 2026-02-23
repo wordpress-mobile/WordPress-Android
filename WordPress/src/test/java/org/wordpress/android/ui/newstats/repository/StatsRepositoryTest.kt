@@ -8,6 +8,7 @@ import org.wordpress.android.ui.newstats.datasource.PostsDataPoint
 import org.wordpress.android.ui.newstats.datasource.ReferrerDataItem
 import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
@@ -108,12 +109,12 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given error response, when fetchTodayAggregates is called, then error result is returned`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
-            .thenReturn(StatsVisitsDataResult.Error(ERROR_MESSAGE))
+            .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchTodayAggregates(TEST_SITE_ID)
 
         assertThat(result).isInstanceOf(TodayAggregatesResult.Error::class.java)
-        assertThat((result as TodayAggregatesResult.Error).message).isEqualTo(ERROR_MESSAGE)
+        assertThat((result as TodayAggregatesResult.Error).message).isEqualTo(TEST_ERROR_TYPE.name)
     }
     // endregion
 
@@ -153,12 +154,12 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given error response, when fetchHourlyViews is called, then error result is returned`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
-            .thenReturn(StatsVisitsDataResult.Error(ERROR_MESSAGE))
+            .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchHourlyViews(TEST_SITE_ID)
 
         assertThat(result).isInstanceOf(HourlyViewsResult.Error::class.java)
-        assertThat((result as HourlyViewsResult.Error).message).isEqualTo(ERROR_MESSAGE)
+        assertThat((result as HourlyViewsResult.Error).message).isEqualTo(TEST_ERROR_TYPE.name)
     }
 
     @Test
@@ -213,12 +214,12 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given error response, when fetchWeeklyStats is called, then error result is returned`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
-            .thenReturn(StatsVisitsDataResult.Error(ERROR_MESSAGE))
+            .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchWeeklyStats(TEST_SITE_ID)
 
         assertThat(result).isInstanceOf(WeeklyStatsResult.Error::class.java)
-        assertThat((result as WeeklyStatsResult.Error).message).isEqualTo(ERROR_MESSAGE)
+        assertThat((result as WeeklyStatsResult.Error).message).isEqualTo(TEST_ERROR_TYPE.name)
     }
 
     @Test
@@ -273,12 +274,12 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given error response, when fetchDailyViewsForWeek is called, then error result is returned`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
-            .thenReturn(StatsVisitsDataResult.Error(ERROR_MESSAGE))
+            .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchDailyViewsForWeek(TEST_SITE_ID)
 
         assertThat(result).isInstanceOf(DailyViewsResult.Error::class.java)
-        assertThat((result as DailyViewsResult.Error).message).isEqualTo(ERROR_MESSAGE)
+        assertThat((result as DailyViewsResult.Error).message).isEqualTo(TEST_ERROR_TYPE.name)
     }
     // endregion
 
@@ -326,12 +327,12 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given error response, when fetchWeeklyStatsWithDailyData is called, then error result is returned`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
-            .thenReturn(StatsVisitsDataResult.Error(ERROR_MESSAGE))
+            .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID)
 
         assertThat(result).isInstanceOf(WeeklyStatsWithDailyDataResult.Error::class.java)
-        assertThat((result as WeeklyStatsWithDailyDataResult.Error).message).isEqualTo(ERROR_MESSAGE)
+        assertThat((result as WeeklyStatsWithDailyDataResult.Error).message).isEqualTo(TEST_ERROR_TYPE.name)
     }
 
     @Test
@@ -456,12 +457,12 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given error response, when fetchStatsForPeriod is called, then error result is returned`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
-            .thenReturn(StatsVisitsDataResult.Error(ERROR_MESSAGE))
+            .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
 
         assertThat(result).isInstanceOf(PeriodStatsResult.Error::class.java)
-        assertThat((result as PeriodStatsResult.Error).message).isEqualTo(ERROR_MESSAGE)
+        assertThat((result as PeriodStatsResult.Error).message).isEqualTo(TEST_ERROR_TYPE.name)
     }
 
     @Test
@@ -613,7 +614,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given error response, when fetchMostViewed with POSTS_AND_PAGES, then error result is returned`() = test {
         whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
-            .thenReturn(TopPostsDataResult.Error(ERROR_MESSAGE))
+            .thenReturn(TopPostsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchMostViewed(
             TEST_SITE_ID,
@@ -622,13 +623,13 @@ class StatsRepositoryTest : BaseUnitTest() {
         )
 
         assertThat(result).isInstanceOf(MostViewedResult.Error::class.java)
-        assertThat((result as MostViewedResult.Error).message).isEqualTo(ERROR_MESSAGE)
+        assertThat((result as MostViewedResult.Error).message).isEqualTo(TEST_ERROR_TYPE.name)
     }
 
     @Test
     fun `given error response, when fetchMostViewed with REFERRERS, then error result is returned`() = test {
         whenever(statsDataSource.fetchReferrers(any(), any(), any()))
-            .thenReturn(ReferrersDataResult.Error(ERROR_MESSAGE))
+            .thenReturn(ReferrersDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchMostViewed(
             TEST_SITE_ID,
@@ -637,7 +638,7 @@ class StatsRepositoryTest : BaseUnitTest() {
         )
 
         assertThat(result).isInstanceOf(MostViewedResult.Error::class.java)
-        assertThat((result as MostViewedResult.Error).message).isEqualTo(ERROR_MESSAGE)
+        assertThat((result as MostViewedResult.Error).message).isEqualTo(TEST_ERROR_TYPE.name)
     }
 
     @Test
@@ -758,7 +759,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
-        private const val ERROR_MESSAGE = "Test error message"
+        private val TEST_ERROR_TYPE = StatsErrorType.NETWORK_ERROR
 
         private const val TEST_PERIOD_1 = "2024-01-15"
         private const val TEST_PERIOD_2 = "2024-01-16"

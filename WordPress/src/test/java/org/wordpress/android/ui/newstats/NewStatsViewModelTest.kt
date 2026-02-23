@@ -96,10 +96,10 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         initViewModel(config)
         advanceUntilIdle()
 
-        viewModel.addCard(StatsCardType.COUNTRIES)
+        viewModel.addCard(StatsCardType.LOCATIONS)
         advanceUntilIdle()
 
-        verify(cardConfigurationRepository).addCard(TEST_SITE_ID, StatsCardType.COUNTRIES)
+        verify(cardConfigurationRepository).addCard(TEST_SITE_ID, StatsCardType.LOCATIONS)
     }
 
     @Test
@@ -108,12 +108,12 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val newConfig = StatsCardsConfiguration(
-            visibleCards = listOf(StatsCardType.COUNTRIES)
+            visibleCards = listOf(StatsCardType.LOCATIONS)
         )
         configurationFlow.value = TEST_SITE_ID to newConfig
         advanceUntilIdle()
 
-        assertThat(viewModel.visibleCards.value).containsExactly(StatsCardType.COUNTRIES)
+        assertThat(viewModel.visibleCards.value).containsExactly(StatsCardType.LOCATIONS)
     }
 
     @Test
@@ -123,7 +123,7 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         val initialCards = viewModel.visibleCards.value
 
         val newConfig = StatsCardsConfiguration(
-            visibleCards = listOf(StatsCardType.COUNTRIES)
+            visibleCards = listOf(StatsCardType.LOCATIONS)
         )
         configurationFlow.value = OTHER_SITE_ID to newConfig
         advanceUntilIdle()
@@ -144,7 +144,7 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         assertThat(hiddenCards).contains(
             StatsCardType.VIEWS_STATS,
             StatsCardType.MOST_VIEWED_REFERRERS,
-            StatsCardType.COUNTRIES
+            StatsCardType.LOCATIONS
         )
         assertThat(hiddenCards).doesNotContain(
             StatsCardType.TODAYS_STATS,
@@ -184,10 +184,10 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         initViewModel()
         advanceUntilIdle()
 
-        viewModel.moveCardToTop(StatsCardType.COUNTRIES)
+        viewModel.moveCardToTop(StatsCardType.LOCATIONS)
         advanceUntilIdle()
 
-        verify(cardConfigurationRepository).moveCardToTop(TEST_SITE_ID, StatsCardType.COUNTRIES)
+        verify(cardConfigurationRepository).moveCardToTop(TEST_SITE_ID, StatsCardType.LOCATIONS)
     }
 
     @Test
@@ -254,12 +254,12 @@ class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         val newConfig = StatsCardsConfiguration(
-            visibleCards = listOf(StatsCardType.COUNTRIES)
+            visibleCards = listOf(StatsCardType.LOCATIONS)
         )
         configurationFlow.value = TEST_SITE_ID to newConfig
         advanceUntilIdle()
 
-        assertThat(viewModel.cardsToLoad.value).containsExactly(StatsCardType.COUNTRIES)
+        assertThat(viewModel.cardsToLoad.value).containsExactly(StatsCardType.LOCATIONS)
     }
     // endregion
 

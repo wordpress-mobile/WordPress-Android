@@ -16,6 +16,7 @@ import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TopAuthorItemData
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.repository.TopAuthorsResult
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.ui.newstats.util.toDateRangeString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -50,9 +51,7 @@ class AuthorsViewModel @Inject constructor(
         if (site == null) {
             loadingPeriod = null
             _uiState.value = AuthorsCardUiState.Error(
-                resourceProvider.getString(
-                    R.string.stats_todays_stats_no_site_selected
-                )
+                R.string.stats_error_no_site
             )
             return
         }
@@ -61,9 +60,7 @@ class AuthorsViewModel @Inject constructor(
         if (accessToken.isNullOrEmpty()) {
             loadingPeriod = null
             _uiState.value = AuthorsCardUiState.Error(
-                resourceProvider.getString(
-                    R.string.stats_todays_stats_failed_to_load
-                )
+                R.string.stats_error_api
             )
             return
         }
@@ -87,15 +84,21 @@ class AuthorsViewModel @Inject constructor(
 
         statsRepository.init(accessToken)
         viewModelScope.launch {
-            _isRefreshing.value = true
-            fetchTopAuthors(site)
-            _isRefreshing.value = false
+            try {
+                _isRefreshing.value = true
+                fetchTopAuthors(site)
+            } finally {
+                _isRefreshing.value = false
+            }
         }
     }
 
     fun onRetry() {
         loadData()
     }
+
+    fun getAdminUrl(): String? =
+        selectedSiteRepository.getSelectedSite()?.adminUrl
 
     fun onPeriodChanged(period: StatsPeriod) {
         if (loadedPeriod == period || loadingPeriod == period) return
@@ -114,50 +117,64 @@ class AuthorsViewModel @Inject constructor(
         )
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchTopAuthors(site: SiteModel) {
         val siteId = site.siteId
 
-        when (val result = statsRepository.fetchTopAuthors(siteId, currentPeriod)) {
-            is TopAuthorsResult.Success -> {
-                loadedPeriod = currentPeriod
-                cachedTotalViews = result.totalViews
-                cachedTotalViewsChange = result.totalViewsChange
-                cachedTotalViewsChangePercent = result.totalViewsChangePercent
+        try {
+            when (val result = statsRepository.fetchTopAuthors(
+                siteId, currentPeriod
+            )) {
+                is TopAuthorsResult.Success -> {
+                    loadedPeriod = currentPeriod
+                    cachedTotalViews = result.totalViews
+                    cachedTotalViewsChange = result.totalViewsChange
+                    cachedTotalViewsChangePercent =
+                        result.totalViewsChangePercent
 
-                if (result.authors.isEmpty()) {
-                    allAuthors = emptyList()
-                    _uiState.value = AuthorsCardUiState.Loaded(
-                        authors = emptyList(),
-                        maxViewsForBar = 0,
-                        hasMoreItems = false
-                    )
-                } else {
-                    val authors = result.authors.map { author ->
-                        AuthorUiItem(
-                            name = author.name,
-                            avatarUrl = author.avatarUrl,
-                            views = author.views,
-                            change = author.toStatsViewChange()
+                    if (result.authors.isEmpty()) {
+                        allAuthors = emptyList()
+                        _uiState.value = AuthorsCardUiState.Loaded(
+                            authors = emptyList(),
+                            maxViewsForBar = 0,
+                            hasMoreItems = false
+                        )
+                    } else {
+                        val authors = result.authors.map { author ->
+                            AuthorUiItem(
+                                name = author.name,
+                                avatarUrl = author.avatarUrl,
+                                views = author.views,
+                                change = author.toStatsViewChange()
+                            )
+                        }
+
+                        allAuthors = authors
+
+                        val cardAuthors = authors.take(CARD_MAX_ITEMS)
+                        val maxViewsForBar =
+                            cardAuthors.firstOrNull()?.views ?: 0L
+
+                        _uiState.value = AuthorsCardUiState.Loaded(
+                            authors = cardAuthors,
+                            maxViewsForBar = maxViewsForBar,
+                            hasMoreItems =
+                                authors.size > CARD_MAX_ITEMS
                         )
                     }
-
-                    // Store all authors for detail screen
-                    allAuthors = authors
-
-                    // For bar percentage, use first item's views (list is sorted by views descending)
-                    val cardAuthors = authors.take(CARD_MAX_ITEMS)
-                    val maxViewsForBar = cardAuthors.firstOrNull()?.views ?: 0L
-
-                    _uiState.value = AuthorsCardUiState.Loaded(
-                        authors = cardAuthors,
-                        maxViewsForBar = maxViewsForBar,
-                        hasMoreItems = authors.size > CARD_MAX_ITEMS
+                }
+                is TopAuthorsResult.Error -> {
+                    _uiState.value = AuthorsCardUiState.Error(
+                        result.messageResId,
+                        result.isAuthError
                     )
                 }
             }
-            is TopAuthorsResult.Error -> {
-                _uiState.value = AuthorsCardUiState.Error(result.message)
-            }
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.STATS, "Error fetching top authors", e)
+            _uiState.value = AuthorsCardUiState.Error(
+                R.string.stats_error_unknown
+            )
         }
     }
 

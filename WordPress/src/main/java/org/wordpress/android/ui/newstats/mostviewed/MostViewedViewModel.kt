@@ -94,12 +94,15 @@ class MostViewedViewModel @Inject constructor(
 
         statsRepository.init(accessToken)
         viewModelScope.launch {
-            _isPostsRefreshing.value = true
-            loadDataForSourceInternal(
-                site.siteId,
-                MostViewedDataSource.POSTS_AND_PAGES
-            )
-            _isPostsRefreshing.value = false
+            try {
+                _isPostsRefreshing.value = true
+                loadDataForSourceInternal(
+                    site.siteId,
+                    MostViewedDataSource.POSTS_AND_PAGES
+                )
+            } finally {
+                _isPostsRefreshing.value = false
+            }
         }
     }
 
@@ -110,12 +113,15 @@ class MostViewedViewModel @Inject constructor(
 
         statsRepository.init(accessToken)
         viewModelScope.launch {
-            _isReferrersRefreshing.value = true
-            loadDataForSourceInternal(
-                site.siteId,
-                MostViewedDataSource.REFERRERS
-            )
-            _isReferrersRefreshing.value = false
+            try {
+                _isReferrersRefreshing.value = true
+                loadDataForSourceInternal(
+                    site.siteId,
+                    MostViewedDataSource.REFERRERS
+                )
+            } finally {
+                _isReferrersRefreshing.value = false
+            }
         }
     }
 
@@ -168,7 +174,7 @@ class MostViewedViewModel @Inject constructor(
             clearLoadingPeriod(dataSource)
             val errorState = MostViewedCardUiState.Error(
                 message = resourceProvider.getString(
-                    R.string.stats_todays_stats_no_site_selected
+                    R.string.stats_error_no_site
                 )
             )
             setUiState(dataSource, errorState)
@@ -180,7 +186,7 @@ class MostViewedViewModel @Inject constructor(
             clearLoadingPeriod(dataSource)
             val errorState = MostViewedCardUiState.Error(
                 message = resourceProvider.getString(
-                    R.string.stats_todays_stats_failed_to_load
+                    R.string.stats_error_api
                 )
             )
             setUiState(dataSource, errorState)
@@ -210,13 +216,13 @@ class MostViewedViewModel @Inject constructor(
                 is MostViewedResult.Success -> handleSuccessResult(result, dataSource)
                 is MostViewedResult.Error -> setErrorState(
                     dataSource,
-                    resourceProvider.getString(R.string.stats_todays_stats_failed_to_load)
+                    resourceProvider.getString(R.string.stats_error_api)
                 )
             }
         } catch (e: Exception) {
             setErrorState(
                 dataSource,
-                e.message ?: resourceProvider.getString(R.string.stats_todays_stats_unknown_error)
+                e.message ?: resourceProvider.getString(R.string.stats_error_unknown)
             )
         }
     }

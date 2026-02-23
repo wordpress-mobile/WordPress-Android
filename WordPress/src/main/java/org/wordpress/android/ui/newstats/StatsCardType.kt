@@ -5,18 +5,17 @@ import org.wordpress.android.R
 
 /**
  * Defines the available card types for the new stats screen.
- * Each card has a unique identifier, display name resource, and default order.
+ * Each card has a unique identifier and display name resource.
  */
 enum class StatsCardType(
-    @StringRes val displayNameResId: Int,
-    val defaultOrder: Int
+    @StringRes val displayNameResId: Int
 ) {
-    TODAYS_STATS(R.string.stats_insights_today, 0),
-    VIEWS_STATS(R.string.stats_views, 1),
-    MOST_VIEWED_POSTS_AND_PAGES(R.string.stats_most_viewed_posts_and_pages, 2),
-    MOST_VIEWED_REFERRERS(R.string.stats_most_viewed_referrers, 3),
-    COUNTRIES(R.string.stats_countries_title, 4),
-    AUTHORS(R.string.stats_authors_title, 5);
+    TODAYS_STATS(R.string.stats_insights_today),
+    VIEWS_STATS(R.string.stats_views),
+    MOST_VIEWED_POSTS_AND_PAGES(R.string.stats_most_viewed_posts_and_pages),
+    MOST_VIEWED_REFERRERS(R.string.stats_most_viewed_referrers),
+    LOCATIONS(R.string.stats_countries_location_header),
+    AUTHORS(R.string.stats_authors_title);
 
     companion object {
         /**
@@ -27,7 +26,7 @@ enum class StatsCardType(
             VIEWS_STATS,
             MOST_VIEWED_POSTS_AND_PAGES,
             MOST_VIEWED_REFERRERS,
-            COUNTRIES,
+            LOCATIONS,
             AUTHORS
         )
     }

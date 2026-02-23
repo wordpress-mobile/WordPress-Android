@@ -5,11 +5,16 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.PhotonUtils
+import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,6 +24,62 @@ class PostRsRestClient @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) {
+    private val mediaUrlCache = ConcurrentHashMap<Long, String>()
+
+    /**
+     * Fetches media source URLs for the given [mediaIds] in a single
+     * network call using the `include` parameter, returning a map of
+     * media ID to Photon-optimised URL. IDs already in the local cache
+     * are returned immediately without a network round-trip.
+     */
+    suspend fun fetchMediaUrls(
+        site: SiteModel,
+        mediaIds: List<Long>
+    ): Map<Long, String> {
+        val result = mutableMapOf<Long, String>()
+        val uncached = mutableListOf<Long>()
+        for (id in mediaIds) {
+            val cached = mediaUrlCache[id]
+            if (cached != null) result[id] = cached else uncached.add(id)
+        }
+        if (uncached.isEmpty()) return result
+
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.media().listWithEditContext(
+                MediaListParams(include = uncached)
+            )
+        }
+        when (response) {
+            is WpRequestResult.Success -> {
+                for (media in response.response.data) {
+                    val url = toPhotonUrl(site, media.sourceUrl)
+                    mediaUrlCache[media.id] = url
+                    result[media.id] = url
+                }
+            }
+            else -> {
+                val msg =
+                    (response as? WpRequestResult.WpError<*>)
+                        ?.errorMessage
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "fetchMediaUrls failed: $msg"
+                )
+            }
+        }
+        return result
+    }
+
+    private fun toPhotonUrl(site: SiteModel, sourceUrl: String): String {
+        if (!SiteUtils.isPhotonCapable(site)) return sourceUrl
+        val density = context.resources.displayMetrics.density
+        val sizePx = (FEATURED_IMAGE_SIZE_DP * density).toInt()
+        return PhotonUtils.getPhotonImageUrl(
+            sourceUrl, sizePx, sizePx, site.isPrivateWPComAtomic
+        )
+    }
+
     suspend fun trashPost(site: SiteModel, postId: Long): PostActionResult {
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request { it.posts().trash(PostEndpointType.Posts, postId) }
@@ -68,5 +129,9 @@ class PostRsRestClient @Inject constructor(
     sealed class PostActionResult {
         data object Success : PostActionResult()
         data class Error(val message: String) : PostActionResult()
+    }
+
+    companion object {
+        const val FEATURED_IMAGE_SIZE_DP = 64
     }
 }
