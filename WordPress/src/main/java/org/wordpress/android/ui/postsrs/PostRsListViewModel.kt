@@ -224,6 +224,14 @@ class PostRsListViewModel @Inject constructor(
         postId, R.string.post_rs_moved_to_draft, R.string.post_rs_error_update_status
     ) { restClient.updatePostStatus(site, postId, PostStatus.Draft) }
 
+    /**
+     * Shared helper that runs a post mutation on IO
+     *
+     * @param postId        Remote ID of the post being acted on.
+     * @param successResId  String resource shown when [action] succeeds.
+     * @param errorResId    String resource shown when [action] fails.
+     * @param action        Suspend lambda that performs the network call.
+     */
     private fun executePostAction(
         postId: Long,
         successResId: Int,
@@ -237,6 +245,11 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Duplicates a post by creating a new draft with the same content.
+     * The FluxC dependency is temporary and will be removed once the
+     * editor supports loading posts via wordpress-rs.
+     */
     private fun duplicatePost(remotePostId: Long) {
         val postToCopy = getFluxCPost(remotePostId) ?: return
         val newPost = postStore.instantiatePostModel(
@@ -260,6 +273,11 @@ class PostRsListViewModel @Inject constructor(
         return true
     }
 
+    /**
+     * Processes the outcome of a post mutation. On success, optimistically
+     * removes the post from the UI, shows a toast, and refreshes all tabs.
+     * On error, logs the failure and shows an error toast.
+     */
     private fun handleActionResult(
         result: PostActionResult,
         postId: Long,
