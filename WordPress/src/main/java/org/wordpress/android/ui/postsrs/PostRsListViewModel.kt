@@ -18,6 +18,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -186,8 +187,7 @@ class PostRsListViewModel @Inject constructor(
                 _pendingConfirmation.value = PendingConfirmation.Delete(remotePostId)
             PostRsMenuAction.PUBLISH -> publishPost(site, remotePostId)
             PostRsMenuAction.MOVE_TO_DRAFT -> moveToDraft(site, remotePostId)
-            PostRsMenuAction.DUPLICATE ->
-                _events.trySend(PostRsListEvent.ShowToast(R.string.post_rs_not_implemented_yet))
+            PostRsMenuAction.DUPLICATE -> duplicatePost(remotePostId)
         }
     }
 
@@ -240,6 +240,21 @@ class PostRsListViewModel @Inject constructor(
             }
             handleActionResult(result, postId, R.string.post_rs_moved_to_draft, R.string.post_rs_error_update_status)
         }
+    }
+
+    private fun duplicatePost(remotePostId: Long) {
+        val postToCopy = getFluxCPost(remotePostId) ?: return
+        val newPost = postStore.instantiatePostModel(
+            site,
+            false,
+            postToCopy.title,
+            postToCopy.content,
+            FluxCPostStatus.DRAFT.toString(),
+            postToCopy.categoryIdList,
+            postToCopy.postFormat,
+            true
+        )
+        _events.trySend(PostRsListEvent.EditPost(site, newPost))
     }
 
     private fun checkNetwork(): Boolean {
