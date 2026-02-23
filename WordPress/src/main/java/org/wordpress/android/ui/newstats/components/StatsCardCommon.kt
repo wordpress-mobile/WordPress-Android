@@ -124,14 +124,16 @@ fun StatsCardEmptyContent() {
 @Composable
 fun StatsCardErrorContent(
     @StringRes titleResId: Int,
-    errorMessage: String,
+    @StringRes errorMessageResId: Int,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
     onMoveToTop: (() -> Unit)?,
     onMoveDown: (() -> Unit)?,
-    onMoveToBottom: (() -> Unit)?
+    onMoveToBottom: (() -> Unit)?,
+    onOpenWpAdmin: (() -> Unit)? = null,
+    headerExtra: @Composable (() -> Unit)? = null
 ) {
     Column(modifier = Modifier.padding(CardPadding)) {
         StatsCardHeader(
@@ -143,19 +145,37 @@ fun StatsCardErrorContent(
             onMoveDown = onMoveDown,
             onMoveToBottom = onMoveToBottom
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        if (headerExtra != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            headerExtra()
+        }
+        Spacer(modifier = Modifier.height(
+            if (headerExtra != null) 12.dp else 24.dp
+        ))
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = errorMessage,
+                text = stringResource(errorMessageResId),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(text = stringResource(R.string.retry))
+            if (onOpenWpAdmin != null) {
+                Button(onClick = onOpenWpAdmin) {
+                    Text(
+                        text = stringResource(
+                            R.string.my_site_btn_wp_admin
+                        )
+                    )
+                }
+            } else {
+                Button(onClick = onRetry) {
+                    Text(
+                        text = stringResource(R.string.retry)
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(24.dp))

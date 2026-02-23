@@ -23,6 +23,7 @@ import org.wordpress.android.ui.newstats.repository.RegionViewsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.util.toDateRangeString
 import org.wordpress.android.ui.newstats.components.StatsViewChange
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import kotlin.math.abs
@@ -107,9 +108,7 @@ class LocationsViewModel @Inject constructor(
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
             setAllStatesError(
-                resourceProvider.getString(
-                    R.string.stats_todays_stats_no_site_selected
-                )
+                R.string.stats_error_no_site
             )
             return
         }
@@ -117,9 +116,7 @@ class LocationsViewModel @Inject constructor(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
             setAllStatesError(
-                resourceProvider.getString(
-                    R.string.stats_todays_stats_failed_to_load
-                )
+                R.string.stats_error_api
             )
             return
         }
@@ -153,6 +150,9 @@ class LocationsViewModel @Inject constructor(
     fun onRetry() {
         loadData()
     }
+
+    fun getAdminUrl(): String? =
+        selectedSiteRepository.getSelectedSite()?.adminUrl
 
     fun onPeriodChanged(period: StatsPeriod) {
         if (period == currentPeriod &&
@@ -232,8 +232,13 @@ class LocationsViewModel @Inject constructor(
         }
     }
 
-    private fun setAllStatesError(message: String) {
-        val error = LocationsCardUiState.Error(message)
+    private fun setAllStatesError(
+        @androidx.annotation.StringRes messageResId: Int,
+        isAuthError: Boolean = false
+    ) {
+        val error = LocationsCardUiState.Error(
+            messageResId, isAuthError
+        )
         _countriesUiState.value = error
         _regionsUiState.value = error
         _citiesUiState.value = error
@@ -303,14 +308,16 @@ class LocationsViewModel @Inject constructor(
                 }
                 is CountryViewsResult.Error -> {
                     _countriesUiState.value =
-                        LocationsCardUiState.Error(result.message)
+                        LocationsCardUiState.Error(
+                            result.messageResId,
+                            result.isAuthError
+                        )
                 }
             }
         } catch (e: Exception) {
+            AppLog.e(AppLog.T.STATS, "Error fetching country views", e)
             _countriesUiState.value = LocationsCardUiState.Error(
-                e.message ?: resourceProvider.getString(
-                    R.string.stats_todays_stats_unknown_error
-                )
+                R.string.stats_error_unknown
             )
         }
     }
@@ -382,14 +389,16 @@ class LocationsViewModel @Inject constructor(
                 }
                 is RegionViewsResult.Error -> {
                     _regionsUiState.value =
-                        LocationsCardUiState.Error(result.message)
+                        LocationsCardUiState.Error(
+                            result.messageResId,
+                            result.isAuthError
+                        )
                 }
             }
         } catch (e: Exception) {
+            AppLog.e(AppLog.T.STATS, "Error fetching region views", e)
             _regionsUiState.value = LocationsCardUiState.Error(
-                e.message ?: resourceProvider.getString(
-                    R.string.stats_todays_stats_unknown_error
-                )
+                R.string.stats_error_unknown
             )
         }
     }
@@ -456,14 +465,16 @@ class LocationsViewModel @Inject constructor(
                 }
                 is CityViewsResult.Error -> {
                     _citiesUiState.value =
-                        LocationsCardUiState.Error(result.message)
+                        LocationsCardUiState.Error(
+                            result.messageResId,
+                            result.isAuthError
+                        )
                 }
             }
         } catch (e: Exception) {
+            AppLog.e(AppLog.T.STATS, "Error fetching city views", e)
             _citiesUiState.value = LocationsCardUiState.Error(
-                e.message ?: resourceProvider.getString(
-                    R.string.stats_todays_stats_unknown_error
-                )
+                R.string.stats_error_unknown
             )
         }
     }

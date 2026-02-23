@@ -75,17 +75,8 @@ class StatsDataSourceImpl @Inject constructor(
                 AppLog.d(T.STATS, "StatsDataSourceImpl: fetchStatsVisits success")
                 StatsVisitsDataResult.Success(mapToStatsVisitsData(result.response.data))
             }
-            is WpRequestResult.WpError -> {
-                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchStatsVisits WpError - ${result.errorMessage}")
-                StatsVisitsDataResult.Error(result.errorMessage)
-            }
-            is WpRequestResult.ResponseParsingError<*> -> {
-                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchStatsVisits ResponseParsingError - $result")
-                StatsVisitsDataResult.Error("Response parsing error: $result")
-            }
-            else -> {
-                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchStatsVisits unexpected result - $result")
-                StatsVisitsDataResult.Error("Unknown error: ${result::class.simpleName}")
+            else -> logErrorAndReturn("fetchStatsVisits", result) {
+                StatsVisitsDataResult.Error(it)
             }
         }
     }
@@ -167,26 +158,8 @@ class StatsDataSourceImpl @Inject constructor(
                     }
                 )
             }
-            is WpRequestResult.WpError -> {
-                AppLog.e(
-                    T.STATS,
-                    "StatsDataSourceImpl: fetchTopPostsAndPages WpError - message=${result.errorMessage}"
-                )
-                TopPostsDataResult.Error(result.errorMessage)
-            }
-            is WpRequestResult.ResponseParsingError<*> -> {
-                AppLog.e(
-                    T.STATS,
-                    "StatsDataSourceImpl: fetchTopPostsAndPages ResponseParsingError - $result"
-                )
-                TopPostsDataResult.Error("Response parsing error: $result")
-            }
-            else -> {
-                AppLog.e(
-                    T.STATS,
-                    "StatsDataSourceImpl: fetchTopPostsAndPages unexpected result - $result"
-                )
-                TopPostsDataResult.Error("Unknown error")
+            else -> logErrorAndReturn("fetchTopPostsAndPages", result) {
+                TopPostsDataResult.Error(it)
             }
         }
     }
@@ -235,17 +208,8 @@ class StatsDataSourceImpl @Inject constructor(
                     }
                 )
             }
-            is WpRequestResult.WpError -> {
-                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchReferrers WpError - ${result.errorMessage}")
-                ReferrersDataResult.Error(result.errorMessage)
-            }
-            is WpRequestResult.ResponseParsingError<*> -> {
-                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchReferrers ResponseParsingError - $result")
-                ReferrersDataResult.Error("Response parsing error: $result")
-            }
-            else -> {
-                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchReferrers unexpected result - $result")
-                ReferrersDataResult.Error("Unknown error: ${result::class.simpleName}")
+            else -> logErrorAndReturn("fetchReferrers", result) {
+                ReferrersDataResult.Error(it)
             }
         }
     }
@@ -309,17 +273,8 @@ class StatsDataSourceImpl @Inject constructor(
                     )
                 )
             }
-            is WpRequestResult.WpError -> {
-                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchCountryViews WpError - ${result.errorMessage}")
-                CountryViewsDataResult.Error(result.errorMessage)
-            }
-            is WpRequestResult.ResponseParsingError<*> -> {
-                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchCountryViews ResponseParsingError - $result")
-                CountryViewsDataResult.Error("Response parsing error: $result")
-            }
-            else -> {
-                AppLog.e(T.STATS, "StatsDataSourceImpl: fetchCountryViews unexpected result - $result")
-                CountryViewsDataResult.Error("Unknown error: ${result::class.simpleName}")
+            else -> logErrorAndReturn("fetchCountryViews", result) {
+                CountryViewsDataResult.Error(it)
             }
         }
     }
@@ -536,26 +491,8 @@ class StatsDataSourceImpl @Inject constructor(
                     )
                 )
             }
-            is WpRequestResult.WpError -> {
-                AppLog.e(
-                    T.STATS,
-                    "StatsDataSourceImpl: fetchTopAuthors WpError - ${result.errorMessage}"
-                )
-                TopAuthorsDataResult.Error(result.errorMessage)
-            }
-            is WpRequestResult.ResponseParsingError<*> -> {
-                AppLog.e(
-                    T.STATS,
-                    "StatsDataSourceImpl: fetchTopAuthors ResponseParsingError - $result"
-                )
-                TopAuthorsDataResult.Error("Response parsing error: $result")
-            }
-            else -> {
-                AppLog.e(
-                    T.STATS,
-                    "StatsDataSourceImpl: fetchTopAuthors unexpected result - $result"
-                )
-                TopAuthorsDataResult.Error("Unknown error: ${result::class.simpleName}")
+            else -> logErrorAndReturn("fetchTopAuthors", result) {
+                TopAuthorsDataResult.Error(it)
             }
         }
     }
@@ -568,28 +505,68 @@ class StatsDataSourceImpl @Inject constructor(
         )
     }
 
-    private fun <T> logErrorAndReturn(
+    private fun <R> logErrorAndReturn(
         methodName: String,
         result: WpRequestResult<*>,
-        errorFactory: (String) -> T
-    ): T {
-        val (logMessage, errorMessage) = when (result) {
-            is WpRequestResult.WpError -> {
-                "StatsDataSourceImpl: $methodName WpError - " +
-                    result.errorMessage to result.errorMessage
-            }
-            is WpRequestResult.ResponseParsingError<*> -> {
-                "StatsDataSourceImpl: $methodName " +
-                    "ResponseParsingError - $result" to
-                    "Response parsing error: $result"
-            }
-            else -> {
-                "StatsDataSourceImpl: $methodName " +
-                    "unexpected result - $result" to
-                    "Unknown error: ${result::class.simpleName}"
-            }
-        }
+        errorFactory: (StatsErrorType) -> R
+    ): R {
+        val (logMessage, errorType) = classifyError(methodName, result)
         AppLog.e(T.STATS, logMessage)
-        return errorFactory(errorMessage)
+        return errorFactory(errorType)
+    }
+
+    private fun classifyError(
+        methodName: String,
+        result: WpRequestResult<*>
+    ): Pair<String, StatsErrorType> = when (result) {
+        is WpRequestResult.WpError -> {
+            val statusCode = result.statusCode.toInt()
+            val errorType = if (
+                statusCode == HTTP_FORBIDDEN ||
+                statusCode == HTTP_UNAUTHORIZED
+            ) {
+                StatsErrorType.AUTH_ERROR
+            } else {
+                StatsErrorType.API_ERROR
+            }
+            "StatsDataSourceImpl: $methodName WpError " +
+                "(status=$statusCode) - ${result.errorMessage}" to
+                errorType
+        }
+        is WpRequestResult.ResponseParsingError<*> -> {
+            "StatsDataSourceImpl: $methodName " +
+                "ResponseParsingError - $result" to
+                StatsErrorType.PARSING_ERROR
+        }
+        is WpRequestResult.RequestExecutionFailed<*> -> {
+            val statusCode = result.statusCode?.toInt()
+            val errorType = if (
+                statusCode == HTTP_FORBIDDEN ||
+                statusCode == HTTP_UNAUTHORIZED
+            ) {
+                StatsErrorType.AUTH_ERROR
+            } else {
+                StatsErrorType.NETWORK_ERROR
+            }
+            "StatsDataSourceImpl: $methodName " +
+                "RequestExecutionFailed " +
+                "(status=$statusCode, " +
+                "reason=${result.reason})" to errorType
+        }
+        is WpRequestResult.InvalidHttpStatusCode<*> -> {
+            "StatsDataSourceImpl: $methodName " +
+                "InvalidHttpStatusCode - " +
+                "${result.statusCode}" to StatsErrorType.API_ERROR
+        }
+        else -> {
+            "StatsDataSourceImpl: $methodName " +
+                "unexpected result - $result" to
+                StatsErrorType.UNKNOWN
+        }
+    }
+
+    companion object {
+        private const val HTTP_UNAUTHORIZED = 401
+        private const val HTTP_FORBIDDEN = 403
     }
 }

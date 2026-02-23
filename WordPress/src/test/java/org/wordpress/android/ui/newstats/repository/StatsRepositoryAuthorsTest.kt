@@ -11,11 +11,13 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.TopAuthorItem
 import org.wordpress.android.ui.newstats.datasource.TopAuthorsData
+import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.newstats.datasource.TopAuthorsDataResult
 
 @ExperimentalCoroutinesApi
@@ -154,7 +156,7 @@ class StatsRepositoryAuthorsTest : BaseUnitTest() {
 
         whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
             .thenReturn(TopAuthorsDataResult.Success(currentData))
-            .thenReturn(TopAuthorsDataResult.Error("Network error"))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.NETWORK_ERROR))
 
         val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
 
@@ -168,12 +170,76 @@ class StatsRepositoryAuthorsTest : BaseUnitTest() {
     @Test
     fun `given error response, when fetchTopAuthors, then error result is returned`() = test {
         whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
-            .thenReturn(TopAuthorsDataResult.Error(ERROR_MESSAGE))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.NETWORK_ERROR))
 
         val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
 
         assertThat(result).isInstanceOf(TopAuthorsResult.Error::class.java)
-        assertThat((result as TopAuthorsResult.Error).message).isEqualTo(ERROR_MESSAGE)
+        assertThat((result as TopAuthorsResult.Error).messageResId)
+            .isEqualTo(R.string.stats_error_network)
+    }
+
+    @Test
+    fun `given auth error, when fetchTopAuthors, then isAuthError is true`() = test {
+        whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.AUTH_ERROR))
+
+        val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(TopAuthorsResult.Error::class.java)
+        val error = result as TopAuthorsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_auth)
+        assertThat(error.isAuthError).isTrue()
+    }
+
+    @Test
+    fun `given non-auth error, when fetchTopAuthors, then isAuthError is false`() = test {
+        whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.NETWORK_ERROR))
+
+        val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(TopAuthorsResult.Error::class.java)
+        assertThat((result as TopAuthorsResult.Error).isAuthError).isFalse()
+    }
+
+    @Test
+    fun `given parsing error, when fetchTopAuthors, then correct message is returned`() = test {
+        whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.PARSING_ERROR))
+
+        val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(TopAuthorsResult.Error::class.java)
+        val error = result as TopAuthorsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_parsing)
+        assertThat(error.isAuthError).isFalse()
+    }
+
+    @Test
+    fun `given api error, when fetchTopAuthors, then correct message is returned`() = test {
+        whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.API_ERROR))
+
+        val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(TopAuthorsResult.Error::class.java)
+        val error = result as TopAuthorsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_api)
+        assertThat(error.isAuthError).isFalse()
+    }
+
+    @Test
+    fun `given unknown error, when fetchTopAuthors, then correct message is returned`() = test {
+        whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(TopAuthorsDataResult.Error(StatsErrorType.UNKNOWN))
+
+        val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(TopAuthorsResult.Error::class.java)
+        val error = result as TopAuthorsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_unknown)
+        assertThat(error.isAuthError).isFalse()
     }
 
     @Test
@@ -228,7 +294,6 @@ class StatsRepositoryAuthorsTest : BaseUnitTest() {
 
     companion object {
         private const val TEST_SITE_ID = 123L
-        private const val ERROR_MESSAGE = "Test error message"
 
         private const val TEST_AUTHOR_NAME_1 = "John Doe"
         private const val TEST_AUTHOR_NAME_2 = "Jane Smith"

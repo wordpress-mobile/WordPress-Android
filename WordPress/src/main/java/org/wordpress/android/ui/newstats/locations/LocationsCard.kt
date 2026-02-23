@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
@@ -34,6 +33,7 @@ import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.ShowAllFooter
 import org.wordpress.android.ui.newstats.components.StatsCardContainer
 import org.wordpress.android.ui.newstats.components.StatsCardEmptyContent
+import org.wordpress.android.ui.newstats.components.StatsCardErrorContent
 import org.wordpress.android.ui.newstats.components.StatsCardHeader
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsListItem
@@ -57,7 +57,8 @@ fun LocationsCard(
     onMoveUp: (() -> Unit)? = null,
     onMoveToTop: (() -> Unit)? = null,
     onMoveDown: (() -> Unit)? = null,
-    onMoveToBottom: (() -> Unit)? = null
+    onMoveToBottom: (() -> Unit)? = null,
+    onOpenWpAdmin: (() -> Unit)? = null
 ) {
     StatsCardContainer(modifier = modifier) {
         when (uiState) {
@@ -72,23 +73,40 @@ fun LocationsCard(
                 onMoveToBottom = onMoveToBottom
             )
             is LocationsCardUiState.Loaded -> LoadedContent(
-                uiState, selectedLocationType, onLocationTypeChanged,
+                uiState, selectedLocationType,
+                onLocationTypeChanged,
                 onShowAllClick, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop,
                 onMoveDown, onMoveToBottom
             )
-            is LocationsCardUiState.Error -> ErrorContent(
-                uiState = uiState,
-                selectedLocationType = selectedLocationType,
-                onLocationTypeChanged = onLocationTypeChanged,
-                onRetry = onRetry,
-                onRemoveCard = onRemoveCard,
-                cardPosition = cardPosition,
-                onMoveUp = onMoveUp,
-                onMoveToTop = onMoveToTop,
-                onMoveDown = onMoveDown,
-                onMoveToBottom = onMoveToBottom
-            )
+            is LocationsCardUiState.Error -> {
+                val titleResId = when (selectedLocationType) {
+                    LocationType.COUNTRIES ->
+                        R.string.stats_countries_title
+                    LocationType.REGIONS ->
+                        R.string.stats_regions_title
+                    LocationType.CITIES ->
+                        R.string.stats_cities_title
+                }
+                StatsCardErrorContent(
+                    titleResId = titleResId,
+                    errorMessageResId = uiState.messageResId,
+                    onRetry = onRetry,
+                    onRemoveCard = onRemoveCard,
+                    cardPosition = cardPosition,
+                    onMoveUp = onMoveUp,
+                    onMoveToTop = onMoveToTop,
+                    onMoveDown = onMoveDown,
+                    onMoveToBottom = onMoveToBottom,
+                    onOpenWpAdmin = onOpenWpAdmin,
+                    headerExtra = {
+                        LocationTypeSelector(
+                            selectedType = selectedLocationType,
+                            onTypeSelected = onLocationTypeChanged
+                        )
+                    }
+                )
+            }
         }
     }
 }
@@ -271,60 +289,6 @@ private fun LoadedContent(
     }
 }
 
-@Composable
-private fun ErrorContent(
-    uiState: LocationsCardUiState.Error,
-    selectedLocationType: LocationType,
-    onLocationTypeChanged: (LocationType) -> Unit,
-    onRetry: () -> Unit,
-    onRemoveCard: () -> Unit,
-    cardPosition: CardPosition?,
-    onMoveUp: (() -> Unit)?,
-    onMoveToTop: (() -> Unit)?,
-    onMoveDown: (() -> Unit)?,
-    onMoveToBottom: (() -> Unit)?
-) {
-    val titleResId = when (selectedLocationType) {
-        LocationType.COUNTRIES -> R.string.stats_countries_title
-        LocationType.REGIONS -> R.string.stats_regions_title
-        LocationType.CITIES -> R.string.stats_cities_title
-    }
-    Column(modifier = Modifier.padding(CardPadding)) {
-        StatsCardHeader(
-            titleResId = titleResId,
-            onRemoveCard = onRemoveCard,
-            cardPosition = cardPosition,
-            onMoveUp = onMoveUp,
-            onMoveToTop = onMoveToTop,
-            onMoveDown = onMoveDown,
-            onMoveToBottom = onMoveToBottom
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Location type selector
-        LocationTypeSelector(
-            selectedType = selectedLocationType,
-            onTypeSelected = onLocationTypeChanged
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = uiState.message,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(text = stringResource(R.string.retry))
-            }
-        }
-        Spacer(modifier = Modifier.height(24.dp))
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LocationTypeSelector(
@@ -499,7 +463,7 @@ private fun LocationsCardErrorPreview() {
     AppThemeM3 {
         LocationsCard(
             uiState = LocationsCardUiState.Error(
-                "Failed to load country data"
+                R.string.stats_error_api
             ),
             selectedLocationType = LocationType.COUNTRIES,
             onLocationTypeChanged = {},

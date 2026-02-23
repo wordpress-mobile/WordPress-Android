@@ -1570,9 +1570,13 @@
 
     <string name="stats_loading_error">Data not loaded</string>
     <string name="stats_loading_block_error">There was a problem loading your data, refresh your page to try again.</string>
-    <string name="stats_todays_stats_no_site_selected">No site selected</string>
-    <string name="stats_todays_stats_failed_to_load">Failed to load stats</string>
-    <string name="stats_todays_stats_unknown_error">Unknown error</string>
+    <string name="stats_error_no_site">No site selected</string>
+    <string name="stats_error_api">Failed to load stats</string>
+    <string name="stats_error_unknown">An unexpected error occurred</string>
+    <string name="stats_error_auth">You don\'t have permission to view these stats</string>
+    <string name="stats_error_network">Network error. Please check your connection and try again</string>
+    <string name="stats_error_parsing">There was a problem loading the data. Please try again</string>
+    <string name="stats_error_admin_url_unavailable">Unable to open WP Admin for this site</string>
 
     <!-- stats period selector -->
     <string name="stats_period_today">Today</string>

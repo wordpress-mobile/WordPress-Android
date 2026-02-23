@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.authors
 
 import android.os.Parcelable
+import androidx.annotation.StringRes
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.ui.newstats.components.StatsViewChange
 
@@ -16,7 +17,10 @@ sealed class AuthorsCardUiState {
         val hasMoreItems: Boolean
     ) : AuthorsCardUiState()
 
-    data class Error(val message: String) : AuthorsCardUiState()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : AuthorsCardUiState()
 }
 
 /**

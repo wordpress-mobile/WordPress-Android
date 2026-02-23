@@ -141,7 +141,7 @@ enum class StatsUnit {
  */
 sealed class StatsVisitsDataResult {
     data class Success(val data: StatsVisitsData) : StatsVisitsDataResult()
-    data class Error(val message: String) : StatsVisitsDataResult()
+    data class Error(val errorType: StatsErrorType) : StatsVisitsDataResult()
 }
 
 /**
@@ -201,7 +201,7 @@ data class PostsDataPoint(
  */
 sealed class TopPostsDataResult {
     data class Success(val items: List<TopPostDataItem>) : TopPostsDataResult()
-    data class Error(val message: String) : TopPostsDataResult()
+    data class Error(val errorType: StatsErrorType) : TopPostsDataResult()
 }
 
 /**
@@ -218,7 +218,7 @@ data class TopPostDataItem(
  */
 sealed class ReferrersDataResult {
     data class Success(val items: List<ReferrerDataItem>) : ReferrersDataResult()
-    data class Error(val message: String) : ReferrersDataResult()
+    data class Error(val errorType: StatsErrorType) : ReferrersDataResult()
 }
 
 /**
@@ -234,7 +234,7 @@ data class ReferrerDataItem(
  */
 sealed class CountryViewsDataResult {
     data class Success(val data: CountryViewsData) : CountryViewsDataResult()
-    data class Error(val message: String) : CountryViewsDataResult()
+    data class Error(val errorType: StatsErrorType) : CountryViewsDataResult()
 }
 
 /**
@@ -261,7 +261,7 @@ data class CountryViewItem(
  */
 sealed class RegionViewsDataResult {
     data class Success(val data: RegionViewsData) : RegionViewsDataResult()
-    data class Error(val message: String) : RegionViewsDataResult()
+    data class Error(val errorType: StatsErrorType) : RegionViewsDataResult()
 }
 
 /**
@@ -288,7 +288,7 @@ data class RegionViewItem(
  */
 sealed class CityViewsDataResult {
     data class Success(val data: CityViewsData) : CityViewsDataResult()
-    data class Error(val message: String) : CityViewsDataResult()
+    data class Error(val errorType: StatsErrorType) : CityViewsDataResult()
 }
 
 /**
@@ -317,7 +317,7 @@ data class CityViewItem(
  */
 sealed class TopAuthorsDataResult {
     data class Success(val data: TopAuthorsData) : TopAuthorsDataResult()
-    data class Error(val message: String) : TopAuthorsDataResult()
+    data class Error(val errorType: StatsErrorType) : TopAuthorsDataResult()
 }
 
 /**

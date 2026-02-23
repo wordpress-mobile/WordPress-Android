@@ -237,7 +237,7 @@ class ViewsStatsViewModel @Inject constructor(
             loadingPeriod = null
             _uiState.value = ViewsStatsCardUiState.Error(
                 message = resourceProvider.getString(
-                    R.string.stats_todays_stats_no_site_selected
+                    R.string.stats_error_no_site
                 )
             )
             return
@@ -248,7 +248,7 @@ class ViewsStatsViewModel @Inject constructor(
             loadingPeriod = null
             _uiState.value = ViewsStatsCardUiState.Error(
                 message = resourceProvider.getString(
-                    R.string.stats_todays_stats_failed_to_load
+                    R.string.stats_error_api
                 )
             )
             return
@@ -277,7 +277,7 @@ class ViewsStatsViewModel @Inject constructor(
                 is PeriodStatsResult.Error -> {
                     _uiState.value = ViewsStatsCardUiState.Error(
                         message = resourceProvider.getString(
-                            R.string.stats_todays_stats_failed_to_load
+                            R.string.stats_error_api
                         )
                     )
                 }
@@ -286,7 +286,7 @@ class ViewsStatsViewModel @Inject constructor(
             _uiState.value = ViewsStatsCardUiState.Error(
                 message = e.message
                     ?: resourceProvider.getString(
-                        R.string.stats_todays_stats_unknown_error
+                        R.string.stats_error_unknown
                     )
             )
         } finally {

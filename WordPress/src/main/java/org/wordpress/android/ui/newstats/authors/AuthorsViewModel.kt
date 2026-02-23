@@ -16,6 +16,7 @@ import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TopAuthorItemData
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.repository.TopAuthorsResult
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.ui.newstats.util.toDateRangeString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -50,9 +51,7 @@ class AuthorsViewModel @Inject constructor(
         if (site == null) {
             loadingPeriod = null
             _uiState.value = AuthorsCardUiState.Error(
-                resourceProvider.getString(
-                    R.string.stats_todays_stats_no_site_selected
-                )
+                R.string.stats_error_no_site
             )
             return
         }
@@ -61,9 +60,7 @@ class AuthorsViewModel @Inject constructor(
         if (accessToken.isNullOrEmpty()) {
             loadingPeriod = null
             _uiState.value = AuthorsCardUiState.Error(
-                resourceProvider.getString(
-                    R.string.stats_todays_stats_failed_to_load
-                )
+                R.string.stats_error_api
             )
             return
         }
@@ -99,6 +96,9 @@ class AuthorsViewModel @Inject constructor(
     fun onRetry() {
         loadData()
     }
+
+    fun getAdminUrl(): String? =
+        selectedSiteRepository.getSelectedSite()?.adminUrl
 
     fun onPeriodChanged(period: StatsPeriod) {
         if (loadedPeriod == period || loadingPeriod == period) return
@@ -164,15 +164,16 @@ class AuthorsViewModel @Inject constructor(
                     }
                 }
                 is TopAuthorsResult.Error -> {
-                    _uiState.value =
-                        AuthorsCardUiState.Error(result.message)
+                    _uiState.value = AuthorsCardUiState.Error(
+                        result.messageResId,
+                        result.isAuthError
+                    )
                 }
             }
         } catch (e: Exception) {
+            AppLog.e(AppLog.T.STATS, "Error fetching top authors", e)
             _uiState.value = AuthorsCardUiState.Error(
-                e.message ?: resourceProvider.getString(
-                    R.string.stats_todays_stats_unknown_error
-                )
+                R.string.stats_error_unknown
             )
         }
     }

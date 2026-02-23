@@ -22,7 +22,10 @@ sealed class LocationsCardUiState {
         val hasMoreItems: Boolean
     ) : LocationsCardUiState()
 
-    data class Error(val message: String) : LocationsCardUiState()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : LocationsCardUiState()
 }
 
 /**

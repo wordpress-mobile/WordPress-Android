@@ -883,7 +883,7 @@ private fun ViewsStatsCardErrorPreview() {
     AppThemeM3 {
         ViewsStatsCard(
             uiState = ViewsStatsCardUiState.Error(
-                message = stringResource(R.string.stats_todays_stats_failed_to_load)
+                message = stringResource(R.string.stats_error_api)
             ),
             onChartTypeChanged = {},
             onRetry = {},

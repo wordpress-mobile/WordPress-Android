@@ -51,12 +51,12 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
 
     private fun stubNoSiteSelectedError() {
-        whenever(resourceProvider.getString(R.string.stats_todays_stats_no_site_selected))
+        whenever(resourceProvider.getString(R.string.stats_error_no_site))
             .thenReturn(NO_SITE_SELECTED_ERROR)
     }
 
     private fun stubFailedToLoadError() {
-        whenever(resourceProvider.getString(R.string.stats_todays_stats_failed_to_load))
+        whenever(resourceProvider.getString(R.string.stats_error_api))
             .thenReturn(FAILED_TO_LOAD_ERROR)
     }
 
