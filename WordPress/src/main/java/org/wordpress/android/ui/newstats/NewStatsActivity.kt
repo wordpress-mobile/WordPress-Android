@@ -85,6 +85,7 @@ import org.wordpress.android.ui.newstats.authors.AuthorsDetailActivity
 import org.wordpress.android.ui.newstats.authors.AuthorsViewModel
 import org.wordpress.android.ui.newstats.clicks.ClicksViewModel
 import org.wordpress.android.ui.newstats.locations.LocationsCardUiState
+import org.wordpress.android.ui.newstats.searchterms.SearchTermsViewModel
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
 import android.widget.Toast
@@ -240,6 +241,7 @@ private fun TrafficTabContent(
     locationsViewModel: LocationsViewModel = viewModel(),
     authorsViewModel: AuthorsViewModel = viewModel(),
     clicksViewModel: ClicksViewModel = viewModel(),
+    searchTermsViewModel: SearchTermsViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -251,6 +253,7 @@ private fun TrafficTabContent(
     val selectedLocationType by locationsViewModel.selectedLocationType.collectAsState()
     val authorsUiState by authorsViewModel.uiState.collectAsState()
     val clicksUiState by clicksViewModel.uiState.collectAsState()
+    val searchTermsUiState by searchTermsViewModel.uiState.collectAsState()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
@@ -261,11 +264,13 @@ private fun TrafficTabContent(
     val isLocationsRefreshing by locationsViewModel.isRefreshing.collectAsState()
     val isAuthorsRefreshing by authorsViewModel.isRefreshing.collectAsState()
     val isClicksRefreshing by clicksViewModel.isRefreshing.collectAsState()
+    val isSearchTermsRefreshing by searchTermsViewModel
+        .isRefreshing.collectAsState()
     val isRefreshing = listOf(
         isTodaysStatsRefreshing, isViewsStatsRefreshing,
         isMostViewedPostsRefreshing, isMostViewedReferrersRefreshing,
         isLocationsRefreshing, isAuthorsRefreshing,
-        isClicksRefreshing,
+        isClicksRefreshing, isSearchTermsRefreshing,
     ).any { it }
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -305,6 +310,9 @@ private fun TrafficTabContent(
             onClicks = {
                 clicksViewModel.onPeriodChanged(selectedPeriod)
             },
+            onSearchTerms = {
+                searchTermsViewModel.onPeriodChanged(selectedPeriod)
+            },
         )
     }
 
@@ -334,6 +342,7 @@ private fun TrafficTabContent(
             onLocations = { locationsViewModel.loadData() },
             onAuthors = { authorsViewModel.loadData() },
             onClicks = { clicksViewModel.loadData() },
+            onSearchTerms = { searchTermsViewModel.loadData() },
         )
     }
 
@@ -379,6 +388,7 @@ private fun TrafficTabContent(
                 onLocations = { locationsViewModel.refresh() },
                 onAuthors = { authorsViewModel.refresh() },
                 onClicks = { clicksViewModel.refresh() },
+                onSearchTerms = { searchTermsViewModel.refresh() },
             )
         },
         indicator = {
@@ -574,6 +584,39 @@ private fun TrafficTabContent(
                             newStatsViewModel.moveCardToBottom(cardType)
                         }
                     )
+                    StatsCardType.SEARCH_TERMS -> MostViewedCard(
+                        uiState = searchTermsUiState,
+                        cardType = cardType,
+                        onShowAllClick = {
+                            val detailData =
+                                searchTermsViewModel.getDetailData()
+                            MostViewedDetailActivity.start(
+                                context = context,
+                                cardType = detailData.cardType,
+                                items = detailData.items,
+                                totalViews = detailData.totalViews,
+                                totalViewsChange = detailData.totalViewsChange,
+                                totalViewsChangePercent =
+                                    detailData.totalViewsChangePercent,
+                                dateRange = detailData.dateRange
+                            )
+                        },
+                        onRetry = searchTermsViewModel::onRetry,
+                        onRemoveCard = {
+                            newStatsViewModel.removeCard(cardType)
+                        },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = {
+                            newStatsViewModel.moveCardToTop(cardType)
+                        },
+                        onMoveDown = {
+                            newStatsViewModel.moveCardDown(cardType)
+                        },
+                        onMoveToBottom = {
+                            newStatsViewModel.moveCardToBottom(cardType)
+                        }
+                    )
                 }
             }
 
@@ -614,6 +657,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     onLocations: () -> Unit,
     onAuthors: () -> Unit,
     onClicks: () -> Unit,
+    onSearchTerms: () -> Unit,
 ) {
     if (StatsCardType.TODAYS_STATS in this) onTodaysStats()
     if (StatsCardType.VIEWS_STATS in this) onViewsStats()
@@ -626,6 +670,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     if (StatsCardType.LOCATIONS in this) onLocations()
     if (StatsCardType.AUTHORS in this) onAuthors()
     if (StatsCardType.CLICKS in this) onClicks()
+    if (StatsCardType.SEARCH_TERMS in this) onSearchTerms()
 }
 
 @Composable

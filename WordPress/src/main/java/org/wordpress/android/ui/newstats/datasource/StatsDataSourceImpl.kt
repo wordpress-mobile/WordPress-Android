@@ -506,6 +506,15 @@ class StatsDataSourceImpl @Inject constructor(
         // TODO: Wire RS types when available
         return ClicksDataResult.Error(StatsErrorType.UNKNOWN)
     }
+
+    override suspend fun fetchSearchTerms(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): SearchTermsDataResult {
+        // TODO: Wire RS types when available
+        return SearchTermsDataResult.Error(StatsErrorType.UNKNOWN)
+    }
     private fun logResultType(methodName: String, result: WpRequestResult<*>) {
         AppLog.d(
             T.STATS,

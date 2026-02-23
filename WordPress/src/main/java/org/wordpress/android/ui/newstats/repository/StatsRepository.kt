@@ -8,6 +8,7 @@ import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.RegionViewsDataResult
+import org.wordpress.android.ui.newstats.datasource.SearchTermsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
@@ -1075,6 +1076,72 @@ class StatsRepository @Inject constructor(
         }
     }
 
+    suspend fun fetchSearchTerms(
+        siteId: Long,
+        period: StatsPeriod
+    ): SearchTermsResult = withContext(ioDispatcher) {
+        val (currentDateRange, previousDateRange) =
+            calculateComparisonDateRanges(period)
+
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async {
+                statsDataSource.fetchSearchTerms(
+                    siteId, currentDateRange, max = 0
+                )
+            }
+            val previousDeferred = async {
+                statsDataSource.fetchSearchTerms(
+                    siteId, previousDateRange, max = 0
+                )
+            }
+            currentDeferred.await() to previousDeferred.await()
+        }
+
+        when (currentResult) {
+            is SearchTermsDataResult.Success -> {
+                val previousMap =
+                    if (previousResult is SearchTermsDataResult.Success
+                    ) {
+                        previousResult.items.associateBy { it.name }
+                    } else {
+                        emptyMap()
+                    }
+                val total = currentResult.items.sumOf { it.views }
+                val prevTotal = previousMap.values.sumOf { it.views }
+                val change = total - prevTotal
+                val changePct =
+                    calculateChangePercent(total, prevTotal, change)
+
+                SearchTermsResult.Success(
+                    items = currentResult.items.map { item ->
+                        val prev =
+                            previousMap[item.name]?.views ?: 0L
+                        SearchTermItemData(
+                            name = item.name,
+                            views = item.views,
+                            previousViews = prev
+                        )
+                    },
+                    totalViews = total,
+                    totalViewsChange = change,
+                    totalViewsChangePercent = changePct
+                )
+            }
+            is SearchTermsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching search terms: " +
+                        "${currentResult.errorType}"
+                )
+                SearchTermsResult.Error(
+                    currentResult.errorType.messageResId,
+                    currentResult.errorType ==
+                        StatsErrorType.AUTH_ERROR
+                )
+            }
+        }
+    }
+
     private fun calculateChangePercent(
         totalViews: Long,
         previousTotalViews: Long,
@@ -1391,6 +1458,36 @@ data class ClickItemData(
             (clicksChange.toDouble() / previousClicks.toDouble()) *
                 PERCENTAGE_MULTIPLIER
         } else if (clicks > 0) {
+            PERCENTAGE_MULTIPLIER
+        } else {
+            PERCENTAGE_NO_CHANGE
+        }
+}
+
+sealed class SearchTermsResult {
+    data class Success(
+        val items: List<SearchTermItemData>,
+        val totalViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
+    ) : SearchTermsResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : SearchTermsResult()
+}
+
+data class SearchTermItemData(
+    val name: String,
+    val views: Long,
+    val previousViews: Long
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double
+        get() = if (previousViews > 0) {
+            (viewsChange.toDouble() / previousViews.toDouble()) *
+                PERCENTAGE_MULTIPLIER
+        } else if (views > 0) {
             PERCENTAGE_MULTIPLIER
         } else {
             PERCENTAGE_NO_CHANGE

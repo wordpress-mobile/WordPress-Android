@@ -16,7 +16,8 @@ enum class StatsCardType(
     MOST_VIEWED_REFERRERS(R.string.stats_most_viewed_referrers),
     LOCATIONS(R.string.stats_countries_location_header),
     AUTHORS(R.string.stats_authors_title),
-    CLICKS(R.string.stats_clicks);
+    CLICKS(R.string.stats_clicks),
+    SEARCH_TERMS(R.string.stats_search_terms);
 
     companion object {
         /**
