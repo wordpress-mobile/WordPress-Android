@@ -662,7 +662,7 @@ class StatsDataSourceImpl @Inject constructor(
         return when (result) {
             is WpRequestResult.Success -> {
                 val plays = result.response.data
-                    .days.summary.data
+                    .days.summary.data.orEmpty()
                 AppLog.d(
                     T.STATS,
                     "StatsDataSourceImpl: fetchVideoPlays " +
