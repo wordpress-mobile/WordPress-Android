@@ -36,6 +36,7 @@ import javax.inject.Inject
  * Implementation of [StatsDataSource] that fetches stats data from the WordPress.com API
  * using the wordpress-rs library.
  */
+@Suppress("LargeClass")
 class StatsDataSourceImpl @Inject constructor(
     private val wpComApiClientProvider: WpComApiClientProvider,
     private val localeManagerWrapper: LocaleManagerWrapper

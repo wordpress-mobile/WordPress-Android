@@ -1232,39 +1232,8 @@ class StatsRepository @Inject constructor(
         }
 
         when (currentResult) {
-            is FileDownloadsDataResult.Success -> {
-                val previousMap =
-                    if (previousResult
-                            is FileDownloadsDataResult.Success
-                    ) {
-                        previousResult.items
-                            .associateBy { it.name }
-                    } else {
-                        emptyMap()
-                    }
-                val total =
-                    currentResult.items.sumOf { it.downloads }
-                val prevTotal =
-                    previousMap.values.sumOf { it.downloads }
-                val change = total - prevTotal
-                val changePct =
-                    calculateChangePercent(total, prevTotal, change)
-
-                FileDownloadsResult.Success(
-                    items = currentResult.items.map { item ->
-                        val prev =
-                            previousMap[item.name]?.downloads ?: 0L
-                        FileDownloadItemData(
-                            name = item.name,
-                            downloads = item.downloads,
-                            previousDownloads = prev
-                        )
-                    },
-                    totalDownloads = total,
-                    totalDownloadsChange = change,
-                    totalDownloadsChangePercent = changePct
-                )
-            }
+            is FileDownloadsDataResult.Success ->
+                mapFileDownloadsSuccess(currentResult, previousResult)
             is FileDownloadsDataResult.Error -> {
                 appLogWrapper.e(
                     AppLog.T.STATS,
@@ -1278,6 +1247,38 @@ class StatsRepository @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun mapFileDownloadsSuccess(
+        currentResult: FileDownloadsDataResult.Success,
+        previousResult: FileDownloadsDataResult
+    ): FileDownloadsResult.Success {
+        val previousMap =
+            if (previousResult is FileDownloadsDataResult.Success) {
+                previousResult.items.associateBy { it.name }
+            } else {
+                emptyMap()
+            }
+        val total = currentResult.items.sumOf { it.downloads }
+        val prevTotal = previousMap.values.sumOf { it.downloads }
+        val change = total - prevTotal
+        val changePct =
+            calculateChangePercent(total, prevTotal, change)
+
+        return FileDownloadsResult.Success(
+            items = currentResult.items.map { item ->
+                val prev =
+                    previousMap[item.name]?.downloads ?: 0L
+                FileDownloadItemData(
+                    name = item.name,
+                    downloads = item.downloads,
+                    previousDownloads = prev
+                )
+            },
+            totalDownloads = total,
+            totalDownloadsChange = change,
+            totalDownloadsChangePercent = changePct
+        )
     }
 
     private fun calculateChangePercent(
