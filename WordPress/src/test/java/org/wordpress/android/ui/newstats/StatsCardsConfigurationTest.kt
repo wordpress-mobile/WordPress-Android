@@ -23,21 +23,18 @@ class StatsCardsConfigurationTest {
             StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
             StatsCardType.MOST_VIEWED_REFERRERS,
             StatsCardType.LOCATIONS,
-            StatsCardType.AUTHORS
+            StatsCardType.AUTHORS,
+            StatsCardType.CLICKS,
+            StatsCardType.SEARCH_TERMS,
+            StatsCardType.VIDEO_PLAYS,
+            StatsCardType.FILE_DOWNLOADS
         )
     }
 
     @Test
     fun `when all cards visible, then hiddenCards returns empty list`() {
         val config = StatsCardsConfiguration(
-            visibleCards = listOf(
-                StatsCardType.TODAYS_STATS,
-                StatsCardType.VIEWS_STATS,
-                StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
-                StatsCardType.MOST_VIEWED_REFERRERS,
-                StatsCardType.LOCATIONS,
-                StatsCardType.AUTHORS
-            )
+            visibleCards = StatsCardType.entries.toList()
         )
 
         val hiddenCards = config.hiddenCards()
@@ -52,12 +49,7 @@ class StatsCardsConfigurationTest {
         val hiddenCards = config.hiddenCards()
 
         assertThat(hiddenCards).containsExactlyInAnyOrder(
-            StatsCardType.TODAYS_STATS,
-            StatsCardType.VIEWS_STATS,
-            StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
-            StatsCardType.MOST_VIEWED_REFERRERS,
-            StatsCardType.LOCATIONS,
-            StatsCardType.AUTHORS
+            *StatsCardType.entries.toTypedArray()
         )
     }
 

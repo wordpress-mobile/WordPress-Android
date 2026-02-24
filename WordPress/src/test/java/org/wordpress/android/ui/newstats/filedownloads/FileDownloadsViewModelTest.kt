@@ -55,8 +55,6 @@ class FileDownloadsViewModelTest : BaseUnitTest() {
             .thenReturn("No site selected")
         whenever(resourceProvider.getString(R.string.stats_error_api))
             .thenReturn("API error")
-        whenever(resourceProvider.getString(R.string.stats_error_unknown))
-            .thenReturn("Unknown error")
     }
 
     private fun initViewModel() {

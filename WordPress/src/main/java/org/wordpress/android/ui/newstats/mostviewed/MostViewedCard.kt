@@ -188,22 +188,23 @@ private fun LoadedContent(
             onMoveToBottom = onMoveToBottom
         )
         Spacer(modifier = Modifier.height(12.dp))
-        ColumnHeadersRow(cardType = cardType)
-        Spacer(modifier = Modifier.height(8.dp))
-        state.items.forEachIndexed { index, item ->
-            val percentage = if (state.maxViewsForBar > 0) {
-                item.views.toFloat() / state.maxViewsForBar.toFloat()
-            } else 0f
-            MostViewedItemRow(item = item, percentage = percentage)
-            if (index < state.items.lastIndex) {
-                Spacer(modifier = Modifier.height(4.dp))
-            }
-        }
         if (state.items.isEmpty()) {
             EmptyStateContent()
+        } else {
+            ColumnHeadersRow(cardType = cardType)
+            Spacer(modifier = Modifier.height(8.dp))
+            state.items.forEachIndexed { index, item ->
+                val percentage = if (state.maxViewsForBar > 0) {
+                    item.views.toFloat() / state.maxViewsForBar.toFloat()
+                } else 0f
+                MostViewedItemRow(item = item, percentage = percentage)
+                if (index < state.items.lastIndex) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            ShowAllFooter(onClick = onShowAllClick)
         }
-        Spacer(modifier = Modifier.height(12.dp))
-        ShowAllFooter(onClick = onShowAllClick)
     }
 }
 
