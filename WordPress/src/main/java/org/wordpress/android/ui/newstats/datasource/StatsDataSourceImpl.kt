@@ -514,14 +514,14 @@ class StatsDataSourceImpl @Inject constructor(
             period = StatsClicksPeriod.DAY,
             date = dateRange.date,
             num = dateRange.num.toUInt(),
-            max = max.coerceAtLeast(1).toUInt(),
+            max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsClicksParams(
             period = StatsClicksPeriod.DAY,
             date = dateRange.date,
             startDate = dateRange.startDate,
-            max = max.coerceAtLeast(1).toUInt(),
+            max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
     }
@@ -574,14 +574,14 @@ class StatsDataSourceImpl @Inject constructor(
             period = StatsSearchTermsPeriod.DAY,
             date = dateRange.date,
             num = dateRange.num.toUInt(),
-            max = max.coerceAtLeast(1).toUInt(),
+            max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsSearchTermsParams(
             period = StatsSearchTermsPeriod.DAY,
             date = dateRange.date,
             startDate = dateRange.startDate,
-            max = max.coerceAtLeast(1).toUInt(),
+            max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
     }
@@ -634,14 +634,14 @@ class StatsDataSourceImpl @Inject constructor(
             period = StatsVideoPlaysPeriod.DAY,
             date = dateRange.date,
             num = dateRange.num.toUInt(),
-            max = max.coerceAtLeast(1).toUInt(),
+            max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsVideoPlaysParams(
             period = StatsVideoPlaysPeriod.DAY,
             date = dateRange.date,
             startDate = dateRange.startDate,
-            max = max.coerceAtLeast(1).toUInt(),
+            max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
     }
@@ -694,14 +694,14 @@ class StatsDataSourceImpl @Inject constructor(
             period = StatsFileDownloadsPeriod.DAY,
             date = dateRange.date,
             num = dateRange.num.toUInt(),
-            max = max.coerceAtLeast(1).toUInt(),
+            max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
         is StatsDateRange.Custom -> StatsFileDownloadsParams(
             period = StatsFileDownloadsPeriod.DAY,
             date = dateRange.date,
             startDate = dateRange.startDate,
-            max = max.coerceAtLeast(1).toUInt(),
+            max = if (max > 0) max.toUInt() else null,
             summarize = true
         )
     }
