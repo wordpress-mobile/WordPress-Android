@@ -65,6 +65,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -109,10 +110,10 @@ class NewStatsActivity : BaseAppCompatActivity() {
     }
 }
 
-private enum class StatsTab(val titleResId: Int) {
+private enum class StatsTab(val titleResId: Int, val debugOnly: Boolean = false) {
     TRAFFIC(R.string.stats_traffic),
-    INSIGHTS(R.string.stats_insights),
-    SUBSCRIBERS(R.string.subscribers)
+    INSIGHTS(R.string.stats_insights, debugOnly = true),
+    SUBSCRIBERS(R.string.subscribers, debugOnly = true)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -123,7 +124,7 @@ private fun NewStatsScreen(
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
 
-    val tabs = StatsTab.entries
+    val tabs = StatsTab.entries.filter { !it.debugOnly || BuildConfig.DEBUG }
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
     var showPeriodMenu by remember { mutableStateOf(false) }
