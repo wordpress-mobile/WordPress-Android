@@ -109,6 +109,7 @@
     <string name="local_draft">Local draft</string>
     <string name="local_changes">Local changes</string>
     <string name="continue_label">Continue</string>
+    <string name="beta_label">Beta</string>
     <string name="publish_now">Publish Now</string>
     <string name="update_now">Update Now</string>
     <string name="status_and_visibility">Status &amp; Visibility</string>
@@ -609,6 +610,7 @@
     <!--               -->
 
     <!-- General -->
+    <string name="bullet_with_spaces" translatable="false">" • "</string>
     <string name="discussion">Discussion</string>
     <string name="privacy">Privacy</string>
     <string name="related_posts">Related Posts</string>
@@ -996,6 +998,19 @@
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
     <string name="experimental_new_stats">New Stats</string>
     <string name="experimental_new_stats_description">Show stats in a more modern and advanced UI</string>
+    <string name="experimental_rs_post_list">New Post List</string>
+    <string name="experimental_rs_post_list_description">Show post list in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
+    <string name="post_rs_failed_to_load">Failed to load post</string>
+    <string name="post_rs_not_implemented_yet">Not implemented yet</string>
+    <string name="post_rs_confirm_trash_message">Are you sure you want to trash this post?</string>
+    <string name="post_rs_confirm_delete_message">This will permanently delete this post. This action cannot be undone.</string>
+    <string name="post_rs_trashed">Post moved to trash</string>
+    <string name="post_rs_deleted">Post permanently deleted</string>
+    <string name="post_rs_published">Post published</string>
+    <string name="post_rs_moved_to_draft">Post moved to drafts</string>
+    <string name="post_rs_error_trash">Failed to trash post</string>
+    <string name="post_rs_error_delete">Failed to delete post</string>
+    <string name="post_rs_error_update_status">Failed to update post status</string>
     <string name="post_types_screen_title">Post Types</string>
 
     <!-- Debug settings -->
@@ -1263,11 +1278,11 @@
     <string name="scan_no_network_title" translatable="false">@string/no_network_title</string>
     <string name="scan_no_network_subtitle" translatable="false">@string/no_network_message</string>
     <string name="scan_request_failed_title">Something went wrong</string>
-    <string name="scan_request_failed_subtitle" translatable="false">@string/request_failed_message</string>
+    <string name="scan_request_failed_subtitle" translatable="false">Failed to start the scan</string>
     <string name="scan_start_request_failed_title" translatable="false">@string/scan_request_failed_title</string>
-    <string name="scan_start_request_failed_subtitle">Jetpack Scan couldn\'t complete a scan of your site. Please check to see if your site is down – if it\'s not, try again. If it is, or if Jetpack Scan is still having problems, contact our support team.</string>
+    <string name="scan_start_request_failed_subtitle">Jetpack Scan couldn\'t complete a scan of your site. Please check to see if your site is down.</string>
     <string name="scan_multisite_not_supported_title">WordPress multisites are not supported</string>
-    <string name="scan_multisite_not_supported_subtitle">We\'re sorry, Jetpack Scan is not compatible with multisite WordPress installations at this time.</string>
+    <string name="scan_multisite_not_supported_subtitle">We\'re sorry, Jetpack Scan is not compatible with multisite WordPress installations</string>
     <string name="scan_vault_press_active_on_site_title">Your site has VaultPress</string>
     <string name="scan_vault_press_active_on_site_subtitle">Your site already is protected by VaultPress. You can find a link to your VaultPress dashboard below.</string>
     <string name="scan_vault_press_active_on_site_button_text">Visit Dashboard</string>
@@ -1381,6 +1396,7 @@
     <string name="stats_timeframe_weeks">Weeks</string>
     <string name="stats_timeframe_months">Months</string>
     <string name="stats_timeframe_years">Years</string>
+    <string name="stats_timeframe_hours">Hours</string>
     <string name="stats_timeframe_last_seven_days">Last 7-days</string>
     <string name="stats_timeframe_previous_seven_days">Previous 7-days</string>
     <string name="stats_views">Views</string>
@@ -1490,9 +1506,9 @@
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_path">Path</string>
     <string name="stats_most_popular_percent_views">%1$s of views</string>
-    <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
+    <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back when your site had more visitors!</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
-    <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
+    <string name="stats_insights_management_title">Manage your insights to see only the most relevant stats</string>
 
     <string name="stats_insights_management_general">General</string>
     <string name="stats_insights_management_posts_and_pages">Posts and Pages</string>
@@ -1561,6 +1577,48 @@
     <string name="stats_error_network">Network error. Please check your connection and try again</string>
     <string name="stats_error_parsing">There was a problem loading the data. Please try again</string>
     <string name="stats_error_admin_url_unavailable">Unable to open WP Admin for this site</string>
+
+    <!-- stats period selector -->
+    <string name="stats_period_today">Today</string>
+    <string name="stats_period_last_7_days">Last 7 days</string>
+    <string name="stats_period_last_30_days">Last 30 days</string>
+    <string name="stats_period_last_6_months">Last 6 months</string>
+    <string name="stats_period_last_12_months">Last 12 months</string>
+    <string name="stats_period_custom">Custom</string>
+    <string name="stats_period_selector_content_description">Select stats period</string>
+    <string name="stats_select_date_range">Select date range</string>
+
+    <!-- Most Viewed Stats Card -->
+    <string name="stats_most_viewed_title">Most Viewed</string>
+    <string name="stats_most_viewed_posts_and_pages">Posts &amp; Pages</string>
+    <string name="stats_most_viewed_referrers">Referrers</string>
+    <string name="stats_most_viewed_title_header">Title</string>
+    <string name="stats_most_viewed_referrer_header">Referrer</string>
+    <string name="stats_show_all">Show All</string>
+    <string name="stats_most_viewed_top_n">Top %d</string>
+
+    <!-- Countries Stats Card -->
+    <string name="stats_countries_title">Countries</string>
+    <string name="stats_countries_location_header">Locations</string>
+    <string name="stats_countries_views_header">Views</string>
+    <string name="stats_regions_title">Regions</string>
+    <string name="stats_cities_title">Cities</string>
+
+    <!-- Authors Stats Card -->
+    <string name="stats_authors_title">Authors</string>
+    <string name="stats_authors_author_header">Author</string>
+
+    <!-- Stats Card Configuration -->
+    <string name="stats_card_remove">Remove Card</string>
+    <string name="stats_card_move">Move Card</string>
+    <string name="stats_card_move_submenu">Open move options</string>
+    <string name="stats_card_move_up">Move Up</string>
+    <string name="stats_card_move_to_top">Move to Top</string>
+    <string name="stats_card_move_down">Move Down</string>
+    <string name="stats_card_move_to_bottom">Move to Bottom</string>
+    <string name="stats_add_card_title">Add Card</string>
+    <string name="stats_all_cards_visible">All cards are currently visible</string>
+    <string name="stats_no_cards_message">No cards to display.</string>
 
     <!-- stats referrer popup menu actions   -->
     <string name="stats_referrer_popup_menu_open_website">Open Website</string>
@@ -1779,6 +1837,13 @@
     <string name="reader_follow_comments_message">You\'re following this conversation. You will receive notifications by email when new comments are published.</string>
     <string name="reader_follow_comments_enable_push_notifications">Enable in-app notifications</string>
     <string name="reader_follow_comments_unfollow_conversation">Unfollow conversation</string>
+    <!-- Reader subscription settings bottom sheet -->
+    <string name="reader_subscription_settings_title">Subscription settings</string>
+    <string name="reader_subscription_settings_description">Manage subscription options</string>
+    <string name="reader_subscription_settings_notify_posts">Notify me of new posts</string>
+    <string name="reader_subscription_settings_email_posts">Email me new posts</string>
+    <string name="reader_subscription_settings_email_comments">Email me new comments</string>
+    <string name="reader_subscription_settings_update_error">Failed to update subscription settings</string>
     <string name="reader_marked_post_as_seen">Marked post as seen</string>
     <string name="reader_marked_post_as_unseen">Marked post as unseen</string>
     <string name="reader_error_changing_seen_status_of_unsupported_post">Can\'t toggle seen status of this post</string>
@@ -4002,15 +4067,15 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="qrcode_auth_flow_dismiss">Dismiss</string>
     <string name="qrcode_auth_flow_scan_again">Scan Again</string>
     <string name="qrcode_auth_flow_timeout_title">Scan timed out</string>
-    <string name="qrcode_auth_flow_timeout_subtitle">It took too long to detect a code. Please try again or use your camera app to scan the code.</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">It took too long to detect a code. Try again or use your camera app to scan the code.</string>
     <string name="qrcode_auth_flow_error_no_connection_title">No connection</string>
     <string name="qrcode_auth_flow_error_no_connection_subtitle">An active internet connection is required to scan log in codes</string>
-    <string name="qrcode_auth_flow_error_invalid_data_title">Could not validate the log in code</string>
-    <string name="qrcode_auth_flow_error_invalid_data_subtitle">The log in code that was scanned could not be validated. Please tap the Scan Again button to rescan the code.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Validation failed</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Unable to validate scanned log in code</string>
     <string name="qrcode_auth_flow_error_expired_title">Expired log in code</string>
-    <string name="qrcode_auth_flow_error_expired_subtitle">This log in code has expired. Please tap the Scan Again button to rescan the code.</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">This log in code has expired</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Authentication Failed</string>
-    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Could not log you in using this log in code. Please tap the Scan Again button to rescan the code.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Could not log you in using this log in code</string>
     <string name="qrcode_auth_flow_error_content_description">Image indicating an error</string>
     <string name="qrcode_auth_flow_content_description">Image indicating scan login code in process</string>
 
@@ -4499,6 +4564,60 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="add_term">Add term</string>
     <string name="error_saving_term">There was an error saving the term</string>
     <string name="error_deleting_term">There was an error deleting the term</string>
+
+    <!-- Navigation Menus -->
+    <string name="menus">Menus</string>
+    <string name="create_menu">Create Menu</string>
+    <string name="edit_menu">Edit Menu</string>
+    <string name="no_menus">No menus found</string>
+    <string name="menu_locations_label">Locations: %1$s</string>
+    <string name="edit_items">Edit Items</string>
+    <string name="menu_name_label">Name</string>
+    <string name="menu_description_label">Description</string>
+    <string name="menu_auto_add_pages">Automatically add new top-level pages</string>
+    <string name="menu_display_locations">Display locations</string>
+    <string name="menu_saved">Menu saved</string>
+    <string name="menu_deleted">Menu deleted</string>
+    <string name="delete_menu_confirmation_title">Delete menu</string>
+    <string name="delete_menu_confirmation_message">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="add_menu_item">Add Menu Item</string>
+    <string name="edit_menu_item">Edit Menu Item</string>
+    <string name="no_menu_items">This menu has no items - yet!</string>
+    <string name="menu_items_title">%s Items</string>
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
+    <string name="menu_item_title_label">Title</string>
+    <string name="menu_item_url_label">URL</string>
+    <string name="menu_item_parent_label">Parent</string>
+    <string name="menu_item_no_parent">None (top level)</string>
+    <string name="menu_item_target_label">Link target</string>
+    <string name="menu_item_description_label">Description</string>
+    <string name="menu_item_saved">Menu item saved</string>
+    <string name="menu_item_deleted">Menu item deleted</string>
+    <string name="delete_menu_item_confirmation_title">Delete menu item</string>
+    <string name="delete_menu_item_confirmation_message">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="menu_item_type_label">Type</string>
+    <string name="menu_item_type_custom">Custom Link</string>
+    <string name="menu_item_type_page">Page</string>
+    <string name="menu_item_type_post">Post</string>
+    <string name="menu_item_type_category">Category</string>
+    <string name="menu_item_type_tag">Tag</string>
+    <string name="menu_item_link_to_label">Link to</string>
+    <string name="menu_item_select_item">Select an item</string>
+    <string name="menu_item_select_post">Select a post</string>
+    <string name="menu_item_select_page">Select a page</string>
+    <string name="menu_item_select_category">Select a category</string>
+    <string name="menu_item_select_tag">Select a tag</string>
+    <string name="menu_item_no_items_found">No items found</string>
+    <string name="menu_item_loading_items">Loading…</string>
+    <string name="menu_item_select_required">Please select an item to link to</string>
+    <string name="menu_error_no_site_selected">No site selected</string>
+    <string name="menu_name_required">Menu name is required</string>
+    <string name="menu_item_title_required">Title is required</string>
+    <string name="menu_item_url_required">URL is required for custom links</string>
+    <string name="menu_item_invalid_url">Please enter a valid URL</string>
+    <string name="menu_item_reorder_failed">Failed to reorder menu item</string>
+    <string name="menu_item_accessibility_description">Level %1$d, %2$s, %3$s</string>
 
     <!-- AI Bot Support - Conversations List Screen -->
     <string name="ai_bot_conversations_title">Conversations</string>
