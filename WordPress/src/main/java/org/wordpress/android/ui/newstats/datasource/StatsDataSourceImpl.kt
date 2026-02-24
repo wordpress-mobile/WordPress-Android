@@ -6,16 +6,24 @@ import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.StatsCityViewsParams
 import uniffi.wp_api.StatsCityViewsPeriod
+import uniffi.wp_api.StatsClicksParams
+import uniffi.wp_api.StatsClicksPeriod
 import uniffi.wp_api.StatsCountryViewsParams
 import uniffi.wp_api.StatsCountryViewsPeriod
+import uniffi.wp_api.StatsFileDownloadsParams
+import uniffi.wp_api.StatsFileDownloadsPeriod
 import uniffi.wp_api.StatsReferrersParams
 import uniffi.wp_api.StatsReferrersPeriod
 import uniffi.wp_api.StatsRegionViewsParams
 import uniffi.wp_api.StatsRegionViewsPeriod
+import uniffi.wp_api.StatsSearchTermsParams
+import uniffi.wp_api.StatsSearchTermsPeriod
 import uniffi.wp_api.StatsTopAuthorsParams
 import uniffi.wp_api.StatsTopAuthorsPeriod
 import uniffi.wp_api.StatsTopPostsParams
 import uniffi.wp_api.StatsTopPostsPeriod
+import uniffi.wp_api.StatsVideoPlaysParams
+import uniffi.wp_api.StatsVideoPlaysPeriod
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
 import uniffi.wp_api.WpComLanguage
@@ -497,13 +505,84 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
+    private fun buildClicksParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsClicksParams(
+            period = StatsClicksPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = max.coerceAtLeast(1).toUInt(),
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsClicksParams(
+            period = StatsClicksPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = max.coerceAtLeast(1).toUInt(),
+            summarize = true
+        )
+    }
+
     override suspend fun fetchClicks(
         siteId: Long,
         dateRange: StatsDateRange,
         max: Int
     ): ClicksDataResult {
-        // TODO: Wire RS types when available
-        return ClicksDataResult.Error(StatsErrorType.UNKNOWN)
+        val params = buildClicksParams(dateRange, max)
+        val result = wpComApiClient.request { api ->
+            api.statsClicks().getStatsClicks(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+        logResultType("fetchClicks", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val clicks = result.response.data
+                    .summary?.clicks.orEmpty()
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchClicks " +
+                        "success - ${clicks.size} clicks"
+                )
+                ClicksDataResult.Success(
+                    clicks.map { entry ->
+                        ClickDataItem(
+                            name = entry.name.orEmpty(),
+                            clicks = entry.views?.toLong()
+                                ?: 0L
+                        )
+                    }
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchClicks", result
+            ) {
+                ClicksDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun buildSearchTermsParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsSearchTermsParams(
+            period = StatsSearchTermsPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = max.coerceAtLeast(1).toUInt(),
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsSearchTermsParams(
+            period = StatsSearchTermsPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = max.coerceAtLeast(1).toUInt(),
+            summarize = true
+        )
     }
 
     override suspend fun fetchSearchTerms(
@@ -511,8 +590,59 @@ class StatsDataSourceImpl @Inject constructor(
         dateRange: StatsDateRange,
         max: Int
     ): SearchTermsDataResult {
-        // TODO: Wire RS types when available
-        return SearchTermsDataResult.Error(StatsErrorType.UNKNOWN)
+        val params = buildSearchTermsParams(dateRange, max)
+        val result = wpComApiClient.request { api ->
+            api.statsSearchTerms().getStatsSearchTerms(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+        logResultType("fetchSearchTerms", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val terms = result.response.data
+                    .summary?.searchTerms.orEmpty()
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchSearchTerms " +
+                        "success - ${terms.size} terms"
+                )
+                SearchTermsDataResult.Success(
+                    terms.map { entry ->
+                        SearchTermDataItem(
+                            name = entry.term.orEmpty(),
+                            views = entry.views?.toLong()
+                                ?: 0L
+                        )
+                    }
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchSearchTerms", result
+            ) {
+                SearchTermsDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun buildVideoPlaysParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsVideoPlaysParams(
+            period = StatsVideoPlaysPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = max.coerceAtLeast(1).toUInt(),
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsVideoPlaysParams(
+            period = StatsVideoPlaysPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = max.coerceAtLeast(1).toUInt(),
+            summarize = true
+        )
     }
 
     override suspend fun fetchVideoPlays(
@@ -520,8 +650,59 @@ class StatsDataSourceImpl @Inject constructor(
         dateRange: StatsDateRange,
         max: Int
     ): VideoPlaysDataResult {
-        // TODO: Wire RS types when available
-        return VideoPlaysDataResult.Error(StatsErrorType.UNKNOWN)
+        val params = buildVideoPlaysParams(dateRange, max)
+        val result = wpComApiClient.request { api ->
+            api.statsVideoPlays().getStatsVideoPlays(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+        logResultType("fetchVideoPlays", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val plays = result.response.data
+                    .days.summary.data
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchVideoPlays " +
+                        "success - ${plays.size} plays"
+                )
+                VideoPlaysDataResult.Success(
+                    plays.map { entry ->
+                        VideoPlayDataItem(
+                            title = entry.title.orEmpty(),
+                            views = entry.views?.toLong()
+                                ?: 0L
+                        )
+                    }
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchVideoPlays", result
+            ) {
+                VideoPlaysDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun buildFileDownloadsParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsFileDownloadsParams(
+            period = StatsFileDownloadsPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = max.coerceAtLeast(1).toUInt(),
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsFileDownloadsParams(
+            period = StatsFileDownloadsPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = max.coerceAtLeast(1).toUInt(),
+            summarize = true
+        )
     }
 
     override suspend fun fetchFileDownloads(
@@ -529,8 +710,42 @@ class StatsDataSourceImpl @Inject constructor(
         dateRange: StatsDateRange,
         max: Int
     ): FileDownloadsDataResult {
-        // TODO: Wire RS types when available
-        return FileDownloadsDataResult.Error(StatsErrorType.UNKNOWN)
+        val params = buildFileDownloadsParams(dateRange, max)
+        val result = wpComApiClient.request { api ->
+            api.statsFileDownloads().getStatsFileDownloads(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+        logResultType("fetchFileDownloads", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val files = result.response.data
+                    .summary?.files.orEmpty()
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchFileDownloads success " +
+                        "- ${files.size} files"
+                )
+                FileDownloadsDataResult.Success(
+                    files.map { entry ->
+                        FileDownloadDataItem(
+                            name = entry.filename
+                                .orEmpty(),
+                            downloads =
+                                entry.downloads?.toLong()
+                                    ?: 0L
+                        )
+                    }
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchFileDownloads", result
+            ) {
+                FileDownloadsDataResult.Error(it)
+            }
+        }
     }
 
     private fun logResultType(methodName: String, result: WpRequestResult<*>) {
