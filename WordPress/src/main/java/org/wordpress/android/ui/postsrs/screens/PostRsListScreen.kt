@@ -48,6 +48,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -304,22 +305,25 @@ private fun AuthorFilterIcon(
     avatarUrl: String?,
     contentDescription: String?
 ) {
+    val personIcon = if (selection == AuthorFilterSelection.ME) {
+        Icons.Filled.Person
+    } else {
+        Icons.Outlined.Person
+    }
     if (selection == AuthorFilterSelection.ME && !avatarUrl.isNullOrBlank()) {
         AsyncImage(
             model = avatarUrl,
             contentDescription = contentDescription,
             contentScale = ContentScale.Crop,
+            fallback = rememberVectorPainter(personIcon),
+            error = rememberVectorPainter(personIcon),
             modifier = Modifier
                 .size(24.dp)
                 .clip(CircleShape)
         )
     } else {
         Icon(
-            if (selection == AuthorFilterSelection.ME) {
-                Icons.Filled.Person
-            } else {
-                Icons.Outlined.Person
-            },
+            personIcon,
             contentDescription = contentDescription
         )
     }
