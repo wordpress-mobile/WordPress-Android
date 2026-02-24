@@ -631,8 +631,7 @@ class PostRsListViewModel @Inject constructor(
         tab: PostRsListTab,
         posts: List<PostRsUiModel>
     ) {
-        if (!isAuthorFilterSupported) return
-        if (_authorFilter.value == AuthorFilterSelection.ME) return
+        if (!isAuthorFilterSupported || _authorFilter.value == AuthorFilterSelection.ME) return
 
         val unresolvedIds = posts
             .filter { it.authorId != 0L && it.authorDisplayName == null }
