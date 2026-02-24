@@ -28,6 +28,11 @@ class PostRsRestClient @Inject constructor(
     private val mediaUrlCache = ConcurrentHashMap<Long, String>()
     private val userNameCache = ConcurrentHashMap<Long, String>()
 
+    fun clearCaches() {
+        mediaUrlCache.clear()
+        userNameCache.clear()
+    }
+
     /**
      * Fetches media source URLs for the given [mediaIds] in a single
      * network call using the `include` parameter, returning a map of

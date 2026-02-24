@@ -511,6 +511,7 @@ class PostRsListViewModel @Inject constructor(
         val collection = collections[tab] ?: return
 
         if (isUserRefresh) {
+            restClient.clearCaches()
             userRefreshingTabs.add(tab)
             updateTabUiState(tab) { copy(isRefreshing = true, error = null) }
         } else {
