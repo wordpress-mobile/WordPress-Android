@@ -24,7 +24,10 @@ sealed class MostViewedCardUiState {
         val maxViewsForBar: Long
     ) : MostViewedCardUiState()
 
-    data class Error(val message: String) : MostViewedCardUiState()
+    data class Error(
+        val message: String,
+        val isAuthError: Boolean = false
+    ) : MostViewedCardUiState()
 }
 
 /**

@@ -103,6 +103,9 @@ class VideoPlaysViewModel @Inject constructor(
         loadData()
     }
 
+    fun getAdminUrl(): String? =
+        selectedSiteRepository.getSelectedSite()?.adminUrl
+
     fun onPeriodChanged(period: StatsPeriod) {
         if (loadedPeriod == period || loadingPeriod == period) return
         loadingPeriod = period
@@ -168,9 +171,10 @@ class VideoPlaysViewModel @Inject constructor(
                 }
                 is VideoPlaysResult.Error -> {
                     _uiState.value = MostViewedCardUiState.Error(
-                        resourceProvider.getString(
+                        message = resourceProvider.getString(
                             result.messageResId
-                        )
+                        ),
+                        isAuthError = result.isAuthError
                     )
                 }
             }

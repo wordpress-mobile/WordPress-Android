@@ -59,7 +59,8 @@ fun MostViewedCard(
     onMoveUp: (() -> Unit)? = null,
     onMoveToTop: (() -> Unit)? = null,
     onMoveDown: (() -> Unit)? = null,
-    onMoveToBottom: (() -> Unit)? = null
+    onMoveToBottom: (() -> Unit)? = null,
+    onOpenWpAdmin: (() -> Unit)? = null
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
 
@@ -83,7 +84,8 @@ fun MostViewedCard(
             )
             is MostViewedCardUiState.Error -> ErrorContent(
                 uiState, cardType, onRetry, onRemoveCard,
-                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom,
+                onOpenWpAdmin
             )
         }
     }
@@ -421,7 +423,8 @@ private fun ErrorContent(
     onMoveUp: (() -> Unit)?,
     onMoveToTop: (() -> Unit)?,
     onMoveDown: (() -> Unit)?,
-    onMoveToBottom: (() -> Unit)?
+    onMoveToBottom: (() -> Unit)?,
+    onOpenWpAdmin: (() -> Unit)? = null
 ) {
     Column(
         modifier = Modifier
@@ -448,8 +451,18 @@ private fun ErrorContent(
                 color = MaterialTheme.colorScheme.error
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(text = stringResource(R.string.retry))
+            if (onOpenWpAdmin != null) {
+                Button(onClick = onOpenWpAdmin) {
+                    Text(
+                        text = stringResource(
+                            R.string.my_site_btn_wp_admin
+                        )
+                    )
+                }
+            } else {
+                Button(onClick = onRetry) {
+                    Text(text = stringResource(R.string.retry))
+                }
             }
         }
     }

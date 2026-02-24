@@ -103,6 +103,9 @@ class SearchTermsViewModel @Inject constructor(
         loadData()
     }
 
+    fun getAdminUrl(): String? =
+        selectedSiteRepository.getSelectedSite()?.adminUrl
+
     fun onPeriodChanged(period: StatsPeriod) {
         if (loadedPeriod == period || loadingPeriod == period) return
         loadingPeriod = period
@@ -168,9 +171,10 @@ class SearchTermsViewModel @Inject constructor(
                 }
                 is SearchTermsResult.Error -> {
                     _uiState.value = MostViewedCardUiState.Error(
-                        resourceProvider.getString(
+                        message = resourceProvider.getString(
                             result.messageResId
-                        )
+                        ),
+                        isAuthError = result.isAuthError
                     )
                 }
             }

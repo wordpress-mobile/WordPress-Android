@@ -75,6 +75,7 @@ import org.wordpress.android.ui.newstats.locations.LocationsCard
 import org.wordpress.android.ui.newstats.locations.LocationsDetailActivity
 import org.wordpress.android.ui.newstats.locations.LocationsViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCard
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedCardUiState
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsCard
@@ -605,7 +606,14 @@ private fun TrafficTabContent(
                         },
                         onMoveToBottom = {
                             newStatsViewModel.moveCardToBottom(cardType)
-                        }
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (clicksUiState as?
+                                MostViewedCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl = clicksViewModel::getAdminUrl,
+                            context = context
+                        )
                     )
                     StatsCardType.SEARCH_TERMS -> MostViewedCard(
                         uiState = searchTermsUiState,
@@ -638,7 +646,15 @@ private fun TrafficTabContent(
                         },
                         onMoveToBottom = {
                             newStatsViewModel.moveCardToBottom(cardType)
-                        }
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (searchTermsUiState as?
+                                MostViewedCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl =
+                                searchTermsViewModel::getAdminUrl,
+                            context = context
+                        )
                     )
                     StatsCardType.VIDEO_PLAYS -> MostViewedCard(
                         uiState = videoPlaysUiState,
@@ -671,7 +687,15 @@ private fun TrafficTabContent(
                         },
                         onMoveToBottom = {
                             newStatsViewModel.moveCardToBottom(cardType)
-                        }
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (videoPlaysUiState as?
+                                MostViewedCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl =
+                                videoPlaysViewModel::getAdminUrl,
+                            context = context
+                        )
                     )
                     StatsCardType.FILE_DOWNLOADS -> MostViewedCard(
                         uiState = fileDownloadsUiState,
@@ -706,7 +730,15 @@ private fun TrafficTabContent(
                         },
                         onMoveToBottom = {
                             newStatsViewModel.moveCardToBottom(cardType)
-                        }
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (fileDownloadsUiState as?
+                                MostViewedCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl =
+                                fileDownloadsViewModel::getAdminUrl,
+                            context = context
+                        )
                     )
                 }
             }
