@@ -87,8 +87,7 @@ class PostRsListViewModel @Inject constructor(
         _site != null &&
             _site.isUsingWpComRestApi &&
             _site.hasCapabilityEditOthersPosts &&
-            _site.isSingleUserSite != null &&
-            !_site.isSingleUserSite
+            (_site.isSingleUserSite != null && !_site.isSingleUserSite)
     }
 
     private val _authorFilter = MutableStateFlow(
@@ -473,7 +472,7 @@ class PostRsListViewModel @Inject constructor(
         val service = serviceProvider.getService(site)
         val query = _searchQuery.value
         val authorIds = if (_authorFilter.value == AuthorFilterSelection.ME) {
-            listOf(accountStore.account.userId)
+            accountStore.account?.userId?.let { listOf(it) } ?: emptyList()
         } else {
             emptyList()
         }
