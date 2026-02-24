@@ -49,13 +49,22 @@ class StatsDataSourceImpl @Inject constructor(
     @Volatile
     private var accessToken: String? = null
 
-    private val wpComApiClient: WpComApiClient by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-        check(accessToken != null) { "DataSource not initialized" }
-        wpComApiClientProvider.getWpComApiClient(accessToken!!)
+    @Volatile
+    private var wpComApiClient: WpComApiClient? = null
+
+    private fun getOrCreateClient(): WpComApiClient {
+        val token = accessToken
+        check(token != null) { "DataSource not initialized" }
+        return wpComApiClient
+            ?: wpComApiClientProvider.getWpComApiClient(token)
+                .also { wpComApiClient = it }
     }
 
     override fun init(accessToken: String) {
-        this.accessToken = accessToken
+        if (this.accessToken != accessToken) {
+            this.accessToken = accessToken
+            wpComApiClient = null
+        }
     }
 
     override suspend fun fetchStatsVisits(
@@ -70,7 +79,7 @@ class StatsDataSourceImpl @Inject constructor(
             endDate = endDate,
         )
 
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsVisits().getStatsVisits(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -144,7 +153,7 @@ class StatsDataSourceImpl @Inject constructor(
     ): TopPostsDataResult {
         val params = buildTopPostsParams(dateRange, max)
         AppLog.d(T.STATS, "fetchTopPostsAndPages - siteId=$siteId, dateRange=$dateRange, max=$max")
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsTopPosts().getStatsTopPosts(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -195,7 +204,7 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
 
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsReferrers().getStatsReferrers(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -248,7 +257,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): CountryViewsDataResult {
         val params = buildCountryViewsParams(dateRange, max)
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsCountryViews().getStatsCountryViews(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -316,7 +325,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): RegionViewsDataResult {
         val params = buildRegionViewsParams(dateRange, max)
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsRegionViews().getStatsRegionViews(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -390,7 +399,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): CityViewsDataResult {
         val params = buildCityViewsParams(dateRange, max)
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsCityViews().getStatsCityViews(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -467,7 +476,7 @@ class StatsDataSourceImpl @Inject constructor(
         val params = buildTopAuthorsParams(dateRange, max)
         AppLog.d(T.STATS, "fetchTopAuthors - siteId=$siteId, dateRange=$dateRange, max=$max")
 
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsTopAuthors().getStatsTopAuthors(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -532,7 +541,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): ClicksDataResult {
         val params = buildClicksParams(dateRange, max)
-        val result = wpComApiClient.request { api ->
+        val result = getOrCreateClient().request { api ->
             api.statsClicks().getStatsClicks(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -592,7 +601,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): SearchTermsDataResult {
         val params = buildSearchTermsParams(dateRange, max)
-        val result = wpComApiClient.request { api ->
+        val result = getOrCreateClient().request { api ->
             api.statsSearchTerms().getStatsSearchTerms(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -652,7 +661,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): VideoPlaysDataResult {
         val params = buildVideoPlaysParams(dateRange, max)
-        val result = wpComApiClient.request { api ->
+        val result = getOrCreateClient().request { api ->
             api.statsVideoPlays().getStatsVideoPlays(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -712,7 +721,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): FileDownloadsDataResult {
         val params = buildFileDownloadsParams(dateRange, max)
-        val result = wpComApiClient.request { api ->
+        val result = getOrCreateClient().request { api ->
             api.statsFileDownloads().getStatsFileDownloads(
                 wpComSiteId = siteId.toULong(),
                 params = params

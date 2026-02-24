@@ -44,6 +44,26 @@ private const val MONTHS_IN_6_MONTHS = 6
 private const val MONTHS_IN_12_MONTHS = 12
 private const val PERCENTAGE_MULTIPLIER = 100.0
 private const val PERCENTAGE_NO_CHANGE = 0.0
+
+/**
+ * Calculates the percentage change between a current and previous value.
+ * Returns [PERCENTAGE_MULTIPLIER] (100%) when previous is 0 but current > 0,
+ * and [PERCENTAGE_NO_CHANGE] (0%) when both are 0.
+ */
+internal fun calculateItemChangePercent(
+    current: Long,
+    previous: Long
+): Double {
+    val change = current - previous
+    return if (previous > 0) {
+        (change.toDouble() / previous.toDouble()) *
+            PERCENTAGE_MULTIPLIER
+    } else if (current > 0) {
+        PERCENTAGE_MULTIPLIER
+    } else {
+        PERCENTAGE_NO_CHANGE
+    }
+}
 private const val NUM_DAYS_TODAY = 1
 
 /**
@@ -1016,270 +1036,128 @@ class StatsRepository @Inject constructor(
     suspend fun fetchClicks(
         siteId: Long,
         period: StatsPeriod
-    ): ClicksResult = withContext(ioDispatcher) {
-        val (currentDateRange, previousDateRange) =
-            calculateComparisonDateRanges(period)
-
-        val (currentResult, previousResult) = coroutineScope {
-            val currentDeferred = async {
-                statsDataSource.fetchClicks(
-                    siteId, currentDateRange, max = 0
-                )
+    ): ClicksResult = fetchWithComparison(
+        period = period,
+        fetch = { dateRange ->
+            when (val r = statsDataSource.fetchClicks(
+                siteId, dateRange, max = 0
+            )) {
+                is ClicksDataResult.Success ->
+                    DataSourceResult.Success(r.items)
+                is ClicksDataResult.Error ->
+                    DataSourceResult.Error(r.errorType)
             }
-            val previousDeferred = async {
-                statsDataSource.fetchClicks(
-                    siteId, previousDateRange, max = 0
-                )
-            }
-            currentDeferred.await() to previousDeferred.await()
-        }
-
-        when (currentResult) {
-            is ClicksDataResult.Success -> {
-                val previousMap =
-                    if (previousResult is ClicksDataResult.Success) {
-                        previousResult.items.associateBy { it.name }
-                    } else {
-                        emptyMap()
-                    }
-                val total = currentResult.items.sumOf { it.clicks }
-                val prevTotal = previousMap.values.sumOf { it.clicks }
-                val change = total - prevTotal
-                val changePct =
-                    calculateChangePercent(total, prevTotal, change)
-
-                ClicksResult.Success(
-                    items = currentResult.items.map { item ->
-                        val prev =
-                            previousMap[item.name]?.clicks ?: 0L
-                        ClickItemData(
-                            name = item.name,
-                            clicks = item.clicks,
-                            previousClicks = prev
-                        )
-                    },
-                    totalClicks = total,
-                    totalClicksChange = change,
-                    totalClicksChangePercent = changePct
-                )
-            }
-            is ClicksDataResult.Error -> {
-                appLogWrapper.e(
-                    AppLog.T.STATS,
-                    "Error fetching clicks: " +
-                        "${currentResult.errorType}"
-                )
-                ClicksResult.Error(
-                    currentResult.errorType.messageResId,
-                    currentResult.errorType ==
-                        StatsErrorType.AUTH_ERROR
-                )
-            }
-        }
-    }
+        },
+        keyOf = { it.name },
+        metricOf = { it.clicks },
+        mapItem = { item, prev ->
+            ClickItemData(item.name, item.clicks, prev)
+        },
+        buildSuccess = { items, total, change, pct ->
+            ClicksResult.Success(
+                items, total, change, pct
+            )
+        },
+        buildError = { resId, isAuth ->
+            ClicksResult.Error(resId, isAuth)
+        },
+        logLabel = "clicks"
+    )
 
     suspend fun fetchSearchTerms(
         siteId: Long,
         period: StatsPeriod
-    ): SearchTermsResult = withContext(ioDispatcher) {
-        val (currentDateRange, previousDateRange) =
-            calculateComparisonDateRanges(period)
-
-        val (currentResult, previousResult) = coroutineScope {
-            val currentDeferred = async {
-                statsDataSource.fetchSearchTerms(
-                    siteId, currentDateRange, max = 0
-                )
+    ): SearchTermsResult = fetchWithComparison(
+        period = period,
+        fetch = { dateRange ->
+            when (val r = statsDataSource.fetchSearchTerms(
+                siteId, dateRange, max = 0
+            )) {
+                is SearchTermsDataResult.Success ->
+                    DataSourceResult.Success(r.items)
+                is SearchTermsDataResult.Error ->
+                    DataSourceResult.Error(r.errorType)
             }
-            val previousDeferred = async {
-                statsDataSource.fetchSearchTerms(
-                    siteId, previousDateRange, max = 0
-                )
-            }
-            currentDeferred.await() to previousDeferred.await()
-        }
-
-        when (currentResult) {
-            is SearchTermsDataResult.Success -> {
-                val previousMap =
-                    if (previousResult is SearchTermsDataResult.Success
-                    ) {
-                        previousResult.items.associateBy { it.name }
-                    } else {
-                        emptyMap()
-                    }
-                val total = currentResult.items.sumOf { it.views }
-                val prevTotal = previousMap.values.sumOf { it.views }
-                val change = total - prevTotal
-                val changePct =
-                    calculateChangePercent(total, prevTotal, change)
-
-                SearchTermsResult.Success(
-                    items = currentResult.items.map { item ->
-                        val prev =
-                            previousMap[item.name]?.views ?: 0L
-                        SearchTermItemData(
-                            name = item.name,
-                            views = item.views,
-                            previousViews = prev
-                        )
-                    },
-                    totalViews = total,
-                    totalViewsChange = change,
-                    totalViewsChangePercent = changePct
-                )
-            }
-            is SearchTermsDataResult.Error -> {
-                appLogWrapper.e(
-                    AppLog.T.STATS,
-                    "Error fetching search terms: " +
-                        "${currentResult.errorType}"
-                )
-                SearchTermsResult.Error(
-                    currentResult.errorType.messageResId,
-                    currentResult.errorType ==
-                        StatsErrorType.AUTH_ERROR
-                )
-            }
-        }
-    }
+        },
+        keyOf = { it.name },
+        metricOf = { it.views },
+        mapItem = { item, prev ->
+            SearchTermItemData(item.name, item.views, prev)
+        },
+        buildSuccess = { items, total, change, pct ->
+            SearchTermsResult.Success(
+                items, total, change, pct
+            )
+        },
+        buildError = { resId, isAuth ->
+            SearchTermsResult.Error(resId, isAuth)
+        },
+        logLabel = "search terms"
+    )
 
     suspend fun fetchVideoPlays(
         siteId: Long,
         period: StatsPeriod
-    ): VideoPlaysResult = withContext(ioDispatcher) {
-        val (currentDateRange, previousDateRange) =
-            calculateComparisonDateRanges(period)
-
-        val (currentResult, previousResult) = coroutineScope {
-            val currentDeferred = async {
-                statsDataSource.fetchVideoPlays(
-                    siteId, currentDateRange, max = 0
-                )
+    ): VideoPlaysResult = fetchWithComparison(
+        period = period,
+        fetch = { dateRange ->
+            when (val r = statsDataSource.fetchVideoPlays(
+                siteId, dateRange, max = 0
+            )) {
+                is VideoPlaysDataResult.Success ->
+                    DataSourceResult.Success(r.items)
+                is VideoPlaysDataResult.Error ->
+                    DataSourceResult.Error(r.errorType)
             }
-            val previousDeferred = async {
-                statsDataSource.fetchVideoPlays(
-                    siteId, previousDateRange, max = 0
-                )
-            }
-            currentDeferred.await() to previousDeferred.await()
-        }
-
-        when (currentResult) {
-            is VideoPlaysDataResult.Success -> {
-                val previousMap =
-                    if (previousResult is VideoPlaysDataResult.Success
-                    ) {
-                        previousResult.items.associateBy { it.title }
-                    } else {
-                        emptyMap()
-                    }
-                val total = currentResult.items.sumOf { it.views }
-                val prevTotal = previousMap.values.sumOf { it.views }
-                val change = total - prevTotal
-                val changePct =
-                    calculateChangePercent(total, prevTotal, change)
-
-                VideoPlaysResult.Success(
-                    items = currentResult.items.map { item ->
-                        val prev =
-                            previousMap[item.title]?.views ?: 0L
-                        VideoPlayItemData(
-                            title = item.title,
-                            views = item.views,
-                            previousViews = prev
-                        )
-                    },
-                    totalViews = total,
-                    totalViewsChange = change,
-                    totalViewsChangePercent = changePct
-                )
-            }
-            is VideoPlaysDataResult.Error -> {
-                appLogWrapper.e(
-                    AppLog.T.STATS,
-                    "Error fetching video plays: " +
-                        "${currentResult.errorType}"
-                )
-                VideoPlaysResult.Error(
-                    currentResult.errorType.messageResId,
-                    currentResult.errorType ==
-                        StatsErrorType.AUTH_ERROR
-                )
-            }
-        }
-    }
+        },
+        keyOf = { it.title },
+        metricOf = { it.views },
+        mapItem = { item, prev ->
+            VideoPlayItemData(item.title, item.views, prev)
+        },
+        buildSuccess = { items, total, change, pct ->
+            VideoPlaysResult.Success(
+                items, total, change, pct
+            )
+        },
+        buildError = { resId, isAuth ->
+            VideoPlaysResult.Error(resId, isAuth)
+        },
+        logLabel = "video plays"
+    )
 
     suspend fun fetchFileDownloads(
         siteId: Long,
         period: StatsPeriod
-    ): FileDownloadsResult = withContext(ioDispatcher) {
-        val (currentDateRange, previousDateRange) =
-            calculateComparisonDateRanges(period)
-
-        val (currentResult, previousResult) = coroutineScope {
-            val currentDeferred = async {
-                statsDataSource.fetchFileDownloads(
-                    siteId, currentDateRange, max = 0
-                )
+    ): FileDownloadsResult = fetchWithComparison(
+        period = period,
+        fetch = { dateRange ->
+            when (val r = statsDataSource.fetchFileDownloads(
+                siteId, dateRange, max = 0
+            )) {
+                is FileDownloadsDataResult.Success ->
+                    DataSourceResult.Success(r.items)
+                is FileDownloadsDataResult.Error ->
+                    DataSourceResult.Error(r.errorType)
             }
-            val previousDeferred = async {
-                statsDataSource.fetchFileDownloads(
-                    siteId, previousDateRange, max = 0
-                )
-            }
-            currentDeferred.await() to previousDeferred.await()
-        }
-
-        when (currentResult) {
-            is FileDownloadsDataResult.Success ->
-                mapFileDownloadsSuccess(currentResult, previousResult)
-            is FileDownloadsDataResult.Error -> {
-                appLogWrapper.e(
-                    AppLog.T.STATS,
-                    "Error fetching file downloads: " +
-                        "${currentResult.errorType}"
-                )
-                FileDownloadsResult.Error(
-                    currentResult.errorType.messageResId,
-                    currentResult.errorType ==
-                        StatsErrorType.AUTH_ERROR
-                )
-            }
-        }
-    }
-
-    private fun mapFileDownloadsSuccess(
-        currentResult: FileDownloadsDataResult.Success,
-        previousResult: FileDownloadsDataResult
-    ): FileDownloadsResult.Success {
-        val previousMap =
-            if (previousResult is FileDownloadsDataResult.Success) {
-                previousResult.items.associateBy { it.name }
-            } else {
-                emptyMap()
-            }
-        val total = currentResult.items.sumOf { it.downloads }
-        val prevTotal = previousMap.values.sumOf { it.downloads }
-        val change = total - prevTotal
-        val changePct =
-            calculateChangePercent(total, prevTotal, change)
-
-        return FileDownloadsResult.Success(
-            items = currentResult.items.map { item ->
-                val prev =
-                    previousMap[item.name]?.downloads ?: 0L
-                FileDownloadItemData(
-                    name = item.name,
-                    downloads = item.downloads,
-                    previousDownloads = prev
-                )
-            },
-            totalDownloads = total,
-            totalDownloadsChange = change,
-            totalDownloadsChangePercent = changePct
-        )
-    }
+        },
+        keyOf = { it.name },
+        metricOf = { it.downloads },
+        mapItem = { item, prev ->
+            FileDownloadItemData(
+                item.name, item.downloads, prev
+            )
+        },
+        buildSuccess = { items, total, change, pct ->
+            FileDownloadsResult.Success(
+                items, total, change, pct
+            )
+        },
+        buildError = { resId, isAuth ->
+            FileDownloadsResult.Error(resId, isAuth)
+        },
+        logLabel = "file downloads"
+    )
 
     private fun calculateChangePercent(
         totalViews: Long,
@@ -1293,6 +1171,83 @@ class StatsRepository @Inject constructor(
     } else {
         PERCENTAGE_NO_CHANGE
     }
+
+    /**
+     * Generic helper that encapsulates the parallel
+     * fetch-with-comparison pattern used by multiple stats
+     * endpoints. Fetches current and previous period data in
+     * parallel, builds a lookup map for comparison, and
+     * delegates result construction to the caller via lambdas.
+     */
+    private suspend fun <Raw, Output, R> fetchWithComparison(
+        period: StatsPeriod,
+        fetch: suspend (StatsDateRange) -> DataSourceResult<Raw>,
+        keyOf: (Raw) -> String,
+        metricOf: (Raw) -> Long,
+        mapItem: (Raw, Long) -> Output,
+        buildSuccess: (List<Output>, Long, Long, Double) -> R,
+        buildError: (Int, Boolean) -> R,
+        logLabel: String
+    ): R = withContext(ioDispatcher) {
+        val (curRange, prevRange) =
+            calculateComparisonDateRanges(period)
+
+        val (curResult, prevResult) = coroutineScope {
+            val c = async { fetch(curRange) }
+            val p = async { fetch(prevRange) }
+            c.await() to p.await()
+        }
+
+        when (curResult) {
+            is DataSourceResult.Success -> {
+                val prevMap =
+                    if (prevResult is DataSourceResult.Success) {
+                        prevResult.items.associateBy(keyOf)
+                    } else {
+                        emptyMap()
+                    }
+                val total = curResult.items.sumOf(metricOf)
+                val prevTotal = prevMap.values.sumOf(metricOf)
+                val change = total - prevTotal
+                val changePct = calculateChangePercent(
+                    total, prevTotal, change
+                )
+                buildSuccess(
+                    curResult.items.map { item ->
+                        val prev = prevMap[keyOf(item)]
+                            ?.let(metricOf) ?: 0L
+                        mapItem(item, prev)
+                    },
+                    total, change, changePct
+                )
+            }
+            is DataSourceResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching $logLabel: " +
+                        "${curResult.errorType}"
+                )
+                buildError(
+                    curResult.errorType.messageResId,
+                    curResult.errorType ==
+                        StatsErrorType.AUTH_ERROR
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Intermediate sealed class that normalises data-source
+ * results into a common shape for [StatsRepository.fetchWithComparison].
+ */
+private sealed class DataSourceResult<out T> {
+    data class Success<T>(
+        val items: List<T>
+    ) : DataSourceResult<T>()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : DataSourceResult<Nothing>()
 }
 
 /**
@@ -1416,13 +1371,8 @@ data class MostViewedItemData(
     val isFirst: Boolean
 ) {
     val viewsChange: Long get() = views - previousViews
-    val viewsChangePercent: Double get() = if (previousViews > 0) {
-        (viewsChange.toDouble() / previousViews.toDouble()) * PERCENTAGE_MULTIPLIER
-    } else if (views > 0) {
-        PERCENTAGE_MULTIPLIER
-    } else {
-        PERCENTAGE_NO_CHANGE
-    }
+    val viewsChangePercent: Double
+        get() = calculateItemChangePercent(views, previousViews)
 }
 
 /**
@@ -1453,13 +1403,8 @@ data class CountryViewItemData(
     val previousViews: Long
 ) {
     val viewsChange: Long get() = views - previousViews
-    val viewsChangePercent: Double get() = if (previousViews > 0) {
-        (viewsChange.toDouble() / previousViews.toDouble()) * PERCENTAGE_MULTIPLIER
-    } else if (views > 0) {
-        PERCENTAGE_MULTIPLIER
-    } else {
-        PERCENTAGE_NO_CHANGE
-    }
+    val viewsChangePercent: Double
+        get() = calculateItemChangePercent(views, previousViews)
 }
 
 /**
@@ -1490,13 +1435,8 @@ data class RegionViewItemData(
     val previousViews: Long
 ) {
     val viewsChange: Long get() = views - previousViews
-    val viewsChangePercent: Double get() = if (previousViews > 0) {
-        (viewsChange.toDouble() / previousViews.toDouble()) * PERCENTAGE_MULTIPLIER
-    } else if (views > 0) {
-        PERCENTAGE_MULTIPLIER
-    } else {
-        PERCENTAGE_NO_CHANGE
-    }
+    val viewsChangePercent: Double
+        get() = calculateItemChangePercent(views, previousViews)
 }
 
 /**
@@ -1529,13 +1469,8 @@ data class CityViewItemData(
     val previousViews: Long
 ) {
     val viewsChange: Long get() = views - previousViews
-    val viewsChangePercent: Double get() = if (previousViews > 0) {
-        (viewsChange.toDouble() / previousViews.toDouble()) * PERCENTAGE_MULTIPLIER
-    } else if (views > 0) {
-        PERCENTAGE_MULTIPLIER
-    } else {
-        PERCENTAGE_NO_CHANGE
-    }
+    val viewsChangePercent: Double
+        get() = calculateItemChangePercent(views, previousViews)
 }
 
 /**
@@ -1564,13 +1499,8 @@ data class TopAuthorItemData(
     val previousViews: Long
 ) {
     val viewsChange: Long get() = views - previousViews
-    val viewsChangePercent: Double get() = if (previousViews > 0) {
-        (viewsChange.toDouble() / previousViews.toDouble()) * PERCENTAGE_MULTIPLIER
-    } else if (views > 0) {
-        PERCENTAGE_MULTIPLIER
-    } else {
-        PERCENTAGE_NO_CHANGE
-    }
+    val viewsChangePercent: Double
+        get() = calculateItemChangePercent(views, previousViews)
 }
 
 sealed class ClicksResult {
@@ -1593,14 +1523,7 @@ data class ClickItemData(
 ) {
     val clicksChange: Long get() = clicks - previousClicks
     val clicksChangePercent: Double
-        get() = if (previousClicks > 0) {
-            (clicksChange.toDouble() / previousClicks.toDouble()) *
-                PERCENTAGE_MULTIPLIER
-        } else if (clicks > 0) {
-            PERCENTAGE_MULTIPLIER
-        } else {
-            PERCENTAGE_NO_CHANGE
-        }
+        get() = calculateItemChangePercent(clicks, previousClicks)
 }
 
 sealed class SearchTermsResult {
@@ -1623,14 +1546,7 @@ data class SearchTermItemData(
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double
-        get() = if (previousViews > 0) {
-            (viewsChange.toDouble() / previousViews.toDouble()) *
-                PERCENTAGE_MULTIPLIER
-        } else if (views > 0) {
-            PERCENTAGE_MULTIPLIER
-        } else {
-            PERCENTAGE_NO_CHANGE
-        }
+        get() = calculateItemChangePercent(views, previousViews)
 }
 
 sealed class VideoPlaysResult {
@@ -1653,14 +1569,7 @@ data class VideoPlayItemData(
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double
-        get() = if (previousViews > 0) {
-            (viewsChange.toDouble() / previousViews.toDouble()) *
-                PERCENTAGE_MULTIPLIER
-        } else if (views > 0) {
-            PERCENTAGE_MULTIPLIER
-        } else {
-            PERCENTAGE_NO_CHANGE
-        }
+        get() = calculateItemChangePercent(views, previousViews)
 }
 
 sealed class FileDownloadsResult {
@@ -1683,13 +1592,7 @@ data class FileDownloadItemData(
 ) {
     val downloadsChange: Long get() = downloads - previousDownloads
     val downloadsChangePercent: Double
-        get() = if (previousDownloads > 0) {
-            (downloadsChange.toDouble() /
-                previousDownloads.toDouble()) *
-                PERCENTAGE_MULTIPLIER
-        } else if (downloads > 0) {
-            PERCENTAGE_MULTIPLIER
-        } else {
-            PERCENTAGE_NO_CHANGE
-        }
+        get() = calculateItemChangePercent(
+            downloads, previousDownloads
+        )
 }

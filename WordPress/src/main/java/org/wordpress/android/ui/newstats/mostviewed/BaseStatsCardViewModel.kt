@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.mostviewed
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -49,6 +50,7 @@ abstract class BaseStatsCardViewModel(
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
     private var loadingPeriod: StatsPeriod? = null
     private var loadedPeriod: StatsPeriod? = null
+    private var fetchJob: Job? = null
 
     private var allItems: List<MostViewedDetailItem> = emptyList()
     private var cachedTotalValue: Long = 0L
@@ -89,7 +91,8 @@ abstract class BaseStatsCardViewModel(
         statsRepository.init(accessToken)
         _uiState.value = MostViewedCardUiState.Loading
 
-        viewModelScope.launch {
+        fetchJob?.cancel()
+        fetchJob = viewModelScope.launch {
             try {
                 fetchAndProcess(site)
             } finally {
@@ -105,7 +108,8 @@ abstract class BaseStatsCardViewModel(
         if (accessToken.isNullOrEmpty()) return
 
         statsRepository.init(accessToken)
-        viewModelScope.launch {
+        fetchJob?.cancel()
+        fetchJob = viewModelScope.launch {
             try {
                 _isRefreshing.value = true
                 fetchAndProcess(site)
