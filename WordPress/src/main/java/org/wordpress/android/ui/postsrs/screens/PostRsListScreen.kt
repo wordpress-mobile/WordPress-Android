@@ -250,30 +250,15 @@ private fun AuthorFilterButton(
     onSelectionChanged: (AuthorFilterSelection) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val hasAvatar = !avatarUrl.isNullOrBlank()
     val contentDesc = stringResource(R.string.post_list_toggle_author_filter)
 
     Box {
         IconButton(onClick = { expanded = true }) {
-            if (authorFilter == AuthorFilterSelection.ME && hasAvatar) {
-                AsyncImage(
-                    model = avatarUrl,
-                    contentDescription = contentDesc,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clip(CircleShape)
-                )
-            } else {
-                Icon(
-                    if (authorFilter == AuthorFilterSelection.ME) {
-                        Icons.Filled.Person
-                    } else {
-                        Icons.Outlined.Person
-                    },
-                    contentDescription = contentDesc
-                )
-            }
+            AuthorFilterIcon(
+                selection = authorFilter,
+                avatarUrl = avatarUrl,
+                contentDescription = contentDesc
+            )
         }
         DropdownMenu(
             expanded = expanded,
@@ -297,25 +282,11 @@ private fun AuthorFilterButton(
                         )
                     },
                     leadingIcon = {
-                        if (selection == AuthorFilterSelection.ME && hasAvatar) {
-                            AsyncImage(
-                                model = avatarUrl,
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .clip(CircleShape)
-                            )
-                        } else {
-                            Icon(
-                                if (selection == AuthorFilterSelection.ME) {
-                                    Icons.Filled.Person
-                                } else {
-                                    Icons.Outlined.Person
-                                },
-                                contentDescription = null
-                            )
-                        }
+                        AuthorFilterIcon(
+                            selection = selection,
+                            avatarUrl = avatarUrl,
+                            contentDescription = null
+                        )
                     },
                     onClick = {
                         expanded = false
@@ -324,6 +295,33 @@ private fun AuthorFilterButton(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun AuthorFilterIcon(
+    selection: AuthorFilterSelection,
+    avatarUrl: String?,
+    contentDescription: String?
+) {
+    if (selection == AuthorFilterSelection.ME && !avatarUrl.isNullOrBlank()) {
+        AsyncImage(
+            model = avatarUrl,
+            contentDescription = contentDescription,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(24.dp)
+                .clip(CircleShape)
+        )
+    } else {
+        Icon(
+            if (selection == AuthorFilterSelection.ME) {
+                Icons.Filled.Person
+            } else {
+                Icons.Outlined.Person
+            },
+            contentDescription = contentDescription
+        )
     }
 }
 
