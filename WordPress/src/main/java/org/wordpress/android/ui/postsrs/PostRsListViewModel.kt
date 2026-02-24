@@ -19,6 +19,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -188,8 +189,7 @@ class PostRsListViewModel @Inject constructor(
                 _pendingConfirmation.value = PendingConfirmation.Delete(remotePostId)
             PostRsMenuAction.PUBLISH -> publishPost(site, remotePostId)
             PostRsMenuAction.MOVE_TO_DRAFT -> moveToDraft(site, remotePostId)
-            PostRsMenuAction.DUPLICATE ->
-                _events.trySend(PostRsListEvent.ShowToast(R.string.post_rs_not_implemented_yet))
+            PostRsMenuAction.DUPLICATE -> duplicatePost(remotePostId)
         }
     }
 
@@ -208,40 +208,61 @@ class PostRsListViewModel @Inject constructor(
         _pendingConfirmation.value = null
     }
 
-    private fun trashPost(site: SiteModel, postId: Long) {
+    private fun trashPost(site: SiteModel, postId: Long) = executePostAction(
+        postId, R.string.post_rs_trashed, R.string.post_rs_error_trash
+    ) { restClient.trashPost(site, postId) }
+
+    private fun deletePost(site: SiteModel, postId: Long) = executePostAction(
+        postId, R.string.post_rs_deleted, R.string.post_rs_error_delete
+    ) { restClient.deletePost(site, postId) }
+
+    private fun publishPost(site: SiteModel, postId: Long) = executePostAction(
+        postId, R.string.post_rs_published, R.string.post_rs_error_update_status
+    ) { restClient.updatePostStatus(site, postId, PostStatus.Publish) }
+
+    private fun moveToDraft(site: SiteModel, postId: Long) = executePostAction(
+        postId, R.string.post_rs_moved_to_draft, R.string.post_rs_error_update_status
+    ) { restClient.updatePostStatus(site, postId, PostStatus.Draft) }
+
+    /**
+     * Shared helper that runs a post mutation on IO
+     *
+     * @param postId        Remote ID of the post being acted on.
+     * @param successResId  String resource shown when [action] succeeds.
+     * @param errorResId    String resource shown when [action] fails.
+     * @param action        Suspend lambda that performs the network call.
+     */
+    private fun executePostAction(
+        postId: Long,
+        successResId: Int,
+        errorResId: Int,
+        action: suspend () -> PostActionResult
+    ) {
         if (!checkNetwork()) return
         viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) { restClient.trashPost(site, postId) }
-            handleActionResult(result, postId, R.string.post_rs_trashed, R.string.post_rs_error_trash)
+            val result = withContext(Dispatchers.IO) { action() }
+            handleActionResult(result, postId, successResId, errorResId)
         }
     }
 
-    private fun deletePost(site: SiteModel, postId: Long) {
-        if (!checkNetwork()) return
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) { restClient.deletePost(site, postId) }
-            handleActionResult(result, postId, R.string.post_rs_deleted, R.string.post_rs_error_delete)
-        }
-    }
-
-    private fun publishPost(site: SiteModel, postId: Long) {
-        if (!checkNetwork()) return
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                restClient.updatePostStatus(site, postId, PostStatus.Publish)
-            }
-            handleActionResult(result, postId, R.string.post_rs_published, R.string.post_rs_error_update_status)
-        }
-    }
-
-    private fun moveToDraft(site: SiteModel, postId: Long) {
-        if (!checkNetwork()) return
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                restClient.updatePostStatus(site, postId, PostStatus.Draft)
-            }
-            handleActionResult(result, postId, R.string.post_rs_moved_to_draft, R.string.post_rs_error_update_status)
-        }
+    /**
+     * Duplicates a post by creating a new draft with the same content.
+     * The FluxC dependency is temporary and will be removed once the
+     * editor supports loading posts via wordpress-rs.
+     */
+    private fun duplicatePost(remotePostId: Long) {
+        val postToCopy = getFluxCPost(remotePostId) ?: return
+        val newPost = postStore.instantiatePostModel(
+            site,
+            false,
+            postToCopy.title,
+            postToCopy.content,
+            FluxCPostStatus.DRAFT.toString(),
+            postToCopy.categoryIdList,
+            postToCopy.postFormat,
+            true
+        )
+        _events.trySend(PostRsListEvent.EditPost(site, newPost))
     }
 
     private fun checkNetwork(): Boolean {
@@ -252,6 +273,11 @@ class PostRsListViewModel @Inject constructor(
         return true
     }
 
+    /**
+     * Processes the outcome of a post mutation. On success, optimistically
+     * removes the post from the UI, shows a toast, and refreshes all tabs.
+     * On error, logs the failure and shows an error toast.
+     */
     private fun handleActionResult(
         result: PostActionResult,
         postId: Long,
@@ -275,6 +301,7 @@ class PostRsListViewModel @Inject constructor(
         collections.keys.toList().forEach { tab -> refreshTab(tab) }
     }
 
+    /** Optimistically removes a post from every tab's UI state so it disappears immediately. */
     private fun removePostFromState(postId: Long) {
         _tabStates.value = _tabStates.value.mapValues { (_, state) ->
             val filtered = state.posts.filter { it.remotePostId != postId }
@@ -397,6 +424,11 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Builds an observable post collection for the given [tab] on IO.
+     * When a search query is active, the filter includes all statuses;
+     * otherwise it uses only the statuses for the tab.
+     */
     private suspend fun createCollection(
         site: SiteModel,
         tab: PostRsListTab
