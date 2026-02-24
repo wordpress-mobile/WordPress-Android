@@ -70,6 +70,7 @@ class PostRsListViewModel @Inject constructor(
     private val initializingTabs = mutableSetOf<PostRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PostRsListTab>()
     private val resolveImageJobs = mutableMapOf<PostRsListTab, Job>()
+    private val resolveAuthorJobs = mutableMapOf<PostRsListTab, Job>()
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
@@ -427,6 +428,8 @@ class PostRsListViewModel @Inject constructor(
         userRefreshingTabs.clear()
         resolveImageJobs.values.forEach { it.cancel() }
         resolveImageJobs.clear()
+        resolveAuthorJobs.values.forEach { it.cancel() }
+        resolveAuthorJobs.clear()
         _tabStates.value = emptyMap()
     }
 
@@ -566,16 +569,17 @@ class PostRsListViewModel @Inject constructor(
             val existingPosts = getTabUiState(tab).posts
             val uiModels = items.map { model ->
                 val effectiveTab = if (isSearch) tabForStatus(model.status) else tab
-                val existingUrl = existingPosts
+                val existing = existingPosts
                     .firstOrNull { it.remotePostId == model.remotePostId }
-                    ?.featuredImageUrl
                 model.copy(
                     actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen),
-                    featuredImageUrl = existingUrl
+                    featuredImageUrl = existing?.featuredImageUrl,
+                    authorDisplayName = existing?.authorDisplayName
                 )
             }
             updateTabUiState(tab) { copy(posts = uiModels, isLoading = false, error = null) }
             resolveFeaturedImages(tab, uiModels)
+            resolveAuthorNames(tab, uiModels)
         } catch (e: Exception) {
             AppLog.e(AppLog.T.POSTS, "Failed to load items for tab $tab", e)
         }
@@ -607,6 +611,46 @@ class PostRsListViewModel @Inject constructor(
                         val url = urls[post.featuredImageId]
                         if (url != null) {
                             post.copy(featuredImageUrl = url)
+                        } else {
+                            post
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    /**
+     * Fetches display names for posts that have a non-zero
+     * [PostRsUiModel.authorId] but no resolved name yet.
+     * Skipped when filtering by "Me" since the user already
+     * knows their own name.
+     */
+    private fun resolveAuthorNames(
+        tab: PostRsListTab,
+        posts: List<PostRsUiModel>
+    ) {
+        if (!isAuthorFilterSupported) return
+        if (_authorFilter.value == AuthorFilterSelection.ME) return
+
+        val unresolvedIds = posts
+            .filter { it.authorId != 0L && it.authorDisplayName == null }
+            .map { it.authorId }
+            .distinct()
+        if (unresolvedIds.isEmpty()) return
+
+        resolveAuthorJobs[tab]?.cancel()
+        resolveAuthorJobs[tab] = viewModelScope.launch {
+            val names = withContext(Dispatchers.IO) {
+                restClient.fetchUserDisplayNames(site, unresolvedIds)
+            }
+            if (names.isEmpty()) return@launch
+            updateTabUiState(tab) {
+                copy(
+                    posts = this.posts.map { post ->
+                        val name = names[post.authorId]
+                        if (name != null) {
+                            post.copy(authorDisplayName = name)
                         } else {
                             post
                         }
