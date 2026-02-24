@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.postsrs.screens
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -252,74 +253,76 @@ private fun AuthorFilterButton(
     val hasAvatar = !avatarUrl.isNullOrBlank()
     val contentDesc = stringResource(R.string.post_list_toggle_author_filter)
 
-    IconButton(onClick = { expanded = true }) {
-        if (authorFilter == AuthorFilterSelection.ME && hasAvatar) {
-            AsyncImage(
-                model = avatarUrl,
-                contentDescription = contentDesc,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clip(CircleShape)
-            )
-        } else {
-            Icon(
-                if (authorFilter == AuthorFilterSelection.ME) {
-                    Icons.Filled.Person
-                } else {
-                    Icons.Outlined.Person
-                },
-                contentDescription = contentDesc
-            )
-        }
-    }
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false }
-    ) {
-        AuthorFilterSelection.entries.forEach { selection ->
-            val label = when (selection) {
-                AuthorFilterSelection.ME -> stringResource(R.string.me)
-                AuthorFilterSelection.EVERYONE ->
-                    stringResource(R.string.everyone)
-            }
-            DropdownMenuItem(
-                text = {
-                    Text(
-                        text = label,
-                        color = if (selection == authorFilter) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            Color.Unspecified
-                        }
-                    )
-                },
-                leadingIcon = {
-                    if (selection == AuthorFilterSelection.ME && hasAvatar) {
-                        AsyncImage(
-                            model = avatarUrl,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(24.dp)
-                                .clip(CircleShape)
-                        )
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            if (authorFilter == AuthorFilterSelection.ME && hasAvatar) {
+                AsyncImage(
+                    model = avatarUrl,
+                    contentDescription = contentDesc,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clip(CircleShape)
+                )
+            } else {
+                Icon(
+                    if (authorFilter == AuthorFilterSelection.ME) {
+                        Icons.Filled.Person
                     } else {
-                        Icon(
-                            if (selection == AuthorFilterSelection.ME) {
-                                Icons.Filled.Person
-                            } else {
-                                Icons.Outlined.Person
-                            },
-                            contentDescription = null
-                        )
-                    }
-                },
-                onClick = {
-                    expanded = false
-                    onSelectionChanged(selection)
+                        Icons.Outlined.Person
+                    },
+                    contentDescription = contentDesc
+                )
+            }
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            AuthorFilterSelection.entries.forEach { selection ->
+                val label = when (selection) {
+                    AuthorFilterSelection.ME -> stringResource(R.string.me)
+                    AuthorFilterSelection.EVERYONE ->
+                        stringResource(R.string.everyone)
                 }
-            )
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = label,
+                            color = if (selection == authorFilter) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                Color.Unspecified
+                            }
+                        )
+                    },
+                    leadingIcon = {
+                        if (selection == AuthorFilterSelection.ME && hasAvatar) {
+                            AsyncImage(
+                                model = avatarUrl,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .clip(CircleShape)
+                            )
+                        } else {
+                            Icon(
+                                if (selection == AuthorFilterSelection.ME) {
+                                    Icons.Filled.Person
+                                } else {
+                                    Icons.Outlined.Person
+                                },
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    onClick = {
+                        expanded = false
+                        onSelectionChanged(selection)
+                    }
+                )
+            }
         }
     }
 }
