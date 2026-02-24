@@ -14,7 +14,6 @@ import org.wordpress.android.ui.newstats.repository.ClicksResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
-import kotlin.math.abs
 
 @HiltViewModel
 class ClicksViewModel @Inject constructor(
@@ -64,18 +63,8 @@ class ClicksViewModel @Inject constructor(
         id = id,
         title = name,
         views = clicks,
-        change = toChange()
+        change = MostViewedChange.fromChange(
+            clicksChange, clicksChangePercent
+        )
     )
-
-    private fun ClickItemData.toChange(): MostViewedChange {
-        return when {
-            clicksChange > 0 -> MostViewedChange.Positive(
-                clicksChange, abs(clicksChangePercent)
-            )
-            clicksChange < 0 -> MostViewedChange.Negative(
-                abs(clicksChange), abs(clicksChangePercent)
-            )
-            else -> MostViewedChange.NoChange
-        }
-    }
 }

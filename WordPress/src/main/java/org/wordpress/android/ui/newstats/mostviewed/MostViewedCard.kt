@@ -44,7 +44,7 @@ import java.util.Locale
 private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
-private const val HIGHLIGHTED_ITEM_BACKGROUND_ALPHA = 0.08f
+internal const val HIGHLIGHTED_ITEM_BACKGROUND_ALPHA = 0.08f
 private const val LOADING_SHIMMER_ITEM_COUNT = 5
 
 @Composable
@@ -344,7 +344,7 @@ private fun MostViewedItemRow(item: MostViewedItem, percentage: Float) {
 }
 
 @Composable
-private fun ChangeIndicator(change: MostViewedChange) {
+internal fun ChangeIndicator(change: MostViewedChange) {
     val (text, color) = when (change) {
         is MostViewedChange.Positive -> Pair(
             "+${formatStatValue(change.value)} (${
@@ -493,36 +493,31 @@ private fun MostViewedCardLoadedPreview() {
                         id = 1,
                         title = "Welcome to Automattic",
                         views = 417,
-                        change = MostViewedChange.Negative(194, 31.8),
-                        isHighlighted = true
+                        change = MostViewedChange.Negative(194, 31.8)
                     ),
                     MostViewedItem(
                         id = 2,
                         title = "Travel Guidelines",
                         views = 58,
-                        change = MostViewedChange.NoChange,
-                        isHighlighted = false
+                        change = MostViewedChange.NoChange
                     ),
                     MostViewedItem(
                         id = 3,
                         title = "Expense Guidelines",
                         views = 42,
-                        change = MostViewedChange.Positive(10, 31.2),
-                        isHighlighted = false
+                        change = MostViewedChange.Positive(10, 31.2)
                     ),
                     MostViewedItem(
                         id = 4,
                         title = "Getting Started with Claude Code: A Comprehensive Tutorial",
                         views = 38,
-                        change = MostViewedChange.Positive(4, 11.8),
-                        isHighlighted = false
+                        change = MostViewedChange.Positive(4, 11.8)
                     ),
                     MostViewedItem(
                         id = 5,
                         title = "GitHub Enterprise for Automattic",
                         views = 35,
-                        change = MostViewedChange.Positive(23, 191.7),
-                        isHighlighted = false
+                        change = MostViewedChange.Positive(23, 191.7)
                     )
                 ),
                 maxViewsForBar = 417
@@ -562,15 +557,13 @@ private fun MostViewedCardLoadedDarkPreview() {
                         id = 1,
                         title = "Welcome to Automattic",
                         views = 417,
-                        change = MostViewedChange.Negative(194, 31.8),
-                        isHighlighted = true
+                        change = MostViewedChange.Negative(194, 31.8)
                     ),
                     MostViewedItem(
                         id = 2,
                         title = "Travel Guidelines",
                         views = 58,
-                        change = MostViewedChange.NoChange,
-                        isHighlighted = false
+                        change = MostViewedChange.NoChange
                     )
                 ),
                 maxViewsForBar = 417

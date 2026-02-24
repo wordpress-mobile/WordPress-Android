@@ -108,6 +108,7 @@ abstract class BaseStatsCardViewModel(
         if (accessToken.isNullOrEmpty()) return
 
         statsRepository.init(accessToken)
+        loadingPeriod = currentPeriod
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
             try {
@@ -115,6 +116,7 @@ abstract class BaseStatsCardViewModel(
                 fetchAndProcess(site)
             } finally {
                 _isRefreshing.value = false
+                loadingPeriod = null
             }
         }
     }

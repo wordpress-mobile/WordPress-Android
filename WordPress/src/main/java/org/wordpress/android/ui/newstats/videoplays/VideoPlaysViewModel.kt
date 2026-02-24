@@ -14,7 +14,6 @@ import org.wordpress.android.ui.newstats.repository.VideoPlayItemData
 import org.wordpress.android.ui.newstats.repository.VideoPlaysResult
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
-import kotlin.math.abs
 
 @HiltViewModel
 class VideoPlaysViewModel @Inject constructor(
@@ -64,18 +63,8 @@ class VideoPlaysViewModel @Inject constructor(
         id = id,
         title = title,
         views = views,
-        change = toChange()
+        change = MostViewedChange.fromChange(
+            viewsChange, viewsChangePercent
+        )
     )
-
-    private fun VideoPlayItemData.toChange(): MostViewedChange {
-        return when {
-            viewsChange > 0 -> MostViewedChange.Positive(
-                viewsChange, abs(viewsChangePercent)
-            )
-            viewsChange < 0 -> MostViewedChange.Negative(
-                abs(viewsChange), abs(viewsChangePercent)
-            )
-            else -> MostViewedChange.NoChange
-        }
-    }
 }

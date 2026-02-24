@@ -191,19 +191,6 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when data loads, then first item is highlighted`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
-            .thenReturn(createSuccessResult())
-
-        initViewModel()
-        advanceUntilIdle()
-
-        val state = viewModel.postsUiState.value as MostViewedCardUiState.Loaded
-        assertThat(state.items[0].isHighlighted).isTrue()
-        assertThat(state.items[1].isHighlighted).isFalse()
-    }
-
-    @Test
     fun `when data loads with more than 10 items, then only 10 are shown in card`() = test {
         val manyItems = (1..15).mapIndexed { idx, index ->
             MostViewedItemData(

@@ -45,12 +45,10 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.StatsCardType
-import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
-import java.util.Locale
 
 private const val EXTRA_CARD_TYPE = "extra_card_type"
 private const val EXTRA_ITEMS = "extra_items"
@@ -231,7 +229,9 @@ private fun DetailItemRow(
     maxViewsForBar: Long
 ) {
     val percentage = if (maxViewsForBar > 0) item.views.toFloat() / maxViewsForBar.toFloat() else 0f
-    val barColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
+    val barColor = MaterialTheme.colorScheme.primary.copy(
+        alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA
+    )
 
     Box(
         modifier = Modifier
@@ -289,35 +289,6 @@ private fun DetailItemRow(
             }
         }
     }
-}
-
-@Composable
-private fun ChangeIndicator(change: MostViewedChange) {
-    val (text, color) = when (change) {
-        is MostViewedChange.Positive -> Pair(
-            "+${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
-            StatsColors.ChangeBadgePositive
-        )
-        is MostViewedChange.Negative -> Pair(
-            "-${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
-            StatsColors.ChangeBadgeNegative
-        )
-        is MostViewedChange.NoChange -> Pair(
-            "+0 (0%)",
-            MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        is MostViewedChange.NotAvailable -> return
-    }
-
-    Text(
-        text = text,
-        style = MaterialTheme.typography.labelSmall,
-        color = color
-    )
 }
 
 @Preview(showBackground = true)

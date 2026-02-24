@@ -14,7 +14,6 @@ import org.wordpress.android.ui.newstats.repository.FileDownloadsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
-import kotlin.math.abs
 
 @HiltViewModel
 class FileDownloadsViewModel @Inject constructor(
@@ -65,19 +64,8 @@ class FileDownloadsViewModel @Inject constructor(
         id = id,
         title = name,
         views = downloads,
-        change = toChange()
+        change = MostViewedChange.fromChange(
+            downloadsChange, downloadsChangePercent
+        )
     )
-
-    private fun FileDownloadItemData.toChange(): MostViewedChange {
-        return when {
-            downloadsChange > 0 -> MostViewedChange.Positive(
-                downloadsChange, abs(downloadsChangePercent)
-            )
-            downloadsChange < 0 -> MostViewedChange.Negative(
-                abs(downloadsChange),
-                abs(downloadsChangePercent)
-            )
-            else -> MostViewedChange.NoChange
-        }
-    }
 }

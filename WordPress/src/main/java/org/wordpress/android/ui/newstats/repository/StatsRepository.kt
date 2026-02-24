@@ -1179,6 +1179,7 @@ class StatsRepository @Inject constructor(
      * parallel, builds a lookup map for comparison, and
      * delegates result construction to the caller via lambdas.
      */
+    @Suppress("LongParameterList")
     private suspend fun <Raw, Output, R> fetchWithComparison(
         period: StatsPeriod,
         fetch: suspend (StatsDateRange) -> DataSourceResult<Raw>,

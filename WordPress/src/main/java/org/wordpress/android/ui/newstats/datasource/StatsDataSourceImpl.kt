@@ -86,7 +86,7 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
 
-        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchStatsVisits result type: ${result::class.simpleName}")
+        logResultType("fetchStatsVisits", result)
 
         return when (result) {
             is WpRequestResult.Success -> {
@@ -160,7 +160,7 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
 
-        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchTopPostsAndPages result type: ${result::class.simpleName}")
+        logResultType("fetchTopPostsAndPages", result)
 
         return when (result) {
             is WpRequestResult.Success -> {
@@ -211,7 +211,7 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
 
-        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchReferrers result type: ${result::class.simpleName}")
+        logResultType("fetchReferrers", result)
 
         return when (result) {
             is WpRequestResult.Success -> {
@@ -264,7 +264,7 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
 
-        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchCountryViews result type: ${result::class.simpleName}")
+        logResultType("fetchCountryViews", result)
 
         return when (result) {
             is WpRequestResult.Success -> {
@@ -483,7 +483,7 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
 
-        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchTopAuthors result type: ${result::class.simpleName}")
+        logResultType("fetchTopAuthors", result)
 
         return when (result) {
             is WpRequestResult.Success -> {
@@ -758,12 +758,30 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
-    private fun logResultType(methodName: String, result: WpRequestResult<*>) {
+    private fun logResultType(
+        methodName: String,
+        result: WpRequestResult<*>
+    ) {
+        val typeName = resultTypeName(result)
         AppLog.d(
             T.STATS,
-            "StatsDataSourceImpl: $methodName result type: " +
-                "${result::class.simpleName}"
+            "StatsDataSourceImpl: $methodName " +
+                "result type: $typeName"
         )
+    }
+
+    private fun resultTypeName(
+        result: WpRequestResult<*>
+    ): String = when (result) {
+        is WpRequestResult.Success -> "Success"
+        is WpRequestResult.WpError -> "WpError"
+        is WpRequestResult.ResponseParsingError<*> ->
+            "ResponseParsingError"
+        is WpRequestResult.RequestExecutionFailed<*> ->
+            "RequestExecutionFailed"
+        is WpRequestResult.InvalidHttpStatusCode<*> ->
+            "InvalidHttpStatusCode"
+        else -> "Unknown"
     }
 
     private fun <R> logErrorAndReturn(

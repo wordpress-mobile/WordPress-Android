@@ -14,7 +14,6 @@ import org.wordpress.android.ui.newstats.repository.SearchTermsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
-import kotlin.math.abs
 
 @HiltViewModel
 class SearchTermsViewModel @Inject constructor(
@@ -64,18 +63,8 @@ class SearchTermsViewModel @Inject constructor(
         id = id,
         title = name,
         views = views,
-        change = toChange()
+        change = MostViewedChange.fromChange(
+            viewsChange, viewsChangePercent
+        )
     )
-
-    private fun SearchTermItemData.toChange(): MostViewedChange {
-        return when {
-            viewsChange > 0 -> MostViewedChange.Positive(
-                viewsChange, abs(viewsChangePercent)
-            )
-            viewsChange < 0 -> MostViewedChange.Negative(
-                abs(viewsChange), abs(viewsChangePercent)
-            )
-            else -> MostViewedChange.NoChange
-        }
-    }
 }
