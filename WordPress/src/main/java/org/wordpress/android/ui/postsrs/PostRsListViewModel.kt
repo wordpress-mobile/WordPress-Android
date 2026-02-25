@@ -75,6 +75,9 @@ class PostRsListViewModel @Inject constructor(
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
+    private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
+    val snackbarMessages = _snackbarMessages.receiveAsFlow()
+
     private val _pendingConfirmation = MutableStateFlow<PendingConfirmation?>(null)
     val pendingConfirmation: StateFlow<PendingConfirmation?> = _pendingConfirmation.asStateFlow()
 
@@ -304,7 +307,9 @@ class PostRsListViewModel @Inject constructor(
 
     private fun checkNetwork(): Boolean {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _events.trySend(PostRsListEvent.ShowToast(R.string.no_network_message))
+            _snackbarMessages.trySend(
+                SnackbarMessage(resourceProvider.getString(R.string.no_network_message))
+            )
             return false
         }
         return true
@@ -324,12 +329,16 @@ class PostRsListViewModel @Inject constructor(
         when (result) {
             is PostActionResult.Success -> {
                 removePostFromState(postId)
-                _events.trySend(PostRsListEvent.ShowToast(successResId))
+                _snackbarMessages.trySend(
+                    SnackbarMessage(resourceProvider.getString(successResId))
+                )
                 refreshAllTabs()
             }
             is PostActionResult.Error -> {
                 AppLog.e(AppLog.T.POSTS, "Post action failed: ${result.message}")
-                _events.trySend(PostRsListEvent.ShowToast(errorResId))
+                _snackbarMessages.trySend(
+                    SnackbarMessage(resourceProvider.getString(errorResId))
+                )
             }
         }
     }
@@ -363,7 +372,9 @@ class PostRsListViewModel @Inject constructor(
     private fun getFluxCPost(remotePostId: Long): PostModel? {
         val post = postStore.getPostByRemotePostId(remotePostId, site)
         if (post == null) {
-            _events.trySend(PostRsListEvent.ShowToast(R.string.post_not_found))
+            _snackbarMessages.trySend(
+                SnackbarMessage(resourceProvider.getString(R.string.post_not_found))
+            )
         }
         return post
     }
@@ -525,11 +536,27 @@ class PostRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
                 userRefreshingTabs.remove(tab)
-                updateTabUiState(tab) {
-                    copy(
-                        isLoading = false, isRefreshing = false,
-                        error = e.message ?: resourceProvider.getString(R.string.error_generic)
+                if (getTabUiState(tab).posts.isNotEmpty()) {
+                    updateTabUiState(tab) {
+                        copy(isLoading = false, isRefreshing = false, error = null)
+                    }
+                    _snackbarMessages.trySend(
+                        SnackbarMessage(
+                            message = resourceProvider.getString(
+                                R.string.error_refresh_posts
+                            ),
+                            actionLabel = resourceProvider.getString(R.string.retry),
+                            onAction = { refreshTab(tab) }
+                        )
                     )
+                } else {
+                    updateTabUiState(tab) {
+                        copy(
+                            isLoading = false, isRefreshing = false,
+                            error = e.message
+                                ?: resourceProvider.getString(R.string.error_generic)
+                        )
+                    }
                 }
             }
         }
@@ -551,6 +578,11 @@ class PostRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
                 updateTabUiState(tab) { copy(isLoadingMore = false) }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        resourceProvider.getString(R.string.post_rs_error_load_more)
+                    )
+                )
             }
         }
     }
@@ -674,18 +706,44 @@ class PostRsListViewModel @Inject constructor(
 
         if (!fetchingFirstPage) userRefreshingTabs.remove(tab)
 
-        updateTabUiState(tab) {
-            copy(
-                isLoading = isLoading && fetchingFirstPage,
-                isRefreshing = isUserRefresh && fetchingFirstPage,
-                isLoadingMore = listInfo?.state == ListState.FETCHING_NEXT_PAGE,
-                canLoadMore = morePages,
-                error = if (listInfo?.state == ListState.ERROR) {
-                    listInfo.errorMessage ?: resourceProvider.getString(R.string.error_generic)
-                } else {
-                    null
-                }
+        val isError = listInfo?.state == ListState.ERROR
+        val hasPosts = getTabUiState(tab).posts.isNotEmpty()
+        val errorMessage = if (isError) {
+            listInfo.errorMessage
+                ?: resourceProvider.getString(R.string.error_generic)
+        } else {
+            null
+        }
+
+        if (isError && hasPosts) {
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = false,
+                    isRefreshing = false,
+                    isLoadingMore = false,
+                    canLoadMore = morePages,
+                    error = null
+                )
+            }
+            _snackbarMessages.trySend(
+                SnackbarMessage(
+                    message = errorMessage
+                        ?: resourceProvider.getString(R.string.error_generic),
+                    actionLabel = resourceProvider.getString(R.string.retry),
+                    onAction = { refreshTab(tab) }
+                )
             )
+        } else {
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = isLoading && fetchingFirstPage,
+                    isRefreshing = isUserRefresh && fetchingFirstPage,
+                    isLoadingMore = listInfo?.state
+                        == ListState.FETCHING_NEXT_PAGE,
+                    canLoadMore = morePages,
+                    error = errorMessage
+                )
+            }
         }
     }
 
