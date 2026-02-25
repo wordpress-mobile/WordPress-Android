@@ -6,6 +6,7 @@ import kotlinx.coroutines.coroutineScope
 import org.wordpress.android.ui.newstats.datasource.CityViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
+import org.wordpress.android.ui.newstats.datasource.DevicesDataResult
 import org.wordpress.android.ui.newstats.datasource.FileDownloadsDataResult
 import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.RegionViewsDataResult
@@ -681,6 +682,28 @@ class StatsRepository @Inject constructor(
      * Calculates current and previous date ranges for comparison stats.
      * Used by multiple stats types (MostViewed, Countries, etc.)
      */
+    private fun calculateCurrentDateRange(period: StatsPeriod): StatsDateRange {
+        val today = LocalDate.now()
+        val todayString = today.format(dateFormatter)
+        return when (period) {
+            is StatsPeriod.Today ->
+                StatsDateRange.Preset(num = NUM_DAYS_TODAY, date = todayString)
+            is StatsPeriod.Last7Days ->
+                StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = todayString)
+            is StatsPeriod.Last30Days ->
+                StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString)
+            is StatsPeriod.Last6Months ->
+                StatsDateRange.Preset(num = DAYS_IN_6_MONTHS, date = todayString)
+            is StatsPeriod.Last12Months ->
+                StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = todayString)
+            is StatsPeriod.Custom ->
+                StatsDateRange.Custom(
+                    startDate = period.startDate.format(dateFormatter),
+                    date = period.endDate.format(dateFormatter)
+                )
+        }
+    }
+
     private fun calculateComparisonDateRanges(period: StatsPeriod): Pair<StatsDateRange, StatsDateRange> {
         val today = LocalDate.now()
         val todayString = today.format(dateFormatter)
@@ -1159,6 +1182,67 @@ class StatsRepository @Inject constructor(
         logLabel = "file downloads"
     )
 
+    /**
+     * Fetches device screen size stats for a specific site and period.
+     */
+    suspend fun fetchDevicesScreensize(
+        siteId: Long,
+        period: StatsPeriod
+    ): DevicesResult = withContext(ioDispatcher) {
+        val dateRange = calculateCurrentDateRange(period)
+        fetchDevicesData { statsDataSource.fetchDevicesScreensize(siteId, dateRange) }
+    }
+
+    /**
+     * Fetches device browser stats for a specific site and period.
+     */
+    suspend fun fetchDevicesBrowser(
+        siteId: Long,
+        period: StatsPeriod
+    ): DevicesResult = withContext(ioDispatcher) {
+        val dateRange = calculateCurrentDateRange(period)
+        fetchDevicesData { statsDataSource.fetchDevicesBrowser(siteId, dateRange) }
+    }
+
+    /**
+     * Fetches device platform stats for a specific site and period.
+     */
+    suspend fun fetchDevicesPlatform(
+        siteId: Long,
+        period: StatsPeriod
+    ): DevicesResult = withContext(ioDispatcher) {
+        val dateRange = calculateCurrentDateRange(period)
+        fetchDevicesData { statsDataSource.fetchDevicesPlatform(siteId, dateRange) }
+    }
+
+    private suspend fun fetchDevicesData(
+        fetch: suspend () -> DevicesDataResult
+    ): DevicesResult {
+        return when (val result = fetch()) {
+            is DevicesDataResult.Success -> {
+                val items = result.data.items
+                    .map { (name, views) ->
+                        DeviceItemData(
+                            name = name,
+                            views = views
+                        )
+                    }
+                    .sortedByDescending { it.views }
+                DevicesResult.Success(items = items)
+            }
+            is DevicesDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching devices: ${result.errorType}"
+                )
+                DevicesResult.Error(
+                    result.errorType.messageResId,
+                    result.errorType == StatsErrorType.AUTH_ERROR
+                )
+            }
+        }
+    }
+
     private fun calculateChangePercent(
         totalViews: Long,
         previousTotalViews: Long,
@@ -1597,3 +1681,24 @@ data class FileDownloadItemData(
             downloads, previousDownloads
         )
 }
+
+/**
+ * Result wrapper for devices stats fetch operation.
+ */
+sealed class DevicesResult {
+    data class Success(
+        val items: List<DeviceItemData>
+    ) : DevicesResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : DevicesResult()
+}
+
+/**
+ * Data for a single device item from the repository layer.
+ */
+data class DeviceItemData(
+    val name: String,
+    val views: Double
+)
