@@ -24,7 +24,10 @@ sealed class MostViewedCardUiState {
         val maxViewsForBar: Long
     ) : MostViewedCardUiState()
 
-    data class Error(val message: String) : MostViewedCardUiState()
+    data class Error(
+        val message: String,
+        val isAuthError: Boolean = false
+    ) : MostViewedCardUiState()
 }
 
 /**
@@ -34,14 +37,12 @@ sealed class MostViewedCardUiState {
  * @param title The title/name of the item (post title or referrer name)
  * @param views The number of views
  * @param change The percentage change compared to previous period
- * @param isHighlighted Whether this item should be highlighted (typically the first item)
  */
 data class MostViewedItem(
     val id: Long,
     val title: String,
     val views: Long,
-    val change: MostViewedChange,
-    val isHighlighted: Boolean = false
+    val change: MostViewedChange
 )
 
 /**
@@ -56,6 +57,22 @@ sealed class MostViewedChange : Parcelable {
     data object NoChange : MostViewedChange()
     @Parcelize
     data object NotAvailable : MostViewedChange()
+
+    companion object {
+        fun fromChange(
+            change: Long,
+            changePercent: Double
+        ): MostViewedChange = when {
+            change > 0 -> Positive(
+                change, kotlin.math.abs(changePercent)
+            )
+            change < 0 -> Negative(
+                kotlin.math.abs(change),
+                kotlin.math.abs(changePercent)
+            )
+            else -> NoChange
+        }
+    }
 }
 
 /**

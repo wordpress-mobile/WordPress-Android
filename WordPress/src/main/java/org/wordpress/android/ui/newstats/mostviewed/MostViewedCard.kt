@@ -44,7 +44,7 @@ import java.util.Locale
 private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
-private const val HIGHLIGHTED_ITEM_BACKGROUND_ALPHA = 0.08f
+internal const val HIGHLIGHTED_ITEM_BACKGROUND_ALPHA = 0.08f
 private const val LOADING_SHIMMER_ITEM_COUNT = 5
 
 @Composable
@@ -59,7 +59,8 @@ fun MostViewedCard(
     onMoveUp: (() -> Unit)? = null,
     onMoveToTop: (() -> Unit)? = null,
     onMoveDown: (() -> Unit)? = null,
-    onMoveToBottom: (() -> Unit)? = null
+    onMoveToBottom: (() -> Unit)? = null,
+    onOpenWpAdmin: (() -> Unit)? = null
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
 
@@ -83,7 +84,8 @@ fun MostViewedCard(
             )
             is MostViewedCardUiState.Error -> ErrorContent(
                 uiState, cardType, onRetry, onRemoveCard,
-                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom,
+                onOpenWpAdmin
             )
         }
     }
@@ -188,22 +190,23 @@ private fun LoadedContent(
             onMoveToBottom = onMoveToBottom
         )
         Spacer(modifier = Modifier.height(12.dp))
-        ColumnHeadersRow(cardType = cardType)
-        Spacer(modifier = Modifier.height(8.dp))
-        state.items.forEachIndexed { index, item ->
-            val percentage = if (state.maxViewsForBar > 0) {
-                item.views.toFloat() / state.maxViewsForBar.toFloat()
-            } else 0f
-            MostViewedItemRow(item = item, percentage = percentage)
-            if (index < state.items.lastIndex) {
-                Spacer(modifier = Modifier.height(4.dp))
-            }
-        }
         if (state.items.isEmpty()) {
             EmptyStateContent()
+        } else {
+            ColumnHeadersRow(cardType = cardType)
+            Spacer(modifier = Modifier.height(8.dp))
+            state.items.forEachIndexed { index, item ->
+                val percentage = if (state.maxViewsForBar > 0) {
+                    item.views.toFloat() / state.maxViewsForBar.toFloat()
+                } else 0f
+                MostViewedItemRow(item = item, percentage = percentage)
+                if (index < state.items.lastIndex) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            ShowAllFooter(onClick = onShowAllClick)
         }
-        Spacer(modifier = Modifier.height(12.dp))
-        ShowAllFooter(onClick = onShowAllClick)
     }
 }
 
@@ -241,9 +244,23 @@ private fun HeaderSection(
 @Composable
 private fun ColumnHeadersRow(cardType: StatsCardType) {
     val headerResId = when (cardType) {
-        StatsCardType.MOST_VIEWED_POSTS_AND_PAGES -> R.string.stats_most_viewed_title_header
-        StatsCardType.MOST_VIEWED_REFERRERS -> R.string.stats_most_viewed_referrer_header
+        StatsCardType.MOST_VIEWED_POSTS_AND_PAGES ->
+            R.string.stats_most_viewed_title_header
+        StatsCardType.MOST_VIEWED_REFERRERS ->
+            R.string.stats_most_viewed_referrer_header
+        StatsCardType.CLICKS -> R.string.stats_clicks_link_label
+        StatsCardType.SEARCH_TERMS -> R.string.stats_search_terms_label
+        StatsCardType.VIDEO_PLAYS -> R.string.stats_videos_title_label
+        StatsCardType.FILE_DOWNLOADS ->
+            R.string.stats_file_downloads_title_label
         else -> cardType.displayNameResId
+    }
+
+    val valueHeaderResId = when (cardType) {
+        StatsCardType.CLICKS -> R.string.stats_clicks_label
+        StatsCardType.FILE_DOWNLOADS ->
+            R.string.stats_file_downloads_value_label
+        else -> R.string.stats_views
     }
 
     Row(
@@ -258,7 +275,7 @@ private fun ColumnHeadersRow(cardType: StatsCardType) {
         )
 
         Text(
-            text = stringResource(R.string.stats_views),
+            text = stringResource(valueHeaderResId),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -327,7 +344,7 @@ private fun MostViewedItemRow(item: MostViewedItem, percentage: Float) {
 }
 
 @Composable
-private fun ChangeIndicator(change: MostViewedChange) {
+internal fun ChangeIndicator(change: MostViewedChange) {
     val (text, color) = when (change) {
         is MostViewedChange.Positive -> Pair(
             "+${formatStatValue(change.value)} (${
@@ -406,7 +423,8 @@ private fun ErrorContent(
     onMoveUp: (() -> Unit)?,
     onMoveToTop: (() -> Unit)?,
     onMoveDown: (() -> Unit)?,
-    onMoveToBottom: (() -> Unit)?
+    onMoveToBottom: (() -> Unit)?,
+    onOpenWpAdmin: (() -> Unit)? = null
 ) {
     Column(
         modifier = Modifier
@@ -433,8 +451,18 @@ private fun ErrorContent(
                 color = MaterialTheme.colorScheme.error
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(text = stringResource(R.string.retry))
+            if (onOpenWpAdmin != null) {
+                Button(onClick = onOpenWpAdmin) {
+                    Text(
+                        text = stringResource(
+                            R.string.my_site_btn_wp_admin
+                        )
+                    )
+                }
+            } else {
+                Button(onClick = onRetry) {
+                    Text(text = stringResource(R.string.retry))
+                }
             }
         }
     }
@@ -465,36 +493,31 @@ private fun MostViewedCardLoadedPreview() {
                         id = 1,
                         title = "Welcome to Automattic",
                         views = 417,
-                        change = MostViewedChange.Negative(194, 31.8),
-                        isHighlighted = true
+                        change = MostViewedChange.Negative(194, 31.8)
                     ),
                     MostViewedItem(
                         id = 2,
                         title = "Travel Guidelines",
                         views = 58,
-                        change = MostViewedChange.NoChange,
-                        isHighlighted = false
+                        change = MostViewedChange.NoChange
                     ),
                     MostViewedItem(
                         id = 3,
                         title = "Expense Guidelines",
                         views = 42,
-                        change = MostViewedChange.Positive(10, 31.2),
-                        isHighlighted = false
+                        change = MostViewedChange.Positive(10, 31.2)
                     ),
                     MostViewedItem(
                         id = 4,
                         title = "Getting Started with Claude Code: A Comprehensive Tutorial",
                         views = 38,
-                        change = MostViewedChange.Positive(4, 11.8),
-                        isHighlighted = false
+                        change = MostViewedChange.Positive(4, 11.8)
                     ),
                     MostViewedItem(
                         id = 5,
                         title = "GitHub Enterprise for Automattic",
                         views = 35,
-                        change = MostViewedChange.Positive(23, 191.7),
-                        isHighlighted = false
+                        change = MostViewedChange.Positive(23, 191.7)
                     )
                 ),
                 maxViewsForBar = 417
@@ -534,15 +557,13 @@ private fun MostViewedCardLoadedDarkPreview() {
                         id = 1,
                         title = "Welcome to Automattic",
                         views = 417,
-                        change = MostViewedChange.Negative(194, 31.8),
-                        isHighlighted = true
+                        change = MostViewedChange.Negative(194, 31.8)
                     ),
                     MostViewedItem(
                         id = 2,
                         title = "Travel Guidelines",
                         views = 58,
-                        change = MostViewedChange.NoChange,
-                        isHighlighted = false
+                        change = MostViewedChange.NoChange
                     )
                 ),
                 maxViewsForBar = 417

@@ -231,13 +231,12 @@ class MostViewedViewModel @Inject constructor(
         val allItems = result.items.map { it.toDetailItem() }
         val cardItems = allItems.take(CARD_MAX_ITEMS)
         val loadedState = MostViewedCardUiState.Loaded(
-            items = cardItems.mapIndexed { index, item ->
+            items = cardItems.map { item ->
                 MostViewedItem(
                     id = item.id,
                     title = item.title,
                     views = item.views,
-                    change = item.change,
-                    isHighlighted = index == 0
+                    change = item.change
                 )
             },
             maxViewsForBar = cardItems.firstOrNull()?.views ?: 1L
