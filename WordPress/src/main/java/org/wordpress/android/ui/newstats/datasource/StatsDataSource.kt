@@ -165,6 +165,48 @@ interface StatsDataSource {
         dateRange: StatsDateRange,
         max: Int = 10
     ): FileDownloadsDataResult
+
+    /**
+     * Fetches device screen size stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the device screen size data or an error
+     */
+    suspend fun fetchDevicesScreensize(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): DevicesDataResult
+
+    /**
+     * Fetches device browser stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the device browser data or an error
+     */
+    suspend fun fetchDevicesBrowser(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): DevicesDataResult
+
+    /**
+     * Fetches device platform stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the device platform data or an error
+     */
+    suspend fun fetchDevicesPlatform(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): DevicesDataResult
 }
 
 /**
@@ -472,3 +514,18 @@ data class FileDownloadDataItem(
     val name: String,
     val downloads: Long
 )
+
+/**
+ * Result wrapper for devices stats fetch operation.
+ */
+sealed class DevicesDataResult {
+    data class Success(val data: DevicesData) : DevicesDataResult()
+    data class Error(val errorType: StatsErrorType) : DevicesDataResult()
+}
+
+/**
+ * Devices data from the API.
+ * Contains top values as a map of device name to its value
+ * (percentage for screen size, view count for browser/platform).
+ */
+data class DevicesData(val items: Map<String, Double>)

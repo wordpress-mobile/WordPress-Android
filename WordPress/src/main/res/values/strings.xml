@@ -1577,6 +1577,9 @@
     <string name="stats_error_parsing">There was a problem loading the data. Please try again</string>
     <string name="stats_error_admin_url_unavailable">Unable to open WP Admin for this site</string>
 
+    <!-- stats ring chart accessibility -->
+    <string name="stats_ring_chart_entry_description">%1$s: %2$s</string>
+
     <!-- stats period selector -->
     <string name="stats_period_today">Today</string>
     <string name="stats_period_last_7_days">Last 7 days</string>
@@ -1606,6 +1609,14 @@
     <!-- Authors Stats Card -->
     <string name="stats_authors_title">Authors</string>
     <string name="stats_authors_author_header">Author</string>
+
+    <!-- Devices Stats Card -->
+    <string name="stats_devices_title">Devices</string>
+    <string name="stats_devices_screensize">Size</string>
+    <string name="stats_devices_browser">Browser</string>
+    <string name="stats_devices_platform">Platform</string>
+    <string name="stats_devices_device_header">Device</string>
+    <string name="stats_devices_percentage_header">Percentage</string>
 
     <!-- Stats Card Configuration -->
     <string name="stats_card_remove">Remove Card</string>

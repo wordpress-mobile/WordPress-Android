@@ -305,7 +305,8 @@ private fun LocationTypeSelector(
                     count = LocationType.entries.size
                 ),
                 onClick = { onTypeSelected(type) },
-                selected = type == selectedType
+                selected = type == selectedType,
+                icon = {}
             ) {
                 Text(text = stringResource(type.labelResId))
             }

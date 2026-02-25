@@ -16,6 +16,8 @@ import uniffi.wp_api.StatsReferrersParams
 import uniffi.wp_api.StatsReferrersPeriod
 import uniffi.wp_api.StatsRegionViewsParams
 import uniffi.wp_api.StatsRegionViewsPeriod
+import uniffi.wp_api.StatsDevicesParams
+import uniffi.wp_api.StatsDevicesPeriod
 import uniffi.wp_api.StatsSearchTermsParams
 import uniffi.wp_api.StatsSearchTermsPeriod
 import uniffi.wp_api.StatsTopAuthorsParams
@@ -535,6 +537,26 @@ class StatsDataSourceImpl @Inject constructor(
         )
     }
 
+    private fun buildDevicesParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsDevicesParams(
+            period = StatsDevicesPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = max.coerceAtLeast(1).toUInt(),
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsDevicesParams(
+            period = StatsDevicesPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = max.coerceAtLeast(1).toUInt(),
+            summarize = true
+        )
+    }
+
     override suspend fun fetchClicks(
         siteId: Long,
         dateRange: StatsDateRange,
@@ -571,6 +593,45 @@ class StatsDataSourceImpl @Inject constructor(
                 "fetchClicks", result
             ) {
                 ClicksDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchDevicesScreensize(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): DevicesDataResult {
+        val params = buildDevicesParams(dateRange, max)
+        val result = getOrCreateClient().request { requestBuilder ->
+            requestBuilder.statsDevicesScreensize()
+                .getStatsDevicesScreensize(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+        }
+        logResultType("fetchDevicesScreensize", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val topValues = result.response.data.topValues
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchDevicesScreensize " +
+                        "success - ${topValues.size} items"
+                )
+                DevicesDataResult.Success(
+                    DevicesData(items = topValues)
+                )
+            }
+            is WpRequestResult.WpError -> logErrorAndReturn(
+                "fetchDevicesScreensize", result
+            ) {
+                DevicesDataResult.Error(it)
+            }
+            else -> logErrorAndReturn(
+                "fetchDevicesScreensize", result
+            ) {
+                DevicesDataResult.Error(it)
             }
         }
     }
@@ -635,6 +696,45 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun fetchDevicesBrowser(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): DevicesDataResult {
+        val params = buildDevicesParams(dateRange, max)
+        val result = getOrCreateClient().request { requestBuilder ->
+            requestBuilder.statsDevicesBrowser()
+                .getStatsDevicesBrowser(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+        }
+        logResultType("fetchDevicesBrowser", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val topValues = result.response.data.topValues
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchDevicesBrowser " +
+                        "success - ${topValues.size} items"
+                )
+                DevicesDataResult.Success(
+                    DevicesData(items = topValues)
+                )
+            }
+            is WpRequestResult.WpError -> logErrorAndReturn(
+                "fetchDevicesBrowser", result
+            ) {
+                DevicesDataResult.Error(it)
+            }
+            else -> logErrorAndReturn(
+                "fetchDevicesBrowser", result
+            ) {
+                DevicesDataResult.Error(it)
+            }
+        }
+    }
+
     private fun buildVideoPlaysParams(
         dateRange: StatsDateRange,
         max: Int
@@ -691,6 +791,45 @@ class StatsDataSourceImpl @Inject constructor(
                 "fetchVideoPlays", result
             ) {
                 VideoPlaysDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchDevicesPlatform(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): DevicesDataResult {
+        val params = buildDevicesParams(dateRange, max)
+        val result = getOrCreateClient().request { requestBuilder ->
+            requestBuilder.statsDevicesPlatform()
+                .getStatsDevicesPlatform(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+        }
+        logResultType("fetchDevicesPlatform", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val topValues = result.response.data.topValues
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchDevicesPlatform " +
+                        "success - ${topValues.size} items"
+                )
+                DevicesDataResult.Success(
+                    DevicesData(items = topValues)
+                )
+            }
+            is WpRequestResult.WpError -> logErrorAndReturn(
+                "fetchDevicesPlatform", result
+            ) {
+                DevicesDataResult.Error(it)
+            }
+            else -> logErrorAndReturn(
+                "fetchDevicesPlatform", result
+            ) {
+                DevicesDataResult.Error(it)
             }
         }
     }
