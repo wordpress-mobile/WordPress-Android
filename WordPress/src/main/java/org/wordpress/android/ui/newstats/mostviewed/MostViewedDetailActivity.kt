@@ -45,12 +45,10 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.StatsCardType
-import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
-import java.util.Locale
 
 private const val EXTRA_CARD_TYPE = "extra_card_type"
 private const val EXTRA_ITEMS = "extra_items"
@@ -58,6 +56,7 @@ private const val EXTRA_TOTAL_VIEWS = "extra_total_views"
 private const val EXTRA_TOTAL_VIEWS_CHANGE = "extra_total_views_change"
 private const val EXTRA_TOTAL_VIEWS_CHANGE_PERCENT = "extra_total_views_change_percent"
 private const val EXTRA_DATE_RANGE = "extra_date_range"
+private const val EXTRA_VALUE_HEADER_RES_ID = "extra_value_header_res_id"
 
 @AndroidEntryPoint
 class MostViewedDetailActivity : BaseAppCompatActivity() {
@@ -72,6 +71,9 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
         val totalViewsChange = intent.getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L)
         val totalViewsChangePercent = intent.getDoubleExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0)
         val dateRange = intent.getStringExtra(EXTRA_DATE_RANGE) ?: ""
+        val valueHeaderResId = intent.getIntExtra(
+            EXTRA_VALUE_HEADER_RES_ID, R.string.stats_views
+        )
         // Calculate maxViewsForBar once (list is sorted by views descending)
         val maxViewsForBar = items.firstOrNull()?.views ?: 1L
 
@@ -85,6 +87,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
                     totalViewsChange = totalViewsChange,
                     totalViewsChangePercent = totalViewsChangePercent,
                     dateRange = dateRange,
+                    valueHeaderResId = valueHeaderResId,
                     onBackPressed = onBackPressedDispatcher::onBackPressed
                 )
             }
@@ -100,15 +103,22 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
             totalViews: Long,
             totalViewsChange: Long,
             totalViewsChangePercent: Double,
-            dateRange: String
+            dateRange: String,
+            valueHeaderResId: Int = R.string.stats_views
         ) {
-            val intent = Intent(context, MostViewedDetailActivity::class.java).apply {
+            val intent = Intent(
+                context, MostViewedDetailActivity::class.java
+            ).apply {
                 putExtra(EXTRA_CARD_TYPE, cardType)
                 putExtra(EXTRA_ITEMS, ArrayList(items))
                 putExtra(EXTRA_TOTAL_VIEWS, totalViews)
                 putExtra(EXTRA_TOTAL_VIEWS_CHANGE, totalViewsChange)
-                putExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, totalViewsChangePercent)
+                putExtra(
+                    EXTRA_TOTAL_VIEWS_CHANGE_PERCENT,
+                    totalViewsChangePercent
+                )
                 putExtra(EXTRA_DATE_RANGE, dateRange)
+                putExtra(EXTRA_VALUE_HEADER_RES_ID, valueHeaderResId)
             }
             context.startActivity(intent)
         }
@@ -125,6 +135,7 @@ private fun MostViewedDetailScreen(
     totalViewsChange: Long,
     totalViewsChangePercent: Double,
     dateRange: String,
+    valueHeaderResId: Int = R.string.stats_views,
     onBackPressed: () -> Unit
 ) {
     val title = stringResource(cardType.displayNameResId)
@@ -162,7 +173,10 @@ private fun MostViewedDetailScreen(
             }
 
             item {
-                ColumnHeaders(itemCount = items.size)
+                ColumnHeaders(
+                    itemCount = items.size,
+                    valueHeaderResId = valueHeaderResId
+                )
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
@@ -185,18 +199,23 @@ private fun MostViewedDetailScreen(
 }
 
 @Composable
-private fun ColumnHeaders(itemCount: Int) {
+private fun ColumnHeaders(
+    itemCount: Int,
+    valueHeaderResId: Int = R.string.stats_views
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(R.string.stats_most_viewed_top_n, itemCount),
+            text = stringResource(
+                R.string.stats_most_viewed_top_n, itemCount
+            ),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
-            text = stringResource(R.string.stats_views),
+            text = stringResource(valueHeaderResId),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -210,7 +229,9 @@ private fun DetailItemRow(
     maxViewsForBar: Long
 ) {
     val percentage = if (maxViewsForBar > 0) item.views.toFloat() / maxViewsForBar.toFloat() else 0f
-    val barColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
+    val barColor = MaterialTheme.colorScheme.primary.copy(
+        alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA
+    )
 
     Box(
         modifier = Modifier
@@ -268,35 +289,6 @@ private fun DetailItemRow(
             }
         }
     }
-}
-
-@Composable
-private fun ChangeIndicator(change: MostViewedChange) {
-    val (text, color) = when (change) {
-        is MostViewedChange.Positive -> Pair(
-            "+${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
-            StatsColors.ChangeBadgePositive
-        )
-        is MostViewedChange.Negative -> Pair(
-            "-${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
-            StatsColors.ChangeBadgeNegative
-        )
-        is MostViewedChange.NoChange -> Pair(
-            "+0 (0%)",
-            MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        is MostViewedChange.NotAvailable -> return
-    }
-
-    Text(
-        text = text,
-        style = MaterialTheme.typography.labelSmall,
-        color = color
-    )
 }
 
 @Preview(showBackground = true)

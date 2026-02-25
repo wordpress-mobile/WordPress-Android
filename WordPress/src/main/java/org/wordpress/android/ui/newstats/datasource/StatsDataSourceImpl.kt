@@ -6,16 +6,26 @@ import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.StatsCityViewsParams
 import uniffi.wp_api.StatsCityViewsPeriod
+import uniffi.wp_api.StatsClicksParams
+import uniffi.wp_api.StatsClicksPeriod
 import uniffi.wp_api.StatsCountryViewsParams
 import uniffi.wp_api.StatsCountryViewsPeriod
+import uniffi.wp_api.StatsFileDownloadsParams
+import uniffi.wp_api.StatsFileDownloadsPeriod
 import uniffi.wp_api.StatsReferrersParams
 import uniffi.wp_api.StatsReferrersPeriod
 import uniffi.wp_api.StatsRegionViewsParams
 import uniffi.wp_api.StatsRegionViewsPeriod
+import uniffi.wp_api.StatsDevicesParams
+import uniffi.wp_api.StatsDevicesPeriod
+import uniffi.wp_api.StatsSearchTermsParams
+import uniffi.wp_api.StatsSearchTermsPeriod
 import uniffi.wp_api.StatsTopAuthorsParams
 import uniffi.wp_api.StatsTopAuthorsPeriod
 import uniffi.wp_api.StatsTopPostsParams
 import uniffi.wp_api.StatsTopPostsPeriod
+import uniffi.wp_api.StatsVideoPlaysParams
+import uniffi.wp_api.StatsVideoPlaysPeriod
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
 import uniffi.wp_api.WpComLanguage
@@ -28,6 +38,7 @@ import javax.inject.Inject
  * Implementation of [StatsDataSource] that fetches stats data from the WordPress.com API
  * using the wordpress-rs library.
  */
+@Suppress("LargeClass")
 class StatsDataSourceImpl @Inject constructor(
     private val wpComApiClientProvider: WpComApiClientProvider,
     private val localeManagerWrapper: LocaleManagerWrapper
@@ -40,13 +51,22 @@ class StatsDataSourceImpl @Inject constructor(
     @Volatile
     private var accessToken: String? = null
 
-    private val wpComApiClient: WpComApiClient by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-        check(accessToken != null) { "DataSource not initialized" }
-        wpComApiClientProvider.getWpComApiClient(accessToken!!)
+    @Volatile
+    private var wpComApiClient: WpComApiClient? = null
+
+    private fun getOrCreateClient(): WpComApiClient {
+        val token = accessToken
+        check(token != null) { "DataSource not initialized" }
+        return wpComApiClient
+            ?: wpComApiClientProvider.getWpComApiClient(token)
+                .also { wpComApiClient = it }
     }
 
     override fun init(accessToken: String) {
-        this.accessToken = accessToken
+        if (this.accessToken != accessToken) {
+            this.accessToken = accessToken
+            wpComApiClient = null
+        }
     }
 
     override suspend fun fetchStatsVisits(
@@ -61,14 +81,14 @@ class StatsDataSourceImpl @Inject constructor(
             endDate = endDate,
         )
 
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsVisits().getStatsVisits(
                 wpComSiteId = siteId.toULong(),
                 params = params
             )
         }
 
-        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchStatsVisits result type: ${result::class.simpleName}")
+        logResultType("fetchStatsVisits", result)
 
         return when (result) {
             is WpRequestResult.Success -> {
@@ -135,14 +155,14 @@ class StatsDataSourceImpl @Inject constructor(
     ): TopPostsDataResult {
         val params = buildTopPostsParams(dateRange, max)
         AppLog.d(T.STATS, "fetchTopPostsAndPages - siteId=$siteId, dateRange=$dateRange, max=$max")
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsTopPosts().getStatsTopPosts(
                 wpComSiteId = siteId.toULong(),
                 params = params
             )
         }
 
-        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchTopPostsAndPages result type: ${result::class.simpleName}")
+        logResultType("fetchTopPostsAndPages", result)
 
         return when (result) {
             is WpRequestResult.Success -> {
@@ -186,14 +206,14 @@ class StatsDataSourceImpl @Inject constructor(
             )
         }
 
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsReferrers().getStatsReferrers(
                 wpComSiteId = siteId.toULong(),
                 params = params
             )
         }
 
-        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchReferrers result type: ${result::class.simpleName}")
+        logResultType("fetchReferrers", result)
 
         return when (result) {
             is WpRequestResult.Success -> {
@@ -239,14 +259,14 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): CountryViewsDataResult {
         val params = buildCountryViewsParams(dateRange, max)
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsCountryViews().getStatsCountryViews(
                 wpComSiteId = siteId.toULong(),
                 params = params
             )
         }
 
-        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchCountryViews result type: ${result::class.simpleName}")
+        logResultType("fetchCountryViews", result)
 
         return when (result) {
             is WpRequestResult.Success -> {
@@ -307,7 +327,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): RegionViewsDataResult {
         val params = buildRegionViewsParams(dateRange, max)
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsRegionViews().getStatsRegionViews(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -381,7 +401,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int
     ): CityViewsDataResult {
         val params = buildCityViewsParams(dateRange, max)
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsCityViews().getStatsCityViews(
                 wpComSiteId = siteId.toULong(),
                 params = params
@@ -458,14 +478,14 @@ class StatsDataSourceImpl @Inject constructor(
         val params = buildTopAuthorsParams(dateRange, max)
         AppLog.d(T.STATS, "fetchTopAuthors - siteId=$siteId, dateRange=$dateRange, max=$max")
 
-        val result = wpComApiClient.request { requestBuilder ->
+        val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsTopAuthors().getStatsTopAuthors(
                 wpComSiteId = siteId.toULong(),
                 params = params
             )
         }
 
-        AppLog.d(T.STATS, "StatsDataSourceImpl: fetchTopAuthors result type: ${result::class.simpleName}")
+        logResultType("fetchTopAuthors", result)
 
         return when (result) {
             is WpRequestResult.Success -> {
@@ -497,12 +517,410 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
-    private fun logResultType(methodName: String, result: WpRequestResult<*>) {
+    private fun buildClicksParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsClicksParams(
+            period = StatsClicksPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = if (max > 0) max.toUInt() else null,
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsClicksParams(
+            period = StatsClicksPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = if (max > 0) max.toUInt() else null,
+            summarize = true
+        )
+    }
+
+    private fun buildDevicesParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsDevicesParams(
+            period = StatsDevicesPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = max.coerceAtLeast(1).toUInt(),
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsDevicesParams(
+            period = StatsDevicesPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = max.coerceAtLeast(1).toUInt(),
+            summarize = true
+        )
+    }
+
+    override suspend fun fetchClicks(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): ClicksDataResult {
+        val params = buildClicksParams(dateRange, max)
+        val result = getOrCreateClient().request { api ->
+            api.statsClicks().getStatsClicks(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+        logResultType("fetchClicks", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val clicks = result.response.data
+                    .summary?.clicks.orEmpty()
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchClicks " +
+                        "success - ${clicks.size} clicks"
+                )
+                ClicksDataResult.Success(
+                    clicks.map { entry ->
+                        ClickDataItem(
+                            name = entry.name.orEmpty(),
+                            clicks = entry.views?.toLong()
+                                ?: 0L
+                        )
+                    }
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchClicks", result
+            ) {
+                ClicksDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchDevicesScreensize(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): DevicesDataResult {
+        val params = buildDevicesParams(dateRange, max)
+        val result = getOrCreateClient().request { requestBuilder ->
+            requestBuilder.statsDevicesScreensize()
+                .getStatsDevicesScreensize(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+        }
+        logResultType("fetchDevicesScreensize", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val topValues = result.response.data.topValues
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchDevicesScreensize " +
+                        "success - ${topValues.size} items"
+                )
+                DevicesDataResult.Success(
+                    DevicesData(items = topValues)
+                )
+            }
+            is WpRequestResult.WpError -> logErrorAndReturn(
+                "fetchDevicesScreensize", result
+            ) {
+                DevicesDataResult.Error(it)
+            }
+            else -> logErrorAndReturn(
+                "fetchDevicesScreensize", result
+            ) {
+                DevicesDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun buildSearchTermsParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsSearchTermsParams(
+            period = StatsSearchTermsPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = if (max > 0) max.toUInt() else null,
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsSearchTermsParams(
+            period = StatsSearchTermsPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = if (max > 0) max.toUInt() else null,
+            summarize = true
+        )
+    }
+
+    override suspend fun fetchSearchTerms(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): SearchTermsDataResult {
+        val params = buildSearchTermsParams(dateRange, max)
+        val result = getOrCreateClient().request { api ->
+            api.statsSearchTerms().getStatsSearchTerms(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+        logResultType("fetchSearchTerms", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val terms = result.response.data
+                    .summary?.searchTerms.orEmpty()
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchSearchTerms " +
+                        "success - ${terms.size} terms"
+                )
+                SearchTermsDataResult.Success(
+                    terms.map { entry ->
+                        SearchTermDataItem(
+                            name = entry.term.orEmpty(),
+                            views = entry.views?.toLong()
+                                ?: 0L
+                        )
+                    }
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchSearchTerms", result
+            ) {
+                SearchTermsDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchDevicesBrowser(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): DevicesDataResult {
+        val params = buildDevicesParams(dateRange, max)
+        val result = getOrCreateClient().request { requestBuilder ->
+            requestBuilder.statsDevicesBrowser()
+                .getStatsDevicesBrowser(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+        }
+        logResultType("fetchDevicesBrowser", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val topValues = result.response.data.topValues
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchDevicesBrowser " +
+                        "success - ${topValues.size} items"
+                )
+                DevicesDataResult.Success(
+                    DevicesData(items = topValues)
+                )
+            }
+            is WpRequestResult.WpError -> logErrorAndReturn(
+                "fetchDevicesBrowser", result
+            ) {
+                DevicesDataResult.Error(it)
+            }
+            else -> logErrorAndReturn(
+                "fetchDevicesBrowser", result
+            ) {
+                DevicesDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun buildVideoPlaysParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsVideoPlaysParams(
+            period = StatsVideoPlaysPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = if (max > 0) max.toUInt() else null,
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsVideoPlaysParams(
+            period = StatsVideoPlaysPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = if (max > 0) max.toUInt() else null,
+            summarize = true
+        )
+    }
+
+    override suspend fun fetchVideoPlays(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): VideoPlaysDataResult {
+        val params = buildVideoPlaysParams(dateRange, max)
+        val result = getOrCreateClient().request { api ->
+            api.statsVideoPlays().getStatsVideoPlays(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+        logResultType("fetchVideoPlays", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val plays = result.response.data
+                    .days.summary.data.orEmpty()
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchVideoPlays " +
+                        "success - ${plays.size} plays"
+                )
+                VideoPlaysDataResult.Success(
+                    plays.map { entry ->
+                        VideoPlayDataItem(
+                            title = entry.title.orEmpty(),
+                            views = entry.views?.toLong()
+                                ?: 0L
+                        )
+                    }
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchVideoPlays", result
+            ) {
+                VideoPlaysDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchDevicesPlatform(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): DevicesDataResult {
+        val params = buildDevicesParams(dateRange, max)
+        val result = getOrCreateClient().request { requestBuilder ->
+            requestBuilder.statsDevicesPlatform()
+                .getStatsDevicesPlatform(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+        }
+        logResultType("fetchDevicesPlatform", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val topValues = result.response.data.topValues
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: fetchDevicesPlatform " +
+                        "success - ${topValues.size} items"
+                )
+                DevicesDataResult.Success(
+                    DevicesData(items = topValues)
+                )
+            }
+            is WpRequestResult.WpError -> logErrorAndReturn(
+                "fetchDevicesPlatform", result
+            ) {
+                DevicesDataResult.Error(it)
+            }
+            else -> logErrorAndReturn(
+                "fetchDevicesPlatform", result
+            ) {
+                DevicesDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun buildFileDownloadsParams(
+        dateRange: StatsDateRange,
+        max: Int
+    ) = when (dateRange) {
+        is StatsDateRange.Preset -> StatsFileDownloadsParams(
+            period = StatsFileDownloadsPeriod.DAY,
+            date = dateRange.date,
+            num = dateRange.num.toUInt(),
+            max = if (max > 0) max.toUInt() else null,
+            summarize = true
+        )
+        is StatsDateRange.Custom -> StatsFileDownloadsParams(
+            period = StatsFileDownloadsPeriod.DAY,
+            date = dateRange.date,
+            startDate = dateRange.startDate,
+            max = if (max > 0) max.toUInt() else null,
+            summarize = true
+        )
+    }
+
+    override suspend fun fetchFileDownloads(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int
+    ): FileDownloadsDataResult {
+        val params = buildFileDownloadsParams(dateRange, max)
+        val result = getOrCreateClient().request { api ->
+            api.statsFileDownloads().getStatsFileDownloads(
+                wpComSiteId = siteId.toULong(),
+                params = params
+            )
+        }
+        logResultType("fetchFileDownloads", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val files = result.response.data
+                    .summary?.files.orEmpty()
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchFileDownloads success " +
+                        "- ${files.size} files"
+                )
+                FileDownloadsDataResult.Success(
+                    files.map { entry ->
+                        FileDownloadDataItem(
+                            name = entry.filename
+                                .orEmpty(),
+                            downloads =
+                                entry.downloads?.toLong()
+                                    ?: 0L
+                        )
+                    }
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchFileDownloads", result
+            ) {
+                FileDownloadsDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun logResultType(
+        methodName: String,
+        result: WpRequestResult<*>
+    ) {
+        val typeName = resultTypeName(result)
         AppLog.d(
             T.STATS,
-            "StatsDataSourceImpl: $methodName result type: " +
-                "${result::class.simpleName}"
+            "StatsDataSourceImpl: $methodName " +
+                "result type: $typeName"
         )
+    }
+
+    private fun resultTypeName(
+        result: WpRequestResult<*>
+    ): String = when (result) {
+        is WpRequestResult.Success -> "Success"
+        is WpRequestResult.WpError -> "WpError"
+        is WpRequestResult.ResponseParsingError<*> ->
+            "ResponseParsingError"
+        is WpRequestResult.RequestExecutionFailed<*> ->
+            "RequestExecutionFailed"
+        is WpRequestResult.InvalidHttpStatusCode<*> ->
+            "InvalidHttpStatusCode"
+        else -> "Unknown"
     }
 
     private fun <R> logErrorAndReturn(

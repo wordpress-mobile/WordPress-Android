@@ -65,6 +65,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -75,6 +76,7 @@ import org.wordpress.android.ui.newstats.locations.LocationsCard
 import org.wordpress.android.ui.newstats.locations.LocationsDetailActivity
 import org.wordpress.android.ui.newstats.locations.LocationsViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCard
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedCardUiState
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsCard
@@ -83,7 +85,14 @@ import org.wordpress.android.ui.newstats.authors.AuthorsCard
 import org.wordpress.android.ui.newstats.authors.AuthorsCardUiState
 import org.wordpress.android.ui.newstats.authors.AuthorsDetailActivity
 import org.wordpress.android.ui.newstats.authors.AuthorsViewModel
+import org.wordpress.android.ui.newstats.clicks.ClicksViewModel
+import org.wordpress.android.ui.newstats.devices.DevicesCard
+import org.wordpress.android.ui.newstats.devices.DevicesCardUiState
+import org.wordpress.android.ui.newstats.devices.DevicesViewModel
+import org.wordpress.android.ui.newstats.filedownloads.FileDownloadsViewModel
 import org.wordpress.android.ui.newstats.locations.LocationsCardUiState
+import org.wordpress.android.ui.newstats.searchterms.SearchTermsViewModel
+import org.wordpress.android.ui.newstats.videoplays.VideoPlaysViewModel
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
 import android.widget.Toast
@@ -123,7 +132,8 @@ private fun NewStatsScreen(
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
 
-    val tabs = StatsTab.entries
+    val showTabs = BuildConfig.DEBUG
+    val tabs = if (showTabs) StatsTab.entries else listOf(StatsTab.TRAFFIC)
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
     var showPeriodMenu by remember { mutableStateOf(false) }
@@ -197,25 +207,35 @@ private fun NewStatsScreen(
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            PrimaryTabRow(selectedTabIndex = pagerState.currentPage) {
-                tabs.forEachIndexed { index, tab ->
-                    Tab(
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(index)
+            if (tabs.size > 1) {
+                PrimaryTabRow(selectedTabIndex = pagerState.currentPage) {
+                    tabs.forEachIndexed { index, tab ->
+                        Tab(
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(id = tab.titleResId)
+                                )
                             }
-                        },
-                        text = { Text(text = stringResource(id = tab.titleResId)) }
-                    )
+                        )
+                    }
                 }
             }
 
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                userScrollEnabled = tabs.size > 1
             ) { page ->
-                StatsTabContent(tab = tabs[page], viewsStatsViewModel = viewsStatsViewModel)
+                StatsTabContent(
+                    tab = tabs[page],
+                    viewsStatsViewModel = viewsStatsViewModel
+                )
             }
         }
     }
@@ -231,12 +251,18 @@ private fun StatsTabContent(tab: StatsTab, viewsStatsViewModel: ViewsStatsViewMo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Suppress("LongMethod")
 private fun TrafficTabContent(
     viewsStatsViewModel: ViewsStatsViewModel,
     todaysStatsViewModel: TodaysStatsViewModel = viewModel(),
     mostViewedViewModel: MostViewedViewModel = viewModel(),
     locationsViewModel: LocationsViewModel = viewModel(),
     authorsViewModel: AuthorsViewModel = viewModel(),
+    clicksViewModel: ClicksViewModel = viewModel(),
+    searchTermsViewModel: SearchTermsViewModel = viewModel(),
+    videoPlaysViewModel: VideoPlaysViewModel = viewModel(),
+    fileDownloadsViewModel: FileDownloadsViewModel = viewModel(),
+    devicesViewModel: DevicesViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -247,6 +273,12 @@ private fun TrafficTabContent(
     val locationsUiState by locationsViewModel.uiState.collectAsState()
     val selectedLocationType by locationsViewModel.selectedLocationType.collectAsState()
     val authorsUiState by authorsViewModel.uiState.collectAsState()
+    val clicksUiState by clicksViewModel.uiState.collectAsState()
+    val searchTermsUiState by searchTermsViewModel.uiState.collectAsState()
+    val videoPlaysUiState by videoPlaysViewModel.uiState.collectAsState()
+    val fileDownloadsUiState by fileDownloadsViewModel.uiState.collectAsState()
+    val devicesUiState by devicesViewModel.uiState.collectAsState()
+    val selectedDeviceType by devicesViewModel.selectedDeviceType.collectAsState()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
@@ -256,10 +288,21 @@ private fun TrafficTabContent(
         .isReferrersRefreshing.collectAsState()
     val isLocationsRefreshing by locationsViewModel.isRefreshing.collectAsState()
     val isAuthorsRefreshing by authorsViewModel.isRefreshing.collectAsState()
+    val isClicksRefreshing by clicksViewModel.isRefreshing.collectAsState()
+    val isSearchTermsRefreshing by searchTermsViewModel
+        .isRefreshing.collectAsState()
+    val isVideoPlaysRefreshing by videoPlaysViewModel
+        .isRefreshing.collectAsState()
+    val isFileDownloadsRefreshing by fileDownloadsViewModel
+        .isRefreshing.collectAsState()
+    val isDevicesRefreshing by devicesViewModel.isRefreshing.collectAsState()
     val isRefreshing = listOf(
         isTodaysStatsRefreshing, isViewsStatsRefreshing,
         isMostViewedPostsRefreshing, isMostViewedReferrersRefreshing,
-        isLocationsRefreshing, isAuthorsRefreshing
+        isLocationsRefreshing, isAuthorsRefreshing,
+        isClicksRefreshing, isSearchTermsRefreshing,
+        isVideoPlaysRefreshing, isFileDownloadsRefreshing,
+        isDevicesRefreshing
     ).any { it }
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -295,6 +338,21 @@ private fun TrafficTabContent(
             },
             onAuthors = {
                 authorsViewModel.onPeriodChanged(selectedPeriod)
+            },
+            onClicks = {
+                clicksViewModel.onPeriodChanged(selectedPeriod)
+            },
+            onSearchTerms = {
+                searchTermsViewModel.onPeriodChanged(selectedPeriod)
+            },
+            onVideoPlays = {
+                videoPlaysViewModel.onPeriodChanged(selectedPeriod)
+            },
+            onFileDownloads = {
+                fileDownloadsViewModel.onPeriodChanged(selectedPeriod)
+            },
+            onDevices = {
+                devicesViewModel.onPeriodChanged(selectedPeriod)
             }
         )
     }
@@ -323,7 +381,12 @@ private fun TrafficTabContent(
                 mostViewedViewModel.loadReferrers()
             },
             onLocations = { locationsViewModel.loadData() },
-            onAuthors = { authorsViewModel.loadData() }
+            onAuthors = { authorsViewModel.loadData() },
+            onClicks = { clicksViewModel.loadData() },
+            onSearchTerms = { searchTermsViewModel.loadData() },
+            onVideoPlays = { videoPlaysViewModel.loadData() },
+            onFileDownloads = { fileDownloadsViewModel.loadData() },
+            onDevices = { devicesViewModel.loadData() }
         )
     }
 
@@ -367,7 +430,14 @@ private fun TrafficTabContent(
                     mostViewedViewModel.refreshReferrers()
                 },
                 onLocations = { locationsViewModel.refresh() },
-                onAuthors = { authorsViewModel.refresh() }
+                onAuthors = { authorsViewModel.refresh() },
+                onClicks = { clicksViewModel.refresh() },
+                onSearchTerms = { searchTermsViewModel.refresh() },
+                onVideoPlays = { videoPlaysViewModel.refresh() },
+                onFileDownloads = {
+                    fileDownloadsViewModel.refresh()
+                },
+                onDevices = { devicesViewModel.refresh() }
             )
         },
         indicator = {
@@ -502,6 +572,39 @@ private fun TrafficTabContent(
                             context = context
                         )
                     )
+                    StatsCardType.DEVICES -> DevicesCard(
+                        uiState = devicesUiState,
+                        selectedDeviceType = selectedDeviceType,
+                        onDeviceTypeChanged =
+                            devicesViewModel::onDeviceTypeChanged,
+                        onRetry = devicesViewModel::onRetry,
+                        onRemoveCard = {
+                            newStatsViewModel.removeCard(cardType)
+                        },
+                        cardPosition = cardPosition,
+                        onMoveUp = {
+                            newStatsViewModel.moveCardUp(cardType)
+                        },
+                        onMoveToTop = {
+                            newStatsViewModel.moveCardToTop(cardType)
+                        },
+                        onMoveDown = {
+                            newStatsViewModel.moveCardDown(cardType)
+                        },
+                        onMoveToBottom = {
+                            newStatsViewModel.moveCardToBottom(
+                                cardType
+                            )
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (devicesUiState as?
+                                DevicesCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl =
+                                devicesViewModel::getAdminUrl,
+                            context = context
+                        )
+                    )
                     StatsCardType.AUTHORS -> AuthorsCard(
                         uiState = authorsUiState,
                         onShowAllClick = {
@@ -527,6 +630,171 @@ private fun TrafficTabContent(
                                 AuthorsCardUiState.Error)
                                 ?.isAuthError == true,
                             getAdminUrl = authorsViewModel::getAdminUrl,
+                            context = context
+                        )
+                    )
+                    StatsCardType.CLICKS -> MostViewedCard(
+                        uiState = clicksUiState,
+                        cardType = cardType,
+                        onShowAllClick = {
+                            val detailData = clicksViewModel.getDetailData()
+                            MostViewedDetailActivity.start(
+                                context = context,
+                                cardType = detailData.cardType,
+                                items = detailData.items,
+                                totalViews = detailData.totalViews,
+                                totalViewsChange = detailData.totalViewsChange,
+                                totalViewsChangePercent =
+                                    detailData.totalViewsChangePercent,
+                                dateRange = detailData.dateRange,
+                                valueHeaderResId = R.string.stats_clicks_label
+                            )
+                        },
+                        onRetry = clicksViewModel::onRetry,
+                        onRemoveCard = {
+                            newStatsViewModel.removeCard(cardType)
+                        },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = {
+                            newStatsViewModel.moveCardToTop(cardType)
+                        },
+                        onMoveDown = {
+                            newStatsViewModel.moveCardDown(cardType)
+                        },
+                        onMoveToBottom = {
+                            newStatsViewModel.moveCardToBottom(cardType)
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (clicksUiState as?
+                                MostViewedCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl = clicksViewModel::getAdminUrl,
+                            context = context
+                        )
+                    )
+                    StatsCardType.SEARCH_TERMS -> MostViewedCard(
+                        uiState = searchTermsUiState,
+                        cardType = cardType,
+                        onShowAllClick = {
+                            val detailData =
+                                searchTermsViewModel.getDetailData()
+                            MostViewedDetailActivity.start(
+                                context = context,
+                                cardType = detailData.cardType,
+                                items = detailData.items,
+                                totalViews = detailData.totalViews,
+                                totalViewsChange = detailData.totalViewsChange,
+                                totalViewsChangePercent =
+                                    detailData.totalViewsChangePercent,
+                                dateRange = detailData.dateRange
+                            )
+                        },
+                        onRetry = searchTermsViewModel::onRetry,
+                        onRemoveCard = {
+                            newStatsViewModel.removeCard(cardType)
+                        },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = {
+                            newStatsViewModel.moveCardToTop(cardType)
+                        },
+                        onMoveDown = {
+                            newStatsViewModel.moveCardDown(cardType)
+                        },
+                        onMoveToBottom = {
+                            newStatsViewModel.moveCardToBottom(cardType)
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (searchTermsUiState as?
+                                MostViewedCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl =
+                                searchTermsViewModel::getAdminUrl,
+                            context = context
+                        )
+                    )
+                    StatsCardType.VIDEO_PLAYS -> MostViewedCard(
+                        uiState = videoPlaysUiState,
+                        cardType = cardType,
+                        onShowAllClick = {
+                            val detailData =
+                                videoPlaysViewModel.getDetailData()
+                            MostViewedDetailActivity.start(
+                                context = context,
+                                cardType = detailData.cardType,
+                                items = detailData.items,
+                                totalViews = detailData.totalViews,
+                                totalViewsChange = detailData.totalViewsChange,
+                                totalViewsChangePercent =
+                                    detailData.totalViewsChangePercent,
+                                dateRange = detailData.dateRange
+                            )
+                        },
+                        onRetry = videoPlaysViewModel::onRetry,
+                        onRemoveCard = {
+                            newStatsViewModel.removeCard(cardType)
+                        },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = {
+                            newStatsViewModel.moveCardToTop(cardType)
+                        },
+                        onMoveDown = {
+                            newStatsViewModel.moveCardDown(cardType)
+                        },
+                        onMoveToBottom = {
+                            newStatsViewModel.moveCardToBottom(cardType)
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (videoPlaysUiState as?
+                                MostViewedCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl =
+                                videoPlaysViewModel::getAdminUrl,
+                            context = context
+                        )
+                    )
+                    StatsCardType.FILE_DOWNLOADS -> MostViewedCard(
+                        uiState = fileDownloadsUiState,
+                        cardType = cardType,
+                        onShowAllClick = {
+                            val detailData =
+                                fileDownloadsViewModel.getDetailData()
+                            MostViewedDetailActivity.start(
+                                context = context,
+                                cardType = detailData.cardType,
+                                items = detailData.items,
+                                totalViews = detailData.totalViews,
+                                totalViewsChange = detailData.totalViewsChange,
+                                totalViewsChangePercent =
+                                    detailData.totalViewsChangePercent,
+                                dateRange = detailData.dateRange,
+                                valueHeaderResId =
+                                    R.string.stats_file_downloads_value_label
+                            )
+                        },
+                        onRetry = fileDownloadsViewModel::onRetry,
+                        onRemoveCard = {
+                            newStatsViewModel.removeCard(cardType)
+                        },
+                        cardPosition = cardPosition,
+                        onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
+                        onMoveToTop = {
+                            newStatsViewModel.moveCardToTop(cardType)
+                        },
+                        onMoveDown = {
+                            newStatsViewModel.moveCardDown(cardType)
+                        },
+                        onMoveToBottom = {
+                            newStatsViewModel.moveCardToBottom(cardType)
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (fileDownloadsUiState as?
+                                MostViewedCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl =
+                                fileDownloadsViewModel::getAdminUrl,
                             context = context
                         )
                     )
@@ -568,7 +836,12 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     onMostViewedPosts: () -> Unit,
     onMostViewedReferrers: () -> Unit,
     onLocations: () -> Unit,
-    onAuthors: () -> Unit
+    onAuthors: () -> Unit,
+    onClicks: () -> Unit,
+    onSearchTerms: () -> Unit,
+    onVideoPlays: () -> Unit,
+    onFileDownloads: () -> Unit,
+    onDevices: () -> Unit
 ) {
     if (StatsCardType.TODAYS_STATS in this) onTodaysStats()
     if (StatsCardType.VIEWS_STATS in this) onViewsStats()
@@ -580,6 +853,11 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     }
     if (StatsCardType.LOCATIONS in this) onLocations()
     if (StatsCardType.AUTHORS in this) onAuthors()
+    if (StatsCardType.CLICKS in this) onClicks()
+    if (StatsCardType.SEARCH_TERMS in this) onSearchTerms()
+    if (StatsCardType.VIDEO_PLAYS in this) onVideoPlays()
+    if (StatsCardType.FILE_DOWNLOADS in this) onFileDownloads()
+    if (StatsCardType.DEVICES in this) onDevices()
 }
 
 @Composable

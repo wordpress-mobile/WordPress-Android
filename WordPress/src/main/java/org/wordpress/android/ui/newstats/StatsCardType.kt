@@ -15,7 +15,12 @@ enum class StatsCardType(
     MOST_VIEWED_POSTS_AND_PAGES(R.string.stats_most_viewed_posts_and_pages),
     MOST_VIEWED_REFERRERS(R.string.stats_most_viewed_referrers),
     LOCATIONS(R.string.stats_countries_location_header),
-    AUTHORS(R.string.stats_authors_title);
+    AUTHORS(R.string.stats_authors_title),
+    CLICKS(R.string.stats_clicks),
+    SEARCH_TERMS(R.string.stats_search_terms),
+    VIDEO_PLAYS(R.string.stats_videos),
+    FILE_DOWNLOADS(R.string.stats_file_downloads),
+    DEVICES(R.string.stats_devices_title);
 
     companion object {
         /**
@@ -27,7 +32,8 @@ enum class StatsCardType(
             MOST_VIEWED_POSTS_AND_PAGES,
             MOST_VIEWED_REFERRERS,
             LOCATIONS,
-            AUTHORS
+            AUTHORS,
+            DEVICES
         )
     }
 }

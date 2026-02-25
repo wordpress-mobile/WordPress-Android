@@ -1578,6 +1578,9 @@
     <string name="stats_error_parsing">There was a problem loading the data. Please try again</string>
     <string name="stats_error_admin_url_unavailable">Unable to open WP Admin for this site</string>
 
+    <!-- stats ring chart accessibility -->
+    <string name="stats_ring_chart_entry_description">%1$s: %2$d views</string>
+
     <!-- stats period selector -->
     <string name="stats_period_today">Today</string>
     <string name="stats_period_last_7_days">Last 7 days</string>

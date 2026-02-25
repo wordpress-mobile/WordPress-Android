@@ -109,6 +109,104 @@ interface StatsDataSource {
         dateRange: StatsDateRange,
         max: Int = 10
     ): TopAuthorsDataResult
+
+    /**
+     * Fetches clicks stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the clicks data or an error
+     */
+    suspend fun fetchClicks(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): ClicksDataResult
+
+    /**
+     * Fetches search terms stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the search terms data or an error
+     */
+    suspend fun fetchSearchTerms(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): SearchTermsDataResult
+
+    /**
+     * Fetches video plays stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the video plays data or an error
+     */
+    suspend fun fetchVideoPlays(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): VideoPlaysDataResult
+
+    /**
+     * Fetches file downloads stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the file downloads data or an error
+     */
+    suspend fun fetchFileDownloads(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): FileDownloadsDataResult
+
+    /**
+     * Fetches device screen size stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the device screen size data or an error
+     */
+    suspend fun fetchDevicesScreensize(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): DevicesDataResult
+
+    /**
+     * Fetches device browser stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the device browser data or an error
+     */
+    suspend fun fetchDevicesBrowser(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): DevicesDataResult
+
+    /**
+     * Fetches device platform stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param dateRange The date range parameters for the query
+     * @param max Maximum number of items to return
+     * @return Result containing the device platform data or an error
+     */
+    suspend fun fetchDevicesPlatform(
+        siteId: Long,
+        dateRange: StatsDateRange,
+        max: Int = 10
+    ): DevicesDataResult
 }
 
 /**
@@ -336,3 +434,98 @@ data class TopAuthorItem(
     val avatarUrl: String?,
     val views: Long
 )
+
+/**
+ * Result wrapper for clicks fetch operation.
+ */
+sealed class ClicksDataResult {
+    data class Success(
+        val items: List<ClickDataItem>
+    ) : ClicksDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : ClicksDataResult()
+}
+
+/**
+ * A single click item from the API.
+ */
+data class ClickDataItem(
+    val name: String,
+    val clicks: Long
+)
+
+/**
+ * Result wrapper for search terms fetch operation.
+ */
+sealed class SearchTermsDataResult {
+    data class Success(
+        val items: List<SearchTermDataItem>
+    ) : SearchTermsDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : SearchTermsDataResult()
+}
+
+/**
+ * A single search term item from the API.
+ */
+data class SearchTermDataItem(
+    val name: String,
+    val views: Long
+)
+
+/**
+ * Result wrapper for video plays fetch operation.
+ */
+sealed class VideoPlaysDataResult {
+    data class Success(
+        val items: List<VideoPlayDataItem>
+    ) : VideoPlaysDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : VideoPlaysDataResult()
+}
+
+/**
+ * A single video play item from the API.
+ */
+data class VideoPlayDataItem(
+    val title: String,
+    val views: Long
+)
+
+/**
+ * Result wrapper for file downloads fetch operation.
+ */
+sealed class FileDownloadsDataResult {
+    data class Success(
+        val items: List<FileDownloadDataItem>
+    ) : FileDownloadsDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : FileDownloadsDataResult()
+}
+
+/**
+ * A single file download item from the API.
+ */
+data class FileDownloadDataItem(
+    val name: String,
+    val downloads: Long
+)
+
+/**
+ * Result wrapper for devices stats fetch operation.
+ */
+sealed class DevicesDataResult {
+    data class Success(val data: DevicesData) : DevicesDataResult()
+    data class Error(val errorType: StatsErrorType) : DevicesDataResult()
+}
+
+/**
+ * Devices data from the API.
+ * Contains top values as a map of device name to its value
+ * (percentage for screen size, view count for browser/platform).
+ */
+data class DevicesData(val items: Map<String, Double>)
