@@ -110,10 +110,10 @@ class NewStatsActivity : BaseAppCompatActivity() {
     }
 }
 
-private enum class StatsTab(val titleResId: Int, val debugOnly: Boolean = false) {
+private enum class StatsTab(val titleResId: Int) {
     TRAFFIC(R.string.stats_traffic),
-    INSIGHTS(R.string.stats_insights, debugOnly = true),
-    SUBSCRIBERS(R.string.subscribers, debugOnly = true)
+    INSIGHTS(R.string.stats_insights),
+    SUBSCRIBERS(R.string.subscribers)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,7 +124,8 @@ private fun NewStatsScreen(
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
 
-    val tabs = StatsTab.entries.filter { !it.debugOnly || BuildConfig.DEBUG }
+    val showTabs = BuildConfig.DEBUG
+    val tabs = if (showTabs) StatsTab.entries else listOf(StatsTab.TRAFFIC)
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
     var showPeriodMenu by remember { mutableStateOf(false) }
@@ -198,25 +199,35 @@ private fun NewStatsScreen(
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            PrimaryTabRow(selectedTabIndex = pagerState.currentPage) {
-                tabs.forEachIndexed { index, tab ->
-                    Tab(
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(index)
+            if (tabs.size > 1) {
+                PrimaryTabRow(selectedTabIndex = pagerState.currentPage) {
+                    tabs.forEachIndexed { index, tab ->
+                        Tab(
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(id = tab.titleResId)
+                                )
                             }
-                        },
-                        text = { Text(text = stringResource(id = tab.titleResId)) }
-                    )
+                        )
+                    }
                 }
             }
 
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                userScrollEnabled = tabs.size > 1
             ) { page ->
-                StatsTabContent(tab = tabs[page], viewsStatsViewModel = viewsStatsViewModel)
+                StatsTabContent(
+                    tab = tabs[page],
+                    viewsStatsViewModel = viewsStatsViewModel
+                )
             }
         }
     }
