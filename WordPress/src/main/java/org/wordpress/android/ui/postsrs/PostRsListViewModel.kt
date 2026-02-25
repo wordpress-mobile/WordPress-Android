@@ -20,12 +20,15 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient.PostActionResult
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -50,6 +53,8 @@ class PostRsListViewModel @Inject constructor(
     private val postStore: PostStore,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val accountStore: AccountStore,
+    private val appPrefsWrapper: AppPrefsWrapper,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> = _tabStates.asStateFlow()
@@ -75,6 +80,24 @@ class PostRsListViewModel @Inject constructor(
     private val _site: SiteModel? = selectedSiteRepository.getSelectedSite()
     private val site: SiteModel
         get() = requireNotNull(_site) { "No selected site — Activity should have finished" }
+
+    val avatarUrl: String? = accountStore.account?.avatarUrl
+
+    val isAuthorFilterSupported: Boolean by lazy {
+        _site != null &&
+            _site.isUsingWpComRestApi &&
+            _site.hasCapabilityEditOthersPosts &&
+            (_site.isSingleUserSite != null && !_site.isSingleUserSite)
+    }
+
+    private val _authorFilter = MutableStateFlow(
+        if (isAuthorFilterSupported) {
+            appPrefsWrapper.postListAuthorSelection
+        } else {
+            AuthorFilterSelection.EVERYONE
+        }
+    )
+    val authorFilter: StateFlow<AuthorFilterSelection> = _authorFilter.asStateFlow()
 
     init {
         if (_site == null) {
@@ -142,6 +165,19 @@ class PostRsListViewModel @Inject constructor(
     fun onSearchClose(activeTab: PostRsListTab) {
         _isSearchActive.value = false
         _searchQuery.value = ""
+        clearCollections()
+        initTab(activeTab)
+    }
+
+    /**
+     * Changes the author filter, persists the preference, then tears down
+     * and rebuilds all collections so the new filter takes effect.
+     */
+    @MainThread
+    fun onAuthorFilterChanged(selection: AuthorFilterSelection, activeTab: PostRsListTab) {
+        if (selection == _authorFilter.value) return
+        appPrefsWrapper.postListAuthorSelection = selection
+        _authorFilter.value = selection
         clearCollections()
         initTab(activeTab)
     }
@@ -435,11 +471,17 @@ class PostRsListViewModel @Inject constructor(
     ): ObservableMetadataCollection = withContext(Dispatchers.IO) {
         val service = serviceProvider.getService(site)
         val query = _searchQuery.value
+        val authorIds = if (_authorFilter.value == AuthorFilterSelection.ME) {
+            accountStore.account?.userId?.let { listOf(it) } ?: emptyList()
+        } else {
+            emptyList()
+        }
         val filter = PostListFilter(
             status = if (query.isNotBlank()) ALL_STATUSES else tab.statuses,
             order = tab.order,
             orderby = WpApiParamPostsOrderBy.DATE,
-            search = query.ifBlank { null }
+            search = query.ifBlank { null },
+            author = authorIds
         )
         service.posts().getObservablePostMetadataCollectionWithEditContext(
             endpointType = PostEndpointType.Posts,
@@ -590,6 +632,7 @@ class PostRsListViewModel @Inject constructor(
 
         updateTabUiState(tab) {
             copy(
+                isLoading = isLoading && fetchingFirstPage,
                 isRefreshing = isUserRefresh && fetchingFirstPage,
                 isLoadingMore = listInfo?.state == ListState.FETCHING_NEXT_PAGE,
                 canLoadMore = morePages,

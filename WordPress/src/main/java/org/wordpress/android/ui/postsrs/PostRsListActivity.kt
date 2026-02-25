@@ -38,12 +38,16 @@ class PostRsListActivity : BaseAppCompatActivity() {
             val tabStates by viewModel.tabStates.collectAsState()
             val isSearchActive by viewModel.isSearchActive.collectAsState()
             val searchQuery by viewModel.searchQuery.collectAsState()
+            val authorFilter by viewModel.authorFilter.collectAsState()
             val confirmation by viewModel.pendingConfirmation.collectAsState()
             AppThemeM3 {
                 PostRsListScreen(
                     tabStates = tabStates,
                     isSearchActive = isSearchActive,
                     searchQuery = searchQuery,
+                    authorFilter = authorFilter,
+                    isAuthorFilterSupported = viewModel.isAuthorFilterSupported,
+                    avatarUrl = viewModel.avatarUrl,
                     confirmationDialog = ConfirmationDialogState(
                         pending = confirmation,
                         onConfirm = viewModel::onConfirmPendingAction,
@@ -52,6 +56,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     onSearchOpen = viewModel::onSearchOpen,
                     onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onSearchClose = viewModel::onSearchClose,
+                    onAuthorFilterChanged = viewModel::onAuthorFilterChanged,
                     onInitTab = viewModel::initTab,
                     onRefreshTab = { tab -> viewModel.refreshTab(tab, isUserRefresh = true) },
                     onLoadMore = viewModel::loadMorePosts,

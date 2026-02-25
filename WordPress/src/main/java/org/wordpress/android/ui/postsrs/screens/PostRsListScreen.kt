@@ -1,20 +1,27 @@
 package org.wordpress.android.ui.postsrs.screens
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -30,19 +37,26 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.ConfirmationDialogState
 import org.wordpress.android.ui.postsrs.PendingConfirmation
 import org.wordpress.android.ui.postsrs.PostRsListTab
@@ -56,10 +70,14 @@ fun PostRsListScreen(
     tabStates: Map<PostRsListTab, PostTabUiState>,
     isSearchActive: Boolean,
     searchQuery: String,
+    authorFilter: AuthorFilterSelection,
+    isAuthorFilterSupported: Boolean,
+    avatarUrl: String?,
     confirmationDialog: ConfirmationDialogState,
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PostRsListTab) -> Unit,
     onSearchClose: (PostRsListTab) -> Unit,
+    onAuthorFilterChanged: (AuthorFilterSelection, PostRsListTab) -> Unit,
     onInitTab: (PostRsListTab) -> Unit,
     onRefreshTab: (PostRsListTab) -> Unit,
     onLoadMore: (PostRsListTab) -> Unit,
@@ -126,6 +144,15 @@ fun PostRsListScreen(
                             }
                         }
                     } else {
+                        if (isAuthorFilterSupported) {
+                            AuthorFilterButton(
+                                authorFilter = authorFilter,
+                                avatarUrl = avatarUrl,
+                                onSelectionChanged = { selection ->
+                                    onAuthorFilterChanged(selection, activeTab)
+                                }
+                            )
+                        }
                         IconButton(onClick = onSearchOpen) {
                             Icon(
                                 Icons.Default.Search,
@@ -213,6 +240,90 @@ fun PostRsListScreen(
             onDismiss = confirmationDialog.onDismiss
         )
         null -> {}
+    }
+}
+
+@Composable
+private fun AuthorFilterButton(
+    authorFilter: AuthorFilterSelection,
+    avatarUrl: String?,
+    onSelectionChanged: (AuthorFilterSelection) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val hasAvatar = !avatarUrl.isNullOrBlank()
+    val contentDesc = stringResource(R.string.post_list_toggle_author_filter)
+
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            if (authorFilter == AuthorFilterSelection.ME && hasAvatar) {
+                AsyncImage(
+                    model = avatarUrl,
+                    contentDescription = contentDesc,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clip(CircleShape)
+                )
+            } else {
+                Icon(
+                    if (authorFilter == AuthorFilterSelection.ME) {
+                        Icons.Filled.Person
+                    } else {
+                        Icons.Outlined.Person
+                    },
+                    contentDescription = contentDesc
+                )
+            }
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            AuthorFilterSelection.entries.forEach { selection ->
+                val label = when (selection) {
+                    AuthorFilterSelection.ME -> stringResource(R.string.me)
+                    AuthorFilterSelection.EVERYONE ->
+                        stringResource(R.string.everyone)
+                }
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = label,
+                            color = if (selection == authorFilter) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                Color.Unspecified
+                            }
+                        )
+                    },
+                    leadingIcon = {
+                        if (selection == AuthorFilterSelection.ME && hasAvatar) {
+                            AsyncImage(
+                                model = avatarUrl,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .clip(CircleShape)
+                            )
+                        } else {
+                            Icon(
+                                if (selection == AuthorFilterSelection.ME) {
+                                    Icons.Filled.Person
+                                } else {
+                                    Icons.Outlined.Person
+                                },
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    onClick = {
+                        expanded = false
+                        onSelectionChanged(selection)
+                    }
+                )
+            }
+        }
     }
 }
 
