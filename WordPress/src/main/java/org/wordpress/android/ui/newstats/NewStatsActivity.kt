@@ -86,6 +86,9 @@ import org.wordpress.android.ui.newstats.authors.AuthorsCardUiState
 import org.wordpress.android.ui.newstats.authors.AuthorsDetailActivity
 import org.wordpress.android.ui.newstats.authors.AuthorsViewModel
 import org.wordpress.android.ui.newstats.clicks.ClicksViewModel
+import org.wordpress.android.ui.newstats.devices.DevicesCard
+import org.wordpress.android.ui.newstats.devices.DevicesCardUiState
+import org.wordpress.android.ui.newstats.devices.DevicesViewModel
 import org.wordpress.android.ui.newstats.filedownloads.FileDownloadsViewModel
 import org.wordpress.android.ui.newstats.locations.LocationsCardUiState
 import org.wordpress.android.ui.newstats.searchterms.SearchTermsViewModel
@@ -259,6 +262,7 @@ private fun TrafficTabContent(
     searchTermsViewModel: SearchTermsViewModel = viewModel(),
     videoPlaysViewModel: VideoPlaysViewModel = viewModel(),
     fileDownloadsViewModel: FileDownloadsViewModel = viewModel(),
+    devicesViewModel: DevicesViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -273,6 +277,8 @@ private fun TrafficTabContent(
     val searchTermsUiState by searchTermsViewModel.uiState.collectAsState()
     val videoPlaysUiState by videoPlaysViewModel.uiState.collectAsState()
     val fileDownloadsUiState by fileDownloadsViewModel.uiState.collectAsState()
+    val devicesUiState by devicesViewModel.uiState.collectAsState()
+    val selectedDeviceType by devicesViewModel.selectedDeviceType.collectAsState()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
@@ -289,12 +295,14 @@ private fun TrafficTabContent(
         .isRefreshing.collectAsState()
     val isFileDownloadsRefreshing by fileDownloadsViewModel
         .isRefreshing.collectAsState()
+    val isDevicesRefreshing by devicesViewModel.isRefreshing.collectAsState()
     val isRefreshing = listOf(
         isTodaysStatsRefreshing, isViewsStatsRefreshing,
         isMostViewedPostsRefreshing, isMostViewedReferrersRefreshing,
         isLocationsRefreshing, isAuthorsRefreshing,
         isClicksRefreshing, isSearchTermsRefreshing,
-        isVideoPlaysRefreshing, isFileDownloadsRefreshing
+        isVideoPlaysRefreshing, isFileDownloadsRefreshing,
+        isDevicesRefreshing
     ).any { it }
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -342,6 +350,9 @@ private fun TrafficTabContent(
             },
             onFileDownloads = {
                 fileDownloadsViewModel.onPeriodChanged(selectedPeriod)
+            },
+            onDevices = {
+                devicesViewModel.onPeriodChanged(selectedPeriod)
             }
         )
     }
@@ -374,7 +385,8 @@ private fun TrafficTabContent(
             onClicks = { clicksViewModel.loadData() },
             onSearchTerms = { searchTermsViewModel.loadData() },
             onVideoPlays = { videoPlaysViewModel.loadData() },
-            onFileDownloads = { fileDownloadsViewModel.loadData() }
+            onFileDownloads = { fileDownloadsViewModel.loadData() },
+            onDevices = { devicesViewModel.loadData() }
         )
     }
 
@@ -424,7 +436,8 @@ private fun TrafficTabContent(
                 onVideoPlays = { videoPlaysViewModel.refresh() },
                 onFileDownloads = {
                     fileDownloadsViewModel.refresh()
-                }
+                },
+                onDevices = { devicesViewModel.refresh() }
             )
         },
         indicator = {
@@ -556,6 +569,39 @@ private fun TrafficTabContent(
                                 LocationsCardUiState.Error)
                                 ?.isAuthError == true,
                             getAdminUrl = locationsViewModel::getAdminUrl,
+                            context = context
+                        )
+                    )
+                    StatsCardType.DEVICES -> DevicesCard(
+                        uiState = devicesUiState,
+                        selectedDeviceType = selectedDeviceType,
+                        onDeviceTypeChanged =
+                            devicesViewModel::onDeviceTypeChanged,
+                        onRetry = devicesViewModel::onRetry,
+                        onRemoveCard = {
+                            newStatsViewModel.removeCard(cardType)
+                        },
+                        cardPosition = cardPosition,
+                        onMoveUp = {
+                            newStatsViewModel.moveCardUp(cardType)
+                        },
+                        onMoveToTop = {
+                            newStatsViewModel.moveCardToTop(cardType)
+                        },
+                        onMoveDown = {
+                            newStatsViewModel.moveCardDown(cardType)
+                        },
+                        onMoveToBottom = {
+                            newStatsViewModel.moveCardToBottom(
+                                cardType
+                            )
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (devicesUiState as?
+                                DevicesCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl =
+                                devicesViewModel::getAdminUrl,
                             context = context
                         )
                     )
@@ -794,7 +840,8 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     onClicks: () -> Unit,
     onSearchTerms: () -> Unit,
     onVideoPlays: () -> Unit,
-    onFileDownloads: () -> Unit
+    onFileDownloads: () -> Unit,
+    onDevices: () -> Unit
 ) {
     if (StatsCardType.TODAYS_STATS in this) onTodaysStats()
     if (StatsCardType.VIEWS_STATS in this) onViewsStats()
@@ -810,6 +857,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     if (StatsCardType.SEARCH_TERMS in this) onSearchTerms()
     if (StatsCardType.VIDEO_PLAYS in this) onVideoPlays()
     if (StatsCardType.FILE_DOWNLOADS in this) onFileDownloads()
+    if (StatsCardType.DEVICES in this) onDevices()
 }
 
 @Composable

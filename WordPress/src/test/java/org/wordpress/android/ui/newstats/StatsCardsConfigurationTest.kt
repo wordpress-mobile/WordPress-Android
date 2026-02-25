@@ -27,7 +27,8 @@ class StatsCardsConfigurationTest {
             StatsCardType.CLICKS,
             StatsCardType.SEARCH_TERMS,
             StatsCardType.VIDEO_PLAYS,
-            StatsCardType.FILE_DOWNLOADS
+            StatsCardType.FILE_DOWNLOADS,
+            StatsCardType.DEVICES
         )
     }
 
