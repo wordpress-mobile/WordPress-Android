@@ -302,6 +302,8 @@ public class LoginActivity extends BaseAppCompatActivity implements
      * This is the common exit point for successful logins.
      */
     private void navigateToMainActivityOrFinish() {
+        startPostLoginServices();
+
         LoginFlow.CompletionBehavior behavior = getLoginFlow().getCompletionBehavior();
         if (behavior == LoginFlow.CompletionBehavior.MAIN_ACTIVITY) {
             // Select the primary site after WP.com login
@@ -510,17 +512,6 @@ public class LoginActivity extends BaseAppCompatActivity implements
 
     @Override public AndroidInjector<Object> androidInjector() {
         return mDispatchingAndroidInjector;
-    }
-
-    public void startOver() {
-        // Not used in WordPress app
-    }
-
-    public void gotConnectedSiteInfo(
-            @NonNull String siteAddress,
-            @Nullable String redirectUrl,
-            boolean hasJetpack) {
-        // Not used in WordPress app
     }
 
     public void handleSiteAddressError(ConnectSiteInfoPayload siteInfo) {
