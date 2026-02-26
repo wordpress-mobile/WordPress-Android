@@ -305,6 +305,20 @@ class PostRsListViewModel @Inject constructor(
         _events.trySend(PostRsListEvent.EditPost(site, newPost))
     }
 
+    /**
+     * Returns a user-friendly error message. Prefers the no-network string
+     * when the device is offline; otherwise falls back to the generic error.
+     * Raw exception/API messages are never surfaced to the user.
+     */
+    private fun friendlyErrorMessage(): String {
+        val resId = if (!networkUtilsWrapper.isNetworkAvailable()) {
+            R.string.no_network_message
+        } else {
+            R.string.error_generic
+        }
+        return resourceProvider.getString(resId)
+    }
+
     private fun checkNetwork(): Boolean {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
@@ -466,9 +480,7 @@ class PostRsListViewModel @Inject constructor(
                 AppLog.e(AppLog.T.POSTS, "Failed to init RS post list tab", e)
                 initializingTabs.remove(tab)
                 updateTabUiState(tab) {
-                    PostTabUiState(
-                        error = e.message ?: resourceProvider.getString(R.string.error_generic)
-                    )
+                    PostTabUiState(error = friendlyErrorMessage())
                 }
             }
         }
@@ -553,8 +565,7 @@ class PostRsListViewModel @Inject constructor(
                     updateTabUiState(tab) {
                         copy(
                             isLoading = false, isRefreshing = false,
-                            error = e.message
-                                ?: resourceProvider.getString(R.string.error_generic)
+                            error = friendlyErrorMessage()
                         )
                     }
                 }
@@ -708,12 +719,7 @@ class PostRsListViewModel @Inject constructor(
 
         val isError = listInfo?.state == ListState.ERROR
         val hasPosts = getTabUiState(tab).posts.isNotEmpty()
-        val errorMessage = if (isError) {
-            listInfo.errorMessage
-                ?: resourceProvider.getString(R.string.error_generic)
-        } else {
-            null
-        }
+        val errorMessage = if (isError) friendlyErrorMessage() else null
 
         if (isError && hasPosts) {
             updateTabUiState(tab) {
@@ -727,8 +733,7 @@ class PostRsListViewModel @Inject constructor(
             }
             _snackbarMessages.trySend(
                 SnackbarMessage(
-                    message = errorMessage
-                        ?: resourceProvider.getString(R.string.error_generic),
+                    message = errorMessage.orEmpty(),
                     actionLabel = resourceProvider.getString(R.string.retry),
                     onAction = { refreshTab(tab) }
                 )
