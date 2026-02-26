@@ -50,7 +50,13 @@ class WPcomLoginHelper @Inject constructor(
         onSuccess: Runnable,
         onFailure: java.util.function.Consumer<Exception>
     ) {
-        val code = data.toUri().getQueryParameter("code") ?: return
+        val code = data.toUri().getQueryParameter("code")
+        if (code == null) {
+            onFailure.accept(
+                IllegalArgumentException("Missing OAuth code in callback")
+            )
+            return
+        }
 
         scope.launch {
             try {
