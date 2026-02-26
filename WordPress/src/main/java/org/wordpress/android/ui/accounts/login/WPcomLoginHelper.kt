@@ -72,6 +72,7 @@ class WPcomLoginHelper @Inject constructor(
 
     fun dispose() {
         scope.cancel()
+        customTabsServiceConnection.unbind()
     }
 
     fun bindCustomTabsService(context: Context) {
@@ -82,6 +83,7 @@ class WPcomLoginHelper @Inject constructor(
 class ServiceConnection(
     var uri: Uri
 ) : CustomTabsServiceConnection() {
+    private var boundContext: Context? = null
     private var client: CustomTabsClient? = null
     private var session: CustomTabsSession? = null
 
@@ -124,5 +126,13 @@ class ServiceConnection(
             packageName,
             this
         )
+        boundContext = context
+    }
+
+    fun unbind() {
+        boundContext?.unbindService(this)
+        boundContext = null
+        client = null
+        session = null
     }
 }
