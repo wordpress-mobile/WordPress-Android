@@ -84,6 +84,7 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        activity?.setTitle(R.string.site_address_login_title)
         analyticsListener.trackUrlFormViewed()
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -112,12 +113,6 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         analyticsListener.siteAddressFormScreenResumed()
-    }
-
-    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        activity?.setTitle(R.string.site_address_login_title)
     }
 
     private fun discover(cleanedUrl: String) {
