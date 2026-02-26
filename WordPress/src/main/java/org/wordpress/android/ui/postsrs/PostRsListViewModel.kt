@@ -491,6 +491,7 @@ class PostRsListViewModel @Inject constructor(
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
+                if (SIMULATE_AUTH_ERROR) simulateAuthError() // TODO remove
                 if (SIMULATE_INIT_ERROR) error("Simulated init error") // TODO remove
                 val collection = createCollection(site, tab)
                 collections[tab] = collection
@@ -565,6 +566,7 @@ class PostRsListViewModel @Inject constructor(
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
+                if (SIMULATE_AUTH_ERROR) simulateAuthError() // TODO remove
                 if (SIMULATE_REFRESH_ERROR) error("Simulated refresh error") // TODO remove
                 withContext(Dispatchers.IO) { collection.refresh() }
             } catch (e: Exception) {
@@ -606,6 +608,7 @@ class PostRsListViewModel @Inject constructor(
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
+                if (SIMULATE_AUTH_ERROR) simulateAuthError() // TODO remove
                 if (SIMULATE_LOAD_MORE_ERROR) error("Simulated pagination error") // TODO remove
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
             } catch (e: Exception) {
@@ -798,5 +801,15 @@ class PostRsListViewModel @Inject constructor(
         private const val SIMULATE_REFRESH_ERROR = false
         private const val SIMULATE_LOAD_MORE_ERROR = false
         private const val SIMULATE_ACTION_ERROR = false
+        private const val SIMULATE_AUTH_ERROR = false
+
+        // TODO remove — throws a WpApiException that triggers the auth error message
+        private fun simulateAuthError(): Nothing = throw WpApiException.RequestExecutionFailed(
+            statusCode = 401u.toUShort(),
+            redirects = null,
+            reason = RequestExecutionErrorReason.HttpAuthenticationRejectedError(
+                hostname = "example.com", method = null
+            )
+        )
     }
 }
