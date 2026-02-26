@@ -88,7 +88,7 @@ class PostRsListViewModel @Inject constructor(
         _site != null &&
             _site.isUsingWpComRestApi &&
             _site.hasCapabilityEditOthersPosts &&
-            (_site.isSingleUserSite != null && !_site.isSingleUserSite)
+            _site.isSingleUserSite == false
     }
 
     private val _authorFilter = MutableStateFlow(

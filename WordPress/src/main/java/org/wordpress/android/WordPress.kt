@@ -4,6 +4,7 @@ import android.app.Application
 import coil.decode.VideoFrameDecoder
 import com.android.volley.RequestQueue
 import dagger.hilt.EntryPoints
+import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.modules.AppComponent
 
@@ -24,7 +25,19 @@ abstract class WordPress : Application(), coil.ImageLoaderFactory {
      * This returns a singleton Coil ImageLoader that's accessed with context.imageLoader
      */
     override fun newImageLoader(): coil.ImageLoader {
+        val authUtils = component().authenticationUtils()
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val request = chain.request()
+                val authHeaders = authUtils.getAuthHeaders(request.url.toString())
+                val newRequest = request.newBuilder().apply {
+                    authHeaders.forEach { (name, value) -> header(name, value) }
+                }.build()
+                chain.proceed(newRequest)
+            }
+            .build()
         return coil.ImageLoader.Builder(this)
+            .okHttpClient(okHttpClient)
             .crossfade(true)
             .components {
                 add(VideoFrameDecoder.Factory())
