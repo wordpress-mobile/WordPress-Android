@@ -92,6 +92,10 @@ private fun PostContentItem(
                         if (post.date.isNotBlank()) append(bullet)
                     }
                     append(post.date)
+                    if (!post.authorDisplayName.isNullOrBlank()) {
+                        if (isNotBlank()) append(bullet)
+                        append(post.authorDisplayName)
+                    }
                 }
                 if (dateText.isNotBlank()) {
                     Text(

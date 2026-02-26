@@ -14,6 +14,7 @@ import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
+import uniffi.wp_api.UserListParams
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,6 +26,12 @@ class PostRsRestClient @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) {
     private val mediaUrlCache = ConcurrentHashMap<Long, String>()
+    private val userNameCache = ConcurrentHashMap<Long, String>()
+
+    fun clearCaches() {
+        mediaUrlCache.clear()
+        userNameCache.clear()
+    }
 
     /**
      * Fetches media source URLs for the given [mediaIds] in a single
@@ -65,6 +72,50 @@ class PostRsRestClient @Inject constructor(
                 AppLog.w(
                     AppLog.T.POSTS,
                     "fetchMediaUrls failed: $msg"
+                )
+            }
+        }
+        return result
+    }
+
+    /**
+     * Fetches display names for the given [userIds] in a single network
+     * call using the `include` parameter, returning a map of user ID to
+     * display name. IDs already in the local cache are returned
+     * immediately without a network round-trip.
+     */
+    suspend fun fetchUserDisplayNames(
+        site: SiteModel,
+        userIds: List<Long>
+    ): Map<Long, String> {
+        val result = mutableMapOf<Long, String>()
+        val uncached = mutableListOf<Long>()
+        for (id in userIds) {
+            val cached = userNameCache[id]
+            if (cached != null) result[id] = cached else uncached.add(id)
+        }
+        if (uncached.isEmpty()) return result
+
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.users().listWithViewContext(
+                UserListParams(include = uncached)
+            )
+        }
+        when (response) {
+            is WpRequestResult.Success -> {
+                for (user in response.response.data) {
+                    userNameCache[user.id] = user.name
+                    result[user.id] = user.name
+                }
+            }
+            else -> {
+                val msg =
+                    (response as? WpRequestResult.WpError<*>)
+                        ?.errorMessage
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "fetchUserDisplayNames failed: $msg"
                 )
             }
         }
