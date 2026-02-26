@@ -69,7 +69,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         appLogWrapper.d(AppLog.T.MAIN, "A_P:   isUsingSelfHostedRestApi: ${site.isUsingSelfHostedRestApi}")
         appLogWrapper.d(AppLog.T.MAIN, "A_P:   hasApiRestUsername: ${!site.apiRestUsernamePlain.isNullOrEmpty()}")
         appLogWrapper.d(AppLog.T.MAIN, "A_P:   hasApiRestPassword: ${!site.apiRestPasswordPlain.isNullOrEmpty()}")
-        appLogWrapper.d(AppLog.T.MAIN, "A_P:   apiRestUsername: ${site.apiRestUsernamePlain}")
         appLogWrapper.d(AppLog.T.MAIN, "A_P:   wpApiRestUrl: ${site.wpApiRestUrl}")
         appLogWrapper.d(AppLog.T.MAIN, "A_P:   origin: ${site.origin}")
 
