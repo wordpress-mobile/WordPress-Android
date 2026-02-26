@@ -95,7 +95,7 @@ enum class LoginFlow(
     }
 
     companion object {
-        private const val ARG_LOGIN_FLOW = "ARG_LOGIN_MODE" // Keep same key for compatibility
+        private const val ARG_LOGIN_FLOW = "ARG_LOGIN_FLOW"
 
         @JvmStatic
         fun fromIntent(intent: Intent): LoginFlow {
