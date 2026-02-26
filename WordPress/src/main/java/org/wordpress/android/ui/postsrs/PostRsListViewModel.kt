@@ -306,15 +306,15 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
-     * Returns a user-friendly error message. Prefers the no-network string
-     * when the device is offline; otherwise falls back to the generic error.
+     * Returns a user-friendly error subtitle. Prefers the network-specific
+     * message when offline; otherwise falls back to a generic request error.
      * Raw exception/API messages are never surfaced to the user.
      */
     private fun friendlyErrorMessage(): String {
         val resId = if (!networkUtilsWrapper.isNetworkAvailable()) {
-            R.string.no_network_message
+            R.string.error_generic_network
         } else {
-            R.string.error_generic
+            R.string.request_failed_message
         }
         return resourceProvider.getString(resId)
     }
