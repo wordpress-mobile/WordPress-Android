@@ -42,6 +42,7 @@ import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.WpApiException
 import uniffi.wp_api.WpApiParamPostsOrderBy
 import uniffi.wp_api.WpErrorCode
+import uniffi.wp_mobile.FetchException
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
@@ -319,8 +320,9 @@ class PostRsListViewModel @Inject constructor(
      * exception/API messages are never surfaced to the user.
      */
     private fun friendlyErrorMessage(e: Exception? = null): String {
-        val reason = (e as? WpApiException.RequestExecutionFailed)?.reason
-        val errorCode = (e as? WpApiException.WpException)?.errorCode
+        val apiException = (e as? FetchException.Api)?.v1 ?: e
+        val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
+        val errorCode = (apiException as? WpApiException.WpException)?.errorCode
 
         val resId = when {
             reason is RequestExecutionErrorReason.DeviceIsOfflineError ||
