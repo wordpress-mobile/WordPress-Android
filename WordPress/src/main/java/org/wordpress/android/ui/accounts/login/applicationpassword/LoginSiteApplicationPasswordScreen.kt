@@ -108,7 +108,7 @@ fun LoginSiteApplicationPasswordScreen(
 
                 Text(
                     text = stringResource(R.string.enter_site_address),
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
