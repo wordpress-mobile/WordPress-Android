@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.TextView;
@@ -1261,7 +1260,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Override
     @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("WPMainActivity", "onActivityResult: " + requestCode + " " + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
