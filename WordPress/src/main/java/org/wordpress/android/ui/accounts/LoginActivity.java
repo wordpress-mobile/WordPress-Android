@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.WindowCompat;
@@ -125,15 +127,16 @@ public class LoginActivity extends BaseAppCompatActivity implements
         // Enable edge-to-edge display
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
-        // Attempt Login if this activity was created in response to a user confirming login, and if
-        // successful clear the intent so we don't reuse the OAuth code if the activity is recreated
-        boolean loginProcessed = mLoginHelper.tryLoginWithDataString(getIntent().getDataString());
-
-        if (loginProcessed) {
+        // Attempt Login if this activity was created in response to a user confirming login
+        String dataString = getIntent().getDataString();
+        if (mLoginHelper.hasOAuthCallback(dataString)) {
             getIntent().setData(null);
-            // OAuth login successful - show loading UI and finish the login flow
             setContentView(R.layout.login_loading);
-            this.loggedInAndFinish(new ArrayList<Integer>(), true);
+            mLoginHelper.tryLoginWithDataString(
+                    dataString,
+                    () -> loggedInAndFinish(new ArrayList<>(), true),
+                    error -> showLoginError(error)
+            );
             return;
         } else {
             // Not an OAuth callback - clear any pending login mode from a previous flow
@@ -222,11 +225,15 @@ public class LoginActivity extends BaseAppCompatActivity implements
         setIntent(intent);
 
         // Handle OAuth callback when activity is reused (singleTop)
-        boolean loginProcessed = mLoginHelper.tryLoginWithDataString(intent.getDataString());
-        if (loginProcessed) {
+        String dataString = intent.getDataString();
+        if (mLoginHelper.hasOAuthCallback(dataString)) {
             intent.setData(null);
             setContentView(R.layout.login_loading);
-            this.loggedInAndFinish(new ArrayList<Integer>(), true);
+            mLoginHelper.tryLoginWithDataString(
+                    dataString,
+                    () -> loggedInAndFinish(new ArrayList<>(), true),
+                    error -> showLoginError(error)
+            );
         }
     }
 
@@ -240,6 +247,12 @@ public class LoginActivity extends BaseAppCompatActivity implements
     protected void onStop() {
         super.onStop();
         mDispatcher.unregister(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLoginHelper.dispose();
     }
 
     @Override
@@ -300,6 +313,45 @@ public class LoginActivity extends BaseAppCompatActivity implements
         // For FINISH and FINISH_WITH_SITE, just finish and let the caller handle navigation
         setResult(Activity.RESULT_OK);
         finish();
+    }
+
+    private void showPrologueScreen() {
+        LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
+        FrameLayout fragmentContainer = new FrameLayout(this);
+        mFragmentContainerId = R.id.fragment_container;
+        fragmentContainer.setId(mFragmentContainerId);
+        fragmentContainer.setFitsSystemWindows(false);
+        fragmentContainer.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+        setContentView(fragmentContainer);
+        showFragment(
+                new LoginPrologueRevampedFragment(),
+                LoginPrologueRevampedFragment.TAG
+        );
+    }
+
+    private void showLoginError(@NonNull Exception error) {
+        AppLog.e(T.MAIN, "OAuth login failed", error);
+
+        View progressBar = findViewById(R.id.progress_bar);
+        View loadingText = findViewById(R.id.loading_text);
+        TextView errorText = findViewById(R.id.error_text);
+        View retryButton = findViewById(R.id.retry_button);
+
+        if (progressBar != null) progressBar.setVisibility(View.GONE);
+        if (loadingText != null) loadingText.setVisibility(View.GONE);
+
+        if (errorText != null) {
+            errorText.setText(getString(R.string.error_generic_network));
+            errorText.setVisibility(View.VISIBLE);
+        }
+
+        if (retryButton != null) {
+            retryButton.setVisibility(View.VISIBLE);
+            retryButton.setOnClickListener(v -> showPrologueScreen());
+        }
     }
 
     private void showFragment(@NonNull Fragment fragment, @NonNull String tag) {
