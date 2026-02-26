@@ -781,7 +781,7 @@ class PostRsListViewModel @Inject constructor(
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
         private val ALL_STATUSES = PostRsListTab.entries.flatMap { it.statuses }.distinct()
 
-        // TODO remove before merging — flip to true to test each error path
+        // TODO remove before merging — flip to true one at a time to test each error path
         private const val SIMULATE_INIT_ERROR = false
         private const val SIMULATE_REFRESH_ERROR = false
         private const val SIMULATE_LOAD_MORE_ERROR = false
