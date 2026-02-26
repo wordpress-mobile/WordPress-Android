@@ -95,6 +95,7 @@ import org.wordpress.android.ui.newstats.searchterms.SearchTermsViewModel
 import org.wordpress.android.ui.newstats.videoplays.VideoPlaysViewModel
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
+import org.wordpress.android.ui.newstats.subscribers.SubscribersTabContent
 import android.widget.Toast
 import org.wordpress.android.util.AppLog
 
@@ -245,6 +246,7 @@ private fun NewStatsScreen(
 private fun StatsTabContent(tab: StatsTab, viewsStatsViewModel: ViewsStatsViewModel) {
     when (tab) {
         StatsTab.TRAFFIC -> TrafficTabContent(viewsStatsViewModel = viewsStatsViewModel)
+        StatsTab.SUBSCRIBERS -> SubscribersTabContent()
         else -> PlaceholderTabContent(tab)
     }
 }
