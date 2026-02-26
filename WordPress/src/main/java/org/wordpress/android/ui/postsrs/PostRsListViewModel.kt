@@ -38,7 +38,10 @@ import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditCont
 import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
+import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.WpApiException
 import uniffi.wp_api.WpApiParamPostsOrderBy
+import uniffi.wp_api.WpErrorCode
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
@@ -311,15 +314,27 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
-     * Returns a user-friendly error subtitle. Prefers the network-specific
-     * message when offline; otherwise falls back to a generic request error.
-     * Raw exception/API messages are never surfaced to the user.
+     * Returns a user-friendly error subtitle based on the exception type.
+     * Detects offline, authentication, and generic errors. Raw
+     * exception/API messages are never surfaced to the user.
      */
-    private fun friendlyErrorMessage(): String {
-        val resId = if (!networkUtilsWrapper.isNetworkAvailable()) {
-            R.string.error_generic_network
-        } else {
-            R.string.request_failed_message
+    private fun friendlyErrorMessage(e: Exception? = null): String {
+        val reason = (e as? WpApiException.RequestExecutionFailed)?.reason
+        val errorCode = (e as? WpApiException.WpException)?.errorCode
+
+        val resId = when {
+            reason is RequestExecutionErrorReason.DeviceIsOfflineError ||
+                !networkUtilsWrapper.isNetworkAvailable() ->
+                R.string.error_generic_network
+
+            reason is RequestExecutionErrorReason.HttpAuthenticationRejectedError ||
+                reason is RequestExecutionErrorReason.HttpAuthenticationRequiredError ||
+                errorCode is WpErrorCode.Unauthorized ||
+                errorCode is WpErrorCode.ApplicationPasswordNotFound ||
+                errorCode is WpErrorCode.NoAuthenticatedAppPassword ->
+                R.string.post_rs_error_auth
+
+            else -> R.string.request_failed_message
         }
         return resourceProvider.getString(resId)
     }
@@ -486,7 +501,7 @@ class PostRsListViewModel @Inject constructor(
                 AppLog.e(AppLog.T.POSTS, "Failed to init RS post list tab", e)
                 initializingTabs.remove(tab)
                 updateTabUiState(tab) {
-                    PostTabUiState(error = friendlyErrorMessage())
+                    PostTabUiState(error = friendlyErrorMessage(e))
                 }
             }
         }
@@ -555,15 +570,14 @@ class PostRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
                 userRefreshingTabs.remove(tab)
+                val message = friendlyErrorMessage(e)
                 if (getTabUiState(tab).posts.isNotEmpty()) {
                     updateTabUiState(tab) {
                         copy(isLoading = false, isRefreshing = false, error = null)
                     }
                     _snackbarMessages.trySend(
                         SnackbarMessage(
-                            message = resourceProvider.getString(
-                                R.string.error_refresh_posts
-                            ),
+                            message = message,
                             actionLabel = resourceProvider.getString(R.string.retry),
                             onAction = { refreshTab(tab) }
                         )
@@ -572,7 +586,7 @@ class PostRsListViewModel @Inject constructor(
                     updateTabUiState(tab) {
                         copy(
                             isLoading = false, isRefreshing = false,
-                            error = friendlyErrorMessage()
+                            error = message
                         )
                     }
                 }
@@ -598,9 +612,7 @@ class PostRsListViewModel @Inject constructor(
                 AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
                 updateTabUiState(tab) { copy(isLoadingMore = false) }
                 _snackbarMessages.trySend(
-                    SnackbarMessage(
-                        resourceProvider.getString(R.string.post_rs_error_load_more)
-                    )
+                    SnackbarMessage(friendlyErrorMessage(e))
                 )
             }
         }
