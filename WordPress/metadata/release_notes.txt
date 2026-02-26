@@ -1,8 +1,4 @@
-* [*] Navigation Menus is now available to all eligible users (with an application password) [#22582]
-* [*] Stats: Fix "Hours" timeframe incorrectly displayed as "Years" [#22615]
-* [*] Stats: Update empty/disabled view UI [#22530]
-* [*] My Site: Restore spacing in menu and quick link items, fix TalkBack accessibility [#22612]
-* [*] Media: Fix WP Media Library search results hidden behind keyboard [#22531]
-* [*] Media: Preserve featured image metadata in REST API upload responses on self-hosted sites [#22607]
-* [*] Self-hosted: Fix 401 authentication errors with application passwords [#22603]
-
+- Navigation Menus available to users with application password and theme edit capability.
+- Assorted text and visual fixes to Stats and Media library.
+- Image and authentication fixes for self-hosted sites.
+- My Site visual updates and TalkBack accessibility.
