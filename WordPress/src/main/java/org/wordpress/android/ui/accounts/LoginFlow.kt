@@ -99,11 +99,9 @@ enum class LoginFlow(
 
         @JvmStatic
         fun fromIntent(intent: Intent): LoginFlow {
-            return if (intent.hasExtra(ARG_LOGIN_FLOW)) {
-                valueOf(intent.getStringExtra(ARG_LOGIN_FLOW)!!)
-            } else {
-                PROLOGUE
-            }
+            return intent.getStringExtra(ARG_LOGIN_FLOW)
+                ?.let { runCatching { valueOf(it) }.getOrNull() }
+                ?: PROLOGUE
         }
     }
 }
