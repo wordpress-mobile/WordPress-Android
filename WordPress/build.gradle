@@ -583,10 +583,6 @@ if (!file("google-services.json").exists()) {
     }
 }
 
-// Print warning message if example Google services file is used.
-if ((file('google-services.json').text) == (file('google-services.json-example').text)) {
-    println("WARNING: You're using the example google-services.json file. Google login will fail.")
-}
 
 tasks.register("printVersionName") {
     def versionName = android.defaultConfig.versionName

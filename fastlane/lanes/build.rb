@@ -368,8 +368,7 @@ platform :android do
       body: prototype_build_details_comment(
         app_display_name: app_display_name,
         app_icon: app_icon,
-        metadata: metadata,
-        footnote: '<em>Note: Google Login is not supported on these builds.</em>'
+        metadata: metadata
       )
     )
   end
