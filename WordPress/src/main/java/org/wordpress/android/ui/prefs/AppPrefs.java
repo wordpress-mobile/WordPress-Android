@@ -193,6 +193,11 @@ public class AppPrefs {
         READER_READING_PREFERENCES_JSON,
         SHOULD_SHOW_READER_ANNOUNCEMENT_CARD,
         STATS_CARDS_CONFIGURATION_JSON,
+
+        // Login flow preserved across OAuth Custom Tabs redirect
+        PENDING_LOGIN_FLOW,
+        // Whether a share flow is pending (for self-hosted login)
+        IS_SHARE_FLOW_PENDING,
     }
 
     /**
@@ -1790,5 +1795,27 @@ public class AppPrefs {
 
     public static void setTrackNetworkRequestsRetentionPeriod(int period) {
         setInt(UndeletablePrefKey.TRACK_NETWORK_REQUESTS_RETENTION_PERIOD, period);
+    }
+
+    @Nullable
+    public static String getPendingLoginFlow() {
+        String value = getString(DeletablePrefKey.PENDING_LOGIN_FLOW);
+        return value.isEmpty() ? null : value;
+    }
+
+    public static void setPendingLoginFlow(@Nullable String flowName) {
+        setString(DeletablePrefKey.PENDING_LOGIN_FLOW, flowName);
+    }
+
+    public static boolean consumeShareFlowPending() {
+        boolean result = getBoolean(
+                DeletablePrefKey.IS_SHARE_FLOW_PENDING, false
+        );
+        setBoolean(DeletablePrefKey.IS_SHARE_FLOW_PENDING, false);
+        return result;
+    }
+
+    public static void setShareFlowPending(boolean pending) {
+        setBoolean(DeletablePrefKey.IS_SHARE_FLOW_PENDING, pending);
     }
 }

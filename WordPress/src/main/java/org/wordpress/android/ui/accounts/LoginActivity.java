@@ -86,20 +86,13 @@ public class LoginActivity extends BaseAppCompatActivity implements
 
     private int mFragmentContainerId;
 
-     // Static field to preserve login flow across OAuth flow (when callback creates new activity)
-     @Nullable private static LoginFlow sPendingLoginFlow;
-
-    // Static field to track if we're in a share flow (for self-hosted login via ApplicationPasswordLoginActivity)
-    private static boolean sIsShareFlowPending;
-
     /**
-     * Check if there's a pending share flow. Used by ApplicationPasswordLoginActivity
-     * to determine whether to navigate to main activity or just finish.
+     * Check if there's a pending share flow. Used by
+     * ApplicationPasswordLoginActivity to determine whether to
+     * navigate to main activity or just finish.
      */
     public static boolean consumeShareFlowPending() {
-        boolean result = sIsShareFlowPending;
-        sIsShareFlowPending = false;
-        return result;
+        return AppPrefs.consumeShareFlowPending();
     }
 
     private LoginFlow mLoginFlow;
@@ -139,8 +132,8 @@ public class LoginActivity extends BaseAppCompatActivity implements
             );
             return;
         } else {
-            // Not an OAuth callback - clear any pending login mode from a previous flow
-            sPendingLoginFlow = null;
+            // Not an OAuth callback - clear any pending login flow
+            AppPrefs.setPendingLoginFlow(null);
         }
 
         // Start preloading the WordPress.com login page if needed – this avoids visual hitches
@@ -384,10 +377,17 @@ public class LoginActivity extends BaseAppCompatActivity implements
         // compute and cache the Login flow
         mLoginFlow = LoginFlow.fromIntent(getIntent());
 
-        // If the flow is PROLOGUE (default) but we have a pending flow from an OAuth callback, use that instead
-        if (mLoginFlow == LoginFlow.PROLOGUE && sPendingLoginFlow != null) {
-            mLoginFlow = sPendingLoginFlow;
-            sPendingLoginFlow = null; // Clear after use
+        // If the flow is PROLOGUE (default) but we have a pending flow from an OAuth callback,
+        // use that instead
+        String pendingFlowName = AppPrefs.getPendingLoginFlow();
+        if (mLoginFlow == LoginFlow.PROLOGUE
+                && pendingFlowName != null) {
+            try {
+                mLoginFlow = LoginFlow.valueOf(pendingFlowName);
+            } catch (IllegalArgumentException ignored) {
+                // Invalid value, stick with PROLOGUE
+            }
+            AppPrefs.setPendingLoginFlow(null);
         }
 
         return mLoginFlow;
@@ -449,8 +449,9 @@ public class LoginActivity extends BaseAppCompatActivity implements
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_WEBVIEW);
         mUnifiedLoginTracker.setFlowAndStep(Flow.WORDPRESS_COM_WEB, Step.WPCOM_WEB_START);
 
-        // Save the current login mode so it survives the OAuth callback (which creates a new activity)
-        sPendingLoginFlow = getLoginFlow();
+        // Save the current login flow so it survives the OAuth
+        // callback (which creates a new activity instance)
+        AppPrefs.setPendingLoginFlow(getLoginFlow().name());
 
         CustomTabsIntent intent = getCustomTabsIntent();
 
@@ -477,7 +478,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
     public void loginViaSiteAddress() {
         // Track if we're in a share flow so ApplicationPasswordLoginActivity knows to just finish
         if (getLoginFlow() == LoginFlow.SHARE_INTENT) {
-            sIsShareFlowPending = true;
+            AppPrefs.setShareFlowPending(true);
         }
         slideInFragment(new LoginSiteApplicationPasswordFragment(), true, LoginSiteApplicationPasswordFragment.TAG);
     }
