@@ -297,7 +297,11 @@ public class LoginActivity extends BaseAppCompatActivity implements
 
     private void finishLoginAfterSitesLoaded() {
         mIsWaitingForSitesToLoad = false;
-        navigateToMainActivityOrFinish();
+        ArrayList<Integer> oldSitesIds = mOldSitesIdsForLoginUpdate != null
+                ? mOldSitesIdsForLoginUpdate
+                : new ArrayList<>();
+        mOldSitesIdsForLoginUpdate = null;
+        loggedInAndFinish(oldSitesIds, false);
     }
 
     /**
