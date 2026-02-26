@@ -97,68 +97,60 @@ fun LoginSiteApplicationPasswordScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .imePadding()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
         ) {
-            Column(
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = stringResource(R.string.enter_site_address),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            OutlinedTextField(
+                value = siteAddress,
+                onValueChange = { newValue ->
+                    siteAddress = newValue
+                    onErrorDismissed()
+                },
                 modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp)
-            ) {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = stringResource(R.string.enter_site_address),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                OutlinedTextField(
-                    value = siteAddress,
-                    onValueChange = { newValue ->
-                        siteAddress = newValue
-                        onErrorDismissed()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester),
-                    label = { Text(text = stringResource(R.string.login_site_address)) },
-                    isError = errorMessage != null,
-                    supportingText = errorMessage?.let { { Text(text = it) } },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Uri,
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            if (isValid && !isLoading) {
-                                onContinueClick(cleanedAddress)
-                            }
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
+                label = { Text(text = stringResource(R.string.login_site_address)) },
+                isError = errorMessage != null,
+                supportingText = errorMessage?.let { { Text(text = it) } },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Uri,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        if (isValid && !isLoading) {
+                            onContinueClick(cleanedAddress)
                         }
-                    ),
-                    singleLine = true
-                )
+                    }
+                ),
+                singleLine = true
+            )
 
-                LaunchedEffect(Unit) {
-                    focusRequester.requestFocus()
-                }
+            LaunchedEffect(Unit) {
+                focusRequester.requestFocus()
             }
 
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                tonalElevation = 2.dp
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = { onContinueClick(cleanedAddress) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(vertical = 16.dp),
+                enabled = isValid && !isLoading
             ) {
-                Button(
-                    onClick = { onContinueClick(cleanedAddress) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .navigationBarsPadding()
-                        .padding(16.dp),
-                    enabled = isValid && !isLoading
-                ) {
-                    Text(text = stringResource(R.string.login_continue))
-                }
+                Text(text = stringResource(R.string.login_continue))
             }
         }
     }
