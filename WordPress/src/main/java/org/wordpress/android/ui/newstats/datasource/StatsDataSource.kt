@@ -207,6 +207,42 @@ interface StatsDataSource {
         dateRange: StatsDateRange,
         max: Int = 10
     ): DevicesDataResult
+
+    /**
+     * Fetches subscriber count stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param quantity Number of data points to return
+     * @return Result containing subscriber count data or an error
+     */
+    suspend fun fetchStatsSubscribers(
+        siteId: Long,
+        quantity: Int = 1
+    ): StatsSubscribersDataResult
+
+    /**
+     * Fetches a list of subscribers by user type.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param perPage Number of subscribers per page
+     * @return Result containing subscriber items or an error
+     */
+    suspend fun fetchSubscribersByUserType(
+        siteId: Long,
+        perPage: Int = 10
+    ): SubscribersByUserTypeDataResult
+
+    /**
+     * Fetches email stats summary for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param quantity Number of email items to return
+     * @return Result containing email summary items or an error
+     */
+    suspend fun fetchStatsEmailsSummary(
+        siteId: Long,
+        quantity: Int = 10
+    ): StatsEmailsSummaryDataResult
 }
 
 /**
@@ -529,3 +565,71 @@ sealed class DevicesDataResult {
  * (percentage for screen size, view count for browser/platform).
  */
 data class DevicesData(val items: Map<String, Double>)
+
+/**
+ * Result wrapper for stats subscribers fetch operation.
+ */
+sealed class StatsSubscribersDataResult {
+    data class Success(
+        val data: StatsSubscribersData
+    ) : StatsSubscribersDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : StatsSubscribersDataResult()
+}
+
+/**
+ * Stats subscribers data from the API.
+ */
+data class StatsSubscribersData(
+    val subscribersData: List<SubscribersDataPoint>
+)
+
+/**
+ * A single data point for subscriber count at a date.
+ */
+data class SubscribersDataPoint(
+    val date: String,
+    val count: Long
+)
+
+/**
+ * Result wrapper for subscribers by user type fetch operation.
+ */
+sealed class SubscribersByUserTypeDataResult {
+    data class Success(
+        val items: List<SubscriberItem>
+    ) : SubscribersByUserTypeDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : SubscribersByUserTypeDataResult()
+}
+
+/**
+ * A single subscriber item.
+ */
+data class SubscriberItem(
+    val displayName: String,
+    val subscribedSince: String
+)
+
+/**
+ * Result wrapper for stats emails summary fetch operation.
+ */
+sealed class StatsEmailsSummaryDataResult {
+    data class Success(
+        val items: List<EmailSummaryItem>
+    ) : StatsEmailsSummaryDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : StatsEmailsSummaryDataResult()
+}
+
+/**
+ * A single email summary item.
+ */
+data class EmailSummaryItem(
+    val title: String,
+    val opens: Long,
+    val clicks: Long
+)
