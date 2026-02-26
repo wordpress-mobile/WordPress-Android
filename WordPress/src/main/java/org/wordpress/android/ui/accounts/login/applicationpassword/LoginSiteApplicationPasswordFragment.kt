@@ -22,6 +22,8 @@ import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.WPUrlUtils
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -117,6 +119,12 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
 
     private fun discover(cleanedUrl: String) {
         if (!NetworkUtils.checkConnection(activity)) {
+            return
+        }
+        // WP.com sites should use the OAuth flow, not application passwords
+        val urlWithScheme = UrlUtils.addUrlSchemeIfNeeded(cleanedUrl, true)
+        if (WPUrlUtils.isWordPressCom(urlWithScheme)) {
+            loginActivity?.showWPcomLoginScreen(requireContext())
             return
         }
         analyticsListener.trackSubmitClicked()
