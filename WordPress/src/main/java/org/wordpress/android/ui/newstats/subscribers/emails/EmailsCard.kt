@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -179,16 +181,9 @@ private fun LoadedContent(
         if (state.items.isEmpty()) {
             StatsCardEmptyContent()
         } else {
-            // 3-column headers
             EmailColumnHeaders()
-            Spacer(modifier = Modifier.height(8.dp))
-            state.items.forEachIndexed { index, item ->
+            state.items.forEach { item ->
                 EmailItemRow(item = item)
-                if (index < state.items.lastIndex) {
-                    Spacer(
-                        modifier = Modifier.height(4.dp)
-                    )
-                }
             }
             Spacer(modifier = Modifier.height(12.dp))
             ShowAllFooter(onClick = onShowAllClick)
@@ -220,8 +215,10 @@ private fun EmailColumnHeaders() {
                 .typography.labelMedium,
             color = MaterialTheme
                 .colorScheme.onSurfaceVariant,
-            modifier = Modifier.width(60.dp)
+            textAlign = TextAlign.Center,
+            modifier = Modifier.width(56.dp)
         )
+        Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = stringResource(
                 R.string.stats_emails_clicks_header
@@ -230,9 +227,15 @@ private fun EmailColumnHeaders() {
                 .typography.labelMedium,
             color = MaterialTheme
                 .colorScheme.onSurfaceVariant,
-            modifier = Modifier.width(60.dp)
+            textAlign = TextAlign.Center,
+            modifier = Modifier.width(56.dp)
         )
     }
+    Spacer(modifier = Modifier.height(4.dp))
+    HorizontalDivider(
+        color = MaterialTheme
+            .colorScheme.outlineVariant
+    )
 }
 
 @Composable
@@ -240,7 +243,7 @@ private fun EmailItemRow(item: EmailListItem) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -252,21 +255,39 @@ private fun EmailItemRow(item: EmailListItem) {
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f)
         )
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = formatStatValue(item.opens),
+            text = formatEmailStat(item.opens),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme
-                .colorScheme.onSurface,
-            modifier = Modifier.width(60.dp)
+            color = if (item.opens == 0L) {
+                MaterialTheme
+                    .colorScheme.onSurfaceVariant
+            } else {
+                MaterialTheme
+                    .colorScheme.onSurface
+            },
+            textAlign = TextAlign.Center,
+            modifier = Modifier.width(56.dp)
         )
+        Spacer(modifier = Modifier.width(12.dp))
         Text(
-            text = formatStatValue(item.clicks),
+            text = formatEmailStat(item.clicks),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme
-                .colorScheme.onSurface,
-            modifier = Modifier.width(60.dp)
+            color = if (item.clicks == 0L) {
+                MaterialTheme
+                    .colorScheme.onSurfaceVariant
+            } else {
+                MaterialTheme
+                    .colorScheme.onSurface
+            },
+            textAlign = TextAlign.Center,
+            modifier = Modifier.width(56.dp)
         )
     }
+}
+
+private fun formatEmailStat(value: Long): String {
+    return if (value == 0L) "-" else formatStatValue(value)
 }
