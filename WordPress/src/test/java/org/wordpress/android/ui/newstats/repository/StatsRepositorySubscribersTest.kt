@@ -186,6 +186,122 @@ class StatsRepositorySubscribersTest : BaseUnitTest() {
         }
     // endregion
 
+    // region fetchSubscribersGraph
+    @Test
+    fun `given success, when fetchSubscribersGraph, then data points are mapped`() =
+        test {
+            whenever(
+                statsDataSource.fetchStatsSubscribers(
+                    any(), any(), anyOrNull(), anyOrNull()
+                )
+            ).thenReturn(
+                StatsSubscribersDataResult.Success(
+                    StatsSubscribersData(
+                        subscribersData = listOf(
+                            SubscribersDataPoint(
+                                date = "2026-02-25",
+                                count = 100L
+                            ),
+                            SubscribersDataPoint(
+                                date = "2026-02-26",
+                                count = 150L
+                            )
+                        )
+                    )
+                )
+            )
+
+            val result = repository.fetchSubscribersGraph(
+                TEST_SITE_ID, "day", 30, "2026-02-27"
+            )
+
+            assertThat(result).isInstanceOf(
+                SubscribersGraphResult.Success::class.java
+            )
+            val success =
+                result as SubscribersGraphResult.Success
+            assertThat(success.dataPoints).hasSize(2)
+            assertThat(success.dataPoints[0].date)
+                .isEqualTo("2026-02-25")
+            assertThat(success.dataPoints[0].count)
+                .isEqualTo(100L)
+            assertThat(success.dataPoints[1].count)
+                .isEqualTo(150L)
+        }
+
+    @Test
+    fun `given empty data, when fetchSubscribersGraph, then empty list returned`() =
+        test {
+            whenever(
+                statsDataSource.fetchStatsSubscribers(
+                    any(), any(), anyOrNull(), anyOrNull()
+                )
+            ).thenReturn(
+                StatsSubscribersDataResult.Success(
+                    StatsSubscribersData(
+                        subscribersData = emptyList()
+                    )
+                )
+            )
+
+            val result = repository.fetchSubscribersGraph(
+                TEST_SITE_ID, "day", 30, "2026-02-27"
+            )
+
+            val success =
+                result as SubscribersGraphResult.Success
+            assertThat(success.dataPoints).isEmpty()
+        }
+
+    @Test
+    fun `given error, when fetchSubscribersGraph, then error result returned`() =
+        test {
+            whenever(
+                statsDataSource.fetchStatsSubscribers(
+                    any(), any(), anyOrNull(), anyOrNull()
+                )
+            ).thenReturn(
+                StatsSubscribersDataResult.Error(
+                    StatsErrorType.API_ERROR
+                )
+            )
+
+            val result = repository.fetchSubscribersGraph(
+                TEST_SITE_ID, "week", 12, "2026-02-27"
+            )
+
+            assertThat(result).isInstanceOf(
+                SubscribersGraphResult.Error::class.java
+            )
+            val error =
+                result as SubscribersGraphResult.Error
+            assertThat(error.messageResId)
+                .isEqualTo(R.string.stats_error_api)
+        }
+
+    @Test
+    fun `given auth error, when fetchSubscribersGraph, then isAuthError is true`() =
+        test {
+            whenever(
+                statsDataSource.fetchStatsSubscribers(
+                    any(), any(), anyOrNull(), anyOrNull()
+                )
+            ).thenReturn(
+                StatsSubscribersDataResult.Error(
+                    StatsErrorType.AUTH_ERROR
+                )
+            )
+
+            val result = repository.fetchSubscribersGraph(
+                TEST_SITE_ID, "month", 6, "2026-02-27"
+            )
+
+            val error =
+                result as SubscribersGraphResult.Error
+            assertThat(error.isAuthError).isTrue()
+        }
+    // endregion
+
     // region fetchEmailsSummary
     @Test
     fun `given success, when fetchEmailsSummary, then items are mapped correctly`() =

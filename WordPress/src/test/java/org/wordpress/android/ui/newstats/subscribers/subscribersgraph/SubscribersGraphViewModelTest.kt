@@ -280,6 +280,43 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
         }
 
     @Test
+    fun `when access token is empty, then error state is emitted`() =
+        test {
+            whenever(accountStore.accessToken)
+                .thenReturn("")
+
+            initViewModel()
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertThat(state).isInstanceOf(
+                SubscribersGraphUiState.Error::class.java
+            )
+        }
+
+    @Test
+    fun `when exception with null message, then unknown error`() =
+        test {
+            whenever(
+                statsRepository.fetchSubscribersGraph(
+                    any(), any(), any(), any()
+                )
+            ).thenThrow(RuntimeException())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertThat(state).isInstanceOf(
+                SubscribersGraphUiState.Error::class.java
+            )
+            assertThat(
+                (state as SubscribersGraphUiState.Error)
+                    .message
+            ).isEqualTo("Unknown error")
+        }
+
+    @Test
     fun `when data loads, correct unit param is used`() =
         test {
             whenever(
@@ -298,6 +335,185 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
                     eq(DAYS_QUANTITY),
                     any()
                 )
+        }
+
+    @Test
+    fun `when weeks tab selected, correct params are used`() =
+        test {
+            whenever(
+                statsRepository.fetchSubscribersGraph(
+                    any(), any(), any(), any()
+                )
+            ).thenReturn(createSuccessResult())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onTabSelected(
+                SubscribersGraphTab.WEEKS
+            )
+            advanceUntilIdle()
+
+            verify(statsRepository)
+                .fetchSubscribersGraph(
+                    eq(TEST_SITE_ID),
+                    eq("week"),
+                    eq(WEEKS_QUANTITY),
+                    any()
+                )
+        }
+
+    @Test
+    fun `when months tab selected, correct params are used`() =
+        test {
+            whenever(
+                statsRepository.fetchSubscribersGraph(
+                    any(), any(), any(), any()
+                )
+            ).thenReturn(createSuccessResult())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onTabSelected(
+                SubscribersGraphTab.MONTHS
+            )
+            advanceUntilIdle()
+
+            verify(statsRepository)
+                .fetchSubscribersGraph(
+                    eq(TEST_SITE_ID),
+                    eq("month"),
+                    eq(MONTHS_QUANTITY),
+                    any()
+                )
+        }
+
+    @Test
+    fun `when years tab selected, correct params are used`() =
+        test {
+            whenever(
+                statsRepository.fetchSubscribersGraph(
+                    any(), any(), any(), any()
+                )
+            ).thenReturn(createSuccessResult())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.onTabSelected(
+                SubscribersGraphTab.YEARS
+            )
+            advanceUntilIdle()
+
+            verify(statsRepository)
+                .fetchSubscribersGraph(
+                    eq(TEST_SITE_ID),
+                    eq("year"),
+                    eq(YEARS_QUANTITY),
+                    any()
+                )
+        }
+
+    @Test
+    fun `when data loads, points are sorted chronologically`() =
+        test {
+            whenever(
+                statsRepository.fetchSubscribersGraph(
+                    any(), any(), any(), any()
+                )
+            ).thenReturn(
+                SubscribersGraphResult.Success(
+                    dataPoints = listOf(
+                        SubscribersGraphDataPoint(
+                            "2026-02-27", TEST_COUNT_3
+                        ),
+                        SubscribersGraphDataPoint(
+                            "2026-02-25", TEST_COUNT_1
+                        ),
+                        SubscribersGraphDataPoint(
+                            "2026-02-26", TEST_COUNT_2
+                        )
+                    )
+                )
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            val loaded = viewModel.uiState.value
+                as SubscribersGraphUiState.Loaded
+            assertThat(loaded.dataPoints[0].count)
+                .isEqualTo(TEST_COUNT_1)
+            assertThat(loaded.dataPoints[1].count)
+                .isEqualTo(TEST_COUNT_2)
+            assertThat(loaded.dataPoints[2].count)
+                .isEqualTo(TEST_COUNT_3)
+        }
+
+    @Test
+    fun `when data loads with empty list, then loaded state has no points`() =
+        test {
+            whenever(
+                statsRepository.fetchSubscribersGraph(
+                    any(), any(), any(), any()
+                )
+            ).thenReturn(
+                SubscribersGraphResult.Success(
+                    dataPoints = emptyList()
+                )
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            val loaded = viewModel.uiState.value
+                as SubscribersGraphUiState.Loaded
+            assertThat(loaded.dataPoints).isEmpty()
+        }
+
+    @Test
+    fun `when refresh called, data is fetched again`() =
+        test {
+            whenever(
+                statsRepository.fetchSubscribersGraph(
+                    any(), any(), any(), any()
+                )
+            ).thenReturn(createSuccessResult())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.refresh()
+            advanceUntilIdle()
+
+            verify(statsRepository, times(2))
+                .fetchSubscribersGraph(
+                    any(), any(), any(), any()
+                )
+        }
+
+    @Test
+    fun `when error has auth error flag, then state reflects it`() =
+        test {
+            whenever(
+                statsRepository.fetchSubscribersGraph(
+                    any(), any(), any(), any()
+                )
+            ).thenReturn(
+                SubscribersGraphResult.Error(
+                    messageResId =
+                        R.string.stats_error_api,
+                    isAuthError = true
+                )
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+                as SubscribersGraphUiState.Error
+            assertThat(state.isAuthError).isTrue()
         }
 
     private fun createSuccessResult() =
@@ -325,5 +541,8 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
         private const val TEST_COUNT_2 = 150L
         private const val TEST_COUNT_3 = 200L
         private const val DAYS_QUANTITY = 30
+        private const val WEEKS_QUANTITY = 12
+        private const val MONTHS_QUANTITY = 6
+        private const val YEARS_QUANTITY = 3
     }
 }
