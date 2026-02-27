@@ -74,6 +74,10 @@ fun SubscribersTabContent(
 
     val allTimeUiState by
         allTimeViewModel.uiState.collectAsState()
+    val graphUiState by
+        graphViewModel.uiState.collectAsState()
+    val graphSelectedTab by
+        graphViewModel.selectedTab.collectAsState()
     val subscribersListUiState by
         subscribersListViewModel.uiState.collectAsState()
     val emailsUiState by
@@ -299,6 +303,16 @@ fun SubscribersTabContent(
                     SubscribersCardType
                         .SUBSCRIBERS_GRAPH ->
                         SubscribersGraphCard(
+                            uiState = graphUiState,
+                            selectedTab =
+                                graphSelectedTab,
+                            onTabSelected = {
+                                graphViewModel
+                                    .onTabSelected(it)
+                            },
+                            onRetry = {
+                                graphViewModel.loadData()
+                            },
                             onRemoveCard = {
                                 subscribersTabViewModel
                                     .removeCard(cardType)

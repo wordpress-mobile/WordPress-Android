@@ -1632,6 +1632,10 @@
     <string name="stats_emails_latest_header">Latest emails</string>
     <string name="stats_emails_opens_header">Opens</string>
     <string name="stats_emails_clicks_header">Clicks</string>
+    <string name="stats_subscribers_graph_days">Days</string>
+    <string name="stats_subscribers_graph_weeks">Weeks</string>
+    <string name="stats_subscribers_graph_months">Months</string>
+    <string name="stats_subscribers_graph_years">Years</string>
 
     <!-- Stats Card Configuration -->
     <string name="stats_card_remove">Remove Card</string>

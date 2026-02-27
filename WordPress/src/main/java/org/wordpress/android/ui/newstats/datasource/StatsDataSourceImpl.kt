@@ -996,10 +996,17 @@ class StatsDataSourceImpl @Inject constructor(
     override suspend fun fetchStatsSubscribers(
         siteId: Long,
         quantity: Int,
+        unit: String?,
         date: String?
     ): StatsSubscribersDataResult {
+        val subscribersUnit = when (unit) {
+            "week" -> StatsSubscribersUnit.WEEK
+            "month" -> StatsSubscribersUnit.MONTH
+            "year" -> StatsSubscribersUnit.YEAR
+            else -> StatsSubscribersUnit.DAY
+        }
         val params = StatsSubscribersParams(
-            unit = StatsSubscribersUnit.DAY,
+            unit = subscribersUnit,
             quantity = quantity.toUInt(),
             date = date,
             statFields = listOf(

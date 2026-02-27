@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.repository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.CityViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
@@ -1411,6 +1412,53 @@ class StatsRepository @Inject constructor(
     }
 
     /**
+     * Fetches subscriber graph data for a given time unit.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun fetchSubscribersGraph(
+        siteId: Long,
+        unit: String,
+        quantity: Int,
+        date: String
+    ): SubscribersGraphResult = withContext(ioDispatcher) {
+        try {
+            when (
+                val result = statsDataSource
+                    .fetchStatsSubscribers(
+                        siteId,
+                        quantity = quantity,
+                        unit = unit,
+                        date = date
+                    )
+            ) {
+                is StatsSubscribersDataResult.Success -> {
+                    SubscribersGraphResult.Success(
+                        dataPoints =
+                            result.data.subscribersData.map {
+                                SubscribersGraphDataPoint(
+                                    date = it.date,
+                                    count = it.count
+                                )
+                            }
+                    )
+                }
+                is StatsSubscribersDataResult.Error -> {
+                    SubscribersGraphResult.Error(
+                        messageResId =
+                            result.errorType.messageResId,
+                        isAuthError = result.errorType ==
+                            StatsErrorType.AUTH_ERROR
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            SubscribersGraphResult.Error(
+                messageResId = R.string.stats_error_api
+            )
+        }
+    }
+
+    /**
      * Fetches a list of subscribers for the given site.
      */
     suspend fun fetchSubscribersList(
@@ -1915,4 +1963,25 @@ data class EmailItemData(
     val title: String,
     val opens: Long,
     val clicks: Long
+)
+
+/**
+ * Result wrapper for subscribers graph fetch operation.
+ */
+sealed class SubscribersGraphResult {
+    data class Success(
+        val dataPoints: List<SubscribersGraphDataPoint>
+    ) : SubscribersGraphResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : SubscribersGraphResult()
+}
+
+/**
+ * A single data point for the subscribers graph.
+ */
+data class SubscribersGraphDataPoint(
+    val date: String,
+    val count: Long
 )

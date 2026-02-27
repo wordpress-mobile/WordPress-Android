@@ -44,7 +44,7 @@ class StatsRepositorySubscribersTest : BaseUnitTest() {
     @Test
     fun `given all calls succeed, when fetchSubscribersAllTime, then counts are extracted`() =
         test {
-            whenever(statsDataSource.fetchStatsSubscribers(any(), any(), anyOrNull()))
+            whenever(statsDataSource.fetchStatsSubscribers(any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(
                     StatsSubscribersDataResult.Success(
                         StatsSubscribersData(
@@ -71,7 +71,7 @@ class StatsRepositorySubscribersTest : BaseUnitTest() {
     @Test
     fun `given empty subscribers data, when fetchSubscribersAllTime, then counts are zero`() =
         test {
-            whenever(statsDataSource.fetchStatsSubscribers(any(), any(), anyOrNull()))
+            whenever(statsDataSource.fetchStatsSubscribers(any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(
                     StatsSubscribersDataResult.Success(
                         StatsSubscribersData(subscribersData = emptyList())
@@ -87,7 +87,7 @@ class StatsRepositorySubscribersTest : BaseUnitTest() {
     @Test
     fun `given one call fails, when fetchSubscribersAllTime, then error is returned`() =
         test {
-            whenever(statsDataSource.fetchStatsSubscribers(any(), any(), anyOrNull()))
+            whenever(statsDataSource.fetchStatsSubscribers(any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(
                     StatsSubscribersDataResult.Error(StatsErrorType.API_ERROR)
                 )
@@ -102,7 +102,7 @@ class StatsRepositorySubscribersTest : BaseUnitTest() {
     @Test
     fun `given auth error, when fetchSubscribersAllTime, then isAuthError is true`() =
         test {
-            whenever(statsDataSource.fetchStatsSubscribers(any(), any(), anyOrNull()))
+            whenever(statsDataSource.fetchStatsSubscribers(any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(
                     StatsSubscribersDataResult.Error(StatsErrorType.AUTH_ERROR)
                 )
