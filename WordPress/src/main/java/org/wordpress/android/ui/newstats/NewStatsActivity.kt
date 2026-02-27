@@ -165,39 +165,55 @@ private fun NewStatsScreen(
                     }
                 },
                 actions = {
-                    Box {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .clickable { showPeriodMenu = true }
-                                .padding(horizontal = 8.dp)
-                        ) {
-                            Text(
-                                text = selectedPeriod.getDisplayLabel(),
-                                style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Icon(
-                                imageVector = Icons.Default.DateRange,
-                                contentDescription = stringResource(
-                                    R.string.stats_period_selector_content_description
-                                ),
-                                modifier = Modifier.padding(start = 4.dp)
+                    val currentTab = tabs[pagerState.currentPage]
+                    if (currentTab != StatsTab.SUBSCRIBERS) {
+                        Box {
+                            Row(
+                                verticalAlignment =
+                                    Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .clickable {
+                                        showPeriodMenu = true
+                                    }
+                                    .padding(horizontal = 8.dp)
+                            ) {
+                                Text(
+                                    text = selectedPeriod
+                                        .getDisplayLabel(),
+                                    style = MaterialTheme
+                                        .typography.labelLarge,
+                                    color = MaterialTheme
+                                        .colorScheme.onSurface
+                                )
+                                Icon(
+                                    imageVector =
+                                        Icons.Default.DateRange,
+                                    contentDescription =
+                                        stringResource(
+                                            R.string
+                                                .stats_period_selector_content_description
+                                        ),
+                                    modifier = Modifier
+                                        .padding(start = 4.dp)
+                                )
+                            }
+                            StatsPeriodMenu(
+                                expanded = showPeriodMenu,
+                                selectedPeriod = selectedPeriod,
+                                onDismiss = {
+                                    showPeriodMenu = false
+                                },
+                                onPresetSelected = { period ->
+                                    viewsStatsViewModel
+                                        .onPeriodChanged(period)
+                                    showPeriodMenu = false
+                                },
+                                onCustomSelected = {
+                                    showPeriodMenu = false
+                                    showDateRangePicker = true
+                                }
                             )
                         }
-                        StatsPeriodMenu(
-                            expanded = showPeriodMenu,
-                            selectedPeriod = selectedPeriod,
-                            onDismiss = { showPeriodMenu = false },
-                            onPresetSelected = { period ->
-                                viewsStatsViewModel.onPeriodChanged(period)
-                                showPeriodMenu = false
-                            },
-                            onCustomSelected = {
-                                showPeriodMenu = false
-                                showDateRangePicker = true
-                            }
-                        )
                     }
                 }
             )

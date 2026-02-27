@@ -1333,25 +1333,44 @@ class StatsRepository @Inject constructor(
     suspend fun fetchSubscribersAllTime(
         siteId: Long
     ): SubscribersAllTimeResult = withContext(ioDispatcher) {
+        val today = java.time.LocalDate.now()
+        val dateFormat =
+            java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
+        val todayStr = today.format(dateFormat)
+        val d30Str = today.minusDays(30)
+            .format(dateFormat)
+        val d60Str = today.minusDays(60)
+            .format(dateFormat)
+        val d90Str = today.minusDays(90)
+            .format(dateFormat)
+
         val (current, d30, d60, d90) = coroutineScope {
             val currentDef = async {
                 statsDataSource.fetchStatsSubscribers(
-                    siteId, quantity = 1
+                    siteId,
+                    quantity = 1,
+                    date = todayStr
                 )
             }
             val d30Def = async {
                 statsDataSource.fetchStatsSubscribers(
-                    siteId, quantity = 1
+                    siteId,
+                    quantity = 1,
+                    date = d30Str
                 )
             }
             val d60Def = async {
                 statsDataSource.fetchStatsSubscribers(
-                    siteId, quantity = 1
+                    siteId,
+                    quantity = 1,
+                    date = d60Str
                 )
             }
             val d90Def = async {
                 statsDataSource.fetchStatsSubscribers(
-                    siteId, quantity = 1
+                    siteId,
+                    quantity = 1,
+                    date = d90Str
                 )
             }
             listOf(

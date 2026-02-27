@@ -213,11 +213,13 @@ interface StatsDataSource {
      *
      * @param siteId The WordPress.com site ID
      * @param quantity Number of data points to return
-     * @return Result containing subscriber count data or an error
+     * @param date Optional date in YYYY-MM-DD format
+     * @return Result containing subscriber count data
      */
     suspend fun fetchStatsSubscribers(
         siteId: Long,
-        quantity: Int = 1
+        quantity: Int = 1,
+        date: String? = null
     ): StatsSubscribersDataResult
 
     /**

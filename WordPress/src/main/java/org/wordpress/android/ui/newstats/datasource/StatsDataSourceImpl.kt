@@ -995,11 +995,13 @@ class StatsDataSourceImpl @Inject constructor(
 
     override suspend fun fetchStatsSubscribers(
         siteId: Long,
-        quantity: Int
+        quantity: Int,
+        date: String?
     ): StatsSubscribersDataResult {
         val params = StatsSubscribersParams(
-            unit = StatsSubscribersUnit.MONTH,
+            unit = StatsSubscribersUnit.DAY,
             quantity = quantity.toUInt(),
+            date = date,
             statFields = listOf(
                 StatsSubscribersStatField.SUBSCRIBERS
             )
