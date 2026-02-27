@@ -1089,7 +1089,12 @@ class StatsDataSourceImpl @Inject constructor(
                                 subscriber.displayName,
                             subscribedSince =
                                 subscriber.dateSubscribed
-                                    .toString()
+                                    ?.let {
+                                        java.text.SimpleDateFormat(
+                                            "yyyy-MM-dd'T'HH:mm:ss",
+                                            java.util.Locale.US
+                                        ).format(it)
+                                    } ?: ""
                         )
                     }
                 )

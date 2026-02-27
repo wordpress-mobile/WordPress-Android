@@ -245,37 +245,38 @@ internal fun formatSubscriberDate(
     dateString: String
 ): String {
     return try {
-        val inputFormat =
-            java.time.format.DateTimeFormatter
-                .ISO_DATE_TIME
-        val outputFormat =
-            java.time.format.DateTimeFormatter
-                .ofPattern(
-                    "MMM d, yyyy",
-                    java.util.Locale.getDefault()
-                )
-        val dateTime =
+        val subscribed = try {
             java.time.LocalDateTime.parse(
-                dateString, inputFormat
-            )
-        dateTime.format(outputFormat)
-    } catch (e: Exception) {
-        try {
-            val inputFormat =
+                dateString,
+                java.time.format.DateTimeFormatter
+                    .ISO_DATE_TIME
+            ).toLocalDate()
+        } catch (_: Exception) {
+            java.time.LocalDate.parse(
+                dateString,
                 java.time.format.DateTimeFormatter
                     .ISO_LOCAL_DATE
-            val outputFormat =
-                java.time.format.DateTimeFormatter
-                    .ofPattern(
-                        "MMM d, yyyy",
-                        java.util.Locale.getDefault()
-                    )
-            val date = java.time.LocalDate.parse(
-                dateString, inputFormat
             )
-            date.format(outputFormat)
-        } catch (e2: Exception) {
-            dateString
         }
+        val days = java.time.temporal.ChronoUnit.DAYS
+            .between(subscribed, java.time.LocalDate.now())
+        when {
+            days < 1L -> "today"
+            days == 1L -> "1 day"
+            days < DAYS_IN_YEAR -> "$days days"
+            else -> {
+                val years = days / DAYS_IN_YEAR
+                val remaining = days % DAYS_IN_YEAR
+                val yearsPart =
+                    if (years == 1L) "1 year"
+                    else "$years years"
+                if (remaining == 0L) yearsPart
+                else "$yearsPart, $remaining days"
+            }
+        }
+    } catch (_: Exception) {
+        dateString
     }
 }
+
+private const val DAYS_IN_YEAR = 365L
