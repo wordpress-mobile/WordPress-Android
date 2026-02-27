@@ -290,9 +290,16 @@ class PostRsListViewModel @Inject constructor(
             errorResId = R.string.post_rs_error_update_status,
             onSuccess = {
                 refreshAllTabs()
-                getFluxCPost(postId)?.let { post ->
+                val post = getFluxCPost(postId)
+                if (post != null) {
                     _events.trySend(
                         PostRsListEvent.EditPost(site, post)
+                    )
+                } else {
+                    _events.trySend(
+                        PostRsListEvent.ShowToast(
+                            R.string.post_rs_moved_to_draft
+                        )
                     )
                 }
             },
