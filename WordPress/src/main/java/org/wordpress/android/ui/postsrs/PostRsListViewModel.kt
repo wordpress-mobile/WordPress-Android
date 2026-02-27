@@ -309,12 +309,15 @@ class PostRsListViewModel @Inject constructor(
         _events.trySend(PostRsListEvent.EditPost(site, newPost))
     }
 
+    private fun unwrapException(e: Exception?): Exception? =
+        (e as? FetchException.Api)?.v1 ?: e
+
     /**
      * Returns true when the exception represents an authentication failure
      * (rejected credentials, missing app-password, etc.).
      */
     private fun isAuthError(e: Exception?): Boolean {
-        val apiException = (e as? FetchException.Api)?.v1 ?: e
+        val apiException = unwrapException(e)
         val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
         val errorCode = (apiException as? WpApiException.WpException)?.errorCode
         return reason is RequestExecutionErrorReason.HttpAuthenticationRejectedError ||
@@ -330,7 +333,7 @@ class PostRsListViewModel @Inject constructor(
      * exception/API messages are never surfaced to the user.
      */
     private fun friendlyErrorMessage(e: Exception? = null): String {
-        val apiException = (e as? FetchException.Api)?.v1 ?: e
+        val apiException = unwrapException(e)
         val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
 
         val resId = when {
