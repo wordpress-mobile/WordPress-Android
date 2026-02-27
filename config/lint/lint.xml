@@ -55,6 +55,14 @@
         <!-- EDITOR -->
         <ignore path="**/libs/editor/src/main/res/drawable/**" /> <!-- 9 errors -->
         <ignore path="**/libs/editor/src/main/res/drawable-hdpi/**" />  <!-- 6 errors -->
+        <!-- Resources used by editor/login libraries (not visible with checkDependencies=false) -->
+        <ignore path="**/res/color/aztec_format_button_selector_color.xml" />
+        <ignore path="**/res/color/primary_on_surface_disabled_selector.xml" />
+        <ignore path="**/res/values-night/colors_aztec.xml" />
+        <ignore regexp="R\.style\.FormatBarButton" />
+        <ignore regexp="R\.style\.DividerSourceView" />
+        <ignore regexp="R\.style\.Widget_LoginFlow_Toolbar" />
+        <ignore regexp="R\.dimen\.promo_indicator_bullet_size" />
         <!-- GOOGLE SERVICES -->
         <ignore path="**/generated/res/google-services/**/values/values.xml" />
         <ignore path="**/xml/global_tracker.xml" />
