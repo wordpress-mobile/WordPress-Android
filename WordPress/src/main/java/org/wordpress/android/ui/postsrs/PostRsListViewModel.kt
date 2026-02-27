@@ -131,9 +131,15 @@ class PostRsListViewModel @Inject constructor(
     /**
      * Looks up a post in the local FluxC database and emits
      * an [PostRsListEvent.EditPost] to open the editor.
+     * If the post is trashed, shows a confirmation dialog first.
      */
     @MainThread
-    fun openPost(remotePostId: Long) {
+    fun openPost(remotePostId: Long, tab: PostRsListTab) {
+        if (tab == PostRsListTab.TRASHED) {
+            _pendingConfirmation.value =
+                PendingConfirmation.MoveToDraft(remotePostId)
+            return
+        }
         val post = getFluxCPost(remotePostId) ?: return
         _events.trySend(PostRsListEvent.EditPost(site, post))
     }
@@ -242,6 +248,8 @@ class PostRsListViewModel @Inject constructor(
         when (val confirmation = _pendingConfirmation.value) {
             is PendingConfirmation.Trash -> trashPost(site, confirmation.postId)
             is PendingConfirmation.Delete -> deletePost(site, confirmation.postId)
+            is PendingConfirmation.MoveToDraft ->
+                moveToDraftAndEdit(site, confirmation.postId)
             null -> Unit
         }
         _pendingConfirmation.value = null
@@ -267,6 +275,35 @@ class PostRsListViewModel @Inject constructor(
     private fun moveToDraft(site: SiteModel, postId: Long) = executePostAction(
         postId, R.string.post_rs_moved_to_draft, R.string.post_rs_error_update_status
     ) { restClient.updatePostStatus(site, postId, PostStatus.Draft) }
+
+    private fun moveToDraftAndEdit(site: SiteModel, postId: Long) {
+        if (!checkNetwork()) return
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                restClient.updatePostStatus(site, postId, PostStatus.Draft)
+            }
+            when (result) {
+                is PostActionResult.Success -> {
+                    refreshAllTabs()
+                    val post = getFluxCPost(postId) ?: return@launch
+                    _events.trySend(PostRsListEvent.EditPost(site, post))
+                }
+                is PostActionResult.Error -> {
+                    AppLog.e(
+                        AppLog.T.POSTS,
+                        "Move to draft failed: ${result.message}"
+                    )
+                    _snackbarMessages.trySend(
+                        SnackbarMessage(
+                            resourceProvider.getString(
+                                R.string.post_rs_error_update_status
+                            )
+                        )
+                    )
+                }
+            }
+        }
+    }
 
     /**
      * Shared helper that runs a post mutation on IO

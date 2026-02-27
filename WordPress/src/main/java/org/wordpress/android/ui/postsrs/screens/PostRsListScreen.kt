@@ -90,7 +90,7 @@ fun PostRsListScreen(
     onRefreshTab: (PostRsListTab) -> Unit,
     onLoadMore: (PostRsListTab) -> Unit,
     onNavigateBack: () -> Unit,
-    onPostClick: (Long) -> Unit,
+    onPostClick: (Long, PostRsListTab) -> Unit,
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
     onCreatePost: () -> Unit
 ) {
@@ -239,7 +239,7 @@ fun PostRsListScreen(
                     isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH,
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
-                    onPostClick = onPostClick,
+                    onPostClick = { postId -> onPostClick(postId, tab) },
                     onPostMenuAction = onPostMenuAction,
                     onCreatePost = onCreatePost
                 )
@@ -258,6 +258,16 @@ fun PostRsListScreen(
             titleResId = R.string.delete,
             messageResId = R.string.post_rs_confirm_delete_message,
             isDestructive = true,
+            onConfirm = confirmationDialog.onConfirm,
+            onDismiss = confirmationDialog.onDismiss
+        )
+        is PendingConfirmation.MoveToDraft -> ConfirmationDialog(
+            titleResId =
+                R.string.post_list_move_trashed_post_to_draft_dialog_title,
+            messageResId =
+                R.string.post_list_move_trashed_post_to_draft_dialog_message,
+            confirmTextResId =
+                R.string.post_list_move_trashed_post_to_draft_dialog_positive,
             onConfirm = confirmationDialog.onConfirm,
             onDismiss = confirmationDialog.onDismiss
         )
@@ -354,6 +364,7 @@ private fun AuthorFilterIcon(
 private fun ConfirmationDialog(
     @StringRes titleResId: Int,
     @StringRes messageResId: Int,
+    @StringRes confirmTextResId: Int = titleResId,
     isDestructive: Boolean = false,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
@@ -365,13 +376,19 @@ private fun ConfirmationDialog(
         confirmButton = {
             TextButton(onClick = onConfirm) {
                 Text(
-                    stringResource(titleResId),
-                    color = if (isDestructive) MaterialTheme.colorScheme.error else Color.Unspecified
+                    stringResource(confirmTextResId),
+                    color = if (isDestructive) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        Color.Unspecified
+                    }
                 )
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
         }
     )
 }
