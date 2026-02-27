@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -230,7 +231,8 @@ private fun SubscriberItemRow(
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = formatSubscriberDate(
-                item.subscribedSince
+                item.subscribedSince,
+                LocalContext.current.resources
             ),
             style = MaterialTheme
                 .typography.bodySmall,
@@ -242,7 +244,8 @@ private fun SubscriberItemRow(
 
 @Suppress("TooGenericExceptionCaught", "SwallowedException")
 internal fun formatSubscriberDate(
-    dateString: String
+    dateString: String,
+    resources: android.content.res.Resources
 ): String {
     return try {
         val subscribed = try {
@@ -261,17 +264,36 @@ internal fun formatSubscriberDate(
         val days = java.time.temporal.ChronoUnit.DAYS
             .between(subscribed, java.time.LocalDate.now())
         when {
-            days < 1L -> "today"
-            days == 1L -> "1 day"
-            days < DAYS_IN_YEAR -> "$days days"
+            days < 1L -> resources.getString(
+                R.string.stats_subscriber_since_today
+            )
+            days < DAYS_IN_YEAR -> resources
+                .getQuantityString(
+                    R.plurals.stats_subscriber_days,
+                    days.toInt(), days.toInt()
+                )
             else -> {
                 val years = days / DAYS_IN_YEAR
                 val remaining = days % DAYS_IN_YEAR
-                val yearsPart =
-                    if (years == 1L) "1 year"
-                    else "$years years"
+                val yearsPart = resources
+                    .getQuantityString(
+                        R.plurals.stats_subscriber_years,
+                        years.toInt(), years.toInt()
+                    )
                 if (remaining == 0L) yearsPart
-                else "$yearsPart, $remaining days"
+                else {
+                    val daysPart = resources
+                        .getQuantityString(
+                            R.plurals.stats_subscriber_days,
+                            remaining.toInt(),
+                            remaining.toInt()
+                        )
+                    resources.getString(
+                        R.string
+                            .stats_subscriber_years_and_days,
+                        yearsPart, daysPart
+                    )
+                }
             }
         }
     } catch (_: Exception) {

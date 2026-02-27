@@ -47,6 +47,12 @@ class AllTimeSubscribersViewModelTest : BaseUnitTest() {
         whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
         whenever(resourceProvider.getString(R.string.stats_error_api))
             .thenReturn(FAILED_TO_LOAD_ERROR)
+        whenever(resourceProvider.getString(R.string.stats_error_no_site))
+            .thenReturn("No site selected")
+        whenever(resourceProvider.getString(R.string.stats_error_not_authenticated))
+            .thenReturn("Not authenticated")
+        whenever(resourceProvider.getString(R.string.stats_error_unknown))
+            .thenReturn("Unknown error")
     }
 
     private fun initViewModel() {

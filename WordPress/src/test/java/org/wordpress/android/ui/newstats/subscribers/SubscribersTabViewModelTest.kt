@@ -272,19 +272,22 @@ class SubscribersTabViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `when configuration changes via flow, then cardsToLoad is updated`() = test {
-        initViewModel()
-        advanceUntilIdle()
+    fun `when configuration changes via flow, then cardsToLoad is not updated after initial load`() =
+        test {
+            initViewModel()
+            advanceUntilIdle()
 
-        val newConfig = SubscribersCardsConfiguration(
-            visibleCards = listOf(SubscribersCardType.SUBSCRIBERS_LIST)
-        )
-        configurationFlow.value = TEST_SITE_ID to newConfig
-        advanceUntilIdle()
+            val initialCardsToLoad = viewModel.cardsToLoad.value
 
-        assertThat(viewModel.cardsToLoad.value)
-            .containsExactly(SubscribersCardType.SUBSCRIBERS_LIST)
-    }
+            val newConfig = SubscribersCardsConfiguration(
+                visibleCards = listOf(SubscribersCardType.SUBSCRIBERS_LIST)
+            )
+            configurationFlow.value = TEST_SITE_ID to newConfig
+            advanceUntilIdle()
+
+            assertThat(viewModel.cardsToLoad.value)
+                .isEqualTo(initialCardsToLoad)
+        }
     // endregion
 
     // region Network availability tests

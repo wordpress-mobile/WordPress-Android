@@ -35,6 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.util.formatEmailStat
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 
@@ -229,8 +230,4 @@ private fun DetailEmailRow(item: EmailListItem) {
             modifier = Modifier.width(56.dp)
         )
     }
-}
-
-private fun formatEmailStat(value: Long): String {
-    return if (value == 0L) "-" else formatStatValue(value)
 }

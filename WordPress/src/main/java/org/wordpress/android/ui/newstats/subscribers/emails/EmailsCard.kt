@@ -27,6 +27,7 @@ import org.wordpress.android.ui.newstats.components.StatsCardEmptyContent
 import org.wordpress.android.ui.newstats.components.StatsCardErrorContent
 import org.wordpress.android.ui.newstats.components.StatsCardHeader
 import org.wordpress.android.ui.newstats.util.ShimmerBox
+import org.wordpress.android.ui.newstats.util.formatEmailStat
 import org.wordpress.android.ui.newstats.util.formatStatValue
 
 private val CardPadding = 16.dp
@@ -286,8 +287,4 @@ private fun EmailItemRow(item: EmailListItem) {
             modifier = Modifier.width(56.dp)
         )
     }
-}
-
-private fun formatEmailStat(value: Long): String {
-    return if (value == 0L) "-" else formatStatValue(value)
 }

@@ -4,7 +4,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
@@ -21,6 +23,7 @@ import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner.Silent::class)
 class EmailsCardViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -48,6 +51,13 @@ class EmailsCardViewModelTest : BaseUnitTest() {
         whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
         whenever(resourceProvider.getString(R.string.stats_error_api))
             .thenReturn(FAILED_TO_LOAD_ERROR)
+        whenever(resourceProvider.getString(R.string.stats_error_no_site))
+            .thenReturn("No site selected")
+        whenever(
+            resourceProvider.getString(R.string.stats_error_not_authenticated)
+        ).thenReturn("Not authenticated")
+        whenever(resourceProvider.getString(R.string.stats_error_unknown))
+            .thenReturn("Unknown error")
     }
 
     private fun initViewModel() {

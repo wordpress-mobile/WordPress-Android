@@ -41,6 +41,8 @@ class SubscribersTabViewModel @Inject constructor(
     val cardsToLoad: StateFlow<List<SubscribersCardType>> =
         _cardsToLoad.asStateFlow()
 
+    private var isInitialLoad = true
+
     private val siteId: Long
         get() = selectedSiteRepository
             .getSelectedSite()?.siteId ?: 0L
@@ -89,7 +91,10 @@ class SubscribersTabViewModel @Inject constructor(
     ) {
         _visibleCards.value = config.visibleCards
         _hiddenCards.value = config.hiddenCards()
-        _cardsToLoad.value = config.visibleCards
+        if (isInitialLoad) {
+            _cardsToLoad.value = config.visibleCards
+            isInitialLoad = false
+        }
     }
 
     fun removeCard(cardType: SubscribersCardType) {
