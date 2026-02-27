@@ -10,7 +10,6 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 private const val CARD_MAX_ITEMS = 5
-private const val DETAIL_MAX_ITEMS = 100
 
 @HiltViewModel
 class EmailsCardViewModel @Inject constructor(
@@ -31,24 +30,6 @@ class EmailsCardViewModel @Inject constructor(
         message: String,
         isAuthError: Boolean
     ) = EmailsCardUiState.Error(message, isAuthError)
-
-    suspend fun getDetailData(): List<EmailListItem> {
-        val siteId = getSiteId() ?: return emptyList()
-        val result = statsRepository.fetchEmailsSummary(
-            siteId, DETAIL_MAX_ITEMS
-        )
-        return when (result) {
-            is EmailsStatsResult.Success ->
-                result.items.map {
-                    EmailListItem(
-                        title = it.title,
-                        opens = it.opens,
-                        clicks = it.clicks
-                    )
-                }
-            is EmailsStatsResult.Error -> emptyList()
-        }
-    }
 
     override suspend fun loadDataInternal(siteId: Long) {
         when (

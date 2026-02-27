@@ -1463,11 +1463,14 @@ class StatsRepository @Inject constructor(
      */
     suspend fun fetchSubscribersList(
         siteId: Long,
-        perPage: Int = SUBSCRIBERS_DEFAULT_MAX
+        perPage: Int = SUBSCRIBERS_DEFAULT_MAX,
+        page: Int = 1
     ): SubscribersListResult = withContext(ioDispatcher) {
         when (
             val result = statsDataSource
-                .fetchSubscribersByUserType(siteId, perPage)
+                .fetchSubscribersByUserType(
+                    siteId, perPage, page
+                )
         ) {
             is SubscribersByUserTypeDataResult.Success -> {
                 SubscribersListResult.Success(

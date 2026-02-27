@@ -229,11 +229,13 @@ interface StatsDataSource {
      *
      * @param siteId The WordPress.com site ID
      * @param perPage Number of subscribers per page
+     * @param page Page number (1-based)
      * @return Result containing subscriber items or an error
      */
     suspend fun fetchSubscribersByUserType(
         siteId: Long,
-        perPage: Int = 10
+        perPage: Int = 10,
+        page: Int = 1
     ): SubscribersByUserTypeDataResult
 
     /**

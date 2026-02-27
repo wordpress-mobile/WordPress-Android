@@ -32,7 +32,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +43,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.subscribers.alltimestats.AllTimeSubscribersCard
@@ -73,7 +71,6 @@ fun SubscribersTabContent(
         viewModel()
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     val allTimeUiState by
         allTimeViewModel.uiState.collectAsState()
@@ -351,13 +348,8 @@ fun SubscribersTabContent(
                             uiState =
                                 subscribersListUiState,
                             onShowAllClick = {
-                                scope.launch {
-                                    val items =
-                                        subscribersListViewModel
-                                            .getDetailData()
-                                    SubscribersListDetailActivity
-                                        .start(context, items)
-                                }
+                                SubscribersListDetailActivity
+                                    .start(context)
                             },
                             onRetry = {
                                 subscribersListViewModel
@@ -396,15 +388,8 @@ fun SubscribersTabContent(
                         EmailsCard(
                             uiState = emailsUiState,
                             onShowAllClick = {
-                                scope.launch {
-                                    val items =
-                                        emailsViewModel
-                                            .getDetailData()
-                                    EmailsDetailActivity
-                                        .start(
-                                            context, items
-                                        )
-                                }
+                                EmailsDetailActivity
+                                    .start(context)
                             },
                             onRetry = {
                                 emailsViewModel

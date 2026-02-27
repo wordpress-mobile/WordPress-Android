@@ -10,7 +10,6 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 private const val CARD_MAX_ITEMS = 5
-private const val DETAIL_MAX_ITEMS = 100
 
 @HiltViewModel
 class SubscribersListViewModel @Inject constructor(
@@ -31,24 +30,6 @@ class SubscribersListViewModel @Inject constructor(
         message: String,
         isAuthError: Boolean
     ) = SubscribersListUiState.Error(message, isAuthError)
-
-    suspend fun getDetailData(): List<SubscriberListItem> {
-        val siteId = getSiteId() ?: return emptyList()
-        val result = statsRepository.fetchSubscribersList(
-            siteId, DETAIL_MAX_ITEMS
-        )
-        return when (result) {
-            is SubscribersListResult.Success ->
-                result.subscribers.map {
-                    SubscriberListItem(
-                        displayName = it.displayName,
-                        subscribedSince =
-                            it.subscribedSince
-                    )
-                }
-            is SubscribersListResult.Error -> emptyList()
-        }
-    }
 
     override suspend fun loadDataInternal(siteId: Long) {
         when (

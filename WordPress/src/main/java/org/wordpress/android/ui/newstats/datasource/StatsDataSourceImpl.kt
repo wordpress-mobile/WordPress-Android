@@ -1053,12 +1053,13 @@ class StatsDataSourceImpl @Inject constructor(
 
     override suspend fun fetchSubscribersByUserType(
         siteId: Long,
-        perPage: Int
+        perPage: Int,
+        page: Int
     ): SubscribersByUserTypeDataResult {
         val params = SubscribersByUserTypeParams(
             userType = SubscribersByUserTypeUserType.WP_COM,
             perPage = perPage.toULong(),
-            page = 1uL,
+            page = page.toULong(),
             sort = SubscribersByUserTypeSortField
                 .DATE_SUBSCRIBED
         )

@@ -237,24 +237,6 @@ class EmailsCardViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when getDetailData is called, then all items are returned not truncated`() = test {
-        val items = (1..10).map {
-            EmailItemData(
-                title = "Email $it",
-                opens = it.toLong() * 100,
-                clicks = it.toLong() * 10
-            )
-        }
-        whenever(statsRepository.fetchEmailsSummary(any(), any()))
-            .thenReturn(EmailsStatsResult.Success(items))
-
-        initViewModel()
-        advanceUntilIdle()
-
-        assertThat(viewModel.getDetailData()).hasSize(10)
-    }
-
-    @Test
     fun `when data loads, then items map title opens and clicks correctly`() = test {
         val items = listOf(
             EmailItemData(

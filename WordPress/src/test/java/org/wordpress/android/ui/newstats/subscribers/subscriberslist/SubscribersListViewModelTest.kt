@@ -111,7 +111,7 @@ class SubscribersListViewModelTest : BaseUnitTest() {
                 subscribedSince = "2024-01-0$it"
             )
         }
-        whenever(statsRepository.fetchSubscribersList(any(), any()))
+        whenever(statsRepository.fetchSubscribersList(any(), any(), any()))
             .thenReturn(SubscribersListResult.Success(items))
 
         initViewModel()
@@ -130,7 +130,7 @@ class SubscribersListViewModelTest : BaseUnitTest() {
                 subscribedSince = "2024-01-0$it"
             )
         }
-        whenever(statsRepository.fetchSubscribersList(any(), any()))
+        whenever(statsRepository.fetchSubscribersList(any(), any(), any()))
             .thenReturn(SubscribersListResult.Success(items))
 
         initViewModel()
@@ -142,7 +142,7 @@ class SubscribersListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when data loads with empty list, then loaded state has empty items`() = test {
-        whenever(statsRepository.fetchSubscribersList(any(), any()))
+        whenever(statsRepository.fetchSubscribersList(any(), any(), any()))
             .thenReturn(SubscribersListResult.Success(emptyList()))
 
         initViewModel()
@@ -154,7 +154,7 @@ class SubscribersListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when fetch fails, then error state is emitted`() = test {
-        whenever(statsRepository.fetchSubscribersList(any(), any()))
+        whenever(statsRepository.fetchSubscribersList(any(), any(), any()))
             .thenReturn(
                 SubscribersListResult.Error(
                     messageResId = R.string.stats_error_api
@@ -172,7 +172,7 @@ class SubscribersListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when exception is thrown, then error state has exception message`() = test {
-        whenever(statsRepository.fetchSubscribersList(any(), any()))
+        whenever(statsRepository.fetchSubscribersList(any(), any(), any()))
             .thenThrow(RuntimeException("Test exception"))
 
         initViewModel()
@@ -186,7 +186,7 @@ class SubscribersListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when loadDataIfNeeded called multiple times, then data is only loaded once`() = test {
-        whenever(statsRepository.fetchSubscribersList(any(), any()))
+        whenever(statsRepository.fetchSubscribersList(any(), any(), any()))
             .thenReturn(SubscribersListResult.Success(createTestItems()))
 
         viewModel = SubscribersListViewModel(
@@ -201,12 +201,12 @@ class SubscribersListViewModelTest : BaseUnitTest() {
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
 
-        verify(statsRepository, times(1)).fetchSubscribersList(eq(TEST_SITE_ID), any())
+        verify(statsRepository, times(1)).fetchSubscribersList(eq(TEST_SITE_ID), any(), any())
     }
 
     @Test
     fun `when loadData is called again, then repository is called again`() = test {
-        whenever(statsRepository.fetchSubscribersList(any(), any()))
+        whenever(statsRepository.fetchSubscribersList(any(), any(), any()))
             .thenReturn(SubscribersListResult.Success(createTestItems()))
 
         initViewModel()
@@ -215,12 +215,12 @@ class SubscribersListViewModelTest : BaseUnitTest() {
         viewModel.loadData()
         advanceUntilIdle()
 
-        verify(statsRepository, times(2)).fetchSubscribersList(eq(TEST_SITE_ID), any())
+        verify(statsRepository, times(2)).fetchSubscribersList(eq(TEST_SITE_ID), any(), any())
     }
 
     @Test
     fun `when refresh is called, then isRefreshing becomes false after completion`() = test {
-        whenever(statsRepository.fetchSubscribersList(any(), any()))
+        whenever(statsRepository.fetchSubscribersList(any(), any(), any()))
             .thenReturn(SubscribersListResult.Success(createTestItems()))
 
         initViewModel()
@@ -235,23 +235,6 @@ class SubscribersListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when getDetailData is called, then all items are returned not truncated`() = test {
-        val items = (1..10).map {
-            SubscriberItemData(
-                displayName = "User $it",
-                subscribedSince = "2024-01-0$it"
-            )
-        }
-        whenever(statsRepository.fetchSubscribersList(any(), any()))
-            .thenReturn(SubscribersListResult.Success(items))
-
-        initViewModel()
-        advanceUntilIdle()
-
-        assertThat(viewModel.getDetailData()).hasSize(10)
-    }
-
-    @Test
     fun `when data loads, then items map displayName and subscribedSince correctly`() = test {
         val items = listOf(
             SubscriberItemData(
@@ -259,7 +242,7 @@ class SubscribersListViewModelTest : BaseUnitTest() {
                 subscribedSince = "2024-06-15T10:00:00"
             )
         )
-        whenever(statsRepository.fetchSubscribersList(any(), any()))
+        whenever(statsRepository.fetchSubscribersList(any(), any(), any()))
             .thenReturn(SubscribersListResult.Success(items))
 
         initViewModel()

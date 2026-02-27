@@ -7,6 +7,8 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -118,7 +120,7 @@ class StatsRepositorySubscribersTest : BaseUnitTest() {
     @Test
     fun `given success, when fetchSubscribersList, then items are mapped correctly`() =
         test {
-            whenever(statsDataSource.fetchSubscribersByUserType(any(), any()))
+            whenever(statsDataSource.fetchSubscribersByUserType(any(), any(), any()))
                 .thenReturn(
                     SubscribersByUserTypeDataResult.Success(
                         listOf(
@@ -145,9 +147,22 @@ class StatsRepositorySubscribersTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given page param, when fetchSubscribersList, then page is forwarded`() =
+        test {
+            whenever(statsDataSource.fetchSubscribersByUserType(any(), any(), any()))
+                .thenReturn(SubscribersByUserTypeDataResult.Success(emptyList()))
+
+            repository.fetchSubscribersList(TEST_SITE_ID, perPage = 20, page = 3)
+
+            verify(statsDataSource).fetchSubscribersByUserType(
+                eq(TEST_SITE_ID), eq(20), eq(3)
+            )
+        }
+
+    @Test
     fun `given empty response, when fetchSubscribersList, then empty list is returned`() =
         test {
-            whenever(statsDataSource.fetchSubscribersByUserType(any(), any()))
+            whenever(statsDataSource.fetchSubscribersByUserType(any(), any(), any()))
                 .thenReturn(SubscribersByUserTypeDataResult.Success(emptyList()))
 
             val result = repository.fetchSubscribersList(TEST_SITE_ID)
@@ -159,7 +174,7 @@ class StatsRepositorySubscribersTest : BaseUnitTest() {
     @Test
     fun `given error, when fetchSubscribersList, then error result is returned`() =
         test {
-            whenever(statsDataSource.fetchSubscribersByUserType(any(), any()))
+            whenever(statsDataSource.fetchSubscribersByUserType(any(), any(), any()))
                 .thenReturn(
                     SubscribersByUserTypeDataResult.Error(StatsErrorType.API_ERROR)
                 )
@@ -174,7 +189,7 @@ class StatsRepositorySubscribersTest : BaseUnitTest() {
     @Test
     fun `given auth error, when fetchSubscribersList, then isAuthError is true`() =
         test {
-            whenever(statsDataSource.fetchSubscribersByUserType(any(), any()))
+            whenever(statsDataSource.fetchSubscribersByUserType(any(), any(), any()))
                 .thenReturn(
                     SubscribersByUserTypeDataResult.Error(StatsErrorType.AUTH_ERROR)
                 )
