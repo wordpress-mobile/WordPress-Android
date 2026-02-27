@@ -59,6 +59,17 @@ steps:
         artifact_paths:
           - "**/build/reports/detekt/detekt.html"
 
+      - label: "🌐 Locale Consistency"
+        command: |
+          if .buildkite/commands/should-skip-job.sh --job-type validation; then
+            exit 0
+          fi
+
+          install_gems
+          bundle exec fastlane check_declared_locales_consistency app:wordpress
+          bundle exec fastlane check_declared_locales_consistency app:jetpack
+        plugins: [$CI_TOOLKIT]
+
       - label: "🕵️ Lint WordPress"
         command: ".buildkite/commands/lint.sh wordpress"
         plugins: [$CI_TOOLKIT]

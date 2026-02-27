@@ -6,12 +6,6 @@ fi
 
 "$(dirname "${BASH_SOURCE[0]}")/restore-cache.sh"
 
-echo "--- :rubygems: Setting up Gems"
-install_gems
-
-echo "--- :globe_with_meridians: Check Locales Declaration Consistency"
-bundle exec fastlane check_declared_locales_consistency app:"$1"
-
 echo "--- :microscope: Linting"
 
 if [ "$1" = "wordpress" ]; then
