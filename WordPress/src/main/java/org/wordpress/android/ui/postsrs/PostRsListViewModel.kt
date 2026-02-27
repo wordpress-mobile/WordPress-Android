@@ -315,6 +315,21 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
+     * Returns true when the exception represents an authentication failure
+     * (rejected credentials, missing app-password, etc.).
+     */
+    private fun isAuthError(e: Exception?): Boolean {
+        val apiException = (e as? FetchException.Api)?.v1 ?: e
+        val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
+        val errorCode = (apiException as? WpApiException.WpException)?.errorCode
+        return reason is RequestExecutionErrorReason.HttpAuthenticationRejectedError ||
+            reason is RequestExecutionErrorReason.HttpAuthenticationRequiredError ||
+            errorCode is WpErrorCode.Unauthorized ||
+            errorCode is WpErrorCode.ApplicationPasswordNotFound ||
+            errorCode is WpErrorCode.NoAuthenticatedAppPassword
+    }
+
+    /**
      * Returns a user-friendly error subtitle based on the exception type.
      * Detects offline, authentication, and generic errors. Raw
      * exception/API messages are never surfaced to the user.
@@ -322,19 +337,13 @@ class PostRsListViewModel @Inject constructor(
     private fun friendlyErrorMessage(e: Exception? = null): String {
         val apiException = (e as? FetchException.Api)?.v1 ?: e
         val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
-        val errorCode = (apiException as? WpApiException.WpException)?.errorCode
 
         val resId = when {
             reason is RequestExecutionErrorReason.DeviceIsOfflineError ||
                 !networkUtilsWrapper.isNetworkAvailable() ->
                 R.string.error_generic_network
 
-            reason is RequestExecutionErrorReason.HttpAuthenticationRejectedError ||
-                reason is RequestExecutionErrorReason.HttpAuthenticationRequiredError ||
-                errorCode is WpErrorCode.Unauthorized ||
-                errorCode is WpErrorCode.ApplicationPasswordNotFound ||
-                errorCode is WpErrorCode.NoAuthenticatedAppPassword ->
-                R.string.post_rs_error_auth
+            isAuthError(e) -> R.string.post_rs_error_auth
 
             else -> R.string.request_failed_message
         }
@@ -504,7 +513,10 @@ class PostRsListViewModel @Inject constructor(
                 AppLog.e(AppLog.T.POSTS, "Failed to init RS post list tab", e)
                 initializingTabs.remove(tab)
                 updateTabUiState(tab) {
-                    PostTabUiState(error = friendlyErrorMessage(e))
+                    PostTabUiState(
+                        error = friendlyErrorMessage(e),
+                        isAuthError = isAuthError(e)
+                    )
                 }
             }
         }
@@ -579,18 +591,22 @@ class PostRsListViewModel @Inject constructor(
                     updateTabUiState(tab) {
                         copy(isLoading = false, isRefreshing = false, error = null)
                     }
+                    val authError = isAuthError(e)
                     _snackbarMessages.trySend(
                         SnackbarMessage(
                             message = message,
-                            actionLabel = resourceProvider.getString(R.string.retry),
-                            onAction = { refreshTab(tab) }
+                            actionLabel = if (authError) null
+                                else resourceProvider.getString(R.string.retry),
+                            onAction = if (authError) null
+                                else ({ refreshTab(tab) })
                         )
                     )
                 } else {
                     updateTabUiState(tab) {
                         copy(
                             isLoading = false, isRefreshing = false,
-                            error = message
+                            error = message,
+                            isAuthError = isAuthError(e)
                         )
                     }
                 }
@@ -747,6 +763,7 @@ class PostRsListViewModel @Inject constructor(
         val errorMessage = if (isError) friendlyErrorMessage() else null
 
         if (isError && hasPosts) {
+            val authError = getTabUiState(tab).isAuthError
             updateTabUiState(tab) {
                 copy(
                     isLoading = false,
@@ -759,8 +776,10 @@ class PostRsListViewModel @Inject constructor(
             _snackbarMessages.trySend(
                 SnackbarMessage(
                     message = errorMessage.orEmpty(),
-                    actionLabel = resourceProvider.getString(R.string.retry),
-                    onAction = { refreshTab(tab) }
+                    actionLabel = if (authError) null
+                        else resourceProvider.getString(R.string.retry),
+                    onAction = if (authError) null
+                        else ({ refreshTab(tab) })
                 )
             )
         } else {

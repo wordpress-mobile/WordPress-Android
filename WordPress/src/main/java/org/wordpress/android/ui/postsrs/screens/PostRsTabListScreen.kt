@@ -69,7 +69,10 @@ fun PostRsTabListScreen(
             isSearchIdle -> Box(Modifier.fillMaxSize())
             state.isLoading -> ShimmerList()
             state.error != null && state.posts.isEmpty() -> {
-                ErrorContent(state.error, onRetry = onRefresh)
+                ErrorContent(
+                    error = state.error,
+                    onRetry = if (state.isAuthError) null else onRefresh
+                )
             }
             state.posts.isEmpty() && !state.isRefreshing -> {
                 EmptyContent(
@@ -171,7 +174,7 @@ private fun ShimmerList() {
 }
 
 @Composable
-private fun ErrorContent(error: String, onRetry: () -> Unit) {
+private fun ErrorContent(error: String, onRetry: (() -> Unit)?) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -191,9 +194,11 @@ private fun ErrorContent(error: String, onRetry: () -> Unit) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onRetry) {
-            Text(text = stringResource(R.string.retry))
+        if (onRetry != null) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onRetry) {
+                Text(text = stringResource(R.string.retry))
+            }
         }
     }
 }

@@ -33,7 +33,8 @@ data class PostTabUiState(
     val isRefreshing: Boolean = false,
     val isLoadingMore: Boolean = false,
     val canLoadMore: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val isAuthError: Boolean = false
 )
 
 data class PostRsUiModel(
