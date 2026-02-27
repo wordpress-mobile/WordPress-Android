@@ -1010,6 +1010,8 @@
     <string name="post_rs_error_trash">Failed to trash post</string>
     <string name="post_rs_error_delete">Failed to delete post</string>
     <string name="post_rs_error_update_status">Failed to update post status</string>
+    <string name="post_rs_error_load_more">Couldn\'t load more posts</string>
+    <string name="post_rs_error_auth">Your authentication has expired. Please sign in again.</string>
     <string name="post_types_screen_title">Post Types</string>
 
     <!-- Debug settings -->
