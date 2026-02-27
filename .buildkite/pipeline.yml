@@ -82,6 +82,36 @@ steps:
         artifact_paths:
           - "**/build/reports/lint-results*.*"
 
+      - label: "🕵️ Lint libs:editor"
+        command: |
+          if .buildkite/commands/should-skip-job.sh --job-type lint; then
+            exit 0
+          fi
+
+          .buildkite/commands/restore-cache.sh
+          ./gradlew :libs:editor:lint
+        plugins: [$CI_TOOLKIT]
+
+      - label: "🕵️ Lint libs:login"
+        command: |
+          if .buildkite/commands/should-skip-job.sh --job-type lint; then
+            exit 0
+          fi
+
+          .buildkite/commands/restore-cache.sh
+          ./gradlew :libs:login:lint
+        plugins: [$CI_TOOLKIT]
+
+      - label: "🕵️ Lint libs:image-editor"
+        command: |
+          if .buildkite/commands/should-skip-job.sh --job-type lint; then
+            exit 0
+          fi
+
+          .buildkite/commands/restore-cache.sh
+          ./gradlew :libs:image-editor:lint
+        plugins: [$CI_TOOLKIT]
+
   #################
   # Diff Reports
   #################
