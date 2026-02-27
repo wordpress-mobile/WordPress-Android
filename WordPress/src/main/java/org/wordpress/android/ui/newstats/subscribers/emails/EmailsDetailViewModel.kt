@@ -41,6 +41,10 @@ class EmailsDetailViewModel @Inject constructor(
     val canLoadMore: StateFlow<Boolean> =
         _canLoadMore.asStateFlow()
 
+    private val _hasError = MutableStateFlow(false)
+    val hasError: StateFlow<Boolean> =
+        _hasError.asStateFlow()
+
     private var currentQuantity = 0
     private val paginationMutex = Mutex()
 
@@ -50,6 +54,7 @@ class EmailsDetailViewModel @Inject constructor(
                 if (_items.value.isNotEmpty()) return@launch
                 currentQuantity = PAGE_SIZE
                 _isLoading.value = true
+                _hasError.value = false
                 _canLoadMore.value = true
                 fetchEmails(currentQuantity, isInitial = true)
                 _isLoading.value = false
@@ -104,6 +109,7 @@ class EmailsDetailViewModel @Inject constructor(
                 }
                 is EmailsStatsResult.Error -> {
                     if (isInitial) {
+                        _hasError.value = true
                         _canLoadMore.value = false
                     } else {
                         currentQuantity -= PAGE_SIZE
@@ -111,7 +117,12 @@ class EmailsDetailViewModel @Inject constructor(
                 }
             }
         } catch (_: Exception) {
-            if (!isInitial) currentQuantity -= PAGE_SIZE
+            if (isInitial) {
+                _hasError.value = true
+                _canLoadMore.value = false
+            } else {
+                currentQuantity -= PAGE_SIZE
+            }
         }
     }
 }

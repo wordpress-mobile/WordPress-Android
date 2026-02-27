@@ -2,6 +2,7 @@ package org.wordpress.android.ui.newstats.subscribers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -10,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -25,17 +27,21 @@ abstract class BaseSubscribersCardViewModel<UiState : Any>(
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
-    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+    val isRefreshing: StateFlow<Boolean> =
+        _isRefreshing.asStateFlow()
 
     private val isLoading = AtomicBoolean(false)
     private val isLoadedSuccessfully = AtomicBoolean(false)
+    private var loadJob: Job? = null
 
     protected abstract val loadingState: UiState
     protected abstract fun errorState(
         message: String,
         isAuthError: Boolean = false
     ): UiState
-    protected abstract suspend fun loadDataInternal(siteId: Long)
+    protected abstract suspend fun loadDataInternal(
+        siteId: Long
+    )
 
     fun loadDataIfNeeded() {
         if (isLoadedSuccessfully.get() ||
@@ -50,6 +56,7 @@ abstract class BaseSubscribersCardViewModel<UiState : Any>(
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
         statsRepository.init(accessToken)
+        resetLoadedSuccessfully()
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
@@ -90,7 +97,8 @@ abstract class BaseSubscribersCardViewModel<UiState : Any>(
         statsRepository.init(accessToken)
         updateState(loadingState)
 
-        viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             try {
                 fetchData(site.siteId)
             } finally {
@@ -103,9 +111,14 @@ abstract class BaseSubscribersCardViewModel<UiState : Any>(
         try {
             loadDataInternal(siteId)
         } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error loading stats data",
+                e
+            )
             updateState(
                 errorState(
-                    e.message ?: resourceProvider.getString(
+                    resourceProvider.getString(
                         R.string.stats_error_unknown
                     )
                 )

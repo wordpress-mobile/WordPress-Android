@@ -25,5 +25,6 @@ sealed class SubscribersListUiState {
 @Parcelize
 data class SubscriberListItem(
     val displayName: String,
-    val subscribedSince: String
+    val subscribedSince: String,
+    val formattedDate: String = ""
 ) : Parcelable

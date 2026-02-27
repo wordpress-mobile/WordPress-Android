@@ -72,6 +72,7 @@ class SubscribersCardsConfigurationRepository @Inject constructor(
         cardType: SubscribersCardType
     ): Unit = withContext(ioDispatcher) {
         val current = getConfiguration(siteId)
+        if (cardType in current.visibleCards) return@withContext
         val newVisibleCards =
             current.visibleCards + cardType
         saveConfiguration(

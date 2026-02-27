@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import java.util.concurrent.atomic.AtomicBoolean
 import org.wordpress.android.ui.newstats.repository.SubscribersCardsConfigurationRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
@@ -41,7 +42,7 @@ class SubscribersTabViewModel @Inject constructor(
     val cardsToLoad: StateFlow<List<SubscribersCardType>> =
         _cardsToLoad.asStateFlow()
 
-    private var isInitialLoad = true
+    private val isInitialLoad = AtomicBoolean(true)
 
     private val siteId: Long
         get() = selectedSiteRepository
@@ -91,9 +92,8 @@ class SubscribersTabViewModel @Inject constructor(
     ) {
         _visibleCards.value = config.visibleCards
         _hiddenCards.value = config.hiddenCards()
-        if (isInitialLoad) {
+        if (isInitialLoad.compareAndSet(true, false)) {
             _cardsToLoad.value = config.visibleCards
-            isInitialLoad = false
         }
     }
 

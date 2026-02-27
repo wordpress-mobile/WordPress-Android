@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -86,11 +88,13 @@ private fun SubscribersListDetailScreen(
         viewModel.isLoadingMore.collectAsState()
     val canLoadMore by
         viewModel.canLoadMore.collectAsState()
+    val hasError by viewModel.hasError.collectAsState()
 
+    val resources = LocalContext.current.resources
     val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
-        viewModel.loadInitialPage()
+        viewModel.loadInitialPage(resources)
     }
 
     val shouldLoadMore by remember {
@@ -108,7 +112,7 @@ private fun SubscribersListDetailScreen(
     }
 
     LaunchedEffect(shouldLoadMore) {
-        if (shouldLoadMore) viewModel.loadMore()
+        if (shouldLoadMore) viewModel.loadMore(resources)
     }
 
     val title = stringResource(
@@ -143,6 +147,15 @@ private fun SubscribersListDetailScreen(
             ) {
                 CircularProgressIndicator()
             }
+        } else if (hasError) {
+            ErrorContent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding),
+                onRetry = {
+                    viewModel.loadInitialPage(resources)
+                }
+            )
         } else {
             LazyColumn(
                 state = listState,
@@ -252,14 +265,45 @@ private fun DetailSubscriberRow(
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
-            text = formatSubscriberDate(
-                item.subscribedSince,
-                LocalContext.current.resources
-            ),
+            text = item.formattedDate,
             style = MaterialTheme
                 .typography.bodySmall,
             color = MaterialTheme
                 .colorScheme.onSurfaceVariant
         )
+    }
+}
+
+@Composable
+private fun ErrorContent(
+    modifier: Modifier = Modifier,
+    onRetry: () -> Unit
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment =
+                Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(
+                    R.string.stats_error_api
+                ),
+                style = MaterialTheme
+                    .typography.bodyMedium,
+                color = MaterialTheme
+                    .colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onRetry) {
+                Text(
+                    text = stringResource(
+                        R.string.retry
+                    )
+                )
+            }
+        }
     }
 }

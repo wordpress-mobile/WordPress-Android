@@ -173,7 +173,7 @@ class EmailsCardViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when exception is thrown, then error state has exception message`() = test {
+    fun `when exception is thrown, then error state has unknown error message`() = test {
         whenever(statsRepository.fetchEmailsSummary(any(), any()))
             .thenThrow(RuntimeException("Test exception"))
 
@@ -183,7 +183,7 @@ class EmailsCardViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(EmailsCardUiState.Error::class.java)
         assertThat((state as EmailsCardUiState.Error).message)
-            .isEqualTo("Test exception")
+            .isEqualTo(UNKNOWN_ERROR)
     }
 
     @Test
@@ -266,5 +266,6 @@ class EmailsCardViewModelTest : BaseUnitTest() {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
         private const val FAILED_TO_LOAD_ERROR = "Failed to load stats"
+        private const val UNKNOWN_ERROR = "Unknown error"
     }
 }

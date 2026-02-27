@@ -183,7 +183,7 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
             assertThat(
                 (state as SubscribersGraphUiState.Error)
                     .message
-            ).isEqualTo("Test error")
+            ).isEqualTo(UNKNOWN_ERROR)
         }
 
     @Test
@@ -552,6 +552,7 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
             "test_access_token"
         private const val FAILED_TO_LOAD_ERROR =
             "Failed to load stats"
+        private const val UNKNOWN_ERROR = "Unknown error"
         private const val TEST_COUNT_1 = 100L
         private const val TEST_COUNT_2 = 150L
         private const val TEST_COUNT_3 = 200L

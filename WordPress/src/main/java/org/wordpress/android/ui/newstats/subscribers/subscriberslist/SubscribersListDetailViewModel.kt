@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.subscribers.subscriberslist
 
+import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,23 +42,32 @@ class SubscribersListDetailViewModel @Inject constructor(
     val canLoadMore: StateFlow<Boolean> =
         _canLoadMore.asStateFlow()
 
+    private val _hasError = MutableStateFlow(false)
+    val hasError: StateFlow<Boolean> =
+        _hasError.asStateFlow()
+
     private var currentPage = 0
     private val paginationMutex = Mutex()
 
-    fun loadInitialPage() {
+    fun loadInitialPage(resources: Resources) {
         viewModelScope.launch {
             paginationMutex.withLock {
                 if (_items.value.isNotEmpty()) return@launch
                 currentPage = 1
                 _isLoading.value = true
+                _hasError.value = false
                 _canLoadMore.value = true
-                fetchPage(currentPage, isInitial = true)
+                fetchPage(
+                    currentPage,
+                    isInitial = true,
+                    resources = resources
+                )
                 _isLoading.value = false
             }
         }
     }
 
-    fun loadMore() {
+    fun loadMore(resources: Resources) {
         viewModelScope.launch {
             paginationMutex.withLock {
                 if (!_canLoadMore.value ||
@@ -65,7 +75,11 @@ class SubscribersListDetailViewModel @Inject constructor(
                 ) return@launch
                 _isLoadingMore.value = true
                 currentPage++
-                fetchPage(currentPage, isInitial = false)
+                fetchPage(
+                    currentPage,
+                    isInitial = false,
+                    resources = resources
+                )
                 _isLoadingMore.value = false
             }
         }
@@ -74,7 +88,8 @@ class SubscribersListDetailViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchPage(
         page: Int,
-        isInitial: Boolean
+        isInitial: Boolean,
+        resources: Resources
     ) {
         val siteId = selectedSiteRepository
             .getSelectedSite()?.siteId ?: return
@@ -94,19 +109,26 @@ class SubscribersListDetailViewModel @Inject constructor(
                         SubscriberListItem(
                             displayName = it.displayName,
                             subscribedSince =
-                                it.subscribedSince
+                                it.subscribedSince,
+                            formattedDate =
+                                formatSubscriberDate(
+                                    it.subscribedSince,
+                                    resources
+                                )
                         )
                     }
                     if (isInitial) {
                         _items.value = newItems
                     } else {
-                        _items.value = _items.value + newItems
+                        _items.value =
+                            _items.value + newItems
                     }
                     _canLoadMore.value =
                         newItems.size == PAGE_SIZE
                 }
                 is SubscribersListResult.Error -> {
                     if (isInitial) {
+                        _hasError.value = true
                         _canLoadMore.value = false
                     } else {
                         currentPage--
@@ -114,7 +136,12 @@ class SubscribersListDetailViewModel @Inject constructor(
                 }
             }
         } catch (_: Exception) {
-            if (!isInitial) currentPage--
+            if (isInitial) {
+                _hasError.value = true
+                _canLoadMore.value = false
+            } else {
+                currentPage--
+            }
         }
     }
 }

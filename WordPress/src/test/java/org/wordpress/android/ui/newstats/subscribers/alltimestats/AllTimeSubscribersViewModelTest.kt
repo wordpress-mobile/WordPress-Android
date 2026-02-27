@@ -142,7 +142,7 @@ class AllTimeSubscribersViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when exception is thrown, then error state has exception message`() = test {
+    fun `when exception is thrown, then error state has unknown error message`() = test {
         whenever(statsRepository.fetchSubscribersAllTime(any()))
             .thenThrow(RuntimeException("Test exception"))
 
@@ -152,7 +152,7 @@ class AllTimeSubscribersViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(AllTimeSubscribersUiState.Error::class.java)
         assertThat((state as AllTimeSubscribersUiState.Error).message)
-            .isEqualTo("Test exception")
+            .isEqualTo(UNKNOWN_ERROR)
     }
 
     @Test
@@ -166,7 +166,7 @@ class AllTimeSubscribersViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(AllTimeSubscribersUiState.Error::class.java)
         assertThat((state as AllTimeSubscribersUiState.Error).message)
-            .isEqualTo("Unknown error")
+            .isEqualTo(UNKNOWN_ERROR)
     }
 
     @Test
@@ -273,5 +273,6 @@ class AllTimeSubscribersViewModelTest : BaseUnitTest() {
         private const val TEST_60D = 900L
         private const val TEST_90D = 850L
         private const val FAILED_TO_LOAD_ERROR = "Failed to load stats"
+        private const val UNKNOWN_ERROR = "Unknown error"
     }
 }

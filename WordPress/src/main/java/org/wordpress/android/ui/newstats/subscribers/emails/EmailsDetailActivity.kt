@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -86,6 +88,7 @@ private fun EmailsDetailScreen(
         viewModel.isLoadingMore.collectAsState()
     val canLoadMore by
         viewModel.canLoadMore.collectAsState()
+    val hasError by viewModel.hasError.collectAsState()
 
     val listState = rememberLazyListState()
 
@@ -143,6 +146,13 @@ private fun EmailsDetailScreen(
             ) {
                 CircularProgressIndicator()
             }
+        } else if (hasError) {
+            ErrorContent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding),
+                onRetry = { viewModel.loadInitialPage() }
+            )
         } else {
             LazyColumn(
                 state = listState,
@@ -293,5 +303,39 @@ private fun DetailEmailRow(item: EmailListItem) {
             textAlign = TextAlign.Center,
             modifier = Modifier.width(56.dp)
         )
+    }
+}
+
+@Composable
+private fun ErrorContent(
+    modifier: Modifier = Modifier,
+    onRetry: () -> Unit
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment =
+                Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(
+                    R.string.stats_error_api
+                ),
+                style = MaterialTheme
+                    .typography.bodyMedium,
+                color = MaterialTheme
+                    .colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onRetry) {
+                Text(
+                    text = stringResource(
+                        R.string.retry
+                    )
+                )
+            }
+        }
     }
 }

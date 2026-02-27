@@ -179,6 +179,7 @@ class EmailsDetailViewModelTest : BaseUnitTest() {
 
             assertThat(viewModel.items.value).isEmpty()
             assertThat(viewModel.canLoadMore.value).isFalse()
+            assertThat(viewModel.hasError.value).isTrue()
         }
 
     @Test
@@ -281,7 +282,7 @@ class EmailsDetailViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when exception thrown, then items remain unchanged`() =
+    fun `when exception thrown, then items remain empty and hasError is true`() =
         test {
             whenever(
                 statsRepository.fetchEmailsSummary(any(), any())
@@ -291,6 +292,7 @@ class EmailsDetailViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             assertThat(viewModel.items.value).isEmpty()
+            assertThat(viewModel.hasError.value).isTrue()
         }
 
     private fun createItems(count: Int) =

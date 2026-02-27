@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Modifier
@@ -229,11 +230,16 @@ private fun SubscriberItemRow(
             modifier = Modifier.weight(1f)
         )
         Spacer(modifier = Modifier.width(12.dp))
+        val resources = LocalContext.current.resources
+        val formattedDate = remember(
+            item.subscribedSince
+        ) {
+            formatSubscriberDate(
+                item.subscribedSince, resources
+            )
+        }
         Text(
-            text = formatSubscriberDate(
-                item.subscribedSince,
-                LocalContext.current.resources
-            ),
+            text = formattedDate,
             style = MaterialTheme
                 .typography.bodySmall,
             color = MaterialTheme

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.subscribers.subscriberslist
 
+import android.content.res.Resources
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -31,6 +32,9 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var statsRepository: StatsRepository
+
+    @Mock
+    private lateinit var resources: Resources
 
     private lateinit var viewModel: SubscribersListDetailViewModel
 
@@ -64,7 +68,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 SubscribersListResult.Success(createItems(3))
             )
 
-            viewModel.loadInitialPage()
+            viewModel.loadInitialPage(resources)
             advanceUntilIdle()
 
             assertThat(viewModel.items.value).hasSize(3)
@@ -82,7 +86,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 SubscribersListResult.Success(createItems(PAGE_SIZE))
             )
 
-            viewModel.loadInitialPage()
+            viewModel.loadInitialPage(resources)
             advanceUntilIdle()
 
             assertThat(viewModel.canLoadMore.value).isTrue()
@@ -99,7 +103,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 SubscribersListResult.Success(createItems(5))
             )
 
-            viewModel.loadInitialPage()
+            viewModel.loadInitialPage(resources)
             advanceUntilIdle()
 
             assertThat(viewModel.canLoadMore.value).isFalse()
@@ -125,10 +129,10 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 )
             )
 
-            viewModel.loadInitialPage()
+            viewModel.loadInitialPage(resources)
             advanceUntilIdle()
 
-            viewModel.loadMore()
+            viewModel.loadMore(resources)
             advanceUntilIdle()
 
             assertThat(viewModel.items.value)
@@ -154,10 +158,10 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 SubscribersListResult.Success(createItems(3))
             )
 
-            viewModel.loadInitialPage()
+            viewModel.loadInitialPage(resources)
             advanceUntilIdle()
 
-            viewModel.loadMore()
+            viewModel.loadMore(resources)
             advanceUntilIdle()
 
             assertThat(viewModel.canLoadMore.value).isFalse()
@@ -176,11 +180,12 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 )
             )
 
-            viewModel.loadInitialPage()
+            viewModel.loadInitialPage(resources)
             advanceUntilIdle()
 
             assertThat(viewModel.items.value).isEmpty()
             assertThat(viewModel.canLoadMore.value).isFalse()
+            assertThat(viewModel.hasError.value).isTrue()
         }
 
     @Test
@@ -201,10 +206,10 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 SubscribersListResult.Error(messageResId = 0)
             )
 
-            viewModel.loadInitialPage()
+            viewModel.loadInitialPage(resources)
             advanceUntilIdle()
 
-            viewModel.loadMore()
+            viewModel.loadMore(resources)
             advanceUntilIdle()
 
             // Items unchanged from first page
@@ -224,10 +229,10 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 SubscribersListResult.Success(createItems(3))
             )
 
-            viewModel.loadInitialPage()
+            viewModel.loadInitialPage(resources)
             advanceUntilIdle()
 
-            viewModel.loadInitialPage()
+            viewModel.loadInitialPage(resources)
             advanceUntilIdle()
 
             verify(statsRepository, times(1))
@@ -240,7 +245,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
             whenever(selectedSiteRepository.getSelectedSite())
                 .thenReturn(null)
 
-            viewModel.loadInitialPage()
+            viewModel.loadInitialPage(resources)
             advanceUntilIdle()
 
             assertThat(viewModel.items.value).isEmpty()
@@ -251,7 +256,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
         test {
             whenever(accountStore.accessToken).thenReturn("")
 
-            viewModel.loadInitialPage()
+            viewModel.loadInitialPage(resources)
             advanceUntilIdle()
 
             assertThat(viewModel.items.value).isEmpty()
@@ -272,7 +277,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 )
             ).thenReturn(SubscribersListResult.Success(items))
 
-            viewModel.loadInitialPage()
+            viewModel.loadInitialPage(resources)
             advanceUntilIdle()
 
             val item = viewModel.items.value[0]
@@ -283,7 +288,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when exception thrown, then items remain unchanged`() =
+    fun `when exception thrown, then items remain empty and hasError is true`() =
         test {
             whenever(
                 statsRepository.fetchSubscribersList(
@@ -291,10 +296,11 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 )
             ).thenThrow(RuntimeException("Test exception"))
 
-            viewModel.loadInitialPage()
+            viewModel.loadInitialPage(resources)
             advanceUntilIdle()
 
             assertThat(viewModel.items.value).isEmpty()
+            assertThat(viewModel.hasError.value).isTrue()
         }
 
     private fun createItems(
