@@ -284,12 +284,7 @@ class PostRsListViewModel @Inject constructor(
     ) {
         if (!checkNetwork()) return
         viewModelScope.launch {
-            // TODO remove — simulates a post action failure
-            val result = if (SIMULATE_ACTION_ERROR) {
-                PostActionResult.Error("Simulated action error")
-            } else {
-                withContext(Dispatchers.IO) { action() }
-            }
+            val result = withContext(Dispatchers.IO) { action() }
             handleActionResult(result, postId, successResId, errorResId)
         }
     }
@@ -502,8 +497,6 @@ class PostRsListViewModel @Inject constructor(
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
-                if (SIMULATE_AUTH_ERROR) simulateAuthError() // TODO remove
-                if (SIMULATE_INIT_ERROR) error("Simulated init error") // TODO remove
                 val collection = createCollection(site, tab)
                 collections[tab] = collection
                 initializingTabs.remove(tab)
@@ -580,8 +573,6 @@ class PostRsListViewModel @Inject constructor(
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
-                if (SIMULATE_AUTH_ERROR) simulateAuthError() // TODO remove
-                if (SIMULATE_REFRESH_ERROR) error("Simulated refresh error") // TODO remove
                 withContext(Dispatchers.IO) { collection.refresh() }
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
@@ -626,8 +617,6 @@ class PostRsListViewModel @Inject constructor(
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
-                if (SIMULATE_AUTH_ERROR) simulateAuthError() // TODO remove
-                if (SIMULATE_LOAD_MORE_ERROR) error("Simulated pagination error") // TODO remove
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
@@ -816,21 +805,5 @@ class PostRsListViewModel @Inject constructor(
         private const val SEARCH_DEBOUNCE_MS = 250L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
         private val ALL_STATUSES = PostRsListTab.entries.flatMap { it.statuses }.distinct()
-
-        // TODO remove before merging — flip to true one at a time to test each error path
-        private const val SIMULATE_INIT_ERROR = false
-        private const val SIMULATE_REFRESH_ERROR = false
-        private const val SIMULATE_LOAD_MORE_ERROR = false
-        private const val SIMULATE_ACTION_ERROR = false
-        private const val SIMULATE_AUTH_ERROR = false
-
-        // TODO remove — throws a WpApiException that triggers the auth error message
-        private fun simulateAuthError(): Nothing = throw WpApiException.RequestExecutionFailed(
-            statusCode = 401u.toUShort(),
-            redirects = null,
-            reason = RequestExecutionErrorReason.HttpAuthenticationRejectedError(
-                hostname = "example.com", method = null
-            )
-        )
     }
 }
