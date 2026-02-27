@@ -277,52 +277,63 @@ class PostRsListViewModel @Inject constructor(
     ) { restClient.updatePostStatus(site, postId, PostStatus.Draft) }
 
     private fun moveToDraftAndEdit(site: SiteModel, postId: Long) {
-        if (!checkNetwork()) return
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                restClient.updatePostStatus(site, postId, PostStatus.Draft)
-            }
-            when (result) {
-                is PostActionResult.Success -> {
-                    refreshAllTabs()
-                    val post = getFluxCPost(postId) ?: return@launch
-                    _events.trySend(PostRsListEvent.EditPost(site, post))
-                }
-                is PostActionResult.Error -> {
-                    AppLog.e(
-                        AppLog.T.POSTS,
-                        "Move to draft failed: ${result.message}"
-                    )
-                    _snackbarMessages.trySend(
-                        SnackbarMessage(
-                            resourceProvider.getString(
-                                R.string.post_rs_error_update_status
-                            )
-                        )
-                    )
-                }
+        updateTabUiState(PostRsListTab.TRASHED) {
+            copy(isRefreshing = true)
+        }
+        val clearRefreshing = {
+            updateTabUiState(PostRsListTab.TRASHED) {
+                copy(isRefreshing = false)
             }
         }
+        executePostAction(
+            postId = postId,
+            errorResId = R.string.post_rs_error_update_status,
+            onSuccess = {
+                refreshAllTabs()
+                getFluxCPost(postId)?.let { post ->
+                    _events.trySend(
+                        PostRsListEvent.EditPost(site, post)
+                    )
+                }
+            },
+            onError = clearRefreshing
+        ) { restClient.updatePostStatus(site, postId, PostStatus.Draft) }
     }
 
     /**
-     * Shared helper that runs a post mutation on IO
+     * Shared helper that runs a post mutation on IO.
      *
      * @param postId        Remote ID of the post being acted on.
-     * @param successResId  String resource shown when [action] succeeds.
+     * @param successResId  String resource shown when [action] succeeds
+     *                      (unused when [onSuccess] is provided).
      * @param errorResId    String resource shown when [action] fails.
+     * @param onSuccess     Optional callback that replaces the default
+     *                      success handling (remove from UI + snackbar
+     *                      + refresh).
+     * @param onError       Optional callback invoked after the default
+     *                      error handling (e.g. to clear loading state).
      * @param action        Suspend lambda that performs the network call.
      */
     private fun executePostAction(
         postId: Long,
-        successResId: Int,
+        successResId: Int = 0,
         errorResId: Int,
+        onSuccess: (() -> Unit)? = null,
+        onError: (() -> Unit)? = null,
         action: suspend () -> PostActionResult
     ) {
-        if (!checkNetwork()) return
+        if (!checkNetwork()) {
+            onError?.invoke()
+            return
+        }
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) { action() }
-            handleActionResult(result, postId, successResId, errorResId)
+            if (result is PostActionResult.Success && onSuccess != null) {
+                onSuccess()
+            } else {
+                handleActionResult(result, postId, successResId, errorResId)
+                if (result is PostActionResult.Error) onError?.invoke()
+            }
         }
     }
 
