@@ -33,8 +33,7 @@ If there are uncommitted changes:
   `credentials.json`, etc.). Warn the user if they specifically request
   to commit those files.
 - Write a concise commit message (1-2 sentences) that focuses on the
-  "why" rather than the "what". End it with:
-  `Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>`
+  "why" rather than the "what".
 - Use a HEREDOC to pass the commit message to ensure correct formatting.
 
 ### 4. Push to remote
@@ -98,7 +97,8 @@ EOF
 
 ### 10. Report the result
 
-Output the PR URL and open it in the user's browser.
+Output the PR URL and, if running in a local GUI environment, attempt
+to open it in the user's browser.
 
 ## Important Rules
 
