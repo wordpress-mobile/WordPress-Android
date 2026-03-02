@@ -44,7 +44,6 @@ import uniffi.wp_api.WpApiParamPostsOrderBy
 import uniffi.wp_api.WpErrorCode
 import uniffi.wp_mobile.FetchException
 import uniffi.wp_mobile.PostListFilter
-import uniffi.wp_mobile.PostService
 import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
 
