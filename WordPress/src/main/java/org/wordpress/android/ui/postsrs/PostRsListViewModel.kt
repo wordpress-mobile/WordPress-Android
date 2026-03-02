@@ -89,7 +89,7 @@ class PostRsListViewModel @Inject constructor(
     private val _site: SiteModel? = selectedSiteRepository.getSelectedSite()
     private val site: SiteModel
         get() = requireNotNull(_site) { "No selected site — Activity should have finished" }
-    private val postService: PostService by lazy { serviceProvider.getService(site).posts() }
+    private val postService by lazy { serviceProvider.getService(site).posts() }
 
     val avatarUrl: String? = accountStore.account?.avatarUrl
 
@@ -262,96 +262,42 @@ class PostRsListViewModel @Inject constructor(
         _pendingConfirmation.value = null
     }
 
-    @Suppress("TooGenericExceptionCaught")
-    private fun trashPost(postId: Long) {
-        if (!checkNetwork()) return
-        viewModelScope.launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    postService.trashPost(PostEndpointType.Posts, postId)
-                }
-                _snackbarMessages.trySend(
-                    SnackbarMessage(resourceProvider.getString(R.string.post_rs_trashed))
-                )
-            } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Trash failed", e)
-                _snackbarMessages.trySend(
-                    SnackbarMessage(getErrorMessage(e, R.string.post_rs_error_trash))
-                )
-            }
-        }
+    private fun trashPost(postId: Long) = executePostMutation(
+        successMessageResId = R.string.post_rs_trashed,
+        errorMessageResId = R.string.post_rs_error_trash,
+        logTag = "Trash"
+    ) {
+        postService.trashPost(PostEndpointType.Posts, postId)
     }
 
-    @Suppress("TooGenericExceptionCaught")
-    private fun deletePost(postId: Long) {
-        if (!checkNetwork()) return
-        viewModelScope.launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    postService.deletePostPermanently(PostEndpointType.Posts, postId)
-                }
-                _snackbarMessages.trySend(
-                    SnackbarMessage(resourceProvider.getString(R.string.post_rs_deleted))
-                )
-            } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Delete failed", e)
-                _snackbarMessages.trySend(
-                    SnackbarMessage(getErrorMessage(e, R.string.post_rs_error_delete))
-                )
-            }
-        }
+    private fun deletePost(postId: Long) = executePostMutation(
+        successMessageResId = R.string.post_rs_deleted,
+        errorMessageResId = R.string.post_rs_error_delete,
+        logTag = "Delete"
+    ) {
+        postService.deletePostPermanently(PostEndpointType.Posts, postId)
     }
 
-    @Suppress("TooGenericExceptionCaught")
-    private fun publishPost(postId: Long) {
-        if (!checkNetwork()) return
-        viewModelScope.launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    postService.updatePost(
-                        PostEndpointType.Posts, postId,
-                        PostUpdateParams(status = PostStatus.Publish, meta = null)
-                    )
-                }
-                _snackbarMessages.trySend(
-                    SnackbarMessage(resourceProvider.getString(R.string.post_rs_published))
-                )
-            } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Publish failed", e)
-                _snackbarMessages.trySend(
-                    SnackbarMessage(
-                        getErrorMessage(e, R.string.post_rs_error_update_status)
-                    )
-                )
-            }
-        }
+    private fun publishPost(postId: Long) = executePostMutation(
+        successMessageResId = R.string.post_rs_published,
+        errorMessageResId = R.string.post_rs_error_update_status,
+        logTag = "Publish"
+    ) {
+        postService.updatePost(
+            PostEndpointType.Posts, postId,
+            postStatusUpdate(PostStatus.Publish)
+        )
     }
 
-    @Suppress("TooGenericExceptionCaught")
-    private fun moveToDraft(postId: Long) {
-        if (!checkNetwork()) return
-        viewModelScope.launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    postService.updatePost(
-                        PostEndpointType.Posts, postId,
-                        PostUpdateParams(status = PostStatus.Draft, meta = null)
-                    )
-                }
-                _snackbarMessages.trySend(
-                    SnackbarMessage(
-                        resourceProvider.getString(R.string.post_rs_moved_to_draft)
-                    )
-                )
-            } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Move to draft failed", e)
-                _snackbarMessages.trySend(
-                    SnackbarMessage(
-                        getErrorMessage(e, R.string.post_rs_error_update_status)
-                    )
-                )
-            }
-        }
+    private fun moveToDraft(postId: Long) = executePostMutation(
+        successMessageResId = R.string.post_rs_moved_to_draft,
+        errorMessageResId = R.string.post_rs_error_update_status,
+        logTag = "Move to draft"
+    ) {
+        postService.updatePost(
+            PostEndpointType.Posts, postId,
+            postStatusUpdate(PostStatus.Draft)
+        )
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -363,7 +309,7 @@ class PostRsListViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     postService.updatePost(
                         PostEndpointType.Posts, postId,
-                        PostUpdateParams(status = PostStatus.Draft, meta = null)
+                        postStatusUpdate(PostStatus.Draft)
                     )
                 }
                 val post = getFluxCPost(postId)
@@ -378,7 +324,7 @@ class PostRsListViewModel @Inject constructor(
                 AppLog.e(AppLog.T.POSTS, "Move to draft and edit failed", e)
                 _snackbarMessages.trySend(
                     SnackbarMessage(
-                        getErrorMessage(e, R.string.post_rs_error_update_status)
+                        friendlyErrorMessage(e, R.string.post_rs_error_update_status)
                     )
                 )
             } finally {
@@ -459,18 +405,62 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
-     * Parses an exception to provide a user-friendly error message.
-     * Checks network availability and extracts WpApiException messages.
+     * Returns a user-friendly error subtitle based on the exception type.
+     * Detects offline, authentication, and generic errors. When a default
+     * resource ID is provided and the exception is a WpApiException with a
+     * message, that message is used; otherwise falls back to the default.
      */
-    private fun getErrorMessage(exception: Exception, defaultResId: Int): String {
-        return when {
-            !networkUtilsWrapper.isNetworkAvailable() ->
-                resourceProvider.getString(R.string.no_network_message)
-            exception is WpApiException -> {
-                exception.message?.takeIf { it.isNotBlank() }
-                    ?: resourceProvider.getString(defaultResId)
+    private fun friendlyErrorMessage(e: Exception? = null, defaultResId: Int? = null): String {
+        val apiException = unwrapException(e)
+        val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
+
+        // For WpApiException with a message and a default provided, prefer the API message
+        if (defaultResId != null && apiException is WpApiException) {
+            apiException.message?.takeIf { it.isNotBlank() }?.let { return it }
+        }
+
+        val resId = when {
+            reason is RequestExecutionErrorReason.DeviceIsOfflineError ||
+                !networkUtilsWrapper.isNetworkAvailable() ->
+                R.string.error_generic_network
+
+            isAuthError(e) -> R.string.post_rs_error_auth
+
+            defaultResId != null -> defaultResId
+
+            else -> R.string.request_failed_message
+        }
+        return resourceProvider.getString(resId)
+    }
+
+    /** Creates a PostUpdateParams for changing post status. */
+    private fun postStatusUpdate(status: PostStatus) = PostUpdateParams(status = status, meta = null)
+
+    /**
+     * Executes a post mutation with standard error handling.
+     * Checks network, launches coroutine, executes operation on IO,
+     * shows success/error messages.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    private fun executePostMutation(
+        successMessageResId: Int,
+        errorMessageResId: Int,
+        logTag: String,
+        operation: suspend () -> Unit
+    ) {
+        if (!checkNetwork()) return
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.IO) { operation() }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(resourceProvider.getString(successMessageResId))
+                )
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "$logTag failed", e)
+                _snackbarMessages.trySend(
+                    SnackbarMessage(friendlyErrorMessage(e, errorMessageResId))
+                )
             }
-            else -> resourceProvider.getString(defaultResId)
         }
     }
 
