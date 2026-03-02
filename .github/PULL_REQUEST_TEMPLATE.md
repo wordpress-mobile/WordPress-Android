@@ -2,7 +2,20 @@
 <!-- Describe the changes, why they are needed, and how they address the issue -->
 
 ## Testing instructions
-<!-- Consider listing specific testing steps for helping reviewers evaluate the efficacy of the changes -->
+<!--
+Provide specific testing steps for reviewers. Use the following format:
+
+Test case title:
+
+1. Step 1
+2. Step 2
+- [ ] Verify expected outcome
+3. Step 3
+- [ ] Verify another expected outcome
+
+Use numbered lists for action steps and checkboxes for verifications.
+Organise by test case title when there are multiple scenarios.
+-->
 
 <!--
 
