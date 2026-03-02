@@ -375,27 +375,6 @@ class PostRsListViewModel @Inject constructor(
             errorCode is WpErrorCode.NoAuthenticatedAppPassword
     }
 
-    /**
-     * Returns a user-friendly error subtitle based on the exception type.
-     * Detects offline, authentication, and generic errors. Raw
-     * exception/API messages are never surfaced to the user.
-     */
-    private fun friendlyErrorMessage(e: Exception? = null): String {
-        val apiException = unwrapException(e)
-        val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
-
-        val resId = when {
-            reason is RequestExecutionErrorReason.DeviceIsOfflineError ||
-                !networkUtilsWrapper.isNetworkAvailable() ->
-                R.string.error_generic_network
-
-            isAuthError(e) -> R.string.post_rs_error_auth
-
-            else -> R.string.request_failed_message
-        }
-        return resourceProvider.getString(resId)
-    }
-
     private fun checkNetwork(): Boolean {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
