@@ -26,7 +26,6 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient.PostActionResult
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
@@ -38,12 +37,14 @@ import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditCont
 import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
+import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.WpApiException
 import uniffi.wp_api.WpApiParamPostsOrderBy
 import uniffi.wp_api.WpErrorCode
 import uniffi.wp_mobile.FetchException
 import uniffi.wp_mobile.PostListFilter
+import uniffi.wp_mobile.PostService
 import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
 
@@ -88,6 +89,7 @@ class PostRsListViewModel @Inject constructor(
     private val _site: SiteModel? = selectedSiteRepository.getSelectedSite()
     private val site: SiteModel
         get() = requireNotNull(_site) { "No selected site — Activity should have finished" }
+    private val postService: PostService by lazy { serviceProvider.getService(site).posts() }
 
     val avatarUrl: String? = accountStore.account?.avatarUrl
 
@@ -237,8 +239,8 @@ class PostRsListViewModel @Inject constructor(
                 _pendingConfirmation.value = PendingConfirmation.Trash(remotePostId)
             PostRsMenuAction.DELETE_PERMANENTLY ->
                 _pendingConfirmation.value = PendingConfirmation.Delete(remotePostId)
-            PostRsMenuAction.PUBLISH -> publishPost(site, remotePostId)
-            PostRsMenuAction.MOVE_TO_DRAFT -> moveToDraft(site, remotePostId)
+            PostRsMenuAction.PUBLISH -> publishPost(remotePostId)
+            PostRsMenuAction.MOVE_TO_DRAFT -> moveToDraft(remotePostId)
             PostRsMenuAction.DUPLICATE -> duplicatePost(remotePostId)
         }
     }
@@ -246,10 +248,10 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun onConfirmPendingAction() {
         when (val confirmation = _pendingConfirmation.value) {
-            is PendingConfirmation.Trash -> trashPost(site, confirmation.postId)
-            is PendingConfirmation.Delete -> deletePost(site, confirmation.postId)
+            is PendingConfirmation.Trash -> trashPost(confirmation.postId)
+            is PendingConfirmation.Delete -> deletePost(confirmation.postId)
             is PendingConfirmation.MoveToDraft ->
-                moveToDraftAndEdit(site, confirmation.postId)
+                moveToDraftAndEdit(confirmation.postId)
             null -> Unit
         }
         _pendingConfirmation.value = null
@@ -260,86 +262,129 @@ class PostRsListViewModel @Inject constructor(
         _pendingConfirmation.value = null
     }
 
-    private fun trashPost(site: SiteModel, postId: Long) = executePostAction(
-        postId, R.string.post_rs_trashed, R.string.post_rs_error_trash
-    ) { restClient.trashPost(site, postId) }
-
-    private fun deletePost(site: SiteModel, postId: Long) = executePostAction(
-        postId, R.string.post_rs_deleted, R.string.post_rs_error_delete
-    ) { restClient.deletePost(site, postId) }
-
-    private fun publishPost(site: SiteModel, postId: Long) = executePostAction(
-        postId, R.string.post_rs_published, R.string.post_rs_error_update_status
-    ) { restClient.updatePostStatus(site, postId, PostStatus.Publish) }
-
-    private fun moveToDraft(site: SiteModel, postId: Long) = executePostAction(
-        postId, R.string.post_rs_moved_to_draft, R.string.post_rs_error_update_status
-    ) { restClient.updatePostStatus(site, postId, PostStatus.Draft) }
-
-    private fun moveToDraftAndEdit(site: SiteModel, postId: Long) {
-        updateTabUiState(PostRsListTab.TRASHED) {
-            copy(isRefreshing = true)
-        }
-        val clearRefreshing = {
-            updateTabUiState(PostRsListTab.TRASHED) {
-                copy(isRefreshing = false)
+    @Suppress("TooGenericExceptionCaught")
+    private fun trashPost(postId: Long) {
+        if (!checkNetwork()) return
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    postService.trashPost(PostEndpointType.Posts, postId)
+                }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(resourceProvider.getString(R.string.post_rs_trashed))
+                )
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Trash failed", e)
+                _snackbarMessages.trySend(
+                    SnackbarMessage(resourceProvider.getString(R.string.post_rs_error_trash))
+                )
             }
         }
-        executePostAction(
-            postId = postId,
-            errorResId = R.string.post_rs_error_update_status,
-            onSuccess = {
-                refreshAllTabs()
-                val post = getFluxCPost(postId)
-                if (post != null) {
-                    _events.trySend(
-                        PostRsListEvent.EditPost(site, post)
-                    )
-                } else {
-                    _events.trySend(
-                        PostRsListEvent.ShowToast(
-                            R.string.post_rs_moved_to_draft
-                        )
-                    )
-                }
-            },
-            onError = clearRefreshing
-        ) { restClient.updatePostStatus(site, postId, PostStatus.Draft) }
     }
 
-    /**
-     * Shared helper that runs a post mutation on IO.
-     *
-     * @param postId        Remote ID of the post being acted on.
-     * @param successResId  String resource shown when [action] succeeds
-     *                      (unused when [onSuccess] is provided).
-     * @param errorResId    String resource shown when [action] fails.
-     * @param onSuccess     Optional callback that replaces the default
-     *                      success handling (remove from UI + snackbar
-     *                      + refresh).
-     * @param onError       Optional callback invoked after the default
-     *                      error handling (e.g. to clear loading state).
-     * @param action        Suspend lambda that performs the network call.
-     */
-    private fun executePostAction(
-        postId: Long,
-        successResId: Int = 0,
-        errorResId: Int,
-        onSuccess: (() -> Unit)? = null,
-        onError: (() -> Unit)? = null,
-        action: suspend () -> PostActionResult
-    ) {
-        if (!checkNetwork()) {
-            onError?.invoke()
-            return
-        }
+    @Suppress("TooGenericExceptionCaught")
+    private fun deletePost(postId: Long) {
+        if (!checkNetwork()) return
         viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) { action() }
-            if (result is PostActionResult.Success && onSuccess != null) {
-                onSuccess()
-            } else {
-                handleActionResult(result, postId, successResId, errorResId)
-                if (result is PostActionResult.Error) onError?.invoke()
+            try {
+                withContext(Dispatchers.IO) {
+                    postService.deletePostPermanently(PostEndpointType.Posts, postId)
+                }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(resourceProvider.getString(R.string.post_rs_deleted))
+                )
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Delete failed", e)
+                _snackbarMessages.trySend(
+                    SnackbarMessage(resourceProvider.getString(R.string.post_rs_error_delete))
+                )
+            }
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private fun publishPost(postId: Long) {
+        if (!checkNetwork()) return
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    postService.updatePost(
+                        PostEndpointType.Posts, postId,
+                        PostUpdateParams(status = PostStatus.Publish, meta = null)
+                    )
+                }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(resourceProvider.getString(R.string.post_rs_published))
+                )
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Publish failed", e)
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        resourceProvider.getString(R.string.post_rs_error_update_status)
+                    )
+                )
+            }
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private fun moveToDraft(postId: Long) {
+        if (!checkNetwork()) return
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    postService.updatePost(
+                        PostEndpointType.Posts, postId,
+                        PostUpdateParams(status = PostStatus.Draft, meta = null)
+                    )
+                }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        resourceProvider.getString(R.string.post_rs_moved_to_draft)
+                    )
+                )
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Move to draft failed", e)
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        resourceProvider.getString(R.string.post_rs_error_update_status)
+                    )
+                )
+            }
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private fun moveToDraftAndEdit(postId: Long) {
+        if (!checkNetwork()) return
+        updateTabUiState(PostRsListTab.TRASHED) { copy(isRefreshing = true) }
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    postService.updatePost(
+                        PostEndpointType.Posts, postId,
+                        PostUpdateParams(status = PostStatus.Draft, meta = null)
+                    )
+                }
+                val post = getFluxCPost(postId)
+                if (post != null) {
+                    _events.trySend(PostRsListEvent.EditPost(site, post))
+                } else {
+                    _events.trySend(
+                        PostRsListEvent.ShowToast(R.string.post_rs_moved_to_draft)
+                    )
+                }
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Move to draft and edit failed", e)
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        resourceProvider.getString(R.string.post_rs_error_update_status)
+                    )
+                )
+            } finally {
+                updateTabUiState(PostRsListTab.TRASHED) {
+                    copy(isRefreshing = false)
+                }
             }
         }
     }
@@ -411,46 +456,6 @@ class PostRsListViewModel @Inject constructor(
             return false
         }
         return true
-    }
-
-    /**
-     * Processes the outcome of a post mutation. On success, optimistically
-     * removes the post from the UI, shows a toast, and refreshes all tabs.
-     * On error, logs the failure and shows an error toast.
-     */
-    private fun handleActionResult(
-        result: PostActionResult,
-        postId: Long,
-        successResId: Int,
-        errorResId: Int
-    ) {
-        when (result) {
-            is PostActionResult.Success -> {
-                removePostFromState(postId)
-                _snackbarMessages.trySend(
-                    SnackbarMessage(resourceProvider.getString(successResId))
-                )
-                refreshAllTabs()
-            }
-            is PostActionResult.Error -> {
-                AppLog.e(AppLog.T.POSTS, "Post action failed: ${result.message}")
-                _snackbarMessages.trySend(
-                    SnackbarMessage(resourceProvider.getString(errorResId))
-                )
-            }
-        }
-    }
-
-    private fun refreshAllTabs() {
-        collections.keys.toList().forEach { tab -> refreshTab(tab) }
-    }
-
-    /** Optimistically removes a post from every tab's UI state so it disappears immediately. */
-    private fun removePostFromState(postId: Long) {
-        _tabStates.value = _tabStates.value.mapValues { (_, state) ->
-            val filtered = state.posts.filter { it.remotePostId != postId }
-            if (filtered.size != state.posts.size) state.copy(posts = filtered) else state
-        }
     }
 
     private fun findPost(remotePostId: Long): PostRsUiModel? {
