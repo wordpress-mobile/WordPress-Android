@@ -4,6 +4,7 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
@@ -319,6 +320,8 @@ class PostRsListViewModel @Inject constructor(
                         PostRsListEvent.ShowToast(R.string.post_rs_moved_to_draft)
                     )
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Move to draft and edit failed", e)
                 _snackbarMessages.trySend(
@@ -454,6 +457,8 @@ class PostRsListViewModel @Inject constructor(
                 _snackbarMessages.trySend(
                     SnackbarMessage(resourceProvider.getString(successMessageResId))
                 )
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "$logTag failed", e)
                 _snackbarMessages.trySend(
