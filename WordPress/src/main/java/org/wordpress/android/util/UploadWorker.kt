@@ -1,6 +1,7 @@
 package org.wordpress.android.util
 
 import android.content.Context
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -21,6 +22,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.uploads.UploadStarter
 import java.util.concurrent.TimeUnit.HOURS
+import java.util.concurrent.TimeUnit.MINUTES
 
 class UploadWorker(
     appContext: Context,
@@ -34,15 +36,20 @@ class UploadWorker(
 
     override fun doWork(): Result {
         AppLog.i(AppLog.T.MAIN, "UploadWorker started")
-        runBlocking {
-            val job = when (val localSiteId = inputData.getInt(WordPress.LOCAL_SITE_ID, UPLOAD_FROM_ALL_SITES)) {
-                UPLOAD_FROM_ALL_SITES -> uploadStarter.queueUploadFromAllSites()
-                else -> siteStore.getSiteByLocalId(localSiteId)?.let { uploadStarter.queueUploadFromSite(it) }
+        return try {
+            runBlocking {
+                val job = when (val localSiteId = inputData.getInt(WordPress.LOCAL_SITE_ID, UPLOAD_FROM_ALL_SITES)) {
+                    UPLOAD_FROM_ALL_SITES -> uploadStarter.queueUploadFromAllSites()
+                    else -> siteStore.getSiteByLocalId(localSiteId)?.let { uploadStarter.queueUploadFromSite(it) }
+                }
+                job?.join()
             }
-            job?.join()
+            AppLog.i(AppLog.T.MAIN, "UploadWorker finished")
+            Result.success()
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.MAIN, "UploadWorker failed; will retry", e)
+            Result.retry()
         }
-        AppLog.i(AppLog.T.MAIN, "UploadWorker finished")
-        return Result.success()
     }
 
     class Factory(
@@ -65,13 +72,14 @@ class UploadWorker(
 
 private fun getUploadConstraints(): Constraints {
     return Constraints.Builder()
-        .setRequiredNetworkType(NetworkType.NOT_ROAMING)
+        .setRequiredNetworkType(NetworkType.CONNECTED)
         .build()
 }
 
 fun enqueueUploadWorkRequestForSite(site: SiteModel): Pair<WorkRequest, Operation> {
     val request = OneTimeWorkRequestBuilder<UploadWorker>()
         .setConstraints(getUploadConstraints())
+        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, MINUTES)
         .setInputData(workDataOf(WordPress.LOCAL_SITE_ID to site.id))
         .build()
     val operation = WorkManager.getInstance(WordPress.getContext()).enqueueUniqueWork(
@@ -84,6 +92,7 @@ fun enqueueUploadWorkRequestForSite(site: SiteModel): Pair<WorkRequest, Operatio
 fun enqueuePeriodicUploadWorkRequestForAllSites(): Pair<WorkRequest, Operation> {
     val request = PeriodicWorkRequestBuilder<UploadWorker>(8, HOURS, 6, HOURS)
         .setConstraints(getUploadConstraints())
+        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, MINUTES)
         .build()
     val operation = WorkManager.getInstance(WordPress.getContext()).enqueueUniquePeriodicWork(
         "periodic auto-upload",

@@ -70,6 +70,8 @@ public class UploadService extends Service {
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
     private static final String KEY_SOURCE_FOR_LOGGING = "sourceForLogging";
 
+    private static final Set<Integer> sRecoveredMediaIds = new HashSet<>();
+
     private static @Nullable UploadService sInstance;
 
     private MediaUploadHandler mMediaUploadHandler;
@@ -99,7 +101,6 @@ public class UploadService extends Service {
         AppLog.i(T.MAIN, "UploadService > Created");
         mDispatcher.register(this);
         sInstance = this;
-        // TODO: Recover any posts/media uploads that were interrupted by the service being stopped
 
         if (mMediaUploadHandler == null) {
             mMediaUploadHandler = new MediaUploadHandler();
@@ -112,6 +113,8 @@ public class UploadService extends Service {
         if (mPostUploadHandler == null) {
             mPostUploadHandler = new PostUploadHandler(mPostUploadNotifier);
         }
+
+        recoverInterruptedMediaUploads();
     }
 
     @Override
@@ -245,6 +248,52 @@ public class UploadService extends Service {
                 mPostUploadNotifier.addMediaInfoToForegroundNotification(toBeUploadedMediaList);
             }
         }
+    }
+
+    private void recoverInterruptedMediaUploads() {
+        List<MediaModel> allRecoveredMedia = new ArrayList<>();
+        for (SiteModel site : mSiteStore.getSites()) {
+            List<MediaModel> mediaToRecover = new ArrayList<>(
+                    mMediaStore.getSiteMediaWithState(site, MediaUploadState.QUEUED));
+
+            for (MediaModel media : mMediaStore.getSiteMediaWithState(
+                    site, MediaUploadState.UPLOADING)) {
+                media.setUploadState(MediaUploadState.QUEUED.toString());
+                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+                mediaToRecover.add(media);
+            }
+
+            for (MediaModel media : mMediaStore.getSiteMediaWithState(
+                    site, MediaUploadState.FAILED)) {
+                if (media.getLocalPostId() > 0 && hasValidFile(media)) {
+                    media.setUploadState(MediaUploadState.QUEUED.toString());
+                    mDispatcher.dispatch(
+                            MediaActionBuilder.newUpdateMediaAction(media));
+                    mediaToRecover.add(media);
+                }
+            }
+
+            for (MediaModel media : mediaToRecover) {
+                if (!sRecoveredMediaIds.contains(media.getId())) {
+                    mMediaUploadHandler.upload(media);
+                    sRecoveredMediaIds.add(media.getId());
+                }
+            }
+            allRecoveredMedia.addAll(mediaToRecover);
+        }
+
+        if (!allRecoveredMedia.isEmpty()) {
+            registerPostModelsForMedia(allRecoveredMedia, false);
+            AppLog.i(T.MEDIA, "UploadService > Recovered "
+                    + allRecoveredMedia.size()
+                    + " interrupted media uploads");
+        }
+    }
+
+    private boolean hasValidFile(MediaModel media) {
+        String filePath = media.getFilePath();
+        return filePath != null && !filePath.isEmpty()
+                && new java.io.File(filePath).exists();
     }
 
     private void registerPostModelsForMedia(List<MediaModel> mediaList, boolean isRetry) {
