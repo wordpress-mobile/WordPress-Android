@@ -98,7 +98,7 @@ EOF
 
 ### 10. Report the result
 
-Output the PR URL so the user can access it directly.
+Output the PR URL and open it in the user's browser.
 
 ## Important Rules
 
