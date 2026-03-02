@@ -70,7 +70,7 @@ public class UploadService extends Service {
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
     private static final String KEY_SOURCE_FOR_LOGGING = "sourceForLogging";
 
-    private static final Set<Integer> sRecoveredMediaIds = new HashSet<>();
+    private static final Set<Integer> RECOVERED_MEDIA_IDS = new HashSet<>();
 
     private static @Nullable UploadService sInstance;
 
@@ -274,9 +274,9 @@ public class UploadService extends Service {
             }
 
             for (MediaModel media : mediaToRecover) {
-                if (!sRecoveredMediaIds.contains(media.getId())) {
+                if (!RECOVERED_MEDIA_IDS.contains(media.getId())) {
                     mMediaUploadHandler.upload(media);
-                    sRecoveredMediaIds.add(media.getId());
+                    RECOVERED_MEDIA_IDS.add(media.getId());
                 }
             }
             allRecoveredMedia.addAll(mediaToRecover);
