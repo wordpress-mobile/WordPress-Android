@@ -276,7 +276,7 @@ class PostRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Trash failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(resourceProvider.getString(R.string.post_rs_error_trash))
+                    SnackbarMessage(getErrorMessage(e, R.string.post_rs_error_trash))
                 )
             }
         }
@@ -296,7 +296,7 @@ class PostRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Delete failed", e)
                 _snackbarMessages.trySend(
-                    SnackbarMessage(resourceProvider.getString(R.string.post_rs_error_delete))
+                    SnackbarMessage(getErrorMessage(e, R.string.post_rs_error_delete))
                 )
             }
         }
@@ -320,7 +320,7 @@ class PostRsListViewModel @Inject constructor(
                 AppLog.e(AppLog.T.POSTS, "Publish failed", e)
                 _snackbarMessages.trySend(
                     SnackbarMessage(
-                        resourceProvider.getString(R.string.post_rs_error_update_status)
+                        getErrorMessage(e, R.string.post_rs_error_update_status)
                     )
                 )
             }
@@ -347,7 +347,7 @@ class PostRsListViewModel @Inject constructor(
                 AppLog.e(AppLog.T.POSTS, "Move to draft failed", e)
                 _snackbarMessages.trySend(
                     SnackbarMessage(
-                        resourceProvider.getString(R.string.post_rs_error_update_status)
+                        getErrorMessage(e, R.string.post_rs_error_update_status)
                     )
                 )
             }
@@ -378,7 +378,7 @@ class PostRsListViewModel @Inject constructor(
                 AppLog.e(AppLog.T.POSTS, "Move to draft and edit failed", e)
                 _snackbarMessages.trySend(
                     SnackbarMessage(
-                        resourceProvider.getString(R.string.post_rs_error_update_status)
+                        getErrorMessage(e, R.string.post_rs_error_update_status)
                     )
                 )
             } finally {
@@ -456,6 +456,22 @@ class PostRsListViewModel @Inject constructor(
             return false
         }
         return true
+    }
+
+    /**
+     * Parses an exception to provide a user-friendly error message.
+     * Checks network availability and extracts WpApiException messages.
+     */
+    private fun getErrorMessage(exception: Exception, defaultResId: Int): String {
+        return when {
+            !networkUtilsWrapper.isNetworkAvailable() ->
+                resourceProvider.getString(R.string.no_network_message)
+            exception is WpApiException -> {
+                exception.message?.takeIf { it.isNotBlank() }
+                    ?: resourceProvider.getString(defaultResId)
+            }
+            else -> resourceProvider.getString(defaultResId)
+        }
     }
 
     private fun findPost(remotePostId: Long): PostRsUiModel? {
