@@ -559,6 +559,7 @@ class PostRsListViewModel @Inject constructor(
                 collections[tab] = collection
                 initializingTabs.remove(tab)
                 registerObservers(tab, collection)
+                loadItemsForTab(tab)
                 refreshTab(tab)
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to init RS post list tab", e)
@@ -668,7 +669,7 @@ class PostRsListViewModel @Inject constructor(
     fun loadMorePosts(tab: PostRsListTab) {
         val collection = collections[tab] ?: return
         val current = getTabUiState(tab)
-        if (current.isLoadingMore || !current.canLoadMore) return
+        if (current.isLoadingMore || current.isRefreshing || !current.canLoadMore) return
 
         updateTabUiState(tab) { copy(isLoadingMore = true) }
 
