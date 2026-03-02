@@ -357,6 +357,11 @@ class PostRsListViewModel @Inject constructor(
         _events.trySend(PostRsListEvent.EditPost(site, newPost))
     }
 
+    /**
+     * Extracts the underlying [WpApiException] from a [FetchException.Api]
+     * wrapper so that callers can inspect API-level error details (status
+     * codes, error reasons) without knowing about the wrapper type.
+     */
     private fun unwrapException(e: Exception?): Exception? =
         (e as? FetchException.Api)?.v1 ?: e
 
@@ -418,7 +423,7 @@ class PostRsListViewModel @Inject constructor(
     private fun postStatusUpdate(status: PostStatus) = PostUpdateParams(status = status, meta = null)
 
     /**
-     * Executes a post mutation with standard error handling.
+     * Executes a post mutation (trash, draft, etc.) with standard error handling.
      * Checks network, launches coroutine, executes operation on IO,
      * shows success/error messages.
      */
@@ -447,6 +452,7 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /** Searches all tab states for a [PostRsUiModel] matching [remotePostId]. */
     private fun findPost(remotePostId: Long): PostRsUiModel? {
         for (state in _tabStates.value.values) {
             for (post in state.posts) {
