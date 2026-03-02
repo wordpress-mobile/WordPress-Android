@@ -54,7 +54,9 @@ data class PostRsUiModel(
     val featuredImageUrl: String? = null,
     val actions: List<PostRsMenuAction> = emptyList(),
     val isPlaceholder: Boolean = false,
-    val isError: Boolean = false
+    val isError: Boolean = false,
+    val isSyncing: Boolean = false,
+    val hasSyncError: Boolean = false
 )
 
 enum class PostRsMenuAction(
@@ -108,9 +110,9 @@ fun PostItemState.toUiModel(
         is PostItemState.Stale ->
             data.toUiModel(showStatus)
         is PostItemState.FetchingWithData ->
-            data.toUiModel(showStatus)
+            data.toUiModel(showStatus).copy(isSyncing = true)
         is PostItemState.FailedWithData ->
-            data.toUiModel(showStatus)
+            data.toUiModel(showStatus).copy(hasSyncError = true)
         is PostItemState.Missing,
         is PostItemState.Fetching -> PostRsUiModel(
             remotePostId = postId,

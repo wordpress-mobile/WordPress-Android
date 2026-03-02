@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -97,12 +98,40 @@ private fun PostContentItem(
                         append(post.authorDisplayName)
                     }
                 }
-                if (dateText.isNotBlank()) {
-                    Text(
-                        text = dateText,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                if (dateText.isNotBlank() || post.isSyncing || post.hasSyncError) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        if (dateText.isNotBlank()) {
+                            Text(
+                                text = dateText,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                        if (post.isSyncing) {
+                            if (dateText.isNotBlank()) {
+                                Spacer(modifier = Modifier.width(6.dp))
+                            }
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(12.dp),
+                                strokeWidth = 1.5.dp
+                            )
+                        }
+                        if (post.hasSyncError) {
+                            if (dateText.isNotBlank()) {
+                                Spacer(modifier = Modifier.width(6.dp))
+                            }
+                            Icon(
+                                painter = painterResource(
+                                    R.drawable.ic_notice_white_24dp
+                                ),
+                                contentDescription = stringResource(
+                                    R.string.error
+                                ),
+                                modifier = Modifier.size(14.dp),
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
                     Spacer(modifier = Modifier.height(4.dp))
                 }
                 Text(
