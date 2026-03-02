@@ -50,6 +50,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -70,7 +71,10 @@ public class UploadService extends Service {
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
     private static final String KEY_SOURCE_FOR_LOGGING = "sourceForLogging";
 
-    private static final Set<Integer> RECOVERED_MEDIA_IDS = new HashSet<>();
+    // Accessed only on the main thread from onCreate(). Retains IDs for the process lifetime
+    // to prevent re-recovery loops; naturally cleared when the process dies.
+    private static final Set<Integer> RECOVERED_MEDIA_IDS =
+            Collections.synchronizedSet(new HashSet<>());
 
     private static @Nullable UploadService sInstance;
 
@@ -277,9 +281,9 @@ public class UploadService extends Service {
                 if (!RECOVERED_MEDIA_IDS.contains(media.getId())) {
                     mMediaUploadHandler.upload(media);
                     RECOVERED_MEDIA_IDS.add(media.getId());
+                    allRecoveredMedia.add(media);
                 }
             }
-            allRecoveredMedia.addAll(mediaToRecover);
         }
 
         if (!allRecoveredMedia.isEmpty()) {
@@ -293,7 +297,7 @@ public class UploadService extends Service {
     private boolean hasValidFile(MediaModel media) {
         String filePath = media.getFilePath();
         return filePath != null && !filePath.isEmpty()
-                && new java.io.File(filePath).exists();
+                && new File(filePath).exists();
     }
 
     private void registerPostModelsForMedia(List<MediaModel> mediaList, boolean isRetry) {
