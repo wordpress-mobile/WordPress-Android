@@ -10,6 +10,12 @@ import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
 
+data class SnackbarMessage(
+    val message: String,
+    val actionLabel: String? = null,
+    val onAction: (() -> Unit)? = null
+)
+
 sealed interface PendingConfirmation {
     data class Trash(val postId: Long) : PendingConfirmation
     data class Delete(val postId: Long) : PendingConfirmation
@@ -27,7 +33,8 @@ data class PostTabUiState(
     val isRefreshing: Boolean = false,
     val isLoadingMore: Boolean = false,
     val canLoadMore: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val isAuthError: Boolean = false
 )
 
 data class PostRsUiModel(

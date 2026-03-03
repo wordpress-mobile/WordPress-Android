@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
@@ -68,7 +69,10 @@ fun PostRsTabListScreen(
             isSearchIdle -> Box(Modifier.fillMaxSize())
             state.isLoading -> ShimmerList()
             state.error != null && state.posts.isEmpty() -> {
-                ErrorContent(state.error)
+                ErrorContent(
+                    error = state.error,
+                    onRetry = if (state.isAuthError) null else onRefresh
+                )
             }
             state.posts.isEmpty() && !state.isRefreshing -> {
                 EmptyContent(
@@ -170,7 +174,7 @@ private fun ShimmerList() {
 }
 
 @Composable
-private fun ErrorContent(error: String) {
+private fun ErrorContent(error: String, onRetry: (() -> Unit)?) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -187,8 +191,15 @@ private fun ErrorContent(error: String) {
         Text(
             text = error,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
         )
+        if (onRetry != null) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onRetry) {
+                Text(text = stringResource(R.string.retry))
+            }
+        }
     }
 }
 

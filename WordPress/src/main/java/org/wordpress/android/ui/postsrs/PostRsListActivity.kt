@@ -53,6 +53,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                         onConfirm = viewModel::onConfirmPendingAction,
                         onDismiss = viewModel::onDismissPendingAction
                     ),
+                    snackbarMessages = viewModel.snackbarMessages,
                     onSearchOpen = viewModel::onSearchOpen,
                     onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onSearchClose = viewModel::onSearchClose,

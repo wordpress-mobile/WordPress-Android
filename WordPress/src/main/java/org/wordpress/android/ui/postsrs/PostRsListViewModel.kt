@@ -38,7 +38,11 @@ import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditCont
 import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
+import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.WpApiException
 import uniffi.wp_api.WpApiParamPostsOrderBy
+import uniffi.wp_api.WpErrorCode
+import uniffi.wp_mobile.FetchException
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
@@ -74,6 +78,9 @@ class PostRsListViewModel @Inject constructor(
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
+
+    private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
+    val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
     private val _pendingConfirmation = MutableStateFlow<PendingConfirmation?>(null)
     val pendingConfirmation: StateFlow<PendingConfirmation?> = _pendingConfirmation.asStateFlow()
@@ -302,9 +309,50 @@ class PostRsListViewModel @Inject constructor(
         _events.trySend(PostRsListEvent.EditPost(site, newPost))
     }
 
+    private fun unwrapException(e: Exception?): Exception? =
+        (e as? FetchException.Api)?.v1 ?: e
+
+    /**
+     * Returns true when the exception represents an authentication failure
+     * (rejected credentials, missing app-password, etc.).
+     */
+    private fun isAuthError(e: Exception?): Boolean {
+        val apiException = unwrapException(e)
+        val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
+        val errorCode = (apiException as? WpApiException.WpException)?.errorCode
+        return reason is RequestExecutionErrorReason.HttpAuthenticationRejectedError ||
+            reason is RequestExecutionErrorReason.HttpAuthenticationRequiredError ||
+            errorCode is WpErrorCode.Unauthorized ||
+            errorCode is WpErrorCode.ApplicationPasswordNotFound ||
+            errorCode is WpErrorCode.NoAuthenticatedAppPassword
+    }
+
+    /**
+     * Returns a user-friendly error subtitle based on the exception type.
+     * Detects offline, authentication, and generic errors. Raw
+     * exception/API messages are never surfaced to the user.
+     */
+    private fun friendlyErrorMessage(e: Exception? = null): String {
+        val apiException = unwrapException(e)
+        val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
+
+        val resId = when {
+            reason is RequestExecutionErrorReason.DeviceIsOfflineError ||
+                !networkUtilsWrapper.isNetworkAvailable() ->
+                R.string.error_generic_network
+
+            isAuthError(e) -> R.string.post_rs_error_auth
+
+            else -> R.string.request_failed_message
+        }
+        return resourceProvider.getString(resId)
+    }
+
     private fun checkNetwork(): Boolean {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _events.trySend(PostRsListEvent.ShowToast(R.string.no_network_message))
+            _snackbarMessages.trySend(
+                SnackbarMessage(resourceProvider.getString(R.string.no_network_message))
+            )
             return false
         }
         return true
@@ -324,12 +372,16 @@ class PostRsListViewModel @Inject constructor(
         when (result) {
             is PostActionResult.Success -> {
                 removePostFromState(postId)
-                _events.trySend(PostRsListEvent.ShowToast(successResId))
+                _snackbarMessages.trySend(
+                    SnackbarMessage(resourceProvider.getString(successResId))
+                )
                 refreshAllTabs()
             }
             is PostActionResult.Error -> {
                 AppLog.e(AppLog.T.POSTS, "Post action failed: ${result.message}")
-                _events.trySend(PostRsListEvent.ShowToast(errorResId))
+                _snackbarMessages.trySend(
+                    SnackbarMessage(resourceProvider.getString(errorResId))
+                )
             }
         }
     }
@@ -363,7 +415,9 @@ class PostRsListViewModel @Inject constructor(
     private fun getFluxCPost(remotePostId: Long): PostModel? {
         val post = postStore.getPostByRemotePostId(remotePostId, site)
         if (post == null) {
-            _events.trySend(PostRsListEvent.ShowToast(R.string.post_not_found))
+            _snackbarMessages.trySend(
+                SnackbarMessage(resourceProvider.getString(R.string.post_not_found))
+            )
         }
         return post
     }
@@ -456,7 +510,8 @@ class PostRsListViewModel @Inject constructor(
                 initializingTabs.remove(tab)
                 updateTabUiState(tab) {
                     PostTabUiState(
-                        error = e.message ?: resourceProvider.getString(R.string.error_generic)
+                        error = friendlyErrorMessage(e),
+                        isAuthError = isAuthError(e)
                     )
                 }
             }
@@ -525,11 +580,29 @@ class PostRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
                 userRefreshingTabs.remove(tab)
-                updateTabUiState(tab) {
-                    copy(
-                        isLoading = false, isRefreshing = false,
-                        error = e.message ?: resourceProvider.getString(R.string.error_generic)
+                val message = friendlyErrorMessage(e)
+                if (getTabUiState(tab).posts.isNotEmpty()) {
+                    updateTabUiState(tab) {
+                        copy(isLoading = false, isRefreshing = false, error = null)
+                    }
+                    val authError = isAuthError(e)
+                    _snackbarMessages.trySend(
+                        SnackbarMessage(
+                            message = message,
+                            actionLabel = if (authError) null
+                                else resourceProvider.getString(R.string.retry),
+                            onAction = if (authError) null
+                                else ({ refreshTab(tab) })
+                        )
                     )
+                } else {
+                    updateTabUiState(tab) {
+                        copy(
+                            isLoading = false, isRefreshing = false,
+                            error = message,
+                            isAuthError = isAuthError(e)
+                        )
+                    }
                 }
             }
         }
@@ -551,6 +624,9 @@ class PostRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to load more for tab $tab", e)
                 updateTabUiState(tab) { copy(isLoadingMore = false) }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(friendlyErrorMessage(e))
+                )
             }
         }
     }
@@ -674,18 +750,41 @@ class PostRsListViewModel @Inject constructor(
 
         if (!fetchingFirstPage) userRefreshingTabs.remove(tab)
 
-        updateTabUiState(tab) {
-            copy(
-                isLoading = isLoading && fetchingFirstPage,
-                isRefreshing = isUserRefresh && fetchingFirstPage,
-                isLoadingMore = listInfo?.state == ListState.FETCHING_NEXT_PAGE,
-                canLoadMore = morePages,
-                error = if (listInfo?.state == ListState.ERROR) {
-                    listInfo.errorMessage ?: resourceProvider.getString(R.string.error_generic)
-                } else {
-                    null
-                }
+        val isError = listInfo?.state == ListState.ERROR
+        val hasPosts = getTabUiState(tab).posts.isNotEmpty()
+        val errorMessage = if (isError) friendlyErrorMessage() else null
+
+        if (isError && hasPosts) {
+            val authError = getTabUiState(tab).isAuthError
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = false,
+                    isRefreshing = false,
+                    isLoadingMore = false,
+                    canLoadMore = morePages,
+                    error = null
+                )
+            }
+            _snackbarMessages.trySend(
+                SnackbarMessage(
+                    message = errorMessage.orEmpty(),
+                    actionLabel = if (authError) null
+                        else resourceProvider.getString(R.string.retry),
+                    onAction = if (authError) null
+                        else ({ refreshTab(tab) })
+                )
             )
+        } else {
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = isLoading && fetchingFirstPage,
+                    isRefreshing = isUserRefresh && fetchingFirstPage,
+                    isLoadingMore = listInfo?.state
+                        == ListState.FETCHING_NEXT_PAGE,
+                    canLoadMore = morePages,
+                    error = errorMessage
+                )
+            }
         }
     }
 
