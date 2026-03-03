@@ -56,18 +56,26 @@ emulator -list-avds
 ```
 
 - **AVDs available**: present the list to the user with
-  `AskUserQuestion` and let them pick one. Then start the chosen
-  emulator in the background:
+  `AskUserQuestion` and let them pick one. Before starting the
+  emulator, snapshot the current device list so you can identify
+  the new serial afterwards:
 
   ```bash
+  adb devices -l          # snapshot before
   emulator -avd <avd_name> &
-  ```
-
-  Wait for the device to come online using:
-
-  ```bash
   adb wait-for-device
   ```
+
+  After `wait-for-device` returns, poll until the device has
+  finished booting:
+
+  ```bash
+  adb [-s <serial>] shell getprop sys.boot_completed
+  ```
+
+  Repeat every 2 seconds until the output is `1`. Then run
+  `adb devices -l` again and diff against the earlier snapshot to
+  resolve the new emulator's serial for subsequent `-s` flags.
 
 - **No AVDs available**: warn the user that no devices or emulators
   are available and suggest they connect a device or create an AVD
@@ -75,32 +83,34 @@ emulator -list-avds
 
 ### 5. Install and launch the app
 
-Install the built APK on the target device (use `-s <serial>` when
-multiple devices are present).
+Find the built APK dynamically (the exact filename may change across
+Gradle versions):
 
 **Jetpack (default):**
 
 ```bash
-adb [-s <serial>] install -r \
-  WordPress/build/outputs/apk/jetpackWasabi/debug/org.wordpress.android-jetpack-wasabi-debug.apk
-```
-
-```bash
-adb [-s <serial>] shell am start -n \
-  com.jetpack.android.beta/org.wordpress.android.ui.WPLaunchActivity
+APK=$(find WordPress/build/outputs/apk/jetpackWasabi/debug \
+  -name '*.apk' ! -name '*androidTest*' | head -1)
 ```
 
 **WordPress (only if the user explicitly requested it):**
 
 ```bash
-adb [-s <serial>] install -r \
-  WordPress/build/outputs/apk/wordpressWasabi/debug/org.wordpress.android-wordpress-wasabi-debug.apk
+APK=$(find WordPress/build/outputs/apk/wordpressWasabi/debug \
+  -name '*.apk' ! -name '*androidTest*' | head -1)
 ```
 
+Install the APK on the target device (use `-s <serial>` when multiple
+devices are present):
+
 ```bash
-adb [-s <serial>] shell am start -n \
-  org.wordpress.android.beta/org.wordpress.android.ui.WPLaunchActivity
+adb [-s <serial>] install -r "$APK"
 ```
+
+Then launch the app:
+
+- **Jetpack**: `adb [-s <serial>] shell am start -n com.jetpack.android.beta/org.wordpress.android.ui.WPLaunchActivity`
+- **WordPress**: `adb [-s <serial>] shell am start -n org.wordpress.android.beta/org.wordpress.android.ui.WPLaunchActivity`
 
 ### 6. Report the result
 
