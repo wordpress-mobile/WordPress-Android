@@ -97,60 +97,33 @@ class SubscribersTabViewModel @Inject constructor(
         }
     }
 
-    fun removeCard(cardType: SubscribersCardType) {
-        val currentSiteId = siteId
-        viewModelScope.launch {
-            cardConfigurationRepository.removeCard(
-                currentSiteId, cardType
-            )
-        }
-    }
+    fun removeCard(cardType: SubscribersCardType) =
+        cardAction { removeCard(it, cardType) }
 
-    fun addCard(cardType: SubscribersCardType) {
-        val currentSiteId = siteId
-        viewModelScope.launch {
-            cardConfigurationRepository.addCard(
-                currentSiteId, cardType
-            )
-        }
-    }
+    fun addCard(cardType: SubscribersCardType) =
+        cardAction { addCard(it, cardType) }
 
-    fun moveCardUp(cardType: SubscribersCardType) {
-        val currentSiteId = siteId
-        viewModelScope.launch {
-            cardConfigurationRepository.moveCardUp(
-                currentSiteId, cardType
-            )
-        }
-    }
+    fun moveCardUp(cardType: SubscribersCardType) =
+        cardAction { moveCardUp(it, cardType) }
 
-    fun moveCardToTop(cardType: SubscribersCardType) {
-        val currentSiteId = siteId
-        viewModelScope.launch {
-            cardConfigurationRepository.moveCardToTop(
-                currentSiteId, cardType
-            )
-        }
-    }
+    fun moveCardToTop(cardType: SubscribersCardType) =
+        cardAction { moveCardToTop(it, cardType) }
 
-    fun moveCardDown(cardType: SubscribersCardType) {
-        val currentSiteId = siteId
-        viewModelScope.launch {
-            cardConfigurationRepository.moveCardDown(
-                currentSiteId, cardType
-            )
-        }
-    }
+    fun moveCardDown(cardType: SubscribersCardType) =
+        cardAction { moveCardDown(it, cardType) }
 
     fun moveCardToBottom(
         cardType: SubscribersCardType
+    ) = cardAction { moveCardToBottom(it, cardType) }
+
+    private fun cardAction(
+        action: suspend SubscribersCardsConfigurationRepository.(Long) -> Unit
     ) {
         val currentSiteId = siteId
         viewModelScope.launch {
-            cardConfigurationRepository
-                .moveCardToBottom(
-                    currentSiteId, cardType
-                )
+            cardConfigurationRepository.action(
+                currentSiteId
+            )
         }
     }
 }

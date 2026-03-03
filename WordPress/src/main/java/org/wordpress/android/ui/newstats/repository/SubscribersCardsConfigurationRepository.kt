@@ -98,71 +98,48 @@ class SubscribersCardsConfigurationRepository @Inject constructor(
     suspend fun moveCardUp(
         siteId: Long,
         cardType: SubscribersCardType
-    ): Unit = withContext(ioDispatcher) {
-        mutex.withLock {
-            val current = loadConfiguration(siteId)
-            val index =
-                current.visibleCards.indexOf(cardType)
-            if (index > 0) {
-                moveCardToIndex(
-                    siteId, current,
-                    cardType, index - 1
-                )
-            }
-        }
+    ): Unit = moveCard(siteId, cardType) { idx, _ ->
+        if (idx > 0) idx - 1 else null
     }
 
     suspend fun moveCardToTop(
         siteId: Long,
         cardType: SubscribersCardType
-    ): Unit = withContext(ioDispatcher) {
-        mutex.withLock {
-            val current = loadConfiguration(siteId)
-            val index =
-                current.visibleCards.indexOf(cardType)
-            if (index > 0) {
-                moveCardToIndex(
-                    siteId, current, cardType, 0
-                )
-            }
-        }
+    ): Unit = moveCard(siteId, cardType) { idx, _ ->
+        if (idx > 0) 0 else null
     }
 
     suspend fun moveCardDown(
         siteId: Long,
         cardType: SubscribersCardType
-    ): Unit = withContext(ioDispatcher) {
-        mutex.withLock {
-            val current = loadConfiguration(siteId)
-            val index =
-                current.visibleCards.indexOf(cardType)
-            if (index >= 0 &&
-                index < current.visibleCards.size - 1
-            ) {
-                moveCardToIndex(
-                    siteId, current,
-                    cardType, index + 1
-                )
-            }
-        }
+    ): Unit = moveCard(siteId, cardType) { idx, last ->
+        if (idx < last) idx + 1 else null
     }
 
     suspend fun moveCardToBottom(
         siteId: Long,
         cardType: SubscribersCardType
+    ): Unit = moveCard(siteId, cardType) { idx, last ->
+        if (idx < last) last else null
+    }
+
+    private suspend fun moveCard(
+        siteId: Long,
+        cardType: SubscribersCardType,
+        targetIndex: (index: Int, lastIndex: Int) -> Int?
     ): Unit = withContext(ioDispatcher) {
         mutex.withLock {
             val current = loadConfiguration(siteId)
             val index =
                 current.visibleCards.indexOf(cardType)
-            if (index >= 0 &&
-                index < current.visibleCards.size - 1
-            ) {
-                moveCardToIndex(
-                    siteId, current, cardType,
-                    current.visibleCards.size - 1
-                )
-            }
+            if (index < 0) return@withLock
+            val newIndex = targetIndex(
+                index,
+                current.visibleCards.size - 1
+            ) ?: return@withLock
+            moveCardToIndex(
+                siteId, current, cardType, newIndex
+            )
         }
     }
 
