@@ -16,7 +16,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.newstats.subscribers.SubscribersCardType
-import org.wordpress.android.ui.newstats.subscribers.SubscribersCardsConfiguration
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 @ExperimentalCoroutinesApi

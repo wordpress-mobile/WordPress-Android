@@ -36,6 +36,7 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.coroutines.cancellation.CancellationException
 
 private const val HOURLY_QUANTITY = 24
 private const val DAILY_QUANTITY = 1
@@ -1386,8 +1387,9 @@ class StatsRepository @Inject constructor(
     private fun extractSubscriberCount(
         result: StatsSubscribersDataResult
     ): Long {
-        val data = (result as
-            StatsSubscribersDataResult.Success).data
+        val data = (result as?
+            StatsSubscribersDataResult.Success)?.data
+            ?: return 0L
         return data.subscribersData
             .firstOrNull()?.count ?: 0L
     }
@@ -1447,69 +1449,107 @@ class StatsRepository @Inject constructor(
     /**
      * Fetches a list of subscribers for the given site.
      */
+    @Suppress("TooGenericExceptionCaught")
     suspend fun fetchSubscribersList(
         siteId: Long,
         perPage: Int = SUBSCRIBERS_DEFAULT_MAX,
         page: Int = 1
     ): SubscribersListResult = withContext(ioDispatcher) {
-        when (
-            val result = statsDataSource
-                .fetchSubscribersByUserType(
-                    siteId, perPage, page
-                )
-        ) {
-            is SubscribersByUserTypeDataResult.Success -> {
-                SubscribersListResult.Success(
-                    subscribers = result.items.map {
-                        SubscriberItemData(
-                            displayName = it.displayName,
-                            subscribedSince =
-                                it.subscribedSince
-                        )
-                    }
-                )
+        try {
+            when (
+                val result = statsDataSource
+                    .fetchSubscribersByUserType(
+                        siteId, perPage, page
+                    )
+            ) {
+                is SubscribersByUserTypeDataResult
+                    .Success -> {
+                    SubscribersListResult.Success(
+                        subscribers =
+                            result.items.map {
+                                SubscriberItemData(
+                                    displayName =
+                                        it.displayName,
+                                    subscribedSince =
+                                        it.subscribedSince
+                                )
+                            }
+                    )
+                }
+                is SubscribersByUserTypeDataResult
+                    .Error -> {
+                    SubscribersListResult.Error(
+                        messageResId =
+                            result.errorType.messageResId,
+                        isAuthError =
+                            result.errorType ==
+                                StatsErrorType.AUTH_ERROR
+                    )
+                }
             }
-            is SubscribersByUserTypeDataResult.Error -> {
-                SubscribersListResult.Error(
-                    messageResId =
-                        result.errorType.messageResId,
-                    isAuthError = result.errorType ==
-                        StatsErrorType.AUTH_ERROR
-                )
-            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error fetching subscribers list",
+                e
+            )
+            SubscribersListResult.Error(
+                messageResId = R.string.stats_error_api
+            )
         }
     }
 
     /**
      * Fetches email stats summary for the given site.
      */
+    @Suppress("TooGenericExceptionCaught")
     suspend fun fetchEmailsSummary(
         siteId: Long,
         quantity: Int = SUBSCRIBERS_DEFAULT_MAX
     ): EmailsStatsResult = withContext(ioDispatcher) {
-        when (
-            val result = statsDataSource
-                .fetchStatsEmailsSummary(siteId, quantity)
-        ) {
-            is StatsEmailsSummaryDataResult.Success -> {
-                EmailsStatsResult.Success(
-                    items = result.items.map {
-                        EmailItemData(
-                            title = it.title,
-                            opens = it.opens,
-                            clicks = it.clicks
-                        )
-                    }
-                )
+        try {
+            when (
+                val result = statsDataSource
+                    .fetchStatsEmailsSummary(
+                        siteId, quantity
+                    )
+            ) {
+                is StatsEmailsSummaryDataResult
+                    .Success -> {
+                    EmailsStatsResult.Success(
+                        items = result.items.map {
+                            EmailItemData(
+                                title = it.title,
+                                opens = it.opens,
+                                clicks = it.clicks
+                            )
+                        }
+                    )
+                }
+                is StatsEmailsSummaryDataResult
+                    .Error -> {
+                    EmailsStatsResult.Error(
+                        messageResId =
+                            result.errorType.messageResId,
+                        isAuthError =
+                            result.errorType ==
+                                StatsErrorType.AUTH_ERROR
+                    )
+                }
             }
-            is StatsEmailsSummaryDataResult.Error -> {
-                EmailsStatsResult.Error(
-                    messageResId =
-                        result.errorType.messageResId,
-                    isAuthError = result.errorType ==
-                        StatsErrorType.AUTH_ERROR
-                )
-            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error fetching emails summary",
+                e
+            )
+            EmailsStatsResult.Error(
+                messageResId = R.string.stats_error_api
+            )
         }
     }
 }

@@ -7,7 +7,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -310,7 +309,7 @@ class BaseSubscribersCardViewModelTest : BaseUnitTest() {
             siteId: Long
         ) {
             if (shouldThrow) {
-                throw RuntimeException("Test error")
+                error("Test error")
             }
             loadCount++
             markLoadedSuccessfully()

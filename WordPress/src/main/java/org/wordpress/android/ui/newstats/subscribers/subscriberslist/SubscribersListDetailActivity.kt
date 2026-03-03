@@ -102,8 +102,8 @@ private fun SubscribersListDetailScreen(
                     .lastOrNull()?.index ?: 0
             val totalItems =
                 listState.layoutInfo.totalItemsCount
-            canLoadMore && !isLoadingMore &&
-                totalItems > 0 &&
+            canLoadMore && !isLoading &&
+                !isLoadingMore && totalItems > 0 &&
                 lastVisible >= totalItems -
                 LOAD_MORE_THRESHOLD
         }

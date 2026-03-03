@@ -7,15 +7,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.EmailsStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
-internal const val EMAILS_DETAIL_PAGE_SIZE = 20
+private const val EMAILS_MAX_ITEMS = 25
 
 @HiltViewModel
 class EmailsDetailViewModel @Inject constructor(
@@ -33,99 +33,60 @@ class EmailsDetailViewModel @Inject constructor(
     val isLoading: StateFlow<Boolean> =
         _isLoading.asStateFlow()
 
-    private val _isLoadingMore = MutableStateFlow(false)
-    val isLoadingMore: StateFlow<Boolean> =
-        _isLoadingMore.asStateFlow()
-
-    private val _canLoadMore = MutableStateFlow(true)
-    val canLoadMore: StateFlow<Boolean> =
-        _canLoadMore.asStateFlow()
-
     private val _hasError = MutableStateFlow(false)
     val hasError: StateFlow<Boolean> =
         _hasError.asStateFlow()
 
-    private var currentQuantity = 0
-    private val paginationMutex = Mutex()
-
-    fun loadInitialPage() {
-        viewModelScope.launch {
-            paginationMutex.withLock {
-                if (_items.value.isNotEmpty()) return@launch
-                currentQuantity = EMAILS_DETAIL_PAGE_SIZE
-                _isLoading.value = true
-                _hasError.value = false
-                _canLoadMore.value = true
-                fetchEmails(currentQuantity, isInitial = true)
-                _isLoading.value = false
-            }
-        }
-    }
-
-    // Note: The emails API only supports a "quantity"
-    // parameter (not page/offset), so each "load more"
-    // re-fetches all items with an increased quantity.
-    // This is a known API limitation.
-    fun loadMore() {
-        viewModelScope.launch {
-            paginationMutex.withLock {
-                if (!_canLoadMore.value ||
-                    _isLoadingMore.value
-                ) return@launch
-                _isLoadingMore.value = true
-                currentQuantity += EMAILS_DETAIL_PAGE_SIZE
-                fetchEmails(
-                    currentQuantity, isInitial = false
-                )
-                _isLoadingMore.value = false
-            }
-        }
-    }
-
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchEmails(
-        quantity: Int,
-        isInitial: Boolean
-    ) {
-        val siteId = selectedSiteRepository
-            .getSelectedSite()?.siteId ?: return
-        val accessToken = accountStore.accessToken
-        if (accessToken.isNullOrEmpty()) return
-        statsRepository.init(accessToken)
+    fun loadData() {
+        viewModelScope.launch {
+            if (_items.value.isNotEmpty()) return@launch
+            _isLoading.value = true
+            _hasError.value = false
 
-        try {
-            val result = statsRepository.fetchEmailsSummary(
-                siteId = siteId,
-                quantity = quantity
-            )
-            when (result) {
-                is EmailsStatsResult.Success -> {
-                    val newItems = result.items.map {
-                        EmailListItem(
-                            title = it.title,
-                            opens = it.opens,
-                            clicks = it.clicks
-                        )
-                    }
-                    _items.value = newItems
-                    _canLoadMore.value =
-                        newItems.size == quantity
-                }
-                is EmailsStatsResult.Error -> {
-                    if (isInitial) {
-                        _hasError.value = true
-                        _canLoadMore.value = false
-                    } else {
-                        currentQuantity -= EMAILS_DETAIL_PAGE_SIZE
-                    }
-                }
-            }
-        } catch (_: Exception) {
-            if (isInitial) {
+            val siteId = selectedSiteRepository
+                .getSelectedSite()?.siteId
+            val accessToken = accountStore.accessToken
+            if (siteId == null ||
+                accessToken.isNullOrEmpty()
+            ) {
                 _hasError.value = true
-                _canLoadMore.value = false
-            } else {
-                currentQuantity -= EMAILS_DETAIL_PAGE_SIZE
+                _isLoading.value = false
+                return@launch
+            }
+            statsRepository.init(accessToken)
+
+            try {
+                val result =
+                    statsRepository.fetchEmailsSummary(
+                        siteId = siteId,
+                        quantity = EMAILS_MAX_ITEMS
+                    )
+                when (result) {
+                    is EmailsStatsResult.Success -> {
+                        _items.value = result.items.map {
+                            EmailListItem(
+                                title = it.title,
+                                opens = it.opens,
+                                clicks = it.clicks
+                            )
+                        }
+                    }
+                    is EmailsStatsResult.Error -> {
+                        _hasError.value = true
+                    }
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.STATS,
+                    "Error fetching emails detail",
+                    e
+                )
+                _hasError.value = true
+            } finally {
+                _isLoading.value = false
             }
         }
     }

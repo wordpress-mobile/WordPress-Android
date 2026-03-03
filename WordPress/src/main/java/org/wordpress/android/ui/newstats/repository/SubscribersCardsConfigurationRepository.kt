@@ -42,7 +42,9 @@ class SubscribersCardsConfigurationRepository @Inject constructor(
         siteId: Long
     ): SubscribersCardsConfiguration =
         withContext(ioDispatcher) {
-            loadConfiguration(siteId)
+            mutex.withLock {
+                loadConfiguration(siteId)
+            }
         }
 
     private suspend fun saveConfiguration(

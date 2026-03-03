@@ -14,6 +14,7 @@ import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.coroutines.cancellation.CancellationException
 
 @Suppress("TooGenericExceptionCaught")
 abstract class BaseSubscribersCardViewModel<UiState : Any>(
@@ -57,6 +58,7 @@ abstract class BaseSubscribersCardViewModel<UiState : Any>(
         if (accessToken.isNullOrEmpty()) return
         statsRepository.init(accessToken)
         resetLoadedSuccessfully()
+        isLoading.set(true)
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
             try {
@@ -64,6 +66,7 @@ abstract class BaseSubscribersCardViewModel<UiState : Any>(
                 fetchData(site.siteId)
             } finally {
                 _isRefreshing.value = false
+                isLoading.set(false)
             }
         }
     }
@@ -111,6 +114,8 @@ abstract class BaseSubscribersCardViewModel<UiState : Any>(
     private suspend fun fetchData(siteId: Long) {
         try {
             loadDataInternal(siteId)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             AppLog.e(
                 AppLog.T.STATS,

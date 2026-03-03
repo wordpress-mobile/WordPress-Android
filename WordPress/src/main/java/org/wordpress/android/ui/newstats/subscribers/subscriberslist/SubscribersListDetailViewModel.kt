@@ -13,8 +13,10 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.SubscribersListResult
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 internal const val SUBSCRIBERS_DETAIL_PAGE_SIZE = 20
 
@@ -39,7 +41,7 @@ class SubscribersListDetailViewModel @Inject constructor(
     val isLoadingMore: StateFlow<Boolean> =
         _isLoadingMore.asStateFlow()
 
-    private val _canLoadMore = MutableStateFlow(true)
+    private val _canLoadMore = MutableStateFlow(false)
     val canLoadMore: StateFlow<Boolean> =
         _canLoadMore.asStateFlow()
 
@@ -121,22 +123,27 @@ class SubscribersListDetailViewModel @Inject constructor(
                         newItems.size ==
                             SUBSCRIBERS_DETAIL_PAGE_SIZE
                 }
-                is SubscribersListResult.Error -> {
-                    if (isInitial) {
-                        _hasError.value = true
-                        _canLoadMore.value = false
-                    } else {
-                        currentPage--
-                    }
-                }
+                is SubscribersListResult.Error ->
+                    handleFetchError(isInitial)
             }
-        } catch (_: Exception) {
-            if (isInitial) {
-                _hasError.value = true
-                _canLoadMore.value = false
-            } else {
-                currentPage--
-            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error fetching subscribers detail",
+                e
+            )
+            handleFetchError(isInitial)
+        }
+    }
+
+    private fun handleFetchError(isInitial: Boolean) {
+        if (isInitial) {
+            _hasError.value = true
+            _canLoadMore.value = false
+        } else {
+            currentPage--
         }
     }
 }

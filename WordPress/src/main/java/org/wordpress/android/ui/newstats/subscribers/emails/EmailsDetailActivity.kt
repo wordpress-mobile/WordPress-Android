@@ -12,11 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -32,9 +30,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -48,8 +44,6 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.util.formatEmailStat
-
-private const val LOAD_MORE_THRESHOLD = 5
 
 @AndroidEntryPoint
 class EmailsDetailActivity : BaseAppCompatActivity() {
@@ -84,34 +78,10 @@ private fun EmailsDetailScreen(
 ) {
     val items by viewModel.items.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    val isLoadingMore by
-        viewModel.isLoadingMore.collectAsState()
-    val canLoadMore by
-        viewModel.canLoadMore.collectAsState()
     val hasError by viewModel.hasError.collectAsState()
 
-    val listState = rememberLazyListState()
-
     LaunchedEffect(Unit) {
-        viewModel.loadInitialPage()
-    }
-
-    val shouldLoadMore by remember {
-        derivedStateOf {
-            val lastVisible =
-                listState.layoutInfo.visibleItemsInfo
-                    .lastOrNull()?.index ?: 0
-            val totalItems =
-                listState.layoutInfo.totalItemsCount
-            canLoadMore && !isLoadingMore &&
-                totalItems > 0 &&
-                lastVisible >= totalItems -
-                LOAD_MORE_THRESHOLD
-        }
-    }
-
-    LaunchedEffect(shouldLoadMore) {
-        if (shouldLoadMore) viewModel.loadMore()
+        viewModel.loadData()
     }
 
     val title = stringResource(
@@ -151,11 +121,10 @@ private fun EmailsDetailScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(contentPadding),
-                onRetry = { viewModel.loadInitialPage() }
+                onRetry = { viewModel.loadData() }
             )
         } else {
             LazyColumn(
-                state = listState,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(contentPadding)
@@ -178,24 +147,6 @@ private fun EmailsDetailScreen(
                             modifier =
                                 Modifier.height(4.dp)
                         )
-                    }
-                }
-
-                if (isLoadingMore) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            contentAlignment =
-                                Alignment.Center
-                        ) {
-                            CircularProgressIndicator(
-                                modifier =
-                                    Modifier.size(24.dp),
-                                strokeWidth = 2.dp
-                            )
-                        }
                     }
                 }
 
