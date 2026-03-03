@@ -41,6 +41,7 @@ import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaCaptionWithEditContext
+import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.MediaDeleteResponse
 import uniffi.wp_api.MediaDescriptionWithEditContext
 import uniffi.wp_api.MediaDetails
@@ -158,7 +159,9 @@ class MediaRsApiRestClientTest {
         // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<MediaWithEditContext>(
             statusCode = 500u,
-            response = "Internal Server Error"
+            response = "Internal Server Error",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         whenever(wpApiClient.request<MediaWithEditContext>(any())).thenReturn(errorResponse)
@@ -220,7 +223,9 @@ class MediaRsApiRestClientTest {
         // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<MediaRequestListWithEditContextResponse>(
             statusCode = 500u,
-            response = "Internal Server Error"
+            response = "Internal Server Error",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         whenever(wpApiClient.request<MediaRequestListWithEditContextResponse>(any())).thenReturn(errorResponse)
@@ -294,7 +299,12 @@ class MediaRsApiRestClientTest {
         val testMedia = createTestMedia()
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(
-            WpRequestResult.UnknownError(statusCode = 404u, response = "Media not found")
+            WpRequestResult.UnknownError(
+                statusCode = 404u,
+                response = "Media not found",
+                requestUrl = "",
+                requestMethod = RequestMethod.GET
+            )
         )
 
         restClient.deleteMedia(testSite, testMedia)
@@ -472,7 +482,12 @@ class MediaRsApiRestClientTest {
         whenever(fileCheckWrapper.canReadFile(any())).thenReturn(true)
         // Mock an error response
         whenever(wpApiClient.request<Any>(any())).thenReturn(
-            WpRequestResult.UnknownError(statusCode = 413u, response = "File too large")
+            WpRequestResult.UnknownError(
+                statusCode = 413u,
+                response = "File too large",
+                requestUrl = "",
+                requestMethod = RequestMethod.POST
+            )
         )
 
         restClient.uploadMedia(testSite, testMedia)
@@ -549,7 +564,9 @@ class MediaRsApiRestClientTest {
         // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<MediaRequestUpdateResponse>(
             statusCode = 500u,
-            response = "Internal Server Error"
+            response = "Internal Server Error",
+            requestUrl = "",
+            requestMethod = RequestMethod.POST
         )
 
         whenever(wpApiClient.request<MediaRequestUpdateResponse>(any())).thenReturn(errorResponse)
