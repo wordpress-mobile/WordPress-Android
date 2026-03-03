@@ -107,20 +107,15 @@ private fun PostContentItem(
                                 color = MaterialTheme.colorScheme.primary
                             )
                         }
-                        if (post.isSyncing) {
-                            if (dateText.isNotBlank()) {
-                                Spacer(modifier = Modifier.width(6.dp))
-                            }
-                            CircularProgressIndicator(
+                        if (dateText.isNotBlank() && (post.isSyncing || post.hasSyncError)) {
+                            Spacer(modifier = Modifier.width(6.dp))
+                        }
+                        when {
+                            post.isSyncing -> CircularProgressIndicator(
                                 modifier = Modifier.size(12.dp),
                                 strokeWidth = 1.5.dp
                             )
-                        }
-                        if (post.hasSyncError) {
-                            if (dateText.isNotBlank()) {
-                                Spacer(modifier = Modifier.width(6.dp))
-                            }
-                            Icon(
+                            post.hasSyncError -> Icon(
                                 painter = painterResource(
                                     R.drawable.ic_notice_white_24dp
                                 ),

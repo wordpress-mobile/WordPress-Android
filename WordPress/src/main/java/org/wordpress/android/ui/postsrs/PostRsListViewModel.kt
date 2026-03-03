@@ -402,7 +402,9 @@ class PostRsListViewModel @Inject constructor(
 
         // For WpApiException with a message and a default provided, prefer the API message
         if (defaultResId != null && apiException is WpApiException) {
-            apiException.message?.takeIf { it.isNotBlank() }?.let { return it }
+            apiException.message
+                ?.takeIf { it.isNotBlank() && it.length <= MAX_API_ERROR_LENGTH }
+                ?.let { return it }
         }
 
         val resId = when {
@@ -863,6 +865,7 @@ class PostRsListViewModel @Inject constructor(
         private const val PAGE_SIZE = 20
         private const val SEARCH_DEBOUNCE_MS = 250L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
+        private const val MAX_API_ERROR_LENGTH = 200
         private val ALL_STATUSES = PostRsListTab.entries.flatMap { it.statuses }.distinct()
     }
 }
