@@ -117,6 +117,10 @@ fun SubscribersTabContent(
     val addCardSheetState =
         rememberModalBottomSheetState()
 
+    var previousVisibleCards by remember {
+        mutableStateOf<List<SubscribersCardType>?>(null)
+    }
+
     LaunchedEffect(cardsToLoad) {
         cardsToLoad.dispatchToVisibleCards(
             onAllTimeStats = {
@@ -132,6 +136,23 @@ fun SubscribersTabContent(
             onEmails = {
                 emailsViewModel.loadDataIfNeeded()
             }
+        )
+    }
+
+    LaunchedEffect(visibleCards) {
+        val previous = previousVisibleCards
+        previousVisibleCards = visibleCards
+        if (previous == null) return@LaunchedEffect
+        val newCards = visibleCards - previous.toSet()
+        newCards.dispatchToVisibleCards(
+            onAllTimeStats = {
+                allTimeViewModel.loadData()
+            },
+            onGraph = { graphViewModel.loadData() },
+            onSubscribersList = {
+                subscribersListViewModel.loadData()
+            },
+            onEmails = { emailsViewModel.loadData() }
         )
     }
 

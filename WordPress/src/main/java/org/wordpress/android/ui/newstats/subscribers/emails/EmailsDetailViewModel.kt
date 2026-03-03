@@ -15,7 +15,7 @@ import org.wordpress.android.ui.newstats.repository.EmailsStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import javax.inject.Inject
 
-private const val PAGE_SIZE = 20
+internal const val EMAILS_DETAIL_PAGE_SIZE = 20
 
 @HiltViewModel
 class EmailsDetailViewModel @Inject constructor(
@@ -52,7 +52,7 @@ class EmailsDetailViewModel @Inject constructor(
         viewModelScope.launch {
             paginationMutex.withLock {
                 if (_items.value.isNotEmpty()) return@launch
-                currentQuantity = PAGE_SIZE
+                currentQuantity = EMAILS_DETAIL_PAGE_SIZE
                 _isLoading.value = true
                 _hasError.value = false
                 _canLoadMore.value = true
@@ -69,7 +69,7 @@ class EmailsDetailViewModel @Inject constructor(
                     _isLoadingMore.value
                 ) return@launch
                 _isLoadingMore.value = true
-                currentQuantity += PAGE_SIZE
+                currentQuantity += EMAILS_DETAIL_PAGE_SIZE
                 fetchEmails(
                     currentQuantity, isInitial = false
                 )
@@ -112,7 +112,7 @@ class EmailsDetailViewModel @Inject constructor(
                         _hasError.value = true
                         _canLoadMore.value = false
                     } else {
-                        currentQuantity -= PAGE_SIZE
+                        currentQuantity -= EMAILS_DETAIL_PAGE_SIZE
                     }
                 }
             }
@@ -121,7 +121,7 @@ class EmailsDetailViewModel @Inject constructor(
                 _hasError.value = true
                 _canLoadMore.value = false
             } else {
-                currentQuantity -= PAGE_SIZE
+                currentQuantity -= EMAILS_DETAIL_PAGE_SIZE
             }
         }
     }

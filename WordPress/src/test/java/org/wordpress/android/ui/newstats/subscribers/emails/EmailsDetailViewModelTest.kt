@@ -307,6 +307,7 @@ class EmailsDetailViewModelTest : BaseUnitTest() {
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
-        private const val PAGE_SIZE = 20
+        private const val PAGE_SIZE =
+            EMAILS_DETAIL_PAGE_SIZE
     }
 }

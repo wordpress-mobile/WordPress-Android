@@ -1091,10 +1091,16 @@ class StatsDataSourceImpl @Inject constructor(
                             subscribedSince =
                                 subscriber.dateSubscribed
                                     ?.let {
-                                        java.text.SimpleDateFormat(
-                                            "yyyy-MM-dd'T'HH:mm:ss",
-                                            java.util.Locale.US
-                                        ).format(it)
+                                        java.time.ZonedDateTime
+                                            .ofInstant(
+                                                it.toInstant(),
+                                                java.time.ZoneId
+                                                    .systemDefault()
+                                            ).format(
+                                                java.time.format
+                                                    .DateTimeFormatter
+                                                    .ISO_LOCAL_DATE_TIME
+                                            )
                                     } ?: ""
                         )
                     }

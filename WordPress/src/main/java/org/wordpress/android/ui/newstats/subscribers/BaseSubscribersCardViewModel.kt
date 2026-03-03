@@ -57,7 +57,8 @@ abstract class BaseSubscribersCardViewModel<UiState : Any>(
         if (accessToken.isNullOrEmpty()) return
         statsRepository.init(accessToken)
         resetLoadedSuccessfully()
-        viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             try {
                 _isRefreshing.value = true
                 fetchData(site.siteId)

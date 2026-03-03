@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.subscribers.subscriberslist
 
+import android.content.Context
 import android.content.res.Resources
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.SubscriberItemData
 import org.wordpress.android.ui.newstats.repository.SubscribersListResult
+import org.wordpress.android.viewmodel.ContextProvider
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner.Silent::class)
@@ -32,6 +34,12 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var statsRepository: StatsRepository
+
+    @Mock
+    private lateinit var contextProvider: ContextProvider
+
+    @Mock
+    private lateinit var context: Context
 
     @Mock
     private lateinit var resources: Resources
@@ -50,10 +58,14 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
             .thenReturn(testSite)
         whenever(accountStore.accessToken)
             .thenReturn(TEST_ACCESS_TOKEN)
+        whenever(contextProvider.getContext())
+            .thenReturn(context)
+        whenever(context.resources).thenReturn(resources)
         viewModel = SubscribersListDetailViewModel(
             selectedSiteRepository,
             accountStore,
-            statsRepository
+            statsRepository,
+            contextProvider
         )
     }
 
@@ -68,7 +80,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 SubscribersListResult.Success(createItems(3))
             )
 
-            viewModel.loadInitialPage(resources)
+            viewModel.loadInitialPage()
             advanceUntilIdle()
 
             assertThat(viewModel.items.value).hasSize(3)
@@ -86,7 +98,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 SubscribersListResult.Success(createItems(PAGE_SIZE))
             )
 
-            viewModel.loadInitialPage(resources)
+            viewModel.loadInitialPage()
             advanceUntilIdle()
 
             assertThat(viewModel.canLoadMore.value).isTrue()
@@ -103,7 +115,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 SubscribersListResult.Success(createItems(5))
             )
 
-            viewModel.loadInitialPage(resources)
+            viewModel.loadInitialPage()
             advanceUntilIdle()
 
             assertThat(viewModel.canLoadMore.value).isFalse()
@@ -129,10 +141,10 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 )
             )
 
-            viewModel.loadInitialPage(resources)
+            viewModel.loadInitialPage()
             advanceUntilIdle()
 
-            viewModel.loadMore(resources)
+            viewModel.loadMore()
             advanceUntilIdle()
 
             assertThat(viewModel.items.value)
@@ -158,10 +170,10 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 SubscribersListResult.Success(createItems(3))
             )
 
-            viewModel.loadInitialPage(resources)
+            viewModel.loadInitialPage()
             advanceUntilIdle()
 
-            viewModel.loadMore(resources)
+            viewModel.loadMore()
             advanceUntilIdle()
 
             assertThat(viewModel.canLoadMore.value).isFalse()
@@ -180,7 +192,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 )
             )
 
-            viewModel.loadInitialPage(resources)
+            viewModel.loadInitialPage()
             advanceUntilIdle()
 
             assertThat(viewModel.items.value).isEmpty()
@@ -206,10 +218,10 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 SubscribersListResult.Error(messageResId = 0)
             )
 
-            viewModel.loadInitialPage(resources)
+            viewModel.loadInitialPage()
             advanceUntilIdle()
 
-            viewModel.loadMore(resources)
+            viewModel.loadMore()
             advanceUntilIdle()
 
             // Items unchanged from first page
@@ -229,10 +241,10 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 SubscribersListResult.Success(createItems(3))
             )
 
-            viewModel.loadInitialPage(resources)
+            viewModel.loadInitialPage()
             advanceUntilIdle()
 
-            viewModel.loadInitialPage(resources)
+            viewModel.loadInitialPage()
             advanceUntilIdle()
 
             verify(statsRepository, times(1))
@@ -245,7 +257,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
             whenever(selectedSiteRepository.getSelectedSite())
                 .thenReturn(null)
 
-            viewModel.loadInitialPage(resources)
+            viewModel.loadInitialPage()
             advanceUntilIdle()
 
             assertThat(viewModel.items.value).isEmpty()
@@ -256,7 +268,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
         test {
             whenever(accountStore.accessToken).thenReturn("")
 
-            viewModel.loadInitialPage(resources)
+            viewModel.loadInitialPage()
             advanceUntilIdle()
 
             assertThat(viewModel.items.value).isEmpty()
@@ -277,7 +289,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 )
             ).thenReturn(SubscribersListResult.Success(items))
 
-            viewModel.loadInitialPage(resources)
+            viewModel.loadInitialPage()
             advanceUntilIdle()
 
             val item = viewModel.items.value[0]
@@ -296,7 +308,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
                 )
             ).thenThrow(RuntimeException("Test exception"))
 
-            viewModel.loadInitialPage(resources)
+            viewModel.loadInitialPage()
             advanceUntilIdle()
 
             assertThat(viewModel.items.value).isEmpty()
@@ -316,6 +328,7 @@ class SubscribersListDetailViewModelTest : BaseUnitTest() {
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
-        private const val PAGE_SIZE = 20
+        private const val PAGE_SIZE =
+            SUBSCRIBERS_DETAIL_PAGE_SIZE
     }
 }

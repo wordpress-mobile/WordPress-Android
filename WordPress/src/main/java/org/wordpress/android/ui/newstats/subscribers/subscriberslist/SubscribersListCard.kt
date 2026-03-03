@@ -267,30 +267,43 @@ internal fun formatSubscriberDate(
                     .ISO_LOCAL_DATE
             )
         }
-        val days = java.time.temporal.ChronoUnit.DAYS
-            .between(subscribed, java.time.LocalDate.now())
+        val today = java.time.LocalDate.now()
+        val period = java.time.Period.between(
+            subscribed, today
+        )
+        val totalDays =
+            java.time.temporal.ChronoUnit.DAYS
+                .between(subscribed, today)
         when {
-            days < 1L -> resources.getString(
+            totalDays < 1L -> resources.getString(
                 R.string.stats_subscriber_since_today
             )
-            days < DAYS_IN_YEAR -> resources
+            period.years < 1 -> resources
                 .getQuantityString(
                     R.plurals.stats_subscriber_days,
-                    days.toInt(), days.toInt()
+                    totalDays.toInt(), totalDays.toInt()
                 )
             else -> {
-                val years = days / DAYS_IN_YEAR
-                val remaining = days % DAYS_IN_YEAR
+                val years = period.years
+                val remaining =
+                    java.time.temporal.ChronoUnit.DAYS
+                        .between(
+                            subscribed.plusYears(
+                                years.toLong()
+                            ),
+                            today
+                        )
                 val yearsPart = resources
                     .getQuantityString(
                         R.plurals.stats_subscriber_years,
-                        years.toInt(), years.toInt()
+                        years, years
                     )
                 if (remaining == 0L) yearsPart
                 else {
                     val daysPart = resources
                         .getQuantityString(
-                            R.plurals.stats_subscriber_days,
+                            R.plurals
+                                .stats_subscriber_days,
                             remaining.toInt(),
                             remaining.toInt()
                         )
@@ -306,5 +319,3 @@ internal fun formatSubscriberDate(
         dateString
     }
 }
-
-private const val DAYS_IN_YEAR = 365L

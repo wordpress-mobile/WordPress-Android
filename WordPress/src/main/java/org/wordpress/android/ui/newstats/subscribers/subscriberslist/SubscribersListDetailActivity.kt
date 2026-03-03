@@ -37,7 +37,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -90,11 +89,10 @@ private fun SubscribersListDetailScreen(
         viewModel.canLoadMore.collectAsState()
     val hasError by viewModel.hasError.collectAsState()
 
-    val resources = LocalContext.current.resources
     val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
-        viewModel.loadInitialPage(resources)
+        viewModel.loadInitialPage()
     }
 
     val shouldLoadMore by remember {
@@ -112,7 +110,7 @@ private fun SubscribersListDetailScreen(
     }
 
     LaunchedEffect(shouldLoadMore) {
-        if (shouldLoadMore) viewModel.loadMore(resources)
+        if (shouldLoadMore) viewModel.loadMore()
     }
 
     val title = stringResource(
@@ -153,7 +151,7 @@ private fun SubscribersListDetailScreen(
                     .fillMaxSize()
                     .padding(contentPadding),
                 onRetry = {
-                    viewModel.loadInitialPage(resources)
+                    viewModel.loadInitialPage()
                 }
             )
         } else {

@@ -6,8 +6,7 @@ import org.wordpress.android.R
 sealed class SubscribersGraphUiState {
     data object Loading : SubscribersGraphUiState()
     data class Loaded(
-        val dataPoints: List<GraphDataPoint>,
-        val selectedTab: SubscribersGraphTab
+        val dataPoints: List<GraphDataPoint>
     ) : SubscribersGraphUiState()
     data class Error(
         val message: String,

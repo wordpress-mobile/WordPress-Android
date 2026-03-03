@@ -5,6 +5,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.newstats.subscribers.SubscribersCardType
@@ -27,6 +29,8 @@ class SubscribersCardsConfigurationRepository @Inject constructor(
             EnumWithFallbackValueTypeAdapterFactory()
         )
         .create()
+
+    private val mutex = Mutex()
 
     private val _configurationFlow = MutableStateFlow<
         Pair<Long, SubscribersCardsConfiguration>?>(null)
@@ -57,41 +61,52 @@ class SubscribersCardsConfigurationRepository @Inject constructor(
         siteId: Long,
         cardType: SubscribersCardType
     ): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        val newVisibleCards =
-            current.visibleCards.toMutableList()
-        newVisibleCards.remove(cardType)
-        saveConfiguration(
-            siteId,
-            current.copy(visibleCards = newVisibleCards)
-        )
+        mutex.withLock {
+            val current = loadConfiguration(siteId)
+            val newVisibleCards =
+                current.visibleCards.toMutableList()
+            newVisibleCards.remove(cardType)
+            saveConfiguration(
+                siteId,
+                current.copy(
+                    visibleCards = newVisibleCards
+                )
+            )
+        }
     }
 
     suspend fun addCard(
         siteId: Long,
         cardType: SubscribersCardType
     ): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        if (cardType in current.visibleCards) return@withContext
-        val newVisibleCards =
-            current.visibleCards + cardType
-        saveConfiguration(
-            siteId,
-            current.copy(visibleCards = newVisibleCards)
-        )
+        mutex.withLock {
+            val current = loadConfiguration(siteId)
+            if (cardType in current.visibleCards) return@withLock
+            val newVisibleCards =
+                current.visibleCards + cardType
+            saveConfiguration(
+                siteId,
+                current.copy(
+                    visibleCards = newVisibleCards
+                )
+            )
+        }
     }
 
     suspend fun moveCardUp(
         siteId: Long,
         cardType: SubscribersCardType
     ): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        val index =
-            current.visibleCards.indexOf(cardType)
-        if (index > 0) {
-            moveCardToIndex(
-                siteId, current, cardType, index - 1
-            )
+        mutex.withLock {
+            val current = loadConfiguration(siteId)
+            val index =
+                current.visibleCards.indexOf(cardType)
+            if (index > 0) {
+                moveCardToIndex(
+                    siteId, current,
+                    cardType, index - 1
+                )
+            }
         }
     }
 
@@ -99,13 +114,15 @@ class SubscribersCardsConfigurationRepository @Inject constructor(
         siteId: Long,
         cardType: SubscribersCardType
     ): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        val index =
-            current.visibleCards.indexOf(cardType)
-        if (index > 0) {
-            moveCardToIndex(
-                siteId, current, cardType, 0
-            )
+        mutex.withLock {
+            val current = loadConfiguration(siteId)
+            val index =
+                current.visibleCards.indexOf(cardType)
+            if (index > 0) {
+                moveCardToIndex(
+                    siteId, current, cardType, 0
+                )
+            }
         }
     }
 
@@ -113,15 +130,18 @@ class SubscribersCardsConfigurationRepository @Inject constructor(
         siteId: Long,
         cardType: SubscribersCardType
     ): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        val index =
-            current.visibleCards.indexOf(cardType)
-        if (index >= 0 &&
-            index < current.visibleCards.size - 1
-        ) {
-            moveCardToIndex(
-                siteId, current, cardType, index + 1
-            )
+        mutex.withLock {
+            val current = loadConfiguration(siteId)
+            val index =
+                current.visibleCards.indexOf(cardType)
+            if (index >= 0 &&
+                index < current.visibleCards.size - 1
+            ) {
+                moveCardToIndex(
+                    siteId, current,
+                    cardType, index + 1
+                )
+            }
         }
     }
 
@@ -129,16 +149,18 @@ class SubscribersCardsConfigurationRepository @Inject constructor(
         siteId: Long,
         cardType: SubscribersCardType
     ): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        val index =
-            current.visibleCards.indexOf(cardType)
-        if (index >= 0 &&
-            index < current.visibleCards.size - 1
-        ) {
-            moveCardToIndex(
-                siteId, current, cardType,
-                current.visibleCards.size - 1
-            )
+        mutex.withLock {
+            val current = loadConfiguration(siteId)
+            val index =
+                current.visibleCards.indexOf(cardType)
+            if (index >= 0 &&
+                index < current.visibleCards.size - 1
+            ) {
+                moveCardToIndex(
+                    siteId, current, cardType,
+                    current.visibleCards.size - 1
+                )
+            }
         }
     }
 
@@ -194,13 +216,17 @@ class SubscribersCardsConfigurationRepository @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun isValidConfiguration(
         config: SubscribersCardsConfiguration
     ): Boolean {
-        val validCards = config.visibleCards
-            .filterIsInstance<SubscribersCardType>()
-        return validCards.size ==
-            config.visibleCards.size
+        return try {
+            config.visibleCards.all {
+                it in SubscribersCardType.entries
+            }
+        } catch (_: Exception) {
+            false
+        }
     }
 
     private fun resetToDefault(

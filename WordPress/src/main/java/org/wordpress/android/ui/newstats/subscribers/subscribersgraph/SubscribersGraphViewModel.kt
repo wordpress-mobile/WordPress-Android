@@ -75,8 +75,7 @@ class SubscribersGraphViewModel @Inject constructor(
                                 ),
                                 count = it.count
                             )
-                        },
-                        selectedTab = tab
+                        }
                     )
                 )
             }

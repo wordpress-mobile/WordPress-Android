@@ -108,35 +108,65 @@ class FormatSubscriberDateTest {
 
     @Test
     fun `when subscribed exactly 1 year ago, then returns 1 year`() {
+        val subscribed = LocalDate.now().minusYears(1)
+        val dateStr = subscribed.format(
+            DateTimeFormatter.ISO_LOCAL_DATE
+        )
         val result = formatSubscriberDate(
-            dateNDaysAgo(365), resources
+            dateStr, resources
         )
         assertThat(result).isEqualTo("1 year")
     }
 
     @Test
     fun `when subscribed 1 year and 1 day ago, then returns years and days`() {
+        val subscribed = LocalDate.now().minusYears(1)
+            .minusDays(1)
+        val dateStr = subscribed.format(
+            DateTimeFormatter.ISO_LOCAL_DATE
+        )
         val result = formatSubscriberDate(
-            dateNDaysAgo(366), resources
+            dateStr, resources
         )
         assertThat(result).isEqualTo("1 year, 1 day")
     }
 
     @Test
     fun `when subscribed 2 years ago, then returns 2 years`() {
+        val subscribed = LocalDate.now().minusYears(2)
+        val dateStr = subscribed.format(
+            DateTimeFormatter.ISO_LOCAL_DATE
+        )
         val result = formatSubscriberDate(
-            dateNDaysAgo(730), resources
+            dateStr, resources
         )
         assertThat(result).isEqualTo("2 years")
     }
 
     @Test
-    fun `when subscribed 2 years and 100 days ago, then returns years and days`() {
-        val result = formatSubscriberDate(
-            dateNDaysAgo(830), resources
+    fun `when subscribed more than 2 years ago, then returns years and days`() {
+        val today = LocalDate.now()
+        val twoYearsAgo = today.minusYears(2)
+        val subscribed = twoYearsAgo.minusDays(50)
+        val dateStr = subscribed.format(
+            DateTimeFormatter.ISO_LOCAL_DATE
         )
-        assertThat(result)
-            .isEqualTo("2 years, 100 days")
+        val period = java.time.Period.between(
+            subscribed, today
+        )
+        val remaining =
+            java.time.temporal.ChronoUnit.DAYS.between(
+                subscribed.plusYears(
+                    period.years.toLong()
+                ),
+                today
+            )
+        val result = formatSubscriberDate(
+            dateStr, resources
+        )
+        assertThat(result).isEqualTo(
+            "${period.years} years, $remaining days"
+        )
     }
 
     @Test

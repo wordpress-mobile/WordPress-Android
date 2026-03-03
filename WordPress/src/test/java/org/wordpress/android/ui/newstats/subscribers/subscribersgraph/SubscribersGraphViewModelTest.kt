@@ -134,8 +134,6 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
             val loaded =
                 state as SubscribersGraphUiState.Loaded
             assertThat(loaded.dataPoints).hasSize(3)
-            assertThat(loaded.selectedTab)
-                .isEqualTo(SubscribersGraphTab.DAYS)
         }
 
     @Test
@@ -529,6 +527,22 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
             val state = viewModel.uiState.value
                 as SubscribersGraphUiState.Error
             assertThat(state.isAuthError).isTrue()
+        }
+
+    @Test
+    fun `when data loads, then statsRepository init is called with token`() =
+        test {
+            whenever(
+                statsRepository.fetchSubscribersGraph(
+                    any(), any(), any(), any()
+                )
+            ).thenReturn(createSuccessResult())
+
+            initViewModel()
+            advanceUntilIdle()
+
+            verify(statsRepository)
+                .init(eq(TEST_ACCESS_TOKEN))
         }
 
     private fun createSuccessResult() =

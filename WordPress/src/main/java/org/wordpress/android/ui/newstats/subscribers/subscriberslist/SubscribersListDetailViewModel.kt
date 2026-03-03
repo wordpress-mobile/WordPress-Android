@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.newstats.subscribers.subscriberslist
 
-import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,15 +13,17 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.SubscribersListResult
+import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
-private const val PAGE_SIZE = 20
+internal const val SUBSCRIBERS_DETAIL_PAGE_SIZE = 20
 
 @HiltViewModel
 class SubscribersListDetailViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
-    private val statsRepository: StatsRepository
+    private val statsRepository: StatsRepository,
+    private val contextProvider: ContextProvider
 ) : ViewModel() {
     private val _items = MutableStateFlow<List<SubscriberListItem>>(
         emptyList()
@@ -49,7 +50,7 @@ class SubscribersListDetailViewModel @Inject constructor(
     private var currentPage = 0
     private val paginationMutex = Mutex()
 
-    fun loadInitialPage(resources: Resources) {
+    fun loadInitialPage() {
         viewModelScope.launch {
             paginationMutex.withLock {
                 if (_items.value.isNotEmpty()) return@launch
@@ -57,17 +58,13 @@ class SubscribersListDetailViewModel @Inject constructor(
                 _isLoading.value = true
                 _hasError.value = false
                 _canLoadMore.value = true
-                fetchPage(
-                    currentPage,
-                    isInitial = true,
-                    resources = resources
-                )
+                fetchPage(currentPage, isInitial = true)
                 _isLoading.value = false
             }
         }
     }
 
-    fun loadMore(resources: Resources) {
+    fun loadMore() {
         viewModelScope.launch {
             paginationMutex.withLock {
                 if (!_canLoadMore.value ||
@@ -75,11 +72,7 @@ class SubscribersListDetailViewModel @Inject constructor(
                 ) return@launch
                 _isLoadingMore.value = true
                 currentPage++
-                fetchPage(
-                    currentPage,
-                    isInitial = false,
-                    resources = resources
-                )
+                fetchPage(currentPage, isInitial = false)
                 _isLoadingMore.value = false
             }
         }
@@ -88,8 +81,7 @@ class SubscribersListDetailViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchPage(
         page: Int,
-        isInitial: Boolean,
-        resources: Resources
+        isInitial: Boolean
     ) {
         val siteId = selectedSiteRepository
             .getSelectedSite()?.siteId ?: return
@@ -97,10 +89,12 @@ class SubscribersListDetailViewModel @Inject constructor(
         if (accessToken.isNullOrEmpty()) return
         statsRepository.init(accessToken)
 
+        val resources =
+            contextProvider.getContext().resources
         try {
             val result = statsRepository.fetchSubscribersList(
                 siteId = siteId,
-                perPage = PAGE_SIZE,
+                perPage = SUBSCRIBERS_DETAIL_PAGE_SIZE,
                 page = page
             )
             when (result) {
@@ -124,7 +118,8 @@ class SubscribersListDetailViewModel @Inject constructor(
                             _items.value + newItems
                     }
                     _canLoadMore.value =
-                        newItems.size == PAGE_SIZE
+                        newItems.size ==
+                            SUBSCRIBERS_DETAIL_PAGE_SIZE
                 }
                 is SubscribersListResult.Error -> {
                     if (isInitial) {

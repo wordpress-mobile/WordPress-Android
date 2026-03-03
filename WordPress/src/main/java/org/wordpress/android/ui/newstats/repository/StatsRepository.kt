@@ -1452,6 +1452,11 @@ class StatsRepository @Inject constructor(
                 }
             }
         } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error fetching subscribers graph",
+                e
+            )
             SubscribersGraphResult.Error(
                 messageResId = R.string.stats_error_api
             )
