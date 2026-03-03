@@ -19,6 +19,7 @@ data class SnackbarMessage(
 sealed interface PendingConfirmation {
     data class Trash(val postId: Long) : PendingConfirmation
     data class Delete(val postId: Long) : PendingConfirmation
+    data class MoveToDraft(val postId: Long) : PendingConfirmation
 }
 
 data class ConfirmationDialogState(
