@@ -257,6 +257,7 @@ android {
         }
 
         debug {
+            applicationIdSuffix ".prealpha"
             minifyEnabled false
             pseudoLocalesEnabled true
         }
