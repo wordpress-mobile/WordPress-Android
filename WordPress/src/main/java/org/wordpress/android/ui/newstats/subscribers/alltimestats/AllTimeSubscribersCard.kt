@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -21,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardContainer
-import org.wordpress.android.ui.newstats.components.StatsCardEmptyContent
 import org.wordpress.android.ui.newstats.components.StatsCardErrorContent
 import org.wordpress.android.ui.newstats.components.StatsCardHeader
 import org.wordpress.android.ui.newstats.util.ShimmerBox

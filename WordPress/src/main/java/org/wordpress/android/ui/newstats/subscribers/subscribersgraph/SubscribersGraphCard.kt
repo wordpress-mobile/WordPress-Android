@@ -348,6 +348,7 @@ private fun SubscribersChart(
 private class SubscribersMarkerValueFormatter(
     private val dataPoints: List<GraphDataPoint>
 ) : DefaultCartesianMarker.ValueFormatter {
+    @Suppress("ReturnCount")
     override fun format(
         context: CartesianDrawingContext,
         targets: List<CartesianMarker.Target>

@@ -254,19 +254,7 @@ internal fun formatSubscriberDate(
     resources: android.content.res.Resources
 ): String {
     return try {
-        val subscribed = try {
-            java.time.LocalDateTime.parse(
-                dateString,
-                java.time.format.DateTimeFormatter
-                    .ISO_DATE_TIME
-            ).toLocalDate()
-        } catch (_: Exception) {
-            java.time.LocalDate.parse(
-                dateString,
-                java.time.format.DateTimeFormatter
-                    .ISO_LOCAL_DATE
-            )
-        }
+        val subscribed = parseSubscriberDate(dateString)
         val today = java.time.LocalDate.now()
         val period = java.time.Period.between(
             subscribed, today
@@ -283,39 +271,50 @@ internal fun formatSubscriberDate(
                     R.plurals.stats_subscriber_days,
                     totalDays.toInt(), totalDays.toInt()
                 )
-            else -> {
-                val years = period.years
-                val remaining =
-                    java.time.temporal.ChronoUnit.DAYS
-                        .between(
-                            subscribed.plusYears(
-                                years.toLong()
-                            ),
-                            today
-                        )
-                val yearsPart = resources
-                    .getQuantityString(
-                        R.plurals.stats_subscriber_years,
-                        years, years
-                    )
-                if (remaining == 0L) yearsPart
-                else {
-                    val daysPart = resources
-                        .getQuantityString(
-                            R.plurals
-                                .stats_subscriber_days,
-                            remaining.toInt(),
-                            remaining.toInt()
-                        )
-                    resources.getString(
-                        R.string
-                            .stats_subscriber_years_and_days,
-                        yearsPart, daysPart
-                    )
-                }
-            }
+            else -> formatYearsAndDays(
+                subscribed, today, period, resources
+            )
         }
     } catch (_: Exception) {
         dateString
     }
+}
+
+private fun parseSubscriberDate(
+    dateString: String
+): java.time.LocalDate = try {
+    java.time.LocalDateTime.parse(
+        dateString,
+        java.time.format.DateTimeFormatter.ISO_DATE_TIME
+    ).toLocalDate()
+} catch (_: Exception) {
+    java.time.LocalDate.parse(
+        dateString,
+        java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
+    )
+}
+
+private fun formatYearsAndDays(
+    subscribed: java.time.LocalDate,
+    today: java.time.LocalDate,
+    period: java.time.Period,
+    resources: android.content.res.Resources
+): String {
+    val years = period.years
+    val remaining =
+        java.time.temporal.ChronoUnit.DAYS.between(
+            subscribed.plusYears(years.toLong()), today
+        )
+    val yearsPart = resources.getQuantityString(
+        R.plurals.stats_subscriber_years, years, years
+    )
+    if (remaining == 0L) return yearsPart
+    val daysPart = resources.getQuantityString(
+        R.plurals.stats_subscriber_days,
+        remaining.toInt(), remaining.toInt()
+    )
+    return resources.getString(
+        R.string.stats_subscriber_years_and_days,
+        yearsPart, daysPart
+    )
 }

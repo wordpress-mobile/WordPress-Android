@@ -28,7 +28,6 @@ import org.wordpress.android.ui.newstats.components.StatsCardErrorContent
 import org.wordpress.android.ui.newstats.components.StatsCardHeader
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatEmailStat
-import org.wordpress.android.ui.newstats.util.formatStatValue
 
 private val CardPadding = 16.dp
 private const val LOADING_SHIMMER_ITEM_COUNT = 5

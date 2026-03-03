@@ -1334,55 +1334,8 @@ class StatsRepository @Inject constructor(
     suspend fun fetchSubscribersAllTime(
         siteId: Long
     ): SubscribersAllTimeResult = withContext(ioDispatcher) {
-        val today = java.time.LocalDate.now()
-        val dateFormat =
-            java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
-        val todayStr = today.format(dateFormat)
-        val d30Str = today.minusDays(30)
-            .format(dateFormat)
-        val d60Str = today.minusDays(60)
-            .format(dateFormat)
-        val d90Str = today.minusDays(90)
-            .format(dateFormat)
+        val results = fetchAllTimeResults(siteId)
 
-        val (current, d30, d60, d90) = coroutineScope {
-            val currentDef = async {
-                statsDataSource.fetchStatsSubscribers(
-                    siteId,
-                    quantity = 1,
-                    date = todayStr
-                )
-            }
-            val d30Def = async {
-                statsDataSource.fetchStatsSubscribers(
-                    siteId,
-                    quantity = 1,
-                    date = d30Str
-                )
-            }
-            val d60Def = async {
-                statsDataSource.fetchStatsSubscribers(
-                    siteId,
-                    quantity = 1,
-                    date = d60Str
-                )
-            }
-            val d90Def = async {
-                statsDataSource.fetchStatsSubscribers(
-                    siteId,
-                    quantity = 1,
-                    date = d90Str
-                )
-            }
-            listOf(
-                currentDef.await(),
-                d30Def.await(),
-                d60Def.await(),
-                d90Def.await()
-            )
-        }
-
-        val results = listOf(current, d30, d60, d90)
         val firstError = results.filterIsInstance<
             StatsSubscribersDataResult.Error>().firstOrNull()
         if (firstError != null) {
@@ -1394,21 +1347,49 @@ class StatsRepository @Inject constructor(
             )
         }
 
-        fun extractCount(
-            result: StatsSubscribersDataResult
-        ): Long {
-            val data = (result as
-                StatsSubscribersDataResult.Success).data
-            return data.subscribersData
-                .firstOrNull()?.count ?: 0L
-        }
-
+        val current = results[0]
+        val d30 = results[1]
+        val d60 = results[2]
+        val d90 = results[3]
         SubscribersAllTimeResult.Success(
-            currentCount = extractCount(current),
-            count30DaysAgo = extractCount(d30),
-            count60DaysAgo = extractCount(d60),
-            count90DaysAgo = extractCount(d90)
+            currentCount = extractSubscriberCount(current),
+            count30DaysAgo = extractSubscriberCount(d30),
+            count60DaysAgo = extractSubscriberCount(d60),
+            count90DaysAgo = extractSubscriberCount(d90)
         )
+    }
+
+    @Suppress("MagicNumber")
+    private suspend fun fetchAllTimeResults(
+        siteId: Long
+    ): List<StatsSubscribersDataResult> {
+        val today = java.time.LocalDate.now()
+        val dateFormat =
+            java.time.format.DateTimeFormatter
+                .ISO_LOCAL_DATE
+        val dates = listOf(0L, 30L, 60L, 90L).map {
+            today.minusDays(it).format(dateFormat)
+        }
+        return coroutineScope {
+            dates.map { date ->
+                async {
+                    statsDataSource.fetchStatsSubscribers(
+                        siteId,
+                        quantity = 1,
+                        date = date
+                    )
+                }
+            }.map { it.await() }
+        }
+    }
+
+    private fun extractSubscriberCount(
+        result: StatsSubscribersDataResult
+    ): Long {
+        val data = (result as
+            StatsSubscribersDataResult.Success).data
+        return data.subscribersData
+            .firstOrNull()?.count ?: 0L
     }
 
     /**
