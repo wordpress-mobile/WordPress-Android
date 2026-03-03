@@ -459,6 +459,9 @@ public class UploadUtils {
             if (onPublishingCallback != null) {
                 onPublishingCallback.onPublishing(isFirstTimePublish);
             }
+        } else {
+            AppLog.i(T.POSTS, "UploadUtils > publishPost: no network, post " + post.getId()
+                              + " saved locally and not uploaded");
         }
         PostUtils.trackSavePostAnalytics(post, site);
     }
