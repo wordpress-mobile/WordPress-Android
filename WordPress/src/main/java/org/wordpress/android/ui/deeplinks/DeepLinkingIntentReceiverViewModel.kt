@@ -131,12 +131,21 @@ class DeepLinkingIntentReceiverViewModel
 
     private fun buildNavigateAction(uri: UriWrapper, rootUri: UriWrapper = uri): NavigateAction? {
         return when {
-            deepLinkUriUtils.isTrackingUrl(uri) -> getRedirectUriAndBuildNavigateAction(uri, rootUri)
-                ?.also {
-                    // The new URL was build so we need to hit the original `mbar` tracking URL
+            deepLinkUriUtils.isTrackingUrl(uri) -> {
+                val redirectUri = deepLinkUriUtils.getRedirectUri(uri)
+                val navigateAction = redirectUri?.let { buildNavigateAction(it, rootUri) }
+                if (navigateAction != null) {
                     serverTrackingHandler.request(uri)
+                    navigateAction
+                } else {
+                    // Open the redirect destination (not the tracking URL) to avoid
+                    // an infinite loop with the app's own intent filter.
+                    // Fall back to the tracking URL only if there's no redirect_to.
+                    OpenInBrowser(
+                        redirectUri ?: rootUri.copy(REGULAR_TRACKING_PATH)
+                    )
                 }
-                ?: OpenInBrowser(rootUri.copy(REGULAR_TRACKING_PATH))
+            }
             deepLinkUriUtils.isWpLoginUrl(uri) -> getRedirectUriAndBuildNavigateAction(uri, rootUri)
             else -> deepLinkHandlers.buildNavigateAction(uri)
         }
