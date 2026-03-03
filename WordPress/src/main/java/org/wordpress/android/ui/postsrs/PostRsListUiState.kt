@@ -38,6 +38,14 @@ data class PostTabUiState(
     val isAuthError: Boolean = false
 )
 
+enum class PostDisplayState {
+    NORMAL,
+    FETCHING_WITH_DATA,
+    FAILED_WITH_DATA,
+    PLACEHOLDER,
+    ERROR
+}
+
 data class PostRsUiModel(
     val remotePostId: Long,
     val title: String,
@@ -53,8 +61,8 @@ data class PostRsUiModel(
     val featuredImageId: Long = 0L,
     val featuredImageUrl: String? = null,
     val actions: List<PostRsMenuAction> = emptyList(),
-    val isPlaceholder: Boolean = false,
-    val isError: Boolean = false
+    val displayState: PostDisplayState =
+        PostDisplayState.NORMAL
 )
 
 enum class PostRsMenuAction(
@@ -108,23 +116,29 @@ fun PostItemState.toUiModel(
         is PostItemState.Stale ->
             data.toUiModel(showStatus)
         is PostItemState.FetchingWithData ->
-            data.toUiModel(showStatus)
+            data.toUiModel(showStatus).copy(
+                displayState =
+                    PostDisplayState.FETCHING_WITH_DATA
+            )
         is PostItemState.FailedWithData ->
-            data.toUiModel(showStatus)
+            data.toUiModel(showStatus).copy(
+                displayState =
+                    PostDisplayState.FAILED_WITH_DATA
+            )
         is PostItemState.Missing,
         is PostItemState.Fetching -> PostRsUiModel(
             remotePostId = postId,
             title = "",
             excerpt = "",
             date = "",
-            isPlaceholder = true
+            displayState = PostDisplayState.PLACEHOLDER
         )
         is PostItemState.Failed -> PostRsUiModel(
             remotePostId = postId,
             title = "",
             excerpt = "",
             date = "",
-            isError = true
+            displayState = PostDisplayState.ERROR
         )
     }
 }
