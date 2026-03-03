@@ -355,8 +355,8 @@ Step.3:
   - I recommend using a `versionCode` of `1000000001` and above.
   - I recommend using an explicit `versionName` like `deps-update-google-play-services-20-4-1`
     (similar to the name of this branch itself)
-- Build the release `.aab` locally using this command: `./gradlew bundleJetpackVanillaRelease`
-- Upload the locally generated `.aab`, found within the `WordPress/build/outputs/bundle/jetpackVanillaRelease/`
+- Build the release `.aab` locally using this command: `./gradlew bundleJetpackRelease`
+- Upload the locally generated `.aab`, found within the `WordPress/build/outputs/bundle/jetpackRelease/`
   build folder, and into Google Play Console (`Jetpack - Website Builder`) via:
   `App Bundle Explorer` > `Upload new version` (top-right)
   - Wait for the upload to complete, then via this newly uploaded app version, navigation to the
@@ -385,8 +385,8 @@ Step.3:
   - I recommend using a `versionCode` of `1000000001` and above.
   - I recommend using an explicit `versionName` like `deps-update-google-play-services-20-4-1`
     (similar to the name of this branch itself)
-- Build the release `.aab` locally using this command: `./gradlew bundleWordPressVanillaRelease`
-- Upload the locally generated `.aab`, found within the `WordPress/build/outputs/bundle/wordpressVanillaRelease/`
+- Build the release `.aab` locally using this command: `./gradlew bundleWordPressRelease`
+- Upload the locally generated `.aab`, found within the `WordPress/build/outputs/bundle/wordpressRelease/`
   build folder, and into Google Play Console (`WordPress - Website Builder`) via:
   `App Bundle Explorer` > `Upload new version` (top-right)
   - Wait for the upload to complete, then via this newly uploaded app version, navigation to the
@@ -833,7 +833,7 @@ bumping `sentryVersion`.
 
 #### To Test
 
-Please build the release variant (`vanillaRelease`) of both WordPress and Jetpack flavors and verify if issues are sent correctly. You can use the following snippet.
+Please build the release variant of both WordPress and Jetpack flavors and verify if issues are sent correctly. You can use the following snippet.
 
 <details><summary>PATCH (warning: it'll probably have some conflicts in the future when `WPMainActivityViewModel` change. It's more for an idea:</summary>
 

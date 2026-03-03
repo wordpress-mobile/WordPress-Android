@@ -5,7 +5,7 @@ Our code style guidelines are based on the [Android Code Style Guidelines for Co
 * Line length is 120 characters
 * FIXME must not be committed in the repository use TODO instead. FIXME can be used in your own local repository only.
 
-On top of the Android linter rules (best run for this project using `./gradlew lintWordPressVanillaRelease`), we use two linters: [Checkstyle](https://checkstyle.sourceforge.io/) (for Java and some language-independent custom project rules), and [detekt](https://detekt.dev/) (for Kotlin).
+On top of the Android linter rules (best run for this project using `./gradlew lintWordPressRelease`), we use two linters: [Checkstyle](https://checkstyle.sourceforge.io/) (for Java and some language-independent custom project rules), and [detekt](https://detekt.dev/) (for Kotlin).
 ## Checkstyle
 
 You can run checkstyle via a gradle command:

@@ -78,21 +78,21 @@ steps:
     steps:
       - label: "Dependency Tree Diff"
         command: |
-          comment_with_dependency_diff 'WordPress' 'wordpressVanillaReleaseRuntimeClasspath'
+          comment_with_dependency_diff 'WordPress' 'wordpressReleaseRuntimeClasspath'
         if: build.pull_request.id != null
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/diff/*"
 
       - label: "Merged Manifest Diff WordPress"
-        command: ".buildkite/commands/diff-merged-manifest.sh wordpressVanillaRelease"
+        command: ".buildkite/commands/diff-merged-manifest.sh wordpressRelease"
         if: build.pull_request.id != null
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/diff_manifest/**/**/*"
 
       - label: "Merged Manifest Diff Jetpack"
-        command: ".buildkite/commands/diff-merged-manifest.sh jetpackVanillaRelease"
+        command: ".buildkite/commands/diff-merged-manifest.sh jetpackRelease"
         if: build.pull_request.id != null
         plugins: [$CI_TOOLKIT]
         artifact_paths:

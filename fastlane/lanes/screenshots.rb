@@ -32,7 +32,7 @@ platform :android do
   lane :screenshots do |options|
     app = get_app_name_option!(options)
 
-    gradle(tasks: ["assemble#{app.to_s.capitalize}VanillaDebug", "assemble#{app.to_s.capitalize}VanillaDebugAndroidTest"])
+    gradle(tasks: ["assemble#{app.to_s.capitalize}Debug", "assemble#{app.to_s.capitalize}DebugAndroidTest"])
 
     # Clear previous screenshots if we build for all devices. Don't clear if we only do a subset
     should_clear_previous_screenshots = options[:device].nil? && options[:locale].nil?
@@ -57,8 +57,8 @@ platform :android do
       serial = android_launch_emulator(avd_name: name) # Launch an emulator using this AVD and get its serial number, to know which emulator to run the tests on
 
       capture_android_screenshots(
-        app_apk_path: File.join(apk_dir, "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug.apk"),
-        tests_apk_path: File.join(apk_dir, 'androidTest', "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug-androidTest.apk"),
+        app_apk_path: File.join(apk_dir, app.to_s, 'debug', "org.wordpress.android-#{app}-debug.apk"),
+        tests_apk_path: File.join(apk_dir, 'androidTest', app.to_s, 'debug', "org.wordpress.android-#{app}-debug-androidTest.apk"),
         reinstall_app: false,
         clear_previous_screenshots: should_clear_previous_screenshots,
         app_package_name: package_name,

@@ -21,11 +21,11 @@ Notes:
 
 To build, install, and test the project from the command line:
 
-    $ ./gradlew assembleWordPressVanillaDebug                        # assemble the debug .apk
-    $ ./gradlew installWordPressVanillaDebug                         # install the debug .apk if you have an
+    $ ./gradlew assembleWordPressDebug                        # assemble the debug .apk
+    $ ./gradlew installWordPressDebug                         # install the debug .apk if you have an
                                                                      # emulator or an Android device connected
-    $ ./gradlew :WordPress:testWordPressVanillaDebugUnitTest         # assemble, install and run unit tests
-    $ ./gradlew :WordPress:connectedWordPressVanillaDebugAndroidTest # assemble, install and run Android tests
+    $ ./gradlew :WordPress:testWordPressDebugUnitTest         # assemble, install and run unit tests
+    $ ./gradlew :WordPress:connectedWordPressDebugAndroidTest # assemble, install and run Android tests
 
 ## Running the app ##
 
@@ -49,7 +49,7 @@ Note: Access to WordPress.com features is temporarily disabled in the developmen
     │       │   ├── java        # main project java code
     │       │   └── res         # main project resources
     │       ├── debug           # debug variant
-    │       └── wasabi          # wasabi variant specific resources and manifest
+    │       └── release         # release variant
 
 ## Google Configuration ##
 
