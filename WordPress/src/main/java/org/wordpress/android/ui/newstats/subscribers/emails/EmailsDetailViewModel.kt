@@ -62,6 +62,10 @@ class EmailsDetailViewModel @Inject constructor(
         }
     }
 
+    // Note: The emails API only supports a "quantity"
+    // parameter (not page/offset), so each "load more"
+    // re-fetches all items with an increased quantity.
+    // This is a known API limitation.
     fun loadMore() {
         viewModelScope.launch {
             paginationMutex.withLock {

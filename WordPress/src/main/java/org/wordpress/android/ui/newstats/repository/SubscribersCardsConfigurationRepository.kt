@@ -45,7 +45,7 @@ class SubscribersCardsConfigurationRepository @Inject constructor(
             loadConfiguration(siteId)
         }
 
-    suspend fun saveConfiguration(
+    private suspend fun saveConfiguration(
         siteId: Long,
         configuration: SubscribersCardsConfiguration
     ): Unit = withContext(ioDispatcher) {

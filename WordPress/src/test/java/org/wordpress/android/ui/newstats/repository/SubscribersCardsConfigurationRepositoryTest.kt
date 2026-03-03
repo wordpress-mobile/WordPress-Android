@@ -77,14 +77,11 @@ class SubscribersCardsConfigurationRepositoryTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when saveConfiguration is called, then json is saved to prefs`() = test {
+    fun `when addCard is called, then json is saved to prefs`() = test {
         whenever(appPrefsWrapper.getSubscribersCardsConfigurationJson(TEST_SITE_ID))
-            .thenReturn(null)
-        val config = SubscribersCardsConfiguration(
-            visibleCards = listOf(SubscribersCardType.ALL_TIME_SUBSCRIBERS)
-        )
+            .thenReturn("""{"visibleCards":["ALL_TIME_SUBSCRIBERS"]}""")
 
-        repository.saveConfiguration(TEST_SITE_ID, config)
+        repository.addCard(TEST_SITE_ID, SubscribersCardType.EMAILS)
 
         verify(appPrefsWrapper)
             .setSubscribersCardsConfigurationJson(eq(TEST_SITE_ID), any())
@@ -297,18 +294,20 @@ class SubscribersCardsConfigurationRepositoryTest : BaseUnitTest() {
     @Test
     fun `when configurationFlow emits, then it contains site id and configuration`() = test {
         whenever(appPrefsWrapper.getSubscribersCardsConfigurationJson(TEST_SITE_ID))
-            .thenReturn(null)
-        val config = SubscribersCardsConfiguration(
-            visibleCards = listOf(SubscribersCardType.ALL_TIME_SUBSCRIBERS)
-        )
+            .thenReturn("""{"visibleCards":[]}""")
 
-        repository.saveConfiguration(TEST_SITE_ID, config)
+        repository.addCard(
+            TEST_SITE_ID,
+            SubscribersCardType.ALL_TIME_SUBSCRIBERS
+        )
 
         val flowValue = repository.configurationFlow.value
         assertThat(flowValue).isNotNull
         assertThat(flowValue?.first).isEqualTo(TEST_SITE_ID)
         assertThat(flowValue?.second?.visibleCards)
-            .containsExactly(SubscribersCardType.ALL_TIME_SUBSCRIBERS)
+            .containsExactly(
+                SubscribersCardType.ALL_TIME_SUBSCRIBERS
+            )
     }
 
     companion object {

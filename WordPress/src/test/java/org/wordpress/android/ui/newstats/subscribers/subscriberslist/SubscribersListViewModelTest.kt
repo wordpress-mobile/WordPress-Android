@@ -20,6 +20,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.SubscriberItemData
 import org.wordpress.android.ui.newstats.repository.SubscribersListResult
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
@@ -36,6 +37,15 @@ class SubscribersListViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    private lateinit var contextProvider: ContextProvider
+
+    @Mock
+    private lateinit var context: android.content.Context
+
+    @Mock
+    private lateinit var resources: android.content.res.Resources
 
     private lateinit var viewModel: SubscribersListViewModel
 
@@ -58,6 +68,17 @@ class SubscribersListViewModelTest : BaseUnitTest() {
         ).thenReturn("Not authenticated")
         whenever(resourceProvider.getString(R.string.stats_error_unknown))
             .thenReturn("Unknown error")
+        whenever(contextProvider.getContext()).thenReturn(context)
+        whenever(context.resources).thenReturn(resources)
+        whenever(
+            resources.getQuantityString(any(), any(), any())
+        ).thenReturn("1 year")
+        whenever(
+            resources.getString(
+                eq(R.string.stats_subscriber_years_and_days),
+                any(), any()
+            )
+        ).thenReturn("1 year, 1 day")
     }
 
     private fun initViewModel() {
@@ -65,7 +86,8 @@ class SubscribersListViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             accountStore,
             statsRepository,
-            resourceProvider
+            resourceProvider,
+            contextProvider
         )
         viewModel.loadData()
     }
@@ -193,7 +215,8 @@ class SubscribersListViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             accountStore,
             statsRepository,
-            resourceProvider
+            resourceProvider,
+            contextProvider
         )
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()

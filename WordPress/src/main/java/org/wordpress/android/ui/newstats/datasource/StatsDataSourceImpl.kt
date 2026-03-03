@@ -64,6 +64,7 @@ class StatsDataSourceImpl @Inject constructor(
     @Volatile
     private var wpComApiClient: WpComApiClient? = null
 
+    @Synchronized
     private fun getOrCreateClient(): WpComApiClient {
         val token = accessToken
         check(token != null) { "DataSource not initialized" }

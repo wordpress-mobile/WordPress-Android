@@ -6,6 +6,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.SubscribersListResult
 import org.wordpress.android.ui.newstats.subscribers.BaseSubscribersCardViewModel
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -16,7 +17,8 @@ class SubscribersListViewModel @Inject constructor(
     selectedSiteRepository: SelectedSiteRepository,
     accountStore: AccountStore,
     statsRepository: StatsRepository,
-    resourceProvider: ResourceProvider
+    resourceProvider: ResourceProvider,
+    private val contextProvider: ContextProvider
 ) : BaseSubscribersCardViewModel<SubscribersListUiState>(
     selectedSiteRepository,
     accountStore,
@@ -40,6 +42,8 @@ class SubscribersListViewModel @Inject constructor(
         ) {
             is SubscribersListResult.Success -> {
                 markLoadedSuccessfully()
+                val resources = contextProvider
+                    .getContext().resources
                 updateState(
                     SubscribersListUiState.Loaded(
                         items = result.subscribers
@@ -49,7 +53,12 @@ class SubscribersListViewModel @Inject constructor(
                                     displayName =
                                         it.displayName,
                                     subscribedSince =
-                                        it.subscribedSince
+                                        it.subscribedSince,
+                                    formattedDate =
+                                        formatSubscriberDate(
+                                            it.subscribedSince,
+                                            resources
+                                        )
                                 )
                             }
                     )
