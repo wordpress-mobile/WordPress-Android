@@ -1,5 +1,4 @@
-- Search media by title and see library space as a progress bar.
-- Authenticate with your app password to add new sites.
-- Log in without seeing the site picker and Quick Start guide.
-- See the My Site screen without the Plans menu.
-- Enjoy other new features, updates, and fixes.
+- Navigation Menus available to users with application password and theme edit capability.
+- Assorted text and visual fixes to Stats and Media library.
+- Image and authentication fixes for self-hosted sites.
+- My Site visual updates and TalkBack accessibility.
