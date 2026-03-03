@@ -400,11 +400,6 @@ class PostRsListViewModel @Inject constructor(
         val apiException = unwrapException(e)
         val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
 
-        // For WpApiException with a message and a default provided, prefer the API message
-        if (defaultResId != null && apiException is WpApiException) {
-            apiException.message?.takeIf { it.isNotBlank() }?.let { return it }
-        }
-
         val resId = when {
             reason is RequestExecutionErrorReason.DeviceIsOfflineError ||
                 !networkUtilsWrapper.isNetworkAvailable() ->
