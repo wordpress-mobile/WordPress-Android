@@ -299,7 +299,12 @@ class MediaRsApiRestClientTest {
         val testMedia = createTestMedia()
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(
-            WpRequestResult.UnknownError(statusCode = 404u, response = "Media not found", requestUrl = "", requestMethod = RequestMethod.GET)
+            WpRequestResult.UnknownError(
+                statusCode = 404u,
+                response = "Media not found",
+                requestUrl = "",
+                requestMethod = RequestMethod.GET
+            )
         )
 
         restClient.deleteMedia(testSite, testMedia)
@@ -477,7 +482,12 @@ class MediaRsApiRestClientTest {
         whenever(fileCheckWrapper.canReadFile(any())).thenReturn(true)
         // Mock an error response
         whenever(wpApiClient.request<Any>(any())).thenReturn(
-            WpRequestResult.UnknownError(statusCode = 413u, response = "File too large", requestUrl = "", requestMethod = RequestMethod.POST)
+            WpRequestResult.UnknownError(
+                statusCode = 413u,
+                response = "File too large",
+                requestUrl = "",
+                requestMethod = RequestMethod.POST
+            )
         )
 
         restClient.uploadMedia(testSite, testMedia)
