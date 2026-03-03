@@ -131,9 +131,15 @@ class PostRsListViewModel @Inject constructor(
     /**
      * Looks up a post in the local FluxC database and emits
      * an [PostRsListEvent.EditPost] to open the editor.
+     * If the post is trashed, shows a confirmation dialog first.
      */
     @MainThread
-    fun openPost(remotePostId: Long) {
+    fun openPost(remotePostId: Long, tab: PostRsListTab) {
+        if (tab == PostRsListTab.TRASHED) {
+            _pendingConfirmation.value =
+                PendingConfirmation.MoveToDraft(remotePostId)
+            return
+        }
         val post = getFluxCPost(remotePostId) ?: return
         _events.trySend(PostRsListEvent.EditPost(site, post))
     }
@@ -242,6 +248,8 @@ class PostRsListViewModel @Inject constructor(
         when (val confirmation = _pendingConfirmation.value) {
             is PendingConfirmation.Trash -> trashPost(site, confirmation.postId)
             is PendingConfirmation.Delete -> deletePost(site, confirmation.postId)
+            is PendingConfirmation.MoveToDraft ->
+                moveToDraftAndEdit(site, confirmation.postId)
             null -> Unit
         }
         _pendingConfirmation.value = null
@@ -268,24 +276,71 @@ class PostRsListViewModel @Inject constructor(
         postId, R.string.post_rs_moved_to_draft, R.string.post_rs_error_update_status
     ) { restClient.updatePostStatus(site, postId, PostStatus.Draft) }
 
+    private fun moveToDraftAndEdit(site: SiteModel, postId: Long) {
+        updateTabUiState(PostRsListTab.TRASHED) {
+            copy(isRefreshing = true)
+        }
+        val clearRefreshing = {
+            updateTabUiState(PostRsListTab.TRASHED) {
+                copy(isRefreshing = false)
+            }
+        }
+        executePostAction(
+            postId = postId,
+            errorResId = R.string.post_rs_error_update_status,
+            onSuccess = {
+                refreshAllTabs()
+                val post = getFluxCPost(postId)
+                if (post != null) {
+                    _events.trySend(
+                        PostRsListEvent.EditPost(site, post)
+                    )
+                } else {
+                    _events.trySend(
+                        PostRsListEvent.ShowToast(
+                            R.string.post_rs_moved_to_draft
+                        )
+                    )
+                }
+            },
+            onError = clearRefreshing
+        ) { restClient.updatePostStatus(site, postId, PostStatus.Draft) }
+    }
+
     /**
-     * Shared helper that runs a post mutation on IO
+     * Shared helper that runs a post mutation on IO.
      *
      * @param postId        Remote ID of the post being acted on.
-     * @param successResId  String resource shown when [action] succeeds.
+     * @param successResId  String resource shown when [action] succeeds
+     *                      (unused when [onSuccess] is provided).
      * @param errorResId    String resource shown when [action] fails.
+     * @param onSuccess     Optional callback that replaces the default
+     *                      success handling (remove from UI + snackbar
+     *                      + refresh).
+     * @param onError       Optional callback invoked after the default
+     *                      error handling (e.g. to clear loading state).
      * @param action        Suspend lambda that performs the network call.
      */
     private fun executePostAction(
         postId: Long,
-        successResId: Int,
+        successResId: Int = 0,
         errorResId: Int,
+        onSuccess: (() -> Unit)? = null,
+        onError: (() -> Unit)? = null,
         action: suspend () -> PostActionResult
     ) {
-        if (!checkNetwork()) return
+        if (!checkNetwork()) {
+            onError?.invoke()
+            return
+        }
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) { action() }
-            handleActionResult(result, postId, successResId, errorResId)
+            if (result is PostActionResult.Success && onSuccess != null) {
+                onSuccess()
+            } else {
+                handleActionResult(result, postId, successResId, errorResId)
+                if (result is PostActionResult.Error) onError?.invoke()
+            }
         }
     }
 
