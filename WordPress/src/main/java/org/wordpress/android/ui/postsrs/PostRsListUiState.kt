@@ -116,14 +116,14 @@ fun PostItemState.toUiModel(
         is PostItemState.Stale ->
             data.toUiModel(showStatus)
         is PostItemState.FetchingWithData ->
-            data.toUiModel(showStatus).copy(
-                displayState =
-                    PostDisplayState.FETCHING_WITH_DATA
+            data.toUiModel(
+                showStatus,
+                PostDisplayState.FETCHING_WITH_DATA
             )
         is PostItemState.FailedWithData ->
-            data.toUiModel(showStatus).copy(
-                displayState =
-                    PostDisplayState.FAILED_WITH_DATA
+            data.toUiModel(
+                showStatus,
+                PostDisplayState.FAILED_WITH_DATA
             )
         is PostItemState.Missing,
         is PostItemState.Fetching -> PostRsUiModel(
@@ -144,7 +144,8 @@ fun PostItemState.toUiModel(
 }
 
 private fun FullEntityAnyPostWithEditContext.toUiModel(
-    showStatus: Boolean
+    showStatus: Boolean,
+    displayState: PostDisplayState = PostDisplayState.NORMAL
 ): PostRsUiModel {
     val post: AnyPostWithEditContext = data
     return PostRsUiModel(
@@ -171,7 +172,8 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
             post.status.toLabel()
         } else {
             0
-        }
+        },
+        displayState = displayState
     )
 }
 
