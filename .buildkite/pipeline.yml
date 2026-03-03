@@ -83,6 +83,9 @@ steps:
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/diff/*"
+        # TODO: Remove soft_fail after this PR merges and trunk
+        # uses the new variant names (without buildType flavors)
+        soft_fail: true
 
       - label: "Merged Manifest Diff WordPress"
         command: ".buildkite/commands/diff-merged-manifest.sh wordpressRelease"
@@ -90,6 +93,7 @@ steps:
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/diff_manifest/**/**/*"
+        soft_fail: true
 
       - label: "Merged Manifest Diff Jetpack"
         command: ".buildkite/commands/diff-merged-manifest.sh jetpackRelease"
@@ -97,6 +101,7 @@ steps:
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/diff_manifest/**/**/*"
+        soft_fail: true
 
   #################
   # Unit Tests
