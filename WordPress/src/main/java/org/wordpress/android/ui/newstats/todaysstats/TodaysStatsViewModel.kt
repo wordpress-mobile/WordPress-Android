@@ -13,6 +13,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.repository.HourlyViewsDataPoint
 import org.wordpress.android.ui.newstats.repository.HourlyViewsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TodayAggregatesResult
@@ -168,7 +169,12 @@ class TodaysStatsViewModel @Inject constructor(
 
         return when (result) {
             is HourlyViewsResult.Success -> {
-                result.dataPoints.map { dataPoint ->
+                val dataPoints = if (offsetDays == 0) {
+                    trimFutureHours(result.dataPoints)
+                } else {
+                    result.dataPoints
+                }
+                dataPoints.map { dataPoint ->
                     ViewsDataPoint(
                         label = formatHourlyLabel(dataPoint.period),
                         views = dataPoint.views
@@ -176,6 +182,32 @@ class TodaysStatsViewModel @Inject constructor(
                 }
             }
             is HourlyViewsResult.Error -> emptyList()
+        }
+    }
+
+    /**
+     * Filters out data points for hours after the current hour
+     * to avoid showing a misleading drop to zero in the sparkline.
+     */
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    private fun trimFutureHours(
+        dataPoints: List<HourlyViewsDataPoint>
+    ): List<HourlyViewsDataPoint> {
+        val currentHour = LocalDateTime.now().hour
+        val inputFormat = DateTimeFormatter.ofPattern(
+            "yyyy-MM-dd HH:mm:ss",
+            Locale.getDefault()
+        )
+        return dataPoints.filter { dataPoint ->
+            try {
+                val dateTime = LocalDateTime.parse(
+                    dataPoint.period,
+                    inputFormat
+                )
+                dateTime.hour <= currentHour
+            } catch (e: Exception) {
+                true
+            }
         }
     }
 
