@@ -280,7 +280,7 @@ private fun LoadedContent(
             onMoveDown = onMoveDown,
             onMoveToBottom = onMoveToBottom
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         // Chart Section
         ViewsStatsChart(
             chartData = state.chartData,
@@ -573,6 +573,7 @@ private fun ViewsStatsChart(
                 shape = CorneredShape.rounded(allPercent = 25)
             )
         ),
+        labelPosition = DefaultCartesianMarker.LabelPosition.AroundPoint,
         guideline = LineComponent(
             fill = fill(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
             thicknessDp = 1f
@@ -615,7 +616,9 @@ private fun ViewsStatsChart(
                         )
                     ),
                     startAxis = VerticalAxis.rememberStart(line = null),
-                    bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter),
+                    bottomAxis = HorizontalAxis.rememberBottom(
+                        valueFormatter = bottomAxisValueFormatter
+                    ),
                     marker = marker,
                     decorations = listOf(averageLine)
                 ),
