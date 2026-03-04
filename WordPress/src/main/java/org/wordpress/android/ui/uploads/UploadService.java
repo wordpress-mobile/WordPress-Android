@@ -50,6 +50,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -83,6 +84,9 @@ public class UploadService extends Service {
     // for media that the user actively cancelled uploads for
     private static HashSet<String> mUserDeletedMediaItemIds = new HashSet<>();
 
+    // tracks media IDs that have already been recovered to prevent recovery loops
+    private static final Set<Integer> RECOVERED_MEDIA_IDS = new HashSet<>();
+
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -99,8 +103,6 @@ public class UploadService extends Service {
         AppLog.i(T.MAIN, "UploadService > Created");
         mDispatcher.register(this);
         sInstance = this;
-        // TODO: Recover any posts/media uploads that were interrupted by the service being stopped
-
         if (mMediaUploadHandler == null) {
             mMediaUploadHandler = new MediaUploadHandler();
         }
@@ -112,6 +114,66 @@ public class UploadService extends Service {
         if (mPostUploadHandler == null) {
             mPostUploadHandler = new PostUploadHandler(mPostUploadNotifier);
         }
+
+        recoverInterruptedMediaUploads();
+    }
+
+    /**
+     * Recovers media uploads that were interrupted when the service was killed.
+     * Re-queues QUEUED and UPLOADING media, and retries FAILED media that is
+     * bound to a post and still has a valid local file.
+     */
+    private void recoverInterruptedMediaUploads() {
+        List<MediaModel> recoveredMedia = new ArrayList<>();
+        for (SiteModel site : mSiteStore.getSites()) {
+            List<MediaModel> queuedMedia = mMediaStore.getSiteMediaWithState(
+                    site, MediaUploadState.QUEUED);
+            for (MediaModel media : queuedMedia) {
+                if (RECOVERED_MEDIA_IDS.add(media.getId())) {
+                    recoveredMedia.add(media);
+                }
+            }
+
+            List<MediaModel> uploadingMedia = mMediaStore.getSiteMediaWithState(
+                    site, MediaUploadState.UPLOADING);
+            for (MediaModel media : uploadingMedia) {
+                if (RECOVERED_MEDIA_IDS.add(media.getId())) {
+                    media.setUploadState(MediaUploadState.QUEUED.name());
+                    mDispatcher.dispatch(
+                            MediaActionBuilder.newUpdateMediaAction(media));
+                    recoveredMedia.add(media);
+                }
+            }
+
+            List<MediaModel> failedMedia = mMediaStore.getSiteMediaWithState(
+                    site, MediaUploadState.FAILED);
+            for (MediaModel media : failedMedia) {
+                if (RECOVERED_MEDIA_IDS.add(media.getId())
+                        && media.getLocalPostId() > 0
+                        && hasValidFile(media)) {
+                    media.setUploadState(MediaUploadState.QUEUED.name());
+                    mDispatcher.dispatch(
+                            MediaActionBuilder.newUpdateMediaAction(media));
+                    recoveredMedia.add(media);
+                }
+            }
+        }
+
+        if (!recoveredMedia.isEmpty()) {
+            AppLog.i(T.MAIN, "UploadService > Recovering "
+                    + recoveredMedia.size() + " interrupted media uploads");
+            registerPostModelsForMedia(recoveredMedia, false);
+            for (MediaModel media : recoveredMedia) {
+                mMediaUploadHandler.upload(media);
+            }
+            mPostUploadNotifier
+                    .addMediaInfoToForegroundNotification(recoveredMedia);
+        }
+    }
+
+    private static boolean hasValidFile(@NonNull MediaModel media) {
+        String filePath = media.getFilePath();
+        return filePath != null && new File(filePath).exists();
     }
 
     @Override
