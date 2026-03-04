@@ -833,8 +833,6 @@ public class ReaderPostTable {
      */
     private static final int MAX_TEXT_LEN = (1024 * 1024) / 2;
 
-    // TODO: ideally pass Context to avoid Application context for string resources
-    //  (see https://issuetracker.google.com/issues/406641857)
     private static String maxText(final ReaderPost post) {
         if (post.getText().length() <= MAX_TEXT_LEN) {
             return post.getText();
