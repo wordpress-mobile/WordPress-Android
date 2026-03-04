@@ -1,9 +1,10 @@
 package org.wordpress.android.models;
 
+import android.content.Context;
+
 import androidx.annotation.StringRes;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 
 public enum PeopleListFilter implements FilterCriteria {
     TEAM(R.string.people_dropdown_item_team),
@@ -18,7 +19,7 @@ public enum PeopleListFilter implements FilterCriteria {
     }
 
     @Override
-    public String getLabel() {
-        return WordPress.getContext().getString(mLabelResId);
+    public String getLabel(Context context) {
+        return context.getString(mLabelResId);
     }
 }

@@ -30,7 +30,8 @@ class PostListDialogHelper(
     private val checkNetworkConnection: () -> Boolean,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val showConflictResolutionOverlay: ((PostResolutionOverlayActionEvent.ShowDialogAction) -> Unit)? = null,
-    private val isPostConflictResolutionEnabled: Boolean
+    private val isPostConflictResolutionEnabled: Boolean,
+    private val getContext: () -> android.content.Context
 ) {
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForDeleteDialog: Int? = null
@@ -129,7 +130,7 @@ class PostListDialogHelper(
             val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
                 title = UiStringRes(R.string.dialog_confirm_load_remote_post_title),
-                message = UiStringText(PostUtils.getConflictedPostCustomStringForDialog(post)),
+                message = UiStringText(PostUtils.getConflictedPostCustomStringForDialog(getContext(), post)),
                 positiveButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_local),
                 negativeButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_web)
             )
@@ -150,7 +151,7 @@ class PostListDialogHelper(
             val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
                 title = UiStringRes(R.string.dialog_confirm_autosave_title),
-                message = PostUtils.getCustomStringForAutosaveRevisionDialog(post),
+                message = PostUtils.getCustomStringForAutosaveRevisionDialog(getContext(), post),
                 positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
                 negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
             )

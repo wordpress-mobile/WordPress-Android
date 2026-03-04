@@ -67,6 +67,7 @@ class ReaderViewModel @Inject constructor(
     private val readerTopBarMenuHelper: ReaderTopBarMenuHelper,
     private val urlUtilsWrapper: UrlUtilsWrapper,
     private val readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig,
+    private val contextProvider: org.wordpress.android.viewmodel.ContextProvider,
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private var wasPaused: Boolean = false
@@ -129,7 +130,9 @@ class ReaderViewModel @Inject constructor(
                 updateReaderTagsList(tagList)
                 updateTopBarUiState(savedInstanceState)
                 _uiState.value = ContentUiState(
-                    tabUiStates = tagList.map { TabUiState(label = UiStringText(it.label)) },
+                    tabUiStates = tagList.map {
+                        TabUiState(label = UiStringText(it.getLabel(contextProvider.getContext())))
+                    },
                     selectedReaderTag = selectedReaderTag(),
                 )
                 if (!initialized) {

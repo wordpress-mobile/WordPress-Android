@@ -125,7 +125,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     @Override
     public void onBindViewHolder(TagViewHolder holder, int position) {
         final ReaderTag tag = mTags.get(position);
-        holder.mTxtTagName.setText(tag.getLabel());
+        holder.mTxtTagName.setText(tag.getLabel(holder.itemView.getContext()));
         holder.mRemoveFollowButton.setOnClickListener(view -> performDeleteTag(tag, holder.mRemoveFollowButton));
     }
 

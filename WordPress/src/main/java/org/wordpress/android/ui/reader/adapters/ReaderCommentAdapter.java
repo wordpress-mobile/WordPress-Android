@@ -312,7 +312,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         } else {
             dtPublished = DateTimeUtils.dateFromIso8601(comment.getPublished());
         }
-        commentHolder.mTxtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished, WordPress.getContext()));
+        commentHolder.mTxtDate.setText(
+                DateTimeUtils.javaDateToTimeSpan(dtPublished, commentHolder.itemView.getContext()));
 
         String avatarUrl = WPAvatarUtils.rewriteAvatarUrl(comment.getAuthorAvatar(), mAvatarSz);
         mImageManager.loadIntoCircle(commentHolder.mImgAvatar, ImageType.AVATAR, avatarUrl);

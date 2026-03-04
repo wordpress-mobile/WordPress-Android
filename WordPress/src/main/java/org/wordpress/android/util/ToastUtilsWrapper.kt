@@ -1,12 +1,12 @@
 package org.wordpress.android.util
 
+import android.content.Context
 import androidx.annotation.StringRes
 import dagger.Reusable
-import org.wordpress.android.WordPress
 import javax.inject.Inject
 
 @Reusable
 class ToastUtilsWrapper @Inject constructor() {
-    fun showToast(@StringRes messageRes: Int) =
-        ToastUtils.showToast(WordPress.getContext(), messageRes)
+    fun showToast(context: Context, @StringRes messageRes: Int) =
+        ToastUtils.showToast(context, messageRes)
 }

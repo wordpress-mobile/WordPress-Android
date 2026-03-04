@@ -25,7 +25,8 @@ class PageListDialogHelper(
     private val showDialog: (DialogHolder) -> Unit,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val showConflictResolutionOverlay: ((PostResolutionOverlayActionEvent.ShowDialogAction) -> Unit)? = null,
-    private val isPostConflictResolutionEnabled: Boolean
+    private val isPostConflictResolutionEnabled: Boolean,
+    private val getContext: () -> android.content.Context
 ) {
     private var pageIdForConflictResolutionDialog: Int? = null
     private var pageIdForAutosaveRevisionResolutionDialog: RemoteId? = null
@@ -45,7 +46,7 @@ class PageListDialogHelper(
             val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
                 title = UiStringRes(R.string.dialog_confirm_autosave_title),
-                message = PostUtils.getCustomStringForAutosaveRevisionDialog(page),
+                message = PostUtils.getCustomStringForAutosaveRevisionDialog(getContext(), page),
                 positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
                 negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
             )

@@ -242,7 +242,9 @@ class PostsListActivity : BaseAppCompatActivity(),
 
         fabButton.redirectContextClickToLongPressListener()
 
-        postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, supportFragmentManager)
+        postsPagerAdapter = PostsPagerAdapter(
+            this@PostsListActivity, POST_LIST_PAGES, site, supportFragmentManager
+        )
         postPager.adapter = postsPagerAdapter
     }
 

@@ -31,6 +31,7 @@ class AddSubscribersViewModel @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val toastUtilsWrapper: ToastUtilsWrapper,
     private val trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
+    private val contextProvider: org.wordpress.android.viewmodel.ContextProvider,
 ) : ScopedViewModel(bgDispatcher) {
     @Inject
     @Named(IO_THREAD)
@@ -66,10 +67,10 @@ class AddSubscribersViewModel @Inject constructor(
             val result = addSubscribers(emails)
             withContext(mainDispatcher) {
                 if (result.isSuccess) {
-                    toastUtilsWrapper.showToast(R.string.subscribers_add_success)
+                    toastUtilsWrapper.showToast(contextProvider.getContext(), R.string.subscribers_add_success)
                     onSuccess()
                 } else {
-                    toastUtilsWrapper.showToast(R.string.subscribers_add_failed)
+                    toastUtilsWrapper.showToast(contextProvider.getContext(), R.string.subscribers_add_failed)
                 }
             }
         }

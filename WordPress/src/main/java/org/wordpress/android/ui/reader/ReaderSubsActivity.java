@@ -362,7 +362,7 @@ public class ReaderSubsActivity extends BaseAppCompatActivity
             getPageAdapter().refreshFollowedTagFragment();
 
             if (succeeded) {
-                showInfoSnackbar(getString(R.string.reader_label_added_tag, tag.getLabel()));
+                showInfoSnackbar(getString(R.string.reader_label_added_tag, tag.getLabel(this)));
                 mLastAddedTagName = tag.getTagSlug();
                 mReaderTracker.trackTag(
                         AnalyticsTracker.Stat.READER_TAG_FOLLOWED,

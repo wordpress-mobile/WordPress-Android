@@ -94,7 +94,7 @@ class NotificationsListViewModel @Inject constructor(
     fun markNoteAsRead(context: Context, notes: List<Note>) = launch {
         if (networkUtilsWrapper.isNetworkAvailable().not()) {
             withContext(mainDispatcher) {
-                toastUtilsWrapper.showToast(R.string.error_network_connection)
+                toastUtilsWrapper.showToast(context, R.string.error_network_connection)
             }
             return@launch
         }
@@ -115,7 +115,7 @@ class NotificationsListViewModel @Inject constructor(
                         notificationsTableWrapper.saveNotes(revertedNotes, false)
                         eventBusWrapper.post(NotificationsChanged())
                         withContext(mainDispatcher) {
-                            toastUtilsWrapper.showToast(R.string.error_generic)
+                            toastUtilsWrapper.showToast(context, R.string.error_generic)
                         }
                     }
                 }

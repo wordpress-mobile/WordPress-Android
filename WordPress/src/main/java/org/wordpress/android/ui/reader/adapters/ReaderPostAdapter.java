@@ -349,7 +349,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         };
 
         ReaderTagHeaderUiState uiState = new ReaderTagHeaderUiState(
-                currentTag.getLabel(),
+                currentTag.getLabel(tagHolder.itemView.getContext()),
                 new FollowButtonUiState(
                         onFollowButtonClicked,
                         ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),

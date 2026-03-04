@@ -5,7 +5,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
-import org.wordpress.android.WordPress
+import android.content.Context
 import org.wordpress.android.fluxc.model.revisions.Diff
 import org.wordpress.android.fluxc.model.revisions.RevisionModel
 import org.wordpress.android.ui.history.HistoryListItem.ViewType.FOOTER
@@ -46,8 +46,8 @@ sealed class HistoryListItem(val type: ViewType) {
         @IgnoredOnParcel
         private val postDate: Date = DateTimeUtils.dateUTCFromIso8601(postDateGmt?.replace(" ", "T"))
 
-        @IgnoredOnParcel
-        val timeSpan: String = DateTimeUtils.javaDateToTimeSpan(postDate, WordPress.getContext())
+        fun getTimeSpan(context: Context): String =
+            DateTimeUtils.javaDateToTimeSpan(postDate, context)
 
         @IgnoredOnParcel
         val formattedDate: String = postDate.toFormattedDateString()

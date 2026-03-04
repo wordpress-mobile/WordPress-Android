@@ -78,6 +78,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.extensions.exhaustive
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -131,7 +132,8 @@ class PagesViewModel
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
     private val postConflictResolutionFeatureUtils: PostConflictResolutionFeatureUtils,
     private val uploadStore: UploadStore,
-    private val pageConflictDetector: PageConflictDetector
+    private val pageConflictDetector: PageConflictDetector,
+    private val contextProvider: ContextProvider
 ) : ScopedViewModel(uiDispatcher) {
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
@@ -239,6 +241,7 @@ class PagesViewModel
             analyticsTracker = analyticsTracker,
             isPostConflictResolutionEnabled = postConflictResolutionFeatureUtils.isPostConflictResolutionEnabled(),
             showConflictResolutionOverlay = { _conflictResolutionAction.postValue(it) },
+            getContext = { contextProvider.getContext() }
         )
     }
 

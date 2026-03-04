@@ -948,7 +948,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
         if (error != null) {
-            ToastUtils.showToast(WordPress.getContext(), R.string.username_or_password_incorrect);
+            ToastUtils.showToast(getActivity(), R.string.username_or_password_incorrect);
         }
     }
 

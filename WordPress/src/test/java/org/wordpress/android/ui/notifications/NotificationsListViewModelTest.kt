@@ -195,7 +195,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         viewModel.markNoteAsRead(mock(), listOf(note))
 
         // Then
-        verify(toastUtilsWrapper, times(1)).showToast(any())
+        verify(toastUtilsWrapper, times(1)).showToast(any(), anyInt())
     }
 
     @Test
@@ -220,7 +220,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         verify(gcmMessageHandler).removeNotificationWithNoteIdFromSystemBar(any(), eq("123"))
         verify(notificationsTableWrapper, times(2)).saveNotes(any(), eq(false))
         verify(eventBusWrapper, times(2)).post(any())
-        verify(toastUtilsWrapper, times(1)).showToast(anyInt())
+        verify(toastUtilsWrapper, times(1)).showToast(any(), anyInt())
     }
 
     @Test

@@ -84,7 +84,8 @@ class PostListMainViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter,
     private val postConflictResolutionFeatureUtils: PostConflictResolutionFeatureUtils,
-    private val postConflictDetector: PostConflictDetector
+    private val postConflictDetector: PostConflictDetector,
+    private val contextProvider: org.wordpress.android.viewmodel.ContextProvider
 ) : ViewModel(), CoroutineScope {
     private var isStarted = false
 
@@ -160,7 +161,8 @@ class PostListMainViewModel @Inject constructor(
             showConflictResolutionOverlay = { _conflictResolutionAction.postValue(it) },
             checkNetworkConnection = this::checkNetworkConnection,
             analyticsTracker = analyticsTracker,
-            isPostConflictResolutionEnabled = postConflictResolutionFeatureUtils.isPostConflictResolutionEnabled()
+            isPostConflictResolutionEnabled = postConflictResolutionFeatureUtils.isPostConflictResolutionEnabled(),
+            getContext = { contextProvider.getContext() }
         )
     }
 

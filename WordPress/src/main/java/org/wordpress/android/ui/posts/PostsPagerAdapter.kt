@@ -5,12 +5,13 @@ package org.wordpress.android.ui.posts
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import org.wordpress.android.WordPress
+import android.content.Context
 import org.wordpress.android.fluxc.model.SiteModel
 import java.lang.ref.WeakReference
 
 @Suppress("DEPRECATION")
 class PostsPagerAdapter(
+    private val context: Context,
     private val pages: List<PostListType>,
     private val site: SiteModel,
     val fm: FragmentManager
@@ -29,7 +30,7 @@ class PostsPagerAdapter(
     }
 
     override fun getPageTitle(position: Int): CharSequence? =
-        WordPress.getContext().getString(pages[position].titleResId)
+        context.getString(pages[position].titleResId)
 
     fun getItemAtPosition(position: Int): PostListFragment? {
         return listFragments[position]?.get()

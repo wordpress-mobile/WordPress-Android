@@ -65,7 +65,8 @@ class PostListViewModelTest : BaseUnitTest() {
             connectionStatus = mock(),
             uploadUtilsWrapper = mock(),
             uiDispatcher = testDispatcher(),
-            bgDispatcher = testDispatcher()
+            bgDispatcher = testDispatcher(),
+            contextProvider = mock()
         )
     }
 

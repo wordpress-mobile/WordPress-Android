@@ -7,6 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.AccountStore
@@ -70,6 +71,7 @@ class ReaderViewModelTest : BaseUnitTest() {
             ReaderTopBarMenuHelper(readerTagsFeedFeatureConfig),
             urlUtilsWrapper,
             readerTagsFeedFeatureConfig,
+            mock(),
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))

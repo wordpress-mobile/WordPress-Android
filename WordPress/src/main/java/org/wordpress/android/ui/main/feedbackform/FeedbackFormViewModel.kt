@@ -52,6 +52,7 @@ class FeedbackFormViewModel @Inject constructor(
     private val feedbackFormUtils: FeedbackFormUtils,
     private val mediaPickerLauncher: MediaPickerLauncher,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val contextProvider: org.wordpress.android.viewmodel.ContextProvider,
 ) : ScopedViewModel(mainDispatcher) {
     private val _messageText = MutableStateFlow("")
     val messageText = _messageText.asStateFlow()
@@ -297,7 +298,7 @@ class FeedbackFormViewModel @Inject constructor(
 
     private fun showToast(@StringRes msgId: Int) {
         viewModelScope.launch {
-            toastUtilsWrapper.showToast(msgId)
+            toastUtilsWrapper.showToast(contextProvider.getContext(), msgId)
         }
     }
 

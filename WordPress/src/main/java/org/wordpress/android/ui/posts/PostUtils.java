@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
+
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -307,14 +307,14 @@ public class PostUtils {
         return str.replaceAll("(?s)\\n?<!--\\swp:video.*?(.*?)wp:video.*?\\s-->", "");
     }
 
-    public static String getFormattedDate(PostModel post) {
+    public static String getFormattedDate(Context context, PostModel post) {
         if (PostStatus.fromPost(post) == PostStatus.SCHEDULED) {
-            return DateUtils.formatDateTime(WordPress.getContext(),
+            return DateUtils.formatDateTime(context,
                                             DateTimeUtils.timestampFromIso8601Millis(post.getDateCreated()),
                                             DateUtils.FORMAT_ABBREV_ALL);
         } else {
             return DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateUTCFromIso8601(post.getDateCreated()),
-                                                    WordPress.getContext());
+                                                    context);
         }
     }
 
@@ -480,8 +480,7 @@ public class PostUtils {
                && post.hasUnpublishedRevision();
     }
 
-    public static String getConflictedPostCustomStringForDialog(PostModel post) {
-        Context context = WordPress.getContext();
+    public static String getConflictedPostCustomStringForDialog(Context context, PostModel post) {
         String firstPart = context.getString(R.string.dialog_confirm_load_remote_post_body);
         String lastModified =
                 TextUtils.isEmpty(post.getDateLocallyChanged()) ? post.getLastModified() : post.getDateLocallyChanged();
@@ -494,8 +493,7 @@ public class PostUtils {
         return firstPart + secondPart;
     }
 
-    public static UiStringText getCustomStringForAutosaveRevisionDialog(PostModel post) {
-        Context context = WordPress.getContext();
+    public static UiStringText getCustomStringForAutosaveRevisionDialog(Context context, PostModel post) {
         String firstPart = post.isPage() ? context.getString(R.string.dialog_confirm_autosave_body_first_part_for_page)
                 : context.getString(R.string.dialog_confirm_autosave_body_first_part);
 

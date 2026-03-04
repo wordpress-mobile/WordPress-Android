@@ -266,11 +266,11 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         if (mCurrentFilter == selectedCriteria) {
             AppLog.d(mTAG, "The selected STATUS is already active: "
-                           + selectedCriteria.getLabel());
+                           + selectedCriteria.getLabel(getContext()));
             return;
         }
 
-        AppLog.d(mTAG, "NEW STATUS : " + selectedCriteria.getLabel());
+        AppLog.d(mTAG, "NEW STATUS : " + selectedCriteria.getLabel(getContext()));
         setCurrentFilter(selectedCriteria);
         if (mFilterListener != null) {
             mFilterListener.onFilterSelected(position, selectedCriteria);
@@ -528,7 +528,7 @@ public class FilteredRecyclerView extends RelativeLayout {
 
                 final TextView text = view.findViewById(R.id.text);
                 FilterCriteria selectedCriteria = (FilterCriteria) getItem(position);
-                text.setText(selectedCriteria.getLabel());
+                text.setText(selectedCriteria.getLabel(parent.getContext()));
                 if (mSpinnerTextColor != 0) {
                     text.setTextColor(mSpinnerTextColor);
                 }
@@ -557,7 +557,7 @@ public class FilteredRecyclerView extends RelativeLayout {
                 holder = (TagViewHolder) convertView.getTag();
             }
 
-            holder.mTextView.setText(selectedCriteria.getLabel());
+            holder.mTextView.setText(selectedCriteria.getLabel(parent.getContext()));
             return convertView;
         }
 

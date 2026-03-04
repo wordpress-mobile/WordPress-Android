@@ -1,6 +1,7 @@
 package org.wordpress.android.viewmodel.posts
 
 import android.text.TextUtils
+import org.wordpress.android.viewmodel.ContextProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -71,6 +72,7 @@ class PostListViewModel @Inject constructor(
     private val uploadUtilsWrapper: UploadUtilsWrapper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val contextProvider: ContextProvider,
     connectionStatus: LiveData<ConnectionStatus>
 ) : ScopedViewModel(uiDispatcher) {
     private val isStatsSupported: Boolean by lazy {
@@ -379,7 +381,7 @@ class PostListViewModel @Inject constructor(
             statsSupported = isStatsSupported,
             featuredImageUrl =
             convertToPhotonUrlIfPossible(connector.getFeaturedImageUrl(post.featuredImageId)),
-            formattedDate = PostUtils.getFormattedDate(post),
+            formattedDate = PostUtils.getFormattedDate(contextProvider.getContext(), post),
             performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id)),
             onAction = { postModel, buttonType, statEvent ->
                 trackPostListAction(connector.site, buttonType, postModel, statEvent)

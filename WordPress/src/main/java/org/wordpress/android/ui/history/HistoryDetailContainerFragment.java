@@ -290,7 +290,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     private void showHistoryTimeStampInToolbar(@NonNull Revision revision) {
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setSubtitle(revision.getTimeSpan());
+            actionBar.setSubtitle(revision.getTimeSpan(requireContext()));
         }
     }
 

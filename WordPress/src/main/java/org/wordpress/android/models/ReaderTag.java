@@ -1,5 +1,6 @@
 package org.wordpress.android.models;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import org.wordpress.android.ui.Organization;
@@ -243,7 +244,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
      * the label is the text displayed in the dropdown filter
      */
     @Override
-    public String getLabel() {
+    public String getLabel(Context context) {
         if (isTagDisplayNameAlphaNumeric()) {
             return getTagDisplayName().toLowerCase(Locale.ROOT);
         } else if (hasTagTitle()) {
@@ -282,7 +283,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public boolean equals(Object object) {
         if (object instanceof ReaderTag) {
             ReaderTag tag = (ReaderTag) object;
-            return (tag.tagType == this.tagType && tag.getLabel().equals(this.getLabel()));
+            return (tag.tagType == this.tagType && tag.getLabel(null).equals(this.getLabel(null)));
         } else {
             return false;
         }

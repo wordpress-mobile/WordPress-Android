@@ -165,7 +165,8 @@ class PagesViewModelTest : BaseUnitTest() {
             prefs = appPrefsWrapper,
             blazeFeatureUtils = blazeFeatureUtils,
             postConflictResolutionFeatureUtils = postConflictResolutionFeatureUtils,
-            uploadStore = uploadStore
+            uploadStore = uploadStore,
+            contextProvider = mock()
         )
         listStates = mutableListOf()
         pages = mutableListOf()

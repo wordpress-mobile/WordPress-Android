@@ -372,7 +372,7 @@ public class PublicizeButtonPrefsFragment extends PublicizeBaseFragment implemen
     @Override
     public void onSaveError(Exception error) {
         if (isAdded()) {
-            ToastUtils.showToast(WordPress.getContext(), R.string.error_post_remote_site_settings);
+            ToastUtils.showToast(getActivity(), R.string.error_post_remote_site_settings);
         }
     }
 
