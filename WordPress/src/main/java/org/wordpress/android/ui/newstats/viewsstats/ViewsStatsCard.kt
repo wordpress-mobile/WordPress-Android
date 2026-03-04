@@ -363,14 +363,12 @@ private fun HeaderSection(
             Column(horizontalAlignment = Alignment.End) {
                 DateRangeWithDot(
                     dateRange = state.currentPeriodDateRange,
-                    dotColor = MaterialTheme.colorScheme.primary,
-                    isFilled = true
+                    dotColor = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 DateRangeWithDot(
                     dateRange = state.previousPeriodDateRange,
-                    dotColor = MaterialTheme.colorScheme.outline,
-                    isFilled = true
+                    dotColor = MaterialTheme.colorScheme.outline
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 AverageRow(average = state.periodAverage)
@@ -443,7 +441,7 @@ private fun DifferenceRow(difference: Long, percentageChange: Double) {
 }
 
 @Composable
-private fun DateRangeWithDot(dateRange: String, dotColor: Color, isFilled: Boolean) {
+private fun DateRangeWithDot(dateRange: String, dotColor: Color) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = dateRange,
@@ -454,17 +452,8 @@ private fun DateRangeWithDot(dateRange: String, dotColor: Color, isFilled: Boole
         Box(
             modifier = Modifier
                 .size(8.dp)
-                .then(
-                    if (isFilled) {
-                        Modifier
-                            .clip(CircleShape)
-                            .background(dotColor)
-                    } else {
-                        Modifier
-                            .clip(CircleShape)
-                            .border(1.5.dp, dotColor, CircleShape)
-                    }
-                )
+                .clip(CircleShape)
+                .background(dotColor)
         )
     }
 }

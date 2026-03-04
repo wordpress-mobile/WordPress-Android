@@ -31,10 +31,9 @@ class TodaysStatsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val statsRepository: StatsRepository,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val clock: Clock
 ) : ViewModel() {
-    @Suppress("VisibleForTests")
-    internal var clock: Clock = Clock.systemDefaultZone()
     private val _uiState = MutableStateFlow<TodaysStatsCardUiState>(TodaysStatsCardUiState.Loading)
     val uiState: StateFlow<TodaysStatsCardUiState> = _uiState.asStateFlow()
 
