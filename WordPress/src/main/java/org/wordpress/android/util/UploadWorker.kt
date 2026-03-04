@@ -78,6 +78,8 @@ class UploadWorker(
     }
 }
 
+private const val BACKOFF_DELAY_MINUTES = 10L
+
 private fun getUploadConstraints() = Constraints.Builder()
     .setRequiredNetworkType(NetworkType.CONNECTED)
     .build()
@@ -85,7 +87,7 @@ private fun getUploadConstraints() = Constraints.Builder()
 fun enqueueUploadWorkRequestForSite(site: SiteModel): Pair<WorkRequest, Operation> {
     val request = OneTimeWorkRequestBuilder<UploadWorker>()
         .setConstraints(getUploadConstraints())
-        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, MINUTES)
+        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, BACKOFF_DELAY_MINUTES, MINUTES)
         .setInputData(workDataOf(WordPress.LOCAL_SITE_ID to site.id))
         .build()
     val operation = WorkManager.getInstance(WordPress.getContext()).enqueueUniqueWork(
@@ -98,7 +100,7 @@ fun enqueueUploadWorkRequestForSite(site: SiteModel): Pair<WorkRequest, Operatio
 fun enqueuePeriodicUploadWorkRequestForAllSites(): Pair<WorkRequest, Operation> {
     val request = PeriodicWorkRequestBuilder<UploadWorker>(8, HOURS, 6, HOURS)
         .setConstraints(getUploadConstraints())
-        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, MINUTES)
+        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, BACKOFF_DELAY_MINUTES, MINUTES)
         .build()
     val operation = WorkManager.getInstance(WordPress.getContext()).enqueueUniquePeriodicWork(
         "periodic auto-upload",
