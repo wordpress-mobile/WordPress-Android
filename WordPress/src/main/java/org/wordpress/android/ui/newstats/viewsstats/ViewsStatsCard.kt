@@ -24,13 +24,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ShowChart
-import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.automirrored.outlined.ShowChart
 import androidx.compose.material.icons.filled.ChatBubbleOutline
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.ModeEditOutline
+import androidx.compose.material.icons.filled.PersonOutline
+import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -392,7 +392,7 @@ private fun ChartTypeMenuItems(
         enabled = currentChartType != ChartType.LINE,
         leadingIcon = {
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.ShowChart,
+                imageVector = Icons.AutoMirrored.Outlined.ShowChart,
                 contentDescription = null
             )
         }
@@ -403,7 +403,7 @@ private fun ChartTypeMenuItems(
         enabled = currentChartType != ChartType.BAR,
         leadingIcon = {
             Icon(
-                imageVector = Icons.Default.BarChart,
+                imageVector = Icons.Outlined.BarChart,
                 contentDescription = null
             )
         }
@@ -675,12 +675,12 @@ private fun BottomStatsRow(stats: List<StatItem>) {
 @Composable
 private fun StatItemCard(stat: StatItem) {
     val icon = when (stat.label) {
-        stringResource(R.string.stats_views) -> Icons.Default.Visibility
-        stringResource(R.string.stats_visitors) -> Icons.Default.Person
+        stringResource(R.string.stats_views) -> Icons.Outlined.Visibility
+        stringResource(R.string.stats_visitors) -> Icons.Default.PersonOutline
         stringResource(R.string.stats_likes) -> Icons.Default.FavoriteBorder
         stringResource(R.string.stats_comments) -> Icons.Default.ChatBubbleOutline
-        stringResource(R.string.posts) -> Icons.Default.Edit
-        else -> Icons.Default.Visibility
+        stringResource(R.string.posts) -> Icons.Default.ModeEditOutline
+        else -> Icons.Outlined.Visibility
     }
 
     Column(
