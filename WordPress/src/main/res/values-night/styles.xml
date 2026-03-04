@@ -116,8 +116,8 @@
 
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Material3.FloatingActionButton</item>
-        <item name="android:backgroundTint">?attr/colorPrimaryContainer</item>
-        <item name="tint">?attr/colorOnPrimaryContainer</item>
+        <item name="android:backgroundTint">?attr/colorBackgroundFloating</item>
+        <item name="tint">?attr/colorOnSurface</item>
     </style>
 
     <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
