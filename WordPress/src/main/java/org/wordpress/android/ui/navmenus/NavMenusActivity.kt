@@ -15,7 +15,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -298,8 +297,6 @@ class NavMenusActivity : BaseAppCompatActivity() {
                 NavMenuScreen.MenuList.name -> {
                     FloatingActionButton(
                         onClick = { viewModel.navigateToCreateMenu() },
-                        containerColor = MaterialTheme.colorScheme.onSurface,
-                        contentColor = MaterialTheme.colorScheme.surface
                     ) {
                         Icon(
                             Icons.Default.Add,
@@ -312,8 +309,6 @@ class NavMenusActivity : BaseAppCompatActivity() {
                 NavMenuScreen.MenuItemList.name -> {
                     FloatingActionButton(
                         onClick = { viewModel.navigateToCreateMenuItem() },
-                        containerColor = MaterialTheme.colorScheme.onSurface,
-                        contentColor = MaterialTheme.colorScheme.surface
                     ) {
                         Icon(
                             Icons.Default.Add,

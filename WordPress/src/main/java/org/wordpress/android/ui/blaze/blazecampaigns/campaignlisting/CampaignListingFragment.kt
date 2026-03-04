@@ -19,7 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -277,11 +277,9 @@ private fun CreateCampaignFloatingActionButton(modifier: Modifier = Modifier, on
     FloatingActionButton(
         modifier = modifier,
         onClick = onClick,
-        containerColor = MaterialTheme.colorScheme.onSurface,
-        contentColor = MaterialTheme.colorScheme.surface
     ) {
         Icon(
-            imageVector = Icons.Rounded.Add,
+            imageVector = Icons.Default.Add,
             contentDescription = stringResource(
                 id = R.string.campaign_listing_page_create_campaign_fab_description
             ),

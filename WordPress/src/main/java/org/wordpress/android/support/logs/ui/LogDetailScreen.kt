@@ -49,8 +49,6 @@ fun LogDetailScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onShareClick,
-                containerColor = MaterialTheme.colorScheme.onSurface,
-                contentColor = MaterialTheme.colorScheme.surface
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_share_white_24dp),
