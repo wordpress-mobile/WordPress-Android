@@ -9,4 +9,7 @@
 
     <color name="nav_bar">@color/white</color>
     <color name="tab_indicator">@color/white</color>
+
+    <color name="fab_container">#4F378B</color>
+    <color name="fab_on_container">#EADDFF</color>
 </resources>
