@@ -58,11 +58,11 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun setUp() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
         whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
-        whenever(resourceProvider.getString(R.string.stats_todays_stats_no_site_selected))
+        whenever(resourceProvider.getString(R.string.stats_error_no_site))
             .thenReturn(NO_SITE_SELECTED_ERROR)
-        whenever(resourceProvider.getString(R.string.stats_todays_stats_failed_to_load))
+        whenever(resourceProvider.getString(R.string.stats_error_api))
             .thenReturn(FAILED_TO_LOAD_ERROR)
-        whenever(resourceProvider.getString(R.string.stats_todays_stats_unknown_error))
+        whenever(resourceProvider.getString(R.string.stats_error_unknown))
             .thenReturn(UNKNOWN_ERROR)
         whenever(resourceProvider.getString(R.string.stats_views))
             .thenReturn("Views")
@@ -87,6 +87,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             SavedStateHandle(),
             cardsConfigurationRepository
         )
+        viewModel.loadDataIfNeeded()
     }
 
     @Test
@@ -380,9 +381,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         viewModel.onPeriodChanged(StatsPeriod.Last30Days)
+        viewModel.loadDataIfNeeded()
         advanceUntilIdle()
 
-        // Called twice: once during init, once during period change
+        // Called twice: once during init, once after period change
         verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
     }
 
@@ -401,10 +403,39 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             endDate = LocalDate.of(2024, 1, 15)
         )
         viewModel.onPeriodChanged(customPeriod)
+        viewModel.loadDataIfNeeded()
         advanceUntilIdle()
 
-        // Called twice: once during init, once during custom period change
+        // Called twice: once during init, once after custom period change
         verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any())
+    }
+
+    @Test
+    fun `when initialized, then isPeriodInitialized is true`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.isPeriodInitialized.value).isTrue()
+    }
+
+    @Test
+    fun `when loadDataIfNeeded is called multiple times, then data is only loaded once`() = test {
+        val result = createPeriodStatsResult()
+
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // Should only be called once despite three calls to loadDataIfNeeded
+        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any())
     }
 
     @Test

@@ -1,6 +1,7 @@
 package org.wordpress.android.inappupdate
 
 import android.annotation.SuppressLint
+import androidx.core.content.edit
 import android.app.Activity
 import android.content.Context
 import android.util.Log
@@ -190,19 +191,17 @@ class InAppUpdateManagerImpl(
 
     private fun saveLastUpdateRequestInfo(appUpdateInfo: AppUpdateInfo) {
         val sharedPref = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        sharedPref.edit().apply {
+        sharedPref.edit {
             putInt(KEY_LAST_APP_UPDATE_CHECK_VERSION, getAvailableUpdateAppVersion(appUpdateInfo))
             putLong(KEY_LAST_APP_UPDATE_CHECK_TIME, currentTimeProvider.invoke())
-            apply()
         }
     }
 
     private fun resetLastUpdateRequestInfo() {
         val sharedPref = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        sharedPref.edit().apply {
+        sharedPref.edit {
             putInt(KEY_LAST_APP_UPDATE_CHECK_VERSION, -1)
             putLong(KEY_LAST_APP_UPDATE_CHECK_TIME, -1L)
-            apply()
         }
     }
 

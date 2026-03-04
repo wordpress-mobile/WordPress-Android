@@ -18,3 +18,7 @@ gem 'fastlane-plugin-wpmreleasetoolkit', '~> 14.0'
 group :screenshots, optional: true do
   gem 'rmagick', '~> 4.1'
 end
+
+# Security: https://github.com/lostisland/faraday/pull/1665
+# Faraday 2.0 is not compatible with Fastlane
+gem 'faraday', '~> 1.10', '>= 1.10.5'

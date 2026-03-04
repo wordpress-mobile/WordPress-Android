@@ -55,6 +55,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder
 import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.auth.WordPressCookieAuthenticator
 import org.wordpress.android.fluxc.store.AccountStore
@@ -84,6 +85,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorFileUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorInitializer
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker
+import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
@@ -221,6 +223,12 @@ class AppInitializer @Inject constructor(
     // For jetpack focus
     @Inject
     lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
+
+    @Inject
+    lateinit var wpServiceProvider: WpServiceProvider
+
+    @Inject
+    lateinit var wpApiClientProvider: WpApiClientProvider
 
     @Inject
     lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
@@ -715,6 +723,10 @@ class AppInitializer @Inject constructor(
 
         // Clear WordPress.com account cookie cache
         wordPressCookieAuthenticator.clearAllCachedCookies()
+
+        // Clear cached wordpress-rs services and API clients
+        wpServiceProvider.clearAll()
+        wpApiClientProvider.clearWpComClients()
     }
 
     /*

@@ -84,7 +84,8 @@ sealed class MySiteCardAndItem(open val type: Type) {
                 val label: UiString.UiStringRes,
                 @DrawableRes val icon: Int,
                 val disableTint: Boolean = false,
-                val onClick: ListItemInteraction
+                val onClick: ListItemInteraction,
+                val showBetaBadge: Boolean = false
             )
         }
 

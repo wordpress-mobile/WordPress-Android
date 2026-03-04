@@ -51,12 +51,12 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
 
     private fun stubNoSiteSelectedError() {
-        whenever(resourceProvider.getString(R.string.stats_todays_stats_no_site_selected))
+        whenever(resourceProvider.getString(R.string.stats_error_no_site))
             .thenReturn(NO_SITE_SELECTED_ERROR)
     }
 
     private fun stubFailedToLoadError() {
-        whenever(resourceProvider.getString(R.string.stats_todays_stats_failed_to_load))
+        whenever(resourceProvider.getString(R.string.stats_error_api))
             .thenReturn(FAILED_TO_LOAD_ERROR)
     }
 
@@ -67,6 +67,7 @@ class MostViewedViewModelTest : BaseUnitTest() {
             statsRepository,
             resourceProvider
         )
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
     }
 
     // region Error states
@@ -190,19 +191,6 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when data loads, then first item is highlighted`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
-            .thenReturn(createSuccessResult())
-
-        initViewModel()
-        advanceUntilIdle()
-
-        val state = viewModel.postsUiState.value as MostViewedCardUiState.Loaded
-        assertThat(state.items[0].isHighlighted).isTrue()
-        assertThat(state.items[1].isHighlighted).isFalse()
-    }
-
-    @Test
     fun `when data loads with more than 10 items, then only 10 are shown in card`() = test {
         val manyItems = (1..15).mapIndexed { idx, index ->
             MostViewedItemData(
@@ -277,6 +265,103 @@ class MostViewedViewModelTest : BaseUnitTest() {
         // Should only be called twice during init (once per data source)
         verify(statsRepository, times(2)).fetchMostViewed(any(), any(), any())
     }
+
+    @Test
+    fun `when same period is re-selected after success, then fetch is skipped`() = test {
+        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+            .thenReturn(createSuccessResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // Simulate card removal and re-addition with the same period
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        advanceUntilIdle()
+
+        verify(statsRepository, times(2))
+            .fetchMostViewed(any(), any(), any())
+        assertThat(viewModel.postsUiState.value)
+            .isInstanceOf(MostViewedCardUiState.Loaded::class.java)
+        assertThat(viewModel.referrersUiState.value)
+            .isInstanceOf(MostViewedCardUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `when same period is re-selected after full error, then data is re-fetched`() = test {
+        stubFailedToLoadError()
+        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+            .thenReturn(MostViewedResult.Error("Network error"))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // loadedPeriod should not be set after error, so re-selecting
+        // the same period should trigger a new fetch
+        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+            .thenReturn(createSuccessResult())
+
+        viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+        advanceUntilIdle()
+
+        // 2 from init (both failed) + 2 from re-select
+        verify(statsRepository, times(4))
+            .fetchMostViewed(any(), any(), any())
+        assertThat(viewModel.postsUiState.value)
+            .isInstanceOf(MostViewedCardUiState.Loaded::class.java)
+        assertThat(viewModel.referrersUiState.value)
+            .isInstanceOf(MostViewedCardUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `when same period is re-selected after partial error, only failed source is re-fetched`() =
+        test {
+            stubFailedToLoadError()
+            // Posts succeeds, referrers fails
+            whenever(
+                statsRepository.fetchMostViewed(
+                    any(), any(),
+                    eq(MostViewedDataSource.POSTS_AND_PAGES)
+                )
+            ).thenReturn(createSuccessResult())
+            whenever(
+                statsRepository.fetchMostViewed(
+                    any(), any(),
+                    eq(MostViewedDataSource.REFERRERS)
+                )
+            ).thenReturn(MostViewedResult.Error("Network error"))
+
+            initViewModel()
+            advanceUntilIdle()
+
+            assertThat(viewModel.postsUiState.value)
+                .isInstanceOf(MostViewedCardUiState.Loaded::class.java)
+            assertThat(viewModel.referrersUiState.value)
+                .isInstanceOf(MostViewedCardUiState.Error::class.java)
+
+            // Now fix referrers and re-select the same period
+            whenever(
+                statsRepository.fetchMostViewed(
+                    any(), any(),
+                    eq(MostViewedDataSource.REFERRERS)
+                )
+            ).thenReturn(createSuccessResult())
+
+            viewModel.onPeriodChanged(StatsPeriod.Last7Days)
+            advanceUntilIdle()
+
+            // Posts already loaded for this period — should NOT re-fetch
+            verify(statsRepository, times(1)).fetchMostViewed(
+                any(), any(),
+                eq(MostViewedDataSource.POSTS_AND_PAGES)
+            )
+            // Referrers failed — should re-fetch
+            verify(statsRepository, times(2)).fetchMostViewed(
+                any(), any(),
+                eq(MostViewedDataSource.REFERRERS)
+            )
+            assertThat(viewModel.referrersUiState.value)
+                .isInstanceOf(MostViewedCardUiState.Loaded::class.java)
+        }
     // endregion
 
     // region Refresh
@@ -288,12 +373,14 @@ class MostViewedViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        assertThat(viewModel.isRefreshing.value).isFalse()
+        assertThat(viewModel.isPostsRefreshing.value).isFalse()
+        assertThat(viewModel.isReferrersRefreshing.value).isFalse()
 
         viewModel.refresh()
         advanceUntilIdle()
 
-        assertThat(viewModel.isRefreshing.value).isFalse()
+        assertThat(viewModel.isPostsRefreshing.value).isFalse()
+        assertThat(viewModel.isReferrersRefreshing.value).isFalse()
     }
 
     @Test

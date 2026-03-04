@@ -15,6 +15,7 @@ import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.BotConversation as ApiBotConversation
+import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.BotConversationSummary
 import uniffi.wp_api.BotMessage as ApiBotMessage
 import uniffi.wp_api.BotMessageSummary
@@ -109,7 +110,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         whenever(wpComApiClient.request<SupportBotsRequestGetBotConversationResponse>(any()))
             .thenReturn(successResponse)
 
-        val result = repository.loadConversation(testChatId.toLong())
+        val result = repository.loadConversation(testChatId)
 
         assertThat(result).isNotNull
         assertThat(result?.id).isEqualTo(testChatId)
@@ -125,7 +126,9 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
     fun `loadConversations returns empty list on error`() = test {
         val errorResponse: WpRequestResult<Any> = WpRequestResult.UnknownError(
             statusCode = 500u.toUShort(),
-            response = ""
+            response = "",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         repository.init(testAccessToken, testUserId)
@@ -143,7 +146,9 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
     fun `loadConversation returns null on error`() = test {
         val errorResponse: WpRequestResult<Any> = WpRequestResult.UnknownError(
             statusCode = 404u.toUShort(),
-            response = ""
+            response = "",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         repository.init(testAccessToken, testUserId)
@@ -196,7 +201,9 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
     fun `createNewConversation returns null on error`() = test {
         val errorResponse: WpRequestResult<Any> = WpRequestResult.UnknownError(
             statusCode = 500u.toUShort(),
-            response = ""
+            response = "",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         repository.init(testAccessToken, testUserId)
@@ -236,7 +243,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
         whenever(wpComApiClient.request<SupportBotsRequestAddMessageToBotConversationResponse>(any()))
             .thenReturn(successResponse)
 
-        val result = repository.sendMessageToConversation(existingChatId.toLong(), newMessage)
+        val result = repository.sendMessageToConversation(existingChatId, newMessage)
 
         assertThat(result).isNotNull
         assertThat(result?.id).isEqualTo(existingChatId)
@@ -252,7 +259,9 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
     fun `sendMessageToConversation returns null on error`() = test {
         val errorResponse: WpRequestResult<Any> = WpRequestResult.UnknownError(
             statusCode = 500u.toUShort(),
-            response = ""
+            response = "",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         repository.init(testAccessToken, testUserId)

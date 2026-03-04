@@ -186,6 +186,7 @@ class PluginWPApiRestClientTest {
                 eq(type),
                 eq(cachingEnabled),
                 any(),
+                any(),
                 any()
             )
         ).thenReturn(response)
@@ -203,6 +204,7 @@ class PluginWPApiRestClientTest {
                 urlCaptor.capture(),
                 bodyCaptor.capture(),
                 eq(PluginResponseModel::class.java),
+                any(),
                 any()
             )
         ).thenReturn(response)

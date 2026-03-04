@@ -95,9 +95,11 @@ import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
+import org.wordpress.android.ui.postsrs.PostRsListActivity;
 import org.wordpress.android.posttypes.CptPostTypesActivity;
 import org.wordpress.android.posttypes.bridge.SiteReference;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
@@ -650,7 +652,21 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    private static boolean shouldUseNewPostList(@Nullable SiteModel site) {
+        if (site != null && AppPrefs.getExperimentalFeatureConfig(Feature.RS_POST_LIST.getPrefKey())) {
+            if (site.hasApplicationPassword()) {
+                return true;
+            }
+            return site.isUsingWpComRestApi();
+        }
+        return false;
+    }
+
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
+        if (shouldUseNewPostList(site)) {
+            context.startActivity(PostRsListActivity.Companion.createIntent(context));
+            return;
+        }
         viewCurrentBlogPostsOfType(context, site, null);
     }
 
@@ -712,7 +728,6 @@ public class ActivityLauncher {
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
-
 
     public static void viewPageParentForResult(@NonNull Fragment fragment, @NonNull SiteModel site,
                                                @NonNull Long pageRemoteId) {

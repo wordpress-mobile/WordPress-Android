@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyTermWithEditContext
+import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.TermDeleteResponse
 import uniffi.wp_api.TermsRequestCreateResponse
 import uniffi.wp_api.TermsRequestDeleteResponse
@@ -112,7 +113,9 @@ class TaxonomyRsApiRestClientTest {
         // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
-            response = "Internal Server Error"
+            response = "Internal Server Error",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
@@ -173,7 +176,9 @@ class TaxonomyRsApiRestClientTest {
         // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
-            response = "Internal Server Error"
+            response = "Internal Server Error",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
@@ -234,7 +239,9 @@ class TaxonomyRsApiRestClientTest {
         // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
-            response = "Internal Server Error"
+            response = "Internal Server Error",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
@@ -298,7 +305,9 @@ class TaxonomyRsApiRestClientTest {
         // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
-            response = "Internal Server Error"
+            response = "Internal Server Error",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
@@ -362,7 +371,9 @@ class TaxonomyRsApiRestClientTest {
         // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
-            response = "Internal Server Error"
+            response = "Internal Server Error",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
@@ -457,7 +468,9 @@ class TaxonomyRsApiRestClientTest {
         // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
-            response = "Internal Server Error"
+            response = "Internal Server Error",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
@@ -551,7 +564,9 @@ class TaxonomyRsApiRestClientTest {
     fun `updateTerm category with error response dispatches error action`() = runTest {
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
-            response = "Internal Server Error"
+            response = "Internal Server Error",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)
@@ -639,7 +654,9 @@ class TaxonomyRsApiRestClientTest {
     fun `updateTerm tag with error response dispatches error action`() = runTest {
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
-            response = "Internal Server Error"
+            response = "Internal Server Error",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
         )
 
         whenever(wpApiClient.request<Any>(any())).thenReturn(errorResponse)

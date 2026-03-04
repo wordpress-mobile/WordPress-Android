@@ -2,6 +2,7 @@ package org.wordpress.android.ui.newstats
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.StandardTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -18,7 +19,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner.Silent::class)
-class NewStatsViewModelTest : BaseUnitTest() {
+class NewStatsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
@@ -95,10 +96,10 @@ class NewStatsViewModelTest : BaseUnitTest() {
         initViewModel(config)
         advanceUntilIdle()
 
-        viewModel.addCard(StatsCardType.COUNTRIES)
+        viewModel.addCard(StatsCardType.LOCATIONS)
         advanceUntilIdle()
 
-        verify(cardConfigurationRepository).addCard(TEST_SITE_ID, StatsCardType.COUNTRIES)
+        verify(cardConfigurationRepository).addCard(TEST_SITE_ID, StatsCardType.LOCATIONS)
     }
 
     @Test
@@ -107,12 +108,12 @@ class NewStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val newConfig = StatsCardsConfiguration(
-            visibleCards = listOf(StatsCardType.COUNTRIES)
+            visibleCards = listOf(StatsCardType.LOCATIONS)
         )
         configurationFlow.value = TEST_SITE_ID to newConfig
         advanceUntilIdle()
 
-        assertThat(viewModel.visibleCards.value).containsExactly(StatsCardType.COUNTRIES)
+        assertThat(viewModel.visibleCards.value).containsExactly(StatsCardType.LOCATIONS)
     }
 
     @Test
@@ -122,7 +123,7 @@ class NewStatsViewModelTest : BaseUnitTest() {
         val initialCards = viewModel.visibleCards.value
 
         val newConfig = StatsCardsConfiguration(
-            visibleCards = listOf(StatsCardType.COUNTRIES)
+            visibleCards = listOf(StatsCardType.LOCATIONS)
         )
         configurationFlow.value = OTHER_SITE_ID to newConfig
         advanceUntilIdle()
@@ -143,7 +144,7 @@ class NewStatsViewModelTest : BaseUnitTest() {
         assertThat(hiddenCards).contains(
             StatsCardType.VIEWS_STATS,
             StatsCardType.MOST_VIEWED_REFERRERS,
-            StatsCardType.COUNTRIES
+            StatsCardType.LOCATIONS
         )
         assertThat(hiddenCards).doesNotContain(
             StatsCardType.TODAYS_STATS,
@@ -183,10 +184,10 @@ class NewStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        viewModel.moveCardToTop(StatsCardType.COUNTRIES)
+        viewModel.moveCardToTop(StatsCardType.LOCATIONS)
         advanceUntilIdle()
 
-        verify(cardConfigurationRepository).moveCardToTop(TEST_SITE_ID, StatsCardType.COUNTRIES)
+        verify(cardConfigurationRepository).moveCardToTop(TEST_SITE_ID, StatsCardType.LOCATIONS)
     }
 
     @Test
@@ -209,6 +210,56 @@ class NewStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         verify(cardConfigurationRepository).moveCardToBottom(TEST_SITE_ID, StatsCardType.TODAYS_STATS)
+    }
+    // endregion
+
+    // region cardsToLoad tests
+    @Test
+    fun `when ViewModel is created, then cardsToLoad starts empty`() = test {
+        whenever(cardConfigurationRepository.getConfiguration(TEST_SITE_ID))
+            .thenReturn(StatsCardsConfiguration())
+
+        viewModel = NewStatsViewModel(
+            selectedSiteRepository,
+            cardConfigurationRepository,
+            networkUtilsWrapper
+        )
+
+        // Before advanceUntilIdle(), config hasn't loaded yet
+        assertThat(viewModel.cardsToLoad.value).isEmpty()
+    }
+
+    @Test
+    fun `when config loads, then cardsToLoad matches visible cards`() = test {
+        val config = StatsCardsConfiguration(
+            visibleCards = listOf(StatsCardType.AUTHORS)
+        )
+        initViewModel(config)
+        advanceUntilIdle()
+
+        assertThat(viewModel.cardsToLoad.value).containsExactly(StatsCardType.AUTHORS)
+    }
+
+    @Test
+    fun `when config loads with default, then cardsToLoad matches default cards`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.cardsToLoad.value).isEqualTo(StatsCardType.defaultCards())
+    }
+
+    @Test
+    fun `when configuration changes via flow, then cardsToLoad is updated`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        val newConfig = StatsCardsConfiguration(
+            visibleCards = listOf(StatsCardType.LOCATIONS)
+        )
+        configurationFlow.value = TEST_SITE_ID to newConfig
+        advanceUntilIdle()
+
+        assertThat(viewModel.cardsToLoad.value).containsExactly(StatsCardType.LOCATIONS)
     }
     // endregion
 

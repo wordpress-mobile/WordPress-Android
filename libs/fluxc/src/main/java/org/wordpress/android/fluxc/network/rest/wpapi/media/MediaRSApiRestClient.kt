@@ -229,6 +229,7 @@ class MediaRSApiRestClient @Inject constructor(
         dispatcher.dispatch(MediaActionBuilder.newDeletedMediaAction(payload))
     }
 
+    @Suppress("LongMethod")
     fun uploadMedia(site: SiteModel, media: MediaModel?) {
         if (media == null || media.id == 0) {
             // we can't have a MediaModel without an ID - otherwise we can't keep track of them.
@@ -277,6 +278,8 @@ class MediaRSApiRestClient @Inject constructor(
                     val responseMedia: MediaModel = mediaResponse.response.data.toMediaModel(site.id).apply {
                         id = media.id // be sure we are using the same local id when getting the remote response
                         localSiteId = site.id
+                        localPostId = media.localPostId
+                        markedLocallyAsFeatured = media.markedLocallyAsFeatured
                     }
                     notifyMediaUploaded(
                         media = responseMedia,

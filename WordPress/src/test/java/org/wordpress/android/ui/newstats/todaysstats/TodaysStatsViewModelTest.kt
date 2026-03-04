@@ -48,11 +48,11 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     fun setUp() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
         whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
-        whenever(resourceProvider.getString(R.string.stats_todays_stats_no_site_selected))
+        whenever(resourceProvider.getString(R.string.stats_error_no_site))
             .thenReturn(NO_SITE_SELECTED_ERROR)
-        whenever(resourceProvider.getString(R.string.stats_todays_stats_failed_to_load))
+        whenever(resourceProvider.getString(R.string.stats_error_api))
             .thenReturn(FAILED_TO_LOAD_ERROR)
-        whenever(resourceProvider.getString(R.string.stats_todays_stats_unknown_error))
+        whenever(resourceProvider.getString(R.string.stats_error_unknown))
             .thenReturn(UNKNOWN_ERROR)
     }
 
@@ -63,6 +63,7 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
             statsRepository,
             resourceProvider
         )
+        viewModel.loadData()
     }
 
     @Test
@@ -463,6 +464,34 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         // Verify onCardClick callback can be invoked without error
         state.onCardClick()
         // If we reached here, the callback is present and invocable
+    }
+
+    @Test
+    fun `when loadDataIfNeeded is called multiple times, then data is only loaded once`() = test {
+        val aggregates = createTodayAggregates()
+
+        whenever(statsRepository.fetchTodayAggregates(any()))
+            .thenReturn(TodayAggregatesResult.Success(aggregates))
+        whenever(statsRepository.fetchHourlyViews(any(), any()))
+            .thenReturn(createHourlyViewsResult())
+
+        viewModel = TodaysStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // Should only be called once despite three calls to loadDataIfNeeded
+        verify(statsRepository, times(1)).fetchTodayAggregates(eq(TEST_SITE_ID))
     }
 
     @Test

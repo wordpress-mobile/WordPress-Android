@@ -118,7 +118,12 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.newstats.countries.CountriesDetailActivity"
+            android:name=".ui.newstats.locations.LocationsDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.newstats.authors.AuthorsDetailActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:exported="false" />
 
@@ -332,6 +337,10 @@
         <activity
             android:name=".ui.posts.PostsListActivity"
             android:launchMode="singleTop"
+            android:theme="@style/WordPress.NoActionBar"
+            android:label="" />
+        <activity
+            android:name=".ui.postsrs.PostRsListActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="" />
         <activity

@@ -20,7 +20,8 @@ sealed class MenuItemState {
         val secondaryText: UiString? = null,
         val onClick: ListItemInteraction,
         val disablePrimaryIconTint: Boolean = false,
-        val listItemAction: ListItemAction
+        val listItemAction: ListItemAction,
+        val showBetaBadge: Boolean = false
     ) : MenuItemState()
 }
 
@@ -35,7 +36,8 @@ fun MySiteCardAndItem.Item.toMenuItemState(): MenuItemState {
             secondaryText = secondaryText,
             onClick = onClick,
             disablePrimaryIconTint = disablePrimaryIconTint,
-            listItemAction = listItemAction
+            listItemAction = listItemAction,
+            showBetaBadge = showBetaBadge
         )
         else -> {
             throw IllegalArgumentException("Unsupported MySiteCardAndItem.Item type: $this")

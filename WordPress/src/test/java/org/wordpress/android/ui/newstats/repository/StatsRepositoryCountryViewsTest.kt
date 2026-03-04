@@ -11,12 +11,14 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.datasource.CountryViewItem
 import org.wordpress.android.ui.newstats.datasource.CountryViewsData
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 
 @ExperimentalCoroutinesApi
 class StatsRepositoryCountryViewsTest : BaseUnitTest() {
@@ -184,7 +186,7 @@ class StatsRepositoryCountryViewsTest : BaseUnitTest() {
 
         whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
             .thenReturn(CountryViewsDataResult.Success(currentData))
-            .thenReturn(CountryViewsDataResult.Error("Network error"))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.NETWORK_ERROR))
 
         val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
 
@@ -198,12 +200,76 @@ class StatsRepositoryCountryViewsTest : BaseUnitTest() {
     @Test
     fun `given error response, when fetchCountryViews, then error result is returned`() = test {
         whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
-            .thenReturn(CountryViewsDataResult.Error(ERROR_MESSAGE))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.NETWORK_ERROR))
 
         val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
 
         assertThat(result).isInstanceOf(CountryViewsResult.Error::class.java)
-        assertThat((result as CountryViewsResult.Error).message).isEqualTo(ERROR_MESSAGE)
+        assertThat((result as CountryViewsResult.Error).messageResId)
+            .isEqualTo(R.string.stats_error_network)
+    }
+
+    @Test
+    fun `given auth error, when fetchCountryViews, then isAuthError is true`() = test {
+        whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.AUTH_ERROR))
+
+        val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(CountryViewsResult.Error::class.java)
+        val error = result as CountryViewsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_auth)
+        assertThat(error.isAuthError).isTrue()
+    }
+
+    @Test
+    fun `given non-auth error, when fetchCountryViews, then isAuthError is false`() = test {
+        whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.NETWORK_ERROR))
+
+        val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(CountryViewsResult.Error::class.java)
+        assertThat((result as CountryViewsResult.Error).isAuthError).isFalse()
+    }
+
+    @Test
+    fun `given parsing error, when fetchCountryViews, then correct message is returned`() = test {
+        whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.PARSING_ERROR))
+
+        val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(CountryViewsResult.Error::class.java)
+        val error = result as CountryViewsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_parsing)
+        assertThat(error.isAuthError).isFalse()
+    }
+
+    @Test
+    fun `given api error, when fetchCountryViews, then correct message is returned`() = test {
+        whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.API_ERROR))
+
+        val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(CountryViewsResult.Error::class.java)
+        val error = result as CountryViewsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_api)
+        assertThat(error.isAuthError).isFalse()
+    }
+
+    @Test
+    fun `given unknown error, when fetchCountryViews, then correct message is returned`() = test {
+        whenever(statsDataSource.fetchCountryViews(any(), any(), any()))
+            .thenReturn(CountryViewsDataResult.Error(StatsErrorType.UNKNOWN))
+
+        val result = repository.fetchCountryViews(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(CountryViewsResult.Error::class.java)
+        val error = result as CountryViewsResult.Error
+        assertThat(error.messageResId).isEqualTo(R.string.stats_error_unknown)
+        assertThat(error.isAuthError).isFalse()
     }
 
     @Test
@@ -242,7 +308,6 @@ class StatsRepositoryCountryViewsTest : BaseUnitTest() {
 
     companion object {
         private const val TEST_SITE_ID = 123L
-        private const val ERROR_MESSAGE = "Test error message"
 
         private const val TEST_COUNTRY_CODE_1 = "US"
         private const val TEST_COUNTRY_CODE_2 = "UK"

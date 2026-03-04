@@ -160,7 +160,11 @@ abstract class BaseWPV2MediaRestClient constructor(
                     if (response.isSuccessful) {
                         try {
                             val res = gson.fromJson(response.body!!.string(), MediaWPRESTResponse::class.java)
-                            val uploadedMedia = res.toMediaModel(site.id)
+                            val uploadedMedia = res.toMediaModel(site.id).apply {
+                                id = media.id
+                                localPostId = media.localPostId
+                                markedLocallyAsFeatured = media.markedLocallyAsFeatured
+                            }
                             val payload = ProgressPayload(uploadedMedia, 1f, true, false)
                             try {
                                 trySendBlocking(payload)

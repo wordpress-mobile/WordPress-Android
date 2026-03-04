@@ -54,6 +54,11 @@ class ExperimentalFeatures @Inject constructor(
             "new_stats",
             R.string.experimental_new_stats,
             R.string.experimental_new_stats_description
+        ),
+        RS_POST_LIST(
+            "rs_post_list",
+            R.string.experimental_rs_post_list,
+            R.string.experimental_rs_post_list_description
         );
     }
 }

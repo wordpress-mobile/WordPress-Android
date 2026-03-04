@@ -5,7 +5,10 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import androidx.core.view.ViewCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.widget.ImageViewCompat
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -26,6 +29,21 @@ class MySiteListItemViewHolder(
     private val accountStore: AccountStore,
     private val gravatarLoader: MeGravatarLoader
 ) : MySiteCardAndItemViewHolder<MySiteItemBlockBinding>(parent.viewBinding(MySiteItemBlockBinding::inflate)) {
+    init {
+        ViewCompat.setAccessibilityDelegate(
+            itemView,
+            object : androidx.core.view.AccessibilityDelegateCompat() {
+                override fun onInitializeAccessibilityNodeInfo(
+                    host: View,
+                    info: AccessibilityNodeInfoCompat
+                ) {
+                    super.onInitializeAccessibilityNodeInfo(host, info)
+                    info.className = Button::class.java.name
+                }
+            }
+        )
+    }
+
     fun bind(cardAndItem: ListItem) = with(binding) {
         if (cardAndItem.disablePrimaryIconTint) mySiteItemPrimaryIcon.imageTintList = null
 
