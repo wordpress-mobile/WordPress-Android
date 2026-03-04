@@ -87,7 +87,6 @@ public class UploadService extends Service {
     // tracks media IDs that have already been recovered to prevent recovery loops
     private static final Set<Integer> RECOVERED_MEDIA_IDS = new HashSet<>();
 
-
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
@@ -241,32 +240,6 @@ public class UploadService extends Service {
     }
 
     private void unpackMediaIntent(@NonNull Intent intent) {
-        // TODO right now, in the case we had pending uploads and the app/service was restarted,
-        // we don't really have a way to tell which media was supposed to be added to which post,
-        // unless we open each draft post from the PostStore and try to see if there was any locally added media to try
-        // and match their IDs.
-        // So let's hold on a bit on this functionality, the service won't be recovering any
-        // pending / missing / cancelled / interrupted uploads for now
-
-// // add local queued media from store
-// List<MediaModel> localMedia = mMediaStore.getLocalSiteMedia(site);
-// if (localMedia != null && !localMedia.isEmpty()) {
-// // uploading is updated to queued, queued media added to the queue, failed media added to completed list
-// for (MediaModel mediaItem : localMedia) {
-//
-// if (MediaUploadState.UPLOADING.name().equals(mediaItem.getUploadState())) {
-// mediaItem.setUploadState(MediaUploadState.QUEUED.name());
-// mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaItem));
-// }
-//
-// if (MediaUploadState.QUEUED.name().equals(mediaItem.getUploadState())) {
-// addUniqueMediaToQueue(mediaItem);
-// } else if (MediaUploadState.FAILED.name().equals(mediaItem.getUploadState())) {
-// getCompletedItems().add(mediaItem);
-// }
-// }
-// }
-
         // add new media
         @SuppressWarnings("unchecked")
         List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(KEY_MEDIA_LIST);

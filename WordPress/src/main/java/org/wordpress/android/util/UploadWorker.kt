@@ -78,11 +78,9 @@ class UploadWorker(
     }
 }
 
-private fun getUploadConstraints(): Constraints {
-    return Constraints.Builder()
-        .setRequiredNetworkType(NetworkType.CONNECTED)
-        .build()
-}
+private fun getUploadConstraints() = Constraints.Builder()
+    .setRequiredNetworkType(NetworkType.CONNECTED)
+    .build()
 
 fun enqueueUploadWorkRequestForSite(site: SiteModel): Pair<WorkRequest, Operation> {
     val request = OneTimeWorkRequestBuilder<UploadWorker>()
@@ -91,7 +89,7 @@ fun enqueueUploadWorkRequestForSite(site: SiteModel): Pair<WorkRequest, Operatio
         .setInputData(workDataOf(WordPress.LOCAL_SITE_ID to site.id))
         .build()
     val operation = WorkManager.getInstance(WordPress.getContext()).enqueueUniqueWork(
-        "auto-upload-" + site.id,
+        "auto-upload-${site.id}",
         ExistingWorkPolicy.KEEP, request
     )
     return Pair(request, operation)
