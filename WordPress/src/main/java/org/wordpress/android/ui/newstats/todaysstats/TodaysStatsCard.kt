@@ -390,7 +390,7 @@ private fun StatsChart(chartData: ChartData) {
     // Create gradient shader for area fill (primary color fading to transparent)
     val areaGradient = ShaderProvider.verticalGradient(
         colors = arrayOf(
-            primaryColor.copy(alpha = 0.8f),
+            primaryColor.copy(alpha = 0.3f),
             primaryColor.copy(alpha = 0f)
         )
     )

@@ -89,10 +89,10 @@ import kotlin.math.abs
 private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
-private val ChartHeight = 120.dp
+private val ChartHeight = 180.dp
 private val StatItemWidth = 100.dp
 private val BadgeCornerRadius = 4.dp
-private val ChangeBadgePositiveColor = Color(0xFF4CAF50)
+private val ChangeBadgePositiveColor = Color(0xFF2E7D32)
 private val ChangeBadgeNegativeColor = Color(0xFFE91E63)
 
 // Preview sample data constants
@@ -330,7 +330,7 @@ private fun HeaderSection(
                 }
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -338,18 +338,20 @@ private fun HeaderSection(
         ) {
             // Left: Current and previous period totals with difference
             Column {
-                Row(verticalAlignment = Alignment.Bottom) {
+                Row {
                     Text(
                         text = formatStatValue(state.currentPeriodViews),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.alignByBaseline()
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = formatStatValue(state.previousPeriodViews),
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.alignByBaseline()
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
@@ -417,7 +419,7 @@ private fun DifferenceRow(difference: Long, percentageChange: Double) {
     val color = when {
         difference < 0 -> MaterialTheme.colorScheme.error
         difference > 0 -> ChangeBadgePositiveColor
-        else -> MaterialTheme.colorScheme.onSurfaceVariant
+        else -> MaterialTheme.colorScheme.outline
     }
 
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -447,7 +449,7 @@ private fun DateRangeWithDot(dateRange: String, dotColor: Color, isFilled: Boole
         Text(
             text = dateRange,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.outline
         )
         Spacer(modifier = Modifier.width(6.dp))
         Box(
@@ -474,7 +476,7 @@ private fun AverageRow(average: Long) {
         Text(
             text = stringResource(R.string.stats_weekly_average, formatStatValue(average)),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.outline
         )
         Spacer(modifier = Modifier.width(6.dp))
         Box(
@@ -591,7 +593,7 @@ private fun ViewsStatsChart(
         ChartType.LINE -> {
             val areaGradient = ShaderProvider.verticalGradient(
                 colors = arrayOf(
-                    primaryColor.copy(alpha = 0.8f),
+                    primaryColor.copy(alpha = 0.3f),
                     primaryColor.copy(alpha = 0f)
                 )
             )
