@@ -18,6 +18,7 @@ import org.wordpress.android.ui.newstats.repository.HourlyViewsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TodayAggregatesResult
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.time.Clock
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -32,6 +33,8 @@ class TodaysStatsViewModel @Inject constructor(
     private val statsRepository: StatsRepository,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
+    @Suppress("VisibleForTests")
+    internal var clock: Clock = Clock.systemDefaultZone()
     private val _uiState = MutableStateFlow<TodaysStatsCardUiState>(TodaysStatsCardUiState.Loading)
     val uiState: StateFlow<TodaysStatsCardUiState> = _uiState.asStateFlow()
 
@@ -193,16 +196,12 @@ class TodaysStatsViewModel @Inject constructor(
     private fun trimFutureHours(
         dataPoints: List<HourlyViewsDataPoint>
     ): List<HourlyViewsDataPoint> {
-        val currentHour = LocalDateTime.now().hour
-        val inputFormat = DateTimeFormatter.ofPattern(
-            "yyyy-MM-dd HH:mm:ss",
-            Locale.getDefault()
-        )
+        val currentHour = LocalDateTime.now(clock).hour
         return dataPoints.filter { dataPoint ->
             try {
                 val dateTime = LocalDateTime.parse(
                     dataPoint.period,
-                    inputFormat
+                    HOURLY_PERIOD_FORMAT
                 )
                 dateTime.hour <= currentHour
             } catch (e: Exception) {
@@ -214,18 +213,17 @@ class TodaysStatsViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun formatHourlyLabel(period: String): String {
         return try {
-            // API returns period in format "2024-01-16 14:00:00" for hourly data
-            val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val outputFormat = DateTimeFormatter.ofPattern("ha", Locale.getDefault())
-            val dateTime = LocalDateTime.parse(period, inputFormat)
-            dateTime.format(outputFormat).lowercase()
+            val dateTime = LocalDateTime.parse(
+                period, HOURLY_PERIOD_FORMAT
+            )
+            dateTime.format(HOURLY_LABEL_FORMAT).lowercase()
         } catch (e: Exception) {
-            // Fallback: try parsing just the hour if full format fails
+            // Fallback: try parsing without seconds
             try {
-                val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.getDefault())
-                val outputFormat = DateTimeFormatter.ofPattern("ha", Locale.getDefault())
-                val dateTime = LocalDateTime.parse(period, inputFormat)
-                dateTime.format(outputFormat).lowercase()
+                val dateTime = LocalDateTime.parse(
+                    period, HOURLY_PERIOD_SHORT_FORMAT
+                )
+                dateTime.format(HOURLY_LABEL_FORMAT).lowercase()
             } catch (e2: Exception) {
                 period
             }
@@ -246,4 +244,17 @@ class TodaysStatsViewModel @Inject constructor(
         val likes: Long,
         val comments: Long
     )
+
+    companion object {
+        private val HOURLY_PERIOD_FORMAT =
+            DateTimeFormatter.ofPattern(
+                "yyyy-MM-dd HH:mm:ss", Locale.US
+            )
+        private val HOURLY_PERIOD_SHORT_FORMAT =
+            DateTimeFormatter.ofPattern(
+                "yyyy-MM-dd HH:mm", Locale.US
+            )
+        private val HOURLY_LABEL_FORMAT =
+            DateTimeFormatter.ofPattern("ha", Locale.US)
+    }
 }

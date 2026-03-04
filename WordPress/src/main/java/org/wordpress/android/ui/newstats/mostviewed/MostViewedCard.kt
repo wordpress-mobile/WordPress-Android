@@ -354,10 +354,7 @@ internal fun ChangeIndicator(change: MostViewedChange) {
             String.format(Locale.getDefault(), "-%.1f%%", change.percentage),
             StatsColors.ChangeBadgeNegative
         )
-        is MostViewedChange.NoChange -> Pair(
-            "0%",
-            MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        is MostViewedChange.NoChange -> return
         is MostViewedChange.NotAvailable -> return
     }
 

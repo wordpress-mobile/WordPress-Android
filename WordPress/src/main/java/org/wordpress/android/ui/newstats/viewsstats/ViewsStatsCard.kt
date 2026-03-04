@@ -45,6 +45,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import org.wordpress.android.ui.newstats.StatsColors
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -92,8 +93,6 @@ private val CardMargin = 16.dp
 private val ChartHeight = 180.dp
 private val StatItemWidth = 100.dp
 private val BadgeCornerRadius = 4.dp
-private val ChangeBadgePositiveColor = Color(0xFF2E7D32)
-private val ChangeBadgeNegativeColor = Color(0xFFE91E63)
 
 // Preview sample data constants
 private const val SAMPLE_CURRENT_VIEWS = 7467L
@@ -418,7 +417,7 @@ private fun DifferenceRow(difference: Long, percentageChange: Double) {
     val arrowText = if (isNegative) "↘" else if (difference > 0) "↗" else "↔"
     val color = when {
         difference < 0 -> MaterialTheme.colorScheme.error
-        difference > 0 -> ChangeBadgePositiveColor
+        difference > 0 -> StatsColors.ChangeBadgePositive
         else -> MaterialTheme.colorScheme.outline
     }
 
@@ -723,13 +722,13 @@ private fun ChangeBadge(change: StatChange) {
     val (text, backgroundColor, textColor) = when (change) {
         is StatChange.Positive -> Triple(
             "↗ ${String.format(Locale.getDefault(), "%.1f%%", change.percentage)}",
-            ChangeBadgePositiveColor.copy(alpha = 0.15f),
-            ChangeBadgePositiveColor
+            StatsColors.ChangeBadgePositive.copy(alpha = 0.15f),
+            StatsColors.ChangeBadgePositive
         )
         is StatChange.Negative -> Triple(
             "↘ ${String.format(Locale.getDefault(), "%.1f%%", change.percentage)}",
-            ChangeBadgeNegativeColor.copy(alpha = 0.15f),
-            ChangeBadgeNegativeColor
+            StatsColors.ChangeBadgeNegative.copy(alpha = 0.15f),
+            StatsColors.ChangeBadgeNegative
         )
         is StatChange.NoChange -> Triple(
             "↔ 0%",
