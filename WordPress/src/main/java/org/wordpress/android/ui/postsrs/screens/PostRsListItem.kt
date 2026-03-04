@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -337,3 +338,83 @@ private fun ErrorItem(modifier: Modifier = Modifier) {
 }
 
 private val FEATURED_IMAGE_SIZE = PostRsRestClient.FEATURED_IMAGE_SIZE_DP.dp
+
+// region Previews
+
+private fun samplePost(
+    displayState: PostDisplayState = PostDisplayState.NORMAL
+) = PostRsUiModel(
+    remotePostId = 1L,
+    title = "Welcome to the Flavor Journey",
+    excerpt = "Exploring the rich world of seasonal "
+        + "ingredients and traditional techniques.",
+    date = "Dec 15, 2025",
+    authorDisplayName = "Alice",
+    displayState = displayState
+)
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewNormal() {
+    MaterialTheme {
+        PostRsListItem(
+            post = samplePost(),
+            onClick = {},
+            onMenuAction = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewFetchingWithData() {
+    MaterialTheme {
+        PostRsListItem(
+            post = samplePost(
+                PostDisplayState.FETCHING_WITH_DATA
+            ),
+            onClick = {},
+            onMenuAction = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewFailedWithData() {
+    MaterialTheme {
+        PostRsListItem(
+            post = samplePost(
+                PostDisplayState.FAILED_WITH_DATA
+            ),
+            onClick = {},
+            onMenuAction = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewPlaceholder() {
+    MaterialTheme {
+        PostRsListItem(
+            post = samplePost(PostDisplayState.PLACEHOLDER),
+            onClick = {},
+            onMenuAction = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewError() {
+    MaterialTheme {
+        PostRsListItem(
+            post = samplePost(PostDisplayState.ERROR),
+            onClick = {},
+            onMenuAction = {}
+        )
+    }
+}
+
+// endregion
