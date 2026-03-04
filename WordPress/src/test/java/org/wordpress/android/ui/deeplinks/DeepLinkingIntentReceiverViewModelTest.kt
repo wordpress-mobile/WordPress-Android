@@ -143,6 +143,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         viewModel.start(null, uri, DEFAULT, null)
 
         assertUriHandled(OpenInBrowser(wpLoginUri))
+        verify(serverTrackingHandler).request(uri)
     }
 
     @Test
@@ -155,6 +156,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         viewModel.start(null, uri, DEFAULT, null)
 
         assertUriHandled(OpenInBrowser(redirectUri))
+        verify(serverTrackingHandler).request(uri)
     }
 
     @Test
@@ -165,6 +167,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         viewModel.start(null, uri, DEFAULT, null)
 
         assertUriHandled(OpenInBrowser(wpLoginUri))
+        verify(serverTrackingHandler).request(uri)
     }
 
     @Test

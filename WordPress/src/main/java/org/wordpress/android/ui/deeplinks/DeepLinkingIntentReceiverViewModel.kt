@@ -135,15 +135,22 @@ class DeepLinkingIntentReceiverViewModel
                 val redirectUri = deepLinkUriUtils.getRedirectUri(uri)
                 val navigateAction = redirectUri?.let { buildNavigateAction(it, rootUri) }
                 if (navigateAction != null) {
+                    // Handled in-app — fire the tracking pixel since the
+                    // server won't see the request otherwise.
                     serverTrackingHandler.request(uri)
                     navigateAction
+                } else if (redirectUri != null) {
+                    // Can't handle in-app. Open the redirect destination
+                    // (not the tracking URL) to avoid an infinite loop with
+                    // the app's intent filter. Fire the tracking pixel
+                    // explicitly since the browser won't hit the tracking URL.
+                    serverTrackingHandler.request(uri)
+                    OpenInBrowser(redirectUri)
                 } else {
-                    // Open the redirect destination (not the tracking URL) to avoid
-                    // an infinite loop with the app's own intent filter.
-                    // Fall back to the tracking URL only if there's no redirect_to.
-                    OpenInBrowser(
-                        redirectUri ?: rootUri.copy(REGULAR_TRACKING_PATH)
-                    )
+                    // No redirect_to param — open the /bar/ tracking URL in
+                    // the browser. The browser request itself will handle
+                    // server-side tracking, so no explicit pixel needed.
+                    OpenInBrowser(rootUri.copy(REGULAR_TRACKING_PATH))
                 }
             }
             deepLinkUriUtils.isWpLoginUrl(uri) -> getRedirectUriAndBuildNavigateAction(uri, rootUri)
