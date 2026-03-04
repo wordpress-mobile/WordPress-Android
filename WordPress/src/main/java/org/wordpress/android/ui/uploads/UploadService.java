@@ -125,49 +125,73 @@ public class UploadService extends Service {
     private void recoverInterruptedMediaUploads() {
         List<MediaModel> recoveredMedia = new ArrayList<>();
         for (SiteModel site : mSiteStore.getSites()) {
-            List<MediaModel> queuedMedia = mMediaStore.getSiteMediaWithState(
-                    site, MediaUploadState.QUEUED);
-            for (MediaModel media : queuedMedia) {
-                if (RECOVERED_MEDIA_IDS.add(media.getId())) {
-                    recoveredMedia.add(media);
-                }
-            }
-
-            List<MediaModel> uploadingMedia = mMediaStore.getSiteMediaWithState(
-                    site, MediaUploadState.UPLOADING);
-            for (MediaModel media : uploadingMedia) {
-                if (RECOVERED_MEDIA_IDS.add(media.getId())) {
-                    media.setUploadState(MediaUploadState.QUEUED.name());
-                    mDispatcher.dispatch(
-                            MediaActionBuilder.newUpdateMediaAction(media));
-                    recoveredMedia.add(media);
-                }
-            }
-
-            List<MediaModel> failedMedia = mMediaStore.getSiteMediaWithState(
-                    site, MediaUploadState.FAILED);
-            for (MediaModel media : failedMedia) {
-                if (RECOVERED_MEDIA_IDS.add(media.getId())
-                        && media.getLocalPostId() > 0
-                        && hasValidFile(media)) {
-                    media.setUploadState(MediaUploadState.QUEUED.name());
-                    mDispatcher.dispatch(
-                            MediaActionBuilder.newUpdateMediaAction(media));
-                    recoveredMedia.add(media);
-                }
-            }
+            recoverMediaForSite(site, recoveredMedia);
         }
 
-        if (!recoveredMedia.isEmpty()) {
-            AppLog.i(T.MAIN, "UploadService > Recovering "
-                    + recoveredMedia.size() + " interrupted media uploads");
-            registerPostModelsForMedia(recoveredMedia, false);
-            for (MediaModel media : recoveredMedia) {
-                mMediaUploadHandler.upload(media);
-            }
-            mPostUploadNotifier
-                    .addMediaInfoToForegroundNotification(recoveredMedia);
+        if (recoveredMedia.isEmpty()) {
+            return;
         }
+
+        AppLog.i(T.MAIN, "UploadService > Recovering "
+                + recoveredMedia.size() + " interrupted media uploads");
+        registerPostModelsForMedia(recoveredMedia, false);
+        for (MediaModel media : recoveredMedia) {
+            mMediaUploadHandler.upload(media);
+        }
+        mPostUploadNotifier
+                .addMediaInfoToForegroundNotification(recoveredMedia);
+    }
+
+    private void recoverMediaForSite(
+            @NonNull SiteModel site,
+            @NonNull List<MediaModel> out
+    ) {
+        collectNewMedia(
+                mMediaStore.getSiteMediaWithState(site, MediaUploadState.QUEUED),
+                out
+        );
+        collectAndResetMedia(
+                mMediaStore.getSiteMediaWithState(site, MediaUploadState.UPLOADING),
+                out
+        );
+
+        for (MediaModel media : mMediaStore.getSiteMediaWithState(site, MediaUploadState.FAILED)) {
+            if (!RECOVERED_MEDIA_IDS.add(media.getId())) {
+                continue;
+            }
+            if (media.getLocalPostId() > 0 && hasValidFile(media)) {
+                resetToQueued(media);
+                out.add(media);
+            }
+        }
+    }
+
+    private void collectNewMedia(
+            @NonNull List<MediaModel> source,
+            @NonNull List<MediaModel> out
+    ) {
+        for (MediaModel media : source) {
+            if (RECOVERED_MEDIA_IDS.add(media.getId())) {
+                out.add(media);
+            }
+        }
+    }
+
+    private void collectAndResetMedia(
+            @NonNull List<MediaModel> source,
+            @NonNull List<MediaModel> out
+    ) {
+        for (MediaModel media : source) {
+            if (RECOVERED_MEDIA_IDS.add(media.getId())) {
+                resetToQueued(media);
+                out.add(media);
+            }
+        }
+    }
+
+    private void resetToQueued(@NonNull MediaModel media) {
+        media.setUploadState(MediaUploadState.QUEUED.name());
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
     }
 
     private static boolean hasValidFile(@NonNull MediaModel media) {
