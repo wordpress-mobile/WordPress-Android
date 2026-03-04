@@ -304,13 +304,13 @@ private fun MostViewedItemRow(item: MostViewedItem, percentage: Float) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 8.dp),
+                .padding(vertical = 12.dp, horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = item.title,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
@@ -324,7 +324,7 @@ private fun MostViewedItemRow(item: MostViewedItem, percentage: Float) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = formatStatValue(item.views),
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -347,19 +347,15 @@ private fun MostViewedItemRow(item: MostViewedItem, percentage: Float) {
 internal fun ChangeIndicator(change: MostViewedChange) {
     val (text, color) = when (change) {
         is MostViewedChange.Positive -> Pair(
-            "+${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
+            String.format(Locale.getDefault(), "+%.1f%%", change.percentage),
             StatsColors.ChangeBadgePositive
         )
         is MostViewedChange.Negative -> Pair(
-            "-${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
+            String.format(Locale.getDefault(), "-%.1f%%", change.percentage),
             StatsColors.ChangeBadgeNegative
         )
         is MostViewedChange.NoChange -> Pair(
-            "+0 (0%)",
+            "0%",
             MaterialTheme.colorScheme.onSurfaceVariant
         )
         is MostViewedChange.NotAvailable -> return
@@ -367,7 +363,7 @@ internal fun ChangeIndicator(change: MostViewedChange) {
 
     Text(
         text = text,
-        style = MaterialTheme.typography.labelSmall,
+        style = MaterialTheme.typography.labelMedium,
         color = color
     )
 }

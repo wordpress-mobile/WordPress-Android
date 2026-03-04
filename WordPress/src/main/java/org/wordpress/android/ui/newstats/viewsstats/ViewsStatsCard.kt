@@ -741,7 +741,7 @@ private fun ChangeBadge(change: StatChange) {
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelMedium,
             color = textColor,
             fontWeight = FontWeight.Medium
         )
