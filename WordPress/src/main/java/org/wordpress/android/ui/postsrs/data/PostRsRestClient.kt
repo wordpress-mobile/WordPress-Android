@@ -9,6 +9,8 @@ import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaListParams
+import uniffi.wp_api.TermEndpointType
+import uniffi.wp_api.TermListParams
 import uniffi.wp_api.UserListParams
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -21,10 +23,14 @@ class PostRsRestClient @Inject constructor(
 ) {
     private val mediaUrlCache = ConcurrentHashMap<Long, String>()
     private val userNameCache = ConcurrentHashMap<Long, String>()
+    private val categoryNameCache = ConcurrentHashMap<Long, String>()
+    private val tagNameCache = ConcurrentHashMap<Long, String>()
 
     fun clearCaches() {
         mediaUrlCache.clear()
         userNameCache.clear()
+        categoryNameCache.clear()
+        tagNameCache.clear()
     }
 
     /**
@@ -110,6 +116,84 @@ class PostRsRestClient @Inject constructor(
                 AppLog.w(
                     AppLog.T.POSTS,
                     "fetchUserDisplayNames failed: $msg"
+                )
+            }
+        }
+        return result
+    }
+
+    /**
+     * Fetches category names for the given [categoryIds] in a single
+     * network call using the `include` parameter, returning a map of
+     * category ID to name. IDs already in the local cache are returned
+     * immediately without a network round-trip.
+     */
+    suspend fun fetchCategoryNames(
+        site: SiteModel,
+        categoryIds: List<Long>
+    ): Map<Long, String> {
+        return fetchTermNames(
+            site, categoryIds,
+            TermEndpointType.Categories,
+            categoryNameCache,
+            "fetchCategoryNames"
+        )
+    }
+
+    /**
+     * Fetches tag names for the given [tagIds] in a single network
+     * call using the `include` parameter, returning a map of tag ID
+     * to name. IDs already in the local cache are returned immediately
+     * without a network round-trip.
+     */
+    suspend fun fetchTagNames(
+        site: SiteModel,
+        tagIds: List<Long>
+    ): Map<Long, String> {
+        return fetchTermNames(
+            site, tagIds,
+            TermEndpointType.Tags,
+            tagNameCache,
+            "fetchTagNames"
+        )
+    }
+
+    private suspend fun fetchTermNames(
+        site: SiteModel,
+        termIds: List<Long>,
+        endpointType: TermEndpointType,
+        cache: ConcurrentHashMap<Long, String>,
+        logTag: String,
+    ): Map<Long, String> {
+        val result = mutableMapOf<Long, String>()
+        val uncached = mutableListOf<Long>()
+        for (id in termIds) {
+            val cached = cache[id]
+            if (cached != null) result[id] = cached else uncached.add(id)
+        }
+        if (uncached.isEmpty()) return result
+
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.terms().listWithEditContext(
+                endpointType,
+                TermListParams(include = uncached)
+            )
+        }
+        when (response) {
+            is WpRequestResult.Success -> {
+                for (term in response.response.data) {
+                    cache[term.id] = term.name
+                    result[term.id] = term.name
+                }
+            }
+            else -> {
+                val msg =
+                    (response as? WpRequestResult.WpError<*>)
+                        ?.errorMessage
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "$logTag failed: $msg"
                 )
             }
         }
