@@ -186,10 +186,22 @@ private fun SettingsContent(uiState: PostRsSettingsUiState) {
         )
         HorizontalDivider()
 
-        SettingsRow(
-            label = stringResource(R.string.post_settings_excerpt),
-            value = uiState.excerpt
-        )
+        if (uiState.excerpt.isNotEmpty()) {
+            SettingsRow(
+                label = stringResource(
+                    R.string.post_settings_excerpt
+                ),
+                value = uiState.excerpt
+            )
+        } else {
+            SettingsRow(
+                label = stringResource(
+                    R.string.post_settings_excerpt
+                ),
+                value = stringResource(R.string.none),
+                dimmed = true
+            )
+        }
     }
 }
 
@@ -228,7 +240,11 @@ private fun FeaturedImageField(state: FieldState) {
     )
     when (state) {
         is FieldState.Empty ->
-            SettingsRow(label = label, value = "")
+            SettingsRow(
+                label = stringResource(R.string.none),
+                value = "",
+                dimmed = true
+            )
         is FieldState.Loading -> ListItem(
             headlineContent = { Text(label) },
             supportingContent = {
@@ -271,10 +287,20 @@ private fun SectionHeader(title: String) {
 private fun SettingsRow(
     label: String,
     value: String,
+    dimmed: Boolean = false,
     onClick: (() -> Unit)? = null,
 ) {
     ListItem(
-        headlineContent = { Text(label) },
+        headlineContent = {
+            Text(
+                label,
+                color = if (dimmed) {
+                    MaterialTheme.colorScheme.outline
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
+            )
+        },
         supportingContent = if (value.isNotEmpty()) {
             {
                 Text(
