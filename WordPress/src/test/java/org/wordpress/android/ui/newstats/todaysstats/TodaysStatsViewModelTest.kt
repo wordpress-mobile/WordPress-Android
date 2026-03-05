@@ -60,12 +60,14 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     }
 
     private fun initViewModel() {
+        // Use a clock at 23:00 so trimFutureHours never filters test data
+        val endOfDay = Instant.parse("2024-01-16T23:00:00Z")
         viewModel = TodaysStatsViewModel(
             selectedSiteRepository,
             accountStore,
             statsRepository,
             resourceProvider,
-            Clock.systemDefaultZone()
+            Clock.fixed(endOfDay, ZoneId.of("UTC"))
         )
         viewModel.loadData()
     }
@@ -479,12 +481,13 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         whenever(statsRepository.fetchHourlyViews(any(), any()))
             .thenReturn(createHourlyViewsResult())
 
+        val endOfDay = Instant.parse("2024-01-16T23:00:00Z")
         viewModel = TodaysStatsViewModel(
             selectedSiteRepository,
             accountStore,
             statsRepository,
             resourceProvider,
-            Clock.systemDefaultZone()
+            Clock.fixed(endOfDay, ZoneId.of("UTC"))
         )
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()

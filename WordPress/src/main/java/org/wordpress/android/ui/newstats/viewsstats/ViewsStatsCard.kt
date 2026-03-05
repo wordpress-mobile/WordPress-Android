@@ -27,7 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ShowChart
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.ModeEditOutline
+import androidx.compose.material.icons.outlined.ModeEditOutline
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.Visibility
@@ -672,7 +672,7 @@ private fun StatItemCard(stat: StatItem) {
         stringResource(R.string.stats_visitors) -> Icons.Default.PersonOutline
         stringResource(R.string.stats_likes) -> Icons.Default.FavoriteBorder
         stringResource(R.string.stats_comments) -> Icons.Default.ChatBubbleOutline
-        stringResource(R.string.posts) -> Icons.Default.ModeEditOutline
+        stringResource(R.string.posts) -> Icons.Outlined.ModeEditOutline
         else -> Icons.Outlined.Visibility
     }
 
