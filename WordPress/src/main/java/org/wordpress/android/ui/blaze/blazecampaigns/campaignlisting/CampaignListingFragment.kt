@@ -19,7 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -54,9 +54,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.blaze.blazecampaigns.CampaignViewModel
-import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.compose.utils.isLightTheme
+import org.wordpress.android.ui.mysite.cards.blaze.CampaignStatus
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
 import org.wordpress.android.ui.utils.UiString
@@ -275,20 +274,58 @@ fun CampaignListingError(error: CampaignListingUiState.Error) {
 
 @Composable
 private fun CreateCampaignFloatingActionButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    val isInDarkMode = !isLightTheme()
     FloatingActionButton(
         modifier = modifier,
         onClick = onClick,
-        containerColor = if (isInDarkMode)
-            AppColor.Gray30
-        else MaterialTheme.colorScheme.onSurface
     ) {
         Icon(
-            imageVector = Icons.Rounded.Add,
-            contentDescription = stringResource(id = R.string.campaign_listing_page_create_campaign_fab_description),
-            tint = if (isInDarkMode) MaterialTheme.colorScheme.onSurface
-            else MaterialTheme.colorScheme.surface
+            imageVector = Icons.Default.Add,
+            contentDescription = stringResource(
+                id = R.string.campaign_listing_page_create_campaign_fab_description
+            ),
         )
+    }
+}
+
+@Preview
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun CampaignListingSuccessPreview() {
+    val campaigns = listOf(
+        CampaignModel(
+            id = "1",
+            title = UiString.UiStringText("Summer Sale Campaign"),
+            status = CampaignStatus.Active,
+            featureImageUrl = null,
+            impressions = UiString.UiStringText("10,000"),
+            clicks = UiString.UiStringText("500"),
+            budget = UiString.UiStringText("$50")
+        ),
+        CampaignModel(
+            id = "2",
+            title = UiString.UiStringText("New Product Launch"),
+            status = CampaignStatus.Completed,
+            featureImageUrl = null,
+            impressions = UiString.UiStringText("25,000"),
+            clicks = UiString.UiStringText("1,200"),
+            budget = UiString.UiStringText("$100")
+        ),
+    )
+    AppThemeM3 {
+        Scaffold(
+            floatingActionButton = {
+                CreateCampaignFloatingActionButton(onClick = {})
+            }
+        ) { contentPadding ->
+            LazyColumn(
+                modifier = Modifier.padding(contentPadding),
+                contentPadding = PaddingValues(bottom = 72.dp),
+            ) {
+                items(campaigns) { campaign ->
+                    CampaignListRow(campaignModel = campaign)
+                }
+            }
+        }
     }
 }
 
