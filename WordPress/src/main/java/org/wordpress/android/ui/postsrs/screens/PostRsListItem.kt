@@ -7,9 +7,13 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -147,6 +151,10 @@ private fun PostContentItem(
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                 }
+                if (post.badges.isNotEmpty()) {
+                    BadgeRow(post.badges)
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
                 Text(
                     text = post.title.ifBlank { stringResource(R.string.untitled_in_parentheses) },
                     style = MaterialTheme.typography.titleMedium,
@@ -210,6 +218,31 @@ private fun PostContentItem(
                     .copy(alpha = 0.5f),
                 trackColor = MaterialTheme
                     .colorScheme.surface
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun BadgeRow(badges: List<Int>) {
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        badges.forEach { labelResId ->
+            Text(
+                text = stringResource(labelResId),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.tertiary
+                            .copy(alpha = 0.5f),
+                        shape = RoundedCornerShape(4.dp)
+                    )
+                    .padding(
+                        horizontal = 6.dp,
+                        vertical = 2.dp
+                    )
             )
         }
     }

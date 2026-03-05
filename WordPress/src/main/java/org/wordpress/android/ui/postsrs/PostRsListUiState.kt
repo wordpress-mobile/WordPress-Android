@@ -61,6 +61,7 @@ data class PostRsUiModel(
     val featuredImageId: Long = 0L,
     val featuredImageUrl: String? = null,
     val actions: List<PostRsMenuAction> = emptyList(),
+    @StringRes val badges: List<Int> = emptyList(),
     val displayState: PostDisplayState =
         PostDisplayState.NORMAL
 )
@@ -172,6 +173,17 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
             post.status.toLabel()
         } else {
             0
+        },
+        badges = buildList {
+            if (post.status is PostStatus.Private) {
+                add(R.string.post_status_post_private)
+            }
+            if (post.status is PostStatus.Pending) {
+                add(R.string.post_status_pending_review)
+            }
+            if (post.sticky == true) {
+                add(R.string.post_status_sticky)
+            }
         },
         displayState = displayState
     )
