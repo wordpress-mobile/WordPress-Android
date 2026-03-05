@@ -118,14 +118,20 @@ private fun SettingsContent(uiState: PostRsSettingsUiState) {
         )
         HorizontalDivider()
 
-        SettingsRow(
-            label = stringResource(R.string.password),
-            value = if (uiState.password.isNullOrEmpty()) {
-                ""
-            } else {
-                stringResource(R.string.post_rs_settings_protected)
-            }
-        )
+        if (uiState.password.isNullOrEmpty()) {
+            SettingsRow(
+                label = stringResource(R.string.password),
+                value = stringResource(R.string.none),
+                dimmed = true
+            )
+        } else {
+            SettingsRow(
+                label = stringResource(R.string.password),
+                value = stringResource(
+                    R.string.post_rs_settings_protected
+                )
+            )
+        }
         HorizontalDivider()
 
         AsyncSettingsRow(
@@ -180,10 +186,18 @@ private fun SettingsContent(uiState: PostRsSettingsUiState) {
         )
         HorizontalDivider()
 
-        SettingsRow(
-            label = stringResource(R.string.post_settings_slug),
-            value = uiState.slug
-        )
+        if (uiState.slug.isNotEmpty()) {
+            SettingsRow(
+                label = stringResource(R.string.post_settings_slug),
+                value = uiState.slug
+            )
+        } else {
+            SettingsRow(
+                label = stringResource(R.string.post_settings_slug),
+                value = stringResource(R.string.none),
+                dimmed = true
+            )
+        }
         HorizontalDivider()
 
         if (uiState.excerpt.isNotEmpty()) {
@@ -207,9 +221,14 @@ private fun SettingsContent(uiState: PostRsSettingsUiState) {
 
 @Composable
 private fun AsyncSettingsRow(label: String, state: FieldState) {
+    val noneLabel = stringResource(R.string.none)
     when (state) {
         is FieldState.Empty ->
-            SettingsRow(label = label, value = "")
+            SettingsRow(
+                label = label,
+                value = noneLabel,
+                dimmed = true
+            )
         is FieldState.Loading -> ListItem(
             headlineContent = { Text(label) },
             supportingContent = {
