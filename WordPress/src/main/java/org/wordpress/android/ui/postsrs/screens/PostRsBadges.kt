@@ -54,8 +54,12 @@ fun BadgeRow(
 @Composable
 private fun PreviewStickyBadge() {
     MaterialTheme {
-        BadgeRow(
-            badges = listOf(R.string.post_status_sticky)
+        PostRsListItem(
+            post = samplePost().copy(
+                badges = listOf(R.string.post_status_sticky)
+            ),
+            onClick = {},
+            onMenuAction = {}
         )
     }
 }
@@ -64,10 +68,14 @@ private fun PreviewStickyBadge() {
 @Composable
 private fun PreviewPendingReviewBadge() {
     MaterialTheme {
-        BadgeRow(
-            badges = listOf(
-                R.string.post_status_pending_review
-            )
+        PostRsListItem(
+            post = samplePost().copy(
+                badges = listOf(
+                    R.string.post_status_pending_review
+                )
+            ),
+            onClick = {},
+            onMenuAction = {}
         )
     }
 }
@@ -76,10 +84,14 @@ private fun PreviewPendingReviewBadge() {
 @Composable
 private fun PreviewPrivateBadge() {
     MaterialTheme {
-        BadgeRow(
-            badges = listOf(
-                R.string.post_status_post_private
-            )
+        PostRsListItem(
+            post = samplePost().copy(
+                badges = listOf(
+                    R.string.post_status_post_private
+                )
+            ),
+            onClick = {},
+            onMenuAction = {}
         )
     }
 }
@@ -88,11 +100,15 @@ private fun PreviewPrivateBadge() {
 @Composable
 private fun PreviewMultipleBadges() {
     MaterialTheme {
-        BadgeRow(
-            badges = listOf(
-                R.string.post_status_post_private,
-                R.string.post_status_sticky
-            )
+        PostRsListItem(
+            post = samplePost().copy(
+                badges = listOf(
+                    R.string.post_status_post_private,
+                    R.string.post_status_sticky
+                )
+            ),
+            onClick = {},
+            onMenuAction = {}
         )
     }
 }
