@@ -344,6 +344,10 @@
             android:theme="@style/WordPress.NoActionBar"
             android:label="" />
         <activity
+            android:name=".ui.postsrs.PostRsSettingsActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:label="" />
+        <activity
             android:name=".ui.pages.PagesActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:launchMode="singleTop"

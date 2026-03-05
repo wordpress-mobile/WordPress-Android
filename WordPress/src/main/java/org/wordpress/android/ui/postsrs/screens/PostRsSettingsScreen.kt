@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
+import org.wordpress.android.ui.postsrs.FieldState
 import org.wordpress.android.ui.postsrs.PostRsSettingsUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +54,9 @@ fun PostRsSettingsScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
+                            contentDescription = stringResource(
+                                R.string.back
+                            )
                         )
                     }
                 }
@@ -96,7 +99,9 @@ private fun SettingsContent(uiState: PostRsSettingsUiState) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        SectionHeader(stringResource(R.string.post_settings_publish))
+        SectionHeader(
+            stringResource(R.string.post_settings_publish)
+        )
 
         SettingsRow(
             label = stringResource(R.string.post_settings_status),
@@ -105,7 +110,9 @@ private fun SettingsContent(uiState: PostRsSettingsUiState) {
         HorizontalDivider()
 
         SettingsRow(
-            label = stringResource(R.string.post_settings_time_and_date),
+            label = stringResource(
+                R.string.post_settings_time_and_date
+            ),
             value = uiState.publishDate
         )
         HorizontalDivider()
@@ -120,59 +127,33 @@ private fun SettingsContent(uiState: PostRsSettingsUiState) {
         )
         HorizontalDivider()
 
-        SettingsRow(
+        AsyncSettingsRow(
             label = stringResource(R.string.post_settings_author),
-            value = uiState.authorDisplayName ?: ""
+            state = uiState.authorName
         )
 
         SectionHeader(
-            stringResource(R.string.post_settings_categories_and_tags)
+            stringResource(
+                R.string.post_settings_categories_and_tags
+            )
         )
 
-        SettingsRow(
+        AsyncSettingsRow(
             label = stringResource(R.string.categories),
-            value = when {
-                uiState.categoryNames.isNotEmpty() ->
-                    uiState.categoryNames.joinToString(", ")
-                uiState.categoryIds.isNotEmpty() ->
-                    stringResource(R.string.loading)
-                else -> ""
-            }
+            state = uiState.categoryNames
         )
         HorizontalDivider()
 
-        SettingsRow(
+        AsyncSettingsRow(
             label = stringResource(R.string.post_settings_tags),
-            value = when {
-                uiState.tagNames.isNotEmpty() ->
-                    uiState.tagNames.joinToString(", ")
-                uiState.tagIds.isNotEmpty() ->
-                    stringResource(R.string.loading)
-                else -> ""
-            }
+            state = uiState.tagNames
         )
 
         SectionHeader(
             stringResource(R.string.post_settings_featured_image)
         )
 
-        if (uiState.featuredImageUrl != null) {
-            FeaturedImageRow(imageUrl = uiState.featuredImageUrl)
-        } else if (uiState.featuredImageId != 0L) {
-            SettingsRow(
-                label = stringResource(
-                    R.string.post_settings_featured_image
-                ),
-                value = stringResource(R.string.loading)
-            )
-        } else {
-            SettingsRow(
-                label = stringResource(
-                    R.string.post_settings_featured_image
-                ),
-                value = ""
-            )
-        }
+        FeaturedImageField(state = uiState.featuredImage)
 
         SectionHeader(
             stringResource(R.string.post_settings_more_options)
@@ -191,7 +172,9 @@ private fun SettingsContent(uiState: PostRsSettingsUiState) {
         HorizontalDivider()
 
         SettingsRow(
-            label = stringResource(R.string.post_settings_post_format),
+            label = stringResource(
+                R.string.post_settings_post_format
+            ),
             value = uiState.formatLabel
         )
         HorizontalDivider()
@@ -210,13 +193,75 @@ private fun SettingsContent(uiState: PostRsSettingsUiState) {
 }
 
 @Composable
+private fun AsyncSettingsRow(label: String, state: FieldState) {
+    when (state) {
+        is FieldState.Empty ->
+            SettingsRow(label = label, value = "")
+        is FieldState.Loading -> ListItem(
+            headlineContent = { Text(label) },
+            supportingContent = {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(16.dp),
+                    strokeWidth = 2.dp
+                )
+            }
+        )
+        is FieldState.Loaded ->
+            SettingsRow(label = label, value = state.value)
+        is FieldState.Error -> ListItem(
+            headlineContent = { Text(label) },
+            supportingContent = {
+                Text(
+                    state.message,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        )
+    }
+}
+
+@Composable
+private fun FeaturedImageField(state: FieldState) {
+    val label = stringResource(
+        R.string.post_settings_featured_image
+    )
+    when (state) {
+        is FieldState.Empty ->
+            SettingsRow(label = label, value = "")
+        is FieldState.Loading -> ListItem(
+            headlineContent = { Text(label) },
+            supportingContent = {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(16.dp),
+                    strokeWidth = 2.dp
+                )
+            }
+        )
+        is FieldState.Loaded ->
+            FeaturedImageRow(imageUrl = state.value)
+        is FieldState.Error -> ListItem(
+            headlineContent = { Text(label) },
+            supportingContent = {
+                Text(
+                    state.message,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        )
+    }
+}
+
+@Composable
 private fun SectionHeader(title: String) {
     Text(
         text = title,
         style = MaterialTheme.typography.titleSmall,
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(
-            start = 16.dp, end = 16.dp, top = 24.dp, bottom = 8.dp
+            start = 16.dp,
+            end = 16.dp,
+            top = 24.dp,
+            bottom = 8.dp
         )
     )
 }
@@ -252,7 +297,11 @@ private fun SettingsRow(
 private fun FeaturedImageRow(imageUrl: String) {
     ListItem(
         headlineContent = {
-            Text(stringResource(R.string.post_settings_featured_image))
+            Text(
+                stringResource(
+                    R.string.post_settings_featured_image
+                )
+            )
         },
         trailingContent = {
             AsyncImage(

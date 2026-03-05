@@ -205,6 +205,8 @@ class PostRsListViewModel @Inject constructor(
         val post = findPost(remotePostId)
 
         when (action) {
+            PostRsMenuAction.SETTINGS ->
+                _events.trySend(PostRsListEvent.OpenPostSettings(remotePostId))
             PostRsMenuAction.VIEW -> {
                 val url = post?.link
                 if (url == null) {
@@ -476,48 +478,49 @@ class PostRsListViewModel @Inject constructor(
         tab: PostRsListTab,
         hasPassword: Boolean,
         commentsOpen: Boolean
-    ): List<PostRsMenuAction> = when (tab) {
-        PostRsListTab.PUBLISHED ->
-            getPublishedMenuActions(hasPassword, commentsOpen)
-        PostRsListTab.DRAFTS -> buildList {
-            add(PostRsMenuAction.VIEW)
-            add(PostRsMenuAction.READ)
-            if (site.hasCapabilityPublishPosts) {
-                add(PostRsMenuAction.PUBLISH)
-            }
-            add(PostRsMenuAction.DUPLICATE)
-            add(PostRsMenuAction.SHARE)
-            add(PostRsMenuAction.TRASH)
-        }
-        PostRsListTab.SCHEDULED -> listOf(
-            PostRsMenuAction.VIEW,
-            PostRsMenuAction.READ,
-            PostRsMenuAction.SHARE,
-            PostRsMenuAction.TRASH
-        )
-        PostRsListTab.TRASHED -> listOf(
-            PostRsMenuAction.MOVE_TO_DRAFT,
-            PostRsMenuAction.DELETE_PERMANENTLY
-        )
-    }
-
-    private fun getPublishedMenuActions(
-        hasPassword: Boolean,
-        commentsOpen: Boolean
     ): List<PostRsMenuAction> = buildList {
-        add(PostRsMenuAction.VIEW)
-        add(PostRsMenuAction.READ)
-        add(PostRsMenuAction.MOVE_TO_DRAFT)
-        add(PostRsMenuAction.DUPLICATE)
-        add(PostRsMenuAction.SHARE)
-        if (!hasPassword && blazeFeatureUtils.isSiteBlazeEligible(site)) {
-            add(PostRsMenuAction.BLAZE)
+        when (tab) {
+            PostRsListTab.PUBLISHED -> {
+                add(PostRsMenuAction.SETTINGS)
+                add(PostRsMenuAction.VIEW)
+                add(PostRsMenuAction.READ)
+                add(PostRsMenuAction.MOVE_TO_DRAFT)
+                add(PostRsMenuAction.DUPLICATE)
+                add(PostRsMenuAction.SHARE)
+                if (!hasPassword && blazeFeatureUtils.isSiteBlazeEligible(site)) {
+                    add(PostRsMenuAction.BLAZE)
+                }
+                if (SiteUtils.isAccessedViaWPComRest(site) &&
+                    site.hasCapabilityViewStats
+                ) {
+                    add(PostRsMenuAction.STATS)
+                }
+                if (commentsOpen) add(PostRsMenuAction.COMMENTS)
+                add(PostRsMenuAction.TRASH)
+            }
+            PostRsListTab.DRAFTS -> {
+                add(PostRsMenuAction.SETTINGS)
+                add(PostRsMenuAction.VIEW)
+                add(PostRsMenuAction.READ)
+                if (site.hasCapabilityPublishPosts) {
+                    add(PostRsMenuAction.PUBLISH)
+                }
+                add(PostRsMenuAction.DUPLICATE)
+                add(PostRsMenuAction.SHARE)
+                add(PostRsMenuAction.TRASH)
+            }
+            PostRsListTab.SCHEDULED -> {
+                add(PostRsMenuAction.SETTINGS)
+                add(PostRsMenuAction.VIEW)
+                add(PostRsMenuAction.READ)
+                add(PostRsMenuAction.SHARE)
+                add(PostRsMenuAction.TRASH)
+            }
+            PostRsListTab.TRASHED -> {
+                add(PostRsMenuAction.MOVE_TO_DRAFT)
+                add(PostRsMenuAction.DELETE_PERMANENTLY)
+            }
         }
-        if (SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats) {
-            add(PostRsMenuAction.STATS)
-        }
-        if (commentsOpen) add(PostRsMenuAction.COMMENTS)
-        add(PostRsMenuAction.TRASH)
     }
 
     /**

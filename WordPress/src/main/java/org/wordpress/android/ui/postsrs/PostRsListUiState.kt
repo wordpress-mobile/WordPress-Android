@@ -71,6 +71,10 @@ enum class PostRsMenuAction(
     @DrawableRes val iconResId: Int,
     val isDestructive: Boolean = false
 ) {
+    SETTINGS(
+        R.string.post_settings,
+        R.drawable.ic_settings_white_24dp
+    ),
     VIEW(R.string.button_view, R.drawable.gb_ic_external),
     READ(
         R.string.button_read,

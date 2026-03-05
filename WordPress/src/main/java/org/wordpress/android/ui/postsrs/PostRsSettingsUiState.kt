@@ -1,5 +1,12 @@
 package org.wordpress.android.ui.postsrs
 
+sealed interface FieldState {
+    data object Empty : FieldState
+    data object Loading : FieldState
+    data class Loaded(val value: String) : FieldState
+    data class Error(val message: String) : FieldState
+}
+
 data class PostRsSettingsUiState(
     val isLoading: Boolean = true,
     val error: String? = null,
@@ -7,13 +14,10 @@ data class PostRsSettingsUiState(
     val statusLabel: String = "",
     val publishDate: String = "",
     val password: String? = null,
-    val authorDisplayName: String? = null,
-    val categoryIds: List<Long> = emptyList(),
-    val categoryNames: List<String> = emptyList(),
-    val tagIds: List<Long> = emptyList(),
-    val tagNames: List<String> = emptyList(),
-    val featuredImageId: Long = 0L,
-    val featuredImageUrl: String? = null,
+    val authorName: FieldState = FieldState.Empty,
+    val categoryNames: FieldState = FieldState.Empty,
+    val tagNames: FieldState = FieldState.Empty,
+    val featuredImage: FieldState = FieldState.Empty,
     val sticky: Boolean = false,
     val formatLabel: String = "",
     val slug: String = "",

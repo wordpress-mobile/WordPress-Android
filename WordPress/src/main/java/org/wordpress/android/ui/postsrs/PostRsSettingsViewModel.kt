@@ -52,6 +52,11 @@ class PostRsSettingsViewModel @Inject constructor(
     private val _events = Channel<PostRsSettingsEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
+    private val fieldError: String
+        get() = resourceProvider.getString(
+            R.string.post_rs_settings_field_error
+        )
+
     init {
         if (site == null) {
             _events.trySend(
@@ -70,7 +75,9 @@ class PostRsSettingsViewModel @Inject constructor(
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _uiState.value = PostRsSettingsUiState(
                 isLoading = false,
-                error = resourceProvider.getString(R.string.error_generic_network)
+                error = resourceProvider.getString(
+                    R.string.error_generic_network
+                )
             )
             return
         }
@@ -81,7 +88,8 @@ class PostRsSettingsViewModel @Inject constructor(
             @Suppress("TooGenericExceptionCaught")
             try {
                 val post = withContext(Dispatchers.IO) {
-                    val client = wpApiClientProvider.getWpApiClient(site)
+                    val client =
+                        wpApiClientProvider.getWpApiClient(site)
                     val response = client.request {
                         it.posts().retrieveWithEditContext(
                             PostEndpointType.Posts,
@@ -90,7 +98,8 @@ class PostRsSettingsViewModel @Inject constructor(
                         )
                     }
                     when (response) {
-                        is WpRequestResult.Success -> response.response.data
+                        is WpRequestResult.Success ->
+                            response.response.data
                         else -> throw PostFetchException(
                             (response as? WpRequestResult.WpError<*>)
                                 ?.errorMessage
@@ -104,24 +113,41 @@ class PostRsSettingsViewModel @Inject constructor(
                 resolveTermNames(
                     post.categories,
                     TermEndpointType.Categories
-                ) { _uiState.value.copy(categoryNames = it) }
+                ) { names ->
+                    _uiState.value = _uiState.value.copy(
+                        categoryNames = names
+                    )
+                }
                 resolveTermNames(
                     post.tags,
                     TermEndpointType.Tags
-                ) { _uiState.value.copy(tagNames = it) }
+                ) { names ->
+                    _uiState.value = _uiState.value.copy(
+                        tagNames = names
+                    )
+                }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Failed to load post settings", e)
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to load post settings",
+                    e
+                )
                 _uiState.value = PostRsSettingsUiState(
                     isLoading = false,
-                    error = resourceProvider.getString(R.string.request_failed_message)
+                    error = resourceProvider.getString(
+                        R.string.request_failed_message
+                    )
                 )
             }
         }
     }
 
-    private fun mapPostToUiState(post: AnyPostWithEditContext): PostRsSettingsUiState {
+    @Suppress("ComplexCondition")
+    private fun mapPostToUiState(
+        post: AnyPostWithEditContext
+    ): PostRsSettingsUiState {
         return PostRsSettingsUiState(
             isLoading = false,
             postTitle = post.title?.raw?.takeIf { it.isNotBlank() }
@@ -129,9 +155,33 @@ class PostRsSettingsViewModel @Inject constructor(
             statusLabel = formatStatusLabel(post.status),
             publishDate = formatDate(post.dateGmt),
             password = post.password,
-            categoryIds = post.categories ?: emptyList(),
-            tagIds = post.tags ?: emptyList(),
-            featuredImageId = post.featuredMedia ?: 0L,
+            authorName = if (
+                post.author != null && post.author != 0L
+            ) {
+                FieldState.Loading
+            } else {
+                FieldState.Empty
+            },
+            categoryNames = if (
+                !post.categories.isNullOrEmpty()
+            ) {
+                FieldState.Loading
+            } else {
+                FieldState.Empty
+            },
+            tagNames = if (!post.tags.isNullOrEmpty()) {
+                FieldState.Loading
+            } else {
+                FieldState.Empty
+            },
+            featuredImage = if (
+                post.featuredMedia != null &&
+                post.featuredMedia != 0L
+            ) {
+                FieldState.Loading
+            } else {
+                FieldState.Empty
+            },
             sticky = post.sticky ?: false,
             formatLabel = formatPostFormatLabel(post.format),
             slug = post.slug,
@@ -143,11 +193,33 @@ class PostRsSettingsViewModel @Inject constructor(
         if (authorId == null || authorId == 0L) return
         val site = site ?: return
         viewModelScope.launch {
-            val names = withContext(Dispatchers.IO) {
-                restClient.fetchUserDisplayNames(site, listOf(authorId))
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val names = withContext(Dispatchers.IO) {
+                    restClient.fetchUserDisplayNames(
+                        site, listOf(authorId)
+                    )
+                }
+                val name = names[authorId]
+                _uiState.value = _uiState.value.copy(
+                    authorName = if (name != null) {
+                        FieldState.Loaded(name)
+                    } else {
+                        FieldState.Error(fieldError)
+                    }
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to resolve author",
+                    e
+                )
+                _uiState.value = _uiState.value.copy(
+                    authorName = FieldState.Error(fieldError)
+                )
             }
-            val name = names[authorId] ?: return@launch
-            _uiState.value = _uiState.value.copy(authorDisplayName = name)
         }
     }
 
@@ -155,38 +227,87 @@ class PostRsSettingsViewModel @Inject constructor(
         if (mediaId == null || mediaId == 0L) return
         val site = site ?: return
         viewModelScope.launch {
-            val urls = withContext(Dispatchers.IO) {
-                restClient.fetchMediaUrls(site, listOf(mediaId))
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val urls = withContext(Dispatchers.IO) {
+                    restClient.fetchMediaUrls(
+                        site, listOf(mediaId)
+                    )
+                }
+                val url = urls[mediaId]
+                _uiState.value = _uiState.value.copy(
+                    featuredImage = if (url != null) {
+                        FieldState.Loaded(url)
+                    } else {
+                        FieldState.Error(fieldError)
+                    }
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to resolve featured image",
+                    e
+                )
+                _uiState.value = _uiState.value.copy(
+                    featuredImage = FieldState.Error(fieldError)
+                )
             }
-            val url = urls[mediaId] ?: return@launch
-            _uiState.value = _uiState.value.copy(featuredImageUrl = url)
         }
     }
 
     private fun resolveTermNames(
         ids: List<Long>?,
         endpointType: TermEndpointType,
-        update: (List<String>) -> PostRsSettingsUiState,
+        update: (FieldState) -> Unit,
     ) {
         if (ids.isNullOrEmpty()) return
         val site = site ?: return
         viewModelScope.launch {
-            val names = withContext(Dispatchers.IO) {
-                restClient.fetchTermNames(site, ids, endpointType)
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val names = withContext(Dispatchers.IO) {
+                    restClient.fetchTermNames(
+                        site, ids, endpointType
+                    )
+                }
+                val resolved = ids.mapNotNull { names[it] }
+                update(
+                    if (resolved.isNotEmpty()) {
+                        FieldState.Loaded(
+                            resolved.joinToString(", ")
+                        )
+                    } else {
+                        FieldState.Error(fieldError)
+                    }
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to resolve term names",
+                    e
+                )
+                update(FieldState.Error(fieldError))
             }
-            if (names.isEmpty()) return@launch
-            _uiState.value = update(ids.mapNotNull { names[it] })
         }
     }
 
     private fun formatStatusLabel(status: PostStatus?): String {
         val resId = when (status) {
-            is PostStatus.Publish -> R.string.post_status_post_published
+            is PostStatus.Publish ->
+                R.string.post_status_post_published
             is PostStatus.Draft -> R.string.post_status_draft
-            is PostStatus.Pending -> R.string.post_status_pending_review
-            is PostStatus.Private -> R.string.post_status_post_private
-            is PostStatus.Future -> R.string.post_status_post_scheduled
-            is PostStatus.Trash -> R.string.post_status_post_trashed
+            is PostStatus.Pending ->
+                R.string.post_status_pending_review
+            is PostStatus.Private ->
+                R.string.post_status_post_private
+            is PostStatus.Future ->
+                R.string.post_status_post_scheduled
+            is PostStatus.Trash ->
+                R.string.post_status_post_trashed
             else -> return ""
         }
         return resourceProvider.getString(resId)
@@ -199,7 +320,9 @@ class PostRsSettingsViewModel @Inject constructor(
         ).format(dateGmt)
     }
 
-    private fun formatPostFormatLabel(format: PostFormat?): String {
+    private fun formatPostFormatLabel(
+        format: PostFormat?
+    ): String {
         return when (format) {
             is PostFormat.Standard -> "Standard"
             is PostFormat.Aside -> "Aside"
