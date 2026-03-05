@@ -37,6 +37,9 @@ object AppColor {
 
     // Blues (Automattic Color Studio)
     @Stable
+    val Blue5 = Color(0xFFBBE0FA)
+
+    @Stable
     val Blue30 = Color(0xFF399CE3)
 
     @Stable
@@ -44,6 +47,9 @@ object AppColor {
 
     @Stable
     val Blue70 = Color(0xFF044B7A)
+
+    @Stable
+    val Blue80 = Color(0xFF02395C)
 
     // Reds (Automattic Color Studio)
     @Stable
