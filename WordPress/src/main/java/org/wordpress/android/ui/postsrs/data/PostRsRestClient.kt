@@ -123,48 +123,21 @@ class PostRsRestClient @Inject constructor(
     }
 
     /**
-     * Fetches category names for the given [categoryIds] in a single
-     * network call using the `include` parameter, returning a map of
-     * category ID to name. IDs already in the local cache are returned
-     * immediately without a network round-trip.
-     */
-    suspend fun fetchCategoryNames(
-        site: SiteModel,
-        categoryIds: List<Long>
-    ): Map<Long, String> {
-        return fetchTermNames(
-            site, categoryIds,
-            TermEndpointType.Categories,
-            categoryNameCache,
-            "fetchCategoryNames"
-        )
-    }
-
-    /**
-     * Fetches tag names for the given [tagIds] in a single network
-     * call using the `include` parameter, returning a map of tag ID
+     * Fetches term names for the given [termIds] in a single network
+     * call using the `include` parameter, returning a map of term ID
      * to name. IDs already in the local cache are returned immediately
      * without a network round-trip.
      */
-    suspend fun fetchTagNames(
-        site: SiteModel,
-        tagIds: List<Long>
-    ): Map<Long, String> {
-        return fetchTermNames(
-            site, tagIds,
-            TermEndpointType.Tags,
-            tagNameCache,
-            "fetchTagNames"
-        )
-    }
-
-    private suspend fun fetchTermNames(
+    suspend fun fetchTermNames(
         site: SiteModel,
         termIds: List<Long>,
         endpointType: TermEndpointType,
-        cache: ConcurrentHashMap<Long, String>,
-        logTag: String,
     ): Map<Long, String> {
+        val cache = if (endpointType is TermEndpointType.Categories) {
+            categoryNameCache
+        } else {
+            tagNameCache
+        }
         val result = mutableMapOf<Long, String>()
         val uncached = mutableListOf<Long>()
         for (id in termIds) {
@@ -193,7 +166,7 @@ class PostRsRestClient @Inject constructor(
                         ?.errorMessage
                 AppLog.w(
                     AppLog.T.POSTS,
-                    "$logTag failed: $msg"
+                    "fetchTermNames failed: $msg"
                 )
             }
         }

@@ -26,6 +26,7 @@ import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostRetrieveParams
 import uniffi.wp_api.PostStatus
+import uniffi.wp_api.TermEndpointType
 import java.text.DateFormat
 import java.util.Date
 import javax.inject.Inject
@@ -100,8 +101,14 @@ class PostRsSettingsViewModel @Inject constructor(
                 _uiState.value = state
                 resolveAuthor(post.author)
                 resolveFeaturedImage(post.featuredMedia)
-                resolveCategoryNames(post.categories)
-                resolveTagNames(post.tags)
+                resolveTermNames(
+                    post.categories,
+                    TermEndpointType.Categories
+                ) { _uiState.value.copy(categoryNames = it) }
+                resolveTermNames(
+                    post.tags,
+                    TermEndpointType.Tags
+                ) { _uiState.value.copy(tagNames = it) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -119,16 +126,13 @@ class PostRsSettingsViewModel @Inject constructor(
             isLoading = false,
             postTitle = post.title?.raw?.takeIf { it.isNotBlank() }
                 ?: post.title?.rendered ?: "",
-            status = post.status,
             statusLabel = formatStatusLabel(post.status),
             publishDate = formatDate(post.dateGmt),
             password = post.password,
-            authorId = post.author ?: 0L,
             categoryIds = post.categories ?: emptyList(),
             tagIds = post.tags ?: emptyList(),
             featuredImageId = post.featuredMedia ?: 0L,
             sticky = post.sticky ?: false,
-            format = post.format,
             formatLabel = formatPostFormatLabel(post.format),
             slug = post.slug,
             excerpt = post.excerpt?.raw ?: "",
@@ -159,31 +163,19 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
-    private fun resolveCategoryNames(categoryIds: List<Long>?) {
-        if (categoryIds.isNullOrEmpty()) return
+    private fun resolveTermNames(
+        ids: List<Long>?,
+        endpointType: TermEndpointType,
+        update: (List<String>) -> PostRsSettingsUiState,
+    ) {
+        if (ids.isNullOrEmpty()) return
         val site = site ?: return
         viewModelScope.launch {
             val names = withContext(Dispatchers.IO) {
-                restClient.fetchCategoryNames(site, categoryIds)
+                restClient.fetchTermNames(site, ids, endpointType)
             }
             if (names.isEmpty()) return@launch
-            _uiState.value = _uiState.value.copy(
-                categoryNames = categoryIds.mapNotNull { names[it] }
-            )
-        }
-    }
-
-    private fun resolveTagNames(tagIds: List<Long>?) {
-        if (tagIds.isNullOrEmpty()) return
-        val site = site ?: return
-        viewModelScope.launch {
-            val names = withContext(Dispatchers.IO) {
-                restClient.fetchTagNames(site, tagIds)
-            }
-            if (names.isEmpty()) return@launch
-            _uiState.value = _uiState.value.copy(
-                tagNames = tagIds.mapNotNull { names[it] }
-            )
+            _uiState.value = update(ids.mapNotNull { names[it] })
         }
     }
 
