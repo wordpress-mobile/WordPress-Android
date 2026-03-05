@@ -345,7 +345,7 @@ private val FEATURED_IMAGE_SIZE = PostRsRestClient.FEATURED_IMAGE_SIZE_DP.dp
 
 // region Previews
 
-internal fun samplePost(
+private fun samplePost(
     displayState: PostDisplayState = PostDisplayState.NORMAL
 ) = PostRsUiModel(
     remotePostId = 1L,
