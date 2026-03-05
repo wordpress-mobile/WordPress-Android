@@ -24,13 +24,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ShowChart
-import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.automirrored.outlined.ShowChart
 import androidx.compose.material.icons.filled.ChatBubbleOutline
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.outlined.ModeEditOutline
+import androidx.compose.material.icons.filled.PersonOutline
+import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -45,6 +45,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import org.wordpress.android.ui.newstats.StatsColors
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -89,11 +90,9 @@ import kotlin.math.abs
 private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
-private val ChartHeight = 120.dp
+private val ChartHeight = 180.dp
 private val StatItemWidth = 100.dp
 private val BadgeCornerRadius = 4.dp
-private val ChangeBadgePositiveColor = Color(0xFF4CAF50)
-private val ChangeBadgeNegativeColor = Color(0xFFE91E63)
 
 // Preview sample data constants
 private const val SAMPLE_CURRENT_VIEWS = 7467L
@@ -280,7 +279,7 @@ private fun LoadedContent(
             onMoveDown = onMoveDown,
             onMoveToBottom = onMoveToBottom
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         // Chart Section
         ViewsStatsChart(
             chartData = state.chartData,
@@ -330,7 +329,7 @@ private fun HeaderSection(
                 }
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -338,18 +337,20 @@ private fun HeaderSection(
         ) {
             // Left: Current and previous period totals with difference
             Column {
-                Row(verticalAlignment = Alignment.Bottom) {
+                Row {
                     Text(
                         text = formatStatValue(state.currentPeriodViews),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.alignByBaseline()
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = formatStatValue(state.previousPeriodViews),
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.alignByBaseline()
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
@@ -362,14 +363,12 @@ private fun HeaderSection(
             Column(horizontalAlignment = Alignment.End) {
                 DateRangeWithDot(
                     dateRange = state.currentPeriodDateRange,
-                    dotColor = MaterialTheme.colorScheme.primary,
-                    isFilled = true
+                    dotColor = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 DateRangeWithDot(
                     dateRange = state.previousPeriodDateRange,
-                    dotColor = MaterialTheme.colorScheme.outline,
-                    isFilled = true
+                    dotColor = MaterialTheme.colorScheme.outline
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 AverageRow(average = state.periodAverage)
@@ -392,7 +391,7 @@ private fun ChartTypeMenuItems(
         enabled = currentChartType != ChartType.LINE,
         leadingIcon = {
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.ShowChart,
+                imageVector = Icons.AutoMirrored.Outlined.ShowChart,
                 contentDescription = null
             )
         }
@@ -403,7 +402,7 @@ private fun ChartTypeMenuItems(
         enabled = currentChartType != ChartType.BAR,
         leadingIcon = {
             Icon(
-                imageVector = Icons.Default.BarChart,
+                imageVector = Icons.Outlined.BarChart,
                 contentDescription = null
             )
         }
@@ -416,8 +415,8 @@ private fun DifferenceRow(difference: Long, percentageChange: Double) {
     val arrowText = if (isNegative) "↘" else if (difference > 0) "↗" else "↔"
     val color = when {
         difference < 0 -> MaterialTheme.colorScheme.error
-        difference > 0 -> ChangeBadgePositiveColor
-        else -> MaterialTheme.colorScheme.onSurfaceVariant
+        difference > 0 -> StatsColors.ChangeBadgePositive
+        else -> MaterialTheme.colorScheme.outline
     }
 
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -442,28 +441,19 @@ private fun DifferenceRow(difference: Long, percentageChange: Double) {
 }
 
 @Composable
-private fun DateRangeWithDot(dateRange: String, dotColor: Color, isFilled: Boolean) {
+private fun DateRangeWithDot(dateRange: String, dotColor: Color) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = dateRange,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.outline
         )
         Spacer(modifier = Modifier.width(6.dp))
         Box(
             modifier = Modifier
                 .size(8.dp)
-                .then(
-                    if (isFilled) {
-                        Modifier
-                            .clip(CircleShape)
-                            .background(dotColor)
-                    } else {
-                        Modifier
-                            .clip(CircleShape)
-                            .border(1.5.dp, dotColor, CircleShape)
-                    }
-                )
+                .clip(CircleShape)
+                .background(dotColor)
         )
     }
 }
@@ -474,7 +464,7 @@ private fun AverageRow(average: Long) {
         Text(
             text = stringResource(R.string.stats_weekly_average, formatStatValue(average)),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.outline
         )
         Spacer(modifier = Modifier.width(6.dp))
         Box(
@@ -571,6 +561,7 @@ private fun ViewsStatsChart(
                 shape = CorneredShape.rounded(allPercent = 25)
             )
         ),
+        labelPosition = DefaultCartesianMarker.LabelPosition.AroundPoint,
         guideline = LineComponent(
             fill = fill(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
             thicknessDp = 1f
@@ -591,7 +582,7 @@ private fun ViewsStatsChart(
         ChartType.LINE -> {
             val areaGradient = ShaderProvider.verticalGradient(
                 colors = arrayOf(
-                    primaryColor.copy(alpha = 0.8f),
+                    primaryColor.copy(alpha = 0.3f),
                     primaryColor.copy(alpha = 0f)
                 )
             )
@@ -613,7 +604,9 @@ private fun ViewsStatsChart(
                         )
                     ),
                     startAxis = VerticalAxis.rememberStart(line = null),
-                    bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter),
+                    bottomAxis = HorizontalAxis.rememberBottom(
+                        valueFormatter = bottomAxisValueFormatter
+                    ),
                     marker = marker,
                     decorations = listOf(averageLine)
                 ),
@@ -675,12 +668,12 @@ private fun BottomStatsRow(stats: List<StatItem>) {
 @Composable
 private fun StatItemCard(stat: StatItem) {
     val icon = when (stat.label) {
-        stringResource(R.string.stats_views) -> Icons.Default.Visibility
-        stringResource(R.string.stats_visitors) -> Icons.Default.Person
+        stringResource(R.string.stats_views) -> Icons.Outlined.Visibility
+        stringResource(R.string.stats_visitors) -> Icons.Default.PersonOutline
         stringResource(R.string.stats_likes) -> Icons.Default.FavoriteBorder
         stringResource(R.string.stats_comments) -> Icons.Default.ChatBubbleOutline
-        stringResource(R.string.posts) -> Icons.Default.Edit
-        else -> Icons.Default.Visibility
+        stringResource(R.string.posts) -> Icons.Outlined.ModeEditOutline
+        else -> Icons.Outlined.Visibility
     }
 
     Column(
@@ -718,13 +711,13 @@ private fun ChangeBadge(change: StatChange) {
     val (text, backgroundColor, textColor) = when (change) {
         is StatChange.Positive -> Triple(
             "↗ ${String.format(Locale.getDefault(), "%.1f%%", change.percentage)}",
-            ChangeBadgePositiveColor.copy(alpha = 0.15f),
-            ChangeBadgePositiveColor
+            StatsColors.ChangeBadgePositive.copy(alpha = 0.15f),
+            StatsColors.ChangeBadgePositive
         )
         is StatChange.Negative -> Triple(
             "↘ ${String.format(Locale.getDefault(), "%.1f%%", change.percentage)}",
-            ChangeBadgeNegativeColor.copy(alpha = 0.15f),
-            ChangeBadgeNegativeColor
+            StatsColors.ChangeBadgeNegative.copy(alpha = 0.15f),
+            StatsColors.ChangeBadgeNegative
         )
         is StatChange.NoChange -> Triple(
             "↔ 0%",
@@ -741,7 +734,7 @@ private fun ChangeBadge(change: StatChange) {
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelMedium,
             color = textColor,
             fontWeight = FontWeight.Medium
         )
