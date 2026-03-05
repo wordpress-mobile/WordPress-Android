@@ -241,8 +241,10 @@ private fun FeaturedImageField(state: FieldState) {
     when (state) {
         is FieldState.Empty ->
             SettingsRow(
-                label = stringResource(R.string.none),
-                value = "",
+                label = stringResource(
+                    R.string.post_settings_featured_image
+                ),
+                value = stringResource(R.string.none),
                 dimmed = true
             )
         is FieldState.Loading -> ListItem(
@@ -291,22 +293,18 @@ private fun SettingsRow(
     onClick: (() -> Unit)? = null,
 ) {
     ListItem(
-        headlineContent = {
-            Text(
-                label,
-                color = if (dimmed) {
-                    MaterialTheme.colorScheme.outline
-                } else {
-                    MaterialTheme.colorScheme.onSurface
-                }
-            )
-        },
+        headlineContent = { Text(label) },
         supportingContent = if (value.isNotEmpty()) {
             {
                 Text(
                     text = value,
                     maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = if (dimmed) {
+                        MaterialTheme.colorScheme.outline
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    }
                 )
             }
         } else {
