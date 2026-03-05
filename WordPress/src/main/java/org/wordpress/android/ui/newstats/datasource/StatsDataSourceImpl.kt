@@ -38,7 +38,7 @@ import uniffi.wp_api.SubscribersByUserTypeSortField
 import uniffi.wp_api.StatsEmailsSummaryParams
 import uniffi.wp_api.StatsEmailsSummaryPeriod
 import uniffi.wp_api.StatsEmailsSummarySortField
-import uniffi.wp_api.StatsEmailsSummarySortOrder
+import uniffi.wp_api.WpApiParamOrder
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import rs.wordpress.api.kotlin.fromLocale
@@ -1123,7 +1123,7 @@ class StatsDataSourceImpl @Inject constructor(
             period = StatsEmailsSummaryPeriod.MONTH,
             quantity = quantity.toUInt(),
             sortField = StatsEmailsSummarySortField.OPENS,
-            sortOrder = StatsEmailsSummarySortOrder.DESC
+            sortOrder = WpApiParamOrder.DESC
         )
         val result = getOrCreateClient().request { requestBuilder ->
             requestBuilder.statsEmailsSummary()
