@@ -148,7 +148,7 @@ class PostRsRestClient @Inject constructor(
 
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request {
-            it.terms().listWithEditContext(
+            it.terms().listWithViewContext(
                 endpointType,
                 TermListParams(include = uncached)
             )
