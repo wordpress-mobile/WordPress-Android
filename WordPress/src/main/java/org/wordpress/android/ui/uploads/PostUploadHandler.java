@@ -662,12 +662,15 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     public void onPostUploaded(OnPostUploaded event) {
         // check if the event is related to the PostModel that is being uploaded by PostUploadHandler
         if (!isPostUploading(event.post)) {
-            AppLog.w(T.POSTS, "PostUploadHandler > onPostUploaded for untracked post"
-                    + " (postId=" + (event.post != null ? event.post.getId() : "null") + ","
-                    + " currentUploadingPostId="
-                    + (sCurrentUploadingPost != null ? sCurrentUploadingPost.getId() : "null")
-                    + (event.isError() ? ", error=" + event.error.type
-                    + ": " + event.error.message : "") + ")");
+            AppLog.w(T.POSTS, String.format(
+                    "PostUploadHandler > onPostUploaded for untracked post"
+                            + " (postId=%s, currentUploadingPostId=%s%s)",
+                    event.post != null ? event.post.getId() : "null",
+                    sCurrentUploadingPost != null
+                            ? sCurrentUploadingPost.getId() : "null",
+                    event.isError()
+                            ? ", error=" + event.error.type + ": " + event.error.message
+                            : ""));
             return;
         }
         SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());

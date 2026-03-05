@@ -101,17 +101,9 @@ public class UploadService extends Service {
         AppLog.i(T.MAIN, "UploadService > Created");
         mDispatcher.register(this);
         sInstance = this;
-        if (mMediaUploadHandler == null) {
-            mMediaUploadHandler = new MediaUploadHandler();
-        }
-
-        if (mPostUploadNotifier == null) {
-            mPostUploadNotifier = new PostUploadNotifier(getApplicationContext(), this, mSystemNotificationsTracker);
-        }
-
-        if (mPostUploadHandler == null) {
-            mPostUploadHandler = new PostUploadHandler(mPostUploadNotifier);
-        }
+        mMediaUploadHandler = new MediaUploadHandler();
+        mPostUploadNotifier = new PostUploadNotifier(getApplicationContext(), this, mSystemNotificationsTracker);
+        mPostUploadHandler = new PostUploadHandler(mPostUploadNotifier);
 
         recoverInterruptedMediaUploads();
     }
@@ -119,7 +111,7 @@ public class UploadService extends Service {
     /**
      * Recovers media uploads that were interrupted when the service was killed.
      * Re-queues QUEUED and UPLOADING media, and retries FAILED media that is
-     * bound to a post and still has a valid local file.
+     * bound to a post.
      */
     private void recoverInterruptedMediaUploads() {
         List<MediaModel> recoveredMedia = new ArrayList<>();
@@ -145,13 +137,13 @@ public class UploadService extends Service {
             @NonNull SiteModel site,
             @NonNull List<MediaModel> out
     ) {
-        collectNewMedia(
+        collectMedia(
                 mMediaStore.getSiteMediaWithState(site, MediaUploadState.QUEUED),
-                out
+                out, false
         );
-        collectAndResetMedia(
+        collectMedia(
                 mMediaStore.getSiteMediaWithState(site, MediaUploadState.UPLOADING),
-                out
+                out, true
         );
 
         for (MediaModel media : mMediaStore.getSiteMediaWithState(site, MediaUploadState.FAILED)) {
@@ -165,24 +157,16 @@ public class UploadService extends Service {
         }
     }
 
-    private void collectNewMedia(
+    private void collectMedia(
             @NonNull List<MediaModel> source,
-            @NonNull List<MediaModel> out
+            @NonNull List<MediaModel> out,
+            boolean resetState
     ) {
         for (MediaModel media : source) {
             if (RECOVERED_MEDIA_IDS.add(media.getId())) {
-                out.add(media);
-            }
-        }
-    }
-
-    private void collectAndResetMedia(
-            @NonNull List<MediaModel> source,
-            @NonNull List<MediaModel> out
-    ) {
-        for (MediaModel media : source) {
-            if (RECOVERED_MEDIA_IDS.add(media.getId())) {
-                resetToQueued(media);
+                if (resetState) {
+                    resetToQueued(media);
+                }
                 out.add(media);
             }
         }
