@@ -356,9 +356,6 @@ class AppInitializer @Inject constructor(
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         AppThemeUtils.setAppTheme(application)
 
-        // verify media is sanitized
-        sanitizeMediaUploadStateForSite()
-
         // remove expired lists
         dispatcher.dispatch(ListActionBuilder.newRemoveExpiredListsAction(RemoveExpiredListsPayload()))
 

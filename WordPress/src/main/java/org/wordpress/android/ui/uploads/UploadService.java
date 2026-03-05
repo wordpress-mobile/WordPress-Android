@@ -50,7 +50,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -159,7 +158,7 @@ public class UploadService extends Service {
             if (!RECOVERED_MEDIA_IDS.add(media.getId())) {
                 continue;
             }
-            if (media.getLocalPostId() > 0 && hasValidFile(media)) {
+            if (media.getLocalPostId() > 0) {
                 resetToQueued(media);
                 out.add(media);
             }
@@ -192,11 +191,6 @@ public class UploadService extends Service {
     private void resetToQueued(@NonNull MediaModel media) {
         media.setUploadState(MediaUploadState.QUEUED.name());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-    }
-
-    private static boolean hasValidFile(@NonNull MediaModel media) {
-        String filePath = media.getFilePath();
-        return filePath != null && new File(filePath).exists();
     }
 
     @Override
