@@ -2,7 +2,6 @@ package org.wordpress.android.ui.postsrs.screens
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,9 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun BadgeRow(
+internal fun BadgeRow(
     badges: List<Int>,
     modifier: Modifier = Modifier
 ) {
