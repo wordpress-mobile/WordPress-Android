@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -295,27 +296,15 @@ private fun SettingsRow(
 
 @Composable
 private fun FeaturedImageRow(imageUrl: String) {
-    ListItem(
-        headlineContent = {
-            Text(
-                stringResource(
-                    R.string.post_settings_featured_image
-                )
-            )
-        },
-        trailingContent = {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = stringResource(
-                    R.string.featured_image_desc
-                ),
-                modifier = Modifier
-                    .size(FEATURED_IMAGE_SIZE)
-                    .clip(RoundedCornerShape(4.dp)),
-                contentScale = ContentScale.Crop
-            )
-        }
+    AsyncImage(
+        model = imageUrl,
+        contentDescription = stringResource(
+            R.string.featured_image_desc
+        ),
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp)),
+        contentScale = ContentScale.Crop
     )
 }
-
-private val FEATURED_IMAGE_SIZE = 64.dp
