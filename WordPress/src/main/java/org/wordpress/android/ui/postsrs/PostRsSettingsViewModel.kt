@@ -87,45 +87,9 @@ class PostRsSettingsViewModel @Inject constructor(
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
-                val post = withContext(Dispatchers.IO) {
-                    val client =
-                        wpApiClientProvider.getWpApiClient(site)
-                    val response = client.request {
-                        it.posts().retrieveWithEditContext(
-                            PostEndpointType.Posts,
-                            postId,
-                            PostRetrieveParams()
-                        )
-                    }
-                    when (response) {
-                        is WpRequestResult.Success ->
-                            response.response.data
-                        else -> throw PostFetchException(
-                            (response as? WpRequestResult.WpError<*>)
-                                ?.errorMessage
-                        )
-                    }
-                }
-                val state = mapPostToUiState(post)
-                _uiState.value = state
-                resolveAuthor(post.author)
-                resolveFeaturedImage(post.featuredMedia)
-                resolveTermNames(
-                    post.categories,
-                    TermEndpointType.Categories
-                ) { names ->
-                    _uiState.value = _uiState.value.copy(
-                        categoryNames = names
-                    )
-                }
-                resolveTermNames(
-                    post.tags,
-                    TermEndpointType.Tags
-                ) { names ->
-                    _uiState.value = _uiState.value.copy(
-                        tagNames = names
-                    )
-                }
+                val post = fetchPost(site)
+                _uiState.value = mapPostToUiState(post)
+                resolveAsyncFields(post)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -141,6 +105,50 @@ class PostRsSettingsViewModel @Inject constructor(
                     )
                 )
             }
+        }
+    }
+
+    private suspend fun fetchPost(
+        site: org.wordpress.android.fluxc.model.SiteModel
+    ): AnyPostWithEditContext = withContext(Dispatchers.IO) {
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.posts().retrieveWithEditContext(
+                PostEndpointType.Posts,
+                postId,
+                PostRetrieveParams()
+            )
+        }
+        when (response) {
+            is WpRequestResult.Success ->
+                response.response.data
+            else -> throw PostFetchException(
+                (response as? WpRequestResult.WpError<*>)
+                    ?.errorMessage
+            )
+        }
+    }
+
+    private fun resolveAsyncFields(
+        post: AnyPostWithEditContext
+    ) {
+        resolveAuthor(post.author)
+        resolveFeaturedImage(post.featuredMedia)
+        resolveTermNames(
+            post.categories,
+            TermEndpointType.Categories
+        ) { names ->
+            _uiState.value = _uiState.value.copy(
+                categoryNames = names
+            )
+        }
+        resolveTermNames(
+            post.tags,
+            TermEndpointType.Tags
+        ) { names ->
+            _uiState.value = _uiState.value.copy(
+                tagNames = names
+            )
         }
     }
 
