@@ -61,7 +61,7 @@ data class PostRsUiModel(
     val featuredImageId: Long = 0L,
     val featuredImageUrl: String? = null,
     val actions: List<PostRsMenuAction> = emptyList(),
-    @StringRes val badges: List<Int> = emptyList(),
+    val badges: List<Int> = emptyList(),
     val displayState: PostDisplayState =
         PostDisplayState.NORMAL
 )

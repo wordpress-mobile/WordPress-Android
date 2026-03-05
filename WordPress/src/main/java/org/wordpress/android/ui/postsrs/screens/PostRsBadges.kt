@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.postsrs.screens
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -19,7 +18,7 @@ import org.wordpress.android.R
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun BadgeRow(
-    @StringRes badges: List<Int>,
+    badges: List<Int>,
     modifier: Modifier = Modifier
 ) {
     FlowRow(
