@@ -2,7 +2,6 @@ package org.wordpress.android.ui.newstats.mostviewed
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +35,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsColors
 import org.wordpress.android.ui.newstats.components.CardPosition
+import org.wordpress.android.ui.newstats.components.ShowAllFooter
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
@@ -304,13 +304,13 @@ private fun MostViewedItemRow(item: MostViewedItem, percentage: Float) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 8.dp),
+                .padding(vertical = 12.dp, horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = item.title,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
@@ -324,7 +324,7 @@ private fun MostViewedItemRow(item: MostViewedItem, percentage: Float) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = formatStatValue(item.views),
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -347,27 +347,20 @@ private fun MostViewedItemRow(item: MostViewedItem, percentage: Float) {
 internal fun ChangeIndicator(change: MostViewedChange) {
     val (text, color) = when (change) {
         is MostViewedChange.Positive -> Pair(
-            "+${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
+            String.format(Locale.getDefault(), "+%.1f%%", change.percentage),
             StatsColors.ChangeBadgePositive
         )
         is MostViewedChange.Negative -> Pair(
-            "-${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
+            String.format(Locale.getDefault(), "-%.1f%%", change.percentage),
             StatsColors.ChangeBadgeNegative
         )
-        is MostViewedChange.NoChange -> Pair(
-            "+0 (0%)",
-            MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        is MostViewedChange.NoChange -> return
         is MostViewedChange.NotAvailable -> return
     }
 
     Text(
         text = text,
-        style = MaterialTheme.typography.labelSmall,
+        style = MaterialTheme.typography.labelMedium,
         color = color
     )
 }
@@ -384,31 +377,6 @@ private fun EmptyStateContent() {
             text = stringResource(R.string.stats_no_data_yet),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-@Composable
-private fun ShowAllFooter(onClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = stringResource(R.string.stats_show_all),
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Icon(
-            imageVector = Icons.Default.ChevronRight,
-            contentDescription = null,
-            modifier = Modifier.size(16.dp),
-            tint = MaterialTheme.colorScheme.onSurface
         )
     }
 }

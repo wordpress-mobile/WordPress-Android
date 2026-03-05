@@ -296,7 +296,7 @@ class NavMenusActivity : BaseAppCompatActivity() {
             when (currentRoute) {
                 NavMenuScreen.MenuList.name -> {
                     FloatingActionButton(
-                        onClick = { viewModel.navigateToCreateMenu() }
+                        onClick = { viewModel.navigateToCreateMenu() },
                     ) {
                         Icon(
                             Icons.Default.Add,
@@ -308,7 +308,7 @@ class NavMenusActivity : BaseAppCompatActivity() {
                 }
                 NavMenuScreen.MenuItemList.name -> {
                     FloatingActionButton(
-                        onClick = { viewModel.navigateToCreateMenuItem() }
+                        onClick = { viewModel.navigateToCreateMenuItem() },
                     ) {
                         Icon(
                             Icons.Default.Add,

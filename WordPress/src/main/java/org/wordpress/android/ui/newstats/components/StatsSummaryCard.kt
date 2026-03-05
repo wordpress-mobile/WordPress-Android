@@ -109,10 +109,10 @@ private fun ViewsChangeIndicator(
             tint = color
         )
         Text(
-            text = "$sign${formatStatValue(abs(change))} (${
-                String.format(Locale.getDefault(), "%.1f%%", abs(changePercent))
-            })",
-            style = MaterialTheme.typography.labelSmall,
+            text = String.format(
+                Locale.getDefault(), "%s%.1f%%", sign, abs(changePercent)
+            ),
+            style = MaterialTheme.typography.labelMedium,
             color = color
         )
     }

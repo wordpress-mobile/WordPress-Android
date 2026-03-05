@@ -17,6 +17,7 @@ import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.SupportConversationSummary
 import uniffi.wp_api.SupportMessageAuthor
 import uniffi.wp_api.WpErrorCode
@@ -109,7 +110,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
         repository.init(testAccessToken)
 
         val errorResponse: WpRequestResult<List<SupportConversationSummary>> =
-            WpRequestResult.UnknownError(500.toUShort(), "Internal Server Error")
+            WpRequestResult.UnknownError(500.toUShort(), "Internal Server Error", "", RequestMethod.GET)
 
         whenever(
             wpComApiClient.request<List<SupportConversationSummary>>(any())
@@ -158,7 +159,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
         val conversationId = 123L
 
         val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
-            WpRequestResult.UnknownError(404.toUShort(), "Not Found")
+            WpRequestResult.UnknownError(404.toUShort(), "Not Found", "", RequestMethod.GET)
 
         whenever(
             wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())
@@ -221,7 +222,9 @@ class HESupportRepositoryTest : BaseUnitTest() {
                 errorCode = WpErrorCode.Forbidden(),
                 errorMessage = "Forbidden",
                 statusCode = 403.toUShort(),
-                response = ""
+                response = "",
+                requestUrl = "",
+                requestMethod = RequestMethod.GET
             )
 
         whenever(
@@ -247,7 +250,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
         repository.init(testAccessToken)
 
         val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
-            WpRequestResult.UnknownError(500.toUShort(), "Internal Server Error")
+            WpRequestResult.UnknownError(500.toUShort(), "Internal Server Error", "", RequestMethod.GET)
 
         whenever(
             wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())
@@ -309,7 +312,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
         repository.init(testAccessToken)
 
         val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
-            WpRequestResult.UnknownError(500.toUShort(), "Internal Server Error")
+            WpRequestResult.UnknownError(500.toUShort(), "Internal Server Error", "", RequestMethod.GET)
 
         whenever(
             wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())

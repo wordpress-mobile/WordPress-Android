@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -44,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
+import org.wordpress.android.ui.postsrs.PostDisplayState
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
@@ -55,10 +59,17 @@ fun PostRsListItem(
     onMenuAction: (PostRsMenuAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    when {
-        post.isPlaceholder -> PlaceholderItem(modifier)
-        post.isError -> ErrorItem(modifier)
-        else -> PostContentItem(post, onClick, onMenuAction, modifier)
+    when (post.displayState) {
+        PostDisplayState.PLACEHOLDER ->
+            PlaceholderItem(modifier)
+        PostDisplayState.ERROR ->
+            ErrorItem(modifier)
+        PostDisplayState.NORMAL,
+        PostDisplayState.FETCHING_WITH_DATA,
+        PostDisplayState.FAILED_WITH_DATA ->
+            PostContentItem(
+                post, onClick, onMenuAction, modifier
+            )
     }
 }
 
@@ -98,11 +109,42 @@ private fun PostContentItem(
                     }
                 }
                 if (dateText.isNotBlank()) {
-                    Text(
-                        text = dateText,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    Row(
+                        verticalAlignment =
+                            Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = dateText,
+                            style = MaterialTheme
+                                .typography.labelSmall,
+                            color = MaterialTheme
+                                .colorScheme.primary,
+                            modifier = Modifier.weight(
+                                1f, fill = false
+                            )
+                        )
+                        if (post.displayState ==
+                            PostDisplayState.FAILED_WITH_DATA
+                        ) {
+                            Spacer(
+                                modifier =
+                                    Modifier.width(4.dp)
+                            )
+                            Icon(
+                                imageVector =
+                                    Icons.Default.Warning,
+                                contentDescription =
+                                    stringResource(
+                                        R.string
+                                            .post_rs_sync_failed
+                                    ),
+                                modifier =
+                                    Modifier.size(14.dp),
+                                tint = MaterialTheme
+                                    .colorScheme.error
+                            )
+                        }
+                    }
                     Spacer(modifier = Modifier.height(4.dp))
                 }
                 Text(
@@ -156,6 +198,19 @@ private fun PostContentItem(
                     )
                 }
             }
+        }
+        if (post.displayState ==
+            PostDisplayState.FETCHING_WITH_DATA
+        ) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp),
+                color = MaterialTheme.colorScheme.primary
+                    .copy(alpha = 0.5f),
+                trackColor = MaterialTheme
+                    .colorScheme.surface
+            )
         }
     }
 }
@@ -283,3 +338,83 @@ private fun ErrorItem(modifier: Modifier = Modifier) {
 }
 
 private val FEATURED_IMAGE_SIZE = PostRsRestClient.FEATURED_IMAGE_SIZE_DP.dp
+
+// region Previews
+
+private fun samplePost(
+    displayState: PostDisplayState = PostDisplayState.NORMAL
+) = PostRsUiModel(
+    remotePostId = 1L,
+    title = "Welcome to the Flavor Journey",
+    excerpt = "Exploring the rich world of seasonal "
+        + "ingredients and traditional techniques.",
+    date = "Dec 15, 2025",
+    authorDisplayName = "Alice",
+    displayState = displayState
+)
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewNormal() {
+    MaterialTheme {
+        PostRsListItem(
+            post = samplePost(),
+            onClick = {},
+            onMenuAction = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewFetchingWithData() {
+    MaterialTheme {
+        PostRsListItem(
+            post = samplePost(
+                PostDisplayState.FETCHING_WITH_DATA
+            ),
+            onClick = {},
+            onMenuAction = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewFailedWithData() {
+    MaterialTheme {
+        PostRsListItem(
+            post = samplePost(
+                PostDisplayState.FAILED_WITH_DATA
+            ),
+            onClick = {},
+            onMenuAction = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewPlaceholder() {
+    MaterialTheme {
+        PostRsListItem(
+            post = samplePost(PostDisplayState.PLACEHOLDER),
+            onClick = {},
+            onMenuAction = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewError() {
+    MaterialTheme {
+        PostRsListItem(
+            post = samplePost(PostDisplayState.ERROR),
+            onClick = {},
+            onMenuAction = {}
+        )
+    }
+}
+
+// endregion
