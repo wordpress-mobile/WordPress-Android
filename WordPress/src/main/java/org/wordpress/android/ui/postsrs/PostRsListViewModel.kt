@@ -496,7 +496,9 @@ class PostRsListViewModel @Inject constructor(
             PostRsListTab.DRAFTS -> {
                 add(PostRsMenuAction.VIEW)
                 add(PostRsMenuAction.READ)
-                add(PostRsMenuAction.PUBLISH)
+                if (site.hasCapabilityPublishPosts) {
+                    add(PostRsMenuAction.PUBLISH)
+                }
                 add(PostRsMenuAction.DUPLICATE)
                 add(PostRsMenuAction.SHARE)
                 add(PostRsMenuAction.TRASH)
