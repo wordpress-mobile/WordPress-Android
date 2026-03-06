@@ -1015,6 +1015,8 @@
     <string name="post_rs_sync_failed">Sync failed</string>
     <string name="post_rs_settings_protected">Protected</string>
     <string name="post_rs_settings_field_error">Couldn\'t load</string>
+    <string name="post_rs_settings_tap_to_retry">Tap to retry</string>
+    <string name="post_rs_settings_loading">%s: Loading</string>
     <string name="post_types_screen_title">Post Types</string>
 
     <!-- Debug settings -->

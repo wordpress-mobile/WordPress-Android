@@ -24,6 +24,13 @@ data class PostRsSettingsUiState(
     val excerpt: String = "",
 )
 
+enum class RetryableField {
+    AUTHOR,
+    CATEGORIES,
+    TAGS,
+    FEATURED_IMAGE,
+}
+
 sealed interface PostRsSettingsEvent {
     data object Finish : PostRsSettingsEvent
     data class ShowSnackbar(val message: String) : PostRsSettingsEvent

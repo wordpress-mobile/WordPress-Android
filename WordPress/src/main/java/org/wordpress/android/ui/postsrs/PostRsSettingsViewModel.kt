@@ -58,6 +58,8 @@ class PostRsSettingsViewModel @Inject constructor(
             R.string.post_rs_settings_field_error
         )
 
+    private var lastPost: AnyPostWithEditContext? = null
+
     init {
         if (site == null) {
             _events.trySend(
@@ -68,6 +70,54 @@ class PostRsSettingsViewModel @Inject constructor(
             _events.trySend(PostRsSettingsEvent.Finish)
         } else {
             loadPost()
+        }
+    }
+
+    fun retry() {
+        loadPost()
+    }
+
+    fun retryField(field: RetryableField) {
+        val post = lastPost ?: return
+        when (field) {
+            RetryableField.AUTHOR -> {
+                _uiState.update {
+                    it.copy(authorName = FieldState.Loading)
+                }
+                resolveAuthor(post.author)
+            }
+            RetryableField.CATEGORIES -> {
+                _uiState.update {
+                    it.copy(categoryNames = FieldState.Loading)
+                }
+                resolveTermNames(
+                    post.categories,
+                    TermEndpointType.Categories
+                ) { names ->
+                    _uiState.update {
+                        it.copy(categoryNames = names)
+                    }
+                }
+            }
+            RetryableField.TAGS -> {
+                _uiState.update {
+                    it.copy(tagNames = FieldState.Loading)
+                }
+                resolveTermNames(
+                    post.tags,
+                    TermEndpointType.Tags
+                ) { names ->
+                    _uiState.update {
+                        it.copy(tagNames = names)
+                    }
+                }
+            }
+            RetryableField.FEATURED_IMAGE -> {
+                _uiState.update {
+                    it.copy(featuredImage = FieldState.Loading)
+                }
+                resolveFeaturedImage(post.featuredMedia)
+            }
         }
     }
 
@@ -89,6 +139,7 @@ class PostRsSettingsViewModel @Inject constructor(
             @Suppress("TooGenericExceptionCaught")
             try {
                 val post = fetchPost(site)
+                lastPost = post
                 _uiState.value = mapPostToUiState(post)
                 resolveAsyncFields(post)
             } catch (e: CancellationException) {

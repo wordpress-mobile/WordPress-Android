@@ -1,10 +1,22 @@
 package org.wordpress.android.ui.postsrs.screens
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -12,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -20,27 +33,40 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.FieldState
 import org.wordpress.android.ui.postsrs.PostRsSettingsUiState
+import org.wordpress.android.ui.postsrs.RetryableField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostRsSettingsScreen(
     uiState: PostRsSettingsUiState,
     onNavigateBack: () -> Unit,
+    onRetry: () -> Unit = {},
+    onRetryField: (RetryableField) -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -77,17 +103,16 @@ fun PostRsSettingsScreen(
                     )
                 }
                 uiState.error != null -> {
-                    Text(
-                        text = uiState.error,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(16.dp)
+                    ErrorContent(
+                        error = uiState.error,
+                        onRetry = onRetry
                     )
                 }
                 else -> {
-                    SettingsContent(uiState = uiState)
+                    SettingsContent(
+                        uiState = uiState,
+                        onRetryField = onRetryField
+                    )
                 }
             }
         }
@@ -95,7 +120,41 @@ fun PostRsSettingsScreen(
 }
 
 @Composable
-private fun SettingsContent(uiState: PostRsSettingsUiState) {
+private fun ErrorContent(
+    error: String,
+    onRetry: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(R.string.error_generic),
+            style = MaterialTheme.typography.titleMedium
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = error,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onRetry) {
+            Text(text = stringResource(R.string.retry))
+        }
+    }
+}
+
+@Composable
+private fun SettingsContent(
+    uiState: PostRsSettingsUiState,
+    onRetryField: (RetryableField) -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -137,7 +196,10 @@ private fun SettingsContent(uiState: PostRsSettingsUiState) {
 
         AsyncSettingsRow(
             label = stringResource(R.string.post_settings_author),
-            state = uiState.authorName
+            state = uiState.authorName,
+            onRetry = {
+                onRetryField(RetryableField.AUTHOR)
+            }
         )
 
         SectionHeader(
@@ -146,22 +208,33 @@ private fun SettingsContent(uiState: PostRsSettingsUiState) {
             )
         )
 
-        AsyncSettingsRow(
+        ChipSettingsRow(
             label = stringResource(R.string.categories),
-            state = uiState.categoryNames
+            state = uiState.categoryNames,
+            onRetry = {
+                onRetryField(RetryableField.CATEGORIES)
+            }
         )
         HorizontalDivider()
 
-        AsyncSettingsRow(
+        ChipSettingsRow(
             label = stringResource(R.string.post_settings_tags),
-            state = uiState.tagNames
+            state = uiState.tagNames,
+            onRetry = {
+                onRetryField(RetryableField.TAGS)
+            }
         )
 
         SectionHeader(
             stringResource(R.string.post_settings_featured_image)
         )
 
-        FeaturedImageField(state = uiState.featuredImage)
+        FeaturedImageField(
+            state = uiState.featuredImage,
+            onRetry = {
+                onRetryField(RetryableField.FEATURED_IMAGE)
+            }
+        )
 
         SectionHeader(
             stringResource(R.string.post_settings_more_options)
@@ -202,7 +275,7 @@ private fun SettingsContent(uiState: PostRsSettingsUiState) {
         HorizontalDivider()
 
         if (uiState.excerpt.isNotEmpty()) {
-            SettingsRow(
+            ExpandableSettingsRow(
                 label = stringResource(
                     R.string.post_settings_excerpt
                 ),
@@ -217,12 +290,21 @@ private fun SettingsContent(uiState: PostRsSettingsUiState) {
                 dimmed = true
             )
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
 @Composable
-private fun AsyncSettingsRow(label: String, state: FieldState) {
+private fun AsyncSettingsRow(
+    label: String,
+    state: FieldState,
+    onRetry: () -> Unit,
+) {
     val noneLabel = stringResource(R.string.none)
+    val loadingDesc = stringResource(
+        R.string.post_rs_settings_loading, label
+    )
     when (state) {
         is FieldState.Empty ->
             SettingsRow(
@@ -237,26 +319,114 @@ private fun AsyncSettingsRow(label: String, state: FieldState) {
                     modifier = Modifier.size(16.dp),
                     strokeWidth = 2.dp
                 )
+            },
+            modifier = Modifier.semantics {
+                contentDescription = loadingDesc
             }
         )
         is FieldState.Loaded ->
             SettingsRow(label = label, value = state.value)
-        is FieldState.Error -> ListItem(
+        is FieldState.Error ->
+            ErrorFieldRow(
+                label = label,
+                message = state.message,
+                onRetry = onRetry
+            )
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ChipSettingsRow(
+    label: String,
+    state: FieldState,
+    onRetry: () -> Unit,
+) {
+    val noneLabel = stringResource(R.string.none)
+    val loadingDesc = stringResource(
+        R.string.post_rs_settings_loading, label
+    )
+    when (state) {
+        is FieldState.Empty ->
+            SettingsRow(
+                label = label,
+                value = noneLabel,
+                dimmed = true
+            )
+        is FieldState.Loading -> ListItem(
             headlineContent = { Text(label) },
             supportingContent = {
-                Text(
-                    state.message,
-                    color = MaterialTheme.colorScheme.error
+                CircularProgressIndicator(
+                    modifier = Modifier.size(16.dp),
+                    strokeWidth = 2.dp
                 )
+            },
+            modifier = Modifier.semantics {
+                contentDescription = loadingDesc
             }
         )
+        is FieldState.Loaded -> {
+            val items = state.value
+                .split(", ")
+                .filter { it.isNotBlank() }
+            ListItem(
+                headlineContent = { Text(label) },
+                supportingContent = {
+                    FlowRow(
+                        horizontalArrangement = Arrangement
+                            .spacedBy(8.dp),
+                    ) {
+                        items.forEach { name ->
+                            SuggestionChip(
+                                onClick = {},
+                                label = { Text(name) },
+                                enabled = false
+                            )
+                        }
+                    }
+                }
+            )
+        }
+        is FieldState.Error ->
+            ErrorFieldRow(
+                label = label,
+                message = state.message,
+                onRetry = onRetry
+            )
     }
 }
 
 @Composable
-private fun FeaturedImageField(state: FieldState) {
+private fun ErrorFieldRow(
+    label: String,
+    message: String,
+    onRetry: () -> Unit,
+) {
+    val tapToRetry = stringResource(
+        R.string.post_rs_settings_tap_to_retry
+    )
+    ListItem(
+        headlineContent = { Text(label) },
+        supportingContent = {
+            Text(
+                "$message — $tapToRetry",
+                color = MaterialTheme.colorScheme.error
+            )
+        },
+        modifier = Modifier.clickable(onClick = onRetry)
+    )
+}
+
+@Composable
+private fun FeaturedImageField(
+    state: FieldState,
+    onRetry: () -> Unit,
+) {
     val label = stringResource(
         R.string.post_settings_featured_image
+    )
+    val loadingDesc = stringResource(
+        R.string.post_rs_settings_loading, label
     )
     when (state) {
         is FieldState.Empty ->
@@ -274,19 +444,19 @@ private fun FeaturedImageField(state: FieldState) {
                     modifier = Modifier.size(16.dp),
                     strokeWidth = 2.dp
                 )
+            },
+            modifier = Modifier.semantics {
+                contentDescription = loadingDesc
             }
         )
         is FieldState.Loaded ->
             FeaturedImageRow(imageUrl = state.value)
-        is FieldState.Error -> ListItem(
-            headlineContent = { Text(label) },
-            supportingContent = {
-                Text(
-                    state.message,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-        )
+        is FieldState.Error ->
+            ErrorFieldRow(
+                label = label,
+                message = state.message,
+                onRetry = onRetry
+            )
     }
 }
 
@@ -339,17 +509,76 @@ private fun SettingsRow(
 }
 
 @Composable
+private fun ExpandableSettingsRow(
+    label: String,
+    value: String,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var hasOverflow by remember { mutableStateOf(false) }
+    ListItem(
+        headlineContent = { Text(label) },
+        supportingContent = {
+            Text(
+                text = value,
+                maxLines = if (expanded) Int.MAX_VALUE else 3,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                onTextLayout = { result ->
+                    if (!expanded) {
+                        hasOverflow = result.hasVisualOverflow
+                    }
+                }
+            )
+        },
+        modifier = if (hasOverflow || expanded) {
+            Modifier.clickable { expanded = !expanded }
+        } else {
+            Modifier
+        }
+    )
+}
+
+@Composable
 private fun FeaturedImageRow(imageUrl: String) {
-    AsyncImage(
-        model = imageUrl,
-        contentDescription = stringResource(
-            R.string.featured_image_desc
+    val imageModifier = Modifier
+        .padding(horizontal = 16.dp)
+        .fillMaxWidth()
+        .aspectRatio(16f / 9f)
+        .clip(RoundedCornerShape(8.dp))
+    Box(modifier = imageModifier) {
+        ShimmerBox(modifier = Modifier.matchParentSize())
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .crossfade(true)
+                .build(),
+            contentDescription = stringResource(
+                R.string.featured_image_desc
+            ),
+            modifier = Modifier.matchParentSize(),
+            contentScale = ContentScale.Crop
+        )
+    }
+}
+
+@Composable
+private fun ShimmerBox(modifier: Modifier = Modifier) {
+    val infiniteTransition = rememberInfiniteTransition(
+        label = "shimmer"
+    )
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0.06f,
+        targetValue = 0.14f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 800),
+            repeatMode = RepeatMode.Reverse
         ),
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp)),
-        contentScale = ContentScale.Crop
+        label = "shimmerAlpha"
+    )
+    Box(
+        modifier = modifier.background(
+            MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
+        )
     )
 }
 
@@ -376,6 +605,8 @@ private fun PreviewSettingsLoaded() {
                 excerpt = "A short excerpt of the post.",
             ),
             onNavigateBack = {},
+            onRetry = {},
+            onRetryField = {},
         )
     }
 }
@@ -387,6 +618,8 @@ private fun PreviewSettingsLoading() {
         PostRsSettingsScreen(
             uiState = PostRsSettingsUiState(isLoading = true),
             onNavigateBack = {},
+            onRetry = {},
+            onRetryField = {},
         )
     }
 }
@@ -401,6 +634,35 @@ private fun PreviewSettingsError() {
                 error = "Unable to load post settings"
             ),
             onNavigateBack = {},
+            onRetry = {},
+            onRetryField = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewSettingsFieldErrors() {
+    MaterialTheme {
+        PostRsSettingsScreen(
+            uiState = PostRsSettingsUiState(
+                isLoading = false,
+                postTitle = "Test Post",
+                statusLabel = "Draft",
+                publishDate = "Mar 6, 2026, 10:30 AM",
+                authorName = FieldState.Error("Couldn't load"),
+                categoryNames = FieldState.Error(
+                    "Couldn't load"
+                ),
+                tagNames = FieldState.Loading,
+                featuredImage = FieldState.Loading,
+                formatLabel = "Standard",
+                slug = "test-post",
+                excerpt = "",
+            ),
+            onNavigateBack = {},
+            onRetry = {},
+            onRetryField = {},
         )
     }
 }

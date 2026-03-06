@@ -34,6 +34,8 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                     onNavigateBack = {
                         onBackPressedDispatcher.onBackPressed()
                     },
+                    onRetry = viewModel::retry,
+                    onRetryField = viewModel::retryField,
                 )
             }
         }
