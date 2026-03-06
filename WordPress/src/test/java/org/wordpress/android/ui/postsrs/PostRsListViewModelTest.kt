@@ -441,5 +441,4 @@ class PostRsListViewModelTest : BaseUnitTest() {
                 cancelAndIgnoreRemainingEvents()
             }
         }
-
 }
