@@ -38,6 +38,7 @@ import org.wordpress.android.util.config.InAppUpdatesFeatureConfig;
 import org.wordpress.android.util.config.RemoteConfigWrapper;
 import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor;
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
@@ -53,7 +54,6 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 import kotlinx.coroutines.CoroutineScope;
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider;
 import rs.wordpress.api.kotlin.WpLoginClient;
 
 import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
