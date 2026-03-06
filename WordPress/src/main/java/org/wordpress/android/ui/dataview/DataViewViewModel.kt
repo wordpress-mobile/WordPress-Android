@@ -22,6 +22,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.WpApiParamOrder
@@ -45,6 +46,7 @@ open class DataViewViewModel @Inject constructor(
     private val accountStore: AccountStore,
     @Named(IO_THREAD) protected val ioDispatcher: CoroutineDispatcher,
     private val trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
+    private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableStateFlow(DataViewUiState())
     val uiState: StateFlow<DataViewUiState> = _uiState.asStateFlow()
@@ -88,7 +90,8 @@ open class DataViewViewModel @Inject constructor(
                     WpAuthentication.Bearer(token = token)
                 }
             ),
-            interceptors = listOf(trackNetworkRequestsInterceptor)
+            interceptors = listOf(trackNetworkRequestsInterceptor),
+            networkAvailabilityProvider = networkAvailabilityProvider
         )
     }
 

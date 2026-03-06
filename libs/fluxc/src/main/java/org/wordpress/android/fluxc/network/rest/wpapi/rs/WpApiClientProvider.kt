@@ -29,6 +29,7 @@ class WpApiClientProvider @Inject constructor(
     private val wpAppNotifierHandler: WpAppNotifierHandler,
     private val accountStore: AccountStore,
     @Named(OkHttpClientQualifiers.INTERCEPTORS) private val interceptors: Set<@JvmSuppressWildcards Interceptor>,
+    private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) {
     private val wpComClients = mutableMapOf<Long, WpApiClient>()
 
@@ -50,7 +51,11 @@ class WpApiClientProvider @Inject constructor(
         val client = WpApiClient(
             wpOrgSiteApiRootUrl = apiRootUrl,
             authProvider = authProvider,
-            requestExecutor = WpRequestExecutor(interceptors = interceptors.toList(), uploadListener = uploadListener),
+            requestExecutor = WpRequestExecutor(
+                interceptors = interceptors.toList(),
+                networkAvailabilityProvider = networkAvailabilityProvider,
+                uploadListener = uploadListener
+            ),
             appNotifier = object : WpAppNotifier {
                 override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
                     wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
@@ -79,7 +84,7 @@ class WpApiClientProvider @Inject constructor(
             .build()
 
         val httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient)
-        val requestExecutor = WpRequestExecutor(httpClient)
+        val requestExecutor = WpRequestExecutor(httpClient, networkAvailabilityProvider)
 
         val cookiesNonceProvider = CookiesNonceAuthenticationProvider.withSiteUrl(
             url = site.url,
@@ -111,7 +116,7 @@ class WpApiClientProvider @Inject constructor(
             WpApiClient(
                 apiUrlResolver = urlResolver,
                 authProvider = createWpComAuthProvider(accountStore),
-                requestExecutor = WpRequestExecutor(emptyList()),
+                requestExecutor = WpRequestExecutor(emptyList(), networkAvailabilityProvider),
                 appNotifier = object : WpAppNotifier {
                     override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
                         wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)

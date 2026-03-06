@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.createWpComAuthProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import rs.wordpress.api.kotlin.WpRequestExecutor
@@ -29,6 +30,7 @@ class WpServiceProvider @Inject constructor(
     @ApplicationContext private val context: Context,
     private val wpAppNotifierHandler: WpAppNotifierHandler,
     private val accountStore: AccountStore,
+    private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) {
     private val services = mutableMapOf<Int, WpService>()
     private var cache: WordPressApiCache? = null
@@ -69,7 +71,10 @@ class WpServiceProvider @Inject constructor(
 
         return WpApiClientDelegate(
             authProvider = authProvider,
-            requestExecutor = WpRequestExecutor(emptyList()),
+            requestExecutor = WpRequestExecutor(
+                interceptors = emptyList(),
+                networkAvailabilityProvider = networkAvailabilityProvider
+            ),
             middlewarePipeline = WpApiMiddlewarePipeline(emptyList()),
             appNotifier = object : WpAppNotifier {
                 override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {

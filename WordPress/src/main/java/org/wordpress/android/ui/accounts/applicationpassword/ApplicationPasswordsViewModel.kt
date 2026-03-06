@@ -10,6 +10,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
@@ -43,6 +44,7 @@ class ApplicationPasswordsViewModel @Inject constructor(
     networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher,
     trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
+    networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper,
@@ -51,7 +53,8 @@ class ApplicationPasswordsViewModel @Inject constructor(
     selectedSiteRepository = selectedSiteRepository,
     accountStore = accountStore,
     ioDispatcher = ioDispatcher,
-    trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor
+    trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
+    networkAvailabilityProvider = networkAvailabilityProvider
 ) {
     init {
         initialize()
