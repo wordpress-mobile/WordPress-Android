@@ -46,5 +46,7 @@ sealed interface PostRsListEvent {
         val messageResId: Int
     ) : PostRsListEvent
 
+    data class OpenPostSettings(val postId: Long) : PostRsListEvent
+
     data object Finish : PostRsListEvent
 }

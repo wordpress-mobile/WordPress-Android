@@ -31,6 +31,7 @@ import org.wordpress.android.ui.notifications.NotificationsDetailActivity
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.GutenbergKitActivity
 import org.wordpress.android.ui.postsrs.PostRsListActivity
+import org.wordpress.android.ui.postsrs.PostRsSettingsActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity
 import org.wordpress.android.ui.reader.ReaderCommentListActivity
@@ -100,6 +101,7 @@ private val excludedActivities = listOf(
     NewDomainSearchActivity::class.java.name,
     PersonalizationActivity::class.java.name,
     PostRsListActivity::class.java.name,
+    PostRsSettingsActivity::class.java.name,
     PurchaseDomainActivity::class.java.name,
     SelfHostedUsersActivity::class.java.name,
     SiteMonitorParentActivity::class.java.name,

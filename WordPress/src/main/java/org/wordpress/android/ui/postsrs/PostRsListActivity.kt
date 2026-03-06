@@ -105,6 +105,8 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     this, false, event.blogId, event.postId,
                     DirectOperation.COMMENT_JUMP, false
                 )
+            is PostRsListEvent.OpenPostSettings ->
+                startActivity(PostRsSettingsActivity.createIntent(this, event.postId))
             is PostRsListEvent.ShowToast -> ToastUtils.showToast(this, event.messageResId)
             is PostRsListEvent.Finish -> finish()
         }

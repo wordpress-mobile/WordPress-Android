@@ -9,6 +9,8 @@ import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaListParams
+import uniffi.wp_api.TermEndpointType
+import uniffi.wp_api.TermListParams
 import uniffi.wp_api.UserListParams
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -21,10 +23,14 @@ class PostRsRestClient @Inject constructor(
 ) {
     private val mediaUrlCache = ConcurrentHashMap<Long, String>()
     private val userNameCache = ConcurrentHashMap<Long, String>()
+    private val categoryNameCache = ConcurrentHashMap<Long, String>()
+    private val tagNameCache = ConcurrentHashMap<Long, String>()
 
     fun clearCaches() {
         mediaUrlCache.clear()
         userNameCache.clear()
+        categoryNameCache.clear()
+        tagNameCache.clear()
     }
 
     /**
@@ -116,16 +122,62 @@ class PostRsRestClient @Inject constructor(
         return result
     }
 
-    private fun toPhotonUrl(site: SiteModel, sourceUrl: String): String {
-        if (!SiteUtils.isPhotonCapable(site)) return sourceUrl
-        val density = context.resources.displayMetrics.density
-        val sizePx = (FEATURED_IMAGE_SIZE_DP * density).toInt()
-        return PhotonUtils.getPhotonImageUrl(
-            sourceUrl, sizePx, sizePx, site.isPrivateWPComAtomic
-        )
+    /**
+     * Fetches term names for the given [termIds] in a single network
+     * call using the `include` parameter, returning a map of term ID
+     * to name. IDs already in the local cache are returned immediately
+     * without a network round-trip.
+     */
+    suspend fun fetchTermNames(
+        site: SiteModel,
+        termIds: List<Long>,
+        endpointType: TermEndpointType,
+    ): Map<Long, String> {
+        val cache = if (endpointType is TermEndpointType.Categories) {
+            categoryNameCache
+        } else {
+            tagNameCache
+        }
+        val result = mutableMapOf<Long, String>()
+        val uncached = mutableListOf<Long>()
+        for (id in termIds) {
+            val cached = cache[id]
+            if (cached != null) result[id] = cached else uncached.add(id)
+        }
+        if (uncached.isEmpty()) return result
+
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.terms().listWithViewContext(
+                endpointType,
+                TermListParams(include = uncached)
+            )
+        }
+        when (response) {
+            is WpRequestResult.Success -> {
+                for (term in response.response.data) {
+                    cache[term.id] = term.name
+                    result[term.id] = term.name
+                }
+            }
+            else -> {
+                val msg =
+                    (response as? WpRequestResult.WpError<*>)
+                        ?.errorMessage
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "fetchTermNames failed: $msg"
+                )
+            }
+        }
+        return result
     }
 
-    companion object {
-        const val FEATURED_IMAGE_SIZE_DP = 64
+    private fun toPhotonUrl(site: SiteModel, sourceUrl: String): String {
+        if (!SiteUtils.isPhotonCapable(site)) return sourceUrl
+        val widthPx = context.resources.displayMetrics.widthPixels
+        return PhotonUtils.getPhotonImageUrl(
+            sourceUrl, widthPx, 0, site.isPrivateWPComAtomic
+        )
     }
 }
