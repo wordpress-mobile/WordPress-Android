@@ -335,22 +335,29 @@ class PostRsSettingsViewModel @Inject constructor(
 
     private fun formatPostFormatLabel(
         format: PostFormat?
-    ): String {
-        val resId = when (format) {
-            is PostFormat.Standard -> R.string.post_format_standard
-            is PostFormat.Aside -> R.string.post_format_aside
-            is PostFormat.Chat -> R.string.post_format_chat
-            is PostFormat.Gallery -> R.string.post_format_gallery
-            is PostFormat.Link -> R.string.post_format_link
-            is PostFormat.Image -> R.string.post_format_image
-            is PostFormat.Quote -> R.string.post_format_quote
-            is PostFormat.Status -> R.string.post_format_status
-            is PostFormat.Video -> R.string.post_format_video
-            is PostFormat.Audio -> R.string.post_format_audio
-            is PostFormat.Custom -> return format.v1
-            null -> return ""
-        }
-        return resourceProvider.getString(resId)
+    ): String = when (format) {
+        is PostFormat.Standard ->
+            resourceProvider.getString(R.string.post_format_standard)
+        is PostFormat.Aside ->
+            resourceProvider.getString(R.string.post_format_aside)
+        is PostFormat.Chat ->
+            resourceProvider.getString(R.string.post_format_chat)
+        is PostFormat.Gallery ->
+            resourceProvider.getString(R.string.post_format_gallery)
+        is PostFormat.Link ->
+            resourceProvider.getString(R.string.post_format_link)
+        is PostFormat.Image ->
+            resourceProvider.getString(R.string.post_format_image)
+        is PostFormat.Quote ->
+            resourceProvider.getString(R.string.post_format_quote)
+        is PostFormat.Status ->
+            resourceProvider.getString(R.string.post_format_status)
+        is PostFormat.Video ->
+            resourceProvider.getString(R.string.post_format_video)
+        is PostFormat.Audio ->
+            resourceProvider.getString(R.string.post_format_audio)
+        is PostFormat.Custom -> format.v1
+        null -> ""
     }
 
     private class PostFetchException(message: String?) :
