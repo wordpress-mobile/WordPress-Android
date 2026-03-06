@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -47,7 +46,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -72,8 +70,6 @@ fun PostRsSettingsScreen(
     onRetry: () -> Unit = {},
     onRetryField: (RetryableField) -> Unit = {},
 ) {
-    val showHero =
-        uiState.featuredImage is FieldState.Loaded
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -101,29 +97,12 @@ fun PostRsSettingsScreen(
                     )
                 }
             }
-            showHero -> {
+            else -> {
                 HeroSettingsLayout(
                     uiState = uiState,
                     onNavigateBack = onNavigateBack,
                     onRetryField = onRetryField,
                 )
-            }
-            else -> {
-                NormalAppBarLayout(
-                    onNavigateBack = onNavigateBack,
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        SettingsContent(
-                            uiState = uiState,
-                            onRetryField = onRetryField,
-                            showFeaturedImageSection = true,
-                        )
-                    }
-                }
             }
         }
     }
@@ -183,14 +162,19 @@ private fun HeroSettingsLayout(
                 .verticalScroll(rememberScrollState())
                 .navigationBarsPadding()
         ) {
-            HeroImage(
-                imageUrl = (uiState.featuredImage
-                    as FieldState.Loaded).value
-            )
+            when (uiState.featuredImage) {
+                is FieldState.Loaded ->
+                    HeroImage(
+                        imageUrl = uiState.featuredImage.value
+                    )
+                is FieldState.Loading ->
+                    HeroImageShimmer()
+                else ->
+                    HeroImagePlaceholder()
+            }
             SettingsContent(
                 uiState = uiState,
                 onRetryField = onRetryField,
-                showFeaturedImageSection = false,
             )
         }
         FloatingBackButton(
@@ -220,6 +204,38 @@ private fun HeroImage(imageUrl: String) {
             ),
             modifier = Modifier.matchParentSize(),
             contentScale = ContentScale.Crop
+        )
+    }
+}
+
+@Composable
+private fun HeroImageShimmer() {
+    ShimmerBox(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(16f / 9f)
+    )
+}
+
+@Composable
+private fun HeroImagePlaceholder() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(16f / 9f)
+            .background(
+                MaterialTheme.colorScheme.surfaceVariant
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(
+                R.string
+                    .post_rs_settings_featured_image_not_set
+            ),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme
+                .onSurfaceVariant
         )
     }
 }
@@ -283,7 +299,6 @@ private fun ErrorContent(
 private fun SettingsContent(
     uiState: PostRsSettingsUiState,
     onRetryField: (RetryableField) -> Unit,
-    showFeaturedImageSection: Boolean = true,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         SectionHeader(
@@ -356,22 +371,6 @@ private fun SettingsContent(
                 onRetryField(RetryableField.TAGS)
             }
         )
-
-        if (showFeaturedImageSection) {
-            SectionHeader(
-                stringResource(
-                    R.string.post_settings_featured_image
-                )
-            )
-            FeaturedImageField(
-                state = uiState.featuredImage,
-                onRetry = {
-                    onRetryField(
-                        RetryableField.FEATURED_IMAGE
-                    )
-                }
-            )
-        }
 
         SectionHeader(
             stringResource(
@@ -561,49 +560,6 @@ private fun ErrorFieldRow(
 }
 
 @Composable
-private fun FeaturedImageField(
-    state: FieldState,
-    onRetry: () -> Unit,
-) {
-    val label = stringResource(
-        R.string.post_settings_featured_image
-    )
-    val loadingDesc = stringResource(
-        R.string.post_rs_settings_loading, label
-    )
-    when (state) {
-        is FieldState.Empty ->
-            SettingsRow(
-                label = stringResource(
-                    R.string.post_settings_featured_image
-                ),
-                value = stringResource(R.string.none),
-                dimmed = true
-            )
-        is FieldState.Loading -> ListItem(
-            headlineContent = { Text(label) },
-            supportingContent = {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(16.dp),
-                    strokeWidth = 2.dp
-                )
-            },
-            modifier = Modifier.semantics {
-                contentDescription = loadingDesc
-            }
-        )
-        is FieldState.Loaded ->
-            FeaturedImageRow(imageUrl = state.value)
-        is FieldState.Error ->
-            ErrorFieldRow(
-                label = label,
-                message = state.message,
-                onRetry = onRetry
-            )
-    }
-}
-
-@Composable
 private fun SectionHeader(title: String) {
     Text(
         text = title,
@@ -685,29 +641,6 @@ private fun ExpandableSettingsRow(
             Modifier
         }
     )
-}
-
-@Composable
-private fun FeaturedImageRow(imageUrl: String) {
-    val imageModifier = Modifier
-        .padding(horizontal = 16.dp)
-        .fillMaxWidth()
-        .aspectRatio(16f / 9f)
-        .clip(RoundedCornerShape(8.dp))
-    Box(modifier = imageModifier) {
-        ShimmerBox(modifier = Modifier.matchParentSize())
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = stringResource(
-                R.string.featured_image_desc
-            ),
-            modifier = Modifier.matchParentSize(),
-            contentScale = ContentScale.Crop
-        )
-    }
 }
 
 @Composable
