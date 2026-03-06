@@ -3,6 +3,7 @@ package org.wordpress.android.ui.postsrs
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,6 +23,7 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
     private val viewModel: PostRsSettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         observeEvents()

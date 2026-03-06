@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -17,9 +18,12 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -44,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -60,7 +65,6 @@ import org.wordpress.android.ui.postsrs.FieldState
 import org.wordpress.android.ui.postsrs.PostRsSettingsUiState
 import org.wordpress.android.ui.postsrs.RetryableField
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostRsSettingsScreen(
     uiState: PostRsSettingsUiState,
@@ -68,12 +72,77 @@ fun PostRsSettingsScreen(
     onRetry: () -> Unit = {},
     onRetryField: (RetryableField) -> Unit = {},
 ) {
+    val showHero =
+        uiState.featuredImage is FieldState.Loaded
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        when {
+            uiState.isLoading -> {
+                NormalAppBarLayout(
+                    onNavigateBack = onNavigateBack,
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(
+                            Alignment.Center
+                        )
+                    )
+                }
+            }
+            uiState.error != null -> {
+                NormalAppBarLayout(
+                    onNavigateBack = onNavigateBack,
+                ) {
+                    ErrorContent(
+                        error = uiState.error,
+                        onRetry = onRetry
+                    )
+                }
+            }
+            showHero -> {
+                HeroSettingsLayout(
+                    uiState = uiState,
+                    onNavigateBack = onNavigateBack,
+                    onRetryField = onRetryField,
+                )
+            }
+            else -> {
+                NormalAppBarLayout(
+                    onNavigateBack = onNavigateBack,
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        SettingsContent(
+                            uiState = uiState,
+                            onRetryField = onRetryField,
+                            showFeaturedImageSection = true,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun NormalAppBarLayout(
+    onNavigateBack: () -> Unit,
+    content: @Composable BoxScope.() -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.post_settings),
+                        text = stringResource(
+                            R.string.post_settings
+                        ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -96,26 +165,86 @@ fun PostRsSettingsScreen(
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            when {
-                uiState.isLoading -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-                uiState.error != null -> {
-                    ErrorContent(
-                        error = uiState.error,
-                        onRetry = onRetry
-                    )
-                }
-                else -> {
-                    SettingsContent(
-                        uiState = uiState,
-                        onRetryField = onRetryField
-                    )
-                }
-            }
+            content()
         }
+    }
+}
+
+@Composable
+private fun HeroSettingsLayout(
+    uiState: PostRsSettingsUiState,
+    onNavigateBack: () -> Unit,
+    onRetryField: (RetryableField) -> Unit,
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .navigationBarsPadding()
+        ) {
+            HeroImage(
+                imageUrl = (uiState.featuredImage
+                    as FieldState.Loaded).value
+            )
+            SettingsContent(
+                uiState = uiState,
+                onRetryField = onRetryField,
+                showFeaturedImageSection = false,
+            )
+        }
+        FloatingBackButton(
+            onNavigateBack = onNavigateBack,
+            modifier = Modifier
+                .statusBarsPadding()
+                .padding(start = 4.dp, top = 4.dp)
+        )
+    }
+}
+
+@Composable
+private fun HeroImage(imageUrl: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(16f / 9f)
+    ) {
+        ShimmerBox(modifier = Modifier.matchParentSize())
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .crossfade(true)
+                .build(),
+            contentDescription = stringResource(
+                R.string.featured_image_desc
+            ),
+            modifier = Modifier.matchParentSize(),
+            contentScale = ContentScale.Crop
+        )
+    }
+}
+
+@Composable
+private fun FloatingBackButton(
+    onNavigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    IconButton(
+        onClick = onNavigateBack,
+        modifier = modifier
+            .size(40.dp)
+            .background(
+                color = Color.Black.copy(alpha = 0.4f),
+                shape = CircleShape
+            )
+    ) {
+        Icon(
+            Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = stringResource(
+                R.string.back
+            ),
+            tint = Color.White
+        )
     }
 }
 
@@ -154,18 +283,17 @@ private fun ErrorContent(
 private fun SettingsContent(
     uiState: PostRsSettingsUiState,
     onRetryField: (RetryableField) -> Unit,
+    showFeaturedImageSection: Boolean = true,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         SectionHeader(
             stringResource(R.string.post_settings_publish)
         )
 
         SettingsRow(
-            label = stringResource(R.string.post_settings_status),
+            label = stringResource(
+                R.string.post_settings_status
+            ),
             value = uiState.statusLabel
         )
         HorizontalDivider()
@@ -195,7 +323,9 @@ private fun SettingsContent(
         HorizontalDivider()
 
         AsyncSettingsRow(
-            label = stringResource(R.string.post_settings_author),
+            label = stringResource(
+                R.string.post_settings_author
+            ),
             state = uiState.authorName,
             onRetry = {
                 onRetryField(RetryableField.AUTHOR)
@@ -218,26 +348,35 @@ private fun SettingsContent(
         HorizontalDivider()
 
         ChipSettingsRow(
-            label = stringResource(R.string.post_settings_tags),
+            label = stringResource(
+                R.string.post_settings_tags
+            ),
             state = uiState.tagNames,
             onRetry = {
                 onRetryField(RetryableField.TAGS)
             }
         )
 
-        SectionHeader(
-            stringResource(R.string.post_settings_featured_image)
-        )
+        if (showFeaturedImageSection) {
+            SectionHeader(
+                stringResource(
+                    R.string.post_settings_featured_image
+                )
+            )
+            FeaturedImageField(
+                state = uiState.featuredImage,
+                onRetry = {
+                    onRetryField(
+                        RetryableField.FEATURED_IMAGE
+                    )
+                }
+            )
+        }
 
-        FeaturedImageField(
-            state = uiState.featuredImage,
-            onRetry = {
-                onRetryField(RetryableField.FEATURED_IMAGE)
-            }
-        )
-
         SectionHeader(
-            stringResource(R.string.post_settings_more_options)
+            stringResource(
+                R.string.post_settings_more_options
+            )
         )
 
         SettingsRow(
@@ -262,12 +401,16 @@ private fun SettingsContent(
 
         if (uiState.slug.isNotEmpty()) {
             SettingsRow(
-                label = stringResource(R.string.post_settings_slug),
+                label = stringResource(
+                    R.string.post_settings_slug
+                ),
                 value = uiState.slug
             )
         } else {
             SettingsRow(
-                label = stringResource(R.string.post_settings_slug),
+                label = stringResource(
+                    R.string.post_settings_slug
+                ),
                 value = stringResource(R.string.none),
                 dimmed = true
             )
@@ -493,7 +636,8 @@ private fun SettingsRow(
                     color = if (dimmed) {
                         MaterialTheme.colorScheme.outline
                     } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
+                        MaterialTheme.colorScheme
+                            .onSurfaceVariant
                     }
                 )
             }
@@ -520,9 +664,14 @@ private fun ExpandableSettingsRow(
         supportingContent = {
             Text(
                 text = value,
-                maxLines = if (expanded) Int.MAX_VALUE else 3,
+                maxLines = if (expanded) {
+                    Int.MAX_VALUE
+                } else {
+                    3
+                },
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme
+                    .onSurfaceVariant,
                 onTextLayout = { result ->
                     if (!expanded) {
                         hasOverflow = result.hasVisualOverflow
@@ -577,7 +726,8 @@ private fun ShimmerBox(modifier: Modifier = Modifier) {
     )
     Box(
         modifier = modifier.background(
-            MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
+            MaterialTheme.colorScheme.onSurface
+                .copy(alpha = alpha)
         )
     )
 }
@@ -597,8 +747,43 @@ private fun PreviewSettingsLoaded() {
                 categoryNames = FieldState.Loaded(
                     "Travel, Photography"
                 ),
-                tagNames = FieldState.Loaded("nature, hiking"),
+                tagNames = FieldState.Loaded(
+                    "nature, hiking"
+                ),
                 featuredImage = FieldState.Empty,
+                sticky = true,
+                formatLabel = "Standard",
+                slug = "my-first-post",
+                excerpt = "A short excerpt of the post.",
+            ),
+            onNavigateBack = {},
+            onRetry = {},
+            onRetryField = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewSettingsHeroImage() {
+    MaterialTheme {
+        PostRsSettingsScreen(
+            uiState = PostRsSettingsUiState(
+                isLoading = false,
+                postTitle = "My First Post",
+                statusLabel = "Published",
+                publishDate = "Mar 6, 2026, 10:30 AM",
+                password = null,
+                authorName = FieldState.Loaded("Jane Doe"),
+                categoryNames = FieldState.Loaded(
+                    "Travel, Photography"
+                ),
+                tagNames = FieldState.Loaded(
+                    "nature, hiking"
+                ),
+                featuredImage = FieldState.Loaded(
+                    "https://example.com/hero.jpg"
+                ),
                 sticky = true,
                 formatLabel = "Standard",
                 slug = "my-first-post",
@@ -650,7 +835,9 @@ private fun PreviewSettingsFieldErrors() {
                 postTitle = "Test Post",
                 statusLabel = "Draft",
                 publishDate = "Mar 6, 2026, 10:30 AM",
-                authorName = FieldState.Error("Couldn't load"),
+                authorName = FieldState.Error(
+                    "Couldn't load"
+                ),
                 categoryNames = FieldState.Error(
                     "Couldn't load"
                 ),
