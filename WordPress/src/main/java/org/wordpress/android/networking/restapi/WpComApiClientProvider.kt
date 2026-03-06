@@ -1,6 +1,7 @@
 package org.wordpress.android.networking.restapi
 
 import okhttp3.OkHttpClient
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpHttpClient
 import rs.wordpress.api.kotlin.WpRequestExecutor
@@ -12,7 +13,9 @@ import javax.inject.Inject
 private const val READ_WRITE_TIMEOUT = 60L
 private const val CONNECT_TIMEOUT = 30L
 
-class WpComApiClientProvider @Inject constructor() {
+class WpComApiClientProvider @Inject constructor(
+    private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
+) {
     fun getWpComApiClient(accessToken: String): WpComApiClient {
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
@@ -21,7 +24,10 @@ class WpComApiClientProvider @Inject constructor() {
             .build()
 
         return WpComApiClient(
-            requestExecutor = WpRequestExecutor(httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient)),
+            requestExecutor = WpRequestExecutor(
+                httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient),
+                networkAvailabilityProvider = networkAvailabilityProvider
+            ),
             authProvider = WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = accessToken)
             )
         )

@@ -53,6 +53,7 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 import kotlinx.coroutines.CoroutineScope;
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider;
 import rs.wordpress.api.kotlin.WpLoginClient;
 
 import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
@@ -156,8 +157,12 @@ public abstract class ApplicationModule {
 
     @Provides
     public static WpLoginClient provideWpLoginClient(
-            @NonNull TrackNetworkRequestsInterceptor trackNetworkRequestsInterceptor
+            @NonNull TrackNetworkRequestsInterceptor trackNetworkRequestsInterceptor,
+            @NonNull WpNetworkAvailabilityProvider networkAvailabilityProvider
     ) {
-        return new WpLoginClient(Collections.singletonList(trackNetworkRequestsInterceptor));
+        return new WpLoginClient(
+                Collections.singletonList(trackNetworkRequestsInterceptor),
+                networkAvailabilityProvider
+        );
     }
 }
