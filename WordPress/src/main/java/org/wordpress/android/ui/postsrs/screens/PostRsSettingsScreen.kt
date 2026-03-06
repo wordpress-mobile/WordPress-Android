@@ -169,7 +169,14 @@ private fun HeroSettingsLayout(
                     )
                 is FieldState.Loading ->
                     HeroImageShimmer()
-                else ->
+                is FieldState.Error ->
+                    HeroImagePlaceholder(
+                        text = stringResource(
+                            R.string
+                                .post_rs_settings_featured_image_error
+                        )
+                    )
+                is FieldState.Empty ->
                     HeroImagePlaceholder()
             }
             SettingsContent(
@@ -218,7 +225,11 @@ private fun HeroImageShimmer() {
 }
 
 @Composable
-private fun HeroImagePlaceholder() {
+private fun HeroImagePlaceholder(
+    text: String = stringResource(
+        R.string.post_rs_settings_featured_image_not_set
+    ),
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -229,10 +240,7 @@ private fun HeroImagePlaceholder() {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = stringResource(
-                R.string
-                    .post_rs_settings_featured_image_not_set
-            ),
+            text = text,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme
                 .onSurfaceVariant
@@ -346,6 +354,7 @@ private fun SettingsContent(
                 onRetryField(RetryableField.AUTHOR)
             }
         )
+        HorizontalDivider()
 
         SectionHeader(
             stringResource(
@@ -536,7 +545,10 @@ private fun ErrorFieldRow(
                 color = MaterialTheme.colorScheme.error
             )
         },
-        modifier = Modifier.clickable(onClick = onRetry)
+        modifier = Modifier.clickable(
+            onClickLabel = tapToRetry,
+            onClick = onRetry
+        )
     )
 }
 
@@ -611,7 +623,15 @@ private fun ExpandableSettingsRow(
             )
         },
         modifier = if (hasOverflow || expanded) {
-            Modifier.clickable { expanded = !expanded }
+            Modifier.clickable(
+                onClickLabel = stringResource(
+                    if (expanded) {
+                        R.string.show_less
+                    } else {
+                        R.string.more
+                    }
+                )
+            ) { expanded = !expanded }
         } else {
             Modifier
         }

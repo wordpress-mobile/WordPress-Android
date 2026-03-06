@@ -1018,6 +1018,8 @@
     <string name="post_rs_settings_tap_to_retry">Tap to retry</string>
     <string name="post_rs_settings_loading">%s: Loading</string>
     <string name="post_rs_settings_featured_image_not_set">Featured image not set.</string>
+    <string name="post_rs_settings_featured_image_error">Couldn\'t load featured image.</string>
+    <string name="show_less">Show less</string>
     <string name="post_types_screen_title">Post Types</string>
 
     <!-- Debug settings -->
