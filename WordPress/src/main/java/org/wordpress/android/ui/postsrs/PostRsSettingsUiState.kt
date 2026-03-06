@@ -28,7 +28,6 @@ enum class RetryableField {
     AUTHOR,
     CATEGORIES,
     TAGS,
-    FEATURED_IMAGE,
 }
 
 sealed interface PostRsSettingsEvent {

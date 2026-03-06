@@ -438,12 +438,12 @@ private fun SettingsContent(
 }
 
 @Composable
-private fun AsyncSettingsRow(
+private fun AsyncFieldRow(
     label: String,
     state: FieldState,
     onRetry: () -> Unit,
+    loadedContent: @Composable (String) -> Unit,
 ) {
-    val noneLabel = stringResource(R.string.none)
     val loadingDesc = stringResource(
         R.string.post_rs_settings_loading, label
     )
@@ -451,7 +451,7 @@ private fun AsyncSettingsRow(
         is FieldState.Empty ->
             SettingsRow(
                 label = label,
-                value = noneLabel,
+                value = stringResource(R.string.none),
                 dimmed = true
             )
         is FieldState.Loading -> ListItem(
@@ -467,13 +467,24 @@ private fun AsyncSettingsRow(
             }
         )
         is FieldState.Loaded ->
-            SettingsRow(label = label, value = state.value)
+            loadedContent(state.value)
         is FieldState.Error ->
             ErrorFieldRow(
                 label = label,
                 message = state.message,
                 onRetry = onRetry
             )
+    }
+}
+
+@Composable
+private fun AsyncSettingsRow(
+    label: String,
+    state: FieldState,
+    onRetry: () -> Unit,
+) {
+    AsyncFieldRow(label, state, onRetry) { value ->
+        SettingsRow(label = label, value = value)
     }
 }
 
@@ -484,57 +495,27 @@ private fun ChipSettingsRow(
     state: FieldState,
     onRetry: () -> Unit,
 ) {
-    val noneLabel = stringResource(R.string.none)
-    val loadingDesc = stringResource(
-        R.string.post_rs_settings_loading, label
-    )
-    when (state) {
-        is FieldState.Empty ->
-            SettingsRow(
-                label = label,
-                value = noneLabel,
-                dimmed = true
-            )
-        is FieldState.Loading -> ListItem(
+    AsyncFieldRow(label, state, onRetry) { value ->
+        val items = value
+            .split(", ")
+            .filter { it.isNotBlank() }
+        ListItem(
             headlineContent = { Text(label) },
             supportingContent = {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(16.dp),
-                    strokeWidth = 2.dp
-                )
-            },
-            modifier = Modifier.semantics {
-                contentDescription = loadingDesc
-            }
-        )
-        is FieldState.Loaded -> {
-            val items = state.value
-                .split(", ")
-                .filter { it.isNotBlank() }
-            ListItem(
-                headlineContent = { Text(label) },
-                supportingContent = {
-                    FlowRow(
-                        horizontalArrangement = Arrangement
-                            .spacedBy(8.dp),
-                    ) {
-                        items.forEach { name ->
-                            SuggestionChip(
-                                onClick = {},
-                                label = { Text(name) },
-                                enabled = false
-                            )
-                        }
+                FlowRow(
+                    horizontalArrangement = Arrangement
+                        .spacedBy(8.dp),
+                ) {
+                    items.forEach { name ->
+                        SuggestionChip(
+                            onClick = {},
+                            label = { Text(name) },
+                            enabled = false
+                        )
                     }
                 }
-            )
-        }
-        is FieldState.Error ->
-            ErrorFieldRow(
-                label = label,
-                message = state.message,
-                onRetry = onRetry
-            )
+            }
+        )
     }
 }
 
@@ -579,7 +560,6 @@ private fun SettingsRow(
     label: String,
     value: String,
     dimmed: Boolean = false,
-    onClick: (() -> Unit)? = null,
 ) {
     ListItem(
         headlineContent = { Text(label) },
@@ -600,11 +580,6 @@ private fun SettingsRow(
         } else {
             null
         },
-        modifier = if (onClick != null) {
-            Modifier.clickable(onClick = onClick)
-        } else {
-            Modifier
-        }
     )
 }
 

@@ -175,14 +175,9 @@ class PostRsRestClient @Inject constructor(
 
     private fun toPhotonUrl(site: SiteModel, sourceUrl: String): String {
         if (!SiteUtils.isPhotonCapable(site)) return sourceUrl
-        val density = context.resources.displayMetrics.density
-        val sizePx = (FEATURED_IMAGE_SIZE_DP * density).toInt()
+        val widthPx = context.resources.displayMetrics.widthPixels
         return PhotonUtils.getPhotonImageUrl(
-            sourceUrl, sizePx, sizePx, site.isPrivateWPComAtomic
+            sourceUrl, widthPx, 0, site.isPrivateWPComAtomic
         )
-    }
-
-    companion object {
-        const val FEATURED_IMAGE_SIZE_DP = 64
     }
 }

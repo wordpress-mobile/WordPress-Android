@@ -112,12 +112,6 @@ class PostRsSettingsViewModel @Inject constructor(
                     }
                 }
             }
-            RetryableField.FEATURED_IMAGE -> {
-                _uiState.update {
-                    it.copy(featuredImage = FieldState.Loading)
-                }
-                resolveFeaturedImage(post.featuredMedia)
-            }
         }
     }
 
