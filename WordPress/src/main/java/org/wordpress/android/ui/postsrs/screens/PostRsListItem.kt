@@ -147,6 +147,10 @@ private fun PostContentItem(
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                 }
+                if (post.badges.isNotEmpty()) {
+                    BadgeRow(post.badges)
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
                 Text(
                     text = post.title.ifBlank { stringResource(R.string.untitled_in_parentheses) },
                     style = MaterialTheme.typography.titleMedium,
