@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
@@ -350,4 +351,56 @@ private fun FeaturedImageRow(imageUrl: String) {
             .clip(RoundedCornerShape(8.dp)),
         contentScale = ContentScale.Crop
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewSettingsLoaded() {
+    MaterialTheme {
+        PostRsSettingsScreen(
+            uiState = PostRsSettingsUiState(
+                isLoading = false,
+                postTitle = "My First Post",
+                statusLabel = "Published",
+                publishDate = "Mar 6, 2026, 10:30 AM",
+                password = null,
+                authorName = FieldState.Loaded("Jane Doe"),
+                categoryNames = FieldState.Loaded(
+                    "Travel, Photography"
+                ),
+                tagNames = FieldState.Loaded("nature, hiking"),
+                featuredImage = FieldState.Empty,
+                sticky = true,
+                formatLabel = "Standard",
+                slug = "my-first-post",
+                excerpt = "A short excerpt of the post.",
+            ),
+            onNavigateBack = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewSettingsLoading() {
+    MaterialTheme {
+        PostRsSettingsScreen(
+            uiState = PostRsSettingsUiState(isLoading = true),
+            onNavigateBack = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewSettingsError() {
+    MaterialTheme {
+        PostRsSettingsScreen(
+            uiState = PostRsSettingsUiState(
+                isLoading = false,
+                error = "Unable to load post settings"
+            ),
+            onNavigateBack = {},
+        )
+    }
 }
