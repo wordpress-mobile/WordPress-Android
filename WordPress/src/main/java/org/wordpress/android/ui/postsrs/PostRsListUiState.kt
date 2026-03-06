@@ -194,7 +194,7 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
 }
 
 @StringRes
-private fun PostStatus?.toLabel(): Int = when (this) {
+internal fun PostStatus?.toLabel(): Int = when (this) {
     is PostStatus.Publish ->
         R.string.post_status_post_published
     is PostStatus.Draft -> R.string.post_status_draft

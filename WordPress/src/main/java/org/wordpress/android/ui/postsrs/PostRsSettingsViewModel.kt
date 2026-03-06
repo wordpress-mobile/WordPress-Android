@@ -354,21 +354,12 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     private fun formatStatusLabel(status: PostStatus?): String {
-        val resId = when (status) {
-            is PostStatus.Publish ->
-                R.string.post_status_post_published
-            is PostStatus.Draft -> R.string.post_status_draft
-            is PostStatus.Pending ->
-                R.string.post_status_pending_review
-            is PostStatus.Private ->
-                R.string.post_status_post_private
-            is PostStatus.Future ->
-                R.string.post_status_post_scheduled
-            is PostStatus.Trash ->
-                R.string.post_status_post_trashed
-            else -> return ""
+        val resId = status.toLabel()
+        return if (resId != 0) {
+            resourceProvider.getString(resId)
+        } else {
+            ""
         }
-        return resourceProvider.getString(resId)
     }
 
     private fun formatDate(dateGmt: Date): String {
