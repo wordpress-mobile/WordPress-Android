@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -138,17 +139,13 @@ class PostRsSettingsViewModel @Inject constructor(
             post.categories,
             TermEndpointType.Categories
         ) { names ->
-            _uiState.value = _uiState.value.copy(
-                categoryNames = names
-            )
+            _uiState.update { it.copy(categoryNames = names) }
         }
         resolveTermNames(
             post.tags,
             TermEndpointType.Tags
         ) { names ->
-            _uiState.value = _uiState.value.copy(
-                tagNames = names
-            )
+            _uiState.update { it.copy(tagNames = names) }
         }
     }
 
@@ -209,13 +206,15 @@ class PostRsSettingsViewModel @Inject constructor(
                     )
                 }
                 val name = names[authorId]
-                _uiState.value = _uiState.value.copy(
-                    authorName = if (name != null) {
-                        FieldState.Loaded(name)
-                    } else {
-                        FieldState.Error(fieldError)
-                    }
-                )
+                _uiState.update {
+                    it.copy(
+                        authorName = if (name != null) {
+                            FieldState.Loaded(name)
+                        } else {
+                            FieldState.Error(fieldError)
+                        }
+                    )
+                }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -224,9 +223,11 @@ class PostRsSettingsViewModel @Inject constructor(
                     "Failed to resolve author",
                     e
                 )
-                _uiState.value = _uiState.value.copy(
-                    authorName = FieldState.Error(fieldError)
-                )
+                _uiState.update {
+                    it.copy(
+                        authorName = FieldState.Error(fieldError)
+                    )
+                }
             }
         }
     }
@@ -243,13 +244,15 @@ class PostRsSettingsViewModel @Inject constructor(
                     )
                 }
                 val url = urls[mediaId]
-                _uiState.value = _uiState.value.copy(
-                    featuredImage = if (url != null) {
-                        FieldState.Loaded(url)
-                    } else {
-                        FieldState.Error(fieldError)
-                    }
-                )
+                _uiState.update {
+                    it.copy(
+                        featuredImage = if (url != null) {
+                            FieldState.Loaded(url)
+                        } else {
+                            FieldState.Error(fieldError)
+                        }
+                    )
+                }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -258,9 +261,11 @@ class PostRsSettingsViewModel @Inject constructor(
                     "Failed to resolve featured image",
                     e
                 )
-                _uiState.value = _uiState.value.copy(
-                    featuredImage = FieldState.Error(fieldError)
-                )
+                _uiState.update {
+                    it.copy(
+                        featuredImage = FieldState.Error(fieldError)
+                    )
+                }
             }
         }
     }
@@ -331,20 +336,21 @@ class PostRsSettingsViewModel @Inject constructor(
     private fun formatPostFormatLabel(
         format: PostFormat?
     ): String {
-        return when (format) {
-            is PostFormat.Standard -> "Standard"
-            is PostFormat.Aside -> "Aside"
-            is PostFormat.Chat -> "Chat"
-            is PostFormat.Gallery -> "Gallery"
-            is PostFormat.Link -> "Link"
-            is PostFormat.Image -> "Image"
-            is PostFormat.Quote -> "Quote"
-            is PostFormat.Status -> "Status"
-            is PostFormat.Video -> "Video"
-            is PostFormat.Audio -> "Audio"
-            is PostFormat.Custom -> format.v1
-            null -> ""
+        val resId = when (format) {
+            is PostFormat.Standard -> R.string.post_format_standard
+            is PostFormat.Aside -> R.string.post_format_aside
+            is PostFormat.Chat -> R.string.post_format_chat
+            is PostFormat.Gallery -> R.string.post_format_gallery
+            is PostFormat.Link -> R.string.post_format_link
+            is PostFormat.Image -> R.string.post_format_image
+            is PostFormat.Quote -> R.string.post_format_quote
+            is PostFormat.Status -> R.string.post_format_status
+            is PostFormat.Video -> R.string.post_format_video
+            is PostFormat.Audio -> R.string.post_format_audio
+            is PostFormat.Custom -> return format.v1
+            null -> return ""
         }
+        return resourceProvider.getString(resId)
     }
 
     private class PostFetchException(message: String?) :
