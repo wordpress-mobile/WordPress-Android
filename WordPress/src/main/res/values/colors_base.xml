@@ -19,4 +19,7 @@
 
     <color name="nav_bar">@color/colorPrimary</color>
     <color name="tab_indicator">@color/colorPrimary</color>
+
+    <color name="fab_container">@color/blue_5</color>
+    <color name="fab_on_container">@color/blue_80</color>
 </resources>

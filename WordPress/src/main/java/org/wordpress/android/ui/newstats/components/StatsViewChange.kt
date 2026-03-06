@@ -6,7 +6,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.ui.newstats.StatsColors
-import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
 
 /**
@@ -33,15 +32,11 @@ sealed class StatsViewChange : Parcelable {
 fun StatsChangeIndicator(change: StatsViewChange) {
     val (text, color) = when (change) {
         is StatsViewChange.Positive -> Pair(
-            "+${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
+            String.format(Locale.getDefault(), "+%.1f%%", change.percentage),
             StatsColors.ChangeBadgePositive
         )
         is StatsViewChange.Negative -> Pair(
-            "-${formatStatValue(change.value)} (${
-                String.format(Locale.getDefault(), "%.1f%%", change.percentage)
-            })",
+            String.format(Locale.getDefault(), "-%.1f%%", change.percentage),
             StatsColors.ChangeBadgeNegative
         )
         is StatsViewChange.NoChange -> return
@@ -49,7 +44,7 @@ fun StatsChangeIndicator(change: StatsViewChange) {
 
     Text(
         text = text,
-        style = MaterialTheme.typography.labelSmall,
+        style = MaterialTheme.typography.labelMedium,
         color = color
     )
 }

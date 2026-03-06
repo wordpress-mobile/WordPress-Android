@@ -38,6 +38,14 @@ data class PostTabUiState(
     val isAuthError: Boolean = false
 )
 
+enum class PostDisplayState {
+    NORMAL,
+    FETCHING_WITH_DATA,
+    FAILED_WITH_DATA,
+    PLACEHOLDER,
+    ERROR
+}
+
 data class PostRsUiModel(
     val remotePostId: Long,
     val title: String,
@@ -53,8 +61,9 @@ data class PostRsUiModel(
     val featuredImageId: Long = 0L,
     val featuredImageUrl: String? = null,
     val actions: List<PostRsMenuAction> = emptyList(),
-    val isPlaceholder: Boolean = false,
-    val isError: Boolean = false
+    val badges: List<Int> = emptyList(),
+    val displayState: PostDisplayState =
+        PostDisplayState.NORMAL
 )
 
 enum class PostRsMenuAction(
@@ -108,29 +117,36 @@ fun PostItemState.toUiModel(
         is PostItemState.Stale ->
             data.toUiModel(showStatus)
         is PostItemState.FetchingWithData ->
-            data.toUiModel(showStatus)
+            data.toUiModel(
+                showStatus,
+                PostDisplayState.FETCHING_WITH_DATA
+            )
         is PostItemState.FailedWithData ->
-            data.toUiModel(showStatus)
+            data.toUiModel(
+                showStatus,
+                PostDisplayState.FAILED_WITH_DATA
+            )
         is PostItemState.Missing,
         is PostItemState.Fetching -> PostRsUiModel(
             remotePostId = postId,
             title = "",
             excerpt = "",
             date = "",
-            isPlaceholder = true
+            displayState = PostDisplayState.PLACEHOLDER
         )
         is PostItemState.Failed -> PostRsUiModel(
             remotePostId = postId,
             title = "",
             excerpt = "",
             date = "",
-            isError = true
+            displayState = PostDisplayState.ERROR
         )
     }
 }
 
 private fun FullEntityAnyPostWithEditContext.toUiModel(
-    showStatus: Boolean
+    showStatus: Boolean,
+    displayState: PostDisplayState = PostDisplayState.NORMAL
 ): PostRsUiModel {
     val post: AnyPostWithEditContext = data
     return PostRsUiModel(
@@ -157,7 +173,19 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
             post.status.toLabel()
         } else {
             0
-        }
+        },
+        badges = buildList {
+            if (post.status is PostStatus.Private) {
+                add(R.string.post_status_post_private)
+            }
+            if (post.status is PostStatus.Pending) {
+                add(R.string.post_status_pending_review)
+            }
+            if (post.sticky == true) {
+                add(R.string.post_status_sticky)
+            }
+        },
+        displayState = displayState
     )
 }
 

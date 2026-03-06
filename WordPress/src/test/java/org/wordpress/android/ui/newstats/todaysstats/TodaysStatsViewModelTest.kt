@@ -21,6 +21,9 @@ import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TodayAggregates
 import org.wordpress.android.ui.newstats.repository.TodayAggregatesResult
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
 
 @ExperimentalCoroutinesApi
 class TodaysStatsViewModelTest : BaseUnitTest() {
@@ -57,11 +60,14 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     }
 
     private fun initViewModel() {
+        // Use a clock at 23:00 so trimFutureHours never filters test data
+        val endOfDay = Instant.parse("2024-01-16T23:00:00Z")
         viewModel = TodaysStatsViewModel(
             selectedSiteRepository,
             accountStore,
             statsRepository,
-            resourceProvider
+            resourceProvider,
+            Clock.fixed(endOfDay, ZoneId.of("UTC"))
         )
         viewModel.loadData()
     }
@@ -475,11 +481,13 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         whenever(statsRepository.fetchHourlyViews(any(), any()))
             .thenReturn(createHourlyViewsResult())
 
+        val endOfDay = Instant.parse("2024-01-16T23:00:00Z")
         viewModel = TodaysStatsViewModel(
             selectedSiteRepository,
             accountStore,
             statsRepository,
-            resourceProvider
+            resourceProvider,
+            Clock.fixed(endOfDay, ZoneId.of("UTC"))
         )
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
@@ -519,6 +527,144 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         assertThat(state.chartData.currentPeriod).isEmpty()
     }
 
+    private fun initViewModelWithClock(hour: Int) {
+        // Fixed clock at 2024-01-16T{hour}:30 UTC
+        val instant = Instant.parse(
+            "2024-01-16T%02d:30:00Z".format(hour)
+        )
+        viewModel = TodaysStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            Clock.fixed(instant, ZoneId.of("UTC"))
+        )
+        viewModel.loadData()
+    }
+
+    @Test
+    fun `when current period, then future hours are filtered out`() =
+        test {
+            val aggregates = createTodayAggregates()
+            val hourlyData = createHourlyViewsResultWithHours()
+
+            whenever(statsRepository.fetchTodayAggregates(any()))
+                .thenReturn(TodayAggregatesResult.Success(aggregates))
+            whenever(
+                statsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(0))
+            ).thenReturn(hourlyData)
+            whenever(
+                statsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(1))
+            ).thenReturn(hourlyData)
+
+            // Clock fixed at 14:30 — hours 12, 13, 14 kept; 15, 16 filtered
+            initViewModelWithClock(CLOCK_HOUR)
+            advanceUntilIdle()
+
+            val state =
+                viewModel.uiState.value as TodaysStatsCardUiState.Loaded
+            assertThat(state.chartData.currentPeriod).hasSize(3)
+        }
+
+    @Test
+    fun `when previous period, then future hours are not filtered`() =
+        test {
+            val aggregates = createTodayAggregates()
+            val hourlyData = createHourlyViewsResultWithHours()
+
+            whenever(statsRepository.fetchTodayAggregates(any()))
+                .thenReturn(TodayAggregatesResult.Success(aggregates))
+            whenever(
+                statsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(0))
+            ).thenReturn(hourlyData)
+            whenever(
+                statsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(1))
+            ).thenReturn(hourlyData)
+
+            initViewModelWithClock(CLOCK_HOUR)
+            advanceUntilIdle()
+
+            val state =
+                viewModel.uiState.value as TodaysStatsCardUiState.Loaded
+            // Previous period is not trimmed — all 5 data points remain
+            assertThat(state.chartData.previousPeriod).hasSize(5)
+        }
+
+    @Test
+    fun `when current hour matches data point, then it is included`() =
+        test {
+            val aggregates = createTodayAggregates()
+            // Single data point at exactly the clock hour
+            val hourlyData = HourlyViewsResult.Success(
+                listOf(
+                    HourlyViewsDataPoint(
+                        period = "2024-01-16 14:00:00",
+                        views = 100L
+                    )
+                )
+            )
+
+            whenever(statsRepository.fetchTodayAggregates(any()))
+                .thenReturn(TodayAggregatesResult.Success(aggregates))
+            whenever(
+                statsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(0))
+            ).thenReturn(hourlyData)
+            whenever(
+                statsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(1))
+            ).thenReturn(HourlyViewsResult.Success(emptyList()))
+
+            initViewModelWithClock(CLOCK_HOUR)
+            advanceUntilIdle()
+
+            val state =
+                viewModel.uiState.value as TodaysStatsCardUiState.Loaded
+            assertThat(state.chartData.currentPeriod).hasSize(1)
+        }
+
+    @Test
+    fun `when period string is malformed, then data point is kept`() =
+        test {
+            val aggregates = createTodayAggregates()
+            val hourlyData = HourlyViewsResult.Success(
+                listOf(
+                    HourlyViewsDataPoint(
+                        period = "bad-format",
+                        views = 42L
+                    )
+                )
+            )
+
+            whenever(statsRepository.fetchTodayAggregates(any()))
+                .thenReturn(TodayAggregatesResult.Success(aggregates))
+            whenever(
+                statsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(0))
+            ).thenReturn(hourlyData)
+            whenever(
+                statsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(1))
+            ).thenReturn(HourlyViewsResult.Success(emptyList()))
+
+            initViewModelWithClock(CLOCK_HOUR)
+            advanceUntilIdle()
+
+            val state =
+                viewModel.uiState.value as TodaysStatsCardUiState.Loaded
+            // Malformed period falls through to catch → kept
+            assertThat(state.chartData.currentPeriod).hasSize(1)
+        }
+
+    /**
+     * Creates hourly data spanning hours 12-16 for trim tests.
+     */
+    private fun createHourlyViewsResultWithHours() =
+        HourlyViewsResult.Success(
+            (12..16).map { hour ->
+                HourlyViewsDataPoint(
+                    period = "2024-01-16 %02d:00:00".format(hour),
+                    views = hour * 10L
+                )
+            }
+        )
+
     private fun createTodayAggregates() = TodayAggregates(
         views = TEST_VIEWS,
         visitors = TEST_VISITORS,
@@ -540,6 +686,7 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     )
 
     companion object {
+        private const val CLOCK_HOUR = 14
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
         private const val TEST_VIEWS = 500L
