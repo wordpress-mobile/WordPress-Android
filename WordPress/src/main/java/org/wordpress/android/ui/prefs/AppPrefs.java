@@ -309,6 +309,12 @@ public class AppPrefs {
         // These preferences persist across logout/login cycles.
         IS_TRACK_NETWORK_REQUESTS_ENABLED,
         TRACK_NETWORK_REQUESTS_RETENTION_PERIOD,
+
+        // Indicates if e-ink mode is enabled (grayscale theme, no animations)
+        EINK_MODE_ENABLED,
+
+        // Indicates if e-ink auto-detection has already run on this device
+        EINK_AUTO_DETECT_DONE,
     }
 
     static SharedPreferences prefs() {
@@ -1816,5 +1822,21 @@ public class AppPrefs {
 
     public static void setTrackNetworkRequestsRetentionPeriod(int period) {
         setInt(UndeletablePrefKey.TRACK_NETWORK_REQUESTS_RETENTION_PERIOD, period);
+    }
+
+    public static boolean isEinkModeEnabled() {
+        return getBoolean(UndeletablePrefKey.EINK_MODE_ENABLED, false);
+    }
+
+    public static void setEinkModeEnabled(boolean enabled) {
+        setBoolean(UndeletablePrefKey.EINK_MODE_ENABLED, enabled);
+    }
+
+    public static boolean isEinkAutoDetectDone() {
+        return getBoolean(UndeletablePrefKey.EINK_AUTO_DETECT_DONE, false);
+    }
+
+    public static void setEinkAutoDetectDone(boolean done) {
+        setBoolean(UndeletablePrefKey.EINK_AUTO_DETECT_DONE, done);
     }
 }

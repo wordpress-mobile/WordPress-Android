@@ -15,6 +15,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 
+import org.wordpress.android.ui.prefs.AppPrefs;
+
 public class AniUtils {
     public enum Duration {
         SHORT,
@@ -41,12 +43,28 @@ public class AniUtils {
         throw new AssertionError();
     }
 
+    private static boolean isAnimationDisabled() {
+        return AppPrefs.isEinkModeEnabled();
+    }
+
+    private static ObjectAnimator noopAnimator(View target) {
+        ObjectAnimator noop = ObjectAnimator.ofFloat(target, View.ALPHA, target.getAlpha());
+        noop.setDuration(0);
+        return noop;
+    }
+
     public static void startAnimation(View target, int aniResId) {
         startAnimation(target, aniResId, null);
     }
 
     public static void startAnimation(View target, int aniResId, AnimationListener listener) {
         if (target == null) {
+            return;
+        }
+        if (isAnimationDisabled()) {
+            if (listener != null) {
+                listener.onAnimationEnd(null);
+            }
             return;
         }
 
@@ -82,6 +100,10 @@ public class AniUtils {
         if (view == null || view.getVisibility() == newVisibility) {
             return;
         }
+        if (isAnimationDisabled()) {
+            view.setVisibility(newVisibility);
+            return;
+        }
 
         float fromY;
         float toY;
@@ -113,6 +135,11 @@ public class AniUtils {
     }
 
     public static ObjectAnimator getFadeInAnim(final View target, Duration duration) {
+        if (isAnimationDisabled()) {
+            target.setAlpha(1.0f);
+            target.setVisibility(View.VISIBLE);
+            return noopAnimator(target);
+        }
         ObjectAnimator fadeIn = ObjectAnimator.ofFloat(target, View.ALPHA, 0.0f, 1.0f);
         fadeIn.setDuration(duration.toMillis(target.getContext()));
         fadeIn.setInterpolator(new LinearInterpolator());
@@ -126,6 +153,11 @@ public class AniUtils {
     }
 
     public static ObjectAnimator getFadeOutAnim(final View target, Duration duration, final int endVisibility) {
+        if (isAnimationDisabled()) {
+            target.setAlpha(0.0f);
+            target.setVisibility(endVisibility);
+            return noopAnimator(target);
+        }
         ObjectAnimator fadeOut = ObjectAnimator.ofFloat(target, View.ALPHA, 1.0f, 0.0f);
         fadeOut.setDuration(duration.toMillis(target.getContext()));
         fadeOut.setInterpolator(new LinearInterpolator());
@@ -139,9 +171,13 @@ public class AniUtils {
     }
 
     public static void fadeIn(final View target, Duration duration) {
-        if (target != null && duration != null) {
-            getFadeInAnim(target, duration).start();
+        if (target == null || duration == null) return;
+        if (isAnimationDisabled()) {
+            target.setAlpha(1.0f);
+            target.setVisibility(View.VISIBLE);
+            return;
         }
+        getFadeInAnim(target, duration).start();
     }
 
     public static void fadeOut(final View target, Duration duration) {
@@ -149,13 +185,22 @@ public class AniUtils {
     }
 
     public static void fadeOut(final View target, Duration duration, int endVisibility) {
-        if (target != null && duration != null) {
-            getFadeOutAnim(target, duration, endVisibility).start();
+        if (target == null || duration == null) return;
+        if (isAnimationDisabled()) {
+            target.setAlpha(0.0f);
+            target.setVisibility(endVisibility);
+            return;
         }
+        getFadeOutAnim(target, duration, endVisibility).start();
     }
 
     public static void scale(final View target, float scaleStart, float scaleEnd, Duration duration) {
         if (target == null || duration == null) {
+            return;
+        }
+        if (isAnimationDisabled()) {
+            target.setScaleX(scaleEnd);
+            target.setScaleY(scaleEnd);
             return;
         }
 
@@ -171,6 +216,12 @@ public class AniUtils {
 
     public static void scaleIn(final View target, Duration duration) {
         if (target == null || duration == null) {
+            return;
+        }
+        if (isAnimationDisabled()) {
+            target.setScaleX(1f);
+            target.setScaleY(1f);
+            target.setVisibility(View.VISIBLE);
             return;
         }
 
@@ -200,6 +251,13 @@ public class AniUtils {
                                 Duration duration,
                                 final AnimationEndListener endListener) {
         if (target == null || duration == null) {
+            return;
+        }
+        if (isAnimationDisabled()) {
+            target.setVisibility(endVisibility);
+            if (endListener != null) {
+                endListener.onAnimationEnd();
+            }
             return;
         }
 

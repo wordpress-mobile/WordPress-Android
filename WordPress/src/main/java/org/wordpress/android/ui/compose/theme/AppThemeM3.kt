@@ -12,7 +12,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.ui.prefs.AppPrefs
 
 private val localColors = staticCompositionLocalOf { extraPaletteJPLight }
 
@@ -20,9 +22,10 @@ private val localColors = staticCompositionLocalOf { extraPaletteJPLight }
 fun AppThemeM3(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     isJetpackApp: Boolean = BuildConfig.IS_JETPACK_APP,
+    isEinkMode: Boolean = if (LocalInspectionMode.current) false else AppPrefs.isEinkModeEnabled(),
     content: @Composable () -> Unit
 ) {
-    AppThemeM3WithoutBackground(isDarkTheme, isJetpackApp) {
+    AppThemeM3WithoutBackground(isDarkTheme, isJetpackApp, isEinkMode) {
         ContentInSurfaceM3(content)
     }
 }
@@ -31,17 +34,21 @@ fun AppThemeM3(
 fun AppThemeM3WithoutBackground(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     isJetpackApp: Boolean = BuildConfig.IS_JETPACK_APP,
+    isEinkMode: Boolean = if (LocalInspectionMode.current) false else AppPrefs.isEinkModeEnabled(),
     content: @Composable () -> Unit
 ) {
+    val effectiveIsDark = if (isEinkMode) false else isDarkTheme
     val extraColors = getExtraColors(
-        isDarkTheme = isDarkTheme,
-        isJetpackApp = isJetpackApp
+        isDarkTheme = effectiveIsDark,
+        isJetpackApp = isJetpackApp,
+        isEinkMode = isEinkMode,
     )
     CompositionLocalProvider(localColors provides extraColors) {
         MaterialTheme(
             colorScheme = getColorScheme(
-                isDarkTheme = isDarkTheme,
-                isJetpackApp = isJetpackApp
+                isDarkTheme = effectiveIsDark,
+                isJetpackApp = isJetpackApp,
+                isEinkMode = isEinkMode,
             ),
             content = content
         )
@@ -49,17 +56,24 @@ fun AppThemeM3WithoutBackground(
 }
 
 /**
- * This theme should *only* be used in the context of the Editor (e.g. Post Settings).
+ * This theme should *only* be used in the context of the Editor
+ * (e.g. Post Settings).
  * More info: https://github.com/wordpress-mobile/gutenberg-mobile/issues/4889
  */
 @Composable
 fun AppThemeM3Editor(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     isJetpackApp: Boolean = BuildConfig.IS_JETPACK_APP,
+    isEinkMode: Boolean = if (LocalInspectionMode.current) false else AppPrefs.isEinkModeEnabled(),
     content: @Composable () -> Unit
 ) {
+    val effectiveIsDark = if (isEinkMode) false else isDarkTheme
     androidx.compose.material3.MaterialTheme(
-        colorScheme = getColorScheme(isDarkTheme = isDarkTheme, isJetpackApp = isJetpackApp),
+        colorScheme = getColorScheme(
+            isDarkTheme = effectiveIsDark,
+            isJetpackApp = isJetpackApp,
+            isEinkMode = isEinkMode,
+        ),
         content = content
     )
 }
@@ -70,8 +84,11 @@ fun AppThemeM3Editor(
 @Suppress("SameParameterValue")
 private fun getColorScheme(
     isDarkTheme: Boolean,
-    isJetpackApp: Boolean
+    isJetpackApp: Boolean,
+    isEinkMode: Boolean = false,
 ): ColorScheme {
+    if (isEinkMode) return colorSchemeEink
+
     return if (isJetpackApp) {
         if (isDarkTheme) {
             colorSchemeJPDark
@@ -84,6 +101,31 @@ private fun getColorScheme(
         colorSchemeWPLight
     }
 }
+
+// E-ink displays are grayscale with limited shade range (typically
+// 16 levels). Error color is the same as onSurface because there
+// aren't enough distinct shades to differentiate them — error
+// states rely on icons, borders, and layout rather than color alone.
+private val colorSchemeEink = lightColorScheme(
+    primary = AppColor.Black,
+    secondary = AppColor.Gray50,
+    background = AppColor.White,
+    surface = AppColor.White,
+    error = AppColor.Black,
+    onPrimary = AppColor.White,
+    onSecondary = AppColor.White,
+    onBackground = AppColor.Black,
+    onSurface = AppColor.Black,
+    onError = AppColor.White,
+    primaryContainer = AppColor.Gray10,
+    onPrimaryContainer = AppColor.Black,
+    secondaryContainer = AppColor.Gray10,
+    onSecondaryContainer = AppColor.Black,
+    outline = AppColor.Gray50,
+    outlineVariant = AppColor.Gray30,
+    surfaceVariant = AppColor.Gray10,
+    onSurfaceVariant = AppColor.Black,
+)
 
 private val colorSchemeJPLight = lightColorScheme(
     primary = AppColor.JetpackGreen50,
@@ -146,8 +188,11 @@ private val colorSchemeWPDark = darkColorScheme(
 @Suppress("SameParameterValue")
 private fun getExtraColors(
     isDarkTheme: Boolean,
-    isJetpackApp: Boolean
+    isJetpackApp: Boolean,
+    isEinkMode: Boolean = false,
 ): ExtraColors {
+    if (isEinkMode) return extraPaletteEink
+
     return if (isJetpackApp) {
         if (isDarkTheme) {
             extraPaletteJPDark
@@ -160,6 +205,13 @@ private fun getExtraColors(
         extraPaletteWPLight
     }
 }
+
+private val extraPaletteEink = ExtraColors(
+    success = AppColor.Black,
+    warning = AppColor.Gray50,
+    neutral = AppColor.Gray50,
+    ghost = AppColor.Black,
+)
 
 private val extraPaletteJPLight = ExtraColors(
     success = AppColor.JetpackGreen50,

@@ -513,6 +513,14 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getTrackNetworkRequestsRetentionPeriod()
         set(value) = AppPrefs.setTrackNetworkRequestsRetentionPeriod(value)
 
+    var isEinkModeEnabled: Boolean
+        get() = AppPrefs.isEinkModeEnabled()
+        set(enabled) = AppPrefs.setEinkModeEnabled(enabled)
+
+    var isEinkAutoDetectDone: Boolean
+        get() = AppPrefs.isEinkAutoDetectDone()
+        set(done) = AppPrefs.setEinkAutoDetectDone(done)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

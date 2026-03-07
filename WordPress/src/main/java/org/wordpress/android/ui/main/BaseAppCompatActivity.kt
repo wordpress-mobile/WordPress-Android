@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import org.wordpress.android.support.SupportWebViewActivity
+import org.wordpress.android.ui.accounts.DeviceInfoActivity
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordsListActivity
 import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignParentActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity
@@ -40,6 +41,7 @@ import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.subscribers.SubscribersActivity
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.taxonomies.TermsDataViewActivity
 
 /**
@@ -50,11 +52,35 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Disable animations for e-ink devices
+        if (AppPrefs.isEinkModeEnabled()) {
+            window.setWindowAnimations(0)
+            disableActivityTransition()
+        }
+
         // apply insets for Android 15+ edge-to-edge
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) &&
             !isExcludedActivity(this)
         ) {
             applyInsetOffsets()
+        }
+    }
+
+    override fun finish() {
+        super.finish()
+        if (AppPrefs.isEinkModeEnabled()) {
+            disableActivityTransition()
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun disableActivityTransition() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, 0, 0)
+            overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, 0, 0)
+        } else {
+            overridePendingTransition(0, 0)
         }
     }
 
@@ -90,6 +116,7 @@ private val excludedActivities = listOf(
     BlazeCampaignParentActivity::class.java.name,
     BloggingPromptsListActivity::class.java.name,
     DebugSharedPreferenceFlagsActivity::class.java.name,
+    DeviceInfoActivity::class.java.name,
     DomainManagementActivity::class.java.name,
     EditJetpackSocialShareMessageActivity::class.java.name,
     ExperimentalFeaturesActivity::class.java.name,

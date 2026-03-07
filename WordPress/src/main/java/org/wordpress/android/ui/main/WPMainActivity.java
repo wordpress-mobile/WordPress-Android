@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.play.core.install.model.AppUpdateType;
@@ -135,6 +136,7 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.EinkDeviceDetector;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.DeviceUtils;
@@ -410,6 +412,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             checkTrackAnalyticsEvent();
         }
 
+        showEinkPromptIfNeeded();
+
         // Ensure deep linking activities are enabled.They may have been disabled elsewhere and failed to get re-enabled
         enableDeepLinkingComponentsIfNeeded();
 
@@ -547,6 +551,39 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
                 getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
         );
+    }
+
+    private void showEinkPromptIfNeeded() {
+        if (AppPrefs.isEinkAutoDetectDone()
+                || !EinkDeviceDetector.INSTANCE.isEinkDevice()) {
+            return;
+        }
+        AnalyticsTracker.track(Stat.EINK_PROMPT_SHOWN);
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.eink_prompt_title)
+                .setMessage(R.string.eink_prompt_message)
+                .setCancelable(false)
+                .setPositiveButton(R.string.eink_prompt_enable, (dialog, which) -> {
+                    AppPrefs.setEinkAutoDetectDone(true);
+                    AppPrefs.setEinkModeEnabled(true);
+                    AnalyticsTracker.track(Stat.EINK_PROMPT_ACCEPTED);
+                    Toast.makeText(
+                            this,
+                            R.string.eink_enabled_message,
+                            Toast.LENGTH_LONG
+                    ).show();
+                    recreate();
+                })
+                .setNegativeButton(R.string.eink_prompt_no_thanks, (dialog, which) -> {
+                    AppPrefs.setEinkAutoDetectDone(true);
+                    AnalyticsTracker.track(Stat.EINK_PROMPT_DISMISSED);
+                    Toast.makeText(
+                            this,
+                            R.string.eink_declined_message,
+                            Toast.LENGTH_LONG
+                    ).show();
+                })
+                .show();
     }
 
     private void checkDismissNotification() {
