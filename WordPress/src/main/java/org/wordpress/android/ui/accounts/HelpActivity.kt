@@ -131,6 +131,9 @@ class HelpActivity : BaseAppCompatActivity() {
             logsButton.setOnClickListener { v ->
                 startActivity(Intent(v.context, AppLogViewerActivity::class.java))
             }
+            deviceInfoButton.setOnClickListener { v ->
+                startActivity(Intent(v.context, DeviceInfoActivity::class.java))
+            }
 
             if (originFromExtras == Origin.JETPACK_MIGRATION_HELP) {
                 configureForJetpackMigrationHelp()

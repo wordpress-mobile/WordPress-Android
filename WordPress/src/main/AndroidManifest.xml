@@ -214,6 +214,11 @@
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
+            android:name=".ui.accounts.DeviceInfoActivity"
+            android:label="@string/device_info_title"
+            android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
             android:name=".ui.main.feedbackform.FeedbackFormActivity"
             android:label="@string/feedback_form_title"
             android:theme="@style/WordPress.NoActionBar" />
