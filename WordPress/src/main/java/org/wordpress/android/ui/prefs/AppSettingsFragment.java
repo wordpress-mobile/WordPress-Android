@@ -80,7 +80,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private WPPreference mLanguagePreference;
     private ListPreference mAppThemePreference;
     private ListPreference mInitialScreenPreference;
-    private WPSwitchPreference mEinkModePref;
+    @Nullable private WPSwitchPreference mEinkModePref;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;

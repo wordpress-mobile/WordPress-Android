@@ -15,6 +15,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 
+import androidx.annotation.NonNull;
+
 import org.wordpress.android.ui.prefs.AppPrefs;
 
 public class AniUtils {
@@ -47,7 +49,7 @@ public class AniUtils {
         return AppPrefs.isEinkModeEnabled();
     }
 
-    private static ObjectAnimator noopAnimator(View target) {
+    private static ObjectAnimator noopAnimator(@NonNull View target) {
         ObjectAnimator noop = ObjectAnimator.ofFloat(target, View.ALPHA, target.getAlpha());
         noop.setDuration(0);
         return noop;

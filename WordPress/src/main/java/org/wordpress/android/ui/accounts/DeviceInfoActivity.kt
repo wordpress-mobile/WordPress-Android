@@ -61,6 +61,7 @@ private data class DeviceInfoSection(
 private fun DeviceInfoScreen(onNavigateBack: () -> Unit) {
     val context = LocalContext.current
     val sections = buildDeviceInfoSections()
+    val clipLabel = stringResource(R.string.device_info_title)
 
     Scaffold(
         topBar = {
@@ -103,12 +104,7 @@ private fun DeviceInfoScreen(onNavigateBack: () -> Unit) {
                         ClipboardManager::class.java
                     )
                     clipboard.setPrimaryClip(
-                        ClipData.newPlainText(
-                            context.getString(
-                                R.string.device_info_title
-                            ),
-                            text
-                        )
+                        ClipData.newPlainText(clipLabel, text)
                     )
                     Toast.makeText(
                         context,
