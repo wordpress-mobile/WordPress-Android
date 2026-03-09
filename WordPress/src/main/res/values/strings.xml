@@ -966,8 +966,8 @@
     <!-- E-ink mode -->
     <string name="eink_mode_title">E-ink mode (Beta)</string>
     <string name="eink_mode_summary">Optimizes the display for e-ink screens with a grayscale theme and no animations</string>
-    <string name="eink_prompt_title">E-ink display detected</string>
-    <string name="eink_prompt_message">Would you like to enable e-ink mode? This optimizes the app for eReader devices.</string>
+    <string name="eink_prompt_title">E Ink display detected</string>
+    <string name="eink_prompt_message">Would you like to enable E Ink mode? This optimizes the app for eReader devices.</string>
     <string name="eink_prompt_enable">Enable</string>
     <string name="eink_prompt_no_thanks">No thanks</string>
     <string name="eink_enabled_message">E-ink mode enabled. You can turn it off in Me \u2192 App Settings.</string>
