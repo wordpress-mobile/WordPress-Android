@@ -57,5 +57,6 @@ enum class RetryableField {
 
 sealed interface PostRsSettingsEvent {
     data object Finish : PostRsSettingsEvent
+    data object FinishWithChanges : PostRsSettingsEvent
     data class ShowSnackbar(val message: String) : PostRsSettingsEvent
 }

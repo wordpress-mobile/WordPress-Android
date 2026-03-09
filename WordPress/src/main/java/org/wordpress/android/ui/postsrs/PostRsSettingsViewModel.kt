@@ -241,7 +241,9 @@ class PostRsSettingsViewModel @Inject constructor(
                         )
                     }
                 }
-                _events.trySend(PostRsSettingsEvent.Finish)
+                _events.trySend(
+                    PostRsSettingsEvent.FinishWithChanges
+                )
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.postsrs
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -55,6 +56,10 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                 viewModel.events.collect { event ->
                     when (event) {
                         is PostRsSettingsEvent.Finish -> finish()
+                        is PostRsSettingsEvent.FinishWithChanges -> {
+                            setResult(Activity.RESULT_OK)
+                            finish()
+                        }
                         is PostRsSettingsEvent.ShowSnackbar ->
                             ToastUtils.showToast(
                                 this@PostRsSettingsActivity,

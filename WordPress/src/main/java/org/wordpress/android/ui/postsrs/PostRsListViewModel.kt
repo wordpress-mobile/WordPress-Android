@@ -146,6 +146,18 @@ class PostRsListViewModel @Inject constructor(
         _events.trySend(PostRsListEvent.EditPost(site, post))
     }
 
+    /**
+     * Refreshes all currently initialized tabs. Called when
+     * returning from the settings screen after saving changes.
+     */
+    @MainThread
+    fun refreshAllTabs() {
+        restClient.clearCaches()
+        collections.keys.toList().forEach { tab ->
+            refreshTab(tab)
+        }
+    }
+
     /** Emits a [PostRsListEvent.CreatePost] for the selected site. */
     @MainThread
     fun createNewPost() {
