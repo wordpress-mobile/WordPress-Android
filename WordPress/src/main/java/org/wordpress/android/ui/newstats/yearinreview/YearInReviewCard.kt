@@ -266,10 +266,8 @@ private fun LoadedContent(
                 modifier = Modifier.weight(1f)
             )
         }
-        if (state.years.size > 1) {
-            Spacer(modifier = Modifier.height(8.dp))
-            ShowAllFooter(onClick = onShowAllClick)
-        }
+        Spacer(modifier = Modifier.height(8.dp))
+        ShowAllFooter(onClick = onShowAllClick)
     }
 }
 

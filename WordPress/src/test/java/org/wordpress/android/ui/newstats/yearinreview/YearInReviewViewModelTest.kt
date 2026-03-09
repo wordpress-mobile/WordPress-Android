@@ -19,6 +19,7 @@ import org.wordpress.android.ui.newstats.datasource.YearInsightsData
 import org.wordpress.android.ui.newstats.repository.InsightsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.time.Year
 
 @ExperimentalCoroutinesApi
 class YearInReviewViewModelTest : BaseUnitTest() {
@@ -105,15 +106,17 @@ class YearInReviewViewModelTest : BaseUnitTest() {
                 YearInReviewCardUiState.Loaded::class.java
             )
             with(state as YearInReviewCardUiState.Loaded) {
-                assertThat(years).hasSize(2)
-                assertThat(years[0].year).isEqualTo("2025")
-                assertThat(years[0].totalPosts)
+                assertThat(years).hasSize(3)
+                assertThat(years[0].year)
+                    .isEqualTo(CURRENT_YEAR)
+                assertThat(years[1].year).isEqualTo("2025")
+                assertThat(years[1].totalPosts)
                     .isEqualTo(TEST_TOTAL_POSTS)
-                assertThat(years[0].totalWords)
+                assertThat(years[1].totalWords)
                     .isEqualTo(TEST_TOTAL_WORDS)
-                assertThat(years[0].totalLikes)
+                assertThat(years[1].totalLikes)
                     .isEqualTo(TEST_TOTAL_LIKES)
-                assertThat(years[0].totalComments)
+                assertThat(years[1].totalComments)
                     .isEqualTo(TEST_TOTAL_COMMENTS)
             }
         }
@@ -340,7 +343,7 @@ class YearInReviewViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when data loads with empty years, then loaded state shows empty list`() =
+    fun `when data loads with empty years, then current year is added`() =
         test {
             whenever(statsRepository.fetchInsights(any()))
                 .thenReturn(
@@ -351,8 +354,48 @@ class YearInReviewViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             val state =
-                viewModel.uiState.value as YearInReviewCardUiState.Loaded
-            assertThat(state.years).isEmpty()
+                viewModel.uiState.value
+                    as YearInReviewCardUiState.Loaded
+            assertThat(state.years).hasSize(1)
+            assertThat(state.years[0].year)
+                .isEqualTo(CURRENT_YEAR)
+            assertThat(state.years[0].totalPosts)
+                .isEqualTo(0L)
+        }
+
+    @Test
+    fun `when current year exists in data, then no duplicate is added`() =
+        test {
+            val yearsWithCurrent = listOf(
+                YearInsightsData(
+                    year = CURRENT_YEAR,
+                    totalPosts = TEST_TOTAL_POSTS,
+                    totalWords = TEST_TOTAL_WORDS,
+                    avgWords = TEST_AVG_WORDS,
+                    totalLikes = TEST_TOTAL_LIKES,
+                    avgLikes = TEST_AVG_LIKES,
+                    totalComments = TEST_TOTAL_COMMENTS,
+                    avgComments = TEST_AVG_COMMENTS
+                )
+            )
+            whenever(statsRepository.fetchInsights(any()))
+                .thenReturn(
+                    InsightsResult.Success(
+                        years = yearsWithCurrent
+                    )
+                )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            val state =
+                viewModel.uiState.value
+                    as YearInReviewCardUiState.Loaded
+            assertThat(state.years).hasSize(1)
+            assertThat(state.years[0].year)
+                .isEqualTo(CURRENT_YEAR)
+            assertThat(state.years[0].totalPosts)
+                .isEqualTo(TEST_TOTAL_POSTS)
         }
 
     @Test
@@ -369,11 +412,13 @@ class YearInReviewViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             val detailData = viewModel.getDetailData()
-            assertThat(detailData).hasSize(2)
-            assertThat(detailData[0].year).isEqualTo("2025")
-            assertThat(detailData[0].totalPosts)
+            assertThat(detailData).hasSize(3)
+            assertThat(detailData[0].year)
+                .isEqualTo(CURRENT_YEAR)
+            assertThat(detailData[1].year).isEqualTo("2025")
+            assertThat(detailData[1].totalPosts)
                 .isEqualTo(TEST_TOTAL_POSTS)
-            assertThat(detailData[1].year).isEqualTo("2024")
+            assertThat(detailData[2].year).isEqualTo("2024")
         }
 
     @Test
@@ -444,5 +489,7 @@ class YearInReviewViewModelTest : BaseUnitTest() {
         private const val FAILED_TO_LOAD_ERROR =
             "Failed to load stats"
         private const val UNKNOWN_ERROR = "Unknown error"
+        private val CURRENT_YEAR =
+            Year.now().toString()
     }
 }
