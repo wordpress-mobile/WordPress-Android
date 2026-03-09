@@ -91,7 +91,7 @@ fun PostRsSettingsScreen(
     onDismissDialog: () -> Unit = {},
     onDiscardConfirmed: () -> Unit = {},
 ) {
-    BackHandler(enabled = uiState.hasChanges) {
+    BackHandler {
         onNavigateBack()
     }
 
@@ -719,7 +719,8 @@ private fun DiscardDialog(
         title = {
             Text(
                 stringResource(
-                    R.string.comment_edit_cancel_dialog_title
+                    R.string
+                        .post_rs_settings_discard_title
                 )
             )
         },
@@ -727,7 +728,7 @@ private fun DiscardDialog(
             Text(
                 stringResource(
                     R.string
-                        .comment_edit_cancel_dialog_message
+                        .post_rs_settings_discard_message
                 )
             )
         },

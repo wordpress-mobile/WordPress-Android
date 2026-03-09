@@ -32,7 +32,6 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
             window, window.decorView
         )
         controller.hide(WindowInsetsCompat.Type.statusBars())
-        @Suppress("WrongConstant")
         controller.systemBarsBehavior =
             WindowInsetsControllerCompat
                 .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE

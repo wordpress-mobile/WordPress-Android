@@ -228,7 +228,7 @@ class PostRsSettingsViewModel @Inject constructor(
                     }
                     when (response) {
                         is WpRequestResult.Success -> Unit
-                        else -> throw PostFetchException(
+                        else -> throw PostApiException(
                             (response
                                 as? WpRequestResult.WpError<*>)
                                 ?.errorMessage
@@ -312,7 +312,7 @@ class PostRsSettingsViewModel @Inject constructor(
         when (response) {
             is WpRequestResult.Success ->
                 response.response.data
-            else -> throw PostFetchException(
+            else -> throw PostApiException(
                 (response as? WpRequestResult.WpError<*>)
                     ?.errorMessage
             )
@@ -531,8 +531,8 @@ class PostRsSettingsViewModel @Inject constructor(
         null -> ""
     }
 
-    private class PostFetchException(message: String?) :
-        Exception(message ?: "Failed to fetch post")
+    private class PostApiException(message: String?) :
+        Exception(message ?: "Post API request failed")
 
     companion object {
         const val EXTRA_POST_ID = "extra_post_id"
