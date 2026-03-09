@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.postsrs.screens
 
+import android.view.View
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -46,6 +47,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -58,6 +60,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -341,7 +344,8 @@ private fun FloatingSaveButton(
             modifier = modifier
                 .padding(12.dp)
                 .size(24.dp),
-            strokeWidth = 2.dp
+            strokeWidth = 2.dp,
+            color = Color.White,
         )
     } else {
         IconButton(
@@ -353,6 +357,7 @@ private fun FloatingSaveButton(
                 contentDescription = stringResource(
                     R.string.save
                 ),
+                tint = Color.White,
             )
         }
     }
@@ -635,6 +640,16 @@ private fun PasswordDialog(
     onPasswordSet: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val view = LocalView.current
+    DisposableEffect(Unit) {
+        val prev = view.importantForAutofill
+        view.importantForAutofill =
+            View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
+        onDispose {
+            view.importantForAutofill = prev
+        }
+    }
+
     var text by rememberSaveable {
         mutableStateOf(currentPassword)
     }
