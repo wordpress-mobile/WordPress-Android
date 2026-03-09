@@ -68,6 +68,7 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         cardType: InsightsCardType
     ): Unit = withContext(ioDispatcher) {
         val current = getConfiguration(siteId)
+        if (current.visibleCards.contains(cardType)) return@withContext
         val newVisibleCards = current.visibleCards + cardType
         saveConfiguration(
             siteId,
@@ -176,12 +177,12 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         }
     }
 
+    @Suppress("USELESS_CAST")
     private fun isValidConfiguration(
         config: InsightsCardsConfiguration
     ): Boolean {
-        val validCards =
-            config.visibleCards.filterIsInstance<InsightsCardType>()
-        return validCards.size == config.visibleCards.size
+        return (config.visibleCards as List<Any?>)
+            .none { it == null }
     }
 
     private fun resetToDefault(

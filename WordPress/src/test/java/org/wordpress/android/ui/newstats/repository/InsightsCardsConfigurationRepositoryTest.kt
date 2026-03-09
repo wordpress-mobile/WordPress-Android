@@ -202,6 +202,136 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                 )
         }
 
+    @Test
+    fun `when addCard is called with existing card, then card is not duplicated`() =
+        test {
+            val initialJson = """
+                {
+                    "visibleCards": ["YEAR_IN_REVIEW"]
+                }
+            """.trimIndent()
+            whenever(
+                appPrefsWrapper
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(initialJson)
+
+            repository.addCard(
+                TEST_SITE_ID,
+                InsightsCardType.YEAR_IN_REVIEW
+            )
+
+            verify(appPrefsWrapper, org.mockito.kotlin.never())
+                .setStatsInsightsCardsConfigurationJson(
+                    any(), any()
+                )
+        }
+
+    @Test
+    fun `when moveCardUp on first card, then order unchanged`() =
+        test {
+            val initialJson = """
+                {
+                    "visibleCards": ["YEAR_IN_REVIEW"]
+                }
+            """.trimIndent()
+            whenever(
+                appPrefsWrapper
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(initialJson)
+
+            repository.moveCardUp(
+                TEST_SITE_ID,
+                InsightsCardType.YEAR_IN_REVIEW
+            )
+
+            verify(appPrefsWrapper, org.mockito.kotlin.never())
+                .setStatsInsightsCardsConfigurationJson(
+                    any(), any()
+                )
+        }
+
+    @Test
+    fun `when moveCardDown on last card, then order unchanged`() =
+        test {
+            val initialJson = """
+                {
+                    "visibleCards": ["YEAR_IN_REVIEW"]
+                }
+            """.trimIndent()
+            whenever(
+                appPrefsWrapper
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(initialJson)
+
+            repository.moveCardDown(
+                TEST_SITE_ID,
+                InsightsCardType.YEAR_IN_REVIEW
+            )
+
+            verify(appPrefsWrapper, org.mockito.kotlin.never())
+                .setStatsInsightsCardsConfigurationJson(
+                    any(), any()
+                )
+        }
+
+    @Test
+    fun `when moveCardToTop on first card, then order unchanged`() =
+        test {
+            val initialJson = """
+                {
+                    "visibleCards": ["YEAR_IN_REVIEW"]
+                }
+            """.trimIndent()
+            whenever(
+                appPrefsWrapper
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(initialJson)
+
+            repository.moveCardToTop(
+                TEST_SITE_ID,
+                InsightsCardType.YEAR_IN_REVIEW
+            )
+
+            verify(appPrefsWrapper, org.mockito.kotlin.never())
+                .setStatsInsightsCardsConfigurationJson(
+                    any(), any()
+                )
+        }
+
+    @Test
+    fun `when moveCardToBottom on last card, then order unchanged`() =
+        test {
+            val initialJson = """
+                {
+                    "visibleCards": ["YEAR_IN_REVIEW"]
+                }
+            """.trimIndent()
+            whenever(
+                appPrefsWrapper
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(initialJson)
+
+            repository.moveCardToBottom(
+                TEST_SITE_ID,
+                InsightsCardType.YEAR_IN_REVIEW
+            )
+
+            verify(appPrefsWrapper, org.mockito.kotlin.never())
+                .setStatsInsightsCardsConfigurationJson(
+                    any(), any()
+                )
+        }
+
     companion object {
         private const val TEST_SITE_ID = 123L
     }

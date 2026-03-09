@@ -14,6 +14,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.YearInsightsData
 import org.wordpress.android.ui.newstats.repository.InsightsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.Year
 import javax.inject.Inject
@@ -126,11 +127,15 @@ class YearInReviewViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error loading insights: ${e.message}",
+                e
+            )
             _uiState.value = YearInReviewCardUiState.Error(
-                message = e.message
-                    ?: resourceProvider.getString(
-                        R.string.stats_error_unknown
-                    ),
+                message = resourceProvider.getString(
+                    R.string.stats_error_unknown
+                ),
                 onRetry = ::loadData
             )
         }
@@ -150,8 +155,6 @@ class YearInReviewViewModel @Inject constructor(
     }
 
     companion object {
-        private val CURRENT_YEAR = Year.now().toString()
-
         private fun YearInsightsData.toUiModel() =
             YearSummary(
                 year = year,
@@ -166,11 +169,12 @@ class YearInReviewViewModel @Inject constructor(
 
         private fun List<YearSummary>.ensureCurrentYear():
             List<YearSummary> {
-            return if (any { it.year == CURRENT_YEAR }) {
+            val currentYear = Year.now().toString()
+            return if (any { it.year == currentYear }) {
                 this
             } else {
                 this + YearSummary(
-                    year = CURRENT_YEAR,
+                    year = currentYear,
                     totalPosts = 0L,
                     totalWords = 0L,
                     avgWords = 0.0,

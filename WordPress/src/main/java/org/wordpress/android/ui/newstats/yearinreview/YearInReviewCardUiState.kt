@@ -10,7 +10,7 @@ sealed class YearInReviewCardUiState {
         val years: List<YearSummary>
     ) : YearInReviewCardUiState()
 
-    data class Error(
+    class Error(
         val message: String,
         val onRetry: () -> Unit
     ) : YearInReviewCardUiState()

@@ -120,9 +120,6 @@ private fun YearInReviewDetailScreen(
             verticalArrangement =
                 Arrangement.spacedBy(16.dp)
         ) {
-            item {
-                Spacer(modifier = Modifier.height(0.dp))
-            }
             items(years) { year ->
                 YearDetailSection(year)
             }

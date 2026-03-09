@@ -154,7 +154,7 @@ class YearInReviewViewModelTest : BaseUnitTest() {
             )
             assertThat(
                 (state as YearInReviewCardUiState.Error).message
-            ).isEqualTo("Test exception")
+            ).isEqualTo(UNKNOWN_ERROR)
         }
 
     @Test
