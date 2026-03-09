@@ -1,11 +1,12 @@
 package org.wordpress.android.ui.postsrs
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.Lifecycle
@@ -26,6 +27,15 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        val controller = WindowInsetsControllerCompat(
+            window, window.decorView
+        )
+        controller.hide(WindowInsetsCompat.Type.statusBars())
+        @Suppress("WrongConstant")
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat
+                .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
         observeEvents()
 
@@ -57,7 +67,7 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                     when (event) {
                         is PostRsSettingsEvent.Finish -> finish()
                         is PostRsSettingsEvent.FinishWithChanges -> {
-                            setResult(Activity.RESULT_OK)
+                            setResult(RESULT_OK)
                             finish()
                         }
                         is PostRsSettingsEvent.ShowSnackbar ->
