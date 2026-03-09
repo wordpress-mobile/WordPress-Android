@@ -15,9 +15,9 @@ platform :android do
   lane :build_and_run_instrumented_test do |options|
     app = get_app_name_option!(options)
 
-    gradle(tasks: ["WordPress:assemble#{app.to_s.capitalize}VanillaDebug", "WordPress:assemble#{app.to_s.capitalize}VanillaDebugAndroidTest"])
+    gradle(tasks: ["WordPress:assemble#{app.to_s.capitalize}Debug", "WordPress:assemble#{app.to_s.capitalize}DebugAndroidTest"])
 
-    annotation_ctx = "firebase-test-#{app}-vanilla-debug"
+    annotation_ctx = "firebase-test-#{app}-debug"
     begin
       gradle(task: "runFlank#{app.to_s.capitalize}")
       sh("buildkite-agent annotation remove --context '#{annotation_ctx}' || true") if is_ci?
