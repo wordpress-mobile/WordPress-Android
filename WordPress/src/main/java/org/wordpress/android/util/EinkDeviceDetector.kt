@@ -74,6 +74,7 @@ object EinkDeviceDetector {
         model = Build.MODEL,
     )
 
+    @Suppress("ReturnCount")
     internal fun isEinkDevice(
         manufacturer: String,
         brand: String,

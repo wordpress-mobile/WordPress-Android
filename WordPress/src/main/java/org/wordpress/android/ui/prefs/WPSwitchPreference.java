@@ -69,7 +69,6 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             } else {
                 ViewCompat.setPaddingRelative(titleView, mStartOffset, 0, 0, 0);
             }
-
         }
 
         // style custom switch preference
