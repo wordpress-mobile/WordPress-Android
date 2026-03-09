@@ -158,7 +158,8 @@ private fun YearDetailSection(year: YearSummary) {
             modifier = Modifier.padding(bottom = 12.dp)
         )
         StatRow(
-            labelRes = R.string.stats_insights_posts,
+            labelRes =
+                R.string.stats_insights_total_posts,
             value = formatStatValue(year.totalPosts)
         )
         StatDivider()
@@ -170,7 +171,7 @@ private fun YearDetailSection(year: YearSummary) {
         StatDivider()
         StatRow(
             labelRes =
-                R.string.stats_insights_average_comments,
+                R.string.stats_insights_avg_comments_per_post,
             value = formatStatValue(year.avgComments)
         )
         StatDivider()
@@ -182,7 +183,7 @@ private fun YearDetailSection(year: YearSummary) {
         StatDivider()
         StatRow(
             labelRes =
-                R.string.stats_insights_average_likes,
+                R.string.stats_insights_avg_likes_per_post,
             value = formatStatValue(year.avgLikes)
         )
         StatDivider()
@@ -194,7 +195,7 @@ private fun YearDetailSection(year: YearSummary) {
         StatDivider()
         StatRow(
             labelRes =
-                R.string.stats_insights_average_words,
+                R.string.stats_insights_avg_words_per_post,
             value = formatStatValue(year.avgWords)
         )
     }

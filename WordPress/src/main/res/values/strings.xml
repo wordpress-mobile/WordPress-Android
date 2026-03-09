@@ -1493,6 +1493,12 @@
     <string name="stats_insights_total_stats_seven_days_negative">%1$s lower than the previous 7-days</string>
     <string name="stats_insights_average_likes">Avg likes/post</string>
     <string name="stats_insights_total_words">Total words</string>
+    <string name="stats_insights_words">Words</string>
+    <string name="stats_insights_likes">Likes</string>
+    <string name="stats_insights_total_posts">Total posts</string>
+    <string name="stats_insights_avg_comments_per_post">Avg comments per post</string>
+    <string name="stats_insights_avg_likes_per_post">Avg likes per post</string>
+    <string name="stats_insights_avg_words_per_post">Avg words per post</string>
     <string name="stats_insights_average_words">Avg words/post</string>
     <string name="stats_insights_best_day">Best Day</string>
     <string name="stats_insights_best_hour">Best Hour</string>

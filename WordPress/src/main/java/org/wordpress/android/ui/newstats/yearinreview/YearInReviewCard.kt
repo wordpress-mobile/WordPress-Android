@@ -239,7 +239,7 @@ private fun LoadedContent(
             StatMiniCard(
                 icon = Icons.AutoMirrored.Outlined.TextSnippet,
                 labelRes =
-                    R.string.stats_insights_total_words,
+                    R.string.stats_insights_words,
                 value = formatStatValue(year.totalWords),
                 modifier = Modifier.weight(1f)
             )
@@ -253,7 +253,7 @@ private fun LoadedContent(
             StatMiniCard(
                 icon = Icons.Outlined.StarOutline,
                 labelRes =
-                    R.string.stats_insights_total_likes,
+                    R.string.stats_insights_likes,
                 value = formatStatValue(year.totalLikes),
                 modifier = Modifier.weight(1f)
             )
