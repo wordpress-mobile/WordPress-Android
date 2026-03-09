@@ -22,7 +22,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -54,6 +56,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -149,9 +152,6 @@ fun PostRsSettingsScreen(
 @Composable
 private fun NormalAppBarLayout(
     onNavigateBack: () -> Unit,
-    hasChanges: Boolean = false,
-    isSaving: Boolean = false,
-    onSaveClicked: () -> Unit = {},
     content: @Composable BoxScope.() -> Unit,
 ) {
     Scaffold(
@@ -173,14 +173,6 @@ private fun NormalAppBarLayout(
                             contentDescription = stringResource(
                                 R.string.back
                             )
-                        )
-                    }
-                },
-                actions = {
-                    if (hasChanges) {
-                        SaveButton(
-                            isSaving = isSaving,
-                            onSaveClicked = onSaveClicked,
                         )
                     }
                 }
@@ -207,12 +199,7 @@ private fun HeroSettingsLayout(
     onStickyToggled: () -> Unit,
     onSaveClicked: () -> Unit,
 ) {
-    NormalAppBarLayout(
-        onNavigateBack = onNavigateBack,
-        hasChanges = uiState.hasChanges,
-        isSaving = uiState.isSaving,
-        onSaveClicked = onSaveClicked,
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -242,6 +229,22 @@ private fun HeroSettingsLayout(
                 onStatusClicked = onStatusClicked,
                 onPasswordClicked = onPasswordClicked,
                 onStickyToggled = onStickyToggled,
+            )
+        }
+        FloatingBackButton(
+            onNavigateBack = onNavigateBack,
+            modifier = Modifier
+                .statusBarsPadding()
+                .padding(start = 4.dp, top = 4.dp)
+        )
+        if (uiState.hasChanges) {
+            FloatingSaveButton(
+                isSaving = uiState.isSaving,
+                onSaveClicked = onSaveClicked,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .statusBarsPadding()
+                    .padding(end = 4.dp, top = 4.dp)
             )
         }
     }
@@ -302,25 +305,56 @@ private fun HeroImagePlaceholder(
     }
 }
 
+private fun Modifier.floatingButtonStyle() = this
+    .size(40.dp)
+    .background(
+        color = Color.Black.copy(alpha = 0.4f),
+        shape = CircleShape
+    )
+
 @Composable
-private fun SaveButton(
+private fun FloatingBackButton(
+    onNavigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    IconButton(
+        onClick = onNavigateBack,
+        modifier = modifier.floatingButtonStyle()
+    ) {
+        Icon(
+            Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = stringResource(
+                R.string.back
+            ),
+            tint = Color.White
+        )
+    }
+}
+
+@Composable
+private fun FloatingSaveButton(
     isSaving: Boolean,
     onSaveClicked: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    if (isSaving) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .padding(end = 12.dp)
-                .size(24.dp),
-            strokeWidth = 2.dp
-        )
-    } else {
-        IconButton(onClick = onSaveClicked) {
+    IconButton(
+        onClick = onSaveClicked,
+        enabled = !isSaving,
+        modifier = modifier.floatingButtonStyle()
+    ) {
+        if (isSaving) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                color = Color.White,
+                strokeWidth = 2.dp
+            )
+        } else {
             Icon(
                 Icons.Default.Check,
                 contentDescription = stringResource(
                     R.string.save
-                )
+                ),
+                tint = Color.White
             )
         }
     }
