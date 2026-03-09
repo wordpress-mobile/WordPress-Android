@@ -82,17 +82,9 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
     }
 
     companion object {
-        fun createIntent(
-            context: Context,
-            postId: Long,
-        ): Intent {
-            return Intent(
-                context,
-                PostRsSettingsActivity::class.java
-            ).putExtra(
-                PostRsSettingsViewModel.EXTRA_POST_ID,
-                postId
-            )
+        fun createIntent(context: Context, postId: Long): Intent {
+            return Intent(context, PostRsSettingsActivity::class.java)
+                .putExtra(PostRsSettingsViewModel.EXTRA_POST_ID, postId)
         }
     }
 }

@@ -1022,7 +1022,6 @@
     <string name="post_rs_settings_password_dialog_title">Post Password</string>
     <string name="post_rs_settings_password_hint">Enter password</string>
     <string name="post_rs_settings_remove_password">Remove password</string>
-    <string name="post_rs_settings_save_success">Post updated</string>
     <string name="post_rs_settings_save_error">Couldn\'t update post</string>
     <string name="post_rs_settings_status_dialog_title">Post Status</string>
     <string name="show_less">Show less</string>

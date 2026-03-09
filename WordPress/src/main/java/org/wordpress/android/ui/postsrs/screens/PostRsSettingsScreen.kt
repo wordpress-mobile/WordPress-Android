@@ -405,26 +405,21 @@ private fun SettingsContent(
         )
         HorizontalDivider()
 
-        val passwordModifier = Modifier.clickable(
-            onClick = onPasswordClicked
-        )
         val effectivePassword = uiState.effectivePassword
-        if (effectivePassword.isNullOrEmpty()) {
-            SettingsRow(
-                label = stringResource(R.string.password),
-                value = stringResource(R.string.none),
-                dimmed = true,
-                modifier = passwordModifier
-            )
-        } else {
-            SettingsRow(
-                label = stringResource(R.string.password),
-                value = stringResource(
+        SettingsRow(
+            label = stringResource(R.string.password),
+            value = if (effectivePassword.isNullOrEmpty()) {
+                stringResource(R.string.none)
+            } else {
+                stringResource(
                     R.string.post_rs_settings_protected
-                ),
-                modifier = passwordModifier
+                )
+            },
+            dimmed = effectivePassword.isNullOrEmpty(),
+            modifier = Modifier.clickable(
+                onClick = onPasswordClicked
             )
-        }
+        )
         HorizontalDivider()
 
         AsyncSettingsRow(
@@ -483,22 +478,15 @@ private fun SettingsContent(
         )
         HorizontalDivider()
 
-        if (uiState.slug.isNotEmpty()) {
-            SettingsRow(
-                label = stringResource(
-                    R.string.post_settings_slug
-                ),
-                value = uiState.slug
-            )
-        } else {
-            SettingsRow(
-                label = stringResource(
-                    R.string.post_settings_slug
-                ),
-                value = stringResource(R.string.none),
-                dimmed = true
-            )
-        }
+        SettingsRow(
+            label = stringResource(
+                R.string.post_settings_slug
+            ),
+            value = uiState.slug.ifEmpty {
+                stringResource(R.string.none)
+            },
+            dimmed = uiState.slug.isEmpty()
+        )
         HorizontalDivider()
 
         if (uiState.excerpt.isNotEmpty()) {
@@ -1077,7 +1065,6 @@ private fun PreviewSettingsFieldErrors() {
             uiState = PostRsSettingsUiState(
                 isLoading = false,
                 postTitle = "Test Post",
-
                 publishDate = "Mar 6, 2026, 10:30 AM",
                 authorName = FieldState.Error(
                     "Couldn't load"
