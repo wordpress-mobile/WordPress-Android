@@ -105,6 +105,14 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun setStatsCardsConfigurationJson(siteId: Long, json: String?) =
         AppPrefs.setStatsCardsConfigurationJson(siteId, json)
 
+    fun getStatsInsightsCardsConfigurationJson(siteId: Long): String? =
+        AppPrefs.getStatsInsightsCardsConfigurationJson(siteId)
+
+    fun setStatsInsightsCardsConfigurationJson(
+        siteId: Long,
+        json: String?
+    ) = AppPrefs.setStatsInsightsCardsConfigurationJson(siteId, json)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)

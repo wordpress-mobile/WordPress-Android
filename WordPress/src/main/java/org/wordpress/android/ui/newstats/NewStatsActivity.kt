@@ -43,6 +43,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -59,6 +61,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -96,6 +99,8 @@ import org.wordpress.android.ui.newstats.videoplays.VideoPlaysViewModel
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
 import android.widget.Toast
+import org.wordpress.android.ui.newstats.yearinreview.YearInReviewCard
+import org.wordpress.android.ui.newstats.yearinreview.YearInReviewViewModel
 import org.wordpress.android.util.AppLog
 
 @AndroidEntryPoint
@@ -242,9 +247,15 @@ private fun NewStatsScreen(
 }
 
 @Composable
-private fun StatsTabContent(tab: StatsTab, viewsStatsViewModel: ViewsStatsViewModel) {
+private fun StatsTabContent(
+    tab: StatsTab,
+    viewsStatsViewModel: ViewsStatsViewModel
+) {
     when (tab) {
-        StatsTab.TRAFFIC -> TrafficTabContent(viewsStatsViewModel = viewsStatsViewModel)
+        StatsTab.TRAFFIC -> TrafficTabContent(
+            viewsStatsViewModel = viewsStatsViewModel
+        )
+        StatsTab.INSIGHTS -> InsightsTabContent()
         else -> PlaceholderTabContent(tab)
     }
 }
@@ -858,6 +869,259 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     if (StatsCardType.VIDEO_PLAYS in this) onVideoPlays()
     if (StatsCardType.FILE_DOWNLOADS in this) onFileDownloads()
     if (StatsCardType.DEVICES in this) onDevices()
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+@Suppress("LongMethod")
+private fun InsightsTabContent(
+    yearInReviewViewModel: YearInReviewViewModel = viewModel(),
+    insightsViewModel: InsightsViewModel = viewModel()
+) {
+    val yearInReviewUiState by yearInReviewViewModel
+        .uiState.collectAsState()
+    val isYearInReviewRefreshing by yearInReviewViewModel
+        .isRefreshing.collectAsState()
+    val isRefreshing = isYearInReviewRefreshing
+    val pullToRefreshState = rememberPullToRefreshState()
+
+    val visibleCards by insightsViewModel
+        .visibleCards.collectAsState()
+    val hiddenCards by insightsViewModel
+        .hiddenCards.collectAsState()
+    val isNetworkAvailable by insightsViewModel
+        .isNetworkAvailable.collectAsState()
+    val cardsToLoad by insightsViewModel
+        .cardsToLoad.collectAsState()
+    var showAddCardSheet by remember { mutableStateOf(false) }
+    val addCardSheetState = rememberModalBottomSheetState()
+
+    LaunchedEffect(cardsToLoad) {
+        cardsToLoad.dispatchInsightsToVisibleCards(
+            onYearInReview = {
+                yearInReviewViewModel.loadDataIfNeeded()
+            }
+        )
+    }
+
+    if (showAddCardSheet) {
+        AddInsightsCardBottomSheet(
+            sheetState = addCardSheetState,
+            availableCards = hiddenCards,
+            onDismiss = { showAddCardSheet = false },
+            onCardSelected = { cardType ->
+                insightsViewModel.addCard(cardType)
+            }
+        )
+    }
+
+    var showNoConnectionScreen by remember {
+        mutableStateOf(!isNetworkAvailable)
+    }
+
+    val loadVisibleCards = {
+        visibleCards.dispatchInsightsToVisibleCards(
+            onYearInReview = { yearInReviewViewModel.loadData() }
+        )
+    }
+
+    LaunchedEffect(isNetworkAvailable) {
+        if (isNetworkAvailable && showNoConnectionScreen) {
+            showNoConnectionScreen = false
+            loadVisibleCards()
+        } else if (!isNetworkAvailable &&
+            !showNoConnectionScreen
+        ) {
+            showNoConnectionScreen = true
+        }
+    }
+
+    if (showNoConnectionScreen) {
+        NoConnectionContent(
+            onRetry = {
+                val isAvailable =
+                    insightsViewModel.checkNetworkStatus()
+                if (isAvailable) {
+                    showNoConnectionScreen = false
+                    loadVisibleCards()
+                }
+            }
+        )
+        return
+    }
+
+    PullToRefreshBox(
+        modifier = Modifier.fillMaxSize(),
+        isRefreshing = isRefreshing,
+        state = pullToRefreshState,
+        onRefresh = {
+            insightsViewModel.checkNetworkStatus()
+            visibleCards.dispatchInsightsToVisibleCards(
+                onYearInReview = {
+                    yearInReviewViewModel.refresh()
+                }
+            )
+        },
+        indicator = {
+            PullToRefreshDefaults.Indicator(
+                state = pullToRefreshState,
+                isRefreshing = isRefreshing,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            if (visibleCards.isEmpty()) {
+                val emptyStateMessage = stringResource(
+                    R.string.stats_no_cards_message
+                )
+                Text(
+                    text = emptyStateMessage,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme
+                        .onSurfaceVariant,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(32.dp)
+                        .semantics {
+                            contentDescription =
+                                emptyStateMessage
+                        },
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            val cardPositions = remember(visibleCards) {
+                visibleCards.mapIndexed { index, _ ->
+                    CardPosition(
+                        index = index,
+                        totalCards = visibleCards.size
+                    )
+                }
+            }
+
+            visibleCards.forEachIndexed { index, cardType ->
+                val cardPosition = cardPositions[index]
+                when (cardType) {
+                    InsightsCardType.YEAR_IN_REVIEW ->
+                        YearInReviewCard(
+                            uiState = yearInReviewUiState,
+                            onRemoveCard = {
+                                insightsViewModel
+                                    .removeCard(cardType)
+                            },
+                            cardPosition = cardPosition,
+                            onMoveUp = {
+                                insightsViewModel
+                                    .moveCardUp(cardType)
+                            },
+                            onMoveToTop = {
+                                insightsViewModel
+                                    .moveCardToTop(cardType)
+                            },
+                            onMoveDown = {
+                                insightsViewModel
+                                    .moveCardDown(cardType)
+                            },
+                            onMoveToBottom = {
+                                insightsViewModel
+                                    .moveCardToBottom(cardType)
+                            }
+                        )
+                }
+            }
+
+            AddCardButton(
+                onClick = { showAddCardSheet = true },
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
+}
+
+private fun List<InsightsCardType>.dispatchInsightsToVisibleCards(
+    onYearInReview: () -> Unit
+) {
+    if (InsightsCardType.YEAR_IN_REVIEW in this) {
+        onYearInReview()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AddInsightsCardBottomSheet(
+    sheetState: SheetState,
+    availableCards: List<InsightsCardType>,
+    onDismiss: () -> Unit,
+    onCardSelected: (InsightsCardType) -> Unit
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 32.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.stats_add_card_title),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            if (availableCards.isEmpty()) {
+                Text(
+                    text = stringResource(
+                        R.string.stats_all_cards_visible
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme
+                        .onSurfaceVariant,
+                    modifier = Modifier.padding(vertical = 24.dp)
+                )
+            } else {
+                availableCards.forEach { cardType ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onCardSelected(cardType)
+                                onDismiss()
+                            }
+                            .padding(vertical = 12.dp),
+                        verticalAlignment =
+                            Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null,
+                            tint = MaterialTheme
+                                .colorScheme.primary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+                            text = stringResource(
+                                cardType.displayNameResId
+                            ),
+                            style = MaterialTheme
+                                .typography.bodyLarge,
+                            color = MaterialTheme
+                                .colorScheme.onSurface
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable

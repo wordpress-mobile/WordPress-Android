@@ -18,6 +18,7 @@ import uniffi.wp_api.StatsRegionViewsParams
 import uniffi.wp_api.StatsRegionViewsPeriod
 import uniffi.wp_api.StatsDevicesParams
 import uniffi.wp_api.StatsDevicesPeriod
+import uniffi.wp_api.StatsInsightsParams
 import uniffi.wp_api.StatsSearchTermsParams
 import uniffi.wp_api.StatsSearchTermsPeriod
 import uniffi.wp_api.StatsTopAuthorsParams
@@ -980,6 +981,67 @@ class StatsDataSourceImpl @Inject constructor(
             "StatsDataSourceImpl: $methodName " +
                 "unexpected result - $result" to
                 StatsErrorType.UNKNOWN
+        }
+    }
+
+    override suspend fun fetchStatsInsights(
+        siteId: String
+    ): StatsInsightsDataResult {
+        val result = getOrCreateClient()
+            .request { requestBuilder ->
+                requestBuilder.statsInsights()
+                    .getStatsInsights(
+                        wpComSiteId = siteId.toULong(),
+                        params = StatsInsightsParams()
+                    )
+            }
+
+        logResultType("fetchStatsInsights", result)
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val data = result.response.data
+                val years = data.years
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchStatsInsights success " +
+                        "- ${years.size} years"
+                )
+                StatsInsightsDataResult.Success(
+                    StatsInsightsData(
+                        years = years.map { yearData ->
+                            YearInsightsData(
+                                year = yearData.year,
+                                totalPosts =
+                                    yearData.totalPosts
+                                        .toLong(),
+                                totalWords =
+                                    yearData.totalWords
+                                        .toLong(),
+                                avgWords =
+                                    yearData.avgWords,
+                                totalLikes =
+                                    yearData.totalLikes
+                                        .toLong(),
+                                avgLikes =
+                                    yearData.avgLikes,
+                                totalComments =
+                                    yearData.totalComments
+                                        .toLong(),
+                                avgComments =
+                                    yearData.avgComments
+                            )
+                        }
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchStatsInsights",
+                result
+            ) {
+                StatsInsightsDataResult.Error(it)
+            }
         }
     }
 

@@ -207,6 +207,16 @@ interface StatsDataSource {
         dateRange: StatsDateRange,
         max: Int = 10
     ): DevicesDataResult
+
+    /**
+     * Fetches stats insights for a specific site.
+     *
+     * @param siteId The WordPress.com site ID as String
+     * @return Result containing the insights data or an error
+     */
+    suspend fun fetchStatsInsights(
+        siteId: String
+    ): StatsInsightsDataResult
 }
 
 /**
@@ -529,3 +539,36 @@ sealed class DevicesDataResult {
  * (percentage for screen size, view count for browser/platform).
  */
 data class DevicesData(val items: Map<String, Double>)
+
+/**
+ * Result wrapper for stats insights fetch operation.
+ */
+sealed class StatsInsightsDataResult {
+    data class Success(
+        val data: StatsInsightsData
+    ) : StatsInsightsDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : StatsInsightsDataResult()
+}
+
+/**
+ * Stats insights data from the API.
+ */
+data class StatsInsightsData(
+    val years: List<YearInsightsData>
+)
+
+/**
+ * A single year's insights summary.
+ */
+data class YearInsightsData(
+    val year: String,
+    val totalPosts: Long,
+    val totalWords: Long,
+    val avgWords: Double,
+    val totalLikes: Long,
+    val avgLikes: Double,
+    val totalComments: Long,
+    val avgComments: Double
+)

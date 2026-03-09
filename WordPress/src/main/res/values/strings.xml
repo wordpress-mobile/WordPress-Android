@@ -1498,6 +1498,7 @@
     <string name="stats_insights_best_hour">Best Hour</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
     <string name="stats_insights_today_stats">Today</string>
+    <string name="stats_insights_year_in_review">Year in Review</string>
 
     <!-- Stats refreshed insights -->
     <string name="stats_insights_all_time_stats">All-time</string>
