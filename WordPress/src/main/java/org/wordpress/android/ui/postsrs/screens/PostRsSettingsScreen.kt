@@ -29,6 +29,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -60,6 +62,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -587,8 +591,8 @@ private fun SettingsDialogs(
             onDismiss = onDismissDialog,
         )
         is DialogState.PasswordDialog -> PasswordDialog(
-            hasPassword = !uiState.effectivePassword
-                .isNullOrEmpty(),
+            currentPassword = uiState.effectivePassword
+                ?: "",
             onPasswordSet = onPasswordSet,
             onDismiss = onDismissDialog,
         )
@@ -641,11 +645,16 @@ private fun StatusDialog(
 
 @Composable
 private fun PasswordDialog(
-    hasPassword: Boolean,
+    currentPassword: String,
     onPasswordSet: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    var text by rememberSaveable { mutableStateOf("") }
+    var text by rememberSaveable {
+        mutableStateOf(currentPassword)
+    }
+    var passwordVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -671,9 +680,33 @@ private fun PasswordDialog(
                         )
                     },
                     singleLine = true,
+                    visualTransformation = if (passwordVisible) {
+                        VisualTransformation.None
+                    } else {
+                        PasswordVisualTransformation()
+                    },
+                    trailingIcon = {
+                        IconButton(
+                            onClick = {
+                                passwordVisible =
+                                    !passwordVisible
+                            }
+                        ) {
+                            Icon(
+                                imageVector = if (
+                                    passwordVisible
+                                ) {
+                                    Icons.Default.VisibilityOff
+                                } else {
+                                    Icons.Default.Visibility
+                                },
+                                contentDescription = null
+                            )
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
-                if (hasPassword) {
+                if (currentPassword.isNotEmpty()) {
                     TextButton(
                         onClick = { onPasswordSet("") },
                         modifier = Modifier.padding(top = 8.dp)

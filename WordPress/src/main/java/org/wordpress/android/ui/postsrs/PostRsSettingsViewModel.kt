@@ -241,14 +241,7 @@ class PostRsSettingsViewModel @Inject constructor(
                         )
                     }
                 }
-                _events.trySend(
-                    PostRsSettingsEvent.ShowSnackbar(
-                        resourceProvider.getString(
-                            R.string.post_rs_settings_save_success
-                        )
-                    )
-                )
-                loadPost()
+                _events.trySend(PostRsSettingsEvent.Finish)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -258,12 +251,13 @@ class PostRsSettingsViewModel @Inject constructor(
                     e
                 )
                 _uiState.update { it.copy(isSaving = false) }
+                val message = e.message?.takeIf {
+                    it.isNotBlank()
+                } ?: resourceProvider.getString(
+                    R.string.post_rs_settings_save_error
+                )
                 _events.trySend(
-                    PostRsSettingsEvent.ShowSnackbar(
-                        resourceProvider.getString(
-                            R.string.post_rs_settings_save_error
-                        )
-                    )
+                    PostRsSettingsEvent.ShowSnackbar(message)
                 )
             }
         }
