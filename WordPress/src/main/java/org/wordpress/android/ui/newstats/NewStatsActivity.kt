@@ -882,9 +882,8 @@ private fun InsightsTabContent(
     val context = LocalContext.current
     val yearInReviewUiState by yearInReviewViewModel
         .uiState.collectAsState()
-    val isYearInReviewRefreshing by yearInReviewViewModel
+    val isRefreshing by yearInReviewViewModel
         .isRefreshing.collectAsState()
-    val isRefreshing = isYearInReviewRefreshing
     val pullToRefreshState = rememberPullToRefreshState()
 
     val visibleCards by insightsViewModel

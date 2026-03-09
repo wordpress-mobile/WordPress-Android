@@ -150,6 +150,8 @@ class YearInReviewViewModel @Inject constructor(
     }
 
     companion object {
+        private val CURRENT_YEAR = Year.now().toString()
+
         private fun YearInsightsData.toUiModel() =
             YearSummary(
                 year = year,
@@ -164,12 +166,11 @@ class YearInReviewViewModel @Inject constructor(
 
         private fun List<YearSummary>.ensureCurrentYear():
             List<YearSummary> {
-            val currentYear = Year.now().toString()
-            return if (any { it.year == currentYear }) {
+            return if (any { it.year == CURRENT_YEAR }) {
                 this
             } else {
                 this + YearSummary(
-                    year = currentYear,
+                    year = CURRENT_YEAR,
                     totalPosts = 0L,
                     totalWords = 0L,
                     avgWords = 0.0,
