@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -56,7 +55,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -305,13 +303,6 @@ private fun HeroImagePlaceholder(
     }
 }
 
-private fun Modifier.floatingButtonStyle() = this
-    .size(40.dp)
-    .background(
-        color = Color.Black.copy(alpha = 0.4f),
-        shape = CircleShape
-    )
-
 @Composable
 private fun FloatingBackButton(
     onNavigateBack: () -> Unit,
@@ -319,14 +310,13 @@ private fun FloatingBackButton(
 ) {
     IconButton(
         onClick = onNavigateBack,
-        modifier = modifier.floatingButtonStyle()
+        modifier = modifier
     ) {
         Icon(
             Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = stringResource(
                 R.string.back
             ),
-            tint = Color.White
         )
     }
 }
@@ -337,24 +327,23 @@ private fun FloatingSaveButton(
     onSaveClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    IconButton(
-        onClick = onSaveClicked,
-        enabled = !isSaving,
-        modifier = modifier.floatingButtonStyle()
-    ) {
-        if (isSaving) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(20.dp),
-                color = Color.White,
-                strokeWidth = 2.dp
-            )
-        } else {
+    if (isSaving) {
+        CircularProgressIndicator(
+            modifier = modifier
+                .padding(12.dp)
+                .size(24.dp),
+            strokeWidth = 2.dp
+        )
+    } else {
+        IconButton(
+            onClick = onSaveClicked,
+            modifier = modifier
+        ) {
             Icon(
                 Icons.Default.Check,
                 contentDescription = stringResource(
                     R.string.save
                 ),
-                tint = Color.White
             )
         }
     }
