@@ -970,8 +970,8 @@
     <string name="eink_prompt_message">Would you like to enable E Ink mode? This optimizes the app for eReader devices.</string>
     <string name="eink_prompt_enable">Enable</string>
     <string name="eink_prompt_no_thanks">No thanks</string>
-    <string name="eink_enabled_message">E-ink mode enabled. You can turn it off in Me \u2192 App Settings.</string>
-    <string name="eink_declined_message">No problem! You can enable e-ink mode anytime in Me \u2192 App Settings.</string>
+    <string name="eink_enabled_message">E-ink mode enabled. You can turn it off in Me \u2192 App Settings \u2192 Experimental Features.</string>
+    <string name="eink_declined_message">No problem! You can enable e-ink mode anytime in Me \u2192 App Settings \u2192 Experimental Features.</string>
 
     <!-- Experimental Features -->
     <string name="experimental_features_screen_title">Experimental Features</string>

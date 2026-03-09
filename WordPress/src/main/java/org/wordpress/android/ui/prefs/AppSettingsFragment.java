@@ -80,8 +80,6 @@ public class AppSettingsFragment extends PreferenceFragment
     private WPPreference mLanguagePreference;
     private ListPreference mAppThemePreference;
     private ListPreference mInitialScreenPreference;
-    @Nullable private WPSwitchPreference mEinkModePref;
-
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
     private DetailListPreference mImageMaxSizePref;
@@ -142,10 +140,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mAppThemePreference = (ListPreference) findPreference(getString(R.string.pref_key_app_theme));
         mAppThemePreference.setOnPreferenceChangeListener(this);
-
-        mEinkModePref = (WPSwitchPreference) findPreference(getString(R.string.pref_key_eink_mode));
-        mEinkModePref.setChecked(AppPrefs.isEinkModeEnabled());
-        mEinkModePref.setOnPreferenceChangeListener(this);
 
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
@@ -472,11 +466,6 @@ public class AppSettingsFragment extends PreferenceFragment
             AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_APPEARANCE_CHANGED, Collections
                     .singletonMap(TRACK_STYLE, (String) newValue));
             // restart activity to make sure changes are applied to PreferenceScreen
-            getActivity().recreate();
-        } else if (preference == mEinkModePref) {
-            AppPrefs.setEinkModeEnabled((Boolean) newValue);
-            AnalyticsTracker.track(Stat.APP_SETTINGS_EINK_MODE_CHANGED, Collections
-                    .singletonMap(TRACK_ENABLED, newValue));
             getActivity().recreate();
         } else if (preference == mReportCrashPref) {
             AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED, Collections
