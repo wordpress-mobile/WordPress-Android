@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.InsightsCardsConfigurationRepository
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
@@ -57,7 +58,14 @@ class InsightsViewModel @Inject constructor(
     }
 
     private fun loadConfiguration() {
-        val currentSiteId = siteId
+        val currentSiteId = selectedSiteRepository
+            .getSelectedSite()?.siteId ?: run {
+            AppLog.w(
+                AppLog.T.STATS,
+                "No site selected, skipping config load"
+            )
+            return
+        }
         viewModelScope.launch {
             val config = cardConfigurationRepository
                 .getConfiguration(currentSiteId)
@@ -88,7 +96,7 @@ class InsightsViewModel @Inject constructor(
     }
 
     fun removeCard(cardType: InsightsCardType) {
-        val currentSiteId = siteId
+        val currentSiteId = resolvedSiteId() ?: return
         viewModelScope.launch {
             cardConfigurationRepository
                 .removeCard(currentSiteId, cardType)
@@ -96,7 +104,7 @@ class InsightsViewModel @Inject constructor(
     }
 
     fun addCard(cardType: InsightsCardType) {
-        val currentSiteId = siteId
+        val currentSiteId = resolvedSiteId() ?: return
         viewModelScope.launch {
             cardConfigurationRepository
                 .addCard(currentSiteId, cardType)
@@ -104,7 +112,7 @@ class InsightsViewModel @Inject constructor(
     }
 
     fun moveCardUp(cardType: InsightsCardType) {
-        val currentSiteId = siteId
+        val currentSiteId = resolvedSiteId() ?: return
         viewModelScope.launch {
             cardConfigurationRepository
                 .moveCardUp(currentSiteId, cardType)
@@ -112,7 +120,7 @@ class InsightsViewModel @Inject constructor(
     }
 
     fun moveCardToTop(cardType: InsightsCardType) {
-        val currentSiteId = siteId
+        val currentSiteId = resolvedSiteId() ?: return
         viewModelScope.launch {
             cardConfigurationRepository
                 .moveCardToTop(currentSiteId, cardType)
@@ -120,7 +128,7 @@ class InsightsViewModel @Inject constructor(
     }
 
     fun moveCardDown(cardType: InsightsCardType) {
-        val currentSiteId = siteId
+        val currentSiteId = resolvedSiteId() ?: return
         viewModelScope.launch {
             cardConfigurationRepository
                 .moveCardDown(currentSiteId, cardType)
@@ -128,10 +136,21 @@ class InsightsViewModel @Inject constructor(
     }
 
     fun moveCardToBottom(cardType: InsightsCardType) {
-        val currentSiteId = siteId
+        val currentSiteId = resolvedSiteId() ?: return
         viewModelScope.launch {
             cardConfigurationRepository
                 .moveCardToBottom(currentSiteId, cardType)
+        }
+    }
+
+    private fun resolvedSiteId(): Long? {
+        return selectedSiteRepository
+            .getSelectedSite()?.siteId ?: run {
+            AppLog.w(
+                AppLog.T.STATS,
+                "No site selected for card operation"
+            )
+            null
         }
     }
 }

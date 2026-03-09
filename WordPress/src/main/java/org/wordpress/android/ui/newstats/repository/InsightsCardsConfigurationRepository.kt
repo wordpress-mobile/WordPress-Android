@@ -5,6 +5,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.newstats.InsightsCardType
@@ -21,6 +23,8 @@ class InsightsCardsConfigurationRepository @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
+    private val mutex = Mutex()
+
     private val gson = GsonBuilder()
         .registerTypeAdapterFactory(
             EnumWithFallbackValueTypeAdapterFactory()
@@ -54,36 +58,45 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         siteId: Long,
         cardType: InsightsCardType
     ): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        val newVisibleCards = current.visibleCards.toMutableList()
-        newVisibleCards.remove(cardType)
-        saveConfiguration(
-            siteId,
-            current.copy(visibleCards = newVisibleCards)
-        )
+        mutex.withLock {
+            val current = getConfiguration(siteId)
+            val newVisibleCards =
+                current.visibleCards.toMutableList()
+            newVisibleCards.remove(cardType)
+            saveConfiguration(
+                siteId,
+                current.copy(visibleCards = newVisibleCards)
+            )
+        }
     }
 
     suspend fun addCard(
         siteId: Long,
         cardType: InsightsCardType
     ): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        if (current.visibleCards.contains(cardType)) return@withContext
-        val newVisibleCards = current.visibleCards + cardType
-        saveConfiguration(
-            siteId,
-            current.copy(visibleCards = newVisibleCards)
-        )
+        mutex.withLock {
+            val current = getConfiguration(siteId)
+            if (current.visibleCards.contains(cardType)) return@withLock
+            val newVisibleCards = current.visibleCards + cardType
+            saveConfiguration(
+                siteId,
+                current.copy(visibleCards = newVisibleCards)
+            )
+        }
     }
 
     suspend fun moveCardUp(
         siteId: Long,
         cardType: InsightsCardType
     ): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        val index = current.visibleCards.indexOf(cardType)
-        if (index > 0) {
-            moveCardToIndex(siteId, current, cardType, index - 1)
+        mutex.withLock {
+            val current = getConfiguration(siteId)
+            val index = current.visibleCards.indexOf(cardType)
+            if (index > 0) {
+                moveCardToIndex(
+                    siteId, current, cardType, index - 1
+                )
+            }
         }
     }
 
@@ -91,10 +104,12 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         siteId: Long,
         cardType: InsightsCardType
     ): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        val index = current.visibleCards.indexOf(cardType)
-        if (index > 0) {
-            moveCardToIndex(siteId, current, cardType, 0)
+        mutex.withLock {
+            val current = getConfiguration(siteId)
+            val index = current.visibleCards.indexOf(cardType)
+            if (index > 0) {
+                moveCardToIndex(siteId, current, cardType, 0)
+            }
         }
     }
 
@@ -102,12 +117,16 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         siteId: Long,
         cardType: InsightsCardType
     ): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        val index = current.visibleCards.indexOf(cardType)
-        if (index >= 0 && index < current.visibleCards.size - 1) {
-            moveCardToIndex(
-                siteId, current, cardType, index + 1
-            )
+        mutex.withLock {
+            val current = getConfiguration(siteId)
+            val index = current.visibleCards.indexOf(cardType)
+            if (index >= 0 &&
+                index < current.visibleCards.size - 1
+            ) {
+                moveCardToIndex(
+                    siteId, current, cardType, index + 1
+                )
+            }
         }
     }
 
@@ -115,15 +134,19 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         siteId: Long,
         cardType: InsightsCardType
     ): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        val index = current.visibleCards.indexOf(cardType)
-        if (index >= 0 && index < current.visibleCards.size - 1) {
-            moveCardToIndex(
-                siteId,
-                current,
-                cardType,
-                current.visibleCards.size - 1
-            )
+        mutex.withLock {
+            val current = getConfiguration(siteId)
+            val index = current.visibleCards.indexOf(cardType)
+            if (index >= 0 &&
+                index < current.visibleCards.size - 1
+            ) {
+                moveCardToIndex(
+                    siteId,
+                    current,
+                    cardType,
+                    current.visibleCards.size - 1
+                )
+            }
         }
     }
 

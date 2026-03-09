@@ -111,7 +111,7 @@ class StatsRepositoryInsightsTest : BaseUnitTest() {
             repository.fetchInsights(TEST_SITE_ID)
 
             verify(statsDataSource).fetchStatsInsights(
-                TEST_SITE_ID.toString()
+                TEST_SITE_ID
             )
         }
 

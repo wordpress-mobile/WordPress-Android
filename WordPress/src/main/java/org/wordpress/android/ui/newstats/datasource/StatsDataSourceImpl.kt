@@ -985,7 +985,7 @@ class StatsDataSourceImpl @Inject constructor(
     }
 
     override suspend fun fetchStatsInsights(
-        siteId: String
+        siteId: Long
     ): StatsInsightsDataResult {
         val result = getOrCreateClient()
             .request { requestBuilder ->

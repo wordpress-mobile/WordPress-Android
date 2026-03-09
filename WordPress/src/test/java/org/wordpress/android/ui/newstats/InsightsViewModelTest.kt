@@ -9,6 +9,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -179,12 +180,9 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         }
 
     @Test
-    fun `when no site selected, then siteId defaults to 0`() = test {
+    fun `when no site selected, then config is not loaded`() = test {
         whenever(selectedSiteRepository.getSelectedSite())
             .thenReturn(null)
-        whenever(
-            cardConfigurationRepository.getConfiguration(0L)
-        ).thenReturn(InsightsCardsConfiguration())
 
         viewModel = InsightsViewModel(
             selectedSiteRepository,
@@ -193,7 +191,25 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         )
         advanceUntilIdle()
 
-        verify(cardConfigurationRepository).getConfiguration(0L)
+        verify(cardConfigurationRepository, never())
+            .getConfiguration(org.mockito.kotlin.any())
+    }
+
+    @Test
+    fun `when no site selected, then removeCard is no-op`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        whenever(selectedSiteRepository.getSelectedSite())
+            .thenReturn(null)
+        viewModel.removeCard(InsightsCardType.YEAR_IN_REVIEW)
+        advanceUntilIdle()
+
+        verify(cardConfigurationRepository, never())
+            .removeCard(
+                org.mockito.kotlin.any(),
+                org.mockito.kotlin.any()
+            )
     }
 
     @Test

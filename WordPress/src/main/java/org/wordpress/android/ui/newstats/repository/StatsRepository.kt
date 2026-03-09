@@ -1327,7 +1327,7 @@ class StatsRepository @Inject constructor(
         siteId: Long
     ): InsightsResult = withContext(ioDispatcher) {
         val result = statsDataSource.fetchStatsInsights(
-            siteId = siteId.toString()
+            siteId = siteId
         )
         when (result) {
             is StatsInsightsDataResult.Success ->

@@ -116,6 +116,7 @@ class YearInReviewViewModel @Inject constructor(
                         )
                 }
                 is InsightsResult.Error -> {
+                    isLoadedSuccessfully = false
                     _uiState.value =
                         YearInReviewCardUiState.Error(
                             message = resourceProvider
@@ -127,6 +128,7 @@ class YearInReviewViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
+            isLoadedSuccessfully = false
             AppLog.e(
                 AppLog.T.STATS,
                 "Error loading insights: ${e.message}",

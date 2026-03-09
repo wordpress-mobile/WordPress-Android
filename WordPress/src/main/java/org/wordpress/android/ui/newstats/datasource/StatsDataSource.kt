@@ -211,11 +211,11 @@ interface StatsDataSource {
     /**
      * Fetches stats insights for a specific site.
      *
-     * @param siteId The WordPress.com site ID as String
+     * @param siteId The WordPress.com site ID
      * @return Result containing the insights data or an error
      */
     suspend fun fetchStatsInsights(
-        siteId: String
+        siteId: Long
     ): StatsInsightsDataResult
 }
 

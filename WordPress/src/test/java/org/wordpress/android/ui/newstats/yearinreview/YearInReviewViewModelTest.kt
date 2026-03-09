@@ -451,6 +451,54 @@ class YearInReviewViewModelTest : BaseUnitTest() {
             assertThat(detailData).isEmpty()
         }
 
+    @Test
+    fun `when refresh fails after success, then loadDataIfNeeded reloads`() =
+        test {
+            whenever(statsRepository.fetchInsights(any()))
+                .thenReturn(
+                    InsightsResult.Success(
+                        years = createTestYears()
+                    )
+                )
+
+            viewModel = YearInReviewViewModel(
+                selectedSiteRepository,
+                accountStore,
+                statsRepository,
+                resourceProvider
+            )
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value).isInstanceOf(
+                YearInReviewCardUiState.Loaded::class.java
+            )
+
+            whenever(statsRepository.fetchInsights(any()))
+                .thenReturn(InsightsResult.Error("Network error"))
+            viewModel.refresh()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value).isInstanceOf(
+                YearInReviewCardUiState.Error::class.java
+            )
+
+            whenever(statsRepository.fetchInsights(any()))
+                .thenReturn(
+                    InsightsResult.Success(
+                        years = createTestYears()
+                    )
+                )
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value).isInstanceOf(
+                YearInReviewCardUiState.Loaded::class.java
+            )
+            verify(statsRepository, times(3))
+                .fetchInsights(eq(TEST_SITE_ID))
+        }
+
     private fun createTestYears() = listOf(
         YearInsightsData(
             year = "2025",
