@@ -33,11 +33,17 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
             AppThemeM3 {
                 PostRsSettingsScreen(
                     uiState = uiState,
-                    onNavigateBack = {
-                        onBackPressedDispatcher.onBackPressed()
-                    },
+                    onNavigateBack = viewModel::onBackClicked,
                     onRetry = viewModel::retry,
                     onRetryField = viewModel::retryField,
+                    onStatusClicked = viewModel::onStatusClicked,
+                    onStatusSelected = viewModel::onStatusSelected,
+                    onPasswordClicked = viewModel::onPasswordClicked,
+                    onPasswordSet = viewModel::onPasswordSet,
+                    onStickyToggled = viewModel::onStickyToggled,
+                    onSaveClicked = viewModel::onSaveClicked,
+                    onDismissDialog = viewModel::onDismissDialog,
+                    onDiscardConfirmed = viewModel::onDiscardConfirmed,
                 )
             }
         }
@@ -61,9 +67,17 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
     }
 
     companion object {
-        fun createIntent(context: Context, postId: Long): Intent {
-            return Intent(context, PostRsSettingsActivity::class.java)
-                .putExtra(PostRsSettingsViewModel.EXTRA_POST_ID, postId)
+        fun createIntent(
+            context: Context,
+            postId: Long,
+        ): Intent {
+            return Intent(
+                context,
+                PostRsSettingsActivity::class.java
+            ).putExtra(
+                PostRsSettingsViewModel.EXTRA_POST_ID,
+                postId
+            )
         }
     }
 }

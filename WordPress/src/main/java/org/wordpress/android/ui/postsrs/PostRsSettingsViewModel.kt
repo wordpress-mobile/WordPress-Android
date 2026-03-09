@@ -27,12 +27,14 @@ import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostRetrieveParams
 import uniffi.wp_api.PostStatus
+import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_api.TermEndpointType
 import java.text.DateFormat
 import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
+@Suppress("TooManyFunctions")
 class PostRsSettingsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     selectedSiteRepository: SelectedSiteRepository,
@@ -111,6 +113,158 @@ class PostRsSettingsViewModel @Inject constructor(
                         it.copy(tagNames = names)
                     }
                 }
+            }
+        }
+    }
+
+    fun onStatusClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.StatusDialog)
+        }
+    }
+
+    fun onStatusSelected(status: PostStatus) {
+        val original = _uiState.value.postStatus
+        _uiState.update {
+            it.copy(
+                editedStatus = if (status != original) {
+                    status
+                } else {
+                    null
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onPasswordClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.PasswordDialog)
+        }
+    }
+
+    fun onPasswordSet(password: String) {
+        val original = _uiState.value.password ?: ""
+        _uiState.update {
+            it.copy(
+                editedPassword = if (password != original) {
+                    password
+                } else {
+                    null
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onStickyToggled() {
+        val current = _uiState.value
+        val original = current.sticky
+        val newValue = !current.effectiveSticky
+        _uiState.update {
+            it.copy(
+                editedSticky = if (newValue != original) {
+                    newValue
+                } else {
+                    null
+                }
+            )
+        }
+    }
+
+    fun onDismissDialog() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.None)
+        }
+    }
+
+    fun onBackClicked() {
+        if (_uiState.value.hasChanges) {
+            _uiState.update {
+                it.copy(dialogState = DialogState.DiscardDialog)
+            }
+        } else {
+            _events.trySend(PostRsSettingsEvent.Finish)
+        }
+    }
+
+    fun onDiscardConfirmed() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.None)
+        }
+        _events.trySend(PostRsSettingsEvent.Finish)
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    fun onSaveClicked() {
+        val site = site ?: return
+        val state = _uiState.value
+        if (!state.hasChanges || state.isSaving) return
+
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            _events.trySend(
+                PostRsSettingsEvent.ShowSnackbar(
+                    resourceProvider.getString(
+                        R.string.error_generic_network
+                    )
+                )
+            )
+            return
+        }
+
+        _uiState.update { it.copy(isSaving = true) }
+
+        viewModelScope.launch {
+            try {
+                val params = PostUpdateParams(
+                    status = state.editedStatus,
+                    password = state.editedPassword,
+                    sticky = state.editedSticky,
+                    meta = null
+                )
+                withContext(Dispatchers.IO) {
+                    val client =
+                        wpApiClientProvider.getWpApiClient(site)
+                    val response = client.request {
+                        it.posts().update(
+                            PostEndpointType.Posts,
+                            postId,
+                            params
+                        )
+                    }
+                    when (response) {
+                        is WpRequestResult.Success -> Unit
+                        else -> throw PostFetchException(
+                            (response
+                                as? WpRequestResult.WpError<*>)
+                                ?.errorMessage
+                        )
+                    }
+                }
+                _events.trySend(
+                    PostRsSettingsEvent.ShowSnackbar(
+                        resourceProvider.getString(
+                            R.string.post_rs_settings_save_success
+                        )
+                    )
+                )
+                loadPost()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to save post settings",
+                    e
+                )
+                _uiState.update { it.copy(isSaving = false) }
+                _events.trySend(
+                    PostRsSettingsEvent.ShowSnackbar(
+                        resourceProvider.getString(
+                            R.string.post_rs_settings_save_error
+                        )
+                    )
+                )
             }
         }
     }
@@ -202,7 +356,6 @@ class PostRsSettingsViewModel @Inject constructor(
             isLoading = false,
             postTitle = post.title?.raw?.takeIf { it.isNotBlank() }
                 ?: post.title?.rendered ?: "",
-            statusLabel = formatStatusLabel(post.status),
             publishDate = formatDate(post.dateGmt),
             password = post.password,
             authorName = if (
@@ -236,6 +389,7 @@ class PostRsSettingsViewModel @Inject constructor(
             formatLabel = formatPostFormatLabel(post.format),
             slug = post.slug,
             excerpt = post.excerpt?.raw ?: "",
+            postStatus = post.status,
         )
     }
 
@@ -350,15 +504,6 @@ class PostRsSettingsViewModel @Inject constructor(
                 )
                 update(FieldState.Error(fieldError))
             }
-        }
-    }
-
-    private fun formatStatusLabel(status: PostStatus?): String {
-        val resId = status.toLabel()
-        return if (resId != 0) {
-            resourceProvider.getString(resId)
-        } else {
-            ""
         }
     }
 
