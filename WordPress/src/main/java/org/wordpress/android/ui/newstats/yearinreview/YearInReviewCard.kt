@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.yearinreview
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -8,6 +9,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,10 +17,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Article
+import androidx.compose.material.icons.automirrored.outlined.Chat
+import androidx.compose.material.icons.automirrored.outlined.TextSnippet
+import androidx.compose.material.icons.outlined.StarOutline
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,6 +50,7 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
 private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
+private val MiniCardCornerRadius = 8.dp
 
 @Composable
 fun YearInReviewCard(
@@ -131,36 +141,34 @@ private fun LoadingContent() {
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
+        // Title shimmer
         Box(
             modifier = Modifier
-                .width(120.dp)
+                .width(140.dp)
                 .height(24.dp)
                 .clip(RoundedCornerShape(4.dp))
                 .background(shimmerBrush)
         )
         Spacer(modifier = Modifier.height(16.dp))
+        // 2x2 grid shimmer
         repeat(2) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement =
+                    Arrangement.spacedBy(12.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(20.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                repeat(4) {
+                repeat(2) {
                     Box(
                         modifier = Modifier
-                            .width(50.dp)
-                            .height(20.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .weight(1f)
+                            .height(80.dp)
+                            .clip(
+                                RoundedCornerShape(
+                                    MiniCardCornerRadius
+                                )
+                            )
                             .background(shimmerBrush)
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
@@ -179,18 +187,23 @@ private fun LoadedContent(
     onMoveDown: (() -> Unit)?,
     onMoveToBottom: (() -> Unit)?
 ) {
+    val year = state.years.firstOrNull() ?: return
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
+        // Title row: "2023 in review" + menu
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = stringResource(
-                    R.string.stats_insights_year_in_review
+                    R.string
+                        .stats_insights_year_in_review_title,
+                    year.year
                 ),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
@@ -206,88 +219,95 @@ private fun LoadedContent(
             )
         }
         Spacer(modifier = Modifier.height(12.dp))
-        // Column headers
-        MetricHeaderRow()
-        state.years.forEachIndexed { index, year ->
-            if (index > 0) {
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme
-                        .outlineVariant.copy(alpha = 0.5f)
-                )
-            }
-            YearRow(year)
+        // 2x2 grid of mini stat cards
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement =
+                Arrangement.spacedBy(12.dp)
+        ) {
+            StatMiniCard(
+                icon = Icons.AutoMirrored.Outlined.Article,
+                labelRes = R.string.stats_insights_posts,
+                value = formatStatValue(year.totalPosts),
+                modifier = Modifier.weight(1f)
+            )
+            StatMiniCard(
+                icon = Icons.AutoMirrored.Outlined.TextSnippet,
+                labelRes =
+                    R.string.stats_insights_total_words,
+                value = formatStatValue(year.totalWords),
+                modifier = Modifier.weight(1f)
+            )
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement =
+                Arrangement.spacedBy(12.dp)
+        ) {
+            StatMiniCard(
+                icon = Icons.Outlined.StarOutline,
+                labelRes =
+                    R.string.stats_insights_total_likes,
+                value = formatStatValue(year.totalLikes),
+                modifier = Modifier.weight(1f)
+            )
+            StatMiniCard(
+                icon = Icons.AutoMirrored.Outlined.Chat,
+                labelRes = R.string.stats_comments,
+                value = formatStatValue(
+                    year.totalComments
+                ),
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
 
 @Composable
-private fun MetricHeaderRow() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
+private fun StatMiniCard(
+    icon: ImageVector,
+    @StringRes labelRes: Int,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    val borderColor = MaterialTheme.colorScheme.outlineVariant
+
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(MiniCardCornerRadius))
+            .border(
+                width = 1.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(
+                    MiniCardCornerRadius
+                )
+            )
+            .background(
+                MaterialTheme.colorScheme.surfaceContainerLowest
+            )
+            .padding(12.dp)
     ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(20.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "",
-            modifier = Modifier.weight(1f)
+            text = stringResource(labelRes),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        MetricHeaderLabel(
-            stringResource(R.string.stats_insights_posts)
-        )
-        MetricHeaderLabel(
-            stringResource(R.string.stats_insights_total_words)
-        )
-        MetricHeaderLabel(
-            stringResource(R.string.stats_insights_total_likes)
-        )
-        MetricHeaderLabel(
-            stringResource(R.string.stats_comments)
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = value,
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
-}
-
-@Composable
-private fun MetricHeaderLabel(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.width(60.dp),
-        maxLines = 1
-    )
-}
-
-@Composable
-private fun YearRow(year: YearSummary) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = year.year,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.weight(1f)
-        )
-        MetricValue(formatStatValue(year.totalPosts))
-        MetricValue(formatStatValue(year.totalWords))
-        MetricValue(formatStatValue(year.totalLikes))
-        MetricValue(formatStatValue(year.totalComments))
-    }
-}
-
-@Composable
-private fun MetricValue(value: String) {
-    Text(
-        text = value,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.width(60.dp),
-        maxLines = 1
-    )
 }
 
 @Suppress("LongParameterList")
@@ -374,16 +394,6 @@ private fun YearInReviewCardLoadedPreview() {
                         avgLikes = 5.5,
                         totalComments = 85,
                         avgComments = 2.0
-                    ),
-                    YearSummary(
-                        year = "2024",
-                        totalPosts = 38,
-                        totalWords = 12500,
-                        avgWords = 328.9,
-                        totalLikes = 180,
-                        avgLikes = 4.7,
-                        totalComments = 60,
-                        avgComments = 1.6
                     )
                 )
             ),
