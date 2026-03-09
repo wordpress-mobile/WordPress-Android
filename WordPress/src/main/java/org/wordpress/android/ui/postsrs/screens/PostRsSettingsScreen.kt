@@ -54,6 +54,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -228,6 +230,19 @@ private fun HeroSettingsLayout(
                 onStickyToggled = onStickyToggled,
             )
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.4f),
+                            Color.Transparent
+                        )
+                    )
+                )
+        )
         FloatingBackButton(
             onNavigateBack = onNavigateBack,
         )
@@ -310,6 +325,7 @@ private fun FloatingBackButton(
             contentDescription = stringResource(
                 R.string.back
             ),
+            tint = Color.White,
         )
     }
 }
@@ -874,8 +890,8 @@ private fun SectionHeader(title: String) {
 private fun SettingsRow(
     label: String,
     value: String,
-    dimmed: Boolean = false,
     modifier: Modifier = Modifier,
+    dimmed: Boolean = false,
 ) {
     ListItem(
         headlineContent = { Text(label) },

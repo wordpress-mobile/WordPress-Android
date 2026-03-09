@@ -189,7 +189,7 @@ class PostRsSettingsViewModel @Inject constructor(
         _events.trySend(PostRsSettingsEvent.Finish)
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("ReturnCount")
     fun onSaveClicked() {
         val site = site ?: return
         val state = _uiState.value
@@ -207,7 +207,14 @@ class PostRsSettingsViewModel @Inject constructor(
         }
 
         _uiState.update { it.copy(isSaving = true) }
+        savePost(site, state)
+    }
 
+    @Suppress("TooGenericExceptionCaught")
+    private fun savePost(
+        site: org.wordpress.android.fluxc.model.SiteModel,
+        state: PostRsSettingsUiState,
+    ) {
         viewModelScope.launch {
             try {
                 val params = PostUpdateParams(
