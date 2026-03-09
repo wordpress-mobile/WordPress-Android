@@ -100,6 +100,7 @@ import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
 import android.widget.Toast
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewCard
+import org.wordpress.android.ui.newstats.yearinreview.YearInReviewDetailActivity
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewViewModel
 import org.wordpress.android.util.AppLog
 
@@ -878,6 +879,7 @@ private fun InsightsTabContent(
     yearInReviewViewModel: YearInReviewViewModel = viewModel(),
     insightsViewModel: InsightsViewModel = viewModel()
 ) {
+    val context = LocalContext.current
     val yearInReviewUiState by yearInReviewViewModel
         .uiState.collectAsState()
     val isYearInReviewRefreshing by yearInReviewViewModel
@@ -1014,6 +1016,13 @@ private fun InsightsTabContent(
                             onRemoveCard = {
                                 insightsViewModel
                                     .removeCard(cardType)
+                            },
+                            onShowAllClick = {
+                                val years =
+                                    yearInReviewViewModel
+                                        .getDetailData()
+                                YearInReviewDetailActivity
+                                    .start(context, years)
                             },
                             cardPosition = cardPosition,
                             onMoveUp = {

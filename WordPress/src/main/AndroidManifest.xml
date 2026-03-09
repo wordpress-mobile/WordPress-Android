@@ -127,6 +127,11 @@
             android:theme="@style/WordPress.NoActionBar"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.newstats.yearinreview.YearInReviewDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
         <!-- Account activities -->
         <activity
             android:name=".ui.main.MeActivity"

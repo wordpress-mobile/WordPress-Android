@@ -355,6 +355,57 @@ class YearInReviewViewModelTest : BaseUnitTest() {
             assertThat(state.years).isEmpty()
         }
 
+    @Test
+    fun `when state is loaded, then getDetailData returns years`() =
+        test {
+            whenever(statsRepository.fetchInsights(any()))
+                .thenReturn(
+                    InsightsResult.Success(
+                        years = createTestYears()
+                    )
+                )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            val detailData = viewModel.getDetailData()
+            assertThat(detailData).hasSize(2)
+            assertThat(detailData[0].year).isEqualTo("2025")
+            assertThat(detailData[0].totalPosts)
+                .isEqualTo(TEST_TOTAL_POSTS)
+            assertThat(detailData[1].year).isEqualTo("2024")
+        }
+
+    @Test
+    fun `when state is loading, then getDetailData returns empty list`() =
+        test {
+            viewModel = YearInReviewViewModel(
+                selectedSiteRepository,
+                accountStore,
+                statsRepository,
+                resourceProvider
+            )
+
+            val detailData = viewModel.getDetailData()
+            assertThat(detailData).isEmpty()
+        }
+
+    @Test
+    fun `when state is error, then getDetailData returns empty list`() =
+        test {
+            whenever(selectedSiteRepository.getSelectedSite())
+                .thenReturn(null)
+
+            initViewModel()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value).isInstanceOf(
+                YearInReviewCardUiState.Error::class.java
+            )
+            val detailData = viewModel.getDetailData()
+            assertThat(detailData).isEmpty()
+        }
+
     private fun createTestYears() = listOf(
         YearInsightsData(
             year = "2025",

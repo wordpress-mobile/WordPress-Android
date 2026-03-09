@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.components.CardPosition
+import org.wordpress.android.ui.newstats.components.ShowAllFooter
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
 
@@ -53,9 +54,11 @@ private val CardMargin = 16.dp
 private val MiniCardCornerRadius = 8.dp
 
 @Composable
+@Suppress("LongParameterList")
 fun YearInReviewCard(
     uiState: YearInReviewCardUiState,
     onRemoveCard: () -> Unit,
+    onShowAllClick: () -> Unit,
     modifier: Modifier = Modifier,
     cardPosition: CardPosition? = null,
     onMoveUp: (() -> Unit)? = null,
@@ -84,6 +87,7 @@ fun YearInReviewCard(
                 LoadedContent(
                     uiState,
                     onRemoveCard,
+                    onShowAllClick,
                     cardPosition,
                     onMoveUp,
                     onMoveToTop,
@@ -181,6 +185,7 @@ private fun LoadingContent() {
 private fun LoadedContent(
     state: YearInReviewCardUiState.Loaded,
     onRemoveCard: () -> Unit,
+    onShowAllClick: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
     onMoveToTop: (() -> Unit)?,
@@ -260,6 +265,10 @@ private fun LoadedContent(
                 ),
                 modifier = Modifier.weight(1f)
             )
+        }
+        if (state.years.size > 1) {
+            Spacer(modifier = Modifier.height(8.dp))
+            ShowAllFooter(onClick = onShowAllClick)
         }
     }
 }
@@ -373,7 +382,8 @@ private fun YearInReviewCardLoadingPreview() {
     AppThemeM3 {
         YearInReviewCard(
             uiState = YearInReviewCardUiState.Loading,
-            onRemoveCard = {}
+            onRemoveCard = {},
+            onShowAllClick = {}
         )
     }
 }
@@ -397,7 +407,8 @@ private fun YearInReviewCardLoadedPreview() {
                     )
                 )
             ),
-            onRemoveCard = {}
+            onRemoveCard = {},
+            onShowAllClick = {}
         )
     }
 }
@@ -411,7 +422,8 @@ private fun YearInReviewCardErrorPreview() {
                 message = "Failed to load stats",
                 onRetry = {}
             ),
-            onRemoveCard = {}
+            onRemoveCard = {},
+            onShowAllClick = {}
         )
     }
 }

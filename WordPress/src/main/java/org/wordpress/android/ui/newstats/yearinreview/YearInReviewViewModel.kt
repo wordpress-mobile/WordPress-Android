@@ -106,6 +106,9 @@ class YearInReviewViewModel @Inject constructor(
                         YearInReviewCardUiState.Loaded(
                             years = result.years
                                 .map { it.toUiModel() }
+                                .sortedByDescending {
+                                    it.year
+                                }
                         )
                 }
                 is InsightsResult.Error -> {
@@ -132,6 +135,15 @@ class YearInReviewViewModel @Inject constructor(
 
     fun onRetry() {
         loadData()
+    }
+
+    fun getDetailData(): List<YearSummary> {
+        val state = _uiState.value
+        return if (state is YearInReviewCardUiState.Loaded) {
+            state.years
+        } else {
+            emptyList()
+        }
     }
 
     companion object {
