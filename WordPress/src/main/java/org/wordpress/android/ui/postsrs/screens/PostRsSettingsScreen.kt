@@ -695,7 +695,7 @@ private fun StatusDialog(
         it == currentStatus
     }.coerceAtLeast(0)
 
-    var selectedIndex by remember {
+    val selectedIndex = remember {
         mutableIntStateOf(currentIndex)
     }
 
@@ -704,10 +704,10 @@ private fun StatusDialog(
             R.string.post_rs_settings_status_dialog_title
         ),
         options = labels,
-        selectedIndex = selectedIndex,
-        onOptionSelected = { selectedIndex = it },
+        selectedIndex = selectedIndex.intValue,
+        onOptionSelected = { selectedIndex.intValue = it },
         onConfirm = {
-            onStatusSelected(statuses[selectedIndex])
+            onStatusSelected(statuses[selectedIndex.intValue])
         },
         onDismiss = onDismiss,
         confirmButtonText = stringResource(R.string.ok),
@@ -893,17 +893,19 @@ private fun ExcerptDialog(
         },
         text = {
             Column {
+                Text(
+                    text = stringResource(
+                        R.string
+                            .post_settings_excerpt_dialog_hint
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme
+                        .colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
-                    label = {
-                        Text(
-                            stringResource(
-                                R.string
-                                    .post_settings_excerpt_dialog_hint
-                            )
-                        )
-                    },
                     minLines = 5,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -962,7 +964,7 @@ private fun FormatDialog(
         it == currentFormat
     }.coerceAtLeast(0)
 
-    var selectedIndex by remember {
+    val selectedIndex = remember {
         mutableIntStateOf(currentIndex)
     }
 
@@ -971,10 +973,10 @@ private fun FormatDialog(
             R.string.post_rs_settings_format_dialog_title
         ),
         options = labels,
-        selectedIndex = selectedIndex,
-        onOptionSelected = { selectedIndex = it },
+        selectedIndex = selectedIndex.intValue,
+        onOptionSelected = { selectedIndex.intValue = it },
         onConfirm = {
-            onFormatSelected(formats[selectedIndex])
+            onFormatSelected(formats[selectedIndex.intValue])
         },
         onDismiss = onDismiss,
         confirmButtonText = stringResource(R.string.ok),
