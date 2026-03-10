@@ -127,8 +127,8 @@ class PostRsSettingsViewModel @Inject constructor(
         val original = _uiState.value.postStatus
         _uiState.update {
             it.copy(
-                editedStatus = status.takeIf {
-                    it != original
+                editedStatus = status.takeIf { es ->
+                    es != original
                 },
                 dialogState = DialogState.None
             )
@@ -145,8 +145,8 @@ class PostRsSettingsViewModel @Inject constructor(
         val original = _uiState.value.password ?: ""
         _uiState.update {
             it.copy(
-                editedPassword = password.takeIf {
-                    it != original
+                editedPassword = password.takeIf { ep ->
+                    ep != original
                 },
                 dialogState = DialogState.None
             )
@@ -159,8 +159,8 @@ class PostRsSettingsViewModel @Inject constructor(
         val newValue = !current.effectiveSticky
         _uiState.update {
             it.copy(
-                editedSticky = newValue.takeIf {
-                    it != original
+                editedSticky = newValue.takeIf { es ->
+                    es != original
                 }
             )
         }
