@@ -217,6 +217,16 @@ interface StatsDataSource {
     suspend fun fetchStatsInsights(
         siteId: Long
     ): StatsInsightsDataResult
+
+    /**
+     * Fetches stats summary for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @return Result containing the summary data or an error
+     */
+    suspend fun fetchStatsSummary(
+        siteId: Long
+    ): StatsSummaryDataResult
 }
 
 /**
@@ -571,4 +581,28 @@ data class YearInsightsData(
     val avgLikes: Double,
     val totalComments: Long,
     val avgComments: Double
+)
+
+/**
+ * Result wrapper for stats summary fetch operation.
+ */
+sealed class StatsSummaryDataResult {
+    data class Success(
+        val data: StatsSummaryData
+    ) : StatsSummaryDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : StatsSummaryDataResult()
+}
+
+/**
+ * All-time stats summary data from the API.
+ */
+data class StatsSummaryData(
+    val views: Long,
+    val visitors: Long,
+    val posts: Long,
+    val comments: Long,
+    val viewsBestDay: String,
+    val viewsBestDayTotal: Long
 )
