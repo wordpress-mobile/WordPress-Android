@@ -1026,6 +1026,10 @@
     <string name="post_rs_settings_status_dialog_title">Post Status</string>
     <string name="post_rs_settings_discard_title">Discard changes</string>
     <string name="post_rs_settings_discard_message">You have unsaved changes. Discard them?</string>
+    <string name="post_rs_settings_slug_dialog_title">Slug</string>
+    <string name="post_rs_settings_excerpt_dialog_title">Excerpt</string>
+    <string name="post_rs_settings_format_dialog_title">Post Format</string>
+    <string name="post_rs_settings_clear_excerpt">Clear excerpt</string>
     <string name="show_less">Show less</string>
     <string name="post_types_screen_title">Post Types</string>
 
