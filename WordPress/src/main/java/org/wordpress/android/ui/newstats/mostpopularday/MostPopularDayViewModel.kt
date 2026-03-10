@@ -161,6 +161,7 @@ class MostPopularDayViewModel @Inject constructor(
         private val INPUT_FORMAT =
             DateTimeFormatter.ISO_LOCAL_DATE
         private const val DISPLAY_PATTERN = "MMMM d"
+        private const val PERCENTAGE_MULTIPLIER = 100.0
 
         internal fun mapToUiState(
             data: StatsSummaryData
@@ -179,7 +180,8 @@ class MostPopularDayViewModel @Inject constructor(
             val bestDayViews = data.viewsBestDayTotal
             val percentage = if (totalViews > 0) {
                 val pct = bestDayViews.toDouble() /
-                    totalViews.toDouble() * 100.0
+                    totalViews.toDouble() *
+                    PERCENTAGE_MULTIPLIER
                 String.format(
                     Locale.getDefault(),
                     "%.3f",
@@ -210,9 +212,14 @@ class MostPopularDayViewModel @Inject constructor(
                         Locale.getDefault()
                     )
                 val dayMonth = date.format(displayFormat)
+                    .replaceFirstChar { it.uppercase() }
                 val year = date.year.toString()
                 dayMonth to year
-            } catch (@Suppress("SwallowedException")
+            } catch (
+                @Suppress(
+                    "SwallowedException",
+                    "TooGenericExceptionCaught"
+                )
                 e: Exception
             ) {
                 bestDay to ""

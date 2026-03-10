@@ -992,7 +992,9 @@ class StatsDataSourceImpl @Inject constructor(
                 requestBuilder.statsInsights()
                     .getStatsInsights(
                         wpComSiteId = siteId.toULong(),
-                        params = StatsInsightsParams()
+                        params = StatsInsightsParams(
+                            locale = wpComLanguage
+                        )
                     )
             }
 
