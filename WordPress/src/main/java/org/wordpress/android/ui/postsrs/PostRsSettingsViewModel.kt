@@ -272,6 +272,17 @@ class PostRsSettingsViewModel @Inject constructor(
 
     fun onAuthorClicked() {
         val site = site ?: return
+        if (!_uiState.value.canEditAuthor) {
+            _events.trySend(
+                PostRsSettingsEvent.ShowSnackbar(
+                    resourceProvider.getString(
+                        R.string
+                            .post_rs_settings_author_no_permission
+                    )
+                )
+            )
+            return
+        }
         if (_uiState.value.siteAuthors.isEmpty()) {
             loadSiteAuthors(site)
         }
@@ -518,6 +529,8 @@ class PostRsSettingsViewModel @Inject constructor(
             publishDate = formatDate(post.dateGmt),
             originalDate = post.dateGmt,
             authorId = post.author ?: 0L,
+            canEditAuthor =
+                site?.hasCapabilityEditOthersPosts == true,
             password = post.password,
             authorName = if (
                 post.author != null && post.author != 0L

@@ -21,6 +21,7 @@ data class PostRsSettingsUiState(
     val originalDate: Date? = null,
     val authorId: Long = 0L,
     val siteAuthors: List<AuthorInfo> = emptyList(),
+    val canEditAuthor: Boolean = false,
     val password: String? = null,
     val authorName: FieldState = FieldState.Empty,
     val categoryNames: FieldState = FieldState.Empty,

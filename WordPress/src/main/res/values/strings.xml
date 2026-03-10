@@ -1032,6 +1032,7 @@
     <string name="post_rs_settings_clear_excerpt">Clear excerpt</string>
     <string name="post_rs_settings_select_time">Select Time</string>
     <string name="post_rs_settings_author_dialog_title">Author</string>
+    <string name="post_rs_settings_author_no_permission">You don\'t have permission to change the author</string>
     <string name="show_less">Show less</string>
     <string name="post_types_screen_title">Post Types</string>
 
