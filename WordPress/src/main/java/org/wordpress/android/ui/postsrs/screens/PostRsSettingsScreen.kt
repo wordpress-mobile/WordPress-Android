@@ -1167,6 +1167,49 @@ private fun SettingsRow(
 }
 
 @Composable
+private fun ExpandableSettingsRow(
+    label: String,
+    value: String,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var hasOverflow by remember { mutableStateOf(false) }
+    ListItem(
+        headlineContent = { Text(label) },
+        supportingContent = {
+            Text(
+                text = value,
+                maxLines = if (expanded) {
+                    Int.MAX_VALUE
+                } else {
+                    3
+                },
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme
+                    .onSurfaceVariant,
+                onTextLayout = { result ->
+                    if (!expanded) {
+                        hasOverflow = result.hasVisualOverflow
+                    }
+                }
+            )
+        },
+        modifier = if (hasOverflow || expanded) {
+            Modifier.clickable(
+                onClickLabel = stringResource(
+                    if (expanded) {
+                        R.string.show_less
+                    } else {
+                        R.string.more
+                    }
+                )
+            ) { expanded = !expanded }
+        } else {
+            Modifier
+        }
+    )
+}
+
+@Composable
 private fun ShimmerBox(modifier: Modifier = Modifier) {
     val infiniteTransition = rememberInfiniteTransition(
         label = "shimmer"
