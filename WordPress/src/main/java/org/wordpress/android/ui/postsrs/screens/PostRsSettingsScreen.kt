@@ -329,28 +329,6 @@ private fun HeroSettingsLayout(
 }
 
 @Composable
-private fun HeroImage(imageUrl: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(16f / 9f)
-    ) {
-        ShimmerBox(modifier = Modifier.matchParentSize())
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = stringResource(
-                R.string.featured_image_desc
-            ),
-            modifier = Modifier.matchParentSize(),
-            contentScale = ContentScale.Crop
-        )
-    }
-}
-
-@Composable
 private fun HeroImageWithMenu(
     imageUrl: String,
     onChangeClicked: () -> Unit,
@@ -386,6 +364,32 @@ private fun HeroImageWithMenu(
 }
 
 @Composable
+private fun EditIconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+            .background(
+                Color.Black.copy(alpha = 0.5f),
+                MaterialTheme.shapes.small
+            )
+            .size(36.dp)
+    ) {
+        Icon(
+            Icons.Default.Edit,
+            contentDescription = stringResource(
+                R.string
+                    .post_rs_settings_edit_featured_image
+            ),
+            tint = Color.White,
+            modifier = Modifier.size(20.dp)
+        )
+    }
+}
+
+@Composable
 private fun FeaturedImageEditButton(
     onChangeClicked: () -> Unit,
     onRemoveClicked: () -> Unit,
@@ -393,25 +397,7 @@ private fun FeaturedImageEditButton(
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(modifier = modifier) {
-        IconButton(
-            onClick = { expanded = true },
-            modifier = Modifier
-                .background(
-                    Color.Black.copy(alpha = 0.5f),
-                    MaterialTheme.shapes.small
-                )
-                .size(36.dp)
-        ) {
-            Icon(
-                Icons.Default.Edit,
-                contentDescription = stringResource(
-                    R.string
-                        .post_rs_settings_edit_featured_image
-                ),
-                tint = Color.White,
-                modifier = Modifier.size(20.dp)
-            )
-        }
+        EditIconButton(onClick = { expanded = true })
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
@@ -479,14 +465,22 @@ private fun HeroImagePlaceholder(
                 MaterialTheme.colorScheme.surfaceVariant
             )
             .then(clickModifier),
-        contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme
-                .onSurfaceVariant
+                .onSurfaceVariant,
+            modifier = Modifier.align(Alignment.Center)
         )
+        if (onClick != null) {
+            EditIconButton(
+                onClick = onClick,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(12.dp)
+            )
+        }
     }
 }
 

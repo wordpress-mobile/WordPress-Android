@@ -722,7 +722,14 @@ class PostRsListViewModel @Inject constructor(
                     .firstOrNull { it.remotePostId == model.remotePostId }
                 model.copy(
                     actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen),
-                    featuredImageUrl = existing?.featuredImageUrl,
+                    featuredImageUrl = if (
+                        model.featuredImageId != 0L &&
+                        model.featuredImageId == existing?.featuredImageId
+                    ) {
+                        existing.featuredImageUrl
+                    } else {
+                        null
+                    },
                     authorDisplayName = existing?.authorDisplayName
                 )
             }
