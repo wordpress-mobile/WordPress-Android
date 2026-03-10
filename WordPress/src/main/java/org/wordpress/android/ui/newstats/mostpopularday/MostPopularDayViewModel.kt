@@ -1,0 +1,213 @@
+package org.wordpress.android.ui.newstats.mostpopularday
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
+import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
+import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.viewmodel.ResourceProvider
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+import javax.inject.Inject
+
+@HiltViewModel
+class MostPopularDayViewModel @Inject constructor(
+    private val selectedSiteRepository:
+        SelectedSiteRepository,
+    private val accountStore: AccountStore,
+    private val statsRepository: StatsRepository,
+    private val resourceProvider: ResourceProvider
+) : ViewModel() {
+    private val _uiState =
+        MutableStateFlow<MostPopularDayCardUiState>(
+            MostPopularDayCardUiState.Loading
+        )
+    val uiState: StateFlow<MostPopularDayCardUiState> =
+        _uiState.asStateFlow()
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> =
+        _isRefreshing.asStateFlow()
+
+    private var isLoading = false
+    private var isLoadedSuccessfully = false
+
+    fun loadDataIfNeeded() {
+        if (isLoadedSuccessfully || isLoading) return
+        isLoading = true
+        loadData()
+    }
+
+    fun refresh() {
+        val site = selectedSiteRepository
+            .getSelectedSite() ?: return
+        viewModelScope.launch {
+            try {
+                _isRefreshing.value = true
+                loadDataInternal(
+                    site,
+                    forceRefresh = true
+                )
+            } finally {
+                _isRefreshing.value = false
+            }
+        }
+    }
+
+    fun loadData() {
+        val site = selectedSiteRepository.getSelectedSite()
+        if (site == null) {
+            isLoading = false
+            _uiState.value =
+                MostPopularDayCardUiState.Error(
+                    message = resourceProvider.getString(
+                        R.string.stats_error_no_site
+                    ),
+                    onRetry = ::loadData
+                )
+            return
+        }
+
+        val accessToken = accountStore.accessToken
+        if (accessToken.isNullOrEmpty()) {
+            isLoading = false
+            _uiState.value =
+                MostPopularDayCardUiState.Error(
+                    message = resourceProvider.getString(
+                        R.string.stats_error_api
+                    ),
+                    onRetry = ::loadData
+                )
+            return
+        }
+
+        statsRepository.init(accessToken)
+        _uiState.value = MostPopularDayCardUiState.Loading
+
+        viewModelScope.launch {
+            try {
+                loadDataInternal(site)
+            } finally {
+                isLoading = false
+            }
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun loadDataInternal(
+        site: SiteModel,
+        forceRefresh: Boolean = false
+    ) {
+        try {
+            val result = statsRepository
+                .fetchStatsSummary(
+                    site.siteId,
+                    forceRefresh
+                )
+            when (result) {
+                is StatsSummaryResult.Success -> {
+                    isLoadedSuccessfully = true
+                    _uiState.value = mapToUiState(
+                        result.data
+                    )
+                }
+                is StatsSummaryResult.Error -> {
+                    isLoadedSuccessfully = false
+                    _uiState.value =
+                        MostPopularDayCardUiState.Error(
+                            message = resourceProvider
+                                .getString(
+                                    R.string
+                                        .stats_error_api
+                                ),
+                            onRetry = ::loadData
+                        )
+                }
+            }
+        } catch (e: Exception) {
+            isLoadedSuccessfully = false
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error loading most popular day: " +
+                    "${e.message}",
+                e
+            )
+            _uiState.value =
+                MostPopularDayCardUiState.Error(
+                    message = resourceProvider.getString(
+                        R.string.stats_error_unknown
+                    ),
+                    onRetry = ::loadData
+                )
+        }
+    }
+
+    fun onRetry() {
+        loadData()
+    }
+
+    companion object {
+        private val INPUT_FORMAT =
+            DateTimeFormatter.ISO_LOCAL_DATE
+        private val DISPLAY_FORMAT =
+            DateTimeFormatter.ofPattern(
+                "MMMM d",
+                Locale.getDefault()
+            )
+
+        internal fun mapToUiState(
+            data: StatsSummaryData
+        ): MostPopularDayCardUiState.Loaded {
+            val bestDay = data.viewsBestDay
+            val parsed = parseBestDay(bestDay)
+            val totalViews = data.views
+            val bestDayViews = data.viewsBestDayTotal
+            val percentage = if (totalViews > 0) {
+                val pct = bestDayViews.toDouble() /
+                    totalViews.toDouble() * 100.0
+                String.format(
+                    Locale.getDefault(),
+                    "%.3f",
+                    pct
+                )
+            } else {
+                "0"
+            }
+            return MostPopularDayCardUiState.Loaded(
+                dayAndMonth = parsed.first,
+                year = parsed.second,
+                views = bestDayViews,
+                viewsPercentage = percentage
+            )
+        }
+
+        private fun parseBestDay(
+            bestDay: String
+        ): Pair<String, String> {
+            return try {
+                val date = LocalDate.parse(
+                    bestDay,
+                    INPUT_FORMAT
+                )
+                val dayMonth = date.format(DISPLAY_FORMAT)
+                val year = date.year.toString()
+                dayMonth to year
+            } catch (@Suppress("SwallowedException")
+                e: Exception
+            ) {
+                bestDay to ""
+            }
+        }
+    }
+}
