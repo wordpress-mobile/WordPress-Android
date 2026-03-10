@@ -316,6 +316,7 @@ class PostRsSettingsViewModel @Inject constructor(
 
     fun onFeaturedImageSelected(mediaId: Long) {
         val current = _uiState.value
+        if (mediaId == current.effectiveFeaturedImageId) return
         val edited = mediaId.takeIf { id ->
             id != current.featuredImageId
         }

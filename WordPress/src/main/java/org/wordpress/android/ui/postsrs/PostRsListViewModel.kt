@@ -730,7 +730,14 @@ class PostRsListViewModel @Inject constructor(
                     } else {
                         null
                     },
-                    authorDisplayName = existing?.authorDisplayName
+                    authorDisplayName = if (
+                        model.authorId != 0L &&
+                        model.authorId == existing?.authorId
+                    ) {
+                        existing.authorDisplayName
+                    } else {
+                        null
+                    }
                 )
             }
             updateTabUiState(tab) { copy(posts = uiModels, isLoading = false, error = null) }
