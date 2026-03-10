@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,6 +24,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.AnyTermWithViewContext
 import uniffi.wp_api.TermEndpointType
+import uniffi.wp_api.TermListParams
 import javax.inject.Inject
 
 @HiltViewModel
@@ -62,9 +65,12 @@ class TermSelectionViewModel @Inject constructor(
         Channel<TermSelectionEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
-    private var allTerms = listOf<AnyTermWithViewContext>()
+    private var loadedTerms =
+        mutableListOf<AnyTermWithViewContext>()
+    private var nextPageParams: TermListParams? = null
     private val selectedIds =
         initialSelectedIds.toMutableSet()
+    private var searchJob: Job? = null
 
     init {
         if (site == null) {
@@ -77,12 +83,12 @@ class TermSelectionViewModel @Inject constructor(
             )
             _events.trySend(TermSelectionEvent.Finish)
         } else {
-            loadTerms()
+            loadFirstPage()
         }
     }
 
     fun retry() {
-        loadTerms()
+        loadFirstPage()
     }
 
     fun onTermToggled(id: Long) {
@@ -94,12 +100,28 @@ class TermSelectionViewModel @Inject constructor(
 
     fun onSearchQueryChanged(query: String) {
         _uiState.update { it.copy(searchQuery = query) }
-        rebuildUi()
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_MS)
+            loadFirstPage()
+        }
+    }
+
+    fun onLoadMore() {
+        val currentSite = site ?: return
+        val params = nextPageParams ?: return
+        if (_uiState.value.isLoadingMore) return
+        _uiState.update { it.copy(isLoadingMore = true) }
+        viewModelScope.launch {
+            fetchPage(currentSite, params, append = true)
+        }
     }
 
     fun onAddTermClicked() {
         val parentOptions = if (isCategories) {
-            allTerms.map { ParentOption(it.id, it.name) }
+            loadedTerms.map {
+                ParentOption(it.id, it.name)
+            }
         } else {
             emptyList()
         }
@@ -139,7 +161,7 @@ class TermSelectionViewModel @Inject constructor(
                 }
                 if (newId != null) {
                     selectedIds.add(newId)
-                    loadTerms(checkNetwork = false)
+                    loadFirstPage(showLoading = false)
                 } else {
                     handleCreateTermError()
                 }
@@ -168,9 +190,11 @@ class TermSelectionViewModel @Inject constructor(
         _events.trySend(TermSelectionEvent.Finish)
     }
 
-    private fun loadTerms(checkNetwork: Boolean = true) {
+    private fun loadFirstPage(
+        showLoading: Boolean = true,
+    ) {
         val currentSite = site ?: return
-        if (checkNetwork) {
+        if (showLoading) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 _uiState.value = TermSelectionUiState(
                     isLoading = false,
@@ -181,27 +205,55 @@ class TermSelectionViewModel @Inject constructor(
                 )
                 return
             }
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update {
+                it.copy(isLoading = true, error = null)
+            }
         }
         viewModelScope.launch {
-            fetchAndApplyTerms(currentSite)
+            loadedTerms.clear()
+            nextPageParams = null
+            val search = _uiState.value.searchQuery
+                .trim().ifEmpty { null }
+            fetchPage(
+                currentSite,
+                initialParams = null,
+                append = false,
+                search = search,
+            )
         }
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchAndApplyTerms(
+    private suspend fun fetchPage(
         site: org.wordpress.android.fluxc.model.SiteModel,
+        initialParams: TermListParams?,
+        append: Boolean,
+        search: String? = null,
     ) {
         try {
-            val terms = withContext(Dispatchers.IO) {
-                restClient.fetchAllTerms(site, endpointType)
+            val result = withContext(Dispatchers.IO) {
+                restClient.fetchTermsPage(
+                    site,
+                    endpointType,
+                    search = search,
+                    nextPageParams = initialParams,
+                )
             }
-            allTerms = terms
+            if (append) {
+                loadedTerms.addAll(result.terms)
+            } else {
+                loadedTerms.clear()
+                loadedTerms.addAll(result.terms)
+            }
+            nextPageParams = result.nextPageParams
             _uiState.update {
                 it.copy(
                     isLoading = false,
+                    isLoadingMore = false,
                     isCreating = false,
-                    error = null
+                    canLoadMore =
+                        result.nextPageParams != null,
+                    error = null,
                 )
             }
             rebuildUi()
@@ -213,56 +265,57 @@ class TermSelectionViewModel @Inject constructor(
                 "Failed to load terms",
                 e
             )
-            _uiState.update {
-                it.copy(
-                    isLoading = false,
-                    isCreating = false,
-                    error = resourceProvider.getString(
-                        R.string.request_failed_message
+            if (append) {
+                _uiState.update {
+                    it.copy(isLoadingMore = false)
+                }
+                _events.trySend(
+                    TermSelectionEvent.ShowSnackbar(
+                        resourceProvider.getString(
+                            R.string.request_failed_message
+                        )
                     )
                 )
+            } else {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        isCreating = false,
+                        error = resourceProvider.getString(
+                            R.string.request_failed_message
+                        )
+                    )
+                }
             }
         }
     }
 
     private fun rebuildUi() {
-        val query = _uiState.value.searchQuery
-            .trim().lowercase()
-        val filtered = if (query.isEmpty()) {
-            allTerms
+        val isSearching = _uiState.value.searchQuery
+            .trim().isNotEmpty()
+        val terms = if (
+            isCategories && !isSearching
+        ) {
+            sortByHierarchy(loadedTerms)
         } else {
-            allTerms.filter {
-                it.name.lowercase().contains(query)
-            }
+            loadedTerms.toList()
         }
-        val sorted = sortAndIndent(filtered)
-        _uiState.update { it.copy(terms = sorted) }
-    }
-
-    private fun sortAndIndent(
-        terms: List<AnyTermWithViewContext>,
-    ): List<SelectableTerm> {
-        if (!isCategories) {
-            return terms.sortedBy { it.name.lowercase() }
-                .map {
-                    SelectableTerm(
-                        id = it.id,
-                        name = it.name,
-                        level = 0,
-                        isSelected = it.id in selectedIds
-                    )
-                }
-        }
-        val hierarchical = sortByHierarchy(terms)
-        val termsById = allTerms.associateBy { it.id }
-        return hierarchical.map { term ->
+        val termsById = loadedTerms.associateBy { it.id }
+        val selectable = terms.map { term ->
             SelectableTerm(
                 id = term.id,
                 name = term.name,
-                level = getIndentation(termsById, term),
-                isSelected = term.id in selectedIds
+                level = if (
+                    isCategories && !isSearching
+                ) {
+                    getIndentation(termsById, term)
+                } else {
+                    0
+                },
+                isSelected = term.id in selectedIds,
             )
         }
+        _uiState.update { it.copy(terms = selectable) }
     }
 
     private fun sortByHierarchy(
@@ -328,5 +381,6 @@ class TermSelectionViewModel @Inject constructor(
             "extra_selected_ids"
         const val RESULT_SELECTED_IDS =
             "result_selected_ids"
+        private const val SEARCH_DEBOUNCE_MS = 500L
     }
 }

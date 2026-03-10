@@ -224,49 +224,59 @@ class PostRsRestClient @Inject constructor(
     }
 
     /**
-     * Fetches all terms for the given [endpointType] using
-     * paginated requests. Also populates the name cache as a
-     * side-effect.
+     * Fetches a single page of terms for the given
+     * [endpointType]. Pass [nextPageParams] to fetch
+     * subsequent pages. Also populates the name cache.
      */
-    suspend fun fetchAllTerms(
+    suspend fun fetchTermsPage(
         site: SiteModel,
         endpointType: TermEndpointType,
-    ): List<AnyTermWithViewContext> {
+        search: String? = null,
+        nextPageParams: TermListParams? = null,
+    ): TermsPageResult {
         val cache = termCache(endpointType)
         val client = wpApiClientProvider.getWpApiClient(site)
-        val allTerms = mutableListOf<AnyTermWithViewContext>()
-        var nextParams: TermListParams? = TermListParams(
-            perPage = PER_PAGE
+        val params = nextPageParams ?: TermListParams(
+            perPage = PER_PAGE,
+            search = search,
         )
-        while (nextParams != null) {
-            val response = client.request {
-                it.terms().listWithViewContext(
-                    endpointType, nextParams!!
+        val response = client.request {
+            it.terms().listWithViewContext(
+                endpointType, params
+            )
+        }
+        return when (response) {
+            is WpRequestResult.Success -> {
+                val terms = response.response.data
+                for (term in terms) {
+                    cache[term.id] = term.name
+                }
+                TermsPageResult(
+                    terms = terms,
+                    nextPageParams =
+                        response.response.nextPageParams,
                 )
             }
-            when (response) {
-                is WpRequestResult.Success -> {
-                    for (term in response.response.data) {
-                        cache[term.id] = term.name
-                        allTerms.add(term)
-                    }
-                    nextParams =
-                        response.response.nextPageParams
-                }
-                else -> {
-                    val msg = (response
-                        as? WpRequestResult.WpError<*>)
-                        ?.errorMessage
-                    AppLog.w(
-                        AppLog.T.POSTS,
-                        "fetchAllTerms failed: $msg"
-                    )
-                    break
-                }
+            else -> {
+                val msg = (response
+                    as? WpRequestResult.WpError<*>)
+                    ?.errorMessage
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "fetchTermsPage failed: $msg"
+                )
+                throw TermsFetchException(msg)
             }
         }
-        return allTerms
     }
+
+    data class TermsPageResult(
+        val terms: List<AnyTermWithViewContext>,
+        val nextPageParams: TermListParams?,
+    )
+
+    class TermsFetchException(message: String?) :
+        Exception(message ?: "Failed to fetch terms")
 
     /**
      * Creates a new term and returns its ID, or null on

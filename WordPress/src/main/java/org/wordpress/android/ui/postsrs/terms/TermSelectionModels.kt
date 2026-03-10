@@ -9,6 +9,8 @@ data class SelectableTerm(
 
 data class TermSelectionUiState(
     val isLoading: Boolean = true,
+    val isLoadingMore: Boolean = false,
+    val canLoadMore: Boolean = false,
     val error: String? = null,
     val terms: List<SelectableTerm> = emptyList(),
     val searchQuery: String = "",
