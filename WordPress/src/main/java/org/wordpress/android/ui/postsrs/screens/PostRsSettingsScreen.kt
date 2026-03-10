@@ -821,45 +821,61 @@ private fun PasswordDialog(
 }
 
 @Composable
-private fun SlugDialog(
-    currentSlug: String,
-    onSlugSet: (String) -> Unit,
+private fun TextFieldDialog(
+    title: String,
+    hint: String,
+    currentValue: String,
+    onConfirm: (String) -> Unit,
     onDismiss: () -> Unit,
+    singleLine: Boolean = false,
+    minLines: Int = 1,
+    clearButtonText: String? = null,
+    onClear: (() -> Unit)? = null,
 ) {
-    var text by rememberSaveable { mutableStateOf(currentSlug) }
+    var text by rememberSaveable {
+        mutableStateOf(currentValue)
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = {
-            Text(
-                stringResource(
-                    R.string
-                        .post_rs_settings_slug_dialog_title
-                )
-            )
-        },
+        title = { Text(title) },
         text = {
             Column {
                 Text(
-                    text = stringResource(
-                        R.string
-                            .post_settings_slug_dialog_hint
-                    ),
+                    text = hint,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme
-                        .onSurfaceVariant,
+                    color = MaterialTheme
+                        .colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
-                    singleLine = true,
+                    singleLine = singleLine,
+                    minLines = minLines,
                     modifier = Modifier.fillMaxWidth()
                 )
+                if (
+                    onClear != null &&
+                    clearButtonText != null &&
+                    currentValue.isNotEmpty()
+                ) {
+                    TextButton(
+                        onClick = onClear,
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                    ) {
+                        Text(
+                            clearButtonText,
+                            color = MaterialTheme
+                                .colorScheme.error
+                        )
+                    }
+                }
             }
         },
         confirmButton = {
-            TextButton(onClick = { onSlugSet(text) }) {
+            TextButton(onClick = { onConfirm(text) }) {
                 Text(stringResource(R.string.ok))
             }
         },
@@ -872,70 +888,46 @@ private fun SlugDialog(
 }
 
 @Composable
+private fun SlugDialog(
+    currentSlug: String,
+    onSlugSet: (String) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    TextFieldDialog(
+        title = stringResource(
+            R.string.post_rs_settings_slug_dialog_title
+        ),
+        hint = stringResource(
+            R.string.post_settings_slug_dialog_hint
+        ),
+        currentValue = currentSlug,
+        onConfirm = onSlugSet,
+        onDismiss = onDismiss,
+        singleLine = true,
+    )
+}
+
+@Composable
 private fun ExcerptDialog(
     currentExcerpt: String,
     onExcerptSet: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    var text by rememberSaveable {
-        mutableStateOf(currentExcerpt)
-    }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                stringResource(
-                    R.string
-                        .post_rs_settings_excerpt_dialog_title
-                )
-            )
-        },
-        text = {
-            Column {
-                Text(
-                    text = stringResource(
-                        R.string
-                            .post_settings_excerpt_dialog_hint
-                    ),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme
-                        .colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                OutlinedTextField(
-                    value = text,
-                    onValueChange = { text = it },
-                    minLines = 5,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                if (currentExcerpt.isNotEmpty()) {
-                    TextButton(
-                        onClick = { onExcerptSet("") },
-                        modifier = Modifier.padding(top = 8.dp)
-                    ) {
-                        Text(
-                            stringResource(
-                                R.string
-                                    .post_rs_settings_clear_excerpt
-                            ),
-                            color = MaterialTheme
-                                .colorScheme.error
-                        )
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = { onExcerptSet(text) }) {
-                Text(stringResource(R.string.ok))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
-            }
-        }
+    TextFieldDialog(
+        title = stringResource(
+            R.string.post_rs_settings_excerpt_dialog_title
+        ),
+        hint = stringResource(
+            R.string.post_settings_excerpt_dialog_hint
+        ),
+        currentValue = currentExcerpt,
+        onConfirm = onExcerptSet,
+        onDismiss = onDismiss,
+        minLines = 5,
+        clearButtonText = stringResource(
+            R.string.post_rs_settings_clear_excerpt
+        ),
+        onClear = { onExcerptSet("") },
     )
 }
 
