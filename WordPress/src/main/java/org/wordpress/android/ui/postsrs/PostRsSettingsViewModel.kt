@@ -271,7 +271,7 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     fun onAuthorClicked() {
-        val site = site ?: return
+        val currentSite = site ?: return
         if (!_uiState.value.canEditAuthor) {
             _events.trySend(
                 PostRsSettingsEvent.ShowSnackbar(
@@ -284,7 +284,7 @@ class PostRsSettingsViewModel @Inject constructor(
             return
         }
         if (_uiState.value.siteAuthors.isEmpty()) {
-            loadSiteAuthors(site)
+            loadSiteAuthors(currentSite)
         }
         _uiState.update {
             it.copy(dialogState = DialogState.AuthorDialog)
