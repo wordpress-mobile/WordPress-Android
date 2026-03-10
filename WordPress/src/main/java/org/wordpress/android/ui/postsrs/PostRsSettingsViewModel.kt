@@ -153,6 +153,60 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
+    fun onSlugClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.SlugDialog)
+        }
+    }
+
+    fun onSlugSet(slug: String) {
+        val original = _uiState.value.slug
+        _uiState.update {
+            it.copy(
+                editedSlug = slug.takeIf { es ->
+                    es != original
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onExcerptClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.ExcerptDialog)
+        }
+    }
+
+    fun onExcerptSet(excerpt: String) {
+        val original = _uiState.value.excerpt
+        _uiState.update {
+            it.copy(
+                editedExcerpt = excerpt.takeIf { ee ->
+                    ee != original
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onFormatClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.FormatDialog)
+        }
+    }
+
+    fun onFormatSelected(format: PostFormat) {
+        val original = _uiState.value.postFormat
+        _uiState.update {
+            it.copy(
+                editedFormat = format.takeIf { ef ->
+                    ef != original
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
     fun onStickyToggled() {
         val current = _uiState.value
         val original = current.sticky
@@ -221,6 +275,9 @@ class PostRsSettingsViewModel @Inject constructor(
                     status = state.editedStatus,
                     password = state.editedPassword,
                     sticky = state.editedSticky,
+                    slug = state.editedSlug,
+                    excerpt = state.editedExcerpt,
+                    format = state.editedFormat,
                     meta = null
                 )
                 withContext(Dispatchers.IO) {
@@ -383,10 +440,10 @@ class PostRsSettingsViewModel @Inject constructor(
                 FieldState.Empty
             },
             sticky = post.sticky ?: false,
-            formatLabel = formatPostFormatLabel(post.format),
             slug = post.slug,
             excerpt = post.excerpt?.raw ?: "",
             postStatus = post.status,
+            postFormat = post.format,
         )
     }
 
@@ -509,33 +566,6 @@ class PostRsSettingsViewModel @Inject constructor(
             DateFormat.MEDIUM,
             DateFormat.SHORT
         ).format(dateGmt)
-    }
-
-    private fun formatPostFormatLabel(
-        format: PostFormat?
-    ): String = when (format) {
-        is PostFormat.Standard ->
-            resourceProvider.getString(R.string.post_format_standard)
-        is PostFormat.Aside ->
-            resourceProvider.getString(R.string.post_format_aside)
-        is PostFormat.Chat ->
-            resourceProvider.getString(R.string.post_format_chat)
-        is PostFormat.Gallery ->
-            resourceProvider.getString(R.string.post_format_gallery)
-        is PostFormat.Link ->
-            resourceProvider.getString(R.string.post_format_link)
-        is PostFormat.Image ->
-            resourceProvider.getString(R.string.post_format_image)
-        is PostFormat.Quote ->
-            resourceProvider.getString(R.string.post_format_quote)
-        is PostFormat.Status ->
-            resourceProvider.getString(R.string.post_format_status)
-        is PostFormat.Video ->
-            resourceProvider.getString(R.string.post_format_video)
-        is PostFormat.Audio ->
-            resourceProvider.getString(R.string.post_format_audio)
-        is PostFormat.Custom -> format.v1
-        null -> ""
     }
 
     private class PostApiException(message: String?) :
