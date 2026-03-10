@@ -232,9 +232,9 @@ class PostRsSettingsViewModel @Inject constructor(
         val base = current.effectiveDate ?: Date()
         val cal = Calendar.getInstance(UTC).apply {
             time = base
-            set(Calendar.YEAR, year)
-            set(Calendar.MONTH, month)
-            set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            this[Calendar.YEAR] = year
+            this[Calendar.MONTH] = month
+            this[Calendar.DAY_OF_MONTH] = dayOfMonth
         }
         val newDate = cal.time
         _uiState.update {
@@ -253,10 +253,10 @@ class PostRsSettingsViewModel @Inject constructor(
         val base = current.effectiveDate ?: Date()
         val cal = Calendar.getInstance(UTC).apply {
             time = base
-            set(Calendar.HOUR_OF_DAY, hour)
-            set(Calendar.MINUTE, minute)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+            this[Calendar.HOUR_OF_DAY] = hour
+            this[Calendar.MINUTE] = minute
+            this[Calendar.SECOND] = 0
+            this[Calendar.MILLISECOND] = 0
         }
         val newDate = cal.time
         _uiState.update {
