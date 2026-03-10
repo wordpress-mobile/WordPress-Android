@@ -228,7 +228,7 @@ class PostRsRestClient @Inject constructor(
     }
 
     companion object {
-        private val AUTHORS_PER_PAGE: UInt = 20u
+        private const val AUTHORS_PER_PAGE: UInt = 20u
     }
 
     private fun toPhotonUrl(site: SiteModel, sourceUrl: String): String {

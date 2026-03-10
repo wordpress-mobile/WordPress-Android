@@ -342,6 +342,7 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ReturnCount")
     fun loadMoreAuthors() {
         val site = site ?: return
         val params = nextAuthorPageParams ?: return
