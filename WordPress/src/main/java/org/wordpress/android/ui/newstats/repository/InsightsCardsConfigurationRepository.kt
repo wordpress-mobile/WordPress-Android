@@ -63,9 +63,14 @@ class InsightsCardsConfigurationRepository @Inject constructor(
             val newVisibleCards =
                 current.visibleCards.toMutableList()
             newVisibleCards.remove(cardType)
+            val newHiddenCards =
+                (current.hiddenCards + cardType).distinct()
             saveConfiguration(
                 siteId,
-                current.copy(visibleCards = newVisibleCards)
+                current.copy(
+                    visibleCards = newVisibleCards,
+                    hiddenCards = newHiddenCards
+                )
             )
         }
     }
@@ -76,11 +81,19 @@ class InsightsCardsConfigurationRepository @Inject constructor(
     ): Unit = withContext(ioDispatcher) {
         mutex.withLock {
             val current = getConfiguration(siteId)
-            if (current.visibleCards.contains(cardType)) return@withLock
-            val newVisibleCards = current.visibleCards + cardType
+            if (current.visibleCards.contains(cardType)) {
+                return@withLock
+            }
+            val newVisibleCards =
+                current.visibleCards + cardType
+            val newHiddenCards =
+                current.hiddenCards - cardType
             saveConfiguration(
                 siteId,
-                current.copy(visibleCards = newVisibleCards)
+                current.copy(
+                    visibleCards = newVisibleCards,
+                    hiddenCards = newHiddenCards
+                )
             )
         }
     }
@@ -206,7 +219,7 @@ class InsightsCardsConfigurationRepository @Inject constructor(
     ): InsightsCardsConfiguration {
         val allKnown = InsightsCardType.entries
         val knownInConfig = config.visibleCards +
-            config.hiddenCards()
+            config.hiddenCards
         val newTypes = allKnown - knownInConfig.toSet()
         if (newTypes.isEmpty()) return config
         val updated = config.copy(

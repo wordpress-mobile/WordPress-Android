@@ -2,7 +2,8 @@ package org.wordpress.android.ui.newstats
 
 data class InsightsCardsConfiguration(
     val visibleCards: List<InsightsCardType> =
-        InsightsCardType.defaultCards()
+        InsightsCardType.defaultCards(),
+    val hiddenCards: List<InsightsCardType> = emptyList()
 ) {
     fun hiddenCards(): List<InsightsCardType> {
         return InsightsCardType.entries

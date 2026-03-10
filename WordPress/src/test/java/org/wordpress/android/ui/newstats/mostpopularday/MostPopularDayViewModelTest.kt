@@ -104,6 +104,8 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
             with(
                 state as MostPopularDayCardUiState.Loaded
             ) {
+                assertThat(dayAndMonth)
+                    .isEqualTo("February 22")
                 assertThat(year).isEqualTo("2022")
                 assertThat(views)
                     .isEqualTo(TEST_BEST_DAY_TOTAL)
@@ -204,6 +206,30 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
         }
 
     @Test
+    fun `when exception thrown, then error state`() =
+        test {
+            whenever(
+                statsRepository.fetchStatsSummary(
+                    any(), any()
+                )
+            ).thenThrow(RuntimeException("Test"))
+
+            initViewModel()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    MostPopularDayCardUiState
+                        .Error::class.java
+                )
+            assertThat(
+                (viewModel.uiState.value
+                    as MostPopularDayCardUiState.Error)
+                    .message
+            ).isEqualTo(UNKNOWN_ERROR)
+        }
+
+    @Test
     fun `when mapToUiState called, then percentage is calculated`() {
         val data = StatsSummaryData(
             views = 1000000L,
@@ -215,8 +241,49 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
         )
         val state =
             MostPopularDayViewModel.mapToUiState(data)
+            as MostPopularDayCardUiState.Loaded
         assertThat(state.viewsPercentage)
             .isEqualTo("0.068")
+        assertThat(state.dayAndMonth)
+            .isEqualTo("February 22")
+        assertThat(state.year).isEqualTo("2022")
+    }
+
+    @Test
+    fun `when viewsBestDay is empty, then loaded with empty values`() {
+        val data = StatsSummaryData(
+            views = 100L,
+            visitors = 0L,
+            posts = 0L,
+            comments = 0L,
+            viewsBestDay = "",
+            viewsBestDayTotal = 0L
+        )
+        val state =
+            MostPopularDayViewModel.mapToUiState(data)
+            as MostPopularDayCardUiState.Loaded
+        assertThat(state.dayAndMonth).isEmpty()
+        assertThat(state.year).isEmpty()
+        assertThat(state.views).isEqualTo(0L)
+        assertThat(state.viewsPercentage)
+            .isEqualTo("0")
+    }
+
+    @Test
+    fun `when total views is zero, then percentage is zero`() {
+        val data = StatsSummaryData(
+            views = 0L,
+            visitors = 0L,
+            posts = 0L,
+            comments = 0L,
+            viewsBestDay = "2022-02-22",
+            viewsBestDayTotal = 0L
+        )
+        val state =
+            MostPopularDayViewModel.mapToUiState(data)
+            as MostPopularDayCardUiState.Loaded
+        assertThat(state.viewsPercentage)
+            .isEqualTo("0")
     }
 
     private fun createTestData() = StatsSummaryData(

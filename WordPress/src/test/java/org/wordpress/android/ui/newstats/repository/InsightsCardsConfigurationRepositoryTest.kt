@@ -63,8 +63,74 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
 
             val config = repository.getConfiguration(TEST_SITE_ID)
 
-            assertThat(config.visibleCards).containsExactly(
+            assertThat(config.visibleCards).contains(
                 InsightsCardType.YEAR_IN_REVIEW
+            )
+        }
+
+    @Test
+    fun `when saved config missing new card types, then new types are added`() =
+        test {
+            val json = """
+                {
+                    "visibleCards": ["YEAR_IN_REVIEW"]
+                }
+            """.trimIndent()
+            whenever(
+                appPrefsWrapper
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(json)
+
+            val config =
+                repository.getConfiguration(TEST_SITE_ID)
+
+            assertThat(config.visibleCards)
+                .containsExactly(
+                    InsightsCardType.YEAR_IN_REVIEW,
+                    InsightsCardType.ALL_TIME_STATS,
+                    InsightsCardType.MOST_POPULAR_DAY
+                )
+            verify(appPrefsWrapper)
+                .setStatsInsightsCardsConfigurationJson(
+                    eq(TEST_SITE_ID), any()
+                )
+        }
+
+    @Test
+    fun `when saved config has all card types, then no update is saved`() =
+        test {
+            val json = """
+                {
+                    "visibleCards": [
+                        "YEAR_IN_REVIEW",
+                        "ALL_TIME_STATS",
+                        "MOST_POPULAR_DAY"
+                    ]
+                }
+            """.trimIndent()
+            whenever(
+                appPrefsWrapper
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(json)
+
+            val config =
+                repository.getConfiguration(TEST_SITE_ID)
+
+            assertThat(config.visibleCards)
+                .containsExactly(
+                    InsightsCardType.YEAR_IN_REVIEW,
+                    InsightsCardType.ALL_TIME_STATS,
+                    InsightsCardType.MOST_POPULAR_DAY
+                )
+            verify(
+                appPrefsWrapper,
+                org.mockito.kotlin.never()
+            ).setStatsInsightsCardsConfigurationJson(
+                any(), any()
             )
         }
 
@@ -108,15 +174,12 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
     @Test
     fun `when removeCard is called, then card is removed from visible cards`() =
         test {
-            val initialJson = """
-                {
-                    "visibleCards": ["YEAR_IN_REVIEW"]
-                }
-            """.trimIndent()
             whenever(
                 appPrefsWrapper
-                    .getStatsInsightsCardsConfigurationJson(TEST_SITE_ID)
-            ).thenReturn(initialJson)
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(ALL_CARDS_JSON)
 
             repository.removeCard(
                 TEST_SITE_ID,
@@ -128,8 +191,19 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                 .setStatsInsightsCardsConfigurationJson(
                     eq(TEST_SITE_ID), jsonCaptor.capture()
                 )
-            assertThat(jsonCaptor.firstValue)
-                .doesNotContain("YEAR_IN_REVIEW")
+            val savedConfig = com.google.gson.Gson()
+                .fromJson(
+                    jsonCaptor.firstValue,
+                    InsightsCardsConfiguration::class.java
+                )
+            assertThat(savedConfig.visibleCards)
+                .doesNotContain(
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
+            assertThat(savedConfig.hiddenCards)
+                .contains(
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
         }
 
     @Test
@@ -205,134 +279,128 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
     @Test
     fun `when addCard is called with existing card, then card is not duplicated`() =
         test {
-            val initialJson = """
-                {
-                    "visibleCards": ["YEAR_IN_REVIEW"]
-                }
-            """.trimIndent()
             whenever(
                 appPrefsWrapper
                     .getStatsInsightsCardsConfigurationJson(
                         TEST_SITE_ID
                     )
-            ).thenReturn(initialJson)
+            ).thenReturn(ALL_CARDS_JSON)
 
             repository.addCard(
                 TEST_SITE_ID,
                 InsightsCardType.YEAR_IN_REVIEW
             )
 
-            verify(appPrefsWrapper, org.mockito.kotlin.never())
-                .setStatsInsightsCardsConfigurationJson(
-                    any(), any()
-                )
+            verify(
+                appPrefsWrapper,
+                org.mockito.kotlin.never()
+            ).setStatsInsightsCardsConfigurationJson(
+                any(), any()
+            )
         }
 
     @Test
     fun `when moveCardUp on first card, then order unchanged`() =
         test {
-            val initialJson = """
-                {
-                    "visibleCards": ["YEAR_IN_REVIEW"]
-                }
-            """.trimIndent()
             whenever(
                 appPrefsWrapper
                     .getStatsInsightsCardsConfigurationJson(
                         TEST_SITE_ID
                     )
-            ).thenReturn(initialJson)
+            ).thenReturn(ALL_CARDS_JSON)
 
             repository.moveCardUp(
                 TEST_SITE_ID,
                 InsightsCardType.YEAR_IN_REVIEW
             )
 
-            verify(appPrefsWrapper, org.mockito.kotlin.never())
-                .setStatsInsightsCardsConfigurationJson(
-                    any(), any()
-                )
+            verify(
+                appPrefsWrapper,
+                org.mockito.kotlin.never()
+            ).setStatsInsightsCardsConfigurationJson(
+                any(), any()
+            )
         }
 
     @Test
     fun `when moveCardDown on last card, then order unchanged`() =
         test {
-            val initialJson = """
-                {
-                    "visibleCards": ["YEAR_IN_REVIEW"]
-                }
-            """.trimIndent()
             whenever(
                 appPrefsWrapper
                     .getStatsInsightsCardsConfigurationJson(
                         TEST_SITE_ID
                     )
-            ).thenReturn(initialJson)
+            ).thenReturn(ALL_CARDS_JSON)
 
             repository.moveCardDown(
                 TEST_SITE_ID,
-                InsightsCardType.YEAR_IN_REVIEW
+                InsightsCardType.MOST_POPULAR_DAY
             )
 
-            verify(appPrefsWrapper, org.mockito.kotlin.never())
-                .setStatsInsightsCardsConfigurationJson(
-                    any(), any()
-                )
+            verify(
+                appPrefsWrapper,
+                org.mockito.kotlin.never()
+            ).setStatsInsightsCardsConfigurationJson(
+                any(), any()
+            )
         }
 
     @Test
     fun `when moveCardToTop on first card, then order unchanged`() =
         test {
-            val initialJson = """
-                {
-                    "visibleCards": ["YEAR_IN_REVIEW"]
-                }
-            """.trimIndent()
             whenever(
                 appPrefsWrapper
                     .getStatsInsightsCardsConfigurationJson(
                         TEST_SITE_ID
                     )
-            ).thenReturn(initialJson)
+            ).thenReturn(ALL_CARDS_JSON)
 
             repository.moveCardToTop(
                 TEST_SITE_ID,
                 InsightsCardType.YEAR_IN_REVIEW
             )
 
-            verify(appPrefsWrapper, org.mockito.kotlin.never())
-                .setStatsInsightsCardsConfigurationJson(
-                    any(), any()
-                )
+            verify(
+                appPrefsWrapper,
+                org.mockito.kotlin.never()
+            ).setStatsInsightsCardsConfigurationJson(
+                any(), any()
+            )
         }
 
     @Test
     fun `when moveCardToBottom on last card, then order unchanged`() =
         test {
-            val initialJson = """
-                {
-                    "visibleCards": ["YEAR_IN_REVIEW"]
-                }
-            """.trimIndent()
             whenever(
                 appPrefsWrapper
                     .getStatsInsightsCardsConfigurationJson(
                         TEST_SITE_ID
                     )
-            ).thenReturn(initialJson)
+            ).thenReturn(ALL_CARDS_JSON)
 
             repository.moveCardToBottom(
                 TEST_SITE_ID,
-                InsightsCardType.YEAR_IN_REVIEW
+                InsightsCardType.MOST_POPULAR_DAY
             )
 
-            verify(appPrefsWrapper, org.mockito.kotlin.never())
-                .setStatsInsightsCardsConfigurationJson(
-                    any(), any()
-                )
+            verify(
+                appPrefsWrapper,
+                org.mockito.kotlin.never()
+            ).setStatsInsightsCardsConfigurationJson(
+                any(), any()
+            )
         }
 
     companion object {
         private const val TEST_SITE_ID = 123L
+        private val ALL_CARDS_JSON = """
+            {
+                "visibleCards": [
+                    "YEAR_IN_REVIEW",
+                    "ALL_TIME_STATS",
+                    "MOST_POPULAR_DAY"
+                ]
+            }
+        """.trimIndent()
     }
 }

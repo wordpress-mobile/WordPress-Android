@@ -160,16 +160,20 @@ class MostPopularDayViewModel @Inject constructor(
     companion object {
         private val INPUT_FORMAT =
             DateTimeFormatter.ISO_LOCAL_DATE
-        private val DISPLAY_FORMAT =
-            DateTimeFormatter.ofPattern(
-                "MMMM d",
-                Locale.getDefault()
-            )
+        private const val DISPLAY_PATTERN = "MMMM d"
 
         internal fun mapToUiState(
             data: StatsSummaryData
-        ): MostPopularDayCardUiState.Loaded {
+        ): MostPopularDayCardUiState {
             val bestDay = data.viewsBestDay
+            if (bestDay.isBlank()) {
+                return MostPopularDayCardUiState.Loaded(
+                    dayAndMonth = "",
+                    year = "",
+                    views = 0L,
+                    viewsPercentage = "0"
+                )
+            }
             val parsed = parseBestDay(bestDay)
             val totalViews = data.views
             val bestDayViews = data.viewsBestDayTotal
@@ -200,7 +204,12 @@ class MostPopularDayViewModel @Inject constructor(
                     bestDay,
                     INPUT_FORMAT
                 )
-                val dayMonth = date.format(DISPLAY_FORMAT)
+                val displayFormat =
+                    DateTimeFormatter.ofPattern(
+                        DISPLAY_PATTERN,
+                        Locale.getDefault()
+                    )
+                val dayMonth = date.format(displayFormat)
                 val year = date.year.toString()
                 dayMonth to year
             } catch (@Suppress("SwallowedException")
