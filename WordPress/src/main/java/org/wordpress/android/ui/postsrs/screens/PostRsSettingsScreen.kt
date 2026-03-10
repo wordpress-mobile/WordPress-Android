@@ -267,12 +267,15 @@ private fun HeroSettingsLayout(
         )
         FloatingBackButton(
             onNavigateBack = onNavigateBack,
+            modifier = Modifier.padding(4.dp)
         )
         if (uiState.hasChanges) {
             FloatingSaveButton(
                 isSaving = uiState.isSaving,
                 onSaveClicked = onSaveClicked,
-                modifier = Modifier.align(Alignment.TopEnd)
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(4.dp)
             )
         }
     }
