@@ -839,20 +839,24 @@ private fun SlugDialog(
             )
         },
         text = {
-            OutlinedTextField(
-                value = text,
-                onValueChange = { text = it },
-                label = {
-                    Text(
-                        stringResource(
-                            R.string
-                                .post_settings_slug_dialog_hint
-                        )
-                    )
-                },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
+            Column {
+                Text(
+                    text = stringResource(
+                        R.string
+                            .post_settings_slug_dialog_hint
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme
+                        .onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         },
         confirmButton = {
             TextButton(onClick = { onSlugSet(text) }) {
@@ -939,6 +943,8 @@ private fun FormatDialog(
     onFormatSelected: (PostFormat) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    // TODO: Replace hardcoded formats with site-supported
+    //  formats once wordpress-rs exposes that API
     val formats = listOf(
         PostFormat.Standard,
         PostFormat.Aside,
