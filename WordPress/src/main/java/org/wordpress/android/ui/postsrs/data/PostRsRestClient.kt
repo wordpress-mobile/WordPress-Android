@@ -17,6 +17,11 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
+data class AuthorPage(
+    val authors: List<AuthorInfo>,
+    val nextPageParams: UserListParams?,
+)
+
 @Singleton
 class PostRsRestClient @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -175,27 +180,36 @@ class PostRsRestClient @Inject constructor(
     }
 
     /**
-     * Fetches all users for the given site, returning a list of
-     * [AuthorInfo]. Results are also cached in [userNameCache].
+     * Fetches a page of users for the given site, returning an
+     * [AuthorPage] with the authors and optional next-page params.
+     * Results are also cached in [userNameCache].
      */
     suspend fun fetchSiteAuthors(
-        site: SiteModel
-    ): List<AuthorInfo> {
+        site: SiteModel,
+        params: UserListParams = UserListParams(
+            include = emptyList(),
+            perPage = AUTHORS_PER_PAGE
+        ),
+    ): AuthorPage {
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request {
-            it.users().listWithViewContext(
-                UserListParams(include = emptyList())
-            )
+            it.users().listWithViewContext(params)
         }
         return when (response) {
             is WpRequestResult.Success -> {
-                response.response.data.map { user ->
-                    userNameCache[user.id] = user.name
-                    AuthorInfo(
-                        id = user.id,
-                        name = user.name
-                    )
-                }
+                val authors =
+                    response.response.data.map { user ->
+                        userNameCache[user.id] = user.name
+                        AuthorInfo(
+                            id = user.id,
+                            name = user.name
+                        )
+                    }
+                AuthorPage(
+                    authors = authors,
+                    nextPageParams =
+                        response.response.nextPageParams,
+                )
             }
             else -> {
                 val msg =
@@ -205,9 +219,16 @@ class PostRsRestClient @Inject constructor(
                     AppLog.T.POSTS,
                     "fetchSiteAuthors failed: $msg"
                 )
-                emptyList()
+                AuthorPage(
+                    authors = emptyList(),
+                    nextPageParams = null,
+                )
             }
         }
+    }
+
+    companion object {
+        private val AUTHORS_PER_PAGE: UInt = 20u
     }
 
     private fun toPhotonUrl(site: SiteModel, sourceUrl: String): String {

@@ -62,6 +62,7 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                     onTimeSelected = viewModel::onTimeSelected,
                     onAuthorClicked = viewModel::onAuthorClicked,
                     onAuthorSelected = viewModel::onAuthorSelected,
+                    onLoadMoreAuthors = viewModel::loadMoreAuthors,
                     onSaveClicked = viewModel::onSaveClicked,
                     onDismissDialog = viewModel::onDismissDialog,
                     onDiscardConfirmed = viewModel::onDiscardConfirmed,
