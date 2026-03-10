@@ -89,6 +89,7 @@ import org.wordpress.android.ui.postsrs.toLabel
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
 import java.util.Calendar
+import java.util.Date
 import java.util.TimeZone
 
 private val UTC = TimeZone.getTimeZone("UTC")
@@ -1042,7 +1043,7 @@ private fun FormatDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DateDialog(
-    currentDate: java.util.Date?,
+    currentDate: Date?,
     onDateSelected: (Int, Int, Int) -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -1084,13 +1085,13 @@ private fun DateDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TimeDialog(
-    currentDate: java.util.Date?,
+    currentDate: Date?,
     onTimeSelected: (Int, Int) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val cal = remember(currentDate) {
         Calendar.getInstance(UTC).apply {
-            time = currentDate ?: java.util.Date()
+            time = currentDate ?: Date()
         }
     }
     val timePickerState = rememberTimePickerState(
@@ -1266,17 +1267,6 @@ private fun AsyncFieldRow(
                 message = state.message,
                 onRetry = onRetry
             )
-    }
-}
-
-@Composable
-private fun AsyncSettingsRow(
-    label: String,
-    state: FieldState,
-    onRetry: () -> Unit,
-) {
-    AsyncFieldRow(label, state, onRetry) { value ->
-        SettingsRow(label = label, value = value)
     }
 }
 

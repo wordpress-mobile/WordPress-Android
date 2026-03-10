@@ -36,7 +36,7 @@ import java.util.TimeZone
 import javax.inject.Inject
 
 @HiltViewModel
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LargeClass")
 class PostRsSettingsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     selectedSiteRepository: SelectedSiteRepository,
