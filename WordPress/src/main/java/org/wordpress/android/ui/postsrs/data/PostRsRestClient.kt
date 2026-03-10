@@ -39,16 +39,30 @@ class PostRsRestClient @Inject constructor(
      * network call using the `include` parameter, returning a map of
      * media ID to Photon-optimised URL. IDs already in the local cache
      * are returned immediately without a network round-trip.
+     *
+     * @param widthDp target display width in dp for Photon resizing.
+     *     Pass 0 to use the full screen width.
      */
     suspend fun fetchMediaUrls(
         site: SiteModel,
-        mediaIds: List<Long>
+        mediaIds: List<Long>,
+        widthDp: Int = 0,
     ): Map<Long, String> {
+        val widthPx = if (widthDp > 0) {
+            (widthDp * context.resources.displayMetrics.density)
+                .toInt()
+        } else {
+            0
+        }
         val result = mutableMapOf<Long, String>()
         val uncached = mutableListOf<Long>()
         for (id in mediaIds) {
             val cached = mediaUrlCache[id]
-            if (cached != null) result[id] = cached else uncached.add(id)
+            if (cached != null) {
+                result[id] = toPhotonUrl(site, cached, widthPx)
+            } else {
+                uncached.add(id)
+            }
         }
         if (uncached.isEmpty()) return result
 
@@ -61,9 +75,10 @@ class PostRsRestClient @Inject constructor(
         when (response) {
             is WpRequestResult.Success -> {
                 for (media in response.response.data) {
-                    val url = toPhotonUrl(site, media.sourceUrl)
-                    mediaUrlCache[media.id] = url
-                    result[media.id] = url
+                    mediaUrlCache[media.id] = media.sourceUrl
+                    result[media.id] = toPhotonUrl(
+                        site, media.sourceUrl, widthPx
+                    )
                 }
             }
             else -> {
@@ -210,11 +225,19 @@ class PostRsRestClient @Inject constructor(
         }
     }
 
-    private fun toPhotonUrl(site: SiteModel, sourceUrl: String): String {
+    private fun toPhotonUrl(
+        site: SiteModel,
+        sourceUrl: String,
+        widthPx: Int = 0,
+    ): String {
         if (!SiteUtils.isPhotonCapable(site)) return sourceUrl
-        val widthPx = context.resources.displayMetrics.widthPixels
+        val width = if (widthPx > 0) {
+            widthPx
+        } else {
+            context.resources.displayMetrics.widthPixels
+        }
         return PhotonUtils.getPhotonImageUrl(
-            sourceUrl, widthPx, 0, site.isPrivateWPComAtomic
+            sourceUrl, width, 0, site.isPrivateWPComAtomic
         )
     }
 }

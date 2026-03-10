@@ -1170,10 +1170,10 @@ private fun DateDialog(
     val initialMillis = currentDate?.let { date ->
         val cal = Calendar.getInstance(UTC)
         cal.time = date
-        cal.set(Calendar.HOUR_OF_DAY, 0)
-        cal.set(Calendar.MINUTE, 0)
-        cal.set(Calendar.SECOND, 0)
-        cal.set(Calendar.MILLISECOND, 0)
+        cal[Calendar.HOUR_OF_DAY] = 0
+        cal[Calendar.MINUTE] = 0
+        cal[Calendar.SECOND] = 0
+        cal[Calendar.MILLISECOND] = 0
         cal.timeInMillis
     } ?: System.currentTimeMillis()
     val datePickerState = rememberDatePickerState(
@@ -1190,9 +1190,9 @@ private fun DateDialog(
                     val cal = Calendar.getInstance(UTC)
                     cal.timeInMillis = millis
                     onDateSelected(
-                        cal.get(Calendar.YEAR),
-                        cal.get(Calendar.MONTH),
-                        cal.get(Calendar.DAY_OF_MONTH)
+                        cal[Calendar.YEAR],
+                        cal[Calendar.MONTH],
+                        cal[Calendar.DAY_OF_MONTH]
                     )
                 }
             ) {
@@ -1222,8 +1222,8 @@ private fun TimeDialog(
         }
     }
     val timePickerState = rememberTimePickerState(
-        initialHour = cal.get(Calendar.HOUR_OF_DAY),
-        initialMinute = cal.get(Calendar.MINUTE),
+        initialHour = cal[Calendar.HOUR_OF_DAY],
+        initialMinute = cal[Calendar.MINUTE],
     )
 
     TimePickerDialog(
