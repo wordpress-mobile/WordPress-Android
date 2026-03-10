@@ -1190,6 +1190,7 @@ private fun AuthorDialog(
     )
 }
 
+
 @Composable
 private fun DiscardDialog(
     onDiscard: () -> Unit,
