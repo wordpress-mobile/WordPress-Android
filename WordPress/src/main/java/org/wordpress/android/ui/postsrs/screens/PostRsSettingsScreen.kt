@@ -931,6 +931,7 @@ private fun ExcerptDialog(
     )
 }
 
+@Suppress("ForbiddenComment")
 @Composable
 private fun FormatDialog(
     currentFormat: PostFormat?,
