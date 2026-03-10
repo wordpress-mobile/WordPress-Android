@@ -28,12 +28,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -117,6 +120,8 @@ fun PostRsSettingsScreen(
     onTimeSelected: (Int, Int) -> Unit = { _, _ -> },
     onAuthorClicked: () -> Unit = {},
     onAuthorSelected: (Long) -> Unit = {},
+    onFeaturedImageClicked: () -> Unit = {},
+    onFeaturedImageRemoved: () -> Unit = {},
     onSaveClicked: () -> Unit = {},
     onDismissDialog: () -> Unit = {},
     onDiscardConfirmed: () -> Unit = {},
@@ -165,6 +170,10 @@ fun PostRsSettingsScreen(
                     onFormatClicked = onFormatClicked,
                     onDateClicked = onDateClicked,
                     onAuthorClicked = onAuthorClicked,
+                    onFeaturedImageClicked =
+                        onFeaturedImageClicked,
+                    onFeaturedImageRemoved =
+                        onFeaturedImageRemoved,
                     onSaveClicked = onSaveClicked,
                 )
             }
@@ -227,6 +236,7 @@ private fun NormalAppBarLayout(
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun HeroSettingsLayout(
     uiState: PostRsSettingsUiState,
@@ -240,6 +250,8 @@ private fun HeroSettingsLayout(
     onFormatClicked: () -> Unit,
     onDateClicked: () -> Unit,
     onAuthorClicked: () -> Unit,
+    onFeaturedImageClicked: () -> Unit,
+    onFeaturedImageRemoved: () -> Unit,
     onSaveClicked: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
@@ -251,8 +263,13 @@ private fun HeroSettingsLayout(
         ) {
             when (uiState.featuredImage) {
                 is FieldState.Loaded ->
-                    HeroImage(
-                        imageUrl = uiState.featuredImage.value
+                    HeroImageWithMenu(
+                        imageUrl =
+                            uiState.featuredImage.value,
+                        onChangeClicked =
+                            onFeaturedImageClicked,
+                        onRemoveClicked =
+                            onFeaturedImageRemoved,
                     )
                 is FieldState.Loading ->
                     HeroImageShimmer()
@@ -261,10 +278,13 @@ private fun HeroSettingsLayout(
                         text = stringResource(
                             R.string
                                 .post_rs_settings_featured_image_error
-                        )
+                        ),
+                        onClick = onFeaturedImageClicked,
                     )
                 is FieldState.Empty ->
-                    HeroImagePlaceholder()
+                    HeroImagePlaceholder(
+                        onClick = onFeaturedImageClicked,
+                    )
             }
             SettingsContent(
                 uiState = uiState,
@@ -331,6 +351,106 @@ private fun HeroImage(imageUrl: String) {
 }
 
 @Composable
+private fun HeroImageWithMenu(
+    imageUrl: String,
+    onChangeClicked: () -> Unit,
+    onRemoveClicked: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(16f / 9f)
+    ) {
+        ShimmerBox(modifier = Modifier.matchParentSize())
+        AsyncImage(
+            model = ImageRequest.Builder(
+                LocalContext.current
+            )
+                .data(imageUrl)
+                .crossfade(true)
+                .build(),
+            contentDescription = stringResource(
+                R.string.featured_image_desc
+            ),
+            modifier = Modifier.matchParentSize(),
+            contentScale = ContentScale.Crop
+        )
+        FeaturedImageEditButton(
+            onChangeClicked = onChangeClicked,
+            onRemoveClicked = onRemoveClicked,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(12.dp)
+        )
+    }
+}
+
+@Composable
+private fun FeaturedImageEditButton(
+    onChangeClicked: () -> Unit,
+    onRemoveClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Box(modifier = modifier) {
+        IconButton(
+            onClick = { expanded = true },
+            modifier = Modifier
+                .background(
+                    Color.Black.copy(alpha = 0.5f),
+                    MaterialTheme.shapes.small
+                )
+                .size(36.dp)
+        ) {
+            Icon(
+                Icons.Default.Edit,
+                contentDescription = stringResource(
+                    R.string
+                        .post_rs_settings_edit_featured_image
+                ),
+                tint = Color.White,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        stringResource(
+                            R.string
+                                .post_rs_settings_change_featured_image
+                        )
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    onChangeClicked()
+                }
+            )
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        stringResource(
+                            R.string
+                                .post_rs_settings_remove_featured_image
+                        ),
+                        color = MaterialTheme
+                            .colorScheme.error
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    onRemoveClicked()
+                }
+            )
+        }
+    }
+}
+
+@Composable
 private fun HeroImageShimmer() {
     ShimmerBox(
         modifier = Modifier
@@ -344,14 +464,21 @@ private fun HeroImagePlaceholder(
     text: String = stringResource(
         R.string.post_rs_settings_featured_image_not_set
     ),
+    onClick: (() -> Unit)? = null,
 ) {
+    val clickModifier = if (onClick != null) {
+        Modifier.clickable(onClick = onClick)
+    } else {
+        Modifier
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(16f / 9f)
             .background(
                 MaterialTheme.colorScheme.surfaceVariant
-            ),
+            )
+            .then(clickModifier),
         contentAlignment = Alignment.Center
     ) {
         Text(

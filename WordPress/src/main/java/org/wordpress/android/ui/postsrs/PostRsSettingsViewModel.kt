@@ -310,6 +310,37 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
+    fun onFeaturedImageClicked() {
+        _events.trySend(PostRsSettingsEvent.LaunchMediaPicker)
+    }
+
+    fun onFeaturedImageSelected(mediaId: Long) {
+        val current = _uiState.value
+        val edited = mediaId.takeIf { id ->
+            id != current.featuredImageId
+        }
+        _uiState.update {
+            it.copy(
+                editedFeaturedImageId = edited,
+                featuredImage = FieldState.Loading
+            )
+        }
+        resolveFeaturedImage(mediaId)
+    }
+
+    fun onFeaturedImageRemoved() {
+        val current = _uiState.value
+        val edited = 0L.takeIf {
+            current.featuredImageId != 0L
+        }
+        _uiState.update {
+            it.copy(
+                editedFeaturedImageId = edited,
+                featuredImage = FieldState.Empty
+            )
+        }
+    }
+
     private fun loadSiteAuthors(
         site: org.wordpress.android.fluxc.model.SiteModel
     ) {
@@ -394,6 +425,8 @@ class PostRsSettingsViewModel @Inject constructor(
                     format = state.editedFormat,
                     dateGmt = state.editedDate,
                     author = state.editedAuthor,
+                    featuredMedia =
+                        state.editedFeaturedImageId,
                     meta = null
                 )
                 withContext(Dispatchers.IO) {
@@ -559,6 +592,7 @@ class PostRsSettingsViewModel @Inject constructor(
             } else {
                 FieldState.Empty
             },
+            featuredImageId = post.featuredMedia ?: 0L,
             sticky = post.sticky ?: false,
             slug = post.slug,
             excerpt = post.excerpt?.raw ?: "",
