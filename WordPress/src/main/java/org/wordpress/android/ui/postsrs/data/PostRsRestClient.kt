@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.ui.postsrs.AuthorInfo
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.SiteUtils
@@ -171,6 +172,42 @@ class PostRsRestClient @Inject constructor(
             }
         }
         return result
+    }
+
+    /**
+     * Fetches all users for the given site, returning a list of
+     * [AuthorInfo]. Results are also cached in [userNameCache].
+     */
+    suspend fun fetchSiteAuthors(
+        site: SiteModel
+    ): List<AuthorInfo> {
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.users().listWithViewContext(
+                UserListParams(include = emptyList())
+            )
+        }
+        return when (response) {
+            is WpRequestResult.Success -> {
+                response.response.data.map { user ->
+                    userNameCache[user.id] = user.name
+                    AuthorInfo(
+                        id = user.id,
+                        name = user.name
+                    )
+                }
+            }
+            else -> {
+                val msg =
+                    (response as? WpRequestResult.WpError<*>)
+                        ?.errorMessage
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "fetchSiteAuthors failed: $msg"
+                )
+                emptyList()
+            }
+        }
     }
 
     private fun toPhotonUrl(site: SiteModel, sourceUrl: String): String {

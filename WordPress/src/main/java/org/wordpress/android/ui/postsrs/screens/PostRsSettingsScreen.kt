@@ -33,6 +33,8 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -45,7 +47,11 @@ import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -74,6 +80,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.SingleChoiceAlertDialog
+import org.wordpress.android.ui.postsrs.AuthorInfo
 import org.wordpress.android.ui.postsrs.DialogState
 import org.wordpress.android.ui.postsrs.FieldState
 import org.wordpress.android.ui.postsrs.PostRsSettingsUiState
@@ -81,8 +88,13 @@ import org.wordpress.android.ui.postsrs.RetryableField
 import org.wordpress.android.ui.postsrs.toLabel
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
+import java.util.Calendar
+import java.util.TimeZone
+
+private val UTC = TimeZone.getTimeZone("UTC")
 
 @Composable
+@Suppress("LongParameterList")
 fun PostRsSettingsScreen(
     uiState: PostRsSettingsUiState,
     onNavigateBack: () -> Unit,
@@ -99,6 +111,11 @@ fun PostRsSettingsScreen(
     onExcerptSet: (String) -> Unit = {},
     onFormatClicked: () -> Unit = {},
     onFormatSelected: (PostFormat) -> Unit = {},
+    onDateClicked: () -> Unit = {},
+    onDateSelected: (Int, Int, Int) -> Unit = { _, _, _ -> },
+    onTimeSelected: (Int, Int) -> Unit = { _, _ -> },
+    onAuthorClicked: () -> Unit = {},
+    onAuthorSelected: (Long) -> Unit = {},
     onSaveClicked: () -> Unit = {},
     onDismissDialog: () -> Unit = {},
     onDiscardConfirmed: () -> Unit = {},
@@ -145,6 +162,8 @@ fun PostRsSettingsScreen(
                     onSlugClicked = onSlugClicked,
                     onExcerptClicked = onExcerptClicked,
                     onFormatClicked = onFormatClicked,
+                    onDateClicked = onDateClicked,
+                    onAuthorClicked = onAuthorClicked,
                     onSaveClicked = onSaveClicked,
                 )
             }
@@ -158,6 +177,9 @@ fun PostRsSettingsScreen(
         onSlugSet = onSlugSet,
         onExcerptSet = onExcerptSet,
         onFormatSelected = onFormatSelected,
+        onDateSelected = onDateSelected,
+        onTimeSelected = onTimeSelected,
+        onAuthorSelected = onAuthorSelected,
         onDismissDialog = onDismissDialog,
         onDiscardConfirmed = onDiscardConfirmed,
     )
@@ -215,6 +237,8 @@ private fun HeroSettingsLayout(
     onSlugClicked: () -> Unit,
     onExcerptClicked: () -> Unit,
     onFormatClicked: () -> Unit,
+    onDateClicked: () -> Unit,
+    onAuthorClicked: () -> Unit,
     onSaveClicked: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
@@ -250,6 +274,8 @@ private fun HeroSettingsLayout(
                 onSlugClicked = onSlugClicked,
                 onExcerptClicked = onExcerptClicked,
                 onFormatClicked = onFormatClicked,
+                onDateClicked = onDateClicked,
+                onAuthorClicked = onAuthorClicked,
             )
         }
         Box(
@@ -426,6 +452,8 @@ private fun SettingsContent(
     onSlugClicked: () -> Unit,
     onExcerptClicked: () -> Unit,
     onFormatClicked: () -> Unit,
+    onDateClicked: () -> Unit,
+    onAuthorClicked: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         SectionHeader(
@@ -447,7 +475,10 @@ private fun SettingsContent(
             label = stringResource(
                 R.string.post_settings_time_and_date
             ),
-            value = uiState.publishDate
+            value = uiState.publishDate,
+            modifier = Modifier.clickable(
+                onClick = onDateClicked
+            )
         )
         HorizontalDivider()
 
@@ -468,7 +499,7 @@ private fun SettingsContent(
         )
         HorizontalDivider()
 
-        AsyncSettingsRow(
+        AsyncFieldRow(
             label = stringResource(
                 R.string.post_settings_author
             ),
@@ -476,7 +507,17 @@ private fun SettingsContent(
             onRetry = {
                 onRetryField(RetryableField.AUTHOR)
             }
-        )
+        ) { value ->
+            SettingsRow(
+                label = stringResource(
+                    R.string.post_settings_author
+                ),
+                value = value,
+                modifier = Modifier.clickable(
+                    onClick = onAuthorClicked
+                )
+            )
+        }
         HorizontalDivider()
 
         SectionHeader(
@@ -638,6 +679,9 @@ private fun SettingsDialogs(
     onSlugSet: (String) -> Unit,
     onExcerptSet: (String) -> Unit,
     onFormatSelected: (PostFormat) -> Unit,
+    onDateSelected: (Int, Int, Int) -> Unit,
+    onTimeSelected: (Int, Int) -> Unit,
+    onAuthorSelected: (Long) -> Unit,
     onDismissDialog: () -> Unit,
     onDiscardConfirmed: () -> Unit,
 ) {
@@ -668,6 +712,22 @@ private fun SettingsDialogs(
             currentFormat = uiState.editedFormat
                 ?: uiState.postFormat,
             onFormatSelected = onFormatSelected,
+            onDismiss = onDismissDialog,
+        )
+        is DialogState.DateDialog -> DateDialog(
+            currentDate = uiState.effectiveDate,
+            onDateSelected = onDateSelected,
+            onDismiss = onDismissDialog,
+        )
+        is DialogState.TimeDialog -> TimeDialog(
+            currentDate = uiState.effectiveDate,
+            onTimeSelected = onTimeSelected,
+            onDismiss = onDismissDialog,
+        )
+        is DialogState.AuthorDialog -> AuthorDialog(
+            authors = uiState.siteAuthors,
+            currentAuthorId = uiState.effectiveAuthorId,
+            onAuthorSelected = onAuthorSelected,
             onDismiss = onDismissDialog,
         )
         is DialogState.DiscardDialog -> DiscardDialog(
@@ -973,6 +1033,156 @@ private fun FormatDialog(
         onOptionSelected = { selectedIndex.intValue = it },
         onConfirm = {
             onFormatSelected(formats[selectedIndex.intValue])
+        },
+        onDismiss = onDismiss,
+        confirmButtonText = stringResource(R.string.ok),
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DateDialog(
+    currentDate: java.util.Date?,
+    onDateSelected: (Int, Int, Int) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val initialMillis = currentDate?.time
+        ?: System.currentTimeMillis()
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = initialMillis
+    )
+
+    DatePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val millis = datePickerState
+                        .selectedDateMillis ?: return@TextButton
+                    val cal = Calendar.getInstance(UTC)
+                    cal.timeInMillis = millis
+                    onDateSelected(
+                        cal.get(Calendar.YEAR),
+                        cal.get(Calendar.MONTH),
+                        cal.get(Calendar.DAY_OF_MONTH)
+                    )
+                }
+            ) {
+                Text(stringResource(R.string.ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    ) {
+        DatePicker(state = datePickerState)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TimeDialog(
+    currentDate: java.util.Date?,
+    onTimeSelected: (Int, Int) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val cal = remember(currentDate) {
+        Calendar.getInstance(UTC).apply {
+            time = currentDate ?: java.util.Date()
+        }
+    }
+    val timePickerState = rememberTimePickerState(
+        initialHour = cal.get(Calendar.HOUR_OF_DAY),
+        initialMinute = cal.get(Calendar.MINUTE),
+    )
+
+    TimePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onTimeSelected(
+                        timePickerState.hour,
+                        timePickerState.minute
+                    )
+                }
+            ) {
+                Text(stringResource(R.string.ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        },
+        title = {
+            Text(
+                stringResource(
+                    R.string.post_rs_settings_select_time
+                )
+            )
+        }
+    ) {
+        TimePicker(state = timePickerState)
+    }
+}
+
+@Composable
+private fun AuthorDialog(
+    authors: List<AuthorInfo>,
+    currentAuthorId: Long,
+    onAuthorSelected: (Long) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    if (authors.isEmpty()) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = {
+                Text(
+                    stringResource(
+                        R.string
+                            .post_rs_settings_author_dialog_title
+                    )
+                )
+            },
+            text = {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    strokeWidth = 2.dp
+                )
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+        return
+    }
+
+    val labels = authors.map { it.name }
+    val currentIndex = authors.indexOfFirst {
+        it.id == currentAuthorId
+    }.coerceAtLeast(0)
+
+    val selectedIndex = remember {
+        mutableIntStateOf(currentIndex)
+    }
+
+    SingleChoiceAlertDialog(
+        title = stringResource(
+            R.string.post_rs_settings_author_dialog_title
+        ),
+        options = labels,
+        selectedIndex = selectedIndex.intValue,
+        onOptionSelected = { selectedIndex.intValue = it },
+        onConfirm = {
+            onAuthorSelected(
+                authors[selectedIndex.intValue].id
+            )
         },
         onDismiss = onDismiss,
         confirmButtonText = stringResource(R.string.ok),

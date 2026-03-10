@@ -30,7 +30,9 @@ import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_api.TermEndpointType
 import java.text.DateFormat
+import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 import javax.inject.Inject
 
 @HiltViewModel
@@ -217,6 +219,107 @@ class PostRsSettingsViewModel @Inject constructor(
                     es != original
                 }
             )
+        }
+    }
+
+    fun onDateClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.DateDialog)
+        }
+    }
+
+    fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {
+        val current = _uiState.value
+        val base = current.effectiveDate ?: Date()
+        val cal = Calendar.getInstance(UTC).apply {
+            time = base
+            set(Calendar.YEAR, year)
+            set(Calendar.MONTH, month)
+            set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        }
+        val newDate = cal.time
+        _uiState.update {
+            it.copy(
+                editedDate = newDate.takeIf { ed ->
+                    ed != current.originalDate
+                },
+                dialogState = DialogState.TimeDialog
+            )
+        }
+    }
+
+    fun onTimeSelected(hour: Int, minute: Int) {
+        val current = _uiState.value
+        val base = current.effectiveDate ?: Date()
+        val cal = Calendar.getInstance(UTC).apply {
+            time = base
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val newDate = cal.time
+        _uiState.update {
+            it.copy(
+                editedDate = newDate.takeIf { ed ->
+                    ed != current.originalDate
+                },
+                publishDate = formatDate(newDate),
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onAuthorClicked() {
+        val site = site ?: return
+        if (_uiState.value.siteAuthors.isEmpty()) {
+            loadSiteAuthors(site)
+        }
+        _uiState.update {
+            it.copy(dialogState = DialogState.AuthorDialog)
+        }
+    }
+
+    fun onAuthorSelected(authorId: Long) {
+        val current = _uiState.value
+        val authorName = current.siteAuthors
+            .firstOrNull { it.id == authorId }?.name
+        _uiState.update {
+            it.copy(
+                editedAuthor = authorId.takeIf { ea ->
+                    ea != current.authorId
+                },
+                authorName = if (authorName != null) {
+                    FieldState.Loaded(authorName)
+                } else {
+                    it.authorName
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    private fun loadSiteAuthors(
+        site: org.wordpress.android.fluxc.model.SiteModel
+    ) {
+        viewModelScope.launch {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val authors = withContext(Dispatchers.IO) {
+                    restClient.fetchSiteAuthors(site)
+                }
+                _uiState.update {
+                    it.copy(siteAuthors = authors)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to load site authors",
+                    e
+                )
+            }
         }
     }
 
@@ -411,6 +514,8 @@ class PostRsSettingsViewModel @Inject constructor(
             postTitle = post.title?.raw?.takeIf { it.isNotBlank() }
                 ?: post.title?.rendered ?: "",
             publishDate = formatDate(post.dateGmt),
+            originalDate = post.dateGmt,
+            authorId = post.author ?: 0L,
             password = post.password,
             authorName = if (
                 post.author != null && post.author != 0L
@@ -562,10 +667,12 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     private fun formatDate(dateGmt: Date): String {
-        return DateFormat.getDateTimeInstance(
+        val fmt = DateFormat.getDateTimeInstance(
             DateFormat.MEDIUM,
             DateFormat.SHORT
-        ).format(dateGmt)
+        )
+        fmt.timeZone = UTC
+        return fmt.format(dateGmt)
     }
 
     private class PostApiException(message: String?) :
@@ -573,5 +680,6 @@ class PostRsSettingsViewModel @Inject constructor(
 
     companion object {
         const val EXTRA_POST_ID = "extra_post_id"
+        private val UTC = TimeZone.getTimeZone("UTC")
     }
 }

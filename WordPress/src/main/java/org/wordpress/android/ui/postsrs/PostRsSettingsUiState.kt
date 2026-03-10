@@ -2,6 +2,9 @@ package org.wordpress.android.ui.postsrs
 
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
+import java.util.Date
+
+data class AuthorInfo(val id: Long, val name: String)
 
 sealed interface FieldState {
     data object Empty : FieldState
@@ -15,6 +18,9 @@ data class PostRsSettingsUiState(
     val error: String? = null,
     val postTitle: String = "",
     val publishDate: String = "",
+    val originalDate: Date? = null,
+    val authorId: Long = 0L,
+    val siteAuthors: List<AuthorInfo> = emptyList(),
     val password: String? = null,
     val authorName: FieldState = FieldState.Empty,
     val categoryNames: FieldState = FieldState.Empty,
@@ -31,6 +37,8 @@ data class PostRsSettingsUiState(
     val editedSlug: String? = null,
     val editedExcerpt: String? = null,
     val editedFormat: PostFormat? = null,
+    val editedDate: Date? = null,
+    val editedAuthor: Long? = null,
     val isSaving: Boolean = false,
     val dialogState: DialogState = DialogState.None,
 ) {
@@ -53,6 +61,12 @@ data class PostRsSettingsUiState(
 
     val effectiveExcerpt: String
         get() = editedExcerpt ?: excerpt
+
+    val effectiveDate: Date?
+        get() = editedDate ?: originalDate
+
+    val effectiveAuthorId: Long
+        get() = editedAuthor ?: authorId
 }
 
 sealed interface DialogState {
@@ -62,6 +76,9 @@ sealed interface DialogState {
     data object SlugDialog : DialogState
     data object ExcerptDialog : DialogState
     data object FormatDialog : DialogState
+    data object DateDialog : DialogState
+    data object TimeDialog : DialogState
+    data object AuthorDialog : DialogState
     data object DiscardDialog : DialogState
 }
 
