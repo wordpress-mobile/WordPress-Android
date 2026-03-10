@@ -48,7 +48,9 @@ data class PostRsSettingsUiState(
             editedSticky != null ||
             editedSlug != null ||
             editedExcerpt != null ||
-            editedFormat != null
+            editedFormat != null ||
+            editedDate != null ||
+            editedAuthor != null
 
     val effectivePassword: String?
         get() = editedPassword ?: password

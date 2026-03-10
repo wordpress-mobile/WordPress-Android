@@ -381,6 +381,8 @@ class PostRsSettingsViewModel @Inject constructor(
                     slug = state.editedSlug,
                     excerpt = state.editedExcerpt,
                     format = state.editedFormat,
+                    dateGmt = state.editedDate,
+                    author = state.editedAuthor,
                     meta = null
                 )
                 withContext(Dispatchers.IO) {
