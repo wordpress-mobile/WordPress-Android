@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.postsrs
 
+import uniffi.wp_api.PostStatus
+
 sealed interface FieldState {
     data object Empty : FieldState
     data object Loading : FieldState
@@ -11,7 +13,6 @@ data class PostRsSettingsUiState(
     val isLoading: Boolean = true,
     val error: String? = null,
     val postTitle: String = "",
-    val statusLabel: String = "",
     val publishDate: String = "",
     val password: String? = null,
     val authorName: FieldState = FieldState.Empty,
@@ -22,7 +23,31 @@ data class PostRsSettingsUiState(
     val formatLabel: String = "",
     val slug: String = "",
     val excerpt: String = "",
-)
+    val postStatus: PostStatus? = null,
+    val editedStatus: PostStatus? = null,
+    val editedPassword: String? = null,
+    val editedSticky: Boolean? = null,
+    val isSaving: Boolean = false,
+    val dialogState: DialogState = DialogState.None,
+) {
+    val hasChanges: Boolean
+        get() = editedStatus != null ||
+            editedPassword != null ||
+            editedSticky != null
+
+    val effectivePassword: String?
+        get() = editedPassword ?: password
+
+    val effectiveSticky: Boolean
+        get() = editedSticky ?: sticky
+}
+
+sealed interface DialogState {
+    data object None : DialogState
+    data object StatusDialog : DialogState
+    data object PasswordDialog : DialogState
+    data object DiscardDialog : DialogState
+}
 
 enum class RetryableField {
     AUTHOR,
@@ -32,5 +57,6 @@ enum class RetryableField {
 
 sealed interface PostRsSettingsEvent {
     data object Finish : PostRsSettingsEvent
+    data object FinishWithChanges : PostRsSettingsEvent
     data class ShowSnackbar(val message: String) : PostRsSettingsEvent
 }

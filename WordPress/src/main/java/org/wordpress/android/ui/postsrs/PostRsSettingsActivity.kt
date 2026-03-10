@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.Lifecycle
@@ -26,6 +28,14 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
+        val controller = WindowInsetsControllerCompat(
+            window, window.decorView
+        )
+        controller.hide(WindowInsetsCompat.Type.statusBars())
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat
+                .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
         observeEvents()
 
         setContent {
@@ -33,11 +43,17 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
             AppThemeM3 {
                 PostRsSettingsScreen(
                     uiState = uiState,
-                    onNavigateBack = {
-                        onBackPressedDispatcher.onBackPressed()
-                    },
+                    onNavigateBack = viewModel::onBackClicked,
                     onRetry = viewModel::retry,
                     onRetryField = viewModel::retryField,
+                    onStatusClicked = viewModel::onStatusClicked,
+                    onStatusSelected = viewModel::onStatusSelected,
+                    onPasswordClicked = viewModel::onPasswordClicked,
+                    onPasswordSet = viewModel::onPasswordSet,
+                    onStickyToggled = viewModel::onStickyToggled,
+                    onSaveClicked = viewModel::onSaveClicked,
+                    onDismissDialog = viewModel::onDismissDialog,
+                    onDiscardConfirmed = viewModel::onDiscardConfirmed,
                 )
             }
         }
@@ -49,6 +65,10 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                 viewModel.events.collect { event ->
                     when (event) {
                         is PostRsSettingsEvent.Finish -> finish()
+                        is PostRsSettingsEvent.FinishWithChanges -> {
+                            setResult(RESULT_OK)
+                            finish()
+                        }
                         is PostRsSettingsEvent.ShowSnackbar ->
                             ToastUtils.showToast(
                                 this@PostRsSettingsActivity,

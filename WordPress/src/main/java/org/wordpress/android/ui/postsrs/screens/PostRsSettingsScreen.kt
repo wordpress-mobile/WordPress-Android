@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.postsrs.screens
 
+import android.view.View
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -21,12 +23,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,23 +39,33 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,9 +73,13 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.SingleChoiceAlertDialog
+import org.wordpress.android.ui.postsrs.DialogState
 import org.wordpress.android.ui.postsrs.FieldState
 import org.wordpress.android.ui.postsrs.PostRsSettingsUiState
 import org.wordpress.android.ui.postsrs.RetryableField
+import org.wordpress.android.ui.postsrs.toLabel
+import uniffi.wp_api.PostStatus
 
 @Composable
 fun PostRsSettingsScreen(
@@ -69,7 +87,19 @@ fun PostRsSettingsScreen(
     onNavigateBack: () -> Unit,
     onRetry: () -> Unit = {},
     onRetryField: (RetryableField) -> Unit = {},
+    onStatusClicked: () -> Unit = {},
+    onStatusSelected: (PostStatus) -> Unit = {},
+    onPasswordClicked: () -> Unit = {},
+    onPasswordSet: (String) -> Unit = {},
+    onStickyToggled: () -> Unit = {},
+    onSaveClicked: () -> Unit = {},
+    onDismissDialog: () -> Unit = {},
+    onDiscardConfirmed: () -> Unit = {},
 ) {
+    BackHandler {
+        onNavigateBack()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -102,10 +132,22 @@ fun PostRsSettingsScreen(
                     uiState = uiState,
                     onNavigateBack = onNavigateBack,
                     onRetryField = onRetryField,
+                    onStatusClicked = onStatusClicked,
+                    onPasswordClicked = onPasswordClicked,
+                    onStickyToggled = onStickyToggled,
+                    onSaveClicked = onSaveClicked,
                 )
             }
         }
     }
+
+    SettingsDialogs(
+        uiState = uiState,
+        onStatusSelected = onStatusSelected,
+        onPasswordSet = onPasswordSet,
+        onDismissDialog = onDismissDialog,
+        onDiscardConfirmed = onDiscardConfirmed,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -154,6 +196,10 @@ private fun HeroSettingsLayout(
     uiState: PostRsSettingsUiState,
     onNavigateBack: () -> Unit,
     onRetryField: (RetryableField) -> Unit,
+    onStatusClicked: () -> Unit,
+    onPasswordClicked: () -> Unit,
+    onStickyToggled: () -> Unit,
+    onSaveClicked: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -182,14 +228,34 @@ private fun HeroSettingsLayout(
             SettingsContent(
                 uiState = uiState,
                 onRetryField = onRetryField,
+                onStatusClicked = onStatusClicked,
+                onPasswordClicked = onPasswordClicked,
+                onStickyToggled = onStickyToggled,
             )
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.4f),
+                            Color.Transparent
+                        )
+                    )
+                )
+        )
         FloatingBackButton(
             onNavigateBack = onNavigateBack,
-            modifier = Modifier
-                .statusBarsPadding()
-                .padding(start = 4.dp, top = 4.dp)
         )
+        if (uiState.hasChanges) {
+            FloatingSaveButton(
+                isSaving = uiState.isSaving,
+                onSaveClicked = onSaveClicked,
+                modifier = Modifier.align(Alignment.TopEnd)
+            )
+        }
     }
 }
 
@@ -256,19 +322,44 @@ private fun FloatingBackButton(
     IconButton(
         onClick = onNavigateBack,
         modifier = modifier
-            .size(40.dp)
-            .background(
-                color = Color.Black.copy(alpha = 0.4f),
-                shape = CircleShape
-            )
     ) {
         Icon(
             Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = stringResource(
                 R.string.back
             ),
-            tint = Color.White
+            tint = Color.White,
         )
+    }
+}
+
+@Composable
+private fun FloatingSaveButton(
+    isSaving: Boolean,
+    onSaveClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    if (isSaving) {
+        CircularProgressIndicator(
+            modifier = modifier
+                .padding(12.dp)
+                .size(24.dp),
+            strokeWidth = 2.dp,
+            color = Color.White,
+        )
+    } else {
+        IconButton(
+            onClick = onSaveClicked,
+            modifier = modifier
+        ) {
+            Icon(
+                Icons.Default.Check,
+                contentDescription = stringResource(
+                    R.string.save
+                ),
+                tint = Color.White,
+            )
+        }
     }
 }
 
@@ -307,6 +398,9 @@ private fun ErrorContent(
 private fun SettingsContent(
     uiState: PostRsSettingsUiState,
     onRetryField: (RetryableField) -> Unit,
+    onStatusClicked: () -> Unit,
+    onPasswordClicked: () -> Unit,
+    onStickyToggled: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         SectionHeader(
@@ -317,7 +411,10 @@ private fun SettingsContent(
             label = stringResource(
                 R.string.post_settings_status
             ),
-            value = uiState.statusLabel
+            value = statusDisplayLabel(uiState),
+            modifier = Modifier.clickable(
+                onClick = onStatusClicked
+            )
         )
         HorizontalDivider()
 
@@ -329,20 +426,21 @@ private fun SettingsContent(
         )
         HorizontalDivider()
 
-        if (uiState.password.isNullOrEmpty()) {
-            SettingsRow(
-                label = stringResource(R.string.password),
-                value = stringResource(R.string.none),
-                dimmed = true
-            )
-        } else {
-            SettingsRow(
-                label = stringResource(R.string.password),
-                value = stringResource(
+        val effectivePassword = uiState.effectivePassword
+        SettingsRow(
+            label = stringResource(R.string.password),
+            value = if (effectivePassword.isNullOrEmpty()) {
+                stringResource(R.string.none)
+            } else {
+                stringResource(
                     R.string.post_rs_settings_protected
                 )
+            },
+            dimmed = effectivePassword.isNullOrEmpty(),
+            modifier = Modifier.clickable(
+                onClick = onPasswordClicked
             )
-        }
+        )
         HorizontalDivider()
 
         AsyncSettingsRow(
@@ -387,15 +485,9 @@ private fun SettingsContent(
             )
         )
 
-        SettingsRow(
-            label = stringResource(
-                R.string.post_settings_mark_as_sticky_options_header
-            ),
-            value = if (uiState.sticky) {
-                stringResource(R.string.yes)
-            } else {
-                stringResource(R.string.no)
-            }
+        StickyRow(
+            sticky = uiState.effectiveSticky,
+            onToggle = onStickyToggled,
         )
         HorizontalDivider()
 
@@ -407,22 +499,15 @@ private fun SettingsContent(
         )
         HorizontalDivider()
 
-        if (uiState.slug.isNotEmpty()) {
-            SettingsRow(
-                label = stringResource(
-                    R.string.post_settings_slug
-                ),
-                value = uiState.slug
-            )
-        } else {
-            SettingsRow(
-                label = stringResource(
-                    R.string.post_settings_slug
-                ),
-                value = stringResource(R.string.none),
-                dimmed = true
-            )
-        }
+        SettingsRow(
+            label = stringResource(
+                R.string.post_settings_slug
+            ),
+            value = uiState.slug.ifEmpty {
+                stringResource(R.string.none)
+            },
+            dimmed = uiState.slug.isEmpty()
+        )
         HorizontalDivider()
 
         if (uiState.excerpt.isNotEmpty()) {
@@ -445,6 +530,255 @@ private fun SettingsContent(
         Spacer(modifier = Modifier.height(24.dp))
     }
 }
+
+@Composable
+private fun statusDisplayLabel(
+    uiState: PostRsSettingsUiState,
+): String {
+    val status = uiState.editedStatus ?: uiState.postStatus
+    val resId = status.toLabel()
+    return if (resId != 0) stringResource(resId) else ""
+}
+
+@Composable
+private fun StickyRow(
+    sticky: Boolean,
+    onToggle: () -> Unit,
+) {
+    ListItem(
+        headlineContent = {
+            Text(
+                stringResource(
+                    R.string
+                        .post_settings_mark_as_sticky_options_header
+                )
+            )
+        },
+        trailingContent = {
+            Switch(
+                checked = sticky,
+                onCheckedChange = { onToggle() }
+            )
+        },
+        modifier = Modifier.clickable(onClick = onToggle)
+    )
+}
+
+// region Dialogs
+
+@Composable
+private fun SettingsDialogs(
+    uiState: PostRsSettingsUiState,
+    onStatusSelected: (PostStatus) -> Unit,
+    onPasswordSet: (String) -> Unit,
+    onDismissDialog: () -> Unit,
+    onDiscardConfirmed: () -> Unit,
+) {
+    when (uiState.dialogState) {
+        is DialogState.StatusDialog -> StatusDialog(
+            currentStatus = uiState.editedStatus
+                ?: uiState.postStatus,
+            onStatusSelected = onStatusSelected,
+            onDismiss = onDismissDialog,
+        )
+        is DialogState.PasswordDialog -> PasswordDialog(
+            currentPassword = uiState.effectivePassword
+                ?: "",
+            onPasswordSet = onPasswordSet,
+            onDismiss = onDismissDialog,
+        )
+        is DialogState.DiscardDialog -> DiscardDialog(
+            onDiscard = onDiscardConfirmed,
+            onDismiss = onDismissDialog,
+        )
+        is DialogState.None -> Unit
+    }
+}
+
+@Composable
+private fun StatusDialog(
+    currentStatus: PostStatus?,
+    onStatusSelected: (PostStatus) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val statuses = listOf(
+        PostStatus.Publish,
+        PostStatus.Draft,
+        PostStatus.Pending,
+        PostStatus.Private,
+    )
+    val labels = statuses.map { status ->
+        val resId = status.toLabel()
+        if (resId != 0) stringResource(resId) else ""
+    }
+    val currentIndex = statuses.indexOfFirst {
+        it == currentStatus
+    }.coerceAtLeast(0)
+
+    var selectedIndex by remember {
+        mutableIntStateOf(currentIndex)
+    }
+
+    SingleChoiceAlertDialog(
+        title = stringResource(
+            R.string.post_rs_settings_status_dialog_title
+        ),
+        options = labels,
+        selectedIndex = selectedIndex,
+        onOptionSelected = { selectedIndex = it },
+        onConfirm = {
+            onStatusSelected(statuses[selectedIndex])
+        },
+        onDismiss = onDismiss,
+        confirmButtonText = stringResource(R.string.ok),
+    )
+}
+
+@Composable
+private fun PasswordDialog(
+    currentPassword: String,
+    onPasswordSet: (String) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val view = LocalView.current
+    DisposableEffect(Unit) {
+        val prev = view.importantForAutofill
+        view.importantForAutofill =
+            View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
+        onDispose {
+            view.importantForAutofill = prev
+        }
+    }
+
+    var text by rememberSaveable {
+        mutableStateOf(currentPassword)
+    }
+    var passwordVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                stringResource(
+                    R.string
+                        .post_rs_settings_password_dialog_title
+                )
+            )
+        },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    label = {
+                        Text(
+                            stringResource(
+                                R.string
+                                    .post_rs_settings_password_hint
+                            )
+                        )
+                    },
+                    singleLine = true,
+                    visualTransformation = if (passwordVisible) {
+                        VisualTransformation.None
+                    } else {
+                        PasswordVisualTransformation()
+                    },
+                    trailingIcon = {
+                        IconButton(
+                            onClick = {
+                                passwordVisible =
+                                    !passwordVisible
+                            }
+                        ) {
+                            Icon(
+                                imageVector = if (
+                                    passwordVisible
+                                ) {
+                                    Icons.Default.VisibilityOff
+                                } else {
+                                    Icons.Default.Visibility
+                                },
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                if (currentPassword.isNotEmpty()) {
+                    TextButton(
+                        onClick = { onPasswordSet("") },
+                        modifier = Modifier.padding(top = 8.dp)
+                    ) {
+                        Text(
+                            stringResource(
+                                R.string
+                                    .post_rs_settings_remove_password
+                            ),
+                            color = MaterialTheme
+                                .colorScheme.error
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onPasswordSet(text) },
+                enabled = text.isNotBlank()
+            ) {
+                Text(stringResource(R.string.ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun DiscardDialog(
+    onDiscard: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                stringResource(
+                    R.string
+                        .post_rs_settings_discard_title
+                )
+            )
+        },
+        text = {
+            Text(
+                stringResource(
+                    R.string
+                        .post_rs_settings_discard_message
+                )
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onDiscard) {
+                Text(
+                    stringResource(R.string.button_discard)
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+// endregion
 
 @Composable
 private fun AsyncFieldRow(
@@ -571,6 +905,7 @@ private fun SectionHeader(title: String) {
 private fun SettingsRow(
     label: String,
     value: String,
+    modifier: Modifier = Modifier,
     dimmed: Boolean = false,
 ) {
     ListItem(
@@ -592,6 +927,7 @@ private fun SettingsRow(
         } else {
             null
         },
+        modifier = modifier,
     )
 }
 
@@ -668,7 +1004,6 @@ private fun PreviewSettingsLoaded() {
             uiState = PostRsSettingsUiState(
                 isLoading = false,
                 postTitle = "My First Post",
-                statusLabel = "Published",
                 publishDate = "Mar 6, 2026, 10:30 AM",
                 password = null,
                 authorName = FieldState.Loaded("Jane Doe"),
@@ -683,6 +1018,7 @@ private fun PreviewSettingsLoaded() {
                 formatLabel = "Standard",
                 slug = "my-first-post",
                 excerpt = "A short excerpt of the post.",
+                postStatus = PostStatus.Publish,
             ),
             onNavigateBack = {},
             onRetry = {},
@@ -699,7 +1035,6 @@ private fun PreviewSettingsHeroImage() {
             uiState = PostRsSettingsUiState(
                 isLoading = false,
                 postTitle = "My First Post",
-                statusLabel = "Published",
                 publishDate = "Mar 6, 2026, 10:30 AM",
                 password = null,
                 authorName = FieldState.Loaded("Jane Doe"),
@@ -716,6 +1051,7 @@ private fun PreviewSettingsHeroImage() {
                 formatLabel = "Standard",
                 slug = "my-first-post",
                 excerpt = "A short excerpt of the post.",
+                postStatus = PostStatus.Publish,
             ),
             onNavigateBack = {},
             onRetry = {},
@@ -761,7 +1097,6 @@ private fun PreviewSettingsFieldErrors() {
             uiState = PostRsSettingsUiState(
                 isLoading = false,
                 postTitle = "Test Post",
-                statusLabel = "Draft",
                 publishDate = "Mar 6, 2026, 10:30 AM",
                 authorName = FieldState.Error(
                     "Couldn't load"

@@ -1019,6 +1019,13 @@
     <string name="post_rs_settings_loading">%s: Loading</string>
     <string name="post_rs_settings_featured_image_not_set">Featured image not set.</string>
     <string name="post_rs_settings_featured_image_error">Couldn\'t load featured image.</string>
+    <string name="post_rs_settings_password_dialog_title">Post Password</string>
+    <string name="post_rs_settings_password_hint">Enter password</string>
+    <string name="post_rs_settings_remove_password">Remove password</string>
+    <string name="post_rs_settings_save_error">Couldn\'t update post</string>
+    <string name="post_rs_settings_status_dialog_title">Post Status</string>
+    <string name="post_rs_settings_discard_title">Discard changes</string>
+    <string name="post_rs_settings_discard_message">You have unsaved changes. Discard them?</string>
     <string name="show_less">Show less</string>
     <string name="post_types_screen_title">Post Types</string>
 
