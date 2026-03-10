@@ -329,58 +329,60 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     fun onCategoriesSelected(ids: LongArray) {
-        val original = _uiState.value.categoryIds
-        val newIds = ids.toList()
-        val edited = newIds.takeIf {
-            it.sorted() != original.sorted()
-        }
-        _uiState.update {
-            it.copy(editedCategoryIds = edited)
-        }
-        if (newIds.isEmpty()) {
-            _uiState.update {
-                it.copy(categoryNames = FieldState.Empty)
+        onTermsSelected(
+            ids = ids,
+            originalIds = _uiState.value.categoryIds,
+            endpointType = TermEndpointType.Categories,
+            updateEdited = { state, edited ->
+                state.copy(editedCategoryIds = edited)
+            },
+            updateNames = { state, names ->
+                state.copy(categoryNames = names)
             }
-        } else {
-            _uiState.update {
-                it.copy(
-                    categoryNames = FieldState.Loading
-                )
-            }
-            resolveTermNames(
-                newIds,
-                TermEndpointType.Categories
-            ) { names ->
-                _uiState.update {
-                    it.copy(categoryNames = names)
-                }
-            }
-        }
+        )
     }
 
     fun onTagsSelected(ids: LongArray) {
-        val original = _uiState.value.tagIds
+        onTermsSelected(
+            ids = ids,
+            originalIds = _uiState.value.tagIds,
+            endpointType = TermEndpointType.Tags,
+            updateEdited = { state, edited ->
+                state.copy(editedTagIds = edited)
+            },
+            updateNames = { state, names ->
+                state.copy(tagNames = names)
+            }
+        )
+    }
+
+    private fun onTermsSelected(
+        ids: LongArray,
+        originalIds: List<Long>,
+        endpointType: TermEndpointType,
+        updateEdited: (PostRsSettingsUiState, List<Long>?) ->
+            PostRsSettingsUiState,
+        updateNames: (PostRsSettingsUiState, FieldState) ->
+            PostRsSettingsUiState,
+    ) {
         val newIds = ids.toList()
         val edited = newIds.takeIf {
-            it.sorted() != original.sorted()
+            it.sorted() != originalIds.sorted()
         }
-        _uiState.update {
-            it.copy(editedTagIds = edited)
-        }
+        _uiState.update { updateEdited(it, edited) }
         if (newIds.isEmpty()) {
             _uiState.update {
-                it.copy(tagNames = FieldState.Empty)
+                updateNames(it, FieldState.Empty)
             }
         } else {
             _uiState.update {
-                it.copy(tagNames = FieldState.Loading)
+                updateNames(it, FieldState.Loading)
             }
             resolveTermNames(
-                newIds,
-                TermEndpointType.Tags
+                newIds, endpointType
             ) { names ->
                 _uiState.update {
-                    it.copy(tagNames = names)
+                    updateNames(it, names)
                 }
             }
         }

@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import uniffi.wp_api.TermEndpointType
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.ToastUtils
@@ -30,10 +31,8 @@ class TermSelectionActivity : BaseAppCompatActivity() {
         observeEvents()
 
         val title = if (
-            intent.getBooleanExtra(
-                TermSelectionViewModel.EXTRA_IS_CATEGORIES,
-                true
-            )
+            viewModel.endpointType
+                is TermEndpointType.Categories
         ) {
             getString(R.string.categories)
         } else {

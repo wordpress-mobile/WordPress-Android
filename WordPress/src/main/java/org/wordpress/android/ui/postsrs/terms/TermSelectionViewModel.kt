@@ -139,19 +139,9 @@ class TermSelectionViewModel @Inject constructor(
                 }
                 if (newId != null) {
                     selectedIds.add(newId)
-                    reloadTerms()
+                    loadTerms(checkNetwork = false)
                 } else {
-                    _events.trySend(
-                        TermSelectionEvent.ShowSnackbar(
-                            resourceProvider.getString(
-                                R.string
-                                    .post_rs_settings_term_create_error
-                            )
-                        )
-                    )
-                    _uiState.update {
-                        it.copy(isCreating = false)
-                    }
+                    handleCreateTermError()
                 }
             } catch (e: CancellationException) {
                 throw e
@@ -161,17 +151,7 @@ class TermSelectionViewModel @Inject constructor(
                     "Failed to create term",
                     e
                 )
-                _events.trySend(
-                    TermSelectionEvent.ShowSnackbar(
-                        resourceProvider.getString(
-                            R.string
-                                .post_rs_settings_term_create_error
-                        )
-                    )
-                )
-                _uiState.update {
-                    it.copy(isCreating = false)
-                }
+                handleCreateTermError()
             }
         }
     }
@@ -188,26 +168,21 @@ class TermSelectionViewModel @Inject constructor(
         _events.trySend(TermSelectionEvent.Finish)
     }
 
-    private fun loadTerms() {
+    private fun loadTerms(checkNetwork: Boolean = true) {
         val currentSite = site ?: return
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _uiState.value = TermSelectionUiState(
-                isLoading = false,
-                isHierarchical = isCategories,
-                error = resourceProvider.getString(
-                    R.string.error_generic_network
+        if (checkNetwork) {
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                _uiState.value = TermSelectionUiState(
+                    isLoading = false,
+                    isHierarchical = isCategories,
+                    error = resourceProvider.getString(
+                        R.string.error_generic_network
+                    )
                 )
-            )
-            return
+                return
+            }
+            _uiState.update { it.copy(isLoading = true) }
         }
-        _uiState.update { it.copy(isLoading = true) }
-        viewModelScope.launch {
-            fetchAndApplyTerms(currentSite)
-        }
-    }
-
-    private fun reloadTerms() {
-        val currentSite = site ?: return
         viewModelScope.launch {
             fetchAndApplyTerms(currentSite)
         }
@@ -332,6 +307,18 @@ class TermSelectionViewModel @Inject constructor(
             parentId = parent.parent
         }
         return level
+    }
+
+    private fun handleCreateTermError() {
+        _events.trySend(
+            TermSelectionEvent.ShowSnackbar(
+                resourceProvider.getString(
+                    R.string
+                        .post_rs_settings_term_create_error
+                )
+            )
+        )
+        _uiState.update { it.copy(isCreating = false) }
     }
 
     companion object {

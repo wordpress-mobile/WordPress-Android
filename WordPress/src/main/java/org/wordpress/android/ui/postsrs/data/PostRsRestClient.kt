@@ -151,11 +151,7 @@ class PostRsRestClient @Inject constructor(
         termIds: List<Long>,
         endpointType: TermEndpointType,
     ): Map<Long, String> {
-        val cache = if (endpointType is TermEndpointType.Categories) {
-            categoryNameCache
-        } else {
-            tagNameCache
-        }
+        val cache = termCache(endpointType)
         val result = mutableMapOf<Long, String>()
         val uncached = mutableListOf<Long>()
         for (id in termIds) {
@@ -236,13 +232,7 @@ class PostRsRestClient @Inject constructor(
         site: SiteModel,
         endpointType: TermEndpointType,
     ): List<AnyTermWithViewContext> {
-        val cache = if (
-            endpointType is TermEndpointType.Categories
-        ) {
-            categoryNameCache
-        } else {
-            tagNameCache
-        }
+        val cache = termCache(endpointType)
         val client = wpApiClientProvider.getWpApiClient(site)
         val allTerms = mutableListOf<AnyTermWithViewContext>()
         var nextParams: TermListParams? = TermListParams(
@@ -288,13 +278,7 @@ class PostRsRestClient @Inject constructor(
         name: String,
         parentId: Long? = null,
     ): Long? {
-        val cache = if (
-            endpointType is TermEndpointType.Categories
-        ) {
-            categoryNameCache
-        } else {
-            tagNameCache
-        }
+        val cache = termCache(endpointType)
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request {
             it.terms().create(
@@ -339,6 +323,15 @@ class PostRsRestClient @Inject constructor(
             sourceUrl, width, 0, site.isPrivateWPComAtomic
         )
     }
+
+    private fun termCache(
+        endpointType: TermEndpointType,
+    ): ConcurrentHashMap<Long, String> =
+        if (endpointType is TermEndpointType.Categories) {
+            categoryNameCache
+        } else {
+            tagNameCache
+        }
 
     companion object {
         private const val PER_PAGE = 100u
