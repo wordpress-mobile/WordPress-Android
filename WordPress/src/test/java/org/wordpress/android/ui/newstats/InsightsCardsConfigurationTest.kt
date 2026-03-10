@@ -21,6 +21,8 @@ class InsightsCardsConfigurationTest {
         val hiddenCards = config.hiddenCards()
 
         assertThat(hiddenCards).containsExactlyInAnyOrder(
+            InsightsCardType.ALL_TIME_STATS,
+            InsightsCardType.MOST_POPULAR_DAY,
             InsightsCardType.YEAR_IN_REVIEW
         )
     }

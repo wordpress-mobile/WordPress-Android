@@ -180,7 +180,7 @@ class InsightsCardsConfigurationRepository @Inject constructor(
                 InsightsCardsConfiguration::class.java
             )
             if (isValidConfiguration(config)) {
-                config
+                addNewCardTypes(siteId, config)
             } else {
                 AppLog.w(
                     AppLog.T.STATS,
@@ -198,6 +198,25 @@ class InsightsCardsConfigurationRepository @Inject constructor(
             )
             resetToDefault(siteId)
         }
+    }
+
+    private fun addNewCardTypes(
+        siteId: Long,
+        config: InsightsCardsConfiguration
+    ): InsightsCardsConfiguration {
+        val allKnown = InsightsCardType.entries
+        val knownInConfig = config.visibleCards +
+            config.hiddenCards()
+        val newTypes = allKnown - knownInConfig.toSet()
+        if (newTypes.isEmpty()) return config
+        val updated = config.copy(
+            visibleCards = config.visibleCards + newTypes
+        )
+        appPrefsWrapper.setStatsInsightsCardsConfigurationJson(
+            siteId,
+            gson.toJson(updated)
+        )
+        return updated
     }
 
     @Suppress("USELESS_CAST")
