@@ -310,6 +310,82 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
+    fun onCategoriesClicked() {
+        val ids = _uiState.value.effectiveCategoryIds
+        _events.trySend(
+            PostRsSettingsEvent.LaunchCategorySelection(
+                ids.toLongArray()
+            )
+        )
+    }
+
+    fun onTagsClicked() {
+        val ids = _uiState.value.effectiveTagIds
+        _events.trySend(
+            PostRsSettingsEvent.LaunchTagSelection(
+                ids.toLongArray()
+            )
+        )
+    }
+
+    fun onCategoriesSelected(ids: LongArray) {
+        val original = _uiState.value.categoryIds
+        val newIds = ids.toList()
+        val edited = newIds.takeIf {
+            it.sorted() != original.sorted()
+        }
+        _uiState.update {
+            it.copy(editedCategoryIds = edited)
+        }
+        if (newIds.isEmpty()) {
+            _uiState.update {
+                it.copy(categoryNames = FieldState.Empty)
+            }
+        } else {
+            _uiState.update {
+                it.copy(
+                    categoryNames = FieldState.Loading
+                )
+            }
+            resolveTermNames(
+                newIds,
+                TermEndpointType.Categories
+            ) { names ->
+                _uiState.update {
+                    it.copy(categoryNames = names)
+                }
+            }
+        }
+    }
+
+    fun onTagsSelected(ids: LongArray) {
+        val original = _uiState.value.tagIds
+        val newIds = ids.toList()
+        val edited = newIds.takeIf {
+            it.sorted() != original.sorted()
+        }
+        _uiState.update {
+            it.copy(editedTagIds = edited)
+        }
+        if (newIds.isEmpty()) {
+            _uiState.update {
+                it.copy(tagNames = FieldState.Empty)
+            }
+        } else {
+            _uiState.update {
+                it.copy(tagNames = FieldState.Loading)
+            }
+            resolveTermNames(
+                newIds,
+                TermEndpointType.Tags
+            ) { names ->
+                _uiState.update {
+                    it.copy(tagNames = names)
+                }
+            }
+        }
+    }
+
     fun onFeaturedImageClicked() {
         _events.trySend(PostRsSettingsEvent.LaunchMediaPicker)
     }
@@ -441,6 +517,11 @@ class PostRsSettingsViewModel @Inject constructor(
                     author = state.editedAuthor,
                     featuredMedia =
                         state.editedFeaturedImageId,
+                    categories =
+                        state.editedCategoryIds
+                            ?: listOf(),
+                    tags =
+                        state.editedTagIds ?: listOf(),
                     meta = null
                 )
                 withContext(Dispatchers.IO) {
@@ -586,6 +667,8 @@ class PostRsSettingsViewModel @Inject constructor(
             } else {
                 FieldState.Empty
             },
+            categoryIds = post.categories ?: emptyList(),
+            tagIds = post.tags ?: emptyList(),
             categoryNames = if (
                 !post.categories.isNullOrEmpty()
             ) {

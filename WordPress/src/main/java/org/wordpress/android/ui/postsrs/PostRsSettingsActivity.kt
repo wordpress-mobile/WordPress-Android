@@ -25,6 +25,8 @@ import org.wordpress.android.ui.mediapicker.MediaType
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.postsrs.screens.PostRsSettingsScreen
+import org.wordpress.android.ui.postsrs.terms.TermSelectionActivity
+import org.wordpress.android.ui.postsrs.terms.TermSelectionViewModel
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
@@ -39,10 +41,17 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
     private lateinit var mediaPickerLauncher:
         ActivityResultLauncher<Intent>
 
+    private lateinit var categorySelectionLauncher:
+        ActivityResultLauncher<Intent>
+
+    private lateinit var tagSelectionLauncher:
+        ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         registerMediaPickerLauncher()
+        registerTermSelectionLaunchers()
 
         val controller = WindowInsetsControllerCompat(
             window, window.decorView
@@ -78,6 +87,10 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                     onTimeSelected = viewModel::onTimeSelected,
                     onAuthorClicked = viewModel::onAuthorClicked,
                     onAuthorSelected = viewModel::onAuthorSelected,
+                    onCategoriesClicked =
+                        viewModel::onCategoriesClicked,
+                    onTagsClicked =
+                        viewModel::onTagsClicked,
                     onFeaturedImageClicked =
                         viewModel::onFeaturedImageClicked,
                     onFeaturedImageRemoved =
@@ -102,6 +115,16 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                         }
                         is PostRsSettingsEvent.LaunchMediaPicker ->
                             launchMediaPicker()
+                        is PostRsSettingsEvent
+                            .LaunchCategorySelection ->
+                            launchCategorySelection(
+                                event.selectedIds
+                            )
+                        is PostRsSettingsEvent
+                            .LaunchTagSelection ->
+                            launchTagSelection(
+                                event.selectedIds
+                            )
                         is PostRsSettingsEvent.ShowSnackbar ->
                             ToastUtils.showToast(
                                 this@PostRsSettingsActivity,
@@ -126,6 +149,53 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun registerTermSelectionLaunchers() {
+        categorySelectionLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val ids = result.data?.getLongArrayExtra(
+                    TermSelectionViewModel.RESULT_SELECTED_IDS
+                ) ?: return@registerForActivityResult
+                viewModel.onCategoriesSelected(ids)
+            }
+        }
+        tagSelectionLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val ids = result.data?.getLongArrayExtra(
+                    TermSelectionViewModel.RESULT_SELECTED_IDS
+                ) ?: return@registerForActivityResult
+                viewModel.onTagsSelected(ids)
+            }
+        }
+    }
+
+    private fun launchCategorySelection(
+        selectedIds: LongArray,
+    ) {
+        categorySelectionLauncher.launch(
+            TermSelectionActivity.createIntent(
+                this,
+                isCategories = true,
+                selectedIds = selectedIds
+            )
+        )
+    }
+
+    private fun launchTagSelection(
+        selectedIds: LongArray,
+    ) {
+        tagSelectionLauncher.launch(
+            TermSelectionActivity.createIntent(
+                this,
+                isCategories = false,
+                selectedIds = selectedIds
+            )
+        )
     }
 
     private fun launchMediaPicker() {

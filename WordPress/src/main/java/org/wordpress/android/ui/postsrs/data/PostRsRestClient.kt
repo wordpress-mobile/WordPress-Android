@@ -9,7 +9,9 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.AnyTermWithViewContext
 import uniffi.wp_api.MediaListParams
+import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
 import uniffi.wp_api.UserListParams
@@ -225,6 +227,103 @@ class PostRsRestClient @Inject constructor(
         }
     }
 
+    /**
+     * Fetches all terms for the given [endpointType] using
+     * paginated requests. Also populates the name cache as a
+     * side-effect.
+     */
+    suspend fun fetchAllTerms(
+        site: SiteModel,
+        endpointType: TermEndpointType,
+    ): List<AnyTermWithViewContext> {
+        val cache = if (
+            endpointType is TermEndpointType.Categories
+        ) {
+            categoryNameCache
+        } else {
+            tagNameCache
+        }
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val allTerms = mutableListOf<AnyTermWithViewContext>()
+        var nextParams: TermListParams? = TermListParams(
+            perPage = PER_PAGE
+        )
+        while (nextParams != null) {
+            val response = client.request {
+                it.terms().listWithViewContext(
+                    endpointType, nextParams!!
+                )
+            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    for (term in response.response.data) {
+                        cache[term.id] = term.name
+                        allTerms.add(term)
+                    }
+                    nextParams =
+                        response.response.nextPageParams
+                }
+                else -> {
+                    val msg = (response
+                        as? WpRequestResult.WpError<*>)
+                        ?.errorMessage
+                    AppLog.w(
+                        AppLog.T.POSTS,
+                        "fetchAllTerms failed: $msg"
+                    )
+                    break
+                }
+            }
+        }
+        return allTerms
+    }
+
+    /**
+     * Creates a new term and returns its ID, or null on
+     * failure. Also populates the name cache.
+     */
+    suspend fun createTerm(
+        site: SiteModel,
+        endpointType: TermEndpointType,
+        name: String,
+        parentId: Long? = null,
+    ): Long? {
+        val cache = if (
+            endpointType is TermEndpointType.Categories
+        ) {
+            categoryNameCache
+        } else {
+            tagNameCache
+        }
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.terms().create(
+                endpointType,
+                TermCreateParams(
+                    name = name,
+                    parent = parentId
+                )
+            )
+        }
+        return when (response) {
+            is WpRequestResult.Success -> {
+                val term = response.response.data
+                cache[term.id] = term.name
+                term.id
+            }
+            else -> {
+                val msg =
+                    (response as? WpRequestResult.WpError<*>)
+                        ?.errorMessage
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "createTerm failed: $msg"
+                )
+                null
+            }
+        }
+    }
+
     private fun toPhotonUrl(
         site: SiteModel,
         sourceUrl: String,
@@ -239,5 +338,9 @@ class PostRsRestClient @Inject constructor(
         return PhotonUtils.getPhotonImageUrl(
             sourceUrl, width, 0, site.isPrivateWPComAtomic
         )
+    }
+
+    companion object {
+        private const val PER_PAGE = 100u
     }
 }
