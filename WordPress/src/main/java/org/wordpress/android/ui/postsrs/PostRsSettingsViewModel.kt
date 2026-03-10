@@ -32,7 +32,6 @@ import uniffi.wp_api.TermEndpointType
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
-import java.util.TimeZone
 import javax.inject.Inject
 
 @HiltViewModel
@@ -243,6 +242,7 @@ class PostRsSettingsViewModel @Inject constructor(
                 editedDate = newDate.takeIf { ed ->
                     ed != current.originalDate
                 },
+                publishDate = formatDate(newDate),
                 dialogState = DialogState.TimeDialog
             )
         }
@@ -361,6 +361,19 @@ class PostRsSettingsViewModel @Inject constructor(
                     AppLog.T.POSTS,
                     "Failed to load site authors",
                     e
+                )
+                _uiState.update {
+                    it.copy(
+                        dialogState = DialogState.None
+                    )
+                }
+                _events.trySend(
+                    PostRsSettingsEvent.ShowSnackbar(
+                        resourceProvider.getString(
+                            R.string
+                                .post_rs_settings_field_error
+                        )
+                    )
                 )
             }
         }
@@ -730,6 +743,5 @@ class PostRsSettingsViewModel @Inject constructor(
 
     companion object {
         const val EXTRA_POST_ID = "extra_post_id"
-        private val UTC = TimeZone.getTimeZone("UTC")
     }
 }

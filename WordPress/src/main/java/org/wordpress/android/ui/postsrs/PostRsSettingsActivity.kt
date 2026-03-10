@@ -40,9 +40,9 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
         ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        registerMediaPickerLauncher()
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        registerMediaPickerLauncher()
 
         val controller = WindowInsetsControllerCompat(
             window, window.decorView

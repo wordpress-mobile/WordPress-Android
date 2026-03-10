@@ -93,9 +93,7 @@ import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
 import java.util.Calendar
 import java.util.Date
-import java.util.TimeZone
-
-private val UTC = TimeZone.getTimeZone("UTC")
+import org.wordpress.android.ui.postsrs.UTC
 
 @Composable
 @Suppress("LongParameterList")
@@ -1168,8 +1166,16 @@ private fun DateDialog(
     onDateSelected: (Int, Int, Int) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val initialMillis = currentDate?.time
-        ?: System.currentTimeMillis()
+    // Normalize to UTC midnight for DatePickerState
+    val initialMillis = currentDate?.let { date ->
+        val cal = Calendar.getInstance(UTC)
+        cal.time = date
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+        cal.timeInMillis
+    } ?: System.currentTimeMillis()
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = initialMillis
     )
