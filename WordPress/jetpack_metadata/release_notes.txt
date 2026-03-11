@@ -1,5 +1,0 @@
-- Navigation Menus available to eligible users.
-- Reader has a new subscription settings view.
-- Assorted Reader, Stats, and Media library fixes.
-- Image and authentication fixes for self-hosted sites.
-- My Site visual updates and TalkBack accessibility.
