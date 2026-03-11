@@ -101,6 +101,12 @@ class TermSelectionViewModel @Inject constructor(
     fun onSearchQueryChanged(query: String) {
         _uiState.update { it.copy(searchQuery = query) }
         searchJob?.cancel()
+        val trimmed = query.trim()
+        if (trimmed.isNotEmpty() &&
+            trimmed.length < MIN_SEARCH_QUERY_LENGTH
+        ) {
+            return
+        }
         searchJob = viewModelScope.launch {
             delay(SEARCH_DEBOUNCE_MS)
             loadFirstPage()
@@ -389,5 +395,6 @@ class TermSelectionViewModel @Inject constructor(
         const val RESULT_SELECTED_IDS =
             "result_selected_ids"
         private const val SEARCH_DEBOUNCE_MS = 500L
+        private const val MIN_SEARCH_QUERY_LENGTH = 3
     }
 }

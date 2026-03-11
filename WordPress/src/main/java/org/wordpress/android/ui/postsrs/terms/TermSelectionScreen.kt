@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -202,6 +203,12 @@ private fun TermListContent(
                     )
                 )
             },
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = null
+                )
+            },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
@@ -210,22 +217,46 @@ private fun TermListContent(
                     vertical = 8.dp
                 )
         )
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(
-                items = terms,
-                key = { it.id }
-            ) { term ->
-                TermRow(
-                    term = term,
-                    onToggle = { onTermToggled(term.id) }
+        if (terms.isEmpty() && searchQuery.isNotEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = stringResource(
+                        R.string
+                            .post_rs_settings_search_no_results
+                    ),
+                    style = MaterialTheme.typography
+                        .bodyLarge,
+                    color = MaterialTheme.colorScheme
+                        .onSurfaceVariant,
                 )
             }
-            if (canLoadMore) {
-                item(key = "load_more") {
-                    LoadMoreItem(
-                        isLoading = isLoadingMore,
-                        onLoadMore = onLoadMore,
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(
+                    items = terms,
+                    key = { it.id }
+                ) { term ->
+                    TermRow(
+                        term = term,
+                        onToggle = {
+                            onTermToggled(term.id)
+                        }
                     )
+                }
+                if (canLoadMore) {
+                    item(key = "load_more") {
+                        LoadMoreItem(
+                            isLoading = isLoadingMore,
+                            onLoadMore = onLoadMore,
+                        )
+                    }
                 }
             }
         }
