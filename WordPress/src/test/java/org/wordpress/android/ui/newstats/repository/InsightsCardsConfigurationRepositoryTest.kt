@@ -153,17 +153,29 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when saveConfiguration is called, then json is saved to prefs`() =
+    fun `when addCard is called on empty config, then json is saved to prefs`() =
         test {
+            val emptyJson = """
+                {
+                    "visibleCards": [],
+                    "hiddenCards": [
+                        "YEAR_IN_REVIEW",
+                        "ALL_TIME_STATS",
+                        "MOST_POPULAR_DAY"
+                    ]
+                }
+            """.trimIndent()
             whenever(
                 appPrefsWrapper
-                    .getStatsInsightsCardsConfigurationJson(TEST_SITE_ID)
-            ).thenReturn(null)
-            val config = InsightsCardsConfiguration(
-                visibleCards = listOf(InsightsCardType.YEAR_IN_REVIEW)
-            )
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(emptyJson)
 
-            repository.saveConfiguration(TEST_SITE_ID, config)
+            repository.addCard(
+                TEST_SITE_ID,
+                InsightsCardType.YEAR_IN_REVIEW
+            )
 
             verify(appPrefsWrapper)
                 .setStatsInsightsCardsConfigurationJson(
@@ -211,12 +223,19 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
         test {
             val initialJson = """
                 {
-                    "visibleCards": []
+                    "visibleCards": [],
+                    "hiddenCards": [
+                        "YEAR_IN_REVIEW",
+                        "ALL_TIME_STATS",
+                        "MOST_POPULAR_DAY"
+                    ]
                 }
             """.trimIndent()
             whenever(
                 appPrefsWrapper
-                    .getStatsInsightsCardsConfigurationJson(TEST_SITE_ID)
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
             ).thenReturn(initialJson)
 
             repository.addCard(
@@ -227,30 +246,47 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
             val jsonCaptor = argumentCaptor<String>()
             verify(appPrefsWrapper)
                 .setStatsInsightsCardsConfigurationJson(
-                    eq(TEST_SITE_ID), jsonCaptor.capture()
+                    eq(TEST_SITE_ID),
+                    jsonCaptor.capture()
                 )
             assertThat(jsonCaptor.firstValue)
                 .contains("YEAR_IN_REVIEW")
         }
 
     @Test
-    fun `when configurationFlow emits, then it contains site id and configuration`() =
+    fun `when mutation occurs, then configurationFlow emits site id and configuration`() =
         test {
+            val json = """
+                {
+                    "visibleCards": [],
+                    "hiddenCards": [
+                        "YEAR_IN_REVIEW",
+                        "ALL_TIME_STATS",
+                        "MOST_POPULAR_DAY"
+                    ]
+                }
+            """.trimIndent()
             whenever(
                 appPrefsWrapper
-                    .getStatsInsightsCardsConfigurationJson(TEST_SITE_ID)
-            ).thenReturn(null)
-            val config = InsightsCardsConfiguration(
-                visibleCards = listOf(InsightsCardType.YEAR_IN_REVIEW)
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(json)
+
+            repository.addCard(
+                TEST_SITE_ID,
+                InsightsCardType.YEAR_IN_REVIEW
             )
 
-            repository.saveConfiguration(TEST_SITE_ID, config)
-
-            val flowValue = repository.configurationFlow.value
+            val flowValue =
+                repository.configurationFlow.value
             assertThat(flowValue).isNotNull
-            assertThat(flowValue?.first).isEqualTo(TEST_SITE_ID)
+            assertThat(flowValue?.first)
+                .isEqualTo(TEST_SITE_ID)
             assertThat(flowValue?.second?.visibleCards)
-                .containsExactly(InsightsCardType.YEAR_IN_REVIEW)
+                .contains(
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
         }
 
     @Test

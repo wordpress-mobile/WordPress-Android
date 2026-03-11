@@ -19,9 +19,11 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class InsightsCardsConfigurationRepository @Inject constructor(
+class InsightsCardsConfigurationRepository @Inject
+constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
-    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
+    @Named(IO_THREAD)
+    private val ioDispatcher: CoroutineDispatcher
 ) {
     private val mutex = Mutex()
 
@@ -32,26 +34,34 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         .create()
 
     private val _configurationFlow =
-        MutableStateFlow<Pair<Long, InsightsCardsConfiguration>?>(null)
+        MutableStateFlow<
+            Pair<Long, InsightsCardsConfiguration>?
+        >(null)
     val configurationFlow:
-        StateFlow<Pair<Long, InsightsCardsConfiguration>?> =
-            _configurationFlow.asStateFlow()
+        StateFlow<
+            Pair<Long, InsightsCardsConfiguration>?
+        > = _configurationFlow.asStateFlow()
 
     suspend fun getConfiguration(
         siteId: Long
-    ): InsightsCardsConfiguration = withContext(ioDispatcher) {
-        loadConfiguration(siteId)
-    }
+    ): InsightsCardsConfiguration =
+        withContext(ioDispatcher) {
+            mutex.withLock {
+                loadAndMigrate(siteId)
+            }
+        }
 
-    suspend fun saveConfiguration(
+    private fun persistConfiguration(
         siteId: Long,
         configuration: InsightsCardsConfiguration
-    ): Unit = withContext(ioDispatcher) {
-        appPrefsWrapper.setStatsInsightsCardsConfigurationJson(
-            siteId,
-            gson.toJson(configuration)
-        )
-        _configurationFlow.value = siteId to configuration
+    ) {
+        appPrefsWrapper
+            .setStatsInsightsCardsConfigurationJson(
+                siteId,
+                gson.toJson(configuration)
+            )
+        _configurationFlow.value =
+            siteId to configuration
     }
 
     suspend fun removeCard(
@@ -59,13 +69,14 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         cardType: InsightsCardType
     ): Unit = withContext(ioDispatcher) {
         mutex.withLock {
-            val current = getConfiguration(siteId)
+            val current = loadAndMigrate(siteId)
             val newVisibleCards =
                 current.visibleCards.toMutableList()
             newVisibleCards.remove(cardType)
             val newHiddenCards =
-                (current.hiddenCards + cardType).distinct()
-            saveConfiguration(
+                (current.hiddenCards + cardType)
+                    .distinct()
+            persistConfiguration(
                 siteId,
                 current.copy(
                     visibleCards = newVisibleCards,
@@ -80,15 +91,17 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         cardType: InsightsCardType
     ): Unit = withContext(ioDispatcher) {
         mutex.withLock {
-            val current = getConfiguration(siteId)
-            if (current.visibleCards.contains(cardType)) {
+            val current = loadAndMigrate(siteId)
+            if (current.visibleCards
+                    .contains(cardType)
+            ) {
                 return@withLock
             }
             val newVisibleCards =
                 current.visibleCards + cardType
             val newHiddenCards =
                 current.hiddenCards - cardType
-            saveConfiguration(
+            persistConfiguration(
                 siteId,
                 current.copy(
                     visibleCards = newVisibleCards,
@@ -103,11 +116,15 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         cardType: InsightsCardType
     ): Unit = withContext(ioDispatcher) {
         mutex.withLock {
-            val current = getConfiguration(siteId)
-            val index = current.visibleCards.indexOf(cardType)
+            val current = loadAndMigrate(siteId)
+            val index =
+                current.visibleCards.indexOf(cardType)
             if (index > 0) {
                 moveCardToIndex(
-                    siteId, current, cardType, index - 1
+                    siteId,
+                    current,
+                    cardType,
+                    index - 1
                 )
             }
         }
@@ -118,10 +135,13 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         cardType: InsightsCardType
     ): Unit = withContext(ioDispatcher) {
         mutex.withLock {
-            val current = getConfiguration(siteId)
-            val index = current.visibleCards.indexOf(cardType)
+            val current = loadAndMigrate(siteId)
+            val index =
+                current.visibleCards.indexOf(cardType)
             if (index > 0) {
-                moveCardToIndex(siteId, current, cardType, 0)
+                moveCardToIndex(
+                    siteId, current, cardType, 0
+                )
             }
         }
     }
@@ -131,13 +151,17 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         cardType: InsightsCardType
     ): Unit = withContext(ioDispatcher) {
         mutex.withLock {
-            val current = getConfiguration(siteId)
-            val index = current.visibleCards.indexOf(cardType)
+            val current = loadAndMigrate(siteId)
+            val index =
+                current.visibleCards.indexOf(cardType)
             if (index >= 0 &&
                 index < current.visibleCards.size - 1
             ) {
                 moveCardToIndex(
-                    siteId, current, cardType, index + 1
+                    siteId,
+                    current,
+                    cardType,
+                    index + 1
                 )
             }
         }
@@ -148,8 +172,9 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         cardType: InsightsCardType
     ): Unit = withContext(ioDispatcher) {
         mutex.withLock {
-            val current = getConfiguration(siteId)
-            val index = current.visibleCards.indexOf(cardType)
+            val current = loadAndMigrate(siteId)
+            val index =
+                current.visibleCards.indexOf(cardType)
             if (index >= 0 &&
                 index < current.visibleCards.size - 1
             ) {
@@ -163,19 +188,37 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         }
     }
 
-    private suspend fun moveCardToIndex(
+    private fun moveCardToIndex(
         siteId: Long,
         current: InsightsCardsConfiguration,
         cardType: InsightsCardType,
         newIndex: Int
     ) {
-        val newVisibleCards = current.visibleCards.toMutableList()
+        val newVisibleCards =
+            current.visibleCards.toMutableList()
         newVisibleCards.remove(cardType)
         newVisibleCards.add(newIndex, cardType)
-        saveConfiguration(
+        persistConfiguration(
             siteId,
-            current.copy(visibleCards = newVisibleCards)
+            current.copy(
+                visibleCards = newVisibleCards
+            )
         )
+    }
+
+    /**
+     * Loads config from prefs and migrates if needed.
+     * Must be called within [mutex.withLock].
+     */
+    private fun loadAndMigrate(
+        siteId: Long
+    ): InsightsCardsConfiguration {
+        val config = loadConfiguration(siteId)
+        val migrated = addNewCardTypes(config)
+        if (migrated !== config) {
+            persistConfiguration(siteId, migrated)
+        }
+        return migrated
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -183,7 +226,9 @@ class InsightsCardsConfigurationRepository @Inject constructor(
         siteId: Long
     ): InsightsCardsConfiguration {
         val json = appPrefsWrapper
-            .getStatsInsightsCardsConfigurationJson(siteId)
+            .getStatsInsightsCardsConfigurationJson(
+                siteId
+            )
         if (json == null) {
             return InsightsCardsConfiguration()
         }
@@ -193,12 +238,13 @@ class InsightsCardsConfigurationRepository @Inject constructor(
                 InsightsCardsConfiguration::class.java
             )
             if (isValidConfiguration(config)) {
-                addNewCardTypes(siteId, config)
+                config
             } else {
                 AppLog.w(
                     AppLog.T.STATS,
-                    "Insights cards configuration contains " +
-                        "invalid card types, resetting to default"
+                    "Insights cards configuration " +
+                        "contains invalid card types, " +
+                        "resetting to default"
                 )
                 resetToDefault(siteId)
             }
@@ -206,30 +252,32 @@ class InsightsCardsConfigurationRepository @Inject constructor(
             AppLog.e(
                 AppLog.T.STATS,
                 "Failed to parse insights cards " +
-                    "configuration, resetting to default",
+                    "configuration, resetting to " +
+                    "default",
                 e
             )
             resetToDefault(siteId)
         }
     }
 
+    /**
+     * Pure function: returns a migrated config with
+     * any new card types added, or the original config
+     * if no migration is needed.
+     */
     private fun addNewCardTypes(
-        siteId: Long,
         config: InsightsCardsConfiguration
     ): InsightsCardsConfiguration {
         val allKnown = InsightsCardType.entries
         val knownInConfig = config.visibleCards +
             config.hiddenCards
-        val newTypes = allKnown - knownInConfig.toSet()
+        val newTypes =
+            allKnown - knownInConfig.toSet()
         if (newTypes.isEmpty()) return config
-        val updated = config.copy(
-            visibleCards = config.visibleCards + newTypes
+        return config.copy(
+            visibleCards =
+                config.visibleCards + newTypes
         )
-        appPrefsWrapper.setStatsInsightsCardsConfigurationJson(
-            siteId,
-            gson.toJson(updated)
-        )
-        return updated
     }
 
     @Suppress("USELESS_CAST")
@@ -243,11 +291,9 @@ class InsightsCardsConfigurationRepository @Inject constructor(
     private fun resetToDefault(
         siteId: Long
     ): InsightsCardsConfiguration {
-        val defaultConfig = InsightsCardsConfiguration()
-        appPrefsWrapper.setStatsInsightsCardsConfigurationJson(
-            siteId,
-            gson.toJson(defaultConfig)
-        )
+        val defaultConfig =
+            InsightsCardsConfiguration()
+        persistConfiguration(siteId, defaultConfig)
         return defaultConfig
     }
 }
