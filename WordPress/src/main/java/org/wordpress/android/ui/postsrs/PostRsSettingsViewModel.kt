@@ -15,9 +15,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -29,8 +29,8 @@ import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostRetrieveParams
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
-import uniffi.wp_api.UserListParams
 import uniffi.wp_api.TermEndpointType
+import uniffi.wp_api.UserListParams
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
@@ -337,6 +337,18 @@ class PostRsSettingsViewModel @Inject constructor(
                     AppLog.T.POSTS,
                     "Failed to load site authors",
                     e
+                )
+                _uiState.update {
+                    it.copy(
+                        dialogState = DialogState.None
+                    )
+                }
+                _events.trySend(
+                    PostRsSettingsEvent.ShowSnackbar(
+                        e.message?.takeIf {
+                            it.isNotBlank()
+                        } ?: fieldError
+                    )
                 )
             }
         }
