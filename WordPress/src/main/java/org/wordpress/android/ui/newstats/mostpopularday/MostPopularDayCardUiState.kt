@@ -12,8 +12,7 @@ sealed class MostPopularDayCardUiState {
         val viewsPercentage: String
     ) : MostPopularDayCardUiState()
 
-    class Error(
-        val message: String,
-        val onRetry: () -> Unit
+    data class Error(
+        val message: String
     ) : MostPopularDayCardUiState()
 }

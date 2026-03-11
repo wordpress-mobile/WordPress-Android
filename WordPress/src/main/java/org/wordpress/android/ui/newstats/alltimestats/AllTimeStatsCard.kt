@@ -47,6 +47,7 @@ private val CardMargin = 16.dp
 fun AllTimeStatsCard(
     uiState: AllTimeStatsCardUiState,
     onRemoveCard: () -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
     cardPosition: CardPosition? = null,
     onMoveUp: (() -> Unit)? = null,
@@ -86,6 +87,7 @@ fun AllTimeStatsCard(
                 ErrorContent(
                     uiState,
                     onRemoveCard,
+                    onRetry,
                     cardPosition,
                     onMoveUp,
                     onMoveToTop,
@@ -259,6 +261,7 @@ private fun StatRow(
 private fun ErrorContent(
     state: AllTimeStatsCardUiState.Error,
     onRemoveCard: () -> Unit,
+    onRetry: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
     onMoveToTop: (() -> Unit)?,
@@ -306,7 +309,7 @@ private fun ErrorContent(
                 color = MaterialTheme.colorScheme.error
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = state.onRetry) {
+            Button(onClick = onRetry) {
                 Text(
                     text = stringResource(R.string.retry)
                 )
@@ -321,7 +324,8 @@ private fun AllTimeStatsCardLoadingPreview() {
     AppThemeM3 {
         AllTimeStatsCard(
             uiState = AllTimeStatsCardUiState.Loading,
-            onRemoveCard = {}
+            onRemoveCard = {},
+            onRetry = {}
         )
     }
 }
@@ -337,7 +341,8 @@ private fun AllTimeStatsCardLoadedPreview() {
                 posts = 2L,
                 comments = 0L
             ),
-            onRemoveCard = {}
+            onRemoveCard = {},
+            onRetry = {}
         )
     }
 }
@@ -348,10 +353,10 @@ private fun AllTimeStatsCardErrorPreview() {
     AppThemeM3 {
         AllTimeStatsCard(
             uiState = AllTimeStatsCardUiState.Error(
-                message = "Failed to load stats",
-                onRetry = {}
+                message = "Failed to load stats"
             ),
-            onRemoveCard = {}
+            onRemoveCard = {},
+            onRetry = {}
         )
     }
 }

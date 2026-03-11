@@ -11,17 +11,12 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.never
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.InsightsCardsConfigurationRepository
-import org.wordpress.android.ui.newstats.repository.StatsRepository
-import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
@@ -39,12 +34,6 @@ class InsightsViewModelTest :
     @Mock
     private lateinit var networkUtilsWrapper:
         NetworkUtilsWrapper
-
-    @Mock
-    private lateinit var statsRepository: StatsRepository
-
-    @Mock
-    private lateinit var accountStore: AccountStore
 
     private lateinit var viewModel: InsightsViewModel
 
@@ -70,8 +59,6 @@ class InsightsViewModelTest :
         whenever(
             networkUtilsWrapper.isNetworkAvailable()
         ).thenReturn(true)
-        whenever(accountStore.accessToken)
-            .thenReturn(TEST_ACCESS_TOKEN)
     }
 
     private suspend fun initViewModel(
@@ -85,9 +72,7 @@ class InsightsViewModelTest :
         viewModel = InsightsViewModel(
             selectedSiteRepository,
             cardConfigurationRepository,
-            networkUtilsWrapper,
-            statsRepository,
-            accountStore
+            networkUtilsWrapper
         )
     }
 
@@ -233,9 +218,7 @@ class InsightsViewModelTest :
             viewModel = InsightsViewModel(
                 selectedSiteRepository,
                 cardConfigurationRepository,
-                networkUtilsWrapper,
-                statsRepository,
-                accountStore
+                networkUtilsWrapper
             )
             advanceUntilIdle()
 
@@ -348,9 +331,7 @@ class InsightsViewModelTest :
             viewModel = InsightsViewModel(
                 selectedSiteRepository,
                 cardConfigurationRepository,
-                networkUtilsWrapper,
-                statsRepository,
-                accountStore
+                networkUtilsWrapper
             )
 
             assertThat(viewModel.cardsToLoad.value)
@@ -427,133 +408,8 @@ class InsightsViewModelTest :
             ).isTrue()
         }
 
-    @Test
-    fun `when getStatsSummary called, then returns cached on second call`() =
-        test {
-            initViewModel()
-            advanceUntilIdle()
-
-            whenever(
-                statsRepository.fetchStatsSummary(
-                    TEST_SITE_ID
-                )
-            ).thenReturn(
-                StatsSummaryResult.Success(
-                    createTestSummary()
-                )
-            )
-
-            val first =
-                viewModel.getStatsSummary(TEST_SITE_ID)
-            val second =
-                viewModel.getStatsSummary(TEST_SITE_ID)
-
-            assertThat(first).isInstanceOf(
-                StatsSummaryResult.Success::class.java
-            )
-            assertThat(second).isInstanceOf(
-                StatsSummaryResult.Success::class.java
-            )
-            verify(statsRepository, times(1))
-                .fetchStatsSummary(TEST_SITE_ID)
-        }
-
-    @Test
-    fun `when getStatsSummary called with forceRefresh, then fetches again`() =
-        test {
-            initViewModel()
-            advanceUntilIdle()
-
-            whenever(
-                statsRepository.fetchStatsSummary(
-                    TEST_SITE_ID
-                )
-            ).thenReturn(
-                StatsSummaryResult.Success(
-                    createTestSummary()
-                )
-            )
-
-            viewModel.getStatsSummary(TEST_SITE_ID)
-            viewModel.getStatsSummary(
-                TEST_SITE_ID,
-                forceRefresh = true
-            )
-
-            verify(statsRepository, times(2))
-                .fetchStatsSummary(TEST_SITE_ID)
-        }
-
-    @Test
-    fun `when getStatsSummary called without token, then returns error`() =
-        test {
-            whenever(accountStore.accessToken)
-                .thenReturn(null)
-            initViewModel()
-            advanceUntilIdle()
-
-            val result =
-                viewModel.getStatsSummary(TEST_SITE_ID)
-
-            assertThat(result).isInstanceOf(
-                StatsSummaryResult.Error::class.java
-            )
-            verify(statsRepository, never())
-                .fetchStatsSummary(any())
-        }
-
-    @Test
-    fun `when getStatsSummary errors, then cache is not populated`() =
-        test {
-            initViewModel()
-            advanceUntilIdle()
-
-            whenever(
-                statsRepository.fetchStatsSummary(
-                    TEST_SITE_ID
-                )
-            ).thenReturn(
-                StatsSummaryResult.Error("Network error")
-            )
-
-            val first =
-                viewModel.getStatsSummary(TEST_SITE_ID)
-            assertThat(first).isInstanceOf(
-                StatsSummaryResult.Error::class.java
-            )
-
-            whenever(
-                statsRepository.fetchStatsSummary(
-                    TEST_SITE_ID
-                )
-            ).thenReturn(
-                StatsSummaryResult.Success(
-                    createTestSummary()
-                )
-            )
-
-            val second =
-                viewModel.getStatsSummary(TEST_SITE_ID)
-            assertThat(second).isInstanceOf(
-                StatsSummaryResult.Success::class.java
-            )
-            verify(statsRepository, times(2))
-                .fetchStatsSummary(TEST_SITE_ID)
-        }
-
-    private fun createTestSummary() = StatsSummaryData(
-        views = 100L,
-        visitors = 50L,
-        posts = 10L,
-        comments = 5L,
-        viewsBestDay = "2022-02-22",
-        viewsBestDayTotal = 20L
-    )
-
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val OTHER_SITE_ID = 456L
-        private const val TEST_ACCESS_TOKEN =
-            "test_access_token"
     }
 }

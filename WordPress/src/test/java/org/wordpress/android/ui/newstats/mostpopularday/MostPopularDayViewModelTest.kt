@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
+import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
@@ -25,6 +26,10 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
     private lateinit var resourceProvider:
         ResourceProvider
 
+    @Mock
+    private lateinit var statsSummaryUseCase:
+        StatsSummaryUseCase
+
     private lateinit var viewModel:
         MostPopularDayViewModel
 
@@ -33,13 +38,6 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
         siteId = TEST_SITE_ID
         name = "Test Site"
     }
-
-    private var mockResult: StatsSummaryResult =
-        StatsSummaryResult.Success(createTestData())
-
-    private val testProvider:
-        suspend (Long, Boolean) -> StatsSummaryResult =
-        { _, _ -> mockResult }
 
     @Before
     fun setUp() {
@@ -63,23 +61,37 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
         ).thenReturn(UNKNOWN_ERROR)
     }
 
-    private fun initViewModel() {
+    private suspend fun initViewModel() {
+        whenever(
+            statsSummaryUseCase(TEST_SITE_ID)
+        ).thenReturn(
+            StatsSummaryResult.Success(createTestData())
+        )
         viewModel = MostPopularDayViewModel(
             selectedSiteRepository,
-            resourceProvider
+            resourceProvider,
+            statsSummaryUseCase
         )
-        viewModel.summaryProvider = testProvider
         viewModel.loadData()
     }
 
     @Test
     fun `when data loads, then loaded state has correct day`() =
         test {
-            mockResult = StatsSummaryResult.Success(
-                data = createTestData()
+            whenever(
+                statsSummaryUseCase(TEST_SITE_ID)
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    data = createTestData()
+                )
             )
 
-            initViewModel()
+            viewModel = MostPopularDayViewModel(
+                selectedSiteRepository,
+                resourceProvider,
+                statsSummaryUseCase
+            )
+            viewModel.loadData()
             advanceUntilIdle()
 
             val state = viewModel.uiState.value
@@ -117,10 +129,18 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when fetch fails, then error state`() = test {
-        mockResult =
+        whenever(
+            statsSummaryUseCase(TEST_SITE_ID)
+        ).thenReturn(
             StatsSummaryResult.Error("Network error")
+        )
 
-        initViewModel()
+        viewModel = MostPopularDayViewModel(
+            selectedSiteRepository,
+            resourceProvider,
+            statsSummaryUseCase
+        )
+        viewModel.loadData()
         advanceUntilIdle()
 
         assertThat(viewModel.uiState.value)
@@ -133,73 +153,86 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
     @Test
     fun `when loadDataIfNeeded called multiple times, then loads once`() =
         test {
-            var callCount = 0
-            val countingProvider:
-                suspend (Long, Boolean) ->
-                StatsSummaryResult =
-                { _, _ ->
-                    callCount++
-                    StatsSummaryResult.Success(
-                        data = createTestData()
-                    )
-                }
+            whenever(
+                statsSummaryUseCase(TEST_SITE_ID)
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    data = createTestData()
+                )
+            )
 
             viewModel = MostPopularDayViewModel(
                 selectedSiteRepository,
-                resourceProvider
+                resourceProvider,
+                statsSummaryUseCase
             )
-            viewModel.summaryProvider = countingProvider
             viewModel.loadDataIfNeeded()
             advanceUntilIdle()
 
             viewModel.loadDataIfNeeded()
             advanceUntilIdle()
 
-            assertThat(callCount).isEqualTo(1)
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    MostPopularDayCardUiState
+                        .Loaded::class.java
+                )
         }
 
     @Test
     fun `when refresh called, then data is fetched`() =
         test {
-            var callCount = 0
-            val countingProvider:
-                suspend (Long, Boolean) ->
-                StatsSummaryResult =
-                { _, _ ->
-                    callCount++
-                    StatsSummaryResult.Success(
-                        data = createTestData()
-                    )
-                }
+            whenever(
+                statsSummaryUseCase(TEST_SITE_ID)
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    data = createTestData()
+                )
+            )
+            whenever(
+                statsSummaryUseCase(
+                    TEST_SITE_ID,
+                    forceRefresh = true
+                )
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    data = createTestData()
+                )
+            )
 
             viewModel = MostPopularDayViewModel(
                 selectedSiteRepository,
-                resourceProvider
+                resourceProvider,
+                statsSummaryUseCase
             )
-            viewModel.summaryProvider = countingProvider
             viewModel.loadData()
             advanceUntilIdle()
 
             viewModel.refresh()
             advanceUntilIdle()
 
-            assertThat(callCount).isEqualTo(2)
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    MostPopularDayCardUiState
+                        .Loaded::class.java
+                )
         }
 
     @Suppress("TooGenericExceptionThrown")
     @Test
     fun `when exception thrown, then error state`() =
         test {
-            val throwingProvider:
-                suspend (Long, Boolean) ->
-                StatsSummaryResult =
-                { _, _ -> throw RuntimeException("Test") }
+            whenever(
+                statsSummaryUseCase(TEST_SITE_ID)
+            ).thenAnswer {
+                throw RuntimeException("Test")
+            }
 
             viewModel = MostPopularDayViewModel(
                 selectedSiteRepository,
-                resourceProvider
+                resourceProvider,
+                statsSummaryUseCase
             )
-            viewModel.summaryProvider = throwingProvider
             viewModel.loadData()
             advanceUntilIdle()
 

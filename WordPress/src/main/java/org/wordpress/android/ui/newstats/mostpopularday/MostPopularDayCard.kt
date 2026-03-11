@@ -38,6 +38,7 @@ private val CardMargin = 16.dp
 fun MostPopularDayCard(
     uiState: MostPopularDayCardUiState,
     onRemoveCard: () -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
     cardPosition: CardPosition? = null,
     onMoveUp: (() -> Unit)? = null,
@@ -93,6 +94,7 @@ fun MostPopularDayCard(
                 ErrorContent(
                     uiState,
                     onRemoveCard,
+                    onRetry,
                     cardPosition,
                     onMoveUp,
                     onMoveToTop,
@@ -326,6 +328,7 @@ private fun LoadedContent(
 private fun ErrorContent(
     state: MostPopularDayCardUiState.Error,
     onRemoveCard: () -> Unit,
+    onRetry: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
     onMoveToTop: (() -> Unit)?,
@@ -374,7 +377,7 @@ private fun ErrorContent(
                 color = MaterialTheme.colorScheme.error
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = state.onRetry) {
+            Button(onClick = onRetry) {
                 Text(
                     text = stringResource(
                         R.string.retry
@@ -392,7 +395,8 @@ private fun MostPopularDayCardLoadingPreview() {
         MostPopularDayCard(
             uiState =
                 MostPopularDayCardUiState.Loading,
-            onRemoveCard = {}
+            onRemoveCard = {},
+            onRetry = {}
         )
     }
 }
@@ -409,7 +413,8 @@ private fun MostPopularDayCardLoadedPreview() {
                     views = 4600L,
                     viewsPercentage = "0.068"
                 ),
-            onRemoveCard = {}
+            onRemoveCard = {},
+            onRetry = {}
         )
     }
 }
@@ -420,10 +425,10 @@ private fun MostPopularDayCardErrorPreview() {
     AppThemeM3 {
         MostPopularDayCard(
             uiState = MostPopularDayCardUiState.Error(
-                message = "Failed to load stats",
-                onRetry = {}
+                message = "Failed to load stats"
             ),
-            onRemoveCard = {}
+            onRemoveCard = {},
+            onRetry = {}
         )
     }
 }

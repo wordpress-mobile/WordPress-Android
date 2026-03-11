@@ -10,8 +10,7 @@ sealed class AllTimeStatsCardUiState {
         val comments: Long
     ) : AllTimeStatsCardUiState()
 
-    class Error(
-        val message: String,
-        val onRetry: () -> Unit
+    data class Error(
+        val message: String
     ) : AllTimeStatsCardUiState()
 }

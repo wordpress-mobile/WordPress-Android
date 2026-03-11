@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
+import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
@@ -22,7 +23,8 @@ import javax.inject.Inject
 class MostPopularDayViewModel @Inject constructor(
     private val selectedSiteRepository:
         SelectedSiteRepository,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val statsSummaryUseCase: StatsSummaryUseCase
 ) : ViewModel() {
     private val _uiState =
         MutableStateFlow<MostPopularDayCardUiState>(
@@ -35,12 +37,11 @@ class MostPopularDayViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> =
         _isRefreshing.asStateFlow()
 
+    @Volatile
     private var isLoading = false
-    private var isLoadedSuccessfully = false
 
-    var summaryProvider:
-        (suspend (Long, Boolean) -> StatsSummaryResult)? =
-        null
+    @Volatile
+    private var isLoadedSuccessfully = false
 
     fun loadDataIfNeeded() {
         if (isLoadedSuccessfully || isLoading) return
@@ -72,21 +73,7 @@ class MostPopularDayViewModel @Inject constructor(
                 MostPopularDayCardUiState.Error(
                     message = resourceProvider.getString(
                         R.string.stats_error_no_site
-                    ),
-                    onRetry = ::loadData
-                )
-            return
-        }
-
-        val provider = summaryProvider
-        if (provider == null) {
-            isLoading = false
-            _uiState.value =
-                MostPopularDayCardUiState.Error(
-                    message = resourceProvider.getString(
-                        R.string.stats_error_api
-                    ),
-                    onRetry = ::loadData
+                    )
                 )
             return
         }
@@ -108,10 +95,10 @@ class MostPopularDayViewModel @Inject constructor(
         forceRefresh: Boolean = false
     ) {
         try {
-            val result = summaryProvider?.invoke(
+            val result = statsSummaryUseCase(
                 siteId,
                 forceRefresh
-            ) ?: return
+            )
             when (result) {
                 is StatsSummaryResult.Success -> {
                     isLoadedSuccessfully = true
@@ -127,8 +114,7 @@ class MostPopularDayViewModel @Inject constructor(
                                 .getString(
                                     R.string
                                         .stats_error_api
-                                ),
-                            onRetry = ::loadData
+                                )
                         )
                 }
             }
@@ -144,8 +130,7 @@ class MostPopularDayViewModel @Inject constructor(
                 MostPopularDayCardUiState.Error(
                     message = resourceProvider.getString(
                         R.string.stats_error_unknown
-                    ),
-                    onRetry = ::loadData
+                    )
                 )
         }
     }

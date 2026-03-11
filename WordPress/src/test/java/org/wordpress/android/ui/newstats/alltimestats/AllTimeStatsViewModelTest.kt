@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
+import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
@@ -23,6 +24,10 @@ class AllTimeStatsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var resourceProvider: ResourceProvider
 
+    @Mock
+    private lateinit var statsSummaryUseCase:
+        StatsSummaryUseCase
+
     private lateinit var viewModel: AllTimeStatsViewModel
 
     private val testSite = SiteModel().apply {
@@ -30,13 +35,6 @@ class AllTimeStatsViewModelTest : BaseUnitTest() {
         siteId = TEST_SITE_ID
         name = "Test Site"
     }
-
-    private var mockResult: StatsSummaryResult =
-        StatsSummaryResult.Success(createTestData())
-
-    private val testProvider:
-        suspend (Long, Boolean) -> StatsSummaryResult =
-        { _, _ -> mockResult }
 
     @Before
     fun setUp() {
@@ -60,12 +58,17 @@ class AllTimeStatsViewModelTest : BaseUnitTest() {
         ).thenReturn(UNKNOWN_ERROR)
     }
 
-    private fun initViewModel() {
+    private suspend fun initViewModel() {
+        whenever(
+            statsSummaryUseCase(TEST_SITE_ID)
+        ).thenReturn(
+            StatsSummaryResult.Success(createTestData())
+        )
         viewModel = AllTimeStatsViewModel(
             selectedSiteRepository,
-            resourceProvider
+            resourceProvider,
+            statsSummaryUseCase
         )
-        viewModel.summaryProvider = testProvider
         viewModel.loadData()
     }
 
@@ -90,33 +93,22 @@ class AllTimeStatsViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when provider is null, then error state`() =
-        test {
-            viewModel = AllTimeStatsViewModel(
-                selectedSiteRepository,
-                resourceProvider
-            )
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            val state = viewModel.uiState.value
-            assertThat(state).isInstanceOf(
-                AllTimeStatsCardUiState.Error::class.java
-            )
-            assertThat(
-                (state as AllTimeStatsCardUiState.Error)
-                    .message
-            ).isEqualTo(FAILED_TO_LOAD_ERROR)
-        }
-
-    @Test
     fun `when data loads successfully, then loaded state`() =
         test {
-            mockResult = StatsSummaryResult.Success(
-                data = createTestData()
+            whenever(
+                statsSummaryUseCase(TEST_SITE_ID)
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestData()
+                )
             )
 
-            initViewModel()
+            viewModel = AllTimeStatsViewModel(
+                selectedSiteRepository,
+                resourceProvider,
+                statsSummaryUseCase
+            )
+            viewModel.loadData()
             advanceUntilIdle()
 
             val state = viewModel.uiState.value
@@ -139,10 +131,18 @@ class AllTimeStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when fetch fails, then error state`() = test {
-        mockResult =
+        whenever(
+            statsSummaryUseCase(TEST_SITE_ID)
+        ).thenReturn(
             StatsSummaryResult.Error("Network error")
+        )
 
-        initViewModel()
+        viewModel = AllTimeStatsViewModel(
+            selectedSiteRepository,
+            resourceProvider,
+            statsSummaryUseCase
+        )
+        viewModel.loadData()
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
@@ -159,16 +159,17 @@ class AllTimeStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when exception thrown, then error state`() =
         test {
-            val throwingProvider:
-                suspend (Long, Boolean) ->
-                StatsSummaryResult =
-                { _, _ -> throw RuntimeException("Test") }
+            whenever(
+                statsSummaryUseCase(TEST_SITE_ID)
+            ).thenAnswer {
+                throw RuntimeException("Test")
+            }
 
             viewModel = AllTimeStatsViewModel(
                 selectedSiteRepository,
-                resourceProvider
+                resourceProvider,
+                statsSummaryUseCase
             )
-            viewModel.summaryProvider = throwingProvider
             viewModel.loadData()
             advanceUntilIdle()
 
@@ -185,22 +186,19 @@ class AllTimeStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when loadDataIfNeeded called multiple times, then loads once`() =
         test {
-            var callCount = 0
-            val countingProvider:
-                suspend (Long, Boolean) ->
-                StatsSummaryResult =
-                { _, _ ->
-                    callCount++
-                    StatsSummaryResult.Success(
-                        data = createTestData()
-                    )
-                }
+            whenever(
+                statsSummaryUseCase(TEST_SITE_ID)
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestData()
+                )
+            )
 
             viewModel = AllTimeStatsViewModel(
                 selectedSiteRepository,
-                resourceProvider
+                resourceProvider,
+                statsSummaryUseCase
             )
-            viewModel.summaryProvider = countingProvider
             viewModel.loadDataIfNeeded()
             advanceUntilIdle()
 
@@ -210,70 +208,106 @@ class AllTimeStatsViewModelTest : BaseUnitTest() {
             viewModel.loadDataIfNeeded()
             advanceUntilIdle()
 
-            assertThat(callCount).isEqualTo(1)
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    AllTimeStatsCardUiState
+                        .Loaded::class.java
+                )
         }
 
     @Test
     fun `when onRetry called, then data is reloaded`() =
         test {
-            var callCount = 0
-            val countingProvider:
-                suspend (Long, Boolean) ->
-                StatsSummaryResult =
-                { _, _ ->
-                    callCount++
-                    StatsSummaryResult.Success(
-                        data = createTestData()
-                    )
-                }
+            whenever(
+                statsSummaryUseCase(TEST_SITE_ID)
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestData()
+                )
+            )
 
             viewModel = AllTimeStatsViewModel(
                 selectedSiteRepository,
-                resourceProvider
+                resourceProvider,
+                statsSummaryUseCase
             )
-            viewModel.summaryProvider = countingProvider
             viewModel.loadData()
             advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    AllTimeStatsCardUiState
+                        .Loaded::class.java
+                )
 
             viewModel.onRetry()
             advanceUntilIdle()
 
-            assertThat(callCount).isEqualTo(2)
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    AllTimeStatsCardUiState
+                        .Loaded::class.java
+                )
         }
 
     @Test
     fun `when refresh called, then data is fetched`() =
         test {
-            var callCount = 0
-            val countingProvider:
-                suspend (Long, Boolean) ->
-                StatsSummaryResult =
-                { _, _ ->
-                    callCount++
-                    StatsSummaryResult.Success(
-                        data = createTestData()
-                    )
-                }
+            whenever(
+                statsSummaryUseCase(TEST_SITE_ID)
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestData()
+                )
+            )
+            whenever(
+                statsSummaryUseCase(
+                    TEST_SITE_ID,
+                    forceRefresh = true
+                )
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestData()
+                )
+            )
 
             viewModel = AllTimeStatsViewModel(
                 selectedSiteRepository,
-                resourceProvider
+                resourceProvider,
+                statsSummaryUseCase
             )
-            viewModel.summaryProvider = countingProvider
             viewModel.loadData()
             advanceUntilIdle()
 
             viewModel.refresh()
             advanceUntilIdle()
 
-            assertThat(callCount).isEqualTo(2)
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    AllTimeStatsCardUiState
+                        .Loaded::class.java
+                )
         }
 
     @Test
     fun `when refresh called, then isRefreshing resets`() =
         test {
-            mockResult = StatsSummaryResult.Success(
-                data = createTestData()
+            whenever(
+                statsSummaryUseCase(TEST_SITE_ID)
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestData()
+                )
+            )
+            whenever(
+                statsSummaryUseCase(
+                    TEST_SITE_ID,
+                    forceRefresh = true
+                )
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestData()
+                )
             )
 
             initViewModel()
@@ -292,15 +326,19 @@ class AllTimeStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when refresh fails after success, then loadDataIfNeeded reloads`() =
         test {
-            mockResult = StatsSummaryResult.Success(
-                data = createTestData()
+            whenever(
+                statsSummaryUseCase(TEST_SITE_ID)
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestData()
+                )
             )
 
             viewModel = AllTimeStatsViewModel(
                 selectedSiteRepository,
-                resourceProvider
+                resourceProvider,
+                statsSummaryUseCase
             )
-            viewModel.summaryProvider = testProvider
             viewModel.loadDataIfNeeded()
             advanceUntilIdle()
 
@@ -310,8 +348,14 @@ class AllTimeStatsViewModelTest : BaseUnitTest() {
                         .Loaded::class.java
                 )
 
-            mockResult =
+            whenever(
+                statsSummaryUseCase(
+                    TEST_SITE_ID,
+                    forceRefresh = true
+                )
+            ).thenReturn(
                 StatsSummaryResult.Error("Network error")
+            )
             viewModel.refresh()
             advanceUntilIdle()
 
@@ -321,8 +365,12 @@ class AllTimeStatsViewModelTest : BaseUnitTest() {
                         .Error::class.java
                 )
 
-            mockResult = StatsSummaryResult.Success(
-                data = createTestData()
+            whenever(
+                statsSummaryUseCase(TEST_SITE_ID)
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestData()
+                )
             )
             viewModel.loadDataIfNeeded()
             advanceUntilIdle()

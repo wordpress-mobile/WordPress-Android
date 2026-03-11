@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
+import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class AllTimeStatsViewModel @Inject constructor(
     private val selectedSiteRepository:
         SelectedSiteRepository,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val statsSummaryUseCase: StatsSummaryUseCase
 ) : ViewModel() {
     private val _uiState =
         MutableStateFlow<AllTimeStatsCardUiState>(
@@ -31,12 +33,11 @@ class AllTimeStatsViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> =
         _isRefreshing.asStateFlow()
 
+    @Volatile
     private var isLoading = false
-    private var isLoadedSuccessfully = false
 
-    var summaryProvider:
-        (suspend (Long, Boolean) -> StatsSummaryResult)? =
-        null
+    @Volatile
+    private var isLoadedSuccessfully = false
 
     fun loadDataIfNeeded() {
         if (isLoadedSuccessfully || isLoading) return
@@ -67,20 +68,7 @@ class AllTimeStatsViewModel @Inject constructor(
             _uiState.value = AllTimeStatsCardUiState.Error(
                 message = resourceProvider.getString(
                     R.string.stats_error_no_site
-                ),
-                onRetry = ::loadData
-            )
-            return
-        }
-
-        val provider = summaryProvider
-        if (provider == null) {
-            isLoading = false
-            _uiState.value = AllTimeStatsCardUiState.Error(
-                message = resourceProvider.getString(
-                    R.string.stats_error_api
-                ),
-                onRetry = ::loadData
+                )
             )
             return
         }
@@ -102,10 +90,10 @@ class AllTimeStatsViewModel @Inject constructor(
         forceRefresh: Boolean = false
     ) {
         try {
-            val result = summaryProvider?.invoke(
+            val result = statsSummaryUseCase(
                 siteId,
                 forceRefresh
-            ) ?: return
+            )
             when (result) {
                 is StatsSummaryResult.Success -> {
                     isLoadedSuccessfully = true
@@ -127,8 +115,7 @@ class AllTimeStatsViewModel @Inject constructor(
                                 .getString(
                                     R.string
                                         .stats_error_api
-                                ),
-                            onRetry = ::loadData
+                                )
                         )
                 }
             }
@@ -144,8 +131,7 @@ class AllTimeStatsViewModel @Inject constructor(
                 AllTimeStatsCardUiState.Error(
                     message = resourceProvider.getString(
                         R.string.stats_error_unknown
-                    ),
-                    onRetry = ::loadData
+                    )
                 )
         }
     }
