@@ -30,11 +30,12 @@ import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_api.TermEndpointType
 import java.text.DateFormat
+import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LargeClass")
 class PostRsSettingsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     selectedSiteRepository: SelectedSiteRepository,
@@ -220,6 +221,164 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
+    fun onDateClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.DateDialog)
+        }
+    }
+
+    fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {
+        val current = _uiState.value
+        val base = current.effectiveDate ?: Date()
+        val cal = Calendar.getInstance(UTC).apply {
+            time = base
+            this[Calendar.YEAR] = year
+            this[Calendar.MONTH] = month
+            this[Calendar.DAY_OF_MONTH] = dayOfMonth
+        }
+        val newDate = cal.time
+        _uiState.update {
+            it.copy(
+                editedDate = newDate.takeIf { ed ->
+                    ed != current.originalDate
+                },
+                publishDate = formatDate(newDate),
+                dialogState = DialogState.TimeDialog
+            )
+        }
+    }
+
+    fun onTimeSelected(hour: Int, minute: Int) {
+        val current = _uiState.value
+        val base = current.effectiveDate ?: Date()
+        val cal = Calendar.getInstance(UTC).apply {
+            time = base
+            this[Calendar.HOUR_OF_DAY] = hour
+            this[Calendar.MINUTE] = minute
+            this[Calendar.SECOND] = 0
+            this[Calendar.MILLISECOND] = 0
+        }
+        val newDate = cal.time
+        _uiState.update {
+            it.copy(
+                editedDate = newDate.takeIf { ed ->
+                    ed != current.originalDate
+                },
+                publishDate = formatDate(newDate),
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onAuthorClicked() {
+        val currentSite = site ?: return
+        if (!_uiState.value.canEditAuthor) {
+            _events.trySend(
+                PostRsSettingsEvent.ShowSnackbar(
+                    resourceProvider.getString(
+                        R.string
+                            .post_rs_settings_author_no_permission
+                    )
+                )
+            )
+            return
+        }
+        if (_uiState.value.siteAuthors.isEmpty()) {
+            loadSiteAuthors(currentSite)
+        }
+        _uiState.update {
+            it.copy(dialogState = DialogState.AuthorDialog)
+        }
+    }
+
+    fun onAuthorSelected(authorId: Long) {
+        val current = _uiState.value
+        val authorName = current.siteAuthors
+            .firstOrNull { it.id == authorId }?.name
+        _uiState.update {
+            it.copy(
+                editedAuthor = authorId.takeIf { ea ->
+                    ea != current.authorId
+                },
+                authorName = if (authorName != null) {
+                    FieldState.Loaded(authorName)
+                } else {
+                    it.authorName
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onFeaturedImageClicked() {
+        _events.trySend(PostRsSettingsEvent.LaunchMediaPicker)
+    }
+
+    fun onFeaturedImageSelected(mediaId: Long) {
+        val current = _uiState.value
+        if (mediaId == current.effectiveFeaturedImageId) return
+        val edited = mediaId.takeIf { id ->
+            id != current.featuredImageId
+        }
+        _uiState.update {
+            it.copy(
+                editedFeaturedImageId = edited,
+                featuredImage = FieldState.Loading
+            )
+        }
+        resolveFeaturedImage(mediaId)
+    }
+
+    fun onFeaturedImageRemoved() {
+        val current = _uiState.value
+        val edited = 0L.takeIf {
+            current.featuredImageId != 0L
+        }
+        _uiState.update {
+            it.copy(
+                editedFeaturedImageId = edited,
+                featuredImage = FieldState.Empty
+            )
+        }
+    }
+
+    private fun loadSiteAuthors(
+        site: org.wordpress.android.fluxc.model.SiteModel
+    ) {
+        viewModelScope.launch {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val authors = withContext(Dispatchers.IO) {
+                    restClient.fetchSiteAuthors(site)
+                }
+                _uiState.update {
+                    it.copy(siteAuthors = authors)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to load site authors",
+                    e
+                )
+                _uiState.update {
+                    it.copy(
+                        dialogState = DialogState.None
+                    )
+                }
+                _events.trySend(
+                    PostRsSettingsEvent.ShowSnackbar(
+                        resourceProvider.getString(
+                            R.string
+                                .post_rs_settings_field_error
+                        )
+                    )
+                )
+            }
+        }
+    }
+
     fun onDismissDialog() {
         _uiState.update {
             it.copy(dialogState = DialogState.None)
@@ -278,6 +437,10 @@ class PostRsSettingsViewModel @Inject constructor(
                     slug = state.editedSlug,
                     excerpt = state.editedExcerpt,
                     format = state.editedFormat,
+                    dateGmt = state.editedDate,
+                    author = state.editedAuthor,
+                    featuredMedia =
+                        state.editedFeaturedImageId,
                     meta = null
                 )
                 withContext(Dispatchers.IO) {
@@ -411,6 +574,10 @@ class PostRsSettingsViewModel @Inject constructor(
             postTitle = post.title?.raw?.takeIf { it.isNotBlank() }
                 ?: post.title?.rendered ?: "",
             publishDate = formatDate(post.dateGmt),
+            originalDate = post.dateGmt,
+            authorId = post.author ?: 0L,
+            canEditAuthor =
+                site?.hasCapabilityEditOthersPosts == true,
             password = post.password,
             authorName = if (
                 post.author != null && post.author != 0L
@@ -439,6 +606,7 @@ class PostRsSettingsViewModel @Inject constructor(
             } else {
                 FieldState.Empty
             },
+            featuredImageId = post.featuredMedia ?: 0L,
             sticky = post.sticky ?: false,
             slug = post.slug,
             excerpt = post.excerpt?.raw ?: "",
@@ -562,10 +730,12 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     private fun formatDate(dateGmt: Date): String {
-        return DateFormat.getDateTimeInstance(
+        val fmt = DateFormat.getDateTimeInstance(
             DateFormat.MEDIUM,
             DateFormat.SHORT
-        ).format(dateGmt)
+        )
+        fmt.timeZone = UTC
+        return fmt.format(dateGmt)
     }
 
     private class PostApiException(message: String?) :

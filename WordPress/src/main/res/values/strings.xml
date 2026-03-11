@@ -1019,6 +1019,9 @@
     <string name="post_rs_settings_loading">%s: Loading</string>
     <string name="post_rs_settings_featured_image_not_set">Featured image not set.</string>
     <string name="post_rs_settings_featured_image_error">Couldn\'t load featured image.</string>
+    <string name="post_rs_settings_edit_featured_image">Edit featured image</string>
+    <string name="post_rs_settings_change_featured_image">Change</string>
+    <string name="post_rs_settings_remove_featured_image">Remove</string>
     <string name="post_rs_settings_password_dialog_title">Post Password</string>
     <string name="post_rs_settings_password_hint">Enter password</string>
     <string name="post_rs_settings_remove_password">Remove password</string>
@@ -1030,6 +1033,9 @@
     <string name="post_rs_settings_excerpt_dialog_title">Excerpt</string>
     <string name="post_rs_settings_format_dialog_title">Post Format</string>
     <string name="post_rs_settings_clear_excerpt">Clear excerpt</string>
+    <string name="post_rs_settings_select_time">Select Time</string>
+    <string name="post_rs_settings_author_dialog_title">Author</string>
+    <string name="post_rs_settings_author_no_permission">You don\'t have permission to change the author</string>
     <string name="show_less">Show less</string>
     <string name="post_types_screen_title">Post Types</string>
 
