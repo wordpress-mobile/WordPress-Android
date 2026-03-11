@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.ui.postsrs.AuthorInfo
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.SiteUtils
@@ -15,6 +16,11 @@ import uniffi.wp_api.UserListParams
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
+
+data class AuthorPage(
+    val authors: List<AuthorInfo>,
+    val nextPageParams: UserListParams?,
+)
 
 @Singleton
 class PostRsRestClient @Inject constructor(
@@ -171,6 +177,58 @@ class PostRsRestClient @Inject constructor(
             }
         }
         return result
+    }
+
+    /**
+     * Fetches a page of users for the given site, returning an
+     * [AuthorPage] with the authors and optional next-page params.
+     * Results are also cached in [userNameCache].
+     */
+    suspend fun fetchSiteAuthors(
+        site: SiteModel,
+        params: UserListParams = UserListParams(
+            include = emptyList(),
+            perPage = AUTHORS_PER_PAGE
+        ),
+    ): AuthorPage {
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.users().listWithViewContext(params)
+        }
+        return when (response) {
+            is WpRequestResult.Success -> {
+                val authors =
+                    response.response.data.map { user ->
+                        userNameCache[user.id] = user.name
+                        AuthorInfo(
+                            id = user.id,
+                            name = user.name
+                        )
+                    }
+                AuthorPage(
+                    authors = authors,
+                    nextPageParams =
+                        response.response.nextPageParams,
+                )
+            }
+            else -> {
+                val msg =
+                    (response as? WpRequestResult.WpError<*>)
+                        ?.errorMessage
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "fetchSiteAuthors failed: $msg"
+                )
+                AuthorPage(
+                    authors = emptyList(),
+                    nextPageParams = null,
+                )
+            }
+        }
+    }
+
+    companion object {
+        private const val AUTHORS_PER_PAGE: UInt = 20u
     }
 
     private fun toPhotonUrl(site: SiteModel, sourceUrl: String): String {

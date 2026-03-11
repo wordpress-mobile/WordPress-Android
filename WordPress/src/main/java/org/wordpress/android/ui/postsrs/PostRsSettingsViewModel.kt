@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
@@ -29,12 +30,15 @@ import uniffi.wp_api.PostRetrieveParams
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_api.TermEndpointType
+import uniffi.wp_api.UserListParams
 import java.text.DateFormat
+import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 import javax.inject.Inject
 
 @HiltViewModel
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LargeClass")
 class PostRsSettingsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     selectedSiteRepository: SelectedSiteRepository,
@@ -61,6 +65,7 @@ class PostRsSettingsViewModel @Inject constructor(
         )
 
     private var lastPost: AnyPostWithEditContext? = null
+    private var nextAuthorPageParams: UserListParams? = null
 
     init {
         if (site == null) {
@@ -220,6 +225,178 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
+    fun onDateClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.DateDialog)
+        }
+    }
+
+    fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {
+        val current = _uiState.value
+        val base = current.effectiveDate ?: Date()
+        val cal = Calendar.getInstance(UTC).apply {
+            time = base
+            set(Calendar.YEAR, year)
+            set(Calendar.MONTH, month)
+            set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        }
+        val newDate = cal.time
+        _uiState.update {
+            it.copy(
+                editedDate = newDate.takeIf { ed ->
+                    ed != current.originalDate
+                },
+                dialogState = DialogState.TimeDialog
+            )
+        }
+    }
+
+    fun onTimeSelected(hour: Int, minute: Int) {
+        val current = _uiState.value
+        val base = current.effectiveDate ?: Date()
+        val cal = Calendar.getInstance(UTC).apply {
+            time = base
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val newDate = cal.time
+        _uiState.update {
+            it.copy(
+                editedDate = newDate.takeIf { ed ->
+                    ed != current.originalDate
+                },
+                publishDate = formatDate(newDate),
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onAuthorClicked() {
+        val site = site ?: return
+        if (!_uiState.value.canEditAuthor) {
+            _events.trySend(
+                PostRsSettingsEvent.ShowSnackbar(
+                    resourceProvider.getString(
+                        R.string
+                            .post_rs_settings_author_no_permission
+                    )
+                )
+            )
+            return
+        }
+        if (_uiState.value.siteAuthors.isEmpty()) {
+            loadSiteAuthors(site)
+        }
+        _uiState.update {
+            it.copy(dialogState = DialogState.AuthorDialog)
+        }
+    }
+
+    fun onAuthorSelected(authorId: Long) {
+        val current = _uiState.value
+        val authorName = current.siteAuthors
+            .firstOrNull { it.id == authorId }?.name
+        _uiState.update {
+            it.copy(
+                editedAuthor = authorId.takeIf { ea ->
+                    ea != current.authorId
+                },
+                authorName = if (authorName != null) {
+                    FieldState.Loaded(authorName)
+                } else {
+                    it.authorName
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    private fun loadSiteAuthors(
+        site: SiteModel
+    ) {
+        viewModelScope.launch {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val page = withContext(Dispatchers.IO) {
+                    restClient.fetchSiteAuthors(site)
+                }
+                nextAuthorPageParams = page.nextPageParams
+                _uiState.update {
+                    it.copy(
+                        siteAuthors = page.authors,
+                        canLoadMoreAuthors =
+                            page.nextPageParams != null,
+                    )
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to load site authors",
+                    e
+                )
+                _uiState.update {
+                    it.copy(
+                        dialogState = DialogState.None
+                    )
+                }
+                _events.trySend(
+                    PostRsSettingsEvent.ShowSnackbar(
+                        e.message?.takeIf {
+                            it.isNotBlank()
+                        } ?: fieldError
+                    )
+                )
+            }
+        }
+    }
+
+    @Suppress("ReturnCount")
+    fun loadMoreAuthors() {
+        val site = site ?: return
+        val params = nextAuthorPageParams ?: return
+        if (_uiState.value.isLoadingMoreAuthors) return
+
+        _uiState.update {
+            it.copy(isLoadingMoreAuthors = true)
+        }
+
+        viewModelScope.launch {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val page = withContext(Dispatchers.IO) {
+                    restClient.fetchSiteAuthors(
+                        site, params
+                    )
+                }
+                nextAuthorPageParams = page.nextPageParams
+                _uiState.update {
+                    it.copy(
+                        siteAuthors =
+                            it.siteAuthors + page.authors,
+                        isLoadingMoreAuthors = false,
+                        canLoadMoreAuthors =
+                            page.nextPageParams != null,
+                    )
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to load more authors",
+                    e
+                )
+                _uiState.update {
+                    it.copy(isLoadingMoreAuthors = false)
+                }
+            }
+        }
+    }
+
     fun onDismissDialog() {
         _uiState.update {
             it.copy(dialogState = DialogState.None)
@@ -266,7 +443,7 @@ class PostRsSettingsViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     private fun savePost(
-        site: org.wordpress.android.fluxc.model.SiteModel,
+        site: SiteModel,
         state: PostRsSettingsUiState,
     ) {
         viewModelScope.launch {
@@ -278,6 +455,8 @@ class PostRsSettingsViewModel @Inject constructor(
                     slug = state.editedSlug,
                     excerpt = state.editedExcerpt,
                     format = state.editedFormat,
+                    dateGmt = state.editedDate,
+                    author = state.editedAuthor,
                     meta = null
                 )
                 withContext(Dispatchers.IO) {
@@ -363,7 +542,7 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     private suspend fun fetchPost(
-        site: org.wordpress.android.fluxc.model.SiteModel
+        site: SiteModel
     ): AnyPostWithEditContext = withContext(Dispatchers.IO) {
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request {
@@ -411,6 +590,10 @@ class PostRsSettingsViewModel @Inject constructor(
             postTitle = post.title?.raw?.takeIf { it.isNotBlank() }
                 ?: post.title?.rendered ?: "",
             publishDate = formatDate(post.dateGmt),
+            originalDate = post.dateGmt,
+            authorId = post.author ?: 0L,
+            canEditAuthor =
+                site?.hasCapabilityEditOthersPosts == true,
             password = post.password,
             authorName = if (
                 post.author != null && post.author != 0L
@@ -562,10 +745,12 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     private fun formatDate(dateGmt: Date): String {
-        return DateFormat.getDateTimeInstance(
+        val fmt = DateFormat.getDateTimeInstance(
             DateFormat.MEDIUM,
             DateFormat.SHORT
-        ).format(dateGmt)
+        )
+        fmt.timeZone = UTC
+        return fmt.format(dateGmt)
     }
 
     private class PostApiException(message: String?) :
@@ -573,5 +758,6 @@ class PostRsSettingsViewModel @Inject constructor(
 
     companion object {
         const val EXTRA_POST_ID = "extra_post_id"
+        private val UTC = TimeZone.getTimeZone("UTC")
     }
 }
