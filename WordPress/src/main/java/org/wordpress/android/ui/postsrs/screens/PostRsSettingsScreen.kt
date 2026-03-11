@@ -13,17 +13,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -33,6 +40,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DropdownMenu
@@ -56,6 +64,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -71,6 +81,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -81,6 +92,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.SingleChoiceAlertDialog
 import org.wordpress.android.ui.postsrs.AuthorInfo
@@ -120,6 +132,7 @@ fun PostRsSettingsScreen(
     onAuthorSelected: (Long) -> Unit = {},
     onFeaturedImageClicked: () -> Unit = {},
     onFeaturedImageRemoved: () -> Unit = {},
+    onLoadMoreAuthors: () -> Unit = {},
     onSaveClicked: () -> Unit = {},
     onDismissDialog: () -> Unit = {},
     onDiscardConfirmed: () -> Unit = {},
@@ -188,6 +201,7 @@ fun PostRsSettingsScreen(
         onDateSelected = onDateSelected,
         onTimeSelected = onTimeSelected,
         onAuthorSelected = onAuthorSelected,
+        onLoadMoreAuthors = onLoadMoreAuthors,
         onDismissDialog = onDismissDialog,
         onDiscardConfirmed = onDiscardConfirmed,
     )
@@ -802,6 +816,7 @@ private fun SettingsDialogs(
     onDateSelected: (Int, Int, Int) -> Unit,
     onTimeSelected: (Int, Int) -> Unit,
     onAuthorSelected: (Long) -> Unit,
+    onLoadMoreAuthors: () -> Unit,
     onDismissDialog: () -> Unit,
     onDiscardConfirmed: () -> Unit,
 ) {
@@ -847,7 +862,10 @@ private fun SettingsDialogs(
         is DialogState.AuthorDialog -> AuthorDialog(
             authors = uiState.siteAuthors,
             currentAuthorId = uiState.effectiveAuthorId,
+            isLoadingMore = uiState.isLoadingMoreAuthors,
+            canLoadMore = uiState.canLoadMoreAuthors,
             onAuthorSelected = onAuthorSelected,
+            onLoadMore = onLoadMoreAuthors,
             onDismiss = onDismissDialog,
         )
         is DialogState.DiscardDialog -> DiscardDialog(
@@ -1261,7 +1279,10 @@ private fun TimeDialog(
 private fun AuthorDialog(
     authors: List<AuthorInfo>,
     currentAuthorId: Long,
+    isLoadingMore: Boolean,
+    canLoadMore: Boolean,
     onAuthorSelected: (Long) -> Unit,
+    onLoadMore: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     if (authors.isEmpty()) {
@@ -1276,10 +1297,15 @@ private fun AuthorDialog(
                 )
             },
             text = {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    strokeWidth = 2.dp
-                )
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp
+                    )
+                }
             },
             confirmButton = {},
             dismissButton = {
@@ -1291,7 +1317,6 @@ private fun AuthorDialog(
         return
     }
 
-    val labels = authors.map { it.name }
     val currentIndex = authors.indexOfFirst {
         it.id == currentAuthorId
     }.coerceAtLeast(0)
@@ -1300,22 +1325,113 @@ private fun AuthorDialog(
         mutableIntStateOf(currentIndex)
     }
 
-    SingleChoiceAlertDialog(
-        title = stringResource(
-            R.string.post_rs_settings_author_dialog_title
-        ),
-        options = labels,
-        selectedIndex = selectedIndex.intValue,
-        onOptionSelected = { selectedIndex.intValue = it },
-        onConfirm = {
-            onAuthorSelected(
-                authors[selectedIndex.intValue].id
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(canLoadMore) {
+        if (!canLoadMore) return@LaunchedEffect
+        snapshotFlow {
+            val info = listState.layoutInfo
+            val lastVisible =
+                info.visibleItemsInfo.lastOrNull()?.index
+                    ?: 0
+            lastVisible >= info.totalItemsCount -
+                AUTHOR_LOAD_THRESHOLD
+        }.distinctUntilChanged().collect { shouldLoad ->
+            if (shouldLoad) onLoadMore()
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                stringResource(
+                    R.string
+                        .post_rs_settings_author_dialog_title
+                )
             )
         },
-        onDismiss = onDismiss,
-        confirmButtonText = stringResource(R.string.ok),
+        text = {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .selectableGroup()
+                    .heightIn(max = 400.dp)
+            ) {
+                itemsIndexed(
+                    items = authors,
+                    key = { _, author -> author.id }
+                ) { index, author ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = index ==
+                                    selectedIndex.intValue,
+                                onClick = {
+                                    selectedIndex.intValue =
+                                        index
+                                },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment =
+                            Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = index ==
+                                selectedIndex.intValue,
+                            onClick = null
+                        )
+                        Text(
+                            text = author.name,
+                            style = MaterialTheme
+                                .typography.bodyLarge,
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                        )
+                    }
+                }
+                if (isLoadingMore) {
+                    item(key = "loading_more_authors") {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment =
+                                Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier =
+                                    Modifier.size(24.dp),
+                                strokeWidth = 2.dp
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onAuthorSelected(
+                        authors[selectedIndex.intValue].id
+                    )
+                }
+            ) {
+                Text(stringResource(R.string.ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
     )
 }
+
+private const val AUTHOR_LOAD_THRESHOLD = 3
+
 
 @Composable
 private fun DiscardDialog(
