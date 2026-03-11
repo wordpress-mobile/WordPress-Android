@@ -8,12 +8,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
-import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
@@ -25,8 +22,6 @@ import javax.inject.Inject
 class MostPopularDayViewModel @Inject constructor(
     private val selectedSiteRepository:
         SelectedSiteRepository,
-    private val accountStore: AccountStore,
-    private val statsRepository: StatsRepository,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _uiState =
@@ -43,6 +38,10 @@ class MostPopularDayViewModel @Inject constructor(
     private var isLoading = false
     private var isLoadedSuccessfully = false
 
+    var summaryProvider:
+        (suspend (Long, Boolean) -> StatsSummaryResult)? =
+        null
+
     fun loadDataIfNeeded() {
         if (isLoadedSuccessfully || isLoading) return
         isLoading = true
@@ -56,7 +55,7 @@ class MostPopularDayViewModel @Inject constructor(
             try {
                 _isRefreshing.value = true
                 loadDataInternal(
-                    site,
+                    site.siteId,
                     forceRefresh = true
                 )
             } finally {
@@ -79,8 +78,8 @@ class MostPopularDayViewModel @Inject constructor(
             return
         }
 
-        val accessToken = accountStore.accessToken
-        if (accessToken.isNullOrEmpty()) {
+        val provider = summaryProvider
+        if (provider == null) {
             isLoading = false
             _uiState.value =
                 MostPopularDayCardUiState.Error(
@@ -92,12 +91,11 @@ class MostPopularDayViewModel @Inject constructor(
             return
         }
 
-        statsRepository.init(accessToken)
         _uiState.value = MostPopularDayCardUiState.Loading
 
         viewModelScope.launch {
             try {
-                loadDataInternal(site)
+                loadDataInternal(site.siteId)
             } finally {
                 isLoading = false
             }
@@ -106,15 +104,14 @@ class MostPopularDayViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun loadDataInternal(
-        site: SiteModel,
+        siteId: Long,
         forceRefresh: Boolean = false
     ) {
         try {
-            val result = statsRepository
-                .fetchStatsSummary(
-                    site.siteId,
-                    forceRefresh
-                )
+            val result = summaryProvider?.invoke(
+                siteId,
+                forceRefresh
+            ) ?: return
             when (result) {
                 is StatsSummaryResult.Success -> {
                     isLoadedSuccessfully = true
@@ -168,12 +165,7 @@ class MostPopularDayViewModel @Inject constructor(
         ): MostPopularDayCardUiState {
             val bestDay = data.viewsBestDay
             if (bestDay.isBlank()) {
-                return MostPopularDayCardUiState.Loaded(
-                    dayAndMonth = "",
-                    year = "",
-                    views = 0L,
-                    viewsPercentage = "0"
-                )
+                return MostPopularDayCardUiState.NoData
             }
             val parsed = parseBestDay(bestDay)
             val totalViews = data.views
@@ -184,7 +176,7 @@ class MostPopularDayViewModel @Inject constructor(
                     PERCENTAGE_MULTIPLIER
                 String.format(
                     Locale.getDefault(),
-                    "%.3f",
+                    "%.1f",
                     pct
                 )
             } else {

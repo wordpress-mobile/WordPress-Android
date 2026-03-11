@@ -8,20 +8,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
-import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 @HiltViewModel
 class AllTimeStatsViewModel @Inject constructor(
-    private val selectedSiteRepository: SelectedSiteRepository,
-    private val accountStore: AccountStore,
-    private val statsRepository: StatsRepository,
+    private val selectedSiteRepository:
+        SelectedSiteRepository,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _uiState =
@@ -38,6 +34,10 @@ class AllTimeStatsViewModel @Inject constructor(
     private var isLoading = false
     private var isLoadedSuccessfully = false
 
+    var summaryProvider:
+        (suspend (Long, Boolean) -> StatsSummaryResult)? =
+        null
+
     fun loadDataIfNeeded() {
         if (isLoadedSuccessfully || isLoading) return
         isLoading = true
@@ -50,7 +50,10 @@ class AllTimeStatsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
-                loadDataInternal(site, forceRefresh = true)
+                loadDataInternal(
+                    site.siteId,
+                    forceRefresh = true
+                )
             } finally {
                 _isRefreshing.value = false
             }
@@ -70,8 +73,8 @@ class AllTimeStatsViewModel @Inject constructor(
             return
         }
 
-        val accessToken = accountStore.accessToken
-        if (accessToken.isNullOrEmpty()) {
+        val provider = summaryProvider
+        if (provider == null) {
             isLoading = false
             _uiState.value = AllTimeStatsCardUiState.Error(
                 message = resourceProvider.getString(
@@ -82,12 +85,11 @@ class AllTimeStatsViewModel @Inject constructor(
             return
         }
 
-        statsRepository.init(accessToken)
         _uiState.value = AllTimeStatsCardUiState.Loading
 
         viewModelScope.launch {
             try {
-                loadDataInternal(site)
+                loadDataInternal(site.siteId)
             } finally {
                 isLoading = false
             }
@@ -96,24 +98,25 @@ class AllTimeStatsViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun loadDataInternal(
-        site: SiteModel,
+        siteId: Long,
         forceRefresh: Boolean = false
     ) {
         try {
-            val result = statsRepository
-                .fetchStatsSummary(
-                    site.siteId,
-                    forceRefresh
-                )
+            val result = summaryProvider?.invoke(
+                siteId,
+                forceRefresh
+            ) ?: return
             when (result) {
                 is StatsSummaryResult.Success -> {
                     isLoadedSuccessfully = true
                     _uiState.value =
                         AllTimeStatsCardUiState.Loaded(
                             views = result.data.views,
-                            visitors = result.data.visitors,
+                            visitors =
+                                result.data.visitors,
                             posts = result.data.posts,
-                            comments = result.data.comments
+                            comments =
+                                result.data.comments
                         )
                 }
                 is StatsSummaryResult.Error -> {
@@ -122,7 +125,8 @@ class AllTimeStatsViewModel @Inject constructor(
                         AllTimeStatsCardUiState.Error(
                             message = resourceProvider
                                 .getString(
-                                    R.string.stats_error_api
+                                    R.string
+                                        .stats_error_api
                                 ),
                             onRetry = ::loadData
                         )
@@ -136,12 +140,13 @@ class AllTimeStatsViewModel @Inject constructor(
                     "${e.message}",
                 e
             )
-            _uiState.value = AllTimeStatsCardUiState.Error(
-                message = resourceProvider.getString(
-                    R.string.stats_error_unknown
-                ),
-                onRetry = ::loadData
-            )
+            _uiState.value =
+                AllTimeStatsCardUiState.Error(
+                    message = resourceProvider.getString(
+                        R.string.stats_error_unknown
+                    ),
+                    onRetry = ::loadData
+                )
         }
     }
 

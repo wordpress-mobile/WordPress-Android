@@ -5,20 +5,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.mockito.Mockito.lenient
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
-import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
@@ -26,12 +20,6 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository:
         SelectedSiteRepository
-
-    @Mock
-    private lateinit var accountStore: AccountStore
-
-    @Mock
-    private lateinit var statsRepository: StatsRepository
 
     @Mock
     private lateinit var resourceProvider:
@@ -46,13 +34,18 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
         name = "Test Site"
     }
 
+    private var mockResult: StatsSummaryResult =
+        StatsSummaryResult.Success(createTestData())
+
+    private val testProvider:
+        suspend (Long, Boolean) -> StatsSummaryResult =
+        { _, _ -> mockResult }
+
     @Before
     fun setUp() {
         whenever(
             selectedSiteRepository.getSelectedSite()
         ).thenReturn(testSite)
-        whenever(accountStore.accessToken)
-            .thenReturn(TEST_ACCESS_TOKEN)
         lenient().`when`(
             resourceProvider.getString(
                 R.string.stats_error_no_site
@@ -73,24 +66,17 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
     private fun initViewModel() {
         viewModel = MostPopularDayViewModel(
             selectedSiteRepository,
-            accountStore,
-            statsRepository,
             resourceProvider
         )
+        viewModel.summaryProvider = testProvider
         viewModel.loadData()
     }
 
     @Test
     fun `when data loads, then loaded state has correct day`() =
         test {
-            whenever(
-                statsRepository.fetchStatsSummary(
-                    any(), any()
-                )
-            ).thenReturn(
-                StatsSummaryResult.Success(
-                    data = createTestData()
-                )
+            mockResult = StatsSummaryResult.Success(
+                data = createTestData()
             )
 
             initViewModel()
@@ -131,13 +117,8 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when fetch fails, then error state`() = test {
-        whenever(
-            statsRepository.fetchStatsSummary(
-                any(), any()
-            )
-        ).thenReturn(
+        mockResult =
             StatsSummaryResult.Error("Network error")
-        )
 
         initViewModel()
         advanceUntilIdle()
@@ -152,69 +133,73 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
     @Test
     fun `when loadDataIfNeeded called multiple times, then loads once`() =
         test {
-            whenever(
-                statsRepository.fetchStatsSummary(
-                    any(), any()
-                )
-            ).thenReturn(
-                StatsSummaryResult.Success(
-                    data = createTestData()
-                )
-            )
+            var callCount = 0
+            val countingProvider:
+                suspend (Long, Boolean) ->
+                StatsSummaryResult =
+                { _, _ ->
+                    callCount++
+                    StatsSummaryResult.Success(
+                        data = createTestData()
+                    )
+                }
 
             viewModel = MostPopularDayViewModel(
                 selectedSiteRepository,
-                accountStore,
-                statsRepository,
                 resourceProvider
             )
+            viewModel.summaryProvider = countingProvider
             viewModel.loadDataIfNeeded()
             advanceUntilIdle()
 
             viewModel.loadDataIfNeeded()
             advanceUntilIdle()
 
-            verify(statsRepository, times(1))
-                .fetchStatsSummary(
-                    eq(TEST_SITE_ID), any()
-                )
+            assertThat(callCount).isEqualTo(1)
         }
 
     @Test
     fun `when refresh called, then data is fetched`() =
         test {
-            whenever(
-                statsRepository.fetchStatsSummary(
-                    any(), any()
-                )
-            ).thenReturn(
-                StatsSummaryResult.Success(
-                    data = createTestData()
-                )
-            )
+            var callCount = 0
+            val countingProvider:
+                suspend (Long, Boolean) ->
+                StatsSummaryResult =
+                { _, _ ->
+                    callCount++
+                    StatsSummaryResult.Success(
+                        data = createTestData()
+                    )
+                }
 
-            initViewModel()
+            viewModel = MostPopularDayViewModel(
+                selectedSiteRepository,
+                resourceProvider
+            )
+            viewModel.summaryProvider = countingProvider
+            viewModel.loadData()
             advanceUntilIdle()
 
             viewModel.refresh()
             advanceUntilIdle()
 
-            verify(statsRepository, times(2))
-                .fetchStatsSummary(
-                    eq(TEST_SITE_ID), any()
-                )
+            assertThat(callCount).isEqualTo(2)
         }
 
     @Test
     fun `when exception thrown, then error state`() =
         test {
-            whenever(
-                statsRepository.fetchStatsSummary(
-                    any(), any()
-                )
-            ).thenThrow(RuntimeException("Test"))
+            val throwingProvider:
+                suspend (Long, Boolean) ->
+                StatsSummaryResult =
+                { _, _ -> throw RuntimeException("Test") }
 
-            initViewModel()
+            viewModel = MostPopularDayViewModel(
+                selectedSiteRepository,
+                resourceProvider
+            )
+            viewModel.summaryProvider = throwingProvider
+            viewModel.loadData()
             advanceUntilIdle()
 
             assertThat(viewModel.uiState.value)
@@ -243,14 +228,14 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
             MostPopularDayViewModel.mapToUiState(data)
             as MostPopularDayCardUiState.Loaded
         assertThat(state.viewsPercentage)
-            .isEqualTo("0.068")
+            .isEqualTo("0.1")
         assertThat(state.dayAndMonth)
             .isEqualTo("February 22")
         assertThat(state.year).isEqualTo("2022")
     }
 
     @Test
-    fun `when viewsBestDay is empty, then loaded with empty values`() {
+    fun `when viewsBestDay is empty, then NoData state`() {
         val data = StatsSummaryData(
             views = 100L,
             visitors = 0L,
@@ -261,12 +246,10 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
         )
         val state =
             MostPopularDayViewModel.mapToUiState(data)
-            as MostPopularDayCardUiState.Loaded
-        assertThat(state.dayAndMonth).isEmpty()
-        assertThat(state.year).isEmpty()
-        assertThat(state.views).isEqualTo(0L)
-        assertThat(state.viewsPercentage)
-            .isEqualTo("0")
+        assertThat(state).isInstanceOf(
+            MostPopularDayCardUiState
+                .NoData::class.java
+        )
     }
 
     @Test
@@ -286,19 +269,8 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
             .isEqualTo("0")
     }
 
-    private fun createTestData() = StatsSummaryData(
-        views = TEST_VIEWS,
-        visitors = 154791L,
-        posts = 42L,
-        comments = 85L,
-        viewsBestDay = TEST_BEST_DAY,
-        viewsBestDayTotal = TEST_BEST_DAY_TOTAL
-    )
-
     companion object {
         private const val TEST_SITE_ID = 123L
-        private const val TEST_ACCESS_TOKEN =
-            "test_access_token"
         private const val TEST_VIEWS = 6782856L
         private const val TEST_BEST_DAY = "2022-02-22"
         private const val TEST_BEST_DAY_TOTAL = 4600L
@@ -308,5 +280,14 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
             "Failed to load stats"
         private const val UNKNOWN_ERROR =
             "Unknown error"
+
+        private fun createTestData() = StatsSummaryData(
+            views = TEST_VIEWS,
+            visitors = 154791L,
+            posts = 42L,
+            comments = 85L,
+            viewsBestDay = TEST_BEST_DAY,
+            viewsBestDayTotal = TEST_BEST_DAY_TOTAL
+        )
     }
 }

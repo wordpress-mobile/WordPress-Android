@@ -7,18 +7,27 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.InsightsCardsConfigurationRepository
+import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
 @HiltViewModel
 class InsightsViewModel @Inject constructor(
-    private val selectedSiteRepository: SelectedSiteRepository,
+    private val selectedSiteRepository:
+        SelectedSiteRepository,
     private val cardConfigurationRepository:
         InsightsCardsConfigurationRepository,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val statsRepository: StatsRepository,
+    private val accountStore: AccountStore
 ) : ViewModel() {
     private val _visibleCards =
         MutableStateFlow<List<InsightsCardType>>(
@@ -41,6 +50,10 @@ class InsightsViewModel @Inject constructor(
     val cardsToLoad: StateFlow<List<InsightsCardType>> =
         _cardsToLoad.asStateFlow()
 
+    private val summaryMutex = Mutex()
+    private var cachedSummary:
+        Pair<Long, StatsSummaryData>? = null
+
     private val siteId: Long
         get() = selectedSiteRepository
             .getSelectedSite()?.siteId ?: 0L
@@ -52,9 +65,40 @@ class InsightsViewModel @Inject constructor(
     }
 
     fun checkNetworkStatus(): Boolean {
-        val isAvailable = networkUtilsWrapper.isNetworkAvailable()
+        val isAvailable =
+            networkUtilsWrapper.isNetworkAvailable()
         _isNetworkAvailable.value = isAvailable
         return isAvailable
+    }
+
+    suspend fun getStatsSummary(
+        siteId: Long,
+        forceRefresh: Boolean = false
+    ): StatsSummaryResult {
+        val token = accountStore.accessToken
+        if (token.isNullOrEmpty()) {
+            return StatsSummaryResult.Error(
+                "No access token"
+            )
+        }
+        statsRepository.init(token)
+        return summaryMutex.withLock {
+            val cached = cachedSummary
+            if (!forceRefresh &&
+                cached != null &&
+                cached.first == siteId
+            ) {
+                return@withLock StatsSummaryResult.Success(
+                    cached.second
+                )
+            }
+            val result =
+                statsRepository.fetchStatsSummary(siteId)
+            if (result is StatsSummaryResult.Success) {
+                cachedSummary = siteId to result.data
+            }
+            result
+        }
     }
 
     private fun loadConfiguration() {
@@ -91,7 +135,7 @@ class InsightsViewModel @Inject constructor(
         config: InsightsCardsConfiguration
     ) {
         _visibleCards.value = config.visibleCards
-        _hiddenCards.value = config.hiddenCards()
+        _hiddenCards.value = config.computeHiddenCards()
         _cardsToLoad.value = config.visibleCards
     }
 

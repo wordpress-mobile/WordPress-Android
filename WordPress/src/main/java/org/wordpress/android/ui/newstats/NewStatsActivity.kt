@@ -888,6 +888,11 @@ private fun InsightsTabContent(
         viewModel(),
     insightsViewModel: InsightsViewModel = viewModel()
 ) {
+    LaunchedEffect(Unit) {
+        val provider = insightsViewModel::getStatsSummary
+        allTimeStatsViewModel.summaryProvider = provider
+        mostPopularDayViewModel.summaryProvider = provider
+    }
     val context = LocalContext.current
     val yearInReviewUiState by yearInReviewViewModel
         .uiState.collectAsState()

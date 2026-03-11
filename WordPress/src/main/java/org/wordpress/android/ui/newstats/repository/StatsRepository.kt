@@ -3,7 +3,6 @@ package org.wordpress.android.ui.newstats.repository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.sync.withLock
 import org.wordpress.android.ui.newstats.datasource.CityViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
@@ -83,10 +82,6 @@ class StatsRepository @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
-    private val summaryMutex = kotlinx.coroutines.sync.Mutex()
-    private var cachedSummary: Pair<Long, StatsSummaryResult>? =
-        null
-
     fun init(accessToken: String) {
         statsDataSource.init(accessToken)
     }
@@ -1354,42 +1349,28 @@ class StatsRepository @Inject constructor(
     }
 
     suspend fun fetchStatsSummary(
-        siteId: Long,
-        forceRefresh: Boolean = false
+        siteId: Long
     ): StatsSummaryResult = withContext(ioDispatcher) {
-        summaryMutex.withLock {
-            val cached = cachedSummary
-            if (!forceRefresh &&
-                cached != null &&
-                cached.first == siteId
-            ) {
-                return@withContext cached.second
-            }
-            val result =
-                statsDataSource.fetchStatsSummary(
-                    siteId = siteId
+        val result =
+            statsDataSource.fetchStatsSummary(
+                siteId = siteId
+            )
+        when (result) {
+            is StatsSummaryDataResult.Success ->
+                StatsSummaryResult.Success(
+                    data = result.data
                 )
-            val mapped = when (result) {
-                is StatsSummaryDataResult.Success ->
-                    StatsSummaryResult.Success(
-                        data = result.data
-                    )
-                is StatsSummaryDataResult.Error -> {
-                    appLogWrapper.e(
-                        AppLog.T.STATS,
-                        "Error fetching stats " +
-                            "summary: " +
-                            "${result.errorType}"
-                    )
-                    StatsSummaryResult.Error(
-                        result.errorType.name
-                    )
-                }
+            is StatsSummaryDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching stats " +
+                        "summary: " +
+                        "${result.errorType}"
+                )
+                StatsSummaryResult.Error(
+                    result.errorType.name
+                )
             }
-            if (mapped is StatsSummaryResult.Success) {
-                cachedSummary = siteId to mapped
-            }
-            mapped
         }
     }
 }

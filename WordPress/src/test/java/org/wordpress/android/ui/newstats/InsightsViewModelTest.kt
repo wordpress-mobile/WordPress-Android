@@ -9,27 +9,42 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.InsightsCardsConfigurationRepository
+import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner.Silent::class)
-class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
+class InsightsViewModelTest :
+    BaseUnitTest(StandardTestDispatcher()) {
     @Mock
-    private lateinit var selectedSiteRepository: SelectedSiteRepository
+    private lateinit var selectedSiteRepository:
+        SelectedSiteRepository
 
     @Mock
     private lateinit var cardConfigurationRepository:
         InsightsCardsConfigurationRepository
 
     @Mock
-    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    private lateinit var networkUtilsWrapper:
+        NetworkUtilsWrapper
+
+    @Mock
+    private lateinit var statsRepository: StatsRepository
+
+    @Mock
+    private lateinit var accountStore: AccountStore
 
     private lateinit var viewModel: InsightsViewModel
 
@@ -40,16 +55,23 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     private val configurationFlow =
-        MutableStateFlow<Pair<Long, InsightsCardsConfiguration>?>(null)
+        MutableStateFlow<
+            Pair<Long, InsightsCardsConfiguration>?
+        >(null)
 
     @Before
     fun setUp() {
-        whenever(selectedSiteRepository.getSelectedSite())
-            .thenReturn(testSite)
-        whenever(cardConfigurationRepository.configurationFlow)
-            .thenReturn(configurationFlow)
-        whenever(networkUtilsWrapper.isNetworkAvailable())
-            .thenReturn(true)
+        whenever(
+            selectedSiteRepository.getSelectedSite()
+        ).thenReturn(testSite)
+        whenever(
+            cardConfigurationRepository.configurationFlow
+        ).thenReturn(configurationFlow)
+        whenever(
+            networkUtilsWrapper.isNetworkAvailable()
+        ).thenReturn(true)
+        whenever(accountStore.accessToken)
+            .thenReturn(TEST_ACCESS_TOKEN)
     }
 
     private suspend fun initViewModel(
@@ -57,12 +79,15 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             InsightsCardsConfiguration()
     ) {
         whenever(
-            cardConfigurationRepository.getConfiguration(TEST_SITE_ID)
+            cardConfigurationRepository
+                .getConfiguration(TEST_SITE_ID)
         ).thenReturn(config)
         viewModel = InsightsViewModel(
             selectedSiteRepository,
             cardConfigurationRepository,
-            networkUtilsWrapper
+            networkUtilsWrapper,
+            statsRepository,
+            accountStore
         )
     }
 
@@ -73,23 +98,27 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             advanceUntilIdle()
 
             assertThat(viewModel.visibleCards.value)
-                .isEqualTo(InsightsCardType.defaultCards())
+                .isEqualTo(
+                    InsightsCardType.defaultCards()
+                )
         }
 
     @Test
     fun `when initialized with custom config, then custom cards are visible`() =
         test {
-            val customConfig = InsightsCardsConfiguration(
-                visibleCards = listOf(
-                    InsightsCardType.YEAR_IN_REVIEW
+            val customConfig =
+                InsightsCardsConfiguration(
+                    visibleCards = listOf(
+                        InsightsCardType.YEAR_IN_REVIEW
+                    )
                 )
-            )
             initViewModel(customConfig)
             advanceUntilIdle()
 
-            assertThat(viewModel.visibleCards.value).containsExactly(
-                InsightsCardType.YEAR_IN_REVIEW
-            )
+            assertThat(viewModel.visibleCards.value)
+                .containsExactly(
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
         }
 
     @Test
@@ -98,12 +127,16 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             initViewModel()
             advanceUntilIdle()
 
-            viewModel.removeCard(InsightsCardType.YEAR_IN_REVIEW)
+            viewModel.removeCard(
+                InsightsCardType.YEAR_IN_REVIEW
+            )
             advanceUntilIdle()
 
-            verify(cardConfigurationRepository).removeCard(
-                TEST_SITE_ID, InsightsCardType.YEAR_IN_REVIEW
-            )
+            verify(cardConfigurationRepository)
+                .removeCard(
+                    TEST_SITE_ID,
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
         }
 
     @Test
@@ -115,19 +148,25 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             initViewModel(config)
             advanceUntilIdle()
 
-            viewModel.addCard(InsightsCardType.YEAR_IN_REVIEW)
+            viewModel.addCard(
+                InsightsCardType.YEAR_IN_REVIEW
+            )
             advanceUntilIdle()
 
-            verify(cardConfigurationRepository).addCard(
-                TEST_SITE_ID, InsightsCardType.YEAR_IN_REVIEW
-            )
+            verify(cardConfigurationRepository)
+                .addCard(
+                    TEST_SITE_ID,
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
         }
 
     @Test
     fun `when configuration changes via flow, then state is updated`() =
         test {
             initViewModel(
-                InsightsCardsConfiguration(visibleCards = emptyList())
+                InsightsCardsConfiguration(
+                    visibleCards = emptyList()
+                )
             )
             advanceUntilIdle()
 
@@ -136,12 +175,14 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
                     InsightsCardType.YEAR_IN_REVIEW
                 )
             )
-            configurationFlow.value = TEST_SITE_ID to newConfig
+            configurationFlow.value =
+                TEST_SITE_ID to newConfig
             advanceUntilIdle()
 
-            assertThat(viewModel.visibleCards.value).containsExactly(
-                InsightsCardType.YEAR_IN_REVIEW
-            )
+            assertThat(viewModel.visibleCards.value)
+                .containsExactly(
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
         }
 
     @Test
@@ -149,12 +190,14 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         test {
             initViewModel()
             advanceUntilIdle()
-            val initialCards = viewModel.visibleCards.value
+            val initialCards =
+                viewModel.visibleCards.value
 
             val newConfig = InsightsCardsConfiguration(
                 visibleCards = emptyList()
             )
-            configurationFlow.value = OTHER_SITE_ID to newConfig
+            configurationFlow.value =
+                OTHER_SITE_ID to newConfig
             advanceUntilIdle()
 
             assertThat(viewModel.visibleCards.value)
@@ -172,7 +215,8 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             initViewModel(config)
             advanceUntilIdle()
 
-            val hiddenCards = viewModel.hiddenCards.value
+            val hiddenCards =
+                viewModel.hiddenCards.value
 
             assertThat(hiddenCards).doesNotContain(
                 InsightsCardType.YEAR_IN_REVIEW
@@ -180,37 +224,46 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         }
 
     @Test
-    fun `when no site selected, then config is not loaded`() = test {
-        whenever(selectedSiteRepository.getSelectedSite())
-            .thenReturn(null)
+    fun `when no site selected, then config is not loaded`() =
+        test {
+            whenever(
+                selectedSiteRepository.getSelectedSite()
+            ).thenReturn(null)
 
-        viewModel = InsightsViewModel(
-            selectedSiteRepository,
-            cardConfigurationRepository,
-            networkUtilsWrapper
-        )
-        advanceUntilIdle()
+            viewModel = InsightsViewModel(
+                selectedSiteRepository,
+                cardConfigurationRepository,
+                networkUtilsWrapper,
+                statsRepository,
+                accountStore
+            )
+            advanceUntilIdle()
 
-        verify(cardConfigurationRepository, never())
-            .getConfiguration(org.mockito.kotlin.any())
-    }
+            verify(
+                cardConfigurationRepository,
+                never()
+            ).getConfiguration(any())
+        }
 
     @Test
-    fun `when no site selected, then removeCard is no-op`() = test {
-        initViewModel()
-        advanceUntilIdle()
+    fun `when no site selected, then removeCard is no-op`() =
+        test {
+            initViewModel()
+            advanceUntilIdle()
 
-        whenever(selectedSiteRepository.getSelectedSite())
-            .thenReturn(null)
-        viewModel.removeCard(InsightsCardType.YEAR_IN_REVIEW)
-        advanceUntilIdle()
-
-        verify(cardConfigurationRepository, never())
-            .removeCard(
-                org.mockito.kotlin.any(),
-                org.mockito.kotlin.any()
+            whenever(
+                selectedSiteRepository.getSelectedSite()
+            ).thenReturn(null)
+            viewModel.removeCard(
+                InsightsCardType.YEAR_IN_REVIEW
             )
-    }
+            advanceUntilIdle()
+
+            verify(
+                cardConfigurationRepository,
+                never()
+            ).removeCard(any(), any())
+        }
 
     @Test
     fun `when moveCardUp is called, then repository moveCardUp is invoked`() =
@@ -218,12 +271,16 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             initViewModel()
             advanceUntilIdle()
 
-            viewModel.moveCardUp(InsightsCardType.YEAR_IN_REVIEW)
+            viewModel.moveCardUp(
+                InsightsCardType.YEAR_IN_REVIEW
+            )
             advanceUntilIdle()
 
-            verify(cardConfigurationRepository).moveCardUp(
-                TEST_SITE_ID, InsightsCardType.YEAR_IN_REVIEW
-            )
+            verify(cardConfigurationRepository)
+                .moveCardUp(
+                    TEST_SITE_ID,
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
         }
 
     @Test
@@ -232,12 +289,16 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             initViewModel()
             advanceUntilIdle()
 
-            viewModel.moveCardToTop(InsightsCardType.YEAR_IN_REVIEW)
+            viewModel.moveCardToTop(
+                InsightsCardType.YEAR_IN_REVIEW
+            )
             advanceUntilIdle()
 
-            verify(cardConfigurationRepository).moveCardToTop(
-                TEST_SITE_ID, InsightsCardType.YEAR_IN_REVIEW
-            )
+            verify(cardConfigurationRepository)
+                .moveCardToTop(
+                    TEST_SITE_ID,
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
         }
 
     @Test
@@ -246,12 +307,16 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             initViewModel()
             advanceUntilIdle()
 
-            viewModel.moveCardDown(InsightsCardType.YEAR_IN_REVIEW)
+            viewModel.moveCardDown(
+                InsightsCardType.YEAR_IN_REVIEW
+            )
             advanceUntilIdle()
 
-            verify(cardConfigurationRepository).moveCardDown(
-                TEST_SITE_ID, InsightsCardType.YEAR_IN_REVIEW
-            )
+            verify(cardConfigurationRepository)
+                .moveCardDown(
+                    TEST_SITE_ID,
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
         }
 
     @Test
@@ -265,9 +330,11 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             )
             advanceUntilIdle()
 
-            verify(cardConfigurationRepository).moveCardToBottom(
-                TEST_SITE_ID, InsightsCardType.YEAR_IN_REVIEW
-            )
+            verify(cardConfigurationRepository)
+                .moveCardToBottom(
+                    TEST_SITE_ID,
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
         }
 
     @Test
@@ -281,10 +348,13 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             viewModel = InsightsViewModel(
                 selectedSiteRepository,
                 cardConfigurationRepository,
-                networkUtilsWrapper
+                networkUtilsWrapper,
+                statsRepository,
+                accountStore
             )
 
-            assertThat(viewModel.cardsToLoad.value).isEmpty()
+            assertThat(viewModel.cardsToLoad.value)
+                .isEmpty()
         }
 
     @Test
@@ -299,52 +369,191 @@ class InsightsViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             advanceUntilIdle()
 
             assertThat(viewModel.cardsToLoad.value)
-                .containsExactly(InsightsCardType.YEAR_IN_REVIEW)
+                .containsExactly(
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
         }
 
     @Test
     fun `when initialized with network available, then isNetworkAvailable is true`() =
         test {
-            whenever(networkUtilsWrapper.isNetworkAvailable())
-                .thenReturn(true)
+            whenever(
+                networkUtilsWrapper.isNetworkAvailable()
+            ).thenReturn(true)
 
             initViewModel()
             advanceUntilIdle()
 
-            assertThat(viewModel.isNetworkAvailable.value).isTrue()
+            assertThat(
+                viewModel.isNetworkAvailable.value
+            ).isTrue()
         }
 
     @Test
     fun `when initialized without network, then isNetworkAvailable is false`() =
         test {
-            whenever(networkUtilsWrapper.isNetworkAvailable())
-                .thenReturn(false)
+            whenever(
+                networkUtilsWrapper.isNetworkAvailable()
+            ).thenReturn(false)
 
             initViewModel()
             advanceUntilIdle()
 
-            assertThat(viewModel.isNetworkAvailable.value).isFalse()
+            assertThat(
+                viewModel.isNetworkAvailable.value
+            ).isFalse()
         }
 
     @Test
     fun `when checkNetworkStatus is called, then network status is updated`() =
         test {
-            whenever(networkUtilsWrapper.isNetworkAvailable())
-                .thenReturn(false)
+            whenever(
+                networkUtilsWrapper.isNetworkAvailable()
+            ).thenReturn(false)
             initViewModel()
             advanceUntilIdle()
 
-            assertThat(viewModel.isNetworkAvailable.value).isFalse()
+            assertThat(
+                viewModel.isNetworkAvailable.value
+            ).isFalse()
 
-            whenever(networkUtilsWrapper.isNetworkAvailable())
-                .thenReturn(true)
+            whenever(
+                networkUtilsWrapper.isNetworkAvailable()
+            ).thenReturn(true)
             viewModel.checkNetworkStatus()
 
-            assertThat(viewModel.isNetworkAvailable.value).isTrue()
+            assertThat(
+                viewModel.isNetworkAvailable.value
+            ).isTrue()
         }
+
+    @Test
+    fun `when getStatsSummary called, then returns cached on second call`() =
+        test {
+            initViewModel()
+            advanceUntilIdle()
+
+            whenever(
+                statsRepository.fetchStatsSummary(
+                    TEST_SITE_ID
+                )
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummary()
+                )
+            )
+
+            val first =
+                viewModel.getStatsSummary(TEST_SITE_ID)
+            val second =
+                viewModel.getStatsSummary(TEST_SITE_ID)
+
+            assertThat(first).isInstanceOf(
+                StatsSummaryResult.Success::class.java
+            )
+            assertThat(second).isInstanceOf(
+                StatsSummaryResult.Success::class.java
+            )
+            verify(statsRepository, times(1))
+                .fetchStatsSummary(TEST_SITE_ID)
+        }
+
+    @Test
+    fun `when getStatsSummary called with forceRefresh, then fetches again`() =
+        test {
+            initViewModel()
+            advanceUntilIdle()
+
+            whenever(
+                statsRepository.fetchStatsSummary(
+                    TEST_SITE_ID
+                )
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummary()
+                )
+            )
+
+            viewModel.getStatsSummary(TEST_SITE_ID)
+            viewModel.getStatsSummary(
+                TEST_SITE_ID,
+                forceRefresh = true
+            )
+
+            verify(statsRepository, times(2))
+                .fetchStatsSummary(TEST_SITE_ID)
+        }
+
+    @Test
+    fun `when getStatsSummary called without token, then returns error`() =
+        test {
+            whenever(accountStore.accessToken)
+                .thenReturn(null)
+            initViewModel()
+            advanceUntilIdle()
+
+            val result =
+                viewModel.getStatsSummary(TEST_SITE_ID)
+
+            assertThat(result).isInstanceOf(
+                StatsSummaryResult.Error::class.java
+            )
+            verify(statsRepository, never())
+                .fetchStatsSummary(any())
+        }
+
+    @Test
+    fun `when getStatsSummary errors, then cache is not populated`() =
+        test {
+            initViewModel()
+            advanceUntilIdle()
+
+            whenever(
+                statsRepository.fetchStatsSummary(
+                    TEST_SITE_ID
+                )
+            ).thenReturn(
+                StatsSummaryResult.Error("Network error")
+            )
+
+            val first =
+                viewModel.getStatsSummary(TEST_SITE_ID)
+            assertThat(first).isInstanceOf(
+                StatsSummaryResult.Error::class.java
+            )
+
+            whenever(
+                statsRepository.fetchStatsSummary(
+                    TEST_SITE_ID
+                )
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummary()
+                )
+            )
+
+            val second =
+                viewModel.getStatsSummary(TEST_SITE_ID)
+            assertThat(second).isInstanceOf(
+                StatsSummaryResult.Success::class.java
+            )
+            verify(statsRepository, times(2))
+                .fetchStatsSummary(TEST_SITE_ID)
+        }
+
+    private fun createTestSummary() = StatsSummaryData(
+        views = 100L,
+        visitors = 50L,
+        posts = 10L,
+        comments = 5L,
+        viewsBestDay = "2022-02-22",
+        viewsBestDayTotal = 20L
+    )
 
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val OTHER_SITE_ID = 456L
+        private const val TEST_ACCESS_TOKEN =
+            "test_access_token"
     }
 }
