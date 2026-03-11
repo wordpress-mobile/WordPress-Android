@@ -30,6 +30,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.PhotonUtils
+import org.wordpress.android.util.SiteUtils
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.Continuation
@@ -126,12 +128,38 @@ class MediaLibraryDataSource(
         return this.filter { it.url.isNotBlank() }.map { mediaModel ->
             MediaItem(
                 RemoteId(mediaModel.mediaId),
-                mediaModel.url,
+                thumbnailUrl(mediaModel, mediaType),
                 mediaModel.title,
                 mediaType,
                 mediaModel.mimeType,
-                mediaModel.uploadDate?.let { dateTimeUtilsWrapper.dateFromIso8601(it)?.time } ?: 0L
+                mediaModel.uploadDate?.let {
+                    dateTimeUtilsWrapper.dateFromIso8601(it)?.time
+                } ?: 0L
             )
+        }
+    }
+
+    /**
+     * Returns an appropriately-sized thumbnail URL for display in
+     * the picker grid. Uses the server-provided thumbnail when
+     * available, falls back to Photon resizing for images on
+     * Photon-capable sites, and returns the original URL otherwise.
+     */
+    private fun thumbnailUrl(
+        mediaModel: MediaModel,
+        mediaType: MediaType,
+    ): String {
+        if (mediaType != IMAGE) return mediaModel.url
+        val thumbnail = mediaModel.thumbnailUrl
+        return when {
+            !thumbnail.isNullOrBlank() -> thumbnail
+            SiteUtils.isPhotonCapable(siteModel) -> PhotonUtils.getPhotonImageUrl(
+                mediaModel.url,
+                THUMBNAIL_WIDTH_PX,
+                0,
+                siteModel.isPrivateWPComAtomic
+            )
+            else -> mediaModel.url
         }
     }
 
@@ -188,6 +216,7 @@ class MediaLibraryDataSource(
 
     companion object {
         const val NUM_MEDIA_PER_FETCH = 24
+        private const val THUMBNAIL_WIDTH_PX = 512
     }
 
     class MediaLibraryDataSourceFactory
