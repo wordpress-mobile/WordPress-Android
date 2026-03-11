@@ -9,6 +9,7 @@ data class SelectableTerm(
 
 data class TermSelectionUiState(
     val isLoading: Boolean = true,
+    val isSearching: Boolean = false,
     val isLoadingMore: Boolean = false,
     val canLoadMore: Boolean = false,
     val error: String? = null,

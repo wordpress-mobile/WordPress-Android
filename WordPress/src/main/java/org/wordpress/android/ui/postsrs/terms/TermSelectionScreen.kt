@@ -137,6 +137,7 @@ fun TermSelectionScreen(
                     TermListContent(
                         terms = uiState.terms,
                         searchQuery = uiState.searchQuery,
+                        isSearching = uiState.isSearching,
                         canLoadMore = uiState.canLoadMore,
                         isLoadingMore =
                             uiState.isLoadingMore,
@@ -182,9 +183,11 @@ private fun ErrorContent(
 }
 
 @Composable
+@Suppress("LongParameterList")
 private fun TermListContent(
     terms: List<SelectableTerm>,
     searchQuery: String,
+    isSearching: Boolean,
     canLoadMore: Boolean,
     isLoadingMore: Boolean,
     onSearchQueryChanged: (String) -> Unit,
@@ -217,48 +220,58 @@ private fun TermListContent(
                     vertical = 8.dp
                 )
         )
-        if (terms.isEmpty() && searchQuery.isNotEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(32.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = stringResource(
-                        R.string
-                            .post_rs_settings_search_no_results
-                    ),
-                    style = MaterialTheme.typography
-                        .bodyLarge,
-                    color = MaterialTheme.colorScheme
-                        .onSurfaceVariant,
-                )
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(
-                    items = terms,
-                    key = { it.id }
-                ) { term ->
-                    TermRow(
-                        term = term,
-                        onToggle = {
-                            onTermToggled(term.id)
-                        }
+        when {
+            isSearching ->
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
+            terms.isEmpty() &&
+                searchQuery.isNotEmpty() ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = stringResource(
+                            R.string
+                                .post_rs_settings_search_no_results
+                        ),
+                        style = MaterialTheme.typography
+                            .bodyLarge,
+                        color = MaterialTheme.colorScheme
+                            .onSurfaceVariant,
                     )
                 }
-                if (canLoadMore) {
-                    item(key = "load_more") {
-                        LoadMoreItem(
-                            isLoading = isLoadingMore,
-                            onLoadMore = onLoadMore,
+            else ->
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(
+                        items = terms,
+                        key = { it.id }
+                    ) { term ->
+                        TermRow(
+                            term = term,
+                            onToggle = {
+                                onTermToggled(term.id)
+                            }
                         )
                     }
+                    if (canLoadMore) {
+                        item(key = "load_more") {
+                            LoadMoreItem(
+                                isLoading =
+                                    isLoadingMore,
+                                onLoadMore = onLoadMore,
+                            )
+                        }
+                    }
                 }
-            }
         }
     }
 }

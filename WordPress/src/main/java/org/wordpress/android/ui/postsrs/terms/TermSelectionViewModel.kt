@@ -109,7 +109,10 @@ class TermSelectionViewModel @Inject constructor(
         }
         searchJob = viewModelScope.launch {
             delay(SEARCH_DEBOUNCE_MS)
-            loadFirstPage()
+            _uiState.update {
+                it.copy(isSearching = true)
+            }
+            loadFirstPage(showLoading = false)
         }
     }
 
@@ -255,6 +258,7 @@ class TermSelectionViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     isLoading = false,
+                    isSearching = false,
                     isLoadingMore = false,
                     isCreating = false,
                     canLoadMore =
@@ -273,7 +277,10 @@ class TermSelectionViewModel @Inject constructor(
             )
             if (append) {
                 _uiState.update {
-                    it.copy(isLoadingMore = false)
+                    it.copy(
+                        isSearching = false,
+                        isLoadingMore = false,
+                    )
                 }
                 _events.trySend(
                     TermSelectionEvent.ShowSnackbar(
@@ -286,6 +293,7 @@ class TermSelectionViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
+                        isSearching = false,
                         isCreating = false,
                         error = resourceProvider.getString(
                             R.string.request_failed_message
