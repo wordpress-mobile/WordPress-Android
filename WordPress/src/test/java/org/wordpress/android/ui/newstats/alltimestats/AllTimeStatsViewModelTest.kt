@@ -155,6 +155,7 @@ class AllTimeStatsViewModelTest : BaseUnitTest() {
         ).isEqualTo(FAILED_TO_LOAD_ERROR)
     }
 
+    @Suppress("TooGenericExceptionThrown")
     @Test
     fun `when exception thrown, then error state`() =
         test {

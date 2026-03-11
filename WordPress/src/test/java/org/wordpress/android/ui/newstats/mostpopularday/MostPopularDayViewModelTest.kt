@@ -186,6 +186,7 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
             assertThat(callCount).isEqualTo(2)
         }
 
+    @Suppress("TooGenericExceptionThrown")
     @Test
     fun `when exception thrown, then error state`() =
         test {
