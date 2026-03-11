@@ -95,6 +95,7 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                         viewModel::onFeaturedImageClicked,
                     onFeaturedImageRemoved =
                         viewModel::onFeaturedImageRemoved,
+                    onLoadMoreAuthors = viewModel::loadMoreAuthors,
                     onSaveClicked = viewModel::onSaveClicked,
                     onDismissDialog = viewModel::onDismissDialog,
                     onDiscardConfirmed = viewModel::onDiscardConfirmed,

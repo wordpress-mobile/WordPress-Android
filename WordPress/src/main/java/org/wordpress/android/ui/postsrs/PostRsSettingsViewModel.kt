@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
@@ -29,6 +30,7 @@ import uniffi.wp_api.PostRetrieveParams
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_api.TermEndpointType
+import uniffi.wp_api.UserListParams
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
@@ -62,6 +64,7 @@ class PostRsSettingsViewModel @Inject constructor(
         )
 
     private var lastPost: AnyPostWithEditContext? = null
+    private var nextAuthorPageParams: UserListParams? = null
 
     init {
         if (site == null) {
@@ -421,16 +424,21 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     private fun loadSiteAuthors(
-        site: org.wordpress.android.fluxc.model.SiteModel
+        site: SiteModel
     ) {
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
-                val authors = withContext(Dispatchers.IO) {
+                val page = withContext(Dispatchers.IO) {
                     restClient.fetchSiteAuthors(site)
                 }
+                nextAuthorPageParams = page.nextPageParams
                 _uiState.update {
-                    it.copy(siteAuthors = authors)
+                    it.copy(
+                        siteAuthors = page.authors,
+                        canLoadMoreAuthors =
+                            page.nextPageParams != null,
+                    )
                 }
             } catch (e: CancellationException) {
                 throw e
@@ -447,12 +455,54 @@ class PostRsSettingsViewModel @Inject constructor(
                 }
                 _events.trySend(
                     PostRsSettingsEvent.ShowSnackbar(
-                        resourceProvider.getString(
-                            R.string
-                                .post_rs_settings_field_error
-                        )
+                        e.message?.takeIf {
+                            it.isNotBlank()
+                        } ?: fieldError
                     )
                 )
+            }
+        }
+    }
+
+    @Suppress("ReturnCount")
+    fun loadMoreAuthors() {
+        val site = site ?: return
+        val params = nextAuthorPageParams ?: return
+        if (_uiState.value.isLoadingMoreAuthors) return
+
+        _uiState.update {
+            it.copy(isLoadingMoreAuthors = true)
+        }
+
+        viewModelScope.launch {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val page = withContext(Dispatchers.IO) {
+                    restClient.fetchSiteAuthors(
+                        site, params
+                    )
+                }
+                nextAuthorPageParams = page.nextPageParams
+                _uiState.update {
+                    it.copy(
+                        siteAuthors =
+                            it.siteAuthors + page.authors,
+                        isLoadingMoreAuthors = false,
+                        canLoadMoreAuthors =
+                            page.nextPageParams != null,
+                    )
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to load more authors",
+                    e
+                )
+                _uiState.update {
+                    it.copy(isLoadingMoreAuthors = false)
+                }
             }
         }
     }
@@ -503,7 +553,7 @@ class PostRsSettingsViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     private fun savePost(
-        site: org.wordpress.android.fluxc.model.SiteModel,
+        site: SiteModel,
         state: PostRsSettingsUiState,
     ) {
         viewModelScope.launch {
@@ -609,7 +659,7 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     private suspend fun fetchPost(
-        site: org.wordpress.android.fluxc.model.SiteModel
+        site: SiteModel
     ): AnyPostWithEditContext = withContext(Dispatchers.IO) {
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request {
