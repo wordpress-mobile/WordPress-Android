@@ -34,7 +34,6 @@ import uniffi.wp_api.UserListParams
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
-import java.util.TimeZone
 import javax.inject.Inject
 
 @HiltViewModel
@@ -236,9 +235,9 @@ class PostRsSettingsViewModel @Inject constructor(
         val base = current.effectiveDate ?: Date()
         val cal = Calendar.getInstance(UTC).apply {
             time = base
-            set(Calendar.YEAR, year)
-            set(Calendar.MONTH, month)
-            set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            this[Calendar.YEAR] = year
+            this[Calendar.MONTH] = month
+            this[Calendar.DAY_OF_MONTH] = dayOfMonth
         }
         val newDate = cal.time
         _uiState.update {
@@ -246,6 +245,7 @@ class PostRsSettingsViewModel @Inject constructor(
                 editedDate = newDate.takeIf { ed ->
                     ed != current.originalDate
                 },
+                publishDate = formatDate(newDate),
                 dialogState = DialogState.TimeDialog
             )
         }
@@ -256,10 +256,10 @@ class PostRsSettingsViewModel @Inject constructor(
         val base = current.effectiveDate ?: Date()
         val cal = Calendar.getInstance(UTC).apply {
             time = base
-            set(Calendar.HOUR_OF_DAY, hour)
-            set(Calendar.MINUTE, minute)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+            this[Calendar.HOUR_OF_DAY] = hour
+            this[Calendar.MINUTE] = minute
+            this[Calendar.SECOND] = 0
+            this[Calendar.MILLISECOND] = 0
         }
         val newDate = cal.time
         _uiState.update {
@@ -274,7 +274,7 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     fun onAuthorClicked() {
-        val site = site ?: return
+        val currentSite = site ?: return
         if (!_uiState.value.canEditAuthor) {
             _events.trySend(
                 PostRsSettingsEvent.ShowSnackbar(
@@ -287,7 +287,7 @@ class PostRsSettingsViewModel @Inject constructor(
             return
         }
         if (_uiState.value.siteAuthors.isEmpty()) {
-            loadSiteAuthors(site)
+            loadSiteAuthors(currentSite)
         }
         _uiState.update {
             it.copy(dialogState = DialogState.AuthorDialog)
@@ -309,6 +309,38 @@ class PostRsSettingsViewModel @Inject constructor(
                     it.authorName
                 },
                 dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onFeaturedImageClicked() {
+        _events.trySend(PostRsSettingsEvent.LaunchMediaPicker)
+    }
+
+    fun onFeaturedImageSelected(mediaId: Long) {
+        val current = _uiState.value
+        if (mediaId == current.effectiveFeaturedImageId) return
+        val edited = mediaId.takeIf { id ->
+            id != current.featuredImageId
+        }
+        _uiState.update {
+            it.copy(
+                editedFeaturedImageId = edited,
+                featuredImage = FieldState.Loading
+            )
+        }
+        resolveFeaturedImage(mediaId)
+    }
+
+    fun onFeaturedImageRemoved() {
+        val current = _uiState.value
+        val edited = 0L.takeIf {
+            current.featuredImageId != 0L
+        }
+        _uiState.update {
+            it.copy(
+                editedFeaturedImageId = edited,
+                featuredImage = FieldState.Empty
             )
         }
     }
@@ -457,6 +489,8 @@ class PostRsSettingsViewModel @Inject constructor(
                     format = state.editedFormat,
                     dateGmt = state.editedDate,
                     author = state.editedAuthor,
+                    featuredMedia =
+                        state.editedFeaturedImageId,
                     meta = null
                 )
                 withContext(Dispatchers.IO) {
@@ -622,6 +656,7 @@ class PostRsSettingsViewModel @Inject constructor(
             } else {
                 FieldState.Empty
             },
+            featuredImageId = post.featuredMedia ?: 0L,
             sticky = post.sticky ?: false,
             slug = post.slug,
             excerpt = post.excerpt?.raw ?: "",
@@ -758,6 +793,5 @@ class PostRsSettingsViewModel @Inject constructor(
 
     companion object {
         const val EXTRA_POST_ID = "extra_post_id"
-        private val UTC = TimeZone.getTimeZone("UTC")
     }
 }

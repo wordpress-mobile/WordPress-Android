@@ -722,8 +722,22 @@ class PostRsListViewModel @Inject constructor(
                     .firstOrNull { it.remotePostId == model.remotePostId }
                 model.copy(
                     actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen),
-                    featuredImageUrl = existing?.featuredImageUrl,
-                    authorDisplayName = existing?.authorDisplayName
+                    featuredImageUrl = if (
+                        model.featuredImageId != 0L &&
+                        model.featuredImageId == existing?.featuredImageId
+                    ) {
+                        existing.featuredImageUrl
+                    } else {
+                        null
+                    },
+                    authorDisplayName = if (
+                        model.authorId != 0L &&
+                        model.authorId == existing?.authorId
+                    ) {
+                        existing.authorDisplayName
+                    } else {
+                        null
+                    }
                 )
             }
             updateTabUiState(tab) { copy(posts = uiModels, isLoading = false, error = null) }
@@ -751,7 +765,9 @@ class PostRsListViewModel @Inject constructor(
         resolveImageJobs[tab]?.cancel()
         resolveImageJobs[tab] = viewModelScope.launch {
             val urls = withContext(Dispatchers.IO) {
-                restClient.fetchMediaUrls(site, unresolvedIds)
+                restClient.fetchMediaUrls(
+                    site, unresolvedIds, THUMBNAIL_SIZE_DP
+                )
             }
             if (urls.isEmpty()) return@launch
             updateTabUiState(tab) {
@@ -879,6 +895,7 @@ class PostRsListViewModel @Inject constructor(
         private const val PAGE_SIZE = 20
         private const val SEARCH_DEBOUNCE_MS = 250L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
+        private const val THUMBNAIL_SIZE_DP = 64
         private val ALL_STATUSES = PostRsListTab.entries.flatMap { it.statuses }.distinct()
     }
 }

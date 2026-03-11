@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -14,19 +16,33 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.mediapicker.MediaPickerActivity
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup
+import org.wordpress.android.ui.mediapicker.MediaType
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.postsrs.screens.PostRsSettingsScreen
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.setContent
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PostRsSettingsActivity : BaseAppCompatActivity() {
     private val viewModel: PostRsSettingsViewModel by viewModels()
 
+    @Inject
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    private lateinit var mediaPickerLauncher:
+        ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        registerMediaPickerLauncher()
 
         val controller = WindowInsetsControllerCompat(
             window, window.decorView
@@ -62,6 +78,10 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                     onTimeSelected = viewModel::onTimeSelected,
                     onAuthorClicked = viewModel::onAuthorClicked,
                     onAuthorSelected = viewModel::onAuthorSelected,
+                    onFeaturedImageClicked =
+                        viewModel::onFeaturedImageClicked,
+                    onFeaturedImageRemoved =
+                        viewModel::onFeaturedImageRemoved,
                     onLoadMoreAuthors = viewModel::loadMoreAuthors,
                     onSaveClicked = viewModel::onSaveClicked,
                     onDismissDialog = viewModel::onDismissDialog,
@@ -81,6 +101,8 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                             setResult(RESULT_OK)
                             finish()
                         }
+                        is PostRsSettingsEvent.LaunchMediaPicker ->
+                            launchMediaPicker()
                         is PostRsSettingsEvent.ShowSnackbar ->
                             ToastUtils.showToast(
                                 this@PostRsSettingsActivity,
@@ -90,6 +112,47 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun registerMediaPickerLauncher() {
+        mediaPickerLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val mediaId = result.data?.getLongExtra(
+                    MediaPickerConstants.EXTRA_MEDIA_ID, 0L
+                ) ?: 0L
+                if (mediaId > 0L) {
+                    viewModel.onFeaturedImageSelected(mediaId)
+                }
+            }
+        }
+    }
+
+    private fun launchMediaPicker() {
+        val site =
+            selectedSiteRepository.getSelectedSite()
+                ?: return
+        val setup = MediaPickerSetup(
+            primaryDataSource =
+                MediaPickerSetup.DataSource.WP_LIBRARY,
+            availableDataSources = emptySet(),
+            canMultiselect = false,
+            requiresPhotosVideosPermissions = false,
+            requiresMusicAudioPermissions = false,
+            allowedTypes = setOf(MediaType.IMAGE),
+            cameraSetup =
+                MediaPickerSetup.CameraSetup.HIDDEN,
+            systemPickerEnabled = false,
+            editingEnabled = false,
+            queueResults = false,
+            defaultSearchView = false,
+            title = R.string.photo_picker_title
+        )
+        val intent = MediaPickerActivity.buildIntent(
+            this, setup, site
+        )
+        mediaPickerLauncher.launch(intent)
     }
 
     companion object {

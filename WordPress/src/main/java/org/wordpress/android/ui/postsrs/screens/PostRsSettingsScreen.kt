@@ -35,6 +35,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
@@ -42,6 +43,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -102,9 +105,7 @@ import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
 import java.util.Calendar
 import java.util.Date
-import java.util.TimeZone
-
-private val UTC = TimeZone.getTimeZone("UTC")
+import org.wordpress.android.ui.postsrs.UTC
 
 @Composable
 @Suppress("LongParameterList")
@@ -129,6 +130,8 @@ fun PostRsSettingsScreen(
     onTimeSelected: (Int, Int) -> Unit = { _, _ -> },
     onAuthorClicked: () -> Unit = {},
     onAuthorSelected: (Long) -> Unit = {},
+    onFeaturedImageClicked: () -> Unit = {},
+    onFeaturedImageRemoved: () -> Unit = {},
     onLoadMoreAuthors: () -> Unit = {},
     onSaveClicked: () -> Unit = {},
     onDismissDialog: () -> Unit = {},
@@ -178,6 +181,10 @@ fun PostRsSettingsScreen(
                     onFormatClicked = onFormatClicked,
                     onDateClicked = onDateClicked,
                     onAuthorClicked = onAuthorClicked,
+                    onFeaturedImageClicked =
+                        onFeaturedImageClicked,
+                    onFeaturedImageRemoved =
+                        onFeaturedImageRemoved,
                     onSaveClicked = onSaveClicked,
                 )
             }
@@ -241,6 +248,7 @@ private fun NormalAppBarLayout(
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun HeroSettingsLayout(
     uiState: PostRsSettingsUiState,
@@ -254,6 +262,8 @@ private fun HeroSettingsLayout(
     onFormatClicked: () -> Unit,
     onDateClicked: () -> Unit,
     onAuthorClicked: () -> Unit,
+    onFeaturedImageClicked: () -> Unit,
+    onFeaturedImageRemoved: () -> Unit,
     onSaveClicked: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
@@ -265,8 +275,13 @@ private fun HeroSettingsLayout(
         ) {
             when (uiState.featuredImage) {
                 is FieldState.Loaded ->
-                    HeroImage(
-                        imageUrl = uiState.featuredImage.value
+                    HeroImageWithMenu(
+                        imageUrl =
+                            uiState.featuredImage.value,
+                        onChangeClicked =
+                            onFeaturedImageClicked,
+                        onRemoveClicked =
+                            onFeaturedImageRemoved,
                     )
                 is FieldState.Loading ->
                     HeroImageShimmer()
@@ -275,10 +290,13 @@ private fun HeroSettingsLayout(
                         text = stringResource(
                             R.string
                                 .post_rs_settings_featured_image_error
-                        )
+                        ),
+                        onClick = onFeaturedImageClicked,
                     )
                 is FieldState.Empty ->
-                    HeroImagePlaceholder()
+                    HeroImagePlaceholder(
+                        onClick = onFeaturedImageClicked,
+                    )
             }
             SettingsContent(
                 uiState = uiState,
@@ -323,7 +341,11 @@ private fun HeroSettingsLayout(
 }
 
 @Composable
-private fun HeroImage(imageUrl: String) {
+private fun HeroImageWithMenu(
+    imageUrl: String,
+    onChangeClicked: () -> Unit,
+    onRemoveClicked: () -> Unit,
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -331,7 +353,9 @@ private fun HeroImage(imageUrl: String) {
     ) {
         ShimmerBox(modifier = Modifier.matchParentSize())
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
+            model = ImageRequest.Builder(
+                LocalContext.current
+            )
                 .data(imageUrl)
                 .crossfade(true)
                 .build(),
@@ -341,6 +365,86 @@ private fun HeroImage(imageUrl: String) {
             modifier = Modifier.matchParentSize(),
             contentScale = ContentScale.Crop
         )
+        FeaturedImageEditButton(
+            onChangeClicked = onChangeClicked,
+            onRemoveClicked = onRemoveClicked,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(12.dp)
+        )
+    }
+}
+
+@Composable
+private fun EditIconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+            .background(
+                Color.Black.copy(alpha = 0.5f),
+                MaterialTheme.shapes.small
+            )
+            .size(36.dp)
+    ) {
+        Icon(
+            Icons.Default.Edit,
+            contentDescription = stringResource(
+                R.string
+                    .post_rs_settings_edit_featured_image
+            ),
+            tint = Color.White,
+            modifier = Modifier.size(20.dp)
+        )
+    }
+}
+
+@Composable
+private fun FeaturedImageEditButton(
+    onChangeClicked: () -> Unit,
+    onRemoveClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Box(modifier = modifier) {
+        EditIconButton(onClick = { expanded = true })
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        stringResource(
+                            R.string
+                                .post_rs_settings_change_featured_image
+                        )
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    onChangeClicked()
+                }
+            )
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        stringResource(
+                            R.string
+                                .post_rs_settings_remove_featured_image
+                        ),
+                        color = MaterialTheme
+                            .colorScheme.error
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    onRemoveClicked()
+                }
+            )
+        }
     }
 }
 
@@ -358,22 +462,37 @@ private fun HeroImagePlaceholder(
     text: String = stringResource(
         R.string.post_rs_settings_featured_image_not_set
     ),
+    onClick: (() -> Unit)? = null,
 ) {
+    val clickModifier = if (onClick != null) {
+        Modifier.clickable(onClick = onClick)
+    } else {
+        Modifier
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(16f / 9f)
             .background(
                 MaterialTheme.colorScheme.surfaceVariant
-            ),
-        contentAlignment = Alignment.Center
+            )
+            .then(clickModifier),
     ) {
         Text(
             text = text,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme
-                .onSurfaceVariant
+                .onSurfaceVariant,
+            modifier = Modifier.align(Alignment.Center)
         )
+        if (onClick != null) {
+            EditIconButton(
+                onClick = onClick,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(12.dp)
+            )
+        }
     }
 }
 
@@ -1065,8 +1184,16 @@ private fun DateDialog(
     onDateSelected: (Int, Int, Int) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val initialMillis = currentDate?.time
-        ?: System.currentTimeMillis()
+    // Normalize to UTC midnight for DatePickerState
+    val initialMillis = currentDate?.let { date ->
+        val cal = Calendar.getInstance(UTC)
+        cal.time = date
+        cal[Calendar.HOUR_OF_DAY] = 0
+        cal[Calendar.MINUTE] = 0
+        cal[Calendar.SECOND] = 0
+        cal[Calendar.MILLISECOND] = 0
+        cal.timeInMillis
+    } ?: System.currentTimeMillis()
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = initialMillis
     )
@@ -1081,9 +1208,9 @@ private fun DateDialog(
                     val cal = Calendar.getInstance(UTC)
                     cal.timeInMillis = millis
                     onDateSelected(
-                        cal.get(Calendar.YEAR),
-                        cal.get(Calendar.MONTH),
-                        cal.get(Calendar.DAY_OF_MONTH)
+                        cal[Calendar.YEAR],
+                        cal[Calendar.MONTH],
+                        cal[Calendar.DAY_OF_MONTH]
                     )
                 }
             ) {
@@ -1113,8 +1240,8 @@ private fun TimeDialog(
         }
     }
     val timePickerState = rememberTimePickerState(
-        initialHour = cal.get(Calendar.HOUR_OF_DAY),
-        initialMinute = cal.get(Calendar.MINUTE),
+        initialHour = cal[Calendar.HOUR_OF_DAY],
+        initialMinute = cal[Calendar.MINUTE],
     )
 
     TimePickerDialog(

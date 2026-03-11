@@ -3,6 +3,9 @@ package org.wordpress.android.ui.postsrs
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
 import java.util.Date
+import java.util.TimeZone
+
+internal val UTC: TimeZone = TimeZone.getTimeZone("UTC")
 
 data class AuthorInfo(val id: Long, val name: String)
 
@@ -29,6 +32,8 @@ data class PostRsSettingsUiState(
     val categoryNames: FieldState = FieldState.Empty,
     val tagNames: FieldState = FieldState.Empty,
     val featuredImage: FieldState = FieldState.Empty,
+    val featuredImageId: Long = 0L,
+    val editedFeaturedImageId: Long? = null,
     val sticky: Boolean = false,
     val slug: String = "",
     val excerpt: String = "",
@@ -53,7 +58,8 @@ data class PostRsSettingsUiState(
             editedExcerpt != null ||
             editedFormat != null ||
             editedDate != null ||
-            editedAuthor != null
+            editedAuthor != null ||
+            editedFeaturedImageId != null
 
     val effectivePassword: String?
         get() = editedPassword ?: password
@@ -72,6 +78,9 @@ data class PostRsSettingsUiState(
 
     val effectiveAuthorId: Long
         get() = editedAuthor ?: authorId
+
+    val effectiveFeaturedImageId: Long
+        get() = editedFeaturedImageId ?: featuredImageId
 }
 
 sealed interface DialogState {
@@ -96,5 +105,7 @@ enum class RetryableField {
 sealed interface PostRsSettingsEvent {
     data object Finish : PostRsSettingsEvent
     data object FinishWithChanges : PostRsSettingsEvent
-    data class ShowSnackbar(val message: String) : PostRsSettingsEvent
+    data object LaunchMediaPicker : PostRsSettingsEvent
+    data class ShowSnackbar(val message: String) :
+        PostRsSettingsEvent
 }
