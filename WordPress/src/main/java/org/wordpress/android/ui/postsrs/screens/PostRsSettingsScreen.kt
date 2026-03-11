@@ -1432,7 +1432,6 @@ private fun AuthorDialog(
 
 private const val AUTHOR_LOAD_THRESHOLD = 3
 
-
 @Composable
 private fun DiscardDialog(
     onDiscard: () -> Unit,
