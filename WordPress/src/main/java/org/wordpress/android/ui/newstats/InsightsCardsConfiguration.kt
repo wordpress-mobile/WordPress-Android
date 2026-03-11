@@ -5,7 +5,7 @@ data class InsightsCardsConfiguration(
         InsightsCardType.defaultCards(),
     val hiddenCards: List<InsightsCardType> = emptyList()
 ) {
-    fun hiddenCards(): List<InsightsCardType> {
+    fun computeHiddenCards(): List<InsightsCardType> {
         return InsightsCardType.entries
             .filter { it !in visibleCards }
     }

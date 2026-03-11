@@ -18,7 +18,7 @@ class InsightsCardsConfigurationTest {
             visibleCards = emptyList()
         )
 
-        val hiddenCards = config.hiddenCards()
+        val hiddenCards = config.computeHiddenCards()
 
         assertThat(hiddenCards).containsExactlyInAnyOrder(
             InsightsCardType.ALL_TIME_STATS,
@@ -33,7 +33,7 @@ class InsightsCardsConfigurationTest {
             visibleCards = InsightsCardType.entries.toList()
         )
 
-        val hiddenCards = config.hiddenCards()
+        val hiddenCards = config.computeHiddenCards()
 
         assertThat(hiddenCards).isEmpty()
     }
@@ -44,7 +44,7 @@ class InsightsCardsConfigurationTest {
             visibleCards = emptyList()
         )
 
-        val hiddenCards = config.hiddenCards()
+        val hiddenCards = config.computeHiddenCards()
 
         assertThat(hiddenCards).containsExactlyInAnyOrder(
             *InsightsCardType.entries.toTypedArray()
