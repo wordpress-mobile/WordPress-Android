@@ -3,7 +3,6 @@ package org.wordpress.android.ui.postsrs.terms
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.compose.BackHandler
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
@@ -43,9 +42,6 @@ class TermSelectionActivity : BaseAppCompatActivity() {
             val uiState by viewModel.uiState
                 .collectAsState()
             AppThemeM3 {
-                BackHandler {
-                    viewModel.onBackClicked()
-                }
                 TermSelectionScreen(
                     title = title,
                     uiState = uiState,
@@ -86,6 +82,7 @@ class TermSelectionActivity : BaseAppCompatActivity() {
                                     TermSelectionViewModel
                                         .RESULT_SELECTED_IDS,
                                     event.selectedIds
+                                        .toLongArray()
                                 )
                             )
                             finish()

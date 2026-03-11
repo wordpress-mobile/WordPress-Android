@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.util.AppLog
@@ -119,10 +120,15 @@ class TermSelectionViewModel @Inject constructor(
     fun onLoadMore() {
         val currentSite = site ?: return
         val params = nextPageParams ?: return
-        if (_uiState.value.isLoadingMore) return
-        _uiState.update { it.copy(isLoadingMore = true) }
-        viewModelScope.launch {
-            fetchPage(currentSite, params, append = true)
+        if (!_uiState.value.isLoadingMore) {
+            _uiState.update {
+                it.copy(isLoadingMore = true)
+            }
+            viewModelScope.launch {
+                fetchPage(
+                    currentSite, params, append = true
+                )
+            }
         }
     }
 
@@ -190,7 +196,7 @@ class TermSelectionViewModel @Inject constructor(
     fun onSaveClicked() {
         _events.trySend(
             TermSelectionEvent.FinishWithSelection(
-                selectedIds.toLongArray()
+                selectedIds.toList()
             )
         )
     }
@@ -232,9 +238,9 @@ class TermSelectionViewModel @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "LongMethod")
     private suspend fun fetchPage(
-        site: org.wordpress.android.fluxc.model.SiteModel,
+        site: SiteModel,
         initialParams: TermListParams?,
         append: Boolean,
         search: String? = null,
@@ -305,10 +311,10 @@ class TermSelectionViewModel @Inject constructor(
     }
 
     private fun rebuildUi() {
-        val isSearching = _uiState.value.searchQuery
+        val hasSearchQuery = _uiState.value.searchQuery
             .trim().isNotEmpty()
         val terms = if (
-            isCategories && !isSearching
+            isCategories && !hasSearchQuery
         ) {
             sortByHierarchy(loadedTerms)
         } else {
@@ -320,7 +326,7 @@ class TermSelectionViewModel @Inject constructor(
                 id = term.id,
                 name = term.name,
                 level = if (
-                    isCategories && !isSearching
+                    isCategories && !hasSearchQuery
                 ) {
                     getIndentation(termsById, term)
                 } else {

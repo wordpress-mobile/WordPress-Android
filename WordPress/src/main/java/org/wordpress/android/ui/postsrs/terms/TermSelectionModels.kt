@@ -26,7 +26,7 @@ data class ParentOption(val id: Long, val name: String)
 
 sealed interface TermSelectionEvent {
     data class FinishWithSelection(
-        val selectedIds: LongArray,
+        val selectedIds: List<Long>,
     ) : TermSelectionEvent
 
     data object Finish : TermSelectionEvent

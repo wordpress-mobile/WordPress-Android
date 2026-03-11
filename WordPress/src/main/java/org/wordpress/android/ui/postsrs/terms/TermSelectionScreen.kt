@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.postsrs.terms
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,6 +62,7 @@ fun TermSelectionScreen(
     onAddTermConfirmed: (String, Long?) -> Unit,
     onRetry: () -> Unit,
 ) {
+    BackHandler(onBack = onBackClicked)
     Scaffold(
         topBar = {
             TopAppBar(

@@ -314,19 +314,17 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     fun onCategoriesClicked() {
-        val ids = _uiState.value.effectiveCategoryIds
         _events.trySend(
             PostRsSettingsEvent.LaunchCategorySelection(
-                ids.toLongArray()
+                _uiState.value.effectiveCategoryIds
             )
         )
     }
 
     fun onTagsClicked() {
-        val ids = _uiState.value.effectiveTagIds
         _events.trySend(
             PostRsSettingsEvent.LaunchTagSelection(
-                ids.toLongArray()
+                _uiState.value.effectiveTagIds
             )
         )
     }
@@ -372,15 +370,15 @@ class PostRsSettingsViewModel @Inject constructor(
         val edited = newIds.takeIf {
             it.sorted() != originalIds.sorted()
         }
-        _uiState.update { updateEdited(it, edited) }
-        if (newIds.isEmpty()) {
-            _uiState.update {
-                updateNames(it, FieldState.Empty)
-            }
+        val namesState = if (newIds.isEmpty()) {
+            FieldState.Empty
         } else {
-            _uiState.update {
-                updateNames(it, FieldState.Loading)
-            }
+            FieldState.Loading
+        }
+        _uiState.update {
+            updateNames(updateEdited(it, edited), namesState)
+        }
+        if (newIds.isNotEmpty()) {
             resolveTermNames(
                 newIds, endpointType
             ) { names ->
@@ -551,7 +549,7 @@ class PostRsSettingsViewModel @Inject constructor(
         savePost(site, state)
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "LongMethod")
     private fun savePost(
         site: SiteModel,
         state: PostRsSettingsUiState,
@@ -571,9 +569,10 @@ class PostRsSettingsViewModel @Inject constructor(
                         state.editedFeaturedImageId,
                     categories =
                         state.editedCategoryIds
-                            ?: listOf(),
+                            ?: state.categoryIds,
                     tags =
-                        state.editedTagIds ?: listOf(),
+                        state.editedTagIds
+                            ?: state.tagIds,
                     meta = null
                 )
                 withContext(Dispatchers.IO) {
@@ -698,7 +697,7 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
-    @Suppress("ComplexCondition")
+    @Suppress("ComplexCondition", "CyclomaticComplexMethod")
     private fun mapPostToUiState(
         post: AnyPostWithEditContext
     ): PostRsSettingsUiState {

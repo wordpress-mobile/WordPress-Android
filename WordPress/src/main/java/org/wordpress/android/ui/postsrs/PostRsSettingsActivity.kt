@@ -118,13 +118,17 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                             launchMediaPicker()
                         is PostRsSettingsEvent
                             .LaunchCategorySelection ->
-                            launchCategorySelection(
-                                event.selectedIds
+                            launchTermSelection(
+                                categorySelectionLauncher,
+                                isCategories = true,
+                                event.selectedIds,
                             )
                         is PostRsSettingsEvent
                             .LaunchTagSelection ->
-                            launchTagSelection(
-                                event.selectedIds
+                            launchTermSelection(
+                                tagSelectionLauncher,
+                                isCategories = false,
+                                event.selectedIds,
                             )
                         is PostRsSettingsEvent.ShowSnackbar ->
                             ToastUtils.showToast(
@@ -153,48 +157,40 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
     }
 
     private fun registerTermSelectionLaunchers() {
-        categorySelectionLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val ids = result.data?.getLongArrayExtra(
-                    TermSelectionViewModel.RESULT_SELECTED_IDS
-                ) ?: return@registerForActivityResult
-                viewModel.onCategoriesSelected(ids)
-            }
-        }
-        tagSelectionLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val ids = result.data?.getLongArrayExtra(
-                    TermSelectionViewModel.RESULT_SELECTED_IDS
-                ) ?: return@registerForActivityResult
-                viewModel.onTagsSelected(ids)
-            }
-        }
-    }
-
-    private fun launchCategorySelection(
-        selectedIds: LongArray,
-    ) {
-        categorySelectionLauncher.launch(
-            TermSelectionActivity.createIntent(
-                this,
-                isCategories = true,
-                selectedIds = selectedIds
+        categorySelectionLauncher =
+            registerTermLauncher(
+                viewModel::onCategoriesSelected
             )
-        )
+        tagSelectionLauncher =
+            registerTermLauncher(
+                viewModel::onTagsSelected
+            )
     }
 
-    private fun launchTagSelection(
-        selectedIds: LongArray,
+    private fun registerTermLauncher(
+        onResult: (LongArray) -> Unit,
+    ) = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val ids = result.data?.getLongArrayExtra(
+                TermSelectionViewModel
+                    .RESULT_SELECTED_IDS
+            ) ?: return@registerForActivityResult
+            onResult(ids)
+        }
+    }
+
+    private fun launchTermSelection(
+        launcher: ActivityResultLauncher<Intent>,
+        isCategories: Boolean,
+        selectedIds: List<Long>,
     ) {
-        tagSelectionLauncher.launch(
+        launcher.launch(
             TermSelectionActivity.createIntent(
                 this,
-                isCategories = false,
-                selectedIds = selectedIds
+                isCategories = isCategories,
+                selectedIds = selectedIds.toLongArray()
             )
         )
     }

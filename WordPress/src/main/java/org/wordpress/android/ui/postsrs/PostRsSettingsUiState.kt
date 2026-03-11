@@ -119,10 +119,10 @@ sealed interface PostRsSettingsEvent {
     data object FinishWithChanges : PostRsSettingsEvent
     data object LaunchMediaPicker : PostRsSettingsEvent
     data class LaunchCategorySelection(
-        val selectedIds: LongArray,
+        val selectedIds: List<Long>,
     ) : PostRsSettingsEvent
     data class LaunchTagSelection(
-        val selectedIds: LongArray,
+        val selectedIds: List<Long>,
     ) : PostRsSettingsEvent
     data class ShowSnackbar(val message: String) :
         PostRsSettingsEvent
