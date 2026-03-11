@@ -18,6 +18,7 @@ data class TermSelectionUiState(
     val showAddDialog: Boolean = false,
     val parentOptions: List<ParentOption> = emptyList(),
     val isHierarchical: Boolean = false,
+    val hasChanges: Boolean = false,
 )
 
 data class ParentOption(val id: Long, val name: String)

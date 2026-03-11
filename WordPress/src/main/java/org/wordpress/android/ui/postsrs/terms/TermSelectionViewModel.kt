@@ -315,7 +315,14 @@ class TermSelectionViewModel @Inject constructor(
                 isSelected = term.id in selectedIds,
             )
         }
-        _uiState.update { it.copy(terms = selectable) }
+        val hasChanges =
+            selectedIds != initialSelectedIds.toSet()
+        _uiState.update {
+            it.copy(
+                terms = selectable,
+                hasChanges = hasChanges,
+            )
+        }
     }
 
     private fun sortByHierarchy(

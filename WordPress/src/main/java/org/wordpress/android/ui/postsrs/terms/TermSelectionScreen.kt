@@ -81,12 +81,18 @@ fun TermSelectionScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onSaveClicked) {
-                        Icon(
-                            Icons.Default.Check,
-                            contentDescription =
-                                stringResource(R.string.save)
-                        )
+                    if (uiState.hasChanges) {
+                        IconButton(
+                            onClick = onSaveClicked
+                        ) {
+                            Icon(
+                                Icons.Default.Check,
+                                contentDescription =
+                                    stringResource(
+                                        R.string.save
+                                    )
+                            )
+                        }
                     }
                 }
             )
