@@ -70,6 +70,15 @@ fun MostPopularDayCard(
         when (uiState) {
             is MostPopularDayCardUiState.Loading ->
                 LoadingContent()
+            is MostPopularDayCardUiState.NoData ->
+                NoDataContent(
+                    onRemoveCard,
+                    cardPosition,
+                    onMoveUp,
+                    onMoveToTop,
+                    onMoveDown,
+                    onMoveToBottom
+                )
             is MostPopularDayCardUiState.Loaded ->
                 LoadedContent(
                     uiState,
@@ -157,6 +166,58 @@ private fun LoadingContent() {
                 .height(14.dp)
                 .clip(RoundedCornerShape(4.dp))
                 .background(shimmerBrush)
+        )
+    }
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun NoDataContent(
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(CardPadding)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment =
+                Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(
+                    R.string
+                        .stats_insights_most_popular_day
+                ),
+                style = MaterialTheme.typography
+                    .titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
+            )
+            StatsCardMenu(
+                onRemoveClick = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = stringResource(
+                R.string.stats_no_data_yet
+            ),
+            style = MaterialTheme.typography
+                .bodyMedium,
+            color = MaterialTheme.colorScheme
+                .onSurfaceVariant
         )
     }
 }
