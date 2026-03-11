@@ -569,10 +569,10 @@ class PostRsSettingsViewModel @Inject constructor(
                         state.editedFeaturedImageId,
                     categories =
                         state.editedCategoryIds
-                            ?: state.categoryIds,
+                            ?: emptyList(),
                     tags =
                         state.editedTagIds
-                            ?: state.tagIds,
+                            ?: emptyList(),
                     meta = null
                 )
                 withContext(Dispatchers.IO) {
