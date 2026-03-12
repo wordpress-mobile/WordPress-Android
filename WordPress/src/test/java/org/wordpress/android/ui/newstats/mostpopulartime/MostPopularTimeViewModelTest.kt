@@ -252,6 +252,21 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when mapToUiState with invalid hour, then empty hour`() {
+        val data = StatsInsightsData(
+            highestHour = 25,
+            highestHourPercent = 10.0,
+            highestDayOfWeek = 3,
+            highestDayPercent = 20.0,
+            years = emptyList()
+        )
+        val state =
+            MostPopularTimeViewModel.mapToUiState(data)
+            as MostPopularTimeCardUiState.Loaded
+        assertThat(state.bestHour).isEmpty()
+    }
+
+    @Test
     fun `when mapToUiState with fractional percent, then rounded`() {
         val data = StatsInsightsData(
             highestHour = 14,

@@ -16,6 +16,7 @@ import java.time.format.FormatStyle
 import java.time.format.TextStyle
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.math.round
 
 @HiltViewModel
 class MostPopularTimeViewModel @Inject constructor(
@@ -90,7 +91,10 @@ class MostPopularTimeViewModel @Inject constructor(
             )
         }
 
+        private const val MAX_HOUR = 23
+
         private fun formatHour(hour: Int): String {
+            if (hour !in 0..MAX_HOUR) return ""
             val time = LocalTime.of(hour, 0)
             return time.format(
                 DateTimeFormatter.ofLocalizedTime(
@@ -102,7 +106,7 @@ class MostPopularTimeViewModel @Inject constructor(
         private fun formatPercent(
             percent: Double
         ): String {
-            return kotlin.math.round(percent)
+            return round(percent)
                 .toInt().toString()
         }
     }

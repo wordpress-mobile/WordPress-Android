@@ -286,7 +286,7 @@ private fun LoadedContent(
         Text(
             text = stringResource(
                 R.string
-                    .stats_insights_percent_of_views,
+                    .stats_insights_most_popular_day_percent,
                 state.bestDayPercent
             ),
             style = MaterialTheme.typography.bodyMedium,
@@ -316,7 +316,7 @@ private fun LoadedContent(
         Text(
             text = stringResource(
                 R.string
-                    .stats_insights_percent_of_views,
+                    .stats_insights_most_popular_day_percent,
                 state.bestHourPercent
             ),
             style = MaterialTheme.typography.bodyMedium,
