@@ -32,6 +32,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -169,7 +170,9 @@ private fun ErrorContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.padding(32.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -177,6 +180,7 @@ private fun ErrorContent(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme
                 .onSurfaceVariant,
+            textAlign = TextAlign.Center,
         )
         TextButton(onClick = onRetry) {
             Text(stringResource(R.string.retry))
