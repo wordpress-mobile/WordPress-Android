@@ -8,6 +8,7 @@ import org.wordpress.android.ui.postsrs.AuthorInfo
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.SiteUtils
+import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyTermWithViewContext
 import uniffi.wp_api.MediaListParams
@@ -29,17 +30,24 @@ class PostRsRestClient @Inject constructor(
     @ApplicationContext private val context: Context,
     private val wpApiClientProvider: WpApiClientProvider,
 ) {
+    private val clientCache = ConcurrentHashMap<Int, WpApiClient>()
     private val mediaUrlCache = ConcurrentHashMap<Long, String>()
     private val userNameCache = ConcurrentHashMap<Long, String>()
     private val categoryNameCache = ConcurrentHashMap<Long, String>()
     private val tagNameCache = ConcurrentHashMap<Long, String>()
 
     fun clearCaches() {
+        clientCache.clear()
         mediaUrlCache.clear()
         userNameCache.clear()
         categoryNameCache.clear()
         tagNameCache.clear()
     }
+
+    private fun getClient(site: SiteModel): WpApiClient =
+        clientCache.getOrPut(site.id) {
+            wpApiClientProvider.getWpApiClient(site)
+        }
 
     /**
      * Fetches media source URLs for the given [mediaIds] in a single
@@ -73,7 +81,7 @@ class PostRsRestClient @Inject constructor(
         }
         if (uncached.isEmpty()) return result
 
-        val client = wpApiClientProvider.getWpApiClient(site)
+        val client = getClient(site)
         val response = client.request {
             it.media().listWithEditContext(
                 MediaListParams(include = uncached)
@@ -119,7 +127,7 @@ class PostRsRestClient @Inject constructor(
         }
         if (uncached.isEmpty()) return result
 
-        val client = wpApiClientProvider.getWpApiClient(site)
+        val client = getClient(site)
         val response = client.request {
             it.users().listWithViewContext(
                 UserListParams(include = uncached)
@@ -165,7 +173,7 @@ class PostRsRestClient @Inject constructor(
         }
         if (uncached.isEmpty()) return result
 
-        val client = wpApiClientProvider.getWpApiClient(site)
+        val client = getClient(site)
         val response = client.request {
             it.terms().listWithViewContext(
                 endpointType,
@@ -204,7 +212,7 @@ class PostRsRestClient @Inject constructor(
             perPage = AUTHORS_PER_PAGE
         ),
     ): AuthorPage {
-        val client = wpApiClientProvider.getWpApiClient(site)
+        val client = getClient(site)
         val response = client.request {
             it.users().listWithViewContext(params)
         }
@@ -252,7 +260,7 @@ class PostRsRestClient @Inject constructor(
         nextPageParams: TermListParams? = null,
     ): TermsPageResult {
         val cache = termCache(endpointType)
-        val client = wpApiClientProvider.getWpApiClient(site)
+        val client = getClient(site)
         val params = nextPageParams ?: TermListParams(
             perPage = PER_PAGE,
             search = search,
@@ -306,7 +314,7 @@ class PostRsRestClient @Inject constructor(
         parentId: Long? = null,
     ): Long? {
         val cache = termCache(endpointType)
-        val client = wpApiClientProvider.getWpApiClient(site)
+        val client = getClient(site)
         val response = client.request {
             it.terms().create(
                 endpointType,

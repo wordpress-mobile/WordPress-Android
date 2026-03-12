@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.util.AppLog
+import rs.wordpress.api.kotlin.WpApiClient
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -51,6 +52,10 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     private val site = selectedSiteRepository.getSelectedSite()
+
+    private val apiClient: WpApiClient? by lazy {
+        site?.let { wpApiClientProvider.getWpApiClient(it) }
+    }
 
     private val _uiState = MutableStateFlow(PostRsSettingsUiState())
     val uiState: StateFlow<PostRsSettingsUiState> = _uiState.asStateFlow()
@@ -615,8 +620,8 @@ class PostRsSettingsViewModel @Inject constructor(
                     meta = null
                 )
                 withContext(Dispatchers.IO) {
-                    val client =
-                        wpApiClientProvider.getWpApiClient(site)
+                    val client = apiClient
+                        ?: error("No API client")
                     val response = client.request {
                         it.posts().update(
                             PostEndpointType.Posts,
@@ -714,7 +719,7 @@ class PostRsSettingsViewModel @Inject constructor(
     private suspend fun fetchPost(
         site: SiteModel
     ): AnyPostWithEditContext = withContext(Dispatchers.IO) {
-        val client = wpApiClientProvider.getWpApiClient(site)
+        val client = apiClient ?: error("No API client")
         val response = client.request {
             it.posts().retrieveWithEditContext(
                 PostEndpointType.Posts,
