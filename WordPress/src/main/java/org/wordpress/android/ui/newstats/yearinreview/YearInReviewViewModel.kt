@@ -23,10 +23,7 @@ class YearInReviewViewModel @Inject constructor(
     val uiState: StateFlow<YearInReviewCardUiState> =
         _uiState.asStateFlow()
 
-    fun handleResult(
-        result: InsightsResult,
-        onRetry: () -> Unit
-    ) {
+    fun handleResult(result: InsightsResult) {
         _uiState.value = when (result) {
             is InsightsResult.Success -> {
                 val years = result.data.years
@@ -44,8 +41,7 @@ class YearInReviewViewModel @Inject constructor(
                     message = resourceProvider
                         .getString(
                             R.string.stats_error_api
-                        ),
-                    onRetry = onRetry
+                        )
                 )
         }
     }

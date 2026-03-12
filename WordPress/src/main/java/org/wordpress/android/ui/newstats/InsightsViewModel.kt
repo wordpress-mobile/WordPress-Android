@@ -70,10 +70,6 @@ class InsightsViewModel @Inject constructor(
     private var isDataLoaded = false
     private var isDataLoading = false
 
-    private val siteId: Long
-        get() = selectedSiteRepository
-            .getSelectedSite()?.siteId ?: 0L
-
     init {
         checkNetworkStatus()
         loadConfiguration()
@@ -162,6 +158,7 @@ class InsightsViewModel @Inject constructor(
 
     fun refreshData() {
         isDataLoaded = false
+        isDataLoading = true
         _isDataRefreshing.value = true
         fetchData(forceRefresh = true)
     }
@@ -190,7 +187,8 @@ class InsightsViewModel @Inject constructor(
         viewModelScope.launch {
             cardConfigurationRepository.configurationFlow
                 .collect { pair ->
-                    val currentSiteId = siteId
+                    val currentSiteId =
+                        resolvedSiteId() ?: return@collect
                     if (pair != null &&
                         pair.first == currentSiteId
                     ) {

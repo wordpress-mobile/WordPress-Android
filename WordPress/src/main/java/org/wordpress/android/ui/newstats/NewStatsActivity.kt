@@ -935,10 +935,7 @@ private fun InsightsTabContent(
 
     LaunchedEffect(Unit) {
         insightsViewModel.insightsResult.collect { result ->
-            yearInReviewViewModel.handleResult(
-                result,
-                onRetry = onRetryData
-            )
+            yearInReviewViewModel.handleResult(result)
             mostPopularTimeViewModel.handleResult(result)
         }
     }
@@ -1166,6 +1163,11 @@ private fun InsightsTabContent(
                                         .getDetailData()
                                 YearInReviewDetailActivity
                                     .start(context, years)
+                            },
+                            onRetry = {
+                                yearInReviewViewModel
+                                    .showLoading()
+                                onRetryData()
                             },
                             cardPosition = cardPosition,
                             onMoveUp = {

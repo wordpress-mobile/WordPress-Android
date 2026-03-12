@@ -59,6 +59,7 @@ fun YearInReviewCard(
     uiState: YearInReviewCardUiState,
     onRemoveCard: () -> Unit,
     onShowAllClick: () -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
     cardPosition: CardPosition? = null,
     onMoveUp: (() -> Unit)? = null,
@@ -98,6 +99,7 @@ fun YearInReviewCard(
                 ErrorContent(
                     uiState,
                     onRemoveCard,
+                    onRetry,
                     cardPosition,
                     onMoveUp,
                     onMoveToTop,
@@ -322,6 +324,7 @@ private fun StatMiniCard(
 private fun ErrorContent(
     state: YearInReviewCardUiState.Error,
     onRemoveCard: () -> Unit,
+    onRetry: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
     onMoveToTop: (() -> Unit)?,
@@ -365,7 +368,7 @@ private fun ErrorContent(
                 color = MaterialTheme.colorScheme.error
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = state.onRetry) {
+            Button(onClick = onRetry) {
                 Text(
                     text = stringResource(R.string.retry)
                 )
@@ -381,7 +384,8 @@ private fun YearInReviewCardLoadingPreview() {
         YearInReviewCard(
             uiState = YearInReviewCardUiState.Loading,
             onRemoveCard = {},
-            onShowAllClick = {}
+            onShowAllClick = {},
+            onRetry = {}
         )
     }
 }
@@ -406,7 +410,8 @@ private fun YearInReviewCardLoadedPreview() {
                 )
             ),
             onRemoveCard = {},
-            onShowAllClick = {}
+            onShowAllClick = {},
+            onRetry = {}
         )
     }
 }
@@ -417,11 +422,11 @@ private fun YearInReviewCardErrorPreview() {
     AppThemeM3 {
         YearInReviewCard(
             uiState = YearInReviewCardUiState.Error(
-                message = "Failed to load stats",
-                onRetry = {}
+                message = "Failed to load stats"
             ),
             onRemoveCard = {},
-            onShowAllClick = {}
+            onShowAllClick = {},
+            onRetry = {}
         )
     }
 }

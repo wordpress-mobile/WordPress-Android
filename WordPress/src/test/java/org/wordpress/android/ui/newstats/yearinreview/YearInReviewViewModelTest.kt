@@ -22,10 +22,6 @@ class YearInReviewViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: YearInReviewViewModel
 
-    private var retryCalled = false
-
-    private val onRetry = { retryCalled = true }
-
     @Before
     fun setUp() {
         whenever(
@@ -36,7 +32,6 @@ class YearInReviewViewModelTest : BaseUnitTest() {
         viewModel = YearInReviewViewModel(
             resourceProvider
         )
-        retryCalled = false
     }
 
     @Test
@@ -52,7 +47,6 @@ class YearInReviewViewModelTest : BaseUnitTest() {
     fun `when handleResult with success, then loaded state is emitted`() {
         viewModel.handleResult(
             createSuccessResult(),
-            onRetry = onRetry
         )
 
         val state = viewModel.uiState.value
@@ -82,7 +76,6 @@ class YearInReviewViewModelTest : BaseUnitTest() {
     fun `when handleResult with error, then error state is emitted`() {
         viewModel.handleResult(
             InsightsResult.Error("Network error"),
-            onRetry = onRetry
         )
 
         val state = viewModel.uiState.value
@@ -96,24 +89,9 @@ class YearInReviewViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when error state retry is clicked, then onRetry is invoked`() {
-        viewModel.handleResult(
-            InsightsResult.Error("error"),
-            onRetry = onRetry
-        )
-
-        val errorState = viewModel.uiState.value
-            as YearInReviewCardUiState.Error
-        errorState.onRetry()
-
-        assertThat(retryCalled).isTrue()
-    }
-
-    @Test
     fun `when showLoading called, then loading state`() {
         viewModel.handleResult(
             createSuccessResult(),
-            onRetry = onRetry
         )
         viewModel.showLoading()
 
@@ -132,7 +110,6 @@ class YearInReviewViewModelTest : BaseUnitTest() {
                     emptyList()
                 )
             ),
-            onRetry = onRetry
         )
 
         val state = viewModel.uiState.value
@@ -164,7 +141,6 @@ class YearInReviewViewModelTest : BaseUnitTest() {
                     yearsWithCurrent
                 )
             ),
-            onRetry = onRetry
         )
 
         val state = viewModel.uiState.value
@@ -180,7 +156,6 @@ class YearInReviewViewModelTest : BaseUnitTest() {
     fun `when state is loaded, then getDetailData returns years`() {
         viewModel.handleResult(
             createSuccessResult(),
-            onRetry = onRetry
         )
 
         val detailData = viewModel.getDetailData()
@@ -205,7 +180,6 @@ class YearInReviewViewModelTest : BaseUnitTest() {
     fun `when state is error, then getDetailData returns empty list`() {
         viewModel.handleResult(
             InsightsResult.Error("error"),
-            onRetry = onRetry
         )
 
         assertThat(viewModel.uiState.value)
