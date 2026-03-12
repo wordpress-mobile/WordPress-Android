@@ -9,7 +9,9 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.AnyTermWithViewContext
 import uniffi.wp_api.MediaListParams
+import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
 import uniffi.wp_api.UserListParams
@@ -154,11 +156,7 @@ class PostRsRestClient @Inject constructor(
         termIds: List<Long>,
         endpointType: TermEndpointType,
     ): Map<Long, String> {
-        val cache = if (endpointType is TermEndpointType.Categories) {
-            categoryNameCache
-        } else {
-            tagNameCache
-        }
+        val cache = termCache(endpointType)
         val result = mutableMapOf<Long, String>()
         val uncached = mutableListOf<Long>()
         for (id in termIds) {
@@ -242,8 +240,99 @@ class PostRsRestClient @Inject constructor(
         }
     }
 
-    companion object {
-        private const val AUTHORS_PER_PAGE: UInt = 20u
+    /**
+     * Fetches a single page of terms for the given
+     * [endpointType]. Pass [nextPageParams] to fetch
+     * subsequent pages. Also populates the name cache.
+     */
+    suspend fun fetchTermsPage(
+        site: SiteModel,
+        endpointType: TermEndpointType,
+        search: String? = null,
+        nextPageParams: TermListParams? = null,
+    ): TermsPageResult {
+        val cache = termCache(endpointType)
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val params = nextPageParams ?: TermListParams(
+            perPage = PER_PAGE,
+            search = search,
+        )
+        val response = client.request {
+            it.terms().listWithViewContext(
+                endpointType, params
+            )
+        }
+        return when (response) {
+            is WpRequestResult.Success -> {
+                val terms = response.response.data
+                for (term in terms) {
+                    cache[term.id] = term.name
+                }
+                TermsPageResult(
+                    terms = terms,
+                    nextPageParams =
+                        response.response.nextPageParams,
+                )
+            }
+            else -> {
+                val msg = (response
+                    as? WpRequestResult.WpError<*>)
+                    ?.errorMessage
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "fetchTermsPage failed: $msg"
+                )
+                throw TermsFetchException(msg)
+            }
+        }
+    }
+
+    data class TermsPageResult(
+        val terms: List<AnyTermWithViewContext>,
+        val nextPageParams: TermListParams?,
+    )
+
+    class TermsFetchException(message: String?) :
+        Exception(message ?: "Failed to fetch terms")
+
+    /**
+     * Creates a new term and returns its ID, or null on
+     * failure. Also populates the name cache.
+     */
+    suspend fun createTerm(
+        site: SiteModel,
+        endpointType: TermEndpointType,
+        name: String,
+        parentId: Long? = null,
+    ): Long? {
+        val cache = termCache(endpointType)
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.terms().create(
+                endpointType,
+                TermCreateParams(
+                    name = name,
+                    parent = parentId
+                )
+            )
+        }
+        return when (response) {
+            is WpRequestResult.Success -> {
+                val term = response.response.data
+                cache[term.id] = term.name
+                term.id
+            }
+            else -> {
+                val msg =
+                    (response as? WpRequestResult.WpError<*>)
+                        ?.errorMessage
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "createTerm failed: $msg"
+                )
+                null
+            }
+        }
     }
 
     private fun toPhotonUrl(
@@ -260,5 +349,19 @@ class PostRsRestClient @Inject constructor(
         return PhotonUtils.getPhotonImageUrl(
             sourceUrl, width, 0, site.isPrivateWPComAtomic
         )
+    }
+
+    private fun termCache(
+        endpointType: TermEndpointType,
+    ): ConcurrentHashMap<Long, String> =
+        if (endpointType is TermEndpointType.Categories) {
+            categoryNameCache
+        } else {
+            tagNameCache
+        }
+
+    companion object {
+        private const val AUTHORS_PER_PAGE: UInt = 20u
+        private const val PER_PAGE = 100u
     }
 }

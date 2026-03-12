@@ -31,8 +31,12 @@ data class PostRsSettingsUiState(
     val authorName: FieldState = FieldState.Empty,
     val categoryNames: FieldState = FieldState.Empty,
     val tagNames: FieldState = FieldState.Empty,
+    val categoryIds: List<Long> = emptyList(),
+    val tagIds: List<Long> = emptyList(),
     val featuredImage: FieldState = FieldState.Empty,
     val featuredImageId: Long = 0L,
+    val editedCategoryIds: List<Long>? = null,
+    val editedTagIds: List<Long>? = null,
     val editedFeaturedImageId: Long? = null,
     val sticky: Boolean = false,
     val slug: String = "",
@@ -59,7 +63,9 @@ data class PostRsSettingsUiState(
             editedFormat != null ||
             editedDate != null ||
             editedAuthor != null ||
-            editedFeaturedImageId != null
+            editedFeaturedImageId != null ||
+            editedCategoryIds != null ||
+            editedTagIds != null
 
     val effectivePassword: String?
         get() = editedPassword ?: password
@@ -81,6 +87,12 @@ data class PostRsSettingsUiState(
 
     val effectiveFeaturedImageId: Long
         get() = editedFeaturedImageId ?: featuredImageId
+
+    val effectiveCategoryIds: List<Long>
+        get() = editedCategoryIds ?: categoryIds
+
+    val effectiveTagIds: List<Long>
+        get() = editedTagIds ?: tagIds
 }
 
 sealed interface DialogState {
@@ -106,6 +118,12 @@ sealed interface PostRsSettingsEvent {
     data object Finish : PostRsSettingsEvent
     data object FinishWithChanges : PostRsSettingsEvent
     data object LaunchMediaPicker : PostRsSettingsEvent
+    data class LaunchCategorySelection(
+        val selectedIds: List<Long>,
+    ) : PostRsSettingsEvent
+    data class LaunchTagSelection(
+        val selectedIds: List<Long>,
+    ) : PostRsSettingsEvent
     data class ShowSnackbar(val message: String) :
         PostRsSettingsEvent
 }

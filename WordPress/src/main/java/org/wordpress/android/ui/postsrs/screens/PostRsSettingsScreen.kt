@@ -130,6 +130,8 @@ fun PostRsSettingsScreen(
     onTimeSelected: (Int, Int) -> Unit = { _, _ -> },
     onAuthorClicked: () -> Unit = {},
     onAuthorSelected: (Long) -> Unit = {},
+    onCategoriesClicked: () -> Unit = {},
+    onTagsClicked: () -> Unit = {},
     onFeaturedImageClicked: () -> Unit = {},
     onFeaturedImageRemoved: () -> Unit = {},
     onLoadMoreAuthors: () -> Unit = {},
@@ -181,6 +183,9 @@ fun PostRsSettingsScreen(
                     onFormatClicked = onFormatClicked,
                     onDateClicked = onDateClicked,
                     onAuthorClicked = onAuthorClicked,
+                    onCategoriesClicked =
+                        onCategoriesClicked,
+                    onTagsClicked = onTagsClicked,
                     onFeaturedImageClicked =
                         onFeaturedImageClicked,
                     onFeaturedImageRemoved =
@@ -262,6 +267,8 @@ private fun HeroSettingsLayout(
     onFormatClicked: () -> Unit,
     onDateClicked: () -> Unit,
     onAuthorClicked: () -> Unit,
+    onCategoriesClicked: () -> Unit,
+    onTagsClicked: () -> Unit,
     onFeaturedImageClicked: () -> Unit,
     onFeaturedImageRemoved: () -> Unit,
     onSaveClicked: () -> Unit,
@@ -309,6 +316,9 @@ private fun HeroSettingsLayout(
                 onFormatClicked = onFormatClicked,
                 onDateClicked = onDateClicked,
                 onAuthorClicked = onAuthorClicked,
+                onCategoriesClicked =
+                    onCategoriesClicked,
+                onTagsClicked = onTagsClicked,
             )
         }
         Box(
@@ -576,6 +586,7 @@ private fun ErrorContent(
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun SettingsContent(
     uiState: PostRsSettingsUiState,
@@ -588,6 +599,8 @@ private fun SettingsContent(
     onFormatClicked: () -> Unit,
     onDateClicked: () -> Unit,
     onAuthorClicked: () -> Unit,
+    onCategoriesClicked: () -> Unit,
+    onTagsClicked: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         SectionHeader(
@@ -665,7 +678,8 @@ private fun SettingsContent(
             state = uiState.categoryNames,
             onRetry = {
                 onRetryField(RetryableField.CATEGORIES)
-            }
+            },
+            onClick = onCategoriesClicked,
         )
         HorizontalDivider()
 
@@ -676,7 +690,8 @@ private fun SettingsContent(
             state = uiState.tagNames,
             onRetry = {
                 onRetryField(RetryableField.TAGS)
-            }
+            },
+            onClick = onTagsClicked,
         )
 
         SectionHeader(
@@ -1518,7 +1533,22 @@ private fun ChipSettingsRow(
     label: String,
     state: FieldState,
     onRetry: () -> Unit,
+    onClick: (() -> Unit)? = null,
 ) {
+    val clickModifier = if (onClick != null) {
+        Modifier.clickable(onClick = onClick)
+    } else {
+        Modifier
+    }
+    if (state is FieldState.Empty) {
+        SettingsRow(
+            label = label,
+            value = stringResource(R.string.none),
+            dimmed = true,
+            modifier = clickModifier,
+        )
+        return
+    }
     AsyncFieldRow(label, state, onRetry) { value ->
         val items = value
             .split(", ")
@@ -1532,13 +1562,14 @@ private fun ChipSettingsRow(
                 ) {
                     items.forEach { name ->
                         SuggestionChip(
-                            onClick = {},
+                            onClick = onClick ?: {},
                             label = { Text(name) },
-                            enabled = false
+                            enabled = onClick != null
                         )
                     }
                 }
-            }
+            },
+            modifier = clickModifier,
         )
     }
 }

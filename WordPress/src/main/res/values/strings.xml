@@ -1036,6 +1036,14 @@
     <string name="post_rs_settings_select_time">Select Time</string>
     <string name="post_rs_settings_author_dialog_title">Author</string>
     <string name="post_rs_settings_author_no_permission">You don\'t have permission to change the author</string>
+    <string name="post_rs_settings_add_term">Add New</string>
+    <string name="post_rs_settings_term_name_hint">Name</string>
+    <string name="post_rs_settings_parent_category">Parent Category</string>
+    <string name="post_rs_settings_no_parent">None</string>
+    <string name="post_rs_settings_search_terms">Search</string>
+    <string name="post_rs_settings_term_create_error">Failed to create term</string>
+    <string name="post_rs_settings_load_more">Load more\u2026</string>
+    <string name="post_rs_settings_search_no_results">No results found</string>
     <string name="show_less">Show less</string>
     <string name="post_types_screen_title">Post Types</string>
 
