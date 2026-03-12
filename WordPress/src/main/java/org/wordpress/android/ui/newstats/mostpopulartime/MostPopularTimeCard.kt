@@ -201,7 +201,7 @@ private fun LoadedContent(
             value = state.bestDay,
             percent = stringResource(
                 R.string
-                    .stats_insights_most_popular_day_percent,
+                    .stats_insights_views_percent,
                 state.bestDayPercent
             )
         )
@@ -213,7 +213,7 @@ private fun LoadedContent(
             value = state.bestHour,
             percent = stringResource(
                 R.string
-                    .stats_insights_most_popular_day_percent,
+                    .stats_insights_views_percent,
                 state.bestHourPercent
             )
         )
@@ -255,6 +255,19 @@ private fun MostPopularTimeCardLoadingPreview() {
         MostPopularTimeCard(
             uiState =
                 MostPopularTimeCardUiState.Loading,
+            onRemoveCard = {},
+            onRetry = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MostPopularTimeCardNoDataPreview() {
+    AppThemeM3 {
+        MostPopularTimeCard(
+            uiState =
+                MostPopularTimeCardUiState.NoData,
             onRemoveCard = {},
             onRetry = {}
         )

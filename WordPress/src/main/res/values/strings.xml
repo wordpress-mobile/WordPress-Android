@@ -1512,7 +1512,7 @@
     <string name="stats_insights_all_time_stats_title">All-time stats</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
     <string name="stats_insights_most_popular_day_label">Day</string>
-    <string name="stats_insights_most_popular_day_percent">%1$s%% of views</string>
+    <string name="stats_insights_views_percent">%1$s%% of views</string>
     <string name="stats_insights_most_popular_time">Most popular time</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
     <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>

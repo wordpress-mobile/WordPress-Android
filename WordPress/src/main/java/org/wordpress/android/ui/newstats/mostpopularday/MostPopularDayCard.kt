@@ -313,7 +313,7 @@ private fun LoadedContent(
         Text(
             text = stringResource(
                 R.string
-                    .stats_insights_most_popular_day_percent,
+                    .stats_insights_views_percent,
                 state.viewsPercentage
             ),
             style = MaterialTheme.typography.bodyMedium,
