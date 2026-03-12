@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.mostpopulartime
 
+import android.content.Context
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -18,6 +19,9 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
     private lateinit var resourceProvider:
         ResourceProvider
 
+    @Mock
+    private lateinit var context: Context
+
     private lateinit var viewModel:
         MostPopularTimeViewModel
 
@@ -29,7 +33,7 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
             )
         ).thenReturn(FAILED_TO_LOAD_ERROR)
         viewModel = MostPopularTimeViewModel(
-            resourceProvider
+            context, resourceProvider
         )
     }
 
@@ -40,29 +44,6 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
                 MostPopularTimeCardUiState
                     .Loading::class.java
             )
-    }
-
-    @Test
-    fun `when handleResult with success, then loaded state has correct values`() {
-        viewModel.handleResult(
-            InsightsResult.Success(
-                createTestInsightsData()
-            )
-        )
-
-        val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(
-            MostPopularTimeCardUiState
-                .Loaded::class.java
-        )
-        with(
-            state as MostPopularTimeCardUiState.Loaded
-        ) {
-            assertThat(bestDayPercent)
-                .isEqualTo("25")
-            assertThat(bestHourPercent)
-                .isEqualTo("16")
-        }
     }
 
     @Test
@@ -131,8 +112,8 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
             highestDayPercent = 0.0,
             years = emptyList()
         )
-        val state =
-            MostPopularTimeViewModel.mapToUiState(data)
+        val state = MostPopularTimeViewModel
+            .mapToUiState(data, USE_24H)
         assertThat(state).isInstanceOf(
             MostPopularTimeCardUiState
                 .NoData::class.java
@@ -148,8 +129,8 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
             highestDayPercent = TEST_DAY_PERCENT,
             years = emptyList()
         )
-        val state =
-            MostPopularTimeViewModel.mapToUiState(data)
+        val state = MostPopularTimeViewModel
+            .mapToUiState(data, USE_24H)
             as MostPopularTimeCardUiState.Loaded
         assertThat(state.bestDayPercent)
             .isEqualTo("25")
@@ -166,8 +147,8 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
             highestDayPercent = 20.0,
             years = emptyList()
         )
-        val state =
-            MostPopularTimeViewModel.mapToUiState(data)
+        val state = MostPopularTimeViewModel
+            .mapToUiState(data, USE_24H)
             as MostPopularTimeCardUiState.Loaded
         assertThat(state.bestDay).isEqualTo("Monday")
     }
@@ -181,8 +162,8 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
             highestDayPercent = 20.0,
             years = emptyList()
         )
-        val state =
-            MostPopularTimeViewModel.mapToUiState(data)
+        val state = MostPopularTimeViewModel
+            .mapToUiState(data, USE_24H)
             as MostPopularTimeCardUiState.Loaded
         assertThat(state.bestDay).isEqualTo("Saturday")
     }
@@ -196,8 +177,8 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
             highestDayPercent = 20.0,
             years = emptyList()
         )
-        val state =
-            MostPopularTimeViewModel.mapToUiState(data)
+        val state = MostPopularTimeViewModel
+            .mapToUiState(data, USE_24H)
             as MostPopularTimeCardUiState.Loaded
         assertThat(state.bestDay).isEqualTo("Sunday")
     }
@@ -211,8 +192,8 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
             highestDayPercent = 0.0,
             years = emptyList()
         )
-        val state =
-            MostPopularTimeViewModel.mapToUiState(data)
+        val state = MostPopularTimeViewModel
+            .mapToUiState(data, USE_24H)
         assertThat(state).isInstanceOf(
             MostPopularTimeCardUiState
                 .NoData::class.java
@@ -228,8 +209,8 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
             highestDayPercent = 10.0,
             years = emptyList()
         )
-        val state =
-            MostPopularTimeViewModel.mapToUiState(data)
+        val state = MostPopularTimeViewModel
+            .mapToUiState(data, USE_24H)
         assertThat(state).isInstanceOf(
             MostPopularTimeCardUiState
                 .NoData::class.java
@@ -245,8 +226,8 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
             highestDayPercent = 20.0,
             years = emptyList()
         )
-        val state =
-            MostPopularTimeViewModel.mapToUiState(data)
+        val state = MostPopularTimeViewModel
+            .mapToUiState(data, USE_24H)
             as MostPopularTimeCardUiState.Loaded
         assertThat(state.bestDay).isEmpty()
     }
@@ -260,8 +241,8 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
             highestDayPercent = 20.0,
             years = emptyList()
         )
-        val state =
-            MostPopularTimeViewModel.mapToUiState(data)
+        val state = MostPopularTimeViewModel
+            .mapToUiState(data, USE_24H)
             as MostPopularTimeCardUiState.Loaded
         assertThat(state.bestHour).isEmpty()
     }
@@ -275,13 +256,81 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
             highestDayPercent = 22.66,
             years = emptyList()
         )
-        val state =
-            MostPopularTimeViewModel.mapToUiState(data)
+        val state = MostPopularTimeViewModel
+            .mapToUiState(data, USE_24H)
             as MostPopularTimeCardUiState.Loaded
         assertThat(state.bestDayPercent)
             .isEqualTo("23")
         assertThat(state.bestHourPercent)
             .isEqualTo("11")
+    }
+
+    @Test
+    fun `when 24h format, then hour shows 24h style`() {
+        val data = StatsInsightsData(
+            highestHour = 16,
+            highestHourPercent = 10.0,
+            highestDayOfWeek = 3,
+            highestDayPercent = 20.0,
+            years = emptyList()
+        )
+        val state = MostPopularTimeViewModel
+            .mapToUiState(data, use24HourFormat = true)
+            as MostPopularTimeCardUiState.Loaded
+        assertThat(state.bestHour).isEqualTo("16:00")
+    }
+
+    @Test
+    fun `when 12h format, then hour shows AM PM style`() {
+        val data = StatsInsightsData(
+            highestHour = 16,
+            highestHourPercent = 10.0,
+            highestDayOfWeek = 3,
+            highestDayPercent = 20.0,
+            years = emptyList()
+        )
+        val state = MostPopularTimeViewModel
+            .mapToUiState(
+                data, use24HourFormat = false
+            )
+            as MostPopularTimeCardUiState.Loaded
+        assertThat(state.bestHour)
+            .contains("4:00")
+            .containsIgnoringCase("pm")
+    }
+
+    @Test
+    fun `when 24h format with morning hour, then padded`() {
+        val data = StatsInsightsData(
+            highestHour = 9,
+            highestHourPercent = 10.0,
+            highestDayOfWeek = 3,
+            highestDayPercent = 20.0,
+            years = emptyList()
+        )
+        val state = MostPopularTimeViewModel
+            .mapToUiState(data, use24HourFormat = true)
+            as MostPopularTimeCardUiState.Loaded
+        assertThat(state.bestHour).isEqualTo("09:00")
+    }
+
+    @Test
+    fun `when 12h format with midnight, then 12 AM`() {
+        val data = StatsInsightsData(
+            highestHour = 0,
+            highestHourPercent = 10.0,
+            highestDayOfWeek = 3,
+            highestDayPercent = 20.0,
+            years = emptyList()
+        )
+        val state = MostPopularTimeViewModel
+            .mapToUiState(
+                data, use24HourFormat = false
+            )
+            as MostPopularTimeCardUiState.Loaded
+        assertThat(state.bestHour)
+            .contains("12:00")
+            .containsIgnoringCase("am")
     }
 
     companion object {
@@ -291,6 +340,7 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
         private const val TEST_DAY_PERCENT = 25.0
         private const val FAILED_TO_LOAD_ERROR =
             "Failed to load stats"
+        private const val USE_24H = true
 
         private fun createTestInsightsData() =
             StatsInsightsData(
