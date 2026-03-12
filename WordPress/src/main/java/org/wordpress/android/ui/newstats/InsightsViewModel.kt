@@ -15,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InsightsViewModel @Inject constructor(
-    private val selectedSiteRepository: SelectedSiteRepository,
+    private val selectedSiteRepository:
+        SelectedSiteRepository,
     private val cardConfigurationRepository:
         InsightsCardsConfigurationRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper
@@ -52,7 +53,8 @@ class InsightsViewModel @Inject constructor(
     }
 
     fun checkNetworkStatus(): Boolean {
-        val isAvailable = networkUtilsWrapper.isNetworkAvailable()
+        val isAvailable =
+            networkUtilsWrapper.isNetworkAvailable()
         _isNetworkAvailable.value = isAvailable
         return isAvailable
     }
@@ -91,7 +93,7 @@ class InsightsViewModel @Inject constructor(
         config: InsightsCardsConfiguration
     ) {
         _visibleCards.value = config.visibleCards
-        _hiddenCards.value = config.hiddenCards()
+        _hiddenCards.value = config.computeHiddenCards()
         _cardsToLoad.value = config.visibleCards
     }
 

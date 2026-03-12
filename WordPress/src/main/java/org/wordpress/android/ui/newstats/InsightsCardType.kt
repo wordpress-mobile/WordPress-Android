@@ -6,11 +6,22 @@ import org.wordpress.android.R
 enum class InsightsCardType(
     @StringRes val displayNameResId: Int
 ) {
-    YEAR_IN_REVIEW(R.string.stats_insights_year_in_review);
+    YEAR_IN_REVIEW(
+        R.string.stats_insights_year_in_review
+    ),
+    ALL_TIME_STATS(
+        R.string.stats_insights_all_time_stats_title
+    ),
+    MOST_POPULAR_DAY(
+        R.string.stats_insights_most_popular_day
+    );
 
     companion object {
-        fun defaultCards(): List<InsightsCardType> = listOf(
-            YEAR_IN_REVIEW
-        )
+        fun defaultCards(): List<InsightsCardType> =
+            listOf(
+                YEAR_IN_REVIEW,
+                ALL_TIME_STATS,
+                MOST_POPULAR_DAY
+            )
     }
 }

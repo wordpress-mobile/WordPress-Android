@@ -13,6 +13,8 @@ import org.wordpress.android.ui.newstats.datasource.RegionViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.SearchTermsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsInsightsDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsSummaryDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.datasource.YearInsightsData
 import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
@@ -80,7 +82,6 @@ class StatsRepository @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
-
     fun init(accessToken: String) {
         statsDataSource.init(accessToken)
     }
@@ -1346,6 +1347,32 @@ class StatsRepository @Inject constructor(
             }
         }
     }
+
+    suspend fun fetchStatsSummary(
+        siteId: Long
+    ): StatsSummaryResult = withContext(ioDispatcher) {
+        val result =
+            statsDataSource.fetchStatsSummary(
+                siteId = siteId
+            )
+        when (result) {
+            is StatsSummaryDataResult.Success ->
+                StatsSummaryResult.Success(
+                    data = result.data
+                )
+            is StatsSummaryDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching stats " +
+                        "summary: " +
+                        "${result.errorType}"
+                )
+                StatsSummaryResult.Error(
+                    result.errorType.name
+                )
+            }
+        }
+    }
 }
 
 /**
@@ -1739,4 +1766,16 @@ sealed class InsightsResult {
     data class Error(
         val message: String
     ) : InsightsResult()
+}
+
+/**
+ * Result of fetching stats summary data from the repository.
+ */
+sealed class StatsSummaryResult {
+    data class Success(
+        val data: StatsSummaryData
+    ) : StatsSummaryResult()
+    data class Error(
+        val message: String
+    ) : StatsSummaryResult()
 }

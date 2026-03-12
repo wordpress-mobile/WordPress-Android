@@ -992,7 +992,9 @@ class StatsDataSourceImpl @Inject constructor(
                 requestBuilder.statsInsights()
                     .getStatsInsights(
                         wpComSiteId = siteId.toULong(),
-                        params = StatsInsightsParams()
+                        params = StatsInsightsParams(
+                            locale = wpComLanguage
+                        )
                     )
             }
 
@@ -1041,6 +1043,57 @@ class StatsDataSourceImpl @Inject constructor(
                 result
             ) {
                 StatsInsightsDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchStatsSummary(
+        siteId: Long
+    ): StatsSummaryDataResult {
+        val params = uniffi.wp_api.StatsSummaryParams(
+            locale = wpComLanguage
+        )
+        val result = getOrCreateClient()
+            .request { requestBuilder ->
+                requestBuilder.statsSummary()
+                    .getStatsSummary(
+                        wpComSiteId = siteId.toULong(),
+                        params = params
+                    )
+            }
+
+        logResultType("fetchStatsSummary", result)
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val stats = result.response.data.stats
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchStatsSummary success"
+                )
+                StatsSummaryDataResult.Success(
+                    StatsSummaryData(
+                        views = stats.views.toLong(),
+                        visitors =
+                            stats.visitors.toLong(),
+                        posts = stats.posts.toLong(),
+                        comments =
+                            stats.comments.toLong(),
+                        viewsBestDay =
+                            stats.viewsBestDay
+                                .orEmpty(),
+                        viewsBestDayTotal =
+                            stats.viewsBestDayTotal
+                                .toLong()
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchStatsSummary",
+                result
+            ) {
+                StatsSummaryDataResult.Error(it)
             }
         }
     }
