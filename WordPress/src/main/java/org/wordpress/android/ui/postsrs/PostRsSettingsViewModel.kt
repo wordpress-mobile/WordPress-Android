@@ -101,21 +101,8 @@ class PostRsSettingsViewModel @Inject constructor(
                 val post = fetchPost(site)
                 lastPost = post
                 val current = _uiState.value
-                _uiState.value = mapPostToUiState(post).copy(
-                    editedStatus = current.editedStatus,
-                    editedPassword = current.editedPassword,
-                    editedSticky = current.editedSticky,
-                    editedSlug = current.editedSlug,
-                    editedExcerpt = current.editedExcerpt,
-                    editedFormat = current.editedFormat,
-                    editedDate = current.editedDate,
-                    editedAuthor = current.editedAuthor,
-                    editedFeaturedImageId =
-                        current.editedFeaturedImageId,
-                    editedCategoryIds =
-                        current.editedCategoryIds,
-                    editedTagIds = current.editedTagIds,
-                )
+                _uiState.value = mapPostToUiState(post)
+                    .preserveEdits(from = current)
                 resolveAsyncFields(post)
             } catch (e: CancellationException) {
                 throw e
@@ -945,6 +932,22 @@ class PostRsSettingsViewModel @Inject constructor(
         fmt.timeZone = UTC
         return fmt.format(dateGmt)
     }
+
+    private fun PostRsSettingsUiState.preserveEdits(
+        from: PostRsSettingsUiState
+    ) = copy(
+        editedStatus = from.editedStatus,
+        editedPassword = from.editedPassword,
+        editedSticky = from.editedSticky,
+        editedSlug = from.editedSlug,
+        editedExcerpt = from.editedExcerpt,
+        editedFormat = from.editedFormat,
+        editedDate = from.editedDate,
+        editedAuthor = from.editedAuthor,
+        editedFeaturedImageId = from.editedFeaturedImageId,
+        editedCategoryIds = from.editedCategoryIds,
+        editedTagIds = from.editedTagIds,
+    )
 
     private class PostApiException(message: String?) :
         Exception(message ?: "Post API request failed")

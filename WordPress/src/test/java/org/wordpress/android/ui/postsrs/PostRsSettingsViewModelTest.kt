@@ -28,7 +28,6 @@ import uniffi.wp_api.PostStatus
 @Suppress("LargeClass")
 class PostRsSettingsViewModelTest :
     BaseUnitTest(StandardTestDispatcher()) {
-
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
