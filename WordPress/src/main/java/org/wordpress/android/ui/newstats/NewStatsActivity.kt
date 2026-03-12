@@ -922,8 +922,8 @@ private fun InsightsTabContent(
         insightsViewModel.loadDataIfNeeded()
     }
 
-    val onRetryData = {
-        insightsViewModel.fetchData()
+    val onRetryData = remember {
+        { insightsViewModel.fetchData() }
     }
 
     LaunchedEffect(Unit) {

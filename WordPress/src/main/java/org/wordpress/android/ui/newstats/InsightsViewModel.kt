@@ -19,6 +19,7 @@ import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
 import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import kotlin.coroutines.cancellation.CancellationException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -67,7 +68,10 @@ class InsightsViewModel @Inject constructor(
     val isDataRefreshing: StateFlow<Boolean> =
         _isDataRefreshing.asStateFlow()
 
+    @Volatile
     private var isDataLoaded = false
+
+    @Volatile
     private var isDataLoading = false
 
     init {
@@ -115,7 +119,10 @@ class InsightsViewModel @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress(
+        "TooGenericExceptionCaught",
+        "InstanceOfCheckForException"
+    )
     private suspend fun fetchSummary(
         siteId: Long,
         forceRefresh: Boolean
@@ -126,6 +133,7 @@ class InsightsViewModel @Inject constructor(
             )
             _summaryResult.emit(result)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             AppLog.e(
                 AppLog.T.STATS,
                 "Error fetching stats summary:" +
@@ -140,7 +148,10 @@ class InsightsViewModel @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress(
+        "TooGenericExceptionCaught",
+        "InstanceOfCheckForException"
+    )
     private suspend fun fetchInsights(
         siteId: Long,
         forceRefresh: Boolean
@@ -151,6 +162,7 @@ class InsightsViewModel @Inject constructor(
             )
             _insightsResult.emit(result)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             AppLog.e(
                 AppLog.T.STATS,
                 "Error fetching insights:" +
