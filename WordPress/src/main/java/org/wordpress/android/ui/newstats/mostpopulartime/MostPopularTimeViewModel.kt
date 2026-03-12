@@ -1,18 +1,13 @@
 package org.wordpress.android.ui.newstats.mostpopulartime
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsInsightsData
 import org.wordpress.android.ui.newstats.repository.InsightsResult
-import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.DayOfWeek
 import java.time.LocalTime
@@ -24,10 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MostPopularTimeViewModel @Inject constructor(
-    private val selectedSiteRepository:
-        SelectedSiteRepository,
-    private val resourceProvider: ResourceProvider,
-    private val statsInsightsUseCase: StatsInsightsUseCase
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _uiState =
         MutableStateFlow<MostPopularTimeCardUiState>(
@@ -36,108 +28,22 @@ class MostPopularTimeViewModel @Inject constructor(
     val uiState: StateFlow<MostPopularTimeCardUiState> =
         _uiState.asStateFlow()
 
-    private val _isRefreshing = MutableStateFlow(false)
-    val isRefreshing: StateFlow<Boolean> =
-        _isRefreshing.asStateFlow()
-
-    private var isLoading = false
-
-    private var isLoadedSuccessfully = false
-
-    fun loadDataIfNeeded() {
-        if (isLoadedSuccessfully || isLoading) return
-        isLoading = true
-        loadData()
-    }
-
-    fun refresh() {
-        val site = selectedSiteRepository
-            .getSelectedSite() ?: return
-        viewModelScope.launch {
-            try {
-                _isRefreshing.value = true
-                loadDataInternal(
-                    site.siteId,
-                    forceRefresh = true
-                )
-            } finally {
-                _isRefreshing.value = false
-            }
-        }
-    }
-
-    fun loadData() {
-        val site = selectedSiteRepository.getSelectedSite()
-        if (site == null) {
-            isLoading = false
-            _uiState.value =
+    fun handleResult(result: InsightsResult) {
+        _uiState.value = when (result) {
+            is InsightsResult.Success ->
+                mapToUiState(result.data)
+            is InsightsResult.Error ->
                 MostPopularTimeCardUiState.Error(
-                    message = resourceProvider.getString(
-                        R.string.stats_error_no_site
-                    )
-                )
-            return
-        }
-
-        _uiState.value = MostPopularTimeCardUiState.Loading
-
-        viewModelScope.launch {
-            try {
-                loadDataInternal(site.siteId)
-            } finally {
-                isLoading = false
-            }
-        }
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadDataInternal(
-        siteId: Long,
-        forceRefresh: Boolean = false
-    ) {
-        try {
-            val result = statsInsightsUseCase(
-                siteId,
-                forceRefresh
-            )
-            when (result) {
-                is InsightsResult.Success -> {
-                    isLoadedSuccessfully = true
-                    _uiState.value = mapToUiState(
-                        result.data
-                    )
-                }
-                is InsightsResult.Error -> {
-                    isLoadedSuccessfully = false
-                    _uiState.value =
-                        MostPopularTimeCardUiState.Error(
-                            message = resourceProvider
-                                .getString(
-                                    R.string
-                                        .stats_error_api
-                                )
+                    message = resourceProvider
+                        .getString(
+                            R.string.stats_error_api
                         )
-                }
-            }
-        } catch (e: Exception) {
-            isLoadedSuccessfully = false
-            AppLog.e(
-                AppLog.T.STATS,
-                "Error loading most popular time:" +
-                    " ${e.message}",
-                e
-            )
-            _uiState.value =
-                MostPopularTimeCardUiState.Error(
-                    message = resourceProvider.getString(
-                        R.string.stats_error_unknown
-                    )
                 )
         }
     }
 
-    fun onRetry() {
-        loadData()
+    fun showLoading() {
+        _uiState.value = MostPopularTimeCardUiState.Loading
     }
 
     companion object {
@@ -175,7 +81,9 @@ class MostPopularTimeViewModel @Inject constructor(
                 return ""
             }
             val dayOfWeek =
-                DayOfWeek.of((wpDayOfWeek % DAYS_IN_WEEK) + 1)
+                DayOfWeek.of(
+                    (wpDayOfWeek % DAYS_IN_WEEK) + 1
+                )
             return dayOfWeek.getDisplayName(
                 TextStyle.FULL,
                 Locale.getDefault()

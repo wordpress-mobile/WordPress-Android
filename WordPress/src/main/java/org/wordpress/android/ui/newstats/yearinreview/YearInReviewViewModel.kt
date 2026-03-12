@@ -1,26 +1,19 @@
 package org.wordpress.android.ui.newstats.yearinreview
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.YearInsightsData
 import org.wordpress.android.ui.newstats.repository.InsightsResult
-import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.Year
 import javax.inject.Inject
 
 @HiltViewModel
 class YearInReviewViewModel @Inject constructor(
-    private val selectedSiteRepository: SelectedSiteRepository,
-    private val statsInsightsUseCase: StatsInsightsUseCase,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _uiState =
@@ -30,112 +23,35 @@ class YearInReviewViewModel @Inject constructor(
     val uiState: StateFlow<YearInReviewCardUiState> =
         _uiState.asStateFlow()
 
-    private val _isRefreshing = MutableStateFlow(false)
-    val isRefreshing: StateFlow<Boolean> =
-        _isRefreshing.asStateFlow()
-
-    private var isLoading = false
-    private var isLoadedSuccessfully = false
-
-    fun loadDataIfNeeded() {
-        if (isLoadedSuccessfully || isLoading) return
-        isLoading = true
-        loadData()
-    }
-
-    fun refresh() {
-        val site = selectedSiteRepository
-            .getSelectedSite() ?: return
-        viewModelScope.launch {
-            try {
-                _isRefreshing.value = true
-                loadDataInternal(
-                    site.siteId,
-                    forceRefresh = true
-                )
-            } finally {
-                _isRefreshing.value = false
-            }
-        }
-    }
-
-    fun loadData() {
-        val site = selectedSiteRepository.getSelectedSite()
-        if (site == null) {
-            isLoading = false
-            _uiState.value = YearInReviewCardUiState.Error(
-                message = resourceProvider.getString(
-                    R.string.stats_error_no_site
-                ),
-                onRetry = ::loadData
-            )
-            return
-        }
-
-        _uiState.value = YearInReviewCardUiState.Loading
-
-        viewModelScope.launch {
-            try {
-                loadDataInternal(site.siteId)
-            } finally {
-                isLoading = false
-            }
-        }
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadDataInternal(
-        siteId: Long,
-        forceRefresh: Boolean = false
+    fun handleResult(
+        result: InsightsResult,
+        onRetry: () -> Unit
     ) {
-        try {
-            val result = statsInsightsUseCase(
-                siteId, forceRefresh
-            )
-            when (result) {
-                is InsightsResult.Success -> {
-                    isLoadedSuccessfully = true
-                    val years = result.data.years
-                        .map { it.toUiModel() }
-                        .ensureCurrentYear()
-                        .sortedByDescending {
-                            it.year
-                        }
-                    _uiState.value =
-                        YearInReviewCardUiState.Loaded(
-                            years = years
-                        )
-                }
-                is InsightsResult.Error -> {
-                    isLoadedSuccessfully = false
-                    _uiState.value =
-                        YearInReviewCardUiState.Error(
-                            message = resourceProvider
-                                .getString(
-                                    R.string.stats_error_api
-                                ),
-                            onRetry = ::loadData
-                        )
-                }
+        _uiState.value = when (result) {
+            is InsightsResult.Success -> {
+                val years = result.data.years
+                    .map { it.toUiModel() }
+                    .ensureCurrentYear()
+                    .sortedByDescending {
+                        it.year
+                    }
+                YearInReviewCardUiState.Loaded(
+                    years = years
+                )
             }
-        } catch (e: Exception) {
-            isLoadedSuccessfully = false
-            AppLog.e(
-                AppLog.T.STATS,
-                "Error loading insights: ${e.message}",
-                e
-            )
-            _uiState.value = YearInReviewCardUiState.Error(
-                message = resourceProvider.getString(
-                    R.string.stats_error_unknown
-                ),
-                onRetry = ::loadData
-            )
+            is InsightsResult.Error ->
+                YearInReviewCardUiState.Error(
+                    message = resourceProvider
+                        .getString(
+                            R.string.stats_error_api
+                        ),
+                    onRetry = onRetry
+                )
         }
     }
 
-    fun onRetry() {
-        loadData()
+    fun showLoading() {
+        _uiState.value = YearInReviewCardUiState.Loading
     }
 
     fun getDetailData(): List<YearSummary> {

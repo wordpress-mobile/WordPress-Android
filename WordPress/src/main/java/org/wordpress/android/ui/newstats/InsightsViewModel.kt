@@ -3,12 +3,20 @@ package org.wordpress.android.ui.newstats
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.InsightsCardsConfigurationRepository
+import org.wordpress.android.ui.newstats.repository.InsightsResult
+import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
+import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
+import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
@@ -19,7 +27,9 @@ class InsightsViewModel @Inject constructor(
         SelectedSiteRepository,
     private val cardConfigurationRepository:
         InsightsCardsConfigurationRepository,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val statsSummaryUseCase: StatsSummaryUseCase,
+    private val statsInsightsUseCase: StatsInsightsUseCase
 ) : ViewModel() {
     private val _visibleCards =
         MutableStateFlow<List<InsightsCardType>>(
@@ -42,6 +52,24 @@ class InsightsViewModel @Inject constructor(
     val cardsToLoad: StateFlow<List<InsightsCardType>> =
         _cardsToLoad.asStateFlow()
 
+    // Data fetching coordination
+    private val _summaryResult =
+        MutableSharedFlow<StatsSummaryResult>(replay = 1)
+    val summaryResult: SharedFlow<StatsSummaryResult> =
+        _summaryResult.asSharedFlow()
+
+    private val _insightsResult =
+        MutableSharedFlow<InsightsResult>(replay = 1)
+    val insightsResult: SharedFlow<InsightsResult> =
+        _insightsResult.asSharedFlow()
+
+    private val _isDataRefreshing = MutableStateFlow(false)
+    val isDataRefreshing: StateFlow<Boolean> =
+        _isDataRefreshing.asStateFlow()
+
+    private var isDataLoaded = false
+    private var isDataLoading = false
+
     private val siteId: Long
         get() = selectedSiteRepository
             .getSelectedSite()?.siteId ?: 0L
@@ -58,6 +86,89 @@ class InsightsViewModel @Inject constructor(
         _isNetworkAvailable.value = isAvailable
         return isAvailable
     }
+
+    // region Data fetching
+
+    fun loadDataIfNeeded() {
+        if (isDataLoaded || isDataLoading) return
+        isDataLoading = true
+        fetchData()
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    fun fetchData(forceRefresh: Boolean = false) {
+        val siteId = resolvedSiteId() ?: run {
+            isDataLoading = false
+            _isDataRefreshing.value = false
+            return
+        }
+        viewModelScope.launch {
+            try {
+                coroutineScope {
+                    launch {
+                        try {
+                            val result =
+                                statsSummaryUseCase(
+                                    siteId, forceRefresh
+                                )
+                            _summaryResult.emit(result)
+                        } catch (e: Exception) {
+                            AppLog.e(
+                                AppLog.T.STATS,
+                                "Error fetching stats" +
+                                    " summary:" +
+                                    " ${e.message}",
+                                e
+                            )
+                            _summaryResult.emit(
+                                StatsSummaryResult.Error(
+                                    e.message
+                                        ?: "Unknown error"
+                                )
+                            )
+                        }
+                    }
+                    launch {
+                        try {
+                            val result =
+                                statsInsightsUseCase(
+                                    siteId, forceRefresh
+                                )
+                            _insightsResult.emit(result)
+                        } catch (e: Exception) {
+                            AppLog.e(
+                                AppLog.T.STATS,
+                                "Error fetching" +
+                                    " insights:" +
+                                    " ${e.message}",
+                                e
+                            )
+                            _insightsResult.emit(
+                                InsightsResult.Error(
+                                    e.message
+                                        ?: "Unknown error"
+                                )
+                            )
+                        }
+                    }
+                }
+                isDataLoaded = true
+            } finally {
+                isDataLoading = false
+                _isDataRefreshing.value = false
+            }
+        }
+    }
+
+    fun refreshData() {
+        isDataLoaded = false
+        _isDataRefreshing.value = true
+        fetchData(forceRefresh = true)
+    }
+
+    // endregion
+
+    // region Card configuration
 
     private fun loadConfiguration() {
         val currentSiteId = selectedSiteRepository
@@ -144,6 +255,8 @@ class InsightsViewModel @Inject constructor(
                 .moveCardToBottom(currentSiteId, cardType)
         }
     }
+
+    // endregion
 
     private fun resolvedSiteId(): Long? {
         return selectedSiteRepository
