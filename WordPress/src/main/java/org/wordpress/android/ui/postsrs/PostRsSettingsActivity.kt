@@ -7,8 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.Lifecycle
@@ -51,14 +49,6 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
         registerMediaPickerLauncher()
         registerTermSelectionLaunchers()
-
-        val controller = WindowInsetsControllerCompat(
-            window, window.decorView
-        )
-        controller.hide(WindowInsetsCompat.Type.statusBars())
-        controller.systemBarsBehavior =
-            WindowInsetsControllerCompat
-                .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
         observeEvents()
 

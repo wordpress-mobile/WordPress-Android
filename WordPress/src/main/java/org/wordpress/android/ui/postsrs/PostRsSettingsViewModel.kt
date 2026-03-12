@@ -626,10 +626,11 @@ class PostRsSettingsViewModel @Inject constructor(
                     }
                     when (response) {
                         is WpRequestResult.Success -> Unit
-                        else -> throw PostApiException(
+                        else -> throw RuntimeException(
                             (response
                                 as? WpRequestResult.WpError<*>)
                                 ?.errorMessage
+                                ?: "Post API request failed"
                         )
                     }
                 }
@@ -724,9 +725,10 @@ class PostRsSettingsViewModel @Inject constructor(
         when (response) {
             is WpRequestResult.Success ->
                 response.response.data
-            else -> throw PostApiException(
+            else -> throw RuntimeException(
                 (response as? WpRequestResult.WpError<*>)
                     ?.errorMessage
+                    ?: "Post API request failed"
             )
         }
     }
@@ -940,9 +942,6 @@ class PostRsSettingsViewModel @Inject constructor(
         editedCategoryIds = from.editedCategoryIds,
         editedTagIds = from.editedTagIds,
     )
-
-    private class PostApiException(message: String?) :
-        Exception(message ?: "Post API request failed")
 
     companion object {
         const val EXTRA_POST_ID = "extra_post_id"

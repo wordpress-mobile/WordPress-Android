@@ -151,9 +151,7 @@ fun PostRsSettingsScreen(
     onDismissDialog: () -> Unit = {},
     onDiscardConfirmed: () -> Unit = {},
 ) {
-    BackHandler {
-        onNavigateBack()
-    }
+    BackHandler(onBack = onNavigateBack)
 
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -539,14 +537,12 @@ private fun HeroImagePlaceholder(
     val editLabel = stringResource(
         R.string.post_rs_settings_edit_featured_image
     )
-    val clickModifier = if (onClick != null) {
+    val clickModifier = onClick?.let {
         Modifier.clickable(
             onClickLabel = editLabel,
-            onClick = onClick,
+            onClick = it,
         )
-    } else {
-        Modifier
-    }
+    } ?: Modifier
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -1652,11 +1648,9 @@ private fun ChipSettingsRow(
     onRetry: () -> Unit,
     onClick: (() -> Unit)? = null,
 ) {
-    val clickModifier = if (onClick != null) {
-        Modifier.clickable(onClick = onClick)
-    } else {
-        Modifier
-    }
+    val clickModifier = onClick?.let {
+        Modifier.clickable(onClick = it)
+    } ?: Modifier
     if (state is FieldState.Empty) {
         SettingsRow(
             label = label,

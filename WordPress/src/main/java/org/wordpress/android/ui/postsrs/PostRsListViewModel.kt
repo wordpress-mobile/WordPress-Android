@@ -367,9 +367,6 @@ class PostRsListViewModel @Inject constructor(
         _events.trySend(PostRsListEvent.EditPost(site, newPost))
     }
 
-    private fun isAuthError(e: Exception?): Boolean =
-        PostRsErrorUtils.isAuthError(e)
-
     private fun checkNetwork(): Boolean {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
@@ -542,7 +539,7 @@ class PostRsListViewModel @Inject constructor(
                 updateTabUiState(tab) {
                     PostTabUiState(
                         error = friendlyErrorMessage(e),
-                        isAuthError = isAuthError(e)
+                        isAuthError = PostRsErrorUtils.isAuthError(e)
                     )
                 }
             }
@@ -616,7 +613,7 @@ class PostRsListViewModel @Inject constructor(
                     updateTabUiState(tab) {
                         copy(isLoading = false, isRefreshing = false, error = null)
                     }
-                    val authError = isAuthError(e)
+                    val authError = PostRsErrorUtils.isAuthError(e)
                     _snackbarMessages.trySend(
                         SnackbarMessage(
                             message = message,
@@ -631,7 +628,7 @@ class PostRsListViewModel @Inject constructor(
                         copy(
                             isLoading = false, isRefreshing = false,
                             error = message,
-                            isAuthError = isAuthError(e)
+                            isAuthError = PostRsErrorUtils.isAuthError(e)
                         )
                     }
                 }
