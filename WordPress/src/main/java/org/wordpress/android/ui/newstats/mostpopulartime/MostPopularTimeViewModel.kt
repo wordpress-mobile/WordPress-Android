@@ -15,6 +15,9 @@ import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.DayOfWeek
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.time.format.TextStyle
 import java.util.Locale
 import javax.inject.Inject
@@ -37,10 +40,8 @@ class MostPopularTimeViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> =
         _isRefreshing.asStateFlow()
 
-    @Volatile
     private var isLoading = false
 
-    @Volatile
     private var isLoadedSuccessfully = false
 
     fun loadDataIfNeeded() {
@@ -122,8 +123,8 @@ class MostPopularTimeViewModel @Inject constructor(
             isLoadedSuccessfully = false
             AppLog.e(
                 AppLog.T.STATS,
-                "Error loading most popular time: " +
-                    "${e.message}",
+                "Error loading most popular time:" +
+                    " ${e.message}",
                 e
             )
             _uiState.value =
@@ -140,8 +141,6 @@ class MostPopularTimeViewModel @Inject constructor(
     }
 
     companion object {
-        private const val HOURS_IN_HALF_DAY = 12
-
         internal fun mapToUiState(
             data: StatsInsightsData
         ): MostPopularTimeCardUiState {
@@ -181,24 +180,12 @@ class MostPopularTimeViewModel @Inject constructor(
             )
         }
 
-        @Suppress("MagicNumber")
         private fun formatHour(hour: Int): String {
-            val displayHour = when {
-                hour == 0 -> HOURS_IN_HALF_DAY
-                hour > HOURS_IN_HALF_DAY ->
-                    hour - HOURS_IN_HALF_DAY
-                else -> hour
-            }
-            val amPm = if (hour < HOURS_IN_HALF_DAY) {
-                "AM"
-            } else {
-                "PM"
-            }
-            return String.format(
-                Locale.getDefault(),
-                "%d:00 %s",
-                displayHour,
-                amPm
+            val time = LocalTime.of(hour, 0)
+            return time.format(
+                DateTimeFormatter.ofLocalizedTime(
+                    FormatStyle.SHORT
+                )
             )
         }
 
