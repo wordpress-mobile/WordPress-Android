@@ -91,7 +91,6 @@ class InsightsViewModel @Inject constructor(
         fetchData()
     }
 
-    @Suppress("TooGenericExceptionCaught")
     fun fetchData(forceRefresh: Boolean = false) {
         val siteId = resolvedSiteId() ?: run {
             isDataLoading = false
@@ -102,50 +101,10 @@ class InsightsViewModel @Inject constructor(
             try {
                 coroutineScope {
                     launch {
-                        try {
-                            val result =
-                                statsSummaryUseCase(
-                                    siteId, forceRefresh
-                                )
-                            _summaryResult.emit(result)
-                        } catch (e: Exception) {
-                            AppLog.e(
-                                AppLog.T.STATS,
-                                "Error fetching stats" +
-                                    " summary:" +
-                                    " ${e.message}",
-                                e
-                            )
-                            _summaryResult.emit(
-                                StatsSummaryResult.Error(
-                                    e.message
-                                        ?: "Unknown error"
-                                )
-                            )
-                        }
+                        fetchSummary(siteId, forceRefresh)
                     }
                     launch {
-                        try {
-                            val result =
-                                statsInsightsUseCase(
-                                    siteId, forceRefresh
-                                )
-                            _insightsResult.emit(result)
-                        } catch (e: Exception) {
-                            AppLog.e(
-                                AppLog.T.STATS,
-                                "Error fetching" +
-                                    " insights:" +
-                                    " ${e.message}",
-                                e
-                            )
-                            _insightsResult.emit(
-                                InsightsResult.Error(
-                                    e.message
-                                        ?: "Unknown error"
-                                )
-                            )
-                        }
+                        fetchInsights(siteId, forceRefresh)
                     }
                 }
                 isDataLoaded = true
@@ -153,6 +112,56 @@ class InsightsViewModel @Inject constructor(
                 isDataLoading = false
                 _isDataRefreshing.value = false
             }
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun fetchSummary(
+        siteId: Long,
+        forceRefresh: Boolean
+    ) {
+        try {
+            val result = statsSummaryUseCase(
+                siteId, forceRefresh
+            )
+            _summaryResult.emit(result)
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error fetching stats summary:" +
+                    " ${e.message}",
+                e
+            )
+            _summaryResult.emit(
+                StatsSummaryResult.Error(
+                    e.message ?: "Unknown error"
+                )
+            )
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun fetchInsights(
+        siteId: Long,
+        forceRefresh: Boolean
+    ) {
+        try {
+            val result = statsInsightsUseCase(
+                siteId, forceRefresh
+            )
+            _insightsResult.emit(result)
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error fetching insights:" +
+                    " ${e.message}",
+                e
+            )
+            _insightsResult.emit(
+                InsightsResult.Error(
+                    e.message ?: "Unknown error"
+                )
+            )
         }
     }
 
