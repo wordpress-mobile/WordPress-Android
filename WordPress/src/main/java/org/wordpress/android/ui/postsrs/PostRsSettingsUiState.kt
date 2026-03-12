@@ -18,6 +18,7 @@ sealed interface FieldState {
 
 data class PostRsSettingsUiState(
     val isLoading: Boolean = true,
+    val isRefreshing: Boolean = false,
     val error: String? = null,
     val postTitle: String = "",
     val publishDate: String = "",
@@ -124,6 +125,4 @@ sealed interface PostRsSettingsEvent {
     data class LaunchTagSelection(
         val selectedIds: List<Long>,
     ) : PostRsSettingsEvent
-    data class ShowSnackbar(val message: String) :
-        PostRsSettingsEvent
 }

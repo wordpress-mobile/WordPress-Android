@@ -58,6 +58,10 @@ class PostRsSettingsViewModel @Inject constructor(
     private val _events = Channel<PostRsSettingsEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
+    private val _snackbarMessages =
+        Channel<SnackbarMessage>(Channel.BUFFERED)
+    val snackbarMessages = _snackbarMessages.receiveAsFlow()
+
     private val fieldError: String
         get() = resourceProvider.getString(
             R.string.post_rs_settings_field_error
@@ -68,9 +72,11 @@ class PostRsSettingsViewModel @Inject constructor(
 
     init {
         if (site == null) {
-            _events.trySend(
-                PostRsSettingsEvent.ShowSnackbar(
-                    resourceProvider.getString(R.string.blog_not_found)
+            _snackbarMessages.trySend(
+                SnackbarMessage(
+                    resourceProvider.getString(
+                        R.string.blog_not_found
+                    )
                 )
             )
             _events.trySend(PostRsSettingsEvent.Finish)
@@ -81,6 +87,56 @@ class PostRsSettingsViewModel @Inject constructor(
 
     fun retry() {
         loadPost()
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    fun refreshPost() {
+        val site = site ?: return
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            _snackbarMessages.trySend(
+                SnackbarMessage(
+                    resourceProvider.getString(
+                        R.string.error_generic_network
+                    )
+                )
+            )
+            return
+        }
+        _uiState.update { it.copy(isRefreshing = true) }
+        viewModelScope.launch {
+            try {
+                val post = fetchPost(site)
+                lastPost = post
+                _uiState.value = mapPostToUiState(post)
+                resolveAsyncFields(post)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to refresh post settings",
+                    e
+                )
+                _uiState.update {
+                    it.copy(isRefreshing = false)
+                }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = PostRsErrorUtils
+                            .friendlyErrorMessage(
+                                e = e,
+                                resourceProvider =
+                                    resourceProvider,
+                                networkUtilsWrapper =
+                                    networkUtilsWrapper,
+                            ),
+                        actionLabel = resourceProvider
+                            .getString(R.string.retry),
+                        onAction = { refreshPost() }
+                    )
+                )
+            }
+        }
     }
 
     fun retryField(field: RetryableField) {
@@ -276,8 +332,8 @@ class PostRsSettingsViewModel @Inject constructor(
     fun onAuthorClicked() {
         val currentSite = site ?: return
         if (!_uiState.value.canEditAuthor) {
-            _events.trySend(
-                PostRsSettingsEvent.ShowSnackbar(
+            _snackbarMessages.trySend(
+                SnackbarMessage(
                     resourceProvider.getString(
                         R.string
                             .post_rs_settings_author_no_permission
@@ -451,8 +507,8 @@ class PostRsSettingsViewModel @Inject constructor(
                         dialogState = DialogState.None
                     )
                 }
-                _events.trySend(
-                    PostRsSettingsEvent.ShowSnackbar(
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
                         e.message?.takeIf {
                             it.isNotBlank()
                         } ?: fieldError
@@ -535,8 +591,8 @@ class PostRsSettingsViewModel @Inject constructor(
         if (!state.hasChanges || state.isSaving) return
 
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _events.trySend(
-                PostRsSettingsEvent.ShowSnackbar(
+            _snackbarMessages.trySend(
+                SnackbarMessage(
                     resourceProvider.getString(
                         R.string.error_generic_network
                     )
@@ -611,8 +667,13 @@ class PostRsSettingsViewModel @Inject constructor(
                 } ?: resourceProvider.getString(
                     R.string.post_rs_settings_save_error
                 )
-                _events.trySend(
-                    PostRsSettingsEvent.ShowSnackbar(message)
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = message,
+                        actionLabel = resourceProvider
+                            .getString(R.string.retry),
+                        onAction = { onSaveClicked() }
+                    )
                 )
             }
         }
@@ -649,9 +710,14 @@ class PostRsSettingsViewModel @Inject constructor(
                 )
                 _uiState.value = PostRsSettingsUiState(
                     isLoading = false,
-                    error = resourceProvider.getString(
-                        R.string.request_failed_message
-                    )
+                    error = PostRsErrorUtils
+                        .friendlyErrorMessage(
+                            e = e,
+                            resourceProvider =
+                                resourceProvider,
+                            networkUtilsWrapper =
+                                networkUtilsWrapper,
+                        )
                 )
             }
         }
