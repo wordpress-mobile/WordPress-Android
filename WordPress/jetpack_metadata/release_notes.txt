@@ -1,0 +1,3 @@
+* [*] New Stats Traffic tab is now available as an Experimental Features [#22626]
+* [*] Standardize FAB colors and icon to Material 3 defaults [#22654]
+* [*] Fix: open redirect_to URL in browser to prevent infinite deep link loop [#22665]
