@@ -40,18 +40,6 @@ class WpApiClientProvider @Inject constructor(
         wpComClients.clear()
     }
 
-    /** Removes all cached self-hosted API clients. */
-    @Synchronized
-    fun clearSelfHostedClients() {
-        selfHostedClients.clear()
-    }
-
-    /** Removes all cached API clients (both WP.com and self-hosted). */
-    @Synchronized
-    fun clearAllClients() {
-        wpComClients.clear()
-        selfHostedClients.clear()
-    }
 
     @Synchronized
     fun getWpApiClient(

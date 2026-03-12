@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.util.AppLog
-import rs.wordpress.api.kotlin.WpApiClient
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -53,7 +52,7 @@ class PostRsSettingsViewModel @Inject constructor(
 
     private val site = selectedSiteRepository.getSelectedSite()
 
-    private val apiClient: WpApiClient? by lazy {
+    private val apiClient by lazy {
         site?.let { wpApiClientProvider.getWpApiClient(it) }
     }
 
@@ -620,7 +619,9 @@ class PostRsSettingsViewModel @Inject constructor(
                 )
                 withContext(Dispatchers.IO) {
                     val client = apiClient
-                        ?: error("No API client")
+                        ?: throw PostApiRequestException(
+                            "No API client"
+                        )
                     val response = client.request {
                         it.posts().update(
                             PostEndpointType.Posts,
@@ -717,7 +718,8 @@ class PostRsSettingsViewModel @Inject constructor(
 
     private suspend fun fetchPost():
         AnyPostWithEditContext = withContext(Dispatchers.IO) {
-        val client = apiClient ?: error("No API client")
+        val client = apiClient
+            ?: throw PostApiRequestException("No API client")
         val response = client.request {
             it.posts().retrieveWithEditContext(
                 PostEndpointType.Posts,
