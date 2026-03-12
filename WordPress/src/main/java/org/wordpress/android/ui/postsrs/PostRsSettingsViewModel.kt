@@ -588,9 +588,12 @@ class PostRsSettingsViewModel @Inject constructor(
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
                 SnackbarMessage(
-                    resourceProvider.getString(
+                    message = resourceProvider.getString(
                         R.string.error_generic_network
-                    )
+                    ),
+                    actionLabel = resourceProvider
+                        .getString(R.string.retry),
+                    onAction = { onSaveClicked() }
                 )
             )
             return
