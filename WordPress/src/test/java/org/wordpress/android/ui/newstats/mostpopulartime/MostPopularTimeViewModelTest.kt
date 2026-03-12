@@ -350,26 +350,11 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when mapToUiState with sunday, then correct day name`() {
+    fun `when mapToUiState with day 0, then Monday`() {
         val data = StatsInsightsData(
-            highestHour = 0,
+            highestHour = 10,
             highestHourPercent = 10.0,
             highestDayOfWeek = 0,
-            highestDayPercent = 20.0,
-            years = emptyList()
-        )
-        val state =
-            MostPopularTimeViewModel.mapToUiState(data)
-            as MostPopularTimeCardUiState.Loaded
-        assertThat(state.bestDay).isEqualTo("Sunday")
-    }
-
-    @Test
-    fun `when mapToUiState with monday, then correct day name`() {
-        val data = StatsInsightsData(
-            highestHour = 0,
-            highestHourPercent = 10.0,
-            highestDayOfWeek = 1,
             highestDayPercent = 20.0,
             years = emptyList()
         )
@@ -380,9 +365,24 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when mapToUiState with saturday, then correct day name`() {
+    fun `when mapToUiState with day 5, then Saturday`() {
         val data = StatsInsightsData(
-            highestHour = 0,
+            highestHour = 10,
+            highestHourPercent = 10.0,
+            highestDayOfWeek = 5,
+            highestDayPercent = 20.0,
+            years = emptyList()
+        )
+        val state =
+            MostPopularTimeViewModel.mapToUiState(data)
+            as MostPopularTimeCardUiState.Loaded
+        assertThat(state.bestDay).isEqualTo("Saturday")
+    }
+
+    @Test
+    fun `when mapToUiState with day 6, then Sunday`() {
+        val data = StatsInsightsData(
+            highestHour = 10,
             highestHourPercent = 10.0,
             highestDayOfWeek = 6,
             highestDayPercent = 20.0,
@@ -391,7 +391,56 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
         val state =
             MostPopularTimeViewModel.mapToUiState(data)
             as MostPopularTimeCardUiState.Loaded
-        assertThat(state.bestDay).isEqualTo("Saturday")
+        assertThat(state.bestDay).isEqualTo("Sunday")
+    }
+
+    @Test
+    fun `when mapToUiState with zero day percent, then NoData`() {
+        val data = StatsInsightsData(
+            highestHour = 14,
+            highestHourPercent = 10.0,
+            highestDayOfWeek = 3,
+            highestDayPercent = 0.0,
+            years = emptyList()
+        )
+        val state =
+            MostPopularTimeViewModel.mapToUiState(data)
+        assertThat(state).isInstanceOf(
+            MostPopularTimeCardUiState
+                .NoData::class.java
+        )
+    }
+
+    @Test
+    fun `when mapToUiState with zero hour percent, then NoData`() {
+        val data = StatsInsightsData(
+            highestHour = 14,
+            highestHourPercent = 0.0,
+            highestDayOfWeek = 3,
+            highestDayPercent = 10.0,
+            years = emptyList()
+        )
+        val state =
+            MostPopularTimeViewModel.mapToUiState(data)
+        assertThat(state).isInstanceOf(
+            MostPopularTimeCardUiState
+                .NoData::class.java
+        )
+    }
+
+    @Test
+    fun `when mapToUiState with invalid day, then empty day name`() {
+        val data = StatsInsightsData(
+            highestHour = 10,
+            highestHourPercent = 10.0,
+            highestDayOfWeek = 7,
+            highestDayPercent = 20.0,
+            years = emptyList()
+        )
+        val state =
+            MostPopularTimeViewModel.mapToUiState(data)
+            as MostPopularTimeCardUiState.Loaded
+        assertThat(state.bestDay).isEmpty()
     }
 
     @Test

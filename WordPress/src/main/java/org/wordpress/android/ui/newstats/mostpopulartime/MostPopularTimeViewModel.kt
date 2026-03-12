@@ -144,7 +144,7 @@ class MostPopularTimeViewModel @Inject constructor(
         internal fun mapToUiState(
             data: StatsInsightsData
         ): MostPopularTimeCardUiState {
-            if (data.highestDayPercent == 0.0 &&
+            if (data.highestDayPercent == 0.0 ||
                 data.highestHourPercent == 0.0
             ) {
                 return MostPopularTimeCardUiState.NoData
@@ -165,15 +165,17 @@ class MostPopularTimeViewModel @Inject constructor(
             )
         }
 
+        private const val DAYS_IN_WEEK = 7
+
         private fun formatDayOfWeek(
             wpDayOfWeek: Int
         ): String {
-            // WordPress API: 0=Sunday, 1=Monday...6=Saturday
-            val dayOfWeek = if (wpDayOfWeek == 0) {
-                DayOfWeek.SUNDAY
-            } else {
-                DayOfWeek.of(wpDayOfWeek)
+            // WordPress API: 0=Monday, 6=Sunday
+            if (wpDayOfWeek !in 0 until DAYS_IN_WEEK) {
+                return ""
             }
+            val dayOfWeek =
+                DayOfWeek.of((wpDayOfWeek % DAYS_IN_WEEK) + 1)
             return dayOfWeek.getDisplayName(
                 TextStyle.FULL,
                 Locale.getDefault()
