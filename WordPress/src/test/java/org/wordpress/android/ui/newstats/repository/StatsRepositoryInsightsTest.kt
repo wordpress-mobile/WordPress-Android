@@ -51,15 +51,15 @@ class StatsRepositoryInsightsTest : BaseUnitTest() {
                 InsightsResult.Success::class.java
             )
             val success = result as InsightsResult.Success
-            assertThat(success.years).hasSize(2)
-            assertThat(success.years[0].year).isEqualTo("2025")
-            assertThat(success.years[0].totalPosts)
+            assertThat(success.data.years).hasSize(2)
+            assertThat(success.data.years[0].year).isEqualTo("2025")
+            assertThat(success.data.years[0].totalPosts)
                 .isEqualTo(TEST_TOTAL_POSTS)
-            assertThat(success.years[0].totalWords)
+            assertThat(success.data.years[0].totalWords)
                 .isEqualTo(TEST_TOTAL_WORDS)
-            assertThat(success.years[0].totalLikes)
+            assertThat(success.data.years[0].totalLikes)
                 .isEqualTo(TEST_TOTAL_LIKES)
-            assertThat(success.years[0].totalComments)
+            assertThat(success.data.years[0].totalComments)
                 .isEqualTo(TEST_TOTAL_COMMENTS)
         }
 
@@ -83,7 +83,13 @@ class StatsRepositoryInsightsTest : BaseUnitTest() {
     @Test
     fun `given empty years list, when fetchInsights, then success with empty list`() =
         test {
-            val emptyData = StatsInsightsData(years = emptyList())
+            val emptyData = StatsInsightsData(
+                highestHour = 0,
+                highestHourPercent = 0.0,
+                highestDayOfWeek = 0,
+                highestDayPercent = 0.0,
+                years = emptyList()
+            )
             whenever(statsDataSource.fetchStatsInsights(any()))
                 .thenReturn(
                     StatsInsightsDataResult.Success(emptyData)
@@ -95,7 +101,7 @@ class StatsRepositoryInsightsTest : BaseUnitTest() {
                 InsightsResult.Success::class.java
             )
             val success = result as InsightsResult.Success
-            assertThat(success.years).isEmpty()
+            assertThat(success.data.years).isEmpty()
         }
 
     @Test
@@ -128,12 +134,16 @@ class StatsRepositoryInsightsTest : BaseUnitTest() {
             val result = repository.fetchInsights(TEST_SITE_ID)
 
             val success = result as InsightsResult.Success
-            assertThat(success.years[0].year).isEqualTo("2025")
-            assertThat(success.years[1].year).isEqualTo("2024")
-            assertThat(success.years[1].totalPosts).isEqualTo(38L)
+            assertThat(success.data.years[0].year).isEqualTo("2025")
+            assertThat(success.data.years[1].year).isEqualTo("2024")
+            assertThat(success.data.years[1].totalPosts).isEqualTo(38L)
         }
 
     private fun createTestInsightsData() = StatsInsightsData(
+        highestHour = 14,
+        highestHourPercent = 15.5,
+        highestDayOfWeek = 3,
+        highestDayPercent = 25.0,
         years = listOf(
             YearInsightsData(
                 year = "2025",

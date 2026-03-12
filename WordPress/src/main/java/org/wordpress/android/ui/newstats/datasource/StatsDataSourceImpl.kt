@@ -1012,6 +1012,15 @@ class StatsDataSourceImpl @Inject constructor(
                 )
                 StatsInsightsDataResult.Success(
                     StatsInsightsData(
+                        highestHour =
+                            data.highestHour.toInt(),
+                        highestHourPercent =
+                            data.highestHourPercent,
+                        highestDayOfWeek =
+                            data.highestDayOfWeek
+                                .toInt(),
+                        highestDayPercent =
+                            data.highestDayPercent,
                         years = years.map { yearData ->
                             YearInsightsData(
                                 year = yearData.year,

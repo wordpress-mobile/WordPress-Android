@@ -103,6 +103,8 @@ import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsCard
 import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsViewModel
 import org.wordpress.android.ui.newstats.mostpopularday.MostPopularDayCard
 import org.wordpress.android.ui.newstats.mostpopularday.MostPopularDayViewModel
+import org.wordpress.android.ui.newstats.mostpopulartime.MostPopularTimeCard
+import org.wordpress.android.ui.newstats.mostpopulartime.MostPopularTimeViewModel
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewCard
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewDetailActivity
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewViewModel
@@ -886,6 +888,8 @@ private fun InsightsTabContent(
         viewModel(),
     mostPopularDayViewModel: MostPopularDayViewModel =
         viewModel(),
+    mostPopularTimeViewModel: MostPopularTimeViewModel =
+        viewModel(),
     insightsViewModel: InsightsViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -903,8 +907,15 @@ private fun InsightsTabContent(
     val popularDayRefreshing by
         mostPopularDayViewModel
             .isRefreshing.collectAsState()
+    val mostPopularTimeUiState by
+        mostPopularTimeViewModel
+            .uiState.collectAsState()
+    val popularTimeRefreshing by
+        mostPopularTimeViewModel
+            .isRefreshing.collectAsState()
     val isRefreshing = yearRefreshing ||
-        allTimeRefreshing || popularDayRefreshing
+        allTimeRefreshing || popularDayRefreshing ||
+        popularTimeRefreshing
     val pullToRefreshState = rememberPullToRefreshState()
 
     val visibleCards by insightsViewModel
@@ -930,6 +941,10 @@ private fun InsightsTabContent(
             },
             onMostPopularDay = {
                 mostPopularDayViewModel
+                    .loadDataIfNeeded()
+            },
+            onMostPopularTime = {
+                mostPopularTimeViewModel
                     .loadDataIfNeeded()
             }
         )
@@ -960,6 +975,9 @@ private fun InsightsTabContent(
             },
             onMostPopularDay = {
                 mostPopularDayViewModel.loadData()
+            },
+            onMostPopularTime = {
+                mostPopularTimeViewModel.loadData()
             }
         )
     }
@@ -1004,6 +1022,9 @@ private fun InsightsTabContent(
                 },
                 onMostPopularDay = {
                     mostPopularDayViewModel.refresh()
+                },
+                onMostPopularTime = {
+                    mostPopularTimeViewModel.refresh()
                 }
             )
         },
@@ -1125,6 +1146,47 @@ private fun InsightsTabContent(
                                     )
                             }
                         )
+                    InsightsCardType.MOST_POPULAR_TIME ->
+                        MostPopularTimeCard(
+                            uiState =
+                                mostPopularTimeUiState,
+                            onRemoveCard = {
+                                insightsViewModel
+                                    .removeCard(
+                                        cardType
+                                    )
+                            },
+                            onRetry = {
+                                mostPopularTimeViewModel
+                                    .onRetry()
+                            },
+                            cardPosition =
+                                cardPosition,
+                            onMoveUp = {
+                                insightsViewModel
+                                    .moveCardUp(
+                                        cardType
+                                    )
+                            },
+                            onMoveToTop = {
+                                insightsViewModel
+                                    .moveCardToTop(
+                                        cardType
+                                    )
+                            },
+                            onMoveDown = {
+                                insightsViewModel
+                                    .moveCardDown(
+                                        cardType
+                                    )
+                            },
+                            onMoveToBottom = {
+                                insightsViewModel
+                                    .moveCardToBottom(
+                                        cardType
+                                    )
+                            }
+                        )
                     InsightsCardType.YEAR_IN_REVIEW ->
                         YearInReviewCard(
                             uiState = yearInReviewUiState,
@@ -1171,7 +1233,8 @@ private fun InsightsTabContent(
 private fun List<InsightsCardType>.dispatchInsightsToVisibleCards(
     onYearInReview: () -> Unit,
     onAllTimeStats: () -> Unit,
-    onMostPopularDay: () -> Unit
+    onMostPopularDay: () -> Unit,
+    onMostPopularTime: () -> Unit
 ) {
     if (InsightsCardType.YEAR_IN_REVIEW in this) {
         onYearInReview()
@@ -1181,6 +1244,9 @@ private fun List<InsightsCardType>.dispatchInsightsToVisibleCards(
     }
     if (InsightsCardType.MOST_POPULAR_DAY in this) {
         onMostPopularDay()
+    }
+    if (InsightsCardType.MOST_POPULAR_TIME in this) {
+        onMostPopularTime()
     }
 }
 

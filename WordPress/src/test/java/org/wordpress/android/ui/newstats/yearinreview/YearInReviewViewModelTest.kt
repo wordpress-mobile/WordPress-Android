@@ -13,27 +13,27 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.datasource.StatsInsightsData
 import org.wordpress.android.ui.newstats.datasource.YearInsightsData
 import org.wordpress.android.ui.newstats.repository.InsightsResult
-import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.Year
 
 @ExperimentalCoroutinesApi
 class YearInReviewViewModelTest : BaseUnitTest() {
     @Mock
-    private lateinit var selectedSiteRepository: SelectedSiteRepository
+    private lateinit var selectedSiteRepository:
+        SelectedSiteRepository
 
     @Mock
-    private lateinit var accountStore: AccountStore
+    private lateinit var statsInsightsUseCase:
+        StatsInsightsUseCase
 
     @Mock
-    private lateinit var statsRepository: StatsRepository
-
-    @Mock
-    private lateinit var resourceProvider: ResourceProvider
+    private lateinit var resourceProvider:
+        ResourceProvider
 
     private lateinit var viewModel: YearInReviewViewModel
 
@@ -45,26 +45,30 @@ class YearInReviewViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        whenever(selectedSiteRepository.getSelectedSite())
-            .thenReturn(testSite)
-        whenever(accountStore.accessToken)
-            .thenReturn(TEST_ACCESS_TOKEN)
         whenever(
-            resourceProvider.getString(R.string.stats_error_no_site)
+            selectedSiteRepository.getSelectedSite()
+        ).thenReturn(testSite)
+        whenever(
+            resourceProvider.getString(
+                R.string.stats_error_no_site
+            )
         ).thenReturn(NO_SITE_SELECTED_ERROR)
         whenever(
-            resourceProvider.getString(R.string.stats_error_api)
+            resourceProvider.getString(
+                R.string.stats_error_api
+            )
         ).thenReturn(FAILED_TO_LOAD_ERROR)
         whenever(
-            resourceProvider.getString(R.string.stats_error_unknown)
+            resourceProvider.getString(
+                R.string.stats_error_unknown
+            )
         ).thenReturn(UNKNOWN_ERROR)
     }
 
     private fun initViewModel() {
         viewModel = YearInReviewViewModel(
             selectedSiteRepository,
-            accountStore,
-            statsRepository,
+            statsInsightsUseCase,
             resourceProvider
         )
         viewModel.loadData()
@@ -73,8 +77,9 @@ class YearInReviewViewModelTest : BaseUnitTest() {
     @Test
     fun `when no site selected, then error state is emitted`() =
         test {
-            whenever(selectedSiteRepository.getSelectedSite())
-                .thenReturn(null)
+            whenever(
+                selectedSiteRepository.getSelectedSite()
+            ).thenReturn(null)
 
             initViewModel()
             advanceUntilIdle()
@@ -84,19 +89,16 @@ class YearInReviewViewModelTest : BaseUnitTest() {
                 YearInReviewCardUiState.Error::class.java
             )
             assertThat(
-                (state as YearInReviewCardUiState.Error).message
+                (state as YearInReviewCardUiState.Error)
+                    .message
             ).isEqualTo(NO_SITE_SELECTED_ERROR)
         }
 
     @Test
     fun `when data loads successfully, then loaded state is emitted`() =
         test {
-            whenever(statsRepository.fetchInsights(any()))
-                .thenReturn(
-                    InsightsResult.Success(
-                        years = createTestYears()
-                    )
-                )
+            whenever(statsInsightsUseCase(any(), any()))
+                .thenReturn(createSuccessResult())
 
             initViewModel()
             advanceUntilIdle()
@@ -105,11 +107,14 @@ class YearInReviewViewModelTest : BaseUnitTest() {
             assertThat(state).isInstanceOf(
                 YearInReviewCardUiState.Loaded::class.java
             )
-            with(state as YearInReviewCardUiState.Loaded) {
+            with(
+                state as YearInReviewCardUiState.Loaded
+            ) {
                 assertThat(years).hasSize(3)
                 assertThat(years[0].year)
                     .isEqualTo(CURRENT_YEAR)
-                assertThat(years[1].year).isEqualTo("2025")
+                assertThat(years[1].year)
+                    .isEqualTo("2025")
                 assertThat(years[1].totalPosts)
                     .isEqualTo(TEST_TOTAL_POSTS)
                 assertThat(years[1].totalWords)
@@ -124,8 +129,10 @@ class YearInReviewViewModelTest : BaseUnitTest() {
     @Test
     fun `when fetch fails with error, then error state is emitted`() =
         test {
-            whenever(statsRepository.fetchInsights(any()))
-                .thenReturn(InsightsResult.Error("Network error"))
+            whenever(statsInsightsUseCase(any(), any()))
+                .thenReturn(
+                    InsightsResult.Error("Network error")
+                )
 
             initViewModel()
             advanceUntilIdle()
@@ -135,15 +142,18 @@ class YearInReviewViewModelTest : BaseUnitTest() {
                 YearInReviewCardUiState.Error::class.java
             )
             assertThat(
-                (state as YearInReviewCardUiState.Error).message
+                (state as YearInReviewCardUiState.Error)
+                    .message
             ).isEqualTo(FAILED_TO_LOAD_ERROR)
         }
 
     @Test
     fun `when exception is thrown during fetch, then error state is emitted`() =
         test {
-            whenever(statsRepository.fetchInsights(any()))
-                .thenThrow(RuntimeException("Test exception"))
+            whenever(statsInsightsUseCase(any(), any()))
+                .thenThrow(
+                    RuntimeException("Test exception")
+                )
 
             initViewModel()
             advanceUntilIdle()
@@ -153,14 +163,15 @@ class YearInReviewViewModelTest : BaseUnitTest() {
                 YearInReviewCardUiState.Error::class.java
             )
             assertThat(
-                (state as YearInReviewCardUiState.Error).message
+                (state as YearInReviewCardUiState.Error)
+                    .message
             ).isEqualTo(UNKNOWN_ERROR)
         }
 
     @Test
     fun `when exception with null message, then unknown error message`() =
         test {
-            whenever(statsRepository.fetchInsights(any()))
+            whenever(statsInsightsUseCase(any(), any()))
                 .thenThrow(RuntimeException())
 
             initViewModel()
@@ -171,133 +182,94 @@ class YearInReviewViewModelTest : BaseUnitTest() {
                 YearInReviewCardUiState.Error::class.java
             )
             assertThat(
-                (state as YearInReviewCardUiState.Error).message
+                (state as YearInReviewCardUiState.Error)
+                    .message
             ).isEqualTo(UNKNOWN_ERROR)
         }
 
     @Test
-    fun `when onRetry is called, then data is reloaded`() = test {
-        whenever(statsRepository.fetchInsights(any()))
-            .thenReturn(
-                InsightsResult.Success(
-                    years = createTestYears()
-                )
-            )
+    fun `when onRetry is called, then data is reloaded`() =
+        test {
+            whenever(statsInsightsUseCase(any(), any()))
+                .thenReturn(createSuccessResult())
 
-        initViewModel()
-        advanceUntilIdle()
+            initViewModel()
+            advanceUntilIdle()
 
-        viewModel.onRetry()
-        advanceUntilIdle()
+            viewModel.onRetry()
+            advanceUntilIdle()
 
-        verify(statsRepository, times(2))
-            .fetchInsights(eq(TEST_SITE_ID))
-    }
+            verify(statsInsightsUseCase, times(2))
+                .invoke(eq(TEST_SITE_ID), any())
+        }
 
     @Test
     fun `when refresh is called, then isRefreshing becomes true then false`() =
         test {
-            whenever(statsRepository.fetchInsights(any()))
-                .thenReturn(
-                    InsightsResult.Success(
-                        years = createTestYears()
-                    )
-                )
+            whenever(statsInsightsUseCase(any(), any()))
+                .thenReturn(createSuccessResult())
 
             initViewModel()
             advanceUntilIdle()
 
-            assertThat(viewModel.isRefreshing.value).isFalse()
+            assertThat(viewModel.isRefreshing.value)
+                .isFalse()
 
             viewModel.refresh()
             advanceUntilIdle()
 
-            assertThat(viewModel.isRefreshing.value).isFalse()
+            assertThat(viewModel.isRefreshing.value)
+                .isFalse()
         }
 
     @Test
-    fun `when refresh is called, then data is fetched`() = test {
-        whenever(statsRepository.fetchInsights(any()))
-            .thenReturn(
-                InsightsResult.Success(
-                    years = createTestYears()
-                )
-            )
-
-        initViewModel()
-        advanceUntilIdle()
-
-        viewModel.refresh()
-        advanceUntilIdle()
-
-        verify(statsRepository, times(2))
-            .fetchInsights(eq(TEST_SITE_ID))
-    }
-
-    @Test
-    fun `when access token is null, then error state is emitted`() =
+    fun `when refresh is called, then data is fetched`() =
         test {
-            whenever(accountStore.accessToken).thenReturn(null)
+            whenever(statsInsightsUseCase(any(), any()))
+                .thenReturn(createSuccessResult())
 
             initViewModel()
             advanceUntilIdle()
 
-            val state = viewModel.uiState.value
-            assertThat(state).isInstanceOf(
-                YearInReviewCardUiState.Error::class.java
-            )
-            assertThat(
-                (state as YearInReviewCardUiState.Error).message
-            ).isEqualTo(FAILED_TO_LOAD_ERROR)
-        }
-
-    @Test
-    fun `when access token is empty, then error state is emitted`() =
-        test {
-            whenever(accountStore.accessToken).thenReturn("")
-
-            initViewModel()
+            viewModel.refresh()
             advanceUntilIdle()
 
-            val state = viewModel.uiState.value
-            assertThat(state).isInstanceOf(
-                YearInReviewCardUiState.Error::class.java
-            )
-            assertThat(
-                (state as YearInReviewCardUiState.Error).message
-            ).isEqualTo(FAILED_TO_LOAD_ERROR)
+            verify(statsInsightsUseCase, times(2))
+                .invoke(eq(TEST_SITE_ID), any())
         }
 
     @Test
-    fun `when loadData is called, then repository is initialized with access token`() =
+    fun `when use case returns auth error, then error state is emitted`() =
         test {
-            whenever(statsRepository.fetchInsights(any()))
+            whenever(statsInsightsUseCase(any(), any()))
                 .thenReturn(
-                    InsightsResult.Success(
-                        years = createTestYears()
+                    InsightsResult.Error(
+                        "No access token"
                     )
                 )
 
             initViewModel()
             advanceUntilIdle()
 
-            verify(statsRepository).init(eq(TEST_ACCESS_TOKEN))
+            val state = viewModel.uiState.value
+            assertThat(state).isInstanceOf(
+                YearInReviewCardUiState.Error::class.java
+            )
+            assertThat(
+                (state as YearInReviewCardUiState.Error)
+                    .message
+            ).isEqualTo(FAILED_TO_LOAD_ERROR)
         }
 
     @Test
     fun `when loadDataIfNeeded is called multiple times, then data is only loaded once`() =
         test {
-            whenever(statsRepository.fetchInsights(any()))
-                .thenReturn(
-                    InsightsResult.Success(
-                        years = createTestYears()
-                    )
-                )
+            whenever(statsInsightsUseCase(any(), any()))
+                .thenReturn(createSuccessResult())
 
             viewModel = YearInReviewViewModel(
                 selectedSiteRepository,
-                accountStore,
-                statsRepository,
+                statsInsightsUseCase,
                 resourceProvider
             )
             viewModel.loadDataIfNeeded()
@@ -309,53 +281,56 @@ class YearInReviewViewModelTest : BaseUnitTest() {
             viewModel.loadDataIfNeeded()
             advanceUntilIdle()
 
-            verify(statsRepository, times(1))
-                .fetchInsights(eq(TEST_SITE_ID))
+            verify(statsInsightsUseCase, times(1))
+                .invoke(eq(TEST_SITE_ID), any())
         }
 
     @Test
     fun `when error state retry is clicked, then data is reloaded`() =
         test {
-            whenever(selectedSiteRepository.getSelectedSite())
-                .thenReturn(null)
+            whenever(
+                selectedSiteRepository.getSelectedSite()
+            ).thenReturn(null)
 
             initViewModel()
             advanceUntilIdle()
 
-            val errorState =
-                viewModel.uiState.value as YearInReviewCardUiState.Error
+            val errorState = viewModel.uiState.value
+                as YearInReviewCardUiState.Error
 
-            whenever(selectedSiteRepository.getSelectedSite())
-                .thenReturn(testSite)
-            whenever(statsRepository.fetchInsights(any()))
-                .thenReturn(
-                    InsightsResult.Success(
-                        years = createTestYears()
-                    )
-                )
+            whenever(
+                selectedSiteRepository.getSelectedSite()
+            ).thenReturn(testSite)
+            whenever(statsInsightsUseCase(any(), any()))
+                .thenReturn(createSuccessResult())
 
             errorState.onRetry()
             advanceUntilIdle()
 
-            assertThat(viewModel.uiState.value).isInstanceOf(
-                YearInReviewCardUiState.Loaded::class.java
-            )
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    YearInReviewCardUiState
+                        .Loaded::class.java
+                )
         }
 
     @Test
     fun `when data loads with empty years, then current year is added`() =
         test {
-            whenever(statsRepository.fetchInsights(any()))
+            whenever(statsInsightsUseCase(any(), any()))
                 .thenReturn(
-                    InsightsResult.Success(years = emptyList())
+                    InsightsResult.Success(
+                        data = createTestInsightsData(
+                            emptyList()
+                        )
+                    )
                 )
 
             initViewModel()
             advanceUntilIdle()
 
-            val state =
-                viewModel.uiState.value
-                    as YearInReviewCardUiState.Loaded
+            val state = viewModel.uiState.value
+                as YearInReviewCardUiState.Loaded
             assertThat(state.years).hasSize(1)
             assertThat(state.years[0].year)
                 .isEqualTo(CURRENT_YEAR)
@@ -378,19 +353,20 @@ class YearInReviewViewModelTest : BaseUnitTest() {
                     avgComments = TEST_AVG_COMMENTS
                 )
             )
-            whenever(statsRepository.fetchInsights(any()))
+            whenever(statsInsightsUseCase(any(), any()))
                 .thenReturn(
                     InsightsResult.Success(
-                        years = yearsWithCurrent
+                        data = createTestInsightsData(
+                            yearsWithCurrent
+                        )
                     )
                 )
 
             initViewModel()
             advanceUntilIdle()
 
-            val state =
-                viewModel.uiState.value
-                    as YearInReviewCardUiState.Loaded
+            val state = viewModel.uiState.value
+                as YearInReviewCardUiState.Loaded
             assertThat(state.years).hasSize(1)
             assertThat(state.years[0].year)
                 .isEqualTo(CURRENT_YEAR)
@@ -401,12 +377,8 @@ class YearInReviewViewModelTest : BaseUnitTest() {
     @Test
     fun `when state is loaded, then getDetailData returns years`() =
         test {
-            whenever(statsRepository.fetchInsights(any()))
-                .thenReturn(
-                    InsightsResult.Success(
-                        years = createTestYears()
-                    )
-                )
+            whenever(statsInsightsUseCase(any(), any()))
+                .thenReturn(createSuccessResult())
 
             initViewModel()
             advanceUntilIdle()
@@ -415,10 +387,12 @@ class YearInReviewViewModelTest : BaseUnitTest() {
             assertThat(detailData).hasSize(3)
             assertThat(detailData[0].year)
                 .isEqualTo(CURRENT_YEAR)
-            assertThat(detailData[1].year).isEqualTo("2025")
+            assertThat(detailData[1].year)
+                .isEqualTo("2025")
             assertThat(detailData[1].totalPosts)
                 .isEqualTo(TEST_TOTAL_POSTS)
-            assertThat(detailData[2].year).isEqualTo("2024")
+            assertThat(detailData[2].year)
+                .isEqualTo("2024")
         }
 
     @Test
@@ -426,8 +400,7 @@ class YearInReviewViewModelTest : BaseUnitTest() {
         test {
             viewModel = YearInReviewViewModel(
                 selectedSiteRepository,
-                accountStore,
-                statsRepository,
+                statsInsightsUseCase,
                 resourceProvider
             )
 
@@ -438,15 +411,18 @@ class YearInReviewViewModelTest : BaseUnitTest() {
     @Test
     fun `when state is error, then getDetailData returns empty list`() =
         test {
-            whenever(selectedSiteRepository.getSelectedSite())
-                .thenReturn(null)
+            whenever(
+                selectedSiteRepository.getSelectedSite()
+            ).thenReturn(null)
 
             initViewModel()
             advanceUntilIdle()
 
-            assertThat(viewModel.uiState.value).isInstanceOf(
-                YearInReviewCardUiState.Error::class.java
-            )
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    YearInReviewCardUiState
+                        .Error::class.java
+                )
             val detailData = viewModel.getDetailData()
             assertThat(detailData).isEmpty()
         }
@@ -454,50 +430,66 @@ class YearInReviewViewModelTest : BaseUnitTest() {
     @Test
     fun `when refresh fails after success, then loadDataIfNeeded reloads`() =
         test {
-            whenever(statsRepository.fetchInsights(any()))
-                .thenReturn(
-                    InsightsResult.Success(
-                        years = createTestYears()
-                    )
-                )
+            whenever(statsInsightsUseCase(any(), any()))
+                .thenReturn(createSuccessResult())
 
             viewModel = YearInReviewViewModel(
                 selectedSiteRepository,
-                accountStore,
-                statsRepository,
+                statsInsightsUseCase,
                 resourceProvider
             )
             viewModel.loadDataIfNeeded()
             advanceUntilIdle()
 
-            assertThat(viewModel.uiState.value).isInstanceOf(
-                YearInReviewCardUiState.Loaded::class.java
-            )
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    YearInReviewCardUiState
+                        .Loaded::class.java
+                )
 
-            whenever(statsRepository.fetchInsights(any()))
-                .thenReturn(InsightsResult.Error("Network error"))
+            whenever(statsInsightsUseCase(any(), any()))
+                .thenReturn(
+                    InsightsResult.Error("Network error")
+                )
             viewModel.refresh()
             advanceUntilIdle()
 
-            assertThat(viewModel.uiState.value).isInstanceOf(
-                YearInReviewCardUiState.Error::class.java
-            )
-
-            whenever(statsRepository.fetchInsights(any()))
-                .thenReturn(
-                    InsightsResult.Success(
-                        years = createTestYears()
-                    )
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    YearInReviewCardUiState
+                        .Error::class.java
                 )
+
+            whenever(statsInsightsUseCase(any(), any()))
+                .thenReturn(createSuccessResult())
             viewModel.loadDataIfNeeded()
             advanceUntilIdle()
 
-            assertThat(viewModel.uiState.value).isInstanceOf(
-                YearInReviewCardUiState.Loaded::class.java
-            )
-            verify(statsRepository, times(3))
-                .fetchInsights(eq(TEST_SITE_ID))
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    YearInReviewCardUiState
+                        .Loaded::class.java
+                )
+            verify(statsInsightsUseCase, times(3))
+                .invoke(eq(TEST_SITE_ID), any())
         }
+
+    private fun createSuccessResult() =
+        InsightsResult.Success(
+            data = createTestInsightsData(
+                createTestYears()
+            )
+        )
+
+    private fun createTestInsightsData(
+        years: List<YearInsightsData>
+    ) = StatsInsightsData(
+        highestHour = 14,
+        highestHourPercent = 15.5,
+        highestDayOfWeek = 3,
+        highestDayPercent = 25.0,
+        years = years
+    )
 
     private fun createTestYears() = listOf(
         YearInsightsData(
@@ -524,7 +516,6 @@ class YearInReviewViewModelTest : BaseUnitTest() {
 
     companion object {
         private const val TEST_SITE_ID = 123L
-        private const val TEST_ACCESS_TOKEN = "test_access_token"
         private const val TEST_TOTAL_POSTS = 42L
         private const val TEST_TOTAL_WORDS = 15000L
         private const val TEST_AVG_WORDS = 357.1
@@ -536,7 +527,8 @@ class YearInReviewViewModelTest : BaseUnitTest() {
             "No site selected"
         private const val FAILED_TO_LOAD_ERROR =
             "Failed to load stats"
-        private const val UNKNOWN_ERROR = "Unknown error"
+        private const val UNKNOWN_ERROR =
+            "Unknown error"
         private val CURRENT_YEAR =
             Year.now().toString()
     }

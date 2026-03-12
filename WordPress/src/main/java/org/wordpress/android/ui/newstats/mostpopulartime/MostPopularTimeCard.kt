@@ -1,0 +1,437 @@
+package org.wordpress.android.ui.newstats.mostpopulartime
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.newstats.components.CardPosition
+import org.wordpress.android.ui.newstats.components.StatsCardMenu
+import org.wordpress.android.ui.newstats.util.rememberShimmerBrush
+
+private val CardCornerRadius = 10.dp
+private val CardPadding = 16.dp
+private val CardMargin = 16.dp
+
+@Composable
+@Suppress("LongParameterList")
+fun MostPopularTimeCard(
+    uiState: MostPopularTimeCardUiState,
+    onRemoveCard: () -> Unit,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier,
+    cardPosition: CardPosition? = null,
+    onMoveUp: (() -> Unit)? = null,
+    onMoveToTop: (() -> Unit)? = null,
+    onMoveDown: (() -> Unit)? = null,
+    onMoveToBottom: (() -> Unit)? = null
+) {
+    val borderColor =
+        MaterialTheme.colorScheme.outlineVariant
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = CardMargin,
+                vertical = 8.dp
+            )
+            .clip(RoundedCornerShape(CardCornerRadius))
+            .border(
+                width = 1.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(
+                    CardCornerRadius
+                )
+            )
+            .background(
+                MaterialTheme.colorScheme.surface
+            )
+    ) {
+        when (uiState) {
+            is MostPopularTimeCardUiState.Loading ->
+                LoadingContent()
+            is MostPopularTimeCardUiState.NoData ->
+                NoDataContent(
+                    onRemoveCard,
+                    cardPosition,
+                    onMoveUp,
+                    onMoveToTop,
+                    onMoveDown,
+                    onMoveToBottom
+                )
+            is MostPopularTimeCardUiState.Loaded ->
+                LoadedContent(
+                    uiState,
+                    onRemoveCard,
+                    cardPosition,
+                    onMoveUp,
+                    onMoveToTop,
+                    onMoveDown,
+                    onMoveToBottom
+                )
+            is MostPopularTimeCardUiState.Error ->
+                ErrorContent(
+                    uiState,
+                    onRemoveCard,
+                    onRetry,
+                    cardPosition,
+                    onMoveUp,
+                    onMoveToTop,
+                    onMoveDown,
+                    onMoveToBottom
+                )
+        }
+    }
+}
+
+@Composable
+private fun LoadingContent() {
+    val shimmerBrush = rememberShimmerBrush()
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(CardPadding)
+    ) {
+        Box(
+            modifier = Modifier
+                .width(180.dp)
+                .height(24.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(shimmerBrush)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        Box(
+            modifier = Modifier
+                .width(60.dp)
+                .height(14.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(shimmerBrush)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Box(
+            modifier = Modifier
+                .width(120.dp)
+                .height(32.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(shimmerBrush)
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Box(
+            modifier = Modifier
+                .width(80.dp)
+                .height(14.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(shimmerBrush)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        Box(
+            modifier = Modifier
+                .width(60.dp)
+                .height(14.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(shimmerBrush)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Box(
+            modifier = Modifier
+                .width(100.dp)
+                .height(32.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(shimmerBrush)
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Box(
+            modifier = Modifier
+                .width(80.dp)
+                .height(14.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(shimmerBrush)
+        )
+    }
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun NoDataContent(
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(CardPadding)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment =
+                Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(
+                    R.string
+                        .stats_insights_most_popular_time
+                ),
+                style = MaterialTheme.typography
+                    .titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
+            )
+            StatsCardMenu(
+                onRemoveClick = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = stringResource(
+                R.string.stats_no_data_yet
+            ),
+            style = MaterialTheme.typography
+                .bodyMedium,
+            color = MaterialTheme.colorScheme
+                .onSurfaceVariant
+        )
+    }
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun LoadedContent(
+    state: MostPopularTimeCardUiState.Loaded,
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(CardPadding)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment =
+                Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(
+                    R.string
+                        .stats_insights_most_popular_time
+                ),
+                style = MaterialTheme.typography
+                    .titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
+            )
+            StatsCardMenu(
+                onRemoveClick = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
+            )
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        // Best day section
+        Text(
+            text = stringResource(
+                R.string
+                    .stats_insights_best_day
+            ),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme
+                .onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = state.bestDay,
+            style = MaterialTheme.typography
+                .headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = stringResource(
+                R.string
+                    .stats_insights_percent_of_views,
+                state.bestDayPercent
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme
+                .onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        // Best hour section
+        Text(
+            text = stringResource(
+                R.string
+                    .stats_insights_best_hour
+            ),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme
+                .onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = state.bestHour,
+            style = MaterialTheme.typography
+                .headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = stringResource(
+                R.string
+                    .stats_insights_percent_of_views,
+                state.bestHourPercent
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme
+                .onSurfaceVariant
+        )
+    }
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun ErrorContent(
+    state: MostPopularTimeCardUiState.Error,
+    onRemoveCard: () -> Unit,
+    onRetry: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(CardPadding)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment =
+                Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(
+                    R.string
+                        .stats_insights_most_popular_time
+                ),
+                style = MaterialTheme.typography
+                    .titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
+            )
+            StatsCardMenu(
+                onRemoveClick = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment =
+                Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = state.message,
+                style = MaterialTheme.typography
+                    .bodyMedium,
+                color = MaterialTheme.colorScheme.error
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onRetry) {
+                Text(
+                    text = stringResource(
+                        R.string.retry
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MostPopularTimeCardLoadingPreview() {
+    AppThemeM3 {
+        MostPopularTimeCard(
+            uiState =
+                MostPopularTimeCardUiState.Loading,
+            onRemoveCard = {},
+            onRetry = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MostPopularTimeCardLoadedPreview() {
+    AppThemeM3 {
+        MostPopularTimeCard(
+            uiState =
+                MostPopularTimeCardUiState.Loaded(
+                    bestDay = "Monday",
+                    bestDayPercent = "23",
+                    bestHour = "4:00 PM",
+                    bestHourPercent = "11"
+                ),
+            onRemoveCard = {},
+            onRetry = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MostPopularTimeCardErrorPreview() {
+    AppThemeM3 {
+        MostPopularTimeCard(
+            uiState = MostPopularTimeCardUiState.Error(
+                message = "Failed to load stats"
+            ),
+            onRemoveCard = {},
+            onRetry = {}
+        )
+    }
+}

@@ -14,6 +14,9 @@ enum class InsightsCardType(
     ),
     MOST_POPULAR_DAY(
         R.string.stats_insights_most_popular_day
+    ),
+    MOST_POPULAR_TIME(
+        R.string.stats_insights_most_popular_time
     );
 
     companion object {
@@ -21,7 +24,8 @@ enum class InsightsCardType(
             listOf(
                 YEAR_IN_REVIEW,
                 ALL_TIME_STATS,
-                MOST_POPULAR_DAY
+                MOST_POPULAR_DAY,
+                MOST_POPULAR_TIME
             )
     }
 }

@@ -8,12 +8,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.YearInsightsData
 import org.wordpress.android.ui.newstats.repository.InsightsResult
-import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.Year
@@ -22,8 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class YearInReviewViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val accountStore: AccountStore,
-    private val statsRepository: StatsRepository,
+    private val statsInsightsUseCase: StatsInsightsUseCase,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _uiState =
@@ -52,7 +49,10 @@ class YearInReviewViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
-                loadDataInternal(site)
+                loadDataInternal(
+                    site.siteId,
+                    forceRefresh = true
+                )
             } finally {
                 _isRefreshing.value = false
             }
@@ -72,24 +72,11 @@ class YearInReviewViewModel @Inject constructor(
             return
         }
 
-        val accessToken = accountStore.accessToken
-        if (accessToken.isNullOrEmpty()) {
-            isLoading = false
-            _uiState.value = YearInReviewCardUiState.Error(
-                message = resourceProvider.getString(
-                    R.string.stats_error_api
-                ),
-                onRetry = ::loadData
-            )
-            return
-        }
-
-        statsRepository.init(accessToken)
         _uiState.value = YearInReviewCardUiState.Loading
 
         viewModelScope.launch {
             try {
-                loadDataInternal(site)
+                loadDataInternal(site.siteId)
             } finally {
                 isLoading = false
             }
@@ -97,14 +84,18 @@ class YearInReviewViewModel @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadDataInternal(site: SiteModel) {
+    private suspend fun loadDataInternal(
+        siteId: Long,
+        forceRefresh: Boolean = false
+    ) {
         try {
-            val result = statsRepository
-                .fetchInsights(site.siteId)
+            val result = statsInsightsUseCase(
+                siteId, forceRefresh
+            )
             when (result) {
                 is InsightsResult.Success -> {
                     isLoadedSuccessfully = true
-                    val years = result.years
+                    val years = result.data.years
                         .map { it.toUiModel() }
                         .ensureCurrentYear()
                         .sortedByDescending {

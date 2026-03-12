@@ -566,6 +566,10 @@ sealed class StatsInsightsDataResult {
  * Stats insights data from the API.
  */
 data class StatsInsightsData(
+    val highestHour: Int,
+    val highestHourPercent: Double,
+    val highestDayOfWeek: Int,
+    val highestDayPercent: Double,
     val years: List<YearInsightsData>
 )
 
