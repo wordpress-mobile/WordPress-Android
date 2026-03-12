@@ -579,25 +579,10 @@ class PostRsSettingsViewModel @Inject constructor(
         _events.trySend(PostRsSettingsEvent.Finish)
     }
 
-    @Suppress("ReturnCount")
     fun onSaveClicked() {
         val site = site ?: return
         val state = _uiState.value
         if (!state.hasChanges || state.isSaving) return
-
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _snackbarMessages.trySend(
-                SnackbarMessage(
-                    message = resourceProvider.getString(
-                        R.string.error_generic_network
-                    ),
-                    actionLabel = resourceProvider
-                        .getString(R.string.retry),
-                    onAction = { onSaveClicked() }
-                )
-            )
-            return
-        }
 
         _uiState.update { it.copy(isSaving = true) }
         savePost(site, state)
@@ -660,14 +645,18 @@ class PostRsSettingsViewModel @Inject constructor(
                     e
                 )
                 _uiState.update { it.copy(isSaving = false) }
-                val message = e.message?.takeIf {
-                    it.isNotBlank()
-                } ?: resourceProvider.getString(
-                    R.string.post_rs_settings_save_error
-                )
                 _snackbarMessages.trySend(
                     SnackbarMessage(
-                        message = message,
+                        message = PostRsErrorUtils
+                            .friendlyErrorMessage(
+                                e = e,
+                                defaultResId = R.string
+                                    .post_rs_settings_save_error,
+                                resourceProvider =
+                                    resourceProvider,
+                                networkUtilsWrapper =
+                                    networkUtilsWrapper,
+                            ),
                         actionLabel = resourceProvider
                             .getString(R.string.retry),
                         onAction = { onSaveClicked() }

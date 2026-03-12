@@ -444,29 +444,14 @@ class PostRsSettingsViewModelTest :
         }
 
     @Test
-    fun `onSaveClicked offline sends snackbar`() = test {
-        // VM created offline; edit a field, then save
-        val viewModel = createViewModel()
-        viewModel.onStatusSelected(PostStatus.Draft)
-
-        viewModel.snackbarMessages.test {
-            viewModel.onSaveClicked()
-
-            val msg = awaitItem()
-            assertThat(msg.message).isNotEmpty()
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
-    fun `onSaveClicked does not set isSaving when offline`() {
+    fun `onSaveClicked with changes sets isSaving`() {
         val viewModel = createViewModel()
         viewModel.onStatusSelected(PostStatus.Draft)
 
         viewModel.onSaveClicked()
 
         assertThat(viewModel.uiState.value.isSaving)
-            .isFalse()
+            .isTrue()
     }
 
     // endregion
@@ -560,20 +545,6 @@ class PostRsSettingsViewModelTest :
         assertThat(
             viewModel.uiState.value.isRefreshing
         ).isFalse()
-    }
-
-    @Test
-    fun `onSaveClicked online sets isSaving`() {
-        val viewModel = createViewModel()
-        viewModel.onStatusSelected(PostStatus.Draft)
-        whenever(
-            networkUtilsWrapper.isNetworkAvailable()
-        ).thenReturn(true)
-
-        viewModel.onSaveClicked()
-
-        assertThat(viewModel.uiState.value.isSaving)
-            .isTrue()
     }
 
     // endregion
