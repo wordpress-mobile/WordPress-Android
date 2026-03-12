@@ -54,6 +54,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -227,7 +228,13 @@ fun PostRsSettingsScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding()
-        )
+        ) { data ->
+            Snackbar(
+                snackbarData = data,
+                actionColor =
+                    MaterialTheme.colorScheme.primary
+            )
+        }
     }
 
     SettingsDialogs(
