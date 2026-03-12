@@ -592,7 +592,7 @@ class PostRsSettingsViewModel @Inject constructor(
         savePost(state)
     }
 
-    @Suppress("TooGenericExceptionCaught", "LongMethod")
+    @Suppress("TooGenericExceptionCaught", "LongMethod", "ThrowsCount")
     private fun savePost(
         state: PostRsSettingsUiState,
     ) {

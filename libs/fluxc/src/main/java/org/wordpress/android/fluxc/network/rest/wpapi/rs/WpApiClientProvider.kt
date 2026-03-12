@@ -45,16 +45,14 @@ class WpApiClientProvider @Inject constructor(
     fun getWpApiClient(
         site: SiteModel,
         uploadListener: WpRequestExecutor.UploadListener? = null
-    ): WpApiClient {
-        if (site.isWPCom) return getWpComApiClient(site)
-
-        // Skip caching when an upload listener is provided — upload
-        // flows need a dedicated client with progress callbacks.
-        if (uploadListener != null) {
-            return createSelfHostedClient(site, uploadListener)
-        }
-
-        return selfHostedClients.getOrPut(site.id) {
+    ): WpApiClient = when {
+        site.isWPCom -> getWpComApiClient(site)
+        // Skip caching when an upload listener is provided —
+        // upload flows need a dedicated client with progress
+        // callbacks.
+        uploadListener != null ->
+            createSelfHostedClient(site, uploadListener)
+        else -> selfHostedClients.getOrPut(site.id) {
             createSelfHostedClient(site, uploadListener = null)
         }
     }
