@@ -89,7 +89,7 @@ class PostRsSettingsViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     fun refreshPost() {
-        val site = site ?: return
+        if (site == null) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
                 SnackbarMessage(
@@ -103,7 +103,7 @@ class PostRsSettingsViewModel @Inject constructor(
         _uiState.update { it.copy(isRefreshing = true) }
         viewModelScope.launch {
             try {
-                val post = fetchPost(site)
+                val post = fetchPost()
                 lastPost = post
                 val current = _uiState.value
                 _uiState.value = mapPostToUiState(post)
@@ -585,17 +585,16 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     fun onSaveClicked() {
-        val site = site ?: return
+        if (site == null) return
         val state = _uiState.value
         if (!state.hasChanges || state.isSaving) return
 
         _uiState.update { it.copy(isSaving = true) }
-        savePost(site, state)
+        savePost(state)
     }
 
     @Suppress("TooGenericExceptionCaught", "LongMethod")
     private fun savePost(
-        site: SiteModel,
         state: PostRsSettingsUiState,
     ) {
         viewModelScope.launch {
@@ -673,7 +672,7 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     private fun loadPost() {
-        val site = site ?: return
+        if (site == null) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _uiState.value = PostRsSettingsUiState(
                 isLoading = false,
@@ -689,7 +688,7 @@ class PostRsSettingsViewModel @Inject constructor(
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
-                val post = fetchPost(site)
+                val post = fetchPost()
                 lastPost = post
                 _uiState.value = mapPostToUiState(post)
                 resolveAsyncFields(post)
@@ -716,9 +715,8 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchPost(
-        site: SiteModel
-    ): AnyPostWithEditContext = withContext(Dispatchers.IO) {
+    private suspend fun fetchPost():
+        AnyPostWithEditContext = withContext(Dispatchers.IO) {
         val client = apiClient ?: error("No API client")
         val response = client.request {
             it.posts().retrieveWithEditContext(
