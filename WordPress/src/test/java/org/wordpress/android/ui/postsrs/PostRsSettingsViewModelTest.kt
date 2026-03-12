@@ -110,13 +110,11 @@ class PostRsSettingsViewModelTest :
     }
 
     @Test
-    fun `when no site, sends snackbar message`() = test {
+    fun `when no site, does not emit snackbar`() = test {
         val viewModel = createViewModel(hasSite = false)
 
         viewModel.snackbarMessages.test {
-            val msg = awaitItem()
-            assertThat(msg.message).isNotEmpty()
-            cancelAndIgnoreRemainingEvents()
+            expectNoEvents()
         }
     }
 
@@ -155,7 +153,7 @@ class PostRsSettingsViewModelTest :
     }
 
     @Test
-    fun `onStatusSelected clears when same as original`() {
+    fun `onStatusSelected keeps edit when original is null`() {
         val viewModel = createViewModel()
         // initial postStatus is null, select then re-select
         viewModel.onStatusSelected(PostStatus.Draft)
@@ -163,9 +161,8 @@ class PostRsSettingsViewModelTest :
             viewModel.uiState.value.editedStatus
         ).isNotNull()
 
-        // selecting null-equivalent won't work via API, so
-        // verify that selecting a non-null value then the
-        // same value keeps the edit (since original is null)
+        // Re-selecting same value keeps edit because the
+        // original is null (Draft != null).
         viewModel.onStatusSelected(PostStatus.Draft)
         assertThat(
             viewModel.uiState.value.editedStatus
@@ -544,9 +541,6 @@ class PostRsSettingsViewModelTest :
 
     @Test
     fun `refreshPost offline sends snackbar`() = test {
-        whenever(
-            networkUtilsWrapper.isNetworkAvailable()
-        ).thenReturn(false)
         val viewModel = createViewModel()
 
         viewModel.snackbarMessages.test {
@@ -560,9 +554,6 @@ class PostRsSettingsViewModelTest :
 
     @Test
     fun `refreshPost offline does not set isRefreshing`() {
-        whenever(
-            networkUtilsWrapper.isNetworkAvailable()
-        ).thenReturn(false)
         val viewModel = createViewModel()
 
         viewModel.refreshPost()
@@ -570,6 +561,20 @@ class PostRsSettingsViewModelTest :
         assertThat(
             viewModel.uiState.value.isRefreshing
         ).isFalse()
+    }
+
+    @Test
+    fun `onSaveClicked online sets isSaving`() {
+        val viewModel = createViewModel()
+        viewModel.onStatusSelected(PostStatus.Draft)
+        whenever(
+            networkUtilsWrapper.isNetworkAvailable()
+        ).thenReturn(true)
+
+        viewModel.onSaveClicked()
+
+        assertThat(viewModel.uiState.value.isSaving)
+            .isTrue()
     }
 
     // endregion

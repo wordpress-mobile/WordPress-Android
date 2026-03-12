@@ -326,54 +326,54 @@ private fun HeroSettingsLayout(
                 )
             }
         ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .navigationBarsPadding()
-        ) {
-            when (uiState.featuredImage) {
-                is FieldState.Loaded ->
-                    HeroImageWithMenu(
-                        imageUrl =
-                            uiState.featuredImage.value,
-                        onChangeClicked =
-                            onFeaturedImageClicked,
-                        onRemoveClicked =
-                            onFeaturedImageRemoved,
-                    )
-                is FieldState.Loading ->
-                    HeroImageShimmer()
-                is FieldState.Error ->
-                    HeroImagePlaceholder(
-                        text = stringResource(
-                            R.string
-                                .post_rs_settings_featured_image_error
-                        ),
-                        onClick = onFeaturedImageClicked,
-                    )
-                is FieldState.Empty ->
-                    HeroImagePlaceholder(
-                        onClick = onFeaturedImageClicked,
-                    )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .navigationBarsPadding()
+            ) {
+                when (uiState.featuredImage) {
+                    is FieldState.Loaded ->
+                        HeroImageWithMenu(
+                            imageUrl =
+                                uiState.featuredImage.value,
+                            onChangeClicked =
+                                onFeaturedImageClicked,
+                            onRemoveClicked =
+                                onFeaturedImageRemoved,
+                        )
+                    is FieldState.Loading ->
+                        HeroImageShimmer()
+                    is FieldState.Error ->
+                        HeroImagePlaceholder(
+                            text = stringResource(
+                                R.string
+                                    .post_rs_settings_featured_image_error
+                            ),
+                            onClick = onFeaturedImageClicked,
+                        )
+                    is FieldState.Empty ->
+                        HeroImagePlaceholder(
+                            onClick = onFeaturedImageClicked,
+                        )
+                }
+                SettingsContent(
+                    uiState = uiState,
+                    onRetryField = onRetryField,
+                    onStatusClicked = onStatusClicked,
+                    onPasswordClicked = onPasswordClicked,
+                    onStickyToggled = onStickyToggled,
+                    onSlugClicked = onSlugClicked,
+                    onExcerptClicked = onExcerptClicked,
+                    onFormatClicked = onFormatClicked,
+                    onDateClicked = onDateClicked,
+                    onAuthorClicked = onAuthorClicked,
+                    onCategoriesClicked =
+                        onCategoriesClicked,
+                    onTagsClicked = onTagsClicked,
+                )
             }
-            SettingsContent(
-                uiState = uiState,
-                onRetryField = onRetryField,
-                onStatusClicked = onStatusClicked,
-                onPasswordClicked = onPasswordClicked,
-                onStickyToggled = onStickyToggled,
-                onSlugClicked = onSlugClicked,
-                onExcerptClicked = onExcerptClicked,
-                onFormatClicked = onFormatClicked,
-                onDateClicked = onDateClicked,
-                onAuthorClicked = onAuthorClicked,
-                onCategoriesClicked =
-                    onCategoriesClicked,
-                onTagsClicked = onTagsClicked,
-            )
         }
-        } // end PullToRefreshBox
         Box(
             modifier = Modifier
                 .fillMaxWidth()

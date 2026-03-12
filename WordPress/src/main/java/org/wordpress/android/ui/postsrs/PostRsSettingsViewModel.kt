@@ -72,13 +72,6 @@ class PostRsSettingsViewModel @Inject constructor(
 
     init {
         if (site == null) {
-            _snackbarMessages.trySend(
-                SnackbarMessage(
-                    resourceProvider.getString(
-                        R.string.blog_not_found
-                    )
-                )
-            )
             _events.trySend(PostRsSettingsEvent.Finish)
         } else {
             loadPost()
@@ -107,7 +100,22 @@ class PostRsSettingsViewModel @Inject constructor(
             try {
                 val post = fetchPost(site)
                 lastPost = post
-                _uiState.value = mapPostToUiState(post)
+                val current = _uiState.value
+                _uiState.value = mapPostToUiState(post).copy(
+                    editedStatus = current.editedStatus,
+                    editedPassword = current.editedPassword,
+                    editedSticky = current.editedSticky,
+                    editedSlug = current.editedSlug,
+                    editedExcerpt = current.editedExcerpt,
+                    editedFormat = current.editedFormat,
+                    editedDate = current.editedDate,
+                    editedAuthor = current.editedAuthor,
+                    editedFeaturedImageId =
+                        current.editedFeaturedImageId,
+                    editedCategoryIds =
+                        current.editedCategoryIds,
+                    editedTagIds = current.editedTagIds,
+                )
                 resolveAsyncFields(post)
             } catch (e: CancellationException) {
                 throw e
