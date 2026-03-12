@@ -16,7 +16,6 @@ import org.wordpress.android.ui.newstats.datasource.StatsInsightsData
 import org.wordpress.android.ui.newstats.datasource.StatsInsightsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
-import org.wordpress.android.ui.newstats.datasource.YearInsightsData
 import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData

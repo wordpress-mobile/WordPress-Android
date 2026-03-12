@@ -984,6 +984,7 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
+    @Suppress("LongMethod")
     override suspend fun fetchStatsInsights(
         siteId: Long
     ): StatsInsightsDataResult {
