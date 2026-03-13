@@ -211,13 +211,11 @@ class StatsRepositoryTagsTest : BaseUnitTest() {
                         tags = listOf(
                             TagData(
                                 tagType = "tag",
-                                name = "Alpha",
-                                link = "http://a"
+                                name = "Alpha"
                             ),
                             TagData(
                                 tagType = "category",
-                                name = "Beta",
-                                link = "http://b"
+                                name = "Beta"
                             )
                         ),
                         views = 50
@@ -253,8 +251,7 @@ class StatsRepositoryTagsTest : BaseUnitTest() {
                 tags = listOf(
                     TagData(
                         tagType = "category",
-                        name = TEST_CATEGORY_NAME,
-                        link = "http://example.com"
+                        name = TEST_CATEGORY_NAME
                     )
                 ),
                 views = TEST_CATEGORY_VIEWS
@@ -263,8 +260,7 @@ class StatsRepositoryTagsTest : BaseUnitTest() {
                 tags = listOf(
                     TagData(
                         tagType = "tag",
-                        name = TEST_TAG_NAME,
-                        link = "http://example.com"
+                        name = TEST_TAG_NAME
                     )
                 ),
                 views = TEST_TAG_VIEWS

@@ -655,6 +655,5 @@ data class TagGroupData(
  */
 data class TagData(
     val tagType: String,
-    val name: String,
-    val link: String
+    val name: String
 )

@@ -275,8 +275,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                     tags = listOf(
                         TagData(
                             tagType = "tag",
-                            name = "Tag $i",
-                            link = ""
+                            name = "Tag $i"
                         )
                     ),
                     views = (100 - i).toLong()
@@ -306,13 +305,11 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 tags = listOf(
                     TagData(
                         tagType = "tag",
-                        name = "Alpha",
-                        link = ""
+                        name = "Alpha"
                     ),
                     TagData(
                         tagType = "category",
-                        name = "Beta",
-                        link = ""
+                        name = "Beta"
                     )
                 ),
                 views = 50
@@ -345,13 +342,11 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 tags = listOf(
                     TagData(
                         tagType = "category",
-                        name = "Cat1",
-                        link = ""
+                        name = "Cat1"
                     ),
                     TagData(
                         tagType = "category",
-                        name = "Cat2",
-                        link = ""
+                        name = "Cat2"
                     )
                 ),
                 views = 50
@@ -383,8 +378,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 tags = listOf(
                     TagData(
                         tagType = "tag",
-                        name = "Tag1",
-                        link = ""
+                        name = "Tag1"
                     )
                 ),
                 views = 50
@@ -416,13 +410,11 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 tags = listOf(
                     TagData(
                         tagType = "tag",
-                        name = "Tag1",
-                        link = ""
+                        name = "Tag1"
                     ),
                     TagData(
                         tagType = "category",
-                        name = "Cat1",
-                        link = ""
+                        name = "Cat1"
                     )
                 ),
                 views = 50
@@ -615,8 +607,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                     tags = listOf(
                         TagData(
                             tagType = "tag",
-                            name = "Tag $i",
-                            link = ""
+                            name = "Tag $i"
                         )
                     ),
                     views = (100 - i).toLong()
@@ -674,8 +665,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                         tags = listOf(
                             TagData(
                                 tagType = "category",
-                                name = TEST_CATEGORY_NAME,
-                                link = ""
+                                name = TEST_CATEGORY_NAME
                             )
                         ),
                         views = TEST_CATEGORY_VIEWS
@@ -684,8 +674,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                         tags = listOf(
                             TagData(
                                 tagType = "tag",
-                                name = TEST_TAG_NAME,
-                                link = ""
+                                name = TEST_TAG_NAME
                             )
                         ),
                         views = TEST_TAG_VIEWS

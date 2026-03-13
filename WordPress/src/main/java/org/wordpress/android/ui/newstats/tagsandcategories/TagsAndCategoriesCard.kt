@@ -3,7 +3,6 @@ package org.wordpress.android.ui.newstats.tagsandcategories
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,13 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,8 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -38,9 +30,7 @@ import org.wordpress.android.ui.newstats.components.StatsCardContainer
 import org.wordpress.android.ui.newstats.components.StatsCardEmptyContent
 import org.wordpress.android.ui.newstats.components.StatsCardHeader
 import org.wordpress.android.ui.newstats.components.StatsListHeader
-import org.wordpress.android.ui.newstats.components.StatsListRowContainer
 import org.wordpress.android.ui.newstats.util.ShimmerBox
-import org.wordpress.android.ui.newstats.util.formatStatValue
 
 private val CardPadding = 16.dp
 private const val LOADING_SHIMMER_ITEM_COUNT = 5
@@ -239,92 +229,6 @@ private fun LoadedContent(
             }
             Spacer(modifier = Modifier.height(12.dp))
             ShowAllFooter(onClick = onShowAllClick)
-        }
-    }
-}
-
-@Composable
-private fun TagGroupRow(
-    item: TagGroupUiItem,
-    percentage: Float,
-    isExpandable: Boolean,
-    isExpanded: Boolean,
-    onClick: (() -> Unit)?
-) {
-    StatsListRowContainer(
-        percentage = percentage,
-        modifier = if (onClick != null) {
-            Modifier.clickable(onClick = onClick)
-        } else {
-            Modifier
-        }
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    vertical = 12.dp,
-                    horizontal = 16.dp
-                ),
-            horizontalArrangement =
-                Arrangement.SpaceBetween,
-            verticalAlignment =
-                Alignment.CenterVertically
-        ) {
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment =
-                    Alignment.CenterVertically
-            ) {
-                TagTypeIcon(
-                    displayType = item.displayType
-                )
-                Spacer(
-                    modifier = Modifier.width(8.dp)
-                )
-                if (isExpandable) {
-                    Icon(
-                        imageVector =
-                            if (isExpanded) {
-                                Icons.Default
-                                    .KeyboardArrowUp
-                            } else {
-                                Icons.Default
-                                    .KeyboardArrowDown
-                            },
-                        contentDescription = null,
-                        modifier =
-                            Modifier.size(16.dp),
-                        tint = MaterialTheme
-                            .colorScheme
-                            .onSurfaceVariant
-                    )
-                    Spacer(
-                        modifier =
-                            Modifier.width(4.dp)
-                    )
-                }
-                Text(
-                    text = item.name,
-                    style = MaterialTheme.typography
-                        .bodyLarge,
-                    color = MaterialTheme.colorScheme
-                        .onSurface,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Text(
-                text = formatStatValue(item.views),
-                style = MaterialTheme.typography
-                    .bodyLarge,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme
-                    .onSurface
-            )
         }
     }
 }

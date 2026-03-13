@@ -13,6 +13,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TagsResult
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,18 +32,17 @@ class TagsAndCategoriesViewModel @Inject constructor(
         _uiState.asStateFlow()
 
     private var allItems: List<TagGroupUiItem> = emptyList()
-    private var isLoaded = false
-    private var isLoading = false
+    private val isLoaded = AtomicBoolean(false)
+    private val isLoading = AtomicBoolean(false)
 
     fun loadData() {
-        if (isLoaded || isLoading) return
-        isLoading = true
+        if (isLoaded.get() || !isLoading.compareAndSet(false, true)) return
         fetchData()
     }
 
     fun refresh() {
-        isLoaded = false
-        isLoading = true
+        isLoaded.set(false)
+        isLoading.set(true)
         _uiState.value = TagsAndCategoriesCardUiState.Loading
         fetchData()
     }
@@ -54,7 +54,7 @@ class TagsAndCategoriesViewModel @Inject constructor(
         val site = selectedSiteRepository
             .getSelectedSite()
         if (site == null) {
-            isLoading = false
+            isLoading.set(false)
             _uiState.value =
                 TagsAndCategoriesCardUiState.Error(
                     resourceProvider.getString(
@@ -66,7 +66,7 @@ class TagsAndCategoriesViewModel @Inject constructor(
 
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
-            isLoading = false
+            isLoading.set(false)
             _uiState.value =
                 TagsAndCategoriesCardUiState.Error(
                     resourceProvider.getString(
@@ -83,7 +83,7 @@ class TagsAndCategoriesViewModel @Inject constructor(
                 val result = statsRepository.fetchTags(
                     siteId = site.siteId
                 )
-                isLoaded = result is TagsResult.Success
+                isLoaded.set(result is TagsResult.Success)
                 handleResult(result)
             } catch (e: Exception) {
                 _uiState.value =
@@ -94,7 +94,7 @@ class TagsAndCategoriesViewModel @Inject constructor(
                             )
                     )
             } finally {
-                isLoading = false
+                isLoading.set(false)
             }
         }
     }
