@@ -1,4 +1,2 @@
-- Navigation Menus available to users with application password and theme edit capability.
-- Assorted text and visual fixes to Stats and Media library.
-- Image and authentication fixes for self-hosted sites.
-- My Site visual updates and TalkBack accessibility.
+* [*] Standardize FAB colors and icon to Material 3 defaults [#22654]
+* [*] Fix: open redirect_to URL in browser to prevent infinite deep link loop [#22665]
