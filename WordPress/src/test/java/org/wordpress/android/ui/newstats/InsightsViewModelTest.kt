@@ -639,6 +639,179 @@ class InsightsViewModelTest :
                 .invoke(any(), any())
         }
 
+    @Test
+    fun `when all cards hidden, then no endpoints are called`() =
+        test {
+            val config = InsightsCardsConfiguration(
+                visibleCards = emptyList()
+            )
+            initViewModel(config)
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase, never())
+                .invoke(any(), any())
+            verify(statsInsightsUseCase, never())
+                .invoke(any(), any())
+        }
+
+    @Test
+    fun `when only summary cards visible, then only summary is fetched`() =
+        test {
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummaryData()
+                )
+            )
+
+            val config = InsightsCardsConfiguration(
+                visibleCards = listOf(
+                    InsightsCardType.ALL_TIME_STATS,
+                    InsightsCardType.MOST_POPULAR_DAY
+                )
+            )
+            initViewModel(config)
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase)
+                .invoke(eq(TEST_SITE_ID), eq(false))
+            verify(statsInsightsUseCase, never())
+                .invoke(any(), any())
+        }
+
+    @Test
+    fun `when only insights cards visible, then only insights is fetched`() =
+        test {
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+
+            val config = InsightsCardsConfiguration(
+                visibleCards = listOf(
+                    InsightsCardType.YEAR_IN_REVIEW,
+                    InsightsCardType.MOST_POPULAR_TIME
+                )
+            )
+            initViewModel(config)
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            verify(statsInsightsUseCase)
+                .invoke(eq(TEST_SITE_ID), eq(false))
+            verify(statsSummaryUseCase, never())
+                .invoke(any(), any())
+        }
+
+    @Test
+    fun `when hidden card re-added, then its endpoint is fetched`() =
+        test {
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummaryData()
+                )
+            )
+
+            // Start with only insights cards
+            val config = InsightsCardsConfiguration(
+                visibleCards = listOf(
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
+            )
+            initViewModel(config)
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            verify(statsInsightsUseCase,
+                org.mockito.Mockito.times(1))
+                .invoke(any(), any())
+            verify(statsSummaryUseCase, never())
+                .invoke(any(), any())
+
+            // Now add a summary card via config change
+            val newConfig = InsightsCardsConfiguration(
+                visibleCards = listOf(
+                    InsightsCardType.YEAR_IN_REVIEW,
+                    InsightsCardType.ALL_TIME_STATS
+                )
+            )
+            configurationFlow.value =
+                TEST_SITE_ID to newConfig
+            advanceUntilIdle()
+
+            // loadDataIfNeeded should now fetch
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase,
+                org.mockito.Mockito.times(1))
+                .invoke(eq(TEST_SITE_ID), eq(false))
+        }
+
+    @Test
+    fun `when refresh called, then all visible endpoints are re-fetched`() =
+        test {
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummaryData()
+                )
+            )
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            viewModel.refreshData()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase,
+                org.mockito.Mockito.times(1))
+                .invoke(eq(TEST_SITE_ID), eq(false))
+            verify(statsSummaryUseCase,
+                org.mockito.Mockito.times(1))
+                .invoke(eq(TEST_SITE_ID), eq(true))
+            verify(statsInsightsUseCase,
+                org.mockito.Mockito.times(1))
+                .invoke(eq(TEST_SITE_ID), eq(false))
+            verify(statsInsightsUseCase,
+                org.mockito.Mockito.times(1))
+                .invoke(eq(TEST_SITE_ID), eq(true))
+        }
+
     // endregion
 
     companion object {

@@ -74,6 +74,12 @@ class InsightsViewModel @Inject constructor(
     @Volatile
     private var isDataLoading = false
 
+    @Volatile
+    private var summaryFetched = false
+
+    @Volatile
+    private var insightsFetched = false
+
     init {
         checkNetworkStatus()
         loadConfiguration()
@@ -101,14 +107,21 @@ class InsightsViewModel @Inject constructor(
             _isDataRefreshing.value = false
             return
         }
+        val cards = _cardsToLoad.value
         viewModelScope.launch {
             try {
                 coroutineScope {
-                    launch {
-                        fetchSummary(siteId, forceRefresh)
+                    if (cards.needsSummary()) {
+                        launch {
+                            fetchSummary(siteId, forceRefresh)
+                        }
                     }
-                    launch {
-                        fetchInsights(siteId, forceRefresh)
+                    if (cards.needsInsights()) {
+                        launch {
+                            fetchInsights(
+                                siteId, forceRefresh
+                            )
+                        }
                     }
                 }
                 isDataLoaded = true
@@ -131,6 +144,7 @@ class InsightsViewModel @Inject constructor(
             val result = statsSummaryUseCase(
                 siteId, forceRefresh
             )
+            summaryFetched = true
             _summaryResult.emit(result)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
@@ -160,6 +174,7 @@ class InsightsViewModel @Inject constructor(
             val result = statsInsightsUseCase(
                 siteId, forceRefresh
             )
+            insightsFetched = true
             _insightsResult.emit(result)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
@@ -179,6 +194,8 @@ class InsightsViewModel @Inject constructor(
 
     fun refreshData() {
         isDataLoaded = false
+        summaryFetched = false
+        insightsFetched = false
         isDataLoading = true
         _isDataRefreshing.value = true
         fetchData(forceRefresh = true)
@@ -224,6 +241,13 @@ class InsightsViewModel @Inject constructor(
     ) {
         _visibleCards.value = config.visibleCards
         _hiddenCards.value = config.computeHiddenCards()
+        val cards = config.visibleCards
+        val needsNewFetch =
+            (cards.needsSummary() && !summaryFetched) ||
+                (cards.needsInsights() && !insightsFetched)
+        if (needsNewFetch) {
+            isDataLoaded = false
+        }
         _cardsToLoad.value = config.visibleCards
     }
 
@@ -285,6 +309,20 @@ class InsightsViewModel @Inject constructor(
                 "No site selected for card operation"
             )
             null
+        }
+    }
+
+    companion object {
+        private fun List<InsightsCardType>.needsSummary():
+            Boolean = any {
+            it == InsightsCardType.ALL_TIME_STATS ||
+                it == InsightsCardType.MOST_POPULAR_DAY
+        }
+
+        private fun List<InsightsCardType>.needsInsights():
+            Boolean = any {
+            it == InsightsCardType.YEAR_IN_REVIEW ||
+                it == InsightsCardType.MOST_POPULAR_TIME
         }
     }
 }
