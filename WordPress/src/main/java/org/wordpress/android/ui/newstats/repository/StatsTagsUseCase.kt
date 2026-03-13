@@ -29,12 +29,10 @@ class StatsTagsUseCase @Inject constructor(
         return mutex.withLock {
             val cached = cachedTags
             if (!forceRefresh &&
-                cached != null &&
-                cached.first == siteId &&
-                cached.second == max
+                isCacheHit(cached, siteId, max)
             ) {
                 return@withLock TagsResult
-                    .Success(cached.third)
+                    .Success(cached!!.third)
             }
             val result = statsRepository.fetchTags(
                 siteId = siteId,
@@ -47,6 +45,14 @@ class StatsTagsUseCase @Inject constructor(
             result
         }
     }
+
+    private fun isCacheHit(
+        cached: Triple<Long, Int, StatsTagsData>?,
+        siteId: Long,
+        max: Int
+    ): Boolean = cached != null &&
+        cached.first == siteId &&
+        cached.second == max
 
     companion object {
         private const val DEFAULT_MAX_ITEMS = 10
