@@ -626,7 +626,12 @@ class PostRsSettingsViewModel @Inject constructor(
     fun onDismissDialog() {
         authorSearchJob?.cancel()
         _uiState.update {
-            it.copy(dialogState = DialogState.None)
+            it.copy(
+                dialogState = DialogState.None,
+                authorSearchQuery = "",
+                isSearchingAuthors = false,
+                siteAuthors = emptyList(),
+            )
         }
     }
 
