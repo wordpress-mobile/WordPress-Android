@@ -245,6 +245,14 @@ public class ReaderTag implements Serializable, FilterCriteria {
      */
     @Override
     public String getLabel(Context context) {
+        return getLabel();
+    }
+
+    /**
+     * Returns the label for this tag. Context is not needed since
+     * the label is derived from pure string logic.
+     */
+    public String getLabel() {
         if (isTagDisplayNameAlphaNumeric()) {
             return getTagDisplayName().toLowerCase(Locale.ROOT);
         } else if (hasTagTitle()) {
@@ -283,7 +291,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public boolean equals(Object object) {
         if (object instanceof ReaderTag) {
             ReaderTag tag = (ReaderTag) object;
-            return (tag.tagType == this.tagType && tag.getLabel(null).equals(this.getLabel(null)));
+            return (tag.tagType == this.tagType && tag.getLabel().equals(this.getLabel()));
         } else {
             return false;
         }

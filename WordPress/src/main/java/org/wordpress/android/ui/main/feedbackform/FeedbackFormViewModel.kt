@@ -52,7 +52,6 @@ class FeedbackFormViewModel @Inject constructor(
     private val feedbackFormUtils: FeedbackFormUtils,
     private val mediaPickerLauncher: MediaPickerLauncher,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val contextProvider: org.wordpress.android.viewmodel.ContextProvider,
 ) : ScopedViewModel(mainDispatcher) {
     private val _messageText = MutableStateFlow("")
     val messageText = _messageText.asStateFlow()
@@ -204,14 +203,14 @@ class FeedbackFormViewModel @Inject constructor(
 
     private fun onSuccess(context: Context) {
         analyticsTrackerWrapper.track(APP_REVIEWS_FEEDBACK_SENT)
-        showToast(R.string.feedback_form_success)
+        showToast(context, R.string.feedback_form_success)
         (context as? Activity)?.finish()
     }
 
     private fun onFailure(context: Context, errorMessage: String? = null) {
         appLogWrapper.e(T.SUPPORT, "Failed to submit feedback form: $errorMessage")
         if (errorMessage.isNullOrEmpty()) {
-            showToast(R.string.feedback_form_failure)
+            showToast(context, R.string.feedback_form_failure)
         } else {
             MaterialAlertDialogBuilder(context).also { builder ->
                 builder.setTitle(R.string.feedback_form_failure)
@@ -224,7 +223,7 @@ class FeedbackFormViewModel @Inject constructor(
 
     fun onChooseMediaClick(activity: Activity) {
         if (_attachments.value.size >= MAX_ATTACHMENTS) {
-            showToast(R.string.feedback_form_max_attachments_reached)
+            showToast(activity, R.string.feedback_form_max_attachments_reached)
         } else {
             mediaPickerLauncher.showPhotoPickerForResult(
                 activity,
@@ -240,7 +239,7 @@ class FeedbackFormViewModel @Inject constructor(
             val stringArray = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
             stringArray?.forEach { stringUri ->
                 if (_attachments.value.size >= MAX_ATTACHMENTS) {
-                    showToast(R.string.feedback_form_max_attachments_reached)
+                    showToast(context, R.string.feedback_form_max_attachments_reached)
                     return
                 }
                 addAttachment(context, stringUri.toUri())
@@ -258,16 +257,16 @@ class FeedbackFormViewModel @Inject constructor(
         val mimeType = uri.mimeType(context)
 
         if (list.size >= MAX_ATTACHMENTS) {
-            showToast(R.string.feedback_form_max_attachments_reached)
+            showToast(context, R.string.feedback_form_max_attachments_reached)
             return false
         } else if (list.any { it.uri == uri }) {
-            showToast(R.string.feedback_form_attachment_already_added)
+            showToast(context, R.string.feedback_form_attachment_already_added)
             return false
         } else if (fileSize > MAX_ATTACHMENT_SIZE) {
-            showToast(R.string.feedback_form_attachment_too_large)
+            showToast(context, R.string.feedback_form_attachment_too_large)
             return false
         } else if (!feedbackFormUtils.isSupportedMimeType(mimeType)) {
-            showToast(R.string.feedback_form_unsupported_attachment)
+            showToast(context, R.string.feedback_form_unsupported_attachment)
             return false
         }
 
@@ -296,9 +295,9 @@ class FeedbackFormViewModel @Inject constructor(
         }
     }
 
-    private fun showToast(@StringRes msgId: Int) {
+    private fun showToast(context: Context, @StringRes msgId: Int) {
         viewModelScope.launch {
-            toastUtilsWrapper.showToast(contextProvider.getContext(), msgId)
+            toastUtilsWrapper.showToast(context, msgId)
         }
     }
 
