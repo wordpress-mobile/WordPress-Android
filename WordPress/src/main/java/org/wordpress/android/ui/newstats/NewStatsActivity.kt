@@ -1003,7 +1003,11 @@ private fun InsightsTabContent(
         onRefresh = {
             insightsViewModel.checkNetworkStatus()
             insightsViewModel.refreshData()
-            tagsAndCategoriesViewModel.refresh()
+            if (InsightsCardType.TAGS_AND_CATEGORIES
+                in visibleCards
+            ) {
+                tagsAndCategoriesViewModel.refresh()
+            }
         },
         indicator = {
             PullToRefreshDefaults.Indicator(
@@ -1226,8 +1230,6 @@ private fun InsightsTabContent(
                                     )
                             },
                             onRetry = {
-                                tagsAndCategoriesViewModel
-                                    .showLoading()
                                 tagsAndCategoriesViewModel
                                     .refresh()
                             },

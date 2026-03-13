@@ -543,10 +543,11 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         }
     // endregion
 
-    // region showLoading
+    // region refresh sets loading
     @Test
-    fun `when showLoading, then loading state`() =
+    fun `when refresh with no site, then loading then error`() =
         test {
+            stubNoSiteError()
             whenever(
                 statsRepository.fetchTags(any(), any())
             ).thenReturn(createSuccessResult())
@@ -555,12 +556,52 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             viewModel.loadData()
             advanceUntilIdle()
 
-            viewModel.showLoading()
+            whenever(
+                selectedSiteRepository.getSelectedSite()
+            ).thenReturn(null)
+
+            viewModel.refresh()
 
             assertThat(viewModel.uiState.value)
                 .isInstanceOf(
                     TagsAndCategoriesCardUiState
-                        .Loading::class.java
+                        .Error::class.java
+                )
+        }
+    // endregion
+
+    // region loadData retries after error
+    @Test
+    fun `when loadData after error, then data is re-fetched`() =
+        test {
+            stubApiError()
+            whenever(
+                statsRepository.fetchTags(any(), any())
+            ).thenReturn(
+                TagsResult.Error("Network error")
+            )
+
+            initViewModel()
+            viewModel.loadData()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    TagsAndCategoriesCardUiState
+                        .Error::class.java
+                )
+
+            whenever(
+                statsRepository.fetchTags(any(), any())
+            ).thenReturn(createSuccessResult())
+
+            viewModel.loadData()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    TagsAndCategoriesCardUiState
+                        .Loaded::class.java
                 )
         }
     // endregion

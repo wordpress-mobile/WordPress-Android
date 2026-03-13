@@ -43,11 +43,8 @@ class TagsAndCategoriesViewModel @Inject constructor(
     fun refresh() {
         isLoaded = false
         isLoading = true
-        fetchData()
-    }
-
-    fun showLoading() {
         _uiState.value = TagsAndCategoriesCardUiState.Loading
+        fetchData()
     }
 
     fun getDetailData(): List<TagGroupUiItem> = allItems
@@ -86,8 +83,8 @@ class TagsAndCategoriesViewModel @Inject constructor(
                 val result = statsRepository.fetchTags(
                     siteId = site.siteId
                 )
+                isLoaded = result is TagsResult.Success
                 handleResult(result)
-                isLoaded = true
             } catch (e: Exception) {
                 _uiState.value =
                     TagsAndCategoriesCardUiState.Error(
