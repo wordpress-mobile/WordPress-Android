@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.postsrs
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
@@ -42,6 +43,9 @@ class PostRsSettingsViewModelTest :
 
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var appContext: Context
 
     private lateinit var site: SiteModel
     private var activeViewModel: PostRsSettingsViewModel? =
@@ -91,6 +95,7 @@ class PostRsSettingsViewModelTest :
             restClient = restClient,
             resourceProvider = resourceProvider,
             networkUtilsWrapper = networkUtilsWrapper,
+            appContext = appContext,
         ).also { activeViewModel = it }
     }
 

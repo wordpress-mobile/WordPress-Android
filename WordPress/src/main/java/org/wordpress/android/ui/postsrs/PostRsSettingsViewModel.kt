@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.postsrs
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -24,6 +27,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyPostWithEditContext
+import uniffi.wp_api.MediaCreateParams
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostRetrieveParams
@@ -31,6 +35,7 @@ import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.UserListParams
+import java.io.File
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
@@ -45,6 +50,7 @@ class PostRsSettingsViewModel @Inject constructor(
     private val restClient: PostRsRestClient,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    @ApplicationContext private val appContext: Context,
 ) : ViewModel() {
     private val postId: Long = requireNotNull(savedStateHandle[EXTRA_POST_ID]) {
         "Missing $EXTRA_POST_ID in SavedStateHandle"
@@ -471,6 +477,98 @@ class PostRsSettingsViewModel @Inject constructor(
             it.copy(
                 editedFeaturedImageId = edited,
                 featuredImage = FieldState.Empty
+            )
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    fun onFeaturedImagePickedFromDevice(uri: Uri) {
+        _uiState.update {
+            it.copy(featuredImage = FieldState.Loading)
+        }
+        viewModelScope.launch {
+            try {
+                val mediaId = withContext(Dispatchers.IO) {
+                    val tempFile = copyUriToTempFile(uri)
+                    uploadMediaAndGetId(tempFile.absolutePath)
+                }
+                onFeaturedImageSelected(mediaId)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to upload featured image",
+                    e
+                )
+                _uiState.update {
+                    it.copy(
+                        featuredImage = FieldState.Error(
+                            fieldError
+                        )
+                    )
+                }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = resourceProvider.getString(
+                            R.string.error_media_upload
+                        ),
+                        actionLabel = resourceProvider
+                            .getString(R.string.retry),
+                        onAction = {
+                            onFeaturedImagePickedFromDevice(
+                                uri
+                            )
+                        }
+                    )
+                )
+            }
+        }
+    }
+
+    private fun copyUriToTempFile(uri: Uri): File {
+        val inputStream = appContext.contentResolver
+            .openInputStream(uri)
+            ?: throw PostApiRequestException(
+                "Cannot read URI"
+            )
+        val tempFile = File.createTempFile(
+            "featured_img_",
+            ".jpg",
+            appContext.cacheDir
+        )
+        inputStream.use { input ->
+            tempFile.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+        return tempFile
+    }
+
+    private suspend fun uploadMediaAndGetId(
+        filePath: String
+    ): Long {
+        val client = apiClient
+            ?: throw PostApiRequestException(
+                "No API client"
+            )
+        val response = client.request { requestBuilder ->
+            requestBuilder.media().create(
+                params = MediaCreateParams(
+                    title = File(filePath)
+                        .nameWithoutExtension,
+                    filePath = filePath,
+                )
+            )
+        }
+        return when (response) {
+            is WpRequestResult.Success ->
+                response.response.data.id
+            else -> throw PostApiRequestException(
+                (response
+                    as? WpRequestResult.WpError<*>)
+                    ?.errorMessage
+                    ?: "Failed to upload media"
             )
         }
     }

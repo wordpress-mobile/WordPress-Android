@@ -2,6 +2,7 @@ package org.wordpress.android.ui.postsrs
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
@@ -143,11 +144,25 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == RESULT_OK) {
+                // WP Library — already-uploaded remote media ID
                 val mediaId = result.data?.getLongExtra(
                     MediaPickerConstants.EXTRA_MEDIA_ID, 0L
                 ) ?: 0L
                 if (mediaId > 0L) {
                     viewModel.onFeaturedImageSelected(mediaId)
+                    return@registerForActivityResult
+                }
+                // Device gallery — local URI that needs upload
+                val uris = result.data
+                    ?.getStringArrayExtra(
+                        MediaPickerConstants.EXTRA_MEDIA_URIS
+                    )
+                val uri = uris?.firstOrNull()
+                    ?.let { Uri.parse(it) }
+                if (uri != null) {
+                    viewModel.onFeaturedImagePickedFromDevice(
+                        uri
+                    )
                 }
             }
         }
@@ -198,15 +213,17 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                 ?: return
         val setup = MediaPickerSetup(
             primaryDataSource =
-                MediaPickerSetup.DataSource.WP_LIBRARY,
-            availableDataSources = emptySet(),
+                MediaPickerSetup.DataSource.DEVICE,
+            availableDataSources = setOf(
+                MediaPickerSetup.DataSource.WP_LIBRARY
+            ),
             canMultiselect = false,
-            requiresPhotosVideosPermissions = false,
+            requiresPhotosVideosPermissions = true,
             requiresMusicAudioPermissions = false,
             allowedTypes = setOf(MediaType.IMAGE),
             cameraSetup =
                 MediaPickerSetup.CameraSetup.HIDDEN,
-            systemPickerEnabled = false,
+            systemPickerEnabled = true,
             editingEnabled = false,
             queueResults = false,
             defaultSearchView = false,
