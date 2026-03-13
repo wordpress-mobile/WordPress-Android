@@ -348,11 +348,7 @@ class PostRsSettingsViewModel @Inject constructor(
             loadSiteAuthors(currentSite)
         }
         _uiState.update {
-            it.copy(
-                authorSearchQuery = "",
-                isSearchingAuthors = false,
-                dialogState = DialogState.AuthorDialog,
-            )
+            it.copy(dialogState = DialogState.AuthorDialog)
         }
     }
 
