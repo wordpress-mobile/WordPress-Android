@@ -54,11 +54,11 @@ fladle {
 }
 
 String appPathForVariant(String app) {
-    String path = "outputs/apk/${app}Vanilla/debug"
+    String path = "outputs/apk/${app}/debug"
     return new File(layout.buildDirectory.dir(path).get().asFile, '*.apk').absolutePath
 }
 String testPathForVariant(String app) {
-    String path = "outputs/apk/androidTest/${app}Vanilla/debug"
+    String path = "outputs/apk/androidTest/${app}/debug"
     return new File(layout.buildDirectory.dir(path).get().asFile, '*.apk').absolutePath
 }
 
@@ -195,7 +195,7 @@ android {
         targetCompatibility JvmTarget.fromTarget(libs.versions.java.get()).target
     }
 
-    flavorDimensions = ['app', 'buildType']
+    flavorDimensions = ['app']
 
 
     productFlavors {
@@ -242,29 +242,6 @@ android {
             resourceConfigurations += ["in", "iw"]
         }
 
-        // Used for release/beta testing builds. Usually shouldn't be build locally.
-        // AppName: WordPress/Jetpack
-        vanilla {
-            dimension "buildType"
-
-            buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
-        }
-
-        // Used for local development - preferred variant for developers.
-        // AppName: WordPress Beta/Jetpack Beta
-        wasabi {
-            isDefault true
-            applicationIdSuffix ".beta"
-            dimension "buildType"
-        }
-
-        // Used for CI builds on PRs (aka "Prototype Builds"). Can be used locally when a developer needs to install multiple versions of the app on the same device.
-        // AppName: WordPress Pre-Alpha/Jetpack Pre-Alpha
-        jalapeno {
-            applicationIdSuffix ".prealpha"
-            dimension "buildType"
-        }
-
         // Also dynamically add additional `buildConfigFields` to our app flavors from any `wp.`/`jp.`-prefixed property in `secrets.properties`
         addBuildConfigFieldsFromPrefixedProperties(wordpress, gradle.ext.secretProperties, ['wp'])
         addBuildConfigFieldsFromPrefixedProperties(jetpack, gradle.ext.secretProperties, ['wp', 'jp']) // Inherit same properties used from WP first then overwrite with JP-specific ones
@@ -276,9 +253,11 @@ android {
             // but we don't obfuscate the bytecode.
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+            buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
         }
 
         debug {
+            applicationIdSuffix ".prealpha"
             minifyEnabled false
             pseudoLocalesEnabled true
         }

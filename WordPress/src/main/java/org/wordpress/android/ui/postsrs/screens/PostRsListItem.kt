@@ -50,7 +50,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostDisplayState
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
-import org.wordpress.android.ui.postsrs.data.PostRsRestClient
+
 
 @Composable
 fun PostRsListItem(
@@ -341,7 +341,7 @@ private fun ErrorItem(modifier: Modifier = Modifier) {
     }
 }
 
-private val FEATURED_IMAGE_SIZE = PostRsRestClient.FEATURED_IMAGE_SIZE_DP.dp
+private val FEATURED_IMAGE_SIZE = 64.dp
 
 // region Previews
 

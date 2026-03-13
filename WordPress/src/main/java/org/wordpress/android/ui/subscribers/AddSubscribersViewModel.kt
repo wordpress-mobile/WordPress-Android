@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
@@ -32,6 +33,7 @@ class AddSubscribersViewModel @Inject constructor(
     private val toastUtilsWrapper: ToastUtilsWrapper,
     private val trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
     private val contextProvider: org.wordpress.android.viewmodel.ContextProvider,
+    private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) : ScopedViewModel(bgDispatcher) {
     @Inject
     @Named(IO_THREAD)
@@ -51,7 +53,8 @@ class AddSubscribersViewModel @Inject constructor(
             WpAuthenticationProvider.staticWithAuth(
                 WpAuthentication.Bearer(token = accountStore.accessToken!!)
             ),
-            interceptors = listOf(trackNetworkRequestsInterceptor)
+            interceptors = listOf(trackNetworkRequestsInterceptor),
+            networkAvailabilityProvider = networkAvailabilityProvider
         )
     }
 

@@ -22,6 +22,7 @@ import org.wordpress.android.util.BuildConfigWrapper
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
+import uniffi.wp_api.DiscoveredAuthenticationMechanism
 import uniffi.wp_api.ParseUrlException
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -170,7 +171,9 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
     @Test
     fun `given proper site, when api discovery is success, then return discovery url`() = runTest {
-        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(mock(), mock(), mock(), mock())
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
+            mock(), mock(), mock(), DiscoveredAuthenticationMechanism.ApplicationPasswords(mock())
+        )
         whenever(uriLoginWrapper.appendParamsToRestAuthorizationUrl(any()))
             .thenReturn("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX")
         val apiDiscoveryResult = ApiDiscoveryResult.Success(
@@ -200,7 +203,9 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
     @Test
     fun `given login scenario, when api discovery is empty, then return empty`() = runTest {
-        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(mock(), mock(), mock(), mock())
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
+            mock(), mock(), mock(), DiscoveredAuthenticationMechanism.ApplicationPasswords(mock())
+        )
         val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
         val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)

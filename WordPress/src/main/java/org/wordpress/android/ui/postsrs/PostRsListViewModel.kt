@@ -39,11 +39,7 @@ import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
-import uniffi.wp_api.RequestExecutionErrorReason
-import uniffi.wp_api.WpApiException
 import uniffi.wp_api.WpApiParamPostsOrderBy
-import uniffi.wp_api.WpErrorCode
-import uniffi.wp_mobile.FetchException
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
@@ -146,6 +142,18 @@ class PostRsListViewModel @Inject constructor(
         _events.trySend(PostRsListEvent.EditPost(site, post))
     }
 
+    /**
+     * Refreshes all currently initialized tabs. Called when
+     * returning from the settings screen after saving changes.
+     */
+    @MainThread
+    fun refreshAllTabs() {
+        restClient.clearCaches()
+        collections.keys.toList().forEach { tab ->
+            refreshTab(tab)
+        }
+    }
+
     /** Emits a [PostRsListEvent.CreatePost] for the selected site. */
     @MainThread
     fun createNewPost() {
@@ -205,6 +213,8 @@ class PostRsListViewModel @Inject constructor(
         val post = findPost(remotePostId)
 
         when (action) {
+            PostRsMenuAction.SETTINGS ->
+                _events.trySend(PostRsListEvent.OpenPostSettings(remotePostId))
             PostRsMenuAction.VIEW -> {
                 val url = post?.link
                 if (url == null) {
@@ -357,29 +367,6 @@ class PostRsListViewModel @Inject constructor(
         _events.trySend(PostRsListEvent.EditPost(site, newPost))
     }
 
-    /**
-     * Extracts the underlying [WpApiException] from a [FetchException.Api]
-     * wrapper so that callers can inspect API-level error details (status
-     * codes, error reasons) without knowing about the wrapper type.
-     */
-    private fun unwrapException(e: Exception?): Exception? =
-        (e as? FetchException.Api)?.v1 ?: e
-
-    /**
-     * Returns true when the exception represents an authentication failure
-     * (rejected credentials, missing app-password, etc.).
-     */
-    private fun isAuthError(e: Exception?): Boolean {
-        val apiException = unwrapException(e)
-        val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
-        val errorCode = (apiException as? WpApiException.WpException)?.errorCode
-        return reason is RequestExecutionErrorReason.HttpAuthenticationRejectedError ||
-            reason is RequestExecutionErrorReason.HttpAuthenticationRequiredError ||
-            errorCode is WpErrorCode.Unauthorized ||
-            errorCode is WpErrorCode.ApplicationPasswordNotFound ||
-            errorCode is WpErrorCode.NoAuthenticatedAppPassword
-    }
-
     private fun checkNetwork(): Boolean {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
@@ -390,29 +377,12 @@ class PostRsListViewModel @Inject constructor(
         return true
     }
 
-    /**
-     * Returns a user-friendly error subtitle based on the exception type.
-     * Detects offline, authentication, and generic errors. When a default
-     * resource ID is provided and the exception is a WpApiException with a
-     * message, that message is used; otherwise falls back to the default.
-     */
-    private fun friendlyErrorMessage(e: Exception? = null, defaultResId: Int? = null): String {
-        val apiException = unwrapException(e)
-        val reason = (apiException as? WpApiException.RequestExecutionFailed)?.reason
-
-        val resId = when {
-            reason is RequestExecutionErrorReason.DeviceIsOfflineError ||
-                !networkUtilsWrapper.isNetworkAvailable() ->
-                R.string.error_generic_network
-
-            isAuthError(e) -> R.string.post_rs_error_auth
-
-            defaultResId != null -> defaultResId
-
-            else -> R.string.request_failed_message
-        }
-        return resourceProvider.getString(resId)
-    }
+    private fun friendlyErrorMessage(
+        e: Exception? = null,
+        defaultResId: Int? = null,
+    ): String = PostRsErrorUtils.friendlyErrorMessage(
+        e, defaultResId, resourceProvider, networkUtilsWrapper
+    )
 
     /** Creates a PostUpdateParams for changing post status. */
     private fun postStatusUpdate(status: PostStatus) = PostUpdateParams(status = status, meta = null)
@@ -476,48 +446,49 @@ class PostRsListViewModel @Inject constructor(
         tab: PostRsListTab,
         hasPassword: Boolean,
         commentsOpen: Boolean
-    ): List<PostRsMenuAction> = when (tab) {
-        PostRsListTab.PUBLISHED ->
-            getPublishedMenuActions(hasPassword, commentsOpen)
-        PostRsListTab.DRAFTS -> buildList {
-            add(PostRsMenuAction.VIEW)
-            add(PostRsMenuAction.READ)
-            if (site.hasCapabilityPublishPosts) {
-                add(PostRsMenuAction.PUBLISH)
-            }
-            add(PostRsMenuAction.DUPLICATE)
-            add(PostRsMenuAction.SHARE)
-            add(PostRsMenuAction.TRASH)
-        }
-        PostRsListTab.SCHEDULED -> listOf(
-            PostRsMenuAction.VIEW,
-            PostRsMenuAction.READ,
-            PostRsMenuAction.SHARE,
-            PostRsMenuAction.TRASH
-        )
-        PostRsListTab.TRASHED -> listOf(
-            PostRsMenuAction.MOVE_TO_DRAFT,
-            PostRsMenuAction.DELETE_PERMANENTLY
-        )
-    }
-
-    private fun getPublishedMenuActions(
-        hasPassword: Boolean,
-        commentsOpen: Boolean
     ): List<PostRsMenuAction> = buildList {
-        add(PostRsMenuAction.VIEW)
-        add(PostRsMenuAction.READ)
-        add(PostRsMenuAction.MOVE_TO_DRAFT)
-        add(PostRsMenuAction.DUPLICATE)
-        add(PostRsMenuAction.SHARE)
-        if (!hasPassword && blazeFeatureUtils.isSiteBlazeEligible(site)) {
-            add(PostRsMenuAction.BLAZE)
+        when (tab) {
+            PostRsListTab.PUBLISHED -> {
+                add(PostRsMenuAction.SETTINGS)
+                add(PostRsMenuAction.VIEW)
+                add(PostRsMenuAction.READ)
+                add(PostRsMenuAction.MOVE_TO_DRAFT)
+                add(PostRsMenuAction.DUPLICATE)
+                add(PostRsMenuAction.SHARE)
+                if (!hasPassword && blazeFeatureUtils.isSiteBlazeEligible(site)) {
+                    add(PostRsMenuAction.BLAZE)
+                }
+                if (SiteUtils.isAccessedViaWPComRest(site) &&
+                    site.hasCapabilityViewStats
+                ) {
+                    add(PostRsMenuAction.STATS)
+                }
+                if (commentsOpen) add(PostRsMenuAction.COMMENTS)
+                add(PostRsMenuAction.TRASH)
+            }
+            PostRsListTab.DRAFTS -> {
+                add(PostRsMenuAction.SETTINGS)
+                add(PostRsMenuAction.VIEW)
+                add(PostRsMenuAction.READ)
+                if (site.hasCapabilityPublishPosts) {
+                    add(PostRsMenuAction.PUBLISH)
+                }
+                add(PostRsMenuAction.DUPLICATE)
+                add(PostRsMenuAction.SHARE)
+                add(PostRsMenuAction.TRASH)
+            }
+            PostRsListTab.SCHEDULED -> {
+                add(PostRsMenuAction.SETTINGS)
+                add(PostRsMenuAction.VIEW)
+                add(PostRsMenuAction.READ)
+                add(PostRsMenuAction.SHARE)
+                add(PostRsMenuAction.TRASH)
+            }
+            PostRsListTab.TRASHED -> {
+                add(PostRsMenuAction.MOVE_TO_DRAFT)
+                add(PostRsMenuAction.DELETE_PERMANENTLY)
+            }
         }
-        if (SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats) {
-            add(PostRsMenuAction.STATS)
-        }
-        if (commentsOpen) add(PostRsMenuAction.COMMENTS)
-        add(PostRsMenuAction.TRASH)
     }
 
     /**
@@ -568,7 +539,7 @@ class PostRsListViewModel @Inject constructor(
                 updateTabUiState(tab) {
                     PostTabUiState(
                         error = friendlyErrorMessage(e),
-                        isAuthError = isAuthError(e)
+                        isAuthError = PostRsErrorUtils.isAuthError(e)
                     )
                 }
             }
@@ -642,7 +613,7 @@ class PostRsListViewModel @Inject constructor(
                     updateTabUiState(tab) {
                         copy(isLoading = false, isRefreshing = false, error = null)
                     }
-                    val authError = isAuthError(e)
+                    val authError = PostRsErrorUtils.isAuthError(e)
                     _snackbarMessages.trySend(
                         SnackbarMessage(
                             message = message,
@@ -657,7 +628,7 @@ class PostRsListViewModel @Inject constructor(
                         copy(
                             isLoading = false, isRefreshing = false,
                             error = message,
-                            isAuthError = isAuthError(e)
+                            isAuthError = PostRsErrorUtils.isAuthError(e)
                         )
                     }
                 }
@@ -707,8 +678,22 @@ class PostRsListViewModel @Inject constructor(
                     .firstOrNull { it.remotePostId == model.remotePostId }
                 model.copy(
                     actions = getMenuActions(effectiveTab, model.hasPassword, model.commentsOpen),
-                    featuredImageUrl = existing?.featuredImageUrl,
-                    authorDisplayName = existing?.authorDisplayName
+                    featuredImageUrl = if (
+                        model.featuredImageId != 0L &&
+                        model.featuredImageId == existing?.featuredImageId
+                    ) {
+                        existing.featuredImageUrl
+                    } else {
+                        null
+                    },
+                    authorDisplayName = if (
+                        model.authorId != 0L &&
+                        model.authorId == existing?.authorId
+                    ) {
+                        existing.authorDisplayName
+                    } else {
+                        null
+                    }
                 )
             }
             updateTabUiState(tab) { copy(posts = uiModels, isLoading = false, error = null) }
@@ -736,7 +721,9 @@ class PostRsListViewModel @Inject constructor(
         resolveImageJobs[tab]?.cancel()
         resolveImageJobs[tab] = viewModelScope.launch {
             val urls = withContext(Dispatchers.IO) {
-                restClient.fetchMediaUrls(site, unresolvedIds)
+                restClient.fetchMediaUrls(
+                    site, unresolvedIds, THUMBNAIL_SIZE_DP
+                )
             }
             if (urls.isEmpty()) return@launch
             updateTabUiState(tab) {
@@ -864,6 +851,7 @@ class PostRsListViewModel @Inject constructor(
         private const val PAGE_SIZE = 20
         private const val SEARCH_DEBOUNCE_MS = 250L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
+        private const val THUMBNAIL_SIZE_DP = 64
         private val ALL_STATUSES = PostRsListTab.entries.flatMap { it.statuses }.distinct()
     }
 }

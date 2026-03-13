@@ -14,9 +14,9 @@ bundle exec fastlane run configure_apply
 
 echo "--- :hammer_and_wrench: Building"
 if [ "$1" = "wordpress" ]; then
-  ./gradlew assembleWordpressWasabiDebug
+  ./gradlew assembleWordpressDebug
 fi
 
 if [ "$1" = "jetpack" ]; then
-  ./gradlew assembleJetpackWasabiDebug
+  ./gradlew assembleJetpackDebug
 fi

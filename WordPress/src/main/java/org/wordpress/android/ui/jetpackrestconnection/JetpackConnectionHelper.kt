@@ -3,6 +3,7 @@ package org.wordpress.android.ui.jetpackrestconnection
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
@@ -19,6 +20,7 @@ class JetpackConnectionHelper @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
     private val trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
+    private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) {
     fun initWpApiClient(site: SiteModel): WpApiClient {
         requireRestCredentials(site)
@@ -30,7 +32,10 @@ class JetpackConnectionHelper @Inject constructor(
 
         val delegate = WpApiClientDelegate(
             authProvider = createRestAuthProvider(site),
-            requestExecutor = WpRequestExecutor(interceptors = listOf(trackNetworkRequestsInterceptor)),
+            requestExecutor = WpRequestExecutor(
+                interceptors = listOf(trackNetworkRequestsInterceptor),
+                networkAvailabilityProvider = networkAvailabilityProvider
+            ),
             middlewarePipeline = WpApiMiddlewarePipeline(emptyList()),
             appNotifier = InvalidAuthNotifier()
         )

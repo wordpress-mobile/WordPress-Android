@@ -34,7 +34,7 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, buildType: 'Release')
 
     upload_build_to_play_store(app: app, version_name: version_name, track: 'production')
     upload_gutenberg_sourcemaps(app: app, release_version: version_name)
@@ -103,7 +103,7 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, buildType: 'Release')
 
     upload_build_to_play_store(app: app, version_name: version_name, track: 'beta') if options[:upload_to_play_store]
     upload_gutenberg_sourcemaps(app: app, release_version: version_name)
@@ -214,7 +214,7 @@ platform :android do
     version_name = generate_prototype_build_number
     gradle(
       task: 'assemble',
-      flavor: "WordPress#{PROTOTYPE_BUILD_FLAVOR}",
+      flavor: 'WordPress',
       build_type: PROTOTYPE_BUILD_TYPE,
       properties: { prototypeBuildVersionName: version_name }
     )
@@ -238,7 +238,7 @@ platform :android do
     version_name = generate_prototype_build_number
     gradle(
       task: 'assemble',
-      flavor: "Jetpack#{PROTOTYPE_BUILD_FLAVOR}",
+      flavor: 'Jetpack',
       build_type: PROTOTYPE_BUILD_TYPE,
       properties: { prototypeBuildVersionName: version_name }
     )
@@ -270,13 +270,13 @@ platform :android do
     prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
     name = "#{prefix}-#{version_name}.aab"
 
-    aab_file = "org.wordpress.android-#{app}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
+    aab_file = "org.wordpress.android-#{app}-#{options[:buildType]}.aab".downcase
     output_dir = 'WordPress/build/outputs/bundle/'
     build_dir = 'build/'
     logfile_path = "#{build_dir}build.log"
 
     # Intermediate Variables
-    bundle_path = "#{output_dir}#{app}#{options[:flavor].capitalize}#{options[:buildType].capitalize}/#{aab_file}"
+    bundle_path = "#{output_dir}#{app}#{options[:buildType].capitalize}/#{aab_file}"
 
     # Build
     Dir.chdir('..') do
@@ -290,14 +290,14 @@ platform :android do
       if options[:skip_lint].nil?
         UI.message('Running lint...')
         sh("echo \"Running lint...\" >> #{logfile_path}")
-        sh("./gradlew lint#{app}#{options[:flavor]}#{options[:buildType]} >> #{logfile_path} 2>&1") unless is_ci
+        sh("./gradlew lint#{app}#{options[:buildType]} >> #{logfile_path} 2>&1") unless is_ci
       else
         UI.message('Skipping lint...')
       end
 
       UI.message("Building #{version_name} / #{build_code} - #{aab_file}...")
       sh("echo \"Building #{version_name} / #{build_code} - #{aab_file}...\" >> #{logfile_path}")
-      sh("./gradlew bundle#{app}#{options[:flavor]}#{options[:buildType]} >> #{logfile_path} 2>&1")
+      sh("./gradlew bundle#{app}#{options[:buildType]} >> #{logfile_path} 2>&1")
 
       UI.crash!("Unable to find a bundle at #{bundle_path}") unless File.file?(bundle_path)
 
@@ -342,7 +342,6 @@ platform :android do
       app_display_name: "#{app_display_name} Android",
       app_icon: ":#{app}:",
       metadata: {
-        Flavor: PROTOTYPE_BUILD_FLAVOR,
         'Build Type': PROTOTYPE_BUILD_TYPE,
         Version: version_name
       }
