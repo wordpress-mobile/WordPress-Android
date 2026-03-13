@@ -27,6 +27,7 @@ import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
 import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 
+@Suppress("LargeClass")
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner.Silent::class)
 class InsightsViewModelTest :
