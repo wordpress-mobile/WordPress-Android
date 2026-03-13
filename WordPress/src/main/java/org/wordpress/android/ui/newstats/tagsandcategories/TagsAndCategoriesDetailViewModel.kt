@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.tagsandcategories
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,6 +14,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TagsResult
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,7 +23,8 @@ class TagsAndCategoriesDetailViewModel @Inject constructor(
         SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val statsRepository: StatsRepository,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val mapper: TagsAndCategoriesMapper
 ) : ViewModel() {
     private val _uiState =
         MutableStateFlow<TagsAndCategoriesCardUiState>(
@@ -30,7 +33,14 @@ class TagsAndCategoriesDetailViewModel @Inject constructor(
     val uiState: StateFlow<TagsAndCategoriesCardUiState> =
         _uiState.asStateFlow()
 
+    private val isLoaded = AtomicBoolean(false)
+    private val isLoading = AtomicBoolean(false)
+    private var fetchJob: Job? = null
+
     fun loadData() {
+        if (isLoaded.get() ||
+            !isLoading.compareAndSet(false, true)
+        ) return
         _uiState.value =
             TagsAndCategoriesCardUiState.Loading
         fetchData()
@@ -41,6 +51,7 @@ class TagsAndCategoriesDetailViewModel @Inject constructor(
         val site = selectedSiteRepository
             .getSelectedSite()
         if (site == null) {
+            isLoading.set(false)
             _uiState.value =
                 TagsAndCategoriesCardUiState.Error(
                     resourceProvider.getString(
@@ -52,6 +63,7 @@ class TagsAndCategoriesDetailViewModel @Inject constructor(
 
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
+            isLoading.set(false)
             _uiState.value =
                 TagsAndCategoriesCardUiState.Error(
                     resourceProvider.getString(
@@ -63,11 +75,14 @@ class TagsAndCategoriesDetailViewModel @Inject constructor(
 
         statsRepository.init(accessToken)
 
-        viewModelScope.launch {
+        fetchJob = viewModelScope.launch {
             try {
                 val result = statsRepository.fetchTags(
                     siteId = site.siteId,
                     max = DETAIL_MAX_ITEMS
+                )
+                isLoaded.set(
+                    result is TagsResult.Success
                 )
                 handleResult(result)
             } catch (e: Exception) {
@@ -78,6 +93,8 @@ class TagsAndCategoriesDetailViewModel @Inject constructor(
                                 R.string.stats_error_unknown
                             )
                     )
+            } finally {
+                isLoading.set(false)
             }
         }
     }
@@ -85,26 +102,9 @@ class TagsAndCategoriesDetailViewModel @Inject constructor(
     private fun handleResult(result: TagsResult) {
         when (result) {
             is TagsResult.Success -> {
-                val items = result.data.tagGroups
-                    .map { group ->
-                        val tagUiItems = group.tags
-                            .map { tag ->
-                                TagUiItem(
-                                    name = tag.name,
-                                    tagType = tag.tagType
-                                )
-                            }
-                        TagGroupUiItem(
-                            name = tagUiItems.joinToString(
-                                TAGS_SEPARATOR
-                            ) { it.name },
-                            tags = tagUiItems,
-                            views = group.views,
-                            displayType =
-                                TagGroupDisplayType
-                                    .fromTags(tagUiItems)
-                        )
-                    }
+                val items = mapper.mapToUiItems(
+                    result.data.tagGroups
+                )
                 _uiState.value =
                     TagsAndCategoriesCardUiState.Loaded(
                         items = items,
@@ -126,6 +126,5 @@ class TagsAndCategoriesDetailViewModel @Inject constructor(
 
     companion object {
         private const val DETAIL_MAX_ITEMS = 100
-        private const val TAGS_SEPARATOR = " / "
     }
 }

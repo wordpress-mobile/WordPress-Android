@@ -23,7 +23,8 @@ class TagsAndCategoriesViewModel @Inject constructor(
         SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val statsRepository: StatsRepository,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val mapper: TagsAndCategoriesMapper
 ) : ViewModel() {
     private val _uiState =
         MutableStateFlow<TagsAndCategoriesCardUiState>(
@@ -102,33 +103,14 @@ class TagsAndCategoriesViewModel @Inject constructor(
     private fun handleResult(result: TagsResult) {
         when (result) {
             is TagsResult.Success -> {
-                val items = result.data.tagGroups
-                    .map { group ->
-                        val tagUiItems = group.tags
-                            .map { tag ->
-                                TagUiItem(
-                                    name = tag.name,
-                                    tagType = tag.tagType
-                                )
-                            }
-                        TagGroupUiItem(
-                            name = tagUiItems.joinToString(
-                                TAGS_SEPARATOR
-                            ) { it.name },
-                            tags = tagUiItems,
-                            views = group.views,
-                            displayType =
-                                TagGroupDisplayType
-                                    .fromTags(tagUiItems)
-                        )
-                    }
-                val cardItems =
-                    items.take(CARD_MAX_ITEMS)
+                val items = mapper.mapToUiItems(
+                    result.data.tagGroups
+                )
                 _uiState.value =
                     TagsAndCategoriesCardUiState.Loaded(
-                        items = cardItems,
+                        items = items,
                         maxViewsForBar =
-                            cardItems.firstOrNull()
+                            items.firstOrNull()
                                 ?.views ?: 1L
                     )
             }
@@ -141,10 +123,5 @@ class TagsAndCategoriesViewModel @Inject constructor(
                     )
             }
         }
-    }
-
-    companion object {
-        private const val CARD_MAX_ITEMS = 7
-        private const val TAGS_SEPARATOR = " / "
     }
 }

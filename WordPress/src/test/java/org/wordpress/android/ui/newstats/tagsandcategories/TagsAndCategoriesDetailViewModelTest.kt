@@ -23,7 +23,8 @@ import org.wordpress.android.ui.newstats.repository.TagsResult
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
-class TagsAndCategoriesViewModelTest : BaseUnitTest() {
+class TagsAndCategoriesDetailViewModelTest :
+    BaseUnitTest() {
     @Mock
     private lateinit var selectedSiteRepository:
         SelectedSiteRepository
@@ -40,7 +41,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     private val mapper = TagsAndCategoriesMapper()
 
     private lateinit var viewModel:
-        TagsAndCategoriesViewModel
+        TagsAndCategoriesDetailViewModel
 
     private val testSite = SiteModel().apply {
         id = 1
@@ -74,7 +75,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     }
 
     private fun initViewModel() {
-        viewModel = TagsAndCategoriesViewModel(
+        viewModel = TagsAndCategoriesDetailViewModel(
             selectedSiteRepository,
             accountStore,
             statsRepository,
@@ -143,28 +144,6 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when access token is empty, then error state`() =
-        test {
-            stubApiError()
-            whenever(accountStore.accessToken)
-                .thenReturn("")
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            val state = viewModel.uiState.value
-            assertThat(state).isInstanceOf(
-                TagsAndCategoriesCardUiState
-                    .Error::class.java
-            )
-            assertThat(
-                (state as TagsAndCategoriesCardUiState
-                    .Error).message
-            ).isEqualTo(API_ERROR)
-        }
-
-    @Test
     fun `when fetch returns error, then error state`() =
         test {
             stubApiError()
@@ -186,7 +165,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when exception is thrown, then error state with message`() =
+    fun `when exception thrown, then error state`() =
         test {
             whenever(
                 statsRepository.fetchTags(any(), any())
@@ -230,7 +209,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when fetch succeeds, then items are mapped correctly`() =
+    fun `when fetch succeeds, then items mapped correctly`() =
         test {
             whenever(
                 statsRepository.fetchTags(any(), any())
@@ -247,168 +226,6 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 .isEqualTo(TEST_CATEGORY_NAME)
             assertThat(state.items[0].views)
                 .isEqualTo(TEST_CATEGORY_VIEWS)
-            assertThat(state.items[1].name)
-                .isEqualTo(TEST_TAG_NAME)
-            assertThat(state.items[1].views)
-                .isEqualTo(TEST_TAG_VIEWS)
-        }
-
-    @Test
-    fun `when fetch succeeds, then maxViewsForBar is first item views`() =
-        test {
-            whenever(
-                statsRepository.fetchTags(any(), any())
-            ).thenReturn(createSuccessResult())
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            val state = viewModel.uiState.value
-                as TagsAndCategoriesCardUiState.Loaded
-            assertThat(state.maxViewsForBar)
-                .isEqualTo(TEST_CATEGORY_VIEWS)
-        }
-
-    @Test
-    fun `when multi-tag group, then name is joined with separator`() =
-        test {
-            val multiTagGroup = TagGroupData(
-                tags = listOf(
-                    TagData(
-                        tagType = "tag",
-                        name = "Alpha"
-                    ),
-                    TagData(
-                        tagType = "category",
-                        name = "Beta"
-                    )
-                ),
-                views = 50
-            )
-            whenever(
-                statsRepository.fetchTags(any(), any())
-            ).thenReturn(
-                TagsResult.Success(
-                    StatsTagsData(
-                        tagGroups = listOf(multiTagGroup)
-                    )
-                )
-            )
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            val state = viewModel.uiState.value
-                as TagsAndCategoriesCardUiState.Loaded
-            assertThat(state.items[0].name)
-                .isEqualTo("Alpha / Beta")
-            assertThat(state.items[0].tags).hasSize(2)
-        }
-
-    @Test
-    fun `when all tags are categories, then displayType is CATEGORY`() =
-        test {
-            val group = TagGroupData(
-                tags = listOf(
-                    TagData(
-                        tagType = "category",
-                        name = "Cat1"
-                    ),
-                    TagData(
-                        tagType = "category",
-                        name = "Cat2"
-                    )
-                ),
-                views = 50
-            )
-            whenever(
-                statsRepository.fetchTags(any(), any())
-            ).thenReturn(
-                TagsResult.Success(
-                    StatsTagsData(
-                        tagGroups = listOf(group)
-                    )
-                )
-            )
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            val state = viewModel.uiState.value
-                as TagsAndCategoriesCardUiState.Loaded
-            assertThat(state.items[0].displayType)
-                .isEqualTo(TagGroupDisplayType.CATEGORY)
-        }
-
-    @Test
-    fun `when all tags are tags, then displayType is TAG`() =
-        test {
-            val group = TagGroupData(
-                tags = listOf(
-                    TagData(
-                        tagType = "tag",
-                        name = "Tag1"
-                    )
-                ),
-                views = 50
-            )
-            whenever(
-                statsRepository.fetchTags(any(), any())
-            ).thenReturn(
-                TagsResult.Success(
-                    StatsTagsData(
-                        tagGroups = listOf(group)
-                    )
-                )
-            )
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            val state = viewModel.uiState.value
-                as TagsAndCategoriesCardUiState.Loaded
-            assertThat(state.items[0].displayType)
-                .isEqualTo(TagGroupDisplayType.TAG)
-        }
-
-    @Test
-    fun `when mixed tags, then displayType is MIXED`() =
-        test {
-            val group = TagGroupData(
-                tags = listOf(
-                    TagData(
-                        tagType = "tag",
-                        name = "Tag1"
-                    ),
-                    TagData(
-                        tagType = "category",
-                        name = "Cat1"
-                    )
-                ),
-                views = 50
-            )
-            whenever(
-                statsRepository.fetchTags(any(), any())
-            ).thenReturn(
-                TagsResult.Success(
-                    StatsTagsData(
-                        tagGroups = listOf(group)
-                    )
-                )
-            )
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            val state = viewModel.uiState.value
-                as TagsAndCategoriesCardUiState.Loaded
-            assertThat(state.items[0].displayType)
-                .isEqualTo(TagGroupDisplayType.MIXED)
         }
 
     @Test
@@ -431,11 +248,10 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             val state = viewModel.uiState.value
                 as TagsAndCategoriesCardUiState.Loaded
             assertThat(state.items).isEmpty()
-            assertThat(state.maxViewsForBar).isEqualTo(1L)
         }
     // endregion
 
-    // region loadData guards
+    // region loadData guard
     @Test
     fun `when loadData called twice, then fetch only once`() =
         test {
@@ -445,98 +261,15 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
 
             initViewModel()
             viewModel.loadData()
-            advanceUntilIdle()
             viewModel.loadData()
             advanceUntilIdle()
 
             verify(statsRepository, times(1))
-                .fetchTags(eq(TEST_SITE_ID), any())
-        }
-    // endregion
-
-    // region refresh
-    @Test
-    fun `when refresh, then data is re-fetched`() =
-        test {
-            whenever(
-                statsRepository.fetchTags(any(), any())
-            ).thenReturn(createSuccessResult())
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-            viewModel.refresh()
-            advanceUntilIdle()
-
-            verify(statsRepository, times(2))
-                .fetchTags(eq(TEST_SITE_ID), any())
+                .fetchTags(any(), any())
         }
 
     @Test
-    fun `when refresh after error, then loaded state`() =
-        test {
-            stubApiError()
-            whenever(
-                statsRepository.fetchTags(any(), any())
-            ).thenReturn(
-                TagsResult.Error("Network error")
-            )
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            assertThat(viewModel.uiState.value)
-                .isInstanceOf(
-                    TagsAndCategoriesCardUiState
-                        .Error::class.java
-                )
-
-            whenever(
-                statsRepository.fetchTags(any(), any())
-            ).thenReturn(createSuccessResult())
-
-            viewModel.refresh()
-            advanceUntilIdle()
-
-            assertThat(viewModel.uiState.value)
-                .isInstanceOf(
-                    TagsAndCategoriesCardUiState
-                        .Loaded::class.java
-                )
-        }
-    // endregion
-
-    // region refresh sets loading
-    @Test
-    fun `when refresh with no site, then loading then error`() =
-        test {
-            stubNoSiteError()
-            whenever(
-                statsRepository.fetchTags(any(), any())
-            ).thenReturn(createSuccessResult())
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            whenever(
-                selectedSiteRepository.getSelectedSite()
-            ).thenReturn(null)
-
-            viewModel.refresh()
-
-            assertThat(viewModel.uiState.value)
-                .isInstanceOf(
-                    TagsAndCategoriesCardUiState
-                        .Error::class.java
-                )
-        }
-    // endregion
-
-    // region loadData retries after error
-    @Test
-    fun `when loadData after error, then data is re-fetched`() =
+    fun `when loadData after error, then retries`() =
         test {
             stubApiError()
             whenever(
@@ -572,7 +305,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
 
     // region Repository interaction
     @Test
-    fun `when loadData, then init and fetchTags called`() =
+    fun `when loadData, then fetches with detail max`() =
         test {
             whenever(
                 statsRepository.fetchTags(any(), any())
@@ -585,7 +318,10 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             verify(statsRepository)
                 .init(TEST_ACCESS_TOKEN)
             verify(statsRepository)
-                .fetchTags(eq(TEST_SITE_ID), any())
+                .fetchTags(
+                    eq(TEST_SITE_ID),
+                    eq(DETAIL_MAX_ITEMS)
+                )
         }
     // endregion
 
@@ -623,11 +359,11 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             "No site selected"
         private const val API_ERROR =
             "Failed to load stats"
-
         private const val TEST_CATEGORY_NAME =
             "Uncategorized"
         private const val TEST_CATEGORY_VIEWS = 83L
         private const val TEST_TAG_NAME = "snaps"
         private const val TEST_TAG_VIEWS = 15L
+        private const val DETAIL_MAX_ITEMS = 100
     }
 }
