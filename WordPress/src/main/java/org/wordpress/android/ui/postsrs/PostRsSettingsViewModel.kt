@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -73,6 +75,7 @@ class PostRsSettingsViewModel @Inject constructor(
 
     private var lastPost: AnyPostWithEditContext? = null
     private var nextAuthorPageParams: UserListParams? = null
+    private var authorSearchJob: Job? = null
 
     init {
         if (site == null) {
@@ -344,7 +347,11 @@ class PostRsSettingsViewModel @Inject constructor(
             loadSiteAuthors(currentSite)
         }
         _uiState.update {
-            it.copy(dialogState = DialogState.AuthorDialog)
+            it.copy(
+                authorSearchQuery = "",
+                isSearchingAuthors = false,
+                dialogState = DialogState.AuthorDialog,
+            )
         }
     }
 
@@ -559,7 +566,64 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
+    fun onAuthorSearchQueryChanged(query: String) {
+        _uiState.update {
+            it.copy(authorSearchQuery = query)
+        }
+        authorSearchJob?.cancel()
+        val trimmed = query.trim()
+        if (trimmed.isNotEmpty() &&
+            trimmed.length < MIN_AUTHOR_SEARCH_LENGTH
+        ) {
+            return
+        }
+        authorSearchJob = viewModelScope.launch {
+            delay(AUTHOR_SEARCH_DEBOUNCE_MS)
+            _uiState.update {
+                it.copy(isSearchingAuthors = true)
+            }
+            searchAuthors(trimmed)
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun searchAuthors(query: String) {
+        val currentSite = site ?: return
+        try {
+            val params = UserListParams(
+                search = query.ifEmpty { null },
+                perPage = AUTHORS_PER_PAGE,
+            )
+            val page = withContext(Dispatchers.IO) {
+                restClient.fetchSiteAuthors(
+                    currentSite, params
+                )
+            }
+            nextAuthorPageParams = page.nextPageParams
+            _uiState.update {
+                it.copy(
+                    siteAuthors = page.authors,
+                    isSearchingAuthors = false,
+                    canLoadMoreAuthors =
+                        page.nextPageParams != null,
+                )
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.POSTS,
+                "Failed to search authors",
+                e
+            )
+            _uiState.update {
+                it.copy(isSearchingAuthors = false)
+            }
+        }
+    }
+
     fun onDismissDialog() {
+        authorSearchJob?.cancel()
         _uiState.update {
             it.copy(dialogState = DialogState.None)
         }
@@ -950,5 +1014,8 @@ class PostRsSettingsViewModel @Inject constructor(
 
     companion object {
         const val EXTRA_POST_ID = "extra_post_id"
+        private const val AUTHOR_SEARCH_DEBOUNCE_MS = 500L
+        private const val MIN_AUTHOR_SEARCH_LENGTH = 3
+        private const val AUTHORS_PER_PAGE: UInt = 20u
     }
 }
