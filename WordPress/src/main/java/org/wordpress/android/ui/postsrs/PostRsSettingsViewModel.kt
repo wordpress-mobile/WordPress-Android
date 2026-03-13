@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
@@ -27,12 +28,16 @@ import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostRetrieveParams
 import uniffi.wp_api.PostStatus
+import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_api.TermEndpointType
+import uniffi.wp_api.UserListParams
 import java.text.DateFormat
+import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
+@Suppress("TooManyFunctions", "LargeClass")
 class PostRsSettingsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     selectedSiteRepository: SelectedSiteRepository,
@@ -53,20 +58,20 @@ class PostRsSettingsViewModel @Inject constructor(
     private val _events = Channel<PostRsSettingsEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
+    private val _snackbarMessages =
+        Channel<SnackbarMessage>(Channel.BUFFERED)
+    val snackbarMessages = _snackbarMessages.receiveAsFlow()
+
     private val fieldError: String
         get() = resourceProvider.getString(
             R.string.post_rs_settings_field_error
         )
 
     private var lastPost: AnyPostWithEditContext? = null
+    private var nextAuthorPageParams: UserListParams? = null
 
     init {
         if (site == null) {
-            _events.trySend(
-                PostRsSettingsEvent.ShowSnackbar(
-                    resourceProvider.getString(R.string.blog_not_found)
-                )
-            )
             _events.trySend(PostRsSettingsEvent.Finish)
         } else {
             loadPost()
@@ -75,6 +80,58 @@ class PostRsSettingsViewModel @Inject constructor(
 
     fun retry() {
         loadPost()
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    fun refreshPost() {
+        val site = site ?: return
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            _snackbarMessages.trySend(
+                SnackbarMessage(
+                    resourceProvider.getString(
+                        R.string.error_generic_network
+                    )
+                )
+            )
+            return
+        }
+        _uiState.update { it.copy(isRefreshing = true) }
+        viewModelScope.launch {
+            try {
+                val post = fetchPost(site)
+                lastPost = post
+                val current = _uiState.value
+                _uiState.value = mapPostToUiState(post)
+                    .preserveEdits(from = current)
+                resolveAsyncFields(post)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to refresh post settings",
+                    e
+                )
+                _uiState.update {
+                    it.copy(isRefreshing = false)
+                }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = PostRsErrorUtils
+                            .friendlyErrorMessage(
+                                e = e,
+                                resourceProvider =
+                                    resourceProvider,
+                                networkUtilsWrapper =
+                                    networkUtilsWrapper,
+                            ),
+                        actionLabel = resourceProvider
+                            .getString(R.string.retry),
+                        onAction = { refreshPost() }
+                    )
+                )
+            }
+        }
     }
 
     fun retryField(field: RetryableField) {
@@ -115,6 +172,501 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
+    fun onStatusClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.StatusDialog)
+        }
+    }
+
+    fun onStatusSelected(status: PostStatus) {
+        val original = _uiState.value.postStatus
+        _uiState.update {
+            it.copy(
+                editedStatus = status.takeIf { es ->
+                    es != original
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onPasswordClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.PasswordDialog)
+        }
+    }
+
+    fun onPasswordSet(password: String) {
+        val original = _uiState.value.password ?: ""
+        _uiState.update {
+            it.copy(
+                editedPassword = password.takeIf { ep ->
+                    ep != original
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onSlugClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.SlugDialog)
+        }
+    }
+
+    fun onSlugSet(slug: String) {
+        val original = _uiState.value.slug
+        _uiState.update {
+            it.copy(
+                editedSlug = slug.takeIf { es ->
+                    es != original
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onExcerptClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.ExcerptDialog)
+        }
+    }
+
+    fun onExcerptSet(excerpt: String) {
+        val original = _uiState.value.excerpt
+        _uiState.update {
+            it.copy(
+                editedExcerpt = excerpt.takeIf { ee ->
+                    ee != original
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onFormatClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.FormatDialog)
+        }
+    }
+
+    fun onFormatSelected(format: PostFormat) {
+        val original = _uiState.value.postFormat
+        _uiState.update {
+            it.copy(
+                editedFormat = format.takeIf { ef ->
+                    ef != original
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onStickyToggled() {
+        val current = _uiState.value
+        val original = current.sticky
+        val newValue = !current.effectiveSticky
+        _uiState.update {
+            it.copy(
+                editedSticky = newValue.takeIf { es ->
+                    es != original
+                }
+            )
+        }
+    }
+
+    fun onDateClicked() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.DateDialog)
+        }
+    }
+
+    fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {
+        val current = _uiState.value
+        val base = current.effectiveDate ?: Date()
+        val cal = Calendar.getInstance(UTC).apply {
+            time = base
+            this[Calendar.YEAR] = year
+            this[Calendar.MONTH] = month
+            this[Calendar.DAY_OF_MONTH] = dayOfMonth
+        }
+        val newDate = cal.time
+        _uiState.update {
+            it.copy(
+                editedDate = newDate.takeIf { ed ->
+                    ed != current.originalDate
+                },
+                publishDate = formatDate(newDate),
+                dialogState = DialogState.TimeDialog
+            )
+        }
+    }
+
+    fun onTimeSelected(hour: Int, minute: Int) {
+        val current = _uiState.value
+        val base = current.effectiveDate ?: Date()
+        val cal = Calendar.getInstance(UTC).apply {
+            time = base
+            this[Calendar.HOUR_OF_DAY] = hour
+            this[Calendar.MINUTE] = minute
+            this[Calendar.SECOND] = 0
+            this[Calendar.MILLISECOND] = 0
+        }
+        val newDate = cal.time
+        _uiState.update {
+            it.copy(
+                editedDate = newDate.takeIf { ed ->
+                    ed != current.originalDate
+                },
+                publishDate = formatDate(newDate),
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onAuthorClicked() {
+        val currentSite = site ?: return
+        if (!_uiState.value.canEditAuthor) {
+            _snackbarMessages.trySend(
+                SnackbarMessage(
+                    resourceProvider.getString(
+                        R.string
+                            .post_rs_settings_author_no_permission
+                    )
+                )
+            )
+            return
+        }
+        if (_uiState.value.siteAuthors.isEmpty()) {
+            loadSiteAuthors(currentSite)
+        }
+        _uiState.update {
+            it.copy(dialogState = DialogState.AuthorDialog)
+        }
+    }
+
+    fun onAuthorSelected(authorId: Long) {
+        val current = _uiState.value
+        val authorName = current.siteAuthors
+            .firstOrNull { it.id == authorId }?.name
+        _uiState.update {
+            it.copy(
+                editedAuthor = authorId.takeIf { ea ->
+                    ea != current.authorId
+                },
+                authorName = if (authorName != null) {
+                    FieldState.Loaded(authorName)
+                } else {
+                    it.authorName
+                },
+                dialogState = DialogState.None
+            )
+        }
+    }
+
+    fun onCategoriesClicked() {
+        _events.trySend(
+            PostRsSettingsEvent.LaunchCategorySelection(
+                _uiState.value.effectiveCategoryIds
+            )
+        )
+    }
+
+    fun onTagsClicked() {
+        _events.trySend(
+            PostRsSettingsEvent.LaunchTagSelection(
+                _uiState.value.effectiveTagIds
+            )
+        )
+    }
+
+    fun onCategoriesSelected(ids: LongArray) {
+        onTermsSelected(
+            ids = ids,
+            originalIds = _uiState.value.categoryIds,
+            endpointType = TermEndpointType.Categories,
+            updateEdited = { state, edited ->
+                state.copy(editedCategoryIds = edited)
+            },
+            updateNames = { state, names ->
+                state.copy(categoryNames = names)
+            }
+        )
+    }
+
+    fun onTagsSelected(ids: LongArray) {
+        onTermsSelected(
+            ids = ids,
+            originalIds = _uiState.value.tagIds,
+            endpointType = TermEndpointType.Tags,
+            updateEdited = { state, edited ->
+                state.copy(editedTagIds = edited)
+            },
+            updateNames = { state, names ->
+                state.copy(tagNames = names)
+            }
+        )
+    }
+
+    private fun onTermsSelected(
+        ids: LongArray,
+        originalIds: List<Long>,
+        endpointType: TermEndpointType,
+        updateEdited: (PostRsSettingsUiState, List<Long>?) ->
+            PostRsSettingsUiState,
+        updateNames: (PostRsSettingsUiState, FieldState) ->
+            PostRsSettingsUiState,
+    ) {
+        val newIds = ids.toList()
+        val edited = newIds.takeIf {
+            it.sorted() != originalIds.sorted()
+        }
+        val namesState = if (newIds.isEmpty()) {
+            FieldState.Empty
+        } else {
+            FieldState.Loading
+        }
+        _uiState.update {
+            updateNames(updateEdited(it, edited), namesState)
+        }
+        if (newIds.isNotEmpty()) {
+            resolveTermNames(
+                newIds, endpointType
+            ) { names ->
+                _uiState.update {
+                    updateNames(it, names)
+                }
+            }
+        }
+    }
+
+    fun onFeaturedImageClicked() {
+        _events.trySend(PostRsSettingsEvent.LaunchMediaPicker)
+    }
+
+    fun onFeaturedImageSelected(mediaId: Long) {
+        val current = _uiState.value
+        if (mediaId == current.effectiveFeaturedImageId) return
+        val edited = mediaId.takeIf { id ->
+            id != current.featuredImageId
+        }
+        _uiState.update {
+            it.copy(
+                editedFeaturedImageId = edited,
+                featuredImage = FieldState.Loading
+            )
+        }
+        resolveFeaturedImage(mediaId)
+    }
+
+    fun onFeaturedImageRemoved() {
+        val current = _uiState.value
+        val edited = 0L.takeIf {
+            current.featuredImageId != 0L
+        }
+        _uiState.update {
+            it.copy(
+                editedFeaturedImageId = edited,
+                featuredImage = FieldState.Empty
+            )
+        }
+    }
+
+    private fun loadSiteAuthors(
+        site: SiteModel
+    ) {
+        viewModelScope.launch {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val page = withContext(Dispatchers.IO) {
+                    restClient.fetchSiteAuthors(site)
+                }
+                nextAuthorPageParams = page.nextPageParams
+                _uiState.update {
+                    it.copy(
+                        siteAuthors = page.authors,
+                        canLoadMoreAuthors =
+                            page.nextPageParams != null,
+                    )
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to load site authors",
+                    e
+                )
+                _uiState.update {
+                    it.copy(
+                        dialogState = DialogState.None
+                    )
+                }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        e.message?.takeIf {
+                            it.isNotBlank()
+                        } ?: fieldError
+                    )
+                )
+            }
+        }
+    }
+
+    @Suppress("ReturnCount")
+    fun loadMoreAuthors() {
+        val site = site ?: return
+        val params = nextAuthorPageParams ?: return
+        if (_uiState.value.isLoadingMoreAuthors) return
+
+        _uiState.update {
+            it.copy(isLoadingMoreAuthors = true)
+        }
+
+        viewModelScope.launch {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val page = withContext(Dispatchers.IO) {
+                    restClient.fetchSiteAuthors(
+                        site, params
+                    )
+                }
+                nextAuthorPageParams = page.nextPageParams
+                _uiState.update {
+                    it.copy(
+                        siteAuthors =
+                            it.siteAuthors + page.authors,
+                        isLoadingMoreAuthors = false,
+                        canLoadMoreAuthors =
+                            page.nextPageParams != null,
+                    )
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to load more authors",
+                    e
+                )
+                _uiState.update {
+                    it.copy(isLoadingMoreAuthors = false)
+                }
+            }
+        }
+    }
+
+    fun onDismissDialog() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.None)
+        }
+    }
+
+    fun onBackClicked() {
+        if (_uiState.value.hasChanges) {
+            _uiState.update {
+                it.copy(dialogState = DialogState.DiscardDialog)
+            }
+        } else {
+            _events.trySend(PostRsSettingsEvent.Finish)
+        }
+    }
+
+    fun onDiscardConfirmed() {
+        _uiState.update {
+            it.copy(dialogState = DialogState.None)
+        }
+        _events.trySend(PostRsSettingsEvent.Finish)
+    }
+
+    fun onSaveClicked() {
+        val site = site ?: return
+        val state = _uiState.value
+        if (!state.hasChanges || state.isSaving) return
+
+        _uiState.update { it.copy(isSaving = true) }
+        savePost(site, state)
+    }
+
+    @Suppress("TooGenericExceptionCaught", "LongMethod")
+    private fun savePost(
+        site: SiteModel,
+        state: PostRsSettingsUiState,
+    ) {
+        viewModelScope.launch {
+            try {
+                val params = PostUpdateParams(
+                    status = state.editedStatus,
+                    password = state.editedPassword,
+                    sticky = state.editedSticky,
+                    slug = state.editedSlug,
+                    excerpt = state.editedExcerpt,
+                    format = state.editedFormat,
+                    dateGmt = state.editedDate,
+                    author = state.editedAuthor,
+                    featuredMedia =
+                        state.editedFeaturedImageId,
+                    categories =
+                        state.editedCategoryIds
+                            ?: emptyList(),
+                    tags =
+                        state.editedTagIds
+                            ?: emptyList(),
+                    meta = null
+                )
+                withContext(Dispatchers.IO) {
+                    val client =
+                        wpApiClientProvider.getWpApiClient(site)
+                    val response = client.request {
+                        it.posts().update(
+                            PostEndpointType.Posts,
+                            postId,
+                            params
+                        )
+                    }
+                    when (response) {
+                        is WpRequestResult.Success -> Unit
+                        else -> throw PostApiRequestException(
+                            (response
+                                as? WpRequestResult.WpError<*>)
+                                ?.errorMessage
+                                ?: "Post API request failed"
+                        )
+                    }
+                }
+                _events.trySend(
+                    PostRsSettingsEvent.FinishWithChanges
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to save post settings",
+                    e
+                )
+                _uiState.update { it.copy(isSaving = false) }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = PostRsErrorUtils
+                            .friendlyErrorMessage(
+                                e = e,
+                                defaultResId = R.string
+                                    .post_rs_settings_save_error,
+                                resourceProvider =
+                                    resourceProvider,
+                                networkUtilsWrapper =
+                                    networkUtilsWrapper,
+                            ),
+                        actionLabel = resourceProvider
+                            .getString(R.string.retry),
+                        onAction = { onSaveClicked() }
+                    )
+                )
+            }
+        }
+    }
+
     private fun loadPost() {
         val site = site ?: return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -146,16 +698,21 @@ class PostRsSettingsViewModel @Inject constructor(
                 )
                 _uiState.value = PostRsSettingsUiState(
                     isLoading = false,
-                    error = resourceProvider.getString(
-                        R.string.request_failed_message
-                    )
+                    error = PostRsErrorUtils
+                        .friendlyErrorMessage(
+                            e = e,
+                            resourceProvider =
+                                resourceProvider,
+                            networkUtilsWrapper =
+                                networkUtilsWrapper,
+                        )
                 )
             }
         }
     }
 
     private suspend fun fetchPost(
-        site: org.wordpress.android.fluxc.model.SiteModel
+        site: SiteModel
     ): AnyPostWithEditContext = withContext(Dispatchers.IO) {
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request {
@@ -168,9 +725,10 @@ class PostRsSettingsViewModel @Inject constructor(
         when (response) {
             is WpRequestResult.Success ->
                 response.response.data
-            else -> throw PostFetchException(
+            else -> throw PostApiRequestException(
                 (response as? WpRequestResult.WpError<*>)
                     ?.errorMessage
+                    ?: "Post API request failed"
             )
         }
     }
@@ -194,7 +752,7 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
-    @Suppress("ComplexCondition")
+    @Suppress("ComplexCondition", "CyclomaticComplexMethod")
     private fun mapPostToUiState(
         post: AnyPostWithEditContext
     ): PostRsSettingsUiState {
@@ -202,8 +760,11 @@ class PostRsSettingsViewModel @Inject constructor(
             isLoading = false,
             postTitle = post.title?.raw?.takeIf { it.isNotBlank() }
                 ?: post.title?.rendered ?: "",
-            statusLabel = formatStatusLabel(post.status),
             publishDate = formatDate(post.dateGmt),
+            originalDate = post.dateGmt,
+            authorId = post.author ?: 0L,
+            canEditAuthor =
+                site?.hasCapabilityEditOthersPosts == true,
             password = post.password,
             authorName = if (
                 post.author != null && post.author != 0L
@@ -212,6 +773,8 @@ class PostRsSettingsViewModel @Inject constructor(
             } else {
                 FieldState.Empty
             },
+            categoryIds = post.categories ?: emptyList(),
+            tagIds = post.tags ?: emptyList(),
             categoryNames = if (
                 !post.categories.isNullOrEmpty()
             ) {
@@ -232,10 +795,12 @@ class PostRsSettingsViewModel @Inject constructor(
             } else {
                 FieldState.Empty
             },
+            featuredImageId = post.featuredMedia ?: 0L,
             sticky = post.sticky ?: false,
-            formatLabel = formatPostFormatLabel(post.format),
             slug = post.slug,
             excerpt = post.excerpt?.raw ?: "",
+            postStatus = post.status,
+            postFormat = post.format,
         )
     }
 
@@ -353,51 +918,33 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
-    private fun formatStatusLabel(status: PostStatus?): String {
-        val resId = status.toLabel()
-        return if (resId != 0) {
-            resourceProvider.getString(resId)
-        } else {
-            ""
-        }
-    }
-
     private fun formatDate(dateGmt: Date): String {
-        return DateFormat.getDateTimeInstance(
+        val fmt = DateFormat.getDateTimeInstance(
             DateFormat.MEDIUM,
             DateFormat.SHORT
-        ).format(dateGmt)
+        )
+        fmt.timeZone = UTC
+        return fmt.format(dateGmt)
     }
 
-    private fun formatPostFormatLabel(
-        format: PostFormat?
-    ): String = when (format) {
-        is PostFormat.Standard ->
-            resourceProvider.getString(R.string.post_format_standard)
-        is PostFormat.Aside ->
-            resourceProvider.getString(R.string.post_format_aside)
-        is PostFormat.Chat ->
-            resourceProvider.getString(R.string.post_format_chat)
-        is PostFormat.Gallery ->
-            resourceProvider.getString(R.string.post_format_gallery)
-        is PostFormat.Link ->
-            resourceProvider.getString(R.string.post_format_link)
-        is PostFormat.Image ->
-            resourceProvider.getString(R.string.post_format_image)
-        is PostFormat.Quote ->
-            resourceProvider.getString(R.string.post_format_quote)
-        is PostFormat.Status ->
-            resourceProvider.getString(R.string.post_format_status)
-        is PostFormat.Video ->
-            resourceProvider.getString(R.string.post_format_video)
-        is PostFormat.Audio ->
-            resourceProvider.getString(R.string.post_format_audio)
-        is PostFormat.Custom -> format.v1
-        null -> ""
-    }
+    private fun PostRsSettingsUiState.preserveEdits(
+        from: PostRsSettingsUiState
+    ) = copy(
+        editedStatus = from.editedStatus,
+        editedPassword = from.editedPassword,
+        editedSticky = from.editedSticky,
+        editedSlug = from.editedSlug,
+        editedExcerpt = from.editedExcerpt,
+        editedFormat = from.editedFormat,
+        editedDate = from.editedDate,
+        editedAuthor = from.editedAuthor,
+        editedFeaturedImageId = from.editedFeaturedImageId,
+        editedCategoryIds = from.editedCategoryIds,
+        editedTagIds = from.editedTagIds,
+    )
 
-    private class PostFetchException(message: String?) :
-        Exception(message ?: "Failed to fetch post")
+    private class PostApiRequestException(message: String) :
+        RuntimeException(message)
 
     companion object {
         const val EXTRA_POST_ID = "extra_post_id"
