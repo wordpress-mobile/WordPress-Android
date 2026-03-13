@@ -208,4 +208,5 @@ internal fun PostStatus?.toLabel(): Int = when (this) {
         R.string.post_status_post_trashed
     is PostStatus.Custom -> 0
     null -> 0
+    else -> 0
 }

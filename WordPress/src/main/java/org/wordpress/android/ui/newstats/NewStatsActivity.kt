@@ -106,6 +106,9 @@ import org.wordpress.android.ui.newstats.mostpopularday.MostPopularDayViewModel
 import org.wordpress.android.ui.newstats.mostpopulartime.MostPopularTimeCard
 import org.wordpress.android.ui.newstats.mostpopulartime.MostPopularTimeViewModel
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewCard
+import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesCard
+import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesDetailActivity
+import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesViewModel
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewDetailActivity
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewViewModel
 import org.wordpress.android.util.AppLog
@@ -890,6 +893,8 @@ private fun InsightsTabContent(
         viewModel(),
     mostPopularTimeViewModel: MostPopularTimeViewModel =
         viewModel(),
+    tagsAndCategoriesViewModel:
+        TagsAndCategoriesViewModel = viewModel(),
     insightsViewModel: InsightsViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -902,6 +907,9 @@ private fun InsightsTabContent(
             .uiState.collectAsState()
     val mostPopularTimeUiState by
         mostPopularTimeViewModel
+            .uiState.collectAsState()
+    val tagsAndCategoriesUiState by
+        tagsAndCategoriesViewModel
             .uiState.collectAsState()
     val isRefreshing by insightsViewModel
         .isDataRefreshing.collectAsState()
@@ -937,6 +945,14 @@ private fun InsightsTabContent(
         insightsViewModel.insightsResult.collect { result ->
             yearInReviewViewModel.handleResult(result)
             mostPopularTimeViewModel.handleResult(result)
+        }
+    }
+
+    LaunchedEffect(cardsToLoad) {
+        if (InsightsCardType.TAGS_AND_CATEGORIES
+            in cardsToLoad
+        ) {
+            tagsAndCategoriesViewModel.loadData()
         }
     }
 
@@ -987,6 +1003,11 @@ private fun InsightsTabContent(
         onRefresh = {
             insightsViewModel.checkNetworkStatus()
             insightsViewModel.refreshData()
+            if (InsightsCardType.TAGS_AND_CATEGORIES
+                in visibleCards
+            ) {
+                tagsAndCategoriesViewModel.refresh()
+            }
         },
         indicator = {
             PullToRefreshDefaults.Indicator(
@@ -1185,6 +1206,58 @@ private fun InsightsTabContent(
                             onMoveToBottom = {
                                 insightsViewModel
                                     .moveCardToBottom(cardType)
+                            }
+                        )
+                    InsightsCardType
+                        .TAGS_AND_CATEGORIES ->
+                        TagsAndCategoriesCard(
+                            uiState =
+                                tagsAndCategoriesUiState,
+                            onShowAllClick = {
+                                val items =
+                                    tagsAndCategoriesViewModel
+                                        .getDetailData()
+                                TagsAndCategoriesDetailActivity
+                                    .start(
+                                        context,
+                                        items
+                                    )
+                            },
+                            onRemoveCard = {
+                                insightsViewModel
+                                    .removeCard(
+                                        cardType
+                                    )
+                            },
+                            onRetry = {
+                                tagsAndCategoriesViewModel
+                                    .refresh()
+                            },
+                            cardPosition =
+                                cardPosition,
+                            onMoveUp = {
+                                insightsViewModel
+                                    .moveCardUp(
+                                        cardType
+                                    )
+                            },
+                            onMoveToTop = {
+                                insightsViewModel
+                                    .moveCardToTop(
+                                        cardType
+                                    )
+                            },
+                            onMoveDown = {
+                                insightsViewModel
+                                    .moveCardDown(
+                                        cardType
+                                    )
+                            },
+                            onMoveToBottom = {
+                                insightsViewModel
+                                    .moveCardToBottom(
+                                        cardType
+                                    )
                             }
                         )
                 }

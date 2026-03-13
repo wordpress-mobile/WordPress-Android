@@ -14,6 +14,8 @@ import org.wordpress.android.ui.newstats.datasource.SearchTermsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsInsightsData
 import org.wordpress.android.ui.newstats.datasource.StatsInsightsDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsTagsData
+import org.wordpress.android.ui.newstats.datasource.StatsTagsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.datasource.StatsDateRange
@@ -1373,6 +1375,36 @@ class StatsRepository @Inject constructor(
             }
         }
     }
+
+    suspend fun fetchTags(
+        siteId: Long,
+        max: Int = DEFAULT_TAGS_MAX
+    ): TagsResult = withContext(ioDispatcher) {
+        val result = statsDataSource.fetchStatsTags(
+            siteId = siteId,
+            max = max
+        )
+        when (result) {
+            is StatsTagsDataResult.Success ->
+                TagsResult.Success(
+                    data = result.data
+                )
+            is StatsTagsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching tags: " +
+                        "${result.errorType}"
+                )
+                TagsResult.Error(
+                    result.errorType.name
+                )
+            }
+        }
+    }
+
+    companion object {
+        private const val DEFAULT_TAGS_MAX = 10
+    }
 }
 
 /**
@@ -1778,4 +1810,16 @@ sealed class StatsSummaryResult {
     data class Error(
         val message: String
     ) : StatsSummaryResult()
+}
+
+/**
+ * Result of fetching tags data from the repository.
+ */
+sealed class TagsResult {
+    data class Success(
+        val data: StatsTagsData
+    ) : TagsResult()
+    data class Error(
+        val message: String
+    ) : TagsResult()
 }

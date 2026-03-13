@@ -91,7 +91,8 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                     InsightsCardType.YEAR_IN_REVIEW,
                     InsightsCardType.ALL_TIME_STATS,
                     InsightsCardType.MOST_POPULAR_DAY,
-                    InsightsCardType.MOST_POPULAR_TIME
+                    InsightsCardType.MOST_POPULAR_TIME,
+                    InsightsCardType.TAGS_AND_CATEGORIES
                 )
             verify(appPrefsWrapper)
                 .setStatsInsightsCardsConfigurationJson(
@@ -108,7 +109,8 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                         "YEAR_IN_REVIEW",
                         "ALL_TIME_STATS",
                         "MOST_POPULAR_DAY",
-                        "MOST_POPULAR_TIME"
+                        "MOST_POPULAR_TIME",
+                        "TAGS_AND_CATEGORIES"
                     ]
                 }
             """.trimIndent()
@@ -127,7 +129,8 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                     InsightsCardType.YEAR_IN_REVIEW,
                     InsightsCardType.ALL_TIME_STATS,
                     InsightsCardType.MOST_POPULAR_DAY,
-                    InsightsCardType.MOST_POPULAR_TIME
+                    InsightsCardType.MOST_POPULAR_TIME,
+                    InsightsCardType.TAGS_AND_CATEGORIES
                 )
             verify(
                 appPrefsWrapper,
@@ -165,7 +168,8 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                         "YEAR_IN_REVIEW",
                         "ALL_TIME_STATS",
                         "MOST_POPULAR_DAY",
-                        "MOST_POPULAR_TIME"
+                        "MOST_POPULAR_TIME",
+                        "TAGS_AND_CATEGORIES"
                     ]
                 }
             """.trimIndent()
@@ -232,7 +236,8 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                         "YEAR_IN_REVIEW",
                         "ALL_TIME_STATS",
                         "MOST_POPULAR_DAY",
-                        "MOST_POPULAR_TIME"
+                        "MOST_POPULAR_TIME",
+                        "TAGS_AND_CATEGORIES"
                     ]
                 }
             """.trimIndent()
@@ -268,7 +273,8 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                         "YEAR_IN_REVIEW",
                         "ALL_TIME_STATS",
                         "MOST_POPULAR_DAY",
-                        "MOST_POPULAR_TIME"
+                        "MOST_POPULAR_TIME",
+                        "TAGS_AND_CATEGORIES"
                     ]
                 }
             """.trimIndent()
@@ -376,7 +382,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
 
             repository.moveCardDown(
                 TEST_SITE_ID,
-                InsightsCardType.MOST_POPULAR_TIME
+                InsightsCardType.TAGS_AND_CATEGORIES
             )
 
             verify(
@@ -422,7 +428,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
 
             repository.moveCardToBottom(
                 TEST_SITE_ID,
-                InsightsCardType.MOST_POPULAR_TIME
+                InsightsCardType.TAGS_AND_CATEGORIES
             )
 
             verify(
@@ -441,7 +447,8 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                     "YEAR_IN_REVIEW",
                     "ALL_TIME_STATS",
                     "MOST_POPULAR_DAY",
-                    "MOST_POPULAR_TIME"
+                    "MOST_POPULAR_TIME",
+                    "TAGS_AND_CATEGORIES"
                 ]
             }
         """.trimIndent()
