@@ -3,27 +3,19 @@ package org.wordpress.android.ui.newstats.tagsandcategories
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.outlined.Folder
-import androidx.compose.material.icons.outlined.Sell
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +25,6 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,16 +34,16 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.ShowAllFooter
-import org.wordpress.android.ui.newstats.components.StatsCardMenu
+import org.wordpress.android.ui.newstats.components.StatsCardContainer
+import org.wordpress.android.ui.newstats.components.StatsCardEmptyContent
+import org.wordpress.android.ui.newstats.components.StatsCardHeader
+import org.wordpress.android.ui.newstats.components.StatsListHeader
+import org.wordpress.android.ui.newstats.components.StatsListRowContainer
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
 
-private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
-private val CardMargin = 16.dp
-private const val BAR_BACKGROUND_ALPHA = 0.08f
 private const val LOADING_SHIMMER_ITEM_COUNT = 5
-private const val VERTICAL_LINE_ALPHA = 0.3f
 
 @Composable
 @Suppress("LongParameterList")
@@ -68,26 +59,7 @@ fun TagsAndCategoriesCard(
     onMoveDown: (() -> Unit)? = null,
     onMoveToBottom: (() -> Unit)? = null
 ) {
-    val borderColor =
-        MaterialTheme.colorScheme.outlineVariant
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = CardMargin,
-                vertical = 8.dp
-            )
-            .clip(RoundedCornerShape(CardCornerRadius))
-            .border(
-                width = 1.dp,
-                color = borderColor,
-                shape = RoundedCornerShape(
-                    CardCornerRadius
-                )
-            )
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
+    StatsCardContainer(modifier = modifier) {
         when (uiState) {
             is TagsAndCategoriesCardUiState.Loading ->
                 LoadingContent()
@@ -196,7 +168,10 @@ private fun LoadedContent(
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        HeaderSection(
+        StatsCardHeader(
+            titleResId =
+                R.string
+                    .stats_insights_tags_and_categories,
             onRemoveCard = onRemoveCard,
             cardPosition = cardPosition,
             onMoveUp = onMoveUp,
@@ -206,19 +181,27 @@ private fun LoadedContent(
         )
         Spacer(modifier = Modifier.height(12.dp))
         if (state.items.isEmpty()) {
-            EmptyStateContent()
+            StatsCardEmptyContent()
         } else {
-            ColumnHeadersRow()
+            StatsListHeader(
+                leftHeaderResId =
+                    R.string
+                        .stats_insights_tags_and_categories,
+                rightHeaderResId =
+                    R.string.stats_views
+            )
             Spacer(modifier = Modifier.height(8.dp))
             state.items.forEachIndexed { index, item ->
                 val percentage =
                     if (state.maxViewsForBar > 0) {
                         item.views.toFloat() /
-                            state.maxViewsForBar.toFloat()
+                            state.maxViewsForBar
+                                .toFloat()
                     } else {
                         0f
                     }
-                val isExpandable = item.tags.size > 1
+                val isExpandable =
+                    item.tags.size > 1
                 val isExpanded =
                     expandedGroups[index] == true
 
@@ -249,73 +232,14 @@ private fun LoadedContent(
                 }
                 if (index < state.items.lastIndex) {
                     Spacer(
-                        modifier = Modifier.height(4.dp)
+                        modifier =
+                            Modifier.height(4.dp)
                     )
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
             ShowAllFooter(onClick = onShowAllClick)
         }
-    }
-}
-
-@Composable
-private fun HeaderSection(
-    onRemoveCard: () -> Unit,
-    cardPosition: CardPosition?,
-    onMoveUp: (() -> Unit)?,
-    onMoveToTop: (() -> Unit)?,
-    onMoveDown: (() -> Unit)?,
-    onMoveToBottom: (() -> Unit)?
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement =
-            Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = stringResource(
-                R.string
-                    .stats_insights_tags_and_categories
-            ),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
-        StatsCardMenu(
-            onRemoveClick = onRemoveCard,
-            cardPosition = cardPosition,
-            onMoveUp = onMoveUp,
-            onMoveToTop = onMoveToTop,
-            onMoveDown = onMoveDown,
-            onMoveToBottom = onMoveToBottom
-        )
-    }
-}
-
-@Composable
-private fun ColumnHeadersRow() {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement =
-            Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = stringResource(
-                R.string
-                    .stats_insights_tags_and_categories
-            ),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme
-                .onSurfaceVariant
-        )
-        Text(
-            text = stringResource(R.string.stats_views),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme
-                .onSurfaceVariant
-        )
     }
 }
 
@@ -327,29 +251,14 @@ private fun TagGroupRow(
     isExpanded: Boolean,
     onClick: (() -> Unit)?
 ) {
-    val barColor = MaterialTheme.colorScheme.primary
-        .copy(alpha = BAR_BACKGROUND_ALPHA)
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)
-            .clip(RoundedCornerShape(8.dp))
-            .then(
-                if (onClick != null) {
-                    Modifier.clickable(onClick = onClick)
-                } else {
-                    Modifier
-                }
-            )
+    StatsListRowContainer(
+        percentage = percentage,
+        modifier = if (onClick != null) {
+            Modifier.clickable(onClick = onClick)
+        } else {
+            Modifier
+        }
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(fraction = percentage)
-                .fillMaxHeight()
-                .background(barColor)
-        )
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -375,20 +284,24 @@ private fun TagGroupRow(
                 )
                 if (isExpandable) {
                     Icon(
-                        imageVector = if (isExpanded) {
-                            Icons.Default
-                                .KeyboardArrowUp
-                        } else {
-                            Icons.Default
-                                .KeyboardArrowDown
-                        },
+                        imageVector =
+                            if (isExpanded) {
+                                Icons.Default
+                                    .KeyboardArrowUp
+                            } else {
+                                Icons.Default
+                                    .KeyboardArrowDown
+                            },
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme
+                        modifier =
+                            Modifier.size(16.dp),
+                        tint = MaterialTheme
+                            .colorScheme
                             .onSurfaceVariant
                     )
                     Spacer(
-                        modifier = Modifier.width(4.dp)
+                        modifier =
+                            Modifier.width(4.dp)
                     )
                 }
                 Text(
@@ -417,100 +330,6 @@ private fun TagGroupRow(
 }
 
 @Composable
-private fun TagTypeIcon(
-    displayType: TagGroupDisplayType
-) {
-    Icon(
-        imageVector = when (displayType) {
-            TagGroupDisplayType.CATEGORY ->
-                Icons.Outlined.Folder
-            TagGroupDisplayType.TAG,
-            TagGroupDisplayType.MIXED ->
-                Icons.Outlined.Sell
-        },
-        contentDescription = null,
-        modifier = Modifier.size(16.dp),
-        tint = MaterialTheme.colorScheme
-            .onSurfaceVariant
-    )
-}
-
-@Composable
-private fun ExpandedTagsSection(
-    tags: List<TagUiItem>
-) {
-    val lineColor = MaterialTheme.colorScheme.primary
-        .copy(alpha = VERTICAL_LINE_ALPHA)
-
-    Column(
-        modifier = Modifier.padding(
-            start = 24.dp,
-            top = 4.dp,
-            bottom = 4.dp
-        )
-    ) {
-        tags.forEachIndexed { index, tag ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                verticalAlignment =
-                    Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .width(2.dp)
-                        .height(24.dp)
-                        .background(lineColor)
-                )
-                Spacer(
-                    modifier = Modifier.width(12.dp)
-                )
-                TagTypeIcon(
-                    displayType = TagGroupDisplayType
-                        .fromTags(listOf(tag))
-                )
-                Spacer(
-                    modifier = Modifier.width(8.dp)
-                )
-                Text(
-                    text = tag.name,
-                    style = MaterialTheme.typography
-                        .bodyMedium,
-                    color = MaterialTheme.colorScheme
-                        .onSurface
-                )
-            }
-            if (index < tags.lastIndex) {
-                Spacer(
-                    modifier = Modifier.height(2.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun EmptyStateContent() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = stringResource(
-                R.string.stats_no_data_yet
-            ),
-            style = MaterialTheme.typography
-                .bodyMedium,
-            color = MaterialTheme.colorScheme
-                .onSurfaceVariant
-        )
-    }
-}
-
-@Composable
 @Suppress("LongParameterList")
 private fun ErrorContent(
     state: TagsAndCategoriesCardUiState.Error,
@@ -527,7 +346,10 @@ private fun ErrorContent(
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        HeaderSection(
+        StatsCardHeader(
+            titleResId =
+                R.string
+                    .stats_insights_tags_and_categories,
             onRemoveCard = onRemoveCard,
             cardPosition = cardPosition,
             onMoveUp = onMoveUp,
@@ -545,7 +367,8 @@ private fun ErrorContent(
                 text = state.message,
                 style = MaterialTheme.typography
                     .bodyMedium,
-                color = MaterialTheme.colorScheme.error
+                color = MaterialTheme.colorScheme
+                    .error
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = onRetry) {
@@ -648,7 +471,9 @@ private fun TagsAndCategoriesCardErrorPreview() {
     AppThemeM3 {
         TagsAndCategoriesCard(
             uiState = TagsAndCategoriesCardUiState
-                .Error(message = "Failed to load data"),
+                .Error(
+                    message = "Failed to load data"
+                ),
             onShowAllClick = {},
             onRetry = {},
             onRemoveCard = {}

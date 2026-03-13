@@ -100,4 +100,31 @@ class TagGroupDisplayTypeTest {
         assertThat(result)
             .isEqualTo(TagGroupDisplayType.CATEGORY)
     }
+
+    @Test
+    fun `when fromTagType with category, then CATEGORY`() {
+        val result = TagGroupDisplayType
+            .fromTagType("category")
+
+        assertThat(result)
+            .isEqualTo(TagGroupDisplayType.CATEGORY)
+    }
+
+    @Test
+    fun `when fromTagType with tag, then TAG`() {
+        val result = TagGroupDisplayType
+            .fromTagType("tag")
+
+        assertThat(result)
+            .isEqualTo(TagGroupDisplayType.TAG)
+    }
+
+    @Test
+    fun `when fromTagType with unknown, then TAG`() {
+        val result = TagGroupDisplayType
+            .fromTagType("unknown")
+
+        assertThat(result)
+            .isEqualTo(TagGroupDisplayType.TAG)
+    }
 }

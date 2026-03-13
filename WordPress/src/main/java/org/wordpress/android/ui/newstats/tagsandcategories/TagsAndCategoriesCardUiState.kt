@@ -50,6 +50,15 @@ enum class TagGroupDisplayType {
     companion object {
         private const val CATEGORY_TYPE = "category"
 
+        fun fromTagType(
+            tagType: String
+        ): TagGroupDisplayType =
+            if (tagType == CATEGORY_TYPE) {
+                CATEGORY
+            } else {
+                TAG
+            }
+
         fun fromTags(
             tags: List<TagUiItem>
         ): TagGroupDisplayType {
