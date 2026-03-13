@@ -449,8 +449,16 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
-    fun onFeaturedImageClicked() {
-        _events.trySend(PostRsSettingsEvent.LaunchMediaPicker)
+    fun onChooseFromWpMedia() {
+        _events.trySend(
+            PostRsSettingsEvent.LaunchWpMediaPicker
+        )
+    }
+
+    fun onChooseFromDevice() {
+        _events.trySend(
+            PostRsSettingsEvent.LaunchDeviceMediaPicker
+        )
     }
 
     fun onFeaturedImageSelected(mediaId: Long) {

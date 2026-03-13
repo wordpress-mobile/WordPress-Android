@@ -94,8 +94,10 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                         viewModel::onCategoriesClicked,
                     onTagsClicked =
                         viewModel::onTagsClicked,
-                    onFeaturedImageClicked =
-                        viewModel::onFeaturedImageClicked,
+                    onChooseFromWpMedia =
+                        viewModel::onChooseFromWpMedia,
+                    onChooseFromDevice =
+                        viewModel::onChooseFromDevice,
                     onFeaturedImageRemoved =
                         viewModel::onFeaturedImageRemoved,
                     onLoadMoreAuthors = viewModel::loadMoreAuthors,
@@ -117,8 +119,10 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                             setResult(RESULT_OK)
                             finish()
                         }
-                        is PostRsSettingsEvent.LaunchMediaPicker ->
-                            launchMediaPicker()
+                        is PostRsSettingsEvent.LaunchWpMediaPicker ->
+                            launchWpMediaPicker()
+                        is PostRsSettingsEvent.LaunchDeviceMediaPicker ->
+                            launchDeviceMediaPicker()
                         is PostRsSettingsEvent
                             .LaunchCategorySelection ->
                             launchTermSelection(
@@ -207,16 +211,40 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
         )
     }
 
-    private fun launchMediaPicker() {
+    private fun launchWpMediaPicker() {
+        val site =
+            selectedSiteRepository.getSelectedSite()
+                ?: return
+        val setup = MediaPickerSetup(
+            primaryDataSource =
+                MediaPickerSetup.DataSource.WP_LIBRARY,
+            availableDataSources = emptySet(),
+            canMultiselect = false,
+            requiresPhotosVideosPermissions = false,
+            requiresMusicAudioPermissions = false,
+            allowedTypes = setOf(MediaType.IMAGE),
+            cameraSetup =
+                MediaPickerSetup.CameraSetup.HIDDEN,
+            systemPickerEnabled = false,
+            editingEnabled = false,
+            queueResults = false,
+            defaultSearchView = false,
+            title = R.string.photo_picker_title
+        )
+        val intent = MediaPickerActivity.buildIntent(
+            this, setup, site
+        )
+        mediaPickerLauncher.launch(intent)
+    }
+
+    private fun launchDeviceMediaPicker() {
         val site =
             selectedSiteRepository.getSelectedSite()
                 ?: return
         val setup = MediaPickerSetup(
             primaryDataSource =
                 MediaPickerSetup.DataSource.DEVICE,
-            availableDataSources = setOf(
-                MediaPickerSetup.DataSource.WP_LIBRARY
-            ),
+            availableDataSources = emptySet(),
             canMultiselect = false,
             requiresPhotosVideosPermissions = true,
             requiresMusicAudioPermissions = false,

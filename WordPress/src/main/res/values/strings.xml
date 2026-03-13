@@ -1020,7 +1020,8 @@
     <string name="post_rs_settings_featured_image_not_set">Featured image not set.</string>
     <string name="post_rs_settings_featured_image_error">Couldn\'t load featured image.</string>
     <string name="post_rs_settings_edit_featured_image">Edit featured image</string>
-    <string name="post_rs_settings_change_featured_image">Change</string>
+    <string name="post_rs_settings_choose_from_wp_media">Choose from WP Media</string>
+    <string name="post_rs_settings_choose_from_device">Choose from device</string>
     <string name="post_rs_settings_remove_featured_image">Remove</string>
     <string name="post_rs_settings_password_dialog_title">Post Password</string>
     <string name="post_rs_settings_password_hint">Enter password</string>
