@@ -1214,14 +1214,8 @@ private fun InsightsTabContent(
                             uiState =
                                 tagsAndCategoriesUiState,
                             onShowAllClick = {
-                                val items =
-                                    tagsAndCategoriesViewModel
-                                        .getDetailData()
                                 TagsAndCategoriesDetailActivity
-                                    .start(
-                                        context,
-                                        items
-                                    )
+                                    .start(context)
                             },
                             onRemoveCard = {
                                 insightsViewModel

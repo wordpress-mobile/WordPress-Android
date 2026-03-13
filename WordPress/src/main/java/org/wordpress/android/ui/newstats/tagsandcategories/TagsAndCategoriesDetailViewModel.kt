@@ -3,7 +3,6 @@ package org.wordpress.android.ui.newstats.tagsandcategories
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,11 +13,10 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TagsResult
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 @HiltViewModel
-class TagsAndCategoriesViewModel @Inject constructor(
+class TagsAndCategoriesDetailViewModel @Inject constructor(
     private val selectedSiteRepository:
         SelectedSiteRepository,
     private val accountStore: AccountStore,
@@ -32,20 +30,9 @@ class TagsAndCategoriesViewModel @Inject constructor(
     val uiState: StateFlow<TagsAndCategoriesCardUiState> =
         _uiState.asStateFlow()
 
-    private val isLoaded = AtomicBoolean(false)
-    private val isLoading = AtomicBoolean(false)
-    private var fetchJob: Job? = null
-
     fun loadData() {
-        if (isLoaded.get() || !isLoading.compareAndSet(false, true)) return
-        fetchData()
-    }
-
-    fun refresh() {
-        fetchJob?.cancel()
-        isLoaded.set(false)
-        isLoading.set(true)
-        _uiState.value = TagsAndCategoriesCardUiState.Loading
+        _uiState.value =
+            TagsAndCategoriesCardUiState.Loading
         fetchData()
     }
 
@@ -54,7 +41,6 @@ class TagsAndCategoriesViewModel @Inject constructor(
         val site = selectedSiteRepository
             .getSelectedSite()
         if (site == null) {
-            isLoading.set(false)
             _uiState.value =
                 TagsAndCategoriesCardUiState.Error(
                     resourceProvider.getString(
@@ -66,7 +52,6 @@ class TagsAndCategoriesViewModel @Inject constructor(
 
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) {
-            isLoading.set(false)
             _uiState.value =
                 TagsAndCategoriesCardUiState.Error(
                     resourceProvider.getString(
@@ -78,12 +63,12 @@ class TagsAndCategoriesViewModel @Inject constructor(
 
         statsRepository.init(accessToken)
 
-        fetchJob = viewModelScope.launch {
+        viewModelScope.launch {
             try {
                 val result = statsRepository.fetchTags(
-                    siteId = site.siteId
+                    siteId = site.siteId,
+                    max = DETAIL_MAX_ITEMS
                 )
-                isLoaded.set(result is TagsResult.Success)
                 handleResult(result)
             } catch (e: Exception) {
                 _uiState.value =
@@ -93,8 +78,6 @@ class TagsAndCategoriesViewModel @Inject constructor(
                                 R.string.stats_error_unknown
                             )
                     )
-            } finally {
-                isLoading.set(false)
             }
         }
     }
@@ -122,13 +105,11 @@ class TagsAndCategoriesViewModel @Inject constructor(
                                     .fromTags(tagUiItems)
                         )
                     }
-                val cardItems =
-                    items.take(CARD_MAX_ITEMS)
                 _uiState.value =
                     TagsAndCategoriesCardUiState.Loaded(
-                        items = cardItems,
+                        items = items,
                         maxViewsForBar =
-                            cardItems.firstOrNull()
+                            items.firstOrNull()
                                 ?.views ?: 1L
                     )
             }
@@ -144,7 +125,7 @@ class TagsAndCategoriesViewModel @Inject constructor(
     }
 
     companion object {
-        private const val CARD_MAX_ITEMS = 7
+        private const val DETAIL_MAX_ITEMS = 100
         private const val TAGS_SEPARATOR = " / "
     }
 }

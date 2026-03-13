@@ -598,46 +598,6 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         }
     // endregion
 
-    // region getDetailData
-    @Test
-    fun `when getDetailData, then returns all items`() =
-        test {
-            val manyGroups = (1..10).map { i ->
-                TagGroupData(
-                    tags = listOf(
-                        TagData(
-                            tagType = "tag",
-                            name = "Tag $i"
-                        )
-                    ),
-                    views = (100 - i).toLong()
-                )
-            }
-            whenever(
-                statsRepository.fetchTags(any(), any())
-            ).thenReturn(
-                TagsResult.Success(
-                    StatsTagsData(tagGroups = manyGroups)
-                )
-            )
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            val detailData = viewModel.getDetailData()
-            assertThat(detailData).hasSize(10)
-        }
-
-    @Test
-    fun `when getDetailData before load, then empty list`() {
-        initViewModel()
-
-        val detailData = viewModel.getDetailData()
-        assertThat(detailData).isEmpty()
-    }
-    // endregion
-
     // region Repository interaction
     @Test
     fun `when loadData, then init and fetchTags called`() =
