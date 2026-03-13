@@ -108,15 +108,22 @@ class InsightsViewModel @Inject constructor(
             return
         }
         val cards = _cardsToLoad.value
+        val shouldFetchSummary = cards.needsSummary()
+        val shouldFetchInsights = cards.needsInsights()
+        if (!shouldFetchSummary && !shouldFetchInsights) {
+            isDataLoading = false
+            _isDataRefreshing.value = false
+            return
+        }
         viewModelScope.launch {
             try {
                 coroutineScope {
-                    if (cards.needsSummary()) {
+                    if (shouldFetchSummary) {
                         launch {
                             fetchSummary(siteId, forceRefresh)
                         }
                     }
-                    if (cards.needsInsights()) {
+                    if (shouldFetchInsights) {
                         launch {
                             fetchInsights(
                                 siteId, forceRefresh
