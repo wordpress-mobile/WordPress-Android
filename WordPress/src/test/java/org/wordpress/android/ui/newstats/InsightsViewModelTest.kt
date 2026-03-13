@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats
 
+import app.cash.turbine.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -10,13 +11,20 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.datasource.StatsInsightsData
+import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.InsightsCardsConfigurationRepository
+import org.wordpress.android.ui.newstats.repository.InsightsResult
+import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
+import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
+import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
@@ -34,6 +42,14 @@ class InsightsViewModelTest :
     @Mock
     private lateinit var networkUtilsWrapper:
         NetworkUtilsWrapper
+
+    @Mock
+    private lateinit var statsSummaryUseCase:
+        StatsSummaryUseCase
+
+    @Mock
+    private lateinit var statsInsightsUseCase:
+        StatsInsightsUseCase
 
     private lateinit var viewModel: InsightsViewModel
 
@@ -72,7 +88,9 @@ class InsightsViewModelTest :
         viewModel = InsightsViewModel(
             selectedSiteRepository,
             cardConfigurationRepository,
-            networkUtilsWrapper
+            networkUtilsWrapper,
+            statsSummaryUseCase,
+            statsInsightsUseCase
         )
     }
 
@@ -218,7 +236,9 @@ class InsightsViewModelTest :
             viewModel = InsightsViewModel(
                 selectedSiteRepository,
                 cardConfigurationRepository,
-                networkUtilsWrapper
+                networkUtilsWrapper,
+                statsSummaryUseCase,
+                statsInsightsUseCase
             )
             advanceUntilIdle()
 
@@ -331,7 +351,9 @@ class InsightsViewModelTest :
             viewModel = InsightsViewModel(
                 selectedSiteRepository,
                 cardConfigurationRepository,
-                networkUtilsWrapper
+                networkUtilsWrapper,
+                statsSummaryUseCase,
+                statsInsightsUseCase
             )
 
             assertThat(viewModel.cardsToLoad.value)
@@ -408,8 +430,239 @@ class InsightsViewModelTest :
             ).isTrue()
         }
 
+    // region Data fetching tests
+
+    @Test
+    fun `when loadDataIfNeeded called, then both use cases are invoked`() =
+        test {
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummaryData()
+                )
+            )
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase)
+                .invoke(eq(TEST_SITE_ID), eq(false))
+            verify(statsInsightsUseCase)
+                .invoke(eq(TEST_SITE_ID), eq(false))
+        }
+
+    @Test
+    fun `when loadDataIfNeeded called twice, then use cases invoked only once`() =
+        test {
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummaryData()
+                )
+            )
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase,
+                org.mockito.Mockito.times(1))
+                .invoke(any(), any())
+            verify(statsInsightsUseCase,
+                org.mockito.Mockito.times(1))
+                .invoke(any(), any())
+        }
+
+    @Test
+    fun `when fetchData called, then results are emitted`() =
+        test {
+            val testSummary = createTestSummaryData()
+            val testInsights = createTestInsightsData()
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenReturn(
+                StatsSummaryResult.Success(testSummary)
+            )
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(testInsights)
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.summaryResult.test {
+                viewModel.fetchData()
+                advanceUntilIdle()
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(
+                    StatsSummaryResult
+                        .Success::class.java
+                )
+                assertThat(
+                    (result as StatsSummaryResult.Success)
+                        .data.views
+                ).isEqualTo(TEST_VIEWS)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `when refreshData called, then forceRefresh is true`() =
+        test {
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummaryData()
+                )
+            )
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.refreshData()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase)
+                .invoke(eq(TEST_SITE_ID), eq(true))
+            verify(statsInsightsUseCase)
+                .invoke(eq(TEST_SITE_ID), eq(true))
+        }
+
+    @Test
+    fun `when refreshData called, then isDataRefreshing resets to false`() =
+        test {
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummaryData()
+                )
+            )
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.refreshData()
+            advanceUntilIdle()
+
+            assertThat(viewModel.isDataRefreshing.value)
+                .isFalse()
+        }
+
+    @Suppress("TooGenericExceptionThrown")
+    @Test
+    fun `when summary use case throws, then error result is emitted`() =
+        test {
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenAnswer {
+                throw RuntimeException("Test error")
+            }
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.summaryResult.test {
+                viewModel.fetchData()
+                advanceUntilIdle()
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(
+                    StatsSummaryResult
+                        .Error::class.java
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `when no site selected, then fetchData is no-op`() =
+        test {
+            initViewModel()
+            advanceUntilIdle()
+
+            whenever(
+                selectedSiteRepository.getSelectedSite()
+            ).thenReturn(null)
+
+            viewModel.fetchData()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase, never())
+                .invoke(any(), any())
+        }
+
+    // endregion
+
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val OTHER_SITE_ID = 456L
+        private const val TEST_VIEWS = 6782856L
+
+        private fun createTestSummaryData() =
+            StatsSummaryData(
+                views = TEST_VIEWS,
+                visitors = 154791L,
+                posts = 42L,
+                comments = 85L,
+                viewsBestDay = "2022-02-22",
+                viewsBestDayTotal = 4600L
+            )
+
+        private fun createTestInsightsData() =
+            StatsInsightsData(
+                highestHour = 14,
+                highestHourPercent = 15.5,
+                highestDayOfWeek = 3,
+                highestDayPercent = 25.0,
+                years = emptyList()
+            )
     }
 }

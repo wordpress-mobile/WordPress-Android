@@ -984,6 +984,7 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
+    @Suppress("LongMethod")
     override suspend fun fetchStatsInsights(
         siteId: Long
     ): StatsInsightsDataResult {
@@ -1012,6 +1013,15 @@ class StatsDataSourceImpl @Inject constructor(
                 )
                 StatsInsightsDataResult.Success(
                     StatsInsightsData(
+                        highestHour =
+                            data.highestHour.toInt(),
+                        highestHourPercent =
+                            data.highestHourPercent,
+                        highestDayOfWeek =
+                            data.highestDayOfWeek
+                                .toInt(),
+                        highestDayPercent =
+                            data.highestDayPercent,
                         years = years.map { yearData ->
                             YearInsightsData(
                                 year = yearData.year,

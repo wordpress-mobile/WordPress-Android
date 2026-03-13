@@ -12,10 +12,10 @@ import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.RegionViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.SearchTermsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsInsightsData
 import org.wordpress.android.ui.newstats.datasource.StatsInsightsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
-import org.wordpress.android.ui.newstats.datasource.YearInsightsData
 import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
@@ -1333,7 +1333,7 @@ class StatsRepository @Inject constructor(
         when (result) {
             is StatsInsightsDataResult.Success ->
                 InsightsResult.Success(
-                    years = result.data.years
+                    data = result.data
                 )
             is StatsInsightsDataResult.Error -> {
                 appLogWrapper.e(
@@ -1761,7 +1761,7 @@ data class DeviceItemData(
  */
 sealed class InsightsResult {
     data class Success(
-        val years: List<YearInsightsData>
+        val data: StatsInsightsData
     ) : InsightsResult()
     data class Error(
         val message: String

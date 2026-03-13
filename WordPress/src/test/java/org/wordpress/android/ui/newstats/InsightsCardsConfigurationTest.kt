@@ -23,6 +23,7 @@ class InsightsCardsConfigurationTest {
         assertThat(hiddenCards).containsExactlyInAnyOrder(
             InsightsCardType.ALL_TIME_STATS,
             InsightsCardType.MOST_POPULAR_DAY,
+            InsightsCardType.MOST_POPULAR_TIME,
             InsightsCardType.YEAR_IN_REVIEW
         )
     }
