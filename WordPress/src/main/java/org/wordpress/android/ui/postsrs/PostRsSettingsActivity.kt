@@ -26,6 +26,8 @@ import org.wordpress.android.ui.postsrs.screens.PostRsSettingsScreen
 import org.wordpress.android.ui.postsrs.terms.TermSelectionActivity
 import org.wordpress.android.ui.postsrs.terms.TermSelectionViewModel
 import org.wordpress.android.util.extensions.setContent
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,6 +51,15 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
         registerMediaPickerLauncher()
         registerTermSelectionLaunchers()
+
+        WindowInsetsControllerCompat(
+            window, window.decorView
+        ).apply {
+            hide(WindowInsetsCompat.Type.statusBars())
+            systemBarsBehavior =
+                WindowInsetsControllerCompat
+                    .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
 
         observeEvents()
 
