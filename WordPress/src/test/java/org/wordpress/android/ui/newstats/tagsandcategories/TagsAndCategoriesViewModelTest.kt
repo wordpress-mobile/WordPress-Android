@@ -67,6 +67,14 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         ).thenReturn(API_ERROR)
     }
 
+    private fun stubUnknownError() {
+        whenever(
+            resourceProvider.getString(
+                R.string.stats_error_unknown
+            )
+        ).thenReturn(UNKNOWN_ERROR)
+    }
+
     private fun initViewModel() {
         viewModel = TagsAndCategoriesViewModel(
             selectedSiteRepository,
@@ -135,8 +143,9 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when exception is thrown, then error state with message`() =
+    fun `when exception is thrown, then error state with localized message`() =
         test {
+            stubUnknownError()
             whenever(
                 statsTagsUseCase(any(), any(), any())
             ).thenThrow(
@@ -155,7 +164,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             assertThat(
                 (state as TagsAndCategoriesCardUiState
                     .Error).message
-            ).isEqualTo("Test exception")
+            ).isEqualTo(UNKNOWN_ERROR)
         }
     // endregion
 
@@ -552,6 +561,8 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             "No site selected"
         private const val API_ERROR =
             "Failed to load stats"
+        private const val UNKNOWN_ERROR =
+            "An unknown error occurred"
 
         private const val TEST_CATEGORY_NAME =
             "Uncategorized"
