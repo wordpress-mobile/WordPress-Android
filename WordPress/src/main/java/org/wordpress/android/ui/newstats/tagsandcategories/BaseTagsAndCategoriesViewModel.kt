@@ -14,6 +14,7 @@ import org.wordpress.android.ui.newstats.repository.TagsResult
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.coroutines.cancellation.CancellationException
 
 abstract class BaseTagsAndCategoriesViewModel(
     private val selectedSiteRepository:
@@ -42,7 +43,10 @@ abstract class BaseTagsAndCategoriesViewModel(
         fetchData()
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress(
+        "TooGenericExceptionCaught",
+        "InstanceOfCheckForException"
+    )
     protected fun fetchData(
         forceRefresh: Boolean = false
     ) {
@@ -71,6 +75,7 @@ abstract class BaseTagsAndCategoriesViewModel(
                 )
                 handleResult(result)
             } catch (e: Exception) {
+                if (e is CancellationException) throw e
                 AppLog.e(
                     AppLog.T.STATS,
                     "Error fetching tags: ${e.message}",

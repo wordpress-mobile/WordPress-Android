@@ -19,6 +19,7 @@ import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
 import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.cancellation.CancellationException
 import javax.inject.Inject
 
@@ -68,17 +69,10 @@ class InsightsViewModel @Inject constructor(
     val isDataRefreshing: StateFlow<Boolean> =
         _isDataRefreshing.asStateFlow()
 
-    @Volatile
-    private var isDataLoaded = false
-
-    @Volatile
-    private var isDataLoading = false
-
-    @Volatile
-    private var summaryFetched = false
-
-    @Volatile
-    private var insightsFetched = false
+    private val isDataLoaded = AtomicBoolean(false)
+    private val isDataLoading = AtomicBoolean(false)
+    private val summaryFetched = AtomicBoolean(false)
+    private val insightsFetched = AtomicBoolean(false)
 
     init {
         checkNetworkStatus()
@@ -96,14 +90,15 @@ class InsightsViewModel @Inject constructor(
     // region Data fetching
 
     fun loadDataIfNeeded() {
-        if (isDataLoaded || isDataLoading) return
-        isDataLoading = true
+        if (isDataLoaded.get() ||
+            !isDataLoading.compareAndSet(false, true)
+        ) return
         fetchData()
     }
 
     fun fetchData(forceRefresh: Boolean = false) {
         val siteId = resolvedSiteId() ?: run {
-            isDataLoading = false
+            isDataLoading.set(false)
             _isDataRefreshing.value = false
             return
         }
@@ -111,7 +106,7 @@ class InsightsViewModel @Inject constructor(
         val shouldFetchSummary = cards.needsSummary()
         val shouldFetchInsights = cards.needsInsights()
         if (!shouldFetchSummary && !shouldFetchInsights) {
-            isDataLoading = false
+            isDataLoading.set(false)
             _isDataRefreshing.value = false
             return
         }
@@ -131,9 +126,9 @@ class InsightsViewModel @Inject constructor(
                         }
                     }
                 }
-                isDataLoaded = true
+                isDataLoaded.set(true)
             } finally {
-                isDataLoading = false
+                isDataLoading.set(false)
                 _isDataRefreshing.value = false
             }
         }
@@ -151,7 +146,9 @@ class InsightsViewModel @Inject constructor(
             val result = statsSummaryUseCase(
                 siteId, forceRefresh
             )
-            summaryFetched = true
+            if (result is StatsSummaryResult.Success) {
+                summaryFetched.set(true)
+            }
             _summaryResult.emit(result)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
@@ -181,7 +178,9 @@ class InsightsViewModel @Inject constructor(
             val result = statsInsightsUseCase(
                 siteId, forceRefresh
             )
-            insightsFetched = true
+            if (result is InsightsResult.Success) {
+                insightsFetched.set(true)
+            }
             _insightsResult.emit(result)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
@@ -200,10 +199,10 @@ class InsightsViewModel @Inject constructor(
     }
 
     fun refreshData() {
-        isDataLoaded = false
-        summaryFetched = false
-        insightsFetched = false
-        isDataLoading = true
+        isDataLoaded.set(false)
+        summaryFetched.set(false)
+        insightsFetched.set(false)
+        isDataLoading.set(true)
         _isDataRefreshing.value = true
         fetchData(forceRefresh = true)
     }
@@ -250,10 +249,12 @@ class InsightsViewModel @Inject constructor(
         _hiddenCards.value = config.computeHiddenCards()
         val cards = config.visibleCards
         val needsNewFetch =
-            (cards.needsSummary() && !summaryFetched) ||
-                (cards.needsInsights() && !insightsFetched)
+            (cards.needsSummary() &&
+                !summaryFetched.get()) ||
+                (cards.needsInsights() &&
+                    !insightsFetched.get())
         if (needsNewFetch) {
-            isDataLoaded = false
+            isDataLoaded.set(false)
         }
         _cardsToLoad.value = config.visibleCards
     }
