@@ -71,14 +71,6 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         ).thenReturn(API_ERROR)
     }
 
-    private fun stubUnknownError() {
-        whenever(
-            resourceProvider.getString(
-                R.string.stats_error_unknown
-            )
-        ).thenReturn(UNKNOWN_ERROR)
-    }
-
     private fun initViewModel() {
         viewModel = TagsAndCategoriesViewModel(
             selectedSiteRepository,
@@ -669,8 +661,6 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             "No site selected"
         private const val API_ERROR =
             "Failed to load stats"
-        private const val UNKNOWN_ERROR =
-            "Unknown error"
 
         private const val TEST_CATEGORY_NAME =
             "Uncategorized"
