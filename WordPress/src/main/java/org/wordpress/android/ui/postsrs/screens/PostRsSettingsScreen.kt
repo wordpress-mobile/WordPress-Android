@@ -375,23 +375,7 @@ private fun HeroSettingsLayout(
                 )
             }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Black.copy(alpha = 0.4f),
-                            Color.Transparent
-                        )
-                    )
-                )
-        )
-        FloatingBackButton(
-            onNavigateBack = onNavigateBack,
-            modifier = Modifier.padding(4.dp)
-        )
+        HeroOverlay(onNavigateBack = onNavigateBack)
         if (uiState.hasChanges) {
             FloatingSaveButton(
                 isSaving = uiState.isSaving,
@@ -539,23 +523,7 @@ private fun LoadingSkeletonLayout(
                 HorizontalDivider()
             }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Black.copy(alpha = 0.4f),
-                            Color.Transparent
-                        )
-                    )
-                )
-        )
-        FloatingBackButton(
-            onNavigateBack = onNavigateBack,
-            modifier = Modifier.padding(4.dp)
-        )
+        HeroOverlay(onNavigateBack = onNavigateBack)
     }
 }
 
@@ -635,6 +603,29 @@ private fun HeroImagePlaceholder(
             )
         }
     }
+}
+
+@Composable
+private fun HeroOverlay(
+    onNavigateBack: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(120.dp)
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Black.copy(alpha = 0.4f),
+                        Color.Transparent
+                    )
+                )
+            )
+    )
+    FloatingBackButton(
+        onNavigateBack = onNavigateBack,
+        modifier = Modifier.padding(4.dp)
+    )
 }
 
 @Composable
@@ -768,15 +759,13 @@ private fun SettingsContent(
         )
 
         val statusLabel = statusDisplayLabel(uiState)
-        val statusResId = (
-            uiState.editedStatus ?: uiState.postStatus
-            ).toLabel()
         SettingsRow(
             label = stringResource(
                 R.string.post_settings_status
             ),
             value = statusLabel,
-            dimmed = statusResId == 0,
+            dimmed = (uiState.editedStatus
+                ?: uiState.postStatus).toLabel() == 0,
             modifier = Modifier.clickable(
                 onClick = onStatusClicked
             )

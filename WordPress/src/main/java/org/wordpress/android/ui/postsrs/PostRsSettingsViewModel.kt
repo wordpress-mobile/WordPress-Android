@@ -88,7 +88,6 @@ class PostRsSettingsViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     fun refreshPost() {
-        if (site == null) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
                 SnackbarMessage(
@@ -584,7 +583,6 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     fun onSaveClicked() {
-        if (site == null) return
         val state = _uiState.value
         if (!state.hasChanges || state.isSaving) return
 
@@ -673,7 +671,6 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     private fun loadPost() {
-        if (site == null) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _uiState.value = PostRsSettingsUiState(
                 isLoading = false,

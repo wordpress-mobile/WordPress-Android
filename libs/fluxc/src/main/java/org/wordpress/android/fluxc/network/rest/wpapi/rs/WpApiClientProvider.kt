@@ -40,7 +40,6 @@ class WpApiClientProvider @Inject constructor(
         wpComClients.clear()
     }
 
-
     @Synchronized
     fun getWpApiClient(
         site: SiteModel,
