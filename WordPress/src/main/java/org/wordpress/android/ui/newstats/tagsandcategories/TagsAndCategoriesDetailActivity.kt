@@ -57,9 +57,7 @@ class TagsAndCategoriesDetailActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (savedInstanceState == null) {
-            viewModel.loadData()
-        }
+        viewModel.loadData()
 
         setContent {
             AppThemeM3 {

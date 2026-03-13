@@ -48,11 +48,13 @@ class TagsAndCategoriesViewModel @Inject constructor(
         isLoading.set(true)
         _uiState.value =
             TagsAndCategoriesCardUiState.Loading
-        fetchData()
+        fetchData(forceRefresh = true)
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private fun fetchData() {
+    private fun fetchData(
+        forceRefresh: Boolean = false
+    ) {
         val site = selectedSiteRepository
             .getSelectedSite()
         if (site == null) {
@@ -69,7 +71,8 @@ class TagsAndCategoriesViewModel @Inject constructor(
         fetchJob = viewModelScope.launch {
             try {
                 val result = statsTagsUseCase(
-                    siteId = site.siteId
+                    siteId = site.siteId,
+                    forceRefresh = forceRefresh
                 )
                 isLoaded.set(
                     result is TagsResult.Success

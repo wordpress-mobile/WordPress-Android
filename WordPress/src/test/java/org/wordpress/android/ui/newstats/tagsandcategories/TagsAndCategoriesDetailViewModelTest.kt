@@ -119,7 +119,7 @@ class TagsAndCategoriesDetailViewModelTest :
         test {
             stubApiError()
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Error("Network error")
             )
@@ -139,7 +139,7 @@ class TagsAndCategoriesDetailViewModelTest :
     fun `when exception thrown, then error state`() =
         test {
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenThrow(
                 RuntimeException("Test exception")
             )
@@ -165,7 +165,7 @@ class TagsAndCategoriesDetailViewModelTest :
     fun `when fetch succeeds, then loaded state`() =
         test {
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -183,7 +183,7 @@ class TagsAndCategoriesDetailViewModelTest :
     fun `when fetch succeeds, then items mapped correctly`() =
         test {
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -203,7 +203,7 @@ class TagsAndCategoriesDetailViewModelTest :
     fun `when empty result, then loaded with empty list`() =
         test {
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Success(
                     StatsTagsData(
@@ -227,7 +227,7 @@ class TagsAndCategoriesDetailViewModelTest :
     fun `when loadData called twice, then fetch only once`() =
         test {
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -236,7 +236,7 @@ class TagsAndCategoriesDetailViewModelTest :
             advanceUntilIdle()
 
             verify(statsTagsUseCase, times(1))
-                .invoke(any(), any())
+                .invoke(any(), any(), any())
         }
 
     @Test
@@ -244,7 +244,7 @@ class TagsAndCategoriesDetailViewModelTest :
         test {
             stubApiError()
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Error("Network error")
             )
@@ -260,7 +260,7 @@ class TagsAndCategoriesDetailViewModelTest :
                 )
 
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             viewModel.loadData()
@@ -279,7 +279,7 @@ class TagsAndCategoriesDetailViewModelTest :
     fun `when loadData, then fetches with detail max`() =
         test {
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -289,7 +289,8 @@ class TagsAndCategoriesDetailViewModelTest :
             verify(statsTagsUseCase)
                 .invoke(
                     eq(TEST_SITE_ID),
-                    eq(DETAIL_MAX_ITEMS)
+                    eq(DETAIL_MAX_ITEMS),
+                    any()
                 )
         }
     // endregion

@@ -118,7 +118,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         test {
             stubApiError()
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Error("Network error")
             )
@@ -138,7 +138,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     fun `when exception is thrown, then error state with message`() =
         test {
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenThrow(
                 RuntimeException("Test exception")
             )
@@ -164,7 +164,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     fun `when fetch succeeds, then loaded state`() =
         test {
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -182,7 +182,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     fun `when fetch succeeds, then items are mapped correctly`() =
         test {
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -206,7 +206,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     fun `when fetch succeeds, then maxViewsForBar is first item views`() =
         test {
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -236,7 +236,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 views = 50
             )
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Success(
                     StatsTagsData(
@@ -273,7 +273,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 views = 50
             )
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Success(
                     StatsTagsData(
@@ -305,7 +305,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 views = 50
             )
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Success(
                     StatsTagsData(
@@ -341,7 +341,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 views = 50
             )
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Success(
                     StatsTagsData(
@@ -364,7 +364,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     fun `when empty result, then loaded with empty list`() =
         test {
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Success(
                     StatsTagsData(
@@ -390,7 +390,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     fun `when loadData called twice, then fetch only once`() =
         test {
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -400,7 +400,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(statsTagsUseCase, times(1))
-                .invoke(eq(TEST_SITE_ID), any())
+                .invoke(eq(TEST_SITE_ID), any(), any())
         }
     // endregion
 
@@ -409,7 +409,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     fun `when refresh, then data is re-fetched`() =
         test {
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -419,7 +419,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(statsTagsUseCase, times(2))
-                .invoke(eq(TEST_SITE_ID), any())
+                .invoke(eq(TEST_SITE_ID), any(), any())
         }
 
     @Test
@@ -427,7 +427,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         test {
             stubApiError()
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Error("Network error")
             )
@@ -443,7 +443,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 )
 
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             viewModel.refresh()
@@ -463,7 +463,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         test {
             stubNoSiteError()
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -490,7 +490,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         test {
             stubApiError()
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Error("Network error")
             )
@@ -506,7 +506,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 )
 
             whenever(
-                statsTagsUseCase(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             viewModel.loadData()
