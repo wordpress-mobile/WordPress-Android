@@ -2,7 +2,7 @@ package org.wordpress.android.ui.postsrs
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import androidx.core.net.toUri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
@@ -162,7 +162,7 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                         MediaPickerConstants.EXTRA_MEDIA_URIS
                     )
                 val uri = uris?.firstOrNull()
-                    ?.let { Uri.parse(it) }
+                    ?.let { it.toUri() }
                 if (uri != null) {
                     viewModel.onFeaturedImagePickedFromDevice(
                         uri

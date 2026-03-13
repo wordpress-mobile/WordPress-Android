@@ -469,8 +469,8 @@ private fun FeaturedImageEditButton(
     hasImage: Boolean,
     onChooseFromWpMedia: () -> Unit,
     onChooseFromDevice: () -> Unit,
-    onRemoveClicked: () -> Unit = {},
     modifier: Modifier = Modifier,
+    onRemoveClicked: () -> Unit = {},
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(modifier = modifier) {

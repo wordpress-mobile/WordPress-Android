@@ -534,17 +534,18 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("Recycle") // stream is closed by .use {}
     private fun copyUriToTempFile(uri: Uri): File {
-        val inputStream = appContext.contentResolver
-            .openInputStream(uri)
-            ?: throw PostApiRequestException(
-                "Cannot read URI"
-            )
         val tempFile = File.createTempFile(
             "featured_img_",
             ".jpg",
             appContext.cacheDir
         )
+        val inputStream = appContext.contentResolver
+            .openInputStream(uri)
+            ?: throw PostApiRequestException(
+                "Cannot read URI"
+            )
         inputStream.use { input ->
             tempFile.outputStream().use { output ->
                 input.copyTo(output)
