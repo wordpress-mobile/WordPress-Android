@@ -176,15 +176,9 @@ fun PostRsSettingsScreen(
     ) {
         when {
             uiState.isLoading -> {
-                NormalAppBarLayout(
+                LoadingSkeletonLayout(
                     onNavigateBack = onNavigateBack,
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(
-                            Alignment.Center
-                        )
-                    )
-                }
+                )
             }
             uiState.error != null -> {
                 NormalAppBarLayout(
@@ -525,6 +519,79 @@ private fun HeroImageShimmer() {
             .fillMaxWidth()
             .aspectRatio(16f / 9f)
     )
+}
+
+@Composable
+private fun LoadingSkeletonLayout(
+    onNavigateBack: () -> Unit,
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .navigationBarsPadding()
+        ) {
+            HeroImageShimmer()
+            Spacer(modifier = Modifier.height(24.dp))
+            repeat(SKELETON_ROW_COUNT) {
+                ShimmerRow()
+                HorizontalDivider()
+            }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.4f),
+                            Color.Transparent
+                        )
+                    )
+                )
+        )
+        FloatingBackButton(
+            onNavigateBack = onNavigateBack,
+            modifier = Modifier.padding(4.dp)
+        )
+    }
+}
+
+private const val SKELETON_ROW_COUNT = 8
+
+@Composable
+private fun ShimmerRow() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            ShimmerBox(
+                modifier = Modifier
+                    .size(width = 100.dp, height = 14.dp)
+                    .background(
+                        MaterialTheme.colorScheme.onSurface
+                            .copy(alpha = 0.1f),
+                        MaterialTheme.shapes.small
+                    )
+            )
+            ShimmerBox(
+                modifier = Modifier
+                    .size(width = 160.dp, height = 12.dp)
+                    .background(
+                        MaterialTheme.colorScheme.onSurface
+                            .copy(alpha = 0.06f),
+                        MaterialTheme.shapes.small
+                    )
+            )
+        }
+    }
 }
 
 @Composable
