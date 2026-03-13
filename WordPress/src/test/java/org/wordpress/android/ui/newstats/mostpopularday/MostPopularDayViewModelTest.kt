@@ -2,6 +2,7 @@ package org.wordpress.android.ui.newstats.mostpopularday
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -11,6 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.Locale
 
 @ExperimentalCoroutinesApi
 class MostPopularDayViewModelTest : BaseUnitTest() {
@@ -21,8 +23,12 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
     private lateinit var viewModel:
         MostPopularDayViewModel
 
+    private lateinit var originalLocale: Locale
+
     @Before
     fun setUp() {
+        originalLocale = Locale.getDefault()
+        Locale.setDefault(Locale.US)
         lenient().`when`(
             resourceProvider.getString(
                 R.string.stats_error_api
@@ -31,6 +37,11 @@ class MostPopularDayViewModelTest : BaseUnitTest() {
         viewModel = MostPopularDayViewModel(
             resourceProvider
         )
+    }
+
+    @After
+    fun tearDown() {
+        Locale.setDefault(originalLocale)
     }
 
     @Test

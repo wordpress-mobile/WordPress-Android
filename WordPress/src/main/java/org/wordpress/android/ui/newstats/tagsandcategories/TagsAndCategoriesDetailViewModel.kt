@@ -9,9 +9,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.repository.StatsTagsUseCase
 import org.wordpress.android.ui.newstats.repository.TagsResult
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.concurrent.atomic.AtomicBoolean
@@ -21,8 +20,7 @@ import javax.inject.Inject
 class TagsAndCategoriesDetailViewModel @Inject constructor(
     private val selectedSiteRepository:
         SelectedSiteRepository,
-    private val accountStore: AccountStore,
-    private val statsRepository: StatsRepository,
+    private val statsTagsUseCase: StatsTagsUseCase,
     private val resourceProvider: ResourceProvider,
     private val mapper: TagsAndCategoriesMapper
 ) : ViewModel() {
@@ -61,23 +59,9 @@ class TagsAndCategoriesDetailViewModel @Inject constructor(
             return
         }
 
-        val accessToken = accountStore.accessToken
-        if (accessToken.isNullOrEmpty()) {
-            isLoading.set(false)
-            _uiState.value =
-                TagsAndCategoriesCardUiState.Error(
-                    resourceProvider.getString(
-                        R.string.stats_error_api
-                    )
-                )
-            return
-        }
-
-        statsRepository.init(accessToken)
-
         fetchJob = viewModelScope.launch {
             try {
-                val result = statsRepository.fetchTags(
+                val result = statsTagsUseCase(
                     siteId = site.siteId,
                     max = DETAIL_MAX_ITEMS
                 )
@@ -90,7 +74,8 @@ class TagsAndCategoriesDetailViewModel @Inject constructor(
                     TagsAndCategoriesCardUiState.Error(
                         e.message ?: resourceProvider
                             .getString(
-                                R.string.stats_error_unknown
+                                R.string
+                                    .stats_error_unknown
                             )
                     )
             } finally {
