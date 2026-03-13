@@ -24,7 +24,9 @@ data class TagGroupUiItem(
     val tags: List<TagUiItem>,
     val views: Long,
     val displayType: TagGroupDisplayType
-)
+) {
+    val isExpandable: Boolean get() = tags.size > 1
+}
 
 /**
  * A single tag within a tag group.

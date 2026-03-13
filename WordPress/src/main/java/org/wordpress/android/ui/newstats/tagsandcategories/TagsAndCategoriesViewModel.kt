@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.tagsandcategories
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,6 +35,7 @@ class TagsAndCategoriesViewModel @Inject constructor(
     private var allItems: List<TagGroupUiItem> = emptyList()
     private val isLoaded = AtomicBoolean(false)
     private val isLoading = AtomicBoolean(false)
+    private var fetchJob: Job? = null
 
     fun loadData() {
         if (isLoaded.get() || !isLoading.compareAndSet(false, true)) return
@@ -41,6 +43,7 @@ class TagsAndCategoriesViewModel @Inject constructor(
     }
 
     fun refresh() {
+        fetchJob?.cancel()
         isLoaded.set(false)
         isLoading.set(true)
         _uiState.value = TagsAndCategoriesCardUiState.Loading
@@ -78,7 +81,7 @@ class TagsAndCategoriesViewModel @Inject constructor(
 
         statsRepository.init(accessToken)
 
-        viewModelScope.launch {
+        fetchJob = viewModelScope.launch {
             try {
                 val result = statsRepository.fetchTags(
                     siteId = site.siteId

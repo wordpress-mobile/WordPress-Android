@@ -190,17 +190,15 @@ private fun LoadedContent(
                     } else {
                         0f
                     }
-                val isExpandable =
-                    item.tags.size > 1
                 val isExpanded =
                     expandedGroups[index] == true
 
                 TagGroupRow(
                     item = item,
                     percentage = percentage,
-                    isExpandable = isExpandable,
+                    isExpandable = item.isExpandable,
                     isExpanded = isExpanded,
-                    onClick = if (isExpandable) {
+                    onClick = if (item.isExpandable) {
                         {
                             expandedGroups[index] =
                                 !isExpanded
@@ -209,7 +207,7 @@ private fun LoadedContent(
                         null
                     }
                 )
-                if (isExpandable) {
+                if (item.isExpandable) {
                     AnimatedVisibility(
                         visible = isExpanded,
                         enter = expandVertically(),

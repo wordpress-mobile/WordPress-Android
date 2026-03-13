@@ -25,8 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.components.StatsListRowContainer
 import org.wordpress.android.ui.newstats.util.formatStatValue
 
@@ -44,7 +46,17 @@ fun TagTypeIcon(
             TagGroupDisplayType.MIXED ->
                 Icons.Outlined.Sell
         },
-        contentDescription = null,
+        contentDescription = when (displayType) {
+            TagGroupDisplayType.CATEGORY ->
+                stringResource(
+                    R.string.stats_tag_type_category
+                )
+            TagGroupDisplayType.TAG,
+            TagGroupDisplayType.MIXED ->
+                stringResource(
+                    R.string.stats_tag_type_tag
+                )
+        },
         modifier = Modifier.size(16.dp),
         tint = MaterialTheme.colorScheme
             .onSurfaceVariant
@@ -114,7 +126,16 @@ fun TagGroupRow(
                                 Icons.Default
                                     .KeyboardArrowDown
                             },
-                        contentDescription = null,
+                        contentDescription =
+                            stringResource(
+                                if (isExpanded) {
+                                    R.string
+                                        .stats_collapse_group
+                                } else {
+                                    R.string
+                                        .stats_expand_group
+                                }
+                            ),
                         modifier =
                             Modifier.size(16.dp),
                         tint = MaterialTheme

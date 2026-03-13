@@ -43,7 +43,11 @@ class TagsAndCategoriesDetailActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val items = detailItems ?: emptyList()
+        val items = detailItems
+        if (items == null) {
+            finish()
+            return
+        }
 
         setContent {
             AppThemeM3 {
@@ -155,8 +159,6 @@ private fun TagsAndCategoriesDetailScreen(
                     } else {
                         0f
                     }
-                val isExpandable =
-                    item.tags.size > 1
                 val isExpanded =
                     expandedGroups[index] == true
 
@@ -164,9 +166,9 @@ private fun TagsAndCategoriesDetailScreen(
                     item = item,
                     percentage = percentage,
                     position = index + 1,
-                    isExpandable = isExpandable,
+                    isExpandable = item.isExpandable,
                     isExpanded = isExpanded,
-                    onClick = if (isExpandable) {
+                    onClick = if (item.isExpandable) {
                         {
                             expandedGroups[index] =
                                 !isExpanded
@@ -175,7 +177,7 @@ private fun TagsAndCategoriesDetailScreen(
                         null
                     }
                 )
-                if (isExpandable) {
+                if (item.isExpandable) {
                     AnimatedVisibility(
                         visible = isExpanded,
                         enter = expandVertically(),
