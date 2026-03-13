@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -73,6 +74,7 @@ class InsightsViewModel @Inject constructor(
     private val isDataLoading = AtomicBoolean(false)
     private val summaryFetched = AtomicBoolean(false)
     private val insightsFetched = AtomicBoolean(false)
+    private var fetchJob: Job? = null
 
     init {
         checkNetworkStatus()
@@ -110,7 +112,7 @@ class InsightsViewModel @Inject constructor(
             _isDataRefreshing.value = false
             return
         }
-        viewModelScope.launch {
+        fetchJob = viewModelScope.launch {
             try {
                 coroutineScope {
                     if (shouldFetchSummary) {
@@ -199,6 +201,7 @@ class InsightsViewModel @Inject constructor(
     }
 
     fun refreshData() {
+        fetchJob?.cancel()
         isDataLoaded.set(false)
         summaryFetched.set(false)
         insightsFetched.set(false)
