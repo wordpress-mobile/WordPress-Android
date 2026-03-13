@@ -4,8 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +28,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Sell
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,6 +40,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +61,7 @@ import org.wordpress.android.util.extensions
 private const val EXTRA_TAG_GROUPS = "extra_tag_groups"
 private val CardCornerRadius = 10.dp
 private const val BAR_BACKGROUND_ALPHA = 0.08f
+private const val VERTICAL_LINE_ALPHA = 0.3f
 
 @AndroidEntryPoint
 class TagsAndCategoriesDetailActivity :
@@ -133,6 +142,10 @@ private fun TagsAndCategoriesDetailScreen(
             )
         }
     ) { contentPadding ->
+        val expandedGroups = remember {
+            mutableStateMapOf<Int, Boolean>()
+        }
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -155,11 +168,37 @@ private fun TagsAndCategoriesDetailScreen(
                     } else {
                         0f
                     }
+                val isExpandable =
+                    item.tags.size > 1
+                val isExpanded =
+                    expandedGroups[index] == true
+
                 DetailTagGroupRow(
                     item = item,
                     percentage = percentage,
-                    position = index + 1
+                    position = index + 1,
+                    isExpandable = isExpandable,
+                    isExpanded = isExpanded,
+                    onClick = if (isExpandable) {
+                        {
+                            expandedGroups[index] =
+                                !isExpanded
+                        }
+                    } else {
+                        null
+                    }
                 )
+                if (isExpandable) {
+                    AnimatedVisibility(
+                        visible = isExpanded,
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
+                    ) {
+                        ExpandedTagsSection(
+                            tags = item.tags
+                        )
+                    }
+                }
             }
             item {
                 Spacer(
@@ -203,10 +242,14 @@ private fun DetailColumnHeaders() {
 }
 
 @Composable
+@Suppress("LongParameterList")
 private fun DetailTagGroupRow(
     item: TagGroupUiItem,
     percentage: Float,
-    position: Int
+    position: Int,
+    isExpandable: Boolean,
+    isExpanded: Boolean,
+    onClick: (() -> Unit)?
 ) {
     val barColor = MaterialTheme.colorScheme.primary
         .copy(alpha = BAR_BACKGROUND_ALPHA)
@@ -216,6 +259,15 @@ private fun DetailTagGroupRow(
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(8.dp))
+            .then(
+                if (onClick != null) {
+                    Modifier.clickable(
+                        onClick = onClick
+                    )
+                } else {
+                    Modifier
+                }
+            )
     ) {
         Box(
             modifier = Modifier
@@ -255,6 +307,28 @@ private fun DetailTagGroupRow(
                 Spacer(
                     modifier = Modifier.width(8.dp)
                 )
+                if (isExpandable) {
+                    Icon(
+                        imageVector =
+                            if (isExpanded) {
+                                Icons.Default
+                                    .KeyboardArrowUp
+                            } else {
+                                Icons.Default
+                                    .KeyboardArrowDown
+                            },
+                        contentDescription = null,
+                        modifier =
+                            Modifier.size(16.dp),
+                        tint = MaterialTheme
+                            .colorScheme
+                            .onSurfaceVariant
+                    )
+                    Spacer(
+                        modifier =
+                            Modifier.width(4.dp)
+                    )
+                }
                 Text(
                     text = item.name,
                     style = MaterialTheme.typography
@@ -276,6 +350,62 @@ private fun DetailTagGroupRow(
                 color = MaterialTheme.colorScheme
                     .onSurface
             )
+        }
+    }
+}
+
+@Composable
+private fun ExpandedTagsSection(
+    tags: List<TagUiItem>
+) {
+    val lineColor = MaterialTheme.colorScheme.primary
+        .copy(alpha = VERTICAL_LINE_ALPHA)
+
+    Column(
+        modifier = Modifier.padding(
+            start = 52.dp,
+            top = 4.dp,
+            bottom = 4.dp
+        )
+    ) {
+        tags.forEachIndexed { index, tag ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                verticalAlignment =
+                    Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(2.dp)
+                        .height(24.dp)
+                        .background(lineColor)
+                )
+                Spacer(
+                    modifier = Modifier.width(12.dp)
+                )
+                TagTypeIcon(
+                    displayType =
+                        TagGroupDisplayType
+                            .fromTags(listOf(tag))
+                )
+                Spacer(
+                    modifier = Modifier.width(8.dp)
+                )
+                Text(
+                    text = tag.name,
+                    style = MaterialTheme.typography
+                        .bodyMedium,
+                    color = MaterialTheme.colorScheme
+                        .onSurface
+                )
+            }
+            if (index < tags.lastIndex) {
+                Spacer(
+                    modifier = Modifier.height(2.dp)
+                )
+            }
         }
     }
 }
