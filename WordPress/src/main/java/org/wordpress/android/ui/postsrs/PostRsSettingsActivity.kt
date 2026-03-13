@@ -211,56 +211,47 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
         )
     }
 
-    private fun launchWpMediaPicker() {
-        val site =
-            selectedSiteRepository.getSelectedSite()
-                ?: return
-        val setup = MediaPickerSetup(
-            primaryDataSource =
-                MediaPickerSetup.DataSource.WP_LIBRARY,
-            availableDataSources = emptySet(),
-            canMultiselect = false,
-            requiresPhotosVideosPermissions = false,
-            requiresMusicAudioPermissions = false,
-            allowedTypes = setOf(MediaType.IMAGE),
-            cameraSetup =
-                MediaPickerSetup.CameraSetup.HIDDEN,
-            systemPickerEnabled = false,
-            editingEnabled = false,
-            queueResults = false,
-            defaultSearchView = false,
-            title = R.string.photo_picker_title
-        )
-        val intent = MediaPickerActivity.buildIntent(
-            this, setup, site
-        )
-        mediaPickerLauncher.launch(intent)
-    }
+    private fun launchWpMediaPicker() = launchMediaPicker(
+        dataSource = MediaPickerSetup.DataSource.WP_LIBRARY,
+        requiresPhotosVideosPermissions = false,
+        systemPickerEnabled = false,
+    )
 
-    private fun launchDeviceMediaPicker() {
+    private fun launchDeviceMediaPicker() = launchMediaPicker(
+        dataSource = MediaPickerSetup.DataSource.DEVICE,
+        requiresPhotosVideosPermissions = true,
+        systemPickerEnabled = true,
+    )
+
+    private fun launchMediaPicker(
+        dataSource: MediaPickerSetup.DataSource,
+        requiresPhotosVideosPermissions: Boolean,
+        systemPickerEnabled: Boolean,
+    ) {
         val site =
             selectedSiteRepository.getSelectedSite()
                 ?: return
         val setup = MediaPickerSetup(
-            primaryDataSource =
-                MediaPickerSetup.DataSource.DEVICE,
+            primaryDataSource = dataSource,
             availableDataSources = emptySet(),
             canMultiselect = false,
-            requiresPhotosVideosPermissions = true,
+            requiresPhotosVideosPermissions =
+                requiresPhotosVideosPermissions,
             requiresMusicAudioPermissions = false,
             allowedTypes = setOf(MediaType.IMAGE),
             cameraSetup =
                 MediaPickerSetup.CameraSetup.HIDDEN,
-            systemPickerEnabled = true,
+            systemPickerEnabled = systemPickerEnabled,
             editingEnabled = false,
             queueResults = false,
             defaultSearchView = false,
             title = R.string.photo_picker_title
         )
-        val intent = MediaPickerActivity.buildIntent(
-            this, setup, site
+        mediaPickerLauncher.launch(
+            MediaPickerActivity.buildIntent(
+                this, setup, site
+            )
         )
-        mediaPickerLauncher.launch(intent)
     }
 
     companion object {
