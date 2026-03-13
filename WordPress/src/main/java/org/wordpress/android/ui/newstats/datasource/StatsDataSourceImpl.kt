@@ -19,6 +19,7 @@ import uniffi.wp_api.StatsRegionViewsPeriod
 import uniffi.wp_api.StatsDevicesParams
 import uniffi.wp_api.StatsDevicesPeriod
 import uniffi.wp_api.StatsInsightsParams
+import uniffi.wp_api.StatsTagsParams
 import uniffi.wp_api.StatsSearchTermsParams
 import uniffi.wp_api.StatsSearchTermsPeriod
 import uniffi.wp_api.StatsTopAuthorsParams
@@ -1104,6 +1105,68 @@ class StatsDataSourceImpl @Inject constructor(
                 result
             ) {
                 StatsSummaryDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun mapToStatsTagsData(
+        tagGroups: List<uniffi.wp_api.StatsTagGroup>
+    ): StatsTagsData {
+        return StatsTagsData(
+            tagGroups = tagGroups.map { group ->
+                TagGroupData(
+                    tags = group.tags.map { tag ->
+                        TagData(
+                            tagType = tag.tagType,
+                            name = tag.name,
+                            link = tag.link
+                        )
+                    },
+                    views = group.views.toLong()
+                )
+            }
+        )
+    }
+
+    override suspend fun fetchStatsTags(
+        siteId: Long,
+        max: Int
+    ): StatsTagsDataResult {
+        val params = StatsTagsParams(
+            max = if (max > 0) max.toUInt() else null,
+            locale = wpComLanguage
+        )
+        val result = getOrCreateClient()
+            .request { requestBuilder ->
+                requestBuilder.statsTags()
+                    .getStatsTags(
+                        wpComSiteId = siteId.toULong(),
+                        params = params
+                    )
+            }
+
+        logResultType("fetchStatsTags", result)
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val tagGroups =
+                    result.response.data.tags
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchStatsTags success " +
+                        "- ${tagGroups.size} " +
+                        "tag groups"
+                )
+                StatsTagsDataResult.Success(
+                    mapToStatsTagsData(tagGroups)
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchStatsTags",
+                result
+            ) {
+                StatsTagsDataResult.Error(it)
             }
         }
     }

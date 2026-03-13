@@ -227,6 +227,18 @@ interface StatsDataSource {
     suspend fun fetchStatsSummary(
         siteId: Long
     ): StatsSummaryDataResult
+
+    /**
+     * Fetches tags and categories stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param max Maximum number of tag groups to return
+     * @return Result containing the tags data or an error
+     */
+    suspend fun fetchStatsTags(
+        siteId: Long,
+        max: Int = 10
+    ): StatsTagsDataResult
 }
 
 /**
@@ -609,4 +621,40 @@ data class StatsSummaryData(
     val comments: Long,
     val viewsBestDay: String,
     val viewsBestDayTotal: Long
+)
+
+/**
+ * Result wrapper for stats tags fetch operation.
+ */
+sealed class StatsTagsDataResult {
+    data class Success(
+        val data: StatsTagsData
+    ) : StatsTagsDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : StatsTagsDataResult()
+}
+
+/**
+ * Tags and categories data from the API.
+ */
+data class StatsTagsData(
+    val tagGroups: List<TagGroupData>
+)
+
+/**
+ * A group of tags associated with views.
+ */
+data class TagGroupData(
+    val tags: List<TagData>,
+    val views: Long
+)
+
+/**
+ * A single tag or category item.
+ */
+data class TagData(
+    val tagType: String,
+    val name: String,
+    val link: String
 )
