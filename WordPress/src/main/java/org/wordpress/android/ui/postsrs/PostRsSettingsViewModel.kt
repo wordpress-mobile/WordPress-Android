@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
+import org.wordpress.android.ui.postsrs.data.PostRsRestClient.Companion.AUTHORS_PER_PAGE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -1016,6 +1017,5 @@ class PostRsSettingsViewModel @Inject constructor(
         const val EXTRA_POST_ID = "extra_post_id"
         private const val AUTHOR_SEARCH_DEBOUNCE_MS = 500L
         private const val MIN_AUTHOR_SEARCH_LENGTH = 3
-        private const val AUTHORS_PER_PAGE: UInt = 20u
     }
 }

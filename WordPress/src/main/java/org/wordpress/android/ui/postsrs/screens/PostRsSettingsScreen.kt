@@ -26,7 +26,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
@@ -1620,10 +1620,10 @@ private fun AuthorDialog(
                                 .selectableGroup()
                                 .weight(1f)
                         ) {
-                            itemsIndexed(
+                            items(
                                 items = authors,
-                                key = { _, a -> a.id }
-                            ) { _, author ->
+                                key = { it.id }
+                            ) { author ->
                                 AuthorRow(
                                     author = author,
                                     isSelected =

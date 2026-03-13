@@ -361,7 +361,7 @@ class PostRsRestClient @Inject constructor(
         }
 
     companion object {
-        private const val AUTHORS_PER_PAGE: UInt = 20u
+        internal const val AUTHORS_PER_PAGE: UInt = 20u
         private const val PER_PAGE = 100u
     }
 }
