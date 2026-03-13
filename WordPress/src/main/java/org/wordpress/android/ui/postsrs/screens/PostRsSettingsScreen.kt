@@ -54,6 +54,10 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -61,6 +65,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -92,11 +99,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emptyFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.SingleChoiceAlertDialog
 import org.wordpress.android.ui.postsrs.AuthorInfo
 import org.wordpress.android.ui.postsrs.DialogState
+import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.FieldState
 import org.wordpress.android.ui.postsrs.PostRsSettingsUiState
 import org.wordpress.android.ui.postsrs.RetryableField
@@ -111,8 +121,10 @@ import org.wordpress.android.ui.postsrs.UTC
 @Suppress("LongParameterList")
 fun PostRsSettingsScreen(
     uiState: PostRsSettingsUiState,
+    snackbarMessages: Flow<SnackbarMessage> = emptyFlow(),
     onNavigateBack: () -> Unit,
     onRetry: () -> Unit = {},
+    onRefresh: () -> Unit = {},
     onRetryField: (RetryableField) -> Unit = {},
     onStatusClicked: () -> Unit = {},
     onStatusSelected: (PostStatus) -> Unit = {},
@@ -139,8 +151,22 @@ fun PostRsSettingsScreen(
     onDismissDialog: () -> Unit = {},
     onDiscardConfirmed: () -> Unit = {},
 ) {
-    BackHandler {
-        onNavigateBack()
+    BackHandler(onBack = onNavigateBack)
+
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+
+    LaunchedEffect(snackbarMessages) {
+        snackbarMessages.collect { msg ->
+            val result = snackbarHostState.showSnackbar(
+                message = msg.message,
+                actionLabel = msg.actionLabel
+            )
+            if (result == SnackbarResult.ActionPerformed) {
+                msg.onAction?.invoke()
+            }
+        }
     }
 
     Box(
@@ -174,6 +200,7 @@ fun PostRsSettingsScreen(
                 HeroSettingsLayout(
                     uiState = uiState,
                     onNavigateBack = onNavigateBack,
+                    onRefresh = onRefresh,
                     onRetryField = onRetryField,
                     onStatusClicked = onStatusClicked,
                     onPasswordClicked = onPasswordClicked,
@@ -193,6 +220,18 @@ fun PostRsSettingsScreen(
                     onSaveClicked = onSaveClicked,
                 )
             }
+        }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .navigationBarsPadding()
+        ) { data ->
+            Snackbar(
+                snackbarData = data,
+                actionColor =
+                    MaterialTheme.colorScheme.primary
+            )
         }
     }
 
@@ -253,11 +292,13 @@ private fun NormalAppBarLayout(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Suppress("LongParameterList")
 @Composable
 private fun HeroSettingsLayout(
     uiState: PostRsSettingsUiState,
     onNavigateBack: () -> Unit,
+    onRefresh: () -> Unit,
     onRetryField: (RetryableField) -> Unit,
     onStatusClicked: () -> Unit,
     onPasswordClicked: () -> Unit,
@@ -273,53 +314,72 @@ private fun HeroSettingsLayout(
     onFeaturedImageRemoved: () -> Unit,
     onSaveClicked: () -> Unit,
 ) {
+    val pullToRefreshState = rememberPullToRefreshState()
+
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .navigationBarsPadding()
-        ) {
-            when (uiState.featuredImage) {
-                is FieldState.Loaded ->
-                    HeroImageWithMenu(
-                        imageUrl =
-                            uiState.featuredImage.value,
-                        onChangeClicked =
-                            onFeaturedImageClicked,
-                        onRemoveClicked =
-                            onFeaturedImageRemoved,
-                    )
-                is FieldState.Loading ->
-                    HeroImageShimmer()
-                is FieldState.Error ->
-                    HeroImagePlaceholder(
-                        text = stringResource(
-                            R.string
-                                .post_rs_settings_featured_image_error
-                        ),
-                        onClick = onFeaturedImageClicked,
-                    )
-                is FieldState.Empty ->
-                    HeroImagePlaceholder(
-                        onClick = onFeaturedImageClicked,
-                    )
+        PullToRefreshBox(
+            modifier = Modifier.fillMaxSize(),
+            isRefreshing = uiState.isRefreshing,
+            state = pullToRefreshState,
+            onRefresh = onRefresh,
+            indicator = {
+                PullToRefreshDefaults.Indicator(
+                    state = pullToRefreshState,
+                    isRefreshing = uiState.isRefreshing,
+                    color = MaterialTheme
+                        .colorScheme.primary,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                )
             }
-            SettingsContent(
-                uiState = uiState,
-                onRetryField = onRetryField,
-                onStatusClicked = onStatusClicked,
-                onPasswordClicked = onPasswordClicked,
-                onStickyToggled = onStickyToggled,
-                onSlugClicked = onSlugClicked,
-                onExcerptClicked = onExcerptClicked,
-                onFormatClicked = onFormatClicked,
-                onDateClicked = onDateClicked,
-                onAuthorClicked = onAuthorClicked,
-                onCategoriesClicked =
-                    onCategoriesClicked,
-                onTagsClicked = onTagsClicked,
-            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .navigationBarsPadding()
+            ) {
+                when (uiState.featuredImage) {
+                    is FieldState.Loaded ->
+                        HeroImageWithMenu(
+                            imageUrl =
+                                uiState.featuredImage.value,
+                            onChangeClicked =
+                                onFeaturedImageClicked,
+                            onRemoveClicked =
+                                onFeaturedImageRemoved,
+                        )
+                    is FieldState.Loading ->
+                        HeroImageShimmer()
+                    is FieldState.Error ->
+                        HeroImagePlaceholder(
+                            text = stringResource(
+                                R.string
+                                    .post_rs_settings_featured_image_error
+                            ),
+                            onClick = onFeaturedImageClicked,
+                        )
+                    is FieldState.Empty ->
+                        HeroImagePlaceholder(
+                            onClick = onFeaturedImageClicked,
+                        )
+                }
+                SettingsContent(
+                    uiState = uiState,
+                    onRetryField = onRetryField,
+                    onStatusClicked = onStatusClicked,
+                    onPasswordClicked = onPasswordClicked,
+                    onStickyToggled = onStickyToggled,
+                    onSlugClicked = onSlugClicked,
+                    onExcerptClicked = onExcerptClicked,
+                    onFormatClicked = onFormatClicked,
+                    onDateClicked = onDateClicked,
+                    onAuthorClicked = onAuthorClicked,
+                    onCategoriesClicked =
+                        onCategoriesClicked,
+                    onTagsClicked = onTagsClicked,
+                )
+            }
         }
         Box(
             modifier = Modifier
@@ -474,11 +534,15 @@ private fun HeroImagePlaceholder(
     ),
     onClick: (() -> Unit)? = null,
 ) {
-    val clickModifier = if (onClick != null) {
-        Modifier.clickable(onClick = onClick)
-    } else {
-        Modifier
-    }
+    val editLabel = stringResource(
+        R.string.post_rs_settings_edit_featured_image
+    )
+    val clickModifier = onClick?.let {
+        Modifier.clickable(
+            onClickLabel = editLabel,
+            onClick = it,
+        )
+    } ?: Modifier
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -531,14 +595,31 @@ private fun FloatingSaveButton(
     onSaveClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val savingDesc = stringResource(
+        R.string.post_rs_settings_saving
+    )
     if (isSaving) {
-        CircularProgressIndicator(
-            modifier = modifier
-                .padding(12.dp)
-                .size(24.dp),
-            strokeWidth = 2.dp,
-            color = Color.White,
-        )
+        Row(
+            modifier = modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement
+                .spacedBy(6.dp)
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(18.dp)
+                    .semantics {
+                        contentDescription = savingDesc
+                    },
+                strokeWidth = 2.dp,
+                color = Color.White,
+            )
+            Text(
+                text = savingDesc,
+                color = Color.White,
+                style = MaterialTheme.typography.labelLarge,
+            )
+        }
     } else {
         IconButton(
             onClick = onSaveClicked,
@@ -560,28 +641,40 @@ private fun ErrorContent(
     error: String,
     onRetry: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = stringResource(R.string.error_generic),
-            style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = error,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onRetry) {
-            Text(text = stringResource(R.string.retry))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(32.dp),
+            horizontalAlignment =
+                Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = stringResource(
+                    R.string.error_generic
+                ),
+                style =
+                    MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = error,
+                style =
+                    MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme
+                    .onSurfaceVariant,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onRetry) {
+                Text(
+                    text = stringResource(R.string.retry)
+                )
+            }
         }
     }
 }
@@ -607,11 +700,16 @@ private fun SettingsContent(
             stringResource(R.string.post_settings_publish)
         )
 
+        val statusLabel = statusDisplayLabel(uiState)
+        val statusResId = (
+            uiState.editedStatus ?: uiState.postStatus
+            ).toLabel()
         SettingsRow(
             label = stringResource(
                 R.string.post_settings_status
             ),
-            value = statusDisplayLabel(uiState),
+            value = statusLabel,
+            dimmed = statusResId == 0,
             modifier = Modifier.clickable(
                 onClick = onStatusClicked
             )
@@ -756,7 +854,11 @@ private fun statusDisplayLabel(
 ): String {
     val status = uiState.editedStatus ?: uiState.postStatus
     val resId = status.toLabel()
-    return if (resId != 0) stringResource(resId) else ""
+    return if (resId != 0) {
+        stringResource(resId)
+    } else {
+        stringResource(R.string.post_settings_not_set)
+    }
 }
 
 @Composable
@@ -997,7 +1099,18 @@ private fun PasswordDialog(
                                 } else {
                                     Icons.Default.Visibility
                                 },
-                                contentDescription = null
+                                contentDescription =
+                                    if (passwordVisible) {
+                                        stringResource(
+                                            R.string
+                                                .post_rs_settings_hide_password
+                                        )
+                                    } else {
+                                        stringResource(
+                                            R.string
+                                                .post_rs_settings_show_password
+                                        )
+                                    }
                             )
                         }
                     },
@@ -1535,11 +1648,9 @@ private fun ChipSettingsRow(
     onRetry: () -> Unit,
     onClick: (() -> Unit)? = null,
 ) {
-    val clickModifier = if (onClick != null) {
-        Modifier.clickable(onClick = onClick)
-    } else {
-        Modifier
-    }
+    val clickModifier = onClick?.let {
+        Modifier.clickable(onClick = it)
+    } ?: Modifier
     if (state is FieldState.Empty) {
         SettingsRow(
             label = label,

@@ -7,8 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.Lifecycle
@@ -27,8 +25,9 @@ import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.postsrs.screens.PostRsSettingsScreen
 import org.wordpress.android.ui.postsrs.terms.TermSelectionActivity
 import org.wordpress.android.ui.postsrs.terms.TermSelectionViewModel
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.setContent
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -53,13 +52,14 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
         registerMediaPickerLauncher()
         registerTermSelectionLaunchers()
 
-        val controller = WindowInsetsControllerCompat(
+        WindowInsetsControllerCompat(
             window, window.decorView
-        )
-        controller.hide(WindowInsetsCompat.Type.statusBars())
-        controller.systemBarsBehavior =
-            WindowInsetsControllerCompat
-                .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        ).apply {
+            hide(WindowInsetsCompat.Type.statusBars())
+            systemBarsBehavior =
+                WindowInsetsControllerCompat
+                    .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
 
         observeEvents()
 
@@ -68,8 +68,10 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
             AppThemeM3 {
                 PostRsSettingsScreen(
                     uiState = uiState,
+                    snackbarMessages = viewModel.snackbarMessages,
                     onNavigateBack = viewModel::onBackClicked,
                     onRetry = viewModel::retry,
+                    onRefresh = viewModel::refreshPost,
                     onRetryField = viewModel::retryField,
                     onStatusClicked = viewModel::onStatusClicked,
                     onStatusSelected = viewModel::onStatusSelected,
@@ -129,11 +131,6 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                                 tagSelectionLauncher,
                                 isCategories = false,
                                 event.selectedIds,
-                            )
-                        is PostRsSettingsEvent.ShowSnackbar ->
-                            ToastUtils.showToast(
-                                this@PostRsSettingsActivity,
-                                event.message
                             )
                     }
                 }

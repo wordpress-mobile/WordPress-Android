@@ -58,6 +58,10 @@ class PostRsSettingsViewModel @Inject constructor(
     private val _events = Channel<PostRsSettingsEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
+    private val _snackbarMessages =
+        Channel<SnackbarMessage>(Channel.BUFFERED)
+    val snackbarMessages = _snackbarMessages.receiveAsFlow()
+
     private val fieldError: String
         get() = resourceProvider.getString(
             R.string.post_rs_settings_field_error
@@ -68,11 +72,6 @@ class PostRsSettingsViewModel @Inject constructor(
 
     init {
         if (site == null) {
-            _events.trySend(
-                PostRsSettingsEvent.ShowSnackbar(
-                    resourceProvider.getString(R.string.blog_not_found)
-                )
-            )
             _events.trySend(PostRsSettingsEvent.Finish)
         } else {
             loadPost()
@@ -81,6 +80,58 @@ class PostRsSettingsViewModel @Inject constructor(
 
     fun retry() {
         loadPost()
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    fun refreshPost() {
+        val site = site ?: return
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            _snackbarMessages.trySend(
+                SnackbarMessage(
+                    resourceProvider.getString(
+                        R.string.error_generic_network
+                    )
+                )
+            )
+            return
+        }
+        _uiState.update { it.copy(isRefreshing = true) }
+        viewModelScope.launch {
+            try {
+                val post = fetchPost(site)
+                lastPost = post
+                val current = _uiState.value
+                _uiState.value = mapPostToUiState(post)
+                    .preserveEdits(from = current)
+                resolveAsyncFields(post)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to refresh post settings",
+                    e
+                )
+                _uiState.update {
+                    it.copy(isRefreshing = false)
+                }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = PostRsErrorUtils
+                            .friendlyErrorMessage(
+                                e = e,
+                                resourceProvider =
+                                    resourceProvider,
+                                networkUtilsWrapper =
+                                    networkUtilsWrapper,
+                            ),
+                        actionLabel = resourceProvider
+                            .getString(R.string.retry),
+                        onAction = { refreshPost() }
+                    )
+                )
+            }
+        }
     }
 
     fun retryField(field: RetryableField) {
@@ -276,8 +327,8 @@ class PostRsSettingsViewModel @Inject constructor(
     fun onAuthorClicked() {
         val currentSite = site ?: return
         if (!_uiState.value.canEditAuthor) {
-            _events.trySend(
-                PostRsSettingsEvent.ShowSnackbar(
+            _snackbarMessages.trySend(
+                SnackbarMessage(
                     resourceProvider.getString(
                         R.string
                             .post_rs_settings_author_no_permission
@@ -451,8 +502,8 @@ class PostRsSettingsViewModel @Inject constructor(
                         dialogState = DialogState.None
                     )
                 }
-                _events.trySend(
-                    PostRsSettingsEvent.ShowSnackbar(
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
                         e.message?.takeIf {
                             it.isNotBlank()
                         } ?: fieldError
@@ -528,22 +579,10 @@ class PostRsSettingsViewModel @Inject constructor(
         _events.trySend(PostRsSettingsEvent.Finish)
     }
 
-    @Suppress("ReturnCount")
     fun onSaveClicked() {
         val site = site ?: return
         val state = _uiState.value
         if (!state.hasChanges || state.isSaving) return
-
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _events.trySend(
-                PostRsSettingsEvent.ShowSnackbar(
-                    resourceProvider.getString(
-                        R.string.error_generic_network
-                    )
-                )
-            )
-            return
-        }
 
         _uiState.update { it.copy(isSaving = true) }
         savePost(site, state)
@@ -587,10 +626,11 @@ class PostRsSettingsViewModel @Inject constructor(
                     }
                     when (response) {
                         is WpRequestResult.Success -> Unit
-                        else -> throw PostApiException(
+                        else -> throw PostApiRequestException(
                             (response
                                 as? WpRequestResult.WpError<*>)
                                 ?.errorMessage
+                                ?: "Post API request failed"
                         )
                     }
                 }
@@ -606,13 +646,22 @@ class PostRsSettingsViewModel @Inject constructor(
                     e
                 )
                 _uiState.update { it.copy(isSaving = false) }
-                val message = e.message?.takeIf {
-                    it.isNotBlank()
-                } ?: resourceProvider.getString(
-                    R.string.post_rs_settings_save_error
-                )
-                _events.trySend(
-                    PostRsSettingsEvent.ShowSnackbar(message)
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = PostRsErrorUtils
+                            .friendlyErrorMessage(
+                                e = e,
+                                defaultResId = R.string
+                                    .post_rs_settings_save_error,
+                                resourceProvider =
+                                    resourceProvider,
+                                networkUtilsWrapper =
+                                    networkUtilsWrapper,
+                            ),
+                        actionLabel = resourceProvider
+                            .getString(R.string.retry),
+                        onAction = { onSaveClicked() }
+                    )
                 )
             }
         }
@@ -649,9 +698,14 @@ class PostRsSettingsViewModel @Inject constructor(
                 )
                 _uiState.value = PostRsSettingsUiState(
                     isLoading = false,
-                    error = resourceProvider.getString(
-                        R.string.request_failed_message
-                    )
+                    error = PostRsErrorUtils
+                        .friendlyErrorMessage(
+                            e = e,
+                            resourceProvider =
+                                resourceProvider,
+                            networkUtilsWrapper =
+                                networkUtilsWrapper,
+                        )
                 )
             }
         }
@@ -671,9 +725,10 @@ class PostRsSettingsViewModel @Inject constructor(
         when (response) {
             is WpRequestResult.Success ->
                 response.response.data
-            else -> throw PostApiException(
+            else -> throw PostApiRequestException(
                 (response as? WpRequestResult.WpError<*>)
                     ?.errorMessage
+                    ?: "Post API request failed"
             )
         }
     }
@@ -872,8 +927,24 @@ class PostRsSettingsViewModel @Inject constructor(
         return fmt.format(dateGmt)
     }
 
-    private class PostApiException(message: String?) :
-        Exception(message ?: "Post API request failed")
+    private fun PostRsSettingsUiState.preserveEdits(
+        from: PostRsSettingsUiState
+    ) = copy(
+        editedStatus = from.editedStatus,
+        editedPassword = from.editedPassword,
+        editedSticky = from.editedSticky,
+        editedSlug = from.editedSlug,
+        editedExcerpt = from.editedExcerpt,
+        editedFormat = from.editedFormat,
+        editedDate = from.editedDate,
+        editedAuthor = from.editedAuthor,
+        editedFeaturedImageId = from.editedFeaturedImageId,
+        editedCategoryIds = from.editedCategoryIds,
+        editedTagIds = from.editedTagIds,
+    )
+
+    private class PostApiRequestException(message: String) :
+        RuntimeException(message)
 
     companion object {
         const val EXTRA_POST_ID = "extra_post_id"

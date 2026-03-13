@@ -1044,6 +1044,9 @@
     <string name="post_rs_settings_term_create_error">Failed to create term</string>
     <string name="post_rs_settings_load_more">Load more\u2026</string>
     <string name="post_rs_settings_search_no_results">No results found</string>
+    <string name="post_rs_settings_saving">Saving\u2026</string>
+    <string name="post_rs_settings_hide_password">Hide password</string>
+    <string name="post_rs_settings_show_password">Show password</string>
     <string name="show_less">Show less</string>
     <string name="post_types_screen_title">Post Types</string>
 
