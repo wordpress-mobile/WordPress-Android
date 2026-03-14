@@ -119,6 +119,19 @@
       <property name="severity" value="error"/>
     </module>
 
+    <!-- Specific to WordPress -->
+    <!-- WordPress.getContext() must not be used for string resource access. -->
+    <!-- AGP 8.8+ generateLocaleConfig causes incorrect resource resolution -->
+    <!-- with Application context. Use Activity/Fragment context, or -->
+    <!-- injected ResourceProvider instead. -->
+    <module name="RegexpSingleline">
+      <property name="format"
+                value="WordPress\.getContext\(\)\.getString\((?!.*checkstyle ignore)"/>
+      <property name="message"
+                value="Do not use WordPress.getContext().getString(). Use Activity/Fragment context or injected ResourceProvider instead."/>
+      <property name="severity" value="error"/>
+    </module>
+
     <module name="LineLength">
         <property name="fileExtensions" value="java"/>
         <!-- what is a good max value? -->

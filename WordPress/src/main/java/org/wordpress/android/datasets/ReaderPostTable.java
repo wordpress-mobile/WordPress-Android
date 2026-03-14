@@ -11,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderCardType;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
@@ -844,7 +842,7 @@ public class ReaderPostTable {
             return "<p>" + post.getExcerpt() + "</p>"
                    + String.format("<p style='text-align:center'><a href='%s'>%s</a></p>",
                     post.getUrl(),
-                    WordPress.getContext().getString(R.string.reader_label_view_original));
+                    "View original article");
         } else {
             AppLog.w(AppLog.T.READER, "reader post table > max text exceeded, storing truncated text");
             return post.getText().substring(0, MAX_TEXT_LEN);
