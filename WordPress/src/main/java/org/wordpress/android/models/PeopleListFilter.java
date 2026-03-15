@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
 import org.wordpress.android.R;
@@ -18,8 +19,8 @@ public enum PeopleListFilter implements FilterCriteria {
         mLabelResId = labelResId;
     }
 
-    @Override
-    public String getLabel(Context context) {
+    @NonNull @Override
+    public String getLabel(@NonNull Context context) {
         return context.getString(mLabelResId);
     }
 }
