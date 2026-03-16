@@ -32,37 +32,60 @@ class WpApiClientProvider @Inject constructor(
     private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) {
     private val wpComClients = mutableMapOf<Long, WpApiClient>()
+    private val selfHostedClients = mutableMapOf<Int, WpApiClient>()
 
-    /** Removes all cached WP.com API clients (e.g. on sign-out). */
+    /** Removes all cached API clients (e.g. on sign-out). */
     @Synchronized
     fun clearWpComClients() {
         wpComClients.clear()
+        selfHostedClients.clear()
     }
 
+    @Synchronized
     fun getWpApiClient(
         site: SiteModel,
         uploadListener: WpRequestExecutor.UploadListener? = null
+    ): WpApiClient = when {
+        site.isWPCom -> getWpComApiClient(site)
+        // Skip caching when an upload listener is provided —
+        // upload flows need a dedicated client with progress
+        // callbacks.
+        uploadListener != null ->
+            createSelfHostedClient(site, uploadListener)
+        else -> selfHostedClients.getOrPut(site.id) {
+            createSelfHostedClient(site, uploadListener = null)
+        }
+    }
+
+    private fun createSelfHostedClient(
+        site: SiteModel,
+        uploadListener: WpRequestExecutor.UploadListener?,
     ): WpApiClient {
-        if (site.isWPCom) return getWpComApiClient(site)
-        val authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(
-            username = site.apiRestUsernamePlain, password = site.apiRestPasswordPlain
-        )
-        val apiRootUrl = URL(site.buildUrl())
-        val client = WpApiClient(
-            wpOrgSiteApiRootUrl = apiRootUrl,
+        val authProvider =
+            WpAuthenticationProvider.staticWithUsernameAndPassword(
+                username = site.apiRestUsernamePlain,
+                password = site.apiRestPasswordPlain,
+            )
+        return WpApiClient(
+            wpOrgSiteApiRootUrl = URL(site.buildUrl()),
             authProvider = authProvider,
             requestExecutor = WpRequestExecutor(
                 interceptors = interceptors.toList(),
-                networkAvailabilityProvider = networkAvailabilityProvider,
-                uploadListener = uploadListener
+                networkAvailabilityProvider =
+                    networkAvailabilityProvider,
+                uploadListener = uploadListener,
             ),
             appNotifier = object : WpAppNotifier {
-                override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
-                    wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
+                override suspend fun requestedWithInvalidAuthentication(
+                    requestUrl: String
+                ) {
+                    wpAppNotifierHandler
+                        .notifyRequestedWithInvalidAuthentication(
+                            site
+                        )
                 }
-            }
+            },
         )
-        return client
     }
 
     fun getWpApiClientCookiesNonceAuthentication(site: SiteModel): WpApiClient {
