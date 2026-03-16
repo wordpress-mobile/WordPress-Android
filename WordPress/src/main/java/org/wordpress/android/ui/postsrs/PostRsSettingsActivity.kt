@@ -162,7 +162,7 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                         MediaPickerConstants.EXTRA_MEDIA_URIS
                     )
                 val uri = uris?.firstOrNull()
-                    ?.let { it.toUri() }
+                    ?.toUri()
                 if (uri != null) {
                     viewModel.onFeaturedImagePickedFromDevice(
                         uri

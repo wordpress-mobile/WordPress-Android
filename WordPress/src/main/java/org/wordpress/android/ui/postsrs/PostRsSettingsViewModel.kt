@@ -560,7 +560,7 @@ class PostRsSettingsViewModel @Inject constructor(
     ): Long {
         val client = apiClient
             ?: throw PostApiRequestException(
-                "No API client"
+                "No site selected"
             )
         val response = client.request { requestBuilder ->
             requestBuilder.media().create(

@@ -593,8 +593,8 @@ private fun HeroImagePlaceholder(
     text: String = stringResource(
         R.string.post_rs_settings_featured_image_not_set
     ),
-    onChooseFromWpMedia: (() -> Unit)? = null,
-    onChooseFromDevice: (() -> Unit)? = null,
+    onChooseFromWpMedia: () -> Unit,
+    onChooseFromDevice: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -611,19 +611,14 @@ private fun HeroImagePlaceholder(
                 .onSurfaceVariant,
             modifier = Modifier.align(Alignment.Center)
         )
-        if (
-            onChooseFromWpMedia != null &&
-            onChooseFromDevice != null
-        ) {
-            FeaturedImageEditButton(
-                hasImage = false,
-                onChooseFromWpMedia = onChooseFromWpMedia,
-                onChooseFromDevice = onChooseFromDevice,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(12.dp)
-            )
-        }
+        FeaturedImageEditButton(
+            hasImage = false,
+            onChooseFromWpMedia = onChooseFromWpMedia,
+            onChooseFromDevice = onChooseFromDevice,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(12.dp)
+        )
     }
 }
 
