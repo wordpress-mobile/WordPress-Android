@@ -34,10 +34,11 @@ class WpApiClientProvider @Inject constructor(
     private val wpComClients = mutableMapOf<Long, WpApiClient>()
     private val selfHostedClients = mutableMapOf<Int, WpApiClient>()
 
-    /** Removes all cached WP.com API clients (e.g. on sign-out). */
+    /** Removes all cached API clients (e.g. on sign-out). */
     @Synchronized
     fun clearWpComClients() {
         wpComClients.clear()
+        selfHostedClients.clear()
     }
 
     @Synchronized

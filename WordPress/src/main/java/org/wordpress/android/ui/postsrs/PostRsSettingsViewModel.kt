@@ -94,6 +94,7 @@ class PostRsSettingsViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     fun refreshPost() {
+        if (site == null) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
                 SnackbarMessage(
@@ -725,7 +726,7 @@ class PostRsSettingsViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     val client = apiClient
                         ?: throw PostApiRequestException(
-                            "No API client"
+                            "No site selected"
                         )
                     val response = client.request {
                         it.posts().update(
@@ -778,6 +779,7 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     private fun loadPost() {
+        if (site == null) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _uiState.value = PostRsSettingsUiState(
                 isLoading = false,
