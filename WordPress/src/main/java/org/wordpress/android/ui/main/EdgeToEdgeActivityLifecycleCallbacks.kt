@@ -13,7 +13,6 @@ import androidx.core.view.WindowInsetsCompat
  */
 class EdgeToEdgeActivityLifecycleCallbacks :
     Application.ActivityLifecycleCallbacks {
-
     private val targetActivities = setOf(
         "zendesk.support.guide.HelpCenterActivity",
         "zendesk.support.guide.ViewArticleActivity",
