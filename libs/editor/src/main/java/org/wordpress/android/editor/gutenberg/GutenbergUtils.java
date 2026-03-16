@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.LocaleList;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -36,13 +37,13 @@ class GutenbergUtils {
                 .createConfigurationContext(currentResources.getConfiguration());
         // if the current locale of the app is english stop here and return an empty map
         Configuration currentConfiguration = localizedContextCurrent.getResources().getConfiguration();
-        if (currentConfiguration.locale.equals(defaultLocale)) {
+        if (defaultLocale.equals(currentConfiguration.getLocales().get(0))) {
             return translations;
         }
 
         // Let's create a Resources object for the default locale (english) to get the original values for our strings
         Configuration defaultLocaleConfiguration = new Configuration(currentConfiguration);
-        defaultLocaleConfiguration.setLocale(defaultLocale);
+        defaultLocaleConfiguration.setLocales(new LocaleList(defaultLocale));
         Context localizedContextDefault = activity
                 .createConfigurationContext(defaultLocaleConfiguration);
         Resources englishResources = localizedContextDefault.getResources();
