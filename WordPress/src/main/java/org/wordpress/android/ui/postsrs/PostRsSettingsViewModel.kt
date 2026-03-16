@@ -22,6 +22,7 @@ import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
+import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyPostWithEditContext
 import uniffi.wp_api.PostEndpointType
@@ -52,7 +53,7 @@ class PostRsSettingsViewModel @Inject constructor(
 
     private val site = selectedSiteRepository.getSelectedSite()
 
-    private val apiClient by lazy {
+    private val apiClient: WpApiClient? by lazy {
         site?.let { wpApiClientProvider.getWpApiClient(it) }
     }
 
@@ -88,6 +89,7 @@ class PostRsSettingsViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     fun refreshPost() {
+        if (apiClient == null) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
                 SnackbarMessage(
@@ -618,7 +620,7 @@ class PostRsSettingsViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     val client = apiClient
                         ?: throw PostApiRequestException(
-                            "No API client"
+                            "No site selected"
                         )
                     val response = client.request {
                         it.posts().update(
@@ -671,6 +673,7 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     private fun loadPost() {
+        if (apiClient == null) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _uiState.value = PostRsSettingsUiState(
                 isLoading = false,

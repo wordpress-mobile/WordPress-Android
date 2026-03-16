@@ -82,6 +82,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -543,20 +544,12 @@ private fun ShimmerRow() {
             ShimmerBox(
                 modifier = Modifier
                     .size(width = 100.dp, height = 14.dp)
-                    .background(
-                        MaterialTheme.colorScheme.onSurface
-                            .copy(alpha = 0.1f),
-                        MaterialTheme.shapes.small
-                    )
+                    .clip(MaterialTheme.shapes.small)
             )
             ShimmerBox(
                 modifier = Modifier
                     .size(width = 160.dp, height = 12.dp)
-                    .background(
-                        MaterialTheme.colorScheme.onSurface
-                            .copy(alpha = 0.06f),
-                        MaterialTheme.shapes.small
-                    )
+                    .clip(MaterialTheme.shapes.small)
             )
         }
     }
