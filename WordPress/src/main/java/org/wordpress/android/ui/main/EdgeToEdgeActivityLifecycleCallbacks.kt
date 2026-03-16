@@ -36,6 +36,7 @@ class EdgeToEdgeActivityLifecycleCallbacks :
             val padding = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
                     or WindowInsetsCompat.Type.displayCutout()
+                    or WindowInsetsCompat.Type.ime()
             )
             view.setPadding(
                 padding.left,
