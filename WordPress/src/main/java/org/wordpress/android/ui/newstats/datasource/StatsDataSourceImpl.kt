@@ -33,7 +33,7 @@ import uniffi.wp_api.StatsSubscribersParams
 import uniffi.wp_api.StatsSubscribersUnit
 import uniffi.wp_api.StatsSubscribersStatField
 import uniffi.wp_api.SubscribersByUserTypeParams
-import uniffi.wp_api.SubscribersByUserTypeUserType
+import uniffi.wp_api.WpComSubscriberType
 import uniffi.wp_api.SubscribersByUserTypeSortField
 import uniffi.wp_api.StatsEmailsSummaryParams
 import uniffi.wp_api.StatsEmailsSummaryPeriod
@@ -1058,7 +1058,7 @@ class StatsDataSourceImpl @Inject constructor(
         page: Int
     ): SubscribersByUserTypeDataResult {
         val params = SubscribersByUserTypeParams(
-            userType = SubscribersByUserTypeUserType.WP_COM,
+            userType = WpComSubscriberType.WP_COM,
             perPage = perPage.toULong(),
             page = page.toULong(),
             sort = SubscribersByUserTypeSortField
@@ -1090,19 +1090,17 @@ class StatsDataSourceImpl @Inject constructor(
                             displayName =
                                 subscriber.displayName,
                             subscribedSince =
-                                subscriber.dateSubscribed
-                                    ?.let {
-                                        java.time.ZonedDateTime
-                                            .ofInstant(
-                                                it.toInstant(),
-                                                java.time.ZoneId
-                                                    .systemDefault()
-                                            ).format(
-                                                java.time.format
-                                                    .DateTimeFormatter
-                                                    .ISO_LOCAL_DATE_TIME
-                                            )
-                                    } ?: ""
+                                java.time.ZonedDateTime
+                                    .ofInstant(
+                                        subscriber.dateSubscribed
+                                            .toInstant(),
+                                        java.time.ZoneId
+                                            .systemDefault()
+                                    ).format(
+                                        java.time.format
+                                            .DateTimeFormatter
+                                            .ISO_LOCAL_DATE_TIME
+                                    )
                         )
                     }
                 )
