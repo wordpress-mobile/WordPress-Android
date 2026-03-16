@@ -19,6 +19,7 @@ class ChipsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
             checkedIds.forEach { checkedId ->
                 val checkedChip = group.findViewById<Chip>(checkedId)
+                @Suppress("DEPRECATION")
                 checkedChip?.announceForAccessibility(group.resources.getString(R.string.stats_graph_updated))
                 item.onColumnSelected?.invoke(group.indexOfChild(checkedChip))
             }

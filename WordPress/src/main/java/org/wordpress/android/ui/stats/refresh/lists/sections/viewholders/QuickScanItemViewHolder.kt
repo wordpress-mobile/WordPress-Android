@@ -55,6 +55,7 @@ class QuickScanItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         column.tooltip?.let {
             TooltipCompat.setTooltipText(container, column.tooltip)
             container.setOnClickListener {
+                @Suppress("DEPRECATION")
                 container.announceForAccessibility(column.tooltip)
                 it.performLongClick()
             }

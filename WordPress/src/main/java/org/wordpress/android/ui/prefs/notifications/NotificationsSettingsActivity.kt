@@ -120,7 +120,7 @@ class NotificationsSettingsActivity : BaseAppCompatActivity(), MainSwitchToolbar
         hideDisabledView(isMainChecked)
     }
 
-    override fun onMainSwitchCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+    override fun onMainSwitchCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         applicationScope.launch { updateNotificationSettingsUseCase.updateNotificationSettings(isChecked) }
 
         hideDisabledView(isChecked)
