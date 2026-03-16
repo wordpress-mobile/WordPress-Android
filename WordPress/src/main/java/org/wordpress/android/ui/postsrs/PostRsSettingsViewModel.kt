@@ -825,7 +825,7 @@ class PostRsSettingsViewModel @Inject constructor(
     private suspend fun fetchPost():
         AnyPostWithEditContext = withContext(Dispatchers.IO) {
         val client = apiClient
-            ?: throw PostApiRequestException("No API client")
+            ?: throw PostApiRequestException("No site selected")
         val response = client.request {
             it.posts().retrieveWithEditContext(
                 PostEndpointType.Posts,
