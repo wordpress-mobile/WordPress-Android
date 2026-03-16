@@ -206,6 +206,7 @@ internal fun PostStatus?.toLabel(): Int = when (this) {
         R.string.post_status_post_scheduled
     is PostStatus.Trash ->
         R.string.post_status_post_trashed
+    is PostStatus.Any -> 0
     is PostStatus.Custom -> 0
     null -> 0
 }
