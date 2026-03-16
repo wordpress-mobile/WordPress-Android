@@ -89,12 +89,22 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                     }
 
                     else -> {
-                        appLogWrapper.e(AppLog.T.API, "Error creating application password")
+                        appLogWrapper.e(
+                            AppLog.T.API,
+                            "A_P: Error creating application password" +
+                                " for: ${site.url}" +
+                                " - response: $response"
+                        )
                         fallbackToManualLogin(site.url)
                     }
                 }
             } catch (e: Exception) {
-                appLogWrapper.e(AppLog.T.API, "Exception creating application password: ${e.message}")
+                appLogWrapper.e(
+                    AppLog.T.API,
+                    "A_P: Exception creating application password" +
+                        " for: ${site.url}" +
+                        " - ${e.message}"
+                )
                 fallbackToManualLogin(site.url)
             } finally {
                 _isLoading.value = false
@@ -115,7 +125,11 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
             val authUrl = applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)
             _navigationEvent.emit(NavigationEvent.FallbackToManualLogin(authUrl))
         } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.API, "Failed to get authorization URL: ${e.message}")
+            appLogWrapper.e(
+                AppLog.T.API,
+                "A_P: Failed to get authorization URL" +
+                    " for: $siteUrl - ${e.message}"
+            )
             _navigationEvent.emit(NavigationEvent.Error)
         }
     }
