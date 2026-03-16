@@ -89,27 +89,24 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                     }
 
                     else -> {
-                        appLogWrapper.e(
-                            AppLog.T.API,
-                            "A_P: Error creating application password" +
-                                " for: ${site.url}" +
-                                " - response type: ${response::class.simpleName}"
-                        )
+                        logCreationError(site.url, "response type: ${response::class.simpleName}")
                         fallbackToManualLogin(site.url)
                     }
                 }
             } catch (e: Exception) {
-                appLogWrapper.e(
-                    AppLog.T.API,
-                    "A_P: Exception creating application password" +
-                        " for: ${site.url}" +
-                        " - ${e.message}"
-                )
+                logCreationError(site.url, e.message.orEmpty())
                 fallbackToManualLogin(site.url)
             } finally {
                 _isLoading.value = false
             }
         }
+    }
+
+    private fun logCreationError(siteUrl: String, detail: String) {
+        appLogWrapper.e(
+            AppLog.T.API,
+            "A_P: Error creating application password for: $siteUrl - $detail"
+        )
     }
 
     @Suppress("TooGenericExceptionCaught")
