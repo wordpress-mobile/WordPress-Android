@@ -1,3 +1,3 @@
-* [*] New Stats Traffic tab is now available as an Experimental Features [#22626]
-* [*] Standardize FAB colors and icon to Material 3 defaults [#22654]
-* [*] Fix: open redirect_to URL in browser to prevent infinite deep link loop [#22665]
+- We added the Traffic tab to the Stats area as an experimental feature.
+- Button colors are now consistent across different areas of the app.
+- We fixed an infinite loop that sometimes appeared when opening certain types of links.
