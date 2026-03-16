@@ -1140,6 +1140,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                   .show();
     }
 
+    @SuppressWarnings("deprecation")
     private void announceTitleForAccessibility(PageType pageType) {
         getWindow().getDecorView().announceForAccessibility(mBottomNav.getContentDescriptionForPageType(pageType));
     }

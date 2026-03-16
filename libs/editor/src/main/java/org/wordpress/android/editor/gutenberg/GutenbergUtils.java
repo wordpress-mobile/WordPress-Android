@@ -30,7 +30,7 @@ class GutenbergUtils {
     @SuppressLint("AppBundleLocaleChanges")
     public static Bundle getTranslations(Activity activity) {
         Bundle translations = new Bundle();
-        Locale defaultLocale = new Locale("en");
+        Locale defaultLocale = new Locale.Builder().setLanguage("en").build();
         Resources currentResources = activity.getResources();
         Context localizedContextCurrent = activity
                 .createConfigurationContext(currentResources.getConfiguration());
