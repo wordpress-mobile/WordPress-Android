@@ -24,10 +24,7 @@ class EdgeToEdgeActivityLifecycleCallbacks :
         activity: Activity,
         savedInstanceState: Bundle?
     ) {
-        if (targetActivities.contains(
-                activity::class.java.name
-            )
-        ) {
+        if (activity::class.java.name in targetActivities) {
             applyInsetOffsets(activity)
         }
     }
