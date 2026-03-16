@@ -54,6 +54,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
             val innerPadding = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
                         or WindowInsetsCompat.Type.displayCutout()
+                        or WindowInsetsCompat.Type.ime()
             )
 
             view.setPadding(
