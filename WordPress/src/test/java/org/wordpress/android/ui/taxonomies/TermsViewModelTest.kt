@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
@@ -59,6 +60,9 @@ class TermsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor
 
+    @Mock
+    private lateinit var networkAvailabilityProvider: WpNetworkAvailabilityProvider
+
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
@@ -77,7 +81,8 @@ class TermsViewModelTest : BaseUnitTest() {
             ioDispatcher = testDispatcher(),
             taxonomyStore = taxonomyStore,
             fluxCDispatcher = fluxCDispatcher,
-            trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor
+            trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
+            networkAvailabilityProvider = networkAvailabilityProvider
         )
     }
 

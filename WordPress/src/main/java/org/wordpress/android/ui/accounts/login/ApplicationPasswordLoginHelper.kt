@@ -16,6 +16,7 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.UrlUtils
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
+import uniffi.wp_api.applicationPasswordsUrl
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -260,7 +261,12 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     class DiscoverSuccessWrapper @Inject constructor() {
         fun getApiRootUrl(successObject: ApiDiscoveryResult.Success) = successObject.success.apiRootUrl.url()
 
-        fun getApplicationPasswordsAuthenticationUrl(successObject: ApiDiscoveryResult.Success) =
-            successObject.success.applicationPasswordsAuthenticationUrl.url()
+        fun getApplicationPasswordsAuthenticationUrl(
+            successObject: ApiDiscoveryResult.Success
+        ): String = requireNotNull(
+            applicationPasswordsUrl(successObject.success.authentication)?.url()
+        ) {
+            "Application passwords authentication URL is required"
+        }
     }
 }

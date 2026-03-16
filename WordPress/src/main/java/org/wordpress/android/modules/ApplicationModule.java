@@ -38,6 +38,7 @@ import org.wordpress.android.util.config.InAppUpdatesFeatureConfig;
 import org.wordpress.android.util.config.RemoteConfigWrapper;
 import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor;
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
@@ -156,8 +157,12 @@ public abstract class ApplicationModule {
 
     @Provides
     public static WpLoginClient provideWpLoginClient(
-            @NonNull TrackNetworkRequestsInterceptor trackNetworkRequestsInterceptor
+            @NonNull TrackNetworkRequestsInterceptor trackNetworkRequestsInterceptor,
+            @NonNull WpNetworkAvailabilityProvider networkAvailabilityProvider
     ) {
-        return new WpLoginClient(Collections.singletonList(trackNetworkRequestsInterceptor));
+        return new WpLoginClient(
+                Collections.singletonList(trackNetworkRequestsInterceptor),
+                networkAvailabilityProvider
+        );
     }
 }

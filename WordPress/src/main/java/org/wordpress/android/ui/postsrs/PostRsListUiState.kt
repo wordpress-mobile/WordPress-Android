@@ -61,6 +61,7 @@ data class PostRsUiModel(
     val featuredImageId: Long = 0L,
     val featuredImageUrl: String? = null,
     val actions: List<PostRsMenuAction> = emptyList(),
+    val badges: List<Int> = emptyList(),
     val displayState: PostDisplayState =
         PostDisplayState.NORMAL
 )
@@ -70,6 +71,10 @@ enum class PostRsMenuAction(
     @DrawableRes val iconResId: Int,
     val isDestructive: Boolean = false
 ) {
+    SETTINGS(
+        R.string.post_settings,
+        R.drawable.ic_settings_white_24dp
+    ),
     VIEW(R.string.button_view, R.drawable.gb_ic_external),
     READ(
         R.string.button_read,
@@ -173,12 +178,23 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
         } else {
             0
         },
+        badges = buildList {
+            if (post.status is PostStatus.Private) {
+                add(R.string.post_status_post_private)
+            }
+            if (post.status is PostStatus.Pending) {
+                add(R.string.post_status_pending_review)
+            }
+            if (post.sticky == true) {
+                add(R.string.post_status_sticky)
+            }
+        },
         displayState = displayState
     )
 }
 
 @StringRes
-private fun PostStatus?.toLabel(): Int = when (this) {
+internal fun PostStatus?.toLabel(): Int = when (this) {
     is PostStatus.Publish ->
         R.string.post_status_post_published
     is PostStatus.Draft -> R.string.post_status_draft

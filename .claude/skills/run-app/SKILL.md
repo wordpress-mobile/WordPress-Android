@@ -8,7 +8,7 @@ description: >
 
 # Run App
 
-Build and run the Jetpack wasabi debug variant on a connected Android
+Build and run the Jetpack debug variant on a connected Android
 device or emulator. By default this skill builds and runs the
 **Jetpack** app. Only build the WordPress app if the user explicitly
 asks for it.
@@ -17,16 +17,16 @@ asks for it.
 
 ### 1. Build the app
 
-By default, build the Jetpack wasabi debug variant:
+By default, build the Jetpack debug variant:
 
 ```bash
-./gradlew assembleJetpackWasabiDebug
+./gradlew assembleJetpackDebug
 ```
 
 If the user explicitly asks for the WordPress app instead, run:
 
 ```bash
-./gradlew assembleWordPressWasabiDebug
+./gradlew assembleWordPressDebug
 ```
 
 ### 2. Check for connected devices
@@ -89,14 +89,14 @@ Gradle versions):
 **Jetpack (default):**
 
 ```bash
-APK=$(find WordPress/build/outputs/apk/jetpackWasabi/debug \
+APK=$(find WordPress/build/outputs/apk/jetpack/debug \
   -name '*.apk' ! -name '*androidTest*' | head -1)
 ```
 
 **WordPress (only if the user explicitly requested it):**
 
 ```bash
-APK=$(find WordPress/build/outputs/apk/wordpressWasabi/debug \
+APK=$(find WordPress/build/outputs/apk/wordpress/debug \
   -name '*.apk' ! -name '*androidTest*' | head -1)
 ```
 
@@ -107,10 +107,11 @@ devices are present):
 adb [-s <serial>] install -r "$APK"
 ```
 
-Then launch the app:
+Then launch the app. The debug build type appends `.prealpha` to the
+application ID, so use the correct package name:
 
-- **Jetpack**: `adb [-s <serial>] shell am start -n com.jetpack.android.beta/org.wordpress.android.ui.WPLaunchActivity`
-- **WordPress**: `adb [-s <serial>] shell am start -n org.wordpress.android.beta/org.wordpress.android.ui.WPLaunchActivity`
+- **Jetpack debug**: `adb [-s <serial>] shell monkey -p com.jetpack.android.prealpha -c android.intent.category.LAUNCHER 1`
+- **WordPress debug**: `adb [-s <serial>] shell monkey -p org.wordpress.android.prealpha -c android.intent.category.LAUNCHER 1`
 
 ### 6. Report the result
 

@@ -147,5 +147,5 @@ When adding new functionality to this module:
 ./gradlew :libs:posttypes:assembleDebug
 
 # Build the full app (verifies integration)
-./gradlew assembleWordPressVanillaDebug
+./gradlew assembleWordPressDebug
 ```

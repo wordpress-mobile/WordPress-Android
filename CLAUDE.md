@@ -5,21 +5,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Build and Test Commands
 
 ### Main Build Commands
-- `./gradlew assembleWordPressVanillaDebug` - Build debug APK for WordPress app
-- `./gradlew assembleJetpackVanillaDebug` - Build debug APK for Jetpack app
-- `./gradlew installWordPressVanillaDebug` - Install debug APK to connected device
-- `./gradlew installJetpackVanillaDebug` - Install debug APK for Jetpack to device
+- `./gradlew assembleWordPressDebug` - Build debug APK for WordPress app
+- `./gradlew assembleJetpackDebug` - Build debug APK for Jetpack app
+- `./gradlew installWordPressDebug` - Install debug APK to connected device
+- `./gradlew installJetpackDebug` - Install debug APK for Jetpack to device
 
 ### Testing Commands
-- `./gradlew :WordPress:testWordPressVanillaDebugUnitTest` - Run unit tests for WordPress app
-- `./gradlew :WordPress:connectedWordPressVanillaDebugAndroidTest` - Run instrumented tests for WordPress app
+- `./gradlew :WordPress:testWordPressDebugUnitTest` - Run unit tests for WordPress app
+- `./gradlew :WordPress:connectedWordPressDebugAndroidTest` - Run instrumented tests for WordPress app
 - `bundle exec fastlane build_and_run_instrumented_test app:wordpress` - Build and run WordPress instrumented tests in Firebase Test Lab
 - `bundle exec fastlane build_and_run_instrumented_test app:jetpack` - Build and run Jetpack instrumented tests in Firebase Test Lab
 
 ### Code Quality Commands
 - `./gradlew checkstyle` - Run Checkstyle linter (generates report in `WordPress/build/reports/checkstyle/checkstyle.html`)
 - `./gradlew detekt` - Run Detekt linter for Kotlin (generates report in `WordPress/build/reports/detekt/detekt.html`)
-- `./gradlew lintWordPressVanillaRelease` - Run Android lint on WordPress release variant
+- `./gradlew lintWordPressRelease` - Run Android lint on WordPress release variant
 
 ## Architecture Overview
 
@@ -30,8 +30,8 @@ This repository builds two apps from shared codebase:
 
 ### Product Flavors and Build Types
 - **App Flavors**: `wordpress`, `jetpack`
-- **Build Type Flavors**: `vanilla` (release/beta), `wasabi` (development), `jalapeno` (CI/prototype)
-- Common development variant: `jetpackWasabiDebug`
+- **Build Types**: `debug`, `release`
+- Common development variant: `jetpackDebug`
 
 ### Module Architecture
 ```
@@ -121,7 +121,7 @@ WordPress/src/main/java/org/wordpress/android/
   other members (properties, init blocks, constructors, functions)
 
 ### Development Workflow
-- Default development flavor: `jetpackWasabi` (Jetpack app with beta suffix)
+- Default development variant: `jetpackDebug`
 - Remote build cache available for faster builds (requires setup)
 - Fastlane used for release automation and testing
 - Secrets managed via `secrets.properties` file (not in repo)

@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.postsrs
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,6 +29,14 @@ import org.wordpress.android.util.extensions.setContent
 @AndroidEntryPoint
 class PostRsListActivity : BaseAppCompatActivity() {
     private val viewModel: PostRsListViewModel by viewModels()
+
+    private val settingsLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            viewModel.refreshAllTabs()
+        }
+    }
 
     @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,6 +114,10 @@ class PostRsListActivity : BaseAppCompatActivity() {
                 ReaderActivityLauncher.showReaderPostDetail(
                     this, false, event.blogId, event.postId,
                     DirectOperation.COMMENT_JUMP, false
+                )
+            is PostRsListEvent.OpenPostSettings ->
+                settingsLauncher.launch(
+                    PostRsSettingsActivity.createIntent(this, event.postId)
                 )
             is PostRsListEvent.ShowToast -> ToastUtils.showToast(this, event.messageResId)
             is PostRsListEvent.Finish -> finish()

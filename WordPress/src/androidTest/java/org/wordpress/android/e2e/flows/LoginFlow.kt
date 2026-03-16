@@ -57,7 +57,7 @@ class LoginFlow {
 
         // Follow the magic link to continue login
         // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background
-        val appVariant = BuildConfig.FLAVOR_app
+        val appVariant = BuildConfig.FLAVOR
         val intent =
             Intent(Intent.ACTION_VIEW, Uri.parse("$appVariant://magic-login?token=valid_token"))
                 .setPackage(ApplicationProvider.getApplicationContext<Context>().packageName)

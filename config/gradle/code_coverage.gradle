@@ -1,6 +1,6 @@
 static String resolveProjectVariantForCodeCoverage(Project project) {
     if (project.name == "WordPress") {
-        return "wordpressVanillaRelease"
+        return "wordpressRelease"
     } else {
         return "release"
     }
