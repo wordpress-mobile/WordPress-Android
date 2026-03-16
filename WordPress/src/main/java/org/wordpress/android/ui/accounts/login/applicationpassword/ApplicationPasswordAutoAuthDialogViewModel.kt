@@ -93,7 +93,7 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                             AppLog.T.API,
                             "A_P: Error creating application password" +
                                 " for: ${site.url}" +
-                                " - response: $response"
+                                " - response type: ${response::class.simpleName}"
                         )
                         fallbackToManualLogin(site.url)
                     }
