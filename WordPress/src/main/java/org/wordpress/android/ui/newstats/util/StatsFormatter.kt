@@ -24,6 +24,13 @@ fun formatStatValue(value: Long): String {
 }
 
 /**
+ * Formats an email stat value for display, showing "-" for zero values.
+ */
+fun formatEmailStat(value: Long): String {
+    return if (value == 0L) "-" else formatStatValue(value)
+}
+
+/**
  * Converts a StatsPeriod to a human-readable date range string.
  */
 fun StatsPeriod.toDateRangeString(resourceProvider: ResourceProvider): String {

@@ -231,7 +231,9 @@ fun NewsletterSubscriptionCard(
 
             DetailRow(
                 label = stringResource(R.string.subscribers_date_label),
-                value = SimpleDateFormatWrapper().getDateInstance().format(subscriber.dateSubscribed)
+                value = SimpleDateFormatWrapper()
+                    .getDateInstance()
+                    .format(subscriber.dateSubscribed)
             )
 
             subscriber.subscriptionStatus?.let { status ->
