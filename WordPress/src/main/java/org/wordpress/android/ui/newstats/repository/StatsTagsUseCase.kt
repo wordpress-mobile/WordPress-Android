@@ -16,6 +16,7 @@ class StatsTagsUseCase @Inject constructor(
     private var cachedTags:
         Triple<Long, Int, StatsTagsData>? = null
 
+    @Suppress("ReturnCount")
     suspend operator fun invoke(
         siteId: Long,
         max: Int = DEFAULT_MAX_ITEMS,

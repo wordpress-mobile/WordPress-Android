@@ -1351,16 +1351,6 @@ private fun AddInsightsCardBottomSheet(
 }
 
 @Composable
-private fun PlaceholderTabContent(tab: StatsTab) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "${stringResource(id = tab.titleResId)} - Coming Soon")
-    }
-}
-
-@Composable
 private fun StatsPeriodMenu(
     expanded: Boolean,
     selectedPeriod: StatsPeriod,
