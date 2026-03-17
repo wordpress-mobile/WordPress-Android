@@ -497,10 +497,15 @@ class PostRsSettingsViewModel @Inject constructor(
             var tempFile: File? = null
             try {
                 val mediaId = withContext(Dispatchers.IO) {
+                    val displayName = uriToFileMapper
+                        .getDisplayName(uri)
                     val file = uriToFileMapper
                         .copyUriToTempFile(uri)
                     tempFile = file
-                    uploadMediaAndGetId(file.absolutePath)
+                    uploadMediaAndGetId(
+                        file.absolutePath,
+                        displayName
+                    )
                 }
                 onFeaturedImageSelected(mediaId)
             } catch (e: CancellationException) {
@@ -539,8 +544,12 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     private suspend fun uploadMediaAndGetId(
-        filePath: String
+        filePath: String,
+        displayName: String?,
     ): Long {
+        val title = displayName
+            ?.substringBeforeLast(".")
+            ?: File(filePath).nameWithoutExtension
         val client = apiClient
             ?: throw PostApiRequestException(
                 "No site selected"
@@ -548,8 +557,7 @@ class PostRsSettingsViewModel @Inject constructor(
         val response = client.request { requestBuilder ->
             requestBuilder.media().create(
                 params = MediaCreateParams(
-                    title = File(filePath)
-                        .nameWithoutExtension,
+                    title = title,
                     filePath = filePath,
                 )
             )

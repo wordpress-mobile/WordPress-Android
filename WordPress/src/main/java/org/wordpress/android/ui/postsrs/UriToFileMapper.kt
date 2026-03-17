@@ -2,6 +2,7 @@ package org.wordpress.android.ui.postsrs
 
 import android.content.Context
 import android.net.Uri
+import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
@@ -23,14 +24,34 @@ class UriToFileMapper @Inject constructor(
             ext,
             appContext.cacheDir
         )
-        val inputStream = appContext.contentResolver
-            .openInputStream(uri)
-            ?: throw IOException("Cannot read URI")
-        inputStream.use { input ->
-            tempFile.outputStream().use { output ->
-                input.copyTo(output)
+        try {
+            val inputStream = appContext.contentResolver
+                .openInputStream(uri)
+                ?: throw IOException("Cannot read URI")
+            inputStream.use { input ->
+                tempFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
             }
+        } catch (e: Exception) {
+            tempFile.delete()
+            throw e
         }
         return tempFile
+    }
+
+    fun getDisplayName(uri: Uri): String? {
+        return appContext.contentResolver
+            .query(uri, null, null, null, null)
+            ?.use { cursor ->
+                val idx = cursor.getColumnIndex(
+                    OpenableColumns.DISPLAY_NAME
+                )
+                if (idx >= 0 && cursor.moveToFirst()) {
+                    cursor.getString(idx)
+                } else {
+                    null
+                }
+            }
     }
 }
