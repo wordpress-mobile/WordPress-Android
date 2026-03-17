@@ -15,7 +15,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.login.BuildConfig
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefs

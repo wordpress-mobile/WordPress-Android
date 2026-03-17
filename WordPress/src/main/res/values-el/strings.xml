@@ -39,7 +39,6 @@ Language: el_GR
     <string name="prepublishing_nudges_toolbar_title_categories">Κατηγορίες</string>
     <string name="prepublishing_nudges_home_categories_not_set">Δεν έχει οριστεί</string>
     <string name="prepublishing_nudges_categories_action">Κατηγορίες</string>
-    <string name="login_prologue_fifth_caption_three">Μουσεία στο Λονδίνο</string>
     <string name="post_signup_interstitial_not_right_now">Όχι τώρα</string>
     <string name="post_signup_interstitial_title">Καλώς ήρθατε στο WordPress!</string>
     <string name="photo_picker_image_selected">, Επιλεγμένο</string>

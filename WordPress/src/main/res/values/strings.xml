@@ -8,7 +8,6 @@
     <string name="notification_disable_broadcast_permission_desc">Allows the app to disable WordPress notifications.</string>
 
     <!-- login prologue strings (used by WordPress variant) -->
-    <string name="login_prologue_screen_title" translatable="false">@string/app_name</string>
     <string name="login_prologue_revamped_tagline">Write, edit, and publish from anywhere.</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress icon</string>
 
@@ -3302,29 +3301,6 @@
     <!-- If any of these appear unused, be sure to check the same string in the login library -
     it may be used there and keeping it here is required for translation. -->
     <string name="log_in" a8c-src-lib="module:login">Log In</string>
-    <string name="login_prologue_title_first">Welcome to the world\’s most popular website builder.</string>
-    <string name="login_prologue_title_second">With the powerful editor you can post on the go.</string>
-    <string name="login_prologue_title_third">See comments and notifications in real time.</string>
-    <string name="login_prologue_title_fourth">Watch your audience grow with in-depth analytics.</string>
-    <string name="login_prologue_title_fifth">Follow your favorite sites and discover new blogs.</string>
-    <string name="login_prologue_second_subtitle_one">Getting Inspired</string>
-    <string name="login_prologue_second_subtitle_two">I am so inspired by photographer Cameron Karsten\’s work. I will be trying these techniques on my next</string>
-    <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; liked your post</string>
-    <string name="login_prologue_third_subtitle_two">You received &lt;b&gt;50 likes&lt;/b&gt; on your site today</string>
-    <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; responded to your post</string>
-    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
-    <string name="login_prologue_fifth_subtitle_two">Web News</string>
-    <string name="login_prologue_fifth_subtitle_three">Rock n\' Roll Weekly</string>
-    <string name="login_prologue_fifth_tag_one">Art</string>
-    <string name="login_prologue_fifth_tag_two">Cooking</string>
-    <string name="login_prologue_fifth_tag_three">Football</string>
-    <string name="login_prologue_fifth_tag_four">Gardening</string>
-    <string name="login_prologue_fifth_tag_five">Music</string>
-    <string name="login_prologue_fifth_tag_six">Politics</string>
-    <string name="login_prologue_fifth_caption_one">My Top Ten Cafes</string>
-    <string name="login_prologue_fifth_caption_two">The World\'s Best Fans</string>
-    <string name="login_prologue_fifth_caption_three">Museums in London</string>
-
     <string name="invalid_verification_code" a8c-src-lib="module:login">Invalid verification code</string>
     <string name="send_link_by_email" a8c-src-lib="module:login">Send link by email</string>
     <string name="create_account" a8c-src-lib="module:login">Create account</string>
@@ -4617,6 +4593,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_name_sort">Name</string>
     <string name="application_password_created_sort">Created</string>
     <string name="application_password_last_used_sort">Last used</string>
+    <string name="application_password_app_name_jetpack">Jetpack Android App on %s</string>
+    <string name="application_password_app_name_wordpress">WordPress Android App on %s</string>
+    <string name="application_password_reauthentication_banner">Your site credentials are invalid. Tap to reauthenticate.</string>
 
     <!-- DataView -->
     <string name="dataview_default_empty_message">There\'s nothing here</string>
