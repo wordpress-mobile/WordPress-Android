@@ -1097,7 +1097,7 @@ private fun StatusDialog(
         it == currentStatus
     }.coerceAtLeast(0)
 
-    val selectedIndex = remember {
+    val selectedIndex = rememberSaveable {
         mutableIntStateOf(currentIndex)
     }
 
@@ -1370,7 +1370,7 @@ private fun FormatDialog(
         it == currentFormat
     }.coerceAtLeast(0)
 
-    val selectedIndex = remember {
+    val selectedIndex = rememberSaveable {
         mutableIntStateOf(currentIndex)
     }
 
