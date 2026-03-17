@@ -4,22 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
@@ -27,7 +23,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,7 +52,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
@@ -75,6 +69,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.components.AddStatsCardBottomSheet
 import org.wordpress.android.ui.newstats.components.CardPosition
+import org.wordpress.android.ui.newstats.components.NoConnectionContent
 import org.wordpress.android.ui.newstats.locations.LocationsCard
 import org.wordpress.android.ui.newstats.locations.LocationsDetailActivity
 import org.wordpress.android.ui.newstats.locations.LocationsViewModel
@@ -98,6 +93,7 @@ import org.wordpress.android.ui.newstats.searchterms.SearchTermsViewModel
 import org.wordpress.android.ui.newstats.videoplays.VideoPlaysViewModel
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
+import org.wordpress.android.ui.newstats.subscribers.SubscribersTabContent
 import android.widget.Toast
 import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsCard
 import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsViewModel
@@ -179,39 +175,55 @@ private fun NewStatsScreen(
                     }
                 },
                 actions = {
-                    Box {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .clickable { showPeriodMenu = true }
-                                .padding(horizontal = 8.dp)
-                        ) {
-                            Text(
-                                text = selectedPeriod.getDisplayLabel(),
-                                style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Icon(
-                                imageVector = Icons.Default.DateRange,
-                                contentDescription = stringResource(
-                                    R.string.stats_period_selector_content_description
-                                ),
-                                modifier = Modifier.padding(start = 4.dp)
+                    val currentTab = tabs[pagerState.currentPage]
+                    if (currentTab != StatsTab.SUBSCRIBERS) {
+                        Box {
+                            Row(
+                                verticalAlignment =
+                                    Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .clickable {
+                                        showPeriodMenu = true
+                                    }
+                                    .padding(horizontal = 8.dp)
+                            ) {
+                                Text(
+                                    text = selectedPeriod
+                                        .getDisplayLabel(),
+                                    style = MaterialTheme
+                                        .typography.labelLarge,
+                                    color = MaterialTheme
+                                        .colorScheme.onSurface
+                                )
+                                Icon(
+                                    imageVector =
+                                        Icons.Default.DateRange,
+                                    contentDescription =
+                                        stringResource(
+                                            R.string
+                                                .stats_period_selector_content_description
+                                        ),
+                                    modifier = Modifier
+                                        .padding(start = 4.dp)
+                                )
+                            }
+                            StatsPeriodMenu(
+                                expanded = showPeriodMenu,
+                                selectedPeriod = selectedPeriod,
+                                onDismiss = {
+                                    showPeriodMenu = false
+                                },
+                                onPresetSelected = { period ->
+                                    viewsStatsViewModel
+                                        .onPeriodChanged(period)
+                                    showPeriodMenu = false
+                                },
+                                onCustomSelected = {
+                                    showPeriodMenu = false
+                                    showDateRangePicker = true
+                                }
                             )
                         }
-                        StatsPeriodMenu(
-                            expanded = showPeriodMenu,
-                            selectedPeriod = selectedPeriod,
-                            onDismiss = { showPeriodMenu = false },
-                            onPresetSelected = { period ->
-                                viewsStatsViewModel.onPeriodChanged(period)
-                                showPeriodMenu = false
-                            },
-                            onCustomSelected = {
-                                showPeriodMenu = false
-                                showDateRangePicker = true
-                            }
-                        )
                     }
                 }
             )
@@ -266,6 +278,7 @@ private fun StatsTabContent(
             viewsStatsViewModel = viewsStatsViewModel
         )
         StatsTab.INSIGHTS -> InsightsTabContent()
+        StatsTab.SUBSCRIBERS -> SubscribersTabContent()
         else -> PlaceholderTabContent(tab)
     }
 }
