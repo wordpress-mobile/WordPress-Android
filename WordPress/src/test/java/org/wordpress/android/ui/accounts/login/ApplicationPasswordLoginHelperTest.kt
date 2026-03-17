@@ -4,7 +4,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import com.automattic.android.tracks.crashlogging.CrashLogging
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
@@ -64,9 +63,6 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     @Mock
     lateinit var apiRootUrlCache: ApiRootUrlCache
 
-    @Mock
-    lateinit var crashLogging: CrashLogging
-
     private lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 
     @Before
@@ -81,8 +77,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             wpLoginClient,
             appLogWrapper,
             apiRootUrlCache,
-            discoverSuccessWrapper,
-            crashLogging
+            discoverSuccessWrapper
         )
     }
 
