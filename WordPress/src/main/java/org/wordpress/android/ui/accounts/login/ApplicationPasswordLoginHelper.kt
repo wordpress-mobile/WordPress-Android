@@ -121,16 +121,13 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 processedAppPasswordData = urlLogin.siteUrl // Save locally to avoid duplicated calls
                 true
             } else {
-                val availableSiteUrls = siteStore.sites.map {
-                    UrlUtils.normalizeUrl(it.url)
-                }
                 appLogWrapper.e(
                     AppLog.T.DB,
                     "A_P: Cannot save application password" +
                         " credentials for: ${urlLogin.siteUrl}" +
                         " (normalized: $normalizedUrl)" +
-                        " - site not found in store." +
-                        " Available sites: $availableSiteUrls"
+                        " - site not found in store" +
+                        " (${siteStore.sites.size} sites available)"
                 )
                 false
             }
