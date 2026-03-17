@@ -1628,6 +1628,7 @@
     <string name="stats_error_api">Failed to load stats</string>
     <string name="stats_error_unknown">An unexpected error occurred</string>
     <string name="stats_error_auth">You don\'t have permission to view these stats</string>
+    <string name="stats_error_not_authenticated">Not authenticated</string>
     <string name="stats_error_network">Network error. Please check your connection and try again</string>
     <string name="stats_error_parsing">There was a problem loading the data. Please try again</string>
     <string name="stats_error_admin_url_unavailable">Unable to open WP Admin for this site</string>
@@ -1672,6 +1673,27 @@
     <string name="stats_devices_platform">Platform</string>
     <string name="stats_devices_device_header">Device</string>
     <string name="stats_devices_percentage_header">Percentage</string>
+
+    <!-- Subscribers Stats Cards -->
+    <string name="stats_subscribers_all_time">All-time Subscribers</string>
+    <string name="stats_subscribers_graph">Subscribers Graph</string>
+    <string name="stats_subscribers_list">Subscribers</string>
+    <string name="stats_subscribers_emails">Emails</string>
+    <string name="stats_subscribers_current">Current</string>
+    <string name="stats_subscribers_30_days_ago">30 days ago</string>
+    <string name="stats_subscribers_60_days_ago">60 days ago</string>
+    <string name="stats_subscribers_90_days_ago">90 days ago</string>
+    <string name="stats_subscribers_subscriber_header">Subscriber</string>
+    <string name="stats_subscribers_since_header">Since</string>
+    <string name="stats_emails_latest_header">Latest emails</string>
+    <string name="stats_emails_opens_header">Opens</string>
+    <string name="stats_emails_clicks_header">Clicks</string>
+    <string name="stats_subscribers_graph_days">Days</string>
+    <string name="stats_subscribers_graph_weeks">Weeks</string>
+    <string name="stats_subscribers_graph_months">Months</string>
+    <string name="stats_subscribers_graph_years">Years</string>
+    <string name="stats_subscriber_since_today">today</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
 
     <!-- Stats Card Configuration -->
     <string name="stats_card_remove">Remove Card</string>

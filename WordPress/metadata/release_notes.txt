@@ -1,2 +1,2 @@
-* [*] Standardize FAB colors and icon to Material 3 defaults [#22654]
-* [*] Fix: open redirect_to URL in browser to prevent infinite deep link loop [#22665]
+- Button colors are now consistent across different areas of the app.
+- We fixed an infinite loop that sometimes appeared when opening certain types of links.
