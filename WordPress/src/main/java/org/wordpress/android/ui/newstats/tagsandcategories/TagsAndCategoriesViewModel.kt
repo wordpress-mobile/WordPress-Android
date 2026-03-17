@@ -18,7 +18,7 @@ class TagsAndCategoriesViewModel @Inject constructor(
     resourceProvider,
     mapper
 ) {
-    override val maxItems: Int = DEFAULT_MAX_ITEMS
+    override val maxItems: Int = CARD_MAX_ITEMS
 
     fun refresh() {
         resetForRefresh()
@@ -26,6 +26,6 @@ class TagsAndCategoriesViewModel @Inject constructor(
     }
 
     companion object {
-        private const val DEFAULT_MAX_ITEMS = 10
+        private const val CARD_MAX_ITEMS = 7
     }
 }

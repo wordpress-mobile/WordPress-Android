@@ -32,6 +32,8 @@ abstract class BaseTagsAndCategoriesViewModel(
 
     protected val isLoaded = AtomicBoolean(false)
     private val isLoading = AtomicBoolean(false)
+    // Main-thread-confined: only accessed from
+    // viewModelScope (Dispatchers.Main).
     private var fetchJob: Job? = null
 
     protected abstract val maxItems: Int

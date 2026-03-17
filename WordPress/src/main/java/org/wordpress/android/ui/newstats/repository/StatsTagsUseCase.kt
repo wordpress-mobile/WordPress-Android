@@ -26,24 +26,28 @@ class StatsTagsUseCase @Inject constructor(
             return TagsResult.Error("No access token")
         }
         statsRepository.init(token)
-        return mutex.withLock {
-            val cached = cachedTags
-            if (!forceRefresh &&
-                isCacheHit(cached, siteId, max)
-            ) {
-                return@withLock TagsResult
-                    .Success(cached!!.third)
-            }
-            val result = statsRepository.fetchTags(
-                siteId = siteId,
-                max = max
-            )
+
+        // Check cache under lock, but fetch outside
+        // to avoid blocking other callers during
+        // network requests.
+        val cached = mutex.withLock { cachedTags }
+        if (!forceRefresh &&
+            isCacheHit(cached, siteId, max)
+        ) {
+            return TagsResult.Success(cached!!.third)
+        }
+
+        val result = statsRepository.fetchTags(
+            siteId = siteId,
+            max = max
+        )
+        mutex.withLock {
             if (result is TagsResult.Success) {
                 cachedTags =
                     Triple(siteId, max, result.data)
             }
-            result
         }
+        return result
     }
 
     private fun isCacheHit(
