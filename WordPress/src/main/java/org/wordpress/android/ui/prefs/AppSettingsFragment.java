@@ -80,7 +80,6 @@ public class AppSettingsFragment extends PreferenceFragment
     private WPPreference mLanguagePreference;
     private ListPreference mAppThemePreference;
     private ListPreference mInitialScreenPreference;
-
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
     private DetailListPreference mImageMaxSizePref;

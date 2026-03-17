@@ -963,6 +963,16 @@
     </string-array>
     <string name="locale_picker_current_language">Current language:</string>
 
+    <!-- E-ink mode -->
+    <string name="eink_mode_title">E-ink mode (Beta)</string>
+    <string name="eink_mode_summary">Optimizes the display for e-ink screens with a grayscale theme and no animations</string>
+    <string name="eink_prompt_title">E Ink display detected</string>
+    <string name="eink_prompt_message">Would you like to enable E Ink mode? This optimizes the app for eReader devices.</string>
+    <string name="eink_prompt_enable">Enable</string>
+    <string name="eink_prompt_no_thanks">No thanks</string>
+    <string name="eink_enabled_message">E-ink mode enabled. You can turn it off in Me \u2192 App Settings \u2192 Experimental Features.</string>
+    <string name="eink_declined_message">No problem! You can enable e-ink mode anytime in Me \u2192 App Settings \u2192 Experimental Features.</string>
+
     <!-- Experimental Features -->
     <string name="experimental_features_screen_title">Experimental Features</string>
     <string name="disable_experimental_block_editor">Disable experimental block editor</string>
@@ -2175,6 +2185,21 @@
 
     <!-- About View -->
     <string name="version_with_name_param">Version %s</string>
+    <string name="device_info_title" translatable="false">Device Info</string>
+    <string name="device_info_manufacturer" translatable="false">Manufacturer</string>
+    <string name="device_info_brand" translatable="false">Brand</string>
+    <string name="device_info_model" translatable="false">Model</string>
+    <string name="device_info_device" translatable="false">Device</string>
+    <string name="device_info_product" translatable="false">Product</string>
+    <string name="device_info_android_version" translatable="false">Android Version</string>
+    <string name="device_info_sdk_level" translatable="false">SDK Level</string>
+    <string name="device_info_eink_detected" translatable="false">Matches known E-reader list</string>
+    <string name="device_info_app_version" translatable="false">App Version</string>
+    <string name="device_info_copied">Device info copied to clipboard</string>
+    <string name="copy_to_clipboard">Copy to Clipboard</string>
+    <string name="device_info_section_application" translatable="false">Application</string>
+    <string name="device_info_section_device" translatable="false">Device</string>
+    <string name="device_info_section_android" translatable="false">Android</string>
 
     <!-- Remote Post&Page has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>

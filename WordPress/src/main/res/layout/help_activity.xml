@@ -276,6 +276,11 @@
                     android:text="@string/logs_button" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/device_info_button"
+                    style="@style/HelpActivitySingleText"
+                    android:text="@string/device_info_title" />
+
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/applicationVersion"
                     style="@style/HelpActivitySingleText"
                     android:textColor="?attr/wpColorOnSurfaceMedium"
