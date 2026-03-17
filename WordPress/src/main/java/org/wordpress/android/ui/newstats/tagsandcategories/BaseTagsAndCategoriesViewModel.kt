@@ -30,7 +30,7 @@ abstract class BaseTagsAndCategoriesViewModel(
     val uiState: StateFlow<TagsAndCategoriesCardUiState> =
         _uiState.asStateFlow()
 
-    protected val isLoaded = AtomicBoolean(false)
+    private val isLoaded = AtomicBoolean(false)
     private val isLoading = AtomicBoolean(false)
     // Main-thread-confined: only accessed from
     // viewModelScope (Dispatchers.Main).

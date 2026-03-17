@@ -258,10 +258,11 @@ class InsightsViewModel @Inject constructor(
                 !summaryFetched.get()) ||
                 (cards.needsInsights() &&
                     !insightsFetched.get())
+        _cardsToLoad.value = config.visibleCards
         if (needsNewFetch) {
             isDataLoaded.set(false)
+            loadDataIfNeeded()
         }
-        _cardsToLoad.value = config.visibleCards
     }
 
     fun removeCard(cardType: InsightsCardType) {

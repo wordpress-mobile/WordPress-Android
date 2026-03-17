@@ -626,12 +626,15 @@ class InsightsViewModelTest :
     @Test
     fun `when no site selected, then fetchData is no-op`() =
         test {
-            initViewModel()
-            advanceUntilIdle()
-
             whenever(
                 selectedSiteRepository.getSelectedSite()
             ).thenReturn(null)
+
+            val config = InsightsCardsConfiguration(
+                visibleCards = emptyList()
+            )
+            initViewModel(config)
+            advanceUntilIdle()
 
             viewModel.fetchData()
             advanceUntilIdle()

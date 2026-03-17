@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.repository
 
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.wordpress.android.fluxc.store.AccountStore
@@ -16,6 +17,13 @@ class StatsTagsUseCase @Inject constructor(
     private var cachedTags:
         Triple<Long, Int, StatsTagsData>? = null
 
+    // In-flight request keyed by (siteId, max).
+    // Concurrent callers with the same params join
+    // the existing request instead of duplicating it.
+    private var inFlight:
+        Pair<Pair<Long, Int>,
+            CompletableDeferred<TagsResult>>? = null
+
     @Suppress("ReturnCount")
     suspend operator fun invoke(
         siteId: Long,
@@ -28,27 +36,52 @@ class StatsTagsUseCase @Inject constructor(
         }
         statsRepository.init(token)
 
-        // Check cache under lock, but fetch outside
-        // to avoid blocking other callers during
-        // network requests.
-        val cached = mutex.withLock { cachedTags }
-        if (!forceRefresh &&
-            isCacheHit(cached, siteId, max)
-        ) {
-            return TagsResult.Success(cached!!.third)
+        val key = siteId to max
+
+        // Under lock: check cache, then check/create
+        // an in-flight deferred. The actual network
+        // call runs outside the lock so concurrent
+        // callers with different params aren't blocked.
+        val (deferred, isOwner) = mutex.withLock {
+            val cached = cachedTags
+            if (!forceRefresh &&
+                isCacheHit(cached, siteId, max)
+            ) {
+                return TagsResult.Success(
+                    cached!!.third
+                )
+            }
+
+            val existing = inFlight
+            if (!forceRefresh &&
+                existing != null &&
+                existing.first == key
+            ) {
+                return@withLock existing.second to false
+            }
+
+            val newDeferred =
+                CompletableDeferred<TagsResult>()
+            inFlight = key to newDeferred
+            newDeferred to true
         }
 
-        val result = statsRepository.fetchTags(
-            siteId = siteId,
-            max = max
-        )
-        mutex.withLock {
-            if (result is TagsResult.Success) {
-                cachedTags =
-                    Triple(siteId, max, result.data)
+        if (isOwner) {
+            val result = statsRepository.fetchTags(
+                siteId = siteId,
+                max = max
+            )
+            mutex.withLock {
+                if (result is TagsResult.Success) {
+                    cachedTags =
+                        Triple(siteId, max, result.data)
+                }
+                inFlight = null
             }
+            deferred.complete(result)
         }
-        return result
+
+        return deferred.await()
     }
 
     private fun isCacheHit(
