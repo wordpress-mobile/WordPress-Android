@@ -22,6 +22,8 @@ import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Ur
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.crashlogging.sendReportWithTag
+import com.automattic.android.tracks.crashlogging.CrashLogging
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -34,6 +36,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val appLogWrapper: AppLogWrapper,
+    private val crashLogging: CrashLogging,
 ) : ViewModel() {
     private val _onFinishedEvent = MutableSharedFlow<NavigationActionData>()
     /**
@@ -141,11 +144,18 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 AppLog.T.API,
                 "A_P: Error fetching sites: ${e.stackTraceToString()}"
             )
-            emitError(siteUrl = siteUrl, errorMessage = e.message)
+            emitError(siteUrl = siteUrl, errorMessage = e.message, cause = e)
         }
     }
 
-    private suspend fun emitError(siteUrl: String, errorMessage: String? = null) =
+    private suspend fun emitError(
+        siteUrl: String,
+        errorMessage: String? = null,
+        cause: Throwable? = null
+    ) {
+        val exception = cause
+            ?: Exception("Application password login failed: $errorMessage")
+        crashLogging.sendReportWithTag(exception, AppLog.T.MAIN)
         _onFinishedEvent.emit(
             NavigationActionData(
                 showSiteSelector = false,
@@ -156,6 +166,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 errorMessage = errorMessage
             )
         )
+    }
 
     @Suppress("TooGenericExceptionCaught")
     @SuppressWarnings("unused")
@@ -192,7 +203,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 )
                 emitError(
                     siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
-                    errorMessage = "Failed to read sites: ${e.message}"
+                    errorMessage = "Failed to read sites: ${e.message}",
+                    cause = e
                 )
                 return@launch
             }
