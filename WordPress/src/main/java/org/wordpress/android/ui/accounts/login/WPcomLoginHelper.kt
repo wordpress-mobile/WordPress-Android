@@ -17,8 +17,6 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.network.rest.wpapi.WPcomLoginClient
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
 
 class WPcomLoginHelper @Inject constructor(
@@ -59,16 +57,21 @@ class WPcomLoginHelper @Inject constructor(
         }
 
         scope.launch {
-            try {
-                val tokenResult = loginClient
-                    .exchangeAuthCodeForToken(code)
-                accountStore.updateAccessToken(
-                    tokenResult.getOrThrow()
-                )
-                withContext(Dispatchers.Main) { onSuccess.run() }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) { onFailure.accept(e) }
-            }
+            loginClient.exchangeAuthCodeForToken(code).fold(
+                onSuccess = { token ->
+                    accountStore.updateAccessToken(token)
+                    withContext(Dispatchers.Main) {
+                        onSuccess.run()
+                    }
+                },
+                onFailure = { error ->
+                    withContext(Dispatchers.Main) {
+                        onFailure.accept(
+                            Exception(error)
+                        )
+                    }
+                }
+            )
         }
     }
 

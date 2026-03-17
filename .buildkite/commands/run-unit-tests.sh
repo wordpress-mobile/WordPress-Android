@@ -14,7 +14,7 @@ set +e
   :libs:processors:test \
   :libs:image-editor:testDebugUnitTest \
   :libs:fluxc:testDebugUnitTest \
-  koverXmlReportWordpressWasabiDebug \
+  koverXmlReportWordpressDebug \
   :libs:processors:koverXmlReportJvm \
   :libs:image-editor:koverXmlReportDebug \
   :libs:fluxc:koverXmlReportDebug
