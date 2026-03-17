@@ -43,6 +43,9 @@ class PostRsSettingsViewModelTest :
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
+    @Mock
+    lateinit var uriToFileMapper: UriToFileMapper
+
     private lateinit var site: SiteModel
     private var activeViewModel: PostRsSettingsViewModel? =
         null
@@ -91,6 +94,7 @@ class PostRsSettingsViewModelTest :
             restClient = restClient,
             resourceProvider = resourceProvider,
             networkUtilsWrapper = networkUtilsWrapper,
+            uriToFileMapper = uriToFileMapper,
         ).also { activeViewModel = it }
     }
 

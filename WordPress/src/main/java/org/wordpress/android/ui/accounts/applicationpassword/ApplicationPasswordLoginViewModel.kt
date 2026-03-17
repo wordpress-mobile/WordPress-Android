@@ -60,7 +60,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     fun setupSite(rawData: String) {
         viewModelScope.launch {
             if (rawData.isEmpty()) {
-                appLogWrapper.e(AppLog.T.MAIN, "Cannot store credentials: rawData is empty")
+                appLogWrapper.e(AppLog.T.MAIN, "A_P: Cannot store credentials: rawData is empty")
                 _onFinishedEvent.emit(
                     NavigationActionData(
                         showSiteSelector = false,
@@ -92,7 +92,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         try {
             applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(urlLogin)
         } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.DB, "Error storing credentials: ${e.stackTraceToString()}")
+            appLogWrapper.e(
+                AppLog.T.DB,
+                "A_P: Error storing credentials: ${e.stackTraceToString()}"
+            )
             false
         }
     }
@@ -106,9 +109,14 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         ) = withContext(ioDispatcher) {
         try {
             if (username.isEmpty() || password.isEmpty() || siteUrl.isEmpty() || apiRootUrl.isEmpty()) {
-                appLogWrapper.e(AppLog.T.MAIN, "Cannot fetch sites for credential storing: " +
-                        "Username: $username, Password: ${password.isEmpty()}, SiteUrl: $siteUrl, " +
-                        "API Root URL: $apiRootUrl")
+                appLogWrapper.e(
+                    AppLog.T.MAIN,
+                    "A_P: Cannot fetch sites for credential storing" +
+                        " - username isEmpty=${username.isEmpty()}" +
+                        ", password isEmpty=${password.isEmpty()}" +
+                        ", siteUrl isEmpty=${siteUrl.isEmpty()}" +
+                        ", apiRootUrl isEmpty=${apiRootUrl.isEmpty()}"
+                )
                 emitErrorFetching(siteUrl)
             } else {
                 val xmlRpcEndpoint =
@@ -125,7 +133,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 )
             }
         } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.API, "Error fetching sites: ${e.stackTraceToString()}")
+            appLogWrapper.e(
+                AppLog.T.API,
+                "A_P: Error fetching sites: ${e.stackTraceToString()}"
+            )
             emitErrorFetching(siteUrl)
         }
     }
@@ -146,7 +157,19 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             val currentNormalizedUrl = UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
             val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == currentNormalizedUrl }
             if (event.rowsAffected < 1 || site == null || applicationPasswordLoginHelper.siteHasBadCredentials(site)) {
-                appLogWrapper.e(AppLog.T.MAIN, "Site not found or credentials are empty.")
+                appLogWrapper.e(
+                    AppLog.T.MAIN,
+                    "A_P: onSiteChanged failed" +
+                        " for: ${currentUrlLogin?.siteUrl}" +
+                        " - rowsAffected=${event.rowsAffected}" +
+                        ", siteFound=${site != null}" +
+                        ", badCredentials=${
+                            site?.let {
+                                applicationPasswordLoginHelper
+                                    .siteHasBadCredentials(it)
+                            }
+                        }"
+                )
                 _onFinishedEvent.emit(
                     NavigationActionData(
                         showSiteSelector = false,

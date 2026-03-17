@@ -94,7 +94,14 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             ) {
             appLogWrapper.e(
                 AppLog.T.DB,
-                "A_P: Cannot save application password credentials for: ${urlLogin.siteUrl} - bad data"
+                "A_P: Cannot save application password credentials" +
+                    " for: ${urlLogin.siteUrl}" +
+                    " - apiRootUrl isNull=${urlLogin.apiRootUrl == null}" +
+                    ", user isEmpty=${urlLogin.user.isNullOrEmpty()}" +
+                    ", password isEmpty=${urlLogin.password.isNullOrEmpty()}" +
+                    ", siteUrl isNull=${urlLogin.siteUrl == null}" +
+                    ", alreadyProcessed=" +
+                    "${urlLogin.siteUrl == processedAppPasswordData}"
             )
             return false
         }
@@ -119,7 +126,11 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             } else {
                 appLogWrapper.e(
                     AppLog.T.DB,
-                    "A_P: Cannot save application password credentials for: ${urlLogin.siteUrl} - null site"
+                    "A_P: Cannot save application password" +
+                        " credentials for: ${urlLogin.siteUrl}" +
+                        " (normalized: $normalizedUrl)" +
+                        " - site not found in store" +
+                        " (${siteStore.sites.size} sites available)"
                 )
                 false
             }

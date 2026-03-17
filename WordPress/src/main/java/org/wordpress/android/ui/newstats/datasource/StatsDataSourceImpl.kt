@@ -29,6 +29,16 @@ import uniffi.wp_api.StatsVideoPlaysPeriod
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
 import uniffi.wp_api.WpComLanguage
+import uniffi.wp_api.StatsSubscribersParams
+import uniffi.wp_api.StatsSubscribersUnit
+import uniffi.wp_api.StatsSubscribersStatField
+import uniffi.wp_api.SubscribersByUserTypeParams
+import uniffi.wp_api.WpComSubscriberType
+import uniffi.wp_api.SubscribersByUserTypeSortField
+import uniffi.wp_api.StatsEmailsSummaryParams
+import uniffi.wp_api.StatsEmailsSummaryPeriod
+import uniffi.wp_api.StatsEmailsSummarySortField
+import uniffi.wp_api.WpApiParamOrder
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import rs.wordpress.api.kotlin.fromLocale
@@ -54,6 +64,7 @@ class StatsDataSourceImpl @Inject constructor(
     @Volatile
     private var wpComApiClient: WpComApiClient? = null
 
+    @Synchronized
     private fun getOrCreateClient(): WpComApiClient {
         val token = accessToken
         check(token != null) { "DataSource not initialized" }
@@ -980,6 +991,172 @@ class StatsDataSourceImpl @Inject constructor(
             "StatsDataSourceImpl: $methodName " +
                 "unexpected result - $result" to
                 StatsErrorType.UNKNOWN
+        }
+    }
+
+    override suspend fun fetchStatsSubscribers(
+        siteId: Long,
+        quantity: Int,
+        unit: String?,
+        date: String?
+    ): StatsSubscribersDataResult {
+        val subscribersUnit = when (unit) {
+            "week" -> StatsSubscribersUnit.WEEK
+            "month" -> StatsSubscribersUnit.MONTH
+            "year" -> StatsSubscribersUnit.YEAR
+            else -> StatsSubscribersUnit.DAY
+        }
+        val params = StatsSubscribersParams(
+            unit = subscribersUnit,
+            quantity = quantity.toUInt(),
+            date = date,
+            statFields = listOf(
+                StatsSubscribersStatField.SUBSCRIBERS
+            )
+        )
+        val result = getOrCreateClient().request { requestBuilder ->
+            requestBuilder.statsSubscribers()
+                .getStatsSubscribers(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+        }
+        logResultType("fetchStatsSubscribers", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val dataPoints =
+                    result.response.data.subscribersData()
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchStatsSubscribers success " +
+                        "- ${dataPoints.size} data points"
+                )
+                StatsSubscribersDataResult.Success(
+                    StatsSubscribersData(
+                        subscribersData = dataPoints.map {
+                            SubscribersDataPoint(
+                                date = it.period,
+                                count = it.subscribers
+                                    .toLong()
+                            )
+                        }
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchStatsSubscribers", result
+            ) {
+                StatsSubscribersDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchSubscribersByUserType(
+        siteId: Long,
+        perPage: Int,
+        page: Int
+    ): SubscribersByUserTypeDataResult {
+        val params = SubscribersByUserTypeParams(
+            userType = WpComSubscriberType.WP_COM,
+            perPage = perPage.toULong(),
+            page = page.toULong(),
+            sort = SubscribersByUserTypeSortField
+                .DATE_SUBSCRIBED
+        )
+        val result = getOrCreateClient().request { requestBuilder ->
+            requestBuilder.subscribers()
+                .listSubscribersByUserType(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+        }
+        logResultType(
+            "fetchSubscribersByUserType", result
+        )
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val subscribers = result.response.data.subscribers
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchSubscribersByUserType " +
+                        "success - " +
+                        "${subscribers.size} subscribers"
+                )
+                SubscribersByUserTypeDataResult.Success(
+                    subscribers.map { subscriber ->
+                        SubscriberItem(
+                            displayName =
+                                subscriber.displayName,
+                            subscribedSince =
+                                java.time.ZonedDateTime
+                                    .ofInstant(
+                                        subscriber.dateSubscribed
+                                            .toInstant(),
+                                        java.time.ZoneId
+                                            .systemDefault()
+                                    ).format(
+                                        java.time.format
+                                            .DateTimeFormatter
+                                            .ISO_LOCAL_DATE_TIME
+                                    )
+                        )
+                    }
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchSubscribersByUserType", result
+            ) {
+                SubscribersByUserTypeDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchStatsEmailsSummary(
+        siteId: Long,
+        quantity: Int
+    ): StatsEmailsSummaryDataResult {
+        val params = StatsEmailsSummaryParams(
+            period = StatsEmailsSummaryPeriod.MONTH,
+            quantity = quantity.toUInt(),
+            sortField = StatsEmailsSummarySortField.OPENS,
+            sortOrder = WpApiParamOrder.DESC
+        )
+        val result = getOrCreateClient().request { requestBuilder ->
+            requestBuilder.statsEmailsSummary()
+                .getStatsEmailsSummary(
+                    wpComSiteId = siteId.toULong(),
+                    params = params
+                )
+        }
+        logResultType("fetchStatsEmailsSummary", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val emails = result.response.data.posts
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchStatsEmailsSummary success" +
+                        " - ${emails.size} emails"
+                )
+                StatsEmailsSummaryDataResult.Success(
+                    emails.map { email ->
+                        EmailSummaryItem(
+                            title = email.title.orEmpty(),
+                            opens = email.opens
+                                ?.toLong() ?: 0L,
+                            clicks = email.clicks
+                                ?.toLong() ?: 0L
+                        )
+                    }
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchStatsEmailsSummary", result
+            ) {
+                StatsEmailsSummaryDataResult.Error(it)
+            }
         }
     }
 

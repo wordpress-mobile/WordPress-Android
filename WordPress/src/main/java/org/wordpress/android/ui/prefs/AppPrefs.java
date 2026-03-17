@@ -193,6 +193,7 @@ public class AppPrefs {
         READER_READING_PREFERENCES_JSON,
         SHOULD_SHOW_READER_ANNOUNCEMENT_CARD,
         STATS_CARDS_CONFIGURATION_JSON,
+        SUBSCRIBERS_CARDS_CONFIGURATION_JSON,
 
         // Login flow preserved across OAuth Custom Tabs redirect
         PENDING_LOGIN_FLOW,
@@ -1769,6 +1770,32 @@ public class AppPrefs {
     @NonNull
     private static String getStatsCardsConfigurationKey(long siteId) {
         return DeletablePrefKey.STATS_CARDS_CONFIGURATION_JSON.name() + siteId;
+    }
+
+    @Nullable
+    public static String getSubscribersCardsConfigurationJson(long siteId) {
+        return prefs().getString(getSubscribersCardsConfigurationKey(siteId), null);
+    }
+
+    public static void setSubscribersCardsConfigurationJson(
+            long siteId,
+            @Nullable String json
+    ) {
+        SharedPreferences.Editor editor = prefs().edit();
+        if (json == null) {
+            editor.remove(getSubscribersCardsConfigurationKey(siteId));
+        } else {
+            editor.putString(
+                    getSubscribersCardsConfigurationKey(siteId),
+                    json
+            );
+        }
+        editor.apply();
+    }
+
+    @NonNull
+    private static String getSubscribersCardsConfigurationKey(long siteId) {
+        return DeletablePrefKey.SUBSCRIBERS_CARDS_CONFIGURATION_JSON.name() + siteId;
     }
 
     /**

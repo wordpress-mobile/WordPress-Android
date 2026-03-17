@@ -127,6 +127,16 @@
             android:theme="@style/WordPress.NoActionBar"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.newstats.subscribers.subscriberslist.SubscribersListDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.newstats.subscribers.emails.EmailsDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
         <!-- Account activities -->
         <activity
             android:name=".ui.main.MeActivity"
@@ -226,7 +236,7 @@
 
         <activity
             android:name=".support.SupportWebViewActivity"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- empty title -->
 
@@ -294,7 +304,7 @@
             android:label="@string/edit_comment"/>
         <activity
             android:name=".ui.comments.CommentsDetailActivity"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize"
             android:label="@string/comments"/>
         <activity
@@ -307,7 +317,7 @@
         <activity
             android:name=".ui.posts.EditPostActivity"
             android:configChanges="locale|orientation|screenSize"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:exported="false">
             <meta-data
@@ -849,7 +859,7 @@
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
             android:label="@string/reader_title_comments"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.reader.NoSiteToReblogActivity"
@@ -863,7 +873,7 @@
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
@@ -947,7 +957,7 @@
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NotificationsDetailActivity"
-            android:theme="@style/WordPress.NoActionBar.NoEdgeToEdge" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!--People Management-->
         <activity

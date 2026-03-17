@@ -68,6 +68,7 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
             } else {
                 itemView.resources.getString(R.string.stats_item_expanded)
             }
+            @Suppress("DEPRECATION")
             itemView.announceForAccessibility(announcement)
             expandableItem.onExpandClicked(!expandableItem.isExpanded)
         }

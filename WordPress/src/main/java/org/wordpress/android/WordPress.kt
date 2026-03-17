@@ -1,12 +1,14 @@
 package org.wordpress.android
 
 import android.app.Application
+import android.os.Build
 import coil.decode.VideoFrameDecoder
 import com.android.volley.RequestQueue
 import dagger.hilt.EntryPoints
 import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.modules.AppComponent
+import org.wordpress.android.ui.main.EdgeToEdgeActivityLifecycleCallbacks
 
 /**
  * An abstract class to be extended by {@link WordPressApp} for real application and WordPressTest for UI test
@@ -14,6 +16,15 @@ import org.wordpress.android.modules.AppComponent
  */
 abstract class WordPress : Application(), coil.ImageLoaderFactory {
     abstract fun initializer(): AppInitializer
+
+    override fun onCreate() {
+        super.onCreate()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            registerActivityLifecycleCallbacks(
+                EdgeToEdgeActivityLifecycleCallbacks()
+            )
+        }
+    }
 
     fun component(): AppComponent = EntryPoints.get(this, AppComponent::class.java)
 

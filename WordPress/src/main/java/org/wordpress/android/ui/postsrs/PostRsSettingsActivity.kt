@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -93,8 +94,10 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                         viewModel::onCategoriesClicked,
                     onTagsClicked =
                         viewModel::onTagsClicked,
-                    onFeaturedImageClicked =
-                        viewModel::onFeaturedImageClicked,
+                    onChooseFromWpMedia =
+                        viewModel::onChooseFromWpMedia,
+                    onChooseFromDevice =
+                        viewModel::onChooseFromDevice,
                     onFeaturedImageRemoved =
                         viewModel::onFeaturedImageRemoved,
                     onLoadMoreAuthors = viewModel::loadMoreAuthors,
@@ -116,8 +119,10 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                             setResult(RESULT_OK)
                             finish()
                         }
-                        is PostRsSettingsEvent.LaunchMediaPicker ->
-                            launchMediaPicker()
+                        is PostRsSettingsEvent.LaunchWpMediaPicker ->
+                            launchWpMediaPicker()
+                        is PostRsSettingsEvent.LaunchDeviceMediaPicker ->
+                            launchDeviceMediaPicker()
                         is PostRsSettingsEvent
                             .LaunchCategorySelection ->
                             launchTermSelection(
@@ -143,11 +148,25 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == RESULT_OK) {
+                // WP Library — already-uploaded remote media ID
                 val mediaId = result.data?.getLongExtra(
                     MediaPickerConstants.EXTRA_MEDIA_ID, 0L
                 ) ?: 0L
                 if (mediaId > 0L) {
                     viewModel.onFeaturedImageSelected(mediaId)
+                    return@registerForActivityResult
+                }
+                // Device gallery — local URI that needs upload
+                val uris = result.data
+                    ?.getStringArrayExtra(
+                        MediaPickerConstants.EXTRA_MEDIA_URIS
+                    )
+                val uri = uris?.firstOrNull()
+                    ?.toUri()
+                if (uri != null) {
+                    viewModel.onFeaturedImagePickedFromDevice(
+                        uri
+                    )
                 }
             }
         }
@@ -192,30 +211,47 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
         )
     }
 
-    private fun launchMediaPicker() {
+    private fun launchWpMediaPicker() = launchMediaPicker(
+        dataSource = MediaPickerSetup.DataSource.WP_LIBRARY,
+        requiresPhotosVideosPermissions = false,
+        systemPickerEnabled = false,
+    )
+
+    private fun launchDeviceMediaPicker() = launchMediaPicker(
+        dataSource = MediaPickerSetup.DataSource.DEVICE,
+        requiresPhotosVideosPermissions = true,
+        systemPickerEnabled = true,
+    )
+
+    private fun launchMediaPicker(
+        dataSource: MediaPickerSetup.DataSource,
+        requiresPhotosVideosPermissions: Boolean,
+        systemPickerEnabled: Boolean,
+    ) {
         val site =
             selectedSiteRepository.getSelectedSite()
                 ?: return
         val setup = MediaPickerSetup(
-            primaryDataSource =
-                MediaPickerSetup.DataSource.WP_LIBRARY,
+            primaryDataSource = dataSource,
             availableDataSources = emptySet(),
             canMultiselect = false,
-            requiresPhotosVideosPermissions = false,
+            requiresPhotosVideosPermissions =
+                requiresPhotosVideosPermissions,
             requiresMusicAudioPermissions = false,
             allowedTypes = setOf(MediaType.IMAGE),
             cameraSetup =
                 MediaPickerSetup.CameraSetup.HIDDEN,
-            systemPickerEnabled = false,
+            systemPickerEnabled = systemPickerEnabled,
             editingEnabled = false,
             queueResults = false,
             defaultSearchView = false,
             title = R.string.photo_picker_title
         )
-        val intent = MediaPickerActivity.buildIntent(
-            this, setup, site
+        mediaPickerLauncher.launch(
+            MediaPickerActivity.buildIntent(
+                this, setup, site
+            )
         )
-        mediaPickerLauncher.launch(intent)
     }
 
     companion object {
