@@ -33,13 +33,14 @@ class UriToFileMapper @Inject constructor(
                     input.copyTo(output)
                 }
             }
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             tempFile.delete()
             throw e
         }
         return tempFile
     }
 
+    @Suppress("Recycle") // cursor is closed by .use {}
     fun getDisplayName(uri: Uri): String? {
         return appContext.contentResolver
             .query(uri, null, null, null, null)
