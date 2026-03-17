@@ -7,6 +7,7 @@ import android.webkit.MimeTypeMap
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.IOException
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 class UriToFileMapper @Inject constructor(
@@ -34,7 +35,12 @@ class UriToFileMapper @Inject constructor(
                 }
             }
         } catch (e: IOException) {
-            tempFile.delete()
+            if (!tempFile.delete()) {
+                AppLog.w(
+                    AppLog.T.MEDIA,
+                    "Failed to delete temp file: ${tempFile.name}"
+                )
+            }
             throw e
         }
         return tempFile

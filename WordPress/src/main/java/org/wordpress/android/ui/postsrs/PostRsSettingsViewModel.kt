@@ -538,7 +538,12 @@ class PostRsSettingsViewModel @Inject constructor(
                     )
                 )
             } finally {
-                tempFile?.delete()
+                if (tempFile?.delete() == false) {
+                    AppLog.w(
+                        AppLog.T.MEDIA,
+                        "Failed to delete temp file"
+                    )
+                }
             }
         }
     }
@@ -552,7 +557,7 @@ class PostRsSettingsViewModel @Inject constructor(
             ?: File(filePath).nameWithoutExtension
         val client = apiClient
             ?: throw PostApiRequestException(
-                "No site selected"
+                ERROR_NO_SITE
             )
         val response = client.request { requestBuilder ->
             requestBuilder.media().create(
@@ -717,7 +722,7 @@ class PostRsSettingsViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     val client = apiClient
                         ?: throw PostApiRequestException(
-                            "No site selected"
+                            ERROR_NO_SITE
                         )
                     val response = client.request {
                         it.posts().update(
@@ -816,7 +821,7 @@ class PostRsSettingsViewModel @Inject constructor(
     private suspend fun fetchPost():
         AnyPostWithEditContext = withContext(Dispatchers.IO) {
         val client = apiClient
-            ?: throw PostApiRequestException("No site selected")
+            ?: throw PostApiRequestException(ERROR_NO_SITE)
         val response = client.request {
             it.posts().retrieveWithEditContext(
                 PostEndpointType.Posts,
@@ -1050,5 +1055,7 @@ class PostRsSettingsViewModel @Inject constructor(
 
     companion object {
         const val EXTRA_POST_ID = "extra_post_id"
+        private const val ERROR_NO_SITE =
+            "No site selected"
     }
 }
