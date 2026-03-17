@@ -1,13 +1,10 @@
 package org.wordpress.android.ui.postsrs
 
-import android.content.Context
 import android.net.Uri
-import android.webkit.MimeTypeMap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -51,7 +48,7 @@ class PostRsSettingsViewModel @Inject constructor(
     private val restClient: PostRsRestClient,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    @ApplicationContext private val appContext: Context,
+    private val uriToFileMapper: UriToFileMapper,
 ) : ViewModel() {
     private val postId: Long = requireNotNull(savedStateHandle[EXTRA_POST_ID]) {
         "Missing $EXTRA_POST_ID in SavedStateHandle"
@@ -500,8 +497,10 @@ class PostRsSettingsViewModel @Inject constructor(
             var tempFile: File? = null
             try {
                 val mediaId = withContext(Dispatchers.IO) {
-                    tempFile = copyUriToTempFile(uri)
-                    uploadMediaAndGetId(tempFile!!.absolutePath)
+                    val file = uriToFileMapper
+                        .copyUriToTempFile(uri)
+                    tempFile = file
+                    uploadMediaAndGetId(file.absolutePath)
                 }
                 onFeaturedImageSelected(mediaId)
             } catch (e: CancellationException) {
@@ -537,31 +536,6 @@ class PostRsSettingsViewModel @Inject constructor(
                 tempFile?.delete()
             }
         }
-    }
-
-    @Suppress("Recycle") // stream is closed by .use {}
-    private fun copyUriToTempFile(uri: Uri): File {
-        val mime = appContext.contentResolver.getType(uri)
-        val ext = MimeTypeMap.getSingleton()
-            .getExtensionFromMimeType(mime)
-            ?.let { ".$it" }
-            ?: ".jpg"
-        val tempFile = File.createTempFile(
-            "featured_img_",
-            ext,
-            appContext.cacheDir
-        )
-        val inputStream = appContext.contentResolver
-            .openInputStream(uri)
-            ?: throw PostApiRequestException(
-                "Cannot read URI"
-            )
-        inputStream.use { input ->
-            tempFile.outputStream().use { output ->
-                input.copyTo(output)
-            }
-        }
-        return tempFile
     }
 
     private suspend fun uploadMediaAndGetId(
