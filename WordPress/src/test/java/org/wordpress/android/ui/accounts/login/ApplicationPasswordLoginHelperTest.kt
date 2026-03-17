@@ -150,7 +150,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
 
             assertFalse(result)
-            verify(siteStore).sites
+            verify(siteStore, times(2)).sites
             verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
             verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
         }
