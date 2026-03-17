@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.login
 
 import android.content.Context
 import androidx.core.net.toUri
+import com.automattic.android.tracks.crashlogging.CrashLogging
 import org.wordpress.android.R
 import org.wordpress.android.util.DeviceUtils
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,6 +18,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.applicationPasswordsUrl
@@ -25,6 +27,7 @@ import javax.inject.Named
 
 private const val URL_TAG = "url"
 private const val SUCCESS_TAG = "success"
+private const val REASON_TAG = "reason"
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -35,7 +38,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val wpLoginClient: WpLoginClient,
     private val appLogWrapper: AppLogWrapper,
     private val apiRootUrlCache: ApiRootUrlCache,
-    private val discoverSuccessWrapper: DiscoverSuccessWrapper
+    private val discoverSuccessWrapper: DiscoverSuccessWrapper,
+    private val crashLogging: CrashLogging
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -103,6 +107,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     ", alreadyProcessed=" +
                     "${urlLogin.siteUrl == processedAppPasswordData}"
             )
+            trackStoringFailed(urlLogin.siteUrl, "bad_data")
             return false
         }
 
@@ -132,9 +137,26 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                         " - site not found in store" +
                         " (${siteStore.sites.size} sites available)"
                 )
+                trackStoringFailed(urlLogin.siteUrl, "site_not_found")
                 false
             }
         }
+    }
+
+    fun trackStoringFailed(siteUrl: String?, reason: String) {
+        val properties: MutableMap<String, String?> = HashMap()
+        properties[URL_TAG] = siteUrl
+        properties[REASON_TAG] = reason
+        AnalyticsTracker.track(
+            Stat.APPLICATION_PASSWORD_STORING_FAILED,
+            properties
+        )
+        crashLogging.sendReportWithTag(
+            exception = Exception(
+                "A_P: storing failed for $siteUrl - $reason"
+            ),
+            tag = AppLog.T.DB
+        )
     }
 
     private fun trackSuccessful(siteUrl: String) {
