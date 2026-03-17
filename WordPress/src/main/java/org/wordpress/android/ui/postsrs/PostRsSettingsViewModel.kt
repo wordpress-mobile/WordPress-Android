@@ -2,6 +2,7 @@ package org.wordpress.android.ui.postsrs
 
 import android.content.Context
 import android.net.Uri
+import android.webkit.MimeTypeMap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -540,9 +541,14 @@ class PostRsSettingsViewModel @Inject constructor(
 
     @Suppress("Recycle") // stream is closed by .use {}
     private fun copyUriToTempFile(uri: Uri): File {
+        val mime = appContext.contentResolver.getType(uri)
+        val ext = MimeTypeMap.getSingleton()
+            .getExtensionFromMimeType(mime)
+            ?.let { ".$it" }
+            ?: ".jpg"
         val tempFile = File.createTempFile(
             "featured_img_",
-            ".jpg",
+            ext,
             appContext.cacheDir
         )
         val inputStream = appContext.contentResolver
