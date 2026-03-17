@@ -720,17 +720,30 @@ class PostRsSettingsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(isSearchingAuthors = false)
             }
+            _snackbarMessages.trySend(
+                SnackbarMessage(
+                    PostRsErrorUtils.friendlyErrorMessage(
+                        e = e,
+                        resourceProvider =
+                            resourceProvider,
+                        networkUtilsWrapper =
+                            networkUtilsWrapper,
+                    )
+                )
+            )
         }
     }
 
     fun onDismissDialog() {
         authorSearchJob?.cancel()
+        nextAuthorPageParams = null
         _uiState.update {
             it.copy(
                 dialogState = DialogState.None,
                 authorSearchQuery = "",
                 isSearchingAuthors = false,
                 siteAuthors = emptyList(),
+                canLoadMoreAuthors = false,
             )
         }
     }
