@@ -13,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -491,10 +492,10 @@ class InsightsViewModelTest :
             advanceUntilIdle()
 
             verify(statsSummaryUseCase,
-                org.mockito.Mockito.times(1))
+                times(1))
                 .invoke(any(), any())
             verify(statsInsightsUseCase,
-                org.mockito.Mockito.times(1))
+                times(1))
                 .invoke(any(), any())
         }
 
@@ -750,7 +751,7 @@ class InsightsViewModelTest :
             advanceUntilIdle()
 
             verify(statsInsightsUseCase,
-                org.mockito.Mockito.times(1))
+                times(1))
                 .invoke(any(), any())
             verify(statsSummaryUseCase, never())
                 .invoke(any(), any())
@@ -771,7 +772,7 @@ class InsightsViewModelTest :
             advanceUntilIdle()
 
             verify(statsSummaryUseCase,
-                org.mockito.Mockito.times(1))
+                times(1))
                 .invoke(eq(TEST_SITE_ID), eq(false))
         }
 
@@ -803,16 +804,57 @@ class InsightsViewModelTest :
             advanceUntilIdle()
 
             verify(statsSummaryUseCase,
-                org.mockito.Mockito.times(1))
+                times(1))
                 .invoke(eq(TEST_SITE_ID), eq(false))
             verify(statsSummaryUseCase,
-                org.mockito.Mockito.times(1))
+                times(1))
                 .invoke(eq(TEST_SITE_ID), eq(true))
             verify(statsInsightsUseCase,
-                org.mockito.Mockito.times(1))
+                times(1))
                 .invoke(eq(TEST_SITE_ID), eq(false))
             verify(statsInsightsUseCase,
-                org.mockito.Mockito.times(1))
+                times(1))
+                .invoke(eq(TEST_SITE_ID), eq(true))
+        }
+
+    @Test
+    fun `when refresh called twice rapidly, then second refresh replaces first`() =
+        test {
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummaryData()
+                )
+            )
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            // Two rapid refreshes — second should
+            // cancel the first via fetchJob?.cancel().
+            viewModel.refreshData()
+            viewModel.refreshData()
+            advanceUntilIdle()
+
+            // The second refreshData() cancels the
+            // first job before it executes, so only
+            // one forceRefresh=true call completes.
+            assertThat(
+                viewModel.isDataRefreshing.value
+            ).isFalse()
+
+            verify(statsSummaryUseCase, times(1))
                 .invoke(eq(TEST_SITE_ID), eq(true))
         }
 
