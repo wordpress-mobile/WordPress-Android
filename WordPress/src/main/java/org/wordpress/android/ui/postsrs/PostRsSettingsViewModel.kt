@@ -496,10 +496,11 @@ class PostRsSettingsViewModel @Inject constructor(
             it.copy(featuredImage = FieldState.Loading)
         }
         viewModelScope.launch {
+            var tempFile: File? = null
             try {
                 val mediaId = withContext(Dispatchers.IO) {
-                    val tempFile = copyUriToTempFile(uri)
-                    uploadMediaAndGetId(tempFile.absolutePath)
+                    tempFile = copyUriToTempFile(uri)
+                    uploadMediaAndGetId(tempFile!!.absolutePath)
                 }
                 onFeaturedImageSelected(mediaId)
             } catch (e: CancellationException) {
@@ -531,6 +532,8 @@ class PostRsSettingsViewModel @Inject constructor(
                         }
                     )
                 )
+            } finally {
+                tempFile?.delete()
             }
         }
     }
