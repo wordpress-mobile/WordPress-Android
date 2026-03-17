@@ -58,9 +58,9 @@ object LocaleManager {
         // Attempt to parse language and region codes.
         val opts = LANGUAGE_SPLITTER.split(languageCode, 0)
         return if (opts.size > 1) {
-            Locale(opts[0], opts[1])
+            Locale.Builder().setLanguage(opts[0]).setRegion(opts[1]).build()
         } else {
-            Locale(opts[0])
+            Locale.Builder().setLanguage(opts[0]).build()
         }
     }
 

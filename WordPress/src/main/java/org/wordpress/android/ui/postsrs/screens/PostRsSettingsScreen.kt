@@ -84,6 +84,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -146,7 +147,8 @@ fun PostRsSettingsScreen(
     onAuthorSelected: (Long) -> Unit = {},
     onCategoriesClicked: () -> Unit = {},
     onTagsClicked: () -> Unit = {},
-    onFeaturedImageClicked: () -> Unit = {},
+    onChooseFromWpMedia: () -> Unit = {},
+    onChooseFromDevice: () -> Unit = {},
     onFeaturedImageRemoved: () -> Unit = {},
     onLoadMoreAuthors: () -> Unit = {},
     onAuthorSearchQueryChanged: (String) -> Unit = {},
@@ -210,8 +212,10 @@ fun PostRsSettingsScreen(
                     onCategoriesClicked =
                         onCategoriesClicked,
                     onTagsClicked = onTagsClicked,
-                    onFeaturedImageClicked =
-                        onFeaturedImageClicked,
+                    onChooseFromWpMedia =
+                        onChooseFromWpMedia,
+                    onChooseFromDevice =
+                        onChooseFromDevice,
                     onFeaturedImageRemoved =
                         onFeaturedImageRemoved,
                     onSaveClicked = onSaveClicked,
@@ -309,7 +313,8 @@ private fun HeroSettingsLayout(
     onAuthorClicked: () -> Unit,
     onCategoriesClicked: () -> Unit,
     onTagsClicked: () -> Unit,
-    onFeaturedImageClicked: () -> Unit,
+    onChooseFromWpMedia: () -> Unit,
+    onChooseFromDevice: () -> Unit,
     onFeaturedImageRemoved: () -> Unit,
     onSaveClicked: () -> Unit,
 ) {
@@ -343,8 +348,10 @@ private fun HeroSettingsLayout(
                         HeroImageWithMenu(
                             imageUrl =
                                 uiState.featuredImage.value,
-                            onChangeClicked =
-                                onFeaturedImageClicked,
+                            onChooseFromWpMedia =
+                                onChooseFromWpMedia,
+                            onChooseFromDevice =
+                                onChooseFromDevice,
                             onRemoveClicked =
                                 onFeaturedImageRemoved,
                         )
@@ -356,11 +363,17 @@ private fun HeroSettingsLayout(
                                 R.string
                                     .post_rs_settings_featured_image_error
                             ),
-                            onClick = onFeaturedImageClicked,
+                            onChooseFromWpMedia =
+                                onChooseFromWpMedia,
+                            onChooseFromDevice =
+                                onChooseFromDevice,
                         )
                     is FieldState.Empty ->
                         HeroImagePlaceholder(
-                            onClick = onFeaturedImageClicked,
+                            onChooseFromWpMedia =
+                                onChooseFromWpMedia,
+                            onChooseFromDevice =
+                                onChooseFromDevice,
                         )
                 }
                 SettingsContent(
@@ -396,7 +409,8 @@ private fun HeroSettingsLayout(
 @Composable
 private fun HeroImageWithMenu(
     imageUrl: String,
-    onChangeClicked: () -> Unit,
+    onChooseFromWpMedia: () -> Unit,
+    onChooseFromDevice: () -> Unit,
     onRemoveClicked: () -> Unit,
 ) {
     Box(
@@ -419,7 +433,9 @@ private fun HeroImageWithMenu(
             contentScale = ContentScale.Crop
         )
         FeaturedImageEditButton(
-            onChangeClicked = onChangeClicked,
+            hasImage = true,
+            onChooseFromWpMedia = onChooseFromWpMedia,
+            onChooseFromDevice = onChooseFromDevice,
             onRemoveClicked = onRemoveClicked,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -456,9 +472,11 @@ private fun EditIconButton(
 
 @Composable
 private fun FeaturedImageEditButton(
-    onChangeClicked: () -> Unit,
-    onRemoveClicked: () -> Unit,
+    hasImage: Boolean,
+    onChooseFromWpMedia: () -> Unit,
+    onChooseFromDevice: () -> Unit,
     modifier: Modifier = Modifier,
+    onRemoveClicked: () -> Unit = {},
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(modifier = modifier) {
@@ -472,13 +490,13 @@ private fun FeaturedImageEditButton(
                     Text(
                         stringResource(
                             R.string
-                                .post_rs_settings_change_featured_image
+                                .post_rs_settings_choose_from_wp_media
                         )
                     )
                 },
                 onClick = {
                     expanded = false
-                    onChangeClicked()
+                    onChooseFromWpMedia()
                 }
             )
             DropdownMenuItem(
@@ -486,17 +504,33 @@ private fun FeaturedImageEditButton(
                     Text(
                         stringResource(
                             R.string
-                                .post_rs_settings_remove_featured_image
-                        ),
-                        color = MaterialTheme
-                            .colorScheme.error
+                                .post_rs_settings_choose_from_device
+                        )
                     )
                 },
                 onClick = {
                     expanded = false
-                    onRemoveClicked()
+                    onChooseFromDevice()
                 }
             )
+            if (hasImage) {
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            stringResource(
+                                R.string
+                                    .post_rs_settings_remove_featured_image
+                            ),
+                            color = MaterialTheme
+                                .colorScheme.error
+                        )
+                    },
+                    onClick = {
+                        expanded = false
+                        onRemoveClicked()
+                    }
+                )
+            }
         }
     }
 }
@@ -548,20 +582,12 @@ private fun ShimmerRow() {
             ShimmerBox(
                 modifier = Modifier
                     .size(width = 100.dp, height = 14.dp)
-                    .background(
-                        MaterialTheme.colorScheme.onSurface
-                            .copy(alpha = 0.1f),
-                        MaterialTheme.shapes.small
-                    )
+                    .clip(MaterialTheme.shapes.small)
             )
             ShimmerBox(
                 modifier = Modifier
                     .size(width = 160.dp, height = 12.dp)
-                    .background(
-                        MaterialTheme.colorScheme.onSurface
-                            .copy(alpha = 0.06f),
-                        MaterialTheme.shapes.small
-                    )
+                    .clip(MaterialTheme.shapes.small)
             )
         }
     }
@@ -572,25 +598,16 @@ private fun HeroImagePlaceholder(
     text: String = stringResource(
         R.string.post_rs_settings_featured_image_not_set
     ),
-    onClick: (() -> Unit)? = null,
+    onChooseFromWpMedia: () -> Unit,
+    onChooseFromDevice: () -> Unit,
 ) {
-    val editLabel = stringResource(
-        R.string.post_rs_settings_edit_featured_image
-    )
-    val clickModifier = onClick?.let {
-        Modifier.clickable(
-            onClickLabel = editLabel,
-            onClick = it,
-        )
-    } ?: Modifier
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(16f / 9f)
             .background(
                 MaterialTheme.colorScheme.surfaceVariant
-            )
-            .then(clickModifier),
+            ),
     ) {
         Text(
             text = text,
@@ -599,14 +616,14 @@ private fun HeroImagePlaceholder(
                 .onSurfaceVariant,
             modifier = Modifier.align(Alignment.Center)
         )
-        if (onClick != null) {
-            EditIconButton(
-                onClick = onClick,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(12.dp)
-            )
-        }
+        FeaturedImageEditButton(
+            hasImage = false,
+            onChooseFromWpMedia = onChooseFromWpMedia,
+            onChooseFromDevice = onChooseFromDevice,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(12.dp)
+        )
     }
 }
 

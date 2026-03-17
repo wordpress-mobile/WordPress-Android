@@ -79,7 +79,7 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
          * @param buttonView The main switch whose state has changed.
          * @param isChecked The new checked state of main switch.
          */
-        fun onMainSwitchCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean)
+        fun onMainSwitchCheckedChanged(buttonView: CompoundButton, isChecked: Boolean)
     }
 
     init {
@@ -296,7 +296,7 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
     /*
      * User toggled the main switch
      */
-    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         setToolbarTitle(isChecked)
         mainSwitchToolbarListener?.onMainSwitchCheckedChanged(buttonView, isChecked)
     }

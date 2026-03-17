@@ -20,4 +20,15 @@
         <item quantity="one">%1$d week ago</item>
         <item quantity="other">%1$d weeks ago</item>
     </plurals>
+
+    <!-- Stats Subscribers - Relative time -->
+    <plurals name="stats_subscriber_days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+
+    <plurals name="stats_subscriber_years">
+        <item quantity="one">%1$d year</item>
+        <item quantity="other">%1$d years</item>
+    </plurals>
 </resources>

@@ -51,14 +51,17 @@ class ContentDescriptionListAnnouncer {
 
         targetView.setOnClickListener {
             if (contentDescriptions.isEmpty()) {
+                @Suppress("DEPRECATION")
                 it.announceForAccessibility(it.context.getString(emptyListText))
                 return@setOnClickListener
             }
 
             if (currentIndex == contentDescriptions.size) {
+                @Suppress("DEPRECATION")
                 it.announceForAccessibility(it.context.getString(endOfListText))
                 currentIndex = 0
             } else {
+                @Suppress("DEPRECATION")
                 it.announceForAccessibility(contentDescriptions[currentIndex])
                 currentIndex++
             }

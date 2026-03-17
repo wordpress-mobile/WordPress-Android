@@ -120,7 +120,8 @@ enum class RetryableField {
 sealed interface PostRsSettingsEvent {
     data object Finish : PostRsSettingsEvent
     data object FinishWithChanges : PostRsSettingsEvent
-    data object LaunchMediaPicker : PostRsSettingsEvent
+    data object LaunchWpMediaPicker : PostRsSettingsEvent
+    data object LaunchDeviceMediaPicker : PostRsSettingsEvent
     data class LaunchCategorySelection(
         val selectedIds: List<Long>,
     ) : PostRsSettingsEvent
