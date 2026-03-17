@@ -83,6 +83,8 @@ public class LoginActivity extends BaseAppCompatActivity implements
 
     private static final String KEY_UNIFIED_TRACKER_SOURCE = "KEY_UNIFIED_TRACKER_SOURCE";
     private static final String KEY_UNIFIED_TRACKER_FLOW = "KEY_UNIFIED_TRACKER_FLOW";
+    private static final String KEY_IS_WAITING_FOR_SITES = "KEY_IS_WAITING_FOR_SITES";
+    private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
 
     private int mFragmentContainerId;
 
@@ -183,6 +185,14 @@ public class LoginActivity extends BaseAppCompatActivity implements
                 mUnifiedLoginTracker.setSource(source);
             }
             mUnifiedLoginTracker.setFlow(savedInstanceState.getString(KEY_UNIFIED_TRACKER_FLOW));
+            mIsWaitingForSitesToLoad = savedInstanceState.getBoolean(KEY_IS_WAITING_FOR_SITES);
+            mOldSitesIdsForLoginUpdate = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
+        }
+
+        // If we're waiting for sites (e.g. after config change during post-OAuth fetch),
+        // show the loading screen instead of the fragment container
+        if (mIsWaitingForSitesToLoad) {
+            setContentView(R.layout.login_loading);
         }
 
         initViewModel();
@@ -210,6 +220,8 @@ public class LoginActivity extends BaseAppCompatActivity implements
         if (flow != null) {
             outState.putString(KEY_UNIFIED_TRACKER_FLOW, flow.getValue());
         }
+        outState.putBoolean(KEY_IS_WAITING_FOR_SITES, mIsWaitingForSitesToLoad);
+        outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIdsForLoginUpdate);
     }
 
     @Override
