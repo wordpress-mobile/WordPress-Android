@@ -84,6 +84,13 @@ class StatsTagsUseCase @Inject constructor(
         return deferred.await()
     }
 
+    suspend fun clearCache() {
+        mutex.withLock {
+            cachedTags = null
+            inFlight = null
+        }
+    }
+
     private fun isCacheHit(
         cached: Triple<Long, Int, StatsTagsData>?,
         siteId: Long,

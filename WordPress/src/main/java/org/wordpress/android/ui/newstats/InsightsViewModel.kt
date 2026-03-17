@@ -18,6 +18,7 @@ import org.wordpress.android.ui.newstats.repository.InsightsResult
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
 import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
 import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
+import org.wordpress.android.ui.newstats.repository.StatsTagsUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.concurrent.atomic.AtomicBoolean
@@ -32,7 +33,8 @@ class InsightsViewModel @Inject constructor(
         InsightsCardsConfigurationRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val statsSummaryUseCase: StatsSummaryUseCase,
-    private val statsInsightsUseCase: StatsInsightsUseCase
+    private val statsInsightsUseCase: StatsInsightsUseCase,
+    private val statsTagsUseCase: StatsTagsUseCase
 ) : ViewModel() {
     private val _visibleCards =
         MutableStateFlow<List<InsightsCardType>>(
@@ -79,6 +81,11 @@ class InsightsViewModel @Inject constructor(
     private var fetchJob: Job? = null
 
     init {
+        viewModelScope.launch {
+            statsSummaryUseCase.clearCache()
+            statsInsightsUseCase.clearCache()
+            statsTagsUseCase.clearCache()
+        }
         checkNetworkStatus()
         loadConfiguration()
         observeConfigurationChanges()

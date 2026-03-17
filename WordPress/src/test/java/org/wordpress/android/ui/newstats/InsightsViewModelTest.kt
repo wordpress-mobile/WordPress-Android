@@ -26,6 +26,7 @@ import org.wordpress.android.ui.newstats.repository.InsightsResult
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
 import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
 import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
+import org.wordpress.android.ui.newstats.repository.StatsTagsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @Suppress("LargeClass")
@@ -52,6 +53,10 @@ class InsightsViewModelTest :
     @Mock
     private lateinit var statsInsightsUseCase:
         StatsInsightsUseCase
+
+    @Mock
+    private lateinit var statsTagsUseCase:
+        StatsTagsUseCase
 
     private lateinit var viewModel: InsightsViewModel
 
@@ -92,7 +97,8 @@ class InsightsViewModelTest :
             cardConfigurationRepository,
             networkUtilsWrapper,
             statsSummaryUseCase,
-            statsInsightsUseCase
+            statsInsightsUseCase,
+            statsTagsUseCase
         )
     }
 
@@ -240,7 +246,8 @@ class InsightsViewModelTest :
                 cardConfigurationRepository,
                 networkUtilsWrapper,
                 statsSummaryUseCase,
-                statsInsightsUseCase
+                statsInsightsUseCase,
+                statsTagsUseCase
             )
             advanceUntilIdle()
 
@@ -355,7 +362,8 @@ class InsightsViewModelTest :
                 cardConfigurationRepository,
                 networkUtilsWrapper,
                 statsSummaryUseCase,
-                statsInsightsUseCase
+                statsInsightsUseCase,
+                statsTagsUseCase
             )
 
             assertThat(viewModel.cardsToLoad.value)
@@ -856,6 +864,17 @@ class InsightsViewModelTest :
 
             verify(statsSummaryUseCase, times(1))
                 .invoke(eq(TEST_SITE_ID), eq(true))
+        }
+
+    @Test
+    fun `when initialized, then all caches are cleared`() =
+        test {
+            initViewModel()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase).clearCache()
+            verify(statsInsightsUseCase).clearCache()
+            verify(statsTagsUseCase).clearCache()
         }
 
     // endregion

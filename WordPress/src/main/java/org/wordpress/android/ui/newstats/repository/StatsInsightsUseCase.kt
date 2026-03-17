@@ -44,4 +44,8 @@ class StatsInsightsUseCase @Inject constructor(
             result
         }
     }
+
+    suspend fun clearCache() {
+        mutex.withLock { cachedInsights = null }
+    }
 }
