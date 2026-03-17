@@ -69,6 +69,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     AppLog.T.MAIN,
                     "A_P: Cannot store credentials: rawData is empty"
                 )
+                applicationPasswordLoginHelper.trackStoringFailed("", "empty_raw_data")
                 emitError(siteUrl = "", errorMessage = "Callback data was empty")
                 return@launch
             }
@@ -118,6 +119,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                         ", siteUrl isEmpty=${siteUrl.isEmpty()}" +
                         ", apiRootUrl isEmpty=${apiRootUrl.isEmpty()}"
                 )
+                applicationPasswordLoginHelper.trackStoringFailed(
+                    siteUrl, "empty_fetch_params"
+                )
                 emitError(
                     siteUrl = siteUrl,
                     errorMessage = "Missing login data — " +
@@ -143,6 +147,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             appLogWrapper.e(
                 AppLog.T.API,
                 "A_P: Error fetching sites: ${e.stackTraceToString()}"
+            )
+            applicationPasswordLoginHelper.trackStoringFailed(
+                siteUrl, "fetch_sites_exception"
             )
             emitError(siteUrl = siteUrl, errorMessage = e.message, cause = e)
         }
@@ -182,6 +189,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     "A_P: onSiteChanged failed: " +
                         "SiteStore error ${error?.type}: ${error?.message}"
                 )
+                applicationPasswordLoginHelper.trackStoringFailed(
+                    currentUrlLogin?.siteUrl,
+                    "site_changed_failed"
+                )
                 emitError(
                     siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
                     errorMessage = "SiteStore error: " +
@@ -200,6 +211,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     "A_P: onSiteChanged failed: " +
                         "exception reading sites from DB: " +
                         e.stackTraceToString()
+                )
+                applicationPasswordLoginHelper.trackStoringFailed(
+                    currentUrlLogin?.siteUrl,
+                    "site_changed_failed"
                 )
                 emitError(
                     siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
@@ -226,6 +241,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 appLogWrapper.e(
                     AppLog.T.MAIN,
                     "A_P: onSiteChanged failed: $errorMessage"
+                )
+                applicationPasswordLoginHelper.trackStoringFailed(
+                    currentUrlLogin?.siteUrl,
+                    "site_changed_failed"
                 )
                 emitError(
                     siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
