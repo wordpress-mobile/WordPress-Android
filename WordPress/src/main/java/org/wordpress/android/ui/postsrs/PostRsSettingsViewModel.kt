@@ -361,6 +361,8 @@ class PostRsSettingsViewModel @Inject constructor(
         val current = _uiState.value
         val authorName = current.siteAuthors
             .firstOrNull { it.id == authorId }?.name
+        authorSearchJob?.cancel()
+        nextAuthorPageParams = null
         _uiState.update {
             it.copy(
                 editedAuthor = authorId.takeIf { ea ->
@@ -371,7 +373,11 @@ class PostRsSettingsViewModel @Inject constructor(
                 } else {
                     it.authorName
                 },
-                dialogState = DialogState.None
+                dialogState = DialogState.None,
+                authorSearchQuery = "",
+                isSearchingAuthors = false,
+                siteAuthors = emptyList(),
+                canLoadMoreAuthors = false,
             )
         }
     }

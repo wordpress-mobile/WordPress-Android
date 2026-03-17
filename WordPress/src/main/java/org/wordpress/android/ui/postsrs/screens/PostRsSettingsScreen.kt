@@ -1687,7 +1687,8 @@ private fun AuthorDialog(
                     onAuthorSelected(
                         selectedAuthorId.longValue
                     )
-                }
+                },
+                enabled = authors.isNotEmpty()
             ) {
                 Text(stringResource(R.string.ok))
             }
