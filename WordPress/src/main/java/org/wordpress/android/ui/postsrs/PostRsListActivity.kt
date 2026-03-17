@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.postsrs
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -33,7 +32,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
     private val settingsLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
+        if (result.resultCode == RESULT_OK) {
             viewModel.refreshAllTabs()
         }
     }
