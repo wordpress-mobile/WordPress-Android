@@ -85,6 +85,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
     private static final String KEY_UNIFIED_TRACKER_FLOW = "KEY_UNIFIED_TRACKER_FLOW";
     private static final String KEY_IS_WAITING_FOR_SITES = "KEY_IS_WAITING_FOR_SITES";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
+    private static final String KEY_SHARE_FLOW_LOGIN_LAUNCHED = "KEY_SHARE_FLOW_LOGIN_LAUNCHED";
 
     private int mFragmentContainerId;
 
@@ -111,6 +112,8 @@ public class LoginActivity extends BaseAppCompatActivity implements
 
     // Flag to track when we're waiting for account/sites to load after OAuth login
     private boolean mIsWaitingForSitesToLoad = false;
+    // Flag to track that the user actually launched a login during share flow
+    private boolean mShareFlowLoginLaunched = false;
     private ArrayList<Integer> mOldSitesIdsForLoginUpdate;
 
     @Inject ExperimentalFeatures mExperimentalFeatures;
@@ -186,6 +189,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
             }
             mUnifiedLoginTracker.setFlow(savedInstanceState.getString(KEY_UNIFIED_TRACKER_FLOW));
             mIsWaitingForSitesToLoad = savedInstanceState.getBoolean(KEY_IS_WAITING_FOR_SITES);
+            mShareFlowLoginLaunched = savedInstanceState.getBoolean(KEY_SHARE_FLOW_LOGIN_LAUNCHED);
             mOldSitesIdsForLoginUpdate = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         }
 
@@ -221,6 +225,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
             outState.putString(KEY_UNIFIED_TRACKER_FLOW, flow.getValue());
         }
         outState.putBoolean(KEY_IS_WAITING_FOR_SITES, mIsWaitingForSitesToLoad);
+        outState.putBoolean(KEY_SHARE_FLOW_LOGIN_LAUNCHED, mShareFlowLoginLaunched);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIdsForLoginUpdate);
     }
 
@@ -265,7 +270,9 @@ public class LoginActivity extends BaseAppCompatActivity implements
         super.onResume();
         // Check if self-hosted login completed while in share flow
         // ApplicationPasswordLoginActivity finishes back here after successful login
-        if (getLoginFlow() == LoginFlow.SHARE_INTENT && mSiteStore.hasSite()) {
+        if (getLoginFlow() == LoginFlow.SHARE_INTENT
+                && mShareFlowLoginLaunched
+                && mSiteStore.hasSite()) {
             setResult(Activity.RESULT_OK);
             finish();
         }
@@ -493,6 +500,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
         // Track if we're in a share flow so ApplicationPasswordLoginActivity knows to just finish
         if (getLoginFlow() == LoginFlow.SHARE_INTENT) {
             AppPrefs.setShareFlowPending(true);
+            mShareFlowLoginLaunched = true;
         }
         slideInFragment(new LoginSiteApplicationPasswordFragment(), true, LoginSiteApplicationPasswordFragment.TAG);
     }
