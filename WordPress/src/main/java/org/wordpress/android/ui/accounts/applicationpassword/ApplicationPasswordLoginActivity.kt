@@ -64,13 +64,13 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
             )
             intent.setData(null)
         } else {
-            ToastUtils.showToast(
-                this,
-                getString(
-                    R.string.application_password_credentials_storing_error,
-                    navigationActionData.siteUrl
-                )
+            val detail = navigationActionData.errorMessage
+            val baseMessage = getString(
+                R.string.application_password_credentials_storing_error,
+                navigationActionData.siteUrl
             )
+            val message = if (detail != null) "$baseMessage\n$detail" else baseMessage
+            ToastUtils.showToast(this, message)
         }
 
         if (navigationActionData.isError) {
