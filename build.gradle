@@ -98,7 +98,7 @@ allprojects {
 subprojects {
     plugins.withType(com.android.build.gradle.AppPlugin) {
         android {
-            lintOptions {
+            lint {
                 warningsAsErrors = true
                 checkDependencies true
                 checkGeneratedSources = true
@@ -114,7 +114,7 @@ subprojects {
     }
     plugins.withType(com.android.build.gradle.LibraryPlugin) {
         android {
-            lintOptions {
+            lint {
                 checkDependencies false
                 lintConfig file("${project.rootDir}/config/lint/lint.xml")
             }
