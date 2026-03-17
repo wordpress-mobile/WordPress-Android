@@ -1972,6 +1972,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     private fun announceListStateForAccessibility() {
         if (view != null) {
+            @Suppress("DEPRECATION")
             requireView().announceForAccessibility(
                 getString(
                     R.string.reader_acessibility_list_loaded,
