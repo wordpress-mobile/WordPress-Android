@@ -1385,15 +1385,18 @@ private fun DateDialog(
     onDateSelected: (Int, Int, Int) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    // Normalize to UTC midnight for DatePickerState
+    // Extract the local date, then normalize to UTC midnight
+    // for DatePickerState (which operates in UTC millis)
     val initialMillis = currentDate?.let { date ->
-        val cal = Calendar.getInstance(UTC)
-        cal.time = date
-        cal[Calendar.HOUR_OF_DAY] = 0
-        cal[Calendar.MINUTE] = 0
-        cal[Calendar.SECOND] = 0
-        cal[Calendar.MILLISECOND] = 0
-        cal.timeInMillis
+        val localCal = Calendar.getInstance()
+        localCal.time = date
+        val utcCal = Calendar.getInstance(UTC)
+        utcCal.clear()
+        utcCal[Calendar.YEAR] = localCal[Calendar.YEAR]
+        utcCal[Calendar.MONTH] = localCal[Calendar.MONTH]
+        utcCal[Calendar.DAY_OF_MONTH] =
+            localCal[Calendar.DAY_OF_MONTH]
+        utcCal.timeInMillis
     } ?: System.currentTimeMillis()
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = initialMillis
@@ -1436,7 +1439,7 @@ private fun TimeDialog(
     onDismiss: () -> Unit,
 ) {
     val cal = remember(currentDate) {
-        Calendar.getInstance(UTC).apply {
+        Calendar.getInstance().apply {
             time = currentDate ?: Date()
         }
     }
