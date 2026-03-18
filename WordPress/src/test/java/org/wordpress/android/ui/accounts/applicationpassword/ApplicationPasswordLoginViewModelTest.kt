@@ -84,7 +84,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             siteUrl = "",
             oldSitesIDs = null,
             isError = true,
-            errorMessage = "Callback data was empty"
+            errorMessage = "empty_raw_data"
         )
 
         // When
@@ -112,10 +112,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 siteUrl = "",
                 oldSitesIDs = null,
                 isError = true,
-                errorMessage = "Missing login data — " +
-                    "username empty: true, " +
-                    "password empty: true, " +
-                    "apiRootUrl empty: true"
+                errorMessage = "empty_fetch_params"
             )
             whenever(applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(malformedRawData))
                 .thenReturn(
@@ -186,9 +183,8 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertTrue(finishedEvent.isError)
-                assertTrue(
-                    finishedEvent.errorMessage
-                        ?.contains("Site not found") == true
+                assertEquals(
+                    "site_not_found", finishedEvent.errorMessage
                 )
                 verify(selfHostedEndpointFinder, times(1))
                     .verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
@@ -335,10 +331,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val result = awaitItem()
                 assertTrue(result.isError)
-                assertEquals(
-                    "SiteStore error: GENERIC_ERROR — encryption failed",
-                    result.errorMessage
-                )
+                assertEquals("site_store_error", result.errorMessage)
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -359,9 +352,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val result = awaitItem()
                 assertTrue(result.isError)
-                assertTrue(
-                    result.errorMessage?.contains("No rows affected") == true
-                )
+                assertEquals("no_rows_affected", result.errorMessage)
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -389,10 +380,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val result = awaitItem()
                 assertTrue(result.isError)
-                assertTrue(
-                    result.errorMessage
-                        ?.contains("Credentials are empty") == true
-                )
+                assertEquals("empty_credentials", result.errorMessage)
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -415,10 +403,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val result = awaitItem()
                 assertTrue(result.isError)
-                assertEquals(
-                    "Failed to read sites: DB corrupted",
-                    result.errorMessage
-                )
+                assertEquals("db_read_exception", result.errorMessage)
                 cancelAndIgnoreRemainingEvents()
             }
         }
