@@ -67,13 +67,13 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
             )
             intent.setData(null)
         } else {
-            val detail = navigationActionData.errorMessage
-            val baseMessage = getString(
-                R.string.application_password_credentials_storing_error,
-                navigationActionData.siteUrl
+            ToastUtils.showToast(
+                this,
+                getString(
+                    R.string.application_password_credentials_storing_error,
+                    navigationActionData.siteUrl
+                )
             )
-            val message = if (detail != null) "$baseMessage\n$detail" else baseMessage
-            ToastUtils.showToast(this, message)
         }
 
         // Check if we're in a share flow - if so, just finish and return to LoginActivity
