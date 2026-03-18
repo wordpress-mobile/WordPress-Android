@@ -22,8 +22,8 @@ import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Ur
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
-import org.wordpress.android.util.crashlogging.sendReportWithTag
 import com.automattic.android.tracks.crashlogging.CrashLogging
+import org.wordpress.android.util.crashlogging.sendReportWithTag
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -251,17 +251,17 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     errorMessage = errorMessage
                 )
             } else {
-                val nonNullSite = site!!
+                val resolvedSite = site ?: return@launch
                 _onFinishedEvent.emit(
                     NavigationActionData(
                         showSiteSelector = siteStore.hasSite() &&
-                                oldSitesIDs?.contains(nonNullSite.id) != true,
+                                oldSitesIDs?.contains(resolvedSite.id) != true,
                         showPostSignupInterstitial = !siteStore.hasSite()
                                 && appPrefsWrapper.shouldShowPostSignupInterstitial,
                         siteUrl = currentUrlLogin?.siteUrl,
                         oldSitesIDs = oldSitesIDs,
                         isError = false,
-                        newSiteLocalId = nonNullSite.id
+                        newSiteLocalId = resolvedSite.id
                     )
                 )
             }
