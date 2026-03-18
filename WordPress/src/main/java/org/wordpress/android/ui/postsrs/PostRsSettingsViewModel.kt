@@ -37,6 +37,7 @@ import java.io.File
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 import javax.inject.Inject
 
 @HiltViewModel
@@ -1030,7 +1031,12 @@ class PostRsSettingsViewModel @Inject constructor(
             DateFormat.MEDIUM,
             DateFormat.SHORT
         )
-        return fmt.format(dateGmt)
+        val tz = TimeZone.getDefault()
+        val tzLabel = tz.getDisplayName(
+            tz.inDaylightTime(dateGmt),
+            TimeZone.SHORT
+        )
+        return "${fmt.format(dateGmt)} $tzLabel"
     }
 
     private fun PostRsSettingsUiState.preserveEdits(
