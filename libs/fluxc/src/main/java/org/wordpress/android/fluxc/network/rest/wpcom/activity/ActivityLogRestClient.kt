@@ -341,7 +341,9 @@ class ActivityLogRestClient @Inject constructor(
                                         it.type,
                                         it.wpcom_user_id,
                                         it.icon?.url,
-                                        it.role
+                                        it.role,
+                                        it.is_mcp_agent ?: false,
+                                        it.mcp_client
                                 )
                             }
                     )
@@ -461,7 +463,9 @@ class ActivityLogRestClient @Inject constructor(
             val external_user_id: Long?,
             val wpcom_user_id: Long?,
             val icon: Icon?,
-            val role: String?
+            val role: String?,
+            val is_mcp_agent: Boolean?,
+            val mcp_client: String?
         )
 
         class Icon(val type: String?, val url: String?, val width: Int?, val height: Int?)

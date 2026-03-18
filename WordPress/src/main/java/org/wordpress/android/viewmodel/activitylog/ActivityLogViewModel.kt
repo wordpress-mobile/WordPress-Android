@@ -204,7 +204,19 @@ class ActivityLogViewModel @Inject constructor(
                 model = model,
                 rewindDisabled = withRestoreProgressItem || withBackupDownloadProgressItem,
                 isRestoreHidden = restoreEvent.isRestoreHidden
-            )
+            ).let { event ->
+                val client = model.actor?.mcpClient
+                if (model.actor?.isMCPAgent == true && !client.isNullOrEmpty()) {
+                    event.copy(
+                        actorMetadata = resourceProvider.getString(
+                            R.string.activity_log_mcp_agent_label,
+                            client
+                        )
+                    )
+                } else {
+                    event
+                }
+            }
             val lastItem = items.lastOrNull() as? ActivityLogListItem.Event
             if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
                 items.add(ActivityLogListItem.Header(currentItem.formattedDate))

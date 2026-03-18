@@ -25,6 +25,8 @@ class EventItemViewHolder(
     private val thumbnail: ImageView = itemView.findViewById(R.id.action_icon)
     private val container: View = itemView.findViewById(R.id.activity_content_container)
     private val actionButton: ImageButton = itemView.findViewById(R.id.action_button)
+    private val metadataSeparator: TextView = itemView.findViewById(R.id.action_metadata_separator)
+    private val metadata: TextView = itemView.findViewById(R.id.action_metadata)
 
     override fun updateChanges(bundle: Bundle) {
         if (bundle.containsKey(ActivityLogDiffCallback.LIST_ITEM_BUTTON_VISIBILITY_KEY)) {
@@ -40,6 +42,15 @@ class EventItemViewHolder(
     fun bind(activity: Event) {
         summary.text = activity.title
         text.text = activity.description
+
+        if (activity.actorMetadata != null) {
+            metadataSeparator.visibility = View.VISIBLE
+            metadata.visibility = View.VISIBLE
+            metadata.text = activity.actorMetadata
+        } else {
+            metadataSeparator.visibility = View.GONE
+            metadata.visibility = View.GONE
+        }
 
         ColorUtils.setImageResourceWithTint(
             actionButton,

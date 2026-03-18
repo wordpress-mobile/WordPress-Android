@@ -107,13 +107,13 @@ class ActivityLogDetailViewModel @Inject constructor(
 
 
     private fun findAndPostActivityLogItemDetail() {
-        activityLogStore
+        val model = activityLogStore
             .getActivityLogForSite(site)
             .find { it.activityID == activityLogId }
-            ?.toActivityLogDetailModel()
+        model?.toActivityLogDetailModel()
             ?.let {
                 _item.value = it
-            }?: findAndPostActivityLogItemDetailViaDashboardCardsIfNeeded()
+            } ?: findAndPostActivityLogItemDetailViaDashboardCardsIfNeeded()
     }
 
     private fun findAndPostActivityLogItemDetailViaDashboardCardsIfNeeded() {
@@ -138,20 +138,32 @@ class ActivityLogDetailViewModel @Inject constructor(
         }
     }
 
-    private fun ActivityLogModel.toActivityLogDetailModel() =
-        ActivityLogDetailModel(
+    private fun ActivityLogModel.toActivityLogDetailModel(): ActivityLogDetailModel {
+        val actorSnapshot = actor
+        return ActivityLogDetailModel(
             activityID = activityID,
             rewindId = rewindID,
-            actorIconUrl = actor?.avatarURL,
-            showJetpackIcon = actor?.showJetpackIcon(),
+            actorIconUrl = actorSnapshot?.avatarURL,
+            showJetpackIcon = actorSnapshot?.showJetpackIcon(),
             isRewindButtonVisible = rewindable ?: false,
-            actorName = actor?.displayName,
-            actorRole = actor?.role,
+            actorName = actorSnapshot?.displayName,
+            actorRole = actorSnapshot?.role,
+            actorMetadata = actorSnapshot?.mcpClient
+                ?.takeIf { client ->
+                    actorSnapshot.isMCPAgent && client.isNotEmpty()
+                }
+                ?.let { client ->
+                    resourceProvider.getString(
+                        R.string.activity_log_mcp_agent_label,
+                        client
+                    )
+                },
             content = content,
             summary = summary,
             createdDate = published.toFormattedDateString(),
             createdTime = published.toFormattedTimeString()
         )
+    }
 
     private fun getMultisiteMessage(): SpannableString {
         val clickableText = resourceProvider.getString(R.string.activity_log_visit_our_documentation_page)
