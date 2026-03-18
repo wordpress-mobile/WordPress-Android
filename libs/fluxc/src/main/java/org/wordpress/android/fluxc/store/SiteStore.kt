@@ -1495,8 +1495,6 @@ open class SiteStore @Inject constructor(
                     )
                 )
             } catch (e: Exception) {
-                // TODO: Narrow to specific exception type once Android 16
-                //  KeyStore root cause is identified (CMM-1949)
                 AppLog.e(T.API, "Failed to fetch/store sites: ${e.message}", e)
                 OnSiteChanged(SiteError(SiteErrorType.GENERIC_ERROR, e.message))
             }
@@ -1578,8 +1576,6 @@ open class SiteStore @Inject constructor(
         } catch (e: DuplicateSiteException) {
             OnSiteChanged(SiteError(DUPLICATE_SITE))
         } catch (e: Exception) {
-            // TODO: Narrow to specific exception type once Android 16
-            //  KeyStore root cause is identified (CMM-1949)
             AppLog.e(
                 T.DB,
                 "Failed to update application password: ${e.message}",
