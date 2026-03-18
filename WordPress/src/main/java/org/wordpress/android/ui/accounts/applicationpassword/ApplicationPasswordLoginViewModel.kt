@@ -11,6 +11,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
@@ -175,97 +176,109 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         )
     }
 
-    @Suppress("TooGenericExceptionCaught")
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onSiteChanged(event: OnSiteChanged) {
         viewModelScope.launch {
-            val currentNormalizedUrl = UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
-
             if (event.isError) {
-                val error = event.error
-                appLogWrapper.e(
-                    AppLog.T.MAIN,
-                    "A_P: onSiteChanged failed: " +
-                        "SiteStore error ${error?.type}: ${error?.message}"
-                )
-                applicationPasswordLoginHelper.trackStoringFailed(
-                    currentUrlLogin?.siteUrl,
-                    "site_changed_failed"
-                )
-                emitError(
-                    siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
-                    errorMessage = "SiteStore error: " +
-                        "${error?.type} — ${error?.message}"
-                )
-                return@launch
-            }
-
-            val site = try {
-                siteStore.sites.firstOrNull {
-                    UrlUtils.normalizeUrl(it.url) == currentNormalizedUrl
-                }
-            } catch (e: Exception) {
-                appLogWrapper.e(
-                    AppLog.T.MAIN,
-                    "A_P: onSiteChanged failed: " +
-                        "exception reading sites from DB: " +
-                        e.stackTraceToString()
-                )
-                applicationPasswordLoginHelper.trackStoringFailed(
-                    currentUrlLogin?.siteUrl,
-                    "site_changed_failed"
-                )
-                emitError(
-                    siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
-                    errorMessage = "Failed to read sites: ${e.message}",
-                    cause = e
-                )
-                return@launch
-            }
-
-            val errorMessage = when {
-                event.rowsAffected < 1 -> {
-                    "No rows affected (rowsAffected=${event.rowsAffected})"
-                }
-                site == null -> {
-                    "Site not found for URL: $currentNormalizedUrl"
-                }
-                applicationPasswordLoginHelper.siteHasBadCredentials(site) -> {
-                    "Credentials are empty for site: $currentNormalizedUrl"
-                }
-                else -> null
-            }
-
-            if (errorMessage != null) {
-                appLogWrapper.e(
-                    AppLog.T.MAIN,
-                    "A_P: onSiteChanged failed: $errorMessage"
-                )
-                applicationPasswordLoginHelper.trackStoringFailed(
-                    currentUrlLogin?.siteUrl,
-                    "site_changed_failed"
-                )
-                emitError(
-                    siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
-                    errorMessage = errorMessage
-                )
+                handleSiteChangedError(event)
             } else {
-                val resolvedSite = site ?: return@launch
-                _onFinishedEvent.emit(
-                    NavigationActionData(
-                        showSiteSelector = siteStore.hasSite() &&
-                                oldSitesIDs?.contains(resolvedSite.id) != true,
-                        showPostSignupInterstitial = !siteStore.hasSite()
-                                && appPrefsWrapper.shouldShowPostSignupInterstitial,
-                        siteUrl = currentUrlLogin?.siteUrl,
-                        oldSitesIDs = oldSitesIDs,
-                        isError = false,
-                        newSiteLocalId = resolvedSite.id
-                    )
-                )
+                handleSiteChangedSuccess(event)
             }
         }
+    }
+
+    private suspend fun handleSiteChangedError(event: OnSiteChanged) {
+        val error = event.error
+        appLogWrapper.e(
+            AppLog.T.MAIN,
+            "A_P: onSiteChanged failed: " +
+                "SiteStore error ${error?.type}: ${error?.message}"
+        )
+        applicationPasswordLoginHelper.trackStoringFailed(
+            currentUrlLogin?.siteUrl,
+            "site_changed_failed"
+        )
+        emitError(
+            siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
+            errorMessage = "SiteStore error: " +
+                "${error?.type} — ${error?.message}"
+        )
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun handleSiteChangedSuccess(event: OnSiteChanged) {
+        val normalizedUrl =
+            UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
+
+        val site = try {
+            siteStore.sites.firstOrNull {
+                UrlUtils.normalizeUrl(it.url) == normalizedUrl
+            }
+        } catch (e: Exception) {
+            logAndEmitSiteChangedError(
+                "exception reading sites from DB: " +
+                    e.stackTraceToString(),
+                "Failed to read sites: ${e.message}",
+                e
+            )
+            return
+        }
+
+        val errorMessage = validateSiteChanged(
+            event, site, normalizedUrl
+        )
+        if (errorMessage != null) {
+            logAndEmitSiteChangedError(errorMessage, errorMessage)
+        } else {
+            val resolvedSite = site ?: return
+            _onFinishedEvent.emit(
+                NavigationActionData(
+                    showSiteSelector = siteStore.hasSite() &&
+                        oldSitesIDs?.contains(resolvedSite.id) != true,
+                    showPostSignupInterstitial = !siteStore.hasSite()
+                        && appPrefsWrapper.shouldShowPostSignupInterstitial,
+                    siteUrl = currentUrlLogin?.siteUrl,
+                    oldSitesIDs = oldSitesIDs,
+                    isError = false,
+                    newSiteLocalId = resolvedSite.id
+                )
+            )
+        }
+    }
+
+    private fun validateSiteChanged(
+        event: OnSiteChanged,
+        site: SiteModel?,
+        normalizedUrl: String?
+    ): String? = when {
+        event.rowsAffected < 1 ->
+            "No rows affected (rowsAffected=${event.rowsAffected})"
+        site == null ->
+            "Site not found for URL: $normalizedUrl"
+        applicationPasswordLoginHelper.siteHasBadCredentials(site) ->
+            "Credentials are empty for site: $normalizedUrl"
+        else -> null
+    }
+
+    private suspend fun logAndEmitSiteChangedError(
+        logMessage: String,
+        errorMessage: String,
+        cause: Throwable? = null
+    ) {
+        appLogWrapper.e(
+            AppLog.T.MAIN,
+            "A_P: onSiteChanged failed: $logMessage"
+        )
+        applicationPasswordLoginHelper.trackStoringFailed(
+            currentUrlLogin?.siteUrl,
+            "site_changed_failed"
+        )
+        emitError(
+            siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
+            errorMessage = errorMessage,
+            cause = cause
+        )
     }
 
     data class NavigationActionData(
