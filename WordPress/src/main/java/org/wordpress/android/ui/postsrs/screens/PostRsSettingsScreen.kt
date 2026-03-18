@@ -116,7 +116,7 @@ import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
 import java.util.Calendar
 import java.util.Date
-import org.wordpress.android.ui.postsrs.UTC
+import java.util.TimeZone
 
 @Composable
 @Suppress("LongParameterList")
@@ -1635,6 +1635,7 @@ private fun AuthorDialog(
 }
 
 private const val AUTHOR_LOAD_THRESHOLD = 3
+private val UTC: TimeZone = TimeZone.getTimeZone("UTC")
 
 @Composable
 private fun DiscardDialog(
