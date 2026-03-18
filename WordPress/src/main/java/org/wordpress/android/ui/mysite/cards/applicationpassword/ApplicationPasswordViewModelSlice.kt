@@ -134,7 +134,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                     AppLog.T.MAIN,
                     "A_P: Exception validating credentials for ${site.url}: ${e::class.simpleName}: ${e.message}"
                 )
-                e.printStackTrace()
                 uiModelMutable.postValue(null)
             }
         }

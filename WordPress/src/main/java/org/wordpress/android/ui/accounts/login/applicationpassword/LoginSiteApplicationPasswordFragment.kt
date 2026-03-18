@@ -62,7 +62,6 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
 
                 AppThemeM3 {
                     LoginSiteApplicationPasswordScreen(
-                        isLoading = isLoading,
                         errorMessage = errorMessage,
                         onBackClick = {
                             requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -76,6 +75,11 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
                         },
                         onErrorDismissed = {
                             viewModel.clearError()
+                        },
+                        onCancelLoading = if (isLoading) {
+                            { viewModel.cancelDiscovery() }
+                        } else {
+                            null
                         }
                     )
                 }
