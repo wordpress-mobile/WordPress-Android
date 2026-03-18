@@ -382,6 +382,16 @@ public class LoginActivity extends BaseAppCompatActivity implements
         }
     }
 
+    private void hideLoadingOverlay() {
+        if (mLoadingOverlay != null) {
+            mLoadingOverlay.setVisibility(View.GONE);
+        }
+        View fragmentContainer = findViewById(mFragmentContainerId);
+        if (fragmentContainer != null) {
+            fragmentContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void showLoginError(@NonNull Exception error) {
         AppLog.e(T.MAIN, "OAuth login failed", error);
 
