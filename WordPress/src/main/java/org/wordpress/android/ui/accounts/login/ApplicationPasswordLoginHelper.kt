@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts.login
 
 import android.content.Context
 import androidx.core.net.toUri
-import com.automattic.android.tracks.crashlogging.CrashLogging
 import org.wordpress.android.R
 import org.wordpress.android.util.DeviceUtils
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,7 +17,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.UrlUtils
-import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.applicationPasswordsUrl
@@ -38,8 +36,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val wpLoginClient: WpLoginClient,
     private val appLogWrapper: AppLogWrapper,
     private val apiRootUrlCache: ApiRootUrlCache,
-    private val discoverSuccessWrapper: DiscoverSuccessWrapper,
-    private val crashLogging: CrashLogging
+    private val discoverSuccessWrapper: DiscoverSuccessWrapper
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -150,12 +147,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         AnalyticsTracker.track(
             Stat.APPLICATION_PASSWORD_STORING_FAILED,
             properties
-        )
-        crashLogging.sendReportWithTag(
-            exception = Exception(
-                "A_P: storing failed for $siteUrl - $reason"
-            ),
-            tag = AppLog.T.DB
         )
     }
 

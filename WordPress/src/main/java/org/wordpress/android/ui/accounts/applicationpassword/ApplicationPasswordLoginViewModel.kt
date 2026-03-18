@@ -69,7 +69,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     "A_P: Cannot store credentials: rawData is empty"
                 )
                 applicationPasswordLoginHelper.trackStoringFailed("", "empty_raw_data")
-                emitError(siteUrl = "", errorMessage = "Callback data was empty")
+                emitError(siteUrl = "", errorMessage = "empty_raw_data")
                 return@launch
             }
             val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
@@ -97,6 +97,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 AppLog.T.DB,
                 "A_P: Error storing credentials: ${e.stackTraceToString()}"
             )
+            applicationPasswordLoginHelper.trackStoringFailed(
+                urlLogin.siteUrl, "store_credentials_exception"
+            )
+            crashLogging.sendReportWithTag(e, AppLog.T.DB)
             false
         }
     }
@@ -123,10 +127,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 )
                 emitError(
                     siteUrl = siteUrl,
-                    errorMessage = "Missing login data — " +
-                        "username empty: ${username.isEmpty()}, " +
-                        "password empty: ${password.isEmpty()}, " +
-                        "apiRootUrl empty: ${apiRootUrl.isEmpty()}"
+                    errorMessage = "empty_fetch_params"
                 )
             } else {
                 val xmlRpcEndpoint =
@@ -198,8 +199,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         )
         emitError(
             siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
-            errorMessage = "SiteStore error: " +
-                "${error?.type} — ${error?.message}"
+            errorMessage = "site_store_error"
         )
     }
 
@@ -214,19 +214,20 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             }
         } catch (e: Exception) {
             logAndEmitSiteChangedError(
-                "exception reading sites from DB: " +
+                logMessage = "exception reading sites from DB: " +
                     e.stackTraceToString(),
-                "Failed to read sites: ${e.message}",
-                e
+                errorCode = "db_read_exception",
+                cause = e
             )
             return
         }
 
-        val errorMessage = validateSiteChanged(
-            event, site, normalizedUrl
-        )
-        if (errorMessage != null) {
-            logAndEmitSiteChangedError(errorMessage, errorMessage)
+        val validationError = validateSiteChanged(event, site)
+        if (validationError != null) {
+            logAndEmitSiteChangedError(
+                logMessage = validationError.logMessage,
+                errorCode = validationError.errorCode
+            )
         } else {
             val resolvedSite = site ?: return
             _onFinishedEvent.emit(
@@ -244,21 +245,33 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
 
     private fun validateSiteChanged(
         event: OnSiteChanged,
-        site: SiteModel?,
-        normalizedUrl: String?
-    ): String? = when {
-        event.rowsAffected < 1 ->
-            "No rows affected (rowsAffected=${event.rowsAffected})"
-        site == null ->
-            "Site not found for URL: $normalizedUrl"
-        applicationPasswordLoginHelper.siteHasBadCredentials(site) ->
-            "Credentials are empty for site: $normalizedUrl"
+        site: SiteModel?
+    ): SiteChangedValidationError? = when {
+        event.rowsAffected < 1 -> SiteChangedValidationError(
+            logMessage = "No rows affected " +
+                "(rowsAffected=${event.rowsAffected})",
+            errorCode = "no_rows_affected"
+        )
+        site == null -> SiteChangedValidationError(
+            logMessage = "Site not found after update",
+            errorCode = "site_not_found"
+        )
+        applicationPasswordLoginHelper
+            .siteHasBadCredentials(site) -> SiteChangedValidationError(
+            logMessage = "Credentials are empty after store",
+            errorCode = "empty_credentials"
+        )
         else -> null
     }
 
+    private data class SiteChangedValidationError(
+        val logMessage: String,
+        val errorCode: String
+    )
+
     private suspend fun logAndEmitSiteChangedError(
         logMessage: String,
-        errorMessage: String,
+        errorCode: String,
         cause: Throwable? = null
     ) {
         appLogWrapper.e(
@@ -271,7 +284,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         )
         emitError(
             siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
-            errorMessage = errorMessage,
+            errorMessage = errorCode,
             cause = cause
         )
     }

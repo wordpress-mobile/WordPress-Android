@@ -1495,8 +1495,9 @@ open class SiteStore @Inject constructor(
                     )
                 )
             } catch (e: Exception) {
-                AppLog.e(T.API, "Failed to fetch/store sites: ${e.message}", e)
-                OnSiteChanged(SiteError(SiteErrorType.GENERIC_ERROR, e.message))
+                val errorMsg = e.message ?: e.javaClass.simpleName
+                AppLog.e(T.API, "Failed to fetch/store sites: $errorMsg", e)
+                OnSiteChanged(SiteError(SiteErrorType.GENERIC_ERROR, errorMsg))
             }
         }
     }
@@ -1576,12 +1577,13 @@ open class SiteStore @Inject constructor(
         } catch (e: DuplicateSiteException) {
             OnSiteChanged(SiteError(DUPLICATE_SITE))
         } catch (e: Exception) {
+            val errorMsg = e.message ?: e.javaClass.simpleName
             AppLog.e(
                 T.DB,
-                "Failed to update application password: ${e.message}",
+                "Failed to update application password: $errorMsg",
                 e
             )
-            OnSiteChanged(SiteError(SiteErrorType.GENERIC_ERROR, e.message))
+            OnSiteChanged(SiteError(SiteErrorType.GENERIC_ERROR, errorMsg))
         }
     }
 
