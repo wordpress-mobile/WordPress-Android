@@ -1381,9 +1381,6 @@ Language: es_CO
     <string name="login_find_your_connected_email" a8c-src-lib="module:login">Encuentra tu correo electrónico conectado</string>
     <string name="continue_site_credentials" a8c-src-lib="module:login">Continuar con las credenciales de la tienda</string>
     <string name="reader_discover_no_posts_follow_subtitle">Prueba a seguir más etiquetas para ampliar la búsqueda</string>
-    <string name="login_prologue_third_subtitle_one">A &lt;b&gt;Madison Ruíz&lt;/b&gt; le ha gustado tu entrada</string>
-    <string name="login_prologue_third_subtitle_two">Hoy has recibido &lt;b&gt;50 me gusta&lt;/b&gt; en tu sitio</string>
-    <string name="login_prologue_third_subtitle_three">&lt;b&gt;Juan Gómez&lt;/b&gt; ha respondido en tu entrada</string>
     <string name="hpp_choose_button">Elegir</string>
     <string name="mlp_network_error_subtitle">Toca «Reintentar» cuando vuelvas a estar en línea o crea una página en blanco usando el botón a continuación.</string>
     <string name="mlp_network_error_title">Los diseños no están disponibles sin conexión</string>
@@ -1394,25 +1391,6 @@ Language: es_CO
     <string name="prepublishing_nudges_home_categories_not_set">No establecido</string>
     <string name="prepublishing_nudges_categories_action">Categorías</string>
     <string name="prepublishing_nudges_add_category_button">Añadir una categoría</string>
-    <string name="login_prologue_fifth_caption_three">Museos en Londres</string>
-    <string name="login_prologue_fifth_caption_two">Los mejores fanáticos del mundo</string>
-    <string name="login_prologue_fifth_caption_one">Mis diez mejores cafés</string>
-    <string name="login_prologue_fifth_tag_six">Política</string>
-    <string name="login_prologue_fifth_tag_five">Música</string>
-    <string name="login_prologue_fifth_tag_four">Jardinería</string>
-    <string name="login_prologue_fifth_tag_three">Fútbol</string>
-    <string name="login_prologue_fifth_tag_two">Cocina</string>
-    <string name="login_prologue_fifth_tag_one">Arte</string>
-    <string name="login_prologue_fifth_subtitle_three">Rock n\' roll semanal</string>
-    <string name="login_prologue_fifth_subtitle_two">Noticias web</string>
-    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
-    <string name="login_prologue_second_subtitle_two">Estoy muy inspirado por el trabajo del fotógrafo Cameron Karsten. Probaré estas técnicas en mi próximo</string>
-    <string name="login_prologue_second_subtitle_one">Inspírate</string>
-    <string name="login_prologue_title_fourth">Observa cómo crece tu audiencia con analíticas avanzadas.</string>
-    <string name="login_prologue_title_second">Con el potente editor puedes publicar sobre la marcha.</string>
-    <string name="login_prologue_title_first">Bienvenido al maquetador web más popular del mundo.</string>
-    <string name="login_prologue_title_third">Mira los comentarios y avisos en tiempo real.</string>
-    <string name="login_prologue_title_fifth">Sigue tus sitios favoritos y descubre nuevos blogs.</string>
     <string name="media_loading_failed">La carga del medio ha fallado</string>
     <string name="mlp_notice_blank_page_created">Página en blanco creada</string>
     <string name="mlp_notice_page_created">Página creada</string>

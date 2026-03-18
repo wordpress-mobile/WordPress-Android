@@ -1,8 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- On API 29+, disable navigation bar contrast enforcement -->
+    <style name="LoginTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Type attributes -->
+        <item name="textAppearanceHeadline1">@style/TextAppearance.LoginFlow.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.LoginFlow.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.LoginFlow.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.LoginFlow.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.LoginFlow.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.LoginFlow.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.LoginFlow.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.LoginFlow.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.LoginFlow.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.LoginFlow.Body2</item>
+        <item name="textAppearanceButton">@style/TextAppearance.LoginFlow.Button</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.LoginFlow.Caption</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.LoginFlow.Overline</item>
 
-    <style name="LoginTheme.TransparentSystemBars" parent="LoginTheme.BaseTransparentSystemBars">
+        <!-- Shape attributes -->
+        <item name="shapeAppearanceSmallComponent">
+            @style/ShapeAppearance.LoginFlow.SmallComponent
+        </item>
+        <item name="shapeAppearanceMediumComponent">
+            @style/ShapeAppearance.LoginFlow.MediumComponent
+        </item>
+        <item name="shapeAppearanceLargeComponent">
+            @style/ShapeAppearance.LoginFlow.LargeComponent
+        </item>
+
+        <!-- Component styles -->
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.Dialog.Alert
+        </item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.LoginFlow.BottomSheetDialog</item>
+        <item name="appBarLayoutStyle">@style/Widget.LoginFlow.AppBarLayout</item>
+        <item name="toolbarStyle">@style/Widget.LoginFlow.Toolbar</item>
+
+        <!-- Makes the toolbar action mode behave correctly on older API levels -->
+        <item name="windowActionModeOverlay">true</item>
+
+        <!-- Colors -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+        <item name="android:colorBackground">@color/white</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorError">@color/red_50</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorOnBackground">@color/black</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="colorOnError">@color/white</item>
+
+        <!-- System bars (transparent) -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar">true</item>
         <item name="android:enforceNavigationBarContrast">false</item>
     </style>
-
 </resources>

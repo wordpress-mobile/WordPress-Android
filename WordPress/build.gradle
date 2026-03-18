@@ -168,7 +168,6 @@ android {
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
         buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "true"
-        buildConfigField "boolean", "ENABLE_SIGNUP", "true"
         buildConfigField "boolean", "ENABLE_READER", "true"
         buildConfigField "boolean", "ENABLE_CREATE_FAB", "true"
         buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
@@ -221,7 +220,6 @@ android {
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
             buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "true"
-            buildConfigField "boolean", "ENABLE_SIGNUP", "true"
             buildConfigField "boolean", "ENABLE_READER", "true"
             buildConfigField "boolean", "ENABLE_CREATE_FAB", "true"
             buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
@@ -373,7 +371,6 @@ dependencies {
             strictly libs.wordpress.utils.get().version
         }
     }
-    implementation project(":libs:login")
     implementation project(":libs:posttypes")
     implementation("$gradle.ext.aboutAutomatticBinaryPath:${libs.versions.automattic.about.get()}")
 
@@ -415,7 +412,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.process)
     implementation(libs.android.volley)
     implementation(libs.google.play.review)
-    implementation(libs.google.play.services.auth)
     implementation(libs.google.mlkit.barcode.scanning.common)
     implementation(libs.google.mlkit.text.recognition)
     implementation(libs.google.mlkit.barcode.scanning.main)
@@ -587,10 +583,6 @@ if (!file("google-services.json").exists()) {
     }
 }
 
-// Print warning message if example Google services file is used.
-if ((file('google-services.json').text) == (file('google-services.json-example').text)) {
-    println("WARNING: You're using the example google-services.json file. Google login will fail.")
-}
 
 tasks.register("printVersionName") {
     def versionName = android.defaultConfig.versionName

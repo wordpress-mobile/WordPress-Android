@@ -80,6 +80,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     private lateinit var notesAdapter: NotesAdapter
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var isAnimatingOutNewNotificationsBar = false
+    private var isFetchingRemoteNotes = false
     private var tabPosition = 0
     private val viewModel: NotificationsListViewModel by viewModels()
 
@@ -171,7 +172,14 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         binding?.apply {
             if (itemsCount > 0) {
                 hideEmptyView()
+                progressLoading.visibility = View.GONE
+            } else if (isFetchingRemoteNotes) {
+                // Show loading spinner while fetching and list is empty
+                progressLoading.visibility = View.VISIBLE
+                actionableEmptyView.visibility = View.GONE
+                notificationsList.visibility = View.GONE
             } else {
+                progressLoading.visibility = View.GONE
                 showEmptyViewForCurrentFilter()
             }
         }
@@ -185,6 +193,8 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         super.onResume()
         binding?.hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
+        // Fetch remote notes when resumed (e.g., after login or returning to this screen)
+        fetchRemoteNotes()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -268,8 +278,11 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
         if (!NetworkUtils.isNetworkAvailable(activity)) {
             swipeToRefreshHelper?.isRefreshing = false
+            isFetchingRemoteNotes = false
+            updateEmptyLayouts(notesAdapter.itemCount)
             return
         }
+        isFetchingRemoteNotes = true
         swipeToRefreshHelper?.isRefreshing = true
         NotificationsUpdateServiceStarter.startService(activity)
     }
@@ -488,6 +501,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         if (!isAdded) {
             return
         }
+        isFetchingRemoteNotes = false
         swipeToRefreshHelper?.isRefreshing = false
         notesAdapter.addAll(event.notes)
     }
@@ -496,7 +510,9 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(error: NotificationsRefreshError?) {
         if (isAdded) {
+            isFetchingRemoteNotes = false
             swipeToRefreshHelper?.isRefreshing = false
+            updateEmptyLayouts(notesAdapter.itemCount)
         }
     }
 

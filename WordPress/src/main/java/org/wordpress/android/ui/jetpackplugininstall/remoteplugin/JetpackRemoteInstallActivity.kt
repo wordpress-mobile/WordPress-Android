@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.login.LoginMode
+import org.wordpress.android.ui.accounts.LoginFlow
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.JetpackConnectionSource
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
@@ -101,7 +101,7 @@ class JetpackRemoteInstallActivity : BaseAppCompatActivity() {
         source: JetpackConnectionSource
     ) {
         val loginIntent = Intent(this, LoginActivity::class.java)
-        LoginMode.JETPACK_STATS.putInto(loginIntent)
+        LoginFlow.JETPACK_STATS.putInto(loginIntent)
         loginIntent.putExtra(LoginActivity.ARG_JETPACK_CONNECT_SOURCE, source)
         startActivityForResult(loginIntent, RequestCodes.JETPACK_LOGIN)
     }

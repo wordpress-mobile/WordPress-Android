@@ -1,110 +1,25 @@
 package org.wordpress.android.e2e.flows
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.widget.EditText
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
-import org.hamcrest.CoreMatchers
-import org.hamcrest.Matchers
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.e2e.pages.HelpScreen
 import org.wordpress.android.e2e.pages.LandingPage.tapContinueWithWpCom
 import org.wordpress.android.e2e.pages.LandingPage.tapEnterYourSiteAddress
 import org.wordpress.android.support.WPSupportUtils
-import org.wordpress.android.login.R as LoginR
 
 class LoginFlow {
     fun chooseContinueWithWpCom(composeTestRule: ComposeTestRule?): LoginFlow {
         // Login Prologue – We want to Continue with WordPress.com, not a site address
+        // Note: WP.com login now uses web-based OAuth flow via Custom Tabs
         tapContinueWithWpCom(composeTestRule!!)
-        return this
-    }
-
-    fun enterEmailAddress(emailAddress: String?): LoginFlow {
-        // Email Address Screen – Fill it in and click "Continue"
-        // See LoginEmailFragment
-        WPSupportUtils.populateTextField(R.id.input, emailAddress)
-        WPSupportUtils.clickOn(LoginR.id.login_continue_button)
-        return this
-    }
-
-    fun enterPassword(password: String?): LoginFlow {
-        // Password Screen – Fill it in and click "Continue"
-        // See LoginEmailPasswordFragment
-        WPSupportUtils.populateTextField(R.id.input, password)
-        WPSupportUtils.clickOn(R.id.bottom_button)
-        return this
-    }
-
-    fun chooseMagicLink(): LoginFlow {
-        // Password Screen – Choose "Get a login link by email"
-        // See LoginEmailPasswordFragment
-        WPSupportUtils.clickOn(LoginR.id.login_get_email_link)
-        return this
-    }
-
-    fun openMagicLink(): LoginFlow {
-        // Magic Link Sent Screen – Should see "Check email" button
-        // See LoginMagicLinkSentFragment
-        WPSupportUtils.waitForElementToBeDisplayed(LoginR.id.login_open_email_client)
-
-        // Follow the magic link to continue login
-        // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background
-        val appVariant = BuildConfig.FLAVOR
-        val intent =
-            Intent(Intent.ACTION_VIEW, Uri.parse("$appVariant://magic-login?token=valid_token"))
-                .setPackage(ApplicationProvider.getApplicationContext<Context>().packageName)
-        ActivityScenario.launch<Activity>(intent)
-        return this
-    }
-
-    fun enterUsernameAndPassword(username: String, password: String): LoginFlow {
-        val usernameElement = Espresso.onView(
-            CoreMatchers.allOf(
-                ViewMatchers.isDescendantOfA(ViewMatchers.withId(LoginR.id.login_username_row)),
-                Matchers.instanceOf(EditText::class.java)
-            )
-        )
-        val passwordElement = Espresso.onView(
-            CoreMatchers.allOf(
-                ViewMatchers.isDescendantOfA(ViewMatchers.withId(LoginR.id.login_password_row)),
-                Matchers.instanceOf(EditText::class.java)
-            )
-        )
-        WPSupportUtils.populateTextField(
-            usernameElement, """
-     $username
-
-     """.trimIndent()
-        )
-        WPSupportUtils.populateTextField(
-            passwordElement, """
-     $password
-
-     """.trimIndent()
-        )
-        WPSupportUtils.clickOn(R.id.bottom_button)
         return this
     }
 
     fun chooseEnterYourSiteAddress(composeTestRule: ComposeTestRule?): LoginFlow {
         // Login Prologue – We want to continue with a site address not a WordPress.com account
         tapEnterYourSiteAddress(composeTestRule!!)
-        return this
-    }
-
-    fun enterSiteAddress(siteAddress: String?): LoginFlow {
-        // Site Address Screen – Fill it in and click "Continue"
-        // See LoginSiteApplicationPasswordFragment
-        WPSupportUtils.populateTextField(R.id.input, siteAddress)
-        WPSupportUtils.clickOn(R.id.bottom_button)
         return this
     }
 
