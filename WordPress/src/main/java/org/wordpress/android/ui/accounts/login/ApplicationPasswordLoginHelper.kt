@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.login
 
 import android.content.Context
 import androidx.core.net.toUri
+import com.automattic.android.tracks.crashlogging.CrashLogging
 import org.wordpress.android.R
 import org.wordpress.android.util.DeviceUtils
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,6 +18,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.applicationPasswordsUrl
@@ -36,7 +38,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val wpLoginClient: WpLoginClient,
     private val appLogWrapper: AppLogWrapper,
     private val apiRootUrlCache: ApiRootUrlCache,
-    private val discoverSuccessWrapper: DiscoverSuccessWrapper
+    private val discoverSuccessWrapper: DiscoverSuccessWrapper,
+    private val crashLogging: CrashLogging
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -105,6 +108,22 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     "${urlLogin.siteUrl == processedAppPasswordData}"
             )
             trackStoringFailed(urlLogin.siteUrl, "bad_data")
+            crashLogging.sendReportWithTag(
+                Exception(
+                    "A_P: bad_data for ${urlLogin.siteUrl}" +
+                        " — apiRootUrl isNull=" +
+                        "${urlLogin.apiRootUrl == null}" +
+                        ", user isEmpty=" +
+                        "${urlLogin.user.isNullOrEmpty()}" +
+                        ", password isEmpty=" +
+                        "${urlLogin.password.isNullOrEmpty()}" +
+                        ", siteUrl isNull=" +
+                        "${urlLogin.siteUrl == null}" +
+                        ", alreadyProcessed=" +
+                        "${urlLogin.siteUrl == processedAppPasswordData}"
+                ),
+                AppLog.T.DB
+            )
             return false
         }
 
@@ -135,6 +154,16 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                         " (${siteStore.sites.size} sites available)"
                 )
                 trackStoringFailed(urlLogin.siteUrl, "site_not_found")
+                crashLogging.sendReportWithTag(
+                    Exception(
+                        "A_P: site_not_found for " +
+                            "${urlLogin.siteUrl}" +
+                            " (normalized: $normalizedUrl)" +
+                            " — ${siteStore.sites.size} sites" +
+                            " available"
+                    ),
+                    AppLog.T.DB
+                )
                 false
             }
         }

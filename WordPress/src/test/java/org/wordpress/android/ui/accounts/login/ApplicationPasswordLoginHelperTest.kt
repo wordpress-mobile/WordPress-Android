@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login
 
 import android.content.Context
+import com.automattic.android.tracks.crashlogging.CrashLogging
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -67,6 +68,9 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     @Mock
     lateinit var apiRootUrlCache: ApiRootUrlCache
 
+    @Mock
+    lateinit var crashLogging: CrashLogging
+
     private lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 
     @Before
@@ -81,7 +85,8 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             wpLoginClient,
             appLogWrapper,
             apiRootUrlCache,
-            discoverSuccessWrapper
+            discoverSuccessWrapper,
+            crashLogging
         )
     }
 
@@ -154,7 +159,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
 
             assertFalse(result)
-            verify(siteStore, times(2)).sites
+            verify(siteStore, times(3)).sites
             verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
             verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
         }
