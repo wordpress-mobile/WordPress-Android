@@ -88,41 +88,16 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     @Suppress("ComplexCondition")
-    suspend fun storeApplicationPasswordCredentialsFrom(urlLogin: UriLogin): Boolean {
+    suspend fun storeApplicationPasswordCredentialsFrom(
+        urlLogin: UriLogin
+    ): Boolean {
         if (urlLogin.apiRootUrl == null ||
             urlLogin.user.isNullOrEmpty() ||
             urlLogin.password.isNullOrEmpty() ||
             urlLogin.siteUrl == null ||
             urlLogin.siteUrl == processedAppPasswordData
-            ) {
-            appLogWrapper.e(
-                AppLog.T.DB,
-                "A_P: Cannot save application password credentials" +
-                    " for: ${urlLogin.siteUrl}" +
-                    " - apiRootUrl isNull=${urlLogin.apiRootUrl == null}" +
-                    ", user isEmpty=${urlLogin.user.isNullOrEmpty()}" +
-                    ", password isEmpty=${urlLogin.password.isNullOrEmpty()}" +
-                    ", siteUrl isNull=${urlLogin.siteUrl == null}" +
-                    ", alreadyProcessed=" +
-                    "${urlLogin.siteUrl == processedAppPasswordData}"
-            )
-            trackStoringFailed(urlLogin.siteUrl, "bad_data")
-            crashLogging.sendReportWithTag(
-                Exception(
-                    "A_P: bad_data for ${urlLogin.siteUrl}" +
-                        " — apiRootUrl isNull=" +
-                        "${urlLogin.apiRootUrl == null}" +
-                        ", user isEmpty=" +
-                        "${urlLogin.user.isNullOrEmpty()}" +
-                        ", password isEmpty=" +
-                        "${urlLogin.password.isNullOrEmpty()}" +
-                        ", siteUrl isNull=" +
-                        "${urlLogin.siteUrl == null}" +
-                        ", alreadyProcessed=" +
-                        "${urlLogin.siteUrl == processedAppPasswordData}"
-                ),
-                AppLog.T.DB
-            )
+        ) {
+            logAndReportBadData(urlLogin)
             return false
         }
 
@@ -144,24 +119,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 processedAppPasswordData = urlLogin.siteUrl // Save locally to avoid duplicated calls
                 true
             } else {
-                appLogWrapper.e(
-                    AppLog.T.DB,
-                    "A_P: Cannot save application password" +
-                        " credentials for: ${urlLogin.siteUrl}" +
-                        " (normalized: $normalizedUrl)" +
-                        " - site not found in store" +
-                        " (${siteStore.sites.size} sites available)"
-                )
-                trackStoringFailed(urlLogin.siteUrl, "site_not_found")
-                crashLogging.sendReportWithTag(
-                    Exception(
-                        "A_P: site_not_found for " +
-                            "${urlLogin.siteUrl}" +
-                            " (normalized: $normalizedUrl)" +
-                            " — ${siteStore.sites.size} sites" +
-                            " available"
-                    ),
-                    AppLog.T.DB
+                logAndReportSiteNotFound(
+                    urlLogin.siteUrl, normalizedUrl
                 )
                 false
             }
@@ -176,6 +135,49 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             Stat.APPLICATION_PASSWORD_STORING_FAILED,
             properties
         )
+    }
+
+    private fun reportStoringFailedToSentry(
+        reason: String,
+        detail: String
+    ) {
+        crashLogging.sendReportWithTag(
+            Exception("A_P: $reason — $detail"),
+            AppLog.T.DB
+        )
+    }
+
+    private fun logAndReportBadData(urlLogin: UriLogin) {
+        val detail =
+            "apiRootUrl isNull=${urlLogin.apiRootUrl == null}" +
+                ", user isEmpty=${urlLogin.user.isNullOrEmpty()}" +
+                ", password isEmpty=" +
+                "${urlLogin.password.isNullOrEmpty()}" +
+                ", siteUrl isNull=${urlLogin.siteUrl == null}" +
+                ", alreadyProcessed=" +
+                "${urlLogin.siteUrl == processedAppPasswordData}"
+        appLogWrapper.e(
+            AppLog.T.DB,
+            "A_P: Cannot save credentials" +
+                " for: ${urlLogin.siteUrl} - $detail"
+        )
+        trackStoringFailed(urlLogin.siteUrl, "bad_data")
+        reportStoringFailedToSentry("bad_data", detail)
+    }
+
+    private fun logAndReportSiteNotFound(
+        siteUrl: String?,
+        normalizedUrl: String?
+    ) {
+        val detail = "$siteUrl (normalized: $normalizedUrl)" +
+            " — ${siteStore.sites.size} sites available"
+        appLogWrapper.e(
+            AppLog.T.DB,
+            "A_P: Cannot save credentials" +
+                " - site not found: $detail"
+        )
+        trackStoringFailed(siteUrl, "site_not_found")
+        reportStoringFailedToSentry("site_not_found", detail)
     }
 
     private fun trackSuccessful(siteUrl: String) {
