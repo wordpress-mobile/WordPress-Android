@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
-                android:text="\u00B7"
+                android:text="@string/activity_log_metadata_separator"
                 android:textAppearance="?attr/textAppearanceCaption"
                 android:visibility="gone"
                 tools:visibility="visible" />

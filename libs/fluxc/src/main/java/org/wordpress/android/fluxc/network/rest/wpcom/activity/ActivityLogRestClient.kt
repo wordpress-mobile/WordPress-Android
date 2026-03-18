@@ -457,6 +457,7 @@ class ActivityLogRestClient @Inject constructor(
             val activity_id: String?
         )
 
+        @Suppress("LongParameterList")
         class Actor(
             val type: String?,
             val name: String?,
