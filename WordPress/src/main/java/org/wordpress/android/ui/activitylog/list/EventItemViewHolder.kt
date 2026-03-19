@@ -12,13 +12,15 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 
 class EventItemViewHolder(
     parent: ViewGroup,
     private val itemClickListener: (ActivityLogListItem) -> Unit,
-    private val secondaryActionClickListener: (SecondaryAction, ActivityLogListItem) -> Boolean
+    private val secondaryActionClickListener: (SecondaryAction, ActivityLogListItem) -> Boolean,
+    private val uiHelpers: UiHelpers
 ) : ActivityLogViewHolder(parent, R.layout.activity_log_list_event_item) {
     private val summary: TextView = itemView.findViewById(R.id.action_summary)
     private val text: TextView = itemView.findViewById(R.id.action_text)
@@ -43,14 +45,10 @@ class EventItemViewHolder(
         summary.text = activity.title
         text.text = activity.description
 
-        if (activity.actorMetadata != null) {
-            metadataSeparator.visibility = View.VISIBLE
-            metadata.visibility = View.VISIBLE
-            metadata.text = activity.actorMetadata
-        } else {
-            metadataSeparator.visibility = View.GONE
-            metadata.visibility = View.GONE
-        }
+        uiHelpers.setTextOrHide(metadata, activity.actorMetadata)
+        uiHelpers.updateVisibility(
+            metadataSeparator, activity.actorMetadata != null
+        )
 
         ColorUtils.setImageResourceWithTint(
             actionButton,

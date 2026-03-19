@@ -205,14 +205,9 @@ class ActivityLogViewModel @Inject constructor(
                 rewindDisabled = withRestoreProgressItem || withBackupDownloadProgressItem,
                 isRestoreHidden = restoreEvent.isRestoreHidden
             ).let { event ->
-                val client = model.actor?.mcpClient
-                if (model.actor?.isMCPAgent == true && !client.isNullOrEmpty()) {
-                    event.copy(
-                        actorMetadata = resourceProvider.getString(
-                            R.string.activity_log_mcp_agent_label,
-                            client
-                        )
-                    )
+                val metadata = model.actor?.formattedMcpMetadata(resourceProvider)
+                if (metadata != null) {
+                    event.copy(actorMetadata = metadata)
                 } else {
                     event
                 }

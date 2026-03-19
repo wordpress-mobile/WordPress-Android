@@ -107,10 +107,10 @@ class ActivityLogDetailViewModel @Inject constructor(
 
 
     private fun findAndPostActivityLogItemDetail() {
-        val model = activityLogStore
+        activityLogStore
             .getActivityLogForSite(site)
             .find { it.activityID == activityLogId }
-        model?.toActivityLogDetailModel()
+            ?.toActivityLogDetailModel()
             ?.let {
                 _item.value = it
             } ?: findAndPostActivityLogItemDetailViaDashboardCardsIfNeeded()
@@ -148,16 +148,7 @@ class ActivityLogDetailViewModel @Inject constructor(
             isRewindButtonVisible = rewindable ?: false,
             actorName = actorSnapshot?.displayName,
             actorRole = actorSnapshot?.role,
-            actorMetadata = actorSnapshot?.mcpClient
-                ?.takeIf { client ->
-                    actorSnapshot.isMCPAgent && client.isNotEmpty()
-                }
-                ?.let { client ->
-                    resourceProvider.getString(
-                        R.string.activity_log_mcp_agent_label,
-                        client
-                    )
-                },
+            actorMetadata = actorSnapshot?.formattedMcpMetadata(resourceProvider),
             content = content,
             summary = summary,
             createdDate = published.toFormattedDateString(),
