@@ -1133,8 +1133,7 @@ class PostRsSettingsViewModel @Inject constructor(
             } catch (e: Exception) {
                 AppLog.w(
                     AppLog.T.POSTS,
-                    "resolveSitePostFormats failed: " +
-                        "${e.message}"
+                    "resolveSitePostFormats failed: ${e.message}"
                 )
             }
         }
