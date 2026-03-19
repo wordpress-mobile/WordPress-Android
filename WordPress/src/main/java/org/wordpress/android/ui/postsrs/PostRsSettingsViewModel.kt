@@ -943,6 +943,7 @@ class PostRsSettingsViewModel @Inject constructor(
         ) { names ->
             _uiState.update { it.copy(tagNames = names) }
         }
+        resolveSitePostFormats()
     }
 
     @Suppress("ComplexCondition", "CyclomaticComplexMethod")
@@ -1111,6 +1112,30 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
+    private fun resolveSitePostFormats() {
+        val site = site ?: return
+        viewModelScope.launch {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val formats =
+                    withContext(Dispatchers.IO) {
+                        restClient.fetchSitePostFormats(site)
+                    }
+                _uiState.update {
+                    it.copy(sitePostFormats = formats)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "resolveSitePostFormats failed: " +
+                        "${e.message}"
+                )
+            }
+        }
+    }
+
     private fun formatDate(dateGmt: Date): String {
         val fmt = DateFormat.getDateTimeInstance(
             DateFormat.MEDIUM,
@@ -1138,6 +1163,7 @@ class PostRsSettingsViewModel @Inject constructor(
         editedFeaturedImageId = from.editedFeaturedImageId,
         editedCategoryIds = from.editedCategoryIds,
         editedTagIds = from.editedTagIds,
+        sitePostFormats = from.sitePostFormats,
     )
 
     private class PostApiRequestException(message: String) :

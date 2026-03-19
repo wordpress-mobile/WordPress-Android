@@ -1043,6 +1043,7 @@ private fun SettingsDialogs(
         is DialogState.FormatDialog -> FormatDialog(
             currentFormat = uiState.editedFormat
                 ?: uiState.postFormat,
+            formats = uiState.sitePostFormats,
             onFormatSelected = onFormatSelected,
             onDismiss = onDismissDialog,
         )
@@ -1344,27 +1345,13 @@ private fun ExcerptDialog(
     )
 }
 
-@Suppress("ForbiddenComment")
 @Composable
 private fun FormatDialog(
     currentFormat: PostFormat?,
+    formats: List<PostFormat>,
     onFormatSelected: (PostFormat) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    // TODO: Replace hardcoded formats with site-supported
-    //  formats once wordpress-rs exposes that API
-    val formats = listOf(
-        PostFormat.Standard,
-        PostFormat.Aside,
-        PostFormat.Audio,
-        PostFormat.Chat,
-        PostFormat.Gallery,
-        PostFormat.Image,
-        PostFormat.Link,
-        PostFormat.Quote,
-        PostFormat.Status,
-        PostFormat.Video,
-    )
     val labels = formats.map { postFormatLabel(it) }
     val currentIndex = formats.indexOfFirst {
         it == currentFormat

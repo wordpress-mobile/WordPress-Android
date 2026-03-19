@@ -11,9 +11,14 @@ import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyTermWithViewContext
 import uniffi.wp_api.MediaListParams
+import uniffi.wp_api.PostFormat
 import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
+import uniffi.wp_api.ThemeListParams
+import uniffi.wp_api.ThemeStatus
+import uniffi.wp_api.ThemeSupports
+import uniffi.wp_api.ThemeSupportsData
 import uniffi.wp_api.UserListParams
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -335,6 +340,88 @@ class PostRsRestClient @Inject constructor(
         }
     }
 
+    /**
+     * Fetches the post formats supported by the site's active
+     * theme. Returns [DEFAULT_POST_FORMATS] on failure or when
+     * the theme does not declare format support.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun fetchSitePostFormats(
+        site: SiteModel,
+    ): List<PostFormat> {
+        return try {
+            val client = wpApiClientProvider.getWpApiClient(site)
+            val response = client.request {
+                it.themes().listWithViewContext(
+                    ThemeListParams(
+                        status = ThemeStatus.Active
+                    )
+                )
+            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    val theme =
+                        response.response.data.firstOrNull()
+                            ?: return DEFAULT_POST_FORMATS
+                    val supports = theme.themeSupports
+                        ?: return DEFAULT_POST_FORMATS
+                    val data = supports[ThemeSupports.Formats]
+                        ?: return DEFAULT_POST_FORMATS
+                    val slugs =
+                        (data as? ThemeSupportsData.VecString)
+                            ?.v1
+                            ?: return DEFAULT_POST_FORMATS
+                    if (slugs.isEmpty()) {
+                        return DEFAULT_POST_FORMATS
+                    }
+                    val formats = slugs
+                        .map { slugToPostFormat(it) }
+                        .toMutableList()
+                    if (formats.none {
+                            it is PostFormat.Standard
+                        }
+                    ) {
+                        formats.add(0, PostFormat.Standard)
+                    }
+                    formats
+                }
+                else -> {
+                    val msg =
+                        (response
+                            as? WpRequestResult.WpError<*>)
+                            ?.errorMessage
+                    AppLog.w(
+                        AppLog.T.POSTS,
+                        "fetchSitePostFormats failed: $msg"
+                    )
+                    DEFAULT_POST_FORMATS
+                }
+            }
+        } catch (e: Exception) {
+            AppLog.w(
+                AppLog.T.POSTS,
+                "fetchSitePostFormats exception: " +
+                    "${e.message}"
+            )
+            DEFAULT_POST_FORMATS
+        }
+    }
+
+    private fun slugToPostFormat(slug: String): PostFormat =
+        when (slug) {
+            "standard" -> PostFormat.Standard
+            "aside" -> PostFormat.Aside
+            "audio" -> PostFormat.Audio
+            "chat" -> PostFormat.Chat
+            "gallery" -> PostFormat.Gallery
+            "image" -> PostFormat.Image
+            "link" -> PostFormat.Link
+            "quote" -> PostFormat.Quote
+            "status" -> PostFormat.Status
+            "video" -> PostFormat.Video
+            else -> PostFormat.Custom(slug)
+        }
+
     private fun toPhotonUrl(
         site: SiteModel,
         sourceUrl: String,
@@ -363,5 +450,18 @@ class PostRsRestClient @Inject constructor(
     companion object {
         internal const val AUTHORS_PER_PAGE: UInt = 20u
         private const val PER_PAGE = 100u
+
+        val DEFAULT_POST_FORMATS = listOf(
+            PostFormat.Standard,
+            PostFormat.Aside,
+            PostFormat.Audio,
+            PostFormat.Chat,
+            PostFormat.Gallery,
+            PostFormat.Image,
+            PostFormat.Link,
+            PostFormat.Quote,
+            PostFormat.Status,
+            PostFormat.Video,
+        )
     }
 }
