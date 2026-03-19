@@ -297,23 +297,16 @@ android {
         }
     }
 
-    packagingOptions {
-        // MPAndroidChart uses androidX - remove this line when we migrate everything to androidX
-        exclude 'META-INF/proguard/androidx-annotations.pro'
-
-        // Exclude React Native's JSC and Fabric JNI
-        exclude '**/libjscexecutor.so'
-        exclude '**/libfabricjni.so'
-
-        // Avoid React Native's JNI duplicated classes
-        pickFirst '**/libc++_shared.so'
-        pickFirst '**/libfbjni.so'
-
-        pickFirst 'META-INF/-no-jdk.kotlin_module'
-
-        // OkHttp 5.x: Pick first OSGI manifest from multi-release JARs
-        pickFirst 'META-INF/versions/9/OSGI-INF/MANIFEST.MF'
-
+    packaging {
+        resources {
+            excludes += 'META-INF/proguard/androidx-annotations.pro'
+            excludes += '**/libjscexecutor.so'
+            excludes += '**/libfabricjni.so'
+            pickFirsts += '**/libc++_shared.so'
+            pickFirsts += '**/libfbjni.so'
+            pickFirsts += 'META-INF/-no-jdk.kotlin_module'
+            pickFirsts += 'META-INF/versions/9/OSGI-INF/MANIFEST.MF'
+        }
     }
 
     bundle {

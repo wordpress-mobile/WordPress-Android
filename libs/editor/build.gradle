@@ -21,13 +21,14 @@ android {
         targetCompatibility JvmTarget.fromTarget(libs.versions.java.get()).target
     }
 
-    // Avoid 'duplicate files during packaging of APK' errors
-    packagingOptions {
-        exclude 'LICENSE.txt'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/NOTICE.txt'
+    packaging {
+        resources {
+            excludes += 'LICENSE.txt'
+            excludes += 'META-INF/LICENSE.txt'
+            excludes += 'META-INF/LICENSE'
+            excludes += 'META-INF/NOTICE'
+            excludes += 'META-INF/NOTICE.txt'
+        }
     }
 
     buildFeatures {
