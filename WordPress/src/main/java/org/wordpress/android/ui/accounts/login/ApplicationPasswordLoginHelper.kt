@@ -2,8 +2,6 @@ package org.wordpress.android.ui.accounts.login
 
 import androidx.core.net.toUri
 import com.automattic.android.tracks.crashlogging.CrashLogging
-import org.wordpress.android.R
-import org.wordpress.android.util.DeviceUtils
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker

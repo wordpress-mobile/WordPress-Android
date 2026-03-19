@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login
 
-import android.content.Context
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest

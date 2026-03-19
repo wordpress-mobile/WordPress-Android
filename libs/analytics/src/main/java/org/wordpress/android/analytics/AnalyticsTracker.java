@@ -1134,7 +1134,7 @@ public final class AnalyticsTracker {
 
         private String mEventName;
 
-        Stat(String eventName) {
+        Stat(@Nullable String eventName) {
             this.mEventName = eventName;
         }
 
