@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.dependency.analysis)
 }
 
-kotlin {
+java {
     sourceCompatibility = JvmTarget.fromTarget(libs.versions.java.get()).target
     targetCompatibility = JvmTarget.fromTarget(libs.versions.java.get()).target
 }
