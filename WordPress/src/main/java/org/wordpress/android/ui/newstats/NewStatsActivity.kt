@@ -38,8 +38,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -55,7 +53,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -67,6 +64,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.components.AddCardBottomSheet
 import org.wordpress.android.ui.newstats.components.AddStatsCardBottomSheet
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.NoConnectionContent
@@ -940,6 +938,11 @@ private fun InsightsTabContent(
 
     LaunchedEffect(cardsToLoad) {
         insightsViewModel.loadDataIfNeeded()
+        if (InsightsCardType.TAGS_AND_CATEGORIES
+            in cardsToLoad
+        ) {
+            tagsAndCategoriesViewModel.loadData()
+        }
     }
 
     val onRetryData = remember {
@@ -960,18 +963,13 @@ private fun InsightsTabContent(
         }
     }
 
-    LaunchedEffect(cardsToLoad) {
-        if (InsightsCardType.TAGS_AND_CATEGORIES
-            in cardsToLoad
-        ) {
-            tagsAndCategoriesViewModel.loadData()
-        }
-    }
-
     if (showAddCardSheet) {
-        AddInsightsCardBottomSheet(
+        AddCardBottomSheet(
             sheetState = addCardSheetState,
             availableCards = hiddenCards,
+            getDisplayNameResId = {
+                it.displayNameResId
+            },
             onDismiss = { showAddCardSheet = false },
             onCardSelected = { cardType ->
                 insightsViewModel.addCard(cardType)
@@ -1273,79 +1271,6 @@ private fun InsightsTabContent(
                 onClick = { showAddCardSheet = true },
                 modifier = Modifier.padding(16.dp)
             )
-        }
-    }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun AddInsightsCardBottomSheet(
-    sheetState: SheetState,
-    availableCards: List<InsightsCardType>,
-    onDismiss: () -> Unit,
-    onCardSelected: (InsightsCardType) -> Unit
-) {
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 32.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.stats_add_card_title),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            if (availableCards.isEmpty()) {
-                Text(
-                    text = stringResource(
-                        R.string.stats_all_cards_visible
-                    ),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme
-                        .onSurfaceVariant,
-                    modifier = Modifier.padding(vertical = 24.dp)
-                )
-            } else {
-                availableCards.forEach { cardType ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onCardSelected(cardType)
-                                onDismiss()
-                            }
-                            .padding(vertical = 12.dp),
-                        verticalAlignment =
-                            Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = null,
-                            tint = MaterialTheme
-                                .colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text(
-                            text = stringResource(
-                                cardType.displayNameResId
-                            ),
-                            style = MaterialTheme
-                                .typography.bodyLarge,
-                            color = MaterialTheme
-                                .colorScheme.onSurface
-                        )
-                    }
-                }
-            }
         }
     }
 }

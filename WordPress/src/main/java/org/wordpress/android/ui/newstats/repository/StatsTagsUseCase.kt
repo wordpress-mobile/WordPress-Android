@@ -67,18 +67,24 @@ class StatsTagsUseCase @Inject constructor(
         }
 
         if (isOwner) {
-            val result = statsRepository.fetchTags(
-                siteId = siteId,
-                max = max
-            )
-            mutex.withLock {
-                if (result is TagsResult.Success) {
-                    cachedTags =
-                        Triple(siteId, max, result.data)
+            try {
+                val result = statsRepository.fetchTags(
+                    siteId = siteId,
+                    max = max
+                )
+                mutex.withLock {
+                    if (result is TagsResult.Success) {
+                        cachedTags =
+                            Triple(siteId, max, result.data)
+                    }
+                    inFlight = null
                 }
-                inFlight = null
+                deferred.complete(result)
+            } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
+                mutex.withLock { inFlight = null }
+                deferred.completeExceptionally(e)
+                throw e
             }
-            deferred.complete(result)
         }
 
         return deferred.await()
