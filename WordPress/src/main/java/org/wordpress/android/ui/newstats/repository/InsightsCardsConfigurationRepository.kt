@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.repository
 
 import com.google.gson.GsonBuilder
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -73,14 +74,10 @@ constructor(
             val newVisibleCards =
                 current.visibleCards.toMutableList()
             newVisibleCards.remove(cardType)
-            val newHiddenCards =
-                (current.hiddenCards + cardType)
-                    .distinct()
             persistConfiguration(
                 siteId,
                 current.copy(
-                    visibleCards = newVisibleCards,
-                    hiddenCards = newHiddenCards
+                    visibleCards = newVisibleCards
                 )
             )
         }
@@ -99,13 +96,10 @@ constructor(
             }
             val newVisibleCards =
                 current.visibleCards + cardType
-            val newHiddenCards =
-                current.hiddenCards - cardType
             persistConfiguration(
                 siteId,
                 current.copy(
-                    visibleCards = newVisibleCards,
-                    hiddenCards = newHiddenCards
+                    visibleCards = newVisibleCards
                 )
             )
         }
@@ -213,8 +207,13 @@ constructor(
     private fun loadAndMigrate(
         siteId: Long
     ): InsightsCardsConfiguration {
-        val config = loadConfiguration(siteId)
-        val migrated = addNewCardTypes(config)
+        val persisted = loadConfiguration(siteId)
+        val config = InsightsCardsConfiguration(
+            visibleCards = persisted.visibleCards
+        )
+        val migrated = addNewCardTypes(
+            config, persisted.storedHiddenCards
+        )
         if (migrated !== config) {
             persistConfiguration(siteId, migrated)
         }
@@ -224,21 +223,25 @@ constructor(
     @Suppress("TooGenericExceptionCaught")
     private fun loadConfiguration(
         siteId: Long
-    ): InsightsCardsConfiguration {
+    ): PersistedConfig {
         val json = appPrefsWrapper
             .getStatsInsightsCardsConfigurationJson(
                 siteId
             )
         if (json == null) {
-            return InsightsCardsConfiguration()
+            return PersistedConfig(
+                visibleCards =
+                    InsightsCardType.defaultCards(),
+                storedHiddenCards = emptyList()
+            )
         }
         return try {
-            val config = gson.fromJson(
+            val parsed = gson.fromJson(
                 json,
-                InsightsCardsConfiguration::class.java
+                PersistedConfig::class.java
             )
-            if (isValidConfiguration(config)) {
-                config
+            if (isValidConfiguration(parsed)) {
+                parsed
             } else {
                 AppLog.w(
                     AppLog.T.STATS,
@@ -266,11 +269,12 @@ constructor(
      * if no migration is needed.
      */
     private fun addNewCardTypes(
-        config: InsightsCardsConfiguration
+        config: InsightsCardsConfiguration,
+        storedHiddenCards: List<InsightsCardType>
     ): InsightsCardsConfiguration {
         val allKnown = InsightsCardType.entries
         val knownInConfig = config.visibleCards +
-            config.hiddenCards
+            storedHiddenCards
         val newTypes =
             allKnown - knownInConfig.toSet()
         if (newTypes.isEmpty()) return config
@@ -282,7 +286,7 @@ constructor(
 
     @Suppress("USELESS_CAST")
     private fun isValidConfiguration(
-        config: InsightsCardsConfiguration
+        config: PersistedConfig
     ): Boolean {
         return (config.visibleCards as List<Any?>)
             .none { it == null }
@@ -290,10 +294,26 @@ constructor(
 
     private fun resetToDefault(
         siteId: Long
-    ): InsightsCardsConfiguration {
+    ): PersistedConfig {
         val defaultConfig =
             InsightsCardsConfiguration()
         persistConfiguration(siteId, defaultConfig)
-        return defaultConfig
+        return PersistedConfig(
+            visibleCards = defaultConfig.visibleCards,
+            storedHiddenCards = emptyList()
+        )
     }
+
+    /**
+     * Internal class for JSON deserialization that
+     * preserves the stored hidden cards from old
+     * config format for migration purposes.
+     */
+    private data class PersistedConfig(
+        val visibleCards: List<InsightsCardType> =
+            emptyList(),
+        @SerializedName("hiddenCards")
+        val storedHiddenCards: List<InsightsCardType> =
+            emptyList()
+    )
 }

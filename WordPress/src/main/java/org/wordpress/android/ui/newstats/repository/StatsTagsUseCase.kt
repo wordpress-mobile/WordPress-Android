@@ -5,6 +5,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.newstats.datasource.StatsTagsData
+import kotlin.coroutines.cancellation.CancellationException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,7 +25,7 @@ class StatsTagsUseCase @Inject constructor(
         Pair<Pair<Long, Int>,
             CompletableDeferred<TagsResult>>? = null
 
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "TooGenericExceptionCaught")
     suspend operator fun invoke(
         siteId: Long,
         max: Int = DEFAULT_MAX_ITEMS,
@@ -80,7 +81,15 @@ class StatsTagsUseCase @Inject constructor(
                     inFlight = null
                 }
                 deferred.complete(result)
-            } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
+            } catch (e: CancellationException) {
+                mutex.withLock { inFlight = null }
+                deferred.complete(
+                    TagsResult.Error(
+                        "Request cancelled"
+                    )
+                )
+                throw e
+            } catch (e: Exception) {
                 mutex.withLock { inFlight = null }
                 deferred.completeExceptionally(e)
                 throw e

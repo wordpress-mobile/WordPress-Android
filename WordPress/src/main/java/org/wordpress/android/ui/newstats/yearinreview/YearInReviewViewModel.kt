@@ -9,7 +9,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.YearInsightsData
 import org.wordpress.android.ui.newstats.repository.InsightsResult
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.time.Year
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,7 +74,8 @@ class YearInReviewViewModel @Inject constructor(
 
         private fun List<YearSummary>.ensureCurrentYear():
             List<YearSummary> {
-            val currentYear = Year.now().toString()
+            val currentYear = Calendar.getInstance()
+                .get(Calendar.YEAR).toString()
             return if (any { it.year == currentYear }) {
                 this
             } else {

@@ -18,26 +18,24 @@ class InsightsCardsConfigurationTest {
             visibleCards = emptyList()
         )
 
-        val hiddenCards = config.computeHiddenCards()
-
-        assertThat(hiddenCards).containsExactlyInAnyOrder(
-            InsightsCardType.ALL_TIME_STATS,
-            InsightsCardType.MOST_POPULAR_DAY,
-            InsightsCardType.MOST_POPULAR_TIME,
-            InsightsCardType.YEAR_IN_REVIEW,
-            InsightsCardType.TAGS_AND_CATEGORIES
-        )
+        assertThat(config.hiddenCards)
+            .containsExactlyInAnyOrder(
+                InsightsCardType.ALL_TIME_STATS,
+                InsightsCardType.MOST_POPULAR_DAY,
+                InsightsCardType.MOST_POPULAR_TIME,
+                InsightsCardType.YEAR_IN_REVIEW,
+                InsightsCardType.TAGS_AND_CATEGORIES
+            )
     }
 
     @Test
     fun `when all cards visible, then hiddenCards returns empty list`() {
         val config = InsightsCardsConfiguration(
-            visibleCards = InsightsCardType.entries.toList()
+            visibleCards =
+                InsightsCardType.entries.toList()
         )
 
-        val hiddenCards = config.computeHiddenCards()
-
-        assertThat(hiddenCards).isEmpty()
+        assertThat(config.hiddenCards).isEmpty()
     }
 
     @Test
@@ -46,32 +44,9 @@ class InsightsCardsConfigurationTest {
             visibleCards = emptyList()
         )
 
-        val hiddenCards = config.computeHiddenCards()
-
-        assertThat(hiddenCards).containsExactlyInAnyOrder(
-            *InsightsCardType.entries.toTypedArray()
-        )
-    }
-
-    @Test
-    fun `when isCardVisible is called for visible card, then returns true`() {
-        val config = InsightsCardsConfiguration(
-            visibleCards = listOf(InsightsCardType.YEAR_IN_REVIEW)
-        )
-
-        assertThat(
-            config.isCardVisible(InsightsCardType.YEAR_IN_REVIEW)
-        ).isTrue()
-    }
-
-    @Test
-    fun `when isCardVisible is called for hidden card, then returns false`() {
-        val config = InsightsCardsConfiguration(
-            visibleCards = emptyList()
-        )
-
-        assertThat(
-            config.isCardVisible(InsightsCardType.YEAR_IN_REVIEW)
-        ).isFalse()
+        assertThat(config.hiddenCards)
+            .containsExactlyInAnyOrder(
+                *InsightsCardType.entries.toTypedArray()
+            )
     }
 }

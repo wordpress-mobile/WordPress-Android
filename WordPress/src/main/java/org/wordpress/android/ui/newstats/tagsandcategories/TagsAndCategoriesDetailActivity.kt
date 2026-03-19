@@ -204,7 +204,7 @@ private fun DetailLoadedContent(
         return
     }
 
-    val expandedGroups = remember {
+    val expandedGroups = remember(items) {
         mutableStateMapOf<Int, Boolean>()
     }
 

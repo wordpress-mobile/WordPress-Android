@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.newstats.mostpopularday
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,13 +24,12 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.components.CardPosition
+import org.wordpress.android.ui.newstats.components.StatsCardContainer
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.ui.newstats.util.rememberShimmerBrush
 
-private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
-private val CardMargin = 16.dp
 
 @Composable
 @Suppress("LongParameterList")
@@ -46,28 +44,7 @@ fun MostPopularDayCard(
     onMoveDown: (() -> Unit)? = null,
     onMoveToBottom: (() -> Unit)? = null
 ) {
-    val borderColor =
-        MaterialTheme.colorScheme.outlineVariant
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = CardMargin,
-                vertical = 8.dp
-            )
-            .clip(RoundedCornerShape(CardCornerRadius))
-            .border(
-                width = 1.dp,
-                color = borderColor,
-                shape = RoundedCornerShape(
-                    CardCornerRadius
-                )
-            )
-            .background(
-                MaterialTheme.colorScheme.surface
-            )
-    ) {
+    StatsCardContainer(modifier = modifier) {
         when (uiState) {
             is MostPopularDayCardUiState.Loading ->
                 LoadingContent()

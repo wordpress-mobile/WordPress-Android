@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
+import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -121,7 +122,7 @@ class InsightsViewModel @Inject constructor(
             _isDataRefreshing.value = false
             return
         }
-        fetchJob = viewModelScope.launch {
+        val job = viewModelScope.launch {
             try {
                 coroutineScope {
                     if (shouldFetchSummary) {
@@ -139,10 +140,13 @@ class InsightsViewModel @Inject constructor(
                 }
                 isDataLoaded.set(true)
             } finally {
-                isDataLoading.set(false)
-                _isDataRefreshing.value = false
+                if (fetchJob === coroutineContext[Job]) {
+                    isDataLoading.set(false)
+                    _isDataRefreshing.value = false
+                }
             }
         }
+        fetchJob = job
     }
 
     @Suppress(
@@ -210,7 +214,9 @@ class InsightsViewModel @Inject constructor(
     }
 
     fun refreshData() {
-        fetchJob?.cancel()
+        val oldJob = fetchJob
+        fetchJob = null
+        oldJob?.cancel()
         isDataLoaded.set(false)
         summaryFetched.set(false)
         insightsFetched.set(false)
@@ -258,7 +264,7 @@ class InsightsViewModel @Inject constructor(
         config: InsightsCardsConfiguration
     ) {
         _visibleCards.value = config.visibleCards
-        _hiddenCards.value = config.computeHiddenCards()
+        _hiddenCards.value = config.hiddenCards
         val cards = config.visibleCards
         val needsNewFetch =
             (cards.needsSummary() &&

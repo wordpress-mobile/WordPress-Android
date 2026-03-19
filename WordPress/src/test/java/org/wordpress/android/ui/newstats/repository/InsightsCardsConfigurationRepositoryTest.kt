@@ -8,9 +8,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import com.google.gson.Gson
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -134,7 +136,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                 )
             verify(
                 appPrefsWrapper,
-                org.mockito.kotlin.never()
+                never()
             ).setStatsInsightsCardsConfigurationJson(
                 any(), any()
             )
@@ -211,7 +213,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                 .setStatsInsightsCardsConfigurationJson(
                     eq(TEST_SITE_ID), jsonCaptor.capture()
                 )
-            val savedConfig = com.google.gson.Gson()
+            val savedConfig = Gson()
                 .fromJson(
                     jsonCaptor.firstValue,
                     InsightsCardsConfiguration::class.java
@@ -341,7 +343,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
 
             verify(
                 appPrefsWrapper,
-                org.mockito.kotlin.never()
+                never()
             ).setStatsInsightsCardsConfigurationJson(
                 any(), any()
             )
@@ -364,7 +366,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
 
             verify(
                 appPrefsWrapper,
-                org.mockito.kotlin.never()
+                never()
             ).setStatsInsightsCardsConfigurationJson(
                 any(), any()
             )
@@ -387,7 +389,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
 
             verify(
                 appPrefsWrapper,
-                org.mockito.kotlin.never()
+                never()
             ).setStatsInsightsCardsConfigurationJson(
                 any(), any()
             )
@@ -410,7 +412,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
 
             verify(
                 appPrefsWrapper,
-                org.mockito.kotlin.never()
+                never()
             ).setStatsInsightsCardsConfigurationJson(
                 any(), any()
             )
@@ -433,7 +435,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
 
             verify(
                 appPrefsWrapper,
-                org.mockito.kotlin.never()
+                never()
             ).setStatsInsightsCardsConfigurationJson(
                 any(), any()
             )
@@ -459,7 +461,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                 .setStatsInsightsCardsConfigurationJson(
                     eq(TEST_SITE_ID), jsonCaptor.capture()
                 )
-            val saved = com.google.gson.Gson()
+            val saved = Gson()
                 .fromJson(
                     jsonCaptor.firstValue,
                     InsightsCardsConfiguration::class.java
@@ -490,7 +492,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                 .setStatsInsightsCardsConfigurationJson(
                     eq(TEST_SITE_ID), jsonCaptor.capture()
                 )
-            val saved = com.google.gson.Gson()
+            val saved = Gson()
                 .fromJson(
                     jsonCaptor.firstValue,
                     InsightsCardsConfiguration::class.java
@@ -523,7 +525,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                 .setStatsInsightsCardsConfigurationJson(
                     eq(TEST_SITE_ID), jsonCaptor.capture()
                 )
-            val saved = com.google.gson.Gson()
+            val saved = Gson()
                 .fromJson(
                     jsonCaptor.firstValue,
                     InsightsCardsConfiguration::class.java
@@ -554,7 +556,7 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
                 .setStatsInsightsCardsConfigurationJson(
                     eq(TEST_SITE_ID), jsonCaptor.capture()
                 )
-            val saved = com.google.gson.Gson()
+            val saved = Gson()
                 .fromJson(
                     jsonCaptor.firstValue,
                     InsightsCardsConfiguration::class.java

@@ -149,7 +149,7 @@ private fun LoadedContent(
     onMoveDown: (() -> Unit)?,
     onMoveToBottom: (() -> Unit)?
 ) {
-    val expandedGroups = remember {
+    val expandedGroups = remember(state.items) {
         mutableStateMapOf<Int, Boolean>()
     }
 
